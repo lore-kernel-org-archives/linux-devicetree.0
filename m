@@ -1,183 +1,161 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2] firmware: qcom: scm: Expose PAS command 10 as
- reset-controller
-Date: Mon, 20 Jun 2016 12:20:01 +0100
-Message-ID: <5767D161.9040605@linaro.org>
-References: <1466185243-31569-1-git-send-email-bjorn.andersson@linaro.org>
+From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
+Date: Mon, 20 Jun 2016 19:22:00 +0800
+Message-ID: <1466421720.1918.11.camel@mtksdaap41>
+References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
+	 <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
+	 <1466419311.27959.12.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1466185243-31569-1-git-send-email-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466419311.27959.12.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2016-06-20 at 18:41 +0800, CK Hu wrote:
+> Hi, HS:
+> 
+> One comment inline.
+> 
+> On Mon, 2016-05-30 at 11:19 +0800, HS Liao wrote:
+> > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
+> > CMDQ is used to help read/write registers with critical time limitation,
+> > such as updating display configuration during the vblank. It controls
+> > Global Command Engine (GCE) hardware to achieve this requirement.
+> > Currently, CMDQ only supports display related hardwares, but we expect
+> > it can be extended to other hardwares for future requirements.
+> > 
+> > Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/soc/mediatek/Kconfig    |  10 +
+> >  drivers/soc/mediatek/Makefile   |   1 +
+> >  drivers/soc/mediatek/mtk-cmdq.c | 943 ++++++++++++++++++++++++++++++++++++++++
+> >  include/soc/mediatek/cmdq.h     | 197 +++++++++
+> >  4 files changed, 1151 insertions(+)
+> >  create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
+> >  create mode 100644 include/soc/mediatek/cmdq.h
+> > 
+> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> > index 0a4ea80..c4ad75c 100644
+> > --- a/drivers/soc/mediatek/Kconfig
+> > +++ b/drivers/soc/mediatek/Kconfig
+> > @@ -1,6 +1,16 @@
+> >  #
+> >  # MediaTek SoC drivers
+> >  #
+> > +config MTK_CMDQ
+> > +	bool "MediaTek CMDQ Support"
+> > +	depends on ARCH_MEDIATEK || COMPILE_TEST
+> > +	select MTK_INFRACFG
+> > +	help
+> > +	  Say yes here to add support for the MediaTek Command Queue (CMDQ)
+> > +	  driver. The CMDQ is used to help read/write registers with critical
+> > +	  time limitation, such as updating display configuration during the
+> > +	  vblank.
+> > +
+> >  config MTK_INFRACFG
+> >  	bool "MediaTek INFRACFG Support"
+> >  	depends on ARCH_MEDIATEK || COMPILE_TEST
+> > diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
+> > index 12998b0..f7397ef 100644
+> > --- a/drivers/soc/mediatek/Makefile
+> > +++ b/drivers/soc/mediatek/Makefile
+> 
+> [Snip...]
+> 
+> > +
+> > +static int cmdq_eng_get_thread(u64 flag)
+> > +{
+> > +	if (flag & BIT_ULL(CMDQ_ENG_DISP_DSI0))
+> > +		return CMDQ_THR_DISP_MAIN_IDX;
+> > +	else if (flag & BIT_ULL(CMDQ_ENG_DISP_DPI0))
+> > +		return CMDQ_THR_DISP_SUB_IDX;
+> > +	else
+> > +		return CMDQ_THR_DISP_MISC_IDX;
+> > +}
+> 
+> I think cmdq should not have knowledge of client. These statement show
+> that cmdq know that DSI0-tasks is different with DPI0-tasks. I propose
+> the 'session' to replace engine flag. For example, main display create
+> one cmdq_session and external display create another cmdq_session. For
+> client driver, every tasks created by main display is bound to main
+> display session. For cmdq driver, it should dynamically bind a session
+> to a HW thread, and then dispatch tasks of this session to this HW
+> thread. After HW thread run out of tasks of this session, detach this
+> session with this thread.
+> For the problem of remove wfe cmd, I think a session can have a property
+> of merge_wfe_cmd. For display session, session->merge_wfe_cmd = true.
+> For other client, it's false.
+
+Hi CK,
+
+I think your suggestion is similar to CMDQ 'scenarios',
+which was removed from CMDQ v2.
+
+Daniel suggests to use engine flags instead of scenarios.
+Quote from https://patchwork.kernel.org/patch/8068311/ .
+'Instead of encoding policy (these arbitrary "scenarios"), perhaps the
+ cmdq driver should just provide these flag bits, and the display
+ subsystem can use them to build the "flag" parameter itself.
+
+ After all, the exact configuration of mmsys components is somewhat
+ flexible.'
+
+Therefore, it would be better to discuss with Daniel before we change
+it.
 
 
-On 17/06/16 18:40, Bjorn Andersson wrote:
-> PAS command 10 is used to assert and deassert the MSS reset via
-> TrustZone, expose this as a reset-controller to mimic the direct
-> access case.
->
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+Hi Daniel,
 
-Good stuff!
+Do you think we should use scenarios or sessions instead of flags?
 
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Thanks,
+HS
 
->
-> Changes since v1:
-> - Selecting RESET_CONTROLLER
-> - Constifying reset_ops
->
->   drivers/firmware/Kconfig       |  1 +
->   drivers/firmware/qcom_scm-32.c | 13 +++++++++++++
->   drivers/firmware/qcom_scm-64.c | 14 ++++++++++++++
->   drivers/firmware/qcom_scm.c    | 30 ++++++++++++++++++++++++++++++
->   drivers/firmware/qcom_scm.h    |  2 ++
->   5 files changed, 60 insertions(+)
->
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index 6664f1108c7c..5e618058defe 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -184,6 +184,7 @@ config FW_CFG_SYSFS_CMDLINE
->   config QCOM_SCM
->   	bool
->   	depends on ARM || ARM64
-> +	select RESET_CONTROLLER
->
->   config QCOM_SCM_32
->   	def_bool y
-> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-> index 3df3798729c3..cf731b3452f3 100644
-> --- a/drivers/firmware/qcom_scm-32.c
-> +++ b/drivers/firmware/qcom_scm-32.c
-> @@ -564,3 +564,16 @@ int __qcom_scm_pas_shutdown(u32 peripheral)
->
->   	return ret ? : le32_to_cpu(out);
->   }
-> +
-> +int __qcom_scm_pas_mss_reset(bool reset)
-> +{
-> +	__le32 out;
-> +	__le32 in = cpu_to_le32(reset);
-> +	int ret;
-> +
-> +	ret = qcom_scm_call(QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET,
-> +			&in, sizeof(in),
-> +			&out, sizeof(out));
-> +
-> +	return ret ? : le32_to_cpu(out);
-> +}
-> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-> index 72c2f81b8fd3..45ee872b6e6d 100644
-> --- a/drivers/firmware/qcom_scm-64.c
-> +++ b/drivers/firmware/qcom_scm-64.c
-> @@ -565,6 +565,20 @@ int __qcom_scm_pas_shutdown(u32 peripheral)
->   	return ret ? : scm_ret;
->   }
->
-> +int __qcom_scm_pas_mss_reset(bool reset)
-> +{
-> +	struct qcom_scm_desc desc = {0};
-> +	int ret;
-> +
-> +	desc.args[0] = reset;
-> +	desc.args[1] = 0;
-> +	desc.arginfo = QCOM_SCM_ARGS(2);
-> +
-> +	ret = qcom_scm_call(QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET, &desc);
-> +
-> +	return ret ? : desc.ret[0];
-> +}
-> +
->   int __qcom_scm_pil_init_image_cmd(u32 proc, u64 image_addr)
->   {
->   	struct qcom_scm_desc desc = {0};
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 6fc9580a26bd..bfa9bfd9a62c 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -20,6 +20,7 @@
->   #include <linux/qcom_scm.h>
->   #include <linux/of.h>
->   #include <linux/clk.h>
-> +#include <linux/reset-controller.h>
->
->   #include "qcom_scm.h"
->
-> @@ -28,6 +29,7 @@ struct qcom_scm {
->   	struct clk *core_clk;
->   	struct clk *iface_clk;
->   	struct clk *bus_clk;
-> +	struct reset_controller_dev reset;
->   };
->
->   static struct qcom_scm *__scm;
-> @@ -280,6 +282,29 @@ int qcom_scm_pas_shutdown(u32 peripheral)
->   }
->   EXPORT_SYMBOL(qcom_scm_pas_shutdown);
->
-> +static int qcom_scm_pas_reset_assert(struct reset_controller_dev *rcdev,
-> +				     unsigned long idx)
-> +{
-> +	if (idx != 0)
-> +		return -EINVAL;
-> +
-> +	return __qcom_scm_pas_mss_reset(1);
-> +}
-> +
-> +static int qcom_scm_pas_reset_deassert(struct reset_controller_dev *rcdev,
-> +				       unsigned long idx)
-> +{
-> +	if (idx != 0)
-> +		return -EINVAL;
-> +
-> +	return __qcom_scm_pas_mss_reset(0);
-> +}
-> +
-> +static const struct reset_control_ops qcom_scm_pas_reset_ops = {
-> +	.assert = qcom_scm_pas_reset_assert,
-> +	.deassert = qcom_scm_pas_reset_deassert,
-> +};
-> +
->   /**
->    * qcom_scm_is_available() - Checks if SCM is available
->    */
-> @@ -322,6 +347,11 @@ static int qcom_scm_probe(struct platform_device *pdev)
->   		return PTR_ERR(scm->bus_clk);
->   	}
->
-> +	scm->reset.ops = &qcom_scm_pas_reset_ops;
-> +	scm->reset.nr_resets = 1;
-> +	scm->reset.of_node = pdev->dev.of_node;
-> +	reset_controller_register(&scm->reset);
-> +
->   	/* vote for max clk rate for highest performance */
->   	rate = clk_round_rate(scm->core_clk, INT_MAX);
->   	ret = clk_set_rate(scm->core_clk, rate);
-> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-> index 8f1207fca771..80752cbfd139 100644
-> --- a/drivers/firmware/qcom_scm.h
-> +++ b/drivers/firmware/qcom_scm.h
-> @@ -44,11 +44,13 @@ extern int __qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
->   #define QCOM_SCM_PAS_AUTH_AND_RESET_CMD	0x5
->   #define QCOM_SCM_PAS_SHUTDOWN_CMD	0x6
->   #define QCOM_SCM_PAS_IS_SUPPORTED_CMD	0x7
-> +#define QCOM_SCM_PAS_MSS_RESET		0xa
->   extern bool __qcom_scm_pas_supported(u32 peripheral);
->   extern int  __qcom_scm_pas_init_image(u32 peripheral, dma_addr_t metadata_phys);
->   extern int  __qcom_scm_pas_mem_setup(u32 peripheral, phys_addr_t addr, phys_addr_t size);
->   extern int  __qcom_scm_pas_auth_and_reset(u32 peripheral);
->   extern int  __qcom_scm_pas_shutdown(u32 peripheral);
-> +extern int  __qcom_scm_pas_mss_reset(bool reset);
->
->   /* common error codes */
->   #define QCOM_SCM_ENOMEM		-5
->
+> Here is the sample code to create cmdq_rec with session.
+> 
+> merge_wfe_cmd = true;
+> cmdq_session_create(merge_wfe_cmd, &primary_display_session);
+> cmdq_rec_create(dev, primary_display_session, &rec);
+> 
+> 
+> Therefore, the below definition can be removed.
+> 
+> > +
+> > +enum cmdq_eng {
+> > +	CMDQ_ENG_DISP_AAL,
+> > +	CMDQ_ENG_DISP_COLOR0,
+> > +	CMDQ_ENG_DISP_COLOR1,
+> > +	CMDQ_ENG_DISP_DPI0,
+> > +	CMDQ_ENG_DISP_DSI0,
+> > +	CMDQ_ENG_DISP_DSI1,
+> > +	CMDQ_ENG_DISP_GAMMA,
+> > +	CMDQ_ENG_DISP_OD,
+> > +	CMDQ_ENG_DISP_OVL0,
+> > +	CMDQ_ENG_DISP_OVL1,
+> > +	CMDQ_ENG_DISP_PWM0,
+> > +	CMDQ_ENG_DISP_PWM1,
+> > +	CMDQ_ENG_DISP_RDMA0,
+> > +	CMDQ_ENG_DISP_RDMA1,
+> > +	CMDQ_ENG_DISP_RDMA2,
+> > +	CMDQ_ENG_DISP_UFOE,
+> > +	CMDQ_ENG_DISP_WDMA0,
+> > +	CMDQ_ENG_DISP_WDMA1,
+> > +	CMDQ_ENG_MAX,
+> > +};
+> > +
+> 
+> 
+> Regards,
+> CK
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
