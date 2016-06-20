@@ -1,118 +1,116 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [v3,1/4] mfd: cros_ec: Add cros_ec_cmd_xfer_status helper
-Date: Mon, 20 Jun 2016 14:24:32 -0400
-Message-ID: <1092e8cd-33f0-888c-1e88-f996a262e1a9@osg.samsung.com>
-References: <1466193495-95801-2-git-send-email-briannorris@chromium.org>
- <20160617214151.GA1400@roeck-us.net> <20160618010855.GA67034@google.com>
- <5765805A.5070407@roeck-us.net>
- <3eac0aed-58ed-8376-dc29-ab374c67ebc0@osg.samsung.com>
- <20160620174455.GB40678@google.com> <20160620181020.GA46079@google.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] ARM: sun8i: Add Parrot Board DTS
+Date: Mon, 20 Jun 2016 20:35:43 +0200
+Message-ID: <20160620183543.GM26668@lukather>
+References: <1465812931-22824-1-git-send-email-quentin.schulz@free-electrons.com>
+ <1465812931-22824-2-git-send-email-quentin.schulz@free-electrons.com>
+ <CAGb2v64jduBijEXzsKbOpSvLd9YHwO=qpSyPSDuYtMPg8wfKzA@mail.gmail.com>
+ <575FFFBE.5090107@free-electrons.com>
+ <CAGb2v67JGG35odB7kEAoF0kGes=KRGoREOSTc_GM0B4A+8cKWg@mail.gmail.com>
+ <20160620154452.GL26668@lukather>
+ <CAGb2v66_iUMd5V=9Np4Kqqv+yqq2HbjoPhC3Z6cpHFrMzkddvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160620181020.GA46079-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Enric Balletbo <enric.balletbo-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Randall Spangler <rspangler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Nematbakhsh <shawnn-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Todd Broch <tbroch-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gwendal Grignou <gwendal-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HVCoas+krw6dou6l"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66_iUMd5V=9Np4Kqqv+yqq2HbjoPhC3Z6cpHFrMzkddvw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Quentin Schulz <quentin.schulz@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Hans De Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Brian,
 
-On 06/20/2016 02:10 PM, Brian Norris wrote:
-> Hi,
-> 
-> On Mon, Jun 20, 2016 at 10:44:55AM -0700, Brian Norris wrote:
->> On Mon, Jun 20, 2016 at 09:46:57AM -0400, Javier Martinez Canillas wrote:
->>> On 06/18/2016 01:09 PM, Guenter Roeck wrote:
->>>> On 06/17/2016 06:08 PM, Brian Norris wrote:
->>>>> How do you propose we do that? Do all of the following become EINVAL?
->>>>>
->>>
->>> Yes, I would just do that.
->>>
->>> The idea of this helper is to remove duplicated code and AFAICT what most EC
->>> drivers do is something similar to the following:
->>>
->>>         ret = cros_ec_cmd_xfer(ec, msg);
->>>         if (ret < 0)
->>> 	   	return ret;
->>>
->>>         if (msg->result != EC_RES_SUCCESS) {
->>>                 dev_dbg(ec->dev, "EC result %d\n", msg->result);
->>>                 return -EINVAL;
->>>         }
->>>
->>> So in practice what most drivers really care is if the result was successful
->>> or not, I don't see specific EC error handling in the EC drivers.  The real
->>> EC error code is still in the message anyways so drivers that do cares about
->>> the real EC error can look at msg->result instead.
-> [...]
->>>>>          EC_RES_INVALID_COMMAND
->>>>
->>>>     -EOPNOTSUPP
->>>>
->>>>>          EC_RES_INVALID_PARAM
->>>>
->>>>     -EINVAL or -EBADMSG
->>>>
->>>>>          EC_RES_INVALID_VERSION
->>>>
->>>>     -EPROTO or -EBADR or -EBADE or -EBADRQC or -EPROTOOPT
->>>>
->>>>>          EC_RES_INVALID_HEADER
->>>>
->>>>     -EPROTO or -EBADR or -EBADE
->>>>
->>>> Doesn't look that bad to me. Also, the raw error could still be logged,
->>>> for example with dev_dbg().
->>>>
->>>
->>> Yes, I think that adding a dev_dbg() with the real EC error code should
->>> be enough, that's basically what drivers do since they can't propagate
->>> the EC error to higher layers anyways.
->>
->> I'll take a look at adding an error code translation table when I get a
->> chance. Hopefully that doesn't delay the others who are planning to use
->> this API shortly...
-> 
-> Actually, I had some second thoughts, and others brought similar
-> concerns up to me:
-> 
-> What do we really win by doing the translation? It'll be difficult to do
-> a 1:1 translation, and any time the EC adds additional error types,
-> we'll have to update the translation. What's more, AFAICT, no one will
-> really be looking at the translated error codes now, and will just be
-> blindly passing them on. So maybe it makes more sense to just pick a
-> single error code and pass that on instead. Possibly just -EPROTO (or
-> nominate your favorite) for all EC error results, and if someone cares,
+--HVCoas+krw6dou6l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 21, 2016 at 12:30:25AM +0800, Chen-Yu Tsai wrote:
+> >> >>> +&reg_aldo1 {
+> >> >>> +       regulator-always-on;
+> >> >>> +       regulator-min-microvolt =3D <3000000>;
+> >> >>> +       regulator-max-microvolt =3D <3000000>;
+> >> >>> +       regulator-name =3D "aldo1";
+> >> >>
+> >> >> What is this for exactly? Would turning it off render the system in=
+operable?
+> >> >> How was it referenced in the fex file?
+> >> >>
+> >> >> If this is for WiFi I/O VCC, then you should specify it in mmc1 with
+> >> >> vqmmc-supply.
+> >> >>
+> >> >
+> >> > In the fex, aldo1 is one of the three power inputs for the WiFi (the
+> >> > others being dldo1 and dldo2) and in the schematics it is linked to
+> >> > both VCC-USB and VCC-IO-WIFI.
+> >> >
+> >> > I tried to turn it off and, indeed, the system becomes inoperable.
+> >> >
+> >> > I'll add vqmmc-supply in mmc1 with aldo1 regulator. However, I am
+> >> > wondering what to put in vmmc-supply for mmc1 since the WiFi module =
+has
+> >> > three power inputs: dldo1, dldo2 and aldo1. In the fex, they are
+> >> > referenced as, respectively, module_power1, module_power2 and
+> >> > module_power3 and in the schematics dldo1 and dldo2 are named VCC-WI=
+FI
+> >> > while aldo1 is used for VCC-IO-WIFI (if it can help in any way).
+> >> >
+> >> > VCC-WIFI is connected to pin VBAT of the Broadcom AP6212 WiFi chip.
+> >> > VCC-IO-WIFI is connected to pin VDDIO of the chip.
+> >>
+> >> VCC-IO-WIFI is vqmmc, and VCC-WIFI is vmmc.
+> >
+> > Isn't vmmc supposed to be always powered at 3.3v, and vqmmc the one
+> > used to drop to 1.8V with the UHS cards?
+>=20
+> For eMMC, vmmc and vqmmc correspond to the pins on the eMMC chip.
+> vmmc provides power to the internals, while vqmmc provides power to the
+> I/O buffers on both sides. With SD this is a bit less clear. IIUC the SD
+> card itself supplies I/O voltage, dropping it to 1.8V if necessary, from
+> VDD (vmmc). vqmmc only affects the host side, and whatever external pull-=
+ups
+> that might exist.
 
-I think I didn't make clear in my previous email but yes, I also think
-that a translate table for errors is not a good idea and that just a
-single -EINVAL (or another error if is more suitable for all EC errors)
-will be enough. I say -EINVAL because that's what you first mentioned
-in a previous email and that's what most EC clients drivers are using.
+Ok.
 
-I do believe that EC specific errors shouldn't be returned in a Linux
-function though for the reasons I explained before.
+> > In which case, VCC-IO-WIFI is vmmc, and VCC-WIFI is just one of the
+> > wifi chip power rail, to be handled by a power sequence.
+>=20
+> For the WiFi chip, there is a separate IO-VCC rail, which is VCC-IO-WIFI.
+> This, from what I understand of the datasheet, is for I/O signaling, and
+> thus vqmmc. VCC-WIFI is what powers the chip, which is what vmmc is.
 
-> they decode msg->result in their driver, or check the dev_dbg() log?
->
+Ok. but there's still the issue of the two regulators that needs to be
+kept in sync. Before, that, I'd rather stice to not tying them to the
+MMC bus, and putting a comment on top.
 
-And yes, I also think that a dev_dbg() is a good idea (the more data
-we have about an error, the better) and as mentioned the EC error can
-always be found in the EC message result field.
- 
-> Brian
-> 
+Maxime
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--HVCoas+krw6dou6l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXaDd/AAoJEBx+YmzsjxAgD8sP/0eBZor6/qRy3x7cJvNOvbyX
+TyGxcetPNiY4X1nGcEdli+GFHBsaeWr/0X/RSJCaUtt4lNWmlKtdTfkpoKQ3hpEL
+Ua9WBGX+RdCePbwY46OKbSND5r+tKQQVhPieJqtRGqhGL9RyWKuEKhwH3giWttCq
+xBVIcWjzWtwF8pUYA7kcRXMntWgj/htQqbABB7tiw866UVES2LDaNyoKkvxrcDv+
+9bv4k6ZPsIMHGj71hmwDLzyJ+ychKyOTDP4KGV0ufxzSxcMtbeYaFpqvfdaAQfgN
+uT/hHkOHKlYQdNEHWT8p4nYnAx5xx5c7CyrfIfAUXfUKPQR51W99Wv+5Ydk5vQ0W
+Prrh4I8BN/5ZFnGfr3k0ESpNT8kG5vFV8+RdsY1LB62tKseEojacq4tFem4Sy8PW
++Z3QcaOqOJpBKS4ZPJO03AnabUqq2d2ttKPIXXIbiMMZFFNanr3N+W+XedbePe8P
+bBQW8v18yTKus7uSrO2g6A/M8qonqHbLOCMU2+EBAexsncR3A9cd8uVjpe9qGral
+3P0wzvgk/WxedpMlm0OjYU3GHWKQ7zc1gl8sjx/747mXtc0865qCh8/cS7UmZejs
+EbuZbWZx4y5S8vVqm8ia/eOIoH8gi/fh9aLyzcCfyJNbqLTqmGGOq5KltFniMUtL
+G9+g9MdQCJMfyX0G84jz
+=3XyW
+-----END PGP SIGNATURE-----
+
+--HVCoas+krw6dou6l--
