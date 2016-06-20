@@ -1,55 +1,281 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [RFC PATCH 11/13] arm64: tegra: Add SOR power-domain node
-Date: Mon, 20 Jun 2016 10:18:42 +0100
-Message-ID: <5767B4F2.2090306@nvidia.com>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <1466165027-17917-12-git-send-email-jonathanh@nvidia.com>
- <20160617164202.GJ27475@ulmo.ba.sec>
+From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: mediatek: add mt6755 support
+Date: Mon, 20 Jun 2016 17:19:10 +0800
+Message-ID: <1466414350.3378.9.camel@mtkswgap22>
+References: <1465870805-10451-1-git-send-email-mars.cheng@mediatek.com>
+ <1465870805-10451-3-git-send-email-mars.cheng@mediatek.com>
+ <5767A9FB.3010007@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160617164202.GJ27475@ulmo.ba.sec>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <5767A9FB.3010007-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Choui <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDE3LzA2LzE2IDE3OjQyLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiAqIFBHUCBTaWduZWQg
-YnkgYW4gdW5rbm93biBrZXkKPiAKPiBPbiBGcmksIEp1biAxNywgMjAxNiBhdCAwMTowMzo0NVBN
-ICswMTAwLCBKb24gSHVudGVyIHdyb3RlOgo+PiBBZGQgbm9kZSBmb3IgU09SIHBvd2VyLWRvbWFp
-biBmb3IgVGVncmEyMTAgYW5kIHBvcHVsYXRlIHRoZSBTT1IKPj4gcG93ZXItZG9tYWluIHBoYW5k
-bGUgZm9yIFNPUiBhbmQgRFBBVVggbm9kZXMgdGhhdCBhcmUgZGVwZW5kZW50Cj4+IG9uIHRoaXMg
-cG93ZXItZG9tYWluLgo+Pgo+PiBQbGVhc2Ugbm90ZSB0aGF0IGFsdGhvdWdoIG5laXRoZXIgdGhl
-IFNPUiBvciBEUEFVWCBkcml2ZXJzIGN1cnJlbnRseQo+PiBzdXBwb3J0IHJ1bnRpbWUgcG93ZXIt
-bWFuYWdlbWVudCwgYnkgcG9wdWxhdGluZyB0aGUgcG93ZXItZG9tYWluIG5vZGUKPj4gdGhlIFNP
-UiBwb3dlci1kb21haW4gd2lsbCBiZSB0dXJuZWQgb24gYmVmb3JlIHByb2JpbmcgU09SIG9yIERQ
-QVVYCj4+IGRldmljZXMgYW5kIGtlcHQgb24gd2hpbGUgdGhlIGRldmljZXMgYXJlIGJvdW5kLgo+
-Pgo+PiBTaWduZWQtb2ZmLWJ5OiBKb24gSHVudGVyIDxqb25hdGhhbmhAbnZpZGlhLmNvbT4KPj4g
-LS0tCj4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL252aWRpYS90ZWdyYTIxMC5kdHNpIHwgMTggKysr
-KysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKQo+IAo+
-IEkndmUgZ290IHBhdGNoZXMgcXVldWVkIGluIG15IGRybS10ZWdyYSB0cmVlIHRvIGFkZCBzdXBw
-b3J0IGZvciBydW50aW1lCj4gUE0gZm9yIHRoZSBTT1IgZHJpdmVyLiBXaWxsIHRoYXQgaW4gc29t
-ZSB3YXkgY2xhc2ggd2l0aCB0aGlzIHdvcmsgaWYKPiBtZXJnZWQgaW4gcGFyYWxsZWw/CgpZZXMg
-SSBoYWQgc2VlbiB0aG9zZS4gSSB3YXMgd29uZGVyaW5nIGlmIEkgc2hvdWxkIGluY2x1ZGUgdGhl
-bSBoZXJlIGJ1dApvcHRlZCBub3QgdG9vIChhcyBpdCB3YXMgYmVjb21pbmcgYSBtYXNzaXZlIHNl
-cmllcykuIEl0IHNob3VsZCBiZSBmaW5lCnRvIGVuYWJsZSBSUE0gbGF0ZXIsIHlvdSBqdXN0IG5l
-ZWQgdG8gYmUgYXdhcmUgdGhhdCB0aGUgcGFydGl0aW9uIGNvdWxkCnR1cm4gb2ZmIG9uIGEgUlBN
-IHB1dCBzbyB5b3UganVzdCBuZWVkIHRvIGVuc3VyZSB0aGF0IGFueSByZWdpc3Rlcgpjb250ZXh0
-IGlzIHNhdmVkIGFuZCByZXN0b3JlZC4KCkJ5IHRoZSB3YXksIG9uZSBpdGVtIEkgYW0gbm90IGNl
-cnRhaW4gYWJvdXQgaXMgdGhlIHJlbGF0aW9uc2hpcCBiZXR3ZWVuCnRoZSBIRE1JIGRldmljZSBh
-bmQgdGhlIFNPUiBkZXZpY2UuIElmIHRoZSBIRE1JIGlzIGluIHRoZSBTT1IgcGFydGl0aW9uCml0
-IHNob3VsZCBhbHNvIGhhdmUgdGhlIFNPUiBwb3dlci1kb21haW4gcG9wdWxhdGVkLCBidXQgaXQg
-anVzdCB1c2VzIHRoZQpTT1IsIHRoZW4gdGhlIFNPUiBkcml2ZXIgc2hvdWxkIGhhbmRsZSB0aGlz
-LgoKQ2hlZXJzCkpvbgoKLS0gCm52cHVibGljCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, 2016-06-20 at 10:31 +0200, Matthias Brugger wrote:
+> 
+> On 14/06/16 04:20, Mars Cheng wrote:
+> > This adds basic chip support for MT6755 SoC.
+> >
+> > Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+> >   arch/arm64/boot/dts/mediatek/mt6755-phone.dts |   39 +++++++
+> >   arch/arm64/boot/dts/mediatek/mt6755.dtsi      |  143 +++++++++++++++++++++++++
+> >   3 files changed, 183 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt6755-phone.dts
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt6755.dtsi
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> > index e0a4bff..9abdb01 100644
+> > --- a/arch/arm64/boot/dts/mediatek/Makefile
+> > +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> > @@ -1,3 +1,4 @@
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-phone.dtb
+> 
+> I suppose this is a evaluation platform? Is this different to the EVB 
+> for this SoC? Or will the only phone build with this SoC be this one?
+> 
+
+Yes, this is an evaluation platform which is an internal demo phone.
+No difference to EVB. Would you suggest I change the name? If so, I will
+change it to mt6755-evb.dtb. So will the compatible string in it.
+ 
+> Thanks,
+> Matthias
+> 
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt6755-phone.dts b/arch/arm64/boot/dts/mediatek/mt6755-phone.dts
+> > new file mode 100644
+> > index 0000000..f551666
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt6755-phone.dts
+> > @@ -0,0 +1,39 @@
+> > +/*
+> > + * Copyright (c) 2016 MediaTek Inc.
+> > + * Author: Mars.C <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "mt6755.dtsi"
+> > +
+> > +/ {
+> > +	model = "MediaTek MT6755 phone";
+> > +	compatible = "mediatek,mt6755-phone", "mediatek,mt6755";
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +		serial1 = &uart1;
+> 
+> we don't enable uart1, so we don't need the alias.
+
+OK, will fix this.
+
+> 
+> > +	};
+> > +
+> > +	memory@40000000 {
+> > +		device_type = "memory";
+> > +		reg = <0 0x40000000 0 0x1e800000>;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0:921600n8";
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt6755.dtsi b/arch/arm64/boot/dts/mediatek/mt6755.dtsi
+> > new file mode 100644
+> > index 0000000..36c3384
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt6755.dtsi
+> > @@ -0,0 +1,143 @@
+> > +/*
+> > + * Copyright (c) 2016 MediaTek Inc.
+> > + * Author: Mars.C <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +/ {
+> > +	compatible = "mediatek,mt6755";
+> > +	interrupt-parent = <&sysirq>;
+> > +	#address-cells = <2>;
+> > +	#size-cells = <2>;
+> > +
+> > +	psci {
+> > +		compatible = "arm,psci-0.2";
+> > +		method = "smc";
+> > +	};
+> > +
+> > +	cpus {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		cpu0: cpu@0 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			enable-method = "psci";
+> > +			reg = <0x000>;
+> > +		};
+> > +
+> > +		cpu1: cpu@1 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			enable-method = "psci";
+> > +			reg = <0x001>;
+> > +		};
+> > +
+> > +		cpu2: cpu@2 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			enable-method = "psci";
+> > +			reg = <0x002>;
+> > +		};
+> > +
+> > +		cpu3: cpu@3 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			enable-method = "psci";
+> > +			reg = <0x003>;
+> > +		};
+> > +
+> > +		cpu4: cpu@100 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			enable-method = "psci";
+> > +			reg = <0x100>;
+> > +		};
+> > +
+> > +		cpu5: cpu@101 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			enable-method = "psci";
+> > +			reg = <0x101>;
+> > +		};
+> > +
+> > +		cpu6: cpu@102 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			enable-method = "psci";
+> > +			reg = <0x102>;
+> > +		};
+> > +
+> > +		cpu7: cpu@103 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53";
+> > +			enable-method = "psci";
+> > +			reg = <0x103>;
+> > +		};
+> > +	};
+> > +
+> > +	uart_clk: dummy26m {
+> > +		compatible = "fixed-clock";
+> > +		clock-frequency = <26000000>;
+> > +		#clock-cells = <0>;
+> > +	};
+> > +
+> 
+> We can do that, but I would prefer to see the clock driver early. So 
+> that the DTS we carry around as complete as possible.
+> 
+
+OK, I will merge the clk later. However, the clk driver would be
+submmited later, is that OK? Or would you prefer sunmmit clk driver
+together?
+
+> > +	timer {
+> > +		compatible = "arm,armv8-timer";
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_PPI 13
+> > +			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 14
+> > +			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 11
+> > +			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 10
+> > +			     (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+> > +	};
+> > +
+> > +	sysirq: intpol-controller@10200620 {
+> > +		compatible = "mediatek,mt6755-sysirq",
+> > +			     "mediatek,mt6577-sysirq";
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <3>;
+> > +		interrupt-parent = <&gic>;
+> > +		reg = <0 0x10200620 0 0x20>;
+> > +	};
+> > +
+> > +	gic: interrupt-controller@10231000 {
+> > +		compatible = "arm,gic-400";
+> > +		#interrupt-cells = <3>;
+> > +		interrupt-parent = <&gic>;
+> > +		interrupt-controller;
+> > +		reg = <0 0x10231000 0 0x1000>,
+> > +		      <0 0x10232000 0 0x2000>,
+> > +		      <0 0x10234000 0 0x2000>,
+> > +		      <0 0x10236000 0 0x2000>;
+> > +	};
+> > +
+> > +	uart0: serial@11002000 {
+> > +		compatible = "mediatek,mt6755-uart",
+> > +			     "mediatek,mt6577-uart";
+> > +		reg = <0 0x11002000 0 0x400>;
+> > +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&uart_clk>;
+> 
+> status = "disabled";
+
+OK, will fix this.
+> 
+> > +	};
+> > +
+> > +	uart1: serial@11003000 {
+> > +		compatible = "mediatek,mt6755-uart",
+> > +			     "mediatek,mt6577-uart";
+> > +		reg = <0 0x11003000 0 0x400>;
+> > +		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&uart_clk>;
+> 
+> same here.
+
+OK, will fix this.
+
+Thanks.
+> 
+> Regards,
+> Matthias
