@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 6/8] arm64: dts: db820c: add support to LS-SPI0
-Date: Mon, 20 Jun 2016 21:01:45 +0100
-Message-ID: <1466452907-23290-7-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 5/8] arm64: dts: db820c: add support to I2C on HS
+Date: Mon, 20 Jun 2016 21:01:44 +0100
+Message-ID: <1466452907-23290-6-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1466452907-23290-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,7 +21,7 @@ To: Andy Gross <andy.gross@linaro.org>
 Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to SPI on LS expansion connector.
+This patch adds support to i2c bus on High speed connector.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
@@ -29,29 +29,28 @@ Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
  1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index aefbb64..07fe6fb 100644
+index 3114710..aefbb64 100644
 --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
 +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -20,6 +20,7 @@
+@@ -19,6 +19,7 @@
+ 		serial1 = &blsp2_uart2;
  		i2c0	= &blsp1_i2c2;
  		i2c1	= &blsp2_i2c1;
- 		i2c2	= &blsp2_i2c0;
-+		spi0	= &blsp1_spi0;
++		i2c2	= &blsp2_i2c0;
  	};
  
  	chosen {
-@@ -55,6 +56,12 @@
+@@ -53,5 +54,11 @@
+ 			label = "LS-I2C1";
  			status = "okay";
  		};
- 
-+		spi@07575000 {
-+		/* On Low speed expansion */
-+			label = "LS-SPI0";
++
++		i2c@075b5000 {
++		/* On High speed expansion */
++			label = "HS-I2C2";
 +			status = "okay";
 +		};
-+
- 		i2c@075b5000 {
- 		/* On High speed expansion */
- 			label = "HS-I2C2";
+ 	};
+ };
 -- 
 2.7.4
