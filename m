@@ -1,56 +1,82 @@
-From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 4/4 v3] add tpm2 capability test flag to
-	tpm_tis driver
-Date: Mon, 20 Jun 2016 17:38:57 +0300
-Message-ID: <20160620143857.GB8712@intel.com>
-References: <1466417229-16734-1-git-send-email-andrew.zamansky@nuvoton.com>
-	<1466417229-16734-5-git-send-email-andrew.zamansky@nuvoton.com>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: [PATCH v9 2/4] power: reset: add reboot mode driver
+Date: Mon, 20 Jun 2016 10:40:02 -0400
+Message-ID: <20160620144002.GY12567@windriver.com>
+References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
+ <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
+ <5767A4C0.3080902@samsung.com>
+ <5767A92E.5040602@rock-chips.com>
+ <5767E22F.5030207@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466417229-16734-5-git-send-email-andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <5767E22F.5030207@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Andy Yan <andy.yan@rock-chips.com>, robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at
 List-Id: devicetree@vger.kernel.org
 
-Isn't tpm2_probe() call now twice in tpm_tis initialization?
+[Re: [PATCH v9 2/4] power: reset: add reboot mode driver] On 20/06/2016=
+ (Mon 14:31) Krzysztof Kozlowski wrote:
 
-On Mon, Jun 20, 2016 at 01:07:09PM +0300, andrew zamansky wrote:
-> Signed-off-by: Andrew Azmansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/char/tpm/tpm_tis.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
-> index 30aff5b..859fb8c 100644
-> --- a/drivers/char/tpm/tpm_tis.c
-> +++ b/drivers/char/tpm/tpm_tis.c
-> @@ -524,7 +524,7 @@ static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
->  }
->  
->  static const struct tpm_class_ops tpm_tis = {
-> -	.flags = TPM_OPS_AUTO_STARTUP,
-> +	.flags = TPM_OPS_AUTO_STARTUP | TPM_OPS_PROBE_TPM2,
->  	.status = tpm_tis_status,
->  	.recv = tpm_tis_recv,
->  	.send = tpm_tis_send,
-> -- 
-> 1.9.1
-> 
+> On 06/20/2016 10:28 AM, Andy Yan wrote:
+> > Hi Krzysztof:
+> >=20
+> > On 2016=E5=B9=B406=E6=9C=8820=E6=97=A5 16:09, Krzysztof Kozlowski w=
+rote:
+> >> On 06/20/2016 08:38 AM, Andy Yan wrote:
 
-------------------------------------------------------------------------------
-What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
-patterns at an interface-level. Reveals which users, apps, and protocols are 
-consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
-J-Flow, sFlow and other flows. Make informed decisions using capacity planning
-reports. http://sdm.link/zohomanageengine
+[...]
+
+> >>> +
+> >>> +config SYSCON_REBOOT_MODE
+> >>> +    bool "Generic SYSCON regmap reboot mode driver"
+> >> Why not tristate?
+> >=20
+> >    I see many reset drivers in this directories  use bool, so I fol=
+low
+> > them.
+
+Andy - understood, but mistakes done in the past do not justify
+repeating them again in the present.  OK, this is not strictly a mistak=
+e
+in that it causes an error, but it isn't an ideal approach.
+
+>=20
+> +Cc Paul,
+>=20
+> I don't mind that although I don't see any particular objections for
+> making it module-capable. In the same time I just reminded myself abo=
+ut
+> Paul Gortmaker's long effort (like [1] [2]) about removing module
+> capability from non-modular drivers.
+
+Thanks -- it is nice to see that people are starting to add this to
+their review checklist ; early on they were getting added faster than I
+could remove them.  :-(   But I think we are making ground now.
+
+=46or this case, I don't have any bias for it being built-in vs. being
+modular, so long as the code is actually consistent with the Kconfig.=20
+
+=46or existing bool settings I just remove the modular references, sinc=
+e I
+can't be extending the functionality to include a modular usage when I
+can't test it or even be sure if a module has a sensible use case.
+
+Paul.
+--
+
+>=20
+> Following his rationale, I think either this should be a tristate or =
+the
+> module stuff should be removed.
+>=20
+> Best regards,
+> Krzysztof
+>=20
+> [1] https://lkml.org/lkml/2016/2/21/180
+> [2] https://lkml.org/lkml/2016/6/13/682
+>=20
+>=20
