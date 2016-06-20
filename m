@@ -1,46 +1,42 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v1 1/2] ASoC: Add DT bindings documentation
- for max98504 amplifier
-Date: Mon, 20 Jun 2016 15:49:17 +0200
-Message-ID: <5767F45D.5040404@samsung.com>
-References: <1466095238-9047-1-git-send-email-s.nawrocki@samsung.com>
- <20160620131522.GA27923@rob-hp-laptop>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] of/irq: Mark initialised interrupt controllers as populated
+Date: Mon, 20 Jun 2016 14:49:18 +0100
+Message-ID: <1466430558-24143-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-reply-to: <20160620131522.GA27923@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, b.zolnierkie@samsung.com, inki.dae@samsung.com, broonie@kernel.org, ideal.song@samsung.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2016 03:15 PM, Rob Herring wrote:
->> diff --git a/Documentation/devicetree/bindings/sound/max98504.txt 
->> b/Documentation/devicetree/bindings/sound/max98504.txt
->> > new file mode 100644
->> > index 0000000..7aa5b93
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/sound/max98504.txt
->> > @@ -0,0 +1,22 @@
->> > +Maxim MAX98504 class D mono speaker amplifier
->> > +
->> > +This device supports I2C control interface and an IRQ output signal. It features
->> > +a PCM and PDM digital audio interface (DAI) and a differential analog input.
->
-> Where's the IRQ in the binding?
+For interrupt controllers successfully initialised early via device-tree,
+mark these interrupt controllers as populated so we don't unnecessarily
+create a device and populate any platform data later on in the boot
+sequence when we populate all the various platform devices.
 
-It seems I didn't do my homework and didn't add it here, even though
-the driver currently uses the interrupt. I'll add something like this
-in next iteration:
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/of/irq.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- - interrupts : should specify the interrupt the device is connected to,
-   as described in ../interrupt-controller/interrupts.txt
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 6ec743faabe8..1b58cd574316 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -557,6 +557,8 @@ void __init of_irq_init(const struct of_device_id *matches)
+ 			 * its children can get processed in a subsequent pass.
+ 			 */
+ 			list_add_tail(&desc->list, &intc_parent_list);
++
++			of_node_set_flag(desc->dev, OF_POPULATED);
+ 		}
+ 
+ 		/* Get the next pending parent that might have children */
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
