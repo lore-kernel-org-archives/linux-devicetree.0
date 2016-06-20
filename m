@@ -1,136 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Mon, 20 Jun 2016 08:25:08 -0500
-Message-ID: <20160620132508.GA32585@rob-hp-laptop>
-References: <1466153854-30272-1-git-send-email-songjun.wu@atmel.com>
- <1466153854-30272-3-git-send-email-songjun.wu@atmel.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 21/22] arm64: dts: msm8916: Add display support
+Date: Mon, 20 Jun 2016 19:17:06 +0530
+Message-ID: <5767F3DA.9010807@codeaurora.org>
+References: <1466077007-26792-1-git-send-email-architt@codeaurora.org>
+ <1466077007-26792-22-git-send-email-architt@codeaurora.org>
+ <20160620130420.GD31965@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1466153854-30272-3-git-send-email-songjun.wu@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Songjun Wu <songjun.wu@atmel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, boris.brezillon@free-electrons.com, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, laurent.pinchart@ideasonboard.com, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160620130420.GD31965@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 04:57:14PM +0800, Songjun Wu wrote:
-> DT binding documentation for ISC driver.
-> 
-> Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
-> ---
-> 
-> Changes in v5:
-> - Add clock names.
-> 
-> Changes in v4:
-> - Remove the isc clock nodes.
-> 
-> Changes in v3:
-> - Remove the 'atmel,sensor-preferred'.
-> - Modify the isc clock node according to the Rob's remarks.
-> 
-> Changes in v2:
-> - Remove the unit address of the endpoint.
-> - Add the unit address to the clock node.
-> - Avoid using underscores in node names.
-> - Drop the "0x" in the unit address of the i2c node.
-> - Modify the description of 'atmel,sensor-preferred'.
-> - Add the description for the ISC internal clock.
-> 
->  .../devicetree/bindings/media/atmel-isc.txt        | 64 ++++++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> new file mode 100644
-> index 0000000..9558a77
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> @@ -0,0 +1,64 @@
-> +Atmel Image Sensor Controller (ISC)
-> +----------------------------------------------
-> +
-> +Required properties for ISC:
-> +- compatible
-> +	Must be "atmel,sama5d2-isc".
-> +- reg
-> +	Physical base address and length of the registers set for the device.
-> +- interrupts
-> +	Should contain IRQ line for the ISC.
-> +- clocks
-> +	List of clock specifiers, corresponding to entries in
-> +	the clock-names property;
-> +	Please refer to clock-bindings.txt.
-> +- clock-names
-> +	Required elements: "hclock".
-
-What about the 2 other clocks in the example?
-
-> +- #clock-cells
-> +	Should be 0.
-> +- clock-output-names
-> +	Should contain the name of the clock driving the sensor master clock.
-
-State what the name is.
-
-> +- pinctrl-names, pinctrl-0
-> +	Please refer to pinctrl-bindings.txt.
-> +
-> +ISC supports a single port node with parallel bus. It should contain one
-> +'port' child node with child 'endpoint' node. Please refer to the bindings
-> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +isc: isc@f0008000 {
-> +	compatible = "atmel,sama5d2-isc";
-> +	reg = <0xf0008000 0x4000>;
-> +	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
-> +	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-> +	clock-names = "hclock", "iscck", "gck";
-> +	#clock-cells = <0>;
-> +	clock-output-names = "isc-mck";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_isc_base &pinctrl_isc_data_8bit &pinctrl_isc_data_9_10 &pinctrl_isc_data_11_12>;
-> +
-> +	port {
-> +		isc_0: endpoint {
-> +			remote-endpoint = <&ov7740_0>;
-> +			hsync-active = <1>;
-> +			vsync-active = <0>;
-> +			pclk-sample = <1>;
-> +		};
-> +	};
-> +};
-> +
-> +i2c1: i2c@fc028000 {
-> +	ov7740: camera@21 {
-> +	compatible = "ovti,ov7740";
-
-Indentation is still wrong here...
-
-> +	reg = <0x21>;
-> +	clocks = <&isc>;
-> +	clock-names = "xvclk";
-> +	assigned-clocks = <&isc>;
-> +	assigned-clock-rates = <24000000>;
-> +
-> +	port {
-> +		ov7740_0: endpoint {
-> +			remote-endpoint = <&isc_0>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+CgpPbiA2LzIwLzIwMTYgNjozNCBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVGh1LCBKdW4g
+MTYsIDIwMTYgYXQgMDU6MDY6NDZQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3cm90ZToKPj4gVGhl
+IE1TTTg5MTYgU29DIGNvbnRhaW5zIGEgTURQNSBiYXNlZCBkaXNwbGF5IGJsb2NrLCBhbmQgb25l
+IERTSSBvdXRwdXQuCj4+IEFkZCB0aGUgdG9wIGxldmVsIE1EU1MgRFQgbm9kZSwgYW5kIHRoZSBN
+RFA1LCBEU0kgYW5kIERTSSBQSFkgY2hpbGRyZW4KPj4gc3ViLWJsb2Nrcy4gRXN0YWJsaXNoIHRo
+ZSBsaW5rIGJldHdlZW4gTURQNSdzIElOVEYxIG91dHB1dCBwb3J0IGFuZCBEU0kncwo+PiBpbnB1
+dCBwb3J0Lgo+Pgo+PiBDYzogQW5keSBHcm9zcyA8YW5keS5ncm9zc0BsaW5hcm8ub3JnPgo+PiBD
+YzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPj4gQ2M6IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29k
+ZWF1cm9yYS5vcmc+Cj4+IC0tLQo+PiAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTE2
+LmR0c2kgfCAxMjAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgIDEgZmls
+ZSBjaGFuZ2VkLCAxMjAgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02
+NC9ib290L2R0cy9xY29tL21zbTg5MTYuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9t
+c204OTE2LmR0c2kKPj4gaW5kZXggOTY4MTIwMC4uZDhjY2NmYyAxMDA2NDQKPj4gLS0tIGEvYXJj
+aC9hcm02NC9ib290L2R0cy9xY29tL21zbTg5MTYuZHRzaQo+PiArKysgYi9hcmNoL2FybTY0L2Jv
+b3QvZHRzL3Fjb20vbXNtODkxNi5kdHNpCj4KPj4gKwo+PiArCQkJZHNpMDogZHNpQDFhOTgwMDAg
+ewo+PiArCQkJCWNvbXBhdGlibGUgPSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPj4gKwkJCQlxY29t
+LGRzaS1ob3N0LWluZGV4ID0gPDA+Owo+Cj4gSG93IGlzIHRoaXMgdXNlZD8gSXQgc2hvdWxkIHJl
+YWxseSBnby4KCkl0J3Mgc3VwcG9zZWQgdG8gdGVsbCB0aGUgZHJpdmVyIHdoaWNoIGluc3RhbmNl
+ICMgb2YgRFNJIGJsb2NrIGl0IGlzLgpUaGUgRFNJIGRpc3BsYXkgYmluZGluZ3Mgb24gT01BUCBh
+bHNvIGhhZCB0aGUgc2FtZSBpc3N1ZS4gSXQgd2FzCmRlYWx0IHdpdGggYnkga2VlcGluZyBhIGNv
+cHkgb2YgdGhlIHN0YXJ0aW5nIE1NSU8gYWRkcmVzcyBvZiBlYWNoCkRTSSBpbnN0YW5jZSBmb3Ig
+ZXZlcnkgc3VwcG9ydGVkIFNvQyBpbiB0aGUgZHJpdmVyLCBhbmQgZmlndXJlIG91dAp3aGljaCBE
+U0kgaW5zdGFuY2UgdGhlIGRldmljZSB3YXMgdGhyb3VnaCB0aGF0LgoKSSBjb3VsZCBkbyB0aGUg
+c2FtZSBoZXJlIChhbmQgZHJvcCBhIHNpbWlsYXIgcHJvcGVydHkgZm9yIERTSSBQSFkKdG9vKS4g
+RG8geW91IGhhdmUgYW55IHN1Z2dlc3Rpb25zIG9uIGhvdyB0aGUgZHJpdmVyIGNvdWxkIGZpZ3Vy
+ZQp3aGljaCBpbnN0YW5jZSB0aGUgZGV2aWNlIGlzIHdpdGhvdXQgaW5kaXJlY3RseSBmaWd1cmlu
+ZyBvdXQKdGhyb3VnaCBzb21lIG90aGVyIHByb3BlcnR5PwoKVGhhbmtzIGZvciB0aGUgcmV2aWV3
+cy4KCkFyY2hpdAoKPgo+IFJvYgo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6
+IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWFybS1tc20iIGluCj4gdGhlIGJvZHkg
+b2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9t
+byBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKPgoK
+LS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUg
+QXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
