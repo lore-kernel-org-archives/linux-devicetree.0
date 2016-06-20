@@ -1,109 +1,120 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/4] mfd: cros_ec: add EC_PWM function definitions
-Date: Mon, 20 Jun 2016 08:47:02 +0100
-Message-ID: <20160620074702.GI21702@dell>
-References: <1464916904-37554-1-git-send-email-briannorris@chromium.org>
- <1464916904-37554-3-git-send-email-briannorris@chromium.org>
- <20160616153817.GD21702@dell>
- <20160617192133.GA83919@google.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/1] ARM: dts: sunxi: Fix simplefb not working in 4.7-rc1
+Date: Mon, 20 Jun 2016 09:46:10 +0200
+Message-ID: <20160620074610.GH26668@lukather>
+References: <1465063524-4925-1-git-send-email-hdegoede@redhat.com>
+ <20160609074643.GA5242@lukather>
+ <21258fc0-0250-951b-2ee7-d022fb3c09ac@redhat.com>
+ <20160613080124.GA4481@lukather>
+ <1a9a0d76-5bbf-4b79-abee-1c9dd0436567@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="X+8siUETKMkW99st"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160617192133.GA83919@google.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+In-Reply-To: <1a9a0d76-5bbf-4b79-abee-1c9dd0436567-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Jun 2016, Brian Norris wrote:
 
-> On Thu, Jun 16, 2016 at 04:38:17PM +0100, Lee Jones wrote:
-> > On Thu, 02 Jun 2016, Brian Norris wrote:
-> > > The EC_CMD_PWM_{GET,SET}_DUTY commands allow us to control a PWM =
-that is
-> > > attached to the EC, rather than the main host SoC. The API provid=
-es
-> > > functionality-based (e.g., keyboard light, backlight) or index-ba=
-sed
-> > > addressing of the PWM(s). Duty cycles are represented by a 16-bit=
- value,
-> > > where 0 maps to 0% duty cycle and U16_MAX maps to 100%. The perio=
-d
-> > > cannot be controlled.
-> > >=20
-> > > This command set is more generic than, e.g.,
-> > > EC_CMD_PWM_{GET,SET}_KEYBOARD_BACKLIGHT and could possibly used t=
-o
-> > > replace it on future products.
-> > >=20
-> > > Let's update the command header to include the definitions.
-> > >=20
-> > > Signed-off-by: Brian Norris <briannorris@chromium.org>
-> > > ---
-> > > v2: no change
-> > >=20
-> > >  include/linux/mfd/cros_ec_commands.h | 31 ++++++++++++++++++++++=
-+++++++++
-> > >  1 file changed, 31 insertions(+)
-> > >=20
-> > > diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux=
-/mfd/cros_ec_commands.h
-> > > index 13b630c10d4c..d673575e0ada 100644
-> > > --- a/include/linux/mfd/cros_ec_commands.h
-> > > +++ b/include/linux/mfd/cros_ec_commands.h
-> > > @@ -949,6 +949,37 @@ struct ec_params_pwm_set_fan_duty {
-> > >  	uint32_t percent;
-> > >  } __packed;
-> > > =20
-> > > +#define EC_CMD_PWM_SET_DUTY 0x25
-> > > +/* 16 bit duty cycle, 65535 =3D 100% */
-> > > +#define EC_PWM_MAX_DUTY 65535
-> >=20
-> > Any reason this isn't represented in hex, like we do normally?
->=20
-> Hex would probably be clearer. I'll try to change that.
->=20
-> > > +enum ec_pwm_type {
-> > > +	/* All types, indexed by board-specific enum pwm_channel */
-> > > +	EC_PWM_TYPE_GENERIC =3D 0,
-> > > +	/* Keyboard backlight */
-> > > +	EC_PWM_TYPE_KB_LIGHT,
-> > > +	/* Display backlight */
-> > > +	EC_PWM_TYPE_DISPLAY_LIGHT,
-> > > +	EC_PWM_TYPE_COUNT,
-> > > +};
-> >=20
-> > Are these comments really necessary?  I'd recommend that if your
-> > defines require comments, then they are not adequately named.  In t=
-his
-> > case however, I'd suggest that they are and the comments are
-> > superfluous.
->=20
-> I don't think your rule holds water: there are definitely cases where
-> defines/enums require (or at least are better with) additional commen=
-ts.
-> Sentence-long identifier names are not very readable, but sometimes a
-> sentence of comment can help.
+--X+8siUETKMkW99st
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I was generalising.  There will always be exceptions to the rule, but
-in the standard case we can be forthcoming enough with our naming
-conventions that comments aren't required.
-
-> Anyway, I think two of the three are probably unnecessary, if you rea=
-lly
-> want to ask. The first (EC_PWM_TYPE_GENERIC) seems useful.
+On Mon, Jun 13, 2016 at 10:30:57AM +0200, Hans de Goede wrote:
+> Hi,
 >=20
-> But then, how do you suggest handling this in conjunction with your
-> kerneldoc suggestion? IIRC, kerneldoc requires that if one
-> entry/field/parameter is documented, then all most be documented. So
-> avoid kerneldoc on the enum, and just use inline comments?
+> On 13-06-16 10:01, Maxime Ripard wrote:
+> >On Thu, Jun 09, 2016 at 12:47:36PM +0200, Hans de Goede wrote:
+> >>Hi,
+> >>
+> >>On 09-06-16 09:46, Maxime Ripard wrote:
+> >>>Hi Hans,
+> >>>
+> >>>On Sat, Jun 04, 2016 at 08:05:23PM +0200, Hans de Goede wrote:
+> >>>>Hi Maxime,
+> >>>>
+> >>>>While testing 4.7-rc1 / linux-sunxi/sunxi-next on a A10s I noticed th=
+at
+> >>>>hdmi out is no longer working (screen goes black when the kernel turns
+> >>>>of unused clocks).
+> >>>>
+> >>>>This is caused by the dtsi for sun4i / sun5i / sun7i based boards now
+> >>>>listing pll3, without pll3 being added to the clocks list for the
+> >>>>simplefb nodes.
+> >>>
+> >>>Why not do just that then? It's more appropriate for a fix imho.
+> >>
+> >>You mean just for sun5i-a10s, or for all of sun4i / sun5i-a10s and
+> >>sun7i ?
+> >>
+> >>For sun4i and sun7i things are already fixed in next:
+> >>
+> >>https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?=
+id=3D5a7f2310cc847a73852e70bc720a61ca9bf986a6
+> >>https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?=
+id=3Dc79255ca4d7b67cce4eac4dd532e097ce49f3679
+> >>
+> >>It seems best to use those fixes, rather then come up with a separate
+> >>fix for 4.7.
+> >>
+> >>My patch for fixing sun5i-a10s is inline with the 2 above patches,
+> >>which seems best, rather then doing something special for just sun5i-a1=
+0s.
+> >
+> >Well, you are doing something special for just the A10s: the patches
+> >quoted above just add a bunch of clocks and add the handles to the
+> >list of clocks managed by simplefb.
+> >
+> >For the A10s, you also declare the whole display engine block without
+> >anyone having tested that it was actually working.
+>=20
+> A10s is the same SoC as A13 / R8, just in a different package / with
+> different pins routed to the outside and it features a parallel LCD
+> interface just like the A13 / R8. We've had this confirmed by
+> Allwinner multiple times now, A13 / A10s / R8 literary are the same
+> chip, there simply is no way the displayblock on the A10s somehow
+> is magically different.
+>=20
+> Given all this, clearly having this identical displayblock in the
+> shared sun5i.dtsi is the right thing to do.
 
-Sounds reasonable.
+Maybe, but this is not a patch for an 4.7-rc* release, but for the
+next merge window.
+
+Maxime
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--X+8siUETKMkW99st
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXZ59CAAoJEBx+YmzsjxAgm44QAI48tn1GG71g4v/YZgfhq4Mh
+BNRc/ix09icyGi6/K/yZrwdFMrHGa/NmHfSGCSMykQUPZMAbrA3WbISGpToiMvjY
+tDTnuHPkwIAmLQLW6i+2N1AvUpS+AGYVvqFI2+UTv2mhS83dGmWzVAJTNOebyDL8
+U8Xyv1ty+YiJGLfTkeJXIyPA4y9TzQztiaN1MteOGDfX8KM9ggHZKITbLxvCtn84
+NA0dyCeF/IH2Fi2620qu76i868CjwvnbPiQP2OhHd06WMxP4EaODQRirQwUtshsN
+u8UNlS9AYwe8uevTGQDeFnaDcOkGpiw41WG8dUpOYktWdh8UWKXxWza+VoUuXwFp
+QqmU5Nx2UhpRQ/4Y82b/Y7i/BltSKgKpYjVUhtMynjf1v+KQNcmMx+RgmnE+dWpS
+cVK91ZuKVn/X4VXg+w3uXXniMBcAqqmYrK9LSKxGXZAkqit5m9JOQEeeiI/waB3S
+p4Dxp2b4Nro2brb7rtz0ZW/nxIDRnYHMtQXHgw4cM1CM0DAGlhTu6VuoRHno2NGc
+sBiTaBHaFemdqLelWwEztdSxrxG2Y/jzBZOUcA0mZRjEqOAghzfW8yJg8AwERLUL
+pN4PU8pZ5H3zb3PvvO14MWYkHrN6axjgejjB9OE/SaEbt8LznHxghKSE17XzoQGV
+wXFsF2rrRlnprTbMWXbB
+=pkDM
+-----END PGP SIGNATURE-----
+
+--X+8siUETKMkW99st--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
