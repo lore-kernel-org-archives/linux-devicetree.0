@@ -1,68 +1,100 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6] ASoC: rockchip: Add machine driver for
- RK3399 GRU Boards
-Date: Mon, 20 Jun 2016 08:08:12 -0500
-Message-ID: <20160620130812.GA24614@rob-hp-laptop>
-References: <1466080858-29565-1-git-send-email-zhengxing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <1466080858-29565-1-git-send-email-zhengxing@rock-chips.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Xing Zheng <zhengxing@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, dianders@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, Mark Brown <broonie@kernel.org>, smbarber@google.com, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [linux-sunxi] Auto-detecting touchscreen controller
+	and dealing with hw configuration differences on q8 tablets
+Date: Mon, 20 Jun 2016 16:08:47 +0300
+Message-ID: <19098CD8-6BC1-4FFE-858F-A6DF4BE655D5@konsulko.com>
+References: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
+ <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7@konsulko.com>
+ <17e69e9e-06be-dc4f-cd47-152f6290d2ec@redhat.com>
+ <7FA186CB-9BF2-47A6-835C-06AD63CF8837@konsulko.com>
+ <b16c2b42-5628-c0b9-6486-f8a4728a0a33@redhat.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <b16c2b42-5628-c0b9-6486-f8a4728a0a33@redhat.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, "u-boot@lists.denx.de" <u-boot@lists.denx.de>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2016 at 08:40:58PM +0800, Xing Zheng wrote:
-> Because we need to support the multiple codecs (MAX98357A/RT5514/DA7219)
-> on the RK3399 GRU boards, this patch can help us to support these codecs.
-> 
-> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-> ---
-> 
-> Changes in v6:
-> - remove enable/disable dapm pins, and to switch codecs via user space
-> - fix "Speaker" dapm route for max98357a
-> - add SND_JACK_LINEOUT flag for da7219 jack detection
-> 
-> Changes in v5:
-> - fix the build warning for missing I2C/CLKDEV_LOOKUP dependency
-> 
-> Changes in v4:
-> - the compatible name needs to be based on a single reference design,
->   and the name of the board is called "GRU"
-> - use one i2sX card "rockchip,cpu = <&i2s0>" instead of array that is
->   based on GRU
-> - rename DOC to rockchip,rk3399-gru-sound.txt
-> - rename compatible to rockchip,rk3399-gru-sound
-> - rename source code to rk3399_gru_sound.c
-> 
-> Changes in v3:
-> - rename DOC to rockchip,rk3399-max98357a-rt5514-da7219.txt
-> - rename compatible to rockchip,rk3399-max98357a-rt5514-da7219
-> - rename source code to rk3399_max98357a_rt5514_da7219.c
-> 
-> Changes in v2:
-> - use the FS 256 to set mclks of the max98357a and rt5514 danamically
-> - add more sample rate for da7219
-> 
->  .../bindings/sound/rockchip,rk3399-gru-sound.txt   |   15 +
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  sound/soc/rockchip/Kconfig                         |   11 +
->  sound/soc/rockchip/Makefile                        |    2 +
->  sound/soc/rockchip/rk3399_gru_sound.c              |  322 ++++++++++++++++++++
->  4 files changed, 350 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
->  create mode 100644 sound/soc/rockchip/rk3399_gru_sound.c
+SGkgSGFucywKCj4gT24gSnVuIDIwLCAyMDE2LCBhdCAxNjowMiAsIEhhbnMgZGUgR29lZGUgPGhk
+ZWdvZWRlQHJlZGhhdC5jb20+IHdyb3RlOgo+IAo+IEhpLAo+IAo+IE9uIDIwLTA2LTE2IDE0OjIy
+LCBQYW50ZWxpcyBBbnRvbmlvdSB3cm90ZToKPj4gSGkgSGFucywKPj4gCj4+PiBPbiBKdW4gMjAs
+IDIwMTYsIGF0IDE0OjAzICwgSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4gd3Jv
+dGU6Cj4+PiAKPj4+IEhpLAo+Pj4gCj4+PiBPbiAyMC0wNi0xNiAxMToyNywgUGFudGVsaXMgQW50
+b25pb3Ugd3JvdGU6Cj4gCj4gPHNuaXA+Cj4gCj4+Pj4gWWVzLCBpdOKAmXMgcXVpdGUgcG9zc2li
+bGUuIFlvdSBjYW4gZXZlbiBoYXZlIHN0YWNrZWQgb3ZlcmxheXMuCj4+PiAKPj4+IE9rLCBpcyB0
+aGVyZSBhbnkgZXhhbXBsZSBjb2RlIGhvdyB0byBjaGFuZ2UgYW4gb3ZlcmxheSBiZWZvcmUgYXBw
+bHlpbmcgaXQgb3V0IHRoZXJlLAo+Pj4gb3IgaWYgbm90IGNhbiB5b3UgcG9pbnQgdG8gdGhlIGZ1
+bmN0aW9ucyB0byB1c2UgdG8gZG8gdGhpcyA/Cj4+PiAKPj4gCj4+IFRoZSBjYW5vbmljYWwgcGxh
+Y2UgZm9yIGFsbCB0aGUgZHluYW1pYyBEVCBzdHVmZiBpcwo+PiAKPj4gaHR0cHM6Ly9naXRodWIu
+Y29tL3BhbnRvbmlvdS9saW51eC1iZWFnbGUtdHJhY2stbWFpbmxpbmUvdHJlZS9iYmItb3Zlcmxh
+eXMKPj4gCj4+IFRoZSBiZWFnbGVib25lIGNhcGUgbWFuYWdlciBpcyBoZXJlLgo+PiAKPj4gaHR0
+cHM6Ly9naXRodWIuY29tL3BhbnRvbmlvdS9saW51eC1iZWFnbGUtdHJhY2stbWFpbmxpbmUvY29t
+bWl0LzUwMjhkMWVkM2JlYjhjNzViMjhmY2UzN2IxYmI1ZWU1NTFiMmFlOWUKPj4gCj4+PiBTcGVj
+aWZpY2FsbHkgbXkgcGxhbiBpcyB0bzoKPj4+IAo+Pj4gMSkgSGF2ZSBhIHNpbmdsZSBvdmVybGF5
+IGZvciBxOCB0YWJsZXRzIHdpdGggZ3NsMTY4MCB0YWJsZXRzCj4+PiAKPj4+IDIpIFdyaXRlIGFu
+IGluIGtlcm5lbCBvdmVybGF5IG1hbmFnZXIgd2hpY2ggd2hlbiBpdCBkZXRlY3RzIGEgZ3NsMTY4
+MCB0b3VjaHNjcmVlbgo+Pj4gd2lsbCBwaWNrIGEgYmVzdC1kZWZhdWx0IGZpcm13YXJlLWZpbGUg
+KyBtYXRjaGluZyByZXNvbHV0aW9uICsgc3dhcC14LXkgYmFzZWQgb24KPj4+IHdoaWNoIFNvQyAo
+QTEzL0EyMy9BMzMpIHRoZSB0YWJsZXQgaXMgYmFzZWQgb24gYXMgd2VsbCBhcyB0aGUgZ3NsMTY4
+MCdzIGNoaXAtaWQKPj4+IGFuZCB3aWxsIHRoZW4gInBhdGNoIiB0aGlzIGluZm8gaW50byB0aGUg
+b3ZlcmxheSBiZWZvcmUgYXBwbHlpbmcgaXQuIFRoaXMKPj4+IG1lYW5zIGJlaW5nIGFibGUgdG8g
+c2V0IC8gbW9kaWZ5IHNldmVyYWwgc3RyaW5nLCBpbnQgYW5kIGJvb2wgZHQgcHJvcGVydGllcy4K
+Pj4+IAo+Pj4gMykgT2ZmZXIgYSBrZXJuZWwtbW9kdWxlIG9wdGlvbiBmb3IgdGhlIG92ZXJsYXlt
+YW5hZ2VyIHdoaWNoIHdpbGwgYWxsb3dzCj4+PiBvdmVycmlkaW5nIHRoZSBkZWZhdWx0cyBmb3Ig
+dGhlIGZpcm13YXJlLWZpbGVuYW1lLCBldGMuIFRoaXMgaXMgYWxzbwo+Pj4gd2h5IEkgd2FudCB0
+byBnbyB3aXRoIHRoZSBwYXRjaCBhcHByb2FjaCBpbnN0ZWFkIG9mIGhhdmluZyBtdWx0aXBsZQo+
+Pj4gZHQtb3ZlcmxheSBmaWxlcy4KPj4+IAo+PiAKPj4gSG1tLCB5b3VyIHByb2JsZW0gYXBwZWFy
+cyB0byBiZSBzaW1wbGVyLiBZb3UgYWxyZWFkeSBrbm93IGFsbCB0aGUgcG9zc2libGUKPj4gcGFy
+dHMgdGhhdCB5b3VyIHRvdWNoc2NyZWVuL3ZpZGVvL3RoaW5neSBpcyBnb2luZyB0byB1c2UuCj4+
+IAo+PiBZb3UgZG9u4oCZdCBoYXZlIHRvIHVzZSBhbiBvdmVybGF5IHRoZW4uIE92ZXJsYXlzIGFy
+ZSBidWlsdCBvbiB0b3Agb2YKPj4gY2hhbmdlc2V0cy4KPj4gCj4+IEZvciBleGFtcGxlLCBsZXTi
+gJlzIHNheSB0aGF0IHlvdSBoYXZlIHZhcmlvdXMgb3B0aW9ucyBmb3IgYSB0b3VjaHNjcmVlbiBv
+dXQKPj4gb2YgYSBmaW5pdGUgc2V0Lgo+PiAKPj4gWW91IGp1c3QgcHV0IHRoZSBiYXNpYyBjb25m
+aWd1cmF0aW9uIGZvciBlYWNoIGluIGEgZGlzYWJsZSBub2RlIGFuZCB5b3VyCj4+IG1hbmFnZXIg
+b25seSBuZWVkcyB0byB1cGRhdGUgdGhlIHByb3BlcnRpZXMgYW5kIHNldCB0aGUgc3RhdHVzIHRv
+IGVuYWJsZWQKPj4gZm9yIGl0IHRvIGJlIGVuYWJsZWQuCj4+IAo+PiBGb3IgaW5zdGFuY2UgbGV0
+4oCZcyBzYXkgeW91IGhhdmUgYW4gb3B0aW9uIG9mIHR3byBkZXZpY2VzIChvbmx5IG9uZSBvZiB0
+aGVtCj4+IGJlaW5nIHByZXNlbnQpLgo+PiAKPj4gZGV2QSB7Cj4+IAlzdGF0dXMgPSDigJxkaXNh
+YmxlZOKAnTsKPj4gCWNvbXBhdGlibGUgPSDigJxmb28sQeKAnTsKPj4gfTsKPj4gCj4+IGRldkIg
+ewo+PiAJc3RhdHVzID0g4oCcZGlzYWJsZWTigJ07Cj4+IAljb21wYXRpYmxlID0g4oCcYmFyLELi
+gJ07Cj4+IH07Cj4+IAo+PiBZb3VyIG1hbmFnZXIgY2FuIHNpbXBseSB1c2UgYSBjaGFuZ2VzZXQg
+dG8gZW5hYmxlIEEgYW5kIHB1dCBhIHByb3BlcnR5IHRoZXJlCj4+IChleGFtcGxlIGRvbmUgdXNp
+bmcgdGhlIGV4dGVuZGVkIGhlbHBlciBBUEkgZm9yIGNsYXJpdHkpLgo+PiAKPj4gCXN0cnVjdCBv
+Zl9jaGFuZ2VzZXQgY3NldDsKPj4gCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBvZl9maW5kX25v
+ZGVfYnlfcGF0aCjigJwvZGV2QeKAnSk7Cj4+IAo+PiAJb2ZfY2hhbmdlc2V0X2luaXQoJmNzZXQp
+Owo+PiAJb2ZfY2hhbmdlc2V0X2FkZF9wcm9wZXJ0eV9ib29sKCZjc2V0LCBucCwg4oCcaW52ZXJ0
+LXjigJ0pOwo+PiAJb2ZfY2hhbmdlc2V0X3VwZGF0ZV9wcm9wZXJ0eV9zdHJpbmcoJmNzZXQsIG5w
+LCDigJxzdGF0dXPigJ0sIOKAnG9rYXnigJ0pOwo+PiAKPj4gCW9mX2NoYW5nZXNldF9hcHBseSgm
+Y3NldCk7Cj4gCj4gQ29vbCB0aGF0IGxvb2tzIHF1aXRlIG5pY2UgLyBlYXN5LiAyIHF1ZXN0aW9u
+cyBvbiB0aGUgYWJvdmU6Cj4gCj4gMSkgSXMgdGhlIGZ1bmN0aW9uYWxpdHkgbmVlZGVkIGJ5IHRo
+ZSBhYm92ZSBzbmlwcGV0IGluIG1haW5saW5lID8KCkNoYW5nZXNldHMgYXJlIGluIG1haW5saW5l
+OyBUaGUgZXh0ZW5kZWQgQVBJIGZvciB0aGUgZXhhbXBsZSBhYm92ZSBpcyBub3QuClNvIHlvdeKA
+mWxsIGhhdmUgdG8gY3JlYXRlIHRoZSBwcm9wZXJ0eS9pZXMgdG8gcGFzcyB0byB0aGUgYmFyZSAK
+b2ZfY2hhbmdlc2V0X3VwZGF0ZV9wcm9wZXJ0eS9vZl9jaGFuZ2VzZXRfYWRkX3Byb3BlcnR5IG1l
+dGhvZHMuCgpEaWcgaW50byB0aGUgYmJiLW92ZXJsYXlzIGJyYW5jaCBhbmQgeW914oCZbGwgZmln
+dXJlIGl0IG91dC4KCj4gMikgSSBhc3N1bWUgeW91J3ZjIGUgbGVmdCBvdXQgZXJyb3IgaGFuZGxp
+bmcgZnJvbSB0aGUgYWJvdmUKPiBmb3Igc2ltcGxpY2l0eS4gSSBhc3N1bWUgdGhhdCBvZl9jaGFu
+Z2VzZXRfYXBwbHkoKSBuZWVkcyBzb21lCj4gZXJyb3IgcmV0dXJuIGNoZWNraW5nID8gV2hhdCBh
+Ym91dCB0aGUgb3RoZXJzID8KCkVycm9yIGNoZWNraW5nIGlzIHJlbW92ZWQgZm9yIGNsYXJpdHku
+IE9uIGVycm9yIHlvdSBzaW1wbHkKZGVzdHJveSB0aGUgY2hhbmdlc2V0LiBDaGFuZ2VzIHRvIHRo
+ZSB0cmVlIGFwcGx5IGF0b21pY2FsbHkKb3Igbm90IGF0IGFsbC4KCj4gCj4gQW5kIG9uZSBuZXcg
+cXVlc3Rpb24sIHRoZSBvdmVybGF5IG1hbmFnZXIgd2lsbCBuZWVkIGFjY2Vzcwo+IHRvIChzZXZl
+cmFsKSBpMmMgYnVzc2VzLCBwcmVmZXJhYmx5IEkgY2FuIHBhc3MgaW4gYSBwaGFuZGxlCj4gdG8g
+dGhlc2UgaW4gZGV2aWNldHJlZSwgZG8geW91IGhhdmUgYW55IGV4cGVyaWVuY2Ugd2l0aCAvCj4g
+ZXhhbXBsZXMgb2YgZG9pbmcgc3VjaCBhIHRoaW5nID8KCk5vIHByb2JsZW1zIHRoZXJlLiBUaGVy
+ZeKAmXMgYW4gSTJDIEFQSSB0byBnZXQgdGhlIGJ1cyBmcm9tIGEgcGhhbmRsZS4KCj4gCj4gUmVn
+YXJkcywKPiAKPiBIYW5zCgpSZWdhcmRzCgrigJQgUGFudGVsaXMKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fClUtQm9vdCBtYWlsaW5nIGxpc3QKVS1Cb290
+QGxpc3RzLmRlbnguZGUKaHR0cDovL2xpc3RzLmRlbnguZGUvbWFpbG1hbi9saXN0aW5mby91LWJv
+b3QK
