@@ -1,158 +1,105 @@
-From: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] phy: rockchip-inno-usb2: add a new driver for
- Rockchip usb2phy
-Date: Sun, 19 Jun 2016 20:00:41 -0700
-Message-ID: <CABXOdTd0baqMt7LqsmVk1S8VNpzEhQ7kBeKiqTaR4+Ov01NwDA@mail.gmail.com>
-References: <1466129353-48063-1-git-send-email-frank.wang@rock-chips.com>
- <1466129353-48063-3-git-send-email-frank.wang@rock-chips.com>
- <576383C6.3050005@roeck-us.net>
- <98bc69af-c597-d1ee-e83d-c7b5918e9ef4@rock-chips.com>
- <5763F92D.80102@roeck-us.net>
- <ab59a324-d5e1-730a-28a7-01f8af664eb7@rock-chips.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v3 1/2] usb: ohci-at91: Forcibly suspend ports while USB
+ suspend
+Date: Mon, 20 Jun 2016 03:16:35 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A24364101650C5253@penmbx01>
+References: <1465359311-14544-1-git-send-email-wenyou.yang@atmel.com>
+ <1465359311-14544-2-git-send-email-wenyou.yang@atmel.com>
+ <20160608202651.GA23604@rob-hp-laptop> <20160608203810.GF2466@piout.net>
+ <B256D81BAE5131468A838E5D7A24364101650C3632@penmbx01>
+ <20160617135448.GI5809@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <ab59a324-d5e1-730a-28a7-01f8af664eb7-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160617135448.GI5809-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 19, 2016 at 6:27 PM, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Hi Guenter,
->
->
-> On 2016/6/17 21:20, Guenter Roeck wrote:
->>
->> Hi Frank,
->>
->> On 06/16/2016 11:43 PM, Frank Wang wrote:
->>>
->>> Hi Guenter,
->>>
->>> On 2016/6/17 12:59, Guenter Roeck wrote:
->>>>
->>>> On 06/16/2016 07:09 PM, Frank Wang wrote:
->>>>>
->>>>> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
->>>>> than rk3288 and before, and most of phy-related registers are also
->>>>> different from the past, so a new phy driver is required necessarily.
->>>>>
->>>>> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>> Suggested-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>>>> Suggested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>>> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->>>>> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->>>>> ---
->>>>
->>>>
->>>> [ ... ]
->>>>
->>>>> +
->>>>> +static int rockchip_usb2phy_resume(struct phy *phy)
->>>>> +{
->>>>> +    struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
->>>>> +    struct rockchip_usb2phy *rphy = dev_get_drvdata(phy->dev.parent);
->>>>> +    int ret;
->>>>> +
->>>>> +    dev_dbg(&rport->phy->dev, "port resume\n");
->>>>> +
->>>>> +    ret = clk_prepare_enable(rphy->clk480m);
->>>>> +    if (ret)
->>>>> +        return ret;
->>>>> +
->>>>
->>>> If suspend can be called multiple times, resume can be called
->>>> multiple times as well. Doesn't this cause a clock imbalance
->>>> if you call clk_prepare_enable() multiple times on resume,
->>>> but clk_disable_unprepare() only once on suspend ?
->>>>
->>>
->>> Well, what you said is reasonable, How does something like below?
->>>
->>> @@ -307,6 +307,9 @@ static int rockchip_usb2phy_resume(struct phy *phy)
->>>
->>>          dev_dbg(&rport->phy->dev, "port resume\n");
->>>
->>> +       if (!rport->suspended)
->>> +               return 0;
->>> +
->>>          ret = clk_prepare_enable(rphy->clk480m);
->>>          if (ret)
->>>                  return ret;
->>> @@ -327,12 +330,16 @@ static int rockchip_usb2phy_suspend(struct phy
->>> *phy)
->>>
->>>          dev_dbg(&rport->phy->dev, "port suspend\n");
->>>
->>> +       if (rport->suspended)
->>> +               return 0;
->>> +
->>>          ret = property_enable(rphy, &rport->port_cfg->phy_sus, true);
->>>          if (ret)
->>>                  return ret;
->>>
->>>          rport->suspended = true;
->>>          clk_disable_unprepare(rphy->clk480m);
->>> +
->>>          return 0;
->>>   }
->>>
->>> @@ -485,6 +492,7 @@ static int rockchip_usb2phy_host_port_init(struct
->>> rockchip_usb2phy *rphy,
->>>
->>>          rport->port_id = USB2PHY_PORT_HOST;
->>>          rport->port_cfg = &rphy->phy_cfg->port_cfgs[USB2PHY_PORT_HOST];
->>> +       rport->suspended = true;
->>>
->>
->> Why does it start in suspended mode ? That seems odd.
->>
->
-> This is an initialization. Using above design which make 'suspended' as a
-> condition both in *_usb2phy_resume and *_usb2phy_suspend, I believe if it is
-> not initialized as suspended mode, the first resume process will be skipped.
-
-I had to re-read the entire patch.
-
-Turns out my problem was one of terminology. Using "suspend" and
-"resume" to me suggested the common use of suspend and resume
-functions. That is not the case here. After mentally replacing
-"suspend" with "power_off" and "resume" with "power_on", you are
-right, no problem exists. Sorry for the noise.
-
-Maybe it would be useful to replace "resume" with "power_on" and
-"suspend" with "power_off" in the function and variable names to
-reduce confusion and misunderstandings.
-
-Thanks,
-Guenter
-
-> Theoretically, the phy-port in suspended mode make sense when it is at start
-> time, then the upper layer controller will invoke phy_power_on (See
-> phy-core.c), and it further call back *_usb2phy_resume to make phy-port work
-> properly.
->
-> So could you tell me what make you feeling odd or would you like to give
-> another appropriate way please? :-)
->
-> BR.
-> Frank
->
->
->>
->>>          mutex_init(&rport->mutex);
->>>          INIT_DELAYED_WORK(&rport->sm_work, rockchip_usb2phy_sm_work);
->>>
->>
->
->
+SGkgQWxlYW5kcmUsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWxl
+eGFuZHJlIEJlbGxvbmkgW21haWx0bzphbGV4YW5kcmUuYmVsbG9uaUBmcmVlLWVsZWN0cm9ucy5j
+b21dDQo+IFNlbnQ6IDIwMTblubQ25pyIMTfml6UgMjE6NTUNCj4gVG86IFlhbmcsIFdlbnlvdSA8
+V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
+Zz47IEFsYW4gU3Rlcm4gPHN0ZXJuQHJvd2xhbmQuaGFydmFyZC5lZHU+Ow0KPiBHcmVnIEtyb2Fo
+LUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgRmVycmUsIE5pY29sYXMNCj4g
+PE5pY29sYXMuRkVSUkVAYXRtZWwuY29tPjsgUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29t
+PjsgTWFyayBCcm93bg0KPiA8YnJvb25pZUBrZXJuZWwub3JnPjsgSWFuIENhbXBiZWxsIDxpamMr
+ZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyDQo+IEdhbGEgPGdhbGFrQGNvZGVhdXJv
+cmEub3JnPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgt
+DQo+IHVzYkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAxLzJdIHVz
+Yjogb2hjaS1hdDkxOiBGb3JjaWJseSBzdXNwZW5kIHBvcnRzIHdoaWxlIFVTQg0KPiBzdXNwZW5k
+DQo+IA0KPiBPbiAxNy8wNi8yMDE2IGF0IDEzOjQ0OjIyICswMDAwLCBZYW5nLCBXZW55b3Ugd3Jv
+dGUgOg0KPiA+IEhpIEFsZXhhbmRyZSwNCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gPiA+IEZyb206IEFsZXhhbmRyZSBCZWxsb25pDQo+ID4gPiBbbWFpbHRvOmFsZXhh
+bmRyZS5iZWxsb25pQGZyZWUtZWxlY3Ryb25zLmNvbV0NCj4gPiA+IFNlbnQ6IDIwMTblubQ25pyI
+OeaXpSA0OjM4DQo+ID4gPiBUbzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiA+
+IENjOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT47IEFsYW4gU3Rlcm4NCj4g
+PiA+IDxzdGVybkByb3dsYW5kLmhhcnZhcmQuZWR1PjsgR3JlZyBLcm9haC1IYXJ0bWFuDQo+ID4g
+PiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBGZXJyZSwgTmljb2xhcw0KPiA+ID4gPE5p
+Y29sYXMuRkVSUkVAYXRtZWwuY29tPjsgUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPjsg
+TWFyaw0KPiA+ID4gQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz47IElhbiBDYW1wYmVsbA0KPiA+
+ID4gPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXIgR2FsYSA8Z2FsYWtAY29k
+ZWF1cm9yYS5vcmc+Ow0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gPiA+IGtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnOyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnDQo+ID4gPiBTdWJqZWN0OiBSZTog
+W1BBVENIIHYzIDEvMl0gdXNiOiBvaGNpLWF0OTE6IEZvcmNpYmx5IHN1c3BlbmQgcG9ydHMNCj4g
+PiA+IHdoaWxlIFVTQiBzdXNwZW5kDQo+ID4gPg0KPiA+ID4gT24gMDgvMDYvMjAxNiBhdCAxNToy
+Njo1MSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGUgOg0KPiA+ID4gPiBPbiBXZWQsIEp1biAwOCwg
+MjAxNiBhdCAxMjoxNToxMFBNICswODAwLCBXZW55b3UgWWFuZyB3cm90ZToNCj4gPiA+ID4gPiBJ
+biBvcmRlciB0byB0aGUgc2F2ZSBwb3dlciBjb25zdW1wdGlvbiwgYXMgYSB3b3JrYXJvdW5kLCBz
+dXNwZW5kDQo+ID4gPiA+ID4gZm9yY2libHkgdGhlIFVTQiBQT1JUQS9CL0MgdmlhIHNldCB0aGUg
+U1VTUEVORF9BL0IvQyBiaXRzIG9mDQo+ID4gPiA+ID4gT0hDSSBJbnRlcnJ1cHQgQ29uZmlndXJh
+dGlvbiBSZWdpc3RlciBpbiB0aGUgU0ZScyB3aGlsZSBPSENJIFVTQg0KPiBzdXNwZW5kLg0KPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gVGhpcyBzdXNwZW5kIG9wZXJhdGlvbiBtdXN0IGJlIGRvbmUgYmVm
+b3JlIHRoZSBVU0IgY2xvY2sgaXMNCj4gPiA+ID4gPiBkaXNhYmxlZCwgcmVzdW1lIGFmdGVyIHRo
+ZSBVU0IgY2xvY2sgaXMgZW5hYmxlZC4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+DQo+ID4gPiA+ID4gLS0tDQo+
+ID4gPiA+ID4NCj4gPiA+ID4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+ID4gPiA+ICAtIENoYW5nZSB0
+aGUgY29tcGF0aWJsZSBkZXNjcmlwdGlvbiBmb3IgbW9yZSBwcmVjaXNlLg0KPiA+ID4gPiA+DQo+
+ID4gPiA+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiA+ID4gPiAgLSBBZGQgY29tcGF0aWJsZSB0byBz
+dXBwb3J0IGZvcmNpYmx5IHN1c3BlbmQgdGhlIHBvcnRzLg0KPiA+ID4gPiA+ICAtIEFkZCBzb2Mv
+YXQ5MS9hdDkxX3Nmci5oIHRvIGFjY29tbW9kYXRlIHRoZSBkZWZpbmVzLg0KPiA+ID4gPiA+ICAt
+IEFkZCBlcnJvciBjaGVja2luZyBmb3IgLnNmcl9yZWdtYXAuDQo+ID4gPiA+ID4gIC0gUmVtb3Zl
+IHVubmVjZXNzYXJ5IHJlZ21hcF9yZWFkKCkgc3RhdGVtZW50Lg0KPiA+ID4gPiA+DQo+ID4gPiA+
+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9hdG1lbC11c2IudHh0ICAgICAgICAgIHwg
+IDYgKy0NCj4gPiA+ID4gPiAgZHJpdmVycy91c2IvaG9zdC9vaGNpLWF0OTEuYyAgICAgICAgICAg
+ICAgICAgICAgICAgfCA4MA0KPiArKysrKysrKysrKysrKysrKysrKystDQo+ID4gPiA+ID4gIGlu
+Y2x1ZGUvc29jL2F0OTEvYXQ5MV9zZnIuaCAgICAgICAgICAgICAgICAgICAgICAgIHwgMjkgKysr
+KysrKysNCj4gPiA+ID4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMTIgaW5zZXJ0aW9ucygrKSwgMyBk
+ZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4gPiA+ID4gMTAwNjQ0IGluY2x1ZGUvc29jL2F0
+OTEvYXQ5MV9zZnIuaA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvYXRtZWwtdXNiLnR4dA0KPiA+ID4gPiA+IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9hdG1lbC11c2IudHh0DQo+ID4g
+PiA+ID4gaW5kZXggNTg4M2I3My4uODg4ZGVhYSAxMDA2NDQNCj4gPiA+ID4gPiAtLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2F0bWVsLXVzYi50eHQNCj4gPiA+ID4g
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2F0bWVsLXVzYi50
+eHQNCj4gPiA+ID4gPiBAQCAtMyw4ICszLDEwIEBAIEF0bWVsIFNPQyBVU0IgY29udHJvbGxlcnMg
+IE9IQ0kNCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ID4g
+PiA+IC0gLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgImF0bWVsLGF0OTFybTkyMDAtb2hjaSIgZm9y
+IFVTQiBjb250cm9sbGVycw0KPiA+ID4gPiA+IC0gICB1c2VkIGluIGhvc3QgbW9kZS4NCj4gPiA+
+ID4gPiArIC0gY29tcGF0aWJsZTogU2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nDQo+ID4g
+PiA+ID4gKwkgICAgICAgImF0bWVsLGF0OTFybTkyMDAtb2hjaSIgZm9yIFVTQiBjb250cm9sbGVy
+cyB1c2VkIGluIGhvc3QNCj4gbW9kZS4NCj4gPiA+ID4gPiArCSAgICAgICAiYXRtZWwsc2FtYTVk
+Mi1vaGNpIiBmb3IgVVNCIGNvbnRyb2xsZXJzIHVzZWQgaW4gaG9zdCBtb2RlDQo+ID4gPiA+ID4g
+KwkgICAgICAgb24gU0FNQTVEMiB3aGljaCBjYW4gZm9yY2UgdG8gc3VzcGVuZC4NCj4gPiA+ID4N
+Cj4gPiA+ID4gR3Vlc3MgSSB3YXNuJ3QgY2xlYXIgZW5vdWdoIGJlZm9yZS4gRHJvcCAid2hpY2gg
+Y2FuIGZvcmNlIHRvIHN1c3BlbmQiLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IFdlbGwsIG15IHBv
+aW50IGlzIHRoYXQgd2UgZG9uJ3QgbmVlZCBhIG5ldyBjb21wYXRpYmxlIGFueXdheS4NCj4gPg0K
+PiA+IENvdWxkIHlvdSBnaXZlIHNvbWUgYWR2aWNlPy4NCj4gPg0KPiANCj4gU3VyZSwgd2hhdCBJ
+IG1lYW4gaXMgdGhhdCB5b3UgY2FuIHRyeSB0byBnZXQgdGhlIHJlZ21hcCBmb3IgdGhlIFNGUiBp
+biBldmVyeSBjYXNlLg0KPiBEZXBlbmRpbmcgb24gd2hldGhlciB5b3Ugd2VyZSBhYmxlIHRvIGdl
+dCBpdCwgeW91IGNhbiBkZWNpZGUgdG8gY2FsbA0KPiBvaGNpX2F0OTFfcG9ydF9zdXNwZW5kL3Jl
+c3VtZSBvciBub3QgKGp1c3QgdGVzdCBmb3Igc2ZyX3JlZ21hcCAhPSBOVUxMKS4NCg0KSSBkb24n
+dCB0aGluayBzby4gVGhlIFNGUiBpbmNsdWRlcyBhIGxvdCBvZiBtaXNjZWxsYW5lb3VzIGZ1bmN0
+aW9ucywgbW9yZSB0aGFuIHRoaXMgb25lLg0KDQo+IA0KPiAtLQ0KPiBBbGV4YW5kcmUgQmVsbG9u
+aSwgRnJlZSBFbGVjdHJvbnMNCj4gRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBl
+bmdpbmVlcmluZyBodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tDQoNCg0KQmVzdCBSZWdhcmRzLA0K
+V2VueW91IFlhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
