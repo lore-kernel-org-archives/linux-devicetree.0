@@ -1,102 +1,282 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v9 0/4] add reboot mode driver
-Date: Mon, 20 Jun 2016 14:34:50 +0800
-Message-ID: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de
-Cc: k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at, Andy Yan <andy.yan@rock-chips.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
+Date: Mon, 20 Jun 2016 09:07:29 +0200
+Message-ID: <9a87b3cd-ae21-cb66-481b-e6fb7822e8f9@redhat.com>
+References: <1466404962-13613-1-git-send-email-stefan.mavrodiev@gmail.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBP5MT25QKGQEUO4PP7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1466404962-13613-1-git-send-email-stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Stefan.Mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-AbSShOkvfpQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-This driver parses the reboot commands like "reboot bootloader"
-and "reboot recovery" to get a boot mode described in the
-device tree , then call the corresponding  write interfae
-to store the boot mode in some place like special register
-or ram , which can be read by the bootloader after system
-reboot.
+On 20-06-16 08:42, Stefan Mavrodiev wrote:
+> A33-OLinuXino is A33 development board designed by Olimex LTD.
+>
+> It has AXP233 PMU, 1GB DRAM, a micro SD card, one USB-OTG connector,
+> headphone and mic jacks, connector for LiPo battery and optional
+> 4GB NAND Flash.
+>
+> It has two 40-pin headers. One for LCD panel, and one for
+> additional modules. Also there is CSI/DSI connector.
+>
+> Signed-off-by: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This is commonly done on Android based devices, in order to
-reboot the device into fastboot or recovery mode.
+The new looks good to me:
 
-
-Changes in v9:
-- select MFD_SYSCON when syscon-reboot-mode driver enabled
-- refactoring error handling in reboot_mode_register
-
-Changes in v8:
-- do some cleanup when driver ubind
-
-Changes in v7:
-- fix some spelling mistakes
-- declare that the mode magic should be none-zero value
-- address some suggestions from Krzysztof, make syscon-reboot-mode driver data self-contained.
-
-Changes in v6:
-- fix a typo with "property"
-- describe property "mask" more clear
-
-Changes in v5:
-- delete a unnecessary blank line in syscon-reboot-mode.txt
-- rename mode-fastoboot to mode-bootloader in syscon-reboot-mode.txt
-- rename macro BOOT_LOADER to BOOT_BL_DOWNLOAD, which gives a more clear mean
-- use two blank space under help in Kconfig
-- use unsigned int instead of int for member magic in struct mode_info
-
-Changes in v4:
-- remove mode-maskrom
-- rename mode-fastboot to mode-bootloader to keep compatible with the exiting Android device
-- make this driver depends on OF to avoid kbuild test error
-
-Changes in v3:
-- descirbe all reboot mode as properity instead of subnode
-- scan multi properities
-- add mask value for some platform which only use some bits of the register
-  to store boot mode magic value
-- descirbe all reboot mode as property instead of subnode
-- add rk3036 support
-- descirbe all reboot mode as property instead of subnode
-
-Changes in v2:
-- move to dir drivers/power/reset/
-- make syscon-reboot-mode a generic driver
-- make this node as a subnode of PMU
-- make this node as a subnode of pmugrf
-
-Changes in v1:
-- fix the embarrassed compile warning
-- correct the maskrom magic number
-- check for the normal reboot
-- correct the maskrom magic number
-- use macro defined in rockchip_boot-mode.h for reboot-mode DT node
-
-Andy Yan (4):
-  dt-bindings: power: reset: add document for reboot-mode driver
-  power: reset: add reboot mode driver
-  ARM: dts: rockchip: add syscon-reboot-mode DT node
-  ARM64: dts: rockchip: add syscon-reboot-mode DT node
-
- .../bindings/power/reset/reboot-mode.txt           |  25 ++++
- .../bindings/power/reset/syscon-reboot-mode.txt    |  35 ++++++
- arch/arm/boot/dts/rk3036.dtsi                      |  11 +-
- arch/arm/boot/dts/rk3288.dtsi                      |  10 ++
- arch/arm/boot/dts/rk3xxx.dtsi                      |  12 +-
- arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  12 +-
- drivers/power/reset/Kconfig                        |  14 +++
- drivers/power/reset/Makefile                       |   2 +
- drivers/power/reset/reboot-mode.c                  | 128 +++++++++++++++++++++
- drivers/power/reset/reboot-mode.h                  |  14 +++
- drivers/power/reset/syscon-reboot-mode.c           | 100 ++++++++++++++++
- include/dt-bindings/soc/rockchip_boot-mode.h       |  15 +++
- 12 files changed, 375 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
- create mode 100644 drivers/power/reset/reboot-mode.c
- create mode 100644 drivers/power/reset/reboot-mode.h
- create mode 100644 drivers/power/reset/syscon-reboot-mode.c
- create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
-
--- 
-2.7.4
+Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
 
+Regards,
+
+Hans
+
+
+> ---
+> Changes for v2:
+> 	- Removed unused power nodes
+> 	- Removed default-trigger for green led
+> 	- Removed "always-on" option for LCD power
+>
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/sun8i-a33-olinuxino.dts | 207 ++++++++++++++++++++++++++++++
+>  2 files changed, 208 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-a33-olinuxino.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 970e906..b78f363 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -760,6 +760,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>  	sun8i-a33-ippo-q8h-v1.2.dtb \
+>  	sun8i-a33-q8-tablet.dtb \
+>  	sun8i-a33-sinlinx-sina33.dtb \
+> +	sun8i-a33-olinuxino.dtb \
+>  	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+>  	sun8i-a83t-cubietruck-plus.dtb \
+>  	sun8i-h3-orangepi-2.dtb \
+> diff --git a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
+> new file mode 100644
+> index 0000000..14fa801
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
+> @@ -0,0 +1,207 @@
+> +/*
+> + * Copyright 2016 - Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *                  Olimex LTD. <support-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-a33.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+> +
+> +/ {
+> +	model = "A33-OLinuXino";
+> +	compatible = "allwinner,sun8i-a33";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&led_pin_olinuxino>;
+> +
+> +		green {
+> +			label = "olinuxino:green:usr";
+> +			gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LED2 */
+> +		};
+> +	};
+> +};
+> +
+> +&ehci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ohci0 {
+> +	status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_olinuxino>;
+> +	vmmc-supply = <&reg_dcdc1>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+> +	cd-inverted;
+> +	status = "okay";
+> +};
+> +
+> +&pio {
+> +	mmc0_cd_pin_olinuxino: mmc0_cd_pin@0 {
+> +		allwinner,pins = "PB4";
+> +		allwinner,function = "gpio_in";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +	};
+> +
+> +	led_pin_olinuxino: led_pins@0 {
+> +		allwinner,pins = "PB7";
+> +		allwinner,function = "gpio_out";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +	};
+> +};
+> +
+> +&r_rsb {
+> +	status = "okay";
+> +
+> +	axp22x: pmic@3a3 {
+> +		compatible = "x-powers,axp223";
+> +		reg = <0x3a3>;
+> +		interrupt-parent = <&nmi_intc>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +		eldoin-supply = <&reg_dcdc1>;
+> +	};
+> +};
+> +
+> +#include "axp22x.dtsi"
+> +
+> +&reg_dcdc1 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-dsi";
+> +};
+> +
+> +&reg_dc1sw {
+> +	regulator-name = "vcc-lcd";
+> +};
+> +
+> +&reg_dcdc2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <900000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-sys";
+> +};
+> +
+> +&reg_dcdc3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <900000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-cpu";
+> +};
+> +
+> +&reg_dcdc5 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1500000>;
+> +	regulator-max-microvolt = <1500000>;
+> +	regulator-name = "vcc-dram";
+> +};
+> +
+> +&reg_dc5ldo {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <900000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-cpus";
+> +};
+> +
+> +&reg_aldo1 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-io";
+> +};
+> +
+> +&reg_aldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <2350000>;
+> +	regulator-max-microvolt = <2650000>;
+> +	regulator-name = "vdd-dll";
+> +};
+> +
+> +&reg_aldo3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-avcc";
+> +};
+> +
+> +&reg_rtc_ldo {
+> +	regulator-name = "vcc-rtc";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins_b>;
+> +	status = "okay";
+> +};
+> +
+> +&usb_otg {
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	usb0_vbus-supply = <&reg_vcc5v0>;
+> +	status = "okay";
+> +
+> +};
+> +
+> +&simplefb_lcd {
+> +	vcc-lcd-supply = <&reg_dc1sw>;
+> +};
+>
