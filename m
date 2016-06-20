@@ -1,35 +1,85 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: silk: add DU pins
-Date: Mon, 20 Jun 2016 17:35:37 +0900
-Message-ID: <20160620083537.GF17292@verge.net.au>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
- <2415333.mtLdVEoB2G@wasted.cogentembedded.com>
- <f9aee8b5-7f78-acd0-e544-3d5977c01246@cogentembedded.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [RFC PATCH 04/13] drm/tegra: Add sor-safe clock for DPAUX on
+ Tegra210
+Date: Mon, 20 Jun 2016 09:43:42 +0100
+Message-ID: <5767ACBE.3090008@nvidia.com>
+References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
+ <1466165027-17917-5-git-send-email-jonathanh@nvidia.com>
+ <20160617161819.GE27475@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f9aee8b5-7f78-acd0-e544-3d5977c01246@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160617161819.GE27475@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 11:53:21PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 04/13/2016 10:36 PM, Sergei Shtylyov wrote:
-> 
-> >Add the (previously omitted) DU pin data to the SILK board's device tree.
-> >
-> >Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >
-> >---
-> >This patch is against the 'renesas-devel-20160411-v4.6-rc3' tag of Simon
-> >Horman's 'renesas.git' repo. It depends on the R8A7794 DU PFC driver patch
-> >just posted for the pins to be configured...
-> 
->    Simon, this patch seems stuck while the PFC driver patch hit Linus' tree
-> long ago. :-(
-
-Thanks, I have queued it up.
+Ck9uIDE3LzA2LzE2IDE3OjE4LCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPiAqIFBHUCBTaWduZWQg
+YnkgYW4gdW5rbm93biBrZXkKPiAKPiBPbiBGcmksIEp1biAxNywgMjAxNiBhdCAwMTowMzozOFBN
+ICswMTAwLCBKb24gSHVudGVyIHdyb3RlOgo+PiBGb3IgVGVncmEyMTAgdGhlICdzb3Itc2FmZScg
+Y2xvY2sgbmVlZHMgdG8gYmUgZW5hYmxlZCB3aGVuIHVzaW5nIERQQVVYLgo+PiBBZGQgc3VwcG9y
+dCB0byB0aGUgRFBBVVggZHJpdmVyIGZvciBlbmFibGluZyB0aGlzIGNsb2NrIG9uIFRlZ3JhMjEw
+Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBKb24gSHVudGVyIDxqb25hdGhhbmhAbnZpZGlhLmNvbT4K
+Pj4gLS0tCj4+ICBkcml2ZXJzL2dwdS9kcm0vdGVncmEvZHBhdXguYyB8IDI5ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKy0tCj4+ICAxIGZpbGUgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKSwg
+MiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9k
+cGF1eC5jIGIvZHJpdmVycy9ncHUvZHJtL3RlZ3JhL2RwYXV4LmMKPj4gaW5kZXggYWEzYTAzN2Zj
+ZDNiLi5kNjk2YTdlNDU5MzUgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9k
+cGF1eC5jCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9kcGF1eC5jCj4+IEBAIC0zNyw2
+ICszNyw3IEBAIHN0cnVjdCB0ZWdyYV9kcGF1eCB7Cj4+ICAKPj4gIAlzdHJ1Y3QgcmVzZXRfY29u
+dHJvbCAqcnN0Owo+PiAgCXN0cnVjdCBjbGsgKmNsa19wYXJlbnQ7Cj4+ICsJc3RydWN0IGNsayAq
+Y2xrX3NvcjsKPiAKPiBDYW4gd2UgY2FsbCB0aGlzICJjbGtfc2FmZSIsIHBsZWFzZT8gT24gb25l
+IGhhbmQgdGhhdCBtaXJyb3JzIHRoZSBuYW1lCj4gb2YgdGhlIGNsb2NrIGluIHRoZSBiaW5kaW5n
+IGFuZCBvbiB0aGUgb3RoZXIgaGFuZCBpdCBhdm9pZHMgY29uZnVzaW9uCj4gd2l0aCB0aGUgcmVh
+bCBTT1IgY2xvY2suCgpPSy4KCj4+ICAJc3RydWN0IGNsayAqY2xrOwo+PiAgCj4+ICAJc3RydWN0
+IHJlZ3VsYXRvciAqdmRkOwo+PiBAQCAtMzQwLDE4ICszNDEsMzcgQEAgc3RhdGljIGludCB0ZWdy
+YV9kcGF1eF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+PiAgCQlyZXR1cm4g
+UFRSX0VSUihkcGF1eC0+cnN0KTsKPj4gIAl9Cj4+ICAKPj4gKwlpZiAob2ZfZGV2aWNlX2lzX2Nv
+bXBhdGlibGUocGRldi0+ZGV2Lm9mX25vZGUsCj4+ICsJCQkJICAgICJudmlkaWEsdGVncmEyMTAt
+ZHBhdXgiKSkgewo+PiArCQlkcGF1eC0+Y2xrX3NvciA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2
+LCAic29yLXNhZmUiKTsKPj4gKwkJaWYgKElTX0VSUihkcGF1eC0+Y2xrX3NvcikpIHsKPj4gKwkJ
+CWRldl9lcnIoJnBkZXYtPmRldiwKPj4gKwkJCQkiZmFpbGVkIHRvIGdldCBzb3Itc2FmZSBjbG9j
+azogJWxkXG4iLAo+PiArCQkJCVBUUl9FUlIoZHBhdXgtPmNsa19zb3IpKTsKPj4gKwkJCXJldHVy
+biBQVFJfRVJSKGRwYXV4LT5jbGtfc29yKTsKPj4gKwkJfQo+PiArCj4+ICsJCWVyciA9IGNsa19w
+cmVwYXJlX2VuYWJsZShkcGF1eC0+Y2xrX3Nvcik7Cj4+ICsJCWlmIChlcnIgPCAwKSB7Cj4+ICsJ
+CQlkZXZfZXJyKCZwZGV2LT5kZXYsCj4+ICsJCQkJImZhaWxlZCB0byBlbmFibGUgc29yLXNhZmUg
+Y2xvY2s6ICVkXG4iLCBlcnIpOwo+PiArCQkJcmV0dXJuIGVycjsKPj4gKwkJfQo+PiArCX0KPiAK
+PiBQbGVhc2UgbWFrZSB0aGlzIHBhcnQgb2YgYSBzdHJ1Y3QgdGVncmFfZHBhdXhfc29jLCBzbyB0
+aGF0IHdlIGRvbid0IGhhdmUKPiB0byBjaGVjayB0aGUgY29tcGF0aWJsZSBzdHJpbmcgYWdhaW4g
+aGVyZS4gVGhpcyBjb3VsZCBsb29rIGxpa2U6Cj4gCj4gCXN0cnVjdCB0ZWdyYV9kcGF1eF9zb2Mg
+ewo+IAkJYm9vbCBuZWVkc19zYWZlX2Nsb2NrOwo+IAl9Owo+IAo+IAlzdGF0aWMgY29uc3Qgc3Ry
+dWN0IHRlZ3JhX2RwYXV4X3NvYyB0ZWdyYTEyNF9kcGF1eF9zb2MgPSB7Cj4gCQkubmVlZHNfc2Fm
+ZV9jbG9jayA9IGZhbHNlLAo+IAl9Owo+IAo+IAlzdGF0aWMgY29uc3Qgc3RydWN0IHRlZ3JhX2Rw
+YXV4X3NvYyB0ZWdyYTIxMF9kcGF1eF9zb2MgPSB7Cj4gCQkubmVlZHNfc2FmZV9jbG9jayA9IHRy
+dWUsCj4gCX07Cj4gCj4gCS4uLgo+IAo+IAlzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
+ZCB0ZWdyYV9kcGF1eF9vZl9tYXRjaFtdID0gewo+IAkJeyAuY29tcGF0aWJsZSA9ICJudmlkaWEs
+dGVncmEyMTAtZHBhdXgiLCAuZGF0YSA9ICZ0ZWdyYTIxMF9kcGF1eF9zb2MgfSwKPiAJCXsgLmNv
+bXBhdGlibGUgPSAibnZpZGlhLHRlZ3JhMTI0LWRwYXV4IiwgLmRhdGEgPSAmdGVncmExMjRfZHBh
+dXhfc29jIH0sCj4gCQl7IH0sCj4gCX07CgpPSy4gSSB3b25kZXIgaWYgd2Ugc2hvdWxkIGNhbGwg
+aXQgJ2hhc19zYWZlX2Nsb2NrJyBiZWNhdXNlIHRoaXMgY2xvY2sKZG9lcyBub3QgZXhpc3QgZm9y
+IHRlZ3JhMTI0IEFGQUlDVC4gI2Jpa2VzaGVkIDstKQoKPj4gQEAgLTQzNCw2ICs0NTQsOSBAQCBk
+aXNhYmxlX3BhcmVudF9jbGs6Cj4+ICBhc3NlcnRfcmVzZXQ6Cj4+ICAJcmVzZXRfY29udHJvbF9h
+c3NlcnQoZHBhdXgtPnJzdCk7Cj4+ICAJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRwYXV4LT5jbGsp
+Owo+PiArZGlzYWJsZV9zb3JfY2xrOgo+PiArCWlmIChkcGF1eC0+Y2xrX3NvcikKPj4gKwkJY2xr
+X2Rpc2FibGVfdW5wcmVwYXJlKGRwYXV4LT5jbGtfc29yKTsKPiAKPiBZb3UgY2FuIGRyb3AgdGhl
+IGV4dHJhIGNoZWNrIGhlcmUsIHNpbmNlIHRoZSBjb21tb24gY2xvY2sgZnJhbWV3b3JrCj4gaWdu
+b3JlcyBOVUxMIG9yIEVSUl9QVFIoKSBwb2ludGVycy4KCk9LLgoKPj4gIAo+PiAgCXJldHVybiBl
+cnI7Cj4+ICB9Cj4+IEBAIC00NTYsNiArNDc5LDggQEAgc3RhdGljIGludCB0ZWdyYV9kcGF1eF9y
+ZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4gIAljbGtfZGlzYWJsZV91bnBy
+ZXBhcmUoZHBhdXgtPmNsa19wYXJlbnQpOwo+PiAgCXJlc2V0X2NvbnRyb2xfYXNzZXJ0KGRwYXV4
+LT5yc3QpOwo+PiAgCWNsa19kaXNhYmxlX3VucHJlcGFyZShkcGF1eC0+Y2xrKTsKPj4gKwlpZiAo
+ZHBhdXgtPmNsa19zb3IpCj4+ICsJCWNsa19kaXNhYmxlX3VucHJlcGFyZShkcGF1eC0+Y2xrX3Nv
+cik7Cj4gCj4gU2FtZSBoZXJlLgoKT0suCgpDaGVlcnMKSm9uCgotLSAKbnZwdWJsaWMKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
