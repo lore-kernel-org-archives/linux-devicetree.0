@@ -1,106 +1,70 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 8/8] arm64: dts: db820c: add support to external sd card.
-Date: Mon, 20 Jun 2016 21:01:47 +0100
-Message-ID: <1466452907-23290-9-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1466452907-23290-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH 02/20] clk: multiplier: Prevent the multiplier from under
+ / over flowing
+Date: Mon, 20 Jun 2016 13:50:30 -0700
+Message-ID: <20160620205030.24587.98159@quark.deferred.io>
+References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1463402840-17062-3-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466452907-23290-1-git-send-email-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1463402840-17062-3-git-send-email-maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Stephen Boyd <sboyd@codeaurora.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to external sd card.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi | 39 +++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi      | 10 ++++++
- 2 files changed, 49 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-new file mode 100644
-index 0000000..24552f1
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c-pins.dtsi
-@@ -0,0 +1,39 @@
-+/*
-+ * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+&msmgpio {
-+	sdc2_cd_on: sdc2_cd_on {
-+		mux {
-+			pins = "gpio38";
-+			function = "gpio";
-+		};
-+
-+		config {
-+			pins = "gpio38";
-+			bias-pull-up;		/* pull up */
-+			drive-strength = <16>;	/* 16 MA */
-+		};
-+	};
-+
-+	sdc2_cd_off: sdc2_cd_off {
-+		mux {
-+			pins = "gpio38";
-+			function = "gpio";
-+		};
-+
-+		config {
-+			pins = "gpio38";
-+			bias-pull-up;		/* pull up */
-+			drive-strength = <2>;	/* 2 MA */
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 08b063d..3fbd23e 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -12,6 +12,7 @@
-  */
- 
- #include "msm8996.dtsi"
-+#include "apq8096-db820c-pins.dtsi"
- 
- / {
- 	aliases {
-@@ -74,5 +75,14 @@
- 			label = "HS-SPI1";
- 			status = "okay";
- 		};
-+
-+		sdhci@74A4900 {
-+		/* External SD card */
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
-+			pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-+			cd-gpios = <&msmgpio 38 0x1>;
-+			status = "okay";
-+		};
- 	};
- };
--- 
-2.7.4
+UXVvdGluZyBNYXhpbWUgUmlwYXJkICgyMDE2LTA1LTE2IDA1OjQ3OjAyKQo+IEluIHRoZSBjdXJy
+ZW50IG11bHRpcGxpZXIgYmFzZSBjbG9jayBpbXBsZW1lbnRhdGlvbiwgaWYgdGhlCj4gQ0xLX1NF
+VF9SQVRFX1BBUkVOVCBmbGFnIGlzbid0IHNldCwgdGhlIGNvZGUgd2lsbCBub3QgbWFrZSBzdXJl
+IHRoYXQgdGhlCj4gbXVsdGlwbGllciBjb21wdXRlZCByZW1haW5zIHdpdGhpbiB0aGUgYm91bmRh
+cmllcyBvZiBvdXIgY2xvY2suCj4gCj4gVGhpcyBtZWFucyB0aGF0IGlmIHRoZSBjbG9jayB3ZSB3
+YW50IHRvIHJlYWNoIGlzIGJlbG93IHRoZSBwYXJlbnQgcmF0ZSwKPiBvciBpZiB0aGUgbXVsdGlw
+bGllciBpcyBhYm92ZSB0aGUgbWF4aW11bSB0aGF0IHdlIGNhbiByZWFjaCwgd2Ugd2lsbCBlbmQg
+dXAKPiB3aXRoIGEgY29tcGxldGVseSBib2d1cyBvbmUgdGhhdCB0aGUgY2xvY2sgY2Fubm90IGFj
+aGlldmUuCj4gCj4gRml4ZXM6IGYyZTBhNTMyNzFhNCAoImNsazogQWRkIGEgYmFzaWMgbXVsdGlw
+bGllciBjbG9jayIpCj4gU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFy
+ZEBmcmVlLWVsZWN0cm9ucy5jb20+CgpBcHBsaWVkLgoKUmVnYXJkcywKTWlrZQoKPiAtLS0KPiAg
+ZHJpdmVycy9jbGsvY2xrLW11bHRpcGxpZXIuYyB8IDIwICsrKysrKysrKysrKysrKysrLS0tCj4g
+IDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+IAo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9jbGstbXVsdGlwbGllci5jIGIvZHJpdmVycy9jbGsvY2xr
+LW11bHRpcGxpZXIuYwo+IGluZGV4IDllNDQ5YzdiNzUxYy4uZGMwMzdjOTU3YWNkIDEwMDY0NAo+
+IC0tLSBhL2RyaXZlcnMvY2xrL2Nsay1tdWx0aXBsaWVyLmMKPiArKysgYi9kcml2ZXJzL2Nsay9j
+bGstbXVsdGlwbGllci5jCj4gQEAgLTUyLDE0ICs1MiwyOCBAQCBzdGF0aWMgdW5zaWduZWQgbG9u
+ZyBfX2Jlc3RtdWx0KHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nICpiZXN0X3BhcmVudF9y
+YXRlLAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdTggd2lkdGgsIHVuc2lnbmVk
+IGxvbmcgZmxhZ3MpCj4gIHsKPiArICAgICAgIHN0cnVjdCBjbGtfbXVsdGlwbGllciAqbXVsdCA9
+IHRvX2Nsa19tdWx0aXBsaWVyKGh3KTsKPiAgICAgICAgIHVuc2lnbmVkIGxvbmcgb3JpZ19wYXJl
+bnRfcmF0ZSA9ICpiZXN0X3BhcmVudF9yYXRlOwo+ICAgICAgICAgdW5zaWduZWQgbG9uZyBwYXJl
+bnRfcmF0ZSwgY3VycmVudF9yYXRlLCBiZXN0X3JhdGUgPSB+MDsKPiAgICAgICAgIHVuc2lnbmVk
+IGludCBpLCBiZXN0bXVsdCA9IDA7Cj4gKyAgICAgICB1bnNpZ25lZCBpbnQgbWF4bXVsdCA9ICgx
+IDw8IHdpZHRoKSAtIDE7Cj4gKwo+ICsgICAgICAgaWYgKCEoY2xrX2h3X2dldF9mbGFncyhodykg
+JiBDTEtfU0VUX1JBVEVfUEFSRU5UKSkgewo+ICsgICAgICAgICAgICAgICBiZXN0bXVsdCA9IHJh
+dGUgLyBvcmlnX3BhcmVudF9yYXRlOwo+ICsKPiArICAgICAgICAgICAgICAgLyogTWFrZSBzdXJl
+IHdlIGRvbid0IGVuZCB1cCB3aXRoIGEgMCBtdWx0aXBsaWVyICovCj4gKyAgICAgICAgICAgICAg
+IGlmICgoYmVzdG11bHQgPT0gMCkgJiYKPiArICAgICAgICAgICAgICAgICAgICEobXVsdC0+Zmxh
+Z3MgJiBDTEtfTVVMVElQTElFUl9aRVJPX0JZUEFTUykpCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgYmVzdG11bHQgPSAxOwo+ICAKPiAtICAgICAgIGlmICghKGNsa19od19nZXRfZmxhZ3MoaHcp
+ICYgQ0xLX1NFVF9SQVRFX1BBUkVOVCkpCj4gLSAgICAgICAgICAgICAgIHJldHVybiByYXRlIC8g
+KmJlc3RfcGFyZW50X3JhdGU7Cj4gKyAgICAgICAgICAgICAgIC8qIE1ha2Ugc3VyZSB3ZSBkb24n
+dCBvdmVyZmxvdyB0aGUgbXVsdGlwbGllciAqLwo+ICsgICAgICAgICAgICAgICBpZiAoYmVzdG11
+bHQgPiBtYXhtdWx0KQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGJlc3RtdWx0ID0gbWF4bXVs
+dDsKPiArCj4gKyAgICAgICAgICAgICAgIHJldHVybiBiZXN0bXVsdDsKPiArICAgICAgIH0KPiAg
+Cj4gLSAgICAgICBmb3IgKGkgPSAxOyBpIDwgKCgxIDw8IHdpZHRoKSAtIDEpOyBpKyspIHsKPiAr
+ICAgICAgIGZvciAoaSA9IDE7IGkgPCBtYXhtdWx0OyBpKyspIHsKPiAgICAgICAgICAgICAgICAg
+aWYgKHJhdGUgPT0gb3JpZ19wYXJlbnRfcmF0ZSAqIGkpIHsKPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAvKgo+ICAgICAgICAgICAgICAgICAgICAgICAgICAqIFRoaXMgaXMgdGhlIGJlc3QgY2Fz
+ZSBmb3IgdXMgaWYgd2UgaGF2ZSBhCj4gLS0gCj4gMi44LjIKPiAKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
