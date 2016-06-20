@@ -1,111 +1,112 @@
-From: Marcin Niestroj <m.niestroj@grinn-global.com>
-Subject: Re: [PATCH v3 1/5] mfd: tps65217: Add support for IRQs
-Date: Mon, 20 Jun 2016 12:56:42 +0200
-Message-ID: <90cc8e89-3132-e43e-371b-842774a5a7fc@grinn-global.com>
-References: <20160616114110.23455-1-m.niestroj@grinn-global.com>
- <20160616114110.23455-2-m.niestroj@grinn-global.com>
- <5762A3AC.9010409@ti.com>
- <123e6759-fa44-48f0-860d-623aaa39f8ea@grinn-global.com>
- <57640C3C.1070001@ti.com>
- <062438af-c05f-00b3-adc6-ac27e7cec892@grinn-global.com>
- <576420C4.4060002@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Auto-detecting touchscreen controller and dealing
+ with hw configuration differences on q8 tablets
+Date: Mon, 20 Jun 2016 13:03:18 +0200
+Message-ID: <17e69e9e-06be-dc4f-cd47-152f6290d2ec@redhat.com>
+References: <bc978925-46a4-c069-8793-903a87ec70b8@redhat.com>
+ <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7@konsulko.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <576420C4.4060002@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB7U2T65QKGQE46BASGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <5E70AD96-4E8E-4430-AF99-0AA0FCF5F8E7-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org" <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17.06.2016 18:09, Grygorii Strashko wrote:
-> On 06/17/2016 06:31 PM, Marcin Niestroj wrote:
->>
->>
->> On 17.06.2016 16:42, Grygorii Strashko wrote:
->>> On 06/17/2016 05:05 PM, Marcin Niestroj wrote:
->>>>
->>>> On 16.06.2016 15:03, Grygorii Strashko wrote:
->>>>> On 06/16/2016 02:41 PM, Marcin Niestroj wrote:
->>>>>> Add support for handling IRQs: power button, AC and USB power state
->>>>>> changes. Mask and interrupt bits are shared within one register, which
->>>>>> prevents us to use regmap_irq implementation. New irq_domain is
->>>>>> created in
->>>>>> order to add interrupt handling for each tps65217's subsystem. IRQ
->>>>>> resources have been added for charger subsystem to be able to notify
->>>>>> about
->>>>>> AC and USB state changes.
->>>>>>
->>>>>> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
->>>>>> ---
->>>>>>   drivers/mfd/Kconfig          |   1 +
->>>>>>   drivers/mfd/tps65217.c       | 194
->>>>>> +++++++++++++++++++++++++++++++++++++++++--
->>>>>>   include/linux/mfd/tps65217.h |  11 +++
->>>>>>   3 files changed, 198 insertions(+), 8 deletions(-)
->>>
->>> [...]
->>>
->>>>>> +{
->>>>>> +    int ret;
->>>>>> +
->>>>>> +    mutex_init(&tps->irq_lock);
->>>>>> +
->>>>>> +    /* Mask all interrupt sources */
->>>>>> +    tps->irq_mask = (TPS65217_INT_RESERVEDM | TPS65217_INT_PBM
->>>>>> +            | TPS65217_INT_ACM | TPS65217_INT_USBM);
->>>>>> +    tps65217_reg_write(tps, TPS65217_REG_INT, tps->irq_mask,
->>>>>> +            TPS65217_PROTECT_NONE);
->>>>>> +
->>>>>> +    tps->irq_domain = irq_domain_add_linear(tps->dev->of_node,
->>>>>> +        TPS65217_NUM_IRQ, &tps65217_irq_domain_ops, tps);
->>>>>> +    if (!tps->irq_domain) {
->>>>>> +        dev_err(tps->dev, "Could not create IRQ domain\n");
->>>>>> +        return -ENOMEM;
->>>>>> +    }
->>>>>> +
->>>>>> +    ret = devm_request_threaded_irq(tps->dev, irq, NULL,
->>>>>> +                    tps65217_irq_thread,
->>>>>> +                    IRQF_TRIGGER_RISING | IRQF_ONESHOT,
->>>>>
->>>>> Are there any reasons why IRQ trigger type specified here explicitly?
->>>>
->>>> Not really. I have configured it that way, it worked and I forgot about
->>>> it when preparing patches. Could you give some hint here?
->>>>
->>>
->>> It's better to get it from DT and in case of DT boot it will - the real
->>> IRQ trigger type may depends on board.
->>>
->>
->> So what I understand, I need to remove IRQF_TRIGGER_RISING here.
->> Addidional flags will be passed by 'irq_flags' in
->> "interrupts = <irq_num irq_flags>" in DT, right?
->
-> Indeed. And usually it is not "Addidional flags" - its mandatory cell for
->  the most of IRQ controllers.
->
-> The problem with hard-coded IRQ trigger type values in code is that on
-> different boards IRQ can be wired on different way - to the GIC/INTC,
-> to SoC GPIO, to GPIO expanders and .. And they can support different sets
-> of allowed IRQ triggering types. More over, on some boards IRQ signal can be
-> inverted, for example :P
->
-> So, It's more generic to not hard-code it if your driver is expected to be
-> used only with DT.
-> Also as per TRM http://www.ti.com/lit/ds/symlink/tps65217.pdf
-> nINT - interrupt output (active low, open drain). Pin is pulled low if an interrupt bit is set. The
->        output goes high after the bit causing the interrupt in register INT has been read.
->        The interrupt sources can be masked in register INT, so no interrupt is generated when the
->        corresponding interrupt bit is set
->
->
+Hi,
 
-Thanks very much for making this clear to me.
+On 20-06-16 11:27, Pantelis Antoniou wrote:
+> Hi Hans,
+>
+> I=E2=80=99m going to commend only on the overlay related parts since I=E2=
+=80=99m not I
+> get all the nuances right.
 
-I have just send new patch version with fixes from your comments.
+No problem and thanks for the answer anyways!
 
--- 
-Regards,
-Marcin Niestroj
+>> On Jun 19, 2016, at 14:06 , Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+
+<snip>
+
+>> 2) Give the user some way to override the dts settings.
+>>
+>> Which after a somewhat long intro brings me to the actual purpose of thi=
+s thread, discuss
+>> how to best deal with this. I again see 2 options:
+>>
+>> 1) Put a disabled gsl1680 node in the dts file, have a q8_autodetect.c i=
+n u-boot
+>> which probes i2c and if it finds the gsl1680 nodes enables it, and patch=
+es in a best-effort
+>> default for which fw file to use. Allow the user to set a touchscreen_fw=
+ u-boot env
+>> variable which will override this. Also allow the user to set a touchscr=
+een_inverted_x env
+>> variable to add inverted-x to the dt node for the gsl1680.
+>>
+>
+> That can work. The problem is that having anything requiring smarts in u-=
+boot always
+> leads to trouble with users. It all depends on your user=E2=80=99s techni=
+cal proficiency, if
+> they are comfortable tweaking things in u-boot it=E2=80=99s fine. If it=
+=E2=80=99s not, expect lots of
+> bricked boards when they mess up.
+>
+>> 2) Write an in kernel overlay manager which does auto-detect as describe=
+d by 1, and
+>> loads an overlay for the detected touchscreen controller, with module op=
+tions to allow
+>> specifying the fw-file, x-inversion, etc.
+>>
+>> One things which worries me about 2. is that we would need to have 2 ove=
+rlay files
+>> per fw-file, one regular config, one inverted-x, or is it possible for t=
+he overlay
+>> manager to modify an overlay before applying it ?
+>>
+>
+> Yes, it=E2=80=99s quite possible. You can even have stacked overlays.
+
+Ok, is there any example code how to change an overlay before applying it o=
+ut there,
+or if not can you point to the functions to use to do this ?
+
+Specifically my plan is to:
+
+1) Have a single overlay for q8 tablets with gsl1680 tablets
+
+2) Write an in kernel overlay manager which when it detects a gsl1680 touch=
+screen
+will pick a best-default firmware-file + matching resolution + swap-x-y bas=
+ed on
+which SoC (A13/A23/A33) the tablet is based on as well as the gsl1680's chi=
+p-id
+and will then "patch" this info into the overlay before applying it. This
+means being able to set / modify several string, int and bool dt properties=
+.
+
+3) Offer a kernel-module option for the overlaymanager which will allows
+overriding the defaults for the firmware-filename, etc. This is also
+why I want to go with the patch approach instead of having multiple
+dt-overlay files.
+
+Thanks & Regards,
+
+Hans
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
