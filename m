@@ -1,158 +1,166 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v10 06/14] usb: gadget.h: Add OTG to gadget interface
-Date: Mon, 20 Jun 2016 12:43:11 +0300
-Message-ID: <5767BAAF.9010307@ti.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
- <1465564043-27163-7-git-send-email-rogerq@ti.com>
- <87k2hkxr4d.fsf@linux.intel.com> <57679B30.6030809@ti.com>
- <87d1ncxopa.fsf@linux.intel.com> <5767A87C.20704@ti.com>
- <87inx4qkka.fsf@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="H08H8ABFebAQ4VTR7HvVF2bUIrreaAjAr"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87inx4qkka.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2] gpio: sx150x: Update OF configuration
+Date: Mon, 20 Jun 2016 11:56:44 +0200
+Message-ID: <1466416604-19129-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---H08H8ABFebAQ4VTR7HvVF2bUIrreaAjAr
-Content-Type: multipart/mixed; boundary="o54bPdH6RopKC3sfraJ7iG71Pxcjit4ti"
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org,
- mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org,
- sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org,
- grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org,
- nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Message-ID: <5767BAAF.9010307-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v10 06/14] usb: gadget.h: Add OTG to gadget interface
-References: <1465564043-27163-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
- <1465564043-27163-7-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
- <87k2hkxr4d.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> <57679B30.6030809-l0cyMroinI0@public.gmane.org>
- <87d1ncxopa.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> <5767A87C.20704-l0cyMroinI0@public.gmane.org>
- <87inx4qkka.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-In-Reply-To: <87inx4qkka.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In case of OF probing, the driver fails to initialize :
+- gpio_chip.base must be -1
+- irq_summary must be either -1 or valid
+- There is no way to use the other configurations
 
---o54bPdH6RopKC3sfraJ7iG71Pxcjit4ti
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+Add OF parsing function to complete the HW configuration, make
+OF configuration dynamic instead of static with #defines and
+update the DT bindings.
 
-On 20/06/16 12:24, Felipe Balbi wrote:
->=20
-> Hi,
->=20
-> Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> writes:
->>>>> Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> writes:
->>>>>> The OTG core will use struct otg_gadget_ops to
->>>>>> start/stop the gadget controller.
->>>>>>
->>>>>> The main purpose of this interface is to avoid directly
->>>>>> calling usb_gadget_start/stop() from the OTG core as they
->>>>>> wouldn't be defined in the built-in symbol table if
->>>>>> CONFIG_USB_GADGET is m.
->>>>>>
->>>>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>>>>> ---
->>>>>>  include/linux/usb/gadget.h | 16 ++++++++++++++++
->>>>>>  1 file changed, 16 insertions(+)
->>>>>>
->>>>>> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget=
-=2Eh
->>>>>> index 2dd9e6b..f4fc0aa 100644
->>>>>> --- a/include/linux/usb/gadget.h
->>>>>> +++ b/include/linux/usb/gadget.h
->>>>>> @@ -639,6 +639,22 @@ struct usb_gadget_driver {
->>>>>>  };
->>>>>> =20
->>>>>> =20
->>>>>> +/*---------------------------------------------------------------=
-----------*/
->>>>>> +
->>>>>> +/**
->>>>>> + * struct otg_gadget_ops - Interface between OTG core and gadget
->>>>>> + *
->>>>>> + * Provided by the gadget core to allow the OTG core to start/sto=
-p the gadget
->>>>>> + *
->>>>>> + * @start: function to start the gadget
->>>>>> + * @stop: function to stop the gadget
->>>>>> + * @connect_control: function to connect/disconnect from the bus
->>>>>> + */
->>>>>> +struct otg_gadget_ops {
->>>>>> +	int (*start)(struct usb_gadget *gadget);
->>>>>> +	int (*stop)(struct usb_gadget *gadget);
->>>>>> +	int (*connect_control)(struct usb_gadget *gadget, bool connect);=
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
 
->>>>>> +};
->>>>>
->>>>> you shouldn't need these at all. They are already part of the gadge=
-t
->>>>> framework as ->udc_start(), ->udc_stop() and ->pullup()
->>>>>
->>>>
->>>> This is to avoid the undefined symbol errors during build when OTG h=
-as is
->>>> built-in because USB (host) is built-in but GADGET is still a module=
-=2E
->>>
->>> change your Kconfig dependencies. OTG layer shouldn't be built-in unl=
-ess
->>> both Gadget and Host are built-in.
->>>
->>
->> That is only one side of the story.
->> What happens if OTG is (m), Host is (m) but Gadget is (built in).
->>
->> Gadget build will fail because of undefined symbol errors for all of
->> the OTG APIs.
->=20
-> So you created a circular dependency, right? That's not good either. I
-> suggest you clean that up because this is bound to create randconfig
-> build problems in the long run.
->=20
+Changes since v1 at http://lkml.kernel.org/r/1466157063-10955-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org:
+ - Put back #ifdef CONFIG_OF_GPIO to remove OF code for non-of platforms
 
-We can't avoid the circular dependency.
-Gadget/Host has to register with otg. otg has to use gadget & host functi=
-ons.
+ .../devicetree/bindings/gpio/gpio-sx150x.txt       | 17 ++++++
+ drivers/gpio/gpio-sx150x.c                         | 67 ++++++++++++++++++++--
+ 2 files changed, 79 insertions(+), 5 deletions(-)
 
-If you have better ideas, please let us know.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt b/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt
+index c809acb..d2b5bb3 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-sx150x.txt
+@@ -22,6 +22,17 @@ Required properties:
+ 
+ - interrupt-controller: Marks the device as a interrupt controller.
+ 
++Optional Properties:
++- oscio-is-gpo: Boolean, Indicated the oscio pin can be used as additional
++		output gpo port.
++
++- pull-up-ports: Array of port numbers which must have pull-up enabled.
++- pull-down-ports: Array of port numbers which must have pull-down enabled.
++- open-drain-ports: Array of port numbers which must be configured as open-drain,
++			Push-Pull mode is default.
++- polarity-invert-ports: Array of port numbers whih port polarity must be inverted.
++- probe-reset: Boolean, Indicates the expander must be resetted.
++
+ The GPIO expander can optionally be used as an interrupt controller, in
+ which case it uses the default two cell specifier as described in
+ Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
+@@ -38,4 +49,10 @@ Example:
+ 
+ 		gpio-controller;
+ 		interrupt-controller;
++
++		pull-up-ports = <0 12>;
++		pull-down-ports = <1 8>;
++		open-drain-ports = <6 7 11>;
++		polarity-invert-ports = <3>;
++		probe-reset;
+ 	};
+diff --git a/drivers/gpio/gpio-sx150x.c b/drivers/gpio/gpio-sx150x.c
+index a177ebd..1226b5b 100644
+--- a/drivers/gpio/gpio-sx150x.c
++++ b/drivers/gpio/gpio-sx150x.c
+@@ -588,13 +588,16 @@ static void sx150x_init_chip(struct sx150x_chip *chip,
+ 	chip->gpio_chip.get              = sx150x_gpio_get;
+ 	chip->gpio_chip.set              = sx150x_gpio_set;
+ 	chip->gpio_chip.set_single_ended = sx150x_gpio_set_single_ended;
+-	chip->gpio_chip.base             = pdata->gpio_base;
+ 	chip->gpio_chip.can_sleep        = true;
+ 	chip->gpio_chip.ngpio            = chip->dev_cfg->ngpios;
+ #ifdef CONFIG_OF_GPIO
+-	chip->gpio_chip.of_node          = client->dev.of_node;
+-	chip->gpio_chip.of_gpio_n_cells  = 2;
++	if (client->dev.of_node) {
++		chip->gpio_chip.of_node          = client->dev.of_node;
++		chip->gpio_chip.of_gpio_n_cells  = 2;
++		chip->gpio_chip.base             = -1;
++	} else
+ #endif
++		chip->gpio_chip.base             = pdata->gpio_base;
+ 	if (pdata->oscio_is_gpo)
+ 		++chip->gpio_chip.ngpio;
+ 
+@@ -735,16 +738,70 @@ static int sx150x_install_irq_chip(struct sx150x_chip *chip,
+ 	return err;
+ }
+ 
++#ifdef CONFIG_OF_GPIO
++static u16 sx150x_of_probe_pins(struct device *dev, char *attr_name)
++{
++	struct property *prop;
++	const __be32 *p;
++	u16 pins = 0;
++	u32 u;
++
++	if (!of_find_property(dev->of_node, attr_name, NULL))
++		return 0;
++
++	of_property_for_each_u32(dev->of_node, attr_name, prop, p, u)
++		if (u < 16)
++			pins |= BIT(u);
++
++	return pins;
++}
++
++static struct sx150x_platform_data *sx150x_of_probe(struct device *dev)
++{
++	struct sx150x_platform_data *pdata = devm_kzalloc(dev, sizeof(*pdata),
++								GFP_KERNEL);
++	/* gpio_base is not needed with OF */
++
++	pdata->oscio_is_gpo = of_property_read_bool(dev->of_node,
++						    "oscio-is-gpo");
++
++	pdata->io_pullup_ena = sx150x_of_probe_pins(dev,
++						    "pull-up-ports");
++
++	pdata->io_pulldn_ena = sx150x_of_probe_pins(dev,
++						    "pull-down-ports");
++
++	pdata->io_polarity = sx150x_of_probe_pins(dev,
++						  "polarity-invert-ports");
++
++	pdata->irq_summary = of_irq_get(dev->of_node, 0);
++
++	/* irq_base is not needed with OF */
++
++	pdata->reset_during_probe = of_property_read_bool(dev->of_node,
++							  "probe-reset");
++
++	return pdata;
++}
++#endif
++
+ static int sx150x_probe(struct i2c_client *client,
+ 				const struct i2c_device_id *id)
+ {
+ 	static const u32 i2c_funcs = I2C_FUNC_SMBUS_BYTE_DATA |
+ 				     I2C_FUNC_SMBUS_WRITE_WORD_DATA;
+-	struct sx150x_platform_data *pdata;
++	struct sx150x_platform_data *pdata = NULL;
+ 	struct sx150x_chip *chip;
+ 	int rc;
+ 
+-	pdata = dev_get_platdata(&client->dev);
++#ifdef CONFIG_OF_GPIO
++	if (client->dev.of_node)
++		pdata = sx150x_of_probe(&client->dev);
++#endif
++
++	if (!pdata)
++		pdata = dev_get_platdata(&client->dev);
++
+ 	if (!pdata)
+ 		return -EINVAL;
+ 
+-- 
+1.9.1
 
-cheers,
--roger
-
-
---o54bPdH6RopKC3sfraJ7iG71Pxcjit4ti--
-
---H08H8ABFebAQ4VTR7HvVF2bUIrreaAjAr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXZ7qvAAoJENJaa9O+djCTF8wP/jgSEyLN66G2bq23eGHRnL5v
-HVBDVNZYFxfNl7x9H2AIBr152W9hf7jcSZEhhzoO2PbHHkd/y17D5F8PXxJjNXP5
-BW10brvPbpQ3OaRceHuxx2ZcV3Y9dG0G8Rd8l691S2Hr+lPUONdExH9kFnJPLxjf
-SfdcZhNiJouBicYIbkF+Z7WgkZBJF7DiGVu395aoSEr4t1xV32BrnDKEMSzOAEe7
-UZST27WBhmFTTtQZeIUTesKF9c/IpyEtitPGUqENpJWD0TLel8FIhW5ncyXbeHHD
-IpCVC3F5tNXEvwFoC3xJ5XLEiblzDC7G8sP9yganvZNQHHdqW4WjkO8Dv2lPG4zi
-/uwy3Y1Xg0FaGORWDi0PyGMQrYHiUCMHV5zxZLd9LtpY3X3/9qlyJIXoDoFHwpvK
-QAO5sla3gT08EaXRX3qqIoPjNBTqnTBiaPnq9b1TPiVFB7hFEdZlC2e8mKnogTpq
-ahEq1elTyd1aZameRVrnbl7ggE04Yj+ufkEX79eiS1dwFHQCfHNyRrQnYVetpP50
-F2yNPJ0ImYF4+TtVaE3Tp5VisUGId3D/zoYSb3qtZNuPqnQFI3Y0AhU3OmWvoYn4
-8jnU67Fp3N0b/JnICP+GYYNL9Cqj/Pin/6JPIJjCCggu/kitLvhyO16ApcNfrFJx
-R9AulB+f4/mTVkrmSGfr
-=3mk9
------END PGP SIGNATURE-----
-
---H08H8ABFebAQ4VTR7HvVF2bUIrreaAjAr--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
