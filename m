@@ -1,208 +1,273 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 4/6] mtd: nand: gpmi: correct bitflip for erased NAND
- page
-Date: Tue, 21 Jun 2016 18:18:12 +0200
-Message-ID: <20160621181812.50c4321f@bbrezillon>
-References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
- <1465578094-8816-5-git-send-email-han.xu@nxp.com>
- <20160614211401.40c26b37@bbrezillon>
- <CA+EcR22rADB8=CORdLTpSyM2-VaB+EcX5oZfFoVLAfgUVDgN=Q@mail.gmail.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: RE: [PATCH v10 2/2] dmaengine: Add Xilinx zynqmp dma engine driver
+ support
+Date: Tue, 21 Jun 2016 16:19:38 +0000
+Message-ID: <03CA77BA8AF6F1469AEDFBDA1322A7B74A18BAE8@XAP-PVEXMBX02.xlnx.xilinx.com>
+References: <1464765839-29018-1-git-send-email-appanad@xilinx.com>
+ <1464765839-29018-2-git-send-email-appanad@xilinx.com>
+ <20160607070841.GJ16910@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B4FA9@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160613055012.GC16910@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B6441@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160615165004.GC16910@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B6CAD@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160621154103.GA16910@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CA+EcR22rADB8=CORdLTpSyM2-VaB+EcX5oZfFoVLAfgUVDgN=Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Han Xu <xhnjupt@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, galak@codeaurora.org, Han Xu <han.xu@nxp.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160621154103.GA16910@localhost>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, Anirudha Sarangi <anirudh@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.c>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Jun 2016 10:53:48 -0500
-Han Xu <xhnjupt@gmail.com> wrote:
+Hi Vinod,
 
-> On Tue, Jun 14, 2016 at 2:14 PM, Boris Brezillon
-> <boris.brezillon@free-electrons.com> wrote:
-> > On Fri, 10 Jun 2016 12:01:32 -0500
-> > Han Xu <han.xu@nxp.com> wrote:
-> >  
-> >> i.MX6QP and i.MX7D BCH module integrated a new feature to detect the
-> >> bitflip number for erased NAND page. So for these two platform, set the
-> >> erase threshold to ecc_strength and if bitflip detected, GPMI driver
-> >> will correct the data to all 0xFF.
-> >>
-> >> Signed-off-by: Han Xu <han.xu@nxp.com>
-> >> ---
-> >>  drivers/mtd/nand/gpmi-nand/bch-regs.h  | 10 ++++++++++
-> >>  drivers/mtd/nand/gpmi-nand/gpmi-lib.c  |  5 +++++
-> >>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 27 ++++++++++++++++++++++++++-
-> >>  3 files changed, 41 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/mtd/nand/gpmi-nand/bch-regs.h b/drivers/mtd/nand/gpmi-nand/bch-regs.h
-> >> index 228142c..2c44b88 100644
-> >> --- a/drivers/mtd/nand/gpmi-nand/bch-regs.h
-> >> +++ b/drivers/mtd/nand/gpmi-nand/bch-regs.h
-> >> @@ -30,7 +30,13 @@
-> >>  #define BM_BCH_CTRL_COMPLETE_IRQ             (1 << 0)
-> >>
-> >>  #define HW_BCH_STATUS0                               0x00000010
-> >> +
-> >>  #define HW_BCH_MODE                          0x00000020
-> >> +#define BP_BCH_MODE_ERASE_THRESHOLD          0
-> >> +#define BM_BCH_MODE_ERASE_THRESHOLD  (0xff << BP_BCH_MODE_ERASE_THRESHOLD)
-> >> +#define BF_BCH_MODE_ERASE_THRESHOLD(v)               \
-> >> +     (((v) << BP_BCH_MODE_ERASE_THRESHOLD) & BM_BCH_MODE_ERASE_THRESHOLD)
-> >> +
-> >>  #define HW_BCH_ENCODEPTR                     0x00000030
-> >>  #define HW_BCH_DATAPTR                               0x00000040
-> >>  #define HW_BCH_METAPTR                               0x00000050
-> >> @@ -125,4 +131,8 @@
-> >>       )
-> >>
-> >>  #define HW_BCH_VERSION                               0x00000160
-> >> +#define HW_BCH_DEBUG1                                0x00000170
-> >> +#define BP_BCH_DEBUG1_ERASED_ZERO_COUNT      0
-> >> +#define BM_BCH_DEBUG1_ERASED_ZERO_COUNT              \
-> >> +             (0x1ff << BP_BCH_DEBUG1_ERASED_ZERO_COUNT)
-> >>  #endif
-> >> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
-> >> index 358ff5d..0b5666a 100644
-> >> --- a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
-> >> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
-> >> @@ -298,6 +298,11 @@ int bch_set_geometry(struct gpmi_nand_data *this)
-> >>                       | BF_BCH_FLASH0LAYOUT1_DATAN_SIZE(block_size, this),
-> >>                       r->bch_regs + HW_BCH_FLASH0LAYOUT1);
-> >>
-> >> +     /* Set erase threshold to ecc_strength for mx6qp and mx7 */
-> >> +     if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
-> >> +             writel(BF_BCH_MODE_ERASE_THRESHOLD(ecc_strength),
-> >> +                     r->bch_regs + HW_BCH_MODE);
-> >> +
-> >>       /* Set *all* chip selects to use layout 0. */
-> >>       writel(0, r->bch_regs + HW_BCH_LAYOUTSELECT);
-> >>
-> >> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> >> index aedaff3..03bdb4d 100644
-> >> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> >> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> >> @@ -1043,6 +1043,7 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
-> >>  {
-> >>       struct gpmi_nand_data *this = nand_get_controller_data(chip);
-> >>       struct bch_geometry *nfc_geo = &this->bch_geometry;
-> >> +     void __iomem *bch_regs = this->resources.bch_regs;
-> >>       void          *payload_virt;
-> >>       dma_addr_t    payload_phys;
-> >>       void          *auxiliary_virt;
-> >> @@ -1051,6 +1052,8 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
-> >>       unsigned char *status;
-> >>       unsigned int  max_bitflips = 0;
-> >>       int           ret;
-> >> +     int bitflips = 0;
-> >> +     int bitflip_flag = 0;  
+> -----Original Message-----
+> From: Vinod Koul [mailto:vinod.koul@intel.com]
+> Sent: Tuesday, June 21, 2016 9:11 PM
+> To: Appana Durga Kedareswara Rao <appanad@xilinx.com>
+> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+> dan.j.williams@intel.com; moritz.fischer@ettus.com;
+> laurent.pinchart@ideasonboard.com; luis@debethencourt.com; Srikanth
+> Vemula <svemula@xilinx.com>; Anirudha Sarangi <anirudh@xilinx.com>;
+> Punnaiah Choudary Kalluri <punnaia@xilinx.com>;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; dmaengine@vger.kernel.org
+> Subject: Re: [PATCH v10 2/2] dmaengine: Add Xilinx zynqmp dma engine
+> driver support
+>
+> On Thu, Jun 16, 2016 at 07:19:38AM +0000, Appana Durga Kedareswara Rao
+> wrote:
+> > Hi Vinod,
 > >
-> > Hm, I would choose another name, but I'm not even sure this is really
-> > needed (see below).
-> >  
-> >>
-> >>       dev_dbg(this->dev, "page number is : %d\n", page);
-> >>       ret = read_page_prepare(this, buf, nfc_geo->payload_size,
-> >> @@ -1088,8 +1091,20 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
-> >>                          payload_virt, payload_phys);
-> >>
-> >>       for (i = 0; i < nfc_geo->ecc_chunk_count; i++, status++) {
-> >> -             if ((*status == STATUS_GOOD) || (*status == STATUS_ERASED))
-> >> +             if (*status == STATUS_GOOD)
-> >> +                     continue;
-> >> +             if (*status == STATUS_ERASED) {
-> >> +                     if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this)) {
-> >> +                             bitflips = readl(bch_regs + HW_BCH_DEBUG1);  
+> >     Thanks for the review...
 > >
-> > You could use ret here or define a flips variable locally to this code
-> > (see what's done for the software correction).
-> >
-> > BTW, why not memset-ing the data chunk here (as done for the SW
-> > correction part). This way you wouldn't need the extra bitflips_flag
-> > variable.
-> >  
-> >> +                             if (bitflips) {
-> >> +                                     bitflip_flag = 1;
-> >> +                                     max_bitflips = max_t(unsigned int,
-> >> +                                                          max_bitflips,
-> >> +                                                          bitflips);
-> >> +                             }
-> >> +                     }
-> >>                       continue;
-> >> +             }
-> >>
-> >>               if (*status == STATUS_UNCORRECTABLE) {
-> >>                       int eccbits = nfc_geo->ecc_strength * nfc_geo->gf_len;
-> >> @@ -1098,6 +1113,10 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
-> >>                       int eccbytes;
-> >>                       int flips;
-> >>
-> >> +                     /* shortcut for i.MX7 and i.MX6QP */
-> >> +                     if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))  
-> >
-> > You should increment mtd->ecc_stats.failed in this case.  
-> 
-> Do you mean update the mtd->ecc_status.corrected when flips happened?
-> Nothing failed in this case.
+> > >
+> > > On Tue, Jun 14, 2016 at 08:18:09AM +0000, Appana Durga Kedareswara
+> Rao
+> > > wrote:
+> > > > > > Yes it is HW capability. It can be either in simple mode or SG
+> > > > > > mode Earlier In the driver this configuration is read from the
+> > > > > > device-tree But as per lars and your suggestion moved it as runtime
+> config
+> > > parameters.
+> > > > >
+> > > > > If sg mode is available why would anyone _not_ want it?
+> > > > >
+> > > > > I do not think there is point to have this
+> > > >
+> > > > You mean always keep the device in SG mode and provide an option
+> For
+> > > > simple dma mode if user want to use simple DMA mode??
+> > >
+> > > Yes, why would anyone want to use single if sg is available?
+>
+> If you have sg mode always enabled, but sg_list is size 1, that its
+> essentially a single
+>
 
-No, I really meant mtd->ecc_stats.failed.
-*status == STATUS_UNCORRECTABLE on MX7 and MX6QP really means we have
-an uncorrectable, but you're no longer incrementing ecc_stats->failed
-because of this 'continue' statement.
+True. As we said, simple mode ha few additional features like write only
+And read only dma. So, if user want then here is the provision.
 
-So it should be something like:
+> Btw SPI is a slave case, not a memcpy!
+>
 
-			if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this)) {
-				mtd->ecc_status.failed++;
-				continue;
-			}
+Correct. We are working on slave dma support and will patch to this driver.
 
-> 
-> >  
-> >> +                             continue;
-> >> +
-> >>                       /* Read ECC bytes into our internal raw_buffer */
-> >>                       offset = nfc_geo->metadata_size * 8;
-> >>                       offset += ((8 * nfc_geo->ecc_chunk_size) + eccbits) * (i + 1);
-> >> @@ -1182,6 +1201,12 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
-> >>               chip->oob_poi[0] = ((uint8_t *) auxiliary_virt)[0];
-> >>       }
-> >>
-> >> +     /* if bitflip occurred in erased page, change data to all 0xff */
-> >> +     if (bitflip_flag) {
-> >> +             memset(buf, ~0, nfc_geo->payload_size);
-> >> +             memset(chip->oob_poi, ~0, mtd->oobsize);
-> >> +     }
-> >> +
-> >>       return max_bitflips;
-> >>  }
-> >>  
+> > > > There are few features that are available in the simple DMA mode
+> won't
+> > > > Available in SG mode like write only DMA , read only DMA mode etc...
+> > >
+> > > Can you explain what these are, how they are used by clients?
 > >
+> > Currently it is not implemented but there are cases like,
 > >
-> >
-> > --
-> > Boris Brezillon, Free Electrons
-> > Embedded Linux and Kernel engineering
-> > http://free-electrons.com
-> >
-> > ______________________________________________________
-> > Linux MTD discussion mailing list
-> > http://lists.infradead.org/mailman/listinfo/linux-mtd/  
-> 
-> 
-> 
+> > We want to initialize the some region with known value, then write only
+> dma helps
+> > We want to read dummy data from the fifo, then read only dma helps.
+>
+> Read will be another transfer, perhpas sg lnegth = 1
+>
 
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+In sg case, both source and destination locations need to be configured.
+In simple dma and read-only mode, only source address is required. Simple
+Dma just read the data from source location and discard that data. It will save
+Unnecessary write to destination here.
+
+> > Best case is SPI fifo.
+>
+> Nope
+>
+
+Why?
+
+
+> >
+> > >
+> > > > > > > > +       chan->config.ratectrl = cfg->ratectrl;
+> > > > > > > > +       chan->config.src_issue = cfg->src_issue;
+> > > > > > > > +       chan->config.src_burst_len = cfg->src_burst_len;
+> > > > > > > > +       chan->config.dst_burst_len = cfg->dst_burst_len;
+> > > > > > >
+> > > > > > > can you describe these parameters?
+> > > > > > ratectl:
+> > > > > > Rate control can be independently enabled per channel. When rate
+> > > > > > control is enabled, the DMA channel uses the rate control count to
+> > > > > > schedule
+> > > > > successive data read transactions.
+> > > > >
+> > > > > And how is this used by client?
+> > > >
+> > > > When rate control is enabled, ZDMA channel uses the rate control
+> count
+> > > > To schedule successive data read transactions I mean kind of flow
+> > > > control to schedule Transactions at fixed intervals instead of pumping
+> > > > the transfers without delay or whenever bus is available
+> > > >
+> > > > Rate control count register definition (11:0):
+> > > > Scheduling interval for SRC AXI transaction, only used if rate control
+> > > > is enabled
+> > >
+> > > Okay, why would anyone want transactions at fixed interval. We are
+> talking
+> > > about DMA, so please give me transfers without delay or whenever bus
+> is
+> > > available!
+> >
+> > Could be that there are certain IPs that requires delay in b/w transactions.
+> > Since IP is providing this feature we are exploring it to the user.
+>
+> I kind of don't agree to that!
+>
+
+It's a kind of rate control mechanism. We can aslo use this feature to prioritize other
+Channel by deliberately controlling the current channel transfer scheduling.
+
+> >
+> > >
+> > >
+> > > > > > src_issue:
+> > > > > > Tells outstanding transaction on SRC.
+> > > > >
+> > > > > This should be read only then, right?
+> > > >
+> > > > It is a Read/Write register
+> > > > http://www.xilinx.com/html_docs/registers/ug1087/ug1087-zynq-
+> ultrascal
+> > > > e-registers.html By default it is configured for Max transactions.
+> > > > If user want to limit it they can limit it using this config option.
+> > >
+> > > And why would they want that?
+> >
+> > Could be that there are certain IPs that my not support burst operations or
+> > May not support all burst lengths it will be helpful.
+> > Since IP is providing the feature, we are exploring it to the user.
+> >
+> > >
+> > > > > > Burst_len:
+> > > > > > Configures the burst length of the src and dst transfers...
+> > > > >
+> > > > > Hmmm, but you are on memcpy, so that should be programmed for
+> > > throughput?
+> > > >
+> > > > Yes...
+> > >
+> > > So max burst lengths then, why would anyone configure lesser?
+> >
+> > Depends on the destination and source IPs.
+>
+> Not for memory copy
+>
+
+Depends on the system and how source and destination IPs are interconnected.
+Sometimes there is a limitation from interconnection also.
+Also some flash controllers providing linear access to NAND or NOR memories may
+Have limitation in burst length but still user can use memory copy with desired burst
+Length.
+
+>
+> >
+> > >
+> > > > > > > How would a client know how to configure them?
+> > > > > >
+> > > > > > With the default values of the config parameters driver will work.
+> > > > >
+> > > > > But how will client know what is default!
+> > > >
+> > > > Default values means IP default state after reset.
+> > > > If user not aware of the above parameters also still the driver will work
+> for
+> > > basic functionality.
+> > > > Do you want me to implement one more API get_config so that
+> Whenever
+> > > > user will call the get_config he will know the default values Of the
+> > > > config parameters?
+> > >
+> > > Looking at above I think we do not warrant programming them. Assume
+> defaults
+> > > in your driver for performance. Like max burst lengths, Max transactions,
+> > > without delay scheduling.
+> > >
+> > > If you disagree, which is fine, please provide the cases where a client
+> would
+> > > need to program these to different values.
+> >
+> > As said above there are use cases for SPI and others but currently we didn't
+> tested
+> > It.
+> >
+> > >
+> > > > > > If user has specific requirement to change these parameters they
+> > > > > > can pass It to the driver using set_config API and all these
+> > > > > > parameters are Documented in the include/linux/dma/xilinx_dma.h
+> file...
+> > > > >
+> > > > > Can you give me an example where user would like to do that
+> > > >
+> > > > I am using customized dma test client.
+> > > > There I am calling this set_config API before triggering memcpy/SG
+> > > operations.
+> > >
+> > > Well that is precisely a  problem. The generic applications wont know
+> "your"
+> > > custom API and will not configure that!
+> >
+> > As said above, generic application can work with default values.
+> > These are not custom parameters and we can say these are the dma
+> parameters.
+> > i.e we can generalize these and provide it to user as generic API.
+>
+> No it doesn't make it generic API. With generic API the IP should be usable
+> with any generic interface without specfic hoops to go thru. People are
+> going to test upstream dmatest on your IP and find it not working or
+> degraded perf, so better stick with generic API.
+>
+
+By default driver configures the optimized settings and it works with upstream
+Dmatest. Even with customized settings it works with dmatest only thing it might
+Gain/loss performance but that's up to the configuration user may want.
+
+This dma controller was designed to provide more flexibility to the user by providing
+the all possible dma parameters configurable.
+
+Regards,
+Punnaiah
+> --
+> ~Vinod
+
+
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
