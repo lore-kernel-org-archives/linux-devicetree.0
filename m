@@ -1,88 +1,35 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] phy: rockchip-inno-usb2: add a new driver for
- Rockchip usb2phy
-Date: Tue, 21 Jun 2016 17:27:33 +0800
-Message-ID: <f70f9c49-9eb7-5dc9-4ff1-eab1481ad66a@rock-chips.com>
-References: <1466129353-48063-1-git-send-email-frank.wang@rock-chips.com>
- <CABXOdTcz9zjJ1iN2D9UXeYgd0y-kzh+fV3=+kmB=8j2jYqTQkg@mail.gmail.com>
- <986b53d6-ef65-bc1f-38a8-f981e23a6f02@rock-chips.com>
- <2284777.mdEtFaarym@diego>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V4 1/1] net: ethernet: Add TSE PCS support to dwmac-socfpga
+Date: Tue, 21 Jun 2016 11:34:49 +0200
+Message-ID: <3759495.N5GR8CgQvA@wuerfel>
+References: <1466498771-18971-1-git-send-email-thloh@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <2284777.mdEtFaarym@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466498771-18971-1-git-send-email-thloh@altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thloh@altera.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net, preid@electromag.com.au, dinguyen@opensource.altera.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thloh85@gmail.com, cnphoon@altera.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpPbiAyMDE2LzYvMjEgMTc6MDUsIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+IEhp
-IEZyYW5rLAo+Cj4gQW0gRGllbnN0YWcsIDIxLiBKdW5pIDIwMTYsIDE1OjUyOjQ1IHNjaHJpZWIg
-RnJhbmsgV2FuZzoKPj4gT24gMjAxNi82LzIwIDEyOjU2LCBHdWVudGVyIFJvZWNrIHdyb3RlOgo+
-Pj4gT24gU3VuLCBKdW4gMTksIDIwMTYgYXQgODozMiBQTSwgRnJhbmsgV2FuZyA8ZnJhbmsud2Fu
-Z0Byb2NrLWNoaXBzLmNvbT4KPiB3cm90ZToKPj4+Pj4gVHVybnMgb3V0IG15IHByb2JsZW0gd2Fz
-IG9uZSBvZiB0ZXJtaW5vbG9neS4gVXNpbmcgInN1c3BlbmQiIGFuZAo+Pj4+PiAicmVzdW1lIiB0
-byBtZSBzdWdnZXN0ZWQgdGhlIGNvbW1vbiB1c2Ugb2Ygc3VzcGVuZCBhbmQgcmVzdW1lCj4+Pj4+
-IGZ1bmN0aW9ucy4gVGhhdCBpcyBub3QgdGhlIGNhc2UgaGVyZS4gQWZ0ZXIgbWVudGFsbHkgcmVw
-bGFjaW5nCj4+Pj4+ICJzdXNwZW5kIiB3aXRoICJwb3dlcl9vZmYiIGFuZCAicmVzdW1lIiB3aXRo
-ICJwb3dlcl9vbiIsIHlvdSBhcmUKPj4+Pj4gcmlnaHQsIG5vIHByb2JsZW0gZXhpc3RzLiBTb3Jy
-eSBmb3IgdGhlIG5vaXNlLgo+Pj4+Pgo+Pj4+PiBNYXliZSBpdCB3b3VsZCBiZSB1c2VmdWwgdG8g
-cmVwbGFjZSAicmVzdW1lIiB3aXRoICJwb3dlcl9vbiIgYW5kCj4+Pj4+ICJzdXNwZW5kIiB3aXRo
-ICJwb3dlcl9vZmYiIGluIHRoZSBmdW5jdGlvbiBhbmQgdmFyaWFibGUgbmFtZXMgdG8KPj4+Pj4g
-cmVkdWNlIGNvbmZ1c2lvbiBhbmQgbWlzdW5kZXJzdGFuZGluZ3MuCj4+Pj4+Cj4+Pj4+IFRoYW5r
-cywKPj4+Pj4gR3VlbnRlcgo+Pj4+IFdlbGwsIGl0IGRvZXMgaGF2ZSBhIGJpdHMgY29uZnVzaW9u
-LCBob3dldmVyLCB0aGUgcGh5LXBvcnQgYWx3YXlzIGp1c3QKPj4+PiBnb2VzCj4+Pj4gdG8gc3Vz
-cGVuZCBhbmQgcmVzdW1lIG1vZGUgKE5vdCBwb3dlciBvZmYgYW5kIHBvd2VyIG9uKSBpbiBhIGZh
-Y3QuIFNvCj4+Pj4gbXVzdAo+Pj4+IGl0IGJlIHJlbmFtZWQ/Cj4+PiBPdGhlciBwaHkgZHJpdmVy
-cyBuYW1lIHRoZSBmdW5jdGlvbnMgX3Bvd2VyX29mZiBhbmQgX3Bvd2VyX29uIGFuZAo+Pj4gYXZv
-aWQgdGhlIGNvbmZ1c2lvbi4gVGhlIGNhbGxiYWNrcyBhcmUgbmFtZWQgLnBvd2VyX29mZiBhbmQg
-LnBvd2VyX29uLAo+Pj4gd2hpY2ggZ2l2ZXMgYSBjbGVhciBpbmRpY2F0aW9uIG9mIGl0cyBpbnRl
-bmRlZCBwdXJwb3NlLiBPdGhlciBkcml2ZXJzCj4+PiBpbXBsZW1lbnRpbmcgc3VzcGVuZC9yZXN1
-bWUgKHN1Y2ggYXMgdGhlIG9tYXAgdXNiIHBoeSBkcml2ZXIpIHRpZQo+Pj4gdGhvc2UgZnVuY3Rp
-b25zIG5vdCBpbnRvIHRoZSBwb3dlcl9vZmYvcG93ZXJfb24gY2FsbGJhY2tzLCBidXQgaW50bwo+
-Pj4gdGhlIGRyaXZlcidzIHN1c3BlbmQvcmVzdW1lIGNhbGxiYWNrcy4gQXQgbGVhc3QgdGhlIG9t
-YXAgZHJpdmVyIGhhcwo+Pj4gc2VwYXJhdGUgcG93ZXIgbWFuYWdlbWVudCBmdW5jdGlvbnMuCj4+
-Pgo+Pj4gRG8gdGhlIGZ1bmN0aW9ucyBfaGF2ZV8gdG8gYmUgcmVuYW1lZCA/IFN1cmVseSBub3Qu
-IEJ1dCwgaWYgdGhlCj4+PiBmdW5jdGlvbnMgYXJlIHJlYWxseSBzdXNwZW5kL3Jlc3VtZSBmdW5j
-dGlvbnMgYW5kIG5vdAo+Pj4gcG93ZXJfb2ZmL3Bvd2VyX29uIGZ1bmN0aW9ucywgbWF5YmUgdGhl
-eSBzaG91bGQgdGllIHRvIHRoZQo+Pj4gc3VzcGVuZC9yZXN1bWUgZnVuY3Rpb25zIGFuZCBub3Qg
-cmVnaXN0ZXIgdGhlbXNlbHZlcyBhcwo+Pj4gcG93ZXJfb2ZmL3Bvd2VyX29uIGZ1bmN0aW9ucyA/
-Cj4+IEFzIEd1ZW50ZXIgbWVudGlvbmVkIGFib3ZlLCAgSSBkb3BlZCBvdXQgdHdvIHNvbHV0aW9u
-cywgb25lIGlzIHRoYXQga2VlcAo+PiBjdXJyZW50IHByb2Nlc3MgYnV0IHJlbmFtaW5nICpfcmVz
-dW1lLypfc3VzcGVuZCB0bwo+PiAqX3Bvd2VyX29uLypfcG93ZXJfb2ZmOwo+IGluIGEgd2F5LCBu
-YW1pbmcgc3R1ZmYgInBvd2VyX29mZiIsICJwb3dlcl9vbiIgYWN0dWFsbHkgbWF0Y2hlcy4gRm9y
-IG9uZSwgdGhlCj4gcGh5LWJsb2NrIGdvZXMgZnJvbSB1bnVzYWJsZSB0byB1c2FibGUgYnkgdXNi
-LWRldmljZXMgYW5kIGFsc28gd2lsbCBwb3dlci1vbiBhCj4gcGh5LXN1cHBseSByZWd1bGF0b3Ig
-KG9mdGVuIG5hbWVkIHZjY19ob3N0KiBvbiBSb2NrY2hpcCBib2FyZHMpIGZyb20gdGhlIHBoeS0K
-PiBjb3JlLgo+Cj4+IGFub3RoZXIgaXMgdGhhdCBkbyBub3QgYXNzaWduIHBvd2VyX29uL3Bvd2Vy
-X29mZgo+PiBmdW5jdGlvbnMgZm9yIHBoeV9vcHMgYXQgcGh5IGNyZWF0aW5nIHRpbWUsIHRoZW4s
-IHNob3J0ZW4KPj4gX1NDSEVEVUxFX0RFTEFZXyBkZWxheSB0aW1lIGxlc3MgdGhhdCAxMCBTZWNv
-bmRzLCBhbmQgdGhlIHBoeS1wb3J0Cj4+IHN1c3BlbmQvcmVzdW1lIG1lY2hhbmlzbSBkZXBlbmQg
-b24gX3NtX3dvcmtfIGNvbXBsZXRlbHkuCj4gV2hpY2ggaW4gdHVybiB3b3VsZCBtZWFuIHRoYXQg
-d2Ugd291bGQgYWx3YXlzIGRlcGVuZCBvbiBhIGZ1bGx5IGNvbnRyb2xsYWJsZQo+IHBoeSBibG9j
-ay4gUmlnaHQgbm93IGl0IHNlZW1zLCByazMwMzYsIHJrMzIyOCwgcmszMzY4IChwcm9iYWJseSBm
-b3Jnb3Qgc29tZSkKPiBoYXZlIHRoZSBzYW1lIHR5cGUgb2YgcGh5LCBidXQgd2l0aCBhdCBsZWFz
-dCB0aGUgdW5wbHVnLWRldGVjdGlvbiBtaXNzaW5nLgo+IEluIGl0cyBjdXJyZW50IGZvcm0gdGhl
-IGRyaXZlciBjYW4gdmVyeSB3ZWxsIHN1cHBvcnQgdGhvc2UgKGxhdGVyIG9uKSBieQo+IHNpbXBs
-eSB3b3JraW5nIHN0YXRpY2FsbHkgKG9ubHkgYWN0aW5nIG9uIHBoeV9wb3dlciBjYWxsYmFja3Mg
-YW5kIG5vdCBnb2luZyB0bwo+IHN1c3BlbmQgb24gaXRzIG93bikuCj4KPiBBbHNvIGhhdmluZyB0
-aGUgd29yayBydW5uaW5nIGluIDEwLXNlY29uZCBpbnRlcnZhbGwgc2VlbXMgd2FzdGVmdWwuCj4K
-Pj4gU28gd2hpY2ggaXMgdGhlIGJldHRlciB3YXkgZnJvbSB5b3VyIHZpZXc/IG9yIHdvdWxkIHlv
-dSBsaWtlIHRvIGdpdmUKPj4gb3RoZXIgdW5pcXVlIHBlcmNlcHRpb25zIHBsZWFzZT8KPiBBcyBv
-YnZpb3VzIGZyb20gdGhlIGFib3ZlLCBJIHdvdWxkIHByZWZlciBqdXN0IHJlbmFtaW5nIHRoZSBm
-dW5jdGlvbnMgOi0pCj4KPiBIZWlrbwo+CgpHb3QgaXQsIHRoYW5rcyBmb3IgeW91ciBjb21tZW50
-cy4gSSBhbSBnb2luZyB0byBjb3JyZWN0IGFuZCBzZW5kIG91dCBhIApuZXcgdmVyc2lvbiBsYXRl
-ciB0b2RheSwgc28gc29ycnkgZm9yIHRyb3VibGUgeW91IHRvIHNpZ24gJ1Jldmlld2VkLWJ5JyAK
-YWdhaW4gaWYgbm8gYW55IG90aGVyIGlzc3Vlcy4KCgpCUi4KRnJhbmsKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5n
-IGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
+On Tuesday, June 21, 2016 1:46:11 AM CEST thloh@altera.com wrote:
+> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> index 72d82d6..dd10f2f 100644
+> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> @@ -17,9 +17,26 @@ Required properties:
+>  Optional properties:
+>  altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
+>  		DWMAC controller is connected emac splitter.
+> +phy-mode: The phy mode the ethernet operates in
+> +altr,sgmii_to_sgmii_converter: phandle to the TSE SGMII converter
+> +
+
+Please use '-' instead of '_' in the property names.
+
+Can you explain in the patch description why you can't reference
+the converter using the normal "phy-handle" property and implement
+the converter as a phy driver?
+
+	Arnd
