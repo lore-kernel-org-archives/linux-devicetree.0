@@ -1,46 +1,86 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: cs53l30: Add MUTE pin control support via GPIO
-Date: Tue, 21 Jun 2016 16:34:37 -0500
-Message-ID: <20160621213437.GA3571@rob-hp-laptop>
-References: <1466474084-6775-1-git-send-email-nicoleotsuka@gmail.com>
+Subject: Re: [PATCH 2/3] iio: potentiometer: mcp4531: Add device tree binding
+ documentation
+Date: Tue, 21 Jun 2016 16:37:16 -0500
+Message-ID: <20160621213716.GA4370@rob-hp-laptop>
+References: <1466492137-32683-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1466492137-32683-3-git-send-email-florian.vaussard@heig-vd.ch>
+ <f763a2ea-6a82-a8f6-4afb-d09dba240927@axentia.se>
+ <5768F180.4080601@heig-vd.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1466474084-6775-1-git-send-email-nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+In-Reply-To: <5768F180.4080601-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 20, 2016 at 06:54:44PM -0700, Nicolin Chen wrote:
-> The codec chip has a physical MUTE pin to let users control it via
-> GPIO. So this patch add a mute control support to the driver.
+On Tue, Jun 21, 2016 at 09:49:20AM +0200, Florian Vaussard wrote:
+> Hello,
 > 
-> Signed-off-by: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/sound/cs53l30.txt          |  2 ++
->  sound/soc/codecs/cs53l30.c                         | 30 ++++++++++++++++++++++
->  sound/soc/codecs/cs53l30.h                         |  1 +
->  3 files changed, 33 insertions(+)
+> On 06/21/2016 09:38 AM, Peter Rosin wrote:
+> > On 2016-06-21 08:55, Florian Vaussard wrote:
+> >> Add the device tree documentation for all the supported parts. Apart the
+> >> compatible string and standard I2C binding, no other binding is currently
+> >> needed.
+> >>
+> >> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+> >> ---
+> >>  .../bindings/iio/potentiometer/mcp4531.txt         | 84 ++++++++++++++++++++++
+> >>  1 file changed, 84 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/mcp4531.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/mcp4531.txt b/Documentation/devicetree/bindings/iio/potentiometer/mcp4531.txt
+> >> new file mode 100644
+> >> index 0000000..b052299
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/iio/potentiometer/mcp4531.txt
+> >> @@ -0,0 +1,84 @@
+> >> +* Microchip MCP453X/454X/455X/456X/463X/464X/465X/466X Digital Potentiometer
+> >> +  driver
+> >> +
+> >> +The node for this driver must be a child node of a I2C controller, hence
+> >> +all mandatory properties for your controller must be specified. See directory:
+> >> +
+> >> +        Documentation/devicetree/bindings/i2c
+> >> +
+> >> +for more details.
+> >> +
+> >> +Required properties:
+> >> +	- compatible:  	Must be one of the following, depending on the
+> >> +			model:
+> >> +			"microchip,mcp4531-502"
+> >> +			"microchip,mcp4531-103"
+> >> +			"microchip,mcp4531-503"
+> > 
+> > *snip*
+> > 
+> > I'm not directly opposed, but I have used the following and DT booting
+> > works like a charm here.
+> > 
+> > 		mcp4651-104@28 {
+> > 			compatible = "mcp4651-104";
+> > 			reg = <0x28>;
+> > 		};
+> > 
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/cs53l30.txt b/Documentation/devicetree/bindings/sound/cs53l30.txt
-> index 18d6b99..6f7d3c8 100644
-> --- a/Documentation/devicetree/bindings/sound/cs53l30.txt
-> +++ b/Documentation/devicetree/bindings/sound/cs53l30.txt
-> @@ -13,6 +13,8 @@ Optional properties:
->  
->    - reset-gpios : a GPIO spec for the reset pin.
->  
-> +  - mute-gpios : a GPIO spec for the MUTE pin.
+> I was not aware that the i2c subsystem had a facility to match the compatible
+> string against i2c_device_id. Good to know.
+> 
+> > But, I suppose some DT documentation is not bad, and my understanding of
+> > the device instantiation process and the i2c/dt interactions are not
+> > complete, so my DT snippet might be an abomination? I'll leave the
+> > decision if this is needed to someone with more experience on how other
+> > drivers handle this.
+> > 
+> 
+> Your compatible string is missing the vendor ID (microchip). This is the only
+> objection that I can see to your proposition. Let's wait to hear from a DT
+> maintainer.
 
-Please define the active state for the gpio.
+I2C subsystem happens to ignore the vendor prefix in matching. You 
+should not rely on that and provide proper compatible strings.
 
-> +
->    - cirrus,micbias-lvl : Set the output voltage level on the MICBIAS Pin.
->  			 0 = Hi-Z
->  			 1 = 1.80 V
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
