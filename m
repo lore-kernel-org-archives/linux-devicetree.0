@@ -1,122 +1,71 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: rockchip: add GMAC nodes for RK3228 SoCs
-Date: Tue, 21 Jun 2016 15:20:52 +0800
-Message-ID: <1466493653-18611-3-git-send-email-zhengxing@rock-chips.com>
-References: <1466493653-18611-1-git-send-email-zhengxing@rock-chips.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 03/17] RTC: ds1307: Add devicetree bindings for DS1341
+Date: Tue, 21 Jun 2016 00:22:36 -0700
+Message-ID: <1466493770-11895-2-git-send-email-andrew.smirnov@gmail.com>
+References: <1466493770-11895-1-git-send-email-andrew.smirnov@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1466493653-18611-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDKOBWPM5ABRBVOWUO5QKGQEEOBADSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1466493770-11895-1-git-send-email-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add the GMAC dt nodes for rk3228 SoCs.
+Add devicetree bindings for DS1341 that allow to control settings
+affecting power consumption of the chip.
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
+ .../devicetree/bindings/rtc/dallas,ds1341.txt      | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
 
- arch/arm/boot/dts/rk3228.dtsi |   64 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3228.dtsi b/arch/arm/boot/dts/rk3228.dtsi
-index e224147..4c0223c 100644
---- a/arch/arm/boot/dts/rk3228.dtsi
-+++ b/arch/arm/boot/dts/rk3228.dtsi
-@@ -417,6 +417,28 @@
- 		status = "disabled";
- 	};
- 
-+	gmac: eth@30200000 {
-+		compatible = "rockchip,rk322x-gmac";
-+		reg = <0x30200000 0x10000>;
-+		rockchip,grf = <&grf>;
-+		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "macirq";
-+		clocks = <&cru SCLK_MAC>, <&cru SCLK_MAC_RX>,
-+			<&cru SCLK_MAC_TX>, <&cru SCLK_MAC_REF>,
-+			<&cru SCLK_MAC_REFOUT>, <&cru ACLK_GMAC>,
-+			<&cru PCLK_GMAC>;
-+		clock-names = "stmmaceth", "mac_clk_rx",
-+			"mac_clk_tx", "clk_mac_ref",
-+			"clk_mac_refout", "aclk_mac",
-+			"pclk_mac";
-+		resets = <&cru SRST_GMAC>;
-+		reset-names = "stmmaceth";
-+		phy-mode = "rgmii";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&rgmii_pins>;
-+		status = "disabled";
+diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
+new file mode 100644
+index 0000000..7942dd0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/dallas,ds1341.txt
+@@ -0,0 +1,23 @@
++* Dallas DS1341		I2C Serial Real-Time Clock
++
++Required properties:
++
++- compatible: Should contain "dallas,ds1341".
++
++- reg: I2C address for chip
++
++Optional properties:
++
++- dallas,disable-oscillator-stop-flag : Boolean. Configure chip to disable oscillator
++  fault detection circuitry. Setting this flag is beneficial for power saving.
++
++- dallas,enable-glitch-filter : Boolean. Configure chip to enable crystal oscillator
++  output glitch filtering. Setting this flag will increase power consumption.
++
++Example:
++	ds1341: rtc@68 {
++		compatible = "dallas,ds1341";
++		dallas,disable-oscillator-stop-flag;
++		dallas,enable-glitch-filter;
++		reg = <0x68>;
 +	};
-+
- 	gic: interrupt-controller@32010000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
-@@ -501,6 +523,10 @@
- 			bias-disable;
- 		};
- 
-+		pcfg_pull_none_drv_12ma: pcfg-pull-none-drv-12ma {
-+			drive-strength = <12>;
-+		};
-+
- 		emmc {
- 			emmc_clk: emmc-clk {
- 				rockchip,pins = <2 7 RK_FUNC_2 &pcfg_pull_none>;
-@@ -522,6 +548,44 @@
- 			};
- 		};
- 
-+		gmac {
-+			rgmii_pins: rgmii-pins {
-+				rockchip,pins = <2 14 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 12 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 25 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 19 RK_FUNC_1 &pcfg_pull_none_drv_12ma>,
-+						<2 18 RK_FUNC_1 &pcfg_pull_none_drv_12ma>,
-+						<2 22 RK_FUNC_1 &pcfg_pull_none_drv_12ma>,
-+						<2 23 RK_FUNC_1 &pcfg_pull_none_drv_12ma>,
-+						<2 9 RK_FUNC_1 &pcfg_pull_none_drv_12ma>,
-+						<2 13 RK_FUNC_1 &pcfg_pull_none_drv_12ma>,
-+						<2 17 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 16 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 21 RK_FUNC_2 &pcfg_pull_none>,
-+						<2 20 RK_FUNC_2 &pcfg_pull_none>,
-+						<2 11 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 8 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			rmii_pins: rmii-pins {
-+				rockchip,pins = <2 14 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 12 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 25 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 19 RK_FUNC_1 &pcfg_pull_none_drv_12ma>,
-+						<2 18 RK_FUNC_1 &pcfg_pull_none_drv_12ma>,
-+						<2 13 RK_FUNC_1 &pcfg_pull_none_drv_12ma>,
-+						<2 17 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 16 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 8 RK_FUNC_1 &pcfg_pull_none>,
-+						<2 15 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			phy_pins: phy-pins {
-+				rockchip,pins = <2 14 RK_FUNC_2 &pcfg_pull_none>,
-+						<2 8 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
- 				rockchip,pins = <0 0 RK_FUNC_1 &pcfg_pull_none>,
 -- 
-1.7.9.5
+2.5.5
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
