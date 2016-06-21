@@ -1,168 +1,128 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: Using DT overlays for adding virtual hardware
-Date: Tue, 21 Jun 2016 14:35:26 +0300
-Message-ID: <EA3C5627-67A4-4120-BA56-D563F2D91CF8@konsulko.com>
-References: <575828C0.5000008@siemens.com> <20160608151745.GB13355@leverpostej> <28BC1AEC-6A7D-4A97-82F4-5670E884C41D@konsulko.com> <20160608162343.GD13355@leverpostej> <999B1CFF-C204-4C19-AE76-AF9DB54E51E4@konsulko.com> <57584A2C.4030507@siemens.com> <5759069B.4080800@siemens.com> <57691342.2020502@siemens.com> <CFCE0FAF-991B-487B-A684-09A04EFC3F46@konsulko.com> <57692378.8010909@siemens.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <jailhouse-dev+bncBCV5BG4UVENBBA6NUS5QKGQENEKT7TI@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <57692378.8010909@siemens.com>
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jailhouse <jailhouse-dev@googlegroups.com>, =?utf-8?Q?M=C3=A5ns_Rullg=C3=A5rd?= <mans@denx.de>, Antonios Motakis <antonios.motakis@huawei.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RESEND PATCH v3 1/2] device property: Add
+	function to search for named child of device
+Date: Tue, 21 Jun 2016 13:42:16 +0200
+Message-ID: <28758107.YROb1rVtm6@vostro.rjw.lan>
+References: <cover.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
+ <866c9edccdd89805f6a0c0aa92f8a78ae616ed61.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
+ <20160621111126.GX1739@lahna.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160621111126.GX1739@lahna.fi.intel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, "Rafael J.Wysocki" <rafael.j.wysocki@intel.com>, Robert Moore <robert.moore@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Lv Zheng <lv.zheng@intel.com>, Takashi Iwai <tiwai@suse.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jan,
+On Tuesday, June 21, 2016 02:11:26 PM Mika Westerberg wrote:
+> On Mon, Jun 20, 2016 at 12:38:58PM +0100, Adam Thomson wrote:
+> > For device nodes in both DT and ACPI, it possible to have named
+> > child nodes which contain properties (an existing example being
+> > gpio-leds). This adds a function to find a named child node for
+> > a device which can be used by drivers for property retrieval.
+> > 
+> > For DT data node name matching, of_node_cmp() and similar functions
+> > are made available outside of CONFIG_OF block so the new function
+> > can reference these for DT and non-DT builds.
+> > 
+> > For ACPI data node name matching, a helper function is also added
+> > which returns false if CONFIG_ACPI is not set, otherwise it
+> > performs a string comparison on the data node name. This avoids
+> > using the acpi_data_node struct for non CONFIG_ACPI builds,
+> > which would otherwise cause a build failure.
+> > 
+> > Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+> > Tested-by: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > ---
+> > 
+> > Changes in v3:
+> >  - Move of_*_cmp() functions in of.h outside of CONFIG_OF block so they are
+> >    available for non-DT builds
+> >  - In device_get_named_child_node(), use of_node_cmp() helper macro instead of
+> >    strcasecmp() (node names not alway case insensitive, depending on platform).
+> > 
+> > Changes in v2:
+> >  - Rebase to v4.7-rc1
+> > 
+> >  drivers/base/property.c  | 28 ++++++++++++++++++++++++++++
+> >  include/acpi/acpi_bus.h  |  7 +++++++
+> >  include/linux/acpi.h     |  6 ++++++
+> >  include/linux/of.h       | 14 +++++++-------
+> >  include/linux/property.h |  3 +++
+> >  5 files changed, 51 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > index f38c21d..43a36d6 100644
+> > --- a/drivers/base/property.c
+> > +++ b/drivers/base/property.c
+> > @@ -888,6 +888,34 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
+> >  EXPORT_SYMBOL_GPL(device_get_next_child_node);
+> > 
+> >  /**
+> > + * device_get_named_child_node - Return first matching named child node handle
+> > + * @dev: Device to find the named child node for.
+> > + * @childname: String to match child node name against.
+> > + */
+> > +struct fwnode_handle *device_get_named_child_node(struct device *dev,
+> > +						  const char *childname)
+> > +{
+> > +	struct fwnode_handle *child;
+> > +
+> > +	/*
+> > +	 * Find first matching named child node of this device.
+> > +	 * For ACPI this will be a data only sub-node.
+> > +	 */
+> > +	device_for_each_child_node(dev, child) {
+> > +		if (is_of_node(child)) {
+> > +			if (!of_node_cmp(to_of_node(child)->name, childname))
+> > +				return child;
+> > +		} else if (is_acpi_data_node(child)) {
+> > +			if (acpi_data_node_match(child, childname))
+> > +				return child;
+> > +		}
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(device_get_named_child_node);
+> > +
+> > +/**
+> >   * fwnode_handle_put - Drop reference to a device node
+> >   * @fwnode: Pointer to the device node to drop the reference to.
+> >   *
+> > diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> > index 788c6c3..993bdd0 100644
+> > --- a/include/acpi/acpi_bus.h
+> > +++ b/include/acpi/acpi_bus.h
+> > @@ -420,6 +420,13 @@ static inline struct acpi_data_node *to_acpi_data_node(struct fwnode_handle *fwn
+> >  		container_of(fwnode, struct acpi_data_node, fwnode) : NULL;
+> >  }
+> > 
+> > +static inline bool acpi_data_node_match(struct fwnode_handle *fwnode,
+> > +					const char *name)
+> > +{
+> > +	return is_acpi_data_node(fwnode) ?
+> > +		(!strcasecmp(to_acpi_data_node(fwnode)->name, name)) : false;
+> > +}
+> 
+> Looks fine to me.
+> 
+> One question - is it expected that matching ACPI data nodes is always
+> case insensitive?
 
-> On Jun 21, 2016, at 14:22 , Jan Kiszka <jan.kiszka@siemens.com> wrote:
->=20
-> On 2016-06-21 12:24, Pantelis Antoniou wrote:
->> Hi Jan,
->>=20
->>> On Jun 21, 2016, at 13:13 , Jan Kiszka <jan.kiszka@siemens.com> wrote:
->>>=20
->>> Hi Pantelis,
->>>=20
->>> coming back to this topic:
->>>=20
->>> On 2016-06-09 08:03, Jan Kiszka wrote:
->>>> OK, trial and error, and some interesting insights: I've played with D=
-T
->>>> fragments and the overlay configfs patch of Pantelis [1] to have a
->>>> convenient start. Interestingly, I wasn't able to load a fragment that
->>>> followed the format specification for overlays ("Failed to resolve
->>>> tree"). By chance, I got this one working:
->>>>=20
->>>> /dts-v1/;
->>>> / {
->>>> 	fragment {
->>>> 		target-path =3D "/soc@01c00000";
->>>> 		__overlay__ {
->>>> 			#address-cells =3D <2>;
->>>> 			#size-cells =3D <2>;
->>>>=20
->>>> 			vpci@0x2000000 {
->>>> 				compatible =3D "pci-host-cam-generic";
->>>> 				device_type =3D "pci";
->>>> 				#address-cells =3D <3>;
->>>> 				#size-cells =3D <2>;
->>>> 				reg =3D <0 0x2000000 0 0x1000000>;
->>>> 				ranges =3D
->>>> 					<0x02000000 0x00 0x10000000 0x00 0x10000000 0x00 0x30000000>;
->>>> 			};
->>>> 		};
->>>> 	};
->>>> };
->>>>=20
->>>> It successfully makes a BananaPi kernel add a pci host with the
->>>> specified config space and MMIO window.
->>>>=20
->>>> [   81.619583] PCI host bridge /soc@01c00000/vpci@0x2000000 ranges:
->>>> [   81.619610]   No bus range found for /soc@01c00000/vpci@0x2000000, =
-using [bus 00-ff]
->>>> [   81.619634]   MEM 0x10000000..0x3fffffff -> 0x10000000
->>>> [   81.620482] pci-host-generic 2000000.vpci: ECAM at [mem 0x02000000-=
-0x02ffffff] for [bus 00-ff]
->>>> [   81.620779] pci-host-generic 2000000.vpci: PCI host bridge to bus 0=
-000:00
->>>> [   81.620801] pci_bus 0000:00: root bus resource [bus 00-ff]
->>>> [   81.620814] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3f=
-ffffff]
->>>> [   81.620851] PCI: bus0: Fast back to back transfers enabled
->>>>=20
->>>> So, no /plugin/ statement, no phandles resolution. This format even
->>>> builds with the in-kernel dtc. Any explanations? Does the code make
->>>> sense (at least it builds without warnings)?
->>>>=20
->>>> Now I need to back this with some code in Jailhouse.
->>>=20
->>> Meanwhile I got a virtual PCI device recognized by Linux when running
->>> over Jailhouse. However, my hack above doesn't get me to proper
->>> interrupt mapping yet. This is what I was trying with upstream dtc:
->>>=20
->>> /dts-v1/;
->>> / {
->>> 	compatible =3D "lemaker,bananapi", "allwinner,sun7i-a20";
->>>=20
->>> 	fragment@0 {
->>> 		target-path =3D "/soc@01c00000";
->>> 		__overlay__ {
->>> 			#address-cells =3D <2>;
->>> 			#size-cells =3D <2>;
->>>=20
->>> 			vpci@2000000 {
->>> 				compatible =3D "pci-host-ecam-generic";
->>> 				device_type =3D "pci";
->>> 				bus-range =3D <0 0>;
->>> 				#address-cells =3D <3>;
->>> 				#size-cells =3D <2>;
->>> 				#interrupt-cells =3D <1>;
->>> 				interrupt-map-mask =3D <0 0 0 7>;
->>> 				interrupt-map =3D <0 0 0 1 &gic 0 0 0 123 4>,
->>> 						<0 0 0 2 &gic 0 0 0 124 4>,
->>> 						<0 0 0 3 &gic 0 0 0 125 4>,
->>> 						<0 0 0 4 &gic 0 0 0 126 4>;
->>> 				reg =3D <0 0x2000000 0 0x100000>;
->>> 				ranges =3D
->>> 					<0x02000000 0x00 0x10000000 0x00 0x10000000 0x00 0x30000000>;
->>> 			};
->>> 		};
->>> 	};
->>>=20
->>> 	gic: fragment@1 {
->>> 		target-path =3D "/soc@01c00000/interrupt-controller@01c81000";
->>> 		__overlay__ {
->>> 		};
->>> 	};
->>> };
->>>=20
->>=20
->> ^ This is not going to work: You need the reference to the real gic not =
-the empty fragment
->> here that has a target there.
->>=20
->> You need to compile with the correct dtc, and you also need to compile t=
-he base dts
->> with dtc too, using the -@ flag. You can hack around it by adding someth=
-ing like
->>=20
->> __symbols__ {
->> 	gic =3D "/soc@01c00000/interrupt-controller@01c81000=E2=80=9D;
->> };
->>=20
->> But you really need the __symbols__ node of the base dts generated by th=
-e dtc proper cause
->> the above is a dirty hack.
->>=20
->=20
-> OK, re-building the kernel with DTC=3D"/your/dtc -@", thus building the
-> base dtb with symbols, fixes proper overlay format loading.
->=20
-> However, no luck yet with the interrupt topic - maybe a different issue.
-> Digging deeper=E2=80=A6
->=20
-Remove the gic: fragment and build both the kernel and the overlay with the=
- -@ option.
-That=E2=80=99s what makes it not to work.
+That would not be a correct expectation in theory, although I don't think it
+really matters in practice.
 
-
-> Thanks,
-> Jan
->=20
-> --=20
-> Siemens AG, Corporate Technology, CT RDA ITP SES-DE
-> Corporate Competence Center Embedded Linux
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-Jailhouse" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to jailhouse-dev+unsubscribe@googlegroups.com.
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Rafael
