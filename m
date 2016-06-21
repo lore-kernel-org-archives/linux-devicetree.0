@@ -1,194 +1,107 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v10 2/2] dmaengine: Add Xilinx zynqmp dma engine driver
- support
-Date: Tue, 21 Jun 2016 21:11:03 +0530
-Message-ID: <20160621154103.GA16910@localhost>
-References: <1464765839-29018-1-git-send-email-appanad@xilinx.com>
- <1464765839-29018-2-git-send-email-appanad@xilinx.com>
- <20160607070841.GJ16910@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A5B4FA9@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160613055012.GC16910@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A5B6441@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160615165004.GC16910@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A5B6CAD@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH 1/2] leds: ncp5623: Add device tree binding documentation
+Date: Tue, 21 Jun 2016 17:28:02 +0200
+Message-ID: <57695D02.2000109@samsung.com>
+References: <1466494154-3786-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1466494154-3786-2-git-send-email-florian.vaussard@heig-vd.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A5B6CAD@XAP-PVEXMBX01.xlnx.xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, Anirudha Sarangi <anirudh@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Srikanth Vemula <svemula@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, laurent.pinchart@i
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1466494154-3786-2-git-send-email-florian.vaussard@heig-vd.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@gmail.com>
+Cc: devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2016 at 07:19:38AM +0000, Appana Durga Kedareswara Rao wrote:
-> Hi Vinod,
-> 
-> 	Thanks for the review...
-> 
-> > 
-> > On Tue, Jun 14, 2016 at 08:18:09AM +0000, Appana Durga Kedareswara Rao
-> > wrote:
-> > > > > Yes it is HW capability. It can be either in simple mode or SG
-> > > > > mode Earlier In the driver this configuration is read from the
-> > > > > device-tree But as per lars and your suggestion moved it as runtime config
-> > parameters.
-> > > >
-> > > > If sg mode is available why would anyone _not_ want it?
-> > > >
-> > > > I do not think there is point to have this
-> > >
-> > > You mean always keep the device in SG mode and provide an option For
-> > > simple dma mode if user want to use simple DMA mode??
-> > 
-> > Yes, why would anyone want to use single if sg is available?
+Hi Florian,
 
-If you have sg mode always enabled, but sg_list is size 1, that its
-essentially a single
+Thanks for the patch. I have two remarks below.
 
-Btw SPI is a slave case, not a memcpy!
+On 06/21/2016 09:29 AM, Florian Vaussard wrote:
+> Add device tree binding documentation for On Semiconductor NCP5623 I2C
+> LED driver. The driver can independently control the PWM of the 3
+> channels with 32 levels of intensity.
+>
+> The current delivered by the current source can be controlled using the
+> led-max-microamp property. In order to control this value, it is also
+> necessary to know the current on the Iref pin, hence the
+> onnn,led-iref-microamp property. It is usually set using an external
+> bias resistor, following Iref = Vref/Rbias with Vref=0.6V.
+>
+> Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
+> ---
+>   .../devicetree/bindings/leds/leds-ncp5623.txt      | 44 ++++++++++++++++++++++
+>   1 file changed, 44 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-ncp5623.txt
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-ncp5623.txt b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
+> new file mode 100644
+> index 0000000..0dc8345
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
+> @@ -0,0 +1,44 @@
+> +* ON Semiconductor - NCP5623 3-Channel LED Driver
+> +
+> +The NCP5623 is a 3-channel I2C LED driver. The brightness of each
+> +channel can be independently set using 32 levels. Each LED is represented
+> +as a sub-node of the device.
+> +
+> +Required properties:
+> +  - compatible: Should be "onnn,ncp5623"
+> +  - reg: I2C slave address (fixed to 0x38)
+> +  - #address-cells: must be 1
+> +  - #size-cells: must be 0
+> +  - onnn,led-iref-microamp: Current on the Iref pin in microampere
 
-> > > There are few features that are available in the simple DMA mode won't
-> > > Available in SG mode like write only DMA , read only DMA mode etc...
-> > 
-> > Can you explain what these are, how they are used by clients?
-> 
-> Currently it is not implemented but there are cases like,
-> 
-> We want to initialize the some region with known value, then write only dma helps
-> We want to read dummy data from the fifo, then read only dma helps.
+I think that you don't need this property. Just provide the formula for
+calculating led-max-microamp value, similarly as you're doing that in
+the commit message.
 
-Read will be another transfer, perhpas sg lnegth = 1
+> +  - led-max-microamp: Desired maximum current for each LED in microampere
+> +                      (maximum 30000uA)
 
-> Best case is SPI fifo.
+Please add instead of (maximum ...):
 
-Nope
+Valid values: min - max, step by N (rounded {up|down})
 
-> 
-> > 
-> > > > > > > +	chan->config.ratectrl = cfg->ratectrl;
-> > > > > > > +	chan->config.src_issue = cfg->src_issue;
-> > > > > > > +	chan->config.src_burst_len = cfg->src_burst_len;
-> > > > > > > +	chan->config.dst_burst_len = cfg->dst_burst_len;
-> > > > > >
-> > > > > > can you describe these parameters?
-> > > > > ratectl:
-> > > > > Rate control can be independently enabled per channel. When rate
-> > > > > control is enabled, the DMA channel uses the rate control count to
-> > > > > schedule
-> > > > successive data read transactions.
-> > > >
-> > > > And how is this used by client?
-> > >
-> > > When rate control is enabled, ZDMA channel uses the rate control count
-> > > To schedule successive data read transactions I mean kind of flow
-> > > control to schedule Transactions at fixed intervals instead of pumping
-> > > the transfers without delay or whenever bus is available
-> > >
-> > > Rate control count register definition (11:0):
-> > > Scheduling interval for SRC AXI transaction, only used if rate control
-> > > is enabled
-> > 
-> > Okay, why would anyone want transactions at fixed interval. We are talking
-> > about DMA, so please give me transfers without delay or whenever bus is
-> > available!
-> 
-> Could be that there are certain IPs that requires delay in b/w transactions.
-> Since IP is providing this feature we are exploring it to the user.
+E.g.
 
-I kind of don't agree to that!
+Valid values: 10000 - 30000, step by 1000 (rounded down)
 
-> 
-> > 
-> > 
-> > > > > src_issue:
-> > > > > Tells outstanding transaction on SRC.
-> > > >
-> > > > This should be read only then, right?
-> > >
-> > > It is a Read/Write register
-> > > http://www.xilinx.com/html_docs/registers/ug1087/ug1087-zynq-ultrascal
-> > > e-registers.html By default it is configured for Max transactions.
-> > > If user want to limit it they can limit it using this config option.
-> > 
-> > And why would they want that?
-> 
-> Could be that there are certain IPs that my not support burst operations or
-> May not support all burst lengths it will be helpful.
-> Since IP is providing the feature, we are exploring it to the user.
-> 
-> > 
-> > > > > Burst_len:
-> > > > > Configures the burst length of the src and dst transfers...
-> > > >
-> > > > Hmmm, but you are on memcpy, so that should be programmed for
-> > throughput?
-> > >
-> > > Yes...
-> > 
-> > So max burst lengths then, why would anyone configure lesser?
-> 
-> Depends on the destination and source IPs.
+> +
+> +LED sub-node properties:
+> +  - reg : LED channel number (0..2)
+> +  - For other LED properties see:
+> +      Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +
+> +led1: ncp5623@38 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	compatible = "onnn,ncp5623";
+> +	reg = <0x38>;
+> +
+> +	led1_r@0 {
+> +		label = "ncp:power:red";
+> +		reg = <0>;
+> +		linux,default-trigger = "default-on";
+> +	};
+> +
+> +	led1_b@1 {
+> +		label = "ncp:power:blue";
+> +		reg = <1>;
+> +	};
+> +
+> +	led1_g@2 {
+> +		label = "ncp:power:green";
+> +		reg = <2>;
+> +	};
+> +};
+>
 
-Not for memory copy
-
-
-> 
-> > 
-> > > > > > How would a client know how to configure them?
-> > > > >
-> > > > > With the default values of the config parameters driver will work.
-> > > >
-> > > > But how will client know what is default!
-> > >
-> > > Default values means IP default state after reset.
-> > > If user not aware of the above parameters also still the driver will work for
-> > basic functionality.
-> > > Do you want me to implement one more API get_config so that Whenever
-> > > user will call the get_config he will know the default values Of the
-> > > config parameters?
-> > 
-> > Looking at above I think we do not warrant programming them. Assume defaults
-> > in your driver for performance. Like max burst lengths, Max transactions,
-> > without delay scheduling.
-> > 
-> > If you disagree, which is fine, please provide the cases where a client would
-> > need to program these to different values.
-> 
-> As said above there are use cases for SPI and others but currently we didn't tested
-> It.
-> 
-> > 
-> > > > > If user has specific requirement to change these parameters they
-> > > > > can pass It to the driver using set_config API and all these
-> > > > > parameters are Documented in the include/linux/dma/xilinx_dma.h file...
-> > > >
-> > > > Can you give me an example where user would like to do that
-> > >
-> > > I am using customized dma test client.
-> > > There I am calling this set_config API before triggering memcpy/SG
-> > operations.
-> > 
-> > Well that is precisely a  problem. The generic applications wont know "your"
-> > custom API and will not configure that!
-> 
-> As said above, generic application can work with default values. 
-> These are not custom parameters and we can say these are the dma parameters.
-> i.e we can generalize these and provide it to user as generic API.
-
-No it doesn't make it generic API. With generic API the IP should be usable
-with any generic interface without specfic hoops to go thru. People are
-going to test upstream dmatest on your IP and find it not working or
-degraded perf, so better stick with generic API.
 
 -- 
-~Vinod
+Best regards,
+Jacek Anaszewski
