@@ -1,259 +1,340 @@
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Subject: Re: Using DT overlays for adding virtual hardware
-Date: Tue, 21 Jun 2016 13:59:59 +0200
-Message-ID: <57692C3F.8000600@siemens.com>
-References: <575828C0.5000008@siemens.com>
- <20160608151745.GB13355@leverpostej>
- <28BC1AEC-6A7D-4A97-82F4-5670E884C41D@konsulko.com>
- <20160608162343.GD13355@leverpostej>
- <999B1CFF-C204-4C19-AE76-AF9DB54E51E4@konsulko.com>
- <57584A2C.4030507@siemens.com> <5759069B.4080800@siemens.com>
- <57691342.2020502@siemens.com>
- <CFCE0FAF-991B-487B-A684-09A04EFC3F46@konsulko.com>
- <57692378.8010909@siemens.com>
- <EA3C5627-67A4-4120-BA56-D563F2D91CF8@konsulko.com>
- <57692856.3090303@siemens.com>
- <D5A6C7EA-1E54-472B-BB65-041E5730790F@konsulko.com>
+From: "Reizer, Eyal" <eyalr@ti.com>
+Subject: [PATCHv3] wlcore: spi: add wl18xx support
+Date: Tue, 21 Jun 2016 12:02:06 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B36138299@DFRE01.ent.ti.com>
+References: <1466510145-15751-1-git-send-email-eyalr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <jailhouse-dev+bncBCJI7SMNV4NBBQWYUS5QKGQENJZ6KJI@googlegroups.com>
-Sender: jailhouse-dev@googlegroups.com
-In-Reply-To: <D5A6C7EA-1E54-472B-BB65-041E5730790F@konsulko.com>
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jailhouse <jailhouse-dev@googlegroups.com>, =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@denx.de>, Antonios Motakis <antonios.motakis@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1466510145-15751-1-git-send-email-eyalr@ti.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: "kvalo@codeaurora.org" <kvalo@codeaurora.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-06-21 13:45, Pantelis Antoniou wrote:
-> Hi Jan,
->=20
->> On Jun 21, 2016, at 14:43 , Jan Kiszka <jan.kiszka@siemens.com> wrote:
->>
->> On 2016-06-21 13:35, Pantelis Antoniou wrote:
->>> Hi Jan,
->>>
->>>> On Jun 21, 2016, at 14:22 , Jan Kiszka <jan.kiszka@siemens.com> wrote:
->>>>
->>>> On 2016-06-21 12:24, Pantelis Antoniou wrote:
->>>>> Hi Jan,
->>>>>
->>>>>> On Jun 21, 2016, at 13:13 , Jan Kiszka <jan.kiszka@siemens.com> wrot=
-e:
->>>>>>
->>>>>> Hi Pantelis,
->>>>>>
->>>>>> coming back to this topic:
->>>>>>
->>>>>> On 2016-06-09 08:03, Jan Kiszka wrote:
->>>>>>> OK, trial and error, and some interesting insights: I've played wit=
-h DT
->>>>>>> fragments and the overlay configfs patch of Pantelis [1] to have a
->>>>>>> convenient start. Interestingly, I wasn't able to load a fragment t=
-hat
->>>>>>> followed the format specification for overlays ("Failed to resolve
->>>>>>> tree"). By chance, I got this one working:
->>>>>>>
->>>>>>> /dts-v1/;
->>>>>>> / {
->>>>>>> 	fragment {
->>>>>>> 		target-path =3D "/soc@01c00000";
->>>>>>> 		__overlay__ {
->>>>>>> 			#address-cells =3D <2>;
->>>>>>> 			#size-cells =3D <2>;
->>>>>>>
->>>>>>> 			vpci@0x2000000 {
->>>>>>> 				compatible =3D "pci-host-cam-generic";
->>>>>>> 				device_type =3D "pci";
->>>>>>> 				#address-cells =3D <3>;
->>>>>>> 				#size-cells =3D <2>;
->>>>>>> 				reg =3D <0 0x2000000 0 0x1000000>;
->>>>>>> 				ranges =3D
->>>>>>> 					<0x02000000 0x00 0x10000000 0x00 0x10000000 0x00 0x30000000>;
->>>>>>> 			};
->>>>>>> 		};
->>>>>>> 	};
->>>>>>> };
->>>>>>>
->>>>>>> It successfully makes a BananaPi kernel add a pci host with the
->>>>>>> specified config space and MMIO window.
->>>>>>>
->>>>>>> [   81.619583] PCI host bridge /soc@01c00000/vpci@0x2000000 ranges:
->>>>>>> [   81.619610]   No bus range found for /soc@01c00000/vpci@0x200000=
-0, using [bus 00-ff]
->>>>>>> [   81.619634]   MEM 0x10000000..0x3fffffff -> 0x10000000
->>>>>>> [   81.620482] pci-host-generic 2000000.vpci: ECAM at [mem 0x020000=
-00-0x02ffffff] for [bus 00-ff]
->>>>>>> [   81.620779] pci-host-generic 2000000.vpci: PCI host bridge to bu=
-s 0000:00
->>>>>>> [   81.620801] pci_bus 0000:00: root bus resource [bus 00-ff]
->>>>>>> [   81.620814] pci_bus 0000:00: root bus resource [mem 0x10000000-0=
-x3fffffff]
->>>>>>> [   81.620851] PCI: bus0: Fast back to back transfers enabled
->>>>>>>
->>>>>>> So, no /plugin/ statement, no phandles resolution. This format even
->>>>>>> builds with the in-kernel dtc. Any explanations? Does the code make
->>>>>>> sense (at least it builds without warnings)?
->>>>>>>
->>>>>>> Now I need to back this with some code in Jailhouse.
->>>>>>
->>>>>> Meanwhile I got a virtual PCI device recognized by Linux when runnin=
-g
->>>>>> over Jailhouse. However, my hack above doesn't get me to proper
->>>>>> interrupt mapping yet. This is what I was trying with upstream dtc:
->>>>>>
->>>>>> /dts-v1/;
->>>>>> / {
->>>>>> 	compatible =3D "lemaker,bananapi", "allwinner,sun7i-a20";
->>>>>>
->>>>>> 	fragment@0 {
->>>>>> 		target-path =3D "/soc@01c00000";
->>>>>> 		__overlay__ {
->>>>>> 			#address-cells =3D <2>;
->>>>>> 			#size-cells =3D <2>;
->>>>>>
->>>>>> 			vpci@2000000 {
->>>>>> 				compatible =3D "pci-host-ecam-generic";
->>>>>> 				device_type =3D "pci";
->>>>>> 				bus-range =3D <0 0>;
->>>>>> 				#address-cells =3D <3>;
->>>>>> 				#size-cells =3D <2>;
->>>>>> 				#interrupt-cells =3D <1>;
->>>>>> 				interrupt-map-mask =3D <0 0 0 7>;
->>>>>> 				interrupt-map =3D <0 0 0 1 &gic 0 0 0 123 4>,
->>>>>> 						<0 0 0 2 &gic 0 0 0 124 4>,
->>>>>> 						<0 0 0 3 &gic 0 0 0 125 4>,
->>>>>> 						<0 0 0 4 &gic 0 0 0 126 4>;
->>>>>> 				reg =3D <0 0x2000000 0 0x100000>;
->>>>>> 				ranges =3D
->>>>>> 					<0x02000000 0x00 0x10000000 0x00 0x10000000 0x00 0x30000000>;
->>>>>> 			};
->>>>>> 		};
->>>>>> 	};
->>>>>>
->>>>>> 	gic: fragment@1 {
->>>>>> 		target-path =3D "/soc@01c00000/interrupt-controller@01c81000";
->>>>>> 		__overlay__ {
->>>>>> 		};
->>>>>> 	};
->>>>>> };
->>>>>>
->>>>>
->>>>> ^ This is not going to work: You need the reference to the real gic n=
-ot the empty fragment
->>>>> here that has a target there.
->>>>>
->>>>> You need to compile with the correct dtc, and you also need to compil=
-e the base dts
->>>>> with dtc too, using the -@ flag. You can hack around it by adding som=
-ething like
->>>>>
->>>>> __symbols__ {
->>>>> 	gic =3D "/soc@01c00000/interrupt-controller@01c81000=E2=80=9D;
->>>>> };
->>>>>
->>>>> But you really need the __symbols__ node of the base dts generated by=
- the dtc proper cause
->>>>> the above is a dirty hack.
->>>>>
->>>>
->>>> OK, re-building the kernel with DTC=3D"/your/dtc -@", thus building th=
-e
->>>> base dtb with symbols, fixes proper overlay format loading.
->>>>
->>>> However, no luck yet with the interrupt topic - maybe a different issu=
-e.
->>>> Digging deeper=E2=80=A6
->>>>
->>> Remove the gic: fragment and build both the kernel and the overlay with=
- the -@ option.
->>> That=E2=80=99s what makes it not to work.
->>
->> That's what I did, of course.
->>
->> I've now
->>
->> /dts-v1/;
->> // magic:		0xd00dfeed
->> // totalsize:		0x448 (1096)
->> // off_dt_struct:	0x38
->> // off_dt_strings:	0x3c0
->> // off_mem_rsvmap:	0x28
->> // version:		17
->> // last_comp_version:	16
->> // boot_cpuid_phys:	0x0
->> // size_dt_strings:	0x88
->> // size_dt_struct:	0x388
->>
->> / {
->>    compatible =3D "lemaker,bananapi", "allwinner,sun7i-a20";
->>    fragment@0 {
->>        target =3D <0xffffffff>;
->>        __overlay__ {
->>            #address-cells =3D <0x00000002>;
->>            #size-cells =3D <0x00000002>;
->>            vpci@2000000 {
->>                compatible =3D "pci-host-ecam-generic";
->>                device_type =3D "pci";
->>                bus-range =3D <0x00000000 0x00000000>;
->>                #address-cells =3D <0x00000003>;
->>                #size-cells =3D <0x00000002>;
->>                #interrupt-cells =3D <0x00000001>;
->>                interrupt-map-mask =3D <0x00000000 0x00000000 0x00000000 =
-0x00000007>;
->>                interrupt-map =3D <0x00000000 0x00000000 0x00000000 0x000=
-00001 0xffffffff 0x00000000 0x00000000 0x00000000 0x0000007b 0x00000004 0x0=
-0000000 0x00000000 0x00000000 0x00000002 0xffffffff 0x00000000 0x00000000 0=
-x00000000 0x0000007c 0x00000004 0x00000000 0x00000000 0x00000000 0x00000003=
- 0xffffffff 0x00000000 0x00000000 0x00000000 0x0000007d 0x00000004 0x000000=
-00 0x00000000 0x00000000 0x00000004 0xffffffff 0x00000000 0x00000000 0x0000=
-0000 0x0000007e 0x00000004>;
->>                reg =3D <0x00000000 0x02000000 0x00000000 0x00100000>;
->>                ranges =3D <0x02000000 0x00000000 0x10000000 0x00000000 0=
-x10000000 0x00000000 0x30000000>;
->>            };
->>        };
->>    };
->>    __symbols__ {
->>    };
->>    __fixups__ {
->>        soc =3D "/fragment@0:target:0";
->>        gic =3D "/fragment@0/__overlay__/vpci@2000000:interrupt-map:16", =
-"/fragment@0/__overlay__/vpci@2000000:interrupt-map:56", "/fragment@0/__ove=
-rlay__/vpci@2000000:interrupt-map:96", "/fragment@0/__overlay__/vpci@200000=
-0:interrupt-map:136";
->>    };
->>    __local_fixups__ {
->>    };
->> };
->>
->> and a base dtb with a symbols section and all the required ones
->> included.
->>
->=20
-> OK, this should make things work. Did you try sticking this in the base d=
-ts and see if it works there?
+Add support for using with both wl12xx and wl18xx.
 
-Can't do this because Linux needs that tree to boot and Jailhouse with
-its virtual PCI controller comes after that only.
+- all wilink family needs special init command for entering wspi mode.
+  extra clock cycles should be sent after the spi init command while the
+  cs pin is high.
+- Use inverted chip select for sending a dummy 4 bytes command that
+  completes the init stage and puts the wilink chip into wspi mode.
 
-I'll debug what's happing behind the curtains regarding PCI interrupt
-mapping, maybe that will give a clue.
+Signed-off-by: Eyal Reizer <eyalr@ti.com>
+---
+v1->v2:update device tree bindings configuration
+v2->v3:revert from manual gpio manipulation. use inverted chip select instead
+for sending the extra init cycle, which achieves the same hardware purpose.
+update device tree bindings docucmentation accordingly
 
-Jan
+ .../bindings/net/wireless/ti,wlcore,spi.txt        |  47 ++++++--
+ drivers/net/wireless/ti/wlcore/spi.c               | 124 +++++++++++++++++----
+ 2 files changed, 145 insertions(+), 26 deletions(-)
 
---=20
-Siemens AG, Corporate Technology, CT RDA ITP SES-DE
-Corporate Competence Center Embedded Linux
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-Jailhouse" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to jailhouse-dev+unsubscribe@googlegroups.com.
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+index 9180724..35467cf 100644
+--- a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
++++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+@@ -1,19 +1,30 @@
+-* Texas Instruments wl1271 wireless lan controller
++* Texas Instruments wl12xx/wl18xx wireless lan controller
+ 
+-The wl1271 chip can be connected via SPI or via SDIO. This
++The wl12xx/wl18xx chips can be connected via SPI or via SDIO. This
+ document describes the binding for the SPI connected chip.
+ 
+ Required properties:
+-- compatible :          Should be "ti,wl1271"
++- compatible :          Should be one of the following:
++    * "ti,wl1271"
++    * "ti,wl1273"
++    * "ti,wl1281"
++    * "ti,wl1283"
++    * "ti,wl1801"
++    * "ti,wl1805"
++    * "ti,wl1807"
++    * "ti,wl1831"
++    * "ti,wl1835"
++    * "ti,wl1837"
+ - reg :                 Chip select address of device
+ - spi-max-frequency :   Maximum SPI clocking speed of device in Hz
+-- ref-clock-frequency : Reference clock frequency
+ - interrupt-parent, interrupts :
+                         Should contain parameters for 1 interrupt line.
+                         Interrupt parameters: parent, line number, type.
+-- vwlan-supply :        Point the node of the regulator that powers/enable the wl1271 chip
++- vwlan-supply :        Point the node of the regulator that powers/enable the
++                        wl12xx/wl18xx chip
+ 
+ Optional properties:
++- ref-clock-frequency : Reference clock frequency (should be set for wl12xx)
+ - clock-xtal :          boolean, clock is generated from XTAL
+ 
+ - Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -21,10 +32,15 @@ Optional properties:
+ 
+ Examples:
+ 
++For wl12xx family:
+ &spi1 {
+-	wl1271@1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi1_pins>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	wlcore: wlcore@0 {
+ 		compatible = "ti,wl1271";
+-
+ 		reg = <1>;
+ 		spi-max-frequency = <48000000>;
+ 		clock-xtal;
+@@ -34,3 +50,20 @@ Examples:
+ 		vwlan-supply = <&vwlan_fixed>;
+ 	};
+ };
++
++For wl18xx family:
++&spi0	{
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	wlcore: wlcore@0 {
++		compatible = "ti,wl1835";
++		vwlan-supply = <&wlan_en_reg>;
++		spi-max-frequency = <48000000>;
++		reg = <0>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <27 IRQ_TYPE_EDGE_RISING>;
++	};
++};
+diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
+index 020ac1a..bd1253d 100644
+--- a/drivers/net/wireless/ti/wlcore/spi.c
++++ b/drivers/net/wireless/ti/wlcore/spi.c
+@@ -70,16 +70,30 @@
+ #define WSPI_MAX_CHUNK_SIZE    4092
+ 
+ /*
+- * only support SPI for 12xx - this code should be reworked when 18xx
+- * support is introduced
++ * wl18xx driver aggregation buffer size is (13 * PAGE_SIZE) compared to
++ * (4 * PAGE_SIZE) for wl12xx, so use the larger buffer needed for wl18xx
+  */
+-#define SPI_AGGR_BUFFER_SIZE (4 * PAGE_SIZE)
++#define SPI_AGGR_BUFFER_SIZE (13 * PAGE_SIZE)
+ 
+ /* Maximum number of SPI write chunks */
+ #define WSPI_MAX_NUM_OF_CHUNKS \
+ 	((SPI_AGGR_BUFFER_SIZE / WSPI_MAX_CHUNK_SIZE) + 1)
+ 
+ 
++struct wilink_familiy_data {
++	char name[8];
++};
++
++const struct wilink_familiy_data *wilink_data;
++
++static const struct wilink_familiy_data wl18xx_data = {
++	.name = "wl18xx",
++};
++
++static const struct wilink_familiy_data wl12xx_data = {
++	.name = "wl12xx",
++};
++
+ struct wl12xx_spi_glue {
+ 	struct device *dev;
+ 	struct platform_device *core;
+@@ -119,6 +133,7 @@ static void wl12xx_spi_init(struct device *child)
+ 	struct wl12xx_spi_glue *glue = dev_get_drvdata(child->parent);
+ 	struct spi_transfer t;
+ 	struct spi_message m;
++	struct spi_device *spi = to_spi_device(glue->dev);
+ 	u8 *cmd = kzalloc(WSPI_INIT_CMD_LEN, GFP_KERNEL);
+ 
+ 	if (!cmd) {
+@@ -151,6 +166,7 @@ static void wl12xx_spi_init(struct device *child)
+ 		cmd[6] |= WSPI_INIT_CMD_EN_FIXEDBUSY;
+ 
+ 	cmd[7] = crc7_be(0, cmd+2, WSPI_INIT_CMD_CRC_LEN) | WSPI_INIT_CMD_END;
++
+ 	/*
+ 	 * The above is the logical order; it must actually be stored
+ 	 * in the buffer byte-swapped.
+@@ -163,6 +179,28 @@ static void wl12xx_spi_init(struct device *child)
+ 	spi_message_add_tail(&t, &m);
+ 
+ 	spi_sync(to_spi_device(glue->dev), &m);
++
++	/* Send extra clocks with inverted CS (high). this is required
++	 * by the wilink family in order to successfully enter WSPI mode.
++	 */
++	spi->mode ^= SPI_CS_HIGH;
++	memset(&m, 0, sizeof(m));
++	spi_message_init(&m);
++
++	cmd[0] = 0xff;
++	cmd[1] = 0xff;
++	cmd[2] = 0xff;
++	cmd[3] = 0xff;
++	__swab32s((u32 *)cmd);
++
++	t.tx_buf = cmd;
++	t.len = 4;
++	spi_message_add_tail(&t, &m);
++
++	spi_sync(to_spi_device(glue->dev), &m);
++
++	/* Restore chip select configration to normal */
++	spi->mode ^= SPI_CS_HIGH;
+ 	kfree(cmd);
+ }
+ 
+@@ -270,22 +308,25 @@ static int __must_check wl12xx_spi_raw_read(struct device *child, int addr,
+ 	return 0;
+ }
+ 
+-static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
+-					     void *buf, size_t len, bool fixed)
++static int __wl12xx_spi_raw_write(struct device *child, int addr,
++				  void *buf, size_t len, bool fixed)
+ {
+ 	struct wl12xx_spi_glue *glue = dev_get_drvdata(child->parent);
+-	/* SPI write buffers - 2 for each chunk */
+-	struct spi_transfer t[2 * WSPI_MAX_NUM_OF_CHUNKS];
++	struct spi_transfer *t;
+ 	struct spi_message m;
+ 	u32 commands[WSPI_MAX_NUM_OF_CHUNKS]; /* 1 command per chunk */
+ 	u32 *cmd;
+ 	u32 chunk_len;
+ 	int i;
+ 
++	/* SPI write buffers - 2 for each chunk */
++	t = kzalloc(sizeof(*t) * 2 * WSPI_MAX_NUM_OF_CHUNKS, GFP_KERNEL);
++	if (!t)
++		return -ENOMEM;
++
+ 	WARN_ON(len > SPI_AGGR_BUFFER_SIZE);
+ 
+ 	spi_message_init(&m);
+-	memset(t, 0, sizeof(t));
+ 
+ 	cmd = &commands[0];
+ 	i = 0;
+@@ -318,9 +359,26 @@ static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
+ 
+ 	spi_sync(to_spi_device(glue->dev), &m);
+ 
++	kfree(t);
+ 	return 0;
+ }
+ 
++static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
++					     void *buf, size_t len, bool fixed)
++{
++	int ret;
++
++	/* The ELP wakeup write may fail the first time due to internal
++	 * hardware latency. It is safer to send the wakeup command twice to
++	 * avoid unexpected failures.
++	 */
++	if (addr == HW_ACCESS_ELP_CTRL_REG)
++		ret = __wl12xx_spi_raw_write(child, addr, buf, len, fixed);
++	ret = __wl12xx_spi_raw_write(child, addr, buf, len, fixed);
++
++	return ret;
++}
++
+ /**
+  * wl12xx_spi_set_power - power on/off the wl12xx unit
+  * @child: wl12xx device handle.
+@@ -349,17 +407,38 @@ static int wl12xx_spi_set_power(struct device *child, bool enable)
+ 	return ret;
+ }
+ 
++/**
++ * wl12xx_spi_set_block_size
++ *
++ * This function is not needed for spi mode, but need to be present.
++ * Without it defined the wlcore fallback to use the wrong packet
++ * allignment on tx.
++ */
++static void wl12xx_spi_set_block_size(struct device *child,
++				      unsigned int blksz)
++{
++}
++
+ static struct wl1271_if_operations spi_ops = {
+ 	.read		= wl12xx_spi_raw_read,
+ 	.write		= wl12xx_spi_raw_write,
+ 	.reset		= wl12xx_spi_reset,
+ 	.init		= wl12xx_spi_init,
+ 	.power		= wl12xx_spi_set_power,
+-	.set_block_size = NULL,
++	.set_block_size = wl12xx_spi_set_block_size,
+ };
+ 
+ static const struct of_device_id wlcore_spi_of_match_table[] = {
+-	{ .compatible = "ti,wl1271" },
++	{ .compatible = "ti,wl1271", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1273", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1281", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1283", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1801", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1805", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1807", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1831", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1835", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1837", .data = &wl18xx_data},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, wlcore_spi_of_match_table);
+@@ -375,18 +454,24 @@ static int wlcore_probe_of(struct spi_device *spi, struct wl12xx_spi_glue *glue,
+ 			   struct wlcore_platdev_data *pdev_data)
+ {
+ 	struct device_node *dt_node = spi->dev.of_node;
+-	int ret;
++	const struct of_device_id *of_id;
++
++	of_id = of_match_node(wlcore_spi_of_match_table, dt_node);
++	if (!of_id)
++		return -ENODEV;
++
++	wilink_data = of_id->data;
++	dev_info(&spi->dev, "selected chip familiy is %s\n",
++		 wilink_data->name);
+ 
+ 	if (of_find_property(dt_node, "clock-xtal", NULL))
+ 		pdev_data->ref_clock_xtal = true;
+ 
+-	ret = of_property_read_u32(dt_node, "ref-clock-frequency",
+-				   &pdev_data->ref_clock_freq);
+-	if (IS_ERR_VALUE(ret)) {
+-		dev_err(glue->dev,
+-			"can't get reference clock frequency (%d)\n", ret);
+-		return ret;
+-	}
++	/* optional clock frequency params */
++	of_property_read_u32(dt_node, "ref-clock-frequency",
++			     &pdev_data->ref_clock_freq);
++	of_property_read_u32(dt_node, "tcxo-clock-frequency",
++			     &pdev_data->tcxo_clock_freq);
+ 
+ 	return 0;
+ }
+@@ -437,7 +522,8 @@ static int wl1271_probe(struct spi_device *spi)
+ 		return ret;
+ 	}
+ 
+-	glue->core = platform_device_alloc("wl12xx", PLATFORM_DEVID_AUTO);
++	glue->core = platform_device_alloc(wilink_data->name,
++					   PLATFORM_DEVID_AUTO);
+ 	if (!glue->core) {
+ 		dev_err(glue->dev, "can't allocate platform_device\n");
+ 		return -ENOMEM;
+-- 
+2.7.4
