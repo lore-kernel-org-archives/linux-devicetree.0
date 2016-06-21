@@ -1,36 +1,57 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH 15/16] arm64: dts: msm8996: add sdc2 pinctrl
-Date: Tue, 21 Jun 2016 16:40:59 -0500
-Message-ID: <20160621214059.GB11867@hector.attlocal.net>
-References: <1466176454-28084-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1466176454-28084-16-git-send-email-srinivas.kandagatla@linaro.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] scripts/dtc: dt_to_config - kernel config options for
+ a devicetree
+Date: Tue, 21 Jun 2016 14:43:24 -0700
+Message-ID: <5769B4FC.1070309@gmail.com>
+References: <575B46CE.6080903@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1466176454-28084-16-git-send-email-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575B46CE.6080903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 04:14:12PM +0100, Srinivas Kandagatla wrote:
-> This patch adds pinctrl required for sdhci for external sd card
-> controller.
+On 06/10/16 16:01, Frank Rowand wrote:
+> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Determining which kernel config options need to be enabled for a
+> given devicetree can be a painful process.  Create a new tool to
+> find the drivers that may match a devicetree node compatible,
+> find the kernel config options that enable the driver, and
+> optionally report whether the kernel config option is enabled.
+> 
+> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
 > ---
+> 
+> changes from v1
+>    - Add --config-format to create config fragment that can be appended
+>      to kernel .config
+>    - Add short node path option, default to full node path for 
+>      --config-format
+>    - Add options to use the driver black list, the config white
+>      list, and the driver white list (new default is to ignore)
+>    - Remove need to hard code config options for hard coded driver.
+>      This allowed removal of 8 entries from the hard coded config list.
+>    - Remove virt/kvm/arm/.* from driver black list (not needed after
+>      commit 503a62862e8f in 4.7-rc1)
+>    - Remove fixed-partitions from compatibles white list
+>    - Updated the --help message
+>    - Remove non-ascii copyright symbol
+> 
 
-I presume this is the right patch 15?  As it matches the subject in your cover
-letter?
+< snip >
 
-Andy
+Hi All,
+
+Did this version resolve the issues from v1?
+
+-Frank
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
