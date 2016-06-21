@@ -1,81 +1,111 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v2] arm: tegra124: remove commas from unit addresses
-Date: Tue, 21 Jun 2016 07:56:41 +0000
-Message-ID: <1466495800.4742.1.camel@toradex.com>
-References: <1466298275-15753-1-git-send-email-marcel.ziswiler@toradex.com>
- <576810C2.1030401@wwwdotorg.org> <20160620164057.GD6175@ulmo.ba.sec>
- <57681DC3.9090801@wwwdotorg.org> <20160620171124.GA6333@ulmo.ba.sec>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+Date: Tue, 21 Jun 2016 16:02:09 +0800
+Message-ID: <20160621080209.GC5108@shlinux2>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+ <1465564043-27163-9-git-send-email-rogerq@ti.com>
+ <575E672E.5070603@ti.com>
+ <87h9coxq04.fsf@linux.intel.com>
+ <5767C1B9.2060805@ti.com>
+ <878ty0qd7q.fsf@linux.intel.com>
+ <20160621063936.GB5108@shlinux2>
+ <87d1nbovp7.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160620171124.GA6333@ulmo.ba.sec>
-Content-Language: en-US
-Content-ID: <792C77FF8362D14FA983F57CB1E94295@eurprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gnurou@gmail.com" <gnurou@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87d1nbovp7.fsf@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Roger Quadros <rogerq@ti.com>, peter.chen@freescale.com, yoshihiro.shimoda.uh@renesas.com, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-06-20 at 19:11 +0200, Thierry Reding wrote:
-> On Mon, Jun 20, 2016 at 10:45:55AM -0600, Stephen Warren wrote:
-> > 
-> > On 06/20/2016 10:40 AM, Thierry Reding wrote:
-> > > 
-> > > On Mon, Jun 20, 2016 at 09:50:26AM -0600, Stephen Warren wrote:
-> > > > 
-> > > > On 06/18/2016 07:04 PM, Marcel Ziswiler wrote:
-> > > > > 
-> > > > > Remove commas from unit addresses as suggested by Rob Herring
-> > > > > upon me
-> > > > > posting initial Apalis TK1 support:
-> > > > > 
-> > > > > http://article.gmane.org/gmane.linux.ports.tegra/26608
-> > > > Acked-by: Stephen Warren <swarren@nvidia.com>
-> > > I'm confused now. I posted almost exactly the same patch a while
-> > > ago and
-> > > we agreed that we couldn't do this because the node names were to
-> > > be
-> > > considered part of the ABI.
-> > > 
-> > > Is it or is it not?
-> > The particular case where it matters is the GPU node, which U-Boot
-> > manipulates. This revised patch version no longer renames the GPU
-> > node and
-> > so in practice avoids any issues that I'm aware of.
-> > 
-> > If there's a more general rule that node names are part of the ABI,
-> > then
-> > indeed we shouldn't take this patch.
-> I'm somewhat uncomfortable with this notion. Just because we don't
-> know
-> of any other cases doesn't mean there aren't any. My understanding is
-> that it's fairly common to look up device tree nodes by name, however
-> brittle that may be.
+On Tue, Jun 21, 2016 at 10:19:32AM +0300, Felipe Balbi wrote:
 > 
-> There's also the matter of consistency to consider here. I suspect
-> that
-> if we make this change somebody will notice the odd one out and send
-> patches to "fix it up". So if we get confirmation about this change
-> being okay, I'd request that a comment be added to the GPU node as to
-> why it is not converted.
+> Hi,
+> 
+> Peter Chen <hzpeterchen@gmail.com> writes:
+> >> >>> +
+> >> >>> +		/* start host */
+> >> >>> +		ret = hcd_ops->add(otg->primary_hcd.hcd,
+> >> >>> +				   otg->primary_hcd.irqnum,
+> >> >>> +				   otg->primary_hcd.irqflags);
+> >> >> 
+> >> >> this is usb_add_hcd(), is it not? Why add an indirection?
+> >> >
+> >> > I've introduced the host and gadget ops interface to get around the
+> >> > circular dependency issue we can't avoid.
+> >> > otg needs to call host/gadget functions and host/gadget also needs to
+> >> > call otg functions.
+> >> 
+> >> IMO, this shows a fragility of your design. You're, now, lying to
+> >> usb_hcd and usb_udc and making them register into a virtual layer that
+> >> doesn't exist. And that layer will end up calling the real registration
+> >> function when some magic event happens.
+> >> 
+> >> This is only really needed for quirky devices like dwc3 (but see more on
+> >> dwc3 below) where host and peripheral registers shadow each
+> >> other. Otherwise we would be able to always keep hcd and udc always
+> >> registered. They would get different interrupt statuses anyway and
+> >> nothing would ever break.
+> >> 
+> >> However, when it comes to dwc3, we already have all the code necessary
+> >> to workaround this issue by destroying the XHCI pdev when OTG interrupt
+> >> says we should be peripheral (and vice-versa). DWC3 also keeps track of
+> >> the OTG states for those folks who really care about OTG (Hint: nobody
+> >> has cared for the past 10 years, why would they do so now?) and we don't
+> >> need a SW state machine when the HW handles that for us, right?
+> >> 
+> >> As for chipidea, IIRC, that doesn't need a SW state machine either, but
+> >> I know very little about that IP and don't even have documentation on
+> >> it. My understanding, however, is that chipidea behaves kinda like MUSB,
+> >> which changes roles automatically in HW based on ID pin state.
+> >
+> > Chipidea needs to set register for USB role manually.
+> 
+> okay, so chipidea has private control of role. Much like dwc3. That's good.
+> 
+> >> >>> + * @otg_dev: OTG controller device, if needs to be used with OTG core.
+> >> >> 
+> >> >> do you really know of any platform which has a separate OTG controller?
+> >> >> 
+> >> >
+> >> > Andrew had pointed out in [1] that Tegra210 has separate blocks for OTG, host
+> >> > and gadget.
+> >> >
+> >> > [1] http://article.gmane.org/gmane.linux.ports.tegra/22969
+> >> 
+> >> that's not an OTG controller, it's just a mux. No different than Intel's
+> >> mux for swapping between XHCI and peripheral-only DWC3.
+> >> 
+> >> frankly, I would NEVER talk about OTG when type-C comes into play. They
+> >> are two competing standards and, apparently, type-C is winning when it
+> >> comes to role-swapping.
+> >> 
+> >
+> > In fact, OTG is mis-used by people. Currently, if the port is dual-role,
+> > It will be considered as an OTG port.
+> 
+> That's because "dual-role" is a non-standard OTG. Seen as people really
+> didn't care about OTG, we (linux-usb folks) ended up naturally referring
+> to "non-standard OTG" as "dual-role". Just to avoid confusion.
 
-Sure, let me add such a comment in a v3 that it is crystal clear why we
-did so.
+So, unless we use OTG FSM defined in OTG spec, we should not mention
+"OTG" in Linux, right?
+ 
+> 
+> > You are right, if the connector is type-c, it will be called as "type-c
+> > port" by people :)
+> 
+> oh no, that's not what I'm talking about. If you read Type-C and PD
+> specs, they define their own method for data role swapping. USB OTG
+> doesn't fit on top of a Type-C environment. It's not about what people
+> will call it, it's really that OTG can't work on top of type-c. For
+> starters, there's no ID pin ;-)
 
-> Thierry
+I know type-c, yes, there is no relationship between OTG and type-c.
 
+-- 
 
-Thanks Thierry.
-
-Cheers
-
-Marcel
+Best Regards,
+Peter Chen
