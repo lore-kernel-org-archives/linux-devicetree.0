@@ -1,40 +1,46 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH v2 16/16] arm64: dts: msm8996: add sdc2 support
-Date: Tue, 21 Jun 2016 16:33:53 -0500
-Message-ID: <20160621213353.GA11867@hector.attlocal.net>
-References: <1466176454-28084-18-git-send-email-srinivas.kandagatla@linaro.org>
- <1466530793-4534-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: cs53l30: Add MUTE pin control support via GPIO
+Date: Tue, 21 Jun 2016 16:34:37 -0500
+Message-ID: <20160621213437.GA3571@rob-hp-laptop>
+References: <1466474084-6775-1-git-send-email-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1466530793-4534-1-git-send-email-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1466474084-6775-1-git-send-email-nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2016 at 06:39:53PM +0100, Srinivas Kandagatla wrote:
-> This patch adds support to sdc2 sdhci controller, which is used on some
-> of the boards.
+On Mon, Jun 20, 2016 at 06:54:44PM -0700, Nicolin Chen wrote:
+> The codec chip has a physical MUTE pin to let users control it via
+> GPIO. So this patch add a mute control support to the driver.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> Hi Andy, 
+>  .../devicetree/bindings/sound/cs53l30.txt          |  2 ++
+>  sound/soc/codecs/cs53l30.c                         | 30 ++++++++++++++++++++++
+>  sound/soc/codecs/cs53l30.h                         |  1 +
+>  3 files changed, 33 insertions(+)
 > 
-> Am resending just this one patch, as It does not make sense
-> to resend entire series for such a small change.
+> diff --git a/Documentation/devicetree/bindings/sound/cs53l30.txt b/Documentation/devicetree/bindings/sound/cs53l30.txt
+> index 18d6b99..6f7d3c8 100644
+> --- a/Documentation/devicetree/bindings/sound/cs53l30.txt
+> +++ b/Documentation/devicetree/bindings/sound/cs53l30.txt
+> @@ -13,6 +13,8 @@ Optional properties:
+>  
+>    - reset-gpios : a GPIO spec for the reset pin.
+>  
+> +  - mute-gpios : a GPIO spec for the MUTE pin.
 
-Got it.  Thanks for the clarification.
+Please define the active state for the gpio.
 
-
-Andy
+> +
+>    - cirrus,micbias-lvl : Set the output voltage level on the MICBIAS Pin.
+>  			 0 = Hi-Z
+>  			 1 = 1.80 V
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
