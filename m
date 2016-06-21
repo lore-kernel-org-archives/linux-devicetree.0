@@ -1,76 +1,53 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 0/2] ASoC: da7219: Convert driver to use
- generic FW functions
-Date: Wed, 22 Jun 2016 00:21:16 +0100
-Message-ID: <20160621232116.GG28202@sirena.org.uk>
-References: <cover.1466523027.git.Adam.Thomson.Opensource@diasemi.com>
- <6274a042-da99-e3e6-20f2-37ce2651645c@intel.com>
- <2E89032DDAA8B9408CB92943514A0337D4644644@SW-EX-MBX01.diasemi.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific power-saving options
+Date: Tue, 21 Jun 2016 16:23:00 -0700
+Message-ID: <CAHQ1cqFgD--n7NMguZNQ+qdQk7zdxPHCM-Phq09wJwBacjMd8Q@mail.gmail.com>
+References: <1465970379-14703-1-git-send-email-andrew.smirnov@gmail.com>
+ <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com>
+ <20160619142934.GA8522@rob-hp-laptop> <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
+ <20160621204904.GA9779@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1550405484819894160=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <2E89032DDAA8B9408CB92943514A0337D4644644@SW-EX-MBX01.diasemi.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>, devicetree <devicetree@vger.kernel.org>, alsa-devel <alsa-devel@alsa-project.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Frank Rowand <frowand.list@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Robert Moore <robert.moore@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-acpi <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lv Zheng <lv.zheng@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160621204904.GA9779@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: rtc-linux@googlegroups.com, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+> So wouldn't you want to set one mode while running and the lower power
+> mode while suspended? I'm trying to understand the frequency of changing
+> this. If it is always one setting for a board, then yes it belongs in
+> DT. If it is a user decision, then it probably shouldn't be in DT.
 
---===============1550405484819894160==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XRI2XbIfl/05pQwm"
-Content-Disposition: inline
+I don't really see a use-case where you'd want setting that
+dynamically. I might be wrong, but IMHO, power consumption of a system
+in suspended mode would dwarf that of an RTC, so there's really much
+to gain by enabling this feature dynamically. Where it matters the
+most is time setting retention when the system is powered off and RTC
+is ticking off of a battery or a some other power storage device. So
+in my opinion it is more of a system design question where one has to
+choose if reliability of RTC data is more important (detection of
+oscillator faults and higher oscillator glitch immunity) and bigger
+power storage device is needed or higher risk of RTC "malfunction" is
+acceptable and cheaper/more convenient power storage device can be
+used
 
+>
+> Seeing as these are reused, I've probably already had this discussion...
+>
+>> > They should have vendor prefix and be explicit that they are boolean.
+>>
+>> I was trying to be consistent with ds1339 and ds1390 bindings which do
+>> not have vendor prefixes. Will fix in v2.
+>
+> Okay, then they are fine if you are using existing properties. Perhaps
+> these should all be in a common binding doc though.
 
---XRI2XbIfl/05pQwm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think we have a misunderstanding. What I meant by "trying to be
+consistent" was that bindings for other DS1307 variants do not prefix
+their own properties with vendor name. Your comment about properties
+being reused makes me suspicious that I misled you to believe that
+other chip variants use those exact properties which is not the case.
 
-On Tue, Jun 21, 2016 at 10:54:39PM +0000, Opensource [Adam Thomson] wrote:
-> On 21 June 2016 23:30, Rafael J. Wysocki wrote:
-
-> > I'm fine with the first patch and the second one carries a couple of
-> > ACKs already, so do you want me to apply them both?
-
-None of whom are from anyone who works on the subsystem at all!  I've
-not looked at the patch yet.
-
-> Thanks Rafael. I think we still need Mark's Ack for the ASoC codec changes
-> though before we can proceed.
-
-Probably the easiest thing would be a tag for the core change that I can
-pull.
-
---XRI2XbIfl/05pQwm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXacvrAAoJECTWi3JdVIfQJ0gH/1Xq4MRqO/W6mePzXOH4ThPL
-RSfBji5Ji5t+cv1FtWU0f453fDro7QRsQP6FVb65JzNRCKlZOS9FcsJQ631Lzb7S
-LpqrCQfr1jdwGZMknAAcZVl98k8GarBFIfr2YnAcXZ549vYm2z92GozUlE9TO4ur
-AcOVC5hEW5ThjFfImqzzTQGCd+XIELJAOZVb6zHgGc7glES23fmeIfnCRcR/LY/h
-y6dZA+d5WW3+tZa3nTUf2J/TNtKo+vXPV0cexSt8Blpi/QOZDhTJI/oyXUvCVRu4
-htQ4j8nfgB7+/nLwbGExmz78J+S+K2uIIK7eR90Bzm8xcdPoyYiTLttVzdGr/EA=
-=e9EC
------END PGP SIGNATURE-----
-
---XRI2XbIfl/05pQwm--
-
---===============1550405484819894160==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1550405484819894160==--
+Andrey
