@@ -1,128 +1,63 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] iio: potentiometer: mcp4531: Add device tree binding
- documentation
-Date: Tue, 21 Jun 2016 16:43:36 -0500
-Message-ID: <20160621214336.GB4370@rob-hp-laptop>
-References: <1466492137-32683-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1466492137-32683-3-git-send-email-florian.vaussard@heig-vd.ch>
+Subject: Re: [PATCH 1/4] devicetree: Add Micro Crystal AG vendor id
+Date: Tue, 21 Jun 2016 16:45:39 -0500
+Message-ID: <20160621214539.GA9080@rob-hp-laptop>
+References: <1466492240-5528-1-git-send-email-dirk.behme@de.bosch.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDJIP47K7MERBBHLU25QKGQEGH67EYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1466492137-32683-3-git-send-email-florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+In-Reply-To: <1466492240-5528-1-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2016 at 08:55:36AM +0200, Florian Vaussard wrote:
-> Add the device tree documentation for all the supported parts. Apart the
-> compatible string and standard I2C binding, no other binding is currently
-> needed.
+On Tue, Jun 21, 2016 at 08:57:17AM +0200, Dirk Behme wrote:
+> From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 > 
-> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  .../bindings/iio/potentiometer/mcp4531.txt         | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/mcp4531.txt
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/mcp4531.txt b/Documentation/devicetree/bindings/iio/potentiometer/mcp4531.txt
-> new file mode 100644
-> index 0000000..b052299
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/potentiometer/mcp4531.txt
-> @@ -0,0 +1,84 @@
-> +* Microchip MCP453X/454X/455X/456X/463X/464X/465X/466X Digital Potentiometer
-> +  driver
-> +
-> +The node for this driver must be a child node of a I2C controller, hence
-> +all mandatory properties for your controller must be specified. See directory:
-> +
-> +        Documentation/devicetree/bindings/i2c
-> +
-> +for more details.
-> +
-> +Required properties:
-> +	- compatible:  	Must be one of the following, depending on the
-> +			model:
-> +			"microchip,mcp4531-502"
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 2c2500d..a6b39f9 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -152,6 +152,7 @@ lsi	LSI Corp. (LSI Logic)
+>  lltc	Linear Technology Corporation
+>  marvell	Marvell Technology Group Ltd.
+>  maxim	Maxim Integrated Products
+> +mc	Micro Crystal AG
 
-These can go in trivial-devices.txt
+mc is a bit short. How about microcrystal?
 
-> +			"microchip,mcp4531-103"
-> +			"microchip,mcp4531-503"
-> +			"microchip,mcp4531-104"
-> +			"microchip,mcp4532-502"
-> +			"microchip,mcp4532-103"
-> +			"microchip,mcp4532-503"
-> +			"microchip,mcp4532-104"
-> +			"microchip,mcp4541-502"
-> +			"microchip,mcp4541-103"
-> +			"microchip,mcp4541-503"
-> +			"microchip,mcp4541-104"
-> +			"microchip,mcp4542-502"
-> +			"microchip,mcp4542-103"
-> +			"microchip,mcp4542-503"
-> +			"microchip,mcp4542-104"
-> +			"microchip,mcp4551-502"
-> +			"microchip,mcp4551-103"
-> +			"microchip,mcp4551-503"
-> +			"microchip,mcp4551-104"
-> +			"microchip,mcp4552-502"
-> +			"microchip,mcp4552-103"
-> +			"microchip,mcp4552-503"
-> +			"microchip,mcp4552-104"
-> +			"microchip,mcp4561-502"
-> +			"microchip,mcp4561-103"
-> +			"microchip,mcp4561-503"
-> +			"microchip,mcp4561-104"
-> +			"microchip,mcp4562-502"
-> +			"microchip,mcp4562-103"
-> +			"microchip,mcp4562-503"
-> +			"microchip,mcp4562-104"
-> +			"microchip,mcp4631-502"
-> +			"microchip,mcp4631-103"
-> +			"microchip,mcp4631-503"
-> +			"microchip,mcp4631-104"
-> +			"microchip,mcp4632-502"
-> +			"microchip,mcp4632-103"
-> +			"microchip,mcp4632-503"
-> +			"microchip,mcp4632-104"
-> +			"microchip,mcp4641-502"
-> +			"microchip,mcp4641-103"
-> +			"microchip,mcp4641-503"
-> +			"microchip,mcp4641-104"
-> +			"microchip,mcp4642-502"
-> +			"microchip,mcp4642-103"
-> +			"microchip,mcp4642-503"
-> +			"microchip,mcp4642-104"
-> +			"microchip,mcp4651-502"
-> +			"microchip,mcp4651-103"
-> +			"microchip,mcp4651-503"
-> +			"microchip,mcp4651-104"
-> +			"microchip,mcp4652-502"
-> +			"microchip,mcp4652-103"
-> +			"microchip,mcp4652-503"
-> +			"microchip,mcp4652-104"
-> +			"microchip,mcp4661-502"
-> +			"microchip,mcp4661-103"
-> +			"microchip,mcp4661-503"
-> +			"microchip,mcp4661-104"
-> +			"microchip,mcp4662-502"
-> +			"microchip,mcp4662-103"
-> +			"microchip,mcp4662-503"
-> +			"microchip,mcp4662-104"
-> +	-reg: Slave I2C address of the potentiometer
-> +
-> +Example:
-> +mcp4561: mcp4561@2e {
-> +	compatible = "microchip,mcp4561-103";
-> +	reg = <0x2e>;
-> +};
+>  meas	Measurement Specialties
+>  mediatek	MediaTek Inc.
+>  melexis	Melexis N.V.
 > -- 
-> 2.5.0
+> 2.8.0
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
