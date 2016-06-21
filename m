@@ -1,183 +1,128 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] net: stmmac: dwmac-rk: add rk322x-specific data
-Date: Tue, 21 Jun 2016 15:13:55 +0800
-Message-ID: <1466493235-17789-1-git-send-email-zhengxing@rock-chips.com>
+From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+Date: Tue, 21 Jun 2016 10:19:32 +0300
+Message-ID: <87d1nbovp7.fsf@linux.intel.com>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com> <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com> <87h9coxq04.fsf@linux.intel.com> <5767C1B9.2060805@ti.com> <878ty0qd7q.fsf@linux.intel.com> <20160621063936.GB5108@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160621063936.GB5108@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add constants and callback functions for the dwmac on rk322x socs.
-As can be seen, the base structure is the same, only registers and
-the bits in them moved slightly.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
 
- .../devicetree/bindings/net/rockchip-dwmac.txt     |    3 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     |  117 ++++++++++++++++++++
- 2 files changed, 119 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-index 93eac7c..5040ed4 100644
---- a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-+++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-@@ -3,7 +3,8 @@ Rockchip SoC RK3288 10/100/1000 Ethernet driver(GMAC)
- The device node has following properties.
- 
- Required properties:
-- - compatible: Can be one of "rockchip,rk3288-gmac", "rockchip,rk3368-gmac"
-+ - compatible: Can be one of "rockchip,rk322x-gmac", "rockchip,rk3288-gmac",
-+                             "rockchip,rk3368-gmac"
-  - reg: addresses and length of the register sets for the device.
-  - interrupts: Should contain the GMAC interrupts.
-  - interrupt-names: Should contain the interrupt names "macirq".
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index 0cd3ecf..7f045db 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -72,6 +72,122 @@ struct rk_priv_data {
- #define GRF_BIT(nr)	(BIT(nr) | BIT(nr+16))
- #define GRF_CLR_BIT(nr)	(BIT(nr+16))
- 
-+#define RK322X_GRF_MAC_CON0	0x0900
-+#define RK322X_GRF_MAC_CON1	0x0904
-+
-+/* RK322X_GRF_MAC_CON0 */
-+#define RK322X_GMAC_CLK_RX_DL_CFG(val)	HIWORD_UPDATE(val, 0x7F, 7)
-+#define RK322X_GMAC_CLK_TX_DL_CFG(val)	HIWORD_UPDATE(val, 0x7F, 0)
-+
-+/* RK322X_GRF_MAC_CON1 */
-+#define RK322X_GMAC_PHY_INTF_SEL_RGMII	\
-+		(GRF_BIT(4) | GRF_CLR_BIT(5) | GRF_CLR_BIT(6))
-+#define RK322X_GMAC_PHY_INTF_SEL_RMII	\
-+		(GRF_CLR_BIT(4) | GRF_CLR_BIT(5) | GRF_BIT(6))
-+#define RK322X_GMAC_FLOW_CTRL		GRF_BIT(3)
-+#define RK322X_GMAC_FLOW_CTRL_CLR	GRF_CLR_BIT(3)
-+#define RK322X_GMAC_SPEED_10M		GRF_CLR_BIT(2)
-+#define RK322X_GMAC_SPEED_100M		GRF_BIT(2)
-+#define RK322X_GMAC_RMII_CLK_25M	GRF_BIT(7)
-+#define RK322X_GMAC_RMII_CLK_2_5M	GRF_CLR_BIT(7)
-+#define RK322X_GMAC_CLK_125M		(GRF_CLR_BIT(8) | GRF_CLR_BIT(9))
-+#define RK322X_GMAC_CLK_25M		(GRF_BIT(8) | GRF_BIT(9))
-+#define RK322X_GMAC_CLK_2_5M		(GRF_CLR_BIT(8) | GRF_BIT(9))
-+#define RK322X_GMAC_RMII_MODE		GRF_BIT(10)
-+#define RK322X_GMAC_RMII_MODE_CLR	GRF_CLR_BIT(10)
-+#define RK322X_GMAC_TXCLK_DLY_ENABLE	GRF_BIT(0)
-+#define RK322X_GMAC_TXCLK_DLY_DISABLE	GRF_CLR_BIT(0)
-+#define RK322X_GMAC_RXCLK_DLY_ENABLE	GRF_BIT(1)
-+#define RK322X_GMAC_RXCLK_DLY_DISABLE	GRF_CLR_BIT(1)
-+
-+static void rk322x_set_to_rgmii(struct rk_priv_data *bsp_priv,
-+				int tx_delay, int rx_delay)
-+{
-+	struct device *dev = &bsp_priv->pdev->dev;
-+
-+	if (IS_ERR(bsp_priv->grf)) {
-+		dev_err(dev, "Missing rockchip,grf property\n");
-+		return;
-+	}
-+
-+	regmap_write(bsp_priv->grf, RK322X_GRF_MAC_CON1,
-+		     RK322X_GMAC_PHY_INTF_SEL_RGMII |
-+		     RK322X_GMAC_RMII_MODE_CLR |
-+		     RK322X_GMAC_RXCLK_DLY_ENABLE |
-+		     RK322X_GMAC_TXCLK_DLY_ENABLE);
-+
-+	regmap_write(bsp_priv->grf, RK322X_GRF_MAC_CON0,
-+		     RK322X_GMAC_CLK_RX_DL_CFG(rx_delay) |
-+		     RK322X_GMAC_CLK_TX_DL_CFG(tx_delay));
-+}
-+
-+static void rk322x_set_to_rmii(struct rk_priv_data *bsp_priv)
-+{
-+	struct device *dev = &bsp_priv->pdev->dev;
-+
-+	if (IS_ERR(bsp_priv->grf)) {
-+		dev_err(dev, "Missing rockchip,grf property\n");
-+		return;
-+	}
-+
-+	regmap_write(bsp_priv->grf, RK322X_GRF_MAC_CON1,
-+		     RK322X_GMAC_PHY_INTF_SEL_RMII |
-+		     RK322X_GMAC_RMII_MODE);
-+
-+	/* set MAC to RMII mode */
-+	regmap_write(bsp_priv->grf, RK322X_GRF_MAC_CON1, GRF_BIT(11));
-+}
-+
-+static void rk322x_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
-+{
-+	struct device *dev = &bsp_priv->pdev->dev;
-+
-+	if (IS_ERR(bsp_priv->grf)) {
-+		dev_err(dev, "Missing rockchip,grf property\n");
-+		return;
-+	}
-+
-+	if (speed == 10)
-+		regmap_write(bsp_priv->grf, RK322X_GRF_MAC_CON1,
-+			     RK322X_GMAC_CLK_2_5M);
-+	else if (speed == 100)
-+		regmap_write(bsp_priv->grf, RK322X_GRF_MAC_CON1,
-+			     RK322X_GMAC_CLK_25M);
-+	else if (speed == 1000)
-+		regmap_write(bsp_priv->grf, RK322X_GRF_MAC_CON1,
-+			     RK322X_GMAC_CLK_125M);
-+	else
-+		dev_err(dev, "unknown speed value for RGMII! speed=%d", speed);
-+}
-+
-+static void rk322x_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
-+{
-+	struct device *dev = &bsp_priv->pdev->dev;
-+
-+	if (IS_ERR(bsp_priv->grf)) {
-+		dev_err(dev, "Missing rockchip,grf property\n");
-+		return;
-+	}
-+
-+	if (speed == 10)
-+		regmap_write(bsp_priv->grf, RK322X_GRF_MAC_CON1,
-+			     RK322X_GMAC_RMII_CLK_2_5M |
-+			     RK322X_GMAC_SPEED_10M);
-+	else if (speed == 100)
-+		regmap_write(bsp_priv->grf, RK322X_GRF_MAC_CON1,
-+			     RK322X_GMAC_RMII_CLK_25M |
-+			     RK322X_GMAC_SPEED_100M);
-+	else
-+		dev_err(dev, "unknown speed value for RMII! speed=%d", speed);
-+}
-+
-+static const struct rk_gmac_ops rk322x_ops = {
-+	.set_to_rgmii = rk322x_set_to_rgmii,
-+	.set_to_rmii = rk322x_set_to_rmii,
-+	.set_rgmii_speed = rk322x_set_rgmii_speed,
-+	.set_rmii_speed = rk322x_set_rmii_speed,
-+};
-+
- #define RK3288_GRF_SOC_CON1	0x0248
- #define RK3288_GRF_SOC_CON3	0x0250
- 
-@@ -604,6 +720,7 @@ static int rk_gmac_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id rk_gmac_dwmac_match[] = {
-+	{ .compatible = "rockchip,rk322x-gmac", .data = &rk322x_ops },
- 	{ .compatible = "rockchip,rk3288-gmac", .data = &rk3288_ops },
- 	{ .compatible = "rockchip,rk3368-gmac", .data = &rk3368_ops },
- 	{ }
--- 
-1.7.9.5
+Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>> >>> +
+>> >>> +		/* start host */
+>> >>> +		ret =3D hcd_ops->add(otg->primary_hcd.hcd,
+>> >>> +				   otg->primary_hcd.irqnum,
+>> >>> +				   otg->primary_hcd.irqflags);
+>> >>=20
+>> >> this is usb_add_hcd(), is it not? Why add an indirection?
+>> >
+>> > I've introduced the host and gadget ops interface to get around the
+>> > circular dependency issue we can't avoid.
+>> > otg needs to call host/gadget functions and host/gadget also needs to
+>> > call otg functions.
+>>=20
+>> IMO, this shows a fragility of your design. You're, now, lying to
+>> usb_hcd and usb_udc and making them register into a virtual layer that
+>> doesn't exist. And that layer will end up calling the real registration
+>> function when some magic event happens.
+>>=20
+>> This is only really needed for quirky devices like dwc3 (but see more on
+>> dwc3 below) where host and peripheral registers shadow each
+>> other. Otherwise we would be able to always keep hcd and udc always
+>> registered. They would get different interrupt statuses anyway and
+>> nothing would ever break.
+>>=20
+>> However, when it comes to dwc3, we already have all the code necessary
+>> to workaround this issue by destroying the XHCI pdev when OTG interrupt
+>> says we should be peripheral (and vice-versa). DWC3 also keeps track of
+>> the OTG states for those folks who really care about OTG (Hint: nobody
+>> has cared for the past 10 years, why would they do so now?) and we don't
+>> need a SW state machine when the HW handles that for us, right?
+>>=20
+>> As for chipidea, IIRC, that doesn't need a SW state machine either, but
+>> I know very little about that IP and don't even have documentation on
+>> it. My understanding, however, is that chipidea behaves kinda like MUSB,
+>> which changes roles automatically in HW based on ID pin state.
+>
+> Chipidea needs to set register for USB role manually.
+
+okay, so chipidea has private control of role. Much like dwc3. That's good.
+
+>> >>> + * @otg_dev: OTG controller device, if needs to be used with OTG co=
+re.
+>> >>=20
+>> >> do you really know of any platform which has a separate OTG controlle=
+r?
+>> >>=20
+>> >
+>> > Andrew had pointed out in [1] that Tegra210 has separate blocks for OT=
+G, host
+>> > and gadget.
+>> >
+>> > [1] http://article.gmane.org/gmane.linux.ports.tegra/22969
+>>=20
+>> that's not an OTG controller, it's just a mux. No different than Intel's
+>> mux for swapping between XHCI and peripheral-only DWC3.
+>>=20
+>> frankly, I would NEVER talk about OTG when type-C comes into play. They
+>> are two competing standards and, apparently, type-C is winning when it
+>> comes to role-swapping.
+>>=20
+>
+> In fact, OTG is mis-used by people. Currently, if the port is dual-role,
+> It will be considered as an OTG port.
+
+That's because "dual-role" is a non-standard OTG. Seen as people really
+didn't care about OTG, we (linux-usb folks) ended up naturally referring
+to "non-standard OTG" as "dual-role". Just to avoid confusion.
+
+> You are right, if the connector is type-c, it will be called as "type-c
+> port" by people :)
+
+oh no, that's not what I'm talking about. If you read Type-C and PD
+specs, they define their own method for data role swapping. USB OTG
+doesn't fit on top of a Type-C environment. It's not about what people
+will call it, it's really that OTG can't work on top of type-c. For
+starters, there's no ID pin ;-)
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXaOqFAAoJEIaOsuA1yqREQQMP/ike4XrLUcpb0EXEnTA7MTQn
+riNOoDu+QXpXa05SqtbYUtDO/j1gu0qzi+3KvRxnTrG74qYJwnLAzc+JrLqERgwl
+p5RY+IwFQPaI6vDYnacge9CU7mJ54vvUlfBVqy1hOVJxiBxv6ut9Fqb6urLQYIgE
+dl51I2W08d4r2QJtZMoh9znWHv+aoOLRfvRI0J872VttxigoYrVHyi47KdYQcnNf
+lrre1Cc6hWY6HslATBnwLQXl4NHPVf0JFf//PhLIAcbLusz424JFV6IZDAxVuajE
+ppgD3GKFvt8a5rQwOhMCBmuqhwc3lobbpNKI+/4jq2gL5UxKapC7b8hrZOm1baKZ
+7JFBDJqFWsdg92ULBcLbE2acbvWpsiHUv9LkvK1AKh/fEMUylUNuVWsLhVPTaLHy
+ivlOzsnotj8P0JavYjqReB5cIajAzSB8/N+3Pu1GW91FiI9JmM3Vv2k92ADh6zcU
+37GuDmtue9CWb+CEeblT02RtS23kPUuozAbpxqMIldNDAmBtGyc92DDW/UEzJIeY
+3r8oJXIzaztcK67KQQqMKtIZ6pifptRZl0l4KtwqZpfq15SqKkK1PKqy+1M1LswB
+HCFYEHufuE0BPPOp6q1x9SYLE8pUR55y/j16Ib4NlXCRg0Akw45YPe9K4gI0XWcu
+gc6KslfJxgprYQmmjVvc
+=jDch
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
