@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 7/8] arm64: dts: db820c: add support to SPI on HS
-Date: Tue, 21 Jun 2016 18:22:48 +0100
-Message-ID: <1466529769-2674-8-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 5/8] arm64: dts: db820c: add support to I2C on HS
+Date: Tue, 21 Jun 2016 18:22:46 +0100
+Message-ID: <1466529769-2674-6-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1466529769-2674-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,7 +21,7 @@ To: Andy Gross <andy.gross@linaro.org>
 Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to SPI on HS expansion connector.
+This patch adds support to i2c bus on High speed connector.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
@@ -29,25 +29,25 @@ Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
  1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 07fe6fb..08b063d 100644
+index 3114710..aefbb64 100644
 --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
 +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -21,6 +21,7 @@
+@@ -19,6 +19,7 @@
+ 		serial1 = &blsp2_uart2;
+ 		i2c0	= &blsp1_i2c2;
  		i2c1	= &blsp2_i2c1;
- 		i2c2	= &blsp2_i2c0;
- 		spi0	= &blsp1_spi0;
-+		spi1	= &blsp2_spi5;
++		i2c2	= &blsp2_i2c0;
  	};
  
  	chosen {
-@@ -67,5 +68,11 @@
- 			label = "HS-I2C2";
+@@ -53,5 +54,11 @@
+ 			label = "LS-I2C1";
  			status = "okay";
  		};
 +
-+		spi@075ba000{
++		i2c@075b5000 {
 +		/* On High speed expansion */
-+			label = "HS-SPI1";
++			label = "HS-I2C2";
 +			status = "okay";
 +		};
  	};
