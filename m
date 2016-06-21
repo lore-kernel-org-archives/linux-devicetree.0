@@ -1,94 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] ASoC: cs35l33: Add device tree bindings file for
- cs35l33
-Date: Tue, 21 Jun 2016 14:21:37 -0500
-Message-ID: <20160621192137.GA11832@rob-hp-laptop>
-References: <1466441119-8488-1-git-send-email-Paul.Handrigan@cirrus.com>
- <1466441119-8488-2-git-send-email-Paul.Handrigan@cirrus.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/9] regulator: tps65217: Enable suspend configuration
+Date: Tue, 21 Jun 2016 20:08:48 +0100
+Message-ID: <20160621190848.GF28202@sirena.org.uk>
+References: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
+ <1466412218-5906-2-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XIiC+We3v3zHqZ6Z"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466441119-8488-2-git-send-email-Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1466412218-5906-2-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 20, 2016 at 11:45:19AM -0500, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org wrote:
-> From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-> 
-> Add device tree bindings file for the cs35l33 8V boosted
-> class D amplifier.
-> 
-> Signed-off-by: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/sound/cs35l33.txt          | 118 +++++++++++++++++++++
->  1 file changed, 118 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/cs35l33.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/cs35l33.txt b/Documentation/devicetree/bindings/sound/cs35l33.txt
-> new file mode 100644
-> index 0000000..bea6de7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/cs35l33.txt
-> @@ -0,0 +1,118 @@
-> +CS35L33 Speaker Amplifier
-> +
-> +Required properties:
-> +
-> +  - compatible : "cirrus,cs35l33"
-> +
-> +  - reg : the I2C address of the device for I2C
-> +
-> +  - VA-supply, VP-supply : power supplies for the device,
-> +    as covered in
-> +    Documentation/devicetree/bindings/regulator/regulator.txt.
-> +
-> +Optional properties:
-> +
-> +  - reset-gpios : gpio used to reset the amplifier
-> +
-> +  - interrupt-parent : Specifies the phandle of the interrupt controller to
-> +    which the IRQs from CS35L33 are delivered to.
-> + -  interrupts : IRQ line info CS35L33.
-> +    (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +    for further information relating to interrupt properties)
-> +
-> +  - cirrus,boost-ctl : Booster voltage use to supply the amp. If the value is
-> +    0, then VBST = VP. If greater than 0, the boost voltage will be 3300mV with
-> +    a value of 1 and will increase at a step size of 100mV until a maximum of
-> +    8000mV.
-> +
-> +  - cirrus,ramp-rate : On power up, it affects the time from when the power
-> +    up sequence begins to the time the audio reaches a full-scale output.
-> +    On power down, it affects the time from when the power-down sequence
-> +    begins to when the amplifier disables the PWM outputs. If this property
-> +    is not set then soft ramping will be disabled and ramp time would be
-> +    20ms. If this property is set to 0,1,2,3 then ramp times would be 40ms,
-> +    60ms,100ms,175ms respectively for 48KHz sample rate.
-> +
-> +  - cirrus,boost-ipk : The maximum current allowed for the boost converter.
-> +    The range starts at 1850000uA and goes to a maximum of 3600000uA
-> +    with a step size of 15625uA. The default is 2500000uA.
-> +
-> +  - cirrus,imon-adc-scale : Configures the scaling of data bits from the IMON
-> +    ADC data word. This property can be set as a value of 0 for bits 15 down
-> +    to 0, 6 for 21 down to 6, 7, for 22 down to 7, 8 for 23 down to 8.
-> +
-> +  - cirrus,hg-algo : Parameters for internal Class H/G algorithm that
-> +    controls the amplifier supplies.
 
-It is not clear that this is a node not a property, and everything 
-below is part of the sub-node. The example is not the binding 
-documentation. I should be able to write the example or validate the 
-binding based on the documentation.
+--XIiC+We3v3zHqZ6Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Mon, Jun 20, 2016 at 02:13:30PM +0530, Keerthy wrote:
+
+> +static struct tps65217_regulator_data regulator_data[TPS65217_NUM_REGULATOR];
+
+Why is this a static global?
+
+> +		/* Store default strobe info */
+> +		ret = tps65217_reg_read(tps, regulators[i].bypass_reg, &val);
 > +
-> +  - cirrus,mem-depth : Memory depth for the Class H/G algorithm measured in
-> +    LRCLK cycles. If this property is set to 0, 1, 2, or 3 then the memory
-> +    depths will be 1, 4, 8, 16 LRCLK cycles.  The default is 16 LRCLK cycles.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		regulator_data[i].strobe = val & regulators[i].bypass_mask;
+> +
+
+Not sure what this is doing...  I think this needs splitting up a bit,
+it looks like it's a bit more than just adding the ops (which should be
+generic things), that bit seems OK but there's these other bits in
+there as well.
+
+--XIiC+We3v3zHqZ6Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXaZC+AAoJECTWi3JdVIfQJ9IH/jvO5mMNs/t1n9soNxyQUqbj
+bDNw3p/jWayvnOgV66QMyXPc3YJo2z5Gp/A+SwtSQRdhbE7TerSQYUWly+xGnjIj
+3ftlfEeKPvF0DOc8ZSm7XaLSn41iy5yctcPcCpAcXuu1unJfOHfFHBxTaxKS7m3M
+DagqcsU4WAhrkFHAhhkJMhb8HNQmIOoREzWbEh8gppmJeSn0zWcwpeTIUNxd0kNA
+0tGZHdufWXFUX8Z6DRfzJ2eYD/3QoGNmw2H16h2ygwH8302GpduY6FUJ9NQdxZYM
+qXCCHzx1aKOogDQrS1RIPbI0V0jsyKkCbvTovXuv2tk4SGDfsmAqk8jHd/mlgGU=
+=uxF5
+-----END PGP SIGNATURE-----
+
+--XIiC+We3v3zHqZ6Z--
