@@ -1,152 +1,200 @@
-From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
-Date: Tue, 21 Jun 2016 11:18:21 +0300
-Message-ID: <87mvmfneeq.fsf@linux.intel.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com> <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com> <87h9coxq04.fsf@linux.intel.com> <5767C1B9.2060805@ti.com> <878ty0qd7q.fsf@linux.intel.com> <20160621063936.GB5108@shlinux2> <87d1nbovp7.fsf@linux.intel.com> <20160621080209.GC5108@shlinux2>
+From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 7/7] iommu/arm-smmu: Support non-PCI devices with SMMUv3
+Date: Tue, 21 Jun 2016 16:36:16 +0800
+Message-ID: <5768FC80.204@huawei.com>
+References: <cover.1464966939.git.robin.murphy@arm.com>
+	<42a8a71932f766d70ea9dcae5d11d5f33dcc3652.1464966939.git.robin.murphy@arm.com>
+	<20160614151642.GC16531@arm.com> <5760ADC6.8000803@huawei.com>
+	<57635843.6000906@huawei.com> <5763BF69.7010205@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160621080209.GC5108@shlinux2>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5763BF69.7010205-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
 
-Hi,
+On 2016/6/17 17:14, Robin Murphy wrote:
+> On 17/06/16 02:54, Leizhen (ThunderTown) wrote:
+>> Hi,
+>> I only applied these patch series on lastest 4.7-rc3, is there any patches I missed?
+>> According to my test, it seems can not work. The problem is:
+> 
+> Thanks, that's helpful (if irritating) confirmation.
+> 
+> Would you mind trying this patch on top to see if that helps: http://article.gmane.org/gmane.linux.kernel.iommu/13991
 
-Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->> Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->> >> >>> +
->> >> >>> +		/* start host */
->> >> >>> +		ret =3D hcd_ops->add(otg->primary_hcd.hcd,
->> >> >>> +				   otg->primary_hcd.irqnum,
->> >> >>> +				   otg->primary_hcd.irqflags);
->> >> >>=20
->> >> >> this is usb_add_hcd(), is it not? Why add an indirection?
->> >> >
->> >> > I've introduced the host and gadget ops interface to get around the
->> >> > circular dependency issue we can't avoid.
->> >> > otg needs to call host/gadget functions and host/gadget also needs =
-to
->> >> > call otg functions.
->> >>=20
->> >> IMO, this shows a fragility of your design. You're, now, lying to
->> >> usb_hcd and usb_udc and making them register into a virtual layer that
->> >> doesn't exist. And that layer will end up calling the real registrati=
-on
->> >> function when some magic event happens.
->> >>=20
->> >> This is only really needed for quirky devices like dwc3 (but see more=
- on
->> >> dwc3 below) where host and peripheral registers shadow each
->> >> other. Otherwise we would be able to always keep hcd and udc always
->> >> registered. They would get different interrupt statuses anyway and
->> >> nothing would ever break.
->> >>=20
->> >> However, when it comes to dwc3, we already have all the code necessary
->> >> to workaround this issue by destroying the XHCI pdev when OTG interru=
-pt
->> >> says we should be peripheral (and vice-versa). DWC3 also keeps track =
-of
->> >> the OTG states for those folks who really care about OTG (Hint: nobody
->> >> has cared for the past 10 years, why would they do so now?) and we do=
-n't
->> >> need a SW state machine when the HW handles that for us, right?
->> >>=20
->> >> As for chipidea, IIRC, that doesn't need a SW state machine either, b=
-ut
->> >> I know very little about that IP and don't even have documentation on
->> >> it. My understanding, however, is that chipidea behaves kinda like MU=
-SB,
->> >> which changes roles automatically in HW based on ID pin state.
->> >
->> > Chipidea needs to set register for USB role manually.
->>=20
->> okay, so chipidea has private control of role. Much like dwc3. That's go=
-od.
->>=20
->> >> >>> + * @otg_dev: OTG controller device, if needs to be used with OTG=
- core.
->> >> >>=20
->> >> >> do you really know of any platform which has a separate OTG contro=
-ller?
->> >> >>=20
->> >> >
->> >> > Andrew had pointed out in [1] that Tegra210 has separate blocks for=
- OTG, host
->> >> > and gadget.
->> >> >
->> >> > [1] http://article.gmane.org/gmane.linux.ports.tegra/22969
->> >>=20
->> >> that's not an OTG controller, it's just a mux. No different than Inte=
-l's
->> >> mux for swapping between XHCI and peripheral-only DWC3.
->> >>=20
->> >> frankly, I would NEVER talk about OTG when type-C comes into play. Th=
-ey
->> >> are two competing standards and, apparently, type-C is winning when it
->> >> comes to role-swapping.
->> >>=20
->> >
->> > In fact, OTG is mis-used by people. Currently, if the port is dual-rol=
-e,
->> > It will be considered as an OTG port.
->>=20
->> That's because "dual-role" is a non-standard OTG. Seen as people really
->> didn't care about OTG, we (linux-usb folks) ended up naturally referring
->> to "non-standard OTG" as "dual-role". Just to avoid confusion.
->
-> So, unless we use OTG FSM defined in OTG spec, we should not mention
-> "OTG" in Linux, right?
+Although it can eliminate the warning, but still can not work.
 
-to avoid confusion with the terminology, yes. With that settled, let's
-figure out how you can deliver what your marketting guys are asking of
-you.
+> 
+> Failing that, we could go back to the forced-device-creation workaround (although I was hoping we'd be able to avoid it):
+> 
+> -----8<-----
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index e5acd601ee96..556a48f836b3 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2683,9 +2683,15 @@ module_exit(arm_smmu_exit);
+> 
+>  static int __init arm_smmu_of_init(struct device_node *np)
+>  {
+> +    static bool registered;
+> +
+>      of_iommu_set_ops(np, &arm_smmu_ops);
+> 
+> -    return 0;
+> +    if (!registered)
+> +        registered = !arm_smmu_init();
+> +
+> +    return PTR_ERR_OR_ZERO(of_platform_device_create(np, NULL,
+> +                    platform_bus_type.dev_root));
+>  }
+>  IOMMU_OF_DECLARE(arm_smmuv3, "arm,smmu-v3", arm_smmu_of_init);
 
->> > You are right, if the connector is type-c, it will be called as "type-c
->> > port" by people :)
->>=20
->> oh no, that's not what I'm talking about. If you read Type-C and PD
->> specs, they define their own method for data role swapping. USB OTG
->> doesn't fit on top of a Type-C environment. It's not about what people
->> will call it, it's really that OTG can't work on top of type-c. For
->> starters, there's no ID pin ;-)
->
-> I know type-c, yes, there is no relationship between OTG and type-c.
+This is work well. With or without the above.
 
-okay, thanks
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXaPhNAAoJEIaOsuA1yqRENHcP/jmghSW2gkCWzdckoE3R64hw
-TI0aAHygYkOEyuYM0j+mUoBUAlVkeXcvnQ3W9aiaCNdf5ot0eo+2qPWIpo/eTmXP
-SvMA9WkjJcDnz6aiuJmTK4QDiWt6h7AQk7hEc8N8kodp4sgqqW+iV+MmzSEFmUqZ
-kuwo0eP4hs0v1kNF8mlqXApBdo/my1mL7QfE2spfWoGVzTBUEc/M6123ZVSnawWm
-fcpHYQKz4SyRSJtb1unmkTgQtZH1l1bjjFHFM90Ri/c93u8rrZWqxeal6XPZuvtn
-EhRdMaESLyZibzT32jwLPxMPrdtiAIymxXNf+0XgqssmQwfDcWYs8qNsevGdKrnU
-Iz8Uc1CkQtsE302CKKeHXE2KkUFEQcNnEIJMD4EkawX0usfOSsWKXNM7Fx7r+Y60
-+0iJCOAHNLCwnyjdQNKEeJOnQmePEmOoXSnwHPRemXG+lD+O9RbsRLIwv9z5DqPF
-8IfCOqkLNpmtUMFzWClOq4lJGWfU3WPMc3aubCTuFSY5EEJOVswoCxoCM8EuTxrr
-RhVG9KkO5Lq2q6zwwoLuPT90VEs8YA9694F0+8sUVWi6AyJObsApfYzn3tq+Zkzn
-u+TLsu9AqgsGELzL4IEohbBhX6nr9aJYCqNjIrAZ+6fJk7jm42N5Vmcxm7upu7t1
-YgFS9w8qxBL3tQnL8/a8
-=AmA0
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> -----8<-----
+> 
+> Robin.
+> 
+>>
+>> [    0.916536] Call trace:
+>> [    0.918967] [<ffff00000808882c>] dump_backtrace+0x0/0x1ac
+>> [    0.924361] [<ffff0000080889ec>] show_stack+0x14/0x1c
+>> [    0.929384] [<ffff00000833c290>] dump_stack+0x8c/0xac
+>> [    0.934425] [<ffff000008093550>] do_iommu_attach.isra.11+0x24/0x7c                //called iommu_get_domain_for_dev, but currently dev->iommu_group is NULL
+>> [    0.940589] [<ffff000008093604>] __iommu_attach_notifier.part.13+0x5c/0xc8
+>> [    0.947443] [<ffff000008093690>] __iommu_attach_notifier+0x20/0x2c
+>> [    0.953608] [<ffff0000080d4c88>] notifier_call_chain+0x4c/0x88
+>> [    0.959408] [<ffff0000080d5010>] __blocking_notifier_call_chain+0x44/0x74
+>> [    0.966159] [<ffff0000080d5054>] blocking_notifier_call_chain+0x14/0x1c
+>> [    0.972754] [<ffff000008489600>] device_add+0x3ac/0x53c
+>> [    0.977959] [<ffff000008671810>] of_device_add+0x58/0x64
+>> [    0.983240] [<ffff0000086720c8>] of_platform_device_create_pdata+0x90/0xe8
+>> [    0.990077] [<ffff00000867220c>] of_platform_bus_create+0xd0/0x31c
+>> [    0.996265] [<ffff000008672574>] of_platform_populate+0x48/0xac
+>> [    1.002169] [<ffff000008af2654>] arm64_device_init+0x30/0x58
+>> [    1.007813] [<ffff000008081a14>] do_one_initcall+0x38/0x128
+>> [    1.013354] [<ffff000008af0cc4>] kernel_init_freeable+0x14c/0x1ec
+>> [    1.019439] [<ffff0000087a92d0>] kernel_init+0x10/0xfc
+>> [    1.024556] [<ffff000008084e10>] ret_from_fork+0x10/0x40
+>>
+>> [    0.906207] Failed to set up IOMMU for device tst_smmu; retaining platform DMA ops        //error info
+>>
+>> [    0.963782] HugeTLB registered 2 MB page size, pre-allocated 0 pages
+>> [    0.970442] ACPI: Interpreter disabled.
+>> [    0.974429] arm-smmu-v3 d0040000.smmu_alg: ias 44-bit, oas 44-bit (features 0x00000f0d)
+>>
+>> [    0.996948] Call trace:
+>> [    0.999400] [<ffff00000808882c>] dump_backtrace+0x0/0x1ac
+>> [    1.004787] [<ffff0000080889ec>] show_stack+0x14/0x1c
+>> [    1.009846] [<ffff00000833c290>] dump_stack+0x8c/0xac
+>> [    1.014905] [<ffff0000084829d4>] arm_smmu_add_device+0x44/0x160
+>> [    1.020801] [<ffff00000847a218>] add_iommu_group+0x20/0x44
+>> [    1.026291] [<ffff00000848a43c>] bus_for_each_dev+0x58/0x98
+>> [    1.031866] [<ffff00000847b220>] bus_set_iommu+0x9c/0xf8
+>> [    1.037150] [<ffff000008b1b420>] arm_smmu_init+0x78/0x84
+>> [    1.042475] [<ffff000008081a14>] do_one_initcall+0x38/0x128
+>> [    1.048043] [<ffff000008af0cc4>] kernel_init_freeable+0x14c/0x1ec
+>> [    1.054138] [<ffff0000087a931c>] kernel_init+0x10/0xfc
+>> [    1.059264] [<ffff000008084e10>] ret_from_fork+0x10/0x40
+>>
+>> [    1.171026] iommu: Adding device tst_smmu to group 0                        //It's already late.
+>>
+>> On 2016/6/15 9:22, Leizhen (ThunderTown) wrote:
+>>>
+>>>
+>>> On 2016/6/14 23:16, Will Deacon wrote:
+>>>> [adding ThunderTown, since he might be able to test this for us]
+>>>
+>>> OK. I'm so glad to do it.
+>>>
+>>>>
+>>>> On Fri, Jun 03, 2016 at 06:15:42PM +0100, Robin Murphy wrote:
+>>>>> With the device <-> stream ID relationship suitably abstracted and
+>>>>> of_xlate() hooked up, we no longer have any PCI-specifics in play,
+>>>>> so adding support for the simpler kinds of platform device (a single
+>>>>> unique stream ID each) becomes trivial; let's do it!
+>>>>>
+>>>>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>>>>> ---
+>>>>>
+>>>>> v2: New. Consider this one "extra bonus material" as I'm not sure there
+>>>>>      are even any suitable devices on our model to test it with (it
+>>>>>      _should_ be OK, given that I know the basic infrastructure on either
+>>>>>      side works...)
+>>>>>
+>>>>>   drivers/iommu/Kconfig       |  2 +-
+>>>>>   drivers/iommu/arm-smmu-v3.c | 36 ++++++++++++++++++++++++++++++------
+>>>>>   2 files changed, 31 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+>>>>> index ad0860383cb3..d1c66afefeed 100644
+>>>>> --- a/drivers/iommu/Kconfig
+>>>>> +++ b/drivers/iommu/Kconfig
+>>>>> @@ -308,7 +308,7 @@ config ARM_SMMU
+>>>>>
+>>>>>   config ARM_SMMU_V3
+>>>>>       bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
+>>>>> -    depends on ARM64 && PCI
+>>>>> +    depends on ARM64
+>>>>>       select IOMMU_API
+>>>>>       select IOMMU_IO_PGTABLE_LPAE
+>>>>>       select GENERIC_MSI_IRQ_DOMAIN
+>>>>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+>>>>> index 28dcc5ca237e..6379f0ab24fc 100644
+>>>>> --- a/drivers/iommu/arm-smmu-v3.c
+>>>>> +++ b/drivers/iommu/arm-smmu-v3.c
+>>>>> @@ -35,6 +35,8 @@
+>>>>>   #include <linux/pci.h>
+>>>>>   #include <linux/platform_device.h>
+>>>>>
+>>>>> +#include <linux/amba/bus.h>
+>>>>> +
+>>>>>   #include "io-pgtable.h"
+>>>>>
+>>>>>   /* MMIO registers */
+>>>>> @@ -1773,6 +1775,22 @@ static void arm_smmu_remove_device(struct device *dev)
+>>>>>       iommu_group_remove_device(dev);
+>>>>>   }
+>>>>>
+>>>>> +static struct iommu_group *arm_smmu_device_group(struct device *dev)
+>>>>> +{
+>>>>> +    struct iommu_group *group;
+>>>>> +
+>>>>> +    /*
+>>>>> +     * We've currently no means of grouping non-PCI masters, so
+>>>>> +     * there'd better not be any non-unique stream IDs in the DT...
+>>>>> +     */
+>>>>
+>>>> Worse: what if a SID in the DT aliases with a PCI master? It might be
+>>>> nice to have some basic snity checking, at least.
+>>>>
+>>>> Will
+>>>>
+>>>> .
+>>>>
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> 
+> 
+> .
+> 
