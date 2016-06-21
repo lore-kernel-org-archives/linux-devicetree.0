@@ -1,71 +1,42 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: Re: [RESEND PATCH v3 1/2] device property: Add
- function to search for named child of device
-Date: Tue, 21 Jun 2016 14:07:23 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D46443CA@SW-EX-MBX01.diasemi.com>
-References: <cover.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
- <866c9edccdd89805f6a0c0aa92f8a78ae616ed61.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
- <20160621111126.GX1739@lahna.fi.intel.com>
- <28758107.YROb1rVtm6@vostro.rjw.lan>
- <2E89032DDAA8B9408CB92943514A0337D46442AB@SW-EX-MBX01.diasemi.com>
- <20160621115947.GZ1739@lahna.fi.intel.com>
- <2E89032DDAA8B9408CB92943514A0337D4644326@SW-EX-MBX01.diasemi.com>
+From: "Imre Kaloz" <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH] ARM: BCM5301X: Set GPIO enabling USB power on Netgear
+ R7000
+Date: Tue, 21 Jun 2016 16:29:21 +0200
+Message-ID: <op.yjevu7en2s3iss@ecaz>
+References: <1466509358-25498-1-git-send-email-zajec5@gmail.com>
+ <op.yjepy3mr2s3iss@ecaz>
+ <CACna6rxm0euw=nVyHZzZa2+Q9U9S4t+aVy34ZvL0Lrx27B8-eA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <2E89032DDAA8B9408CB92943514A0337D4644326@SW-EX-MBX01.diasemi.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>, Mika
- Westerberg <mika.westerberg@linux.intel.com>
-Cc: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, "Rafael J.Wysocki" <rafael.j.wysocki@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Robert Moore <robert.moore@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lv Zheng <lv.zheng@intel.com>, Takashi Iwai <tiwai@suse.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed	delsp=yes
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6rxm0euw=nVyHZzZa2+Q9U9S4t+aVy34ZvL0Lrx27B8-eA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 June 2016 13:27, Adam Thomson wrote:
+On Tue, 21 Jun 2016 14:26:11 +0200, Rafa=C5=82 Mi=C5=82ecki <zajec5@gma=
+il.com> wrote:
 
-> > > > > > +static inline bool acpi_data_node_match(struct fwnode_handle *fwnode,
-> > > > > > +					const char *name)
-> > > > > > +{
-> > > > > > +	return is_acpi_data_node(fwnode) ?
-> > > > > > +		(!strcasecmp(to_acpi_data_node(fwnode)->name, name)) :
-> > false;
-> > > > > > +}
-> > > > >
-> > > > > Looks fine to me.
-> > > > >
-> > > > > One question - is it expected that matching ACPI data nodes is always
-> > > > > case insensitive?
-> > > >
-> > > > That would not be a correct expectation in theory, although I don't think it
-> > > > really matters in practice.
-> > >
-> > > From my reading of the Hierarchical Data Extension and ACPI Spec, I thought
-> > > that was the case (section 19.3.1 ASL Names - ASL names are not case-sensitive
-> > > and will be converted to upper case). Am I misreading the documents/missing
-> > > something else?
-> >
-> > Those are names in the ASL code itself.
-> >
-> > What we are talking here are actually just string values (name of the
-> > data node).
-> 
-> Understood. For DT they are case insensitive (except for Sparc platforms) so
-> having ACPI match seems to make sense. I can add a comment indicating this,
-> just for clarity.
+> On 21 June 2016 at 14:22, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+>> Is there any reason you are not handling this properly as a regulato=
+r =20
+>> with
+>> usb-nop-xceiv?
+>
+> We can't use USB NOP PHY as we need a specific PHY driver for Broadco=
+m's =20
+> USB.
 
-Actually, I'm going to back-track. Having seen the following discussion thread
-on node name matching, it would seem the expected behaviour is that names should
-be case sensitive for DT:
+I see. That shouldn't stop you from addressing the regulator part, tho =
+;)
 
-http://www.spinics.net/lists/devicetree/msg130870.html
 
-Will follow that lead, and do the same for ACPI.
+Imre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
