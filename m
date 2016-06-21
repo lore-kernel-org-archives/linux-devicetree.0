@@ -1,33 +1,62 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH] ARM: BCM5301X: Set GPIO enabling USB power on Netgear
- R7000
-Date: Tue, 21 Jun 2016 14:26:11 +0200
-Message-ID: <CACna6rxm0euw=nVyHZzZa2+Q9U9S4t+aVy34ZvL0Lrx27B8-eA@mail.gmail.com>
-References: <1466509358-25498-1-git-send-email-zajec5@gmail.com>
- <op.yjepy3mr2s3iss@ecaz>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Subject: Re: [RESEND PATCH v3 1/2] device property: Add
+ function to search for named child of device
+Date: Tue, 21 Jun 2016 12:27:28 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337D4644326@SW-EX-MBX01.diasemi.com>
+References: <cover.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
+ <866c9edccdd89805f6a0c0aa92f8a78ae616ed61.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
+ <20160621111126.GX1739@lahna.fi.intel.com>
+ <28758107.YROb1rVtm6@vostro.rjw.lan>
+ <2E89032DDAA8B9408CB92943514A0337D46442AB@SW-EX-MBX01.diasemi.com>
+ <20160621115947.GZ1739@lahna.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <op.yjepy3mr2s3iss@ecaz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Imre Kaloz <kaloz@openwrt.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160621115947.GZ1739@lahna.fi.intel.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, "Opensource [Adam
+ Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, "Rafael J.Wysocki" <rafael.j.wysocki@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Robert Moore <robert.moore@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lv Zheng <lv.zheng@intel.com>, Takashi Iwai <tiwai@suse.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 June 2016 at 14:22, Imre Kaloz <kaloz@openwrt.org> wrote:
-> Is there any reason you are not handling this properly as a regulator with
-> usb-nop-xceiv?
+21 June 2016 13:00, Mika Westerberg wrote:
 
-We can't use USB NOP PHY as we need a specific PHY driver for Broadcom's USB.
+> > > > > +static inline bool acpi_data_node_match(struct fwnode_handle *fwnode,
+> > > > > +					const char *name)
+> > > > > +{
+> > > > > +	return is_acpi_data_node(fwnode) ?
+> > > > > +		(!strcasecmp(to_acpi_data_node(fwnode)->name, name)) :
+> false;
+> > > > > +}
+> > > >
+> > > > Looks fine to me.
+> > > >
+> > > > One question - is it expected that matching ACPI data nodes is always
+> > > > case insensitive?
+> > >
+> > > That would not be a correct expectation in theory, although I don't think it
+> > > really matters in practice.
+> >
+> > From my reading of the Hierarchical Data Extension and ACPI Spec, I thought
+> > that was the case (section 19.3.1 ASL Names - ASL names are not case-sensitive
+> > and will be converted to upper case). Am I misreading the documents/missing
+> > something else?
+> 
+> Those are names in the ASL code itself.
+> 
+> What we are talking here are actually just string values (name of the
+> data node).
 
-I sent patch for this:
-https://patchwork.kernel.org/patch/9148097/
+Understood. For DT they are case insensitive (except for Sparc platforms) so
+having ACPI match seems to make sense. I can add a comment indicating this,
+just for clarity.
