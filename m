@@ -1,34 +1,56 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v9 2/4] power: reset: add reboot mode driver
-Date: Tue, 21 Jun 2016 11:32:51 +0200
-Message-ID: <576909C3.4010109@samsung.com>
-References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
- <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
- <5767A4C0.3080902@samsung.com> <5767A92E.5040602@rock-chips.com>
- <5767E22F.5030207@samsung.com> <20160620144002.GY12567@windriver.com>
- <5768DBCB.4090903@rock-chips.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v2 00/15] clk: sunxi: introduce "modern" clock support
+Date: Tue, 21 Jun 2016 11:40:44 +0200
+Message-ID: <20160621114044.811e2136eca5c1d863d79ac6@free.fr>
+References: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <5768DBCB.4090903-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2016 08:16 AM, Andy Yan wrote:
->   I will remove the module related stuff in the next version.
->>> Following his rationale, I think either this should be a tristate or the
->>> module stuff should be removed.
+On Tue,  7 Jun 2016 22:41:39 +0200
+Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
 
-How about making it tristate? I think there isn't any obstacles for this
-driver being a module. Some distros like modules.
+> The current code has been tested on the H3 and an Orange Pi PC,
+> including making sure that MMC still works, so the general approach
+> seems ok.
+> =
 
-Best regards.
-Krzysztof
+> Let me know what you think,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Maxime,
+
+I used your code in both the H3 and A83T, and it worked fine for the
+current clocks.
+
+But I had some problems with some features as the 'mode select' in the
+A83T MMC2 clock.
+Also, I think that you did not go far enough in the changes.
+For example, most clock gates as well as most resets could be removed
+from the DT and automatically set/de-asserted on clock prepare or clock
+enable.
+
+So, I am rewriting a generic sunxi clock driver into one file (about
+1000 lines) and I have the full (simpler and clearer) description of
+the H3 and the A863T clocks.
+
+Coding is not finished yet. I will submit a RFC as soon as I will have
+something working.
+
+-- =
+
+Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
