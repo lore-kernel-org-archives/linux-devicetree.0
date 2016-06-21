@@ -1,45 +1,35 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V6 0/6] iommu/msm: Add DT adaptation and generic bindings
-	support
-Date: Tue, 21 Jun 2016 14:04:42 +0200
-Message-ID: <20160621120442.GH28248@8bytes.org>
-References: <1465817767-9856-1-git-send-email-sricharan@codeaurora.org>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: Re: [PATCH] net: stmmac: dwmac-rk: add rk322x-specific data
+Date: Tue, 21 Jun 2016 20:12:50 +0800
+Message-ID: <57692F42.30709@rock-chips.com>
+References: <1466493235-17789-1-git-send-email-zhengxing@rock-chips.com>
+ <3520853.j0ALyW964u@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1465817767-9856-1-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3520853.j0ALyW964u@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, roger.chen@rock-chips.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 13, 2016 at 05:06:01PM +0530, Sricharan R wrote:
-> Sricharan R (6):
->   iommu/msm: Add DT adaptation
->   documentation: iommu: Add bindings for msm,iommu-v0 ip
->   iommu/msm: Move the contents from msm_iommu_dev.c to msm_iommu.c
->   iommu/msm: Add support for generic master bindings
->   iommu/msm: use generic ARMV7S short descriptor pagetable ops
->   iommu/msm: Remove driver BROKEN
-> 
->  .../devicetree/bindings/iommu/msm,iommu-v0.txt     |  64 ++
->  drivers/iommu/Kconfig                              |   2 +-
->  drivers/iommu/Makefile                             |   2 +-
->  drivers/iommu/msm_iommu.c                          | 870 +++++++++++----------
->  drivers/iommu/msm_iommu.h                          |  73 +-
->  drivers/iommu/msm_iommu_dev.c                      | 381 ---------
->  6 files changed, 564 insertions(+), 828 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
->  delete mode 100644 drivers/iommu/msm_iommu_dev.c
+Hi Heiko,
 
-Applied this series, thanks.
+On 2016=E5=B9=B406=E6=9C=8821=E6=97=A5 17:43, Heiko St=C3=BCbner wrote:
+> devicetree names are normally expected to be real, aka no "x" as catc=
+hall. So
+> I guess either just add compatibles for both the rk3228 and rk3229 wh=
+ich point
+> to the same structure in the driver. (So driver-side can stay as it i=
+s below,
+> just add a second compatible).
+OK, I try to just use "rockchip,rk3228-gmac" to point to "rk322x_ops"=20
+which is the same structure in MAC driver,
+and both rk3228 and rk3229 use it.
+
+Thanks
+
+--=20
+- Xing Zheng
