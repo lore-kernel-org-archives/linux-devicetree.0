@@ -1,53 +1,80 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific power-saving options
-Date: Tue, 21 Jun 2016 16:23:00 -0700
-Message-ID: <CAHQ1cqFgD--n7NMguZNQ+qdQk7zdxPHCM-Phq09wJwBacjMd8Q@mail.gmail.com>
-References: <1465970379-14703-1-git-send-email-andrew.smirnov@gmail.com>
- <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com>
- <20160619142934.GA8522@rob-hp-laptop> <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
- <20160621204904.GA9779@rob-hp-laptop>
+From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH] ata: ahci_platform: Add ACPI support for APM X-Gene AHCI
+ controller v3 hardware.
+Date: Tue, 21 Jun 2016 16:31:38 -0700
+Message-ID: <CAOHikRDUH-PK4JfS8pUR+or=XTwDHBejFTGy33V20HKMMTUaPg@mail.gmail.com>
+References: <stripathi@apm.com>
+	<1466034240-22694-1-git-send-email-stripathi@apm.com>
+	<6691907.FIx2xYmxSs@wuerfel>
+	<CAOHikRCB4c79okd0q3=Lqwk7LKwZ6EDnWfHRH_oXokrB4PHcyw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160621204904.GA9779@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: rtc-linux@googlegroups.com, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOHikRCB4c79okd0q3=Lqwk7LKwZ6EDnWfHRH_oXokrB4PHcyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> So wouldn't you want to set one mode while running and the lower power
-> mode while suspended? I'm trying to understand the frequency of changing
-> this. If it is always one setting for a board, then yes it belongs in
-> DT. If it is a user decision, then it probably shouldn't be in DT.
+Hi Arnd,
 
-I don't really see a use-case where you'd want setting that
-dynamically. I might be wrong, but IMHO, power consumption of a system
-in suspended mode would dwarf that of an RTC, so there's really much
-to gain by enabling this feature dynamically. Where it matters the
-most is time setting retention when the system is powered off and RTC
-is ticking off of a battery or a some other power storage device. So
-in my opinion it is more of a system design question where one has to
-choose if reliability of RTC data is more important (detection of
-oscillator faults and higher oscillator glitch immunity) and bigger
-power storage device is needed or higher risk of RTC "malfunction" is
-acceptable and cheaper/more convenient power storage device can be
-used
-
->
-> Seeing as these are reused, I've probably already had this discussion...
->
->> > They should have vendor prefix and be explicit that they are boolean.
+On Tue, Jun 21, 2016 at 11:08 AM, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
+> On Wed, Jun 15, 2016 at 11:54 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 >>
->> I was trying to be consistent with ds1339 and ds1390 bindings which do
->> not have vendor prefixes. Will fix in v2.
+>> On Wednesday, June 15, 2016 5:44:00 PM CEST suman-tripathi wrote:
+>> > This patch adds ACPI support for APM X-Gene AHCI controller in
+>> > ahci_platform driver for v3 hardware. APM X-Gene AHCI controller
+>> > v3 hardware is fully compliant with ahci_platform driver and requires
+>> > no workaround quirk.
+>> >
+>> > Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+>> > ---
+>> >  drivers/ata/ahci_platform.c |    1 +
+>> >  1 files changed, 1 insertions(+), 0 deletions(-)
+>> >
+>> > diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+>> > index 62a04c8..3395baf 100644
+>> > --- a/drivers/ata/ahci_platform.c
+>> > +++ b/drivers/ata/ahci_platform.c
+>> > @@ -86,6 +86,7 @@ MODULE_DEVICE_TABLE(of, ahci_of_match);
+>> >
+>> >  static const struct acpi_device_id ahci_acpi_match[] = {
+>> >         { ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
+>> > +       { "APMC0D33", 0},
+>> >         {},
+>> >  };
+>> >  MODULE_DEVICE_TABLE(acpi, ahci_acpi_match);
+>> >
+>>
+>> Doesn't the ACPI_DEVICE_CLASS entry take care of this? I thought it had been
 >
-> Okay, then they are fine if you are using existing properties. Perhaps
-> these should all be in a common binding doc though.
+>
+> yeah it also works. Just thought that we need something different as
+> our's is a non-PCI SATA.
 
-I think we have a misunderstanding. What I meant by "trying to be
-consistent" was that bindings for other DS1307 variants do not prefix
-their own properties with vendor name. Your comment about properties
-being reused makes me suspicious that I misled you to believe that
-other chip variants use those exact properties which is not the case.
+Are you suggesting to introduce a new class ACPI_DEVICE_CLASS for
+non-pci ahci ? or to reuse the existing PCI_CLASS_STORAGE_SATA_AHCI ?
+>>
+>> added specifically for this purpose. It doesn't seem right to add vendor
+>> specific entries for generic hardware in each generic driver.
+>>
+>>         Arnd
+>
+>
+>
+>
+> --
+> Thanks,
+> with regards,
+> Suman Tripathi
 
-Andrey
+
+
+-- 
+Thanks,
+with regards,
+Suman Tripathi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
