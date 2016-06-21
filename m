@@ -1,111 +1,168 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
-Date: Tue, 21 Jun 2016 16:02:09 +0800
-Message-ID: <20160621080209.GC5108@shlinux2>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
- <1465564043-27163-9-git-send-email-rogerq@ti.com>
- <575E672E.5070603@ti.com>
- <87h9coxq04.fsf@linux.intel.com>
- <5767C1B9.2060805@ti.com>
- <878ty0qd7q.fsf@linux.intel.com>
- <20160621063936.GB5108@shlinux2>
- <87d1nbovp7.fsf@linux.intel.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 3/3] iio: potentiometer: mcp4531: Add device tree binding
+Date: Tue, 21 Jun 2016 09:51:52 +0200
+Message-ID: <bf4dbd64-aac8-aba3-ec5c-4cd4d0e848f6@axentia.se>
+References: <1466492137-32683-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1466492137-32683-4-git-send-email-florian.vaussard@heig-vd.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87d1nbovp7.fsf@linux.intel.com>
+In-Reply-To: <1466492137-32683-4-git-send-email-florian.vaussard@heig-vd.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>
-Cc: Roger Quadros <rogerq@ti.com>, peter.chen@freescale.com, yoshihiro.shimoda.uh@renesas.com, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@gmail.com>, devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Slawomir Stepien <sst@poczta.fm>, Joachim Eastwood <manabian@gmail.com>, Matt Ranostay <mranostay@gmail.com>, Cristina Moraru <cristina.moraru09@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2016 at 10:19:32AM +0300, Felipe Balbi wrote:
+On 2016-06-21 08:55, Florian Vaussard wrote:
+> This patch adds the necessary device tree binding to allow DT probing of
+> currently supported parts.
 > 
-> Hi,
+> Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
+> ---
+>  drivers/iio/potentiometer/mcp4531.c | 83 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 82 insertions(+), 1 deletion(-)
 > 
-> Peter Chen <hzpeterchen@gmail.com> writes:
-> >> >>> +
-> >> >>> +		/* start host */
-> >> >>> +		ret = hcd_ops->add(otg->primary_hcd.hcd,
-> >> >>> +				   otg->primary_hcd.irqnum,
-> >> >>> +				   otg->primary_hcd.irqflags);
-> >> >> 
-> >> >> this is usb_add_hcd(), is it not? Why add an indirection?
-> >> >
-> >> > I've introduced the host and gadget ops interface to get around the
-> >> > circular dependency issue we can't avoid.
-> >> > otg needs to call host/gadget functions and host/gadget also needs to
-> >> > call otg functions.
-> >> 
-> >> IMO, this shows a fragility of your design. You're, now, lying to
-> >> usb_hcd and usb_udc and making them register into a virtual layer that
-> >> doesn't exist. And that layer will end up calling the real registration
-> >> function when some magic event happens.
-> >> 
-> >> This is only really needed for quirky devices like dwc3 (but see more on
-> >> dwc3 below) where host and peripheral registers shadow each
-> >> other. Otherwise we would be able to always keep hcd and udc always
-> >> registered. They would get different interrupt statuses anyway and
-> >> nothing would ever break.
-> >> 
-> >> However, when it comes to dwc3, we already have all the code necessary
-> >> to workaround this issue by destroying the XHCI pdev when OTG interrupt
-> >> says we should be peripheral (and vice-versa). DWC3 also keeps track of
-> >> the OTG states for those folks who really care about OTG (Hint: nobody
-> >> has cared for the past 10 years, why would they do so now?) and we don't
-> >> need a SW state machine when the HW handles that for us, right?
-> >> 
-> >> As for chipidea, IIRC, that doesn't need a SW state machine either, but
-> >> I know very little about that IP and don't even have documentation on
-> >> it. My understanding, however, is that chipidea behaves kinda like MUSB,
-> >> which changes roles automatically in HW based on ID pin state.
-> >
-> > Chipidea needs to set register for USB role manually.
-> 
-> okay, so chipidea has private control of role. Much like dwc3. That's good.
-> 
-> >> >>> + * @otg_dev: OTG controller device, if needs to be used with OTG core.
-> >> >> 
-> >> >> do you really know of any platform which has a separate OTG controller?
-> >> >> 
-> >> >
-> >> > Andrew had pointed out in [1] that Tegra210 has separate blocks for OTG, host
-> >> > and gadget.
-> >> >
-> >> > [1] http://article.gmane.org/gmane.linux.ports.tegra/22969
-> >> 
-> >> that's not an OTG controller, it's just a mux. No different than Intel's
-> >> mux for swapping between XHCI and peripheral-only DWC3.
-> >> 
-> >> frankly, I would NEVER talk about OTG when type-C comes into play. They
-> >> are two competing standards and, apparently, type-C is winning when it
-> >> comes to role-swapping.
-> >> 
-> >
-> > In fact, OTG is mis-used by people. Currently, if the port is dual-role,
-> > It will be considered as an OTG port.
-> 
-> That's because "dual-role" is a non-standard OTG. Seen as people really
-> didn't care about OTG, we (linux-usb folks) ended up naturally referring
-> to "non-standard OTG" as "dual-role". Just to avoid confusion.
+> diff --git a/drivers/iio/potentiometer/mcp4531.c b/drivers/iio/potentiometer/mcp4531.c
+> index 2251173..41a1e46 100644
+> --- a/drivers/iio/potentiometer/mcp4531.c
+> +++ b/drivers/iio/potentiometer/mcp4531.c
+> @@ -31,6 +31,8 @@
+>  #include <linux/module.h>
+>  #include <linux/i2c.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  #include <linux/iio/iio.h>
+>  
+> @@ -188,12 +190,84 @@ static const struct iio_info mcp4531_info = {
+>  	.driver_module = THIS_MODULE,
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id mcp45xx_of_match[] = {
 
-So, unless we use OTG FSM defined in OTG spec, we should not mention
-"OTG" in Linux, right?
- 
+Should be named mcp4531_of_match, also the casting to void and
+then back to an integer type is ugly. Would it work to store a
+pointer directly into the mcp4531_cfg array instead? I.e.
+
+	{ .compatible = "microchip,mcp4531-502", .data = &mcp4531_cfg[MCP453x_502] },
+etc
+
+and then adjust accordingly in mcp4531_probe()?
+
+That is, if you need this patch at all, see my reply to 2/3...
+
+Cheers,
+Peter
+
+> +	{ .compatible = "microchip,mcp4531-502", .data = (void *)MCP453x_502 },
+> +	{ .compatible = "microchip,mcp4531-103", .data = (void *)MCP453x_103 },
+> +	{ .compatible = "microchip,mcp4531-503", .data = (void *)MCP453x_503 },
+> +	{ .compatible = "microchip,mcp4531-104", .data = (void *)MCP453x_104 },
+> +	{ .compatible = "microchip,mcp4532-502", .data = (void *)MCP453x_502 },
+> +	{ .compatible = "microchip,mcp4532-103", .data = (void *)MCP453x_103 },
+> +	{ .compatible = "microchip,mcp4532-503", .data = (void *)MCP453x_503 },
+> +	{ .compatible = "microchip,mcp4532-104", .data = (void *)MCP453x_104 },
+> +	{ .compatible = "microchip,mcp4541-502", .data = (void *)MCP454x_502 },
+> +	{ .compatible = "microchip,mcp4541-103", .data = (void *)MCP454x_103 },
+> +	{ .compatible = "microchip,mcp4541-503", .data = (void *)MCP454x_503 },
+> +	{ .compatible = "microchip,mcp4541-104", .data = (void *)MCP454x_104 },
+> +	{ .compatible = "microchip,mcp4542-502", .data = (void *)MCP454x_502 },
+> +	{ .compatible = "microchip,mcp4542-103", .data = (void *)MCP454x_103 },
+> +	{ .compatible = "microchip,mcp4542-503", .data = (void *)MCP454x_503 },
+> +	{ .compatible = "microchip,mcp4542-104", .data = (void *)MCP454x_104 },
+> +	{ .compatible = "microchip,mcp4551-502", .data = (void *)MCP455x_502 },
+> +	{ .compatible = "microchip,mcp4551-103", .data = (void *)MCP455x_103 },
+> +	{ .compatible = "microchip,mcp4551-503", .data = (void *)MCP455x_503 },
+> +	{ .compatible = "microchip,mcp4551-104", .data = (void *)MCP455x_104 },
+> +	{ .compatible = "microchip,mcp4552-502", .data = (void *)MCP455x_502 },
+> +	{ .compatible = "microchip,mcp4552-103", .data = (void *)MCP455x_103 },
+> +	{ .compatible = "microchip,mcp4552-503", .data = (void *)MCP455x_503 },
+> +	{ .compatible = "microchip,mcp4552-104", .data = (void *)MCP455x_104 },
+> +	{ .compatible = "microchip,mcp4561-502", .data = (void *)MCP456x_502 },
+> +	{ .compatible = "microchip,mcp4561-103", .data = (void *)MCP456x_103 },
+> +	{ .compatible = "microchip,mcp4561-503", .data = (void *)MCP456x_503 },
+> +	{ .compatible = "microchip,mcp4561-104", .data = (void *)MCP456x_104 },
+> +	{ .compatible = "microchip,mcp4562-502", .data = (void *)MCP456x_502 },
+> +	{ .compatible = "microchip,mcp4562-103", .data = (void *)MCP456x_103 },
+> +	{ .compatible = "microchip,mcp4562-503", .data = (void *)MCP456x_503 },
+> +	{ .compatible = "microchip,mcp4562-104", .data = (void *)MCP456x_104 },
+> +	{ .compatible = "microchip,mcp4631-502", .data = (void *)MCP463x_502 },
+> +	{ .compatible = "microchip,mcp4631-103", .data = (void *)MCP463x_103 },
+> +	{ .compatible = "microchip,mcp4631-503", .data = (void *)MCP463x_503 },
+> +	{ .compatible = "microchip,mcp4631-104", .data = (void *)MCP463x_104 },
+> +	{ .compatible = "microchip,mcp4632-502", .data = (void *)MCP463x_502 },
+> +	{ .compatible = "microchip,mcp4632-103", .data = (void *)MCP463x_103 },
+> +	{ .compatible = "microchip,mcp4632-503", .data = (void *)MCP463x_503 },
+> +	{ .compatible = "microchip,mcp4632-104", .data = (void *)MCP463x_104 },
+> +	{ .compatible = "microchip,mcp4641-502", .data = (void *)MCP464x_502 },
+> +	{ .compatible = "microchip,mcp4641-103", .data = (void *)MCP464x_103 },
+> +	{ .compatible = "microchip,mcp4641-503", .data = (void *)MCP464x_503 },
+> +	{ .compatible = "microchip,mcp4641-104", .data = (void *)MCP464x_104 },
+> +	{ .compatible = "microchip,mcp4642-502", .data = (void *)MCP464x_502 },
+> +	{ .compatible = "microchip,mcp4642-103", .data = (void *)MCP464x_103 },
+> +	{ .compatible = "microchip,mcp4642-503", .data = (void *)MCP464x_503 },
+> +	{ .compatible = "microchip,mcp4642-104", .data = (void *)MCP464x_104 },
+> +	{ .compatible = "microchip,mcp4651-502", .data = (void *)MCP465x_502 },
+> +	{ .compatible = "microchip,mcp4651-103", .data = (void *)MCP465x_103 },
+> +	{ .compatible = "microchip,mcp4651-503", .data = (void *)MCP465x_503 },
+> +	{ .compatible = "microchip,mcp4651-104", .data = (void *)MCP465x_104 },
+> +	{ .compatible = "microchip,mcp4652-502", .data = (void *)MCP465x_502 },
+> +	{ .compatible = "microchip,mcp4652-103", .data = (void *)MCP465x_103 },
+> +	{ .compatible = "microchip,mcp4652-503", .data = (void *)MCP465x_503 },
+> +	{ .compatible = "microchip,mcp4652-104", .data = (void *)MCP465x_104 },
+> +	{ .compatible = "microchip,mcp4661-502", .data = (void *)MCP466x_502 },
+> +	{ .compatible = "microchip,mcp4661-103", .data = (void *)MCP466x_103 },
+> +	{ .compatible = "microchip,mcp4661-503", .data = (void *)MCP466x_503 },
+> +	{ .compatible = "microchip,mcp4661-104", .data = (void *)MCP466x_104 },
+> +	{ .compatible = "microchip,mcp4662-502", .data = (void *)MCP466x_502 },
+> +	{ .compatible = "microchip,mcp4662-103", .data = (void *)MCP466x_103 },
+> +	{ .compatible = "microchip,mcp4662-503", .data = (void *)MCP466x_503 },
+> +	{ .compatible = "microchip,mcp4662-104", .data = (void *)MCP466x_104 },
+> +	{ /*sentinel*/ }
+> +};
+> +#endif
+> +
+>  static int mcp4531_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
+>  {
+>  	struct device *dev = &client->dev;
+> +	unsigned long devid;
+>  	struct mcp4531_data *data;
+>  	struct iio_dev *indio_dev;
+> +	const struct of_device_id *match;
+>  
+>  	if (!i2c_check_functionality(client->adapter,
+>  				     I2C_FUNC_SMBUS_WORD_DATA)) {
+> @@ -201,13 +275,19 @@ static int mcp4531_probe(struct i2c_client *client,
+>  		return -EOPNOTSUPP;
+>  	}
+>  
+> +	match = of_match_device(of_match_ptr(mcp45xx_of_match), dev);
+> +	if (match)
+> +		devid = (int)of_device_get_match_data(dev);
+> +	else
+> +		devid = id->driver_data;
+> +
+>  	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  	data = iio_priv(indio_dev);
+>  	i2c_set_clientdata(client, indio_dev);
+>  	data->client = client;
+> -	data->cfg = &mcp4531_cfg[id->driver_data];
+> +	data->cfg = &mcp4531_cfg[devid];
+>  
+>  	indio_dev->dev.parent = dev;
+>  	indio_dev->info = &mcp4531_info;
+> @@ -290,6 +370,7 @@ MODULE_DEVICE_TABLE(i2c, mcp4531_id);
+>  static struct i2c_driver mcp4531_driver = {
+>  	.driver = {
+>  		.name	= "mcp4531",
+> +		.of_match_table = of_match_ptr(mcp45xx_of_match),
+>  	},
+>  	.probe		= mcp4531_probe,
+>  	.id_table	= mcp4531_id,
 > 
-> > You are right, if the connector is type-c, it will be called as "type-c
-> > port" by people :)
-> 
-> oh no, that's not what I'm talking about. If you read Type-C and PD
-> specs, they define their own method for data role swapping. USB OTG
-> doesn't fit on top of a Type-C environment. It's not about what people
-> will call it, it's really that OTG can't work on top of type-c. For
-> starters, there's no ID pin ;-)
-
-I know type-c, yes, there is no relationship between OTG and type-c.
-
--- 
-
-Best Regards,
-Peter Chen
