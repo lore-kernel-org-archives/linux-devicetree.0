@@ -1,45 +1,49 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RFC 6/6] ASoC: samsung: Add DT bindings documentation for
- TM2 sound subsystem
-Date: Tue, 21 Jun 2016 11:48:11 +0200
-Message-ID: <57690D5B.2020504@samsung.com>
-References: <1465815160-28504-1-git-send-email-s.nawrocki@samsung.com>
- <1465815160-28504-7-git-send-email-s.nawrocki@samsung.com>
- <20160614233224.GA4477@rob-hp-laptop> <20160615094730.GX2282@sirena.org.uk>
- <CAL_Jsq+=EGo+6PkwjCSUavm+DyvjuXDx2XzteY6xXSP+0u+Z+g@mail.gmail.com>
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] ARM: dts: mt2701: add iommu/smi dtsi node for
+	mt2701
+Date: Tue, 21 Jun 2016 17:55:00 +0800
+Message-ID: <1466502900.8787.2.camel@mtksdaap41>
+References: <1465379461-14757-1-git-send-email-honghui.zhang@mediatek.com>
+	<1465379461-14757-6-git-send-email-honghui.zhang@mediatek.com>
+	<20160621094116.GD28248@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAL_Jsq+=EGo+6PkwjCSUavm+DyvjuXDx2XzteY6xXSP+0u+Z+g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Inha Song <ideal.song@samsung.com>, Beomho Seo <beomho.seo@samsung.com>, InKi Dae <inki.dae@samsung.com>, =?UTF-8?Q?Krzysztof_Koz=c5=82owski?= <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20160621094116.GD28248-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2016 07:49 PM, Rob Herring wrote:
->>>> + - samsung,i2s-controller : the phandle of the I2S controller
->>>> + - samsung,speaker-amplifier : the phandle of the MAX98504 amplifier
+On Tue, 2016-06-21 at 11:41 +0200, Joerg Roedel wrote:
+> On Wed, Jun 08, 2016 at 05:51:01PM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add the dtsi node of iommu and smi for mt2701.
+> > 
+> > Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/mt2701.dtsi | 51 +++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> 
+> Applied the series, except this last patch. It didn't apply cleanly and
+> I was not sure how to correctly fix that. Can you please resubmit the
+> patch based on my arm/mediatek branch once I pushed it?
+> 
 
-I'm considering changing this to a more generic (samsung,?)audio-amplifier
-in next iteration. Or maybe just listing MAX98504 as second entry of the
-(samsung,)audio-codec(s) property value, since capabilities and functionality 
-of the device in the system is not limited to just simple audio power 
-amplification. It accepts analogue audio signal on its input and is 
-transmitting digital audio data stream in the feedback path to the WM5110 
-codec's DSP.
+I will rebase this one later after your push.
+Thanks.
 
->>> >> We should have standard properties for these. 2nd ones I've seen today.
->> >
->> > No, these aren't fixed roles in a system, you couldn't have standard
->> > handling for them.
->
-> What do you mean? It is silly for us to put vendor prefixes on all of
-> these. There are dozens of examples in the binding docs of
-> <vendor>,i2s-controller and <vendor>,audio-codec. Yes, dropping just
-> the vendor prefix doesn't buy much (maybe some string space), but it
-> certainly adds nothing.
-
-It also looked unnecessary to me to at first sight to be adding
-vendor prefixes to those properties. We could look at the compatible
-string in the pointed node for handling any differences.
+> Thanks,
+> 
+> 	Joerg
+> 
