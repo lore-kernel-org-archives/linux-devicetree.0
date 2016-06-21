@@ -1,44 +1,67 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 0/5] Fix and improve clock controller for the RK322x SoCs
-Date: Wed, 22 Jun 2016 09:10:25 +0800
-Message-ID: <5769E581.2040903@rock-chips.com>
-References: <1466484811-26923-1-git-send-email-zhengxing@rock-chips.com>
- <13345941.K3V3BNYxTY@phil>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND] docs: Move brcm,bcm21664-resetmgr.txt
+Date: Wed, 22 Jun 2016 01:37:45 +0200
+Message-ID: <20160621233745.GB14437@earth>
+References: <1466551056-15580-1-git-send-email-chris.brand@broadcom.com>
+ <20160621233326.GA14437@earth>
+ <CAMsMSK9r62W9-a1-d3rusZqG-waspMex8qbJK7phUKbe-R5FLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <13345941.K3V3BNYxTY@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMsMSK9r62W9-a1-d3rusZqG-waspMex8qbJK7phUKbe-R5FLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpPbiAyMDE25bm0MDbmnIgyMuaXpSAwNzowNywgSGVpa28gU3R1ZWJuZXIgd3Jv
-dGU6Cj4gQW0gRGllbnN0YWcsIDIxLiBKdW5pIDIwMTYsIDEyOjUzOjI2IHNjaHJpZWIgWGluZyBa
-aGVuZzoKPj4gSGksCj4+ICAgIFRoZXNlIHBhdGNoc2V0IGZpeCBzb21lIGNsb2NrcyBidWdzLCBh
-bmQgaW1wcm92ZSBjbG9jayBjb25maWd1cmF0aW9uCj4+IGZvciBpMnMvc3BkaWYvTUFDIG9uIFJL
-MzIyeCBTb0NzLgo+IGFwcGxpZWQgdG8gbXkgY2xvY2stYnJhbmNoIHdpdGggdGhlIGZvbGxvd2lu
-ZyBjaGFuZ2VzOgo+Cj4gLSBmaXhlZCB0aGUgZXJyb3IgaW4gcGF0Y2gxIC0gbWlzc2luZyAiKSIg
-aW4KPiAgICAgICAgQ09NUE9TSVRFX0ZSQUMoMCwgImkyczFfZnJhYyIsICJpMnMxX3NyYyIsIENM
-S19TRVRfUkFURV9QQVJFTlQsCj4gLSAgICAgICAgICAgICAgICAgICAgICAgUkszMjg4X0NMS1NF
-TF9DT04oNyksIDAsCj4gLSAgICAgICAgICAgICAgICAgICAgICAgUkszMjg4X0NMS0dBVEVfQ09O
-KDApLCAxMSwgR0ZMQUdTKSwKPiArICAgICAgICAgICAgICAgICAgICAgICBSSzI5MjhfQ0xLU0VM
-X0NPTig3KSwgMCwKPiArICAgICAgICAgICAgICAgICAgICAgICBSSzI5MjhfQ0xLR0FURV9DT04o
-MCksIDExLCBHRkxBR1MsCj4KPiAtIGFkYXB0ZWQgcGF0Y2gyIGFjY29yZGluZ2x5Cj4gLSBzcGxp
-dCBvdXQgY2xvY2sgaWQgYWRkaXRpb24gaW50byBzZXBhcmF0ZSBwYXRjaGVzLCBhcyB0aGV5IG5l
-ZWQgYSBzaGFyZWQKPiBicmFuY2guIFhpbmcgcGxlYXNlIHJlbWVtYmVyIHRvIGFkZCBjbG9jay1p
-ZHMgdG8gdGhlIGhlYWRlciBpbiBzZXBhcmF0ZQo+IHBhdGNoZXMuCj4KPgpTbyBzb3JyeSB0byBt
-aXNzIGl0Li4uCk9LLCBJIHdpbGwgYWRkIGNsb2NrLWlkcyB0byB0aGUgaGVhZGVyIGluIHNlcGFy
-YXRlIHBhdGNoZXMuCgpUaGFua3MuCgotLSAKLSBYaW5nIFpoZW5nCgoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcg
-bGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+
+--4SFOXa2GPu3tIq4H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Jun 21, 2016 at 04:35:58PM -0700, Chris Brand wrote:
+> On Tue, Jun 21, 2016 at 4:33 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > This is already queued:
+> >
+> > https://git.kernel.org/cgit/linux/kernel/git/sre/linux-power-supply.git=
+/commit/?h=3Dnext&id=3D7a4f9830f04c8450a486eb1faf401596259d821b
+> >
+> > -- Sebastian
+>=20
+> Oh, ok then. Sorry for the noise.
+
+No problem. Looks like I forgot to reply to your initial patch.
+
+-- Sebastian
+
+--4SFOXa2GPu3tIq4H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXac/JAAoJENju1/PIO/qahG8P/2WvIm0V68KilVDhZfOkXVCL
+tgWqRJEHWUAjpxpiq6dQuz371oKLdwlsooPHXJjsq0YxpegjiYSzULYorIuCgl1Y
+XC3tMaJEBL6XPz6cXL/MMhsEvm5I7uVzXlCiQpdvBexk9DEUgBdGhCXglpziMEHE
+ILvLltN+vq9XmpAt7ZPvdFiJ88fyfNvMcdB8ycZQ5fD6gnnIReDEnfyKpKZk0g70
+anyvrqFKlmZZoIfNLTTUyXnFBklOoga5k0eLw/Vbhvnsl3LIX6Ra1PvMxSe/wIOk
+NYKFhhcRNJIn8sKbR5cG9KZa+3ndTcV5LG7ktY49dJHw/af4VpkyqxPtQ5+uZb/1
+C9Cz6KZV5ngqN38BY4qLriPSMFwidDykBL0a1Ibb8tnBoCxyitU/UnOpF5dT0T6n
+MAXPdFv6xtU2imvHQXhuMBwQySVxf8dNRZsSXiPm1YrvTH2iQVjXQz9Zi3AtAVjH
+ivM7Z36wnU0zQ3YLg/ziFugOVEuwRuBItMZdMbmwcjxvkXUV01S8ENI/KaOE+6ZB
+gdrBvUSTAB0/PQch2OQF/xpb+Qdd1grO38+Dn6WTlwGDlJzrNVpumU7S8lYv/S/b
+GGIXxEBFVhLJ2pz5RLJfZVY2rcQfog6xHwBfULtttCG1kKDCqcx75QJ/RTsWsjLj
+fUQXQiEzFQAaiOup91Hv
+=bDGi
+-----END PGP SIGNATURE-----
+
+--4SFOXa2GPu3tIq4H--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
