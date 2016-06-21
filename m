@@ -1,94 +1,183 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv4 4/7] Documentation: dt: socfpga: Add Arria10 Ethernet
- binding
-Date: Tue, 21 Jun 2016 10:57:39 -0500
-Message-ID: <576963F3.2050008@opensource.altera.com>
-References: <1466434252-26107-1-git-send-email-tthayer@opensource.altera.com>
- <1466434252-26107-5-git-send-email-tthayer@opensource.altera.com>
- <20160621133340.GA9073@rob-hp-laptop>
- <57695350.3050404@opensource.altera.com>
- <CAL_Jsq+Bhr8BtjZpbLtpXscFU3E1nEbuUcO6enRSKjyL_me3vg@mail.gmail.com>
-Reply-To: tthayer@opensource.altera.com
+From: Han Xu <xhnjupt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] mtd: nand: gpmi: correct bitflip for erased NAND page
+Date: Tue, 21 Jun 2016 10:53:48 -0500
+Message-ID: <CA+EcR22rADB8=CORdLTpSyM2-VaB+EcX5oZfFoVLAfgUVDgN=Q@mail.gmail.com>
+References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
+ <1465578094-8816-5-git-send-email-han.xu@nxp.com> <20160614211401.40c26b37@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+Bhr8BtjZpbLtpXscFU3E1nEbuUcO6enRSKjyL_me3vg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thor Thayer <tthayer.linux@gmail.com>, Borislav Petkov <bp@alien8.de>, Doug Thompson <dougthompson@xmission.com>, Grant Likely <grant.likely@linaro.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-edac@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160614211401.40c26b37@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 14, 2016 at 2:14 PM, Boris Brezillon
+<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Fri, 10 Jun 2016 12:01:32 -0500
+> Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org> wrote:
+>
+>> i.MX6QP and i.MX7D BCH module integrated a new feature to detect the
+>> bitflip number for erased NAND page. So for these two platform, set the
+>> erase threshold to ecc_strength and if bitflip detected, GPMI driver
+>> will correct the data to all 0xFF.
+>>
+>> Signed-off-by: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+>> ---
+>>  drivers/mtd/nand/gpmi-nand/bch-regs.h  | 10 ++++++++++
+>>  drivers/mtd/nand/gpmi-nand/gpmi-lib.c  |  5 +++++
+>>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 27 ++++++++++++++++++++++++++-
+>>  3 files changed, 41 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mtd/nand/gpmi-nand/bch-regs.h b/drivers/mtd/nand/gpmi-nand/bch-regs.h
+>> index 228142c..2c44b88 100644
+>> --- a/drivers/mtd/nand/gpmi-nand/bch-regs.h
+>> +++ b/drivers/mtd/nand/gpmi-nand/bch-regs.h
+>> @@ -30,7 +30,13 @@
+>>  #define BM_BCH_CTRL_COMPLETE_IRQ             (1 << 0)
+>>
+>>  #define HW_BCH_STATUS0                               0x00000010
+>> +
+>>  #define HW_BCH_MODE                          0x00000020
+>> +#define BP_BCH_MODE_ERASE_THRESHOLD          0
+>> +#define BM_BCH_MODE_ERASE_THRESHOLD  (0xff << BP_BCH_MODE_ERASE_THRESHOLD)
+>> +#define BF_BCH_MODE_ERASE_THRESHOLD(v)               \
+>> +     (((v) << BP_BCH_MODE_ERASE_THRESHOLD) & BM_BCH_MODE_ERASE_THRESHOLD)
+>> +
+>>  #define HW_BCH_ENCODEPTR                     0x00000030
+>>  #define HW_BCH_DATAPTR                               0x00000040
+>>  #define HW_BCH_METAPTR                               0x00000050
+>> @@ -125,4 +131,8 @@
+>>       )
+>>
+>>  #define HW_BCH_VERSION                               0x00000160
+>> +#define HW_BCH_DEBUG1                                0x00000170
+>> +#define BP_BCH_DEBUG1_ERASED_ZERO_COUNT      0
+>> +#define BM_BCH_DEBUG1_ERASED_ZERO_COUNT              \
+>> +             (0x1ff << BP_BCH_DEBUG1_ERASED_ZERO_COUNT)
+>>  #endif
+>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+>> index 358ff5d..0b5666a 100644
+>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+>> @@ -298,6 +298,11 @@ int bch_set_geometry(struct gpmi_nand_data *this)
+>>                       | BF_BCH_FLASH0LAYOUT1_DATAN_SIZE(block_size, this),
+>>                       r->bch_regs + HW_BCH_FLASH0LAYOUT1);
+>>
+>> +     /* Set erase threshold to ecc_strength for mx6qp and mx7 */
+>> +     if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
+>> +             writel(BF_BCH_MODE_ERASE_THRESHOLD(ecc_strength),
+>> +                     r->bch_regs + HW_BCH_MODE);
+>> +
+>>       /* Set *all* chip selects to use layout 0. */
+>>       writel(0, r->bch_regs + HW_BCH_LAYOUTSELECT);
+>>
+>> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>> index aedaff3..03bdb4d 100644
+>> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+>> @@ -1043,6 +1043,7 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>>  {
+>>       struct gpmi_nand_data *this = nand_get_controller_data(chip);
+>>       struct bch_geometry *nfc_geo = &this->bch_geometry;
+>> +     void __iomem *bch_regs = this->resources.bch_regs;
+>>       void          *payload_virt;
+>>       dma_addr_t    payload_phys;
+>>       void          *auxiliary_virt;
+>> @@ -1051,6 +1052,8 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>>       unsigned char *status;
+>>       unsigned int  max_bitflips = 0;
+>>       int           ret;
+>> +     int bitflips = 0;
+>> +     int bitflip_flag = 0;
+>
+> Hm, I would choose another name, but I'm not even sure this is really
+> needed (see below).
+>
+>>
+>>       dev_dbg(this->dev, "page number is : %d\n", page);
+>>       ret = read_page_prepare(this, buf, nfc_geo->payload_size,
+>> @@ -1088,8 +1091,20 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>>                          payload_virt, payload_phys);
+>>
+>>       for (i = 0; i < nfc_geo->ecc_chunk_count; i++, status++) {
+>> -             if ((*status == STATUS_GOOD) || (*status == STATUS_ERASED))
+>> +             if (*status == STATUS_GOOD)
+>> +                     continue;
+>> +             if (*status == STATUS_ERASED) {
+>> +                     if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this)) {
+>> +                             bitflips = readl(bch_regs + HW_BCH_DEBUG1);
+>
+> You could use ret here or define a flips variable locally to this code
+> (see what's done for the software correction).
+>
+> BTW, why not memset-ing the data chunk here (as done for the SW
+> correction part). This way you wouldn't need the extra bitflips_flag
+> variable.
+>
+>> +                             if (bitflips) {
+>> +                                     bitflip_flag = 1;
+>> +                                     max_bitflips = max_t(unsigned int,
+>> +                                                          max_bitflips,
+>> +                                                          bitflips);
+>> +                             }
+>> +                     }
+>>                       continue;
+>> +             }
+>>
+>>               if (*status == STATUS_UNCORRECTABLE) {
+>>                       int eccbits = nfc_geo->ecc_strength * nfc_geo->gf_len;
+>> @@ -1098,6 +1113,10 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>>                       int eccbytes;
+>>                       int flips;
+>>
+>> +                     /* shortcut for i.MX7 and i.MX6QP */
+>> +                     if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
+>
+> You should increment mtd->ecc_stats.failed in this case.
+
+Do you mean update the mtd->ecc_status.corrected when flips happened?
+Nothing failed in this case.
+
+>
+>> +                             continue;
+>> +
+>>                       /* Read ECC bytes into our internal raw_buffer */
+>>                       offset = nfc_geo->metadata_size * 8;
+>>                       offset += ((8 * nfc_geo->ecc_chunk_size) + eccbits) * (i + 1);
+>> @@ -1182,6 +1201,12 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>>               chip->oob_poi[0] = ((uint8_t *) auxiliary_virt)[0];
+>>       }
+>>
+>> +     /* if bitflip occurred in erased page, change data to all 0xff */
+>> +     if (bitflip_flag) {
+>> +             memset(buf, ~0, nfc_geo->payload_size);
+>> +             memset(chip->oob_poi, ~0, mtd->oobsize);
+>> +     }
+>> +
+>>       return max_bitflips;
+>>  }
+>>
+>
+>
+>
+> --
+> Boris Brezillon, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
 
-On 06/21/2016 10:48 AM, Rob Herring wrote:
-> On Tue, Jun 21, 2016 at 9:46 AM, Thor Thayer
-> <tthayer@opensource.altera.com> wrote:
->> Hi Rob,
->>
->>
->> On 06/21/2016 08:33 AM, Rob Herring wrote:
->>>
->>> On Mon, Jun 20, 2016 at 09:50:49AM -0500, tthayer@opensource.altera.com
->>> wrote:
->>>>
->>>> From: Thor Thayer <tthayer@opensource.altera.com>
->>>>
->>>> Add the device tree bindings needed to support the Altera Ethernet
->>>> FIFO buffers on the Arria10 chip.
->>>>
->>>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->>>> ---
->>>> v2  No Change
->>>> v3  Change to common compatible string based on maintainer comments
->>>>       Add local IRQ values.
->>>> v4  Add compatible string for parent node.
->>>> ---
->>>>    .../bindings/arm/altera/socfpga-eccmgr.txt         |   24
->>>> ++++++++++++++++++++
->>>>    1 file changed, 24 insertions(+)
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->>>> b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->>>> index 15eb0df..7c714ba 100644
->>>> --- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->>>> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
->>>> @@ -82,6 +82,14 @@ Required Properties:
->>>>    - interrupts : Should be single bit error interrupt, then double bit
->>>> error
->>>>          interrupt, in this order.
->>>>
->>>> +Ethernet FIFO ECC
->>>> +Required Properties:
->>>> +- compatible : Should be "altr,socfpga-eth-mac-ecc"
->>>> +- reg        : Address and size for ECC block registers.
->>>> +- parent     : phandle to parent (altr,socfpga-stmmac) Ethernet node.
->>>
->>>
->>> Sorry if I wasn't clear before, but I was suggesting changing 'parent'
->>> to 'altr,ethernet-mac':
->>>
->>> altr,ethernet-mac = <&gmac0>;
->>>
->>> Rob
->>>
->> Ahh, I see what you're saying.
->>
->> I used parent as the tag because I have a generic function for validating
->> that the parent status is "okay" using the "parent" string in my
->> validate_parent_available() function (see below).
->
-> Ah, so common ecc-mgr code is parsing it. Then how about 'altr,ecc-parent'?
->
-> Rob
->
-That's clean - I'll change to that string. Thanks!
+
+-- 
+Sincerely,
+
+Han XU
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
