@@ -1,14 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] can: rcar_canfd: Add Classical CAN only mode support
-Date: Tue, 21 Jun 2016 08:29:58 -0500
-Message-ID: <20160621132958.GA5283@rob-hp-laptop>
-References: <1466434007-50873-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Subject: Re: [PATCHv4 4/7] Documentation: dt: socfpga: Add Arria10 Ethernet
+ binding
+Date: Tue, 21 Jun 2016 08:33:40 -0500
+Message-ID: <20160621133340.GA9073@rob-hp-laptop>
+References: <1466434252-26107-1-git-send-email-tthayer@opensource.altera.com>
+ <1466434252-26107-5-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1466434007-50873-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+In-Reply-To: <1466434252-26107-5-git-send-email-tthayer@opensource.altera.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,69 +20,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, chris.paterson2@renesas.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, socketcan@hartkopp.net, magnus.damm@gmail.com, linux-can@vger.kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, mkl@pengutronix.de, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, ulrich.hecht+renesas@gmail.com, wg@grandegger.com
+To: tthayer@opensource.altera.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, bp@alien8.de, dougthompson@xmission.com, grant.likely@linaro.org, dinguyen@opensource.altera.com, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 20, 2016 at 03:46:47PM +0100, Ramesh Shanmugasundaram wrote:
-> The controller can operate in one of the two global modes
->  - CAN FD only mode (default)
->  - Classical CAN (CAN2.0) only mode
+On Mon, Jun 20, 2016 at 09:50:49AM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
 > 
-> This patch adds support for Classical CAN only mode. It can be enabled
-> by defining the optional device tree property "renesas,can-nofd" of this
-> node.
+> Add the device tree bindings needed to support the Altera Ethernet
+> FIFO buffers on the Arria10 chip.
 > 
-> Note: R-Car Gen3 h/w manual v0.51E shows bit6 of RSCFDnCFDGCFG as
-> reserved, which is incorrect. This bit is same as RSCFDnGCFG.
-> 
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 > ---
-> Hi Marc, All,
-> 
->    This patch is based on top of can-next(tag:linux-can-next-for-4.8-20160617).
-> 
-> Thanks,
-> Ramesh.
+> v2  No Change
+> v3  Change to common compatible string based on maintainer comments
+>     Add local IRQ values.
+> v4  Add compatible string for parent node.
 > ---
->  .../devicetree/bindings/net/can/rcar_canfd.txt     |   9 +-
->  drivers/net/can/rcar/rcar_canfd.c                  | 355 ++++++++++++++-------
->  2 files changed, 249 insertions(+), 115 deletions(-)
+>  .../bindings/arm/altera/socfpga-eccmgr.txt         |   24 ++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> index d45182b..a343359 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> @@ -32,6 +32,12 @@ below properties.
->  - assigned-clocks: phandle of canfd clock.
->  - assigned-clock-rates: maximum frequency of this clock.
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+> index 15eb0df..7c714ba 100644
+> --- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
+> @@ -82,6 +82,14 @@ Required Properties:
+>  - interrupts : Should be single bit error interrupt, then double bit error
+>  	interrupt, in this order.
 >  
-> +Optional property:
-> +The controller can operate in either CAN FD only mode (default) or
-> +Classical CAN only mode. The mode is global to both the channels. In order to
-> +enable the later, define the following optional property.
-> + - renesas,can-nofd: puts the controller in Classical CAN only mode.
+> +Ethernet FIFO ECC
+> +Required Properties:
+> +- compatible : Should be "altr,socfpga-eth-mac-ecc"
+> +- reg        : Address and size for ECC block registers.
+> +- parent     : phandle to parent (altr,socfpga-stmmac) Ethernet node.
 
-renesas,no-can-fd would be a bit more readable.
+Sorry if I wasn't clear before, but I was suggesting changing 'parent' 
+to 'altr,ethernet-mac':
 
-> +
->  Example
->  -------
->  
-> @@ -63,11 +69,12 @@ SoC common .dtsi file:
->  
->  Board specific .dts file:
->  
-> -E.g. below enables Channel 1 alone in the board.
-> +E.g. below enables Channel 1 alone in the board in Classical CAN only mode.
->  
->  &canfd {
->          pinctrl-0 = <&canfd1_pins>;
->          pinctrl-names = "default";
-> +	renesas,can-nofd;
+altr,ethernet-mac = <&gmac0>;
 
-Now we have a mixture of tabs and spaces.
-
->          status = "okay";
->  
->  	channel1 {
+Rob
