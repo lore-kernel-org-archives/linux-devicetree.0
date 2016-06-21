@@ -1,96 +1,79 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] phy: rockchip-inno-usb2: add a new driver for
- Rockchip usb2phy
-Date: Tue, 21 Jun 2016 11:05:14 +0200
-Message-ID: <2284777.mdEtFaarym@diego>
-References: <1466129353-48063-1-git-send-email-frank.wang@rock-chips.com>
- <CABXOdTcz9zjJ1iN2D9UXeYgd0y-kzh+fV3=+kmB=8j2jYqTQkg@mail.gmail.com>
- <986b53d6-ef65-bc1f-38a8-f981e23a6f02@rock-chips.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] ARM: sun8i: Add Parrot Board DTS
+Date: Tue, 21 Jun 2016 17:11:21 +0800
+Message-ID: <CAGb2v66KPsQ60QbwbWP1nEcjpWVf8CP5vAyOeVpB5hL-Q+wUmg@mail.gmail.com>
+References: <1465812931-22824-1-git-send-email-quentin.schulz@free-electrons.com>
+ <1465812931-22824-2-git-send-email-quentin.schulz@free-electrons.com>
+ <CAGb2v64jduBijEXzsKbOpSvLd9YHwO=qpSyPSDuYtMPg8wfKzA@mail.gmail.com>
+ <575FFFBE.5090107@free-electrons.com> <CAGb2v67JGG35odB7kEAoF0kGes=KRGoREOSTc_GM0B4A+8cKWg@mail.gmail.com>
+ <20160620154452.GL26668@lukather> <CAGb2v66_iUMd5V=9Np4Kqqv+yqq2HbjoPhC3Z6cpHFrMzkddvw@mail.gmail.com>
+ <20160620183543.GM26668@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <986b53d6-ef65-bc1f-38a8-f981e23a6f02-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160620183543.GM26668@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Hans De Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+On Tue, Jun 21, 2016 at 2:35 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Tue, Jun 21, 2016 at 12:30:25AM +0800, Chen-Yu Tsai wrote:
+>> >> >>> +&reg_aldo1 {
+>> >> >>> +       regulator-always-on;
+>> >> >>> +       regulator-min-microvolt = <3000000>;
+>> >> >>> +       regulator-max-microvolt = <3000000>;
+>> >> >>> +       regulator-name = "aldo1";
+>> >> >>
+>> >> >> What is this for exactly? Would turning it off render the system inoperable?
+>> >> >> How was it referenced in the fex file?
+>> >> >>
+>> >> >> If this is for WiFi I/O VCC, then you should specify it in mmc1 with
+>> >> >> vqmmc-supply.
+>> >> >>
+>> >> >
+>> >> > In the fex, aldo1 is one of the three power inputs for the WiFi (the
+>> >> > others being dldo1 and dldo2) and in the schematics it is linked to
+>> >> > both VCC-USB and VCC-IO-WIFI.
+>> >> >
+>> >> > I tried to turn it off and, indeed, the system becomes inoperable.
+>> >> >
+>> >> > I'll add vqmmc-supply in mmc1 with aldo1 regulator. However, I am
+>> >> > wondering what to put in vmmc-supply for mmc1 since the WiFi module has
+>> >> > three power inputs: dldo1, dldo2 and aldo1. In the fex, they are
+>> >> > referenced as, respectively, module_power1, module_power2 and
+>> >> > module_power3 and in the schematics dldo1 and dldo2 are named VCC-WIFI
+>> >> > while aldo1 is used for VCC-IO-WIFI (if it can help in any way).
+>> >> >
+>> >> > VCC-WIFI is connected to pin VBAT of the Broadcom AP6212 WiFi chip.
+>> >> > VCC-IO-WIFI is connected to pin VDDIO of the chip.
+>> >>
+>> >> VCC-IO-WIFI is vqmmc, and VCC-WIFI is vmmc.
+>> >
+>> > Isn't vmmc supposed to be always powered at 3.3v, and vqmmc the one
+>> > used to drop to 1.8V with the UHS cards?
+>>
+>> For eMMC, vmmc and vqmmc correspond to the pins on the eMMC chip.
+>> vmmc provides power to the internals, while vqmmc provides power to the
+>> I/O buffers on both sides. With SD this is a bit less clear. IIUC the SD
+>> card itself supplies I/O voltage, dropping it to 1.8V if necessary, from
+>> VDD (vmmc). vqmmc only affects the host side, and whatever external pull-ups
+>> that might exist.
+>
+> Ok.
+>
+>> > In which case, VCC-IO-WIFI is vmmc, and VCC-WIFI is just one of the
+>> > wifi chip power rail, to be handled by a power sequence.
+>>
+>> For the WiFi chip, there is a separate IO-VCC rail, which is VCC-IO-WIFI.
+>> This, from what I understand of the datasheet, is for I/O signaling, and
+>> thus vqmmc. VCC-WIFI is what powers the chip, which is what vmmc is.
+>
+> Ok. but there's still the issue of the two regulators that needs to be
+> kept in sync. Before, that, I'd rather stice to not tying them to the
+> MMC bus, and putting a comment on top.
 
-Am Dienstag, 21. Juni 2016, 15:52:45 schrieb Frank Wang:
-> On 2016/6/20 12:56, Guenter Roeck wrote:
-> > On Sun, Jun 19, 2016 at 8:32 PM, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> 
-wrote:
-> >>> Turns out my problem was one of terminology. Using "suspend" and
-> >>> "resume" to me suggested the common use of suspend and resume
-> >>> functions. That is not the case here. After mentally replacing
-> >>> "suspend" with "power_off" and "resume" with "power_on", you are
-> >>> right, no problem exists. Sorry for the noise.
-> >>> 
-> >>> Maybe it would be useful to replace "resume" with "power_on" and
-> >>> "suspend" with "power_off" in the function and variable names to
-> >>> reduce confusion and misunderstandings.
-> >>> 
-> >>> Thanks,
-> >>> Guenter
-> >> 
-> >> Well, it does have a bits confusion, however, the phy-port always just
-> >> goes
-> >> to suspend and resume mode (Not power off and power on) in a fact. So
-> >> must
-> >> it be renamed?
-> > 
-> > Other phy drivers name the functions _power_off and _power_on and
-> > avoid the confusion. The callbacks are named .power_off and .power_on,
-> > which gives a clear indication of its intended purpose. Other drivers
-> > implementing suspend/resume (such as the omap usb phy driver) tie
-> > those functions not into the power_off/power_on callbacks, but into
-> > the driver's suspend/resume callbacks. At least the omap driver has
-> > separate power management functions.
-> > 
-> > Do the functions _have_ to be renamed ? Surely not. But, if the
-> > functions are really suspend/resume functions and not
-> > power_off/power_on functions, maybe they should tie to the
-> > suspend/resume functions and not register themselves as
-> > power_off/power_on functions ?
-> 
-> As Guenter mentioned above,  I doped out two solutions, one is that keep
-> current process but renaming *_resume/*_suspend to
-> *_power_on/*_power_off;
+OK. Let's do that for now.
 
-in a way, naming stuff "power_off", "power_on" actually matches. For one, the 
-phy-block goes from unusable to usable by usb-devices and also will power-on a 
-phy-supply regulator (often named vcc_host* on Rockchip boards) from the phy-
-core.
-
-> another is that do not assign power_on/power_off
-> functions for phy_ops at phy creating time, then, shorten
-> _SCHEDULE_DELAY_ delay time less that 10 Seconds, and the phy-port
-> suspend/resume mechanism depend on _sm_work_ completely.
-
-Which in turn would mean that we would always depend on a fully controllable 
-phy block. Right now it seems, rk3036, rk3228, rk3368 (probably forgot some) 
-have the same type of phy, but with at least the unplug-detection missing.
-In its current form the driver can very well support those (later on) by 
-simply working statically (only acting on phy_power callbacks and not going to 
-suspend on its own).
-
-Also having the work running in 10-second intervall seems wasteful.
-
-> 
-> So which is the better way from your view? or would you like to give
-> other unique perceptions please?
-
-As obvious from the above, I would prefer just renaming the functions :-)
-
-
-Heiko
+ChenYu
