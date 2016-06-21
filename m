@@ -1,75 +1,97 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] arm64: dts: db820c: add basic board support
-Date: Tue, 21 Jun 2016 10:14:53 +0100
-Message-ID: <5769058D.9020008@linaro.org>
-References: <1466452907-23290-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1466452907-23290-2-git-send-email-srinivas.kandagatla@linaro.org>
- <57687B08.9060900@codeaurora.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 02/20] clk: multiplier: Prevent the multiplier from under
+ / over flowing
+Date: Tue, 21 Jun 2016 11:20:49 +0200
+Message-ID: <20160621092049.GN26668@lukather>
+References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1463402840-17062-3-git-send-email-maxime.ripard@free-electrons.com>
+ <20160620205030.24587.98159@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57687B08.9060900-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1098594863=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160620205030.24587.98159@quark.deferred.io>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 21/06/16 00:23, Stephen Boyd wrote:
-> On 06/20/2016 01:01 PM, Srinivas Kandagatla wrote:
->> This patch adds apq8096 db820c basic support with serial port.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   arch/arm64/boot/dts/qcom/Makefile            |  2 +-
->>   arch/arm64/boot/dts/qcom/apq8096-db820c.dts  | 21 +++++++++++++++++
->>   arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 34 ++++++++++++++++++++++++++++
->>   3 files changed, 56 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/arm64/boot/dts/qcom/apq8096-db820c.dts
->>   create mode 100644 arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
->> index fa1f661..80ecdfe 100644
->> --- a/arch/arm64/boot/dts/qcom/Makefile
->> +++ b/arch/arm64/boot/dts/qcom/Makefile
->> @@ -1,5 +1,5 @@
->>   dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
->> -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-db820c.dtb
->
-> We should do a new line for each board as other arm64 vendors have done?
-I agree, Will fix this in next version.
-
->
->> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
->> new file mode 100644 >> +/dts-v1/;
->> +
->> +#include "apq8096-db820c.dtsi"
->> +
->> +/ {
->> +	model = "Qualcomm Technologies, Inc. DB820c";
->> +	compatible = "qcom,apq8096-db820c";
->
-> Should be qcom,apq8096-sbc? At least I have to use that on my board to
-> match the board ids.
-I agree, this should match up with the dtbTool. I have been manually 
-patching up dtb to include the board-id, pmic id stuff.
-
-I will fix it in next version,
-
-Did not look at full details but, For some reason dtbTool does not 
-support multiple compatible strings, do you think it makes sense to add 
-this support in dtb tool to cope up with compatible strings like:
-
-compatible = "qcom,apq8096-db820c", "qcom,apq8096-sbc";
+--===============1098594863==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/TUrtqMIkCP4YtJm"
+Content-Disposition: inline
 
 
-Thanks,
-srini
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--/TUrtqMIkCP4YtJm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 20, 2016 at 01:50:30PM -0700, Michael Turquette wrote:
+> Quoting Maxime Ripard (2016-05-16 05:47:02)
+> > In the current multiplier base clock implementation, if the
+> > CLK_SET_RATE_PARENT flag isn't set, the code will not make sure that the
+> > multiplier computed remains within the boundaries of our clock.
+> >=20
+> > This means that if the clock we want to reach is below the parent rate,
+> > or if the multiplier is above the maximum that we can reach, we will en=
+d up
+> > with a completely bogus one that the clock cannot achieve.
+> >=20
+> > Fixes: f2e0a53271a4 ("clk: Add a basic multiplier clock")
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+>=20
+> Applied.
+
+Thanks, but apparently you merged it in clk-next, while it should go
+in clk-fixes, shouldn't it?
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--/TUrtqMIkCP4YtJm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXaQbxAAoJEBx+YmzsjxAgeZEP/iVHW8R27efQFN5Di8VdkEbw
+mFOBo1CJjFRtOQpQw9ty8OuEFJIKec0QcGNgxR3jxRGRbp/xVI97vlPQZ0JnzMTE
+02LOruKb17KL+yS+0SSHWQmXCmOv71nHzLzYU8wUqEhjoh0NycQRJ3uNOUxeOiBy
+fHN8ls5MdSvZTpoy14mcFNtFVZWzn1wrKAFAHKk3hylcaEF4VS0RkNWBoVvZGvQQ
+K5UhAjs42naK93TNhoz0B8lv8xlfcARfGoRli2dqHv5otatA+gSuYWmfvaP2vMjR
+woybO4tTGiuqM4nl8lwqaYo6CC55eeOeZlosFuEPNPrLP04og5gIxy5ZIJzfBlI7
+kvPi+jkoJva73bQeuMJpXvDvrJfvc/DQxmLqxDryGtgB/mdTidhmBoent3oLNK3c
+/zQXmOUtG8ijS4UI8/LvHXI4Y1YBNiLmRjq9LK6vZhiAHndBIuMakHqEvk1Xku++
+nCdY1bYMm5n49/9cB3Y8MWd/fIdDhuqLQYLXA3dzK5fxDCpiP05NuJbaLEwdCXEW
+Q2S/REmVFb1eZYpXrkmovsY2MRQbEeIkdx2F+LVgNw8JIx3S4Z68wWVF38dzeCTr
+vHAfCuMfxzIp8lf78IPFSkN1S6PRNQOwklwiZPUUttbHT2vo9eoKUT0zfDie82js
+/eU9IAlaPdoOEgnUxtyU
+=dj5b
+-----END PGP SIGNATURE-----
+
+--/TUrtqMIkCP4YtJm--
+
+--===============1098594863==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1098594863==--
