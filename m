@@ -1,138 +1,141 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 00/15] clk: sunxi: introduce "modern" clock support
-Date: Tue, 21 Jun 2016 16:47:52 +0200
-Message-ID: <20160621144752.GR26668@lukather>
-References: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
- <20160621114044.811e2136eca5c1d863d79ac6@free.fr>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+Date: Tue, 21 Jun 2016 17:47:47 +0300
+Message-ID: <874m8mmwdo.fsf@linux.intel.com>
+References: <575E672E.5070603@ti.com> <87h9coxq04.fsf@linux.intel.com> <5767C1B9.2060805@ti.com> <878ty0qd7q.fsf@linux.intel.com> <20160621063936.GB5108@shlinux2> <87d1nbovp7.fsf@linux.intel.com> <20160621080209.GC5108@shlinux2> <87mvmfneeq.fsf@linux.intel.com> <20160621091437.GE5108@shlinux2> <87fus6n2iz.fsf@linux.intel.com> <20160621131205.GG5108@shlinux2>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2370165447274819326=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160621114044.811e2136eca5c1d863d79ac6@free.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160621131205.GG5108@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Roger Quadros <rogerq@ti.com>, peter.chen@freescale.com, yoshihiro.shimoda.uh@renesas.com, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============2370165447274819326==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="foM9DbudB2CcldhH"
-Content-Disposition: inline
-
-
---foM9DbudB2CcldhH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-=-=
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jean-Francois,
 
-On Tue, Jun 21, 2016 at 11:40:44AM +0200, Jean-Francois Moine wrote:
-> On Tue,  7 Jun 2016 22:41:39 +0200
-> Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
->=20
-> > The current code has been tested on the H3 and an Orange Pi PC,
-> > including making sure that MMC still works, so the general approach
-> > seems ok.
-> >=20
-> > Let me know what you think,
->=20
-> Hi Maxime,
->=20
-> I used your code in both the H3 and A83T, and it worked fine for the
-> current clocks.
+Hi,
 
-I'm glad it works :)
+Peter Chen <hzpeterchen@gmail.com> writes:
+>> >> >> >> >>> + * @otg_dev: OTG controller device, if needs to be used wi=
+th OTG core.
+>> >> >> >> >>=20
+>> >> >> >> >> do you really know of any platform which has a separate OTG =
+controller?
+>> >> >> >> >>=20
+>> >> >> >> >
+>> >> >> >> > Andrew had pointed out in [1] that Tegra210 has separate bloc=
+ks for OTG, host
+>> >> >> >> > and gadget.
+>> >> >> >> >
+>> >> >> >> > [1] http://article.gmane.org/gmane.linux.ports.tegra/22969
+>> >> >> >>=20
+>> >> >> >> that's not an OTG controller, it's just a mux. No different tha=
+n Intel's
+>> >> >> >> mux for swapping between XHCI and peripheral-only DWC3.
+>> >> >> >>=20
+>> >> >> >> frankly, I would NEVER talk about OTG when type-C comes into pl=
+ay. They
+>> >> >> >> are two competing standards and, apparently, type-C is winning =
+when it
+>> >> >> >> comes to role-swapping.
+>> >> >> >>=20
+>> >> >> >
+>> >> >> > In fact, OTG is mis-used by people. Currently, if the port is du=
+al-role,
+>> >> >> > It will be considered as an OTG port.
+>> >> >>=20
+>> >> >> That's because "dual-role" is a non-standard OTG. Seen as people r=
+eally
+>> >> >> didn't care about OTG, we (linux-usb folks) ended up naturally ref=
+erring
+>> >> >> to "non-standard OTG" as "dual-role". Just to avoid confusion.
+>> >> >
+>> >> > So, unless we use OTG FSM defined in OTG spec, we should not mention
+>> >> > "OTG" in Linux, right?
+>> >>=20
+>> >> to avoid confusion with the terminology, yes. With that settled, let's
+>> >> figure out how you can deliver what your marketting guys are asking of
+>> >> you.
+>> >>=20
+>> >
+>> > Since nxp SoC claims they are OTG compliance, we need to pass usb.org
+>> > test. The internal bsp has passed PET test, and formal compliance test
+>> > is on the way (should pass too).=20
+>> >
+>> > The dual-role and OTG compliance use the same zImage, but different
+>> > dtb.
+>>=20
+>> okay, that's good to know. Now, the question really is: considering we
+>> only have one user for this generic OTG FSM layer, do we really need to
+>> make it generic at all? I mean, just look at how invasive a change that
+>> is.
+>
+> If the chipidea is the only user for this roger's framework, I don't
+> think it is necessary. In fact, Roger introduces this framework, and
+> the first user is dwc3, we think it can be used for others. Let's
 
-Your reviews have been appreciated, I'll address them in my v3.
+Right, we need to look at the history of dwc3 to figure out why the
+conclusion that dwc3 needs this was made.
 
-> But I had some problems with some features as the 'mode select' in the
-> A83T MMC2 clock.
-> Also, I think that you did not go far enough in the changes.
+Roger started working on this framework when Power on Reset section of
+databook had some details which weren't always clear and, for safety, we
+always had reset asserted for a really long time. It was so long (about
+400 ms) that resetting dwc3 for each role swap was just too much.
 
-At some point, you also have to support what's used out there,
-otherwise it just becomes an un-maintainable mess. Plus, it really
-doesn't have to be perfect from day one, it just has to works as it
-used to, we can always add more stuff later on.
+Coupled with that, the OTG chapter wasn't very clear either on
+expections from Host and Peripheral side initialization in OTG/DRD
+systems.
 
-At it works way better than what we had.
+More recent version of dwc3 databook have a much better description of
+how and which reset bits _must_ be asserted and which shouldn't be
+touched unless it's for debugging purposes. When I implemented that, our
+=2D>probe() went from 400ms down to about 50us.
 
-The question also is: is there anyone that we depend on using it
-(mainline u-boot)? and is it something we need? If both answers are
-no, then it's just dead code, which shouldn't be here in the first
-place.
+Coupled with that, the OTG chapter also became a lot clearer to the
+point that it states you just don't initialize anything other than the
+OTG block, and just wait for OTG interrupt to do whatever it is you need
+to do.
 
-> For example, most clock gates as well as most resets could be removed
-> from the DT and automatically set/de-asserted on clock prepare or clock
-> enable.
+This meant that we could actually afford to do full reinitialization of
+dwc3 on role swap (it's now only 50us anyway) and we knew how to swap
+roles properly.
 
-No. The semantics are completely different between the bus gates, bus
-resets and the module clocks. For example, the module clock can be
-shut down while retaining the register state, while the gate clock
-can't. And drivers are already using that semantic.
+(The reason for needing soft-reset during role swap is kinda long. But
+in summary dwc3 shadows register writes to both host and peripheral
+sides)
 
-Some other problems arise from that as well: this would break the DT
-ABI, and it deviates way too much from what the other SoCs are doing
-(which is the whole reason for that rework in the first place).
+> just discuss if it is necessary for dual-role switch.
 
-> So, I am rewriting a generic sunxi clock driver into one file (about
-> 1000 lines) and I have the full (simpler and clearer) description of
-> the H3 and the A863T clocks.
->=20
-> Coding is not finished yet. I will submit a RFC as soon as I will have
-> something working.
+fair. However, if we have a single user we don't have a Generic
+layer. There's not enough variance to come up with truly generic
+architecture for this.
 
-Please don't. I don't want to waste any more time on this, this is way
-overdue.
+=2D-=20
+balbi
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---foM9DbudB2CcldhH
+--=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJXaVOYAAoJEBx+YmzsjxAgshQP/3fDwNpRAYNfZJw3hQBG1m0O
-FF87cnUSFtoxLiopwl1yRvgIIhpIynODVWbW7PlslRWfcrUWUTmPbXvCyC3mZhs4
-I1/8NP+widO6AiUqkdEp5an6uGMyvxhMOznhJZ2tT3Hy690AG8+QpCCl27YXZyZh
-GMm1EDiAyP0fb2Kyo0WEPKDpVsy1nJX7blzNyzj61fBV7uEh3Kat7s7C0qwx7Rip
-TgWAbYH95Wdxp3j6nkqkCr83a8rCWRq7vwZUvpIgsFHXJS+aMDjEO0DGoniw0TD9
-rTQWTHSMMNJwMSngAFPlDbHbFDsiQvkWQzB7zc6g4Lwkx1XUJS0hAcs0xmo/sKIA
-NLaj5ttbS7Oqfy/oq/lqnDWoVotA2d66C792AQ6vMwH3jj0HaqJyI0XMsXe6DuuM
-fum3HqScVUAFUiXO6XQT5EJ79ZOojBLQjG+Ktm1+/vXmT3G4mPgOCM4lBoaice/i
-AIaxAOmKHSRFzrkfPA7cDjuyIIJMe1kS7fa/Z1XtINRdDt8CXCA3GaLvFA+yyprI
-+gXK5COME9mjRTA9CixtuNsu5SGItj301yM9Xx71iJnFTZUsM4TyDaosfru5c7nQ
-u7GshBDZ9t22DhrDAxzkRCI/yA1Nb68r1t3DYgGaH48Rjl4LkaxLh1yr922o2aJ9
-6Smy2S6A6Rgc+Atn9fp2
-=Kws3
+iQIcBAEBCAAGBQJXaVOTAAoJEIaOsuA1yqRE6MQP/iGUsfq+XtyOlsvLwMWRCalo
+EUN+YFglzPCXhaNk/8QLSoT/409u7q8nVVaMfMRN0WSxWNZzeWo2cxtJmgpQEx94
+SyVuWC/9jSz5VrwIZB3zt16EWivxH1/J1srGnKDAHw2KbHtqk/41WKtKC5yJaR2z
+D+0qg38mjezioEQymdifp6rwzhbuTTXMLcr30pOPgKbrOUPKn0JBRgFVoYaRSZMj
+w/LBDKBHGEgo4yAtHg+7jscWh9YolrinVY4RVpJ98tB366YSk0IXjaDY6PmGsZfS
+LyYa+guYSH70nDxLD33I1WcfvPPbKOi3cFk78r60mu4YNHCCRnCrociYBXwMg4Fd
+WpFOs1+iYdAl57lnk5whPy3tQz96k9kVPrGBop7NEx9G97jmpsA2+rfcDFqyHSwm
+Y9Y5/Rj8t6kex5NNe44oeGYAdFkkBExCYfpDX750j7Np18iBD7AIUjH+OP0RmsIU
+rjBtrbcYsIDQxG+Orzzv7/tIrJ6wh1XNaoMBH0EH4LO2OBTIh2aPFMy2z4MCMmbh
+0LDBogRiRorD4b02+6aQSEvh/Ww6hP4XisHeJxObvx5SfgFpvkYsE9UYrvw4nDIY
+gZKEcF5WSrbCgivZ4j2eNuYM+oxWDo2XOAr1Ia1dWuEdALj9puupSEywHZnxVIK4
+LHsNrPiWUpG/ilZWTp0s
+=962d
 -----END PGP SIGNATURE-----
-
---foM9DbudB2CcldhH--
-
-
---===============2370165447274819326==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2370165447274819326==--
+--=-=-=--
