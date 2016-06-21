@@ -1,350 +1,66 @@
-From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
-Date: Tue, 21 Jun 2016 13:52:38 +0800
-Message-ID: <1466488358.8045.19.camel@mtksdaap41>
-References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
- <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
- <574C5CBF.7060002@gmail.com> <1464683762.14604.59.camel@mtksdaap41>
- <574DEE40.9010008@gmail.com> <1464775020.11122.40.camel@mtksdaap41>
- <574FF264.7050209@gmail.com> <1464934356.15175.31.camel@mtksdaap41>
- <57516774.5080008@gmail.com> <1464956037.16029.8.camel@mtksdaap41>
- <575181E5.6090603@gmail.com> <5756FD73.3050607@gmail.com>
- <1465364427.9963.13.camel@mtksdaap41> <5757F762.4020908@gmail.com>
- <1465388727.21326.8.camel@mtksdaap41> <57583B45.2080504@gmail.com>
- <1465890268.7191.13.camel@mtksdaap41> <575FD9BA.8040708@gmail.com>
- <1465906063.20796.20.camel@mtksdaap41>
- <1466152107.11184.14.camel@mtksdaap41> <57641E01.3070205@gmail.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v9 3/4] ARM: dts: rockchip: add syscon-reboot-mode DT node
+Date: Tue, 21 Jun 2016 14:08:50 +0800
+Message-ID: <5768D9F2.4000309@rock-chips.com>
+References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
+ <1466404769-3534-1-git-send-email-andy.yan@rock-chips.com>
+ <20160620215545.GE1256@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <57641E01.3070205-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160620215545.GE1256@tuxbot>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-06-17 at 17:57 +0200, Matthias Brugger wrote:
-> 
-> On 17/06/16 10:28, Horng-Shyang Liao wrote:
-> > Hi Matthias,
-> >
-> > On Tue, 2016-06-14 at 20:07 +0800, Horng-Shyang Liao wrote:
-> >> Hi Matthias,
-> >>
-> >> On Tue, 2016-06-14 at 12:17 +0200, Matthias Brugger wrote:
-> >>>
-> >>> On 14/06/16 09:44, Horng-Shyang Liao wrote:
-> >>>> Hi Matthias,
-> >>>>
-> >>>> On Wed, 2016-06-08 at 17:35 +0200, Matthias Brugger wrote:
-> >>>>>
-> >>>>> On 08/06/16 14:25, Horng-Shyang Liao wrote:
-> >>>>>> Hi Matthias,
-> >>>>>>
-> >>>>>> On Wed, 2016-06-08 at 12:45 +0200, Matthias Brugger wrote:
-> >>>>>>>
-> >>>>>>> On 08/06/16 07:40, Horng-Shyang Liao wrote:
-> >>>>>>>> Hi Matthias,
-> >>>>>>>>
-> >>>>>>>> On Tue, 2016-06-07 at 18:59 +0200, Matthias Brugger wrote:
-> >>>>>>>>>
-> >>>>>>>>> On 03/06/16 15:11, Matthias Brugger wrote:
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>> [...]
-> >>>>>>>>>
-> >>>>>>>>>>>>>>>>>>> +
-> >>>>>>>>>>>>>>>>>>> +            smp_mb(); /* modify jump before enable thread */
-> >>>>>>>>>>>>>>>>>>> +        }
-> >>>>>>>>>>>>>>>>>>> +
-> >>>>>>>>>>>>>>>>>>> +        cmdq_thread_writel(thread, task->pa_base +
-> >>>>>>>>>>>>>>>>>>> task->command_size,
-> >>>>>>>>>>>>>>>>>>> +                   CMDQ_THR_END_ADDR);
-> >>>>>>>>>>>>>>>>>>> +        cmdq_thread_resume(thread);
-> >>>>>>>>>>>>>>>>>>> +    }
-> >>>>>>>>>>>>>>>>>>> +    list_move_tail(&task->list_entry, &thread->task_busy_list);
-> >>>>>>>>>>>>>>>>>>> +    spin_unlock_irqrestore(&cmdq->exec_lock, flags);
-> >>>>>>>>>>>>>>>>>>> +}
-> >>>>>>>>>>>>>>>>>>> +
-> >>>>>>>>>>>>>>>>>>> +static void cmdq_handle_error_done(struct cmdq *cmdq,
-> >>>>>>>>>>>>>>>>>>> +                   struct cmdq_thread *thread, u32 irq_flag)
-> >>>>>>>>>>>>>>>>>>> +{
-> >>>>>>>>>>>>>>>>>>> +    struct cmdq_task *task, *tmp, *curr_task = NULL;
-> >>>>>>>>>>>>>>>>>>> +    u32 curr_pa;
-> >>>>>>>>>>>>>>>>>>> +    struct cmdq_cb_data cmdq_cb_data;
-> >>>>>>>>>>>>>>>>>>> +    bool err;
-> >>>>>>>>>>>>>>>>>>> +
-> >>>>>>>>>>>>>>>>>>> +    if (irq_flag & CMDQ_THR_IRQ_ERROR)
-> >>>>>>>>>>>>>>>>>>> +        err = true;
-> >>>>>>>>>>>>>>>>>>> +    else if (irq_flag & CMDQ_THR_IRQ_DONE)
-> >>>>>>>>>>>>>>>>>>> +        err = false;
-> >>>>>>>>>>>>>>>>>>> +    else
-> >>>>>>>>>>>>>>>>>>> +        return;
-> >>>>>>>>>>>>>>>>>>> +
-> >>>>>>>>>>>>>>>>>>> +    curr_pa = cmdq_thread_readl(thread, CMDQ_THR_CURR_ADDR);
-> >>>>>>>>>>>>>>>>>>> +
-> >>>>>>>>>>>>>>>>>>> +    list_for_each_entry_safe(task, tmp, &thread->task_busy_list,
-> >>>>>>>>>>>>>>>>>>> +                 list_entry) {
-> >>>>>>>>>>>>>>>>>>> +        if (curr_pa >= task->pa_base &&
-> >>>>>>>>>>>>>>>>>>> +            curr_pa < (task->pa_base + task->command_size))
-> >>>>>>>>>>>>>>>>>>
-> >>>>>>>>>>>>>>>>>> What are you checking here? It seems as if you make some implcit
-> >>>>>>>>>>>>>>>>>> assumptions about pa_base and the order of execution of
-> >>>>>>>>>>>>>>>>>> commands in the
-> >>>>>>>>>>>>>>>>>> thread. Is it save to do so? Does dma_alloc_coherent give any
-> >>>>>>>>>>>>>>>>>> guarantees
-> >>>>>>>>>>>>>>>>>> about dma_handle?
-> >>>>>>>>>>>>>>>>>
-> >>>>>>>>>>>>>>>>> 1. Check what is the current running task in this GCE thread.
-> >>>>>>>>>>>>>>>>> 2. Yes.
-> >>>>>>>>>>>>>>>>> 3. Yes, CMDQ doesn't use iommu, so physical address is continuous.
-> >>>>>>>>>>>>>>>>>
-> >>>>>>>>>>>>>>>>
-> >>>>>>>>>>>>>>>> Yes, physical addresses might be continous, but AFAIK there is no
-> >>>>>>>>>>>>>>>> guarantee that the dma_handle address is steadily growing, when
-> >>>>>>>>>>>>>>>> calling
-> >>>>>>>>>>>>>>>> dma_alloc_coherent. And if I understand the code correctly, you
-> >>>>>>>>>>>>>>>> use this
-> >>>>>>>>>>>>>>>> assumption to decide if the task picked from task_busy_list is
-> >>>>>>>>>>>>>>>> currently
-> >>>>>>>>>>>>>>>> executing. So I think this mecanism is not working.
-> >>>>>>>>>>>>>>>
-> >>>>>>>>>>>>>>> I don't use dma_handle address, and just use physical addresses.
-> >>>>>>>>>>>>>>>        From CPU's point of view, tasks are linked by the busy list.
-> >>>>>>>>>>>>>>>        From GCE's point of view, tasks are linked by the JUMP command.
-> >>>>>>>>>>>>>>>
-> >>>>>>>>>>>>>>>> In which cases does the HW thread raise an interrupt.
-> >>>>>>>>>>>>>>>> In case of error. When does CMDQ_THR_IRQ_DONE get raised?
-> >>>>>>>>>>>>>>>
-> >>>>>>>>>>>>>>> GCE will raise interrupt if any task is done or error.
-> >>>>>>>>>>>>>>> However, GCE is fast, so CPU may get multiple done tasks
-> >>>>>>>>>>>>>>> when it is running ISR.
-> >>>>>>>>>>>>>>>
-> >>>>>>>>>>>>>>> In case of error, that GCE thread will pause and raise interrupt.
-> >>>>>>>>>>>>>>> So, CPU may get multiple done tasks and one error task.
-> >>>>>>>>>>>>>>>
-> >>>>>>>>>>>>>>
-> >>>>>>>>>>>>>> I think we should reimplement the ISR mechanism. Can't we just read
-> >>>>>>>>>>>>>> CURR_IRQ_STATUS and THR_IRQ_STATUS in the handler and leave
-> >>>>>>>>>>>>>> cmdq_handle_error_done to the thread_fn? You will need to pass
-> >>>>>>>>>>>>>> information from the handler to thread_fn, but that shouldn't be an
-> >>>>>>>>>>>>>> issue. AFAIK interrupts are disabled in the handler, so we should stay
-> >>>>>>>>>>>>>> there as short as possible. Traversing task_busy_list is expensive, so
-> >>>>>>>>>>>>>> we need to do it in a thread context.
-> >>>>>>>>>>>>>
-> >>>>>>>>>>>>> Actually, our initial implementation is similar to your suggestion,
-> >>>>>>>>>>>>> but display needs CMDQ to return callback function very precisely,
-> >>>>>>>>>>>>> else display will drop frame.
-> >>>>>>>>>>>>> For display, CMDQ interrupt will be raised every 16 ~ 17 ms,
-> >>>>>>>>>>>>> and CMDQ needs to call callback function in ISR.
-> >>>>>>>>>>>>> If we defer callback to workqueue, the time interval may be larger than
-> >>>>>>>>>>>>> 32 ms.sometimes.
-> >>>>>>>>>>>>>
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> I think the problem is, that you implemented the workqueue as a ordered
-> >>>>>>>>>>>> workqueue, so there is no parallel processing. I'm still not sure why
-> >>>>>>>>>>>> you need the workqueue to be ordered. Can you please explain.
-> >>>>>>>>>>>
-> >>>>>>>>>>> The order should be kept.
-> >>>>>>>>>>> Let me use mouse cursor as an example.
-> >>>>>>>>>>> If task 1 means move mouse cursor to point A, task 2 means point B,
-> >>>>>>>>>>> and task 3 means point C, our expected result is A -> B -> C.
-> >>>>>>>>>>> If the order is not kept, the result could become A -> C -> B.
-> >>>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> Got it, thanks for the clarification.
-> >>>>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>> I think a way to get rid of the workqueue is to use a timer, which gets
-> >>>>>>>>> programmed to the time a timeout in the first task in the busy list
-> >>>>>>>>> would happen. Everytime we update the busy list (e.g. because of task
-> >>>>>>>>> got finished by the thread), we update the timer. When the timer
-> >>>>>>>>> triggers, which hopefully won't happen too often, we return timeout on
-> >>>>>>>>> the busy list elements, until the time is lower then the actual time.
-> >>>>>>>>>
-> >>>>>>>>> At least with this we can reduce the data structures in this driver and
-> >>>>>>>>> make it more lightweight.
-> >>>>>>>>
-> >>>>>>>>     From my understanding, your proposed method can handle timeout case.
-> >>>>>>>>
-> >>>>>>>> However, the workqueue is also in charge of releasing tasks.
-> >>>>>>>> Do you take releasing tasks into consideration by using the proposed
-> >>>>>>>> timer method?
-> >>>>>>>> Furthermore, I think the code will become more complex if we also use
-> >>>>>>>> timer to implement releasing tasks.
-> >>>>>>>>
-> >>>>>>>
-> >>>>>>> Can't we call
-> >>>>>>>             clk_disable_unprepare(cmdq->clock);
-> >>>>>>>             cmdq_task_release(task);
-> >>>>>>> after invoking the callback?
-> >
-> > After I put clk_disable_unprepare(cmdq->clock) into ISR, I encounter
-> > another BUG.
-> >
-> > (Quote some Linux 4.7 source code.)
-> >
-> >   605 void clk_unprepare(struct clk *clk)
-> >   606 {
-> >   607         if (IS_ERR_OR_NULL(clk))
-> >   608                 return;
-> >   609
-> >   610         clk_prepare_lock();                      // <-- Here
-> >   611         clk_core_unprepare(clk->core);
-> >   612         clk_prepare_unlock();
-> >   613 }
-> >   614 EXPORT_SYMBOL_GPL(clk_unprepare);
-> >
-> >    91 static void clk_prepare_lock(void)
-> >    92 {
-> >    93         if (!mutex_trylock(&prepare_lock)) {     // <-- Here
-> >    94                 if (prepare_owner == current) {
-> >    95                         prepare_refcnt++;
-> >    96                         return;
-> >    97                 }
-> >    98                 mutex_lock(&prepare_lock);
-> >    99         }
-> >   100         WARN_ON_ONCE(prepare_owner != NULL);
-> >   101         WARN_ON_ONCE(prepare_refcnt != 0);
-> >   102         prepare_owner = current;
-> >   103         prepare_refcnt = 1;
-> >   104 }
-> >
-> > So, 'unprepare' can sleep and cannot be put into ISR.
-> > I also try to put it into a timer, but the error is the same
-> > since timer callback is executed by softirq.
-> >
-> > We need clk_disable_unprepare() since it can save power consumption
-> > in idle.
-> 
-> We can call clk_prepare in probe and then use clk_enable/clk_disable, 
-> which don't sleep.
-> 
+Hi Bjorn:
+On 2016=E5=B9=B406=E6=9C=8821=E6=97=A5 05:55, Bjorn Andersson wrote:
+> On Sun 19 Jun 23:39 PDT 2016, Andy Yan wrote:
+>
+>> Rockchip platform use a SYSCON mapped register store
+>> the reboot mode magic value for bootloader to use when
+>> system reboot. So add syscon-reboot-mode driver DT node
+>> for rk3xxx/rk3036/rk3288 based platform
+>>
+>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>>
+> [..]
+>> diff --git a/include/dt-bindings/soc/rockchip_boot-mode.h b/include/=
+dt-bindings/soc/rockchip_boot-mode.h
+>> new file mode 100644
+>> index 0000000..ae7c867
+>> --- /dev/null
+>> +++ b/include/dt-bindings/soc/rockchip_boot-mode.h
+>> @@ -0,0 +1,15 @@
+>> +#ifndef __ROCKCHIP_BOOT_MODE_H
+>> +#define __ROCKCHIP_BOOT_MODE_H
+>> +
+>> +/*high 24 bits is tag, low 8 bits is type*/
+>> +#define REBOOT_FLAG		0x5242C300
+>> +/* normal boot */
+>> +#define BOOT_NORMAL		(REBOOT_FLAG + 0)
+>> +/* enter bootloader rockusb mode */
+>> +#define BOOT_BL_DOWNLOAD	(REBOOT_FLAG + 1)
+>> +/* enter recovery */
+>> +#define BOOT_RECOVERY		(REBOOT_FLAG + 3)
+>> + /* enter fastboot mode */
+>> +#define BOOT_FASTBOOT		(REBOOT_FLAG + 9)
+> The names of these defines are too generic for being in a header file=
+=2E
+> You should likely make them include "ROCKCHIP" and "BOOT_MODE".
+>
 > Regards,
-> Matthias
-
-Hi Matthias,
-
-Because clock gate and MUX are controlled by clk_enable/clk_disable,
-and PLL is controlled by clk_prepare/clk_unprepare,
-I still need to call clk_unprepare.
-
-After I remove releasing buffer, releasing task, and timeout task from
-work, the work can be detached from task.
-
-Therefore, I can use the following flow to reduce the number of works.
-
-if task_busy_list from empty to non-empty
-	clk_prepare_enable
-if task_busy_list from non-empty to empty
-	in ISR, add work for clk_disable_unprepare
-
-What do you think of this solution?
-
-Thanks,
-HS
-
-> > Therefore, I plan to
-> > (1) move releasing buffer and task into ISR,
-> > (2) move timeout into timer, and
-> > (3) keep workqueue for clk_disable_unprepare().
-> >
-> > What do you think?
-> >
-> > Thanks,
-> > HS
-> >
-> >>>>>>
-> >>>>>> Do you mean just call these two functions in ISR?
-> >>>>>> My major concern is dma_free_coherent() and kfree() in
-> >>>>>> cmdq_task_release(task).
-> >>>>>
-> >>>>> Why do we need the dma calls at all? Can't we just calculate the
-> >>>>> physical address using __pa(x)?
-> >>>>
-> >>>> I prefer to use dma_map_single/dma_unmap_single.
-> >>>>
-> >>>
-> >>> Can you please elaborate why you need this. We don't do dma, so we
-> >>> should not use dma memory for this.
-> >>
-> >> We need a buffer to share between CPU and GCE, so we do need DMA.
-> >> CPU is in charge of writing GCE commands into this buffer.
-> >> GCE is in charge of reading and running GCE commands from this buffer.
-> >> When we chain CMDQ tasks, we also need to modify GCE JUMP command.
-> >> Therefore, I prefer to use dma_alloc_coherent and dma_free_coherent.
-> >>
-> >> However, if we want to use timer to handle timeout, we need to release
-> >> memory in ISR.
-> >> In this case, using kmalloc/kfree + dma_map_single/dma_unmap_single
-> >> instead of dma_alloc_coherent/dma_free_coherent is an alternative
-> >> solution, but taking care the synchronization between cache and memory
-> >> is the expected overhead.
-> >>
-> >>>>>> Therefore, your suggestion is to use GFP_ATOMIC for both
-> >>>>>> dma_alloc_coherent() and kzalloc(). Right?
-> >>>>>
-> >>>>> I don't think we need GFP_ATOMIC, the critical path will just free the
-> >>>>> memory.
-> >>>>
-> >>>> I tested these two functions, and kfree was safe.
-> >>>> However, dma_free_coherent raised BUG.
-> >>>> BUG: failure at
-> >>>> /mnt/host/source/src/third_party/kernel/v3.18/mm/vmalloc.c:1514/vunmap()!
-> >>>
-> >>> Just a general hint. Please try to evaluate on a recent kernel. It looks
-> >>> like as if you tried this on a v3.18 based one.
-> >>
-> >> This driver should be backward compatible to v3.18 for a MTK project.
-> >>
-> >>> Best regards,
-> >>> Matthias
-> >>
-> >> Thanks,
-> >> HS
-> >>
-> >>>> 1512 void vunmap(const void *addr)
-> >>>> 1513 {
-> >>>> 1514         BUG_ON(in_interrupt());		// <-- here
-> >>>> 1515         might_sleep();
-> >>>> 1516         if (addr)
-> >>>> 1517                 __vunmap(addr, 0);
-> >>>> 1518 }
-> >>>> 1519 EXPORT_SYMBOL(vunmap);
-> >>>>
-> >>>> Therefore, I plan to use kmalloc + dma_map_single instead of
-> >>>> dma_alloc_coherent, and dma_unmap_single + kfree instead of
-> >>>> dma_free_coherent.
-> >>>>
-> >>>> What do you think about the function replacement?
-> >>>>
-> >>>>>> If so, I can try to implement timeout by timer, and discuss with you
-> >>>>>> if I have further questions.
-> >>>>>>
-> >>>>>
-> >>>>> Sounds good :)
-> >>>>>
-> >>>>> Thanks,
-> >>>>> Matthias
-> >>>>
-> >>>> Thanks,
-> >>>> HS
-> >>>>
-> >>>>>>> Regrading the clock, wouldn't it be easier to handle the clock
-> >>>>>>> enable/disable depending on the state of task_busy_list? I suppose we
-> >>>>>>> can't as we would need to check the task_busy_list of all threads, right?
-> >>>>>>>
-> >>>>>>> Regards,
-> >>>>>>> Matthias
-> >>>>>>
-> >>>>>> Thanks,
-> >>>>>> HS
+> Bjorn
+>
+>
+>
+I have already named this file as rockchip_boot-mode.h, I thinks this i=
+s
+enough to declare it. And I also check some header files like=20
+qcom,gsbi.h, thermal/theraml_exynos.h, they also don't have include som=
+e=20
+flag like QCOM or EXYNOS.
