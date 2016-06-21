@@ -1,58 +1,64 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 02/20] clk: multiplier: Prevent the multiplier from under
- / over flowing
-Date: Tue, 21 Jun 2016 11:20:49 +0200
-Message-ID: <20160621092049.GN26668@lukather>
-References: <1463402840-17062-1-git-send-email-maxime.ripard@free-electrons.com>
- <1463402840-17062-3-git-send-email-maxime.ripard@free-electrons.com>
- <20160620205030.24587.98159@quark.deferred.io>
+Subject: Re: [PATCH v2 04/15] clk: sunxi-ng: Add fixed factor clock support
+Date: Tue, 21 Jun 2016 11:24:13 +0200
+Message-ID: <20160621092413.GP26668@lukather>
+References: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
+ <20160607204154.31967-5-maxime.ripard@free-electrons.com>
+ <20160621011537.GP1521@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1098594863=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160620205030.24587.98159@quark.deferred.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============0804287481365978275=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160621011537.GP1521@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Mike Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1098594863==
+--===============0804287481365978275==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/TUrtqMIkCP4YtJm"
+	protocol="application/pgp-signature"; boundary="FRaepaAnLTQkJ4tS"
 Content-Disposition: inline
 
 
---/TUrtqMIkCP4YtJm
+--FRaepaAnLTQkJ4tS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 20, 2016 at 01:50:30PM -0700, Michael Turquette wrote:
-> Quoting Maxime Ripard (2016-05-16 05:47:02)
-> > In the current multiplier base clock implementation, if the
-> > CLK_SET_RATE_PARENT flag isn't set, the code will not make sure that the
-> > multiplier computed remains within the boundaries of our clock.
-> >=20
-> > This means that if the clock we want to reach is below the parent rate,
-> > or if the multiplier is above the maximum that we can reach, we will en=
-d up
-> > with a completely bogus one that the clock cannot achieve.
-> >=20
-> > Fixes: f2e0a53271a4 ("clk: Add a basic multiplier clock")
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->=20
-> Applied.
+Hi Stephen,
 
-Thanks, but apparently you merged it in clk-next, while it should go
-in clk-fixes, shouldn't it?
+On Mon, Jun 20, 2016 at 06:15:37PM -0700, Stephen Boyd wrote:
+> On 06/07, Maxime Ripard wrote:
+> > +
+> > +#include <linux/clk-provider.h>
+> > +
+> > +#include "ccu_common.h"
+> > +
+> > +struct ccu_fixed_factor {
+> > +	u16			div;
+> > +	u16			mult;
+> > +
+> > +	struct ccu_common	common;
+>=20
+> Does this use the common structure although we have no usage for
+> the members of struct ccu_common except struct clk_hw? I suppose
+> this is done so registering a bunch of clks is easy?
+
+Yes, when we discussed this with Mike back at the ELC, he said that he
+really liked the approach you had the qualcomm clocks where you have a
+single array with all the clocks, so I tried to follow that as much as
+possible.
+
+Even though it doesn't really make much sense here, indeed.
 
 Maxime
 
@@ -61,37 +67,39 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---/TUrtqMIkCP4YtJm
+--FRaepaAnLTQkJ4tS
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXaQbxAAoJEBx+YmzsjxAgeZEP/iVHW8R27efQFN5Di8VdkEbw
-mFOBo1CJjFRtOQpQw9ty8OuEFJIKec0QcGNgxR3jxRGRbp/xVI97vlPQZ0JnzMTE
-02LOruKb17KL+yS+0SSHWQmXCmOv71nHzLzYU8wUqEhjoh0NycQRJ3uNOUxeOiBy
-fHN8ls5MdSvZTpoy14mcFNtFVZWzn1wrKAFAHKk3hylcaEF4VS0RkNWBoVvZGvQQ
-K5UhAjs42naK93TNhoz0B8lv8xlfcARfGoRli2dqHv5otatA+gSuYWmfvaP2vMjR
-woybO4tTGiuqM4nl8lwqaYo6CC55eeOeZlosFuEPNPrLP04og5gIxy5ZIJzfBlI7
-kvPi+jkoJva73bQeuMJpXvDvrJfvc/DQxmLqxDryGtgB/mdTidhmBoent3oLNK3c
-/zQXmOUtG8ijS4UI8/LvHXI4Y1YBNiLmRjq9LK6vZhiAHndBIuMakHqEvk1Xku++
-nCdY1bYMm5n49/9cB3Y8MWd/fIdDhuqLQYLXA3dzK5fxDCpiP05NuJbaLEwdCXEW
-Q2S/REmVFb1eZYpXrkmovsY2MRQbEeIkdx2F+LVgNw8JIx3S4Z68wWVF38dzeCTr
-vHAfCuMfxzIp8lf78IPFSkN1S6PRNQOwklwiZPUUttbHT2vo9eoKUT0zfDie82js
-/eU9IAlaPdoOEgnUxtyU
-=dj5b
+iQIcBAEBAgAGBQJXaQe9AAoJEBx+YmzsjxAgG8cP/37TVecMg8O3pewe3t/MyUX2
+mfsVCGso6c8U4Q/VoxN+K9gjVNfrMCvA6FsRhHnKTOCcuwwE0H9YlKtCmm6XPevF
+htgzDSc5l/Q1+r3nfSPpxtBxWEhY91SDJ+D149fSgWj5n7/vTW065NhSSTaZHJXo
+oXMuKC0cdlY3i3F+nVPL1gpGqUAJC52vNywh8lbMQapdnkkPBSIQaz3yWZCxEVuw
+tR6lLuar9v4wPElwJeyJkSZHV57Et9SaybwAN4TOYaDQ3OH3zuloSZBA39hK7A7+
+a0MhVAWTUkTfHGHrxxU4qXNN9Wz7A+olpwaq2zsRv+ksu+fcD9XMUnaFAJI0bqOZ
+ydYJqawhHjAEHuqlXJF4f5rg9SQFsoZDOGZOjDwt9yyBH+uQB97Lgnz88bwaPjnC
+qcDB+uiXx5NY5KsAIE2/0L3UHQdCWXDEOXpwolnEsJKlzDyw/MJGtKNePJzRJE+j
+WFyPhgH6MeehZ2jX0Lkgk6vdqKz8CZ5DmHCL7OglrPWEi+C6qimwT1cq5eJ4HjBK
+W1g7Vcp+sxPZSPIqSV0lbgmHW91+UrVO98+Mno+vqV78aEYAA3klT7K/VeL+GyP/
+LnUZC0bbNRwtbumRxVBmrqojU9b8t53lKqvjXpYaoaDVJYOxPEBvBA9JlAjfX5Uk
+mfd83zAKzhxf9Mlgu3Hu
+=JpMU
 -----END PGP SIGNATURE-----
 
---/TUrtqMIkCP4YtJm--
+--FRaepaAnLTQkJ4tS--
 
---===============1098594863==
-Content-Type: text/plain; charset="utf-8"
+
+--===============0804287481365978275==
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============1098594863==--
+--===============0804287481365978275==--
