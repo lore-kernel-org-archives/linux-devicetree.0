@@ -1,35 +1,32 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 04/15] clk: sunxi-ng: Add fixed factor clock support
-Date: Mon, 20 Jun 2016 18:15:37 -0700
-Message-ID: <20160621011537.GP1521@codeaurora.org>
-References: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
- <20160607204154.31967-5-maxime.ripard@free-electrons.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3] arm64: dts: r8a7795: Add CAN FD support
+Date: Tue, 21 Jun 2016 10:38:37 +0900
+Message-ID: <20160621013834.GA18247@verge.net.au>
+References: <1456906550-4849-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1466166943-17670-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160607204154.31967-5-maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@baylibre.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1466166943-17670-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, chris.paterson2@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/07, Maxime Ripard wrote:
-> +
-> +#include <linux/clk-provider.h>
-> +
-> +#include "ccu_common.h"
-> +
-> +struct ccu_fixed_factor {
-> +	u16			div;
-> +	u16			mult;
-> +
-> +	struct ccu_common	common;
+On Fri, Jun 17, 2016 at 01:35:43PM +0100, Ramesh Shanmugasundaram wrote:
+> Adds CAN FD controller node for r8a7795.
+> 
+> Note: CAN FD controller register base address specified in R-Car Gen3
+> Hardware User Manual v0.5E is incorrect. The correct address is:
+> 
+> CAN FD - 0xe66c0000
+> 
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> ---
+> 
+> Note:
+> Bindings already Acked-by: Rob H on driver patch set
+> (https://www.mail-archive.com/netdev@vger.kernel.org/msg102789.html)
 
-Does this use the common structure although we have no usage for
-the members of struct ccu_common except struct clk_hw? I suppose
-this is done so registering a bunch of clks is easy?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks, I have queued this up.
