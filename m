@@ -1,78 +1,36 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: Re: [PATCH v4 0/2] ASoC: da7219: Convert driver to use
- generic FW functions
-Date: Tue, 21 Jun 2016 22:54:39 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D4644644@SW-EX-MBX01.diasemi.com>
-References: <cover.1466523027.git.Adam.Thomson.Opensource@diasemi.com>
- <6274a042-da99-e3e6-20f2-37ce2651645c@intel.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 0/5] Fix and improve clock controller for the RK322x SoCs
+Date: Wed, 22 Jun 2016 01:07:29 +0200
+Message-ID: <13345941.K3V3BNYxTY@phil>
+References: <1466484811-26923-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <6274a042-da99-e3e6-20f2-37ce2651645c@intel.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "Opensource [Adam
- Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>, devicetree <devicetree@vger.kernel.org>, alsa-devel <alsa-devel@alsa-project.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, Robert Moore <robert.moore@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-acpi <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lv Zheng <lv.zheng@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1466484811-26923-1-git-send-email-zhengxing@rock-chips.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Xing Zheng <zhengxing@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Yakir Yang <ykk@rock-chips.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 June 2016 23:30, Rafael J. Wysocki wrote:
+Am Dienstag, 21. Juni 2016, 12:53:26 schrieb Xing Zheng:
+> Hi,
+>   These patchset fix some clocks bugs, and improve clock configuration
+> for i2s/spdif/MAC on RK322x SoCs.
 
-> > This patch set converts the da7219 codec driver to use device/fwnode functions
-> > to access properties, instead of the DT only of_* functions, allowing ACPI
-> > to be used as well.
-> >
-> > The DT bindings for da7219 have a device node for the main codec properties,
-> > and a named child node (da7219_aad), which contains all of the accessory
-> > detection related properties for the device. ACPI also supports this kind of
-> > FW hierarchy (data only sub-nodes), but some support in the kernel needs to be
-> > added to take make use of this in driver code.
-> >
-> > The first patch adds functions to allow searching for a named child node of a
-> > device, for both DT and ACPI, and the second patch updates the codec driver to
-> > use the standard device/fwnode calls, including this new function.
-> >
-> > These changes are based on the v4.7-rc4 kernel.
-> >
-> > Changes in v4:
-> >   - Rebase to v4.7-rc4
-> >   - Use strcmp() in acpi_data_node_match() for matching ACPI data nodes.
-> >
-> > Changes in v3:
-> >   - Use of_node_cmp() in device_get_named_child_node() to match DT node.
-> >
-> > Changes in v2:
-> >   - Rebase to v4.7-rc1
-> >   - Small updates to codec patch based on previous reviewer comments
-> >
-> > Adam Thomson (2):
-> >    device property: Add function to search for named child of device
-> >    ASoC: da7219: Convert driver to use generic device/fwnode functions
-> >
-> >   drivers/base/property.c       |  28 ++++++++++++
-> >   include/acpi/acpi_bus.h       |   7 +++
-> >   include/linux/acpi.h          |   6 +++
-> >   include/linux/of.h            |  14 +++---
-> >   include/linux/property.h      |   3 ++
-> >   sound/soc/codecs/da7219-aad.c | 103 +++++++++++++++++++++--------------------
-> -
-> >   sound/soc/codecs/da7219.c     |  34 +++++++-------
-> >   7 files changed, 119 insertions(+), 76 deletions(-)
-> >
-> > --
-> > 1.9.3
-> >
-> I'm fine with the first patch and the second one carries a couple of
-> ACKs already, so do you want me to apply them both?
+applied to my clock-branch with the following changes:
 
-Thanks Rafael. I think we still need Mark's Ack for the ASoC codec changes
-though before we can proceed.
+- fixed the error in patch1 - missing ")" in
+      COMPOSITE_FRAC(0, "i2s1_frac", "i2s1_src", CLK_SET_RATE_PARENT,
+-                       RK3288_CLKSEL_CON(7), 0,
+-                       RK3288_CLKGATE_CON(0), 11, GFLAGS),
++                       RK2928_CLKSEL_CON(7), 0,
++                       RK2928_CLKGATE_CON(0), 11, GFLAGS,
+
+- adapted patch2 accordingly
+- split out clock id addition into separate patches, as they need a shared 
+branch. Xing please remember to add clock-ids to the header in separate 
+patches.
+
+
+Heiko
