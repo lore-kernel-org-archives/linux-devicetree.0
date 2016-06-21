@@ -1,190 +1,189 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
-Date: Tue, 21 Jun 2016 10:03:00 +0800
-Message-ID: <1466474580.6214.29.camel@mtksdaap41>
-References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
-	 <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
-	 <1466419311.27959.12.camel@mtksdaap41>
-	 <1466421720.1918.11.camel@mtksdaap41>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH 08/12] doc: binding: pwrseq-usb-generic: add binding doc
+ for generic usb power sequence driver
+Date: Tue, 21 Jun 2016 10:11:17 +0800
+Message-ID: <20160621021117.GD26936@shlinux2>
+References: <1466158165-9380-1-git-send-email-peter.chen@nxp.com>
+ <1466158165-9380-9-git-send-email-peter.chen@nxp.com>
+ <CAL_JsqLvs0s2TyfqPM5vtmyY81_X84VjCGjsGYbTgT4syOfp9Q@mail.gmail.com>
+ <20160620112651.GA26936@shlinux2>
+ <20160620161607.GA11427@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466421720.1918.11.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Horng-Shyang Liao <hs.liao@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160620161607.GA11427@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof =?utf-8?Q?Koz=C5=82owski?= <k.kozlowski@samsung.com>, Stephen Boyd <stephen.boyd@linaro.org>, oscar@naiandei.net, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Linux USB List <linux-usb@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, troy.kisky@boundarydevices.com, Javier Martinez Canillas <javier@osg.samsung.com>, Philipp Zabel <p.zabel@pengutronix.>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-06-20 at 19:22 +0800, Horng-Shyang Liao wrote:
-> On Mon, 2016-06-20 at 18:41 +0800, CK Hu wrote:
-> > Hi, HS:
-> > 
-> > One comment inline.
-> > 
-> > On Mon, 2016-05-30 at 11:19 +0800, HS Liao wrote:
-> > > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> > > CMDQ is used to help read/write registers with critical time limitation,
-> > > such as updating display configuration during the vblank. It controls
-> > > Global Command Engine (GCE) hardware to achieve this requirement.
-> > > Currently, CMDQ only supports display related hardwares, but we expect
-> > > it can be extended to other hardwares for future requirements.
+On Mon, Jun 20, 2016 at 11:16:07AM -0500, Rob Herring wrote:
+> On Mon, Jun 20, 2016 at 07:26:51PM +0800, Peter Chen wrote:
+> > On Fri, Jun 17, 2016 at 12:16:48PM -0500, Rob Herring wrote:
+> > > On Fri, Jun 17, 2016 at 5:09 AM, Peter Chen <peter.chen@nxp.com> wrote:
+> > > > Add binding doc for generic usb power sequence driver, and update
+> > > > generic usb device binding-doc accordingly.
+> > > >
+> > > > Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> > > > ---
+> > > >  .../bindings/power/pwrseq/pwrseq-usb-generic.txt   | 31 ++++++++++++++++++++++
+> > > >  .../devicetree/bindings/usb/usb-device.txt         |  2 ++
+> > > >  2 files changed, 33 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+> > > > new file mode 100644
+> > > > index 0000000..8ad98382
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-usb-generic.txt
+> > > > @@ -0,0 +1,31 @@
+> > > > +The power sequence for generic USB Devices
+> > > > +
+> > > > +Some hard-wired USB devices need to do power sequence to let the
+> > > > +device work normally, the typical power sequence like: enable USB
+> > > > +PHY clock, toggle reset pin, etc. But current Linux USB driver
+> > > > +lacks of such code to do it, it may cause some hard-wired USB devices
+> > > > +works abnormal or can't be recognized by controller at all. The
+> > > > +power sequence will be done before this device can be found at USB
+> > > > +bus.
+> > > > +
+> > > > +Required properties:
+> > > > +- compatible : contains "usb-pwrseq-generic".
 > > > 
-> > > Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> > > Signed-off-by: CK Hu <ck.hu@mediatek.com>
-> > > ---
-> > >  drivers/soc/mediatek/Kconfig    |  10 +
-> > >  drivers/soc/mediatek/Makefile   |   1 +
-> > >  drivers/soc/mediatek/mtk-cmdq.c | 943 ++++++++++++++++++++++++++++++++++++++++
-> > >  include/soc/mediatek/cmdq.h     | 197 +++++++++
-> > >  4 files changed, 1151 insertions(+)
-> > >  create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
-> > >  create mode 100644 include/soc/mediatek/cmdq.h
+> > > In case I have not been clear, no.
 > > > 
-> > > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> > > index 0a4ea80..c4ad75c 100644
-> > > --- a/drivers/soc/mediatek/Kconfig
-> > > +++ b/drivers/soc/mediatek/Kconfig
-> > > @@ -1,6 +1,16 @@
-> > >  #
-> > >  # MediaTek SoC drivers
-> > >  #
-> > > +config MTK_CMDQ
-> > > +	bool "MediaTek CMDQ Support"
-> > > +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> > > +	select MTK_INFRACFG
-> > > +	help
-> > > +	  Say yes here to add support for the MediaTek Command Queue (CMDQ)
-> > > +	  driver. The CMDQ is used to help read/write registers with critical
-> > > +	  time limitation, such as updating display configuration during the
-> > > +	  vblank.
-> > > +
-> > >  config MTK_INFRACFG
-> > >  	bool "MediaTek INFRACFG Support"
-> > >  	depends on ARCH_MEDIATEK || COMPILE_TEST
-> > > diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> > > index 12998b0..f7397ef 100644
-> > > --- a/drivers/soc/mediatek/Makefile
-> > > +++ b/drivers/soc/mediatek/Makefile
+> > > I am not going to accept anything along the lines of the current mmc
+> > > pwrseq. I am basically okay with Krzysztof's proposal as it is *only*
+> > > an added property and not a duplication of information. I'd suggest
+> > > you figure out how to make the kernel work with that rather than
+> > > trying to work-around whatever kernel limitations there are.
+> > > 
 > > 
-> > [Snip...]
+> > I see.
 > > 
-> > > +
-> > > +static int cmdq_eng_get_thread(u64 flag)
-> > > +{
-> > > +	if (flag & BIT_ULL(CMDQ_ENG_DISP_DSI0))
-> > > +		return CMDQ_THR_DISP_MAIN_IDX;
-> > > +	else if (flag & BIT_ULL(CMDQ_ENG_DISP_DPI0))
-> > > +		return CMDQ_THR_DISP_SUB_IDX;
-> > > +	else
-> > > +		return CMDQ_THR_DISP_MISC_IDX;
-> > > +}
+> > Would you agree with below:
+> 
+> In general, yes. There are some points being discussed in the other 
+> thread.
+> 
+> > &usbotg1 {
+> > 	vbus-supply = <&reg_usb_otg1_vbus>;
+> > 	pinctrl-names = "default";
+> > 	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+> > 	status = "okay";
 > > 
-> > I think cmdq should not have knowledge of client. These statement show
-> > that cmdq know that DSI0-tasks is different with DPI0-tasks. I propose
-> > the 'session' to replace engine flag. For example, main display create
-> > one cmdq_session and external display create another cmdq_session. For
-> > client driver, every tasks created by main display is bound to main
-> > display session. For cmdq driver, it should dynamically bind a session
-> > to a HW thread, and then dispatch tasks of this session to this HW
-> > thread. After HW thread run out of tasks of this session, detach this
-> > session with this thread.
-> > For the problem of remove wfe cmd, I think a session can have a property
-> > of merge_wfe_cmd. For display session, session->merge_wfe_cmd = true.
-> > For other client, it's false.
+> > 	#address-cells = <1>;
+> > 	#size-cells = <0>;
+> > 	hub: genesys@1 {
+> > 		compatible = "usb5e3,608";
+> > 		reg = <1>;
+> > 
+> > 		power-sequence;
+> > 		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
+> > 		reset-duration-us = <10>;
 > 
-> Hi CK,
-> 
-> I think your suggestion is similar to CMDQ 'scenarios',
-> which was removed from CMDQ v2.
-> 
-> Daniel suggests to use engine flags instead of scenarios.
-> Quote from https://patchwork.kernel.org/patch/8068311/ .
-> 'Instead of encoding policy (these arbitrary "scenarios"), perhaps the
->  cmdq driver should just provide these flag bits, and the display
->  subsystem can use them to build the "flag" parameter itself.
-> 
->  After all, the exact configuration of mmsys components is somewhat
->  flexible.'
-> 
-> Therefore, it would be better to discuss with Daniel before we change
-> it.
-> 
-> 
-> Hi Daniel,
-> 
-> Do you think we should use scenarios or sessions instead of flags?
-> 
-> Thanks,
-> HS
+> I wonder if this really needs to be specified. A sufficiently long 
+> default should be good enough for 90 something % of devices.
 > 
 
-Hi, HS:
+This property is optional, there is a default value in pwrseq driver.
 
-'session' is not similar to 'scenarios'.
-
-In 'scenarios' mechanism, client bind a task with scenarios and send to
-cmdq. Cmdq transfer scenarios to engine flag, and use engine flag to
-dispatch task to HW thread.
-
-
-In 'engine flag' mechanism, proposed by Daniel, client bind a task
-directly with engine flag. Cmdq directly use engine flag to dispatch
-task to HW thread without any translation.
-
-But neither 'scenarios' mechanism nor 'engine flag' mechanism get rid of
-engine flag, which make cmdq have knowledge of client.
-
-In 'session' mechanism, there is no engine flag any more. Client bind
-time-sequential tasks to the same session and tasks in different session
-can execute parallelly. One thing cmdq need to know is to dispatch tasks
-with the same session to the same HW thread, so cmdq does not have any
-knowledge of client.
-
-Daniel focus on reduce translating scenarios to engine flag. I think
-'session' mechanism does not conflict with his opinion because we does
-not translate 'session' to engine flag. Therefore, I think 'session' is
-the best of these three mechanism.
-
-Regards,
-CK
-
-> > Here is the sample code to create cmdq_rec with session.
+> > 		clocks = <&clks IMX6SX_CLK_CKO>;
 > > 
-> > merge_wfe_cmd = true;
-> > cmdq_session_create(merge_wfe_cmd, &primary_display_session);
-> > cmdq_rec_create(dev, primary_display_session, &rec);
+> > 		#address-cells = <1>;
+> > 		#size-cells = <0>;
+> > 		ethernet: asix@1 {
+> > 			compatible = "usbb95,1708";
+> > 			reg = <1>;
 > > 
+> > 			power-sequence;
+> > 			reset-gpios = <&gpio4 6 GPIO_ACTIVE_LOW>; /* ethernet_rst */
+> > 			reset-duration-us = <15>;
+> > 			clocks = <&clks IMX6SX_CLK_IPG>;
+> > 		};
+> > 	};
+> > };
 > > 
-> > Therefore, the below definition can be removed.
-> > 
-> > > +
-> > > +enum cmdq_eng {
-> > > +	CMDQ_ENG_DISP_AAL,
-> > > +	CMDQ_ENG_DISP_COLOR0,
-> > > +	CMDQ_ENG_DISP_COLOR1,
-> > > +	CMDQ_ENG_DISP_DPI0,
-> > > +	CMDQ_ENG_DISP_DSI0,
-> > > +	CMDQ_ENG_DISP_DSI1,
-> > > +	CMDQ_ENG_DISP_GAMMA,
-> > > +	CMDQ_ENG_DISP_OD,
-> > > +	CMDQ_ENG_DISP_OVL0,
-> > > +	CMDQ_ENG_DISP_OVL1,
-> > > +	CMDQ_ENG_DISP_PWM0,
-> > > +	CMDQ_ENG_DISP_PWM1,
-> > > +	CMDQ_ENG_DISP_RDMA0,
-> > > +	CMDQ_ENG_DISP_RDMA1,
-> > > +	CMDQ_ENG_DISP_RDMA2,
-> > > +	CMDQ_ENG_DISP_UFOE,
-> > > +	CMDQ_ENG_DISP_WDMA0,
-> > > +	CMDQ_ENG_DISP_WDMA1,
-> > > +	CMDQ_ENG_MAX,
-> > > +};
-> > > +
-> > 
-> > 
-> > Regards,
-> > CK
-> > 
+> > If the node has property "power-sequence", the pwrseq core will create
+> > related platform device, and the driver under pwrseq driver will handle
+> > power sequence stuffs. 
 > 
+> This I have issue with. If you are creating a platform device here, you 
+> are trying to work-around limitations in the linux driver model.
+
+My current solution like below, but it seems you didn't agree with that.
+I just double confirm here, if you don't, I give up the solution for
+using generic power sequence framework.
+
+In drivers/usb/core/hub.c
+
+	for_each_child_of_node(parent->of_node, node) {
+		hdev_pwrseq = pwrseq_alloc(node, "usb_pwrseq_generic");
+		if (!IS_ERR_OR_NULL(hdev_pwrseq)) {
+			pwrseq_node = kzalloc(sizeof(pwrseq_node), GFP_KERNEL);
+			if (!pwrseq_node) {
+				ret = -ENOMEM;
+				goto err1;
+			}
+			/* power on sequence */
+			ret = pwrseq_pre_power_on(hdev_pwrseq);
+			if (ret)
+				goto err2;
+
+			pwrseq_node->pwrseq_on = hdev_pwrseq;
+			list_add(&pwrseq_node->list, &hub->pwrseq_list);
+		} else if (IS_ERR(hdev_pwrseq)) {
+			return PTR_ERR(hdev_pwrseq);
+		}
+	}
+
+In drivers/power/pwrseq/core.c
+
+struct pwrseq *pwrseq_alloc(struct device_node *np, const char *dev_name)
+{
+	struct pwrseq *p, *pwrseq = NULL;
+	bool created;
+
+	/* If there is no device is associated with this node, create it */
+	if (!of_find_device_by_node(np)) {
+		if (of_platform_device_create(np, dev_name, NULL))
+			created = true;
+		else
+			return ERR_PTR(-ENODEV);
+	}
+
+	mutex_lock(&pwrseq_list_mutex);
+	list_for_each_entry(p, &pwrseq_list, pwrseq_node) {
+		if (p->dev->of_node == np) {
+			if (!try_module_get(p->owner))
+				dev_err(p->dev,
+					"increasing module refcount failed\n");
+			else
+				pwrseq = p;
+			break;
+		}
+	}
+
+And there is a platform driver at drivers/power/pwrseq/pwrseq_usb_generic.c
+to handle these pwrseq properties, see my patch 9/12.
+
+> Either 
+> we need some sort of pre-probe hook to the drivers to call or each 
+> parent node driver is responsible for checking and calling pwr-seq 
+> functions for child nodes. e.g. The host controller calls pwr-seq for 
+> the hub, the hub driver calls the power seq for the asix chip. Soon as 
+> we have a case too complex for the generic pwr-seq, we're going to need 
+> the pre-probe hook as I don't want to see a continual expansion of 
+> generic pwr-seq binding for ever more complex cases.
 > 
+
+How the driver know what it needs to handle (eg, gpio, clock) if there
+is no device for it? The most important we need to consider is which
+device owns there power sequence properties, then the corresponding
+driver can handle it.
+
+-- 
+
+Best Regards,
+Peter Chen
