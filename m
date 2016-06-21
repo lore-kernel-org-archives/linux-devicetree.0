@@ -1,17 +1,16 @@
-From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: Add device-tree for ARM's AEMv8A-AEMv8A
- FVP Base model
-Date: Tue, 21 Jun 2016 19:01:27 +0100
-Message-ID: <1466532087.2856.66.camel@linaro.org>
-References: <1466424796-13769-1-git-send-email-tixy@linaro.org>
- <1466424796-13769-2-git-send-email-tixy@linaro.org>
- <20160620123906.GC26152@leverpostej> <1466433277.2833.33.camel@linaro.org>
- <20160620145535.GC9246@leverpostej>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: Re: [PATCH] ata: ahci_platform: Add ACPI support for APM X-Gene AHCI
+ controller v3 hardware.
+Date: Tue, 21 Jun 2016 11:08:28 -0700
+Message-ID: <CAOHikRCB4c79okd0q3=Lqwk7LKwZ6EDnWfHRH_oXokrB4PHcyw@mail.gmail.com>
+References: <stripathi@apm.com>
+ <1466034240-22694-1-git-send-email-stripathi@apm.com>
+ <6691907.FIx2xYmxSs@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160620145535.GC9246@leverpostej>
+In-Reply-To: <6691907.FIx2xYmxSs@wuerfel>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,88 +20,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Langsdorf <mlangsdo@redhat.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>, Tejun Heo <tj@kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-06-20 at 15:55 +0100, Mark Rutland wrote:
-> On Mon, Jun 20, 2016 at 03:34:37PM +0100, Jon Medhurst (Tixy) wrote:
-> > On Mon, 2016-06-20 at 13:39 +0100, Mark Rutland wrote:
-> > > Hi,
-> > > 
-> > > On Mon, Jun 20, 2016 at 01:13:16PM +0100, Jon Medhurst wrote:
-> > > > Fixed Virtual Platform (FVP) Base models are simulations of systems
-> > > > that resemble Versatile Express or Juno hardware.
-> > > > 
-> > > > This adds a device-tree for the model variant that has two clusters of
-> > > > Architecture Envelope Model (AEM) v8-A CPUs. The peripheral devices that
-> > > > are common to all variants of Base models have been placed in a separate
-> > > > file (fvp-base.dtsi) to facilitate creating device-trees for other
-> > > > models.
-> > > > 
-> > > > It is desirable to use simulations for code testing purposes and so it
-> > > > is beneficial to include nodes for things that are timing and power
-> > > > consumption related, even when these don't otherwise have relevance or
-> > > > accuracy. Where these have been included here (e.g. idle-states) entries
-> > > > have been copied from real hardware platforms such as Juno.
-> > > 
-> > > Which firmware are you using,
-> > 
-> > ARM Trusted Firmware
-> > 
-> > >  and what precisely does it do w.r.t.
-> > > those idle states?
-> > 
-> > I don't know, will check. Those states are also in the ARM TF
-> > device-tree for the Base FVP [2] but I admit I didn't verify they were
-> > correct. (Unlike real 'hardware' dt nodes, for which I methodically went
-> > through documentation and LISA files to check and fix).
-> > 
-> > [2] https://github.com/ARM-software/arm-trusted-firmware/blob/master/fdts/fvp-base-gicv3-psci.dts
-> > 
-> > >  Judging by the FVP ATF pm code [1], those state IDs
-> > > aren't valid (though perhaps the comment is wrong, or I've misunderstood
-> > > something).
-> > 
-> > I'm not sure which comment you are referring to, that link [1] doesn't
-> > seem to anchor to a particular source line in my web browser, and I
-> > don't spot anything relevant scanning by eye.
-> 
-> Aargh, the web interface appears to have given me a duff URL. Let's try
-> again [3]. ;)
-> 
-> The comments note state-ids 0x01, 0x02, and 0x22, which don't appear to
-> match the DT. It might be that I've just misunderstood
+On Wed, Jun 15, 2016 at 11:54 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wednesday, June 15, 2016 5:44:00 PM CEST suman-tripathi wrote:
+> > This patch adds ACPI support for APM X-Gene AHCI controller in
+> > ahci_platform driver for v3 hardware. APM X-Gene AHCI controller
+> > v3 hardware is fully compliant with ahci_platform driver and requires
+> > no workaround quirk.
+> >
+> > Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> > ---
+> >  drivers/ata/ahci_platform.c |    1 +
+> >  1 files changed, 1 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> > index 62a04c8..3395baf 100644
+> > --- a/drivers/ata/ahci_platform.c
+> > +++ b/drivers/ata/ahci_platform.c
+> > @@ -86,6 +86,7 @@ MODULE_DEVICE_TABLE(of, ahci_of_match);
+> >
+> >  static const struct acpi_device_id ahci_acpi_match[] = {
+> >         { ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
+> > +       { "APMC0D33", 0},
+> >         {},
+> >  };
+> >  MODULE_DEVICE_TABLE(acpi, ahci_acpi_match);
+> >
+>
+> Doesn't the ACPI_DEVICE_CLASS entry take care of this? I thought it had been
 
-That function is only compiled when ARM_RECOM_STATE_ID_ENC is true,
-which it isn't when I build TF using "make PLAT=fvp ...." so I think
-it's a red herring.
 
-When I boot the FVP with my posted device-tree, the core run state icons
-on the CLCD window behave as you would expect for CPUs and whole
-clusters powering off/on as CPU's activity changes. So idle _looks_ like
-it's working OK.
+yeah it also works. Just thought that we need something different as
+our's is a non-PCI SATA.
+>
+> added specifically for this purpose. It doesn't seem right to add vendor
+> specific entries for generic hardware in each generic driver.
+>
+>         Arnd
 
-I also put printfs in ATF's psci_cpu_suspend() function and I can see
-the values specified in device-tree being passed in and the code
-behaving sensibly. From how it cracks the power_state value [4] it
-certainly looks like the numbers have the following meanings:
 
-top byte = 0..3 for the 'level' of the power state
-top-but-one byte = 0/1 for Standby/Powerdown
 
-For FVP [5], the level appears to be 0=CPU, 1=Cluster.
-This matches what's in the device-tree I posted, where we have
-0x00010000 for CPU sleep, and 0x01010000 for cluster sleep.
-
-All of which is a long way of saying that I believe the values that the
-firmware guys and Linaro have been using for the past year or two are
-correct ;-)
-
-> [3] https://github.com/ARM-software/arm-trusted-firmware/blob/6355f2347aec8bf6ad74867c2b0c996e10546ad4/plat/arm/board/fvp/fvp_pm.c#L53
-
-[4] https://github.com/ARM-software/arm-trusted-firmware/blob/6355f2347aec8bf6ad74867c2b0c996e10546ad4/include/bl31/services/psci.h#L100
-[5] https://github.com/ARM-software/arm-trusted-firmware/blob/6355f2347aec8bf6ad74867c2b0c996e10546ad4/plat/arm/board/fvp/fvp_pm.c#L195
 
 -- 
-Tixy
+Thanks,
+with regards,
+Suman Tripathi
