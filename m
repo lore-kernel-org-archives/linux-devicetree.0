@@ -1,71 +1,116 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH] ata: ahci_platform: Add ACPI support for APM X-Gene AHCI
- controller v3 hardware.
-Date: Tue, 21 Jun 2016 11:08:28 -0700
-Message-ID: <CAOHikRCB4c79okd0q3=Lqwk7LKwZ6EDnWfHRH_oXokrB4PHcyw@mail.gmail.com>
-References: <stripathi@apm.com>
- <1466034240-22694-1-git-send-email-stripathi@apm.com>
- <6691907.FIx2xYmxSs@wuerfel>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v2 00/15] clk: sunxi: introduce "modern" clock support
+Date: Tue, 21 Jun 2016 20:29:19 +0200
+Message-ID: <20160621202919.b9fff30f050cc00c9acb7688@free.fr>
+References: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
+	<20160621114044.811e2136eca5c1d863d79ac6@free.fr>
+	<20160621144752.GR26668@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6691907.FIx2xYmxSs@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Langsdorf <mlangsdo@redhat.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>, Tejun Heo <tj@kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160621144752.GR26668@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 11:54 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wednesday, June 15, 2016 5:44:00 PM CEST suman-tripathi wrote:
-> > This patch adds ACPI support for APM X-Gene AHCI controller in
-> > ahci_platform driver for v3 hardware. APM X-Gene AHCI controller
-> > v3 hardware is fully compliant with ahci_platform driver and requires
-> > no workaround quirk.
-> >
-> > Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> > ---
-> >  drivers/ata/ahci_platform.c |    1 +
-> >  1 files changed, 1 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-> > index 62a04c8..3395baf 100644
-> > --- a/drivers/ata/ahci_platform.c
-> > +++ b/drivers/ata/ahci_platform.c
-> > @@ -86,6 +86,7 @@ MODULE_DEVICE_TABLE(of, ahci_of_match);
-> >
-> >  static const struct acpi_device_id ahci_acpi_match[] = {
-> >         { ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
-> > +       { "APMC0D33", 0},
-> >         {},
-> >  };
-> >  MODULE_DEVICE_TABLE(acpi, ahci_acpi_match);
-> >
->
-> Doesn't the ACPI_DEVICE_CLASS entry take care of this? I thought it had been
+On Tue, 21 Jun 2016 16:47:52 +0200
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
+> > But I had some problems with some features as the 'mode select' in =
+the
+> > A83T MMC2 clock.
+> > Also, I think that you did not go far enough in the changes.
+>=20
+> At some point, you also have to support what's used out there,
+> otherwise it just becomes an un-maintainable mess. Plus, it really
+> doesn't have to be perfect from day one, it just has to works as it
+> used to, we can always add more stuff later on.
 
-yeah it also works. Just thought that we need something different as
-our's is a non-PCI SATA.
->
-> added specifically for this purpose. It doesn't seem right to add vendor
-> specific entries for generic hardware in each generic driver.
->
->         Arnd
+I was not thinking about the client interface, but about the sunxi new
+clock driver itself. The way the clocks are declared may be enhanced.
+Then, the particular features of some clocks (as MMC2 mode select) ask
+for a hard re-think of your structures.
 
+> At it works way better than what we had.
 
+Maybe for the actual drivers of the H3, but not for DDR for example.
 
+> The question also is: is there anyone that we depend on using it
+> (mainline u-boot)? and is it something we need? If both answers are
+> no, then it's just dead code, which shouldn't be here in the first
+> place.
 
--- 
-Thanks,
-with regards,
-Suman Tripathi
+I don't understand what you mean.
+
+> > For example, most clock gates as well as most resets could be remov=
+ed
+> > from the DT and automatically set/de-asserted on clock prepare or c=
+lock
+> > enable.
+>=20
+> No. The semantics are completely different between the bus gates, bus
+> resets and the module clocks. For example, the module clock can be
+> shut down while retaining the register state, while the gate clock
+> can't. And drivers are already using that semantic.
+
+A quick look at the H3 drivers showed me that they always do
+reset-deassert, bus gate enable and clock gate enable at probe time.
+On the other side, it seems that the order of doing these settings is
+important (Programming Guidelines in the CCU section of the Allwinner's
+doc). So, it seems better to me to centralize these settings in the
+clock driver.
+
+> Some other problems arise from that as well: this would break the DT
+> ABI, and it deviates way too much from what the other SoCs are doing
+> (which is the whole reason for that rework in the first place).
+
+Defining empty reset/bus gate clocks would not imply changes in the
+DTs, nor in the drivers.
+
+> > So, I am rewriting a generic sunxi clock driver into one file (abou=
+t
+> > 1000 lines) and I have the full (simpler and clearer) description o=
+f
+> > the H3 and the A863T clocks.
+> >=20
+> > Coding is not finished yet. I will submit a RFC as soon as I will h=
+ave
+> > something working.
+>=20
+> Please don't. I don't want to waste any more time on this, this is wa=
+y
+> overdue.
+
+OK. I need such a new driver for clocks which cannot be handled with
+your structures. I will propose it later, when it will be time...
+
+<parenthesis>
+Just have a glimpse at my declaration of the A83T audio PLL.
+Isn't it easier to create and read?
+
+/* audio */
+/*	rate =3D 24MHz * n / (d1 + 1) / (d2 + 1) / (p + 1) */
+static struct ccu pll_audio_clk =3D {
+	CCU_REG(0x008),
+	CCU_HW("pll-audio", "osc24M", &ccu_pll_ops, 0),
+	CCU_GATE(0x008, 31),
+	CCU_LOCK(0x20c, 2),
+	CCU_N(8, 8), .n_min =3D 12,
+	CCU_D1(16, 1),
+	CCU_D2(18, 1),
+	CCU_M(0, 6),		/* p =3D divider */
+	.features =3D CCU_FEATURE_N0,
+};
+
+</parenthesis>
+
+--=20
+Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
