@@ -1,216 +1,116 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v6 2/4] power: reset: add reboot mode driver
-Date: Tue, 21 Jun 2016 19:01:38 +0800
-Message-ID: <57691E92.5090205@rock-chips.com>
-References: <1458646525-491-1-git-send-email-andy.yan@rock-chips.com>
- <1458646642-591-1-git-send-email-andy.yan@rock-chips.com>
- <CAJKOXPcKzGTAicbsXK-cC9WQT0vBhpSG_q2GCn37+72x2hdhsQ@mail.gmail.com>
+From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 1/2] device property: Add function to search
+ for named child of device
+Date: Tue, 21 Jun 2016 14:11:26 +0300
+Message-ID: <20160621111126.GX1739@lahna.fi.intel.com>
+References: <cover.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
+ <866c9edccdd89805f6a0c0aa92f8a78ae616ed61.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAJKOXPcKzGTAicbsXK-cC9WQT0vBhpSG_q2GCn37+72x2hdhsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <866c9edccdd89805f6a0c0aa92f8a78ae616ed61.1466421714.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Robert Moore <robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lv Zheng <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Rafael J.Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Sathyanarayana Nujella <sathyanarayana.nujella-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CkhpIEtyenlzenRvZjoKCk9uIDIwMTblubQwM+aciDI05pelIDEwOjUwLCBLcnp5c3p0b2YgS296
-bG93c2tpIHdyb3RlOgo+IENvb2wgd29yayEgRmV3IGNvbW1lbnRzIGJlbG93Lgo+Cj4KPiBPbiBU
-dWUsIE1hciAyMiwgMjAxNiBhdCA4OjM3IFBNLCBBbmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlw
-cy5jb20+IHdyb3RlOgo+PiBUaGlzIGRyaXZlciBwYXJzZSB0aGUgcmVib290IGNvbW1hbmRzIGxp
-a2UgInJlYm9vdCBsb2FkZXIiCj4+IGFuZCAicmVib290IHJlY292ZXJ5IiB0byBnZXQgYSBib290
-IG1vZGUgZGVzY3JpYmVkIGluIHRoZQo+PiBkZXZpY2UgdHJlZSAsIHRoZW4gY2FsbCB0aGUgd3Jp
-dGUgaW50ZXJmYWUgdG8gc3RvcmUgdGhlIGJvb3QKPj4gbW9kZSBpbiBzb21lIHBsYWNlIGxpa2Ug
-c3BlY2lhbCByZWdpc3RlciBvciBzcmFtICwgd2hpY2ggY2FuCj4+IGJlIHJlYWQgYnkgdGhlIGJv
-b3Rsb2FkZXIgYWZ0ZXIgc3lzdGVtIHJlYm9vdCwgdGhlbiB0aGUgYm9vdGxvYWRlcgo+PiBjYW4g
-dGFrZSBkaWZmZXJlbnQgYWN0aW9uIGFjY29yZGluZyB0byB0aGUgbW9kZSBzdG9yZWQuCj4+Cj4+
-IFRoaXMgaXMgY29tbW9ubHkgdXNlZCBvbiBBbmRyb2lkIGJhc2VkIGRldmljZXMsIGluIG9yZGVy
-IHRvCj4+IHJlYm9vdCB0aGUgZGV2aWNlIGludG8gZmFzdGJvb3Qgb3IgcmVjb3ZlcnkgbW9kZS4K
-Pj4KPj4gUmV2aWV3ZWQtYnk6IE1hdHRoaWFzIEJydWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5j
-b20+Cj4+IFJldmlld2VkLWJ5OiBNb3JpdHogRmlzY2hlciA8bW9yaXR6LmZpc2NoZXJAZXR0dXMu
-Y29tPgo+PiBUZXN0ZWQtYnk6IEpvaG4gU3R1bHR6IDxqb2huLnN0dWx0ekBsaW5hcm8ub3JnPgo+
-PiBBY2tlZC1ieTogSm9obiBTdHVsdHogPGpvaG4uc3R1bHR6QGxpbmFyby5vcmc+Cj4+IFNpZ25l
-ZC1vZmYtYnk6IEFuZHkgWWFuIDxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4KPj4gLS0tCj4+
-Cj4+IENoYW5nZXMgaW4gdjY6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2NToKPj4gLSB1c2UgdHdvIGJs
-YW5rIHNwYWNlIHVuZGVyIGhlbHAgaW4gS2NvbmZpZwo+PiAtIHVzZSB1bnNpZ25lZCBpbnQgaW5z
-dGVhZCBvZiBpbnQgZm9yIG1lbWJlciBtYWdpYyBpbiBzdHJ1Y3QgbW9kZV9pbmZvCj4+Cj4+IENo
-YW5nZXMgaW4gdjQ6Cj4+IC0gbWFrZSB0aGlzIGRyaXZlciBkZXBlbmRzIG9uIE9GIHRvIGF2b2lk
-IGtidWlsZCB0ZXN0IGVycm9yCj4+Cj4+IENoYW5nZXMgaW4gdjM6Cj4+IC0gc2NhbiBtdWx0aSBw
-cm9wZXJpdGllcwo+PiAtIGFkZCBtYXNrIHZhbHVlIGZvciBzb21lIHBsYXRmb3JtIHdoaWNoIG9u
-bHkgdXNlIHNvbWUgYml0cyBvZiB0aGUgcmVnaXN0ZXIKPj4gICAgdG8gc3RvcmUgYm9vdCBtb2Rl
-IG1hZ2ljIHZhbHVlCj4+Cj4+IENoYW5nZXMgaW4gdjI6Cj4+IC0gbW92ZSB0byBkaXIgZHJpdmVy
-cy9wb3dlci9yZXNldC8KPj4gLSBtYWtlIHN5c2Nvbi1yZWJvb3QtbW9kZSBhIGdlbmVyaWMgZHJp
-dmVyCj4+Cj4+IENoYW5nZXMgaW4gdjE6Cj4+IC0gZml4IHRoZSBlbWJhcnJhc3NlZCBjb21waWxl
-IHdhcm5pbmcKPj4gLSBjb3JyZWN0IHRoZSBtYXNrcm9tIG1hZ2ljIG51bWJlcgo+PiAtIGNoZWNr
-IGZvciB0aGUgbm9ybWFsIHJlYm9vdAo+Pgo+PiAgIGRyaXZlcnMvcG93ZXIvcmVzZXQvS2NvbmZp
-ZyAgICAgICAgICAgICAgfCAgMTMgKysrKwo+PiAgIGRyaXZlcnMvcG93ZXIvcmVzZXQvTWFrZWZp
-bGUgICAgICAgICAgICAgfCAgIDIgKwo+PiAgIGRyaXZlcnMvcG93ZXIvcmVzZXQvcmVib290LW1v
-ZGUuYyAgICAgICAgfCAxMDYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgIGRy
-aXZlcnMvcG93ZXIvcmVzZXQvcmVib290LW1vZGUuaCAgICAgICAgfCAgIDYgKysKPj4gICBkcml2
-ZXJzL3Bvd2VyL3Jlc2V0L3N5c2Nvbi1yZWJvb3QtbW9kZS5jIHwgIDY1ICsrKysrKysrKysrKysr
-KysrKysKPj4gICA1IGZpbGVzIGNoYW5nZWQsIDE5MiBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvcG93ZXIvcmVzZXQvcmVib290LW1vZGUuYwo+PiAgIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Bvd2VyL3Jlc2V0L3JlYm9vdC1tb2RlLmgKPj4gICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wb3dlci9yZXNldC9zeXNjb24tcmVib290LW1vZGUuYwo+
-Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wb3dlci9yZXNldC9LY29uZmlnIGIvZHJpdmVycy9w
-b3dlci9yZXNldC9LY29uZmlnCj4+IGluZGV4IDExMzFjZjcuLmNmNTA2MzAgMTAwNjQ0Cj4+IC0t
-LSBhL2RyaXZlcnMvcG93ZXIvcmVzZXQvS2NvbmZpZwo+PiArKysgYi9kcml2ZXJzL3Bvd2VyL3Jl
-c2V0L0tjb25maWcKPj4gQEAgLTE3Myw1ICsxNzMsMTggQEAgY29uZmlnIFBPV0VSX1JFU0VUX1pY
-Cj4+ICAgICAgICAgIGhlbHAKPj4gICAgICAgICAgICBSZWJvb3Qgc3VwcG9ydCBmb3IgWlRFIFNv
-Q3MuCj4+Cj4+ICtjb25maWcgUkVCT09UX01PREUKPj4gKyAgICAgICB0cmlzdGF0ZQo+PiArCj4+
-ICtjb25maWcgU1lTQ09OX1JFQk9PVF9NT0RFCj4+ICsgICAgICAgYm9vbCAiR2VuZXJpYyBTWVND
-T04gcmVnbWFwIHJlYm9vdCBtb2RlIGRyaXZlciIKPj4gKyAgICAgICBkZXBlbmRzIG9uIE9GCj4+
-ICsgICAgICAgc2VsZWN0IFJFQk9PVF9NT0RFCj4+ICsgICAgICAgaGVscAo+PiArICAgICAgICAg
-U2F5IHkgaGVyZSB3aWxsIGVuYWJsZSByZWJvb3QgbW9kZSBkcml2ZXIuIFRoaXMgd2lsbAo+PiAr
-ICAgICAgICAgZ2V0IHJlYm9vdCBtb2RlIGFyZ3VtZW50cyBhbmQgc3RvcmUgaXQgaW4gU1lTQ09O
-IG1hcHBlZAo+PiArICAgICAgICAgcmVnaXN0ZXIsIHRoZW4gdGhlIGJvb3Rsb2FkZXIgY2FuIHJl
-YWQgaXQgdG8gdGFrZSBkaWZmZXJlbnQKPj4gKyAgICAgICAgIGFjdGlvbiBhY2NvcmRpbmcgdG8g
-dGhlIG1vZGUuCj4+ICsKPj4gICBlbmRpZgo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wb3dl
-ci9yZXNldC9NYWtlZmlsZSBiL2RyaXZlcnMvcG93ZXIvcmVzZXQvTWFrZWZpbGUKPj4gaW5kZXgg
-MDk2ZmE2Ny4uYTYzODY1YiAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9wb3dlci9yZXNldC9NYWtl
-ZmlsZQo+PiArKysgYi9kcml2ZXJzL3Bvd2VyL3Jlc2V0L01ha2VmaWxlCj4+IEBAIC0yMCwzICsy
-MCw1IEBAIG9iai0kKENPTkZJR19QT1dFUl9SRVNFVF9TWVNDT04pICs9IHN5c2Nvbi1yZWJvb3Qu
-bwo+PiAgIG9iai0kKENPTkZJR19QT1dFUl9SRVNFVF9TWVNDT05fUE9XRVJPRkYpICs9IHN5c2Nv
-bi1wb3dlcm9mZi5vCj4+ICAgb2JqLSQoQ09ORklHX1BPV0VSX1JFU0VUX1JNT0JJTEUpICs9IHJt
-b2JpbGUtcmVzZXQubwo+PiAgIG9iai0kKENPTkZJR19QT1dFUl9SRVNFVF9aWCkgKz0gengtcmVi
-b290Lm8KPj4gK29iai0kKENPTkZJR19SRUJPT1RfTU9ERSkgKz0gcmVib290LW1vZGUubwo+PiAr
-b2JqLSQoQ09ORklHX1NZU0NPTl9SRUJPT1RfTU9ERSkgKz0gc3lzY29uLXJlYm9vdC1tb2RlLm8K
-Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcG93ZXIvcmVzZXQvcmVib290LW1vZGUuYyBiL2RyaXZl
-cnMvcG93ZXIvcmVzZXQvcmVib290LW1vZGUuYwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBp
-bmRleCAwMDAwMDAwLi45YWE3YjgwCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvZHJpdmVycy9w
-b3dlci9yZXNldC9yZWJvb3QtbW9kZS5jCj4+IEBAIC0wLDAgKzEsMTA2IEBACj4+ICsvKgo+PiAr
-ICogQ29weXJpZ2h0IChjKSAyMDE2LCBGdXpob3UgUm9ja2NoaXAgRWxlY3Ryb25pY3MgQ28uLCBM
-dGQKPj4gKyAqCj4+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiBy
-ZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQo+PiArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9m
-IHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcyBwdWJsaXNoZWQgYnkKPj4gKyAqIHRo
-ZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhlIExpY2Vu
-c2UsIG9yCj4+ICsgKiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgo+PiArICov
-Cj4+ICsKPj4gKyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9p
-bml0Lmg+Cj4+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgv
-bW9kdWxlLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9y
-ZWJvb3QuaD4KPj4gKyNpbmNsdWRlICJyZWJvb3QtbW9kZS5oIgo+PiArCj4+ICsjZGVmaW5lIFBS
-RUZJWCAibW9kZS0iCj4+ICsKPj4gK3N0cnVjdCBtb2RlX2luZm8gewo+PiArICAgICAgIGNoYXIg
-bW9kZVszMl07Cj4+ICsgICAgICAgdW5zaWduZWQgaW50IG1hZ2ljOwo+PiArICAgICAgIHN0cnVj
-dCBsaXN0X2hlYWQgbGlzdDsKPj4gK307Cj4+ICsKPj4gK3N0cnVjdCByZWJvb3RfbW9kZV9kcml2
-ZXIgewo+PiArICAgICAgIHN0cnVjdCBsaXN0X2hlYWQgaGVhZDsKPj4gKyAgICAgICBpbnQgKCp3
-cml0ZSkoaW50IG1hZ2ljKTsKPj4gKyAgICAgICBzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgcmVib290
-X25vdGlmaWVyOwo+PiArfTsKPj4gKwo+PiArc3RhdGljIGludCBnZXRfcmVib290X21vZGVfbWFn
-aWMoc3RydWN0IHJlYm9vdF9tb2RlX2RyaXZlciAqcmVib290LAo+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICpjbWQpCj4+ICt7Cj4+ICsgICAgICAgY29uc3Qg
-Y2hhciAqbm9ybWFsID0gIm5vcm1hbCI7Cj4+ICsgICAgICAgaW50IG1hZ2ljID0gMDsKPj4gKyAg
-ICAgICBzdHJ1Y3QgbW9kZV9pbmZvICppbmZvOwo+PiArCj4+ICsgICAgICAgaWYgKCFjbWQpCj4+
-ICsgICAgICAgICAgICAgICBjbWQgPSBub3JtYWw7Cj4+ICsKPj4gKyAgICAgICBsaXN0X2Zvcl9l
-YWNoX2VudHJ5KGluZm8sICZyZWJvb3QtPmhlYWQsIGxpc3QpIHsKPj4gKyAgICAgICAgICAgICAg
-IGlmICghc3RyY21wKGluZm8tPm1vZGUsIGNtZCkpIHsKPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgbWFnaWMgPSBpbmZvLT5tYWdpYzsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7
-Cj4+ICsgICAgICAgICAgICAgICB9Cj4+ICsgICAgICAgfQo+PiArCj4+ICsgICAgICAgcmV0dXJu
-IG1hZ2ljOwo+IEluIGFic2VuY2Ugb2YgJ25vcm1hbCcgbW9kZSAoaXQgaXMgbm90IGRlc2NyaWJl
-ZCBhcyByZXF1aXJlZCBwcm9wZXJ0eSkKPiB0aGUgbWFnaWMgd2lsbCBiZSAnMCcuIEl0IHdvdWxk
-IGJlIG5pY2UgdG8gZG9jdW1lbnQgdGhhdCBpbiBiaW5kaW5ncy4KPiBJbWFnaW5lIHNvbWVvbmUg
-Zm9yZ2V0cyBhYm91dCB0aGlzIGFuZCB3aWxsIHdvbmRlciB3aHkgMHgwIGlzIHdyaXR0ZW4KPiB0
-byBoaXMgcHJlY2lvdXMgcmVnaXN0ZXIgb24gbm9ybWFsIHJlYm9vdC4uLgo+Cj4gSXQgd291bGQg
-YmUgbmljZSB0byBkb2N1bWVudCB0aGF0ICdtb2RlLW5vcm1hbCcgaGFzIGEgc3BlY2lhbAo+ICho
-YXJkLWNvZGVkKSBtZWFuaW5nLgo+Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgcmVib290X21v
-ZGVfbm90aWZ5KHN0cnVjdCBub3RpZmllcl9ibG9jayAqdGhpcywKPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBtb2RlLCB2b2lkICpjbWQpCj4+ICt7Cj4+ICsg
-ICAgICAgc3RydWN0IHJlYm9vdF9tb2RlX2RyaXZlciAqcmVib290Owo+PiArICAgICAgIGludCBt
-YWdpYzsKPj4gKwo+PiArICAgICAgIHJlYm9vdCA9IGNvbnRhaW5lcl9vZih0aGlzLCBzdHJ1Y3Qg
-cmVib290X21vZGVfZHJpdmVyLCByZWJvb3Rfbm90aWZpZXIpOwo+PiArICAgICAgIG1hZ2ljID0g
-Z2V0X3JlYm9vdF9tb2RlX21hZ2ljKHJlYm9vdCwgY21kKTsKPj4gKyAgICAgICBpZiAobWFnaWMp
-Cj4+ICsgICAgICAgICAgICAgICByZWJvb3QtPndyaXRlKG1hZ2ljKTsKPj4gKwo+PiArICAgICAg
-IHJldHVybiBOT1RJRllfRE9ORTsKPj4gK30KPj4gKwo+PiAraW50IHJlYm9vdF9tb2RlX3JlZ2lz
-dGVyKHN0cnVjdCBkZXZpY2UgKmRldiwgaW50ICgqd3JpdGUpKGludCkpCj4+ICt7Cj4+ICsgICAg
-ICAgc3RydWN0IHJlYm9vdF9tb2RlX2RyaXZlciAqcmVib290Owo+PiArICAgICAgIHN0cnVjdCBt
-b2RlX2luZm8gKmluZm87Cj4+ICsgICAgICAgc3RydWN0IHByb3BlcnR5ICpwcm9wOwo+PiArICAg
-ICAgIHNpemVfdCBsZW4gPSBzdHJsZW4oUFJFRklYKTsKPj4gKyAgICAgICBpbnQgcmV0Owo+PiAr
-Cj4+ICsgICAgICAgcmVib290ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpyZWJvb3QpLCBH
-RlBfS0VSTkVMKTsKPj4gKyAgICAgICBpZiAoIXJlYm9vdCkKPj4gKyAgICAgICAgICAgICAgIHJl
-dHVybiAtRU5PTUVNOwo+PiArCj4+ICsgICAgICAgcmVib290LT53cml0ZSA9IHdyaXRlOwo+PiAr
-ICAgICAgIElOSVRfTElTVF9IRUFEKCZyZWJvb3QtPmhlYWQpOwo+PiArICAgICAgIGZvcl9lYWNo
-X3Byb3BlcnR5X29mX25vZGUoZGV2LT5vZl9ub2RlLCBwcm9wKSB7Cj4+ICsgICAgICAgICAgICAg
-ICBpZiAobGVuID4gc3RybGVuKHByb3AtPm5hbWUpIHx8IHN0cm5jbXAocHJvcC0+bmFtZSwgUFJF
-RklYLCBsZW4pKQo+PiArICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsKPiBOZXcgbGlu
-ZSBwbGVhc2UgZm9yIHJlYWRhYmlsaXR5Lgo+Cj4+ICsgICAgICAgICAgICAgICBpbmZvID0gZGV2
-bV9remFsbG9jKGRldiwgc2l6ZW9mKCppbmZvKSwgR0ZQX0tFUk5FTCk7Cj4+ICsgICAgICAgICAg
-ICAgICBpZiAoIWluZm8pCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVN
-Owo+IERpdHRvLgo+Cj4+ICsgICAgICAgICAgICAgICBzdHJjcHkoaW5mby0+bW9kZSwgcHJvcC0+
-bmFtZSArIGxlbik7Cj4gRWhtLCBhbmQgaG93IGRvIHlvdSBwcm90ZWN0IHRoYXQgbmFtZSBvZiBt
-b2RlIGlzIHNob3J0ZXIgdGhhbiAzMiBjaGFyYWN0ZXJzPwo+Cj4+ICsgICAgICAgICAgICAgICBp
-ZiAob2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLCBwcm9wLT5uYW1lLCAmaW5mby0+
-bWFnaWMpKSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAicmVib290
-IG1vZGUgJXMgd2l0aG91dCBtYWdpYyBudW1iZXJcbiIsCj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgaW5mby0+bW9kZSk7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldm1f
-a2ZyZWUoZGV2LCBpbmZvKTsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7Cj4+
-ICsgICAgICAgICAgICAgICB9Cj4+ICsgICAgICAgICAgICAgICBsaXN0X2FkZF90YWlsKCZpbmZv
-LT5saXN0LCAmcmVib290LT5oZWFkKTsKPj4gKyAgICAgICB9Cj4+ICsgICAgICAgcmVib290LT5y
-ZWJvb3Rfbm90aWZpZXIubm90aWZpZXJfY2FsbCA9IHJlYm9vdF9tb2RlX25vdGlmeTsKPj4gKyAg
-ICAgICByZXQgPSByZWdpc3Rlcl9yZWJvb3Rfbm90aWZpZXIoJnJlYm9vdC0+cmVib290X25vdGlm
-aWVyKTsKPj4gKyAgICAgICBpZiAocmV0KQo+PiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYs
-ICJjYW4ndCByZWdpc3RlciByZWJvb3Qgbm90aWZpZXJcbiIpOwo+PiArCj4+ICsgICAgICAgcmV0
-dXJuIHJldDsKPj4gK30KPj4gK0VYUE9SVF9TWU1CT0xfR1BMKHJlYm9vdF9tb2RlX3JlZ2lzdGVy
-KTsKPj4gKwo+PiArTU9EVUxFX0FVVEhPUigiQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMu
-Y29tIik7Cj4+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlN5c3RlbSByZWJvb3QgbW9kZSBkcml2ZXIi
-KTsKPj4gK01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-cG93ZXIvcmVzZXQvcmVib290LW1vZGUuaCBiL2RyaXZlcnMvcG93ZXIvcmVzZXQvcmVib290LW1v
-ZGUuaAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi40NGVkMzRmCj4+
-IC0tLSAvZGV2L251bGwKPj4gKysrIGIvZHJpdmVycy9wb3dlci9yZXNldC9yZWJvb3QtbW9kZS5o
-Cj4+IEBAIC0wLDAgKzEsNiBAQAo+PiArI2lmbmRlZiBfX1JFQk9PVF9NT0RFX0hfXwo+PiArI2Rl
-ZmluZSBfX1JFQk9PVF9NT0RFX0hfXwo+PiArCj4+ICtpbnQgcmVib290X21vZGVfcmVnaXN0ZXIo
-c3RydWN0IGRldmljZSAqZGV2LCBpbnQgKCp3cml0ZSkoaW50KSk7Cj4gRG9jdW1lbnRhdGlvbiB3
-b3VsZCBiZSBhcHByZWNpYXRlZC4gQWx0aG91Z2ggaXQgaXMgbG9jYWwgaGVhZGVyIGJ1dAo+IHlv
-dSBkZWNvdXBsZWQgdGhlbSBhbmQgeW91IGFyZSBleHBvcnRpbmcgdGhlIGZ1bmN0aW9uLgoKICAg
-IFlvdSB3YW50IHRoaXMgZHJpdmVyIGJlaW5nIGEgbW9kdWxlIGluIFY5LCBzbyB5b3UgbWF5IGFs
-c28gd2FudAogIEkgZG9jdW1lbnQgdGhpcyBmdW5jdGlvbiB3aGVuIGEgZXhwb3J0aW5nIGl0LiBX
-aGVyZSBJIHNob3VsZCB3cml0ZSB0aGUKICBkb2N1bWVudGF0aW9uLCBhbmQgd291bGQgeW91IHBs
-ZWFzZSBnaXZlIG1lIHNvbWUgZXhhbXBsZT8KPj4gKwo+PiArI2VuZGlmCj4+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL3Bvd2VyL3Jlc2V0L3N5c2Nvbi1yZWJvb3QtbW9kZS5jIGIvZHJpdmVycy9wb3dl
-ci9yZXNldC9zeXNjb24tcmVib290LW1vZGUuYwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBp
-bmRleCAwMDAwMDAwLi5kMTUyMWQ4Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvZHJpdmVycy9w
-b3dlci9yZXNldC9zeXNjb24tcmVib290LW1vZGUuYwo+PiBAQCAtMCwwICsxLDY1IEBACj4+ICsv
-Kgo+PiArICogQ29weXJpZ2h0IChjKSAyMDE2LCBGdXpob3UgUm9ja2NoaXAgRWxlY3Ryb25pY3Mg
-Q28uLCBMdGQKPj4gKyAqCj4+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91
-IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQo+PiArICogaXQgdW5kZXIgdGhlIHRl
-cm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcyBwdWJsaXNoZWQgYnkKPj4g
-KyAqIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhl
-IExpY2Vuc2UsIG9yCj4+ICsgKiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgo+
-PiArICovCj4+ICsKPj4gKyNpbmNsdWRlIDxsaW51eC9pbml0Lmg+Cj4+ICsjaW5jbHVkZSA8bGlu
-dXgvbW9kdWxlLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4+ICsjaW5jbHVkZSA8
-bGludXgvb2YuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+Cj4gSSBkb24ndCBz
-ZWUgdGhlIG5lZWQgb2Ygb2ZfYWRkcmVzcyBvciBhbSBJIG1pc3Npbmcgc29tZXRoaW5nPwo+Cj4+
-ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgv
-cmVib290Lmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+Cj4+ICsjaW5jbHVkZSA8bGlu
-dXgvbWZkL3N5c2Nvbi5oPgo+PiArI2luY2x1ZGUgInJlYm9vdC1tb2RlLmgiCj4+ICsKPj4gK3N0
-YXRpYyBzdHJ1Y3QgcmVnbWFwICptYXA7Cj4+ICtzdGF0aWMgdTMyIG9mZnNldDsKPj4gK3N0YXRp
-YyB1MzIgbWFzayA9IDB4ZmZmZmZmZmY7Cj4gV2h5IHRoaXMgY2Fubm90IGJlIHBhcnQgb2Ygc3Rh
-dGUgY29udGFpbmVyPyBJIHN1cHBvc2UgdXN1YWxseSB0aGVyZQo+IHdpbGwgYmUgb25seSBvbmUg
-cmVib290IG1vZGUgaGFuZGxlciwgYnV0Ogo+IDEuIEl0IGlzIGFsd2F5cyBuaWNlIHRvIG1ha2Ug
-dGhpbmdzIHNlbGYtY29udGFpbmVkLCBzbyBjb2RlIGNvdWxkIGJlCj4gZWFzaWx5IHVzZWQgaW4g
-ZGlmZmVyZW50IGNvbnRleHRzLiBEZXBlbmRpbmcgb24gc3RhdGljIHZhcmlhYmxlcwo+IHByZXZl
-bnRzIHRoYXQuCj4gMi4gSG93IGRvIHlvdSBwcm90ZWN0IGFnYWluc3QgZG91YmxlIGJpbmRpbmcg
-KHR3byByZWJvb3QgbW9kZSBkZXZpY2UKPiBub2RlcyBpbiBEVCk/IFRoZSBzZWNvbmQgYmluZGlu
-ZyAocHV0IGJ5IG1pc3Rha2UuLi4gb3Igd2hhdGV2ZXIKPiByZWFzb24pIHdpbGwgb3ZlcndyaXRl
-IGRhdGEgdXNlZCBieSBwcmV2aW91cyBkZXZpY2UuCj4KPj4gKwo+PiArc3RhdGljIGludCBzeXNj
-b25fcmVib290X21vZGVfd3JpdGUoaW50IG1hZ2ljKQo+PiArewo+PiArICAgICAgIHJlZ21hcF91
-cGRhdGVfYml0cyhtYXAsIG9mZnNldCwgbWFzaywgbWFnaWMpOwo+PiArCj4+ICsgICAgICAgcmV0
-dXJuIDA7Cj4gV2h5IGlnbm9yaW5nIHJldHVybiB2YWx1ZSBvZiByZWdtYXBfdXBkYXRlX2JpdHM/
-Cj4KPj4gK30KPj4gKwo+PiArc3RhdGljIGludCBzeXNjb25fcmVib290X21vZGVfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4gK3sKPj4gKyAgICAgICBpbnQgcmV0Owo+PiAr
-Cj4+ICsgICAgICAgbWFwID0gc3lzY29uX25vZGVfdG9fcmVnbWFwKHBkZXYtPmRldi5wYXJlbnQt
-Pm9mX25vZGUpOwo+PiArICAgICAgIGlmIChJU19FUlIobWFwKSkKPj4gKyAgICAgICAgICAgICAg
-IHJldHVybiBQVFJfRVJSKG1hcCk7Cj4gRW1wdHkgbGluZSBmb3IgcmVhZGFiaWxpdHkuCj4KPj4g
-KyAgICAgICBpZiAob2ZfcHJvcGVydHlfcmVhZF91MzIocGRldi0+ZGV2Lm9mX25vZGUsICJvZmZz
-ZXQiLCAmb2Zmc2V0KSkKPj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOwo+IEVtcHR5
-IGxpbmUgZm9yIHJlYWRhYmlsaXR5Lgo+Cj4gQmVzdCByZWdhcmRzLAo+IEtyenlzenRvZgo+Cj4K
-Pgo+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
-bnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9j
-a2NoaXAK
+On Mon, Jun 20, 2016 at 12:38:58PM +0100, Adam Thomson wrote:
+> For device nodes in both DT and ACPI, it possible to have named
+> child nodes which contain properties (an existing example being
+> gpio-leds). This adds a function to find a named child node for
+> a device which can be used by drivers for property retrieval.
+> 
+> For DT data node name matching, of_node_cmp() and similar functions
+> are made available outside of CONFIG_OF block so the new function
+> can reference these for DT and non-DT builds.
+> 
+> For ACPI data node name matching, a helper function is also added
+> which returns false if CONFIG_ACPI is not set, otherwise it
+> performs a string comparison on the data node name. This avoids
+> using the acpi_data_node struct for non CONFIG_ACPI builds,
+> which would otherwise cause a build failure.
+> 
+> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> Tested-by: Sathyanarayana Nujella <sathyanarayana.nujella-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> 
+> Changes in v3:
+>  - Move of_*_cmp() functions in of.h outside of CONFIG_OF block so they are
+>    available for non-DT builds
+>  - In device_get_named_child_node(), use of_node_cmp() helper macro instead of
+>    strcasecmp() (node names not alway case insensitive, depending on platform).
+> 
+> Changes in v2:
+>  - Rebase to v4.7-rc1
+> 
+>  drivers/base/property.c  | 28 ++++++++++++++++++++++++++++
+>  include/acpi/acpi_bus.h  |  7 +++++++
+>  include/linux/acpi.h     |  6 ++++++
+>  include/linux/of.h       | 14 +++++++-------
+>  include/linux/property.h |  3 +++
+>  5 files changed, 51 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index f38c21d..43a36d6 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -888,6 +888,34 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
+>  EXPORT_SYMBOL_GPL(device_get_next_child_node);
+> 
+>  /**
+> + * device_get_named_child_node - Return first matching named child node handle
+> + * @dev: Device to find the named child node for.
+> + * @childname: String to match child node name against.
+> + */
+> +struct fwnode_handle *device_get_named_child_node(struct device *dev,
+> +						  const char *childname)
+> +{
+> +	struct fwnode_handle *child;
+> +
+> +	/*
+> +	 * Find first matching named child node of this device.
+> +	 * For ACPI this will be a data only sub-node.
+> +	 */
+> +	device_for_each_child_node(dev, child) {
+> +		if (is_of_node(child)) {
+> +			if (!of_node_cmp(to_of_node(child)->name, childname))
+> +				return child;
+> +		} else if (is_acpi_data_node(child)) {
+> +			if (acpi_data_node_match(child, childname))
+> +				return child;
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(device_get_named_child_node);
+> +
+> +/**
+>   * fwnode_handle_put - Drop reference to a device node
+>   * @fwnode: Pointer to the device node to drop the reference to.
+>   *
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index 788c6c3..993bdd0 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -420,6 +420,13 @@ static inline struct acpi_data_node *to_acpi_data_node(struct fwnode_handle *fwn
+>  		container_of(fwnode, struct acpi_data_node, fwnode) : NULL;
+>  }
+> 
+> +static inline bool acpi_data_node_match(struct fwnode_handle *fwnode,
+> +					const char *name)
+> +{
+> +	return is_acpi_data_node(fwnode) ?
+> +		(!strcasecmp(to_acpi_data_node(fwnode)->name, name)) : false;
+> +}
+
+Looks fine to me.
+
+One question - is it expected that matching ACPI data nodes is always
+case insensitive?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
