@@ -1,42 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 5/5] Input: Add tps65217 power button driver
-Date: Tue, 21 Jun 2016 08:17:35 -0500
-Message-ID: <20160621131735.GA896@rob-hp-laptop>
-References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
- <20160620105056.25843-6-m.niestroj@grinn-global.com>
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [PATCH 1/2] Documentation: bindings: Add DT bindings for ARM's
+ FVP models.
+Date: Tue, 21 Jun 2016 14:38:32 +0100
+Message-ID: <1466516312.2856.27.camel@linaro.org>
+References: <1466424796-13769-1-git-send-email-tixy@linaro.org>
+ <20160621132257.GA2263@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160620105056.25843-6-m.niestroj@grinn-global.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160621132257.GA2263@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 20, 2016 at 12:50:56PM +0200, Marcin Niestroj wrote:
-> This driver enables us to use tps65217's power button as KEY_POWER on
-> am335x boards (directly connected button in chiliboard, accessible pin
-> via expansion header in beaglebone). This patch has been tested with
-> chiliboard.
+On Tue, 2016-06-21 at 08:22 -0500, Rob Herring wrote:
+> > +Required properties (in root node):
+> > +- compatible value:
+> > +     compatible = "arm,<family>,<variant>", "arm,<family>";
+> > +  where <family> is one of:
+> > +  - "fvp-base" for the Base FVP
+> > +  - "fvp-ve" for the VE FVP
+> > +  and <variant> is the part of the model's executable filename with
+> the family
+> > +  name omitted, converted to lower case, and with non-alphanumeric
+> characters
+> > +  replaced with '-'. E.g. the Base FVP that has two AEMv8 CPU
+> clusters has an
+> > +  executable file called FVP_Base_AEMv8A-AEMv8A, so the compatible
+> value for
 > 
-> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
-> ---
-> Depends on patches 1-4 in series
-> 
-> Changes v2 -> v4: none
-> 
-> Changes v1 -> v2:
->  * Added information about parent device in tps65217 power button
->    device-tree binding documentation (suggested by Rob)
-> 
->  .../bindings/input/tps65217-pwrbutton.txt          |  17 +++
+> Naming conventions of the exe aren't going to change?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Almost certainly will at some point, as will the very name Fixed Virtual
+Platform, what 'families' ARM produce and their naming, and the
+configuration of the 'hardware' compiled into the models.
 
->  drivers/input/misc/Kconfig                         |  10 ++
->  drivers/input/misc/Makefile                        |   1 +
->  drivers/input/misc/tps65217-pwrbutton.c            | 131 +++++++++++++++++++++
->  4 files changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/tps65217-pwrbutton.txt
->  create mode 100644 drivers/input/misc/tps65217-pwrbutton.c
+These are software models, so can be changed easily at the whim of
+marketing, or current perceived requirements from engineers and
+managers. So generally, it's a moving target, that doesn't fit nicely
+into the needs producing device-trees.
+
+-- 
+Tixy
