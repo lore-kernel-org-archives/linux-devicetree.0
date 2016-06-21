@@ -1,35 +1,34 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V4 1/1] net: ethernet: Add TSE PCS support to dwmac-socfpga
-Date: Tue, 21 Jun 2016 11:34:49 +0200
-Message-ID: <3759495.N5GR8CgQvA@wuerfel>
-References: <1466498771-18971-1-git-send-email-thloh@altera.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v9 2/4] power: reset: add reboot mode driver
+Date: Tue, 21 Jun 2016 11:32:51 +0200
+Message-ID: <576909C3.4010109@samsung.com>
+References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
+ <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
+ <5767A4C0.3080902@samsung.com> <5767A92E.5040602@rock-chips.com>
+ <5767E22F.5030207@samsung.com> <20160620144002.GY12567@windriver.com>
+ <5768DBCB.4090903@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466498771-18971-1-git-send-email-thloh@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thloh@altera.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net, preid@electromag.com.au, dinguyen@opensource.altera.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thloh85@gmail.com, cnphoon@altera.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <5768DBCB.4090903-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, June 21, 2016 1:46:11 AM CEST thloh@altera.com wrote:
-> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> index 72d82d6..dd10f2f 100644
-> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> @@ -17,9 +17,26 @@ Required properties:
->  Optional properties:
->  altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
->  		DWMAC controller is connected emac splitter.
-> +phy-mode: The phy mode the ethernet operates in
-> +altr,sgmii_to_sgmii_converter: phandle to the TSE SGMII converter
-> +
+On 06/21/2016 08:16 AM, Andy Yan wrote:
+>   I will remove the module related stuff in the next version.
+>>> Following his rationale, I think either this should be a tristate or the
+>>> module stuff should be removed.
 
-Please use '-' instead of '_' in the property names.
+How about making it tristate? I think there isn't any obstacles for this
+driver being a module. Some distros like modules.
 
-Can you explain in the patch description why you can't reference
-the converter using the normal "phy-handle" property and implement
-the converter as a phy driver?
+Best regards.
+Krzysztof
 
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
