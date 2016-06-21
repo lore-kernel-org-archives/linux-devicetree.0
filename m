@@ -1,128 +1,106 @@
-From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
-Date: Tue, 21 Jun 2016 10:19:32 +0300
-Message-ID: <87d1nbovp7.fsf@linux.intel.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com> <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com> <87h9coxq04.fsf@linux.intel.com> <5767C1B9.2060805@ti.com> <878ty0qd7q.fsf@linux.intel.com> <20160621063936.GB5108@shlinux2>
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: rockchip: add i2s nodes for RK3228 SoCs
+Date: Tue, 21 Jun 2016 15:20:51 +0800
+Message-ID: <1466493653-18611-2-git-send-email-zhengxing@rock-chips.com>
+References: <1466493653-18611-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160621063936.GB5108@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1466493653-18611-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+This patch add the i2s dt nodes for rk3228 SoCs.
 
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-Hi,
+ arch/arm/boot/dts/rk3228.dtsi |   55 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->> >>> +
->> >>> +		/* start host */
->> >>> +		ret =3D hcd_ops->add(otg->primary_hcd.hcd,
->> >>> +				   otg->primary_hcd.irqnum,
->> >>> +				   otg->primary_hcd.irqflags);
->> >>=20
->> >> this is usb_add_hcd(), is it not? Why add an indirection?
->> >
->> > I've introduced the host and gadget ops interface to get around the
->> > circular dependency issue we can't avoid.
->> > otg needs to call host/gadget functions and host/gadget also needs to
->> > call otg functions.
->>=20
->> IMO, this shows a fragility of your design. You're, now, lying to
->> usb_hcd and usb_udc and making them register into a virtual layer that
->> doesn't exist. And that layer will end up calling the real registration
->> function when some magic event happens.
->>=20
->> This is only really needed for quirky devices like dwc3 (but see more on
->> dwc3 below) where host and peripheral registers shadow each
->> other. Otherwise we would be able to always keep hcd and udc always
->> registered. They would get different interrupt statuses anyway and
->> nothing would ever break.
->>=20
->> However, when it comes to dwc3, we already have all the code necessary
->> to workaround this issue by destroying the XHCI pdev when OTG interrupt
->> says we should be peripheral (and vice-versa). DWC3 also keeps track of
->> the OTG states for those folks who really care about OTG (Hint: nobody
->> has cared for the past 10 years, why would they do so now?) and we don't
->> need a SW state machine when the HW handles that for us, right?
->>=20
->> As for chipidea, IIRC, that doesn't need a SW state machine either, but
->> I know very little about that IP and don't even have documentation on
->> it. My understanding, however, is that chipidea behaves kinda like MUSB,
->> which changes roles automatically in HW based on ID pin state.
->
-> Chipidea needs to set register for USB role manually.
-
-okay, so chipidea has private control of role. Much like dwc3. That's good.
-
->> >>> + * @otg_dev: OTG controller device, if needs to be used with OTG co=
-re.
->> >>=20
->> >> do you really know of any platform which has a separate OTG controlle=
-r?
->> >>=20
->> >
->> > Andrew had pointed out in [1] that Tegra210 has separate blocks for OT=
-G, host
->> > and gadget.
->> >
->> > [1] http://article.gmane.org/gmane.linux.ports.tegra/22969
->>=20
->> that's not an OTG controller, it's just a mux. No different than Intel's
->> mux for swapping between XHCI and peripheral-only DWC3.
->>=20
->> frankly, I would NEVER talk about OTG when type-C comes into play. They
->> are two competing standards and, apparently, type-C is winning when it
->> comes to role-swapping.
->>=20
->
-> In fact, OTG is mis-used by people. Currently, if the port is dual-role,
-> It will be considered as an OTG port.
-
-That's because "dual-role" is a non-standard OTG. Seen as people really
-didn't care about OTG, we (linux-usb folks) ended up naturally referring
-to "non-standard OTG" as "dual-role". Just to avoid confusion.
-
-> You are right, if the connector is type-c, it will be called as "type-c
-> port" by people :)
-
-oh no, that's not what I'm talking about. If you read Type-C and PD
-specs, they define their own method for data role swapping. USB OTG
-doesn't fit on top of a Type-C environment. It's not about what people
-will call it, it's really that OTG can't work on top of type-c. For
-starters, there's no ID pin ;-)
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXaOqFAAoJEIaOsuA1yqREQQMP/ike4XrLUcpb0EXEnTA7MTQn
-riNOoDu+QXpXa05SqtbYUtDO/j1gu0qzi+3KvRxnTrG74qYJwnLAzc+JrLqERgwl
-p5RY+IwFQPaI6vDYnacge9CU7mJ54vvUlfBVqy1hOVJxiBxv6ut9Fqb6urLQYIgE
-dl51I2W08d4r2QJtZMoh9znWHv+aoOLRfvRI0J872VttxigoYrVHyi47KdYQcnNf
-lrre1Cc6hWY6HslATBnwLQXl4NHPVf0JFf//PhLIAcbLusz424JFV6IZDAxVuajE
-ppgD3GKFvt8a5rQwOhMCBmuqhwc3lobbpNKI+/4jq2gL5UxKapC7b8hrZOm1baKZ
-7JFBDJqFWsdg92ULBcLbE2acbvWpsiHUv9LkvK1AKh/fEMUylUNuVWsLhVPTaLHy
-ivlOzsnotj8P0JavYjqReB5cIajAzSB8/N+3Pu1GW91FiI9JmM3Vv2k92ADh6zcU
-37GuDmtue9CWb+CEeblT02RtS23kPUuozAbpxqMIldNDAmBtGyc92DDW/UEzJIeY
-3r8oJXIzaztcK67KQQqMKtIZ6pifptRZl0l4KtwqZpfq15SqKkK1PKqy+1M1LswB
-HCFYEHufuE0BPPOp6q1x9SYLE8pUR55y/j16Ib4NlXCRg0Akw45YPe9K4gI0XWcu
-gc6KslfJxgprYQmmjVvc
-=jDch
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/rk3228.dtsi b/arch/arm/boot/dts/rk3228.dtsi
+index e23a22e..e224147 100644
+--- a/arch/arm/boot/dts/rk3228.dtsi
++++ b/arch/arm/boot/dts/rk3228.dtsi
+@@ -239,6 +239,47 @@
+ 		status = "disabled";
+ 	};
+ 
++	i2s1: i2s1@100b0000 {
++		compatible = "rockchip,rk3229-i2s", "rockchip,rk3066-i2s";
++		reg = <0x100b0000 0x4000>;
++		interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "i2s_clk", "i2s_hclk";
++		clocks = <&cru SCLK_I2S1>, <&cru HCLK_I2S1_8CH>;
++		dmas = <&pdma 14>, <&pdma 15>;
++		dma-names = "tx", "rx";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s1_bus>;
++		status = "disabled";
++	};
++
++	i2s0: i2s0@100c0000 {
++		compatible = "rockchip,rk3229-i2s", "rockchip,rk3066-i2s";
++		reg = <0x100c0000 0x4000>;
++		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "i2s_clk", "i2s_hclk";
++		clocks = <&cru SCLK_I2S0>, <&cru HCLK_I2S0_8CH>;
++		dmas = <&pdma 11>, <&pdma 12>;
++		dma-names = "tx", "rx";
++		status = "disabled";
++	};
++
++	i2s2: i2s2@100e0000 {
++		compatible = "rockchip,rk3229-i2s", "rockchip,rk3066-i2s";
++		reg = <0x100e0000 0x4000>;
++		interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-names = "i2s_clk", "i2s_hclk";
++		clocks = <&cru SCLK_I2S2>, <&cru HCLK_I2S2_2CH>;
++		dmas = <&pdma 0>, <&pdma 1>;
++		dma-names = "tx", "rx";
++		status = "disabled";
++	};
++
+ 	pwm0: pwm@110b0000 {
+ 		compatible = "rockchip,rk3288-pwm";
+ 		reg = <0x110b0000 0x10>;
+@@ -509,6 +550,20 @@
+ 			};
+ 		};
+ 
++		i2s1 {
++			i2s1_bus: i2s1-bus {
++				rockchip,pins = <0 8 RK_FUNC_1 &pcfg_pull_none>,
++						<0 9 RK_FUNC_1 &pcfg_pull_none>,
++						<0 11 RK_FUNC_1 &pcfg_pull_none>,
++						<0 12 RK_FUNC_1 &pcfg_pull_none>,
++						<0 13 RK_FUNC_1 &pcfg_pull_none>,
++						<0 14 RK_FUNC_1 &pcfg_pull_none>,
++						<1 2 RK_FUNC_1 &pcfg_pull_none>,
++						<1 4 RK_FUNC_1 &pcfg_pull_none>,
++						<1 5 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
++
+ 		pwm0 {
+ 			pwm0_pin: pwm0-pin {
+ 				rockchip,pins = <3 21 RK_FUNC_1 &pcfg_pull_none>;
+-- 
+1.7.9.5
