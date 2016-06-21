@@ -1,83 +1,100 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v9 2/4] power: reset: add reboot mode driver
-Date: Tue, 21 Jun 2016 14:16:43 +0800
-Message-ID: <5768DBCB.4090903@rock-chips.com>
-References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
- <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
- <5767A4C0.3080902@samsung.com> <5767A92E.5040602@rock-chips.com>
- <5767E22F.5030207@samsung.com> <20160620144002.GY12567@windriver.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+Date: Tue, 21 Jun 2016 14:05:17 +0800
+Message-ID: <20160621060517.GA5108@shlinux2>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+ <1465564043-27163-9-git-send-email-rogerq@ti.com>
+ <575E672E.5070603@ti.com>
+ <87h9coxq04.fsf@linux.intel.com>
+ <20160620114904.GC26936@shlinux2>
+ <8737o8qd00.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160620144002.GY12567@windriver.com>
+Content-Disposition: inline
+In-Reply-To: <8737o8qd00.fsf@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Roger Quadros <rogerq@ti.com>, peter.chen@freescale.com, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul:
+On Mon, Jun 20, 2016 at 03:08:15PM +0300, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Peter Chen <hzpeterchen@gmail.com> writes:
+> >> Roger Quadros <rogerq@ti.com> writes:
+> >> > It provides APIs for the following tasks
+> >> >
+> >> > - Registering an OTG/dual-role capable controller
+> >> > - Registering Host and Gadget controllers to OTG core
+> >> > - Providing inputs to and kicking the OTG state machine
+> >> 
+> >> I think I have already mentioned this, but after over 10 years of OTG,
+> >> nobody seems to care about it, why are we still touching at all I don't
+> >> know. For common non-OTG role-swapping we really don't need any of this
+> >> and, quite frankly, I fail to see enough users for this.
+> >> 
+> >> Apparently there's only chipidea which, AFAICT, already had working
+> >> dual-role before this OTG State Machine was added to the kernel.
+> >
+> > Some users would like to know if vendor's platform is OTG compliance,
+> > so we add it to pass usb.org USB OTG certification test.
+> 
+> I strongly doubt that's really what they mean. IMHO, users want to know
+> if they can swap roles. Ask them if they are really going for OTG
+> certification. Ask them if they have an OPT tester. Ask them if they
+> really want all those timers. If they want HNP polling, etc etc etc.
+> 
+> So far, I haven't seen anybody talking about real USB OTG (the spec)
+> when they say OTG. Usually they just mean "a method for swapping between
+> host and peripheral roles, but we really don't want all the extra cost
+> of the OTG specification".
+> 
 
-On 2016=E5=B9=B406=E6=9C=8820=E6=97=A5 22:40, Paul Gortmaker wrote:
-> [Re: [PATCH v9 2/4] power: reset: add reboot mode driver] On 20/06/20=
-16 (Mon 14:31) Krzysztof Kozlowski wrote:
->
->> On 06/20/2016 10:28 AM, Andy Yan wrote:
->>> Hi Krzysztof:
->>>
->>> On 2016=E5=B9=B406=E6=9C=8820=E6=97=A5 16:09, Krzysztof Kozlowski w=
-rote:
->>>> On 06/20/2016 08:38 AM, Andy Yan wrote:
-> [...]
->
->>>>> +
->>>>> +config SYSCON_REBOOT_MODE
->>>>> +    bool "Generic SYSCON regmap reboot mode driver"
->>>> Why not tristate?
->>>     I see many reset drivers in this directories  use bool, so I fo=
-llow
->>> them.
-> Andy - understood, but mistakes done in the past do not justify
-> repeating them again in the present.  OK, this is not strictly a mist=
-ake
-> in that it causes an error, but it isn't an ideal approach.
->
->> +Cc Paul,
->>
->> I don't mind that although I don't see any particular objections for
->> making it module-capable. In the same time I just reminded myself ab=
-out
->> Paul Gortmaker's long effort (like [1] [2]) about removing module
->> capability from non-modular drivers.
-> Thanks -- it is nice to see that people are starting to add this to
-> their review checklist ; early on they were getting added faster than=
- I
-> could remove them.  :-(   But I think we are making ground now.
->
-> For this case, I don't have any bias for it being built-in vs. being
-> modular, so long as the code is actually consistent with the Kconfig.
->
-> For existing bool settings I just remove the modular references, sinc=
-e I
-> can't be extending the functionality to include a modular usage when =
-I
-> can't test it or even be sure if a module has a sensible use case.
->
-> Paul.
-> --
+That's what I thought before, but the request from the Marketing guy is
+"To prove the SoC is OTG compliance, support HNP and SRP", don't you
+see the SoC reference manual say "it supports HNP and SRP"?
 
-   I will remove the module related stuff in the next version.
->> Following his rationale, I think either this should be a tristate or=
- the
->> module stuff should be removed.
->>
->> Best regards,
->> Krzysztof
->>
->> [1] https://lkml.org/lkml/2016/2/21/180
->> [2] https://lkml.org/lkml/2016/6/13/682
->>
->>
->
->
+If there is no request, who else wants to implement so complicated FSM
+but seldom use cases, and go to pass OTG compliance test (tested by PET).
+
+> > For the real use case, some Carplay platforms need it.
+> 
+> Carplay does *NOT* rely on OTG. Apple has its own proprietary and closed
+> specification which is not OTG-compliant.
+> 
+
+Yes, it is not OTG-compliant, but it can co-work with some standard OTG FSM
+states to finish role swap. Notice, it needs to swap role without
+disconnect cable.
+
+> >> > diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+> >> > index f4fc0aa..1d74fb8 100644
+> >> > --- a/include/linux/usb/gadget.h
+> >> > +++ b/include/linux/usb/gadget.h
+> >> > @@ -328,6 +328,7 @@ struct usb_gadget_ops {
+> >> >   * @in_epnum: last used in ep number
+> >> >   * @mA: last set mA value
+> >> >   * @otg_caps: OTG capabilities of this gadget.
+> >> > + * @otg_dev: OTG controller device, if needs to be used with OTG core.
+> >> 
+> >> do you really know of any platform which has a separate OTG controller?
+> >> 
+> >
+> > It may not be a real separate OTG controller. It can be a hardware part
+> > (external connector, external IC, SoC OTG register area, etc) to handle vbus
+> > ,id and other signals which are used for role swap.
+> 
+> That's already solved. EXTCON solved that years back and OMAP has been
+> using EXTCON to program its UTMI mailbox.
+> 
+
+No, that's not the same thing, it does not include the swap role.
+Consider the use case the host driver is at host/ and udc driver is
+at gadget/udc, how to finish to role swap?
+
+-- 
+
+Best Regards,
+Peter Chen
