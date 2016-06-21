@@ -1,62 +1,175 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: Re: [RESEND PATCH v3 1/2] device property: Add
- function to search for named child of device
-Date: Tue, 21 Jun 2016 12:27:28 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D4644326@SW-EX-MBX01.diasemi.com>
-References: <cover.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
- <866c9edccdd89805f6a0c0aa92f8a78ae616ed61.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
- <20160621111126.GX1739@lahna.fi.intel.com>
- <28758107.YROb1rVtm6@vostro.rjw.lan>
- <2E89032DDAA8B9408CB92943514A0337D46442AB@SW-EX-MBX01.diasemi.com>
- <20160621115947.GZ1739@lahna.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160621115947.GZ1739@lahna.fi.intel.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, "Opensource [Adam
- Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, "Rafael J.Wysocki" <rafael.j.wysocki@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Robert Moore <robert.moore@intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lv Zheng <lv.zheng@intel.com>, Takashi Iwai <tiwai@suse.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [PATCH v2] net: stmmac: dwmac-rk: add rk3228-specific data
+Date: Tue, 21 Jun 2016 20:33:28 +0800
+Message-ID: <1466512409-18855-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, roger.chen@rock-chips.com, Xing Zheng <zhengxing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-21 June 2016 13:00, Mika Westerberg wrote:
+Add constants and callback functions for the dwmac on rk3228/rk3229 socs.
+As can be seen, the base structure is the same, only registers and the
+bits in them moved slightly.
 
-> > > > > +static inline bool acpi_data_node_match(struct fwnode_handle *fwnode,
-> > > > > +					const char *name)
-> > > > > +{
-> > > > > +	return is_acpi_data_node(fwnode) ?
-> > > > > +		(!strcasecmp(to_acpi_data_node(fwnode)->name, name)) :
-> false;
-> > > > > +}
-> > > >
-> > > > Looks fine to me.
-> > > >
-> > > > One question - is it expected that matching ACPI data nodes is always
-> > > > case insensitive?
-> > >
-> > > That would not be a correct expectation in theory, although I don't think it
-> > > really matters in practice.
-> >
-> > From my reading of the Hierarchical Data Extension and ACPI Spec, I thought
-> > that was the case (section 19.3.1 ASL Names - ASL names are not case-sensitive
-> > and will be converted to upper case). Am I misreading the documents/missing
-> > something else?
-> 
-> Those are names in the ASL code itself.
-> 
-> What we are talking here are actually just string values (name of the
-> data node).
+Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+---
 
-Understood. For DT they are case insensitive (except for Sparc platforms) so
-having ACPI match seems to make sense. I can add a comment indicating this,
-just for clarity.
+Changes in v2:
+- the "rk322x" is not clear to SoC decription, rename it to "rk3228"
+
+ .../devicetree/bindings/net/rockchip-dwmac.txt     |    3 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     |  117 ++++++++++++++++++++
+ 2 files changed, 119 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+index 93eac7c..cccd945 100644
+--- a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
++++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+@@ -3,7 +3,8 @@ Rockchip SoC RK3288 10/100/1000 Ethernet driver(GMAC)
+ The device node has following properties.
+ 
+ Required properties:
+- - compatible: Can be one of "rockchip,rk3288-gmac", "rockchip,rk3368-gmac"
++ - compatible: Can be one of "rockchip,rk3228-gmac", "rockchip,rk3288-gmac",
++                             "rockchip,rk3368-gmac"
+  - reg: addresses and length of the register sets for the device.
+  - interrupts: Should contain the GMAC interrupts.
+  - interrupt-names: Should contain the interrupt names "macirq".
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+index 0cd3ecf..25eb797 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -72,6 +72,122 @@ struct rk_priv_data {
+ #define GRF_BIT(nr)	(BIT(nr) | BIT(nr+16))
+ #define GRF_CLR_BIT(nr)	(BIT(nr+16))
+ 
++#define RK3228_GRF_MAC_CON0	0x0900
++#define RK3228_GRF_MAC_CON1	0x0904
++
++/* RK3228_GRF_MAC_CON0 */
++#define RK3228_GMAC_CLK_RX_DL_CFG(val)	HIWORD_UPDATE(val, 0x7F, 7)
++#define RK3228_GMAC_CLK_TX_DL_CFG(val)	HIWORD_UPDATE(val, 0x7F, 0)
++
++/* RK3228_GRF_MAC_CON1 */
++#define RK3228_GMAC_PHY_INTF_SEL_RGMII	\
++		(GRF_BIT(4) | GRF_CLR_BIT(5) | GRF_CLR_BIT(6))
++#define RK3228_GMAC_PHY_INTF_SEL_RMII	\
++		(GRF_CLR_BIT(4) | GRF_CLR_BIT(5) | GRF_BIT(6))
++#define RK3228_GMAC_FLOW_CTRL		GRF_BIT(3)
++#define RK3228_GMAC_FLOW_CTRL_CLR	GRF_CLR_BIT(3)
++#define RK3228_GMAC_SPEED_10M		GRF_CLR_BIT(2)
++#define RK3228_GMAC_SPEED_100M		GRF_BIT(2)
++#define RK3228_GMAC_RMII_CLK_25M	GRF_BIT(7)
++#define RK3228_GMAC_RMII_CLK_2_5M	GRF_CLR_BIT(7)
++#define RK3228_GMAC_CLK_125M		(GRF_CLR_BIT(8) | GRF_CLR_BIT(9))
++#define RK3228_GMAC_CLK_25M		(GRF_BIT(8) | GRF_BIT(9))
++#define RK3228_GMAC_CLK_2_5M		(GRF_CLR_BIT(8) | GRF_BIT(9))
++#define RK3228_GMAC_RMII_MODE		GRF_BIT(10)
++#define RK3228_GMAC_RMII_MODE_CLR	GRF_CLR_BIT(10)
++#define RK3228_GMAC_TXCLK_DLY_ENABLE	GRF_BIT(0)
++#define RK3228_GMAC_TXCLK_DLY_DISABLE	GRF_CLR_BIT(0)
++#define RK3228_GMAC_RXCLK_DLY_ENABLE	GRF_BIT(1)
++#define RK3228_GMAC_RXCLK_DLY_DISABLE	GRF_CLR_BIT(1)
++
++static void rk3228_set_to_rgmii(struct rk_priv_data *bsp_priv,
++				int tx_delay, int rx_delay)
++{
++	struct device *dev = &bsp_priv->pdev->dev;
++
++	if (IS_ERR(bsp_priv->grf)) {
++		dev_err(dev, "Missing rockchip,grf property\n");
++		return;
++	}
++
++	regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
++		     RK3228_GMAC_PHY_INTF_SEL_RGMII |
++		     RK3228_GMAC_RMII_MODE_CLR |
++		     RK3228_GMAC_RXCLK_DLY_ENABLE |
++		     RK3228_GMAC_TXCLK_DLY_ENABLE);
++
++	regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON0,
++		     RK3228_GMAC_CLK_RX_DL_CFG(rx_delay) |
++		     RK3228_GMAC_CLK_TX_DL_CFG(tx_delay));
++}
++
++static void rk3228_set_to_rmii(struct rk_priv_data *bsp_priv)
++{
++	struct device *dev = &bsp_priv->pdev->dev;
++
++	if (IS_ERR(bsp_priv->grf)) {
++		dev_err(dev, "Missing rockchip,grf property\n");
++		return;
++	}
++
++	regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
++		     RK3228_GMAC_PHY_INTF_SEL_RMII |
++		     RK3228_GMAC_RMII_MODE);
++
++	/* set MAC to RMII mode */
++	regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1, GRF_BIT(11));
++}
++
++static void rk3228_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
++{
++	struct device *dev = &bsp_priv->pdev->dev;
++
++	if (IS_ERR(bsp_priv->grf)) {
++		dev_err(dev, "Missing rockchip,grf property\n");
++		return;
++	}
++
++	if (speed == 10)
++		regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
++			     RK3228_GMAC_CLK_2_5M);
++	else if (speed == 100)
++		regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
++			     RK3228_GMAC_CLK_25M);
++	else if (speed == 1000)
++		regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
++			     RK3228_GMAC_CLK_125M);
++	else
++		dev_err(dev, "unknown speed value for RGMII! speed=%d", speed);
++}
++
++static void rk3228_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
++{
++	struct device *dev = &bsp_priv->pdev->dev;
++
++	if (IS_ERR(bsp_priv->grf)) {
++		dev_err(dev, "Missing rockchip,grf property\n");
++		return;
++	}
++
++	if (speed == 10)
++		regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
++			     RK3228_GMAC_RMII_CLK_2_5M |
++			     RK3228_GMAC_SPEED_10M);
++	else if (speed == 100)
++		regmap_write(bsp_priv->grf, RK3228_GRF_MAC_CON1,
++			     RK3228_GMAC_RMII_CLK_25M |
++			     RK3228_GMAC_SPEED_100M);
++	else
++		dev_err(dev, "unknown speed value for RMII! speed=%d", speed);
++}
++
++static const struct rk_gmac_ops rk3228_ops = {
++	.set_to_rgmii = rk3228_set_to_rgmii,
++	.set_to_rmii = rk3228_set_to_rmii,
++	.set_rgmii_speed = rk3228_set_rgmii_speed,
++	.set_rmii_speed = rk3228_set_rmii_speed,
++};
++
+ #define RK3288_GRF_SOC_CON1	0x0248
+ #define RK3288_GRF_SOC_CON3	0x0250
+ 
+@@ -604,6 +720,7 @@ static int rk_gmac_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id rk_gmac_dwmac_match[] = {
++	{ .compatible = "rockchip,rk3228-gmac", .data = &rk3228_ops },
+ 	{ .compatible = "rockchip,rk3288-gmac", .data = &rk3288_ops },
+ 	{ .compatible = "rockchip,rk3368-gmac", .data = &rk3368_ops },
+ 	{ }
+-- 
+1.7.9.5
