@@ -1,183 +1,168 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: dts: juno: add coresight support
-Date: Tue, 21 Jun 2016 12:27:04 +0100
-Message-ID: <57692488.2030507@arm.com>
-References: <1465228765-14038-1-git-send-email-sudeep.holla@arm.com>
- <1465228765-14038-2-git-send-email-sudeep.holla@arm.com>
- <CAOesGMjQNEOcmYpUAxUxBJLyUYZQuRKK48a31Ys9LuTJFWqMFA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMjQNEOcmYpUAxUxBJLyUYZQuRKK48a31Ys9LuTJFWqMFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: Using DT overlays for adding virtual hardware
+Date: Tue, 21 Jun 2016 14:35:26 +0300
+Message-ID: <EA3C5627-67A4-4120-BA56-D563F2D91CF8@konsulko.com>
+References: <575828C0.5000008@siemens.com> <20160608151745.GB13355@leverpostej> <28BC1AEC-6A7D-4A97-82F4-5670E884C41D@konsulko.com> <20160608162343.GD13355@leverpostej> <999B1CFF-C204-4C19-AE76-AF9DB54E51E4@konsulko.com> <57584A2C.4030507@siemens.com> <5759069B.4080800@siemens.com> <57691342.2020502@siemens.com> <CFCE0FAF-991B-487B-A684-09A04EFC3F46@konsulko.com> <57692378.8010909@siemens.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <jailhouse-dev+bncBCV5BG4UVENBBA6NUS5QKGQENEKT7TI@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <57692378.8010909@siemens.com>
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jailhouse <jailhouse-dev@googlegroups.com>, =?utf-8?Q?M=C3=A5ns_Rullg=C3=A5rd?= <mans@denx.de>, Antonios Motakis <antonios.motakis@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jan,
+
+> On Jun 21, 2016, at 14:22 , Jan Kiszka <jan.kiszka@siemens.com> wrote:
+>=20
+> On 2016-06-21 12:24, Pantelis Antoniou wrote:
+>> Hi Jan,
+>>=20
+>>> On Jun 21, 2016, at 13:13 , Jan Kiszka <jan.kiszka@siemens.com> wrote:
+>>>=20
+>>> Hi Pantelis,
+>>>=20
+>>> coming back to this topic:
+>>>=20
+>>> On 2016-06-09 08:03, Jan Kiszka wrote:
+>>>> OK, trial and error, and some interesting insights: I've played with D=
+T
+>>>> fragments and the overlay configfs patch of Pantelis [1] to have a
+>>>> convenient start. Interestingly, I wasn't able to load a fragment that
+>>>> followed the format specification for overlays ("Failed to resolve
+>>>> tree"). By chance, I got this one working:
+>>>>=20
+>>>> /dts-v1/;
+>>>> / {
+>>>> 	fragment {
+>>>> 		target-path =3D "/soc@01c00000";
+>>>> 		__overlay__ {
+>>>> 			#address-cells =3D <2>;
+>>>> 			#size-cells =3D <2>;
+>>>>=20
+>>>> 			vpci@0x2000000 {
+>>>> 				compatible =3D "pci-host-cam-generic";
+>>>> 				device_type =3D "pci";
+>>>> 				#address-cells =3D <3>;
+>>>> 				#size-cells =3D <2>;
+>>>> 				reg =3D <0 0x2000000 0 0x1000000>;
+>>>> 				ranges =3D
+>>>> 					<0x02000000 0x00 0x10000000 0x00 0x10000000 0x00 0x30000000>;
+>>>> 			};
+>>>> 		};
+>>>> 	};
+>>>> };
+>>>>=20
+>>>> It successfully makes a BananaPi kernel add a pci host with the
+>>>> specified config space and MMIO window.
+>>>>=20
+>>>> [   81.619583] PCI host bridge /soc@01c00000/vpci@0x2000000 ranges:
+>>>> [   81.619610]   No bus range found for /soc@01c00000/vpci@0x2000000, =
+using [bus 00-ff]
+>>>> [   81.619634]   MEM 0x10000000..0x3fffffff -> 0x10000000
+>>>> [   81.620482] pci-host-generic 2000000.vpci: ECAM at [mem 0x02000000-=
+0x02ffffff] for [bus 00-ff]
+>>>> [   81.620779] pci-host-generic 2000000.vpci: PCI host bridge to bus 0=
+000:00
+>>>> [   81.620801] pci_bus 0000:00: root bus resource [bus 00-ff]
+>>>> [   81.620814] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3f=
+ffffff]
+>>>> [   81.620851] PCI: bus0: Fast back to back transfers enabled
+>>>>=20
+>>>> So, no /plugin/ statement, no phandles resolution. This format even
+>>>> builds with the in-kernel dtc. Any explanations? Does the code make
+>>>> sense (at least it builds without warnings)?
+>>>>=20
+>>>> Now I need to back this with some code in Jailhouse.
+>>>=20
+>>> Meanwhile I got a virtual PCI device recognized by Linux when running
+>>> over Jailhouse. However, my hack above doesn't get me to proper
+>>> interrupt mapping yet. This is what I was trying with upstream dtc:
+>>>=20
+>>> /dts-v1/;
+>>> / {
+>>> 	compatible =3D "lemaker,bananapi", "allwinner,sun7i-a20";
+>>>=20
+>>> 	fragment@0 {
+>>> 		target-path =3D "/soc@01c00000";
+>>> 		__overlay__ {
+>>> 			#address-cells =3D <2>;
+>>> 			#size-cells =3D <2>;
+>>>=20
+>>> 			vpci@2000000 {
+>>> 				compatible =3D "pci-host-ecam-generic";
+>>> 				device_type =3D "pci";
+>>> 				bus-range =3D <0 0>;
+>>> 				#address-cells =3D <3>;
+>>> 				#size-cells =3D <2>;
+>>> 				#interrupt-cells =3D <1>;
+>>> 				interrupt-map-mask =3D <0 0 0 7>;
+>>> 				interrupt-map =3D <0 0 0 1 &gic 0 0 0 123 4>,
+>>> 						<0 0 0 2 &gic 0 0 0 124 4>,
+>>> 						<0 0 0 3 &gic 0 0 0 125 4>,
+>>> 						<0 0 0 4 &gic 0 0 0 126 4>;
+>>> 				reg =3D <0 0x2000000 0 0x100000>;
+>>> 				ranges =3D
+>>> 					<0x02000000 0x00 0x10000000 0x00 0x10000000 0x00 0x30000000>;
+>>> 			};
+>>> 		};
+>>> 	};
+>>>=20
+>>> 	gic: fragment@1 {
+>>> 		target-path =3D "/soc@01c00000/interrupt-controller@01c81000";
+>>> 		__overlay__ {
+>>> 		};
+>>> 	};
+>>> };
+>>>=20
+>>=20
+>> ^ This is not going to work: You need the reference to the real gic not =
+the empty fragment
+>> here that has a target there.
+>>=20
+>> You need to compile with the correct dtc, and you also need to compile t=
+he base dts
+>> with dtc too, using the -@ flag. You can hack around it by adding someth=
+ing like
+>>=20
+>> __symbols__ {
+>> 	gic =3D "/soc@01c00000/interrupt-controller@01c81000=E2=80=9D;
+>> };
+>>=20
+>> But you really need the __symbols__ node of the base dts generated by th=
+e dtc proper cause
+>> the above is a dirty hack.
+>>=20
+>=20
+> OK, re-building the kernel with DTC=3D"/your/dtc -@", thus building the
+> base dtb with symbols, fixes proper overlay format loading.
+>=20
+> However, no luck yet with the interrupt topic - maybe a different issue.
+> Digging deeper=E2=80=A6
+>=20
+Remove the gic: fragment and build both the kernel and the overlay with the=
+ -@ option.
+That=E2=80=99s what makes it not to work.
 
 
-On 21/06/16 06:41, Olof Johansson wrote:
-> Hi,
->
-> Some nits below.
->
+> Thanks,
+> Jan
+>=20
+> --=20
+> Siemens AG, Corporate Technology, CT RDA ITP SES-DE
+> Corporate Competence Center Embedded Linux
 
-My bad, I blindly copy-pasted it from vexpress TC2 platform.
-
-> On Mon, Jun 6, 2016 at 8:59 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> Most of the debug-related components on Juno are located in the coreSight
->> subsystem while others are located in the Cortex-Axx clusters, the SCP
->> subsystem, and in the main system.
->>
->> Each core in the two processor clusters contain an Embedded Trace
->> Macrocell(ETM) which generates real-time trace information that trace
->> tools can use and an ATB trace output that is sent to a funnel before
->> going to the CoreSight subsystem.
->>
->> The trace output signals combine with two trace expansions using another
->> funnel and fed into the Embedded Trace FIFO(ETF0).
->>
->> The output trace data stream of the funnel is then replicated before it
->> is sent to either the:
->> - Trace Port Interface Unit(TPIU), that sends it out using the trace port.
->> - ETR that can write the trace data to memory located in the application
->>    memory space
->>
->> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
->> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>   arch/arm64/boot/dts/arm/juno-base.dtsi | 296 +++++++++++++++++++++++++++++++++
->>   arch/arm64/boot/dts/arm/juno-r1.dts    |  24 +++
->>   arch/arm64/boot/dts/arm/juno-r2.dts    |  24 +++
->>   arch/arm64/boot/dts/arm/juno.dts       |  24 +++
->>   4 files changed, 368 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
->> index dee2386d3b9b..90a8710f7032 100644
->> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
->> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
->> @@ -56,6 +56,302 @@
->>                               <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
->>          };
->>
->> +       /*
->> +        * Juno TRMs specify the size for these coresight components as 64K.
->> +        * The actual size is just 4K though 64K is reserved. Access to the
->> +        * unmapped reserved region results in a DECERR response.
->> +        */
->> +       etf@20010000 {
->
-> Would it make sense to name it something like trace-fifo instead? We
-> normally name the nodes based on type of device (ethernet@, pci@,
-> etc).
->
-
-As Suzuki already pointed out, these are standard acronyms used in
-various CoreSight specifications. Let me know if you need them to be
-expanded instead of abbreviations.
-
->
->> +               compatible = "arm,coresight-tmc", "arm,primecell";
->
-> Is there a more specific compatible needed here, or does
-> arm,coresight-tmc give you all the information you need on how to use
-> this interface?
->
-> The bindings doc is sort of sparse in this area, all it says is "you
-> might use one of these compatibles".
->
-
-Again Suzuki commented on that. I will leave it to Mathieu who is the
-author of the binding to comment further(if any).
-
-But I agree, it would be good to have one line description on each of
-them as they are pretty much standard primecells or even URL to their
-specifications.
-
->> +       tpiu@20030000 {
->
-> Again, these names are not great. Luckily they don't affect the
-> binding, so they can be fixed. What would be a more human readable and
-> functionally describing name here?
->
->> +               compatible = "arm,coresight-tpiu", "arm,primecell";
->> +               reg = <0 0x20030000 0 0x1000>;
->> +
->> +               clocks = <&soc_smc50mhz>;
->> +               clock-names = "apb_pclk";
->> +               port {
->> +                       tpiu_in_port: endpoint {
->> +                               slave-mode;
->> +                               remote-endpoint = <&replicator_out_port0>;
->> +                       };
->> +               };
->> +       };
->> +
->> +       main_funnel@20040000 {
->
-> Underscores are usually frowned upon. funnel@ or ideally a better more
-> descriptive name should be used here.
-> Use dashes if you really have to.
->
-
-Agreed and fixed locally now.
-
-[...]
-
->> +               compatible = "arm,coresight-tmc", "arm,primecell";
->> +               reg = <0 0x20070000 0 0x1000>;
->> +
->> +               clocks = <&soc_smc50mhz>;
->> +               clock-names = "apb_pclk";
->> +               port {
->> +                       etr_in_port: endpoint {
->> +                               slave-mode;
->> +                               remote-endpoint = <&replicator_out_port1>;
->> +                       };
->> +               };
->> +       };
->> +
->> +       coresight-replicator {
->
-> Hm. It'd sort of be nice to stick all the coresight stuff under one
-> node instead of having them all at the toplevel, but that doesn't
-> really go with the concept of having each device where it's at in the
-> bus/address hierarchy.
->
-
-I understand.
-
-> Should _all_ the nodes be at the toplevel though? Looks like you have
-> a few address ranges that most of the toplevel devices are at, is
-> there really not a physical bus they're each connected to that you can
-> describe?
->
-
-I need to look at the Juno documents again and refine. It may affect
-other devices too. Can that be addressed later separately ?
-
-[...]
-
-
->> +
->> +       etm0: etm@22040000 {
->
-> If this file is sorted on reg values, then this node and the two after
-> are out of order.
->
-
-Yes that was the intent, will fix it. But I see some oddities, may be
-will fix those once I address the address/bus hierarchy.
-
--- 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+Jailhouse" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to jailhouse-dev+unsubscribe@googlegroups.com.
+For more options, visit https://groups.google.com/d/optout.
