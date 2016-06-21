@@ -1,205 +1,219 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: Re: [RESEND PATCH v3 1/2] device property: Add
- function to search for named child of device
-Date: Tue, 21 Jun 2016 10:20:15 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D464422E@SW-EX-MBX01.diasemi.com>
-References: <cover.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
- <866c9edccdd89805f6a0c0aa92f8a78ae616ed61.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <866c9edccdd89805f6a0c0aa92f8a78ae616ed61.1466421714.git.Adam.Thomson.Opensource@diasemi.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, "Rafael J.Wysocki" <rafael.j.wysocki@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Len Brown <lenb@kernel.org>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Support Opensource <Support.Opensource@diasemi.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: Using DT overlays for adding virtual hardware
+Date: Tue, 21 Jun 2016 13:24:43 +0300
+Message-ID: <CFCE0FAF-991B-487B-A684-09A04EFC3F46@konsulko.com>
+References: <575828C0.5000008@siemens.com> <20160608151745.GB13355@leverpostej> <28BC1AEC-6A7D-4A97-82F4-5670E884C41D@konsulko.com> <20160608162343.GD13355@leverpostej> <999B1CFF-C204-4C19-AE76-AF9DB54E51E4@konsulko.com> <57584A2C.4030507@siemens.com> <5759069B.4080800@siemens.com> <57691342.2020502@siemens.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <jailhouse-dev+bncBCV5BG4UVENBB35LUS5QKGQE2HNIN3Y@googlegroups.com>
+Sender: jailhouse-dev@googlegroups.com
+In-Reply-To: <57691342.2020502@siemens.com>
+List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
+List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
+List-Archive: <https://groups.google.com/group/jailhouse-dev
+List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
+ <https://groups.google.com/group/jailhouse-dev/subscribe>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jailhouse <jailhouse-dev@googlegroups.com>, =?utf-8?Q?M=C3=A5ns_Rullg=C3=A5rd?= <mans@denx.de>, Antonios Motakis <antonios.motakis@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20 June 2016 12:39, Adam Thomson wrote:
+Hi Jan,
 
-> For device nodes in both DT and ACPI, it possible to have named
-> child nodes which contain properties (an existing example being
-> gpio-leds). This adds a function to find a named child node for
-> a device which can be used by drivers for property retrieval.
-> 
-> For DT data node name matching, of_node_cmp() and similar functions
-> are made available outside of CONFIG_OF block so the new function
-> can reference these for DT and non-DT builds.
-> 
-> For ACPI data node name matching, a helper function is also added
-> which returns false if CONFIG_ACPI is not set, otherwise it
-> performs a string comparison on the data node name. This avoids
-> using the acpi_data_node struct for non CONFIG_ACPI builds,
-> which would otherwise cause a build failure.
-> 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> Tested-by: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> Changes in v3:
->  - Move of_*_cmp() functions in of.h outside of CONFIG_OF block so they are
->    available for non-DT builds
->  - In device_get_named_child_node(), use of_node_cmp() helper macro instead of
->    strcasecmp() (node names not alway case insensitive, depending on platform).
-> 
-> Changes in v2:
->  - Rebase to v4.7-rc1
-> 
->  drivers/base/property.c  | 28 ++++++++++++++++++++++++++++
->  include/acpi/acpi_bus.h  |  7 +++++++
->  include/linux/acpi.h     |  6 ++++++
->  include/linux/of.h       | 14 +++++++-------
->  include/linux/property.h |  3 +++
->  5 files changed, 51 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index f38c21d..43a36d6 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -888,6 +888,34 @@ struct fwnode_handle *device_get_next_child_node(struct
-> device *dev,
->  EXPORT_SYMBOL_GPL(device_get_next_child_node);
-> 
->  /**
-> + * device_get_named_child_node - Return first matching named child node handle
-> + * @dev: Device to find the named child node for.
-> + * @childname: String to match child node name against.
-> + */
-> +struct fwnode_handle *device_get_named_child_node(struct device *dev,
-> +						  const char *childname)
-> +{
-> +	struct fwnode_handle *child;
-> +
-> +	/*
-> +	 * Find first matching named child node of this device.
-> +	 * For ACPI this will be a data only sub-node.
-> +	 */
-> +	device_for_each_child_node(dev, child) {
-> +		if (is_of_node(child)) {
-> +			if (!of_node_cmp(to_of_node(child)->name, childname))
-> +				return child;
-> +		} else if (is_acpi_data_node(child)) {
-> +			if (acpi_data_node_match(child, childname))
-> +				return child;
-> +		}
-> +	}
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(device_get_named_child_node);
-> +
-> +/**
->   * fwnode_handle_put - Drop reference to a device node
->   * @fwnode: Pointer to the device node to drop the reference to.
->   *
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 788c6c3..993bdd0 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -420,6 +420,13 @@ static inline struct acpi_data_node
-> *to_acpi_data_node(struct fwnode_handle *fwn
->  		container_of(fwnode, struct acpi_data_node, fwnode) : NULL;
->  }
-> 
-> +static inline bool acpi_data_node_match(struct fwnode_handle *fwnode,
-> +					const char *name)
-> +{
-> +	return is_acpi_data_node(fwnode) ?
-> +		(!strcasecmp(to_acpi_data_node(fwnode)->name, name)) : false;
-> +}
-> +
->  static inline struct fwnode_handle *acpi_fwnode_handle(struct acpi_device *adev)
->  {
->  	return &adev->fwnode;
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 288fac5..03039c4 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -568,6 +568,12 @@ static inline struct acpi_data_node
-> *to_acpi_data_node(struct fwnode_handle *fwn
->  	return NULL;
->  }
-> 
-> +static inline bool acpi_data_node_match(struct fwnode_handle *fwnode,
-> +					const char *name)
-> +{
-> +	return false;
-> +}
-> +
->  static inline struct fwnode_handle *acpi_fwnode_handle(struct acpi_device *adev)
->  {
->  	return NULL;
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 74eb28c..310e32f 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -238,13 +238,6 @@ static inline unsigned long of_read_ulong(const __be32
-> *cell, int size)
->  #define OF_ROOT_NODE_SIZE_CELLS_DEFAULT 1
->  #endif
-> 
-> -/* Default string compare functions, Allow arch asm/prom.h to override */
-> -#if !defined(of_compat_cmp)
-> -#define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
-> -#define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
-> -#define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
-> -#endif
-> -
->  #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
->  #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
-> 
-> @@ -726,6 +719,13 @@ static inline void of_property_clear_flag(struct property *p,
-> unsigned long flag
->  #define of_match_node(_matches, _node)	NULL
->  #endif /* CONFIG_OF */
-> 
-> +/* Default string compare functions, Allow arch asm/prom.h to override */
-> +#if !defined(of_compat_cmp)
-> +#define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
-> +#define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
-> +#define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
-> +#endif
-> +
->  #if defined(CONFIG_OF) && defined(CONFIG_NUMA)
->  extern int of_node_to_nid(struct device_node *np);
->  #else
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index ecab11e..3a2f9ae 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -77,6 +77,9 @@ struct fwnode_handle *device_get_next_child_node(struct
-> device *dev,
->  	for (child = device_get_next_child_node(dev, NULL); child;	\
->  	     child = device_get_next_child_node(dev, child))
-> 
-> +struct fwnode_handle *device_get_named_child_node(struct device *dev,
-> +						  const char *childname);
-> +
->  void fwnode_handle_put(struct fwnode_handle *fwnode);
-> 
->  unsigned int device_get_child_node_count(struct device *dev);
-> --
-> 1.9.3
+> On Jun 21, 2016, at 13:13 , Jan Kiszka <jan.kiszka@siemens.com> wrote:
+>=20
+> Hi Pantelis,
+>=20
+> coming back to this topic:
+>=20
+> On 2016-06-09 08:03, Jan Kiszka wrote:
+>> OK, trial and error, and some interesting insights: I've played with DT
+>> fragments and the overlay configfs patch of Pantelis [1] to have a
+>> convenient start. Interestingly, I wasn't able to load a fragment that
+>> followed the format specification for overlays ("Failed to resolve
+>> tree"). By chance, I got this one working:
+>>=20
+>> /dts-v1/;
+>> / {
+>> 	fragment {
+>> 		target-path =3D "/soc@01c00000";
+>> 		__overlay__ {
+>> 			#address-cells =3D <2>;
+>> 			#size-cells =3D <2>;
+>>=20
+>> 			vpci@0x2000000 {
+>> 				compatible =3D "pci-host-cam-generic";
+>> 				device_type =3D "pci";
+>> 				#address-cells =3D <3>;
+>> 				#size-cells =3D <2>;
+>> 				reg =3D <0 0x2000000 0 0x1000000>;
+>> 				ranges =3D
+>> 					<0x02000000 0x00 0x10000000 0x00 0x10000000 0x00 0x30000000>;
+>> 			};
+>> 		};
+>> 	};
+>> };
+>>=20
+>> It successfully makes a BananaPi kernel add a pci host with the
+>> specified config space and MMIO window.
+>>=20
+>> [   81.619583] PCI host bridge /soc@01c00000/vpci@0x2000000 ranges:
+>> [   81.619610]   No bus range found for /soc@01c00000/vpci@0x2000000, us=
+ing [bus 00-ff]
+>> [   81.619634]   MEM 0x10000000..0x3fffffff -> 0x10000000
+>> [   81.620482] pci-host-generic 2000000.vpci: ECAM at [mem 0x02000000-0x=
+02ffffff] for [bus 00-ff]
+>> [   81.620779] pci-host-generic 2000000.vpci: PCI host bridge to bus 000=
+0:00
+>> [   81.620801] pci_bus 0000:00: root bus resource [bus 00-ff]
+>> [   81.620814] pci_bus 0000:00: root bus resource [mem 0x10000000-0x3fff=
+ffff]
+>> [   81.620851] PCI: bus0: Fast back to back transfers enabled
+>>=20
+>> So, no /plugin/ statement, no phandles resolution. This format even
+>> builds with the in-kernel dtc. Any explanations? Does the code make
+>> sense (at least it builds without warnings)?
+>>=20
+>> Now I need to back this with some code in Jailhouse.
+>=20
+> Meanwhile I got a virtual PCI device recognized by Linux when running
+> over Jailhouse. However, my hack above doesn't get me to proper
+> interrupt mapping yet. This is what I was trying with upstream dtc:
+>=20
+> /dts-v1/;
+> / {
+> 	compatible =3D "lemaker,bananapi", "allwinner,sun7i-a20";
+>=20
+> 	fragment@0 {
+> 		target-path =3D "/soc@01c00000";
+> 		__overlay__ {
+> 			#address-cells =3D <2>;
+> 			#size-cells =3D <2>;
+>=20
+> 			vpci@2000000 {
+> 				compatible =3D "pci-host-ecam-generic";
+> 				device_type =3D "pci";
+> 				bus-range =3D <0 0>;
+> 				#address-cells =3D <3>;
+> 				#size-cells =3D <2>;
+> 				#interrupt-cells =3D <1>;
+> 				interrupt-map-mask =3D <0 0 0 7>;
+> 				interrupt-map =3D <0 0 0 1 &gic 0 0 0 123 4>,
+> 						<0 0 0 2 &gic 0 0 0 124 4>,
+> 						<0 0 0 3 &gic 0 0 0 125 4>,
+> 						<0 0 0 4 &gic 0 0 0 126 4>;
+> 				reg =3D <0 0x2000000 0 0x100000>;
+> 				ranges =3D
+> 					<0x02000000 0x00 0x10000000 0x00 0x10000000 0x00 0x30000000>;
+> 			};
+> 		};
+> 	};
+>=20
+> 	gic: fragment@1 {
+> 		target-path =3D "/soc@01c00000/interrupt-controller@01c81000";
+> 		__overlay__ {
+> 		};
+> 	};
+> };
+>=20
 
-There still seems to be an issue with this patch set reaching the
-linux-acpi mailing list (as well as the other vger.kernel.org lists). Have
-spent some time looking into it but so far can't see anything obviously wrong
-with the mail format. Also tried to reduce down the number of people on the
-To/Cc list, and signed up my e-mail address to the linux-acpi list, but still
-not having any joy.
+^ This is not going to work: You need the reference to the real gic not the=
+ empty fragment
+here that has a target there.
 
-Rafael, Mika, et al. Can you please have a look at this patch set and provide
-any feedback on the ACPI part (assuming you still have it in your inbox)?
+You need to compile with the correct dtc, and you also need to compile the =
+base dts
+with dtc too, using the -@ flag. You can hack around it by adding something=
+ like
 
-Thanks.
+__symbols__ {
+	gic =3D "/soc@01c00000/interrupt-controller@01c81000=E2=80=9D;
+};
+
+But you really need the __symbols__ node of the base dts generated by the d=
+tc proper cause
+the above is a dirty hack.
+
+
+> And this is what Linux detects on that PCI bus:
+>=20
+> 00:0f.0 RAM memory: Red Hat, Inc Inter-VM shared memory
+>        Subsystem: Red Hat, Inc Inter-VM shared memory
+>        Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr=
+- Stepping- SERR- FastB2B- DisINTx-
+>        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <=
+TAbort- <MAbort- >SERR- <PERR- INTx-
+>        Interrupt: pin A routed to IRQ 17
+>        Region 0: Memory at 10000000 (64-bit, non-prefetchable) [size=3D25=
+6]
+>        Region 4: Memory at 10000100 (64-bit, non-prefetchable) [size=3D32=
+]
+>        Kernel modules: ivshmem_net
+>=20
+> However, registering a handler on IRQ 17 fails (-EINVAL).
+>=20
+>=20
+> With your dtc [2] (dtc -@ -I dts -O dtb -o vpci-bpi.dtb vpci-bpi.dts)
+> and this fragment, I'm still not able to load the blob:
+>=20
+> /dts-v1/;
+> /plugin/;
+> / {
+> 	compatible =3D "lemaker,bananapi", "allwinner,sun7i-a20";
+>=20
+> 	fragment@0 {
+> 		target-path =3D "/soc@01c00000";
+> 		__overlay__ {
+> 			#address-cells =3D <2>;
+> 			#size-cells =3D <2>;
+>=20
+> 			vpci@2000000 {
+> 				compatible =3D "pci-host-ecam-generic";
+> 				device_type =3D "pci";
+> 				bus-range =3D <0 0>;
+> 				#address-cells =3D <3>;
+> 				#size-cells =3D <2>;
+> 				#interrupt-cells =3D <1>;
+> 				interrupt-map-mask =3D <0 0 0 7>;
+> 				interrupt-map =3D <0 0 0 1 &gic 0 0 0 123 4>,
+> 						<0 0 0 2 &gic 0 0 0 124 4>,
+> 						<0 0 0 3 &gic 0 0 0 125 4>,
+> 						<0 0 0 4 &gic 0 0 0 126 4>;
+> 				reg =3D <0 0x2000000 0 0x100000>;
+> 				ranges =3D
+> 					<0x02000000 0x00 0x10000000 0x00 0x10000000 0x00 0x30000000>;
+> 			};
+> 		};
+> 	};
+> };
+>=20
+
+Please try this branch of dtc; it=E2=80=99s a wip of what I=E2=80=99m tryin=
+g to push to upstream.
+
+https://github.com/pantoniou/dtc/tree/dgibson-overlay-panto
+
+> Any suggestions? Any patches I'm missing in upstream to make that work?
+>=20
+> Jan
+>=20
+
+Regards
+
+=E2=80=94 Pantelis
+
+> [1] https://github.com/pantoniou/linux-beagle-track-mainline/commit/160e6=
+8ec89eca33e8ed0abb13d52c07c54d7fc10
+> [2] https://github.com/pantoniou/dtc/tree/dgibson-overlay-panto
+>=20
+> --=20
+> Siemens AG, Corporate Technology, CT RDA ITP SES-DE
+> Corporate Competence Center Embedded Linux
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+Jailhouse" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to jailhouse-dev+unsubscribe@googlegroups.com.
+For more options, visit https://groups.google.com/d/optout.
