@@ -1,68 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: bindings: Add DT bindings for ARM's
- FVP models.
-Date: Tue, 21 Jun 2016 08:22:57 -0500
-Message-ID: <20160621132257.GA2263@rob-hp-laptop>
-References: <1466424796-13769-1-git-send-email-tixy@linaro.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: Warning when compiling DTB on X-Gene platform with dtc
+ 1.4.1-g53bf130b
+Date: Tue, 21 Jun 2016 15:25:15 +0200
+Message-ID: <20160621132515.GC22350@lunn.ch>
+References: <CADaLNDnfH8Weo=9jVNAW7LQCvAw23-z5fafwWcer4FSKeYH=ug@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466424796-13769-1-git-send-email-tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CADaLNDnfH8Weo=9jVNAW7LQCvAw23-z5fafwWcer4FSKeYH=ug@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Duc Dang <dhdang@apm.com>
+Cc: Rob Herring <robh@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 20, 2016 at 01:13:15PM +0100, Jon Medhurst wrote:
-> List the required properties used to describe ARM's FVP models.
+On Tue, Jun 21, 2016 at 02:02:44AM -0700, Duc Dang wrote:
+> Hi Rob,
 > 
-> Signed-off-by: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/arm-boards | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+> I got warning on unit_address_vs_reg similar to this
+> https://lkml.org/lkml/2016/3/7/43 when using v4.7-rc2 dtc to build dtb
+> for X-Gene Mustang:
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentation/devicetree/bindings/arm/arm-boards
-> index ab318a5..4639a9b 100644
-> --- a/Documentation/devicetree/bindings/arm/arm-boards
-> +++ b/Documentation/devicetree/bindings/arm/arm-boards
-> @@ -234,3 +234,24 @@ Example:
->  	};
->  
->  };
-> +
-> +ARM Fixed Virtual Platforms (FVP)
-> +---------------------------------
-> +FVPs are simulated platforms produced by ARM to aid software development without
-> +the requirement for actual hardware. They come in several families, each of
-> +which (usually) contain variants for different configurations of simulated
-> +hardware. These are documented in the Fixed Virtual Platforms FVP Reference
-> +Guide (reference number ARM DUI0837H).
-> +
-> +Required properties (in root node):
-> +- compatible value:
-> +	compatible = "arm,<family>,<variant>", "arm,<family>";
-> +  where <family> is one of:
-> +  - "fvp-base" for the Base FVP
-> +  - "fvp-ve" for the VE FVP
-> +  and <variant> is the part of the model's executable filename with the family
-> +  name omitted, converted to lower case, and with non-alphanumeric characters
-> +  replaced with '-'. E.g. the Base FVP that has two AEMv8 CPU clusters has an
-> +  executable file called FVP_Base_AEMv8A-AEMv8A, so the compatible value for
+> dhdang@xgene-next=>./scripts/dtc/dtc -O dtb -R 16 -o mustang.dtb
+> arch/arm64/boot/dts/apm/apm-mustang.dts
+>   Warning (unit_address_vs_reg): Node /soc/reboot@17000014 has a unit
+> name, but no reg property
+>   Warning (unit_address_vs_reg): Node /memory has a reg or ranges
+> property, but no unit name
+>   Warning (unit_address_vs_reg): Node /gpio-keys/button@1 has a unit
+> name, but no reg property
+> 
+> There are nodes that I cannot change the node-name due to backward
+> compatible with old firmware reason (/soc/reboot@17000014 as an
+> example). Is there any other way to avoid the warning?
 
-Naming conventions of the exe aren't going to change?
+I think you have that backwards around. The Kernel needs to be
+backwards compatible with old DT blobs. DT blobs don't generally need
+to be backwards compatible to older kernels.
 
-> +  this would be:
-> +	compatible = "arm,fvp-base,aemv8a-aemv8a", "arm,fvp-base";
-> -- 
-> 2.1.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+However, the kernel should however be happy with or without the unit
+name. The unit name is pointless in this case.
+
+	Andrew
