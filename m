@@ -1,79 +1,139 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] ARM: sun8i: Add Parrot Board DTS
-Date: Tue, 21 Jun 2016 17:11:21 +0800
-Message-ID: <CAGb2v66KPsQ60QbwbWP1nEcjpWVf8CP5vAyOeVpB5hL-Q+wUmg@mail.gmail.com>
-References: <1465812931-22824-1-git-send-email-quentin.schulz@free-electrons.com>
- <1465812931-22824-2-git-send-email-quentin.schulz@free-electrons.com>
- <CAGb2v64jduBijEXzsKbOpSvLd9YHwO=qpSyPSDuYtMPg8wfKzA@mail.gmail.com>
- <575FFFBE.5090107@free-electrons.com> <CAGb2v67JGG35odB7kEAoF0kGes=KRGoREOSTc_GM0B4A+8cKWg@mail.gmail.com>
- <20160620154452.GL26668@lukather> <CAGb2v66_iUMd5V=9Np4Kqqv+yqq2HbjoPhC3Z6cpHFrMzkddvw@mail.gmail.com>
- <20160620183543.GM26668@lukather>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+Date: Tue, 21 Jun 2016 17:07:38 +0800
+Message-ID: <20160621090738.GD5108@shlinux2>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+ <1465564043-27163-9-git-send-email-rogerq@ti.com>
+ <575E672E.5070603@ti.com>
+ <87h9coxq04.fsf@linux.intel.com>
+ <20160620114904.GC26936@shlinux2>
+ <8737o8qd00.fsf@linux.intel.com>
+ <20160621060517.GA5108@shlinux2>
+ <877fdjovef.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160620183543.GM26668@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Hans De Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <877fdjovef.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2016 at 2:35 AM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Tue, Jun 21, 2016 at 12:30:25AM +0800, Chen-Yu Tsai wrote:
->> >> >>> +&reg_aldo1 {
->> >> >>> +       regulator-always-on;
->> >> >>> +       regulator-min-microvolt = <3000000>;
->> >> >>> +       regulator-max-microvolt = <3000000>;
->> >> >>> +       regulator-name = "aldo1";
->> >> >>
->> >> >> What is this for exactly? Would turning it off render the system inoperable?
->> >> >> How was it referenced in the fex file?
->> >> >>
->> >> >> If this is for WiFi I/O VCC, then you should specify it in mmc1 with
->> >> >> vqmmc-supply.
->> >> >>
->> >> >
->> >> > In the fex, aldo1 is one of the three power inputs for the WiFi (the
->> >> > others being dldo1 and dldo2) and in the schematics it is linked to
->> >> > both VCC-USB and VCC-IO-WIFI.
->> >> >
->> >> > I tried to turn it off and, indeed, the system becomes inoperable.
->> >> >
->> >> > I'll add vqmmc-supply in mmc1 with aldo1 regulator. However, I am
->> >> > wondering what to put in vmmc-supply for mmc1 since the WiFi module has
->> >> > three power inputs: dldo1, dldo2 and aldo1. In the fex, they are
->> >> > referenced as, respectively, module_power1, module_power2 and
->> >> > module_power3 and in the schematics dldo1 and dldo2 are named VCC-WIFI
->> >> > while aldo1 is used for VCC-IO-WIFI (if it can help in any way).
->> >> >
->> >> > VCC-WIFI is connected to pin VBAT of the Broadcom AP6212 WiFi chip.
->> >> > VCC-IO-WIFI is connected to pin VDDIO of the chip.
->> >>
->> >> VCC-IO-WIFI is vqmmc, and VCC-WIFI is vmmc.
->> >
->> > Isn't vmmc supposed to be always powered at 3.3v, and vqmmc the one
->> > used to drop to 1.8V with the UHS cards?
->>
->> For eMMC, vmmc and vqmmc correspond to the pins on the eMMC chip.
->> vmmc provides power to the internals, while vqmmc provides power to the
->> I/O buffers on both sides. With SD this is a bit less clear. IIUC the SD
->> card itself supplies I/O voltage, dropping it to 1.8V if necessary, from
->> VDD (vmmc). vqmmc only affects the host side, and whatever external pull-ups
->> that might exist.
->
-> Ok.
->
->> > In which case, VCC-IO-WIFI is vmmc, and VCC-WIFI is just one of the
->> > wifi chip power rail, to be handled by a power sequence.
->>
->> For the WiFi chip, there is a separate IO-VCC rail, which is VCC-IO-WIFI.
->> This, from what I understand of the datasheet, is for I/O signaling, and
->> thus vqmmc. VCC-WIFI is what powers the chip, which is what vmmc is.
->
-> Ok. but there's still the issue of the two regulators that needs to be
-> kept in sync. Before, that, I'd rather stice to not tying them to the
-> MMC bus, and putting a comment on top.
+On Tue, Jun 21, 2016 at 10:26:00AM +0300, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> >> 
+> >> So far, I haven't seen anybody talking about real USB OTG (the spec)
+> >> when they say OTG. Usually they just mean "a method for swapping between
+> >> host and peripheral roles, but we really don't want all the extra cost
+> >> of the OTG specification".
+> >> 
+> >
+> > That's what I thought before, but the request from the Marketing guy is
+> > "To prove the SoC is OTG compliance, support HNP and SRP", don't you
+> > see the SoC reference manual say "it supports HNP and SRP"?
+> >
+> > If there is no request, who else wants to implement so complicated FSM
+> > but seldom use cases, and go to pass OTG compliance test (tested by PET).
+> 
+> I stand corrected :-)
+> 
+> So there is one user for this layer. And this user has its own role
+> control registers. I'm not convinced we need this large generic layer
+> for one user.
+> 
 
-OK. Let's do that for now.
+You mean chipidea or dwc3? I have more comments below.
 
-ChenYu
+> >> > For the real use case, some Carplay platforms need it.
+> >> 
+> >> Carplay does *NOT* rely on OTG. Apple has its own proprietary and closed
+> >> specification which is not OTG-compliant.
+> >> 
+> >
+> > Yes, it is not OTG-compliant, but it can co-work with some standard OTG FSM
+> > states to finish role swap.
+> 
+> What are you referring to as "finish role swap"? I don't get that.
+
+Change current role from host to peripheral.
+
+> 
+> > Notice, it needs to swap role without disconnect cable.
+> 
+> right, I can swap role without changing cable, but that's not OTG. The
+> mechanism for that, AFAICT, is not HNP. I don't know details about
+> CarPlay because the spec isn't public, but my understanding is that
+> CarPlay doesn't rely on anything from OTG spec.
+
+Since it is non-public, I can't say much. Some flows of its role-swap
+refers to On-The-Go and Embedded Host Supplement to the USB Revision 2.0
+Specification. 
+
+But OTG FSM is not the only way, the platform which can do role-swap
+without disconnection can support it too.
+
+> 
+> >> >> > diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
+> >> >> > index f4fc0aa..1d74fb8 100644
+> >> >> > --- a/include/linux/usb/gadget.h
+> >> >> > +++ b/include/linux/usb/gadget.h
+> >> >> > @@ -328,6 +328,7 @@ struct usb_gadget_ops {
+> >> >> >   * @in_epnum: last used in ep number
+> >> >> >   * @mA: last set mA value
+> >> >> >   * @otg_caps: OTG capabilities of this gadget.
+> >> >> > + * @otg_dev: OTG controller device, if needs to be used with OTG core.
+> >> >> 
+> >> >> do you really know of any platform which has a separate OTG controller?
+> >> >> 
+> >> >
+> >> > It may not be a real separate OTG controller. It can be a hardware part
+> >> > (external connector, external IC, SoC OTG register area, etc) to handle vbus
+> >> > ,id and other signals which are used for role swap.
+> >> 
+> >> That's already solved. EXTCON solved that years back and OMAP has been
+> >> using EXTCON to program its UTMI mailbox.
+> >> 
+> >
+> > No, that's not the same thing, it does not include the swap role.
+> 
+> Read your original comment:
+> 
+> "handle vbus, id and other signals which are *used for* role swap"
+> 
+> You didn't include role swap in your original comment. Semantics aside...
+> 
+> > Consider the use case the host driver is at host/ and udc driver is
+> > at gadget/udc, how to finish to role swap?
+> 
+> ... why does the source code placement matter? And what do you mean by
+> "finish role swap"?
+> 
+
+Well, it depends on your driver design, do you want the host driver's
+API is still be called when current role is peripheral? One typical
+problem you can refer below:
+
+commit 11c011a5e777c83819078a18672543f04482b3ec
+Author: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date:   Thu May 19 11:12:56 2016 +0100
+
+    usb: echi-hcd: Add ehci_setup check before echi_shutdown
+        
+
+
+In some cases, the USB code (gadget/hcd->start/stop) needs to be called
+during the role swap. For example, if you have mux driver, you may
+need to call usb_remove_hcd when ID from 0 to 1. Without Roger's framework,
+how can we do that?
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
