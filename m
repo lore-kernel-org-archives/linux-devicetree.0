@@ -1,89 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] leds: ncp5623: Add device tree binding documentation
-Date: Tue, 21 Jun 2016 16:52:18 -0500
-Message-ID: <20160621215218.GA12971@rob-hp-laptop>
-References: <1466494154-3786-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1466494154-3786-2-git-send-email-florian.vaussard@heig-vd.ch>
+From: "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] ASoC: da7219: Convert driver to use generic FW
+ functions
+Date: Wed, 22 Jun 2016 00:30:06 +0200
+Message-ID: <6274a042-da99-e3e6-20f2-37ce2651645c@intel.com>
+References: <cover.1466523027.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466494154-3786-2-git-send-email-florian.vaussard@heig-vd.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@gmail.com>
-Cc: devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1466523027.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Robert Moore <robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lv Zheng <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-acpi <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Sathyanarayana Nujella <sathyanarayana.nujella-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2016 at 09:29:13AM +0200, Florian Vaussard wrote:
-> Add device tree binding documentation for On Semiconductor NCP5623 I2C
-> LED driver. The driver can independently control the PWM of the 3
-> channels with 32 levels of intensity.
-> 
-> The current delivered by the current source can be controlled using the
-> led-max-microamp property. In order to control this value, it is also
-> necessary to know the current on the Iref pin, hence the
-> onnn,led-iref-microamp property. It is usually set using an external
-> bias resistor, following Iref = Vref/Rbias with Vref=0.6V.
-> 
-> Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
-> ---
->  .../devicetree/bindings/leds/leds-ncp5623.txt      | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-ncp5623.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-ncp5623.txt b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
-> new file mode 100644
-> index 0000000..0dc8345
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
-> @@ -0,0 +1,44 @@
-> +* ON Semiconductor - NCP5623 3-Channel LED Driver
-> +
-> +The NCP5623 is a 3-channel I2C LED driver. The brightness of each
-> +channel can be independently set using 32 levels. Each LED is represented
-> +as a sub-node of the device.
-> +
-> +Required properties:
-> +  - compatible: Should be "onnn,ncp5623"
-> +  - reg: I2C slave address (fixed to 0x38)
-> +  - #address-cells: must be 1
-> +  - #size-cells: must be 0
-> +  - onnn,led-iref-microamp: Current on the Iref pin in microampere
-> +  - led-max-microamp: Desired maximum current for each LED in microampere
-> +                      (maximum 30000uA)
-> +
-> +LED sub-node properties:
-> +  - reg : LED channel number (0..2)
-> +  - For other LED properties see:
-> +      Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +
-> +led1: ncp5623@38 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "onnn,ncp5623";
-> +	reg = <0x38>;
-> +
-> +	led1_r@0 {
+On 6/21/2016 7:50 PM, Adam Thomson wrote:
+> This patch set converts the da7219 codec driver to use device/fwnode functions
+> to access properties, instead of the DT only of_* functions, allowing ACPI
+> to be used as well.
+>
+> The DT bindings for da7219 have a device node for the main codec properties,
+> and a named child node (da7219_aad), which contains all of the accessory
+> detection related properties for the device. ACPI also supports this kind of
+> FW hierarchy (data only sub-nodes), but some support in the kernel needs to be
+> added to take make use of this in driver code.
+>
+> The first patch adds functions to allow searching for a named child node of a
+> device, for both DT and ACPI, and the second patch updates the codec driver to
+> use the standard device/fwnode calls, including this new function.
+>
+> These changes are based on the v4.7-rc4 kernel.
+>
+> Changes in v4:
+>   - Rebase to v4.7-rc4
+>   - Use strcmp() in acpi_data_node_match() for matching ACPI data nodes.
+>
+> Changes in v3:
+>   - Use of_node_cmp() in device_get_named_child_node() to match DT node.
+>
+> Changes in v2:
+>   - Rebase to v4.7-rc1
+>   - Small updates to codec patch based on previous reviewer comments
+>
+> Adam Thomson (2):
+>    device property: Add function to search for named child of device
+>    ASoC: da7219: Convert driver to use generic device/fwnode functions
+>
+>   drivers/base/property.c       |  28 ++++++++++++
+>   include/acpi/acpi_bus.h       |   7 +++
+>   include/linux/acpi.h          |   6 +++
+>   include/linux/of.h            |  14 +++---
+>   include/linux/property.h      |   3 ++
+>   sound/soc/codecs/da7219-aad.c | 103 +++++++++++++++++++++---------------------
+>   sound/soc/codecs/da7219.c     |  34 +++++++-------
+>   7 files changed, 119 insertions(+), 76 deletions(-)
+>
+> --
+> 1.9.3
+>
+I'm fine with the first patch and the second one carries a couple of 
+ACKs already, so do you want me to apply them both?
 
-Don't use underscores in node names.
 
-> +		label = "ncp:power:red";
-> +		reg = <0>;
-> +		linux,default-trigger = "default-on";
-> +	};
-> +
-> +	led1_b@1 {
-> +		label = "ncp:power:blue";
-> +		reg = <1>;
-> +	};
-> +
-> +	led1_g@2 {
-> +		label = "ncp:power:green";
-> +		reg = <2>;
-> +	};
-> +};
-> -- 
-> 2.5.0
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
