@@ -1,183 +1,106 @@
-From: Han Xu <xhnjupt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] mtd: nand: gpmi: correct bitflip for erased NAND page
-Date: Tue, 21 Jun 2016 10:53:48 -0500
-Message-ID: <CA+EcR22rADB8=CORdLTpSyM2-VaB+EcX5oZfFoVLAfgUVDgN=Q@mail.gmail.com>
-References: <1465578094-8816-1-git-send-email-han.xu@nxp.com>
- <1465578094-8816-5-git-send-email-han.xu@nxp.com> <20160614211401.40c26b37@bbrezillon>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH 2/4] dmaengine: vdma: Add support for mulit-channel dma
+ mode
+Date: Tue, 21 Jun 2016 16:02:05 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5B8248@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1465549954-30220-1-git-send-email-appanad@xilinx.com>
+ <1465549954-30220-3-git-send-email-appanad@xilinx.com>
+ <20160621155502.GB16910@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160614211401.40c26b37@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160621155502.GB16910@localhost>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 14, 2016 at 2:14 PM, Boris Brezillon
-<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, 10 Jun 2016 12:01:32 -0500
-> Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org> wrote:
->
->> i.MX6QP and i.MX7D BCH module integrated a new feature to detect the
->> bitflip number for erased NAND page. So for these two platform, set the
->> erase threshold to ecc_strength and if bitflip detected, GPMI driver
->> will correct the data to all 0xFF.
->>
->> Signed-off-by: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
->> ---
->>  drivers/mtd/nand/gpmi-nand/bch-regs.h  | 10 ++++++++++
->>  drivers/mtd/nand/gpmi-nand/gpmi-lib.c  |  5 +++++
->>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 27 ++++++++++++++++++++++++++-
->>  3 files changed, 41 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mtd/nand/gpmi-nand/bch-regs.h b/drivers/mtd/nand/gpmi-nand/bch-regs.h
->> index 228142c..2c44b88 100644
->> --- a/drivers/mtd/nand/gpmi-nand/bch-regs.h
->> +++ b/drivers/mtd/nand/gpmi-nand/bch-regs.h
->> @@ -30,7 +30,13 @@
->>  #define BM_BCH_CTRL_COMPLETE_IRQ             (1 << 0)
->>
->>  #define HW_BCH_STATUS0                               0x00000010
->> +
->>  #define HW_BCH_MODE                          0x00000020
->> +#define BP_BCH_MODE_ERASE_THRESHOLD          0
->> +#define BM_BCH_MODE_ERASE_THRESHOLD  (0xff << BP_BCH_MODE_ERASE_THRESHOLD)
->> +#define BF_BCH_MODE_ERASE_THRESHOLD(v)               \
->> +     (((v) << BP_BCH_MODE_ERASE_THRESHOLD) & BM_BCH_MODE_ERASE_THRESHOLD)
->> +
->>  #define HW_BCH_ENCODEPTR                     0x00000030
->>  #define HW_BCH_DATAPTR                               0x00000040
->>  #define HW_BCH_METAPTR                               0x00000050
->> @@ -125,4 +131,8 @@
->>       )
->>
->>  #define HW_BCH_VERSION                               0x00000160
->> +#define HW_BCH_DEBUG1                                0x00000170
->> +#define BP_BCH_DEBUG1_ERASED_ZERO_COUNT      0
->> +#define BM_BCH_DEBUG1_ERASED_ZERO_COUNT              \
->> +             (0x1ff << BP_BCH_DEBUG1_ERASED_ZERO_COUNT)
->>  #endif
->> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
->> index 358ff5d..0b5666a 100644
->> --- a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
->> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
->> @@ -298,6 +298,11 @@ int bch_set_geometry(struct gpmi_nand_data *this)
->>                       | BF_BCH_FLASH0LAYOUT1_DATAN_SIZE(block_size, this),
->>                       r->bch_regs + HW_BCH_FLASH0LAYOUT1);
->>
->> +     /* Set erase threshold to ecc_strength for mx6qp and mx7 */
->> +     if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
->> +             writel(BF_BCH_MODE_ERASE_THRESHOLD(ecc_strength),
->> +                     r->bch_regs + HW_BCH_MODE);
->> +
->>       /* Set *all* chip selects to use layout 0. */
->>       writel(0, r->bch_regs + HW_BCH_LAYOUTSELECT);
->>
->> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->> index aedaff3..03bdb4d 100644
->> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
->> @@ -1043,6 +1043,7 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->>  {
->>       struct gpmi_nand_data *this = nand_get_controller_data(chip);
->>       struct bch_geometry *nfc_geo = &this->bch_geometry;
->> +     void __iomem *bch_regs = this->resources.bch_regs;
->>       void          *payload_virt;
->>       dma_addr_t    payload_phys;
->>       void          *auxiliary_virt;
->> @@ -1051,6 +1052,8 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->>       unsigned char *status;
->>       unsigned int  max_bitflips = 0;
->>       int           ret;
->> +     int bitflips = 0;
->> +     int bitflip_flag = 0;
->
-> Hm, I would choose another name, but I'm not even sure this is really
-> needed (see below).
->
->>
->>       dev_dbg(this->dev, "page number is : %d\n", page);
->>       ret = read_page_prepare(this, buf, nfc_geo->payload_size,
->> @@ -1088,8 +1091,20 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->>                          payload_virt, payload_phys);
->>
->>       for (i = 0; i < nfc_geo->ecc_chunk_count; i++, status++) {
->> -             if ((*status == STATUS_GOOD) || (*status == STATUS_ERASED))
->> +             if (*status == STATUS_GOOD)
->> +                     continue;
->> +             if (*status == STATUS_ERASED) {
->> +                     if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this)) {
->> +                             bitflips = readl(bch_regs + HW_BCH_DEBUG1);
->
-> You could use ret here or define a flips variable locally to this code
-> (see what's done for the software correction).
->
-> BTW, why not memset-ing the data chunk here (as done for the SW
-> correction part). This way you wouldn't need the extra bitflips_flag
-> variable.
->
->> +                             if (bitflips) {
->> +                                     bitflip_flag = 1;
->> +                                     max_bitflips = max_t(unsigned int,
->> +                                                          max_bitflips,
->> +                                                          bitflips);
->> +                             }
->> +                     }
->>                       continue;
->> +             }
->>
->>               if (*status == STATUS_UNCORRECTABLE) {
->>                       int eccbits = nfc_geo->ecc_strength * nfc_geo->gf_len;
->> @@ -1098,6 +1113,10 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->>                       int eccbytes;
->>                       int flips;
->>
->> +                     /* shortcut for i.MX7 and i.MX6QP */
->> +                     if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
->
-> You should increment mtd->ecc_stats.failed in this case.
+Hi Vinod,
 
-Do you mean update the mtd->ecc_status.corrected when flips happened?
-Nothing failed in this case.
+	Thanks for the review...
 
->
->> +                             continue;
->> +
->>                       /* Read ECC bytes into our internal raw_buffer */
->>                       offset = nfc_geo->metadata_size * 8;
->>                       offset += ((8 * nfc_geo->ecc_chunk_size) + eccbits) * (i + 1);
->> @@ -1182,6 +1201,12 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
->>               chip->oob_poi[0] = ((uint8_t *) auxiliary_virt)[0];
->>       }
->>
->> +     /* if bitflip occurred in erased page, change data to all 0xff */
->> +     if (bitflip_flag) {
->> +             memset(buf, ~0, nfc_geo->payload_size);
->> +             memset(chip->oob_poi, ~0, mtd->oobsize);
->> +     }
->> +
->>       return max_bitflips;
->>  }
->>
->
->
->
+> 
+> On Fri, Jun 10, 2016 at 02:42:32PM +0530, Kedareswara rao Appana wrote:
+> > This patch adds support for AXI DMA multi-channel dma mode
+> > Multichannel mode enables DMA to connect to multiple masters And
+> > slaves on the streaming side.
+> > In Multichannel mode AXI DMA supports 2D transfers.
+> 
+> Funny formatting!
+
+Will fix in next version...
+
+> 
+> Can you elobrate what you meant by Multichannel mode? This patch seems to
+> do two things, one is to add interleaved dma support and something else. Can
+> you explain the latter part?
+
+AXI DMA has two Stream interfaces (Memory to Stream MM2S and Stream to Memory S2MM)
+In Multi-Channel dma mode each stream interface can be configured up to 16 channels.
+In Multi-channel DMA mode IP supports only interleaved transfers (2-D transfers).
+
+> 
+> >  /**
+> > + * struct xilinx_mcdma_config - DMA Multi channel configuration
+> > +structure
+> > + * @tdest: Channel to operate on
+> > + * @tid:   Channel configuration
+> > + * @tuser: Tuser configuration
+> > + * @ax_user: ax_user value
+> > + * @ax_cache: ax_cache value
+> > + */
+> > +struct xilinx_mcdma_config {
+> > +	u8 tdest;
+> > +	u8 tid;
+> > +	u8 tuser;
+> > +	u8 ax_user;
+> > +	u8 ax_cache;
+> 
+> can you describe these in details, what do these do, what are the values to be
+> programmed?
+
+As said above In Multi-Channel Mode each Stream interface can be 
+Configured up to 16 channels each channel is differentiated based on the tdest and tid values.
+
+tdest:
+TDEST provides routing information for the data stream.
+TDEST values are static for the entire packet.
+
+tid:
+Provides a stream identifier. TID values are static for entire packet.
+TID values provided in the TX descriptor field are presented on
+TID signals of the streaming side.
+
+tuser:
+Sideband signals used for user-defined information.
+TUSER values are static for entire packet. TUSER values provided in the TX
+Descriptor field are presented on TUSER signals of streaming side.
+
+ax_user: 
+Sideband signals used for user-defined information
+ARUSER values and their interpretations are user-defined
+
+ax_cache:
+Cache type this signal provides additional information about the cacheable
+Characteristics of the transfer.
+
+In the above parameters tdest and tid are mandatory to differentiate b/w different channels
+Other parameters are optional please let me know if you don't want me to 
+Include other optional parameters will remove in the next version.
+
+Regards,
+Kedar.
+
+> 
 > --
-> Boris Brezillon, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
->
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
-
-
--- 
-Sincerely,
-
-Han XU
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ~Vinod
