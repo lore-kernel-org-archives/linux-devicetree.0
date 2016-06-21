@@ -1,80 +1,76 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/48] ARM: at91: Document new TCB bindings
-Date: Tue, 21 Jun 2016 15:28:00 -0500
-Message-ID: <20160621202800.GB22435@rob-hp-laptop>
-References: <1465596231-21766-1-git-send-email-alexandre.belloni@free-electrons.com>
- <1465596231-21766-3-git-send-email-alexandre.belloni@free-electrons.com>
- <20160614214737.GA10294@rob-hp-laptop>
- <20160615092955.261f14fb@bbrezillon>
+Subject: Re: [PATCH v4 0/1] pstore/ram: add Device Tree bindings
+Date: Tue, 21 Jun 2016 15:41:21 -0500
+Message-ID: <20160621204121.GA1595@rob-hp-laptop>
+References: <1465599059-22665-1-git-send-email-keescook@chromium.org>
+ <20160614215914.GA16454@rob-hp-laptop>
+ <CAGXu5jJG6-QS9Z75Px-0ZF8A222OPtHq8Hc8QYFu6vZGAoOeVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160615092955.261f14fb@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAGXu5jJG6-QS9Z75Px-0ZF8A222OPtHq8Hc8QYFu6vZGAoOeVA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kees Cook <keescook@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Greg Hackmann <ghackmann@google.com>, Arnd Bergmann <arnd@arndb.de>, Markus Pargmann <mpa@pengutronix.de>, Olof Johansson <olof@lixom.net>, Brian Norris <computersforpeace@gmail.com>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Lee Campbell <leecam@google.com>, Tony Luck <tony.luck@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 15, 2016 at 09:29:55AM +0200, Boris Brezillon wrote:
-> On Tue, 14 Jun 2016 16:47:37 -0500
-> Rob Herring <robh@kernel.org> wrote:
+On Tue, Jun 14, 2016 at 09:40:47PM -0700, Kees Cook wrote:
+> On Tue, Jun 14, 2016 at 2:59 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Fri, Jun 10, 2016 at 03:50:58PM -0700, Kees Cook wrote:
+> >> This is a "v4" of Greg Hackmann's DT bindings for ramoops. This is
+> >> what I'm going to land in the pstore tree unless there are strong and
+> >> convincing arguments against it. :)
+> >>
+> >> I made a number of changes based people's feedback, and I want to get
+> >> it unblocked. This patch is already carried by Android, and it doesn't
+> >> need to be out of tree.
+> >>
+> >> To respond to Arnd's comment: I like this as the ramoops node, not the
+> >> pstore node, since it describes the ramoops backend, not the pstore
+> >> subsystem, which has different controls, and can only have one backend
+> >> at a time. So it doesn't make sense to me to have this have a redundant
+> >> extra pstore node, since the very presence of ramoops implies pstore.
+> >
+> > Either I don't follow or you don't get Arnd's comment...
+> >
+> > IIRC, his suggestion which I agree with was to remove the memory-region
+> > phandle and just move all the properties into the reserved memory node
+> > directly. This simplifies things such that we are just describing
+> > properties of a chunk of memory rather than a Linux specific node for
+> > virtual driver.
 > 
-> > On Sat, Jun 11, 2016 at 12:03:05AM +0200, Alexandre Belloni wrote:
-> > > The current binding for the TCB is not flexible enough for some use cases
-> > > and prevents proper utilization of all the channels.
-> > > 
-> > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > Cc: linux-pwm@vger.kernel.org
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > > ---
-> > >  .../devicetree/bindings/arm/atmel-at91.txt         | 32 -----------
-> > >  .../devicetree/bindings/mfd/atmel-tcb.txt          | 62 ++++++++++++++++++++++
-> > >  .../devicetree/bindings/pwm/atmel-tcb-pwm.txt      | 12 +++--
-> > >  3 files changed, 69 insertions(+), 37 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt  
-> > 
-> > [...]
+> Ah! Okay, I'm a DT newbie, so I think I misunderstood Arnd. :) If it's
+> easy, can you create a patch for that against the v4 I sent of Greg's
+> patch? I'm not sure how to do what you're suggesting. :)
 
+While I want to see this merged, I'm not going to get to anything soon. 
+So here's a DT example of what I mean. This will in addition need an 
+of_platform_populate call on the /reserved-memory node to get the 
+platform device created.
 
-> > > diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> > > index 8031148bcf85..ab8fbd5ba184 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> > > +++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> > > @@ -2,15 +2,17 @@ Atmel TCB PWM controller
-> > >  
-> > >  Required properties:
-> > >  - compatible: should be "atmel,tcb-pwm"
-> > > +- reg: tcb channel to use. Each channel can export 2 PWMs  
-> > 
-> > Is there a difference in channels? If not, then this compatible should 
-> > go.
-> 
-> This one I don't understand.
-> The TCB (Timer Counter Block) is an MFD containing 3 Timer Counter
-> devices. Each of these devices (also called channels) can be assigned a
-> specific mode:
-> - timer mode (free-running of programmable)
-> - waveform generator mode (IOW, a PWM)
-> - capture mode (an IIO device, but we don't have any driver for that
->   right now)
-> 
-> So each sub-device of the TCB is represented as a sub-node with its own
-> compatible. Is there a problem with that?
+{/
+        reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
 
-Missed this in my first reply. I guess for purposes of referencing pwm 
-from other nodes this is okay.
+		/* global autoconfigured region for contiguous allocations */
+		linux,cma {
+			compatible = "shared-dma-pool";
+			reusable;
+			size = <0x4000000>;
+			alignment = <0x2000>;
+			linux,cma-default;
+		};
+
+		ramoops@78000000 {
+			compatible = "ramoops";
+			reg = <0x78000000 0x8000>;
+			record-size = <0x4000>;
+			console-size = <0x4000>
+		};
+	};
+};
 
 Rob
