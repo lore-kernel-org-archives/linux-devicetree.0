@@ -1,7 +1,7 @@
 From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: [PATCH 1/6] regulator: core: Allow simultaneous use of enable op and GPIO
-Date: Wed, 22 Jun 2016 17:25:53 +0900
-Message-ID: <20160622082558.20935-2-acourbot@nvidia.com>
+Subject: [PATCH 4/6] regulator: gpio: Use of_get_regulator_gpio_config
+Date: Wed, 22 Jun 2016 17:25:56 +0900
+Message-ID: <20160622082558.20935-5-acourbot@nvidia.com>
 References: <20160622082558.20935-1-acourbot@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,97 +12,97 @@ To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob He
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gnurou@gmail.com, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The current regulator enable/disable mechanism does not call the driver
-enable/disable op if an enable GPIO is set. It may be desirable to use
-both mechanisms though, e.g. in the case of a PWM regulator that also
-has an enable GPIO.
-
-_regulator_is_enabled() is also updated in order to take both enable
-conditions into account.
+If instanciated from the DT, use of_get_regulator_gpio_config to obtain
+the enable GPIO configuration.
 
 Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 ---
- drivers/regulator/core.c | 34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+ drivers/regulator/gpio-regulator.c | 47 ++++++++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index db320e8fa865..995706070906 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -2111,6 +2111,9 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
- 		}
- 	}
+diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
+index 83e89e5d4752..5c079f854e77 100644
+--- a/drivers/regulator/gpio-regulator.c
++++ b/drivers/regulator/gpio-regulator.c
+@@ -153,18 +153,8 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
  
-+	if (!rdev->ena_pin && !rdev->desc->ops->enable)
-+		return -EINVAL;
-+
- 	if (rdev->ena_pin) {
- 		if (!rdev->ena_gpio_state) {
- 			ret = regulator_ena_gpio_ctrl(rdev, true);
-@@ -2118,12 +2121,12 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
- 				return ret;
- 			rdev->ena_gpio_state = 1;
- 		}
--	} else if (rdev->desc->ops->enable) {
-+	}
-+
-+	if (rdev->desc->ops->enable) {
- 		ret = rdev->desc->ops->enable(rdev);
- 		if (ret < 0)
- 			return ret;
--	} else {
--		return -EINVAL;
- 	}
+ 	config->supply_name = config->init_data->constraints.name;
  
- 	/* Allow the regulator to ramp; it would be useful to extend
-@@ -2215,6 +2218,12 @@ static int _regulator_do_disable(struct regulator_dev *rdev)
- 
- 	trace_regulator_disable(rdev_get_name(rdev));
- 
-+	if (rdev->desc->ops->disable) {
-+		ret = rdev->desc->ops->disable(rdev);
-+		if (ret != 0)
-+			return ret;
-+	}
-+
- 	if (rdev->ena_pin) {
- 		if (rdev->ena_gpio_state) {
- 			ret = regulator_ena_gpio_ctrl(rdev, false);
-@@ -2222,11 +2231,6 @@ static int _regulator_do_disable(struct regulator_dev *rdev)
- 				return ret;
- 			rdev->ena_gpio_state = 0;
- 		}
+-	if (of_property_read_bool(np, "enable-active-high"))
+-		config->enable_high = true;
 -
--	} else if (rdev->desc->ops->disable) {
--		ret = rdev->desc->ops->disable(rdev);
--		if (ret != 0)
--			return ret;
+-	if (of_property_read_bool(np, "enable-at-boot"))
+-		config->enabled_at_boot = true;
+-
+ 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
+ 
+-	config->enable_gpio = of_get_named_gpio(np, "enable-gpio", 0);
+-	if (config->enable_gpio == -EPROBE_DEFER)
+-		return ERR_PTR(-EPROBE_DEFER);
+-
+ 	/* Fetch GPIOs. - optional property*/
+ 	ret = of_gpio_count(np);
+ 	if ((ret < 0) && (ret != -ENOENT))
+@@ -237,6 +227,9 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
+ 				 regtype);
  	}
  
- 	/* cares about last_off_jiffy only if off_on_delay is required by
-@@ -2436,15 +2440,17 @@ EXPORT_SYMBOL_GPL(regulator_disable_deferred);
- 
- static int _regulator_is_enabled(struct regulator_dev *rdev)
- {
--	/* A GPIO control always takes precedence */
-+	/* If we don't know then assume that the regulator is always on */
-+	bool pin_enb = true;
-+	bool ops_enb = true;
++	/* GPIO info will be obtained via regulator_of_get_gpio_config */
++	config->enable_gpio = -ENOENT;
 +
- 	if (rdev->ena_pin)
--		return rdev->ena_gpio_state;
-+		pin_enb = rdev->ena_gpio_state;
- 
--	/* If we don't know then assume that the regulator is always on */
--	if (!rdev->desc->ops->is_enabled)
--		return 1;
-+	if (rdev->desc->ops->is_enabled)
-+		ops_enb = rdev->desc->ops->is_enabled(rdev);
- 
--	return rdev->desc->ops->is_enabled(rdev);
-+	return pin_enb && ops_enb;
+ 	return config;
  }
  
- static int _regulator_list_voltage(struct regulator *regulator,
+@@ -263,6 +256,11 @@ static int gpio_regulator_probe(struct platform_device *pdev)
+ 						      &drvdata->desc);
+ 		if (IS_ERR(config))
+ 			return PTR_ERR(config);
++
++		ret = of_get_regulator_gpio_config(&pdev->dev, np,
++						   "enable-gpio", &cfg);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	drvdata->desc.name = kstrdup(config->supply_name, GFP_KERNEL);
+@@ -337,21 +335,26 @@ static int gpio_regulator_probe(struct platform_device *pdev)
+ 	cfg.driver_data = drvdata;
+ 	cfg.of_node = np;
+ 
++	/*
++	 * For platform-defined regulators - DT is already handled by
++	 * of_get_regulator_gpio_config
++	 */
+ 	if (gpio_is_valid(config->enable_gpio)) {
+ 		cfg.ena_gpio = config->enable_gpio;
+ 		cfg.ena_gpio_initialized = true;
+-	}
+-	cfg.ena_gpio_invert = !config->enable_high;
+-	if (config->enabled_at_boot) {
+-		if (config->enable_high)
+-			cfg.ena_gpio_flags |= GPIOF_OUT_INIT_HIGH;
+-		else
+-			cfg.ena_gpio_flags |= GPIOF_OUT_INIT_LOW;
+-	} else {
+-		if (config->enable_high)
+-			cfg.ena_gpio_flags |= GPIOF_OUT_INIT_LOW;
+-		else
+-			cfg.ena_gpio_flags |= GPIOF_OUT_INIT_HIGH;
++
++		cfg.ena_gpio_invert = !config->enable_high;
++		if (config->enabled_at_boot) {
++			if (config->enable_high)
++				cfg.ena_gpio_flags |= GPIOF_OUT_INIT_HIGH;
++			else
++				cfg.ena_gpio_flags |= GPIOF_OUT_INIT_LOW;
++		} else {
++			if (config->enable_high)
++				cfg.ena_gpio_flags |= GPIOF_OUT_INIT_LOW;
++			else
++				cfg.ena_gpio_flags |= GPIOF_OUT_INIT_HIGH;
++		}
+ 	}
+ 
+ 	drvdata->dev = regulator_register(&drvdata->desc, &cfg);
 -- 
 2.8.3
