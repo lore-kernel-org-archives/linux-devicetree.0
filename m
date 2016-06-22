@@ -1,66 +1,37 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v3 0/2] irqchip: Support Aspeed IRQ controller
-Date: Wed, 22 Jun 2016 18:53:57 +0000
-Message-ID: <20160622185357.GE9922@io.lakedaemon.net>
-References: <1462802317-27086-1-git-send-email-joel@jms.id.au>
- <1463064193-2178-1-git-send-email-joel@jms.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1463064193-2178-1-git-send-email-joel@jms.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: baruch@tkos.co.il, arnd@arndb.de, devicetree@vger.kernel.org, marc.zyngier@arm.com, benh@kernel.crashing.org, andrew@aj.id.au, jk@ozlabs.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Subject: [PATCH 0/2] Add support for Smart Battery System Manager
+Date: Wed, 22 Jun 2016 21:07:14 +0200
+Message-ID: <1466622436-27963-1-git-send-email-karl-heinz@schneider-inet.de>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>, Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
 List-Id: devicetree@vger.kernel.org
 
-Hey Joel, Ben,
+This patch series adds support for Smart Battery System Manager.
+A SBSM is a device listening at I2C/SMBus address 0x0a and is capable of
+communicating up to four I2C smart battery devices. All smart battery
+devices are listening at address 0x0b, so the SBSM muliplexes between
+them. The driver makes use of the I2C-Mux framework to allow smart
+batteries to be bound via device tree, i.e. the sbs-battery driver.
 
-On Fri, May 13, 2016 at 12:13:11AM +0930, Joel Stanley wrote:
-> Hello All,
-> 
-> This adds support for the IRQ controller found in the Aspeed ast2400 and
-> ast2500 BMC SoCs.
-> 
-> It's been tested on the ast2400 in an OpenPower Palmetto system, and on the
-> ast2500-edk developer kit.
-> 
-> V2 has a fix for the compatible string in the device tree bindings.
-> 
-> V3 drops the valid-sources bitmasks and adds a unit address to the example in
-> the bindings
-> 
-> Cheers,
-> 
-> Joel
-> 
-> Benjamin Herrenschmidt (1):
->   irqchip: Add irq controller for Aspeed
-> 
-> Joel Stanley (1):
->   doc/devicetree: Add Aspeed VIC bindings
-> 
->  .../interrupt-controller/aspeed,ast2400-vic.txt    |  22 ++
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-aspeed-vic.c                   | 230 +++++++++++++++++++++
->  3 files changed, 253 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-vic.txt
->  create mode 100644 drivers/irqchip/irq-aspeed-vic.c
+Via sysfs interface the online state and charge type are presented. If
+the driver is bound as ltc1760 (a Dual Smart Battery System Manager)
+the charge type can also be changed from trickle to fast.
 
-Series applied to irqchip/aspeed.  I'll only rebase it if you tell me
-to. :-)
+Patch set generated against v4.7rc-4.
 
-Should be in -next the next time it gets built.
+Karl-Heinz Schneider (2):
+  Documentation: Add sbs-manager device tree node documentation
+  power: Adds support for Smart Battery System Manager
 
-thx,
+ .../devicetree/bindings/power/sbs,sbs-manager.txt  |  57 ++++
+ drivers/power/Kconfig                              |  13 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/sbs-manager.c                        | 346 +++++++++++++++++++++
+ 4 files changed, 417 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+ create mode 100644 drivers/power/sbs-manager.c
 
-Jason.
+--
+1.9.1
