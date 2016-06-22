@@ -1,283 +1,122 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: [RESEND PATCH v2 3/5] ir-rx51: use PWM framework instead of OMAP
- dmtimer
-Date: Wed, 22 Jun 2016 22:22:19 +0300
-Message-ID: <1466623341-30130-4-git-send-email-ivo.g.dimitrov.75@gmail.com>
-References: <1466623341-30130-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466623341-30130-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com
-Cc: devicetree@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, pavel@ucw.cz, pali.rohar@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 02/14] dt/bindings: update binding for PM domain idle states
+Date: Wed, 22 Jun 2016 13:36:37 -0600
+Message-ID: <1466624209-27432-3-git-send-email-lina.iyer@linaro.org>
+References: <1466624209-27432-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466624209-27432-1-git-send-email-lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mtitinger-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert driver to use PWM framework instead of calling dmtimer functions
-directly for PWM timer. Remove paragraph about writing to the Free Software
-Foundation's mailing address while at it.
+From: Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Update DT bindings to describe idle states of PM domains.
+
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+[Lina: Added state properties, removed state names, wakeup-latency,
+added of_pm_genpd_init() API, pruned commit text]
+Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+[Ulf: Moved around code to make it compile properly, rebased on top of multiple state support]
 ---
- arch/arm/mach-omap2/board-rx51-peripherals.c |  1 -
- arch/arm/mach-omap2/pdata-quirks.c           |  1 -
- drivers/media/rc/ir-rx51.c                   | 85 ++++++++++++++--------------
- include/linux/platform_data/media/ir-rx51.h  |  2 -
- 4 files changed, 44 insertions(+), 45 deletions(-)
+ .../devicetree/bindings/power/power_domain.txt     | 70 ++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-diff --git a/arch/arm/mach-omap2/board-rx51-peripherals.c b/arch/arm/mach-omap2/board-rx51-peripherals.c
-index 9a70739..e487575 100644
---- a/arch/arm/mach-omap2/board-rx51-peripherals.c
-+++ b/arch/arm/mach-omap2/board-rx51-peripherals.c
-@@ -1242,7 +1242,6 @@ static struct pwm_omap_dmtimer_pdata __maybe_unused pwm_dmtimer_pdata = {
- #if defined(CONFIG_IR_RX51) || defined(CONFIG_IR_RX51_MODULE)
- static struct lirc_rx51_platform_data rx51_lirc_data = {
- 	.set_max_mpu_wakeup_lat = omap_pm_set_max_mpu_wakeup_lat,
--	.pwm_timer = 9, /* Use GPT 9 for CIR */
- #if IS_ENABLED(CONFIG_OMAP_DM_TIMER)
- 	.dmtimer = &pwm_dmtimer_pdata,
- #endif
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 6571ad9..278bb8f 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -491,7 +491,6 @@ static struct pwm_omap_dmtimer_pdata pwm_dmtimer_pdata = {
+diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+index 025b5e7..41e8dda 100644
+--- a/Documentation/devicetree/bindings/power/power_domain.txt
++++ b/Documentation/devicetree/bindings/power/power_domain.txt
+@@ -29,6 +29,43 @@ Optional properties:
+    specified by this binding. More details about power domain specifier are
+    available in the next section.
  
- static struct lirc_rx51_platform_data __maybe_unused rx51_lirc_data = {
- 	.set_max_mpu_wakeup_lat = omap_pm_set_max_mpu_wakeup_lat,
--	.pwm_timer = 9, /* Use GPT 9 for CIR */
- #if IS_ENABLED(CONFIG_OMAP_DM_TIMER)
- 	.dmtimer = &pwm_dmtimer_pdata,
- #endif
-diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
-index da839c3..5096ef3 100644
---- a/drivers/media/rc/ir-rx51.c
-+++ b/drivers/media/rc/ir-rx51.c
-@@ -12,13 +12,7 @@
-  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  *  GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License
-- *  along with this program; if not, write to the Free Software
-- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-- *
-  */
--
- #include <linux/clk.h>
- #include <linux/module.h>
- #include <linux/interrupt.h>
-@@ -26,6 +20,7 @@
- #include <linux/platform_device.h>
- #include <linux/sched.h>
- #include <linux/wait.h>
-+#include <linux/pwm.h>
- 
- #include <media/lirc.h>
- #include <media/lirc_dev.h>
-@@ -43,7 +38,7 @@
- #define TIMER_MAX_VALUE 0xffffffff
- 
- struct lirc_rx51 {
--	pwm_omap_dmtimer *pwm_timer;
-+	struct pwm_device *pwm;
- 	pwm_omap_dmtimer *pulse_timer;
- 	struct pwm_omap_dmtimer_pdata *dmtimer;
- 	struct device	     *dev;
-@@ -58,32 +53,28 @@ struct lirc_rx51 {
- 	int		wbuf[WBUF_LEN];
- 	int		wbuf_index;
- 	unsigned long	device_is_open;
--	int		pwm_timer_num;
- };
- 
- static void lirc_rx51_on(struct lirc_rx51 *lirc_rx51)
- {
--	lirc_rx51->dmtimer->set_pwm(lirc_rx51->pwm_timer, 0, 1,
--				PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-+	pwm_enable(lirc_rx51->pwm);
- }
- 
- static void lirc_rx51_off(struct lirc_rx51 *lirc_rx51)
- {
--	lirc_rx51->dmtimer->set_pwm(lirc_rx51->pwm_timer, 0, 1,
--				    PWM_OMAP_DMTIMER_TRIGGER_NONE);
-+	pwm_disable(lirc_rx51->pwm);
- }
- 
- static int init_timing_params(struct lirc_rx51 *lirc_rx51)
- {
--	u32 load, match;
--
--	load = -(lirc_rx51->fclk_khz * 1000 / lirc_rx51->freq);
--	match = -(lirc_rx51->duty_cycle * -load / 100);
--	lirc_rx51->dmtimer->set_load(lirc_rx51->pwm_timer, 1, load);
--	lirc_rx51->dmtimer->set_match(lirc_rx51->pwm_timer, 1, match);
--	lirc_rx51->dmtimer->write_counter(lirc_rx51->pwm_timer, TIMER_MAX_VALUE - 2);
--	lirc_rx51->dmtimer->start(lirc_rx51->pwm_timer);
-+	struct pwm_device *pwm = lirc_rx51->pwm;
-+	int duty, period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, lirc_rx51->freq);
++- power-states : A phandle of an idle-state that shall be soaked into a
++                generic domain power state.
 +
-+	duty = DIV_ROUND_CLOSEST(lirc_rx51->duty_cycle * period, 100);
- 	lirc_rx51->dmtimer->set_int_enable(lirc_rx51->pulse_timer, 0);
++==Power state==
 +
-+	pwm_config(pwm, duty, period);
++A PM domain power state describes an idle state of a domain and must be
++have the following properties -
 +
- 	lirc_rx51->dmtimer->start(lirc_rx51->pulse_timer);
- 
- 	lirc_rx51->match = 0;
-@@ -165,7 +156,7 @@ end:
- 	/* Stop TX here */
- 	lirc_rx51_off(lirc_rx51);
- 	lirc_rx51->wbuf_index = -1;
--	lirc_rx51->dmtimer->stop(lirc_rx51->pwm_timer);
++	- entry-latency-us
++		Usage: Not required if wakeup-latency-us is provided.
++		Value type: <prop-encoded-array>
++		Definition: u32 value representing worst case latency in
++		microseconds required to enter the idle state.
++		The exit-latency-us duration may be guaranteed
++		only after entry-latency-us has passed.
 +
- 	lirc_rx51->dmtimer->stop(lirc_rx51->pulse_timer);
- 	lirc_rx51->dmtimer->set_int_enable(lirc_rx51->pulse_timer, 0);
- 	wake_up_interruptible(&lirc_rx51->wqueue);
-@@ -176,13 +167,13 @@ end:
- static int lirc_rx51_init_port(struct lirc_rx51 *lirc_rx51)
- {
- 	struct clk *clk_fclk;
--	int retval, pwm_timer = lirc_rx51->pwm_timer_num;
-+	int retval;
- 
--	lirc_rx51->pwm_timer = lirc_rx51->dmtimer->request_specific(pwm_timer);
--	if (lirc_rx51->pwm_timer == NULL) {
--		dev_err(lirc_rx51->dev, ": Error requesting GPT%d timer\n",
--			pwm_timer);
--		return -EBUSY;
-+	lirc_rx51->pwm = pwm_get(lirc_rx51->dev, NULL);
-+	if (IS_ERR(lirc_rx51->pwm)) {
-+		retval = PTR_ERR(lirc_rx51->pwm);
-+		dev_err(lirc_rx51->dev, ": pwm_get failed: %d\n", retval);
-+		return retval;
- 	}
- 
- 	lirc_rx51->pulse_timer = lirc_rx51->dmtimer->request();
-@@ -192,15 +183,11 @@ static int lirc_rx51_init_port(struct lirc_rx51 *lirc_rx51)
- 		goto err1;
- 	}
- 
--	lirc_rx51->dmtimer->set_source(lirc_rx51->pwm_timer,
--				       PWM_OMAP_DMTIMER_SRC_SYS_CLK);
- 	lirc_rx51->dmtimer->set_source(lirc_rx51->pulse_timer,
- 				       PWM_OMAP_DMTIMER_SRC_SYS_CLK);
--
--	lirc_rx51->dmtimer->enable(lirc_rx51->pwm_timer);
- 	lirc_rx51->dmtimer->enable(lirc_rx51->pulse_timer);
--
--	lirc_rx51->irq_num = lirc_rx51->dmtimer->get_irq(lirc_rx51->pulse_timer);
-+	lirc_rx51->irq_num =
-+			lirc_rx51->dmtimer->get_irq(lirc_rx51->pulse_timer);
- 	retval = request_irq(lirc_rx51->irq_num, lirc_rx51_interrupt_handler,
- 			     IRQF_SHARED, "lirc_pulse_timer", lirc_rx51);
- 	if (retval) {
-@@ -208,7 +195,7 @@ static int lirc_rx51_init_port(struct lirc_rx51 *lirc_rx51)
- 		goto err2;
- 	}
- 
--	clk_fclk = lirc_rx51->dmtimer->get_fclk(lirc_rx51->pwm_timer);
-+	clk_fclk = lirc_rx51->dmtimer->get_fclk(lirc_rx51->pulse_timer);
- 	lirc_rx51->fclk_khz = clk_get_rate(clk_fclk) / 1000;
- 
- 	return 0;
-@@ -216,7 +203,7 @@ static int lirc_rx51_init_port(struct lirc_rx51 *lirc_rx51)
- err2:
- 	lirc_rx51->dmtimer->free(lirc_rx51->pulse_timer);
- err1:
--	lirc_rx51->dmtimer->free(lirc_rx51->pwm_timer);
-+	pwm_put(lirc_rx51->pwm);
- 
- 	return retval;
- }
-@@ -226,11 +213,10 @@ static int lirc_rx51_free_port(struct lirc_rx51 *lirc_rx51)
- 	lirc_rx51->dmtimer->set_int_enable(lirc_rx51->pulse_timer, 0);
- 	free_irq(lirc_rx51->irq_num, lirc_rx51);
- 	lirc_rx51_off(lirc_rx51);
--	lirc_rx51->dmtimer->disable(lirc_rx51->pwm_timer);
- 	lirc_rx51->dmtimer->disable(lirc_rx51->pulse_timer);
--	lirc_rx51->dmtimer->free(lirc_rx51->pwm_timer);
- 	lirc_rx51->dmtimer->free(lirc_rx51->pulse_timer);
- 	lirc_rx51->wbuf_index = -1;
-+	pwm_put(lirc_rx51->pwm);
- 
- 	return 0;
- }
-@@ -387,7 +373,6 @@ static int lirc_rx51_release(struct inode *inode, struct file *file)
- }
- 
- static struct lirc_rx51 lirc_rx51 = {
--	.freq		= 38000,
- 	.duty_cycle	= 50,
- 	.wbuf_index	= -1,
- };
-@@ -445,14 +430,34 @@ static int lirc_rx51_resume(struct platform_device *dev)
- 
- static int lirc_rx51_probe(struct platform_device *dev)
- {
-+	struct pwm_device *pwm;
++	- exit-latency-us
++		Usage: Not required if wakeup-latency-us is provided.
++		Value type: <prop-encoded-array>
++		Definition: u32 value representing worst case latency
++		in microseconds required to exit the idle state.
 +
- 	lirc_rx51_driver.features = LIRC_RX51_DRIVER_FEATURES;
- 	lirc_rx51.pdata = dev->dev.platform_data;
++	- residency-us:
++		Usage: Optional
++		Value type: <prop-encoded-array>
++		Definition: A u32 value representing the time for which a
++		domain must be idle in the state to reap power saving benefits
++		of entering the state.
 +
-+	if (!lirc_rx51.pdata) {
-+		dev_err(&dev->dev, "Platform Data is missing\n");
-+		return -ENXIO;
-+	}
++	- state-param:
++		Usage: Optional
++		Value type: <prop-encoded-array>
++		Definition: A u32 value as defined by the state. May be used
++		by the driver to hold state related u32 data. In the case of
++		PSCI, an extended state-id for the domain may be encoded in
++		this value.
 +
- 	if (!lirc_rx51.pdata->dmtimer) {
- 		dev_err(&dev->dev, "no dmtimer?\n");
- 		return -ENODEV;
- 	}
+ Example:
  
--	lirc_rx51.pwm_timer_num = lirc_rx51.pdata->pwm_timer;
-+	pwm = pwm_get(&dev->dev, NULL);
-+	if (IS_ERR(pwm)) {
-+		int err = PTR_ERR(pwm);
-+
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&dev->dev, "pwm_get failed: %d\n", err);
-+		return err;
-+	}
-+
-+	/* Use default, in case userspace does not set the carrier */
-+	lirc_rx51.freq = DIV_ROUND_CLOSEST(pwm_get_period(pwm), NSEC_PER_SEC);
-+	pwm_put(pwm);
-+
- 	lirc_rx51.dmtimer = lirc_rx51.pdata->dmtimer;
- 	lirc_rx51.dev = &dev->dev;
- 	lirc_rx51_driver.dev = &dev->dev;
-@@ -464,8 +469,6 @@ static int lirc_rx51_probe(struct platform_device *dev)
- 		       lirc_rx51_driver.minor);
- 		return lirc_rx51_driver.minor;
- 	}
--	dev_info(lirc_rx51.dev, "registration ok, minor: %d, pwm: %d\n",
--		 lirc_rx51_driver.minor, lirc_rx51.pwm_timer_num);
+ 	power: power-controller@12340000 {
+@@ -55,6 +92,39 @@ Example 2:
+ 		#power-domain-cells = <1>;
+ 	};
  
- 	return 0;
- }
-diff --git a/include/linux/platform_data/media/ir-rx51.h b/include/linux/platform_data/media/ir-rx51.h
-index 3038120..6acf22d 100644
---- a/include/linux/platform_data/media/ir-rx51.h
-+++ b/include/linux/platform_data/media/ir-rx51.h
-@@ -2,8 +2,6 @@
- #define _LIRC_RX51_H
- 
- struct lirc_rx51_platform_data {
--	int pwm_timer;
--
- 	int(*set_max_mpu_wakeup_lat)(struct device *dev, long t);
- 	struct pwm_omap_dmtimer_pdata *dmtimer;
- };
++Example 3:
++
++	pm-domains {
++		a57_pd: a57_pd@ {
++			/* will have a57 platform ARM_PD_METHOD_OF_DECLARE*/
++			compatible = "arm,pd","arm,cortex-a57";
++			#power-domain-cells = <0>;
++			power-states = <&CLUSTER_SLEEP_0>;
++		};
++
++		a53_pd: a53_pd@ {
++			/* will have a a53 platform ARM_PD_METHOD_OF_DECLARE*/
++			compatible = "arm,pd","arm,cortex-a53";
++			#power-domain-cells = <0>;
++			power-states = <&CLUSTER_SLEEP_0>, <&CLUSTER_SLEEP_1>;
++		};
++
++		CLUSTER_SLEEP_0: power-state@0 {
++			entry-latency-us = <1000>;
++			exit-latency-us = <2000>;
++			residency-us = <10000>;
++			state-param = <0x1000010>;
++		};
++
++		CLUSTER_SLEEP_1: power-state@1 {
++			entry-latency-us = <5000>;
++			exit-latency-us = <5000>;
++			residency-us = <100000>;
++			state-param = <0x1000020>;
++		};
++	};
++
++
+ The nodes above define two power controllers: 'parent' and 'child'.
+ Domains created by the 'child' power controller are subdomains of '0' power
+ domain provided by the 'parent' power controller.
 -- 
-1.9.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
