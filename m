@@ -1,78 +1,88 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: Add dts file for inet86dz board
-Date: Wed, 22 Jun 2016 18:09:37 +0200
-Message-ID: <3d9acb4f-93ac-5345-88f2-0b260dd86d6f@redhat.com>
-References: <1465754150-16753-1-git-send-email-hdegoede@redhat.com>
- <CAGb2v66cbx0jta1unrKeYm1t9JKO9Unw8z75rXbW3JSi2=NuMw@mail.gmail.com>
- <f080dda9-6410-ec79-f083-29a20d147d61@redhat.com>
- <20160617054607.GN5144@lukather>
- <CAGb2v67TUUZSj2bCQPvogG8rNfdxBcnZwRVLVLxw6Tjg4o+kDA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] gpio: omap: make gpio numbering deterministical by using
+ of aliases
+Date: Wed, 22 Jun 2016 17:16:44 +0100
+Message-ID: <20160622161644.GD31817@leverpostej>
+References: <1465898604-16294-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <CACRpkdaVRTj4jpGQp9nDKo8RAPDPUaApp4jAdBGRgd45bqo2zQ@mail.gmail.com>
+ <20160615072404.GB26768@pengutronix.de>
+ <CACRpkdYK1C5px+A_O1sF99KTPTob9qTQpipEaRLHnNx5=AokLg@mail.gmail.com>
+ <20160619010823.GC26875@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v67TUUZSj2bCQPvogG8rNfdxBcnZwRVLVLxw6Tjg4o+kDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160619010823.GC26875@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, Jun 19, 2016 at 03:08:23AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Linus,
+>=20
+> On Sat, Jun 18, 2016 at 10:25:45AM +0200, Linus Walleij wrote:
+> > On Wed, Jun 15, 2016 at 9:24 AM, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Wed, Jun 15, 2016 at 08:56:58AM +0200, Linus Walleij wrote:
+> >=20
+> > >> The GPIO numbering scheme is a matter of Linux internals and
+> > >> not about hardware description IMO.
+> > >
+> > > Not sure if I should agree here or not. It's very usual that the
+> > > "internal" gpio numbers match the hardware reference manual. I kn=
+ow this
+> > > from imx, at91, all pre-dt platforms, I'm sure there are more, an=
+d I bet
+> > > I'm not the only one relying on this for omap.
+> >=20
+> > I think it will still match nicely against the chip-local offsets o=
+f the
+> > primary gpiochip so it'll be fine with a chardev too. The same was/=
+is
+>=20
+> I cannot follow. What is the primary gpiochip? The first one? What is=
+ a
+> "chip-local offset". Just 3 for the fourth gpio of a given gpio bank?
+> I guess the problem is that I didn't follow development of the gpio
+> chardev.
 
-On 22-06-16 08:40, Chen-Yu Tsai wrote:
-> On Fri, Jun 17, 2016 at 1:46 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On Mon, Jun 13, 2016 at 11:35:15AM +0200, Hans de Goede wrote:
->>> Hi
->>>
->>> On 13-06-16 05:16, Chen-Yu Tsai wrote:
->>>> Hi,
->>>>
->>>> On Mon, Jun 13, 2016 at 1:55 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>>> The inet86dz board is a board used in 7" tablets from various oems.
->>>>>
->>>>> These tablets are a23 based 7" tablets featuring a 1024x600 LCD,
->>>>> 512MB RAM, 4G NAND, rtl8188etv usb wifi, gsl1680 touchschreen,
->>>>> micro-sd slot, 3.5mm headphone jack and a micro-usb otg connector
->>>>> which doubles as charging port.
->>>>
->>>> This seems awfully similar to the sun8i-a23-q8-tablet, any reason
->>>> not to include that or sun8i-q8-common.dtsi?
->>>
->>> So to answer this both for this board and for the Polaroid MID2407PXE03
->>> one, these are not q8 tablets, they are not using the standard q8 casing
->>> at least. So using q8 for them would seem to be a bit confusing to users
->>> and figuring out how to do proper autodetect is already hard enough without
->>> throwing these into the mix too.
->>>
->>> OTOH you are right that there is a lot of code duplication here. Since I
->>> plan to start working on touchscreen autodetect soon-ish, let me see how
->>> that goes first.
->>
->> For reference, I'm not really against having similar boards having
->> similar-yet-duplicated DT. This is just data, and sometimes trying to
->> factorise things also make it less trivial and easy to understand.
->
-> It seems most if not all Allwinner based tablets use the reference design
-> Allwinner provides. The design specifies how components are connected,
-> what models could be used, etc.. Maybe we could rename sun*i-q8-common to
-> sun*i-reference-design and use that? We'd still have board.dts files
-> including it, and providing the board name.
+If I've understood correctly, Linus was on about the id space for GPIOs
+under a particular gpiochip. If I've understand correctly, you're tryin=
+g
+to ensure consistent numbering the the *global* ID space shared by all
+GPIO chips present in a system?
 
-Ok, so as the thread I started on this shows, doing auto-detect is actually
-more or less impossible when it comes to the touchscreens, so I do believe
-that having separate dts files for clearly identifiable non q8 boards is
-best.
+> > the case of the first interrupts on x86 I think, but with the pleth=
+ora of
+> > irqchips and dependency on probe order etc the assumption is
+> > nowadays to dangerous.
+> >=20
+> > > And this is very usual in the dt world, too:
+> > >
+> > > $ git grep -El 'gpio. =3D \&gpio' arch/arm/boot/dts | wc -l
+> > > 37
+> >=20
+> > Aha I didn't even know. Well I guess I could allow it for OMAP too
+> > then, but I want an ACK from one of the DT binding maintainers.
 
-I do like the idea of sharing some more stuff though, I'll do a v2 of
-the Polaroid MID2407PXE03 and inet86dz dts additions based on first
-introducing a sun8i-reference-design-tablet.dtsi which will take most
-of the content currently in sun8i-q8-common.dtsi
+In general, our use of aliases is rather ill-defined. It would be nicer
+if we could address devices in a similar manner to disks or partitions,
+e.g. by path or uuid, but I don't think we have anything sensible we ca=
+n
+use there.
 
-Regards,
+Given that, I can see the use of an alias to provide a consistent way o=
+f
+referring to a particular gpiochip (and maybe we need to expose the
+alises information somehow to userspace), but IMO that's independent of
+any global ID space, probe ordering, etc.
 
-Hans
+Thanks,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
