@@ -1,52 +1,68 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] regulator: tps65217: Enable suspend configuration
-Date: Wed, 22 Jun 2016 11:16:11 +0100
-Message-ID: <20160622101611.GI28202@sirena.org.uk>
-References: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
- <1466412218-5906-2-git-send-email-j-keerthy@ti.com>
- <20160621190848.GF28202@sirena.org.uk>
- <576A64EA.4000607@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] ata: ahci_platform: Add ACPI support for APM X-Gene AHCI
+ controller v3 hardware.
+Date: Wed, 22 Jun 2016 12:18:33 +0200
+Message-ID: <5402203.QaZloJIEAM@wuerfel>
+References: <stripathi@apm.com>
+ <CAOHikRCB4c79okd0q3=Lqwk7LKwZ6EDnWfHRH_oXokrB4PHcyw@mail.gmail.com>
+ <CAOHikRDUH-PK4JfS8pUR+or=XTwDHBejFTGy33V20HKMMTUaPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Encpt1P6Mxii2VuT"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <576A64EA.4000607-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, russ.dill-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOHikRDUH-PK4JfS8pUR+or=XTwDHBejFTGy33V20HKMMTUaPg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Langsdorf <mlangsdo@redhat.com>, Suman Tripathi <stripathi@apm.com>, Jon Masters <jcm@redhat.com>, Olof Johansson <olof@lixom.net>, patches <patches@apm.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Tejun Heo <tj@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday, June 21, 2016 4:31:38 PM CEST Suman Tripathi wrote:
+> On Tue, Jun 21, 2016 at 11:08 AM, Suman Tripathi <stripathi@apm.com> wrote:
+> > On Wed, Jun 15, 2016 at 11:54 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >>
+> >> On Wednesday, June 15, 2016 5:44:00 PM CEST suman-tripathi wrote:
+> >> > This patch adds ACPI support for APM X-Gene AHCI controller in
+> >> > ahci_platform driver for v3 hardware. APM X-Gene AHCI controller
+> >> > v3 hardware is fully compliant with ahci_platform driver and requires
+> >> > no workaround quirk.
+> >> >
+> >> > Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> >> > ---
+> >> >  drivers/ata/ahci_platform.c |    1 +
+> >> >  1 files changed, 1 insertions(+), 0 deletions(-)
+> >> >
+> >> > diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> >> > index 62a04c8..3395baf 100644
+> >> > --- a/drivers/ata/ahci_platform.c
+> >> > +++ b/drivers/ata/ahci_platform.c
+> >> > @@ -86,6 +86,7 @@ MODULE_DEVICE_TABLE(of, ahci_of_match);
+> >> >
+> >> >  static const struct acpi_device_id ahci_acpi_match[] = {
+> >> >         { ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
+> >> > +       { "APMC0D33", 0},
+> >> >         {},
+> >> >  };
+> >> >  MODULE_DEVICE_TABLE(acpi, ahci_acpi_match);
+> >> >
+> >>
+> >> Doesn't the ACPI_DEVICE_CLASS entry take care of this? I thought it had been
+> >
+> >
+> > yeah it also works. Just thought that we need something different as
+> > our's is a non-PCI SATA.
+> 
+> Are you suggesting to introduce a new class ACPI_DEVICE_CLASS for
+> non-pci ahci ? or to reuse the existing PCI_CLASS_STORAGE_SATA_AHCI ?
 
---Encpt1P6Mxii2VuT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This was specifically introduced for non-PCI devices, so it should
+just work.
 
-On Wed, Jun 22, 2016 at 03:44:02PM +0530, Keerthy wrote:
-
-> Hence saving it in a static array and using it later in the ops functions to
-> disable or enable regulator during suspend.
-
-Why a static array and not part of the dynamically allocated driver
-data?
-
---Encpt1P6Mxii2VuT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXamVpAAoJECTWi3JdVIfQ2FEH/1KSem8eNAWDCdpOmy8v8jJe
-ixmSH+oUNIfKsXMPg8eVIVycXLX2lo7ez277dsxqWXZ8m6Dgi8OGrF0pAdsZhF2Y
-VOzn4F+7tcDHuJe6PmymHpMvj6Q7SSd6Kieda7Ic7mozFzYh8/OV5Mb9hfM/WO31
-0hbJtVWzORTaEKWmSBI2k7kmTmPEM0Kwc4tFO8q2zeQ1Q8B2WczVYg2n3Mf+ZxDy
-h8/8fB7mflvPhg8KkOhUCiepJRkQJagDbdI+qZEgPD62WOBW49jLbvqAmlviDspx
-YuplJ5zc4u1LDmZfrPlETCfOpqLvQGYMlGeBQ9TAexQr+UdJSHrGhmsd5W7cTWI=
-=jzNr
------END PGP SIGNATURE-----
-
---Encpt1P6Mxii2VuT--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
