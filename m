@@ -1,55 +1,90 @@
-From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: lpc32xx: set default parent clock for pwm1 & pwm2
-Date: Wed, 22 Jun 2016 08:32:11 -0400
-Message-ID: <1466598731-5144-1-git-send-email-slemieux.tyco@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC PATCH 0/4] Introduce new caps to improve the card's init sequence
+Date: Wed, 22 Jun 2016 14:37:39 +0200
+Message-ID: <CAPDyKFp+ugPtHsxa1O9eeArkJjoM2sL2F7gqAekgus1qoi3UUw@mail.gmail.com>
+References: <1465373996-2485-1-git-send-email-shawn.lin@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465373996-2485-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+On 8 June 2016 at 10:19, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>
+> Hi all,
+>
+> This patchset is gonna improve the card's init sequence
+> by exposing some caps to DT.
+>
+> The basic idea is to skip sending specific init cmd inspired
+> by Carlo Caione's commit[0].
+>
+> To make it possible, I firstly expose Carlo's MMC_CAP2_NO_SDIO
+> to DT and extend two new caps for similar usage of sd and mmc.
+> We probably need it because for most of the boards, each of the
+> slots should have a specific function when designed. It's impossible
+> for one slot which can either to be used as eMMC or a SD card for a
+> given board. The same for SDIO case.
+>
+> We could have two ways to improve it
+> A) Skip sending specific commands if knowing we don't support
+> the specific card type.
+> B) Allow sending specific commands if knowing we do support
+> the specific card type.
+>
+> A) and B) shouldn't have difference, but I take A) as the final
+> one as it looks more consistent with Carlo's way, which does not
+> seem to break anything as possible.
+>
+> The only roadblock for this patchset to be landed should be the
+> improvement we gain from it. Theoretically sdio-card doesn't get
+> improvment as it's already in the first place to be attached.
+> But considering the sd and (e)MMC case, we should gain more benifit
+> from it.
+>
+> From the test, we can save nearly 2ms for attaching emmc against the
+> original 8ms. And we gain more than 30us improvement for sd card for
+> each insert.
+>
+> [0]: http://permalink.gmane.org/gmane.linux.kernel.mmc/34774
+>
+>
+>
+> Shawn Lin (4):
+>   Documentation: mmc: add description for new caps
+>   mmc: core: expose MMC_CAP2_NO_SDIO to dt-binding
+>   mmc: core: add cap-no-sd and cap-no-mmc properties
+>   mmc: core: improve initialization flow
+>
 
-The change setup the peripheral clock (PERIPH_CLK) as the default 
-parent clock for PWM1 & PWM2.
+I would prefer that you restructure this series a bit.
 
-Signed-off-by: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
----
-Dependencies:
-- clk: lpc32xx: allow peripheral clock selection in device tree
-  http://thread.gmane.org/gmane.linux.kernel.clk/6938
+Start by adding each new MMC_CAP2* separately and without involving
+the DT parsing.
 
- arch/arm/boot/dts/lpc32xx.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Make the DT documentation patch come after the above, and add a new
+separate patch which exposes the caps to device tree.
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index e295e1e..ed85b95 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -469,6 +469,9 @@
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C000 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM1>;
-+				assigned-clocks = <&clk LPC32XX_CLK_PWM1>,
-+						  <&clk LPC32XX_CLK_PERIPH>;
-+				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
- 				status = "disabled";
- 			};
- 
-@@ -476,6 +479,9 @@
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C004 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM2>;
-+				assigned-clocks = <&clk LPC32XX_CLK_PWM2>,
-+						  <&clk LPC32XX_CLK_PERIPH>;
-+				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
- 				status = "disabled";
- 			};
- 
--- 
-1.8.3.1
+In that way, I can pick up the non DT parts and wait for Rob's
+ack/nack of the DT bindings.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
+
+>  Documentation/devicetree/bindings/mmc/mmc.txt |  3 +++
+>  drivers/mmc/core/core.c                       | 10 +++++-----
+>  drivers/mmc/core/host.c                       |  6 ++++++
+>  include/linux/mmc/host.h                      |  2 ++
+>  4 files changed, 16 insertions(+), 5 deletions(-)
+>
+> --
+> 2.3.7
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
