@@ -1,47 +1,41 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v3 08/15] mmc: sdhci-of-arasan: Properly set
- corecfg_baseclkfreq on rk3399
-Date: Wed, 22 Jun 2016 15:34:41 +0300
-Message-ID: <576A85E1.3010309@intel.com>
-References: <1466445414-11974-1-git-send-email-dianders@chromium.org>
- <1466445414-11974-9-git-send-email-dianders@chromium.org>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v2 0/2] can: rcar_canfd: Add Classical CAN & lower state
+ transition support
+Date: Wed, 22 Jun 2016 13:31:45 +0100
+Message-ID: <1466598707-44076-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+References: <1466434007-50873-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466445414-11974-9-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>, ulf.hansson@linaro.org, Heiko Stuebner <heiko@sntech.de>
-Cc: kishon@ti.com, robh+dt@kernel.org, shawn.lin@rock-chips.com, xzy.xu@rock-chips.com, briannorris@chromium.org, linux-rockchip@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, groeck@chromium.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1466434007-50873-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mkl@pengutronix.de, wg@grandegger.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, chris.paterson2@renesas.com, socketcan@hartkopp.net, magnus.damm@gmail.com, linux-can@vger.kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, ulrich.hecht+renesas@gmail.com, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/06/16 20:56, Douglas Anderson wrote:
-> In the the earlier change in this series ("Documentation: mmc:
-> sdhci-of-arasan: Add soc-ctl-syscon for corecfg regs") we can see the
-> mechansim for specifying a syscon to properly set corecfg registers in
-> sdhci-of-arasan.  Now let's use this mechanism to properly set
-> corecfg_baseclkfreq on rk3399.
-> 
->>From [1] the corecfg_baseclkfreq is supposed to be set to:
->   Base Clock Frequency for SD Clock.
->   This is the frequency of the xin_clk.
-> 
-> This is a relatively easy thing to do.  Note that we assume that xin_clk
-> is not dynamic and we can check the clock at probe time.  If any real
-> devices have a dynamic xin_clk future patches could register for
-> notifiers for the clock.
-> 
-> At the moment, setting corecfg_baseclkfreq is only supported for rk3399
-> since we need a specific map for each implementation.  The code is
-> written in a generic way that should make this easy to extend to other
-> SoCs.  Note that a specific compatible string for rk3399 is already in
-> use and so we add that to the table to match rk3399.
-> 
-> [1]: https://arasan.com/wp-content/media/eMMC-5-1-Total-Solution_Rev-1-3.pdf
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
+This patch is based on latest can-next(tag:linux-can-next-for-4.8-20160617).
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Changes since v1:
+ - property named changed from "can-nofd" to "no-can-fd" (Rob H)
+ - added new patch(0002) that support lower state transitions (Wolfgang G)
+   (http://marc.info/?l=linux-can&m=146650325116971&w=2)
+
+Ramesh Shanmugasundaram (2):
+  can: rcar_canfd: Add Classical CAN only mode support
+  can: rcar_canfd: Add back-to-error-active support
+
+ .../devicetree/bindings/net/can/rcar_canfd.txt     |  21 +-
+ drivers/net/can/rcar/rcar_canfd.c                  | 429 ++++++++++++++-------
+ 2 files changed, 310 insertions(+), 140 deletions(-)
+
+-- 
+1.9.1
