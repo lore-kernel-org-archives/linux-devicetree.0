@@ -1,140 +1,111 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
-Date: Wed, 22 Jun 2016 11:33:56 +0800
-Message-ID: <20160622033356.GB21361@shlinux2>
-References: <5767C1B9.2060805@ti.com>
- <878ty0qd7q.fsf@linux.intel.com>
- <20160621063936.GB5108@shlinux2>
- <87d1nbovp7.fsf@linux.intel.com>
- <20160621080209.GC5108@shlinux2>
- <87mvmfneeq.fsf@linux.intel.com>
- <20160621091437.GE5108@shlinux2>
- <87fus6n2iz.fsf@linux.intel.com>
- <20160621131205.GG5108@shlinux2>
- <874m8mmwdo.fsf@linux.intel.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 2/8] mfd: ac100: Add device tree bindings
+ for X-Powers AC100 codec/RTC combo IC
+Date: Wed, 22 Jun 2016 12:16:03 +0800
+Message-ID: <CAGb2v64TYTi0_thF7Z8cdBE9dkbPUq9xAhmhegqH8efVx1oCFw@mail.gmail.com>
+References: <1466391138-12862-1-git-send-email-wens@csie.org>
+ <1466391138-12862-3-git-send-email-wens@csie.org> <20160621131443.GA29350@rob-hp-laptop>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <874m8mmwdo.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCMILY6JWQBBBG5CVC5QKGQENDCAGEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160621131443.GA29350@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2016 at 05:47:47PM +0300, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-> >> >> >> >> >>> + * @otg_dev: OTG controller device, if needs to be used with OTG core.
-> >> >> >> >> >> 
-> >> >> >> >> >> do you really know of any platform which has a separate OTG controller?
-> >> >> >> >> >> 
-> >> >> >> >> >
-> >> >> >> >> > Andrew had pointed out in [1] that Tegra210 has separate blocks for OTG, host
-> >> >> >> >> > and gadget.
-> >> >> >> >> >
-> >> >> >> >> > [1] http://article.gmane.org/gmane.linux.ports.tegra/22969
-> >> >> >> >> 
-> >> >> >> >> that's not an OTG controller, it's just a mux. No different than Intel's
-> >> >> >> >> mux for swapping between XHCI and peripheral-only DWC3.
-> >> >> >> >> 
-> >> >> >> >> frankly, I would NEVER talk about OTG when type-C comes into play. They
-> >> >> >> >> are two competing standards and, apparently, type-C is winning when it
-> >> >> >> >> comes to role-swapping.
-> >> >> >> >> 
-> >> >> >> >
-> >> >> >> > In fact, OTG is mis-used by people. Currently, if the port is dual-role,
-> >> >> >> > It will be considered as an OTG port.
-> >> >> >> 
-> >> >> >> That's because "dual-role" is a non-standard OTG. Seen as people really
-> >> >> >> didn't care about OTG, we (linux-usb folks) ended up naturally referring
-> >> >> >> to "non-standard OTG" as "dual-role". Just to avoid confusion.
-> >> >> >
-> >> >> > So, unless we use OTG FSM defined in OTG spec, we should not mention
-> >> >> > "OTG" in Linux, right?
-> >> >> 
-> >> >> to avoid confusion with the terminology, yes. With that settled, let's
-> >> >> figure out how you can deliver what your marketting guys are asking of
-> >> >> you.
-> >> >> 
-> >> >
-> >> > Since nxp SoC claims they are OTG compliance, we need to pass usb.org
-> >> > test. The internal bsp has passed PET test, and formal compliance test
-> >> > is on the way (should pass too). 
-> >> >
-> >> > The dual-role and OTG compliance use the same zImage, but different
-> >> > dtb.
-> >> 
-> >> okay, that's good to know. Now, the question really is: considering we
-> >> only have one user for this generic OTG FSM layer, do we really need to
-> >> make it generic at all? I mean, just look at how invasive a change that
-> >> is.
-> >
-> > If the chipidea is the only user for this roger's framework, I don't
-> > think it is necessary. In fact, Roger introduces this framework, and
-> > the first user is dwc3, we think it can be used for others. Let's
-> 
-> Right, we need to look at the history of dwc3 to figure out why the
-> conclusion that dwc3 needs this was made.
-> 
-> Roger started working on this framework when Power on Reset section of
-> databook had some details which weren't always clear and, for safety, we
-> always had reset asserted for a really long time. It was so long (about
-> 400 ms) that resetting dwc3 for each role swap was just too much.
-> 
-> Coupled with that, the OTG chapter wasn't very clear either on
-> expections from Host and Peripheral side initialization in OTG/DRD
-> systems.
-> 
-> More recent version of dwc3 databook have a much better description of
-> how and which reset bits _must_ be asserted and which shouldn't be
-> touched unless it's for debugging purposes. When I implemented that, our
-> ->probe() went from 400ms down to about 50us.
-> 
-> Coupled with that, the OTG chapter also became a lot clearer to the
-> point that it states you just don't initialize anything other than the
-> OTG block, and just wait for OTG interrupt to do whatever it is you need
-> to do.
-> 
-> This meant that we could actually afford to do full reinitialization of
-> dwc3 on role swap (it's now only 50us anyway) and we knew how to swap
-> roles properly.
-> 
-> (The reason for needing soft-reset during role swap is kinda long. But
-> in summary dwc3 shadows register writes to both host and peripheral
-> sides)
-> 
-> > just discuss if it is necessary for dual-role switch.
-> 
-> fair. However, if we have a single user we don't have a Generic
-> layer. There's not enough variance to come up with truly generic
-> architecture for this.
-> 
-> -- 
+On Tue, Jun 21, 2016 at 9:14 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Jun 20, 2016 at 10:52:12AM +0800, Chen-Yu Tsai wrote:
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>> Changes since v2:
+>>
+>>   - Fix interrupt line for ac100_codec in provided example.
+>>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/ac100.txt | 42 +++++++++++++++++++++++++
+>>  1 file changed, 42 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/ac100.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/ac100.txt b/Documentation/devicetree/bindings/mfd/ac100.txt
+>> new file mode 100644
+>> index 000000000000..a793954bb952
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/ac100.txt
+>> @@ -0,0 +1,42 @@
+>> +X-Powers AC100 Codec/RTC IC device tree bindings
+>> +
+>> +AC100 is a audio codec and RTC subsystem combo IC. The 2 parts are
+>> +separated, including power supplies and interrupt lines, but share
+>> +a common register address space and host interface.
+>> +
+>> +Required properties:
+>> +- compatible: "x-powers,ac100"
+>> +- reg: The I2C slave address or RSB hardware address for the chip
+>> +- sub-nodes:
+>> +  - codec
+>> +    - compatible: "x-powers,ac100-codec"
+>> +    - interrupt-parent: The parent interrupt controller
+>> +    - interrupts: SoC NMI / GPIO interrupt connected to the IRQ_AUDIO pin
+>> +  - rtc
+>> +    - compatible: "x-powers,ac100-rtc"
+>> +    - interrupt-parent: The parent interrupt controller
+>> +    - interrupts: SoC NMI / GPIO interrupt connected to the IRQ_RTC pin
+>> +    - #clock-cells: shall be 1
+>> +    - clock-output-names: "cko1_rtc", "cko2_rtc", "cko3_rtc"
+>> +    - see clock/clock-bindings.txt for common clock bindings
+>> +
+>> +Example:
+>> +
+>> +ac100: codec@e89 {
+>> +     compatible = "x-powers,ac100";
+>> +     reg = <0xe89>;
+>> +
+>> +     ac100_codec {
+>
+> Use generic node names and no underscores:
+>
+> codec {
 
-I have put some points in my last reply [1], I summery it here to
-see if a generic framework is deserved or not?
+Right. I intended to add them as labels, not change the node names.
 
-1. If there are some parts we can use during the role switch
-- The common start/stop host and peripheral operation
-eg, when switch from host to peripheral, all drivers can use
-usb_remove_hcd to finish it.
-- A common workqueue to handle vbus and id event
-- sysfs for role switch
+Thanks
+ChenYu
 
-2. Does a mux driver can do it well? Yoshihiro, here we need your
-point. The main point is if we need to call USB API to change
-roles (eg, usb_remove_hcd) during the role switch, thanks.
+>
+>> +             compatible = "x-powers,ac100-codec";
+>> +             interrupt-parent = <&r_pio>;
+>> +             interrupts = <0 9 IRQ_TYPE_LEVEL_LOW>; /* PL9 */
+>> +     };
+>> +
+>> +     ac100_rtc {
+>
+> rtc {
+>
+>> +             compatible = "x-powers,ac100-rtc";
+>> +             interrupt-parent = <&nmi_intc>;
+>> +             interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> +             #clock-cells = <1>;
+>> +             clock-output-names = "cko1_rtc", "cko2_rtc", "cko3_rtc";
+>> +     };
+>> +};
+>> --
+>> 2.8.1
+>>
 
-
-[1] http://www.spinics.net/lists/linux-usb/msg142974.html
 -- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
