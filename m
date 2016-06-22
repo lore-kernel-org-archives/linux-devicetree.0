@@ -1,119 +1,41 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 1/2] leds: ncp5623: Add device tree binding documentation
-Date: Wed, 22 Jun 2016 10:52:59 +0200
-Message-ID: <576A51EB.8090800@samsung.com>
-References: <1466494154-3786-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1466494154-3786-2-git-send-email-florian.vaussard@heig-vd.ch>
- <57695D02.2000109@samsung.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] ARM: dts: mt2701: add iommu/smi dtsi node for
+	mt2701
+Date: Wed, 22 Jun 2016 10:58:29 +0200
+Message-ID: <20160622085829.GH11432@8bytes.org>
+References: <1465379461-14757-1-git-send-email-honghui.zhang@mediatek.com>
+	<1465379461-14757-6-git-send-email-honghui.zhang@mediatek.com>
+	<20160621095748.GE28248@8bytes.org>
+	<1466574342.27791.8.camel@mtksdaap41>
+	<1466581547.8787.18.camel@mtksdaap41>
+	<20160622083117.GG11432@8bytes.org>
+	<1466584741.8787.22.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <57695D02.2000109@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@gmail.com>
-Cc: devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466584741.8787.22.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Youlin Pei =?utf-8?B?KOijtOWPi+aelyk=?= <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yingjoe Chen =?utf-8?B?KD8/6Iux5rSyKQ==?= <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kendrick Hsu =?utf-8?B?KOW+kOWtkOWHoSk=?= <Kendrick.Hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel@>
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2016 05:28 PM, Jacek Anaszewski wrote:
-> Hi Florian,
->
-> Thanks for the patch. I have two remarks below.
->
-> On 06/21/2016 09:29 AM, Florian Vaussard wrote:
->> Add device tree binding documentation for On Semiconductor NCP5623 I2C
->> LED driver. The driver can independently control the PWM of the 3
->> channels with 32 levels of intensity.
->>
->> The current delivered by the current source can be controlled using the
->> led-max-microamp property. In order to control this value, it is also
->> necessary to know the current on the Iref pin, hence the
->> onnn,led-iref-microamp property. It is usually set using an external
->> bias resistor, following Iref = Vref/Rbias with Vref=0.6V.
->>
->> Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
->> ---
->>   .../devicetree/bindings/leds/leds-ncp5623.txt      | 44
->> ++++++++++++++++++++++
->>   1 file changed, 44 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->> b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->> new file mode 100644
->> index 0000000..0dc8345
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->> @@ -0,0 +1,44 @@
->> +* ON Semiconductor - NCP5623 3-Channel LED Driver
->> +
->> +The NCP5623 is a 3-channel I2C LED driver. The brightness of each
->> +channel can be independently set using 32 levels. Each LED is
->> represented
->> +as a sub-node of the device.
->> +
->> +Required properties:
->> +  - compatible: Should be "onnn,ncp5623"
->> +  - reg: I2C slave address (fixed to 0x38)
->> +  - #address-cells: must be 1
->> +  - #size-cells: must be 0
->> +  - onnn,led-iref-microamp: Current on the Iref pin in microampere
->
-> I think that you don't need this property. Just provide the formula for
-> calculating led-max-microamp value, similarly as you're doing that in
-> the commit message.
->
->> +  - led-max-microamp: Desired maximum current for each LED in
->> microampere
->> +                      (maximum 30000uA)
->
-> Please add instead of (maximum ...):
->
-> Valid values: min - max, step by N (rounded {up|down})
->
-> E.g.
->
-> Valid values: 10000 - 30000, step by 1000 (rounded down)
->
->> +
->> +LED sub-node properties:
->> +  - reg : LED channel number (0..2)
->> +  - For other LED properties see:
->> +      Documentation/devicetree/bindings/leds/common.txt
->> +
->> +Example:
->> +
->> +led1: ncp5623@38 {
->> +    #address-cells = <1>;
->> +    #size-cells = <0>;
->> +    compatible = "onnn,ncp5623";
->> +    reg = <0x38>;
->> +
->> +    led1_r@0 {
->> +        label = "ncp:power:red";
->> +        reg = <0>;
->> +        linux,default-trigger = "default-on";
+On Wed, Jun 22, 2016 at 04:39:01PM +0800, Honghui Zhang wrote:
+> I think that driver and dtsi could merged separately, I would prefer
+> those previous patches stay in the tree if it's OK for you.
 
-Please add also led-max-microamp to all child nodes in this example.
-
->> +    };
->> +
->> +    led1_b@1 {
->> +        label = "ncp:power:blue";
->> +        reg = <1>;
->> +    };
->> +
->> +    led1_g@2 {
->> +        label = "ncp:power:green";
->> +        reg = <2>;
->> +    };
->> +};
->>
->
->
+Sure, I send them upstream through my tree.
 
 
--- 
-Best regards,
-Jacek Anaszewski
+Thanks,
+
+	Joerg
