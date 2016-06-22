@@ -1,62 +1,89 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 1/5] pwm: tegra: Add support for reset control
-Date: Wed, 22 Jun 2016 17:17:19 +0530
-Message-ID: <1466596043-27262-2-git-send-email-ldewangan@nvidia.com>
-References: <1466596043-27262-1-git-send-email-ldewangan@nvidia.com>
+From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 1/2] tpm: Factor out common startup code
+Date: Wed, 22 Jun 2016 15:22:28 +0300
+Message-ID: <20160622122227.GA27577@intel.com>
+References: <1466324401-5054-1-git-send-email-andrew.zamansky@nuvoton.com>
+	<1466324401-5054-2-git-send-email-andrew.zamansky@nuvoton.com>
+	<20160619123923.GA31053@intel.com>
+	<20160620210757.GB11746@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1466596043-27262-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, swarren@wwwdotorg.org, gnurou@gmail.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Rohith Seelaboyina <rseelaboyina@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160620210757.GB11746-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rohith Seelaboyina <rseelaboyina@nvidia.com>
+On Mon, Jun 20, 2016 at 03:07:57PM -0600, Jason Gunthorpe wrote:
+> On Sun, Jun 19, 2016 at 02:39:24PM +0200, Jarkko Sakkinen wrote:
+> > > Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> > > Tested-by: Andrew Zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
+> > 
+> > Couldn't tpm?_auto_startup() be static functions inside tpm-chip.c?
+> 
+> Why? tpm-chip is for chip functions and tpm-interface is for command
+> issuing functions, the startup command sequencors seem appropriately
+> placed...
+> 
+> These are still module private functions.
 
-Add reset control of the PWM controller to reset it before
-accessing the PWM register.
+Hmm.. interesting point and I actually realized that this related to
+work that I'm doing right now.
 
-Signed-off-by: Rohith Seelaboyina <rseelaboyina@nvidia.com>
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- drivers/pwm/pwm-tegra.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I'm working on a patches to move TPM 1.x protocol level code to
+tpm1-cmd.c. We want to do so that one can conditionally compile out TPM
+1.x when it is not needed. Another reason is that, I would not like to
+put TPM 1.x sealing code to tpm-interface.c.
 
-diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-index d4de060..71b9c4d 100644
---- a/drivers/pwm/pwm-tegra.c
-+++ b/drivers/pwm/pwm-tegra.c
-@@ -29,6 +29,7 @@
- #include <linux/pwm.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/reset.h>
- 
- #define PWM_ENABLE	(1 << 31)
- #define PWM_DUTY_WIDTH	8
-@@ -43,6 +44,7 @@ struct tegra_pwm_chip {
- 	struct device		*dev;
- 
- 	struct clk		*clk;
-+	struct reset_control	*rstc;
- 
- 	void __iomem		*mmio_base;
- };
-@@ -189,6 +191,14 @@ static int tegra_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pwm->clk))
- 		return PTR_ERR(pwm->clk);
- 
-+	pwm->rstc = devm_reset_control_get(&pdev->dev, "pwm");
-+	if (IS_ERR(pwm->rstc)) {
-+		ret = PTR_ERR(pwm->rstc);
-+		dev_err(&pdev->dev, "Reset control is not found: %d\n", ret);
-+		return ret;
-+	}
-+	reset_control_reset(pwm->rstc);
-+
- 	pwm->chip.dev = &pdev->dev;
- 	pwm->chip.ops = &tegra_pwm_ops;
- 	pwm->chip.base = -1;
--- 
-2.1.4
+Given that I think it is cool to keep these in tpm-interface.c in this
+in tpm-interface.c.
+
+Summary: lets keep it in a way that these functions are in
+tpm-interface.c for now.
+
+> > > +enum TPM_OPS_FLAGS {
+> > > +	TPM_OPS_PROBE_TPM2 = BIT(0),
+> > 
+> > I see two alternatives here:
+> > 
+> > 1. Make this work for tpm_tis.c if it is doable.
+> > 2. Remove this flag and call tpm2_probe() inside tpm_i2c_nuvoton.c.
+> > 
+> > If this flag works only for a single driver, it does not bring any value.
+> 
+> We already have two drivers that auto probe, you don't think there
+> will be more? The idea is to try and remove these low level entry
+> points so drivers are simpler.
+> 
+> TIS doesn't use it because it needs to get things setup in advance for
+> interrupt auto-probing, which is a very TIS unique thing.
+> 
+> Alternatively we can drop the auto-probe from nuvoton and force it to
+> rely on compatible string matching to enter TPM2 mode.
+
+The patch set used TPM2_OPS_PROBE_TPM2 only for nuvoton driver. The more
+recent one used it incorrectly with tpm_tis.
+
+> Jason
+
+PS. Would you have time to look at https://lkml.org/lkml/2016/6/17/887
+and give your feedback? :)
+
+/Jarkko
+
+------------------------------------------------------------------------------
+Attend Shape: An AT&T Tech Expo July 15-16. Meet us at AT&T Park in San
+Francisco, CA to explore cutting-edge tech and listen to tech luminaries
+present their vision of the future. This family event has something for
+everyone, including kids. Get more information and register today.
+http://sdm.link/attshape
