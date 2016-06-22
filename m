@@ -1,50 +1,82 @@
-From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] ARM: dts: mt2701: add iommu/smi dtsi node for
-	mt2701
-Date: Wed, 22 Jun 2016 16:39:01 +0800
-Message-ID: <1466584741.8787.22.camel@mtksdaap41>
-References: <1465379461-14757-1-git-send-email-honghui.zhang@mediatek.com>
-	<1465379461-14757-6-git-send-email-honghui.zhang@mediatek.com>
-	<20160621095748.GE28248@8bytes.org>
-	<1466574342.27791.8.camel@mtksdaap41>
-	<1466581547.8787.18.camel@mtksdaap41>
-	<20160622083117.GG11432@8bytes.org>
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [PATCH 1/2] Documentation: bindings: Add DT bindings for ARM's
+ FVP models.
+Date: Wed, 22 Jun 2016 09:43:41 +0100
+Message-ID: <1466585021.3026.24.camel@linaro.org>
+References: <1466424796-13769-1-git-send-email-tixy@linaro.org>
+ <20160621132257.GA2263@rob-hp-laptop> <1466516312.2856.27.camel@linaro.org>
+ <20160621213318.GA32655@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20160622083117.GG11432-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Youlin Pei =?UTF-8?Q?=28=E8=A3=B4=E5=8F=8B=E6=9E=97=29?= <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yingjoe Chen =?UTF-8?Q?=28=3F=3F=E8=8B=B1=E6=B4=B2=29?= <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kendrick Hsu =?UTF-8?Q?=28=E5=BE=90=E5=AD=90=E5=87=A1=29?= <Kendrick.Hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-ar
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160621213318.GA32655@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-06-22 at 10:31 +0200, Joerg Roedel wrote:
-> On Wed, Jun 22, 2016 at 03:45:47PM +0800, Honghui Zhang wrote:
-> > This one is based on CCF "arm: dts: mt2701: Add clock controller device
-> > nodes"[1] and power domain patch "Mediatek MT2701 SCPSYS power domain
-> > support v7"[2],
-> > But these two patchset are still being review now.
+On Tue, 2016-06-21 at 16:33 -0500, Rob Herring wrote:
+> On Tue, Jun 21, 2016 at 02:38:32PM +0100, Jon Medhurst (Tixy) wrote:
+> > On Tue, 2016-06-21 at 08:22 -0500, Rob Herring wrote:
+> > > > +Required properties (in root node):
+> > > > +- compatible value:
+> > > > +     compatible = "arm,<family>,<variant>", "arm,<family>";
+> > > > +  where <family> is one of:
+> > > > +  - "fvp-base" for the Base FVP
+> > > > +  - "fvp-ve" for the VE FVP
+> > > > +  and <variant> is the part of the model's executable filename with
+> > > the family
+> > > > +  name omitted, converted to lower case, and with non-alphanumeric
+> > > characters
+> > > > +  replaced with '-'. E.g. the Base FVP that has two AEMv8 CPU
+> > > clusters has an
+> > > > +  executable file called FVP_Base_AEMv8A-AEMv8A, so the compatible
+> > > value for
+> > > 
+> > > Naming conventions of the exe aren't going to change?
 > > 
-> > Do you think it's better that I send this one later after ccf and power
-> > domain patch got merged, and let Matthias take it?
+> > Almost certainly will at some point, as will the very name Fixed Virtual
+> > Platform, what 'families' ARM produce and their naming, and the
+> > configuration of the 'hardware' compiled into the models.
+> > 
+> > These are software models, so can be changed easily at the whim of
+> > marketing, or current perceived requirements from engineers and
+> > managers. So generally, it's a moving target, that doesn't fit nicely
+> > into the needs producing device-trees.
 > 
-> Sure, but the patches I already merged can stay in the tree for now?
-> 
-> 
+> Then do we even need to specify something so specific? The kernel 
+> probably doesn't even care.
 
-I think that driver and dtsi could merged separately, I would prefer
-those previous patches stay in the tree if it's OK for you.
+Well, it would certainly be easier if we could just use a simple
+'arm,fvp' for compatible and model name and not worry about the 100 or
+so current variants. (Some are 32-bit, some 64-bit with just about every
+current ARM CPU represented, plus various peripheral sets with regard to
+display, iommu, dma, etc.
 
-Thanks.
+
+>  Are you going to upstream new strings 
+> everytime there's a new one (that's public)?
+
+I've only been asked to upstream a device-tree for the one that ARM
+targets in its 'platform release' [1]. Note, all 100+ models are equally
+'public' in the sense that they are available to people are pay (like
+real hardware supported by Linux).
+
+[1] https://community.arm.com/docs/DOC-10803)
+
 > 
-> 	Joerg
-> 
+> We've had models supported upstream for a long time. What's changed now?
+
+ARM's software releases are targeting a different model.
+
+-- 
+Tixy
