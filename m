@@ -1,89 +1,141 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] arm64: dts: db820c: add basic board support
-Date: Wed, 22 Jun 2016 09:04:52 -0700
-Message-ID: <20160622160452.GN1256@tuxbot>
-References: <1466529769-2674-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1466529769-2674-2-git-send-email-srinivas.kandagatla@linaro.org>
- <20160622044916.GF1256@tuxbot>
- <576A51BC.5090108@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <576A51BC.5090108-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "spi: Improve DT binding documentation" to the spi tree
+Date: Wed, 22 Jun 2016 16:29:14 +0100
+Message-ID: <E1bFk5a-0002V7-4H@debutante>
+References: <1466599706-2850-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466599706-2850-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 22 Jun 01:52 PDT 2016, Srinivas Kandagatla wrote:
+The patch
 
-> 
-> 
-> On 22/06/16 05:49, Bjorn Andersson wrote:
-> >On Tue 21 Jun 10:22 PDT 2016, Srinivas Kandagatla wrote:
-> >
-> >[..]
-> >>diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-> >[..]
-> >>+
-> >>+/ {
-> >>+	model = "Qualcomm Technologies, Inc. DB820c";
-> >>+	compatible = "qcom,apq8096-sbc";
-> >
-> >I'm still not buying the concept of this being the one and only
-> >single-board-computer.
-> >
-> +1
-> 
-> AFAIK, The problem is the dtbTool. dtbTool has predefined all the platform
-> names along with its platform ID's [1] for auto generating board-id, pmic-id
-> and soc-id. dtbTool checks the compatible strings along with soc name with
-> its static list, it would fail if it did not find a matching combination of
-> soc,platform compatible.
-> 
-> Either we have to cope up with this and have a compatbile strings which keep
-> dtbTool happy
->  or
-> Keep patching dtbtool to be more flexible.
+   spi: Improve DT binding documentation
 
-dtbTool is unfortunately broken if it can't handle unknown compatibles.
+has been applied to the spi tree at
 
-> 
-> There is another problem with dtbTool, We can not use dtbTool with new
-> boards from other vendors with own board names, like SD600 or IFC6410 and
-> so..
-> 
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-Which means that everyone will, just like in Android-land, ship their
-products with the one-and-only-supported qcom,apq8096-sbc.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-If at least dtbTool would skip (and potentially warn about) unknown
-entries vendors could add their specific name and then have the sbc
-compatible, allowing for compatibility while dtbTool is updated.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> 
-> IMO, we should patch dtbTool to make it more flexible to cope up with
-> situations like this.
-> 
-> >If this compatible fully and exclusively identifies this particular
-> >board then dtbTool should be updated to follow the product name
-> >"qcom,apq8096-db820c". If on the other hand this identifies a class of
-> >single-board-computers, then the compatible should list both
-> >"qcom,apq8096-dtb820c" and "qcom,apq8096-sbc".
-> 
-> Am not sure this would actually work when we have two boards with same sbc
-> platform ID. Which one would the bootloader pick? and on what basis?
-> 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-In Android land you don't have this problem, you know which zImage and
-which set of dtbs you should put into your boot.img. So based on above
-problem (requirement to update dtbTool) and the lack of need companies
-will continue to ship their products as "mtp" or "sbc".
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Regards,
-Bjorn
+Thanks,
+Mark
+
+>From a777059a3fc13f51e91442ccf043c8e3bcd1c48f Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Date: Wed, 22 Jun 2016 14:48:26 +0200
+Subject: [PATCH] spi: Improve DT binding documentation
+
+  - Add missing verbs and periods,
+  - Add spaces before opening parentheses,
+  - Align list layout,
+  - Correct grammar,
+  - Move "cs-gpios" from the required to the optional properties
+    section,
+  - Remove spaces before tabs.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/spi-bus.txt | 35 ++++++++++++-----------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index 42d595425dfb..17822860cb98 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -8,11 +8,10 @@ in slave mode.
+ 
+ The SPI master node requires the following properties:
+ - #address-cells  - number of cells required to define a chip select
+-    		address on the SPI bus.
++		address on the SPI bus.
+ - #size-cells     - should be zero.
+ - compatible      - name of SPI bus controller following generic names
+-    		recommended practice.
+-- cs-gpios	  - (optional) gpios chip select.
++		recommended practice.
+ No other properties are required in the SPI bus node.  It is assumed
+ that a driver for an SPI bus device will understand that it is an SPI bus.
+ However, the binding does not attempt to define the specific method for
+@@ -22,11 +21,12 @@ assumption that board specific platform code will be used to manage
+ chip selects.  Individual drivers can define additional properties to
+ support describing the chip select layout.
+ 
+-Optional property:
+-- num-cs : total number of chipselects
++Optional properties:
++- cs-gpios	  - gpios chip select.
++- num-cs	  - total number of chipselects.
+ 
+-If cs-gpios is used the number of chip select will automatically increased
+-with max(cs-gpios > hw cs)
++If cs-gpios is used the number of chip selects will be increased automatically
++with max(cs-gpios > hw cs).
+ 
+ So if for example the controller has 2 CS lines, and the cs-gpios
+ property looks like this:
+@@ -45,29 +45,30 @@ SPI slave nodes must be children of the SPI master node and can
+ contain the following properties.
+ - reg             - (required) chip select address of device.
+ - compatible      - (required) name of SPI device following generic names
+-    		recommended practice
+-- spi-max-frequency - (required) Maximum SPI clocking speed of device in Hz
++		recommended practice.
++- spi-max-frequency - (required) Maximum SPI clocking speed of device in Hz.
+ - spi-cpol        - (optional) Empty property indicating device requires
+-    		inverse clock polarity (CPOL) mode
++		inverse clock polarity (CPOL) mode.
+ - spi-cpha        - (optional) Empty property indicating device requires
+-    		shifted clock phase (CPHA) mode
++		shifted clock phase (CPHA) mode.
+ - spi-cs-high     - (optional) Empty property indicating device requires
+-    		chip select active high
++		chip select active high.
+ - spi-3wire       - (optional) Empty property indicating device requires
+-    		    3-wire mode.
++		3-wire mode.
+ - spi-lsb-first   - (optional) Empty property indicating device requires
+ 		LSB first mode.
+-- spi-tx-bus-width - (optional) The bus width(number of data wires) that
++- spi-tx-bus-width - (optional) The bus width (number of data wires) that is
+                       used for MOSI. Defaults to 1 if not present.
+-- spi-rx-bus-width - (optional) The bus width(number of data wires) that
++- spi-rx-bus-width - (optional) The bus width (number of data wires) that is
+                       used for MISO. Defaults to 1 if not present.
+ - spi-rx-delay-us  - (optional) Microsecond delay after a read transfer.
+ - spi-tx-delay-us  - (optional) Microsecond delay after a write transfer.
+ 
+ Some SPI controllers and devices support Dual and Quad SPI transfer mode.
+-It allows data in the SPI system to be transferred in 2 wires(DUAL) or 4 wires(QUAD).
++It allows data in the SPI system to be transferred using 2 wires (DUAL) or 4
++wires (QUAD).
+ Now the value that spi-tx-bus-width and spi-rx-bus-width can receive is
+-only 1(SINGLE), 2(DUAL) and 4(QUAD).
++only 1 (SINGLE), 2 (DUAL) and 4 (QUAD).
+ Dual/Quad mode is not allowed when 3-wire mode is used.
+ 
+ If a gpio chipselect is used for the SPI slave the gpio number will be passed
+-- 
+2.8.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
