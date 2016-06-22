@@ -1,59 +1,113 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v3 2/7] leds: documentation: 'ide-disk' to 'disk-activity'
-Date: Wed, 22 Jun 2016 09:55:43 +0200
-Message-ID: <576A447F.2020002@samsung.com>
-References: <20160608223000.433-1-linz@li-pro.net>
- <20160608223000.433-2-linz@li-pro.net> <20160621150532.GG3302@leverpostej>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+Date: Wed, 22 Jun 2016 11:03:36 +0300
+Message-ID: <87inx1lkfb.fsf@linux.intel.com>
+References: <575E672E.5070603@ti.com> <87h9coxq04.fsf@linux.intel.com> <20160620114904.GC26936@shlinux2> <8737o8qd00.fsf@linux.intel.com> <20160621060517.GA5108@shlinux2> <877fdjovef.fsf@linux.intel.com> <20160621090738.GD5108@shlinux2> <87h9cmoo4s.fsf@linux.intel.com> <20160621130512.GF5108@shlinux2> <87por9lnjd.fsf@linux.intel.com> <20160622073329.GD21361@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20160621150532.GG3302@leverpostej>
+In-Reply-To: <20160622073329.GD21361@shlinux2>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Stephan Linz <linz@li-pro.net>
-Cc: linux-leds@vger.kernel.org, linux-ide@vger.kernel.org, Joseph Jezak <josejx@gentoo.org>, Nico Macrionitis <acrux@cruxppc.org>, =?UTF-8?B?SsO2cmcgU29tbWVy?= <joerg@alea.gnuu.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Roger Quadros <rogerq@ti.com>, peter.chen@freescale.com, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, yoshihiro.shimoda.uh@renesas.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2016 05:05 PM, Mark Rutland wrote:
-> On Thu, Jun 09, 2016 at 12:29:37AM +0200, Stephan Linz wrote:
->> Cc: Joseph Jezak <josejx@gentoo.org>
->> Cc: Nico Macrionitis <acrux@cruxppc.org>
->> Cc: J=C3=B6rg Sommer <joerg@alea.gnuu.de>
->> Signed-off-by: Stephan Linz <linz@li-pro.net>
->> ---
->>   Documentation/devicetree/bindings/leds/common.txt    | 2 +-
->>   Documentation/devicetree/bindings/leds/leds-gpio.txt | 2 +-
->>   Documentation/laptops/asus-laptop.txt                | 2 +-
->>   Documentation/leds/leds-class.txt                    | 2 +-
->>   4 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Doc=
-umentation/devicetree/bindings/leds/common.txt
->> index af10678..1e97169 100644
->> --- a/Documentation/devicetree/bindings/leds/common.txt
->> +++ b/Documentation/devicetree/bindings/leds/common.txt
->> @@ -26,7 +26,7 @@ Optional properties for child nodes:
->>        "default-on" - LED will turn on (but for leds-gpio see "defau=
-lt-state"
->>   		    property in Documentation/devicetree/bindings/gpio/led.txt)
->>        "heartbeat" - LED "double" flashes at a load average based ra=
-te
->> -     "ide-disk" - LED indicates disk activity
->> +     "disk-activity" - LED indicates disk activity
->>        "timer" - LED flashes at a fixed, configurable rate
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Peter Chen <hzpeterchen@gmail.com> writes:
+>> >> >> >> So far, I haven't seen anybody talking about real USB OTG (the =
+spec)
+>> >> >> >> when they say OTG. Usually they just mean "a method for swappin=
+g between
+>> >> >> >> host and peripheral roles, but we really don't want all the ext=
+ra cost
+>> >> >> >> of the OTG specification".
+>> >> >> >>=20
+>> >> >> >
+>> >> >> > That's what I thought before, but the request from the Marketing=
+ guy is
+>> >> >> > "To prove the SoC is OTG compliance, support HNP and SRP", don't=
+ you
+>> >> >> > see the SoC reference manual say "it supports HNP and SRP"?
+>> >> >> >
+>> >> >> > If there is no request, who else wants to implement so complicat=
+ed FSM
+>> >> >> > but seldom use cases, and go to pass OTG compliance test (tested=
+ by PET).
+>> >> >>=20
+>> >> >> I stand corrected :-)
+>> >> >>=20
+>> >> >> So there is one user for this layer. And this user has its own role
+>> >> >> control registers. I'm not convinced we need this large generic la=
+yer
+>> >> >> for one user.
+>> >> >>=20
+>> >> >
+>> >> > You mean chipidea or dwc3? I have more comments below.
+>> >>=20
+>> >> chipidea. From the point of OTG (or DRD) dwc3 is very
+>> >> self-sufficient. HW itself tracks state machine, much like MUSB does.
+>> >
+>> > You mean HW can do state machine switch? If we are A device,
+>> > - Does the hardware knows if B device is HNP enabled or not?
+>>=20
+>> that's enabled through control message, keep a flag.
+>>=20
+>> > - And if B device is HNP enabled, does it can switch itself from host
+>> > to peripheral when the B device is disconnected (a_suspend->a_peripher=
+al)
+>>=20
+>> It cannot. It must rely on hnp polling which is, again, a control messag=
+e.
+>>=20
+>> > Does hardware can really follow Figure 7-1: OTG A-device with HNP State
+>> > Diagram at On-The-Go and Embedded Host Supplement to the USB Revision
+>> > 2.0 Specification? And can pass PET test?
+>>=20
+>> Seriously, what does this add to the conversation? It has already been
+>> stated that there's nobody asking for OTG certification on dwc3. So all
+>> of this is vaporware from the point of view of dwc3.
 >
-> We should not break the binding.
->
-> Code must continue to support "ide-disk", though we can mark it
-> deprecated in the binding documentation, and update the in-kernel dts
-> files to use "disk-activity".
+> This is just a technical question that I can't understand your words
+> "HW itself tracks state machine"?
 
-The code in the version 4 of the patchset supports also "ide-disk".
+It's simple, really: HW knows that it starts in B_IDLE. All automatic
+state changes, HW will do:
 
-Stephan, could you send a new version of this patch, with preserved
-"ide-disk" property, marked as deprecated?
+B_IDLE -> A_IDLE -> A_WAIT_VRISE -> A_WAIT_BCON -> A_HOST
+B_IDLE -> B_WAIT_ACON -> B_PERIPHERAL
 
---=20
-Best regards,
-Jacek Anaszewski
+Some state changes need SW intervention, for those you need to kick the
+correct event so HW makes the state change. But register will still tell
+you correct state after HW switches to it.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXakZYAAoJEIaOsuA1yqRE6xMP/1x3xFkx5ip8rKuhMBg3SqSq
+tUV10RTQRcuAy4VTx+MRrfK6oxXYSESw8tK1+HzhqKrSSwUIn7CUfWMeQQSquBKr
+yB/nmNafuP+4BsGOKTmQdmevBdsDD46hAuICM0RUzVSS+LgoK+zdYebShUBcznu+
+0fygW4KJwJD+IO93dUtfryPSRVqmrReXmNqVIsacNFWONDtkkR+/FjxQhQdCze8r
+N/MVdlL7z9WMRwywQ7uqlHwpyhC9hvjQQ4KWQhAfE5fE4mvxSvAUYZ71QhQl0cFV
+1e8/xjMkLGx2XzUatT4hTndqv9h7J/5qQgkd64tMopFgjBrrJBbrSAkWD7pEsG7/
+4Mubb2SGeHx0wuuuXjNDJexIU348cI90zivyM6HBXq11KA4Xhlt0AgKwOCFwl08L
+lmkpDTH4QTttJYJk8mTb3/fozjlTM2hqIhsZiwzco+vGDHJcn+KSwwv73LsdnToO
+b8JshxJ72/yqqwHai5T4lw9e6dN/g5NUqgia4KtwGiaor3ScGczme1seZe0WtDtK
+0YynbL4nNLim6RLRBa8zGfyPPMyWar4mmxkx4gfxwn4LrWGvptalr8ZLOXYlfWWV
+zCwTwO2e8G4qRyPgQ8fsd4c9ANX+5rs3mp++tKh3vMVpmTCYsJPu5jb/HoOA+EcX
+MV5IrooX3wB+ymRe/2QO
+=psIG
+-----END PGP SIGNATURE-----
+--=-=-=--
