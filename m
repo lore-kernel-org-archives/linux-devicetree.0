@@ -1,58 +1,75 @@
-From: "Imre Kaloz" <kaloz@openwrt.org>
-Subject: Re: [PATCH] ARM: BCM5301X: Set GPIO enabling USB power on Netgear
- R7000
-Date: Wed, 22 Jun 2016 12:21:03 +0200
-Message-ID: <op.yjge1dkz2s3iss@ecaz>
-References: <1466509358-25498-1-git-send-email-zajec5@gmail.com>
- <op.yjepy3mr2s3iss@ecaz>
- <CACna6rxm0euw=nVyHZzZa2+Q9U9S4t+aVy34ZvL0Lrx27B8-eA@mail.gmail.com>
- <op.yjevu7en2s3iss@ecaz>
- <CACna6ryrABjF3ie8uE6_q-pfNjhQaGbRhNR9jWMEPKwaUt88hQ@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] i2c: hibvt: add Hisilicon BVT I2C controller driver
+Date: Wed, 22 Jun 2016 11:25:10 +0100
+Message-ID: <20160622102509.GD25837@leverpostej>
+References: <1466585726-28467-1-git-send-email-wenpan@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed	delsp=yes
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACna6ryrABjF3ie8uE6_q-pfNjhQaGbRhNR9jWMEPKwaUt88hQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1466585726-28467-1-git-send-email-wenpan@hisilicon.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Pan Wen <wenpan@hisilicon.com>
+Cc: wsa@the-dreams.de, robh+dt@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Jun 2016 17:23:18 +0200, Rafa=C5=82 Mi=C5=82ecki <zajec5@gma=
-il.com> wrote:
+On Wed, Jun 22, 2016 at 04:55:26PM +0800, Pan Wen wrote:
+> add Hisilicon BVT I2C controller driver support.
+> 
+> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+> ---
+>  .../devicetree/bindings/i2c/i2c-hibvt.txt          |  24 +
+>  drivers/i2c/busses/Kconfig                         |  10 +
+>  drivers/i2c/busses/Makefile                        |   1 +
+>  drivers/i2c/busses/i2c-hibvt.c                     | 736 +++++++++++++++++++++
+>  4 files changed, 771 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+>  create mode 100644 drivers/i2c/busses/i2c-hibvt.c
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+> new file mode 100644
+> index 0000000..3aa2cee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+> @@ -0,0 +1,24 @@
+> +Hisilicon BVT I2C master controller
+> +
+> +Required properties:
+> +- compatible: should be "hisilicon,hibvt-i2c".
+> +- reg: physical base address of the controller and length of memory mapped.
+> +     region.
+> +- interrupts: interrupt number to the cpu.
+> +- clocks: phandles to input clocks.
+> +
+> +Optional properties:
+> +- clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000.
+> +
+> +Other properties:
+> +see Documentation/devicetree/bindings/i2c/i2c.txt.
+> +
+> +Examples:
+> +i2c_bus0: i2c@12110000 {
+> +	compatible = "hisilicon,hibvt-i2c";
+> +	reg = <0x12110000 0x100>;
+> +	interrupts = <20>;
+> +	clocks = <&crg_ctrl HI3516CV300_APB_CLK>;
+> +	clock-names = "apb_pclk";
+> +	clock-frequency = <100000>;
+> +};
 
-> On 21 June 2016 at 16:29, Imre Kaloz <kaloz@openwrt.org> wrote:
->> On Tue, 21 Jun 2016 14:26:11 +0200, Rafa=C5=82 Mi=C5=82ecki <zajec5@=
-gmail.com> =20
->> wrote:
->>
->>> On 21 June 2016 at 14:22, Imre Kaloz <kaloz@openwrt.org> wrote:
->>>>
->>>> Is there any reason you are not handling this properly as a regula=
-tor
->>>> with
->>>> usb-nop-xceiv?
->>>
->>>
->>> We can't use USB NOP PHY as we need a specific PHY driver for =20
->>> Broadcom's
->>> USB.
->>
->>
->> I see. That shouldn't stop you from addressing the regulator part, t=
-ho =20
->> ;)
->
-> How? Be more specific please.
->
+The clock-names property was not described above, and the driver doesn't
+appear to use it.
 
-Instead of blindly enabling a GPIO, you should define that GPIO line as=
- a =20
-fixed regulator and make the USB phy driver handle it. Take a look at =20
-http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D7776ab70d75ff9857343e44e428744d81c30ce1b =20
-for example.
+Please explciitly describe the clock-names you expect, and use them in
+the driver. If there is a single clock, then you can simply drop the
+clock-names property from the example.
 
+Thanks,
+Mark.
 
-Imre
+> +	i2c->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(i2c->clk)) {
+> +		dev_err(i2c->dev, "cannot get clock\n");
+> +		return -ENOENT;
+> +	}
+> +	clk_prepare_enable(i2c->clk);
