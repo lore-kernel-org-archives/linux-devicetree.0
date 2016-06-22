@@ -1,123 +1,133 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 3/7] phy: Add set_mode callback
-Date: Wed, 22 Jun 2016 11:27:19 +0530
-Message-ID: <576A28BF.4040805@ti.com>
-References: <1462837203-12125-1-git-send-email-david@lechnology.com>
- <1462837203-12125-4-git-send-email-david@lechnology.com>
+From: "Reizer, Eyal" <eyalr@ti.com>
+Subject: RE: [PATCHv3] wlcore: spi: add wl18xx support
+Date: Wed, 22 Jun 2016 06:05:34 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B36139073@DFRE01.ent.ti.com>
+References: <1466510145-15751-1-git-send-email-eyalr@ti.com>
+ <8665E2433BC68541A24DFFCA87B70F5B36138299@DFRE01.ent.ti.com>
+ <20160621215703.GA14228@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1462837203-12125-4-git-send-email-david@lechnology.com>
+In-Reply-To: <20160621215703.GA14228@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, nsekhar@ti.com, khilman@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>
-Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "kvalo@codeaurora.org" <kvalo@codeaurora.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tuesday 10 May 2016 05:09 AM, David Lechner wrote:
-> The initial use for this is for PHYs that have a mode related to USB OTG.
-> There are several SoCs (e.g. TI OMAP and DA8xx) that have a mode setting
-> in the USB PHY to override OTG VBUS and ID signals.
+> >
+> > - all wilink family needs special init command for entering wspi mode.
+> >   extra clock cycles should be sent after the spi init command while the
+> >   cs pin is high.
+> > - Use inverted chip select for sending a dummy 4 bytes command that
+> >   completes the init stage and puts the wilink chip into wspi mode.
+> >
+> > Signed-off-by: Eyal Reizer <eyalr@ti.com>
+> > ---
+> > v1->v2:update device tree bindings configuration
+> > v2->v3:revert from manual gpio manipulation. use inverted chip select
+> instead
+> > for sending the extra init cycle, which achieves the same hardware purpose.
+> > update device tree bindings docucmentation accordingly
+> >
+> >  .../bindings/net/wireless/ti,wlcore,spi.txt        |  47 ++++++--
+> >  drivers/net/wireless/ti/wlcore/spi.c               | 124 +++++++++++++++++----
+> >  2 files changed, 145 insertions(+), 26 deletions(-)
+> >
+> > diff --git
+> a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+> b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+> > index 9180724..35467cf 100644
+> > --- a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+> > +++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+> > @@ -1,19 +1,30 @@
+> > -* Texas Instruments wl1271 wireless lan controller
+> > +* Texas Instruments wl12xx/wl18xx wireless lan controller
+> >
+> > -The wl1271 chip can be connected via SPI or via SDIO. This
+> > +The wl12xx/wl18xx chips can be connected via SPI or via SDIO. This
+> >  document describes the binding for the SPI connected chip.
+> >
+> >  Required properties:
+> > -- compatible :          Should be "ti,wl1271"
+> > +- compatible :          Should be one of the following:
+> > +    * "ti,wl1271"
+> > +    * "ti,wl1273"
+> > +    * "ti,wl1281"
+> > +    * "ti,wl1283"
+> > +    * "ti,wl1801"
+> > +    * "ti,wl1805"
+> > +    * "ti,wl1807"
+> > +    * "ti,wl1831"
+> > +    * "ti,wl1835"
+> > +    * "ti,wl1837"
+> >  - reg :                 Chip select address of device
+> >  - spi-max-frequency :   Maximum SPI clocking speed of device in Hz
+> > -- ref-clock-frequency : Reference clock frequency
+> >  - interrupt-parent, interrupts :
+> >                          Should contain parameters for 1 interrupt line.
+> >                          Interrupt parameters: parent, line number, type.
+> > -- vwlan-supply :        Point the node of the regulator that powers/enable the
+> wl1271 chip
+> > +- vwlan-supply :        Point the node of the regulator that powers/enable
+> the
+> > +                        wl12xx/wl18xx chip
+> >
+> >  Optional properties:
+> > +- ref-clock-frequency : Reference clock frequency (should be set for
+> wl12xx)
+> >  - clock-xtal :          boolean, clock is generated from XTAL
+> >
+> >  - Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
+> > @@ -21,10 +32,15 @@ Optional properties:
+> >
+> >  Examples:
+> >
+> > +For wl12xx family:
+> >  &spi1 {
+> > -	wl1271@1 {
+> > +	status = "okay";
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&spi1_pins>;
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
 > 
-> Of course, the enum can be expaned in the future to include modes for
-> other types of PHYs as well.
+> None of this is really relevant to this binding.
 > 
-> Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: David Lechner <david@lechnology.com>
 
-This patch is required for both phy driver and the usb driver. I can create a
-immutable branch with only this patch and both me and Bin Liu can merge it in
-our next branch.
+Understood. Will remove in v4
 
-Thanks
-Kishon
-
-> ---
->  drivers/phy/phy-core.c  | 15 +++++++++++++++
->  include/linux/phy/phy.h | 17 +++++++++++++++++
->  2 files changed, 32 insertions(+)
+> > +	wlcore: wlcore@0 {
 > 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index e7e574d..fe0344c 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -342,6 +342,21 @@ int phy_power_off(struct phy *phy)
->  }
->  EXPORT_SYMBOL_GPL(phy_power_off);
->  
-> +int phy_set_mode(struct phy *phy, enum phy_mode mode)
-> +{
-> +	int ret;
-> +
-> +	if (!phy || !phy->ops->set_mode)
-> +		return 0;
-> +
-> +	mutex_lock(&phy->mutex);
-> +	ret = phy->ops->set_mode(phy, mode);
-> +	mutex_unlock(&phy->mutex);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(phy_set_mode);
-> +
->  /**
->   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
->   * @np: device_node for which to get the phy
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index 8cf05e3..4248ade 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -22,12 +22,20 @@
->  
->  struct phy;
->  
-> +enum phy_mode {
-> +	PHY_MODE_INVALID,
-> +	PHY_MODE_USB_HOST,
-> +	PHY_MODE_USB_DEVICE,
-> +	PHY_MODE_USB_OTG,
-> +};
-> +
->  /**
->   * struct phy_ops - set of function pointers for performing phy operations
->   * @init: operation to be performed for initializing phy
->   * @exit: operation to be performed while exiting
->   * @power_on: powering on the phy
->   * @power_off: powering off the phy
-> + * @set_mode: set the mode of the phy
->   * @owner: the module owner containing the ops
->   */
->  struct phy_ops {
-> @@ -35,6 +43,7 @@ struct phy_ops {
->  	int	(*exit)(struct phy *phy);
->  	int	(*power_on)(struct phy *phy);
->  	int	(*power_off)(struct phy *phy);
-> +	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
->  	struct module *owner;
->  };
->  
-> @@ -119,6 +128,7 @@ int phy_init(struct phy *phy);
->  int phy_exit(struct phy *phy);
->  int phy_power_on(struct phy *phy);
->  int phy_power_off(struct phy *phy);
-> +int phy_set_mode(struct phy *phy, enum phy_mode mode);
->  static inline int phy_get_bus_width(struct phy *phy)
->  {
->  	return phy->attrs.bus_width;
-> @@ -224,6 +234,13 @@ static inline int phy_power_off(struct phy *phy)
->  	return -ENOSYS;
->  }
->  
-> +static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
-> +{
-> +	if (!phy)
-> +		return 0;
-> +	return -ENOSYS;
-> +}
-> +
->  static inline int phy_get_bus_width(struct phy *phy)
->  {
->  	return -ENOSYS;
+> Now your unit-address and reg value don't match.
+
+You are right. Will fix in v4
+
 > 
+> >  		compatible = "ti,wl1271";
+> > -
+> >  		reg = <1>;
+> >  		spi-max-frequency = <48000000>;
+> >  		clock-xtal;
+> > @@ -34,3 +50,20 @@ Examples:
+> >  		vwlan-supply = <&vwlan_fixed>;
+> >  	};
+> >  };
+> > +
+> > +For wl18xx family:
+> > +&spi0	{
+> > +	status = "okay";
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&spi0_pins>;
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	wlcore: wlcore@0 {
+> > +		compatible = "ti,wl1835";
+> > +		vwlan-supply = <&wlan_en_reg>;
+> > +		spi-max-frequency = <48000000>;
+> > +		reg = <0>;
+> > +		interrupt-parent = <&gpio0>;
+> > +		interrupts = <27 IRQ_TYPE_EDGE_RISING>;
+> > +	};
+> > +};
