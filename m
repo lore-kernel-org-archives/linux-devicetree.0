@@ -1,75 +1,88 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: of: setup initial suspend state" to the regulator tree
-Date: Wed, 22 Jun 2016 16:29:02 +0100
-Message-ID: <E1bFk5O-0002RF-W0@debutante>
-References: <1466412218-5906-3-git-send-email-j-keerthy@ti.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] arm64: dts: db820c: add basic board support
+Date: Wed, 22 Jun 2016 09:04:52 -0700
+Message-ID: <20160622160452.GN1256@tuxbot>
+References: <1466529769-2674-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1466529769-2674-2-git-send-email-srinivas.kandagatla@linaro.org>
+ <20160622044916.GF1256@tuxbot>
+ <576A51BC.5090108@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466412218-5906-3-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <576A51BC.5090108-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgt-kristo-l0cyMroinI0@public.gmane.org, russ.dill-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.orgDave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Wed 22 Jun 01:52 PDT 2016, Srinivas Kandagatla wrote:
 
-   regulator: of: setup initial suspend state
+> 
+> 
+> On 22/06/16 05:49, Bjorn Andersson wrote:
+> >On Tue 21 Jun 10:22 PDT 2016, Srinivas Kandagatla wrote:
+> >
+> >[..]
+> >>diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
+> >[..]
+> >>+
+> >>+/ {
+> >>+	model = "Qualcomm Technologies, Inc. DB820c";
+> >>+	compatible = "qcom,apq8096-sbc";
+> >
+> >I'm still not buying the concept of this being the one and only
+> >single-board-computer.
+> >
+> +1
+> 
+> AFAIK, The problem is the dtbTool. dtbTool has predefined all the platform
+> names along with its platform ID's [1] for auto generating board-id, pmic-id
+> and soc-id. dtbTool checks the compatible strings along with soc name with
+> its static list, it would fail if it did not find a matching combination of
+> soc,platform compatible.
+> 
+> Either we have to cope up with this and have a compatbile strings which keep
+> dtbTool happy
+>  or
+> Keep patching dtbtool to be more flexible.
 
-has been applied to the regulator tree at
+dtbTool is unfortunately broken if it can't handle unknown compatibles.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+> 
+> There is another problem with dtbTool, We can not use dtbTool with new
+> boards from other vendors with own board names, like SD600 or IFC6410 and
+> so..
+> 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Which means that everyone will, just like in Android-land, ship their
+products with the one-and-only-supported qcom,apq8096-sbc.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+If at least dtbTool would skip (and potentially warn about) unknown
+entries vendors could add their specific name and then have the sbc
+compatible, allowing for compatibility while dtbTool is updated.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> 
+> IMO, we should patch dtbTool to make it more flexible to cope up with
+> situations like this.
+> 
+> >If this compatible fully and exclusively identifies this particular
+> >board then dtbTool should be updated to follow the product name
+> >"qcom,apq8096-db820c". If on the other hand this identifies a class of
+> >single-board-computers, then the compatible should list both
+> >"qcom,apq8096-dtb820c" and "qcom,apq8096-sbc".
+> 
+> Am not sure this would actually work when we have two boards with same sbc
+> platform ID. Which one would the bootloader pick? and on what basis?
+> 
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+In Android land you don't have this problem, you know which zImage and
+which set of dtbs you should put into your boot.img. So based on above
+problem (requirement to update dtbTool) and the lack of need companies
+will continue to ship their products as "mtp" or "sbc".
 
-Thanks,
-Mark
-
->From a0f78bc89c0396d14b6102c6f72485e14c8821f3 Mon Sep 17 00:00:00 2001
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Date: Mon, 20 Jun 2016 14:13:31 +0530
-Subject: [PATCH] regulator: of: setup initial suspend state
-
-Setup initial suspend state to mem, if suspend state is defined for
-mem state. This makes sure that the regulators are in proper mode
-already from boot.
-
-Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- drivers/regulator/of_regulator.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index cd828dbf9d52..4f613ec99500 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -163,6 +163,9 @@ static void of_get_regulation_constraints(struct device_node *np,
- 					"regulator-suspend-microvolt", &pval))
- 			suspend_state->uV = pval;
- 
-+		if (i == PM_SUSPEND_MEM)
-+			constraints->initial_state = PM_SUSPEND_MEM;
-+
- 		of_node_put(suspend_np);
- 		suspend_state = NULL;
- 		suspend_np = NULL;
--- 
-2.8.1
-
+Regards,
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
