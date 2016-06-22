@@ -1,641 +1,830 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Subject: Re: [PATCH V4 1/1] net: ethernet: Add TSE PCS support to
- dwmac-socfpga
-Date: Wed, 22 Jun 2016 11:00:10 +0200
-Message-ID: <c0c2348c-e998-f3ae-fe23-c4a560a462c7@st.com>
-References: <1466498771-18971-1-git-send-email-thloh@altera.com>
+From: Pan Wen <wenpan@hisilicon.com>
+Subject: [PATCH] i2c: hibvt: add Hisilicon BVT I2C controller driver
+Date: Wed, 22 Jun 2016 16:55:26 +0800
+Message-ID: <1466585726-28467-1-git-send-email-wenpan@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1466498771-18971-1-git-send-email-thloh@altera.com>
-Sender: netdev-owner@vger.kernel.org
-To: thloh@altera.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, davem@davemloft.net, preid@electromag.com.au, dinguyen@opensource.altera.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thloh85@gmail.com, cnphoon@altera.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, wenpan@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Tien Hock
+add Hisilicon BVT I2C controller driver support.
 
-On 6/21/2016 10:46 AM, thloh@altera.com wrote:
-> From: Tien Hock Loh <thloh@altera.com>
->
-> This adds support for TSE PCS that uses SGMII adapter when the phy-mode of
-> the dwmac is set to sgmii
->
-> Signed-off-by: Tien Hock Loh <thloh@altera.com>
+Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+---
+ .../devicetree/bindings/i2c/i2c-hibvt.txt          |  24 +
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-hibvt.c                     | 736 +++++++++++++++++++++
+ 4 files changed, 771 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+ create mode 100644 drivers/i2c/busses/i2c-hibvt.c
 
-IIUC, you are keeping the two timers w/o looking.
-
-Is there any motivation behind? I had understood you wanted
-to review it.
-
-Let me know
-
-Regards
-Peppe
-
->
-> ---
-> v2:
-> - Refactored the TSE PCS out from the dwmac-socfpga.c file
-> - Added binding documentation for TSE PCS sgmii adapter
-> v3:
-> - Added missing license header for new source files
-> - Updated tse_pcs.h include headers
-> - Standardize if statements
-> v4:
-> - Reset SGMII adapter on speed change
-> - Do not enable SGMII adapter if speed is not supported
-> - On init, if PCS reset fails, do not enable adapter
-> 123
-> ---
->  .../devicetree/bindings/net/socfpga-dwmac.txt      |  19 ++
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
->  drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.c | 276 +++++++++++++++++++++
->  drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.h |  36 +++
->  .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 149 +++++++++--
->  5 files changed, 460 insertions(+), 22 deletions(-)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.c
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.h
->
-> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> index 72d82d6..dd10f2f 100644
-> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> @@ -17,9 +17,26 @@ Required properties:
->  Optional properties:
->  altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
->  		DWMAC controller is connected emac splitter.
-> +phy-mode: The phy mode the ethernet operates in
-> +altr,sgmii_to_sgmii_converter: phandle to the TSE SGMII converter
-> +
-> +This device node has additional phandle dependency, the sgmii converter:
-> +
-> +Required properties:
-> + - compatible	: Should be altr,gmii-to-sgmii-2.0
-> + - reg-names	: Should be "eth_tse_control_port"
->
->  Example:
->
-> +gmii_to_sgmii_converter: phy@0x100000240 {
-> +	compatible = "altr,gmii-to-sgmii-2.0";
-> +	reg = <0x00000001 0x00000240 0x00000008>,
-> +		<0x00000001 0x00000200 0x00000040>;
-> +	reg-names = "eth_tse_control_port";
-> +	clocks = <&sgmii_1_clk_0 &emac1 1 &sgmii_clk_125 &sgmii_clk_125>;
-> +	clock-names = "tse_pcs_ref_clk_clock_connection", "tse_rx_cdr_refclk";
-> +};
-> +
->  gmac0: ethernet@ff700000 {
->  	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
->  	altr,sysmgr-syscon = <&sysmgr 0x60 0>;
-> @@ -30,4 +47,6 @@ gmac0: ethernet@ff700000 {
->  	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
->  	clocks = <&emac_0_clk>;
->  	clock-names = "stmmaceth";
-> +	phy-mode = "sgmii";
-> +	altr,gmii-to-sgmii-converter = <&gmii_to_sgmii_converter>;
->  };
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-> index 0fb362d..0ff76e8 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-> @@ -11,7 +11,7 @@ obj-$(CONFIG_DWMAC_IPQ806X)	+= dwmac-ipq806x.o
->  obj-$(CONFIG_DWMAC_LPC18XX)	+= dwmac-lpc18xx.o
->  obj-$(CONFIG_DWMAC_MESON)	+= dwmac-meson.o
->  obj-$(CONFIG_DWMAC_ROCKCHIP)	+= dwmac-rk.o
-> -obj-$(CONFIG_DWMAC_SOCFPGA)	+= dwmac-socfpga.o
-> +obj-$(CONFIG_DWMAC_SOCFPGA)	+= dwmac-socfpga.o altr_tse_pcs.o
->  obj-$(CONFIG_DWMAC_STI)		+= dwmac-sti.o
->  obj-$(CONFIG_DWMAC_SUNXI)	+= dwmac-sunxi.o
->  obj-$(CONFIG_DWMAC_GENERIC)	+= dwmac-generic.o
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.c b/drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.c
-> new file mode 100644
-> index 0000000..40bfaac
-> --- /dev/null
-> +++ b/drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.c
-> @@ -0,0 +1,276 @@
-> +/* Copyright Altera Corporation (C) 2016. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License, version 2,
-> + * as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + *
-> + * Author: Tien Hock Loh <thloh@altera.com>
-> + */
-> +
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_net.h>
-> +#include <linux/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/stmmac.h>
-> +
-> +#include "stmmac.h"
-> +#include "stmmac_platform.h"
-> +#include "altr_tse_pcs.h"
-> +
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII	0
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII		BIT(1)
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RMII		BIT(2)
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_WIDTH		2
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_MASK			GENMASK(1, 0)
-> +
-> +#define TSE_PCS_CONTROL_AN_EN_MASK			BIT(12)
-> +#define TSE_PCS_CONTROL_REG				0x00
-> +#define TSE_PCS_CONTROL_RESTART_AN_MASK			BIT(9)
-> +#define TSE_PCS_IF_MODE_REG				0x28
-> +#define TSE_PCS_LINK_TIMER_0_REG			0x24
-> +#define TSE_PCS_LINK_TIMER_1_REG			0x26
-> +#define TSE_PCS_SIZE					0x40
-> +#define TSE_PCS_STATUS_AN_COMPLETED_MASK		BIT(5)
-> +#define TSE_PCS_STATUS_LINK_MASK			0x0004
-> +#define TSE_PCS_STATUS_REG				0x02
-> +#define TSE_PCS_SGMII_SPEED_1000			BIT(3)
-> +#define TSE_PCS_SGMII_SPEED_100				BIT(2)
-> +#define TSE_PCS_SGMII_SPEED_10				0x0
-> +#define TSE_PCS_SW_RST_MASK				0x8000
-> +#define TSE_PCS_PARTNER_ABILITY_REG			0x0A
-> +#define TSE_PCS_PARTNER_DUPLEX_FULL			0x1000
-> +#define TSE_PCS_PARTNER_DUPLEX_HALF			0x0000
-> +#define TSE_PCS_PARTNER_DUPLEX_MASK			0x1000
-> +#define TSE_PCS_PARTNER_SPEED_MASK			GENMASK(11, 10)
-> +#define TSE_PCS_PARTNER_SPEED_1000			BIT(11)
-> +#define TSE_PCS_PARTNER_SPEED_100			BIT(10)
-> +#define TSE_PCS_PARTNER_SPEED_10			0x0000
-> +#define TSE_PCS_PARTNER_SPEED_1000			BIT(11)
-> +#define TSE_PCS_PARTNER_SPEED_100			BIT(10)
-> +#define TSE_PCS_PARTNER_SPEED_10			0x0000
-> +#define TSE_PCS_SGMII_SPEED_MASK			GENMASK(3, 2)
-> +#define TSE_PCS_SGMII_LINK_TIMER_0			0x0D40
-> +#define TSE_PCS_SGMII_LINK_TIMER_1			0x0003
-> +#define TSE_PCS_SW_RESET_TIMEOUT			100
-> +#define TSE_PCS_USE_SGMII_AN_MASK			BIT(2)
-> +#define TSE_PCS_USE_SGMII_ENA				BIT(1)
-> +
-> +#define SGMII_ADAPTER_CTRL_REG				0x00
-> +#define SGMII_ADAPTER_DISABLE				0x0001
-> +#define SGMII_ADAPTER_ENABLE				0x0000
-> +
-> +#define AUTONEGO_LINK_TIMER				20
-> +
-> +static int tse_pcs_reset(void __iomem *base, struct tse_pcs *pcs)
-> +{
-> +	int counter = 0;
-> +	u16 val;
-> +
-> +	val = readw(base + TSE_PCS_CONTROL_REG);
-> +	val |= TSE_PCS_SW_RST_MASK;
-> +	writew(val, base + TSE_PCS_CONTROL_REG);
-> +
-> +	while (counter < TSE_PCS_SW_RESET_TIMEOUT) {
-> +		val = readw(base + TSE_PCS_CONTROL_REG);
-> +		val &= TSE_PCS_SW_RST_MASK;
-> +		if (val == 0)
-> +			break;
-> +		counter++;
-> +		udelay(1);
-> +	}
-> +	if (counter >= TSE_PCS_SW_RESET_TIMEOUT) {
-> +		dev_err(pcs->dev, "PCS could not get out of sw reset\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int tse_pcs_init(void __iomem *base, struct tse_pcs *pcs)
-> +{
-> +	int ret = 0;
-> +
-> +	writew(TSE_PCS_USE_SGMII_ENA, base + TSE_PCS_IF_MODE_REG);
-> +
-> +	writew(TSE_PCS_SGMII_LINK_TIMER_0, base + TSE_PCS_LINK_TIMER_0_REG);
-> +	writew(TSE_PCS_SGMII_LINK_TIMER_1, base + TSE_PCS_LINK_TIMER_1_REG);
-> +
-> +	ret = tse_pcs_reset(base, pcs);
-> +	if (ret == 0)
-> +		writew(SGMII_ADAPTER_ENABLE,
-> +		       pcs->sgmii_adapter_base + SGMII_ADAPTER_CTRL_REG);
-> +
-> +	return ret;
-> +}
-> +
-> +static void pcs_link_timer_callback(unsigned long data)
-> +{
-> +	u16 val = 0;
-> +
-> +	struct tse_pcs *pcs = (struct tse_pcs *)data;
-> +	void __iomem *tse_pcs_base = pcs->tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base = pcs->sgmii_adapter_base;
-> +
-> +	val = readw(tse_pcs_base + TSE_PCS_STATUS_REG);
-> +	val &= TSE_PCS_STATUS_LINK_MASK;
-> +
-> +	if (val != 0) {
-> +		dev_dbg(pcs->dev, "Adapter: Link is established\n");
-> +		writew(SGMII_ADAPTER_ENABLE,
-> +		       sgmii_adapter_base + SGMII_ADAPTER_CTRL_REG);
-> +	} else {
-> +		mod_timer(&pcs->aneg_link_timer, jiffies +
-> +			  msecs_to_jiffies(AUTONEGO_LINK_TIMER));
-> +	}
-> +}
-> +
-> +static void auto_nego_timer_callback(unsigned long data)
-> +{
-> +	u16 val = 0;
-> +	u16 speed = 0;
-> +	u16 duplex = 0;
-> +
-> +	struct tse_pcs *pcs = (struct tse_pcs *)data;
-> +	void __iomem *tse_pcs_base = pcs->tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base = pcs->sgmii_adapter_base;
-> +
-> +	val = readw(tse_pcs_base + TSE_PCS_STATUS_REG);
-> +	val &= TSE_PCS_STATUS_AN_COMPLETED_MASK;
-> +
-> +	if (val != 0) {
-> +		dev_dbg(pcs->dev, "Adapter: Auto Negotiation is completed\n");
-> +		val = readw(tse_pcs_base + TSE_PCS_PARTNER_ABILITY_REG);
-> +		speed = val & TSE_PCS_PARTNER_SPEED_MASK;
-> +		duplex = val & TSE_PCS_PARTNER_DUPLEX_MASK;
-> +
-> +		if (speed == TSE_PCS_PARTNER_SPEED_10 &&
-> +		    duplex == TSE_PCS_PARTNER_DUPLEX_FULL)
-> +			dev_dbg(pcs->dev,
-> +				"Adapter: Link Partner is Up - 10/Full\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_100 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_FULL)
-> +			dev_dbg(pcs->dev,
-> +				"Adapter: Link Partner is Up - 100/Full\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_1000 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_FULL)
-> +			dev_dbg(pcs->dev,
-> +				"Adapter: Link Partner is Up - 1000/Full\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_10 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_HALF)
-> +			dev_err(pcs->dev,
-> +				"Adapter does not support Half Duplex\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_100 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_HALF)
-> +			dev_err(pcs->dev,
-> +				"Adapter does not support Half Duplex\n");
-> +		else if (speed == TSE_PCS_PARTNER_SPEED_1000 &&
-> +			 duplex == TSE_PCS_PARTNER_DUPLEX_HALF)
-> +			dev_err(pcs->dev,
-> +				"Adapter does not support Half Duplex\n");
-> +		else
-> +			dev_err(pcs->dev,
-> +				"Adapter: Invalid Partner Speed and Duplex\n");
-> +
-> +		if (duplex == TSE_PCS_PARTNER_DUPLEX_FULL &&
-> +		    (speed == TSE_PCS_PARTNER_SPEED_10 ||
-> +		     speed == TSE_PCS_PARTNER_SPEED_100 ||
-> +		     speed == TSE_PCS_PARTNER_SPEED_1000))
-> +			writew(SGMII_ADAPTER_ENABLE,
-> +			       sgmii_adapter_base + SGMII_ADAPTER_CTRL_REG);
-> +	} else {
-> +		val = readw(tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +		val |= TSE_PCS_CONTROL_RESTART_AN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +
-> +		tse_pcs_reset(tse_pcs_base, pcs);
-> +		mod_timer(&pcs->aneg_link_timer, jiffies +
-> +			  msecs_to_jiffies(AUTONEGO_LINK_TIMER));
-> +	}
-> +}
-> +
-> +static void aneg_link_timer_callback(unsigned long data)
-> +{
-> +	struct tse_pcs *pcs = (struct tse_pcs *)data;
-> +
-> +	if (pcs->autoneg == AUTONEG_ENABLE)
-> +		auto_nego_timer_callback(data);
-> +	else if (pcs->autoneg == AUTONEG_DISABLE)
-> +		pcs_link_timer_callback(data);
-> +}
-> +
-> +void tse_pcs_fix_mac_speed(struct tse_pcs *pcs, struct phy_device *phy_dev,
-> +			   unsigned int speed)
-> +{
-> +	void __iomem *tse_pcs_base = pcs->tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base = pcs->sgmii_adapter_base;
-> +	u32 val;
-> +
-> +	writew(SGMII_ADAPTER_ENABLE,
-> +	       sgmii_adapter_base + SGMII_ADAPTER_CTRL_REG);
-> +
-> +	pcs->autoneg = phy_dev->autoneg;
-> +
-> +	if (phy_dev->autoneg == AUTONEG_ENABLE) {
-> +		val = readw(tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +		val |= TSE_PCS_CONTROL_AN_EN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +
-> +		val = readw(tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +		val |= TSE_PCS_USE_SGMII_AN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +
-> +		val = readw(tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +		val |= TSE_PCS_CONTROL_RESTART_AN_MASK;
-> +
-> +		tse_pcs_reset(tse_pcs_base, pcs);
-> +
-> +		setup_timer(&pcs->aneg_link_timer,
-> +			    aneg_link_timer_callback, (unsigned long)pcs);
-> +		mod_timer(&pcs->aneg_link_timer, jiffies +
-> +			  msecs_to_jiffies(AUTONEGO_LINK_TIMER));
-> +	} else if (phy_dev->autoneg == AUTONEG_DISABLE) {
-> +		val = readw(tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +		val &= ~TSE_PCS_CONTROL_AN_EN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_CONTROL_REG);
-> +
-> +		val = readw(tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +		val &= ~TSE_PCS_USE_SGMII_AN_MASK;
-> +		writew(val, tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +
-> +		val = readw(tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +		val &= ~TSE_PCS_SGMII_SPEED_MASK;
-> +
-> +		switch (speed) {
-> +		case 1000:
-> +			val |= TSE_PCS_SGMII_SPEED_1000;
-> +			break;
-> +		case 100:
-> +			val |= TSE_PCS_SGMII_SPEED_100;
-> +			break;
-> +		case 10:
-> +			val |= TSE_PCS_SGMII_SPEED_10;
-> +			break;
-> +		default:
-> +			return;
-> +		}
-> +		writew(val, tse_pcs_base + TSE_PCS_IF_MODE_REG);
-> +
-> +		tse_pcs_reset(tse_pcs_base, pcs);
-> +
-> +		setup_timer(&pcs->aneg_link_timer,
-> +			    aneg_link_timer_callback, (unsigned long)pcs);
-> +		mod_timer(&pcs->aneg_link_timer, jiffies +
-> +			  msecs_to_jiffies(AUTONEGO_LINK_TIMER));
-> +	}
-> +}
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.h b/drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.h
-> new file mode 100644
-> index 0000000..2f58824
-> --- /dev/null
-> +++ b/drivers/net/ethernet/stmicro/stmmac/altr_tse_pcs.h
-> @@ -0,0 +1,36 @@
-> +/* Copyright Altera Corporation (C) 2016. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License, version 2,
-> + * as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + *
-> + * Author: Tien Hock Loh <thloh@altera.com>
-> + */
-> +
-> +#ifndef __TSE_PCS_H__
-> +#define __TSE_PCS_H__
-> +
-> +#include <linux/phy.h>
-> +#include <linux/timer.h>
-> +
-> +struct tse_pcs {
-> +	struct device *dev;
-> +	void __iomem *tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base;
-> +	struct timer_list aneg_link_timer;
-> +	int autoneg;
-> +};
-> +
-> +int tse_pcs_init(void __iomem *base, struct tse_pcs *pcs);
-> +void tse_pcs_fix_mac_speed(struct tse_pcs *pcs, struct phy_device *phy_dev,
-> +			   unsigned int speed);
-> +
-> +#endif /* __TSE_PCS_H__ */
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-> index f13499f..bd4008b 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-> @@ -27,6 +27,11 @@
->  #include "stmmac.h"
->  #include "stmmac_platform.h"
->
-> +#include "altr_tse_pcs.h"
-> +
-> +#define SGMII_ADAPTER_CTRL_REG                          0x00
-> +#define SGMII_ADAPTER_DISABLE                           0x0001
-> +
->  #define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII 0x0
->  #define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII 0x1
->  #define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RMII 0x2
-> @@ -52,35 +57,46 @@ struct socfpga_dwmac {
->  	struct reset_control *stmmac_rst;
->  	void __iomem *splitter_base;
->  	bool f2h_ptp_ref_clk;
-> +	struct tse_pcs pcs;
->  };
->
->  static void socfpga_dwmac_fix_mac_speed(void *priv, unsigned int speed)
->  {
->  	struct socfpga_dwmac *dwmac = (struct socfpga_dwmac *)priv;
->  	void __iomem *splitter_base = dwmac->splitter_base;
-> +	void __iomem *tse_pcs_base = dwmac->pcs.tse_pcs_base;
-> +	void __iomem *sgmii_adapter_base = dwmac->pcs.sgmii_adapter_base;
-> +	struct device *dev = dwmac->dev;
-> +	struct net_device *ndev = dev_get_drvdata(dev);
-> +	struct phy_device *phy_dev = ndev->phydev;
->  	u32 val;
->
-> -	if (!splitter_base)
-> -		return;
-> -
-> -	val = readl(splitter_base + EMAC_SPLITTER_CTRL_REG);
-> -	val &= ~EMAC_SPLITTER_CTRL_SPEED_MASK;
-> -
-> -	switch (speed) {
-> -	case 1000:
-> -		val |= EMAC_SPLITTER_CTRL_SPEED_1000;
-> -		break;
-> -	case 100:
-> -		val |= EMAC_SPLITTER_CTRL_SPEED_100;
-> -		break;
-> -	case 10:
-> -		val |= EMAC_SPLITTER_CTRL_SPEED_10;
-> -		break;
-> -	default:
-> -		return;
-> +	if ((tse_pcs_base) && (sgmii_adapter_base))
-> +		writew(SGMII_ADAPTER_DISABLE,
-> +		       sgmii_adapter_base + SGMII_ADAPTER_CTRL_REG);
-> +
-> +	if (splitter_base) {
-> +		val = readl(splitter_base + EMAC_SPLITTER_CTRL_REG);
-> +		val &= ~EMAC_SPLITTER_CTRL_SPEED_MASK;
-> +
-> +		switch (speed) {
-> +		case 1000:
-> +			val |= EMAC_SPLITTER_CTRL_SPEED_1000;
-> +			break;
-> +		case 100:
-> +			val |= EMAC_SPLITTER_CTRL_SPEED_100;
-> +			break;
-> +		case 10:
-> +			val |= EMAC_SPLITTER_CTRL_SPEED_10;
-> +			break;
-> +		default:
-> +			return;
-> +		}
-> +		writel(val, splitter_base + EMAC_SPLITTER_CTRL_REG);
->  	}
->
-> -	writel(val, splitter_base + EMAC_SPLITTER_CTRL_REG);
-> +	if ((tse_pcs_base) && (sgmii_adapter_base))
-> +		tse_pcs_fix_mac_speed(&dwmac->pcs, phy_dev, speed);
->  }
->
->  static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *dev)
-> @@ -88,9 +104,22 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
->  	struct device_node *np = dev->of_node;
->  	struct regmap *sys_mgr_base_addr;
->  	u32 reg_offset, reg_shift;
-> -	int ret;
-> -	struct device_node *np_splitter;
-> +	int ret, index;
-> +	struct device_node *np_splitter = NULL;
-> +	struct device_node *np_sgmii_adapter = NULL;
-> +
->  	struct resource res_splitter;
-> +	struct resource res_tse_pcs;
-> +	struct resource res_sgmii_adapter;
-> +
-> +	dwmac->stmmac_rst = devm_reset_control_get(dev,
-> +						  STMMAC_RESOURCE_NAME);
-> +	if (IS_ERR(dwmac->stmmac_rst)) {
-> +		dev_info(dev, "Could not get reset control!\n");
-> +		if (PTR_ERR(dwmac->stmmac_rst) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		dwmac->stmmac_rst = NULL;
-> +	}
->
->  	dwmac->interface = of_get_phy_mode(np);
->
-> @@ -128,6 +157,77 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
->  		}
->  	}
->
-> +	np_sgmii_adapter = of_parse_phandle(np,
-> +					    "altr,gmii_to_sgmii_converter", 0);
-> +	if (np_sgmii_adapter) {
-> +		index = of_property_match_string(np_sgmii_adapter, "reg-names",
-> +						 "hps_emac_interface_splitter_avalon_slave");
-> +
-> +		if (index >= 0) {
-> +			if (of_address_to_resource(np_sgmii_adapter, index,
-> +						   &res_splitter)) {
-> +				dev_err(dev,
-> +					"%s: ERROR: missing emac splitter address\n",
-> +					__func__);
-> +				return -EINVAL;
-> +			}
-> +
-> +			dwmac->splitter_base =
-> +			    devm_ioremap_resource(dev, &res_splitter);
-> +
-> +			if (IS_ERR(dwmac->splitter_base)) {
-> +				dev_err(dev,
-> +					"%s: ERROR: failed mapping emac splitter\n",
-> +					__func__);
-> +				return PTR_ERR(dwmac->splitter_base);
-> +			}
-> +		}
-> +
-> +		index = of_property_match_string(np_sgmii_adapter, "reg-names",
-> +						 "gmii_to_sgmii_adapter_avalon_slave");
-> +
-> +		if (index >= 0) {
-> +			if (of_address_to_resource(np_sgmii_adapter, index,
-> +						   &res_sgmii_adapter)) {
-> +				dev_err(dev,
-> +					"%s: ERROR: failed mapping adapter\n",
-> +					__func__);
-> +				return -EINVAL;
-> +			}
-> +
-> +			dwmac->pcs.sgmii_adapter_base =
-> +			    devm_ioremap_resource(dev, &res_sgmii_adapter);
-> +
-> +			if (IS_ERR(dwmac->pcs.sgmii_adapter_base)) {
-> +				dev_err(dev, "%s: failed to mapping adapter\n",
-> +					__func__);
-> +				return PTR_ERR(dwmac->pcs.sgmii_adapter_base);
-> +			}
-> +		}
-> +
-> +		index = of_property_match_string(np_sgmii_adapter, "reg-names",
-> +						 "eth_tse_control_port");
-> +
-> +		if (index >= 0) {
-> +			if (of_address_to_resource(np_sgmii_adapter, index,
-> +						   &res_tse_pcs)) {
-> +				dev_err(dev,
-> +					"%s: ERROR: failed mapping tse control port\n",
-> +					__func__);
-> +				return -EINVAL;
-> +			}
-> +
-> +			dwmac->pcs.tse_pcs_base =
-> +			    devm_ioremap_resource(dev, &res_tse_pcs);
-> +
-> +			if (IS_ERR(dwmac->pcs.tse_pcs_base)) {
-> +				dev_err(dev,
-> +					"%s: ERROR: failed mapping tse control port\n",
-> +					__func__);
-> +				return PTR_ERR(dwmac->pcs.sgmii_adapter_base);
-> +			}
-> +		}
-> +	}
->  	dwmac->reg_offset = reg_offset;
->  	dwmac->reg_shift = reg_shift;
->  	dwmac->sys_mgr_base_addr = sys_mgr_base_addr;
-> @@ -151,6 +251,7 @@ static int socfpga_dwmac_set_phy_mode(struct socfpga_dwmac *dwmac)
->  		break;
->  	case PHY_INTERFACE_MODE_MII:
->  	case PHY_INTERFACE_MODE_GMII:
-> +	case PHY_INTERFACE_MODE_SGMII:
->  		val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII;
->  		break;
->  	default:
-> @@ -191,6 +292,12 @@ static int socfpga_dwmac_set_phy_mode(struct socfpga_dwmac *dwmac)
->  	 */
->  	if (dwmac->stmmac_rst)
->  		reset_control_deassert(dwmac->stmmac_rst);
-> +	if (phymode == PHY_INTERFACE_MODE_SGMII) {
-> +		if (tse_pcs_init(dwmac->pcs.tse_pcs_base, &dwmac->pcs) != 0) {
-> +			dev_err(dwmac->dev, "Unable to initialize TSE PCS");
-> +			return -EINVAL;
-> +		}
-> +	}
->
->  	return 0;
->  }
->
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+new file mode 100644
+index 0000000..3aa2cee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+@@ -0,0 +1,24 @@
++Hisilicon BVT I2C master controller
++
++Required properties:
++- compatible: should be "hisilicon,hibvt-i2c".
++- reg: physical base address of the controller and length of memory mapped.
++     region.
++- interrupts: interrupt number to the cpu.
++- clocks: phandles to input clocks.
++
++Optional properties:
++- clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000.
++
++Other properties:
++see Documentation/devicetree/bindings/i2c/i2c.txt.
++
++Examples:
++i2c_bus0: i2c@12110000 {
++	compatible = "hisilicon,hibvt-i2c";
++	reg = <0x12110000 0x100>;
++	interrupts = <20>;
++	clocks = <&crg_ctrl HI3516CV300_APB_CLK>;
++	clock-names = "apb_pclk";
++	clock-frequency = <100000>;
++};
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index f167021..fe167e0 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -564,6 +564,16 @@ config I2C_HIGHLANDER
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-highlander.
+ 
++config I2C_HIBVT
++	tristate "Hisilicon BVT I2C Controller"
++	depends on ARCH_HISI
++	help
++	  Say Y here to include support for Hisilicon BVT I2C controller in the
++	  Hisilicon BVT SoCs.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called i2c-hibvt.
++
+ config I2C_IBM_IIC
+ 	tristate "IBM PPC 4xx on-chip I2C interface"
+ 	depends on 4xx
+diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+index 37f2819..37a6f6e 100644
+--- a/drivers/i2c/busses/Makefile
++++ b/drivers/i2c/busses/Makefile
+@@ -118,5 +118,6 @@ obj-$(CONFIG_I2C_PCA_ISA)	+= i2c-pca-isa.o
+ obj-$(CONFIG_I2C_SIBYTE)	+= i2c-sibyte.o
+ obj-$(CONFIG_I2C_XGENE_SLIMPRO) += i2c-xgene-slimpro.o
+ obj-$(CONFIG_SCx200_ACB)	+= scx200_acb.o
++obj-$(CONFIG_I2C_HIBVT)	+= i2c-hibvt.o
+ 
+ ccflags-$(CONFIG_I2C_DEBUG_BUS) := -DDEBUG
+diff --git a/drivers/i2c/busses/i2c-hibvt.c b/drivers/i2c/busses/i2c-hibvt.c
+new file mode 100644
+index 0000000..18de3cf
+--- /dev/null
++++ b/drivers/i2c/busses/i2c-hibvt.c
+@@ -0,0 +1,736 @@
++/*
++ * Hisilicon BVT I2C Controller Driver
++ *
++ * Copyright (c) 2016 HiSilicon Technologies Co., Ltd.
++ *
++ * Authors: wenpan@hisilicon.com
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++/*
++ * I2C Registers offsets
++ */
++#define HIBVT_I2C_GLB		0x0
++#define HIBVT_I2C_SCL_H		0x4
++#define HIBVT_I2C_SCL_L		0x8
++#define HIBVT_I2C_DATA1		0x10
++#define HIBVT_I2C_TXF		0x20
++#define HIBVT_I2C_RXF		0x24
++#define HIBVT_I2C_CMD_BASE	0x30
++#define HIBVT_I2C_LOOP1		0xb0
++#define HIBVT_I2C_DST1		0xb4
++#define HIBVT_I2C_TX_WATER	0xc8
++#define HIBVT_I2C_RX_WATER	0xcc
++#define HIBVT_I2C_CTRL1		0xd0
++#define HIBVT_I2C_STAT		0xd8
++#define HIBVT_I2C_INTR_RAW	0xe0
++#define HIBVT_I2C_INTR_EN	0xe4
++#define HIBVT_I2C_INTR_STAT	0xe8
++
++/*
++ * I2C Global Config Register -- HIBVT_I2C_GLB
++ */
++#define GLB_EN_MASK		BIT(0)
++#define GLB_SDA_HOLD_MASK	GENMASK(23, 8)
++#define GLB_SDA_HOLD_SHIFT	(8)
++
++/*
++ * I2C Timing CMD Register -- HIBVT_I2C_CMD_BASE + n * 4 (n = 0, 1, 2, ... 31)
++ */
++#define CMD_EXIT	0x0
++#define CMD_TX_S	0x1
++#define CMD_TX_D1_2	0x4
++#define CMD_TX_D1_1	0x5
++#define CMD_TX_FIFO	0x9
++#define CMD_RX_FIFO	0x12
++#define CMD_RX_ACK	0x13
++#define CMD_IGN_ACK	0x15
++#define CMD_TX_ACK	0x16
++#define CMD_TX_NACK	0x17
++#define CMD_JMP1	0x18
++#define CMD_UP_TXF	0x1d
++#define CMD_TX_RS	0x1e
++#define CMD_TX_P	0x1f
++
++/*
++ * I2C Control Register 1 -- HIBVT_I2C_CTRL1
++ */
++#define CTRL1_CMD_START_MASK	BIT(0)
++
++/*
++ * I2C Status Register -- HIBVT_I2C_STAT
++ */
++#define STAT_RXF_NOE_MASK	BIT(16) /* RX FIFO not empty flag */
++#define STAT_TXF_NOF_MASK	BIT(19) /* TX FIFO not full flag */
++
++
++/*
++ * I2C Interrupt status and mask Register --
++ * HIBVT_I2C_INTR_RAW, HIBVT_I2C_STAT, HIBVT_I2C_INTR_STAT
++ */
++#define INTR_ABORT_MASK		(BIT(0) | BIT(11))
++#define INTR_RX_MASK		BIT(2)
++#define INTR_TX_MASK		BIT(4)
++#define INTR_CMD_DONE_MASK	BIT(12)
++#define INTR_USE_MASK		(INTR_ABORT_MASK \
++				|INTR_RX_MASK \
++				| INTR_TX_MASK \
++				| INTR_CMD_DONE_MASK)
++#define INTR_ALL_MASK		GENMASK(31, 0)
++
++#define I2C_DEFAULT_FREQUENCY	0x100000
++#define I2C_TXF_DEPTH		64
++#define I2C_RXF_DEPTH		64
++#define I2C_TXF_WATER		32
++#define I2C_RXF_WATER		32
++#define I2C_WAIT_TIMEOUT	0x10000
++#define I2C_IRQ_TIMEOUT		(msecs_to_jiffies(1000))
++
++
++struct hibvt_i2c_dev {
++	struct device		*dev;
++	struct i2c_adapter	adap;
++	void __iomem		*base;
++	struct clk		*clk;
++	int			irq;
++
++	unsigned int		freq;
++	struct i2c_msg		*msg;
++	unsigned int		msg_num;
++	unsigned int		msg_idx;
++	unsigned int		msg_buf_ptr;
++	struct completion	msg_complete;
++
++	spinlock_t		lock;
++	int			status;
++};
++
++static inline void hibvt_i2c_disable(struct hibvt_i2c_dev *i2c)
++{
++	unsigned int val;
++
++	val = readl(i2c->base + HIBVT_I2C_GLB);
++	val &= ~GLB_EN_MASK;
++	writel(val, i2c->base + HIBVT_I2C_GLB);
++}
++
++static inline void hibvt_i2c_enable(struct hibvt_i2c_dev *i2c)
++{
++	unsigned int val;
++
++	val = readl(i2c->base + HIBVT_I2C_GLB);
++	val |= GLB_EN_MASK;
++	writel(val, i2c->base + HIBVT_I2C_GLB);
++}
++
++static inline void hibvt_i2c_cfg_irq(struct hibvt_i2c_dev *i2c,
++		unsigned int flag)
++{
++	writel(flag, i2c->base + HIBVT_I2C_INTR_EN);
++}
++
++static inline void hibvt_i2c_disable_irq(struct hibvt_i2c_dev *i2c,
++		unsigned int flag)
++{
++	unsigned int val;
++
++	val = readl(i2c->base + HIBVT_I2C_INTR_EN);
++	val &= ~flag;
++	writel(val, i2c->base + HIBVT_I2C_INTR_EN);
++}
++
++static inline unsigned int hibvt_i2c_clr_irq(struct hibvt_i2c_dev *i2c)
++{
++	unsigned int val;
++
++	val = readl(i2c->base + HIBVT_I2C_INTR_STAT);
++	writel(INTR_ALL_MASK, i2c->base + HIBVT_I2C_INTR_RAW);
++
++	return val;
++}
++
++static inline void hibvt_i2c_cmdreg_set(struct hibvt_i2c_dev *i2c,
++		unsigned int cmd, unsigned int *offset)
++{
++	dev_dbg(i2c->dev, "hii2c reg: offset=0x%x, cmd=0x%x...\n",
++			*offset * 4, cmd);
++	writel(cmd, i2c->base + HIBVT_I2C_CMD_BASE + *offset * 4);
++	(*offset)++;
++}
++
++/*
++ * config i2c slave addr
++ */
++static inline void hibvt_i2c_set_addr(struct hibvt_i2c_dev *i2c)
++{
++	struct i2c_msg *msg = i2c->msg;
++	u16 addr;
++
++	if (msg->flags & I2C_M_TEN) {
++		/* First byte is 11110XX0 where XX is upper 2 bits */
++		addr = ((msg->addr & 0x300) << 1) | 0xf000;
++		if (msg->flags & I2C_M_RD)
++			addr |= 1 << 8;
++
++		/* Second byte is the remaining 8 bits */
++		addr |= msg->addr & 0xff;
++	} else {
++		addr = (msg->addr & 0x7f) << 1;
++		if (msg->flags & I2C_M_RD)
++			addr |= 1;
++	}
++
++	writel(addr, i2c->base + HIBVT_I2C_DATA1);
++}
++
++/*
++ * Start command sequence
++ */
++static inline void hibvt_i2c_start_cmd(struct hibvt_i2c_dev *i2c)
++{
++	unsigned int val;
++
++	val = readl(i2c->base + HIBVT_I2C_CTRL1);
++	val |= CTRL1_CMD_START_MASK;
++	writel(val, i2c->base + HIBVT_I2C_CTRL1);
++}
++
++static int hibvt_i2c_wait_rx_noempty(struct hibvt_i2c_dev *i2c)
++{
++	unsigned int time_cnt = 0;
++	unsigned int val;
++
++	do {
++		val = readl(i2c->base + HIBVT_I2C_STAT);
++		if (val & STAT_RXF_NOE_MASK)
++			return 0;
++
++		udelay(50);
++	} while (time_cnt++ < I2C_WAIT_TIMEOUT);
++
++	dev_err(i2c->dev, "wait rx no empty timeout, RIS: 0x%x, SR: 0x%x\n",
++			readl(i2c->base + HIBVT_I2C_INTR_RAW), val);
++	return -EIO;
++}
++
++static int hibvt_i2c_wait_tx_nofull(struct hibvt_i2c_dev *i2c)
++{
++	unsigned int time_cnt = 0;
++	unsigned int val;
++
++	do {
++		val = readl(i2c->base + HIBVT_I2C_STAT);
++		if (val & STAT_TXF_NOF_MASK)
++			return 0;
++
++		udelay(50);
++	} while (time_cnt++ < I2C_WAIT_TIMEOUT);
++
++	dev_err(i2c->dev, "wait rx no empty timeout, RIS: 0x%x, SR: 0x%x\n",
++			readl(i2c->base + HIBVT_I2C_INTR_RAW), val);
++	return -EIO;
++}
++
++static int hibvt_i2c_wait_idle(struct hibvt_i2c_dev *i2c)
++{
++	unsigned int time_cnt = 0;
++	unsigned int val;
++
++	do {
++		val = readl(i2c->base + HIBVT_I2C_INTR_RAW);
++		if (val & (INTR_ABORT_MASK)) {
++			dev_err(i2c->dev, "wait idle abort!, RIS: 0x%x\n",
++					val);
++			return -EIO;
++		}
++
++		if (val & INTR_CMD_DONE_MASK)
++			return 0;
++
++		udelay(50);
++	} while (time_cnt++ < I2C_WAIT_TIMEOUT);
++
++	dev_err(i2c->dev, "wait idle timeout, RIS: 0x%x, SR: 0x%x\n",
++			val, readl(i2c->base + HIBVT_I2C_STAT));
++
++	return -EIO;
++}
++
++static void hibvt_i2c_set_freq(struct hibvt_i2c_dev *i2c)
++{
++	unsigned int max_freq, freq;
++	unsigned int clk_rate;
++	unsigned int val, sda_hold;
++
++	freq = i2c->freq;
++	clk_rate = clk_get_rate(i2c->clk);
++	max_freq = clk_rate >> 1;
++
++	if (freq > max_freq) {
++		i2c->freq = max_freq;
++		freq = i2c->freq;
++	}
++
++	if (freq <= 100000) {
++		val = clk_rate / (freq * 2) - 1;
++		writel(val, i2c->base + HIBVT_I2C_SCL_H);
++		writel(val, i2c->base + HIBVT_I2C_SCL_L);
++	} else {
++		val = (clk_rate * 36) / (freq * 100);
++		writel(val, i2c->base + HIBVT_I2C_SCL_H);
++		val = (clk_rate * 64) / (freq * 100);
++		writel(val, i2c->base + HIBVT_I2C_SCL_L);
++	}
++
++	sda_hold = val * 3 / 10;
++	sda_hold = (sda_hold << GLB_SDA_HOLD_SHIFT) & GLB_SDA_HOLD_MASK;
++	val = readl(i2c->base + HIBVT_I2C_GLB);
++	val &= ~GLB_SDA_HOLD_MASK;
++	val |= sda_hold;
++	writel(val, i2c->base + HIBVT_I2C_GLB);
++}
++
++/*
++ * set i2c controller TX and RX FIFO water
++ */
++static inline void hibvt_i2c_set_water(struct hibvt_i2c_dev *i2c)
++{
++	writel(I2C_TXF_WATER, i2c->base + HIBVT_I2C_TX_WATER);
++	writel(I2C_RXF_WATER, i2c->base + HIBVT_I2C_RX_WATER);
++}
++
++/*
++ * initialise the controller, set i2c bus interface freq
++ */
++static void hibvt_i2c_hw_init(struct hibvt_i2c_dev *i2c)
++{
++	hibvt_i2c_disable(i2c);
++	hibvt_i2c_disable_irq(i2c, INTR_ALL_MASK);
++	hibvt_i2c_set_freq(i2c);
++	hibvt_i2c_set_water(i2c);
++}
++
++/*
++ * hibvt_i2c_cfg_cmd - config i2c controller command sequence
++ *
++ * After all the timing command is configured,
++ * and then start the command, you can i2c communication,
++ * and then only need to read and write i2c fifo.
++ */
++static void hibvt_i2c_cfg_cmd(struct hibvt_i2c_dev *i2c)
++{
++	struct i2c_msg *msg = i2c->msg;
++	int offset = 0;
++
++	if (i2c->msg_idx == 0)
++		hibvt_i2c_cmdreg_set(i2c, CMD_TX_S, &offset);
++	else
++		hibvt_i2c_cmdreg_set(i2c, CMD_TX_RS, &offset);
++
++	if (msg->flags & I2C_M_TEN) {
++		if (i2c->msg_idx == 0) {
++			hibvt_i2c_cmdreg_set(i2c, CMD_TX_D1_2, &offset);
++			hibvt_i2c_cmdreg_set(i2c, CMD_TX_D1_1, &offset);
++		} else {
++			hibvt_i2c_cmdreg_set(i2c, CMD_TX_D1_2, &offset);
++		}
++	} else {
++		hibvt_i2c_cmdreg_set(i2c, CMD_TX_D1_1, &offset);
++	}
++
++	if (msg->flags & I2C_M_IGNORE_NAK)
++		hibvt_i2c_cmdreg_set(i2c, CMD_IGN_ACK, &offset);
++	else
++		hibvt_i2c_cmdreg_set(i2c, CMD_RX_ACK, &offset);
++
++	if (msg->flags & I2C_M_RD) {
++		if (msg->len >= 2) {
++			writel(offset, i2c->base + HIBVT_I2C_DST1);
++			writel(msg->len - 2, i2c->base + HIBVT_I2C_LOOP1);
++			hibvt_i2c_cmdreg_set(i2c, CMD_RX_FIFO, &offset);
++			hibvt_i2c_cmdreg_set(i2c, CMD_TX_ACK, &offset);
++			hibvt_i2c_cmdreg_set(i2c, CMD_JMP1, &offset);
++		}
++		hibvt_i2c_cmdreg_set(i2c, CMD_RX_FIFO, &offset);
++		hibvt_i2c_cmdreg_set(i2c, CMD_TX_NACK, &offset);
++	} else {
++		writel(offset, i2c->base + HIBVT_I2C_DST1);
++		writel(msg->len - 1, i2c->base + HIBVT_I2C_LOOP1);
++		hibvt_i2c_cmdreg_set(i2c, CMD_UP_TXF, &offset);
++		hibvt_i2c_cmdreg_set(i2c, CMD_TX_FIFO, &offset);
++
++		if (msg->flags & I2C_M_IGNORE_NAK)
++			hibvt_i2c_cmdreg_set(i2c, CMD_IGN_ACK, &offset);
++		else
++			hibvt_i2c_cmdreg_set(i2c, CMD_RX_ACK, &offset);
++
++		hibvt_i2c_cmdreg_set(i2c, CMD_JMP1, &offset);
++	}
++
++	if ((i2c->msg_idx == (i2c->msg_num - 1)) || (msg->flags & I2C_M_STOP)) {
++		dev_dbg(i2c->dev, "run to %s %d...TX STOP\n",
++				__func__, __LINE__);
++		hibvt_i2c_cmdreg_set(i2c, CMD_TX_P, &offset);
++	}
++
++	hibvt_i2c_cmdreg_set(i2c, CMD_EXIT, &offset);
++}
++
++static int hibvt_i2c_polling_xfer_one_msg(struct hibvt_i2c_dev *i2c)
++{
++	int status;
++	unsigned int val;
++	struct i2c_msg *msg = i2c->msg;
++
++	dev_dbg(i2c->dev, "[%s,%d]msg->flags=0x%x, len=0x%x\n",
++			__func__, __LINE__, msg->flags, msg->len);
++
++	hibvt_i2c_enable(i2c);
++	hibvt_i2c_clr_irq(i2c);
++	hibvt_i2c_set_addr(i2c);
++	hibvt_i2c_cfg_cmd(i2c);
++	hibvt_i2c_start_cmd(i2c);
++
++	i2c->msg_buf_ptr = 0;
++
++	if (msg->flags & I2C_M_RD) {
++		while (i2c->msg_buf_ptr < msg->len) {
++			status = hibvt_i2c_wait_rx_noempty(i2c);
++			if (status)
++				goto end;
++
++			val = readl(i2c->base + HIBVT_I2C_RXF);
++			msg->buf[i2c->msg_buf_ptr] = val;
++			i2c->msg_buf_ptr++;
++
++		}
++	} else {
++		while (i2c->msg_buf_ptr < msg->len) {
++			status = hibvt_i2c_wait_tx_nofull(i2c);
++			if (status)
++				goto end;
++
++			val = msg->buf[i2c->msg_buf_ptr];
++			writel(val, i2c->base + HIBVT_I2C_TXF);
++			i2c->msg_buf_ptr++;
++		}
++	}
++
++	status = hibvt_i2c_wait_idle(i2c);
++end:
++	hibvt_i2c_disable(i2c);
++
++	return status;
++}
++
++static irqreturn_t hibvt_i2c_isr(int irq, void *dev_id)
++{
++	struct hibvt_i2c_dev *i2c = dev_id;
++	unsigned int irq_status;
++	struct i2c_msg *msg = i2c->msg;
++
++	spin_lock(&i2c->lock);
++
++	irq_status = hibvt_i2c_clr_irq(i2c);
++	dev_dbg(i2c->dev, "%s RIS:  0x%x\n", __func__, irq_status);
++
++	if (!irq_status) {
++		dev_dbg(i2c->dev, "no irq\n");
++		goto end;
++	}
++
++	if (irq_status & INTR_ABORT_MASK) {
++		dev_err(i2c->dev, "irq handle abort, RIS: 0x%x\n",
++				irq_status);
++		i2c->status = -EIO;
++		hibvt_i2c_disable_irq(i2c, INTR_ALL_MASK);
++
++		complete(&i2c->msg_complete);
++		goto end;
++	}
++
++	if (msg->flags & I2C_M_RD) {
++		while ((readl(i2c->base + HIBVT_I2C_STAT) & STAT_RXF_NOE_MASK)
++				&& (i2c->msg_buf_ptr < msg->len)) {
++			msg->buf[i2c->msg_buf_ptr] =
++				readl(i2c->base + HIBVT_I2C_RXF);
++			i2c->msg_buf_ptr++;
++		}
++	} else {
++		while ((readl(i2c->base + HIBVT_I2C_STAT) & STAT_TXF_NOF_MASK)
++				&& (i2c->msg_buf_ptr < msg->len)) {
++			writel(msg->buf[i2c->msg_buf_ptr],
++					i2c->base + HIBVT_I2C_TXF);
++			i2c->msg_buf_ptr++;
++		}
++	}
++
++	if (i2c->msg_buf_ptr >= msg->len)
++		hibvt_i2c_disable_irq(i2c, INTR_TX_MASK | INTR_RX_MASK);
++
++	if (irq_status & INTR_CMD_DONE_MASK) {
++		dev_dbg(i2c->dev, "cmd done\n");
++		i2c->status =  0;
++		hibvt_i2c_disable_irq(i2c, INTR_ALL_MASK);
++
++		complete(&i2c->msg_complete);
++	}
++
++end:
++	spin_unlock(&i2c->lock);
++
++	return IRQ_HANDLED;
++}
++
++static int hibvt_i2c_interrupt_xfer_one_msg(struct hibvt_i2c_dev *i2c)
++{
++	int status;
++	struct i2c_msg *msg = i2c->msg;
++	unsigned long timeout;
++	unsigned long flags;
++
++	dev_dbg(i2c->dev, "[%s,%d]msg->flags=0x%x, len=0x%x\n",
++			__func__, __LINE__, msg->flags, msg->len);
++
++	reinit_completion(&i2c->msg_complete);
++	i2c->msg_buf_ptr = 0;
++	i2c->status = -EIO;
++
++	spin_lock_irqsave(&i2c->lock, flags);
++	hibvt_i2c_enable(i2c);
++	hibvt_i2c_clr_irq(i2c);
++	if (msg->flags & I2C_M_RD)
++		hibvt_i2c_cfg_irq(i2c, INTR_USE_MASK & ~INTR_TX_MASK);
++	else
++		hibvt_i2c_cfg_irq(i2c, INTR_USE_MASK & ~INTR_RX_MASK);
++
++	hibvt_i2c_set_addr(i2c);
++	hibvt_i2c_cfg_cmd(i2c);
++	hibvt_i2c_start_cmd(i2c);
++	spin_unlock_irqrestore(&i2c->lock, flags);
++
++	timeout = wait_for_completion_timeout(&i2c->msg_complete,
++			I2C_IRQ_TIMEOUT);
++
++	if (timeout == 0) {
++		hibvt_i2c_disable_irq(i2c, INTR_ALL_MASK);
++		status = -EIO;
++		dev_err(i2c->dev, "%s timeout\n",
++			 msg->flags & I2C_M_RD ? "rx" : "tx");
++	} else {
++		status = i2c->status;
++	}
++
++	hibvt_i2c_disable(i2c);
++
++	return status;
++}
++
++/*
++ * Master transfer function
++ */
++static int hibvt_i2c_xfer(struct i2c_adapter *adap,
++			struct i2c_msg *msgs, int num)
++{
++	struct hibvt_i2c_dev *i2c = i2c_get_adapdata(adap);
++	int status;
++
++	if (!msgs) {
++		dev_err(i2c->dev, "msgs == NULL\n");
++		return -EIO;
++	}
++
++	i2c->msg = msgs;
++	i2c->msg_num = num;
++	i2c->msg_idx = 0;
++
++	if (i2c->irq >= 0) {
++		while (i2c->msg_idx < i2c->msg_num) {
++			status = hibvt_i2c_interrupt_xfer_one_msg(i2c);
++			if (status)
++				break;
++
++			i2c->msg++;
++			i2c->msg_idx++;
++		}
++	} else {
++		while (i2c->msg_idx < i2c->msg_num) {
++			status = hibvt_i2c_polling_xfer_one_msg(i2c);
++			if (status)
++				break;
++
++			i2c->msg++;
++			i2c->msg_idx++;
++		}
++	}
++
++	if (!status || i2c->msg_idx > 0)
++		status = i2c->msg_idx;
++
++	return status;
++}
++
++static u32 hibvt_i2c_func(struct i2c_adapter *adap)
++{
++	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR
++		| I2C_FUNC_PROTOCOL_MANGLING;
++}
++
++static const struct i2c_algorithm hibvt_i2c_algo = {
++	.master_xfer		= hibvt_i2c_xfer,
++	.functionality		= hibvt_i2c_func,
++};
++
++static int hibvt_i2c_probe(struct platform_device *pdev)
++{
++	int status;
++	struct hibvt_i2c_dev *i2c;
++	struct i2c_adapter *adap;
++	struct resource *res;
++
++	i2c = devm_kzalloc(&pdev->dev, sizeof(*i2c), GFP_KERNEL);
++	if (!i2c)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, i2c);
++	i2c->dev = &pdev->dev;
++	spin_lock_init(&i2c->lock);
++	init_completion(&i2c->msg_complete);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	i2c->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(i2c->base)) {
++		dev_err(i2c->dev, "cannot ioremap resource\n");
++		return -ENOMEM;
++	}
++
++	i2c->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(i2c->clk)) {
++		dev_err(i2c->dev, "cannot get clock\n");
++		return -ENOENT;
++	}
++	clk_prepare_enable(i2c->clk);
++
++	if (of_property_read_u32(pdev->dev.of_node, "clock-frequency",
++				&i2c->freq)) {
++		dev_warn(i2c->dev, "setting default clock-frequency@%dHz\n",
++				I2C_DEFAULT_FREQUENCY);
++		i2c->freq = I2C_DEFAULT_FREQUENCY;
++	}
++
++	/* i2c controller initialization, disable interrupt */
++	hibvt_i2c_hw_init(i2c);
++
++	i2c->irq = platform_get_irq(pdev, 0);
++	status = devm_request_irq(&pdev->dev, i2c->irq, hibvt_i2c_isr,
++			IRQF_SHARED, dev_name(&pdev->dev), i2c);
++	if (status) {
++		dev_dbg(i2c->dev, "falling back to polling mode");
++		i2c->irq = -1;
++	}
++
++	adap = &i2c->adap;
++	i2c_set_adapdata(adap, i2c);
++	adap->owner = THIS_MODULE;
++	strlcpy(adap->name, "hibvt-i2c", sizeof(adap->name));
++	adap->dev.parent = &pdev->dev;
++	adap->dev.of_node = pdev->dev.of_node;
++	adap->algo = &hibvt_i2c_algo;
++
++	/* Add the i2c adapter */
++	status = i2c_add_adapter(adap);
++	if (status) {
++		dev_err(i2c->dev, "failed to add bus to i2c core\n");
++		goto err_add_adapter;
++	}
++
++	dev_info(i2c->dev, "%s%d@%dhz registered\n",
++			adap->name, adap->nr, i2c->freq);
++
++	return 0;
++
++err_add_adapter:
++	clk_disable_unprepare(i2c->clk);
++	return status;
++}
++
++static int hibvt_i2c_remove(struct platform_device *pdev)
++{
++	struct hibvt_i2c_dev *i2c = platform_get_drvdata(pdev);
++
++	clk_disable_unprepare(i2c->clk);
++	i2c_del_adapter(&i2c->adap);
++
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int hibvt_i2c_suspend(struct device *dev)
++{
++	struct hibvt_i2c_dev *i2c = dev_get_drvdata(dev);
++
++	i2c_lock_adapter(&i2c->adapter);
++	clk_disable_unprepare(i2c->clk);
++	i2c_unlock_adapter(&i2c->adapter);
++
++	return 0;
++}
++
++static int hibvt_i2c_resume(struct device *dev)
++{
++	struct hibvt_i2c_dev *i2c = dev_get_drvdata(dev);
++
++	i2c_lock_adapter(&i2c->adapter);
++	clk_prepare_enable(i2c->clk);
++	hibvt_i2c_hw_init(i2c);
++	i2c_unlock_adapter(&i2c->adapter);
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(hibvt_i2c_dev_pm, hibvt_i2c_suspend,
++		hibvt_i2c_resume);
++
++static const struct of_device_id hibvt_i2c_match[] = {
++	{ .compatible = "hisilicon,hibvt-i2c"},
++	{},
++};
++MODULE_DEVICE_TABLE(of, hibvt_i2c_match);
++
++static struct platform_driver hibvt_i2c_driver = {
++	.driver		= {
++		.name	= "hibvt-i2c",
++		.of_match_table = hibvt_i2c_match,
++		.pm	= &hibvt_i2c_dev_pm,
++	},
++	.probe		= hibvt_i2c_probe,
++	.remove		= hibvt_i2c_remove,
++};
++
++module_platform_driver(hibvt_i2c_driver);
++
++MODULE_AUTHOR("Pan Wen, <wenpan@hisilicon.com>");
++MODULE_DESCRIPTION("HISILICON BVT I2C Bus driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.3.7
