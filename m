@@ -1,254 +1,121 @@
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Tue, 21 Jun 2016 20:45:26 -0500
-Message-ID: <1466559926.22191.203.camel@buserror.net>
-References: <1463114260-8724-1-git-send-email-oss@buserror.net>
-	 <20160513112441.200f4349@arm.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Subject: Re: [PATCH v4 00/14] fix some type infos and bugs for arm64/of numa
+Date: Wed, 22 Jun 2016 09:55:55 +0800
+Message-ID: <5769F02B.7090705@huawei.com>
+References: <1465286898-13828-1-git-send-email-thunder.leizhen@huawei.com>
+ <20160607135852.GA20477@arm.com> <5757DE57.10700@huawei.com>
+ <20160614142220.GC14654@e104818-lin.cambridge.arm.com>
+ <57678F8F.6060303@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160513112441.200f4349-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <57678F8F.6060303@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, David Daney <david.daney@cavium.com>, Tianhong Ding <dingtianhong@huawei.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Xinwei Hu <huxinwei@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-05-13 at 11:24 +0100, Marc Zyngier wrote:
-> On Thu, 12 May 2016 23:37:39 -0500
-> Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org> wrote:
-> 
-> Hi Scott,
-> 
-> > Erratum A-008585 says that the ARM generic timer counter "has the
-> > potential to contain an erroneous value for a small number of core
-> > clock cycles every time the timer value changes".  Accesses to TVAL
-> > (both read and write) are also affected due to the implicit counter
-> > read.  Accesses to CVAL are not affected.
-> > 
-> > The workaround is to reread TVAL and count registers until successive
-> > reads
-> > return the same value, and when writing TVAL to retry until counter
-> > reads before and after the write return the same value.
-> > 
-> > This erratum can be found on LS1043A and LS2080A.
-> > 
-> > Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-> > ---
-> > v2:
-> > Significant rework based on feedback, including using static_key,
-> > disabling VDSO counter access rather than adding the workaround to the
-> > VDSO, and uninlining the loops.
-> > 
-> > Dropped the separate property for indicating that writes to TVAL are
-> > affected, as I believe that's just a side effect of the implicit
-> > counter read being corrupted, and thus a chip that is affected by one
-> > will always be affected by the other.
-> > 
-> > Dropped the arm32 portion as it seems there was confusion about whether
-> > LS1021A is affected.  Currently I am being told that it is not
-> > affected.
-> > 
-> > I considered writing to CVAL rather than looping on TVAL writes, but
-> > that would still have required separate set_next_event() code for the
-> > erratum, and adding CVAL to the enum would have required a bunch of
-> > extra handlers in switch statements (even where unused, due to compiler
-> > warnings about unhandled enum values) including in an arm32 header.  It
-> > seemed better to avoid the arm32 interaction and new untested
-> > accessors.
-> > ---
-> >  .../devicetree/bindings/arm/arch_timer.txt         |   6 ++
-> >  arch/arm64/include/asm/arch_timer.h                |  37 +++++--
-> >  drivers/clocksource/arm_arch_timer.c               | 110
-> > +++++++++++++++++++++
-> >  3 files changed, 144 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> > b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> > index e774128..ef5fbe9 100644
-> > --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> > +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> > @@ -25,6 +25,12 @@ to deliver its interrupts via SPIs.
-> >  - always-on : a boolean property. If present, the timer is powered
-> > through an
-> >    always-on power domain, therefore it never loses context.
-> >  
-> > +- fsl,erratum-a008585 : A boolean property. Indicates the presence of
-> > +  QorIQ erratum A-008585, which says that reading the counter is
-> > +  unreliable unless the same value is returned by back-to-back reads.
-> > +  This also affects writes to the tval register, due to the implicit
-> > +  counter read.
-> > +
-> >  ** Optional properties:
-> >  
-> >  - arm,cpu-registers-not-fw-configured : Firmware does not initialize
-> 
-> This should be part of a separate patch. Also, errata should be
-> documented in Documentation/arm64/silicon-errata.txt.
 
-Oh right, forgot.
 
-> > +extern struct static_key_false arch_timer_read_ool_enabled;
-> > +
-> > +#define ARCH_TIMER_REG_READ(reg, func) \
-> > +extern u64 func##_ool(void); \
-> > +static inline u64 __##func(void) \
-> > +{ \
-> > +	u64 val; \
-> > +	asm volatile("mrs %0, " reg : "=r" (val)); \
-> > +	return val; \
-> > +} \
-> > +static inline u64 _##func(void) \
-> > +{ \
-> > +	if (static_branch_unlikely(&arch_timer_read_ool_enabled)) \
-> > +		return func##_ool(); \
-> > +	else \
-> > +		return __##func(); \
-> > +}
-> > +
-> > +ARCH_TIMER_REG_READ("cntp_tval_el0", arch_timer_get_ptval)
-> > +ARCH_TIMER_REG_READ("cntv_tval_el0", arch_timer_get_vtval)
-> > +ARCH_TIMER_REG_READ("cntvct_el0", arch_counter_get_cntvct)
-> > +
+On 2016/6/20 14:39, Leizhen (ThunderTown) wrote:
 > 
-> Given that this will have a (small) impact on non-affected platforms,
-> it'd be good to have this guarded by a erratum-specific config option
-> (CONFIG_FSL_ERRATUM_008585?) and turn it into trivial accessors when not
-> defined.
+> 
+> On 2016/6/14 22:22, Catalin Marinas wrote:
+>> On Wed, Jun 08, 2016 at 04:59:03PM +0800, Leizhen (ThunderTown) wrote:
+>>> On 2016/6/7 21:58, Will Deacon wrote:
+>>>> On Tue, Jun 07, 2016 at 04:08:04PM +0800, Zhen Lei wrote:
+>>>>> v3 -> v4:
+>>>>> 1. Packed three patches of Kefeng Wang, patch6-8.
+>>>>> 2. Add 6 new patches(9-15) to enhance the numa on arm64.
+>>>>>
+>>>>> v2 -> v3:
+>>>>> 1. Adjust patch2 and patch5 according to Matthias Brugger's advice, to make the
+>>>>>    patches looks more well. The final code have no change. 
+>>>>>
+>>>>> v1 -> v2:
+>>>>> 1. Base on https://lkml.org/lkml/2016/5/24/679
+>>>>
+>>>> If you want bug fixes to land in 4.7, you'll need to base them on a
+>>>> mainline kernel.
+>>>
+>>> I heared that David Daney's acpi numa patch series was accepted and
+>>> put into next branch(Linux 4.8).
+>>> Otherwise I will suggest him sending his patch6-7 to mainline first.
+>>> So that, only a very small conflict will be exist.
+>>>
+>>> I also tested that:
+>>> 1. git am David Daney's patch6-7, then git am all of my patches on a
+>>> branch, named branch A.
+>>> 2. git am David Daney's patch6-7 on another branch, named branch B.
+>>> 3. when I git merge B into branch A, it's still conflict. So I guess
+>>> git merge is based on source code, rather than patches.
+>>>
+>>> So at present, unless the maintainers are willing to resolve the
+>>> conflict, otherwise I update my patches will not work.
+>>
+>> It usually depends on how complex the conflict is and whether your
+>> patches functionally depend on the other patches. I have no idea what
+>> the dependency is here since I haven't tried applying them to mainline.
+>>
+>>> Fortunately, these patches are not particularly urgent. So I think I
+>>> can wait until Linux 4.8 start, then send these patches again. But I'm
+>>> not sure whether these patches can be merged into Linux 4.8, I really
+>>> hope.
+>>
+>> If there are fixes to the arm64 ACPI NUMA patches that Rafael queued
+>> into linux-next, they should be sent to him and potentially being queued
+>> on top ahead of the 4.8 merging window or shortly after 4.8-rc1.
+>> Non-ACPI NUMA patches (as I can see, most of these patches are DT
+>> specific) could be merged independently.
+>>
+>> So how many patches do you have in each category below:
+>>
+>> 1. NUMA fixes against current mainline (4.7-rc3)
+>> 2. NUMA fixes against the arm64 ACPI NUMA patches queued by Rafael
+> My patches have not fixed any bugs for ACPI NUMA, but just based on it.
+> There are only three related patches:
+> [PATCH v7 06_15] arm64, numa  rework numa_add_memblk()
+> [PATCH v7 07_15] arm64, numa  Cleanup NUMA disabled messages.
+> [PATCH v7 14_15] arm64, acpi, numa  NUMA support based on SRAT and SLIT
+> 
+> arch/arm64/mm/numa.c          |  28 ++++--
+> drivers/of/of_numa.c          |   4 +-
+> 
+> My patches 1-5, 8, 11 will confict with it.
+> 
+>> 3. New functionality or clean-up. Are these against mainline or ACPI
+>>    NUMA patches?
+> Hi, Catalin
+> I'm sorry to reply this email too late. Because I have been thinking if
+> there are any other solutions.
+> 
+> I try to adjust the sequence of my patches as below:
+> 1. New functionality 		//queued in your branch  (my patches 9-14, and 6, 6 is clean-up)
+> 2. 4.8-rc1			//apci numa series and my new functionality had been merged
+> 3. bug fixes			//other 4.8-rc versions	 (my patches 1-5)
+> 4. clean-up (pr_fmt)		//queued in 4.9		 (my patches 7-8)
 
-OK.
+Hi, Catalin
+  What about your opinion? Are you agree?
 
 > 
-> >  /*
-> >   * These register accessors are marked inline so the compiler can
-> >   * nicely work out which register we want, and chuck away the rest of
-> > @@ -66,19 +89,19 @@ u32 arch_timer_reg_read_cp15(int access, enum
-> > arch_timer_reg reg)
-> >  	if (access == ARCH_TIMER_PHYS_ACCESS) {
-> >  		switch (reg) {
-> >  		case ARCH_TIMER_REG_CTRL:
-> > -			asm volatile("mrs %0,  cntp_ctl_el0" : "=r"
-> > (val));
-> > +			asm volatile("mrs %0, cntp_ctl_el0" : "=r"
-> > (val));
+> And there only one confliction exist:
+> ++<<<<<<< HEAD
+>  +static u8 numa_distance[MAX_NUMNODES][MAX_NUMNODES];			//choose this
+>  +static int numa_off;
+> ++=======
+> + static int numa_distance_cnt;
+> + static u8 *numa_distance;
+> + static bool numa_off;							//choose this
+> ++>>>>>>> acpi
 > 
-> Spurious change?
-
-The extra spacing seemed to be an attempt to get things to line up between the
-CTRL and TVAL asm statements.  When the TVAL case was converted to a function
-call, there was nothing for the above to line up with, so I moved it back to
-normal spacing.
-
-> > +{
-> > +	u64 cval_old, cval_new;
-> > +	int timeout = 200;
-> 
-> Can we have a comment on how this value has been chosen? 
-
-It's an arbitrary value well beyond the point at which we've seen it fail.
-
-> > @@ -232,6 +274,50 @@ static __always_inline void set_next_event(const int
-> > access, unsigned long evt,
-> >  	arch_timer_reg_write(access, ARCH_TIMER_REG_CTRL, ctrl, clk);
-> >  }
-> >  
-> > +#ifdef CONFIG_ARM64
-> > +static __always_inline void rewrite_tval(const int access,
-> > +		unsigned long evt, struct clock_event_device *clk)
-> > +{
-> > +	u64 cval_old, cval_new;
-> > +	int timeout = 200;
-> > +
-> > +	do {
-> > +		cval_old = __arch_counter_get_cntvct();
-> > +		arch_timer_reg_write(access, ARCH_TIMER_REG_TVAL, evt,
-> > clk);
-> > +		cval_new = __arch_counter_get_cntvct();
-> 
-> Don't you need to guarantee the order of accesses here?
-
-I'm not 100% sure.  The erratum workaround sample code doesn't show any
-barriers, and adding more barriers could make it harder for the loop to
-successfully complete.  There's already a barrier after the write, so the only
-concern should be whether the timer read could be reordered after the timer
-write, which could cause the loop to exit even if the write was bad.  Do you
-know if A53 or A57 will reorder a counter read relative to a tval write?
-
-> > +#endif /* ARM64 */
-> > +
-> >  static int arch_timer_set_next_event_virt(unsigned long evt,
-> >  					  struct clock_event_device *clk)
-> >  {
-> > @@ -277,6 +363,13 @@ static void __arch_timer_setup(unsigned type,
-> >  			clk->set_state_shutdown =
-> > arch_timer_shutdown_virt;
-> >  			clk->set_state_oneshot_stopped =
-> > arch_timer_shutdown_virt;
-> >  			clk->set_next_event =
-> > arch_timer_set_next_event_virt;
-> > +
-> > +#ifdef CONFIG_ARM64
-> > +			if
-> > (static_branch_unlikely(&arch_timer_read_ool_enabled))
-> > +				clk->set_next_event =
-> > +					arch_timer_set_next_event_virt_er
-> > rata;
-> 
-> On the same line, please.
-
-I was trying to avoid going beyond 80 columns.
-
-> > @@ -485,6 +585,13 @@ static void __init arch_counter_register(unsigned
-> > type)
-> >  			arch_timer_read_counter =
-> > arch_counter_get_cntvct;
-> >  		else
-> >  			arch_timer_read_counter =
-> > arch_counter_get_cntpct;
-> > +
-> > +		/*
-> > +		 * Don't use the vdso fastpath if errata require using
-> > +		 * the out-of-line counter accessor.
-> > +		 */
-> > +		if (static_branch_unlikely(&arch_timer_read_ool_enabled))
-> > +			clocksource_counter.name =
-> > "arch_sys_counter_ool";
-> 
-> This looks really ugly. How about telling the vdso subsystem directly?
-> Will, do you have a preference?
-
-I was following the example set by "arch_mem_counter".
-
-> >  	} else {
-> >  		arch_timer_read_counter = arch_counter_get_cntvct_mem;
-> >  
-> > @@ -763,6 +870,9 @@ static void __init arch_timer_of_init(struct
-> > device_node *np)
-> >  
-> >  	arch_timer_c3stop = !of_property_read_bool(np, "always-on");
-> >  
-> > +	if (of_property_read_bool(np, "fsl,erratum-a008585"))
-> > +		static_branch_enable(&arch_timer_read_ool_enabled);
-> > +
-> >  	/*
-> >  	 * If we cannot rely on firmware initializing the timer registers
-> > then
-> >  	 * we should use the physical timers instead.
-> 
-> An outstanding question is how we're going to deal with this in KVM,
-> because a guest absolutely needs to know about it (I can definitely see
-> time jumping in guests running on a LS2080).
-
-The property will need to be in the guest's device tree.  I'm not too familiar
-with how KVM handles device trees on arm...  From looking at the QEMU source
-it seems that the dtb is passed in by the user.  So either that dtb will need
-the erratum property in it, or QEMU (and KVM tool?) would need to patch it
- into the guest dtb based on seeing the property in /proc/device-tree.
-
--Scott
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
