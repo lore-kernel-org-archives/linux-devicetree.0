@@ -1,89 +1,49 @@
-From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/2] tpm: Factor out common startup code
-Date: Wed, 22 Jun 2016 15:22:28 +0300
-Message-ID: <20160622122227.GA27577@intel.com>
-References: <1466324401-5054-1-git-send-email-andrew.zamansky@nuvoton.com>
-	<1466324401-5054-2-git-send-email-andrew.zamansky@nuvoton.com>
-	<20160619123923.GA31053@intel.com>
-	<20160620210757.GB11746@obsidianresearch.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] Documentation: mmc: add description for new caps
+Date: Wed, 22 Jun 2016 14:30:22 +0200
+Message-ID: <CAPDyKFquaUOUM+8UYBZhq=t0n6+v+cbTy8FotjYyysi6EGHx3A@mail.gmail.com>
+References: <1465373996-2485-1-git-send-email-shawn.lin@rock-chips.com>
+ <1465374021-2526-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160608204848.GA3368@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160620210757.GB11746-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160608204848.GA3368@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 20, 2016 at 03:07:57PM -0600, Jason Gunthorpe wrote:
-> On Sun, Jun 19, 2016 at 02:39:24PM +0200, Jarkko Sakkinen wrote:
-> > > Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> > > Tested-by: Andrew Zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-> > 
-> > Couldn't tpm?_auto_startup() be static functions inside tpm-chip.c?
-> 
-> Why? tpm-chip is for chip functions and tpm-interface is for command
-> issuing functions, the startup command sequencors seem appropriately
-> placed...
-> 
-> These are still module private functions.
+On 8 June 2016 at 22:48, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Jun 08, 2016 at 04:20:21PM +0800, Shawn Lin wrote:
+>> Let's add some basic description for cap-no-sdio,
+>> cap-no-sd and cap-no-mmc.
+>
+> This doesn't say why.
+>
+> If you know what is there, then there's a better way to do this. Look at
+> the child nodes because chances are if you have something soldered down
+> like SDIO or eMMC, then you have a child node already for resets,
+> regulators, etc.
+>
 
-Hmm.. interesting point and I actually realized that this related to
-work that I'm doing right now.
+According to patch4, this is a description of the mmc controller,
+perhaps together with some limitations as per SoC/platform and thus
+has nothing to do with the card.
 
-I'm working on a patches to move TPM 1.x protocol level code to
-tpm1-cmd.c. We want to do so that one can conditionally compile out TPM
-1.x when it is not needed. Another reason is that, I would not like to
-put TPM 1.x sealing code to tpm-interface.c.
+I have seen several drivers, which needs to validate every single
+piece of command to avoid execute those it cannot support.
 
-Given that I think it is cool to keep these in tpm-interface.c in this
-in tpm-interface.c.
+So, I personally thinks these new DT bindings would be nice to add.
 
-Summary: lets keep it in a way that these functions are in
-tpm-interface.c for now.
-
-> > > +enum TPM_OPS_FLAGS {
-> > > +	TPM_OPS_PROBE_TPM2 = BIT(0),
-> > 
-> > I see two alternatives here:
-> > 
-> > 1. Make this work for tpm_tis.c if it is doable.
-> > 2. Remove this flag and call tpm2_probe() inside tpm_i2c_nuvoton.c.
-> > 
-> > If this flag works only for a single driver, it does not bring any value.
-> 
-> We already have two drivers that auto probe, you don't think there
-> will be more? The idea is to try and remove these low level entry
-> points so drivers are simpler.
-> 
-> TIS doesn't use it because it needs to get things setup in advance for
-> interrupt auto-probing, which is a very TIS unique thing.
-> 
-> Alternatively we can drop the auto-probe from nuvoton and force it to
-> rely on compatible string matching to enter TPM2 mode.
-
-The patch set used TPM2_OPS_PROBE_TPM2 only for nuvoton driver. The more
-recent one used it incorrectly with tpm_tis.
-
-> Jason
-
-PS. Would you have time to look at https://lkml.org/lkml/2016/6/17/887
-and give your feedback? :)
-
-/Jarkko
-
-------------------------------------------------------------------------------
-Attend Shape: An AT&T Tech Expo July 15-16. Meet us at AT&T Park in San
-Francisco, CA to explore cutting-edge tech and listen to tech luminaries
-present their vision of the future. This family event has something for
-everyone, including kids. Get more information and register today.
-http://sdm.link/attshape
+Kind regards
+Uffe
