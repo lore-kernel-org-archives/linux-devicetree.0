@@ -1,69 +1,45 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/9 v2] iio: pressure: bmp280: augment DT bindings
-Date: Wed, 22 Jun 2016 22:53:31 +0200
-Message-ID: <1466628819-29784-2-git-send-email-linus.walleij@linaro.org>
-References: <1466628819-29784-1-git-send-email-linus.walleij@linaro.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: fix reference counting in of_graph_get_endpoint_by_regs
+Date: Wed, 22 Jun 2016 16:01:02 -0500
+Message-ID: <CAL_JsqK7W6N7rbhkH-EF=-R5HtWqifS5VNaj0dYAeJo-DV=zWg@mail.gmail.com>
+References: <1466157929-22594-1-git-send-email-l.stach@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466628819-29784-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1466157929-22594-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Christoph Mair <christoph.mair-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vlad Dogaru <vlad.dogaru-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Eric Andersson <eric.andersson-TStm8jYLEPpl57MIdRCFDg@public.gmane.org>, Neil Brown <neilb-l3A5Bk7waGM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds standard device tree bindings for a reset GPIO line, and
-the VDDD and VDDA power regulators.
+On Fri, Jun 17, 2016 at 5:05 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> The called of_graph_get_next_endpoint() already decrements the refcount
+> of the prev node, so it is wrong to do it again in the calling function.
+>
+> Fixes: 8ccd0d0ca041
+> (of: add helper for getting endpoint node of specific identifiers)
+> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Reported-by: David Jander <david-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/of/base.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index ebf84e3b56d5..6d8514c431f5 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -2310,7 +2310,6 @@ struct device_node *of_graph_get_endpoint_by_regs(
+>
+>         while (1) {
+>                 node = of_graph_get_next_endpoint(parent, prev_node);
+> -               of_node_put(prev_node);
+>                 if (!node)
+>                         break;
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Order compatible string on single lines
-- Add "bosch,bme280" for the new sensor from Matt
----
- Documentation/devicetree/bindings/iio/pressure/bmp085.txt | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Can you convert this to use for_each_endpoint_of_node instead?
 
-diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-index d7a6deb6b21e..c7198a03c906 100644
---- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-+++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-@@ -1,7 +1,11 @@
--BMP085/BMP18x digital pressure sensors
-+BMP085/BMP18x/BMP28x digital pressure sensors
- 
- Required properties:
--- compatible: bosch,bmp085
-+- compatible: must be one of:
-+  "bosch,bmp085"
-+  "bosch,bmp180"
-+  "bosch,bmp280"
-+  "bosch,bme280"
- 
- Optional properties:
- - chip-id: configurable chip id for non-default chip revisions
-@@ -10,6 +14,10 @@ Optional properties:
-   value range is 0-3 with rising sensitivity.
- - interrupt-parent: should be the phandle for the interrupt controller
- - interrupts: interrupt mapping for IRQ
-+- reset-gpios: a GPIO line handling reset of the sensor: as the line is
-+  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
-+- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
-+- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
- 
- Example:
- 
-@@ -21,4 +29,7 @@ pressure@77 {
- 	default-oversampling = <2>;
- 	interrupt-parent = <&gpio0>;
- 	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
-+	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-+	vddd-supply = <&foo>;
-+	vdda-supply = <&bar>;
- };
--- 
-2.4.11
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
