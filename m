@@ -1,535 +1,231 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH V2 4/5] drm/bridge: Add driver for GE B850v3 LVDS/DP++
- Bridge
-Date: Wed, 22 Jun 2016 14:04:10 +0530
-Message-ID: <576A4D82.1040207@codeaurora.org>
-References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
- <cover.1465486875.git.peter.senna@collabora.com>
- <12d7b93d6143aabec19999af84e592768adc63a0.1465486875.git.peter.senna@collabora.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+Date: Wed, 22 Jun 2016 11:30:13 +0300
+Message-ID: <576A4C95.4080202@ti.com>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+ <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com>
+ <87h9coxq04.fsf@linux.intel.com> <20160620114904.GC26936@shlinux2>
+ <8737o8qd00.fsf@linux.intel.com> <20160621060517.GA5108@shlinux2>
+ <877fdjovef.fsf@linux.intel.com> <20160621090738.GD5108@shlinux2>
+ <87h9cmoo4s.fsf@linux.intel.com> <20160621130512.GF5108@shlinux2>
+ <87por9lnjd.fsf@linux.intel.com> <576A4321.6020209@ti.com>
+ <87fus5ljwf.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="P5A5M5SGJVpwShVxfDeGrEluvVSixGbvn"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <12d7b93d6143aabec19999af84e592768adc63a0.1465486875.git.peter.senna@collabora.com>
+In-Reply-To: <87fus5ljwf.fsf@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Senna Tschudin <peter.senna@collabora.com>, airlied@linux.ie, akpm@linux-foundation.org, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, enric.balletbo@collabora.com, eballetbo@gmail.com, galak@codeaurora.org, gregkh@linuxfoundation.org, heiko@sntech.de, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, martin.donnelly@ge.com, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, pawel.moll@arm.com, peter.senna@gmail.com, p.zabel@pengutronix.de, thierry.reding@gmail.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, shawnguo@kernel.org, tiwai@suse.com, treding@nvidia.com, ykk@rock-chips.com
-Cc: Rob Herring <robh@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Felipe Balbi <balbi@kernel.org>, Peter Chen <hzpeterchen@gmail.com>, yoshihiro.shimoda.uh@renesas.com
+Cc: peter.chen@freescale.com, tony@atomide.com, gregkh@linuxfoundation.org, dan.j.williams@intel.com, mathias.nyman@linux.intel.com, Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com, jun.li@freescale.com, grygorii.strashko@ti.com, robh@kernel.org, nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+--P5A5M5SGJVpwShVxfDeGrEluvVSixGbvn
+Content-Type: multipart/mixed; boundary="Xomf6e9EgfC35tFb74CCtCiswQoWoSl3L"
+From: Roger Quadros <rogerq@ti.com>
+To: Felipe Balbi <balbi@kernel.org>, Peter Chen <hzpeterchen@gmail.com>,
+ yoshihiro.shimoda.uh@renesas.com
+Cc: peter.chen@freescale.com, tony@atomide.com, gregkh@linuxfoundation.org,
+ dan.j.williams@intel.com, mathias.nyman@linux.intel.com,
+ Joao.Pinto@synopsys.com, sergei.shtylyov@cogentembedded.com,
+ jun.li@freescale.com, grygorii.strashko@ti.com, robh@kernel.org,
+ nsekhar@ti.com, b-liu@ti.com, joe@perches.com, linux-usb@vger.kernel.org,
+ linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Message-ID: <576A4C95.4080202@ti.com>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+ <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com>
+ <87h9coxq04.fsf@linux.intel.com> <20160620114904.GC26936@shlinux2>
+ <8737o8qd00.fsf@linux.intel.com> <20160621060517.GA5108@shlinux2>
+ <877fdjovef.fsf@linux.intel.com> <20160621090738.GD5108@shlinux2>
+ <87h9cmoo4s.fsf@linux.intel.com> <20160621130512.GF5108@shlinux2>
+ <87por9lnjd.fsf@linux.intel.com> <576A4321.6020209@ti.com>
+ <87fus5ljwf.fsf@linux.intel.com>
+In-Reply-To: <87fus5ljwf.fsf@linux.intel.com>
+
+--Xomf6e9EgfC35tFb74CCtCiswQoWoSl3L
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
+
+On 22/06/16 11:14, Felipe Balbi wrote:
+>=20
+> Hi,
+>=20
+> Roger Quadros <rogerq@ti.com> writes:
+>>>>>>>>>> For the real use case, some Carplay platforms need it.
+>>>>>>>>>
+>>>>>>>>> Carplay does *NOT* rely on OTG. Apple has its own proprietary a=
+nd closed
+>>>>>>>>> specification which is not OTG-compliant.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Yes, it is not OTG-compliant, but it can co-work with some stand=
+ard OTG FSM
+>>>>>>>> states to finish role swap.
+>>>>>>>
+>>>>>>> What are you referring to as "finish role swap"? I don't get that=
+=2E
+>>>>>>
+>>>>>> Change current role from host to peripheral.
+>>>>>
+>>>>> Okay, we have two scenarios here:
+>>>>>
+>>>>> 1. You need full OTG compliance
+>>>>>
+>>>>> 	For this, granted, you need the state machine if your HW doesn't
+>>>>> 	track it. This is a given. With only one user, however, perhaps
+>>>>> 	we don't need a generic layer. There are not enough different
+>>>>> 	setups to design a good enough generic layer. We will end up
+>>>>> 	with a pseudo-generic framework which is coupled with its only
+>>>>> 	user.
+>>>>>
+>>>>> 2. Dual-role support, without OTG compliance
+>>>>>
+>>>>> 	In this case, you don't need a stack. All you need is a signal
+>>>>> 	to tell you state of ID pin and another to tell you state of
+>>>>> 	VBUS level. If you have those, you don't need to walk an OTG
+>>>>> 	state machine at all. You don't need any of those quirky OTG
+>>>>> 	timers, agreed?
+>>>>>
+>>>>> 	Given the above, why would you even want to use a subset of OTG
+>>>>> 	state machine to implement something that's _usually_ as simple
+>>>>> 	as:
+>>>>>
+>>>>> 8<-----------------------------------------------------------------=
+-----
+>>>>> 	vbus =3D read(VBUS_STATE); /* could be a gpio_get_value() */
+>>>>>         id =3D read(ID_STATE); /* could be a gpio_get_value() */
+>>>>>
+>>>>>         set_role(id);
+>>>>>         set_vbus(vbus);
+>>>>> -------------------------------------------------------------------=
+-----
+>>>>>
+>>>>
+>>>> In fact, the individual driver can do it by itself. The chipidea dri=
+ver
+>>>> handles OTG and dual-role well currently. By considering this OTG/DR=
+D
+>>>> framework is worthwhile or not, we would like to see if it can
+>>>> simplify DRD design for each driver, and can benefit the platforms w=
+hich
+>>>> has different drivers for host and peripheral to finish the role swi=
+tch
+>>>> well.
+>>>
+>>> simplify how?  By adding unnecessary workqueues and a level indirecti=
+on
+>>> that just goes back to the same driver?
+>>
+>> What do you mean by same driver?
+>=20
+> dwc3 registers to OTG layer. dwc3 also registers as UDC to UDC
+> layer. When dwc3 OTG IRQ fires, dwc3 tells OTG layer about it and OTG
+> layer jumps to a callback that goes back to dwc3 to e.g. start
+> peripheral side.
+>=20
+> See ?!? Starts on dwc3, goes to OTG layer, goes back to DWC3.
+>=20
+>> Gadget driver, host driver and PHY (or MUX) driver (for ID/VBUS) can
+>> be 3 totally independent drivers unlike dwc3 where you have a single
+>> driver in control of both host and gadget.
+>=20
+> That's a totally different issue and one not being tackled by OTG
+> layer, because there are no such users yet. We can't design anything
+> based solely on speculation of what might happen.
+>=20
+> If there aren't enough users, there is no way to design a good generic
+> layer.
+>=20
+>> Questions not clear to me are:
+>>
+>> 1) Which driver handles ID/VBUS events and makes a decision to do the
+>> role swap?  Probably the PHY/MUX driver?
+>=20
+> This is implementation dependent. For TI's USB subsystem, we have PMIC
+> sampling VBUS/ID that and using EXTCON to tell dwc3-omap to program UTM=
+I
+> mailbox. The same mailbox can be used in HW-mode (see AM437x) where SW
+> has no intervention.
+>=20
+> For Intel's USB subsystem, we have PMIC sampling VBUS/ID with an
+> internal mux (much like TI's UTMI mailbox, but slightly different) to
+> switch between a separate XHCI or a separate dwc3. The same mux can be
+> put in HW-mode where SW has no intervention.
+>=20
+> In any case, for Intel's stuff most of the magic happens in ASL. Our PH=
+Y
+> driver just detects role (at least for Type-C based plats) and executes=
+
+> _DSM with correct arguments [1]. _DSM will program internal MUX, toggle=
+
+> VBUS and, for type-C, toggle VCONN when needed.
+>=20
+>> 2) How does it perform the role swap? Probably a register write to the=
+
+>> PHY/MUX without needing to stop/start controllers? Easy case is both
+>> controllers can run in co-existence without interference. Is there any=
+
+>> platform other than dwc3 where this is not the case?
+>=20
+> Again speculation. But to answer your question, only dwc3 is in such a
+> case today. But even for dwc3 we can have DRD with a much, much simpler=
+
+> setup as I have already explained.
+>=20
+>> 3) Even if host and gadget controllers can operate in coexistence,
+>> there is no need for both to be running for embedded applications
+>> which are usually power conservative.  How can we achieve that?
+>=20
+> Now you're also speculating that you're running on embedded application=
+s
+> and that we _can_ power off parts of the IP. I happen to know that we
+> can't power off XHCI part of dwc3 in TI's SoC because that's fed by sam=
+e
+> Clocks and power rails as the peripheral side.
+>=20
+> [1] https://lkml.org/lkml/2016/6/21/658
+>=20
+For TI's case it is dwc3 and you are implementing the role swap in the dw=
+c3
+driver where you do intend to remove the XHCI platform device. So I'm not=
+
+much concerned about that.
+
+I was concerned about other platforms. I guess I'll let the other platfor=
+m
+people speak up as to what they need.
+
+--
+cheers,
+-roger
 
 
-On 6/9/2016 9:55 PM, Peter Senna Tschudin wrote:
-> Add a driver that create a drm_bridge and a drm_connector for the LVDS
-> to DP++ display bridge of the GE B850v3.
->
-> There are two physical bridges on the video signal pipeline: a
-> STDP4028(LVDS to DP) and a STDP2690(DP to DP++).  The hardware and
-> firmware made it complicated for this binding to comprise two device
-> tree nodes, as the design goal is to configure both bridges based on
-> the LVDS signal, which leave the driver powerless to control the video
-> processing pipeline. The two bridges behaves as a single bridge, and
-> the driver is only needed for telling the host about EDID / HPD, and
-> for giving the host powers to ack interrupts. The video signal pipeline
-> is as follows:
->
->    Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+--Xomf6e9EgfC35tFb74CCtCiswQoWoSl3L--
 
-Are these two chips always expected to be used together? I don't think
-it's right to pair up two encoder chips into one driver just for one
-board.
+--P5A5M5SGJVpwShVxfDeGrEluvVSixGbvn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Is one device @0x72 and other @0x73? Or is only one of them an i2c
-slave?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-What's preventing us to create these as two different bridge drivers?
-The drm framework allows us to daisy chain encoder bridges. The only
-problem I see is that we don't have a clear-cut way to tell the bridge
-driver whether we want it to create a connector for us or not. Because,
-it looks like both can potentially create connectors. This isn't a big
-problem either if we have DT. We just need to check whether our output
-port is connected to another bridge or a connector.
+iQIcBAEBCAAGBQJXakyVAAoJENJaa9O+djCTXg0QALjVHqG26KbqsNM3dIk2UL1E
+rG03OzaK48RMt4sTmshE0q9VKm3AhbgWX4yOD+qvTEUbib1LZosnWzPZwNVJ21hF
+ySOnEgzlx5GrzbDqyE5+paH5zDeWJksq18Zlu7wwFu0o/QFfwdC738v0SNFBtrr1
+l4SJZ0fqfaEggmZzDMOVKfrTkA8g0XxXbX8Wg5+82Aaq6kx6XKYBidWLd7lJ/0oF
+Lw6iwndgszHXFHB0aMKIkrohAI6jhzt0Ve0PBpFu65k81WhxFTmSkn46WzhmF9i3
+DpYTa6Jn7fy79dk7Pawyv/irTr93bJlhtPJ1y27iA0/RBOtzVocNM2RXBx/CTCYO
+JKP8WTIlF9rEdIzGRau+LCQh2fwUtl9Xkebk9YNmND52POaLpGtjXBvwTvAqMITB
+v975HvwpFz5LXzAKJSwDNdbykC4NKzR96YHGhz4/fuWmzZh8EvrIwgLuo6Fozn8B
+PTsUQJCnvvfO2i+vMTzHc1hP5z9xVbJQiCI0tZKo1LDiEyTKxy2p08gyEinTUbV/
+qbRiEJMZVTS4WoB5bW9FMH93d+4/UeRS+RStrtRgMQOAjEejghTE8vbAGJDzAfdw
+ON4PiLcUckj/l1HOiyypElklOG7d4t/oib+t+QALPk/do+dMbAjpE9RjMK3SFrjS
+JEqCRm5GATQIWgUZlAA0
+=W1m1
+-----END PGP SIGNATURE-----
 
-Thanks,
-Archit
-
->
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> CC: David Airlie <airlied@linux.ie>
-> CC: Thierry Reding <treding@nvidia.com>
-> CC: Thierry Reding <thierry.reding@gmail.com>
-> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
-> ---
-> Changes from V1:
->   - New commit message
->   - Removed 3 empty entry points
->   - Removed memory leak from ge_b850v3_lvds_dp_get_modes()
->   - Added a lock for mode setting
->   - Removed a few blank lines
->   - Changed the order at Makefile and Kconfig
->
->   MAINTAINERS                                |   8 +
->   drivers/gpu/drm/bridge/Kconfig             |  11 +
->   drivers/gpu/drm/bridge/Makefile            |   1 +
->   drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c | 392 +++++++++++++++++++++++++++++
->   4 files changed, 412 insertions(+)
->   create mode 100644 drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2ce5e91..2dd3d7f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5010,6 +5010,14 @@ W:	https://linuxtv.org
->   S:	Maintained
->   F:	drivers/media/radio/radio-gemtek*
->
-> +GENERAL ELECTRIC B850V3 LVDS/DP++ BRIDGE
-> +M:	Martin Donnelly <martin.donnelly@ge.com>
-> +M:	Peter Senna Tschudin <peter.senna@collabora.com>
-> +M:	Martyn Welch <martyn.welch@collabora.co.uk>
-> +S:	Maintained
-> +F:	drivers/gpu/drm/bridge/ge_b850v3_dp2.c
-> +F:	Documentation/devicetree/bindings/ge/b850v3_dp2_bridge.txt
-> +
->   GENERIC GPIO I2C DRIVER
->   M:	Haavard Skinnemoen <hskinnemoen@gmail.com>
->   S:	Supported
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 8f7423f..93dae5bd 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -32,6 +32,17 @@ config DRM_DW_HDMI_AHB_AUDIO
->   	  Designware HDMI block.  This is used in conjunction with
->   	  the i.MX6 HDMI driver.
->
-> +config DRM_GE_B850V3_LVDS_DP
-> +	tristate "GE B850v3 LVDS to DP++ display bridge"
-> +	depends on OF
-> +	select DRM_KMS_HELPER
-> +	select DRM_PANEL
-> +	---help---
-> +          This is a driver for the display bridge of
-> +          GE B850v3 that convert dual channel LVDS
-> +          to DP++. This is used with the i.MX6 imx-ldb
-> +          driver.
-> +
->   config DRM_NXP_PTN3460
->   	tristate "NXP PTN3460 DP/LVDS bridge"
->   	depends on OF
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 96b13b3..47ea6c1 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -3,6 +3,7 @@ ccflags-y := -Iinclude/drm
->   obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->   obj-$(CONFIG_DRM_DW_HDMI) += dw-hdmi.o
->   obj-$(CONFIG_DRM_DW_HDMI_AHB_AUDIO) += dw-hdmi-ahb-audio.o
-> +obj-$(CONFIG_DRM_GE_B850V3_LVDS_DP) += ge_b850v3_lvds_dp.o
->   obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
->   obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
->   obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
-> diff --git a/drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c b/drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c
-> new file mode 100644
-> index 0000000..c73cd77
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c
-> @@ -0,0 +1,392 @@
-> +/*
-> + * Driver for GE B850v3 DP display bridge
-> +
-> + * Copyright (c) 2016, Collabora Ltd.
-> + * Copyright (c) 2016, General Electric Company
-> +
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> +
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> +
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> +
-> + * This driver creates a drm_bridge and a drm_connector for the LVDS to DP++
-> + * display bridge of the GE B850v3. There are two physical bridges on the video
-> + * signal pipeline: a STDP4028(LVDS to DP) and a STDP2690(DP to DP++). However
-> + * the physical bridges are automatically configured by the input video signal,
-> + * and the driver has no access to the video processing pipeline. The driver is
-> + * only needed to read EDID from the STDP2690 and to handle HPD events from the
-> + * STDP4028. The driver communicates with both bridges over i2c. The video
-> + * signal pipeline is as follows:
-> + *
-> + *   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
-> +
-> + *
-> + */
-> +#include <linux/gpio.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include "drm_crtc.h"
-> +#include "drm_crtc_helper.h"
-> +#include "drm_edid.h"
-> +#include "drmP.h"
-> +
-> +#define EDID_EXT_BLOCK_CNT 0x7E
-> +
-> +#define STDP4028_IRQ_OUT_CONF_REG 0x02
-> +#define STDP4028_DPTX_IRQ_EN_REG 0x3C
-> +#define STDP4028_DPTX_IRQ_STS_REG 0x3D
-> +#define STDP4028_DPTX_STS_REG 0x3E
-> +
-> +#define STDP4028_DPTX_DP_IRQ_EN 0x1000
-> +
-> +#define STDP4028_DPTX_HOTPLUG_IRQ_EN 0x0400
-> +#define STDP4028_DPTX_LINK_CH_IRQ_EN 0x2000
-> +#define STDP4028_DPTX_IRQ_CONFIG \
-> +		(STDP4028_DPTX_LINK_CH_IRQ_EN | STDP4028_DPTX_HOTPLUG_IRQ_EN)
-> +
-> +#define STDP4028_DPTX_HOTPLUG_STS 0x0200
-> +#define STDP4028_DPTX_LINK_STS 0x1000
-> +#define STDP4028_CON_STATE_CONNECTED \
-> +		(STDP4028_DPTX_HOTPLUG_STS | STDP4028_DPTX_LINK_STS)
-> +
-> +#define STDP4028_DPTX_HOTPLUG_CH_STS 0x0400
-> +#define STDP4028_DPTX_LINK_CH_STS 0x2000
-> +#define STDP4028_DPTX_IRQ_CLEAR \
-> +		(STDP4028_DPTX_LINK_CH_STS | STDP4028_DPTX_HOTPLUG_CH_STS)
-> +
-> +struct ge_b850v3_lvds_dp {
-> +	struct drm_connector connector;
-> +	struct drm_bridge bridge;
-> +	struct i2c_client *ge_b850v3_lvds_dp_i2c;
-> +	struct i2c_client *edid_i2c;
-> +	struct edid *edid;
-> +	struct mutex lock;
-> +};
-> +
-> +static inline struct ge_b850v3_lvds_dp *
-> +		bridge_to_ge_b850v3_lvds_dp(struct drm_bridge *bridge)
-> +{
-> +	return container_of(bridge, struct ge_b850v3_lvds_dp, bridge);
-> +}
-> +
-> +static inline struct ge_b850v3_lvds_dp *
-> +		connector_to_ge_b850v3_lvds_dp(struct drm_connector *connector)
-> +{
-> +	return container_of(connector, struct ge_b850v3_lvds_dp, connector);
-> +}
-> +
-> +static void ge_b850v3_lvds_dp_enable(struct drm_bridge *bridge)
-> +{
-> +}
-> +
-> +static void ge_b850v3_lvds_dp_disable(struct drm_bridge *bridge)
-> +{
-> +}
-> +
-> +u8 *stdp2690_get_edid(struct i2c_client *client)
-> +{
-> +	struct i2c_adapter *adapter = client->adapter;
-> +	unsigned char start = 0x00;
-> +	unsigned int total_size;
-> +	u8 *block = kmalloc(EDID_LENGTH, GFP_KERNEL);
-> +
-> +	struct i2c_msg msgs[] = {
-> +		{
-> +			.addr	= client->addr,
-> +			.flags	= 0,
-> +			.len	= 1,
-> +			.buf	= &start,
-> +		}, {
-> +			.addr	= client->addr,
-> +			.flags	= I2C_M_RD,
-> +			.len	= EDID_LENGTH,
-> +			.buf	= block,
-> +		}
-> +	};
-> +
-> +	if (!block)
-> +		return NULL;
-> +
-> +	if (i2c_transfer(adapter, msgs, 2) != 2) {
-> +		DRM_ERROR("Unable to read EDID.\n");
-> +		goto err;
-> +	}
-> +
-> +	if (!drm_edid_block_valid(block, 0, false, NULL)) {
-> +		DRM_ERROR("Invalid EDID block\n");
-> +		goto err;
-> +	}
-> +
-> +	total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
-> +	if (total_size > EDID_LENGTH) {
-> +		kfree(block);
-> +		block = kmalloc(total_size, GFP_KERNEL);
-> +		if (!block)
-> +			return NULL;
-> +
-> +		/* Yes, read the entire buffer, and do not skip the first
-> +		 * EDID_LENGTH bytes.
-> +		 */
-> +		start = 0x00;
-> +		msgs[1].len = total_size;
-> +		msgs[1].buf = block;
-> +
-> +		if (i2c_transfer(adapter, msgs, 2) != 2) {
-> +			DRM_ERROR("Unable to read EDID extension blocks.\n");
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	return block;
-> +
-> +err:
-> +	kfree(block);
-> +	return NULL;
-> +}
-> +
-> +static int ge_b850v3_lvds_dp_get_modes(struct drm_connector *connector)
-> +{
-> +	struct ge_b850v3_lvds_dp *ptn_bridge;
-> +	struct i2c_client *client;
-> +	int num_modes = 0;
-> +
-> +	ptn_bridge = connector_to_ge_b850v3_lvds_dp(connector);
-> +	client = ptn_bridge->edid_i2c;
-> +
-> +	mutex_lock(&ptn_bridge->lock);
-> +
-> +	kfree(ptn_bridge->edid);
-> +	ptn_bridge->edid = (struct edid *) stdp2690_get_edid(client);
-> +
-> +	if (ptn_bridge->edid) {
-> +		drm_mode_connector_update_edid_property(connector,
-> +				ptn_bridge->edid);
-> +		num_modes = drm_add_edid_modes(connector, ptn_bridge->edid);
-> +	}
-> +
-> +	mutex_unlock(&ptn_bridge->lock);
-> +
-> +	return num_modes;
-> +}
-> +
-> +static struct drm_encoder
-> +*ge_b850v3_lvds_dp_best_encoder(struct drm_connector *connector)
-> +{
-> +	struct ge_b850v3_lvds_dp *ptn_bridge =
-> +		connector_to_ge_b850v3_lvds_dp(connector);
-> +
-> +	return ptn_bridge->bridge.encoder;
-> +}
-> +
-> +static const struct
-> +drm_connector_helper_funcs ge_b850v3_lvds_dp_connector_helper_funcs = {
-> +	.get_modes = ge_b850v3_lvds_dp_get_modes,
-> +	.best_encoder = ge_b850v3_lvds_dp_best_encoder,
-> +};
-> +
-> +static enum drm_connector_status ge_b850v3_lvds_dp_detect(
-> +		struct drm_connector *connector, bool force)
-> +{
-> +	struct ge_b850v3_lvds_dp *ptn_bridge =
-> +			connector_to_ge_b850v3_lvds_dp(connector);
-> +	struct i2c_client *ge_b850v3_lvds_dp_i2c =
-> +			ptn_bridge->ge_b850v3_lvds_dp_i2c;
-> +	s32 link_state;
-> +
-> +	link_state = i2c_smbus_read_word_data(ge_b850v3_lvds_dp_i2c,
-> +			STDP4028_DPTX_STS_REG);
-> +
-> +	if (link_state == STDP4028_CON_STATE_CONNECTED)
-> +		return connector_status_connected;
-> +
-> +	if (link_state == 0)
-> +		return connector_status_disconnected;
-> +
-> +	return connector_status_unknown;
-> +}
-> +
-> +static void ge_b850v3_lvds_dp_connector_destroy(struct drm_connector *connector)
-> +{
-> +	drm_connector_cleanup(connector);
-> +}
-> +
-> +static const struct drm_connector_funcs ge_b850v3_lvds_dp_connector_funcs = {
-> +	.dpms = drm_helper_connector_dpms,
-> +	.fill_modes = drm_helper_probe_single_connector_modes,
-> +	.detect = ge_b850v3_lvds_dp_detect,
-> +	.destroy = ge_b850v3_lvds_dp_connector_destroy,
-> +};
-> +
-> +static irqreturn_t ge_b850v3_lvds_dp_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct ge_b850v3_lvds_dp *ptn_bridge = dev_id;
-> +	struct i2c_client *ge_b850v3_lvds_dp_i2c
-> +			= ptn_bridge->ge_b850v3_lvds_dp_i2c;
-> +
-> +	mutex_lock(&ptn_bridge->lock);
-> +
-> +	i2c_smbus_write_word_data(ge_b850v3_lvds_dp_i2c,
-> +			STDP4028_DPTX_IRQ_STS_REG, STDP4028_DPTX_IRQ_CLEAR);
-> +
-> +	mutex_unlock(&ptn_bridge->lock);
-> +
-> +	if (ptn_bridge->connector.dev)
-> +		drm_kms_helper_hotplug_event(ptn_bridge->connector.dev);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int ge_b850v3_lvds_dp_attach(struct drm_bridge *bridge)
-> +{
-> +	struct ge_b850v3_lvds_dp *ptn_bridge
-> +			= bridge_to_ge_b850v3_lvds_dp(bridge);
-> +	struct drm_connector *connector = &ptn_bridge->connector;
-> +	struct i2c_client *ge_b850v3_lvds_dp_i2c
-> +			= ptn_bridge->ge_b850v3_lvds_dp_i2c;
-> +	int ret;
-> +
-> +	if (!bridge->encoder) {
-> +		DRM_ERROR("Parent encoder object not found");
-> +		return -ENODEV;
-> +	}
-> +
-> +	connector->polled = DRM_CONNECTOR_POLL_HPD;
-> +
-> +	drm_connector_helper_add(connector,
-> +			&ge_b850v3_lvds_dp_connector_helper_funcs);
-> +
-> +	ret = drm_connector_init(bridge->dev, connector,
-> +			&ge_b850v3_lvds_dp_connector_funcs,
-> +			DRM_MODE_CONNECTOR_DisplayPort);
-> +	if (ret) {
-> +		DRM_ERROR("Failed to initialize connector with drm\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = drm_mode_connector_attach_encoder(connector, bridge->encoder);
-> +	if (ret)
-> +		return ret;
-> +
-> +	drm_bridge_enable(bridge);
-> +	if (ge_b850v3_lvds_dp_i2c->irq) {
-> +		drm_helper_hpd_irq_event(connector->dev);
-> +
-> +		ret = devm_request_threaded_irq(&ge_b850v3_lvds_dp_i2c->dev,
-> +				ge_b850v3_lvds_dp_i2c->irq, NULL,
-> +				ge_b850v3_lvds_dp_irq_handler,
-> +				IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-> +				"ge-b850v3-lvds-dp", ptn_bridge);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct drm_bridge_funcs ge_b850v3_lvds_dp_funcs = {
-> +	.enable = ge_b850v3_lvds_dp_enable,
-> +	.disable = ge_b850v3_lvds_dp_disable,
-> +	.attach = ge_b850v3_lvds_dp_attach,
-> +};
-> +
-> +static int ge_b850v3_lvds_dp_probe(struct i2c_client *ge_b850v3_lvds_dp_i2c,
-> +				const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &ge_b850v3_lvds_dp_i2c->dev;
-> +	struct ge_b850v3_lvds_dp *ptn_bridge;
-> +	int ret;
-> +	u32 edid_i2c_reg;
-> +
-> +	ptn_bridge = devm_kzalloc(dev, sizeof(*ptn_bridge), GFP_KERNEL);
-> +	if (!ptn_bridge)
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&ptn_bridge->lock);
-> +
-> +	ptn_bridge->ge_b850v3_lvds_dp_i2c = ge_b850v3_lvds_dp_i2c;
-> +	ptn_bridge->bridge.driver_private = ptn_bridge;
-> +	i2c_set_clientdata(ge_b850v3_lvds_dp_i2c, ptn_bridge);
-> +
-> +	ret = of_property_read_u32(dev->of_node, "edid-reg", &edid_i2c_reg);
-> +	if (ret) {
-> +		dev_err(dev, "edid-reg not specified, aborting...\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ptn_bridge->edid_i2c = devm_kzalloc(dev,
-> +			sizeof(struct i2c_client), GFP_KERNEL);
-> +
-> +	if (!ptn_bridge->edid_i2c)
-> +		return -ENOMEM;
-> +
-> +	memcpy(ptn_bridge->edid_i2c, ge_b850v3_lvds_dp_i2c,
-> +			sizeof(struct i2c_client));
-> +
-> +	ptn_bridge->edid_i2c->addr = (unsigned short) edid_i2c_reg;
-> +
-> +	/* Configures the bridge to re-enable interrupts after each ack */
-> +	i2c_smbus_write_word_data(ge_b850v3_lvds_dp_i2c,
-> +			STDP4028_IRQ_OUT_CONF_REG, STDP4028_DPTX_DP_IRQ_EN);
-> +	i2c_smbus_write_word_data(ge_b850v3_lvds_dp_i2c,
-> +			STDP4028_DPTX_IRQ_EN_REG, STDP4028_DPTX_IRQ_CONFIG);
-> +
-> +	/* Clear pending interrupts since power up. */
-> +	i2c_smbus_write_word_data(ge_b850v3_lvds_dp_i2c,
-> +			STDP4028_DPTX_IRQ_STS_REG, STDP4028_DPTX_IRQ_CLEAR);
-> +
-> +	ptn_bridge->bridge.funcs = &ge_b850v3_lvds_dp_funcs;
-> +	ptn_bridge->bridge.of_node = dev->of_node;
-> +	ret = drm_bridge_add(&ptn_bridge->bridge);
-> +	if (ret) {
-> +		DRM_ERROR("Failed to add bridge\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ge_b850v3_lvds_dp_remove(struct i2c_client *ge_b850v3_lvds_dp_i2c)
-> +{
-> +	struct ge_b850v3_lvds_dp *ptn_bridge =
-> +		i2c_get_clientdata(ge_b850v3_lvds_dp_i2c);
-> +
-> +	drm_bridge_remove(&ptn_bridge->bridge);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id ge_b850v3_lvds_dp_i2c_table[] = {
-> +	{"b850v3-lvds-dp", 0},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(i2c, ge_b850v3_lvds_dp_i2c_table);
-> +
-> +static const struct of_device_id ge_b850v3_lvds_dp_match[] = {
-> +	{ .compatible = "ge,b850v3-lvds-dp" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, ge_b850v3_lvds_dp_match);
-> +
-> +static struct i2c_driver ge_b850v3_lvds_dp_driver = {
-> +	.id_table	= ge_b850v3_lvds_dp_i2c_table,
-> +	.probe		= ge_b850v3_lvds_dp_probe,
-> +	.remove		= ge_b850v3_lvds_dp_remove,
-> +	.driver		= {
-> +		.name		= "ge,b850v3-lvds-dp",
-> +		.of_match_table = ge_b850v3_lvds_dp_match,
-> +	},
-> +};
-> +module_i2c_driver(ge_b850v3_lvds_dp_driver);
-> +
-> +MODULE_AUTHOR("Peter Senna Tschudin <peter.senna@collabora.com>");
-> +MODULE_AUTHOR("Martyn Welch <martyn.welch@collabora.co.uk>");
-> +MODULE_DESCRIPTION("GE LVDS to DP++ bridge)");
-> +MODULE_LICENSE("GPL v2");
->
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--P5A5M5SGJVpwShVxfDeGrEluvVSixGbvn--
