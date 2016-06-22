@@ -1,42 +1,46 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 1/2] tpm: Factor out common startup code
-Date: Wed, 22 Jun 2016 15:37:09 -0600
-Message-ID: <20160622213709.GA24072@obsidianresearch.com>
-References: <1466324401-5054-1-git-send-email-andrew.zamansky@nuvoton.com>
-	<1466324401-5054-2-git-send-email-andrew.zamansky@nuvoton.com>
-	<20160619123923.GA31053@intel.com>
-	<20160620210757.GB11746@obsidianresearch.com>
-	<20160622122227.GA27577@intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] mmc: pwrseq-simple: Add an optional post-power-on-delay
+Date: Wed, 22 Jun 2016 17:25:03 -0500
+Message-ID: <CAL_JsqJ0XVJb=Q9FT8g_OUTbgZWr-E58xQS0iCR4hv-9EHCcPA@mail.gmail.com>
+References: <1466618348-32304-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160622122227.GA27577-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1466618348-32304-1-git-send-email-hdegoede@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 03:22:28PM +0300, Jarkko Sakkinen wrote:
+On Wed, Jun 22, 2016 at 12:59 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Some devices need a while to boot their firmware after providing clks /
+> de-asserting resets before they are ready to receive sdio commands.
+>
+> This commits adds a post-power-on-delay-ms devicetree property to
+> mmc-pwrseq-simple for use with such devices.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
+>  drivers/mmc/core/pwrseq_simple.c                            | 9 +++++++++
+>  2 files changed, 11 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> index ce0e767..e254368 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> @@ -16,6 +16,8 @@ Optional properties:
+>    See ../clocks/clock-bindings.txt for details.
+>  - clock-names : Must include the following entry:
+>    "ext_clock" (External clock provided to the card).
+> +- post-power-on-delay-ms : Delay in ms after powering the card and
+> +       de-asserting the reset-gpios (if any)
 
-> PS. Would you have time to look at https://lkml.org/lkml/2016/6/17/887
-> and give your feedback? :)
+Presumably you need this delay post any reset, not just after power on
+if you are waiting for firmware to boot. So the name is not all that
+clear. How about a "reset-timing-ms" property that takes 3 values for
+pre-assert time (normally 0), assertion time, post assert time. Of
+course, I can still think of ways that breaks like when in this
+sequence do clocks need to be turned on.
 
-Looks reasonable to me.
-
-Jason
-
-------------------------------------------------------------------------------
-Attend Shape: An AT&T Tech Expo July 15-16. Meet us at AT&T Park in San
-Francisco, CA to explore cutting-edge tech and listen to tech luminaries
-present their vision of the future. This family event has something for
-everyone, including kids. Get more information and register today.
-http://sdm.link/attshape
+Rob
