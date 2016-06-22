@@ -1,68 +1,52 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/7] leds: documentation: 'ide-disk' to 'disk-activity'
-Date: Wed, 22 Jun 2016 11:16:04 +0100
-Message-ID: <20160622101603.GC25837@leverpostej>
-References: <20160608223000.433-1-linz@li-pro.net>
- <20160608223000.433-2-linz@li-pro.net>
- <20160621150532.GG3302@leverpostej>
- <576A447F.2020002@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/9] regulator: tps65217: Enable suspend configuration
+Date: Wed, 22 Jun 2016 11:16:11 +0100
+Message-ID: <20160622101611.GI28202@sirena.org.uk>
+References: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
+ <1466412218-5906-2-git-send-email-j-keerthy@ti.com>
+ <20160621190848.GF28202@sirena.org.uk>
+ <576A64EA.4000607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Encpt1P6Mxii2VuT"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <576A447F.2020002@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Stephan Linz <linz@li-pro.net>, linux-leds@vger.kernel.org, linux-ide@vger.kernel.org, Joseph Jezak <josejx@gentoo.org>, Nico Macrionitis <acrux@cruxppc.org>, =?utf-8?B?SsO2cmc=?= Sommer <joerg@alea.gnuu.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+In-Reply-To: <576A64EA.4000607-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, russ.dill-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 09:55:43AM +0200, Jacek Anaszewski wrote:
-> On 06/21/2016 05:05 PM, Mark Rutland wrote:
-> >On Thu, Jun 09, 2016 at 12:29:37AM +0200, Stephan Linz wrote:
-> >>Cc: Joseph Jezak <josejx@gentoo.org>
-> >>Cc: Nico Macrionitis <acrux@cruxppc.org>
-> >>Cc: J=C3=B6rg Sommer <joerg@alea.gnuu.de>
-> >>Signed-off-by: Stephan Linz <linz@li-pro.net>
-> >>---
-> >>  Documentation/devicetree/bindings/leds/common.txt    | 2 +-
-> >>  Documentation/devicetree/bindings/leds/leds-gpio.txt | 2 +-
-> >>  Documentation/laptops/asus-laptop.txt                | 2 +-
-> >>  Documentation/leds/leds-class.txt                    | 2 +-
-> >>  4 files changed, 4 insertions(+), 4 deletions(-)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Do=
-cumentation/devicetree/bindings/leds/common.txt
-> >>index af10678..1e97169 100644
-> >>--- a/Documentation/devicetree/bindings/leds/common.txt
-> >>+++ b/Documentation/devicetree/bindings/leds/common.txt
-> >>@@ -26,7 +26,7 @@ Optional properties for child nodes:
-> >>       "default-on" - LED will turn on (but for leds-gpio see "defa=
-ult-state"
-> >>  		    property in Documentation/devicetree/bindings/gpio/led.txt)
-> >>       "heartbeat" - LED "double" flashes at a load average based r=
-ate
-> >>-     "ide-disk" - LED indicates disk activity
-> >>+     "disk-activity" - LED indicates disk activity
-> >>       "timer" - LED flashes at a fixed, configurable rate
-> >
-> >We should not break the binding.
-> >
-> >Code must continue to support "ide-disk", though we can mark it
-> >deprecated in the binding documentation, and update the in-kernel dt=
-s
-> >files to use "disk-activity".
->=20
-> The code in the version 4 of the patchset supports also "ide-disk".
 
-Ah, sorry, I missed v4.
+--Encpt1P6Mxii2VuT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Stephan, could you send a new version of this patch, with preserved
-> "ide-disk" property, marked as deprecated?
+On Wed, Jun 22, 2016 at 03:44:02PM +0530, Keerthy wrote:
 
-With that, feel free to add:
+> Hence saving it in a static array and using it later in the ops functions to
+> disable or enable regulator during suspend.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Why a static array and not part of the dynamically allocated driver
+data?
 
-Thanks,
-Mark.
+--Encpt1P6Mxii2VuT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXamVpAAoJECTWi3JdVIfQ2FEH/1KSem8eNAWDCdpOmy8v8jJe
+ixmSH+oUNIfKsXMPg8eVIVycXLX2lo7ez277dsxqWXZ8m6Dgi8OGrF0pAdsZhF2Y
+VOzn4F+7tcDHuJe6PmymHpMvj6Q7SSd6Kieda7Ic7mozFzYh8/OV5Mb9hfM/WO31
+0hbJtVWzORTaEKWmSBI2k7kmTmPEM0Kwc4tFO8q2zeQ1Q8B2WczVYg2n3Mf+ZxDy
+h8/8fB7mflvPhg8KkOhUCiepJRkQJagDbdI+qZEgPD62WOBW49jLbvqAmlviDspx
+YuplJ5zc4u1LDmZfrPlETCfOpqLvQGYMlGeBQ9TAexQr+UdJSHrGhmsd5W7cTWI=
+=jzNr
+-----END PGP SIGNATURE-----
+
+--Encpt1P6Mxii2VuT--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
