@@ -1,78 +1,78 @@
-From: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] iio: potentiometer: mcp4531: Add device tree binding
-Date: Wed, 22 Jun 2016 08:22:46 +0200
-Message-ID: <829a4507-39d7-e04a-9672-6309def89ee2@heig-vd.ch>
-References: <1466492137-32683-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1466492137-32683-4-git-send-email-florian.vaussard@heig-vd.ch>
- <bf4dbd64-aac8-aba3-ec5c-4cd4d0e848f6@axentia.se>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: Add dts file for inet86dz board
+Date: Wed, 22 Jun 2016 14:40:07 +0800
+Message-ID: <CAGb2v67TUUZSj2bCQPvogG8rNfdxBcnZwRVLVLxw6Tjg4o+kDA@mail.gmail.com>
+References: <1465754150-16753-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v66cbx0jta1unrKeYm1t9JKO9Unw8z75rXbW3JSi2=NuMw@mail.gmail.com>
+ <f080dda9-6410-ec79-f083-29a20d147d61@redhat.com>
+ <20160617054607.GN5144@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <bf4dbd64-aac8-aba3-ec5c-4cd4d0e848f6-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaussard Florian <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160617054607.GN5144@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Peter,
-
-Le 21. 06. 16 =E0 09:51, Peter Rosin a =E9crit :
-> On 2016-06-21 08:55, Florian Vaussard wrote:
->> This patch adds the necessary device tree binding to allow DT probin=
-g of
->> currently supported parts.
+On Fri, Jun 17, 2016 at 1:46 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Mon, Jun 13, 2016 at 11:35:15AM +0200, Hans de Goede wrote:
+>> Hi
 >>
->> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
->> ---
->>  drivers/iio/potentiometer/mcp4531.c | 83 ++++++++++++++++++++++++++=
-++++++++++-
->>  1 file changed, 82 insertions(+), 1 deletion(-)
+>> On 13-06-16 05:16, Chen-Yu Tsai wrote:
+>> >Hi,
+>> >
+>> >On Mon, Jun 13, 2016 at 1:55 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> >>The inet86dz board is a board used in 7" tablets from various oems.
+>> >>
+>> >>These tablets are a23 based 7" tablets featuring a 1024x600 LCD,
+>> >>512MB RAM, 4G NAND, rtl8188etv usb wifi, gsl1680 touchschreen,
+>> >>micro-sd slot, 3.5mm headphone jack and a micro-usb otg connector
+>> >>which doubles as charging port.
+>> >
+>> >This seems awfully similar to the sun8i-a23-q8-tablet, any reason
+>> >not to include that or sun8i-q8-common.dtsi?
 >>
->> diff --git a/drivers/iio/potentiometer/mcp4531.c b/drivers/iio/poten=
-tiometer/mcp4531.c
->> index 2251173..41a1e46 100644
->> --- a/drivers/iio/potentiometer/mcp4531.c
->> +++ b/drivers/iio/potentiometer/mcp4531.c
->> @@ -31,6 +31,8 @@
->>  #include <linux/module.h>
->>  #include <linux/i2c.h>
->>  #include <linux/err.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> =20
->>  #include <linux/iio/iio.h>
->> =20
->> @@ -188,12 +190,84 @@ static const struct iio_info mcp4531_info =3D =
-{
->>  	.driver_module =3D THIS_MODULE,
->>  };
->> =20
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id mcp45xx_of_match[] =3D {
->=20
-> Should be named mcp4531_of_match, also the casting to void and
-> then back to an integer type is ugly. Would it work to store a
-> pointer directly into the mcp4531_cfg array instead? I.e.
->=20
-> 	{ .compatible =3D "microchip,mcp4531-502", .data =3D &mcp4531_cfg[MC=
-P453x_502] },
-> etc
->=20
-> and then adjust accordingly in mcp4531_probe()?
->=20
+>> So to answer this both for this board and for the Polaroid MID2407PXE03
+>> one, these are not q8 tablets, they are not using the standard q8 casing
+>> at least. So using q8 for them would seem to be a bit confusing to users
+>> and figuring out how to do proper autodetect is already hard enough without
+>> throwing these into the mix too.
+>>
+>> OTOH you are right that there is a lot of code duplication here. Since I
+>> plan to start working on touchscreen autodetect soon-ish, let me see how
+>> that goes first.
+>
+> For reference, I'm not really against having similar boards having
+> similar-yet-duplicated DT. This is just data, and sometimes trying to
+> factorise things also make it less trivial and easy to understand.
 
-Yes the casting is pretty ugly. And kbuild agrees with you :) I took th=
-is from
-another driver (lame excuse). Your suggestion is sensible, I will give =
-it a try.
+It seems most if not all Allwinner based tablets use the reference design
+Allwinner provides. The design specifies how components are connected,
+what models could be used, etc.. Maybe we could rename sun*i-q8-common to
+sun*i-reference-design and use that? We'd still have board.dts files
+including it, and providing the board name.
 
-> That is, if you need this patch at all, see my reply to 2/3...
->=20
+ChenYu
 
-This seems necessary in order to have the vendor ID in the compatible s=
-tring.
-
-Thanks for your review.
-
-=46lorian
+>> Maxime can you drop the Polaroid MID2407PXE03 patch for now ?
+>
+> Done.
+>
+> Thanks,
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
