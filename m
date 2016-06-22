@@ -1,57 +1,87 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] pwm: iproc: Add support for Broadcom iproc pwm
- controller
-Date: Wed, 22 Jun 2016 10:31:26 -0700
-Message-ID: <20160622173126.GA74558@google.com>
-References: <1466594987-26537-1-git-send-email-yendapally.reddy@broadcom.com>
- <1466594987-26537-3-git-send-email-yendapally.reddy@broadcom.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] mmc: pwrseq-simple: Add an optional post-power-on-delay
+Date: Wed, 22 Jun 2016 19:59:08 +0200
+Message-ID: <1466618348-32304-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1466594987-26537-3-git-send-email-yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB5VDVO5QKGQE7R2YZYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 07:29:46AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
-> Add support for the PWM controller present in Broadcom's iProc
-> family of SoCs. This driver is derived from the pwm-bcm-kona
-> driver, with changes to the register offsets and bit positions.
-> It has been tested on the  Northstar+ bcm958625HR board.
-> 
-> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/pwm/Kconfig         |  10 ++
->  drivers/pwm/Makefile        |   1 +
->  drivers/pwm/pwm-bcm-iproc.c | 327 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 338 insertions(+)
->  create mode 100644 drivers/pwm/pwm-bcm-iproc.c
-> 
-[...]
-> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-> new file mode 100644
-> index 0000000..952c457
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-bcm-iproc.c
-> @@ -0,0 +1,327 @@
-[...]
-> +static const struct pwm_ops iproc_pwm_ops = {
-> +	.config = iproc_pwmc_config_check,
-> +	.set_polarity = iproc_pwmc_set_polarity,
-> +	.enable = iproc_pwmc_enable,
-> +	.disable = iproc_pwmc_disable,
-> +	.owner = THIS_MODULE,
-> +};
+Some devices need a while to boot their firmware after providing clks /
+de-asserting resets before they are ready to receive sdio commands.
 
-Have you considered trying the new apply() callback instead of
-config()/set_polarity()/enable()/disable()?
+This commits adds a post-power-on-delay-ms devicetree property to
+mmc-pwrseq-simple for use with such devices.
 
-[...]
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
+ drivers/mmc/core/pwrseq_simple.c                            | 9 +++++++++
+ 2 files changed, 11 insertions(+)
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+index ce0e767..e254368 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+@@ -16,6 +16,8 @@ Optional properties:
+   See ../clocks/clock-bindings.txt for details.
+ - clock-names : Must include the following entry:
+   "ext_clock" (External clock provided to the card).
++- post-power-on-delay-ms : Delay in ms after powering the card and
++	de-asserting the reset-gpios (if any)
+ 
+ Example:
+ 
+diff --git a/drivers/mmc/core/pwrseq_simple.c b/drivers/mmc/core/pwrseq_simple.c
+index 450d907..1304160 100644
+--- a/drivers/mmc/core/pwrseq_simple.c
++++ b/drivers/mmc/core/pwrseq_simple.c
+@@ -16,6 +16,8 @@
+ #include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/delay.h>
++#include <linux/property.h>
+ 
+ #include <linux/mmc/host.h>
+ 
+@@ -24,6 +26,7 @@
+ struct mmc_pwrseq_simple {
+ 	struct mmc_pwrseq pwrseq;
+ 	bool clk_enabled;
++	u32 post_power_on_delay_ms;
+ 	struct clk *ext_clk;
+ 	struct gpio_descs *reset_gpios;
+ };
+@@ -64,6 +67,9 @@ static void mmc_pwrseq_simple_post_power_on(struct mmc_host *host)
+ 	struct mmc_pwrseq_simple *pwrseq = to_pwrseq_simple(host->pwrseq);
+ 
+ 	mmc_pwrseq_simple_set_gpios_value(pwrseq, 0);
++
++	if (pwrseq->post_power_on_delay_ms)
++		msleep(pwrseq->post_power_on_delay_ms);
+ }
+ 
+ static void mmc_pwrseq_simple_power_off(struct mmc_host *host)
+@@ -111,6 +117,9 @@ static int mmc_pwrseq_simple_probe(struct platform_device *pdev)
+ 		return PTR_ERR(pwrseq->reset_gpios);
+ 	}
+ 
++	device_property_read_u32(dev, "post-power-on-delay-ms",
++				 &pwrseq->post_power_on_delay_ms);
++
+ 	pwrseq->pwrseq.dev = dev;
+ 	pwrseq->pwrseq.ops = &mmc_pwrseq_simple_ops;
+ 	pwrseq->pwrseq.owner = THIS_MODULE;
+-- 
+2.7.4
