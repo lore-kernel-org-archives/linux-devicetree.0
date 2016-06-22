@@ -1,68 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] ata: ahci_platform: Add ACPI support for APM X-Gene AHCI
- controller v3 hardware.
-Date: Wed, 22 Jun 2016 12:18:33 +0200
-Message-ID: <5402203.QaZloJIEAM@wuerfel>
-References: <stripathi@apm.com>
- <CAOHikRCB4c79okd0q3=Lqwk7LKwZ6EDnWfHRH_oXokrB4PHcyw@mail.gmail.com>
- <CAOHikRDUH-PK4JfS8pUR+or=XTwDHBejFTGy33V20HKMMTUaPg@mail.gmail.com>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH 1/9] regulator: tps65217: Enable suspend configuration
+Date: Wed, 22 Jun 2016 15:44:02 +0530
+Message-ID: <576A64EA.4000607@ti.com>
+References: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
+ <1466412218-5906-2-git-send-email-j-keerthy@ti.com>
+ <20160621190848.GF28202@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOHikRDUH-PK4JfS8pUR+or=XTwDHBejFTGy33V20HKMMTUaPg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Langsdorf <mlangsdo@redhat.com>, Suman Tripathi <stripathi@apm.com>, Jon Masters <jcm@redhat.com>, Olof Johansson <olof@lixom.net>, patches <patches@apm.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Tejun Heo <tj@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160621190848.GF28202@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Keerthy <j-keerthy@ti.com>
+Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, June 21, 2016 4:31:38 PM CEST Suman Tripathi wrote:
-> On Tue, Jun 21, 2016 at 11:08 AM, Suman Tripathi <stripathi@apm.com> wrote:
-> > On Wed, Jun 15, 2016 at 11:54 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >>
-> >> On Wednesday, June 15, 2016 5:44:00 PM CEST suman-tripathi wrote:
-> >> > This patch adds ACPI support for APM X-Gene AHCI controller in
-> >> > ahci_platform driver for v3 hardware. APM X-Gene AHCI controller
-> >> > v3 hardware is fully compliant with ahci_platform driver and requires
-> >> > no workaround quirk.
-> >> >
-> >> > Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> >> > ---
-> >> >  drivers/ata/ahci_platform.c |    1 +
-> >> >  1 files changed, 1 insertions(+), 0 deletions(-)
-> >> >
-> >> > diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-> >> > index 62a04c8..3395baf 100644
-> >> > --- a/drivers/ata/ahci_platform.c
-> >> > +++ b/drivers/ata/ahci_platform.c
-> >> > @@ -86,6 +86,7 @@ MODULE_DEVICE_TABLE(of, ahci_of_match);
-> >> >
-> >> >  static const struct acpi_device_id ahci_acpi_match[] = {
-> >> >         { ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
-> >> > +       { "APMC0D33", 0},
-> >> >         {},
-> >> >  };
-> >> >  MODULE_DEVICE_TABLE(acpi, ahci_acpi_match);
-> >> >
-> >>
-> >> Doesn't the ACPI_DEVICE_CLASS entry take care of this? I thought it had been
-> >
-> >
-> > yeah it also works. Just thought that we need something different as
-> > our's is a non-PCI SATA.
-> 
-> Are you suggesting to introduce a new class ACPI_DEVICE_CLASS for
-> non-pci ahci ? or to reuse the existing PCI_CLASS_STORAGE_SATA_AHCI ?
 
-This was specifically introduced for non-PCI devices, so it should
-just work.
 
-	Arnd
+On Wednesday 22 June 2016 12:38 AM, Mark Brown wrote:
+> On Mon, Jun 20, 2016 at 02:13:30PM +0530, Keerthy wrote:
+>
+>> +static struct tps65217_regulator_data regulator_data[TPS65217_NUM_REGULATOR];
+>
+> Why is this a static global?
+>
+>> +		/* Store default strobe info */
+>> +		ret = tps65217_reg_read(tps, regulators[i].bypass_reg, &val);
+>> +
+>> +		regulator_data[i].strobe = val & regulators[i].bypass_mask;
+>> +
+>
+> Not sure what this is doing...  I think this needs splitting up a bit,
+> it looks like it's a bit more than just adding the ops (which should be
+> generic things), that bit seems OK but there's these other bits in
+> there as well.
+
+Okay. Let me explain a bit more here:
+
+The TPS65217 has a pre-defined power-up / power-down sequence which in a 
+typical application does not need
+to be changed. However, it is possible to define custom sequences under 
+I2C control. The power-up sequence is
+defined by strobes and delay times. Each output rail is assigned to a 
+strobe to determine the order in which the
+rails are enabled.
+
+Every regulator of tps65217 PMIC has sequence registers and every 
+regulator has a default strobe value
+and gets disabled when a particular power down sequence occurs.
+
+So as to keep it on during suspend we write value 0 to strobe so that 
+the regulator is out of all sequencers and is not impacted by any power 
+down sequence. We are saving the default strobe value during probe so 
+that when we want to regulator to be enabled during suspend we write 0 
+to strobe and when we want it to get disabled during suspend we write 
+the default saved strobe value.
+
+Hence saving it in a static array and using it later in the ops 
+functions to disable or enable regulator during suspend.
+
+>
