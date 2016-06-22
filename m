@@ -1,49 +1,78 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/8] arm64: dts: db820c: add basic board support
-Date: Tue, 21 Jun 2016 21:49:16 -0700
-Message-ID: <20160622044916.GF1256@tuxbot>
-References: <1466529769-2674-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1466529769-2674-2-git-send-email-srinivas.kandagatla@linaro.org>
+From: fixed-term.Oleksij.Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/4] dt/bindings: Add bindings for Micro
+ Crystal rv8803
+Date: Wed, 22 Jun 2016 07:15:12 +0200
+Message-ID: <576A1EE0.4000603@de.bosch.com>
+References: <1466492240-5528-1-git-send-email-dirk.behme@de.bosch.com>
+ <1466492240-5528-2-git-send-email-dirk.behme@de.bosch.com>
+ <20160621214836.GA10197@rob-hp-laptop>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466529769-2674-2-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBAABBYV5VC5QKGQEXESHI3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160621214836.GA10197@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 21 Jun 10:22 PDT 2016, Srinivas Kandagatla wrote:
-
-[..]
-> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-[..]
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. DB820c";
-> +	compatible = "qcom,apq8096-sbc";
-
-I'm still not buying the concept of this being the one and only
-single-board-computer.
-
-If this compatible fully and exclusively identifies this particular
-board then dtbTool should be updated to follow the product name
-"qcom,apq8096-db820c". If on the other hand this identifies a class of
-single-board-computers, then the compatible should list both
-"qcom,apq8096-dtb820c" and "qcom,apq8096-sbc".
 
 
+On 21.06.2016 23:48, Rob Herring wrote:
+> On Tue, Jun 21, 2016 at 08:57:18AM +0200, Dirk Behme wrote:
+>> From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+>>
+>> ... and Epson RX8900 real time clock
+>>
+>> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> ---
+>>  .../devicetree/bindings/rtc/epson,rx8900.txt        | 21 +++++++++++++++++++++
+>>  1 file changed, 21 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx8900.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/rtc/epson,rx8900.txt b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
+>> new file mode 100644
+>> index 0000000..51959de
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
+>> @@ -0,0 +1,21 @@
+>> +Real Time Clock driver for:
+>> +  - Epson RX8900
+>> +  - Micro Crystal rv8803
+>> +
+>> +Required properties:
+>> +- compatible: should be: "mc,rv8803" or "epson,rx8900"
+>> +- reg : the I2C address of the device for I2C
+>> +
+>> +Optional properties:
+>> +- epson,vdetoff : Disable Voltage Detector. Should be set if no
+>> +  backup battery is used.
+> 
+> set to no? Looks like a boolean to me.
+> 
+> How about epson,vdet-disable to be consistent.
+> 
+>> +- trickle-diode-disable : Disable internal trickle charger diode
+> 
+> boolean?
+> 
+> Needs a vendor prefix.
 
-Further more, the ePAPR defines this property as:
-"Specifies a list of platform architectures with which this platform is
-compatible. This property can be used by operating systems in selecting
-platform specific code."
+This is common name used by many rtc driver without vendor prefix.
 
-So I think we should follow the common pattern of having the least
-significant entry being "qcom,apq8096".
-
-> +};
-
-Regards,
-Bjorn
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
