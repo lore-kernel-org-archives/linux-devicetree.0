@@ -1,88 +1,106 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 4/5] pwm: tegra: Add DT node compatible for Tegra186
-Date: Wed, 22 Jun 2016 14:46:14 +0200
-Message-ID: <20160622124614.GG26943@ulmo.ba.sec>
-References: <1466596043-27262-1-git-send-email-ldewangan@nvidia.com>
- <1466596043-27262-5-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ulDeV4rPMk/y39in"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466596043-27262-5-git-send-email-ldewangan@nvidia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, swarren@wwwdotorg.org, gnurou@gmail.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] spi: Improve DT binding documentation
+Date: Wed, 22 Jun 2016 14:48:26 +0200
+Message-ID: <1466599706-2850-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+  - Add missing verbs and periods,
+  - Add spaces before opening parentheses,
+  - Align list layout,
+  - Correct grammar,
+  - Move "cs-gpios" from the required to the optional properties
+    section,
+  - Remove spaces before tabs.
 
---ulDeV4rPMk/y39in
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/spi-bus.txt | 35 ++++++++++++-----------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
 
-On Wed, Jun 22, 2016 at 05:17:22PM +0530, Laxman Dewangan wrote:
-> Tegra186 has 8 different PWM controller and each controller has only
-> one output. Earlier generation SoCs have the 4 PWM output per controller.
->=20
-> Add DT node compatible for Tegra186.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 10 ++++++=
-----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt=
- b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> index c52f03b..2851b2d 100644
-> --- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> @@ -1,10 +1,12 @@
->  Tegra SoC PWFM controller
-> =20
->  Required properties:
-> -- compatible: For Tegra20, must contain "nvidia,tegra20-pwm".  For Tegra=
-30,
-> -  must contain "nvidia,tegra30-pwm".  Otherwise, must contain
-> -  "nvidia,<chip>-pwm", plus one of the above, where <chip> is tegra114,
-> -  tegra124, tegra132, or tegra210.
-> +- compatible: For Tegra20, must contain "nvidia,tegra20-pwm".
-> +	      For Tegra30, must contain "nvidia,tegra30-pwm".
-> +	      For Tegra114, Tegra124, Tegra132, Tegra210 must contain
-> +	      "nvidia,<chip>-pwm", plus one of the above, where <chip> is
-> +	      tegra114, tegra124, tegra132, or tegra210.
-> +	      For Tegra186, must contain "nvidia,tegra186-pwm".
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index 42d595425dfb9f3c..17822860cb98c34d 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -8,11 +8,10 @@ in slave mode.
+ 
+ The SPI master node requires the following properties:
+ - #address-cells  - number of cells required to define a chip select
+-    		address on the SPI bus.
++		address on the SPI bus.
+ - #size-cells     - should be zero.
+ - compatible      - name of SPI bus controller following generic names
+-    		recommended practice.
+-- cs-gpios	  - (optional) gpios chip select.
++		recommended practice.
+ No other properties are required in the SPI bus node.  It is assumed
+ that a driver for an SPI bus device will understand that it is an SPI bus.
+ However, the binding does not attempt to define the specific method for
+@@ -22,11 +21,12 @@ assumption that board specific platform code will be used to manage
+ chip selects.  Individual drivers can define additional properties to
+ support describing the chip select layout.
+ 
+-Optional property:
+-- num-cs : total number of chipselects
++Optional properties:
++- cs-gpios	  - gpios chip select.
++- num-cs	  - total number of chipselects.
+ 
+-If cs-gpios is used the number of chip select will automatically increased
+-with max(cs-gpios > hw cs)
++If cs-gpios is used the number of chip selects will be increased automatically
++with max(cs-gpios > hw cs).
+ 
+ So if for example the controller has 2 CS lines, and the cs-gpios
+ property looks like this:
+@@ -45,29 +45,30 @@ SPI slave nodes must be children of the SPI master node and can
+ contain the following properties.
+ - reg             - (required) chip select address of device.
+ - compatible      - (required) name of SPI device following generic names
+-    		recommended practice
+-- spi-max-frequency - (required) Maximum SPI clocking speed of device in Hz
++		recommended practice.
++- spi-max-frequency - (required) Maximum SPI clocking speed of device in Hz.
+ - spi-cpol        - (optional) Empty property indicating device requires
+-    		inverse clock polarity (CPOL) mode
++		inverse clock polarity (CPOL) mode.
+ - spi-cpha        - (optional) Empty property indicating device requires
+-    		shifted clock phase (CPHA) mode
++		shifted clock phase (CPHA) mode.
+ - spi-cs-high     - (optional) Empty property indicating device requires
+-    		chip select active high
++		chip select active high.
+ - spi-3wire       - (optional) Empty property indicating device requires
+-    		    3-wire mode.
++		3-wire mode.
+ - spi-lsb-first   - (optional) Empty property indicating device requires
+ 		LSB first mode.
+-- spi-tx-bus-width - (optional) The bus width(number of data wires) that
++- spi-tx-bus-width - (optional) The bus width (number of data wires) that is
+                       used for MOSI. Defaults to 1 if not present.
+-- spi-rx-bus-width - (optional) The bus width(number of data wires) that
++- spi-rx-bus-width - (optional) The bus width (number of data wires) that is
+                       used for MISO. Defaults to 1 if not present.
+ - spi-rx-delay-us  - (optional) Microsecond delay after a read transfer.
+ - spi-tx-delay-us  - (optional) Microsecond delay after a write transfer.
+ 
+ Some SPI controllers and devices support Dual and Quad SPI transfer mode.
+-It allows data in the SPI system to be transferred in 2 wires(DUAL) or 4 wires(QUAD).
++It allows data in the SPI system to be transferred using 2 wires (DUAL) or 4
++wires (QUAD).
+ Now the value that spi-tx-bus-width and spi-rx-bus-width can receive is
+-only 1(SINGLE), 2(DUAL) and 4(QUAD).
++only 1 (SINGLE), 2 (DUAL) and 4 (QUAD).
+ Dual/Quad mode is not allowed when 3-wire mode is used.
+ 
+ If a gpio chipselect is used for the SPI slave the gpio number will be passed
+-- 
+1.9.1
 
-Rob, I recall discussing this with you a couple of weeks ago, but fail
-to remember the outcome and can't find a link to the discussion either.
-Wasn't there a new standard way of documenting this kind of compatible
-string list?
-
-Or did you say it didn't matter much until we moved to a YAML-based
-description?
-
-Thierry
-
---ulDeV4rPMk/y39in
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXaoiVAAoJEN0jrNd/PrOhBcIP/3OgHrcpV580PDw9Um1h4ZV/
-aRTWHRhDjdKZ/TTKrhUeIuh8jNzQV69eIkUBaR2pK38c3wziA5k+oBpFGt0uC0WG
-rujfoXYccl3eiJXZCSTPCmM6RDFeSdfblkT8YpWQwF3jEsDJPFMwXSpWBWMEMHpU
-td0qxcbuQGSTKmiESckOD6ck8GpjoFwtK74HRpz03VmJgOwr7betfCkoKaoBTOJZ
-cXnPWUsG0TOnIVT3f8xo4Zf3p2WWQuBPs1nVx4kFoTzgO90a+cWW0Ak4dQobPUDB
-eqhbdfdZWR6kjm/uJsG3TBa5yQv2XIeSo58JTbkZJ8CX8YpDfqyP48I9phmM2zL8
-X6ipgzsbS4+/4cYKp9dAMoQITuFTpu9ODdvGvzuJNKVQU6nLShgBTDKFtnNTcFSE
-SNazWBZCfAMwUyJNk79x8eHFz7ZYNFCYEAAlwIxRJCKVPKnttdVSkd6eqWNh66bO
-qaI1MfOUOYayEZWh+Fy24XQu0OMoxpnJLRgSRcY/+g9LQXOUXoRerunIyj/15dpB
-2HEDHb/M0K7q/MxOnpckbJbqpOuIXS7vYfRcEoLHVnn8SimgMT2DEsnZpGvScJyp
-4blMUeJ0bgZfNKGIdrJCYLlrizMo28ULgoNB56TbmA9GGH3Yy9ZWfJuOh7/WuD9p
-eLDxYpBHXFKrxaMY4jSP
-=c/7R
------END PGP SIGNATURE-----
-
---ulDeV4rPMk/y39in--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
