@@ -1,49 +1,55 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/4] Documentation: mmc: add description for new caps
-Date: Wed, 22 Jun 2016 14:30:22 +0200
-Message-ID: <CAPDyKFquaUOUM+8UYBZhq=t0n6+v+cbTy8FotjYyysi6EGHx3A@mail.gmail.com>
-References: <1465373996-2485-1-git-send-email-shawn.lin@rock-chips.com>
- <1465374021-2526-1-git-send-email-shawn.lin@rock-chips.com>
- <20160608204848.GA3368@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20160608204848.GA3368@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: lpc32xx: set default parent clock for pwm1 & pwm2
+Date: Wed, 22 Jun 2016 08:32:11 -0400
+Message-ID: <1466598731-5144-1-git-send-email-slemieux.tyco@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 8 June 2016 at 22:48, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jun 08, 2016 at 04:20:21PM +0800, Shawn Lin wrote:
->> Let's add some basic description for cap-no-sdio,
->> cap-no-sd and cap-no-mmc.
->
-> This doesn't say why.
->
-> If you know what is there, then there's a better way to do this. Look at
-> the child nodes because chances are if you have something soldered down
-> like SDIO or eMMC, then you have a child node already for resets,
-> regulators, etc.
->
+From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
 
-According to patch4, this is a description of the mmc controller,
-perhaps together with some limitations as per SoC/platform and thus
-has nothing to do with the card.
+The change setup the peripheral clock (PERIPH_CLK) as the default 
+parent clock for PWM1 & PWM2.
 
-I have seen several drivers, which needs to validate every single
-piece of command to avoid execute those it cannot support.
+Signed-off-by: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+---
+Dependencies:
+- clk: lpc32xx: allow peripheral clock selection in device tree
+  http://thread.gmane.org/gmane.linux.kernel.clk/6938
 
-So, I personally thinks these new DT bindings would be nice to add.
+ arch/arm/boot/dts/lpc32xx.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Kind regards
-Uffe
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index e295e1e..ed85b95 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -469,6 +469,9 @@
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C000 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM1>;
++				assigned-clocks = <&clk LPC32XX_CLK_PWM1>,
++						  <&clk LPC32XX_CLK_PERIPH>;
++				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -476,6 +479,9 @@
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C004 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM2>;
++				assigned-clocks = <&clk LPC32XX_CLK_PWM2>,
++						  <&clk LPC32XX_CLK_PERIPH>;
++				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+ 				status = "disabled";
+ 			};
+ 
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
