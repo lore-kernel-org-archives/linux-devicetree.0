@@ -1,38 +1,44 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] ASoC: da7219: Convert driver to use generic FW functions
-Date: Wed, 22 Jun 2016 03:05:26 +0200
-Message-ID: <CAJZ5v0g47+igo+Z+gZZE9sOix8oCs7Jy+H-i=HcBUB+RVib3+g@mail.gmail.com>
-References: <cover.1466523027.git.Adam.Thomson.Opensource@diasemi.com>
- <6274a042-da99-e3e6-20f2-37ce2651645c@intel.com> <2E89032DDAA8B9408CB92943514A0337D4644644@SW-EX-MBX01.diasemi.com>
- <20160621232116.GG28202@sirena.org.uk>
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 0/5] Fix and improve clock controller for the RK322x SoCs
+Date: Wed, 22 Jun 2016 09:10:25 +0800
+Message-ID: <5769E581.2040903@rock-chips.com>
+References: <1466484811-26923-1-git-send-email-zhengxing@rock-chips.com>
+ <13345941.K3V3BNYxTY@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160621232116.GG28202-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Robert Moore <robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lv Zheng <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-acpi <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Sathyanarayana Nujella <sathyanarayana.nujella-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <13345941.K3V3BNYxTY@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 1:21 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Jun 21, 2016 at 10:54:39PM +0000, Opensource [Adam Thomson] wrote:
->> On 21 June 2016 23:30, Rafael J. Wysocki wrote:
->
->> > I'm fine with the first patch and the second one carries a couple of
->> > ACKs already, so do you want me to apply them both?
->
-> None of whom are from anyone who works on the subsystem at all!  I've
-> not looked at the patch yet.
->
->> Thanks Rafael. I think we still need Mark's Ack for the ASoC codec changes
->> though before we can proceed.
->
-> Probably the easiest thing would be a tag for the core change that I can
-> pull.
-
-Or you can apply them both if that helps (please consider the first
-one as ACKed in that case).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSGVpa28sCgpPbiAyMDE25bm0MDbmnIgyMuaXpSAwNzowNywgSGVpa28gU3R1ZWJuZXIgd3Jv
+dGU6Cj4gQW0gRGllbnN0YWcsIDIxLiBKdW5pIDIwMTYsIDEyOjUzOjI2IHNjaHJpZWIgWGluZyBa
+aGVuZzoKPj4gSGksCj4+ICAgIFRoZXNlIHBhdGNoc2V0IGZpeCBzb21lIGNsb2NrcyBidWdzLCBh
+bmQgaW1wcm92ZSBjbG9jayBjb25maWd1cmF0aW9uCj4+IGZvciBpMnMvc3BkaWYvTUFDIG9uIFJL
+MzIyeCBTb0NzLgo+IGFwcGxpZWQgdG8gbXkgY2xvY2stYnJhbmNoIHdpdGggdGhlIGZvbGxvd2lu
+ZyBjaGFuZ2VzOgo+Cj4gLSBmaXhlZCB0aGUgZXJyb3IgaW4gcGF0Y2gxIC0gbWlzc2luZyAiKSIg
+aW4KPiAgICAgICAgQ09NUE9TSVRFX0ZSQUMoMCwgImkyczFfZnJhYyIsICJpMnMxX3NyYyIsIENM
+S19TRVRfUkFURV9QQVJFTlQsCj4gLSAgICAgICAgICAgICAgICAgICAgICAgUkszMjg4X0NMS1NF
+TF9DT04oNyksIDAsCj4gLSAgICAgICAgICAgICAgICAgICAgICAgUkszMjg4X0NMS0dBVEVfQ09O
+KDApLCAxMSwgR0ZMQUdTKSwKPiArICAgICAgICAgICAgICAgICAgICAgICBSSzI5MjhfQ0xLU0VM
+X0NPTig3KSwgMCwKPiArICAgICAgICAgICAgICAgICAgICAgICBSSzI5MjhfQ0xLR0FURV9DT04o
+MCksIDExLCBHRkxBR1MsCj4KPiAtIGFkYXB0ZWQgcGF0Y2gyIGFjY29yZGluZ2x5Cj4gLSBzcGxp
+dCBvdXQgY2xvY2sgaWQgYWRkaXRpb24gaW50byBzZXBhcmF0ZSBwYXRjaGVzLCBhcyB0aGV5IG5l
+ZWQgYSBzaGFyZWQKPiBicmFuY2guIFhpbmcgcGxlYXNlIHJlbWVtYmVyIHRvIGFkZCBjbG9jay1p
+ZHMgdG8gdGhlIGhlYWRlciBpbiBzZXBhcmF0ZQo+IHBhdGNoZXMuCj4KPgpTbyBzb3JyeSB0byBt
+aXNzIGl0Li4uCk9LLCBJIHdpbGwgYWRkIGNsb2NrLWlkcyB0byB0aGUgaGVhZGVyIGluIHNlcGFy
+YXRlIHBhdGNoZXMuCgpUaGFua3MuCgotLSAKLSBYaW5nIFpoZW5nCgoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcg
+bGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
