@@ -1,200 +1,140 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH v2 4/4] ARM: dts: rockchip: add support rk3229 evb board
-Date: Wed, 22 Jun 2016 11:16:53 +0800
-Message-ID: <1466565413-31027-5-git-send-email-zhengxing@rock-chips.com>
-References: <1466565413-31027-1-git-send-email-zhengxing@rock-chips.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+Date: Wed, 22 Jun 2016 11:33:56 +0800
+Message-ID: <20160622033356.GB21361@shlinux2>
+References: <5767C1B9.2060805@ti.com>
+ <878ty0qd7q.fsf@linux.intel.com>
+ <20160621063936.GB5108@shlinux2>
+ <87d1nbovp7.fsf@linux.intel.com>
+ <20160621080209.GC5108@shlinux2>
+ <87mvmfneeq.fsf@linux.intel.com>
+ <20160621091437.GE5108@shlinux2>
+ <87fus6n2iz.fsf@linux.intel.com>
+ <20160621131205.GG5108@shlinux2>
+ <874m8mmwdo.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1466565413-31027-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, radek.dostal-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <874m8mmwdo.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Initial release for rk3229 evb board, and turn the GMAC on.
+On Tue, Jun 21, 2016 at 05:47:47PM +0300, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+> >> >> >> >> >>> + * @otg_dev: OTG controller device, if needs to be used with OTG core.
+> >> >> >> >> >> 
+> >> >> >> >> >> do you really know of any platform which has a separate OTG controller?
+> >> >> >> >> >> 
+> >> >> >> >> >
+> >> >> >> >> > Andrew had pointed out in [1] that Tegra210 has separate blocks for OTG, host
+> >> >> >> >> > and gadget.
+> >> >> >> >> >
+> >> >> >> >> > [1] http://article.gmane.org/gmane.linux.ports.tegra/22969
+> >> >> >> >> 
+> >> >> >> >> that's not an OTG controller, it's just a mux. No different than Intel's
+> >> >> >> >> mux for swapping between XHCI and peripheral-only DWC3.
+> >> >> >> >> 
+> >> >> >> >> frankly, I would NEVER talk about OTG when type-C comes into play. They
+> >> >> >> >> are two competing standards and, apparently, type-C is winning when it
+> >> >> >> >> comes to role-swapping.
+> >> >> >> >> 
+> >> >> >> >
+> >> >> >> > In fact, OTG is mis-used by people. Currently, if the port is dual-role,
+> >> >> >> > It will be considered as an OTG port.
+> >> >> >> 
+> >> >> >> That's because "dual-role" is a non-standard OTG. Seen as people really
+> >> >> >> didn't care about OTG, we (linux-usb folks) ended up naturally referring
+> >> >> >> to "non-standard OTG" as "dual-role". Just to avoid confusion.
+> >> >> >
+> >> >> > So, unless we use OTG FSM defined in OTG spec, we should not mention
+> >> >> > "OTG" in Linux, right?
+> >> >> 
+> >> >> to avoid confusion with the terminology, yes. With that settled, let's
+> >> >> figure out how you can deliver what your marketting guys are asking of
+> >> >> you.
+> >> >> 
+> >> >
+> >> > Since nxp SoC claims they are OTG compliance, we need to pass usb.org
+> >> > test. The internal bsp has passed PET test, and formal compliance test
+> >> > is on the way (should pass too). 
+> >> >
+> >> > The dual-role and OTG compliance use the same zImage, but different
+> >> > dtb.
+> >> 
+> >> okay, that's good to know. Now, the question really is: considering we
+> >> only have one user for this generic OTG FSM layer, do we really need to
+> >> make it generic at all? I mean, just look at how invasive a change that
+> >> is.
+> >
+> > If the chipidea is the only user for this roger's framework, I don't
+> > think it is necessary. In fact, Roger introduces this framework, and
+> > the first user is dwc3, we think it can be used for others. Let's
+> 
+> Right, we need to look at the history of dwc3 to figure out why the
+> conclusion that dwc3 needs this was made.
+> 
+> Roger started working on this framework when Power on Reset section of
+> databook had some details which weren't always clear and, for safety, we
+> always had reset asserted for a really long time. It was so long (about
+> 400 ms) that resetting dwc3 for each role swap was just too much.
+> 
+> Coupled with that, the OTG chapter wasn't very clear either on
+> expections from Host and Peripheral side initialization in OTG/DRD
+> systems.
+> 
+> More recent version of dwc3 databook have a much better description of
+> how and which reset bits _must_ be asserted and which shouldn't be
+> touched unless it's for debugging purposes. When I implemented that, our
+> ->probe() went from 400ms down to about 50us.
+> 
+> Coupled with that, the OTG chapter also became a lot clearer to the
+> point that it states you just don't initialize anything other than the
+> OTG block, and just wait for OTG interrupt to do whatever it is you need
+> to do.
+> 
+> This meant that we could actually afford to do full reinitialization of
+> dwc3 on role swap (it's now only 50us anyway) and we knew how to swap
+> roles properly.
+> 
+> (The reason for needing soft-reset during role swap is kinda long. But
+> in summary dwc3 shadows register writes to both host and peripheral
+> sides)
+> 
+> > just discuss if it is necessary for dual-role switch.
+> 
+> fair. However, if we have a single user we don't have a Generic
+> layer. There's not enough variance to come up with truly generic
+> architecture for this.
+> 
+> -- 
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+I have put some points in my last reply [1], I summery it here to
+see if a generic framework is deserved or not?
 
----
+1. If there are some parts we can use during the role switch
+- The common start/stop host and peripheral operation
+eg, when switch from host to peripheral, all drivers can use
+usb_remove_hcd to finish it.
+- A common workqueue to handle vbus and id event
+- sysfs for role switch
 
-Changes in v2:
-- rename rk3228.dtsi to rk322x.dtsi
+2. Does a mux driver can do it well? Yoshihiro, here we need your
+point. The main point is if we need to call USB API to change
+roles (eg, usb_remove_hcd) during the role switch, thanks.
 
- arch/arm/boot/dts/Makefile       |    1 +
- arch/arm/boot/dts/rk3229-evb.dts |   90 ++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/rk3229.dtsi    |   45 +++++++++++++++++++
- 3 files changed, 136 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3229-evb.dts
- create mode 100644 arch/arm/boot/dts/rk3229.dtsi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 06b6c2d..5e0833f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -602,6 +602,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3066a-rayeager.dtb \
- 	rk3188-radxarock.dtb \
- 	rk3228-evb.dtb \
-+	rk3229-evb.dtb \
- 	rk3288-evb-act8846.dtb \
- 	rk3288-evb-rk808.dtb \
- 	rk3288-firefly-beta.dtb \
-diff --git a/arch/arm/boot/dts/rk3229-evb.dts b/arch/arm/boot/dts/rk3229-evb.dts
-new file mode 100644
-index 0000000..77a46c7
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3229-evb.dts
-@@ -0,0 +1,90 @@
-+/*
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *  Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "rk3229.dtsi"
-+
-+/ {
-+	model = "Rockchip RK3229 Evaluation board";
-+	compatible = "rockchip,rk3229-evb", "rockchip,rk3229";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x60000000 0x40000000>;
-+	};
-+
-+	ext_gmac: ext_gmac {
-+		compatible = "fixed-clock";
-+		clock-frequency = <125000000>;
-+		clock-output-names = "ext_gmac";
-+		#clock-cells = <0>;
-+	};
-+
-+	vcc_phy: vcc-phy-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		regulator-name = "vcc_phy";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&gmac {
-+	phy-supply = <&vcc_phy>;
-+	phy-mode = "rgmii";
-+	clock_in_out = "input";
-+	snps,reset-gpio = <&gpio2 24 GPIO_ACTIVE_LOW>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	assigned-clocks = <&cru SCLK_MAC_EXTCLK>, <&cru SCLK_MAC>;
-+	assigned-clock-parents = <&ext_gmac>, <&cru SCLK_MAC_EXTCLK>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	tx_delay = <0x30>;
-+	rx_delay = <0x10>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/rk3229.dtsi b/arch/arm/boot/dts/rk3229.dtsi
-new file mode 100644
-index 0000000..35ca047
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3229.dtsi
-@@ -0,0 +1,45 @@
-+/*
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "rk322x.dtsi"
-+
-+/ {
-+	compatible = "rockchip,rk3229";
-+};
+[1] http://www.spinics.net/lists/linux-usb/msg142974.html
 -- 
-1.7.9.5
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
