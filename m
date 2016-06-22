@@ -1,69 +1,116 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] coresight: document binding acronyms
-Date: Wed, 22 Jun 2016 10:18:18 +0100
-Message-ID: <576A57DA.8090309@arm.com>
-References: <1466534486-22422-1-git-send-email-mathieu.poirier@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: Add device-tree for ARM's AEMv8A-AEMv8A
+ FVP Base model
+Date: Wed, 22 Jun 2016 10:35:49 +0100
+Message-ID: <20160622093549.GA25837@leverpostej>
+References: <1466424796-13769-1-git-send-email-tixy@linaro.org>
+ <1466424796-13769-2-git-send-email-tixy@linaro.org>
+ <20160620123906.GC26152@leverpostej>
+ <1466433277.2833.33.camel@linaro.org>
+ <20160620145535.GC9246@leverpostej>
+ <1466532087.2856.66.camel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466534486-22422-1-git-send-email-mathieu.poirier@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, suzuki.poulose@arm.com, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, olof@lixom.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466532087.2856.66.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 21, 2016 at 07:01:27PM +0100, Jon Medhurst (Tixy) wrote:
+> On Mon, 2016-06-20 at 15:55 +0100, Mark Rutland wrote:
+> > On Mon, Jun 20, 2016 at 03:34:37PM +0100, Jon Medhurst (Tixy) wrote:
+> > > On Mon, 2016-06-20 at 13:39 +0100, Mark Rutland wrote:
+> > > > Hi,
+> > > > 
+> > > > On Mon, Jun 20, 2016 at 01:13:16PM +0100, Jon Medhurst wrote:
+> > > > > Fixed Virtual Platform (FVP) Base models are simulations of systems
+> > > > > that resemble Versatile Express or Juno hardware.
+> > > > > 
+> > > > > This adds a device-tree for the model variant that has two clusters of
+> > > > > Architecture Envelope Model (AEM) v8-A CPUs. The peripheral devices that
+> > > > > are common to all variants of Base models have been placed in a separate
+> > > > > file (fvp-base.dtsi) to facilitate creating device-trees for other
+> > > > > models.
+> > > > > 
+> > > > > It is desirable to use simulations for code testing purposes and so it
+> > > > > is beneficial to include nodes for things that are timing and power
+> > > > > consumption related, even when these don't otherwise have relevance or
+> > > > > accuracy. Where these have been included here (e.g. idle-states) entries
+> > > > > have been copied from real hardware platforms such as Juno.
+> > > > 
+> > > > Which firmware are you using,
+> > > 
+> > > ARM Trusted Firmware
+> > > 
+> > > >  and what precisely does it do w.r.t.
+> > > > those idle states?
+> > > 
+> > > I don't know, will check. Those states are also in the ARM TF
+> > > device-tree for the Base FVP [2] but I admit I didn't verify they were
+> > > correct. (Unlike real 'hardware' dt nodes, for which I methodically went
+> > > through documentation and LISA files to check and fix).
+> > > 
+> > > [2] https://github.com/ARM-software/arm-trusted-firmware/blob/master/fdts/fvp-base-gicv3-psci.dts
+> > > 
+> > > >  Judging by the FVP ATF pm code [1], those state IDs
+> > > > aren't valid (though perhaps the comment is wrong, or I've misunderstood
+> > > > something).
+> > > 
+> > > I'm not sure which comment you are referring to, that link [1] doesn't
+> > > seem to anchor to a particular source line in my web browser, and I
+> > > don't spot anything relevant scanning by eye.
+> > 
+> > Aargh, the web interface appears to have given me a duff URL. Let's try
+> > again [3]. ;)
+> > 
+> > The comments note state-ids 0x01, 0x02, and 0x22, which don't appear to
+> > match the DT. It might be that I've just misunderstood
+> 
+> That function is only compiled when ARM_RECOM_STATE_ID_ENC is true,
+> which it isn't when I build TF using "make PLAT=fvp ...." so I think
+> it's a red herring.
 
+Ah,ok.
 
-On 21/06/16 19:41, Mathieu Poirier wrote:
-> It can be hard for people not familiar with the CoreSight IP blocks
-> to make sense of the acronyms found in the current bindings.  As such
-> this patch expands each acronym in the hope of providing a better
-> description of the IP block they represent.
->
+> When I boot the FVP with my posted device-tree, the core run state icons
+> on the CLCD window behave as you would expect for CPUs and whole
+> clusters powering off/on as CPU's activity changes. So idle _looks_ like
+> it's working OK.
+> 
+> I also put printfs in ATF's psci_cpu_suspend() function and I can see
+> the values specified in device-tree being passed in and the code
+> behaving sensibly. From how it cracks the power_state value [4] it
+> certainly looks like the numbers have the following meanings:
+> 
+> top byte = 0..3 for the 'level' of the power state
+> top-but-one byte = 0/1 for Standby/Powerdown
+> 
+> For FVP [5], the level appears to be 0=CPU, 1=Cluster.
+> This matches what's in the device-tree I posted, where we have
+> 0x00010000 for CPU sleep, and 0x01010000 for cluster sleep.
+> 
+> All of which is a long way of saying that I believe the values that the
+> firmware guys and Linaro have been using for the past year or two are
+> correct ;-)
 
-Thanks for adding these info so quickly. Just a minor nit below.
+Great, thanks for digging into that, and apologies for the noise!
 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->   .../devicetree/bindings/arm/coresight.txt          | 32 ++++++++++++++++------
->   1 file changed, 24 insertions(+), 8 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index 93147c0c8a0e..c73a7f773998 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -12,14 +12,30 @@ its hardware characteristcs.
->
->   	* compatible: These have to be supplemented with "arm,primecell" as
->   	  drivers are using the AMBA bus interface.  Possible values include:
-> -		- "arm,coresight-etb10", "arm,primecell";
-> -		- "arm,coresight-tpiu", "arm,primecell";
-> -		- "arm,coresight-tmc", "arm,primecell";
-> -		- "arm,coresight-funnel", "arm,primecell";
-> -		- "arm,coresight-etm3x", "arm,primecell";
-> -		- "arm,coresight-etm4x", "arm,primecell";
-> -		- "qcom,coresight-replicator1x", "arm,primecell";
-> -		- "arm,coresight-stm", "arm,primecell"; [1]
-> +		- Embedded Trace Buffer (version 1.0):
-> +			"arm,coresight-etb10", "arm,primecell";
-> +
-> +		- Trace Port Interface Unit:
-> +			"arm,coresight-tpiu", "arm,primecell";
-> +
-> +		- Trace Memory Controller (ETB, ETF, ETR):
+Thanks,
+Mark.
 
-Only ETB is expanded in the list, does it make sense to expand ETF and
-ETR too ?
-
--- 
-Regards,
-Sudeep
+> 
+> > [3] https://github.com/ARM-software/arm-trusted-firmware/blob/6355f2347aec8bf6ad74867c2b0c996e10546ad4/plat/arm/board/fvp/fvp_pm.c#L53
+> 
+> [4] https://github.com/ARM-software/arm-trusted-firmware/blob/6355f2347aec8bf6ad74867c2b0c996e10546ad4/include/bl31/services/psci.h#L100
+> [5] https://github.com/ARM-software/arm-trusted-firmware/blob/6355f2347aec8bf6ad74867c2b0c996e10546ad4/plat/arm/board/fvp/fvp_pm.c#L195
+> 
+> -- 
+> Tixy
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
