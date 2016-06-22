@@ -1,180 +1,67 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v5 2/5] ARM: davinci: da8xx: Add CFGCHIP syscon platform
- declaration.
-Date: Wed, 22 Jun 2016 12:03:10 -0500
-Message-ID: <576AC4CE.1070506@lechnology.com>
-References: <1462837612-7803-1-git-send-email-david@lechnology.com>
- <1462837612-7803-3-git-send-email-david@lechnology.com>
- <7e0373cf-2ae9-e205-2226-0ded6894b709@cogentembedded.com>
- <57320FE6.60003@lechnology.com> <5745893C.5040603@ti.com>
+From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] pwm support for Broadcom iProc SoC's
+Date: Wed, 22 Jun 2016 10:06:26 -0700
+Message-ID: <576AC592.7030805@broadcom.com>
+References: <1466594987-26537-1-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5745893C.5040603-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1466594987-26537-1-git-send-email-yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
- From b0ae5eeba849b49f82980218a374c6d3f06487b8 Mon Sep 17 00:00:00 2001
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Date: Thu, 24 Mar 2016 01:38:54 -0500
-Subject: [PATCH] ARM: davinci: da8xx: Add CFGCHIP syscon platform 
-declaration.
+Hi Dhanajaya,
 
-The CFGCHIP registers are used by a number of devices, so using a syscon
-device to share them. The first consumer of this will by the phy-da8xx-usb
-driver.
+Patch series looks good.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
----
+Acked-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-the id of syscon is changed from 0 to -1.
+On 16-06-22 04:29 AM, Yendapally Reddy Dhananjaya Reddy wrote:
+> This patchset contains the pwm support for the Broadcom's iProc SoC's.
+>
+> The first patch provides the documentation details and the
+> second patch contains the controller support details. The third patch
+> contains the enable method for Northstar Plus SoC.
+>
+> This patch series has been tested on NSP bcm958625HR board.
+> The pwm is not enabled for this board as the pins are open and not used.
+>
+> This patch series is based on v4.7.0-rc1 and is available from github
+> repo: https://github.com/Broadcom/cygnus-linux.git
+> branch: iproc-pwm-v4
+>
+>
+> Changes since v3
+> Addressed comments from Scott to include COMPILE_TEST
+>
+> Changes since v2
+> Rebased on v4.7.0-rc1
+>
+> Changes since v1
+> Addressed the review comments from Thierry
+>   1. Use separate driver for iProc SoC's.
+>   2. Added Robs ack to the Documentation patch
+>
+> Yendapally Reddy Dhananjaya Reddy (3):
+>    Documentation: dt: Add Broadcom iproc pwm controller binding
+>    pwm: iproc: Add support for Broadcom iproc pwm controller
+>    ARM: dts: NSP: Add PWM Support to DT
+>
+>   .../devicetree/bindings/pwm/brcm,iproc-pwm.txt     |  21 ++
+>   arch/arm/boot/dts/bcm-nsp.dtsi                     |   8 +
+>   drivers/pwm/Kconfig                                |  10 +
+>   drivers/pwm/Makefile                               |   1 +
+>   drivers/pwm/pwm-bcm-iproc.c                        | 327 +++++++++++++++++++++
+>   5 files changed, 367 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
+>   create mode 100644 drivers/pwm/pwm-bcm-iproc.c
+>
 
-  arch/arm/mach-davinci/board-da830-evm.c     |  4 ++++
-  arch/arm/mach-davinci/board-da850-evm.c     |  4 ++++
-  arch/arm/mach-davinci/board-mityomapl138.c  |  4 ++++
-  arch/arm/mach-davinci/board-omapl138-hawk.c |  4 ++++
-  arch/arm/mach-davinci/devices-da8xx.c       | 28 
-++++++++++++++++++++++++++++
-  arch/arm/mach-davinci/include/mach/da8xx.h  |  2 ++
-  6 files changed, 46 insertions(+)
-
-diff --git a/arch/arm/mach-davinci/board-da830-evm.c 
-b/arch/arm/mach-davinci/board-da830-evm.c
-index 605d444..3051cb6 100644
---- a/arch/arm/mach-davinci/board-da830-evm.c
-+++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -586,6 +586,10 @@ static __init void da830_evm_init(void)
-  	struct davinci_soc_info *soc_info = &davinci_soc_info;
-  	int ret;
-
-+	ret = da8xx_register_cfgchip();
-+	if (ret)
-+		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
-+
-  	ret = da830_register_gpio();
-  	if (ret)
-  		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c 
-b/arch/arm/mach-davinci/board-da850-evm.c
-index 8e4539f..ec5cb10 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -1345,6 +1345,10 @@ static __init void da850_evm_init(void)
-  {
-  	int ret;
-
-+	ret = da8xx_register_cfgchip();
-+	if (ret)
-+		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
-+
-  	ret = da850_register_gpio();
-  	if (ret)
-  		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/board-mityomapl138.c 
-b/arch/arm/mach-davinci/board-mityomapl138.c
-index bc4e63f..1a6d430 100644
---- a/arch/arm/mach-davinci/board-mityomapl138.c
-+++ b/arch/arm/mach-davinci/board-mityomapl138.c
-@@ -514,6 +514,10 @@ static void __init mityomapl138_init(void)
-  {
-  	int ret;
-
-+	ret = da8xx_register_cfgchip();
-+	if (ret)
-+		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
-+
-  	/* for now, no special EDMA channels are reserved */
-  	ret = da850_register_edma(NULL);
-  	if (ret)
-diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c 
-b/arch/arm/mach-davinci/board-omapl138-hawk.c
-index d4930b6..8691a25 100644
---- a/arch/arm/mach-davinci/board-omapl138-hawk.c
-+++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
-@@ -294,6 +294,10 @@ static __init void omapl138_hawk_init(void)
-  {
-  	int ret;
-
-+	ret = da8xx_register_cfgchip();
-+	if (ret)
-+		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
-+
-  	ret = da850_register_gpio();
-  	if (ret)
-  		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/devices-da8xx.c 
-b/arch/arm/mach-davinci/devices-da8xx.c
-index 725e693..bf5f145 100644
---- a/arch/arm/mach-davinci/devices-da8xx.c
-+++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -11,6 +11,7 @@
-   * (at your option) any later version.
-   */
-  #include <linux/init.h>
-+#include <linux/platform_data/syscon.h>
-  #include <linux/platform_device.h>
-  #include <linux/dma-contiguous.h>
-  #include <linux/serial_8250.h>
-@@ -1109,3 +1110,30 @@ int __init da850_register_sata(unsigned long 
-refclkpn)
-  	return platform_device_register(&da850_sata_device);
-  }
-  #endif
-+
-+static struct syscon_platform_data da8xx_cfgchip_platform_data = {
-+	.label	= "cfgchip",
-+};
-+
-+static struct resource da8xx_cfgchip_resources[] = {
-+	{
-+		.start	= DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP0_REG,
-+		.end	= DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP4_REG + 3,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device da8xx_cfgchip_device = {
-+	.name	= "syscon",
-+	.id	= -1,
-+	.dev	= {
-+		.platform_data	= &da8xx_cfgchip_platform_data,
-+	},
-+	.num_resources	= ARRAY_SIZE(da8xx_cfgchip_resources),
-+	.resource	= da8xx_cfgchip_resources,
-+};
-+
-+int __init da8xx_register_cfgchip(void)
-+{
-+	return platform_device_register(&da8xx_cfgchip_device);
-+}
-diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h 
-b/arch/arm/mach-davinci/include/mach/da8xx.h
-index c367530..c32444b 100644
---- a/arch/arm/mach-davinci/include/mach/da8xx.h
-+++ b/arch/arm/mach-davinci/include/mach/da8xx.h
-@@ -61,6 +61,7 @@ extern unsigned int da850_max_speed;
-  #define DA8XX_CFGCHIP1_REG	0x180
-  #define DA8XX_CFGCHIP2_REG	0x184
-  #define DA8XX_CFGCHIP3_REG	0x188
-+#define DA8XX_CFGCHIP4_REG	0x18c
-
-  #define DA8XX_SYSCFG1_BASE	(IO_PHYS + 0x22C000)
-  #define DA8XX_SYSCFG1_VIRT(x)	(da8xx_syscfg1_base + (x))
-@@ -116,6 +117,7 @@ void da8xx_rproc_reserve_cma(void);
-  int da8xx_register_rproc(void);
-  int da850_register_gpio(void);
-  int da830_register_gpio(void);
-+int da8xx_register_cfgchip(void);
-
-  extern struct platform_device da8xx_serial_device[];
-  extern struct emac_platform_data da8xx_emac_pdata;
--- 
-2.7.4
-
-
+Regards,
+Scott
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
