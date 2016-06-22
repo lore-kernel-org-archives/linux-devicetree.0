@@ -1,12 +1,13 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 1/2] clk: fixed-factor: Allow for a few clocks to change the
- parent rate
-Date: Wed, 22 Jun 2016 11:15:54 +0200
-Message-ID: <20160622091555.18415-1-maxime.ripard@free-electrons.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] coresight: document binding acronyms
+Date: Wed, 22 Jun 2016 10:18:18 +0100
+Message-ID: <576A57DA.8090309@arm.com>
+References: <1466534486-22422-1-git-send-email-mathieu.poirier@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1466534486-22422-1-git-send-email-mathieu.poirier@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,74 +17,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jongsung Kim <neidhard.kim@lge.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, suzuki.poulose@arm.com, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, olof@lixom.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The only way for a fixed factor clock to change its rate would be to change
-its parent rate.
 
-Since passing blindly CLK_SET_RATE_PARENT might break a lot of platforms
-that were relying on the fact that the parent rate wouldn't change,
-introduce a compatible-based whitelist that will allow clocks to opt-in
-that flag.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- .../devicetree/bindings/clock/fixed-factor-clock.txt          |  4 ++++
- drivers/clk/clk-fixed-factor.c                                | 11 ++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+On 21/06/16 19:41, Mathieu Poirier wrote:
+> It can be hard for people not familiar with the CoreSight IP blocks
+> to make sense of the acronyms found in the current bindings.  As such
+> this patch expands each acronym in the hope of providing a better
+> description of the IP block they represent.
+>
 
-diff --git a/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-index 1bae8527eb9b..189467a7188a 100644
---- a/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-@@ -14,6 +14,10 @@ Required properties:
- Optional properties:
- - clock-output-names : From common clock binding.
- 
-+Some clocks that require special treatments are also handled by that
-+driver, with the compatibles:
-+  - allwinner,sun4i-a10-pll3-2x-clk
-+
- Example:
- 	clock {
- 		compatible = "fixed-factor-clock";
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index 75cd6c792cb8..4db3be214077 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -142,6 +142,11 @@ void clk_hw_unregister_fixed_factor(struct clk_hw *hw)
- EXPORT_SYMBOL_GPL(clk_hw_unregister_fixed_factor);
- 
- #ifdef CONFIG_OF
-+static const struct of_device_id set_rate_parent_matches[] = {
-+	{ .compatible = "allwinner,sun4i-a10-pll3-2x-clk" },
-+	{ /* Sentinel */ },
-+};
-+
- /**
-  * of_fixed_factor_clk_setup() - Setup function for simple fixed factor clock
-  */
-@@ -150,6 +155,7 @@ void __init of_fixed_factor_clk_setup(struct device_node *node)
- 	struct clk *clk;
- 	const char *clk_name = node->name;
- 	const char *parent_name;
-+	unsigned long flags = 0;
- 	u32 div, mult;
- 
- 	if (of_property_read_u32(node, "clock-div", &div)) {
-@@ -167,7 +173,10 @@ void __init of_fixed_factor_clk_setup(struct device_node *node)
- 	of_property_read_string(node, "clock-output-names", &clk_name);
- 	parent_name = of_clk_get_parent_name(node, 0);
- 
--	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
-+	if (of_match_node(set_rate_parent_matches, node))
-+		flags |= CLK_SET_RATE_PARENT;
-+
-+	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, flags,
- 					mult, div);
- 	if (!IS_ERR(clk))
- 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+Thanks for adding these info so quickly. Just a minor nit below.
+
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>   .../devicetree/bindings/arm/coresight.txt          | 32 ++++++++++++++++------
+>   1 file changed, 24 insertions(+), 8 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index 93147c0c8a0e..c73a7f773998 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -12,14 +12,30 @@ its hardware characteristcs.
+>
+>   	* compatible: These have to be supplemented with "arm,primecell" as
+>   	  drivers are using the AMBA bus interface.  Possible values include:
+> -		- "arm,coresight-etb10", "arm,primecell";
+> -		- "arm,coresight-tpiu", "arm,primecell";
+> -		- "arm,coresight-tmc", "arm,primecell";
+> -		- "arm,coresight-funnel", "arm,primecell";
+> -		- "arm,coresight-etm3x", "arm,primecell";
+> -		- "arm,coresight-etm4x", "arm,primecell";
+> -		- "qcom,coresight-replicator1x", "arm,primecell";
+> -		- "arm,coresight-stm", "arm,primecell"; [1]
+> +		- Embedded Trace Buffer (version 1.0):
+> +			"arm,coresight-etb10", "arm,primecell";
+> +
+> +		- Trace Port Interface Unit:
+> +			"arm,coresight-tpiu", "arm,primecell";
+> +
+> +		- Trace Memory Controller (ETB, ETF, ETR):
+
+Only ETB is expanded in the list, does it make sense to expand ETF and
+ETR too ?
+
 -- 
-2.9.0
+Regards,
+Sudeep
