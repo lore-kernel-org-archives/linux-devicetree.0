@@ -1,68 +1,108 @@
-From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] pwm support for Broadcom iProc SoC's
-Date: Wed, 22 Jun 2016 10:06:26 -0700
-Message-ID: <576AC592.7030805@broadcom.com>
-References: <1466594987-26537-1-git-send-email-yendapally.reddy@broadcom.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] ARM: davinci: da8xx: Add CFGCHIP syscon platform
+ declaration.
+Date: Wed, 22 Jun 2016 12:07:25 -0500
+Message-ID: <576AC5CD.2010107@lechnology.com>
+References: <1462837612-7803-1-git-send-email-david@lechnology.com>
+ <1462837612-7803-3-git-send-email-david@lechnology.com>
+ <7e0373cf-2ae9-e205-2226-0ded6894b709@cogentembedded.com>
+ <57320FE6.60003@lechnology.com> <5745893C.5040603@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466594987-26537-1-git-send-email-yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5745893C.5040603-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dhanajaya,
+On 05/25/2016 06:15 AM, Sekhar Nori wrote:
+> On Tuesday 10 May 2016 10:14 PM, David Lechner wrote:
+>> On 05/10/2016 06:26 AM, Sergei Shtylyov wrote:
+>>> On 5/10/2016 2:46 AM, David Lechner wrote:
+>>>
+>>>> The CFGCHIP registers are used by a number of devices, so using a syscon
+>>>> device to share them. The first consumer of this will by the
+>>>> phy-da8xx-usb
+>>>> driver.
+>>>>
+>>>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>>> [...]
+>>>> diff --git a/arch/arm/mach-davinci/devices-da8xx.c
+>>>> b/arch/arm/mach-davinci/devices-da8xx.c
+>>>> index 725e693..69d11a1 100644
+>>>> --- a/arch/arm/mach-davinci/devices-da8xx.c
+>>>> +++ b/arch/arm/mach-davinci/devices-da8xx.c
+>>>> @@ -11,6 +11,7 @@
+>>>>    * (at your option) any later version.
+>>>>    */
+>>>>   #include <linux/init.h>
+>>>> +#include <linux/platform_data/syscon.h>
+>>>>   #include <linux/platform_device.h>
+>>>>   #include <linux/dma-contiguous.h>
+>>>>   #include <linux/serial_8250.h>
+>>>> @@ -1109,3 +1110,30 @@ int __init da850_register_sata(unsigned long
+>>>> refclkpn)
+>>>>       return platform_device_register(&da850_sata_device);
+>>>>   }
+>>>>   #endif
+>>>> +
+>>>> +static struct syscon_platform_data da8xx_cfgchip_platform_data = {
+>>>> +    .label    = "cfgchip",
+>>>> +};
+>>>> +
+>>>> +static struct resource da8xx_cfgchip_resources[] = {
+>>>> +    {
+>>>> +        .start    = DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP0_REG,
+>>>> +        .end    = DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP4_REG + 3,
+>>>> +        .flags    = IORESOURCE_MEM,
+>>>> +    },
+>>>> +};
+>>>> +
+>>>> +static struct platform_device da8xx_cfgchip_device = {
+>>>> +    .name    = "syscon",
+>>>> +    .id    = 0,
+>>>
+>>>      Again, -1.
+>>>
+>>> [...]
+>>>
+>>> MBR, Sergei
+>>>
+>>
+>> I wish you would have noticed this when I first submitted it. I remember
+>> going back and forth about this. But it has been too long and I can't
+>> remember the reason why I chose to go this way.
+>>
+>> It seems like changing it broke something with either this one or the
+>> phy device and I opted to keep it this way on both to be consistent. For
+>> example, the USB devices both use id = 0 as well even though there are
+>> only one of each type.
+>
+> Agree with Sergei here. Can you confirm what broke exactly? I think the
+> USB needs to be fixed too.
+>
+> Thanks,
+> Sekhar
+>
 
-Patch series looks good.
+I have made the changes from id = 0 to id = -1. I'm not sure what broke 
+before, but it is working now.
 
-Acked-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Re: USB needing fixed, I'm not sure how to do this and I won't have time 
+for at least the next 2 or 3 months to do anything about it. The problem 
+is that the MUSB can't detect the ID pin. As a workaround, it is
+detecting the VBUS state and using that to determine the ID pin state. 
+So, when you attach a self-powered device, it tells the VBUS to turn 
+off, which in turn triggers the workaround to say that the ID pin has 
+changed state.
 
-On 16-06-22 04:29 AM, Yendapally Reddy Dhananjaya Reddy wrote:
-> This patchset contains the pwm support for the Broadcom's iProc SoC's.
->
-> The first patch provides the documentation details and the
-> second patch contains the controller support details. The third patch
-> contains the enable method for Northstar Plus SoC.
->
-> This patch series has been tested on NSP bcm958625HR board.
-> The pwm is not enabled for this board as the pins are open and not used.
->
-> This patch series is based on v4.7.0-rc1 and is available from github
-> repo: https://github.com/Broadcom/cygnus-linux.git
-> branch: iproc-pwm-v4
->
->
-> Changes since v3
-> Addressed comments from Scott to include COMPILE_TEST
->
-> Changes since v2
-> Rebased on v4.7.0-rc1
->
-> Changes since v1
-> Addressed the review comments from Thierry
->   1. Use separate driver for iProc SoC's.
->   2. Added Robs ack to the Documentation patch
->
-> Yendapally Reddy Dhananjaya Reddy (3):
->    Documentation: dt: Add Broadcom iproc pwm controller binding
->    pwm: iproc: Add support for Broadcom iproc pwm controller
->    ARM: dts: NSP: Add PWM Support to DT
->
->   .../devicetree/bindings/pwm/brcm,iproc-pwm.txt     |  21 ++
->   arch/arm/boot/dts/bcm-nsp.dtsi                     |   8 +
->   drivers/pwm/Kconfig                                |  10 +
->   drivers/pwm/Makefile                               |   1 +
->   drivers/pwm/pwm-bcm-iproc.c                        | 327 +++++++++++++++++++++
->   5 files changed, 367 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.txt
->   create mode 100644 drivers/pwm/pwm-bcm-iproc.c
->
+If anyone has any ideas on what to do about this, I will be glad to have 
+a look at it. It will just have to wait a bit though.
 
-Regards,
-Scott
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
