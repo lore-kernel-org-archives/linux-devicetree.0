@@ -1,8 +1,7 @@
 From: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/4] dt/bindings: Add bindings for Micro
- Crystal rv8803
-Date: Wed, 22 Jun 2016 08:42:20 +0200
-Message-ID: <1466577742-18824-3-git-send-email-dirk.behme@de.bosch.com>
+Subject: [PATCH v2 1/4] devicetree: Add Micro Crystal AG vendor id
+Date: Wed, 22 Jun 2016 08:42:19 +0200
+Message-ID: <1466577742-18824-2-git-send-email-dirk.behme@de.bosch.com>
 References: <1466577742-18824-1-git-send-email-dirk.behme@de.bosch.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -22,43 +21,24 @@ List-Id: devicetree@vger.kernel.org
 
 From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 
-... and Epson RX8900 real time clock
-
 Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- .../devicetree/bindings/rtc/epson,rx8900.txt       | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx8900.txt
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/epson,rx8900.txt b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
-new file mode 100644
-index 0000000..3f61e51
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
-@@ -0,0 +1,22 @@
-+Real Time Clock driver for:
-+  - Epson RX8900
-+  - Micro Crystal rv8803
-+
-+Required properties:
-+- compatible: should be: "microcrystal,rv8803" or "epson,rx8900"
-+- reg : the I2C address of the device for I2C
-+
-+Optional properties:
-+- epson,vdet-disable : boolean, if present will disable voltage detector.
-+  Should be set if no backup battery is used.
-+- trickle-diode-disable : boolean, if present will disable internal trickle
-+  charger diode
-+
-+Example:
-+
-+	rtc: rtc@32 {
-+		compatible = "epson,rx8900"
-+		reg = <0x32>;
-+		epson,vdet-disable;
-+		trickle-diode-disable;
-+	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 2c2500d..7a1d5ea 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -158,6 +158,7 @@ melexis	Melexis N.V.
+ merrii	Merrii Technology Co., Ltd.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
++microcrystal	Micro Crystal AG
+ micron	Micron Technology Inc.
+ minix	MINIX Technology Ltd.
+ mitsubishi	Mitsubishi Electric Corporation
 -- 
 1.9.1
 
