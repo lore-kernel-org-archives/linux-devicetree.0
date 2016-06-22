@@ -1,93 +1,331 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [PATCH v5 1/8] Documentation: arm: define DT cpu
- capacity-dmips-mhz bindings
-Date: Wed, 22 Jun 2016 17:51:12 +0100
-Message-ID: <20160622165112.GD5981@e106622-lin>
-References: <1465985877-18271-1-git-send-email-juri.lelli@arm.com>
- <1465985877-18271-2-git-send-email-juri.lelli@arm.com>
- <CAL_JsqJwQVsn3=6vQus4Q2OhnLUsJVN70j2+f3QoJejcb=p9YA@mail.gmail.com>
- <20160616082042.GI5981@e106622-lin>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v5 4/7] phy: da8xx-usb: new driver for DA8xx SoC USB PHY
+Date: Wed, 22 Jun 2016 11:58:52 -0500
+Message-ID: <576AC3CC.30206@lechnology.com>
+References: <1462837203-12125-1-git-send-email-david@lechnology.com>
+ <1462837203-12125-5-git-send-email-david@lechnology.com>
+ <575ABDB9.8000502@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160616082042.GI5981@e106622-lin>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, peterz@infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, dietmar.eggemann@arm.com, Mark Brown <broonie@kernel.org>, sgurrappadi@nvidia.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575ABDB9.8000502-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+ From 2261f0ea15690623dcefd71b8aaaea6089b16468 Mon Sep 17 00:00:00 2001
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Date: Wed, 16 Mar 2016 14:16:08 -0500
+Subject: [PATCH] phy: da8xx-usb: new driver for DA8xx SoC USB PHY
 
-On 16/06/16 09:20, Juri Lelli wrote:
-> Hi,
-> 
-> On 15/06/16 17:11, Rob Herring wrote:
-> > On Wed, Jun 15, 2016 at 5:17 AM, Juri Lelli <juri.lelli@arm.com> wrote:
-> 
-> [...]
-> 
-> > > +==========================================
-> > > +2 - CPU capacity definition
-> > > +==========================================
-> > > +
-> > > +CPU capacity is a number that provides the scheduler information about CPUs
-> > > +heterogeneity. Such heterogeneity can come from micro-architectural differences
-> > > +(e.g., ARM big.LITTLE systems) or maximum frequency at which CPUs can run
-> > > +(e.g., SMP systems with multiple frequency domains). Heterogeneity in this
-> > > +context is about differing performance characteristics; this binding tries to
-> > > +capture a first-order approximation of the relative performance of CPUs.
-> > > +
-> > > +CPU capacities are obtained by running a suitable benchmark. This binding makes
-> > > +no aspersions on the validity or suitability of any particular benchmark, the
-> > > +final capacity should, however, be:
-> > > +
-> > > +* A "single-threaded" or CPU affine benchmark
-> > > +* Divided by the running frequency of the CPU executing the benchmark
-> > > +* Not subject to dynamic frequency scaling of the CPU
-> > > +
-> > > +For the time being we however advise usage of the Dhrystone benchmark. What
-> > > +above thus becomes:
-> > > +
-> > > +CPU capacities are obtained by running the Dhrystone benchmark on each CPU at
-> > > +max frequency. The obtained DMIPS score is then divided by the frequency (in
-> > > +MHz) at which the benchmark has been run, so that DMIPS/MHz are obtained.
-> > > +Such values are then normalized w.r.t. the highest score obtained in the
-> > > +system.
-> > 
-> > So the property says it represents DMIPS/MHz, but we take that and
-> > "normalize" them back to a made up numbers?
-> 
-> The normalization step is required if one wants to prevent
-> cross-platform comparisons (I think that's what vendors generally want).
-> They are not made up, they still come from measured DMIPS/MHz values.
-> 
-> > Perhaps that step should
-> > be optional. Then paranoid Si vendors can put their fake numbers in
-> > and end users can update the dts files with real numbers.
-> > 
-> 
-> But, you can also decide to skip that step and put non normalized
-> numbers in. This documentation is advising people for what seems to be
-> be the most common way of coming up with values that, once in a DT,
-> won't be used to compare perf of different platforms.
-> 
-> Maybe we want to add a paragraph clearly stating this point?
-> 
-> > Is there any point in allowing people to pick their own scale? Why not
-> > just 100 (as in percent)?
-> > 
-> 
-> I think we agreed that not picking any particular scale is more flexible
-> and easier to use. For example, if there is a 2x factor between you cpus
-> you can simply put 1 and 2 there. But, if you need higher "resolution"
-> you can put whatever suits you better and we'll use the max as scale.
-> 
-> Thanks a lot for the review.
-> 
+This is a new phy driver for the SoC USB controllers on the TI DA8xx
+family of microcontrollers. The USB 1.1 PHY is just a simple on/off.
+The USB 2.0 PHY also allows overriding the VBUS and ID pins.
 
-Do you have any further comments on this point?
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Reviewed-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+---
 
-Best,
+Just one small change here. Changed "syscon.0" to "syscon"
 
-- Juri
+
+  drivers/phy/Kconfig         |  10 ++
+  drivers/phy/Makefile        |   1 +
+  drivers/phy/phy-da8xx-usb.c | 244 
+++++++++++++++++++++++++++++++++++++++++++++
+  3 files changed, 255 insertions(+)
+  create mode 100644 drivers/phy/phy-da8xx-usb.c
+
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 26566db..c1d315f 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -35,6 +35,16 @@ config ARMADA375_USBCLUSTER_PHY
+  	depends on OF && HAS_IOMEM
+  	select GENERIC_PHY
+
++config PHY_DA8XX_USB
++	tristate "TI DA8xx USB PHY Driver"
++	depends on ARCH_DAVINCI_DA8XX
++	select GENERIC_PHY
++	select MFD_SYSCON
++	help
++	  Enable this to support the USB PHY on DA8xx SoCs.
++
++	  This driver controls both the USB 1.1 PHY and the USB 2.0 PHY.
++
+  config PHY_DM816X_USB
+  	tristate "TI dm816x USB PHY driver"
+  	depends on ARCH_OMAP2PLUS
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 24596a9..722e01c 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -5,6 +5,7 @@
+  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+  obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
+  obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
++obj-$(CONFIG_PHY_DA8XX_USB)		+= phy-da8xx-usb.o
+  obj-$(CONFIG_PHY_DM816X_USB)		+= phy-dm816x-usb.o
+  obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+  obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+diff --git a/drivers/phy/phy-da8xx-usb.c b/drivers/phy/phy-da8xx-usb.c
+new file mode 100644
+index 0000000..79af8d2
+--- /dev/null
++++ b/drivers/phy/phy-da8xx-usb.c
+@@ -0,0 +1,244 @@
++/*
++ * phy-da8xx-usb - TI DaVinci DA8xx USB PHY driver
++ *
++ * Copyright (C) 2016 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/mfd/da8xx-cfgchip.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++struct da8xx_usb_phy {
++	struct phy_provider	*phy_provider;
++	struct phy		*usb11_phy;
++	struct phy		*usb20_phy;
++	struct clk		*usb11_clk;
++	struct clk		*usb20_clk;
++	struct regmap		*regmap;
++};
++
++static int da8xx_usb11_phy_power_on(struct phy *phy)
++{
++	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
++	int ret;
++
++	ret = clk_prepare_enable(d_phy->usb11_clk);
++	if (ret)
++		return ret;
++
++	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_USB1SUSPENDM,
++			  CFGCHIP2_USB1SUSPENDM);
++
++	return 0;
++}
++
++static int da8xx_usb11_phy_power_off(struct phy *phy)
++{
++	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
++
++	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_USB1SUSPENDM, 0);
++
++	clk_disable_unprepare(d_phy->usb11_clk);
++
++	return 0;
++}
++
++static const struct phy_ops da8xx_usb11_phy_ops = {
++	.power_on	= da8xx_usb11_phy_power_on,
++	.power_off	= da8xx_usb11_phy_power_off,
++	.owner		= THIS_MODULE,
++};
++
++static int da8xx_usb20_phy_power_on(struct phy *phy)
++{
++	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
++	int ret;
++
++	ret = clk_prepare_enable(d_phy->usb20_clk);
++	if (ret)
++		return ret;
++
++	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_OTGPWRDN, 0);
++
++	return 0;
++}
++
++static int da8xx_usb20_phy_power_off(struct phy *phy)
++{
++	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
++
++	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_OTGPWRDN,
++			  CFGCHIP2_OTGPWRDN);
++
++	clk_disable_unprepare(d_phy->usb20_clk);
++
++	return 0;
++}
++
++static int da8xx_usb20_phy_set_mode(struct phy *phy, enum phy_mode mode)
++{
++	struct da8xx_usb_phy *d_phy = phy_get_drvdata(phy);
++	u32 val;
++
++	switch (mode) {
++	case PHY_MODE_USB_HOST:		/* Force VBUS valid, ID = 0 */
++		val = CFGCHIP2_OTGMODE_FORCE_HOST;
++		break;
++	case PHY_MODE_USB_DEVICE:	/* Force VBUS valid, ID = 1 */
++		val = CFGCHIP2_OTGMODE_FORCE_DEVICE;
++		break;
++	case PHY_MODE_USB_OTG:	/* Don't override the VBUS/ID comparators */
++		val = CFGCHIP2_OTGMODE_NO_OVERRIDE;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	regmap_write_bits(d_phy->regmap, CFGCHIP(2), CFGCHIP2_OTGMODE_MASK, val);
++
++	return 0;
++}
++
++static const struct phy_ops da8xx_usb20_phy_ops = {
++	.power_on	= da8xx_usb20_phy_power_on,
++	.power_off	= da8xx_usb20_phy_power_off,
++	.set_mode	= da8xx_usb20_phy_set_mode,
++	.owner		= THIS_MODULE,
++};
++
++static struct phy *da8xx_usb_phy_of_xlate(struct device *dev,
++					 struct of_phandle_args *args)
++{
++	struct da8xx_usb_phy *d_phy = dev_get_drvdata(dev);
++
++	if (!d_phy)
++		return ERR_PTR(-ENODEV);
++
++	switch (args->args[0]) {
++	case 0:
++		return d_phy->usb20_phy;
++	case 1:
++		return d_phy->usb11_phy;
++	default:
++		return ERR_PTR(-EINVAL);
++	}
++}
++
++static int da8xx_usb_phy_probe(struct platform_device *pdev)
++{
++	struct device		*dev = &pdev->dev;
++	struct device_node	*node = dev->of_node;
++	struct da8xx_usb_phy	*d_phy;
++
++	d_phy = devm_kzalloc(dev, sizeof(*d_phy), GFP_KERNEL);
++	if (!d_phy)
++		return -ENOMEM;
++
++	if (node)
++		d_phy->regmap = syscon_regmap_lookup_by_compatible(
++							"ti,da830-cfgchip");
++	else
++		d_phy->regmap = syscon_regmap_lookup_by_pdevname("syscon");
++	if (IS_ERR(d_phy->regmap)) {
++		dev_err(dev, "Failed to get syscon\n");
++		return PTR_ERR(d_phy->regmap);
++	}
++
++	d_phy->usb11_clk = devm_clk_get(dev, "usb11_phy");
++	if (IS_ERR(d_phy->usb11_clk)) {
++		dev_err(dev, "Failed to get usb11_phy clock\n");
++		return PTR_ERR(d_phy->usb11_clk);
++	}
++
++	d_phy->usb20_clk = devm_clk_get(dev, "usb20_phy");
++	if (IS_ERR(d_phy->usb20_clk)) {
++		dev_err(dev, "Failed to get usb20_phy clock\n");
++		return PTR_ERR(d_phy->usb20_clk);
++	}
++
++	d_phy->usb11_phy = devm_phy_create(dev, node, &da8xx_usb11_phy_ops);
++	if (IS_ERR(d_phy->usb11_phy)) {
++		dev_err(dev, "Failed to create usb11 phy\n");
++		return PTR_ERR(d_phy->usb11_phy);
++	}
++
++	d_phy->usb20_phy = devm_phy_create(dev, node, &da8xx_usb20_phy_ops);
++	if (IS_ERR(d_phy->usb20_phy)) {
++		dev_err(dev, "Failed to create usb20 phy\n");
++		return PTR_ERR(d_phy->usb20_phy);
++	}
++
++	platform_set_drvdata(pdev, d_phy);
++	phy_set_drvdata(d_phy->usb11_phy, d_phy);
++	phy_set_drvdata(d_phy->usb20_phy, d_phy);
++
++	if (node) {
++		d_phy->phy_provider = devm_of_phy_provider_register(dev,
++							da8xx_usb_phy_of_xlate);
++		if (IS_ERR(d_phy->phy_provider)) {
++			dev_err(dev, "Failed to create phy provider\n");
++			return PTR_ERR(d_phy->phy_provider);
++		}
++	} else {
++		int ret;
++
++		ret = phy_create_lookup(d_phy->usb11_phy, "usb-phy", "ohci.0");
++		if (ret)
++			dev_warn(dev, "Failed to create usb11 phy lookup\n");
++		ret = phy_create_lookup(d_phy->usb20_phy, "usb-phy",
++					"musb-da8xx");
++		if (ret)
++			dev_warn(dev, "Failed to create usb20 phy lookup\n");
++	}
++
++	return 0;
++}
++
++static int da8xx_usb_phy_remove(struct platform_device *pdev)
++{
++	struct da8xx_usb_phy *d_phy = platform_get_drvdata(pdev);
++
++	if (!pdev->dev.of_node) {
++		phy_remove_lookup(d_phy->usb20_phy, "usb-phy", "musb-da8xx");
++		phy_remove_lookup(d_phy->usb11_phy, "usb-phy", "ohci.0");
++	}
++
++	return 0;
++}
++
++static const struct of_device_id da8xx_usb_phy_ids[] = {
++	{ .compatible = "ti,da830-usb-phy" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, da8xx_usb_phy_ids);
++
++static struct platform_driver da8xx_usb_phy_driver = {
++	.probe	= da8xx_usb_phy_probe,
++	.remove	= da8xx_usb_phy_remove,
++	.driver	= {
++		.name	= "da8xx-usb-phy",
++		.of_match_table = da8xx_usb_phy_ids,
++	},
++};
++
++module_platform_driver(da8xx_usb_phy_driver);
++
++MODULE_ALIAS("platform:da8xx-usb-phy");
++MODULE_AUTHOR("David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>");
++MODULE_DESCRIPTION("TI DA8xx USB PHY driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
