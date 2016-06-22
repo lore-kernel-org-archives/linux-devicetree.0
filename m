@@ -1,88 +1,57 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 4.7 fix] ARM: dts: sunxi: Add pll3 to simplefb nodes
- clocks lists
-Date: Wed, 22 Jun 2016 11:52:03 +0200
-Message-ID: <20160622095203.GT26668@lukather>
-References: <1466456242-22841-1-git-send-email-hdegoede@redhat.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V3] ARM: dts: sun7i: Add dts file for
+ Bananapi M1 Plus board
+Date: Wed, 22 Jun 2016 11:57:23 +0200
+Message-ID: <20160622095723.GU26668@lukather>
+References: <20160617095602.14612-1-luoyi.ly@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6293865375946725239=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466456242-22841-1-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vKcNkqnJHUUp475E"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJOCVG5QKGQEE6UQOCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160617095602.14612-1-luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============6293865375946725239==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/7+LvQqw8N5lf/3J"
+--vKcNkqnJHUUp475E
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
+Hi,
 
---/7+LvQqw8N5lf/3J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jun 17, 2016 at 05:56:02PM +0800, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Add support for the Bananapi M1 Plus A20 development board from
+> sinovoip.com.cn . This board is nearly a clone of the Lemaker's
+> Bananapro, but differ with the wlan chipset connection and i2s pinout.
+> And I also enable the integrated audio codec on default.
 
-On Mon, Jun 20, 2016 at 10:57:22PM +0200, Hans de Goede wrote:
-> Now that we've a clock node describing pll3 we must add it to the
-> simplefb nodes clocks lists to avoid it getting turned off when
-> simplefb is used.
->=20
-> This fixes the screen going black when using simplefb.
->=20
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+This patch content is fine, but there's a lot of small issues:
+  - You're not indenting the nodes properly
+  - You're missing your Signed-off-by tag
+  - And probably other stuff
 
-Applied, thanks!
+This has all been reported by checkpatch.
+
+Make sure you run checkpatch, make the modifications needed so that
+you don't have any warnings or errors anymore, and resubmit it.
+
+Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---/7+LvQqw8N5lf/3J
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXal/DAAoJEBx+YmzsjxAghUgP/RVaeuwz6esTldGOMFRbNIOY
-u+k++ue7qyOj4kjwxSO2WJ2CUQzGu8nIHmXoshzxh2wsIz6P0KKPRCWEQ9ZBS14d
-wC8DAoi3r64SF8VUeicYOl0skLjacsV1jW+hkQyVKPqy7rt3JnhD5Agk8qG/0/tv
-BCT99S5tA6yvUqcU0qUix47WW7MoJP+6IMgCwu2+TQYHzQxLCA1o1Ni7K9DIzxb3
-gYAvAVCUpEU1UrQD+vsIwl81JQ3waOzJywjFoAZQs4hFktnshCzKalMi5Xh1QlKi
-Zz9keo+v6Iq6LSEax8mTao/YD5Nlm58foeVyXl+MYng4JSLSb33WMP9Ml3J50Umk
-7jIlkuN3AnAS6NkaF0a7g8Kp0pWQPIzccYJ0NzwvEGiMTEQAIczeQ9Rc3vOrGnpn
-Mx0VRIigIQCWf9btuKrGoIKoMTwSl2nioBucDtD/9TA/FPZB4pktTZKNT7VPUqNg
-t2WMEZpVB6ykmwrSHCpaXFwsQODMTC6e3OWaEhyrcj6uPYkdLqxOoh93ge124e7j
-MjsFfGnEO/kFpKg/KnMWjT59KQ9c7RMwDs+laYZLYEu+B+7xTQq3tYFeYJi+8nEE
-t22POwlnNTspr/ZkoIKtoSZIayTxvgKGw2w6gaxBmOK5N9wDB/mAAV1ys6/e1re8
-kwFCcUxP6tQWLOzjJCdM
-=linK
------END PGP SIGNATURE-----
-
---/7+LvQqw8N5lf/3J--
-
-
---===============6293865375946725239==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6293865375946725239==--
+--vKcNkqnJHUUp475E--
