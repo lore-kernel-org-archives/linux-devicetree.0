@@ -1,145 +1,88 @@
-From: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] iio: potentiometer: mcp4531: Add device tree binding
- documentation
-Date: Wed, 22 Jun 2016 08:19:04 +0200
-Message-ID: <b8fd47d0-f851-9700-e24c-4f33f5cf2342@heig-vd.ch>
-References: <1466492137-32683-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1466492137-32683-3-git-send-email-florian.vaussard@heig-vd.ch>
- <20160621214336.GB4370@rob-hp-laptop>
+From: Florian Vaussard <florian.vaussard@heig-vd.ch>
+Subject: Re: [PATCH 1/2] leds: ncp5623: Add device tree binding documentation
+Date: Wed, 22 Jun 2016 08:17:09 +0200
+Message-ID: <029fbebf-1fae-06c1-5cdb-07fe256d5130@heig-vd.ch>
+References: <1466494154-3786-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1466494154-3786-2-git-send-email-florian.vaussard@heig-vd.ch>
+ <20160621215218.GA12971@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160621214336.GB4370@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20160621215218.GA12971@rob-hp-laptop>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Florian Vaussard <florian.vaussard@gmail.com>
+Cc: devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Vaussard Florian <florian.vaussard@heig-vd.ch>
 List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
 
-Le 21. 06. 16 =E0 23:43, Rob Herring a =E9crit :
-> On Tue, Jun 21, 2016 at 08:55:36AM +0200, Florian Vaussard wrote:
->> Add the device tree documentation for all the supported parts. Apart=
- the
->> compatible string and standard I2C binding, no other binding is curr=
-ently
->> needed.
+Le 21. 06. 16 =E0 23:52, Rob Herring a =E9crit :
+> On Tue, Jun 21, 2016 at 09:29:13AM +0200, Florian Vaussard wrote:
+>> Add device tree binding documentation for On Semiconductor NCP5623 I=
+2C
+>> LED driver. The driver can independently control the PWM of the 3
+>> channels with 32 levels of intensity.
 >>
->> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+>> The current delivered by the current source can be controlled using =
+the
+>> led-max-microamp property. In order to control this value, it is als=
+o
+>> necessary to know the current on the Iref pin, hence the
+>> onnn,led-iref-microamp property. It is usually set using an external
+>> bias resistor, following Iref =3D Vref/Rbias with Vref=3D0.6V.
+>>
+>> Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
 >> ---
->>  .../bindings/iio/potentiometer/mcp4531.txt         | 84 +++++++++++=
+>>  .../devicetree/bindings/leds/leds-ncp5623.txt      | 44 +++++++++++=
 +++++++++++
->>  1 file changed, 84 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/potentiome=
-ter/mcp4531.txt
+>>  1 file changed, 44 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-ncp5=
+623.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/mcp=
-4531.txt b/Documentation/devicetree/bindings/iio/potentiometer/mcp4531.=
-txt
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-ncp5623.txt=
+ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
 >> new file mode 100644
->> index 0000000..b052299
+>> index 0000000..0dc8345
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/potentiometer/mcp4531.tx=
-t
->> @@ -0,0 +1,84 @@
->> +* Microchip MCP453X/454X/455X/456X/463X/464X/465X/466X Digital Pote=
-ntiometer
->> +  driver
+>> +++ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
+>> @@ -0,0 +1,44 @@
+>> +* ON Semiconductor - NCP5623 3-Channel LED Driver
 >> +
->> +The node for this driver must be a child node of a I2C controller, =
-hence
->> +all mandatory properties for your controller must be specified. See=
- directory:
->> +
->> +        Documentation/devicetree/bindings/i2c
->> +
->> +for more details.
+>> +The NCP5623 is a 3-channel I2C LED driver. The brightness of each
+>> +channel can be independently set using 32 levels. Each LED is repre=
+sented
+>> +as a sub-node of the device.
 >> +
 >> +Required properties:
->> +	- compatible:  	Must be one of the following, depending on the
->> +			model:
->> +			"microchip,mcp4531-502"
->=20
-> These can go in trivial-devices.txt
->=20
-
-Yes indeed. I will fix.
-
-Thanks for the review.
-
-=46lorian
-
->> +			"microchip,mcp4531-103"
->> +			"microchip,mcp4531-503"
->> +			"microchip,mcp4531-104"
->> +			"microchip,mcp4532-502"
->> +			"microchip,mcp4532-103"
->> +			"microchip,mcp4532-503"
->> +			"microchip,mcp4532-104"
->> +			"microchip,mcp4541-502"
->> +			"microchip,mcp4541-103"
->> +			"microchip,mcp4541-503"
->> +			"microchip,mcp4541-104"
->> +			"microchip,mcp4542-502"
->> +			"microchip,mcp4542-103"
->> +			"microchip,mcp4542-503"
->> +			"microchip,mcp4542-104"
->> +			"microchip,mcp4551-502"
->> +			"microchip,mcp4551-103"
->> +			"microchip,mcp4551-503"
->> +			"microchip,mcp4551-104"
->> +			"microchip,mcp4552-502"
->> +			"microchip,mcp4552-103"
->> +			"microchip,mcp4552-503"
->> +			"microchip,mcp4552-104"
->> +			"microchip,mcp4561-502"
->> +			"microchip,mcp4561-103"
->> +			"microchip,mcp4561-503"
->> +			"microchip,mcp4561-104"
->> +			"microchip,mcp4562-502"
->> +			"microchip,mcp4562-103"
->> +			"microchip,mcp4562-503"
->> +			"microchip,mcp4562-104"
->> +			"microchip,mcp4631-502"
->> +			"microchip,mcp4631-103"
->> +			"microchip,mcp4631-503"
->> +			"microchip,mcp4631-104"
->> +			"microchip,mcp4632-502"
->> +			"microchip,mcp4632-103"
->> +			"microchip,mcp4632-503"
->> +			"microchip,mcp4632-104"
->> +			"microchip,mcp4641-502"
->> +			"microchip,mcp4641-103"
->> +			"microchip,mcp4641-503"
->> +			"microchip,mcp4641-104"
->> +			"microchip,mcp4642-502"
->> +			"microchip,mcp4642-103"
->> +			"microchip,mcp4642-503"
->> +			"microchip,mcp4642-104"
->> +			"microchip,mcp4651-502"
->> +			"microchip,mcp4651-103"
->> +			"microchip,mcp4651-503"
->> +			"microchip,mcp4651-104"
->> +			"microchip,mcp4652-502"
->> +			"microchip,mcp4652-103"
->> +			"microchip,mcp4652-503"
->> +			"microchip,mcp4652-104"
->> +			"microchip,mcp4661-502"
->> +			"microchip,mcp4661-103"
->> +			"microchip,mcp4661-503"
->> +			"microchip,mcp4661-104"
->> +			"microchip,mcp4662-502"
->> +			"microchip,mcp4662-103"
->> +			"microchip,mcp4662-503"
->> +			"microchip,mcp4662-104"
->> +	-reg: Slave I2C address of the potentiometer
+>> +  - compatible: Should be "onnn,ncp5623"
+>> +  - reg: I2C slave address (fixed to 0x38)
+>> +  - #address-cells: must be 1
+>> +  - #size-cells: must be 0
+>> +  - onnn,led-iref-microamp: Current on the Iref pin in microampere
+>> +  - led-max-microamp: Desired maximum current for each LED in micro=
+ampere
+>> +                      (maximum 30000uA)
+>> +
+>> +LED sub-node properties:
+>> +  - reg : LED channel number (0..2)
+>> +  - For other LED properties see:
+>> +      Documentation/devicetree/bindings/leds/common.txt
 >> +
 >> +Example:
->> +mcp4561: mcp4561@2e {
->> +	compatible =3D "microchip,mcp4561-103";
->> +	reg =3D <0x2e>;
->> +};
->> --=20
->> 2.5.0
->>
+>> +
+>> +led1: ncp5623@38 {
+>> +	#address-cells =3D <1>;
+>> +	#size-cells =3D <0>;
+>> +	compatible =3D "onnn,ncp5623";
+>> +	reg =3D <0x38>;
+>> +
+>> +	led1_r@0 {
+>=20
+> Don't use underscores in node names.
+>=20
+
+Sorry for the mistake, I will fix.
+
+Thanks for the review,
+=46lorian
