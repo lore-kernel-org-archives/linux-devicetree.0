@@ -1,70 +1,34 @@
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 1/5] dt-bindings: Add binding for brcm,bcm2835-sdhost.
-Date: Wed, 22 Jun 2016 13:42:14 +0200
-Message-ID: <1466595738-2229-2-git-send-email-kraxel@redhat.com>
-References: <1466595738-2229-1-git-send-email-kraxel@redhat.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1466595738-2229-1-git-send-email-kraxel@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 0/5] pwm: Fixes and support for Tegra186
+Date: Wed, 22 Jun 2016 17:17:18 +0530
+Message-ID: <1466596043-27262-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, swarren@wwwdotorg.org, gnurou@gmail.com
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Anholt <eric@anholt.net>
+Have fixes for 100% duty cycle, avoid computation loss for duty
+period calculation and add support the Tegra186.
 
-This is the other SD controller on the platform, which can be swapped
-to the role of SD card host using pin muxing.
+Hyong Bin Kim (1):
+  pwm: tegra: fix overflow when calculating duty cycle
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- .../devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt |  3 +++
- .../bindings/mmc/brcm,bcm2835-sdhost.txt           | 24 ++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
+Laxman Dewangan (2):
+  pwm: tegra: Add DT node compatible for Tegra186
+  pwm: tegra: Add support for Tegra186
 
-diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-index 59476fb..3cc74e2 100644
---- a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-@@ -15,4 +15,7 @@ sdhci: sdhci {
- 	interrupts = <2 30>;
- 	clocks = <&clk_mmc>;
- 	bus-width = <4>;
-+	dmas = <&dma 13>,
-+	       <&dma 13>;
-+	dma-names = "tx", "rx";
- };
-diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-new file mode 100644
-index 0000000..074992c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-@@ -0,0 +1,24 @@
-+Broadcom BCM2835 SDHOST controller
-+
-+This file documents differences between the core properties described
-+by mmc.txt and the properties that represent the BCM2835 controller.
-+
-+Required properties:
-+- compatible: Should be "brcm,bcm2835-sdhci".
-+- clocks: The clock feeding the SDHOST controller.
-+
-+Optional properties:
-+- dmas: DMA channels for read and write.
-+          See Documentation/devicetree/bindings/dma/dma.txt for details
-+
-+Example:
-+
-+sdhost: sdhost@7e202000 {
-+	compatible = "brcm,bcm2835-sdhost";
-+	reg = <0x7e202000 0x100>;
-+	interrupts = <2 24>;
-+	clocks = <&clocks BCM2835_CLOCK_VPU>;
-+	dmas = <&dma 13>,
-+	       <&dma 13>;
-+	dma-names = "tx", "rx";
-+};
+Rohith Seelaboyina (1):
+  pwm: tegra: Add support for reset control
+
+Victor(Weiguo) Pan (1):
+  pwm: tegra: Allow 100% duty cycle
+
+ .../devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 10 +++--
+ drivers/pwm/pwm-tegra.c                            | 46 ++++++++++++++++++----
+ 2 files changed, 45 insertions(+), 11 deletions(-)
+
 -- 
-1.8.3.1
-
+2.1.4
