@@ -1,58 +1,72 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/6] regulator: core: Allow simultaneous use of enable op
- and GPIO
-Date: Wed, 22 Jun 2016 11:34:32 +0100
-Message-ID: <20160622103432.GJ28202@sirena.org.uk>
-References: <20160622082558.20935-1-acourbot@nvidia.com>
- <20160622082558.20935-2-acourbot@nvidia.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 12/15] net: davinci_mdio: document missed "ti,am4372-mdio"
+ compat string
+Date: Wed, 22 Jun 2016 13:26:45 +0300
+Message-ID: <576A67E5.5050106@ti.com>
+References: <20160615115603.4897-1-grygorii.strashko@ti.com>
+ <20160615115603.4897-13-grygorii.strashko@ti.com>
+ <20160619143543.GA14844@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ed/6oDxOLijJh8b0"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160622082558.20935-2-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gnurou@gmail.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160619143543.GA14844@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ivan Khoronzhuk <ivan.khoronzhuk-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/19/2016 05:35 PM, Rob Herring wrote:
+> On Wed, Jun 15, 2016 at 02:56:00PM +0300, Grygorii Strashko wrote:
+>> Document missed "ti,am4372-mdio" compat string used for TI am437x SoC
+>> (am4372.dtsi).
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/net/davinci-mdio.txt | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/davinci-mdio.txt b/Documentation/devicetree/bindings/net/davinci-mdio.txt
+>> index 0369e25..f2bba50 100644
+>> --- a/Documentation/devicetree/bindings/net/davinci-mdio.txt
+>> +++ b/Documentation/devicetree/bindings/net/davinci-mdio.txt
+>> @@ -2,7 +2,8 @@ TI SoC Davinci/Keystone2 MDIO Controller Device Tree Bindings
+>>   ---------------------------------------------------
+>>   
+>>   Required properties:
+>> -- compatible		: Should be "ti,davinci_mdio" or "ti,keystone_mdio"
+>> +- compatible		: Should be "ti,davinci_mdio", "ti,keystone_mdio",
+>> +			  "ti,am4372-mdio"
+> 
+> This is still an OR relationship?
 
---ed/6oDxOLijJh8b0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think it's AND relation. It should be smth. like this:
+ [SoC,][IP family,] "ti,davinci_mdio"
+where "ti,davinci_mdio" is mandatory always
+ [IP family] - mandatory for IP/SOC family and can be "ti,keystone_mdio" or "ti,cpsw-mdio" (last one is added by subsequent patch)
+ [SoC] - mandatory for SoC. now can be "ti,am4372-mdio"
 
-On Wed, Jun 22, 2016 at 05:25:53PM +0900, Alexandre Courbot wrote:
-> The current regulator enable/disable mechanism does not call the driver
-> enable/disable op if an enable GPIO is set. It may be desirable to use
-> both mechanisms though, e.g. in the case of a PWM regulator that also
-> has an enable GPIO.
->=20
-> _regulator_is_enabled() is also updated in order to take both enable
-> conditions into account.
+I can update it as below:
+- compatible		: Should be "ti,davinci_mdio"  
+			  and "ti,keystone_mdio" for Keystone 2 SoCs
+ 			  and "ti,am4372-mdio" for am472x SoC
+and in subsequent patch
+			 and "ti,cpsw-mdio" for am335x, am472x, am57xx/dra7, dm814x SoCs
+			 and "ti,am4372-mdio" for am472x SoC
 
-This is going to break or at least reduce the performance of a lot of
-users - it is very common for regulators to have configurable support
-for a GPIO enable in addition to a register enable with the GPIO enable
-replacing a register enable for improved performance.  If you have some
-strange device that requires GPIO and other operations the driver should
-handle that, if nothing else it's likely that there are sequencing
-requirements between the two which we are probably not going to get
-right for everyone in the core.
 
---ed/6oDxOLijJh8b0
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> 
+> It's preferred to list one per line.
 
-iQEcBAEBCAAGBQJXamm3AAoJECTWi3JdVIfQqUIH/RXwPp5XDZ45kUelY0D2b/i5
-3nq4Bw8T2Tjn4swVXs8XcSJCAUpy+gCXujoP5Bl8P97QR/9gauAy4LhSfSvVPIiv
-eBmc+fxTdyg4J/GntVUkX7nfbaQ65hwvXhrhGuRA+0PBavWE1s7uQEfLZtvAcgZ9
-0yPffVgNbSZjREa3m8bDhaN4E2Om8SLWhonb2d5TCkLhvTAOvQj1WK8YyLNwK4Bj
-W35d6jjrHXAg3bl51C9ebo4lSy0/jEujzf9TkGxERWCuzUMi7phCFdo4nFWGSGSc
-zjDFH1To2gprBiHEHrnkFR3KAPbfj2BzfWGmwUfJjeVSPwR2h9kKq1smI+W9a/Y=
-=Nj7h
------END PGP SIGNATURE-----
+ok
 
---ed/6oDxOLijJh8b0--
+
+
+-- 
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
