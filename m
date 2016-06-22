@@ -1,75 +1,58 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] i2c: hibvt: add Hisilicon BVT I2C controller driver
-Date: Wed, 22 Jun 2016 11:25:10 +0100
-Message-ID: <20160622102509.GD25837@leverpostej>
-References: <1466585726-28467-1-git-send-email-wenpan@hisilicon.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/6] regulator: core: Allow simultaneous use of enable op
+ and GPIO
+Date: Wed, 22 Jun 2016 11:34:32 +0100
+Message-ID: <20160622103432.GJ28202@sirena.org.uk>
+References: <20160622082558.20935-1-acourbot@nvidia.com>
+ <20160622082558.20935-2-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ed/6oDxOLijJh8b0"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466585726-28467-1-git-send-email-wenpan@hisilicon.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Pan Wen <wenpan@hisilicon.com>
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com
+In-Reply-To: <20160622082558.20935-2-acourbot@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gnurou@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 04:55:26PM +0800, Pan Wen wrote:
-> add Hisilicon BVT I2C controller driver support.
-> 
-> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
-> ---
->  .../devicetree/bindings/i2c/i2c-hibvt.txt          |  24 +
->  drivers/i2c/busses/Kconfig                         |  10 +
->  drivers/i2c/busses/Makefile                        |   1 +
->  drivers/i2c/busses/i2c-hibvt.c                     | 736 +++++++++++++++++++++
->  4 files changed, 771 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
->  create mode 100644 drivers/i2c/busses/i2c-hibvt.c
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
-> new file mode 100644
-> index 0000000..3aa2cee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
-> @@ -0,0 +1,24 @@
-> +Hisilicon BVT I2C master controller
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,hibvt-i2c".
-> +- reg: physical base address of the controller and length of memory mapped.
-> +     region.
-> +- interrupts: interrupt number to the cpu.
-> +- clocks: phandles to input clocks.
-> +
-> +Optional properties:
-> +- clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000.
-> +
-> +Other properties:
-> +see Documentation/devicetree/bindings/i2c/i2c.txt.
-> +
-> +Examples:
-> +i2c_bus0: i2c@12110000 {
-> +	compatible = "hisilicon,hibvt-i2c";
-> +	reg = <0x12110000 0x100>;
-> +	interrupts = <20>;
-> +	clocks = <&crg_ctrl HI3516CV300_APB_CLK>;
-> +	clock-names = "apb_pclk";
-> +	clock-frequency = <100000>;
-> +};
 
-The clock-names property was not described above, and the driver doesn't
-appear to use it.
+--ed/6oDxOLijJh8b0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please explciitly describe the clock-names you expect, and use them in
-the driver. If there is a single clock, then you can simply drop the
-clock-names property from the example.
+On Wed, Jun 22, 2016 at 05:25:53PM +0900, Alexandre Courbot wrote:
+> The current regulator enable/disable mechanism does not call the driver
+> enable/disable op if an enable GPIO is set. It may be desirable to use
+> both mechanisms though, e.g. in the case of a PWM regulator that also
+> has an enable GPIO.
+>=20
+> _regulator_is_enabled() is also updated in order to take both enable
+> conditions into account.
 
-Thanks,
-Mark.
+This is going to break or at least reduce the performance of a lot of
+users - it is very common for regulators to have configurable support
+for a GPIO enable in addition to a register enable with the GPIO enable
+replacing a register enable for improved performance.  If you have some
+strange device that requires GPIO and other operations the driver should
+handle that, if nothing else it's likely that there are sequencing
+requirements between the two which we are probably not going to get
+right for everyone in the core.
 
-> +	i2c->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(i2c->clk)) {
-> +		dev_err(i2c->dev, "cannot get clock\n");
-> +		return -ENOENT;
-> +	}
-> +	clk_prepare_enable(i2c->clk);
+--ed/6oDxOLijJh8b0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXamm3AAoJECTWi3JdVIfQqUIH/RXwPp5XDZ45kUelY0D2b/i5
+3nq4Bw8T2Tjn4swVXs8XcSJCAUpy+gCXujoP5Bl8P97QR/9gauAy4LhSfSvVPIiv
+eBmc+fxTdyg4J/GntVUkX7nfbaQ65hwvXhrhGuRA+0PBavWE1s7uQEfLZtvAcgZ9
+0yPffVgNbSZjREa3m8bDhaN4E2Om8SLWhonb2d5TCkLhvTAOvQj1WK8YyLNwK4Bj
+W35d6jjrHXAg3bl51C9ebo4lSy0/jEujzf9TkGxERWCuzUMi7phCFdo4nFWGSGSc
+zjDFH1To2gprBiHEHrnkFR3KAPbfj2BzfWGmwUfJjeVSPwR2h9kKq1smI+W9a/Y=
+=Nj7h
+-----END PGP SIGNATURE-----
+
+--ed/6oDxOLijJh8b0--
