@@ -1,84 +1,52 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH V2] coresight: document binding acronyms
-Date: Wed, 22 Jun 2016 09:01:03 -0600
-Message-ID: <1466607663-22599-1-git-send-email-mathieu.poirier@linaro.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] Documentation: mmc: add description for new caps
+Date: Wed, 22 Jun 2016 08:06:20 -0700
+Message-ID: <CAD=FV=WNaTEDyVNyteLq3O-BL9KxR49W=44jbXogKXd2dkDWDQ@mail.gmail.com>
+References: <1465373996-2485-1-git-send-email-shawn.lin@rock-chips.com> <1465374021-2526-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Suzuki.Poulose@arm.com, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465374021-2526-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It can be hard for people not familiar with the CoreSight IP blocks
-to make sense of the acronyms found in the current bindings.  As such
-this patch expands each acronym in the hope of providing a better
-description of the IP block they represent.
+Hi,
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- .../devicetree/bindings/arm/coresight.txt          | 35 +++++++++++++++++-----
- 1 file changed, 27 insertions(+), 8 deletions(-)
+On Wed, Jun 8, 2016 at 1:20 AM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Let's add some basic description for cap-no-sdio,
+> cap-no-sd and cap-no-mmc.
+>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> ---
+>
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index ecc007a..e16d42b 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -39,6 +39,9 @@ Optional properties:
+>  - cap-power-off-card: powering off the card is safe
+>  - cap-mmc-hw-reset: eMMC hardware reset is supported
+>  - cap-sdio-irq: enable SDIO IRQ signalling on this interface
+> +- cap-no-sdio: skip sending sdio cmd during initialization
+> +- cap-no-sd: skip sending sd cmd during initialization
+> +- cap-no-mmc: skip sending mmc cmd during initialization
 
-Changes since V1:
-   - Expanded ETB, ETF and ETR acronyms.
-   - Added note about using the same binding
-     for all 3 modes (ETB, ETF, ETR).
+In the past it has been determined that the "cap-" prefix is
+unnecessary.  Some properties still have "cap-" because of backward
+compatibility reasons, but as I understand it new properties shouldn't
+start with "cap-".
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index 93147c0c8a0e..fcbae6a5e6c1 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -12,14 +12,33 @@ its hardware characteristcs.
- 
- 	* compatible: These have to be supplemented with "arm,primecell" as
- 	  drivers are using the AMBA bus interface.  Possible values include:
--		- "arm,coresight-etb10", "arm,primecell";
--		- "arm,coresight-tpiu", "arm,primecell";
--		- "arm,coresight-tmc", "arm,primecell";
--		- "arm,coresight-funnel", "arm,primecell";
--		- "arm,coresight-etm3x", "arm,primecell";
--		- "arm,coresight-etm4x", "arm,primecell";
--		- "qcom,coresight-replicator1x", "arm,primecell";
--		- "arm,coresight-stm", "arm,primecell"; [1]
-+		- Embedded Trace Buffer (version 1.0):
-+			"arm,coresight-etb10", "arm,primecell";
-+
-+		- Trace Port Interface Unit:
-+			"arm,coresight-tpiu", "arm,primecell";
-+
-+		- Trace Memory Controller, used for Embedded Trace Buffer(ETB),
-+		  Embedded Trace FIFO(ETF) and Embedded Trace Router(ETR)
-+		  configuration.  The configuration mode (ETB, ETF, ETR) is
-+		  discovered at boot time when the device is probed.
-+			"arm,coresight-tmc", "arm,primecell";
-+
-+		- Trace Funnel:
-+			"arm,coresight-funnel", "arm,primecell";
-+
-+		- Embedded Trace Macrocell (version 3.x) and
-+					Program Flow Trace Macrocell:
-+			"arm,coresight-etm3x", "arm,primecell";
-+
-+		- Embedded Trace Macrocell (version 4.x):
-+			"arm,coresight-etm4x", "arm,primecell";
-+
-+		- Qualcomm Configurable Replicator (version 1.x):
-+			"qcom,coresight-replicator1x", "arm,primecell";
-+
-+		- System Trace Macrocell:
-+			"arm,coresight-stm", "arm,primecell"; [1]
- 
- 	* reg: physical base address and length of the register
- 	  set(s) of the component.
--- 
-2.7.4
+See <https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-June/034664.html>
+for reference.
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
