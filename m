@@ -1,189 +1,192 @@
-From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
-Date: Wed, 22 Jun 2016 09:56:22 +0300
-Message-ID: <87por9lnjd.fsf@linux.intel.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com> <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com> <87h9coxq04.fsf@linux.intel.com> <20160620114904.GC26936@shlinux2> <8737o8qd00.fsf@linux.intel.com> <20160621060517.GA5108@shlinux2> <877fdjovef.fsf@linux.intel.com> <20160621090738.GD5108@shlinux2> <87h9cmoo4s.fsf@linux.intel.com> <20160621130512.GF5108@shlinux2>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH 2/4] dmaengine: vdma: Add support for mulit-channel dma
+ mode
+Date: Wed, 22 Jun 2016 07:04:28 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5B84A9@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1465549954-30220-1-git-send-email-appanad@xilinx.com>
+ <1465549954-30220-3-git-send-email-appanad@xilinx.com>
+ <20160621155502.GB16910@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B8248@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160621163340.GE16910@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160621130512.GF5108@shlinux2>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160621163340.GE16910@localhost>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Vinod,
 
+> 
+> On Tue, Jun 21, 2016 at 04:02:05PM +0000, Appana Durga Kedareswara Rao
+> wrote:
+> > Hi Vinod,
+> >
+> > 	Thanks for the review...
+> >
+> > >
+> > > On Fri, Jun 10, 2016 at 02:42:32PM +0530, Kedareswara rao Appana wrote:
+> > > > This patch adds support for AXI DMA multi-channel dma mode
+> > > > Multichannel mode enables DMA to connect to multiple masters And
+> > > > slaves on the streaming side.
+> > > > In Multichannel mode AXI DMA supports 2D transfers.
+> > >
+> > > Funny formatting!
+> >
+> > Will fix in next version...
+> >
+> > >
+> > > Can you elobrate what you meant by Multichannel mode? This patch
+> > > seems to do two things, one is to add interleaved dma support and
+> > > something else. Can you explain the latter part?
+> >
+> > AXI DMA has two Stream interfaces (Memory to Stream MM2S and Stream to
+> > Memory S2MM)
+> 
+> what is a stream in this context?
 
-Hi,
+Stream means I/O transfer (Memory to I/O and I/O to Memory).
+Sorry if I confused you.
 
-Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->> Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->> >> >> So far, I haven't seen anybody talking about real USB OTG (the spe=
-c)
->> >> >> when they say OTG. Usually they just mean "a method for swapping b=
-etween
->> >> >> host and peripheral roles, but we really don't want all the extra =
-cost
->> >> >> of the OTG specification".
->> >> >>=20
->> >> >
->> >> > That's what I thought before, but the request from the Marketing gu=
-y is
->> >> > "To prove the SoC is OTG compliance, support HNP and SRP", don't you
->> >> > see the SoC reference manual say "it supports HNP and SRP"?
->> >> >
->> >> > If there is no request, who else wants to implement so complicated =
-FSM
->> >> > but seldom use cases, and go to pass OTG compliance test (tested by=
- PET).
->> >>=20
->> >> I stand corrected :-)
->> >>=20
->> >> So there is one user for this layer. And this user has its own role
->> >> control registers. I'm not convinced we need this large generic layer
->> >> for one user.
->> >>=20
->> >
->> > You mean chipidea or dwc3? I have more comments below.
->>=20
->> chipidea. From the point of OTG (or DRD) dwc3 is very
->> self-sufficient. HW itself tracks state machine, much like MUSB does.
->
-> You mean HW can do state machine switch? If we are A device,
-> - Does the hardware knows if B device is HNP enabled or not?
+> 
+> > In Multi-Channel dma mode each stream interface can be configured up to 16
+> channels.
+> > In Multi-channel DMA mode IP supports only interleaved transfers (2-D
+> transfers).
+> 
+> 
+> >
+> > >
+> > > >  /**
+> > > > + * struct xilinx_mcdma_config - DMA Multi channel configuration
+> > > > +structure
+> > > > + * @tdest: Channel to operate on
+> > > > + * @tid:   Channel configuration
+> > > > + * @tuser: Tuser configuration
+> > > > + * @ax_user: ax_user value
+> > > > + * @ax_cache: ax_cache value
+> > > > + */
+> > > > +struct xilinx_mcdma_config {
+> > > > +	u8 tdest;
+> > > > +	u8 tid;
+> > > > +	u8 tuser;
+> > > > +	u8 ax_user;
+> > > > +	u8 ax_cache;
+> > >
+> > > can you describe these in details, what do these do, what are the
+> > > values to be programmed?
+> >
+> > As said above In Multi-Channel Mode each Stream interface can be
+> > Configured up to 16 channels each channel is differentiated based on the tdest
+> and tid values.
+> 
+> Then why are you not registering 16 channels for this? That should give you
+> channel to operate on!
 
-that's enabled through control message, keep a flag.
+The number of channels are configurable.
+We are registering number of Channels that h/w configured for.
 
-> - And if B device is HNP enabled, does it can switch itself from host
-> to peripheral when the B device is disconnected (a_suspend->a_peripheral)
+Will fix in the next version. Will remove this config.
+And based on the channel type will configure the h/w.
 
-It cannot. It must rely on hnp polling which is, again, a control message.
+> 
+> >
+> > tdest:
+> > TDEST provides routing information for the data stream.
+> 
+> pls elobrate
 
-> Does hardware can really follow Figure 7-1: OTG A-device with HNP State
-> Diagram at On-The-Go and Embedded Host Supplement to the USB Revision
-> 2.0 Specification? And can pass PET test?
+Need to configure this with the channel number that
+We would like to transfer data.
 
-Seriously, what does this add to the conversation? It has already been
-stated that there's nobody asking for OTG certification on dwc3. So all
-of this is vaporware from the point of view of dwc3.
+> 
+> > TDEST values are static for the entire packet.
+> 
+> what do these mean
 
->> >> >> > For the real use case, some Carplay platforms need it.
->> >> >>=20
->> >> >> Carplay does *NOT* rely on OTG. Apple has its own proprietary and =
-closed
->> >> >> specification which is not OTG-compliant.
->> >> >>=20
->> >> >
->> >> > Yes, it is not OTG-compliant, but it can co-work with some standard=
- OTG FSM
->> >> > states to finish role swap.
->> >>=20
->> >> What are you referring to as "finish role swap"? I don't get that.
->> >
->> > Change current role from host to peripheral.
->>=20
->> Okay, we have two scenarios here:
->>=20
->> 1. You need full OTG compliance
->>=20
->> 	For this, granted, you need the state machine if your HW doesn't
->> 	track it. This is a given. With only one user, however, perhaps
->> 	we don't need a generic layer. There are not enough different
->> 	setups to design a good enough generic layer. We will end up
->> 	with a pseudo-generic framework which is coupled with its only
->> 	user.
->>=20
->> 2. Dual-role support, without OTG compliance
->>=20
->> 	In this case, you don't need a stack. All you need is a signal
->> 	to tell you state of ID pin and another to tell you state of
->> 	VBUS level. If you have those, you don't need to walk an OTG
->> 	state machine at all. You don't need any of those quirky OTG
->> 	timers, agreed?
->>=20
->> 	Given the above, why would you even want to use a subset of OTG
->> 	state machine to implement something that's _usually_ as simple
->> 	as:
->>=20
->> 8<----------------------------------------------------------------------
->> 	vbus =3D read(VBUS_STATE); /* could be a gpio_get_value() */
->>         id =3D read(ID_STATE); /* could be a gpio_get_value() */
->>=20
->>         set_role(id);
->>         set_vbus(vbus);
->> ------------------------------------------------------------------------
->>=20
->
-> In fact, the individual driver can do it by itself. The chipidea driver
-> handles OTG and dual-role well currently. By considering this OTG/DRD
-> framework is worthwhile or not, we would like to see if it can
-> simplify DRD design for each driver, and can benefit the platforms which
-> has different drivers for host and peripheral to finish the role switch
-> well.
+We shouldn't modify this value when a transfer is going on...
+Providing it in the config option user may not aware of all this possibilities.
+Will remove this config and will handle this in the driver itself.
 
-simplify how?  By adding unnecessary workqueues and a level indirection
-that just goes back to the same driver?
+> 
+> >
+> > tid:
+> > Provides a stream identifier. TID values are static for entire packet.
+> > TID values provided in the TX descriptor field are presented on TID
+> > signals of the streaming side.
+> 
+> what is this used for?
 
->> > commit 11c011a5e777c83819078a18672543f04482b3ec
->> > Author: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > Date:   Thu May 19 11:12:56 2016 +0100
->> >
->> >     usb: echi-hcd: Add ehci_setup check before echi_shutdown
->> >=20=20=20=20=20=20=20=20=20
->> >
->> >
->> > In some cases, the USB code (gadget/hcd->start/stop) needs to be called
->> > during the role swap. For example, if you have mux driver, you may
->> > need to call usb_remove_hcd when ID from 0 to 1. Without Roger's frame=
-work,
->> > how can we do that?
->>=20
->> You don't really need to remove the gadget. Just mask its interrupts and
->> ignore any calls to any gadget_driver ops, right? Likewise for
->> XHCI. Just clear RUN/STOP and no events will ever reach XHCI. But, from
->> the point of view of dwc3, it's simpler to unregister the platform
->> device we create for xhci-plat.c. I need no changes in XHCI to do that
->> and driver model will make sure to call xhci-plat's ->remove() which
->> will handle everything for me correctly.
->>=20
->
-> I admit it can do in a IP driver, eg both host and peripheral for the
-> single IP, eg chipidea, dwc3, etc. But how can we clear RUN/STOP bit
-> or what else for HCD at mux driver?
+Currently I am not using this parameter will remove this config.
+But usually it is used as a packet identifier.
 
-dwc3's OTG block has control of that, however, what I'll do is
-platform_device_del() xhci-plat's device. Not one line changes inside
-XHCI.
+> 
+> >
+> > tuser:
+> > Sideband signals used for user-defined information.
+> > TUSER values are static for entire packet. TUSER values provided in
+> > the TX Descriptor field are presented on TUSER signals of streaming side.
+> 
+> what is this used for?
 
-=2D-=20
-balbi
+Used for user-defined information.
+Currently I am not using it will remove this in the next version...
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> >
+> > ax_user:
+> > Sideband signals used for user-defined information ARUSER values and
+> > their interpretations are user-defined
+> 
+> How is it used by client?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Currently I am not using it will remove this in the next version...
 
-iQIcBAEBCAAGBQJXajaWAAoJEIaOsuA1yqREgRQP/A6XkUnDtNHQKXAHV+RBureo
-92pNt3TWIZSmu5MT9AyPIDbW6Tieke2Fw6mrGH4u6Ms3SKakVtTRPwb1PWOi59n+
-FOG20TfYanIGB8YFG6cFlFeNLOi0rL4svj90ObE5eyLvGST9meKuAqOO3YtOK52D
-4rL+3aWEhib0IE31Q0ZunVUa9cEBXlyVviO4Xye4jb6l7C+hK9mjZM6Dklumnsy9
-oAy/KkTv1JXy4Kf/PZrlrC2zxZH313oG0GQht8VYitpBDxu8KOu2pnjxcvZeYufh
-80AXLkvASDrNUPrlYT7C57S7ZyL+MPrpfZOAEF8PW7r/dgNtHBNdAYJfh4Fx/hV2
-+SSqueB/eSdfmd9O003jQVk6i3f/7AWlLabyh3l4mRvkmw2ZSODFBVUbCR72K06H
-56OxqPBl76jgcscwrmmdNiIGLBUopH1oFwM7zKV1p+2OENkJeor3cdiTaJp/nKvg
-i0n4v0Nt4nap85Mcwoa/K320C7vCpKZOwpaXhY1yePxBOuScwAhdfSsaOf4ldC4k
-8bhI1vIGdufLQw0FZYAUZRznJYuNiDxz6o/oVIGea7r2k50rrzFyGAg0hKQ3mEYK
-8eaRD0/96AA45XyIbYyxv+ZHx9NGid3dwhGFT83pHYzoNRD/tGQ6bP9aU67K/oEi
-1sDkPm/+cMt4/Znp3h6d
-=p1u3
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> >
+> > ax_cache:
+> > Cache type this signal provides additional information about the
+> > cacheable Characteristics of the transfer.
+> 
+> and what are those...
+
+It is a 4-bit filed.
+Bit 0: Bufferable
+Bit 1: Modifiable
+Bit 2: Non-cacheable
+Bit 3: Normal
+
+Currently I am not using it will remove this in the next version...
+
+> 
+> >
+> > In the above parameters tdest and tid are mandatory to differentiate
+> > b/w different channels Other parameters are optional please let me
+> > know if you don't want me to Include other optional parameters will remove in
+> the next version.
+> 
+> dmaengine provides channel as an argument so it is quite odd that you need to
+> differentiate b/w different channels. This only makes me worry that things are
+> not standard and fishy
+
+Will fix in the next version will handle
+Based on the channel type only.
+
+Regards,
+Kedar.
+
+> 
+> --
+> ~Vinod
