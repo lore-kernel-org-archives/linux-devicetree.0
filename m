@@ -1,51 +1,123 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] ARM: dts: mt2701: add iommu/smi dtsi node for
- mt2701
-Date: Wed, 22 Jun 2016 13:45:42 +0800
-Message-ID: <1466574342.27791.8.camel@mtksdaap41>
-References: <1465379461-14757-1-git-send-email-honghui.zhang@mediatek.com>
-	 <1465379461-14757-6-git-send-email-honghui.zhang@mediatek.com>
-	 <20160621095748.GE28248@8bytes.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 3/7] phy: Add set_mode callback
+Date: Wed, 22 Jun 2016 11:27:19 +0530
+Message-ID: <576A28BF.4040805@ti.com>
+References: <1462837203-12125-1-git-send-email-david@lechnology.com>
+ <1462837203-12125-4-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160621095748.GE28248-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Honghui Zhang =?UTF-8?Q?=28=E5=BC=A0=E6=B4=AA=E8=BE=89=29?= <Honghui.Zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Kendrick Hsu =?UTF-8?Q?=28=E5=BE=90=E5=AD=90=E5=87=A1=29?= <Kendrick.Hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462837203-12125-4-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, nsekhar@ti.com, khilman@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>
+Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-06-21 at 17:57 +0800, Joerg Roedel wrote:
-> On Wed, Jun 08, 2016 at 05:51:01PM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > Add the dtsi node of iommu and smi for mt2701.
-> > 
-> > Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/mt2701.dtsi | 51 +++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> 
-> Okay, I pushed my arm/mediatek branch to my tree at
-> 
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
-> 
-> Please base the patch on that branch and re-send.
-> 
+Hi,
 
-I think it is better let Mediatek SoC maintainer Matthias to accept dtsi
-patch like other drivers. This can avoid dtsi conflict. As I
-remember,last time MT8173 IOMMU dtsi patch accepted in iommu tree and
-mt8173.dtsi had conflict with arm soc tree at the merge window. Honghui
-should resend this patch to Matthias, and elaborate your dependency with
-clock and power domain dtsi, then Matthias know the merge sequence. 
+On Tuesday 10 May 2016 05:09 AM, David Lechner wrote:
+> The initial use for this is for PHYs that have a mode related to USB OTG.
+> There are several SoCs (e.g. TI OMAP and DA8xx) that have a mode setting
+> in the USB PHY to override OTG VBUS and ID signals.
+> 
+> Of course, the enum can be expaned in the future to include modes for
+> other types of PHYs as well.
+> 
+> Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-Eddie
+This patch is required for both phy driver and the usb driver. I can create a
+immutable branch with only this patch and both me and Bin Liu can merge it in
+our next branch.
+
 Thanks
+Kishon
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/phy/phy-core.c  | 15 +++++++++++++++
+>  include/linux/phy/phy.h | 17 +++++++++++++++++
+>  2 files changed, 32 insertions(+)
+> 
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index e7e574d..fe0344c 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -342,6 +342,21 @@ int phy_power_off(struct phy *phy)
+>  }
+>  EXPORT_SYMBOL_GPL(phy_power_off);
+>  
+> +int phy_set_mode(struct phy *phy, enum phy_mode mode)
+> +{
+> +	int ret;
+> +
+> +	if (!phy || !phy->ops->set_mode)
+> +		return 0;
+> +
+> +	mutex_lock(&phy->mutex);
+> +	ret = phy->ops->set_mode(phy, mode);
+> +	mutex_unlock(&phy->mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(phy_set_mode);
+> +
+>  /**
+>   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+>   * @np: device_node for which to get the phy
+> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> index 8cf05e3..4248ade 100644
+> --- a/include/linux/phy/phy.h
+> +++ b/include/linux/phy/phy.h
+> @@ -22,12 +22,20 @@
+>  
+>  struct phy;
+>  
+> +enum phy_mode {
+> +	PHY_MODE_INVALID,
+> +	PHY_MODE_USB_HOST,
+> +	PHY_MODE_USB_DEVICE,
+> +	PHY_MODE_USB_OTG,
+> +};
+> +
+>  /**
+>   * struct phy_ops - set of function pointers for performing phy operations
+>   * @init: operation to be performed for initializing phy
+>   * @exit: operation to be performed while exiting
+>   * @power_on: powering on the phy
+>   * @power_off: powering off the phy
+> + * @set_mode: set the mode of the phy
+>   * @owner: the module owner containing the ops
+>   */
+>  struct phy_ops {
+> @@ -35,6 +43,7 @@ struct phy_ops {
+>  	int	(*exit)(struct phy *phy);
+>  	int	(*power_on)(struct phy *phy);
+>  	int	(*power_off)(struct phy *phy);
+> +	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
+>  	struct module *owner;
+>  };
+>  
+> @@ -119,6 +128,7 @@ int phy_init(struct phy *phy);
+>  int phy_exit(struct phy *phy);
+>  int phy_power_on(struct phy *phy);
+>  int phy_power_off(struct phy *phy);
+> +int phy_set_mode(struct phy *phy, enum phy_mode mode);
+>  static inline int phy_get_bus_width(struct phy *phy)
+>  {
+>  	return phy->attrs.bus_width;
+> @@ -224,6 +234,13 @@ static inline int phy_power_off(struct phy *phy)
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
+> +{
+> +	if (!phy)
+> +		return 0;
+> +	return -ENOSYS;
+> +}
+> +
+>  static inline int phy_get_bus_width(struct phy *phy)
+>  {
+>  	return -ENOSYS;
+> 
