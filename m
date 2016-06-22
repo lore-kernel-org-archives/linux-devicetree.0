@@ -1,116 +1,88 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: Add device-tree for ARM's AEMv8A-AEMv8A
- FVP Base model
-Date: Wed, 22 Jun 2016 10:35:49 +0100
-Message-ID: <20160622093549.GA25837@leverpostej>
-References: <1466424796-13769-1-git-send-email-tixy@linaro.org>
- <1466424796-13769-2-git-send-email-tixy@linaro.org>
- <20160620123906.GC26152@leverpostej>
- <1466433277.2833.33.camel@linaro.org>
- <20160620145535.GC9246@leverpostej>
- <1466532087.2856.66.camel@linaro.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 4.7 fix] ARM: dts: sunxi: Add pll3 to simplefb nodes
+ clocks lists
+Date: Wed, 22 Jun 2016 11:52:03 +0200
+Message-ID: <20160622095203.GT26668@lukather>
+References: <1466456242-22841-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1466532087.2856.66.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6293865375946725239=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1466456242-22841-1-git-send-email-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2016 at 07:01:27PM +0100, Jon Medhurst (Tixy) wrote:
-> On Mon, 2016-06-20 at 15:55 +0100, Mark Rutland wrote:
-> > On Mon, Jun 20, 2016 at 03:34:37PM +0100, Jon Medhurst (Tixy) wrote:
-> > > On Mon, 2016-06-20 at 13:39 +0100, Mark Rutland wrote:
-> > > > Hi,
-> > > > 
-> > > > On Mon, Jun 20, 2016 at 01:13:16PM +0100, Jon Medhurst wrote:
-> > > > > Fixed Virtual Platform (FVP) Base models are simulations of systems
-> > > > > that resemble Versatile Express or Juno hardware.
-> > > > > 
-> > > > > This adds a device-tree for the model variant that has two clusters of
-> > > > > Architecture Envelope Model (AEM) v8-A CPUs. The peripheral devices that
-> > > > > are common to all variants of Base models have been placed in a separate
-> > > > > file (fvp-base.dtsi) to facilitate creating device-trees for other
-> > > > > models.
-> > > > > 
-> > > > > It is desirable to use simulations for code testing purposes and so it
-> > > > > is beneficial to include nodes for things that are timing and power
-> > > > > consumption related, even when these don't otherwise have relevance or
-> > > > > accuracy. Where these have been included here (e.g. idle-states) entries
-> > > > > have been copied from real hardware platforms such as Juno.
-> > > > 
-> > > > Which firmware are you using,
-> > > 
-> > > ARM Trusted Firmware
-> > > 
-> > > >  and what precisely does it do w.r.t.
-> > > > those idle states?
-> > > 
-> > > I don't know, will check. Those states are also in the ARM TF
-> > > device-tree for the Base FVP [2] but I admit I didn't verify they were
-> > > correct. (Unlike real 'hardware' dt nodes, for which I methodically went
-> > > through documentation and LISA files to check and fix).
-> > > 
-> > > [2] https://github.com/ARM-software/arm-trusted-firmware/blob/master/fdts/fvp-base-gicv3-psci.dts
-> > > 
-> > > >  Judging by the FVP ATF pm code [1], those state IDs
-> > > > aren't valid (though perhaps the comment is wrong, or I've misunderstood
-> > > > something).
-> > > 
-> > > I'm not sure which comment you are referring to, that link [1] doesn't
-> > > seem to anchor to a particular source line in my web browser, and I
-> > > don't spot anything relevant scanning by eye.
-> > 
-> > Aargh, the web interface appears to have given me a duff URL. Let's try
-> > again [3]. ;)
-> > 
-> > The comments note state-ids 0x01, 0x02, and 0x22, which don't appear to
-> > match the DT. It might be that I've just misunderstood
-> 
-> That function is only compiled when ARM_RECOM_STATE_ID_ENC is true,
-> which it isn't when I build TF using "make PLAT=fvp ...." so I think
-> it's a red herring.
 
-Ah,ok.
+--===============6293865375946725239==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/7+LvQqw8N5lf/3J"
+Content-Disposition: inline
 
-> When I boot the FVP with my posted device-tree, the core run state icons
-> on the CLCD window behave as you would expect for CPUs and whole
-> clusters powering off/on as CPU's activity changes. So idle _looks_ like
-> it's working OK.
-> 
-> I also put printfs in ATF's psci_cpu_suspend() function and I can see
-> the values specified in device-tree being passed in and the code
-> behaving sensibly. From how it cracks the power_state value [4] it
-> certainly looks like the numbers have the following meanings:
-> 
-> top byte = 0..3 for the 'level' of the power state
-> top-but-one byte = 0/1 for Standby/Powerdown
-> 
-> For FVP [5], the level appears to be 0=CPU, 1=Cluster.
-> This matches what's in the device-tree I posted, where we have
-> 0x00010000 for CPU sleep, and 0x01010000 for cluster sleep.
-> 
-> All of which is a long way of saying that I believe the values that the
-> firmware guys and Linaro have been using for the past year or two are
-> correct ;-)
 
-Great, thanks for digging into that, and apologies for the noise!
+--/7+LvQqw8N5lf/3J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Mark.
+On Mon, Jun 20, 2016 at 10:57:22PM +0200, Hans de Goede wrote:
+> Now that we've a clock node describing pll3 we must add it to the
+> simplefb nodes clocks lists to avoid it getting turned off when
+> simplefb is used.
+>=20
+> This fixes the screen going black when using simplefb.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-> 
-> > [3] https://github.com/ARM-software/arm-trusted-firmware/blob/6355f2347aec8bf6ad74867c2b0c996e10546ad4/plat/arm/board/fvp/fvp_pm.c#L53
-> 
-> [4] https://github.com/ARM-software/arm-trusted-firmware/blob/6355f2347aec8bf6ad74867c2b0c996e10546ad4/include/bl31/services/psci.h#L100
-> [5] https://github.com/ARM-software/arm-trusted-firmware/blob/6355f2347aec8bf6ad74867c2b0c996e10546ad4/plat/arm/board/fvp/fvp_pm.c#L195
-> 
-> -- 
-> Tixy
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--/7+LvQqw8N5lf/3J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXal/DAAoJEBx+YmzsjxAghUgP/RVaeuwz6esTldGOMFRbNIOY
+u+k++ue7qyOj4kjwxSO2WJ2CUQzGu8nIHmXoshzxh2wsIz6P0KKPRCWEQ9ZBS14d
+wC8DAoi3r64SF8VUeicYOl0skLjacsV1jW+hkQyVKPqy7rt3JnhD5Agk8qG/0/tv
+BCT99S5tA6yvUqcU0qUix47WW7MoJP+6IMgCwu2+TQYHzQxLCA1o1Ni7K9DIzxb3
+gYAvAVCUpEU1UrQD+vsIwl81JQ3waOzJywjFoAZQs4hFktnshCzKalMi5Xh1QlKi
+Zz9keo+v6Iq6LSEax8mTao/YD5Nlm58foeVyXl+MYng4JSLSb33WMP9Ml3J50Umk
+7jIlkuN3AnAS6NkaF0a7g8Kp0pWQPIzccYJ0NzwvEGiMTEQAIczeQ9Rc3vOrGnpn
+Mx0VRIigIQCWf9btuKrGoIKoMTwSl2nioBucDtD/9TA/FPZB4pktTZKNT7VPUqNg
+t2WMEZpVB6ykmwrSHCpaXFwsQODMTC6e3OWaEhyrcj6uPYkdLqxOoh93ge124e7j
+MjsFfGnEO/kFpKg/KnMWjT59KQ9c7RMwDs+laYZLYEu+B+7xTQq3tYFeYJi+8nEE
+t22POwlnNTspr/ZkoIKtoSZIayTxvgKGw2w6gaxBmOK5N9wDB/mAAV1ys6/e1re8
+kwFCcUxP6tQWLOzjJCdM
+=linK
+-----END PGP SIGNATURE-----
+
+--/7+LvQqw8N5lf/3J--
+
+
+--===============6293865375946725239==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6293865375946725239==--
