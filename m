@@ -1,123 +1,69 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: node modification by overlay does not trigger probe
-Date: Wed, 22 Jun 2016 22:52:13 +0200
-Message-ID: <CAOMqctRug-MQh6hk400Ft7ySEd+1HHzGKezAo3mTN51iuxdbpw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/9 v2] iio: pressure: bmp280: augment DT bindings
+Date: Wed, 22 Jun 2016 22:53:31 +0200
+Message-ID: <1466628819-29784-2-git-send-email-linus.walleij@linaro.org>
+References: <1466628819-29784-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466628819-29784-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christoph Mair <christoph.mair-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vlad Dogaru <vlad.dogaru-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Eric Andersson <eric.andersson-TStm8jYLEPpl57MIdRCFDg@public.gmane.org>, Neil Brown <neilb-l3A5Bk7waGM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This adds standard device tree bindings for a reset GPIO line, and
+the VDDD and VDDA power regulators.
 
-I have been experimenting with overlays a bit.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v1->v2:
+- Order compatible string on single lines
+- Add "bosch,bme280" for the new sensor from Matt
+---
+ Documentation/devicetree/bindings/iio/pressure/bmp085.txt | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-I have a board with SPI interface on an external header.
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+index d7a6deb6b21e..c7198a03c906 100644
+--- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
++++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+@@ -1,7 +1,11 @@
+-BMP085/BMP18x digital pressure sensors
++BMP085/BMP18x/BMP28x digital pressure sensors
+ 
+ Required properties:
+-- compatible: bosch,bmp085
++- compatible: must be one of:
++  "bosch,bmp085"
++  "bosch,bmp180"
++  "bosch,bmp280"
++  "bosch,bme280"
+ 
+ Optional properties:
+ - chip-id: configurable chip id for non-default chip revisions
+@@ -10,6 +14,10 @@ Optional properties:
+   value range is 0-3 with rising sensitivity.
+ - interrupt-parent: should be the phandle for the interrupt controller
+ - interrupts: interrupt mapping for IRQ
++- reset-gpios: a GPIO line handling reset of the sensor: as the line is
++  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
++- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
++- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
+ 
+ Example:
+ 
+@@ -21,4 +29,7 @@ pressure@77 {
+ 	default-oversampling = <2>;
+ 	interrupt-parent = <&gpio0>;
+ 	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
++	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
++	vddd-supply = <&foo>;
++	vdda-supply = <&bar>;
+ };
+-- 
+2.4.11
 
-The first use was like this:
-
-------------board file excerpt:
-&spi2 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&spi2_pins_a>,
-                    <&spi2_cs0_pins_a>;
-        status = "okay";
-};
-
-------------overlay:
-/dts-v1/;
-/plugin/;
-
-/ {
-    compatible = "olimex,a10s-olinuxino-micro";
-
-    /* identification */
-    part-number = "A10S-SPI2";
-
-    fragment@0 {
-        target = <&spi2>;
-        __overlay__ {
-            #address-cells = <1>;
-            #size-cells = <0>;
-            flash: m25p80@0 {
-                #address-cells = <1>;
-                #size-cells = <1>;
-                compatible = "spidev";
-                reg = <0>;
-                spi-max-frequency = <40000000>;
-                   };
-        };
-    };
-};
-
-This is copied from some random example and modified for this use
-case. It adds the whole SPI slave device node and specifies the CS in
-the overlay.
-
-Later I tried this approach with CS in board file which gives more
-generic overlay:
------------board:
-&spi2 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&spi2_pins_a>,
-                    <&spi2_cs0_pins_a>;
-        status = "okay";
-
-        uext_spi: spi@uext {
-                reg = <0>;
-                spi-max-frequency = <40000000>;
-                status = "disabled";
-        };
-};
-----------overlay:
-/dts-v1/;
-/plugin/;
-
-/ {
-  compatible = "olimex,uext";
-
-  /* identification */
-  part-number = "Olimex-UEXT";
-
-  fragment@0 {
-    target = <&uext_spi>;
-    __overlay__ {
-      compatible = "spidev";
-      spi-max-frequency = <40000000>;
-      status = "okay";
-    };
-  };
-};
-
-This works so long as I have status = "disabled" frobbed to "okay" by
-the overlay. Without the status lines in the board and overlay file
-the SPI driver needs to be reloaded for the change to take effect.
-
-It's not entirely out of question to specify the status. However,
-there are problems
-
- - the SPI CS along with the other SPI pins are used on a connector so
-they should not have the "disabled" status reserved for unused
-hardware. When a patch for automagic binding of spidev to every CS was
-proposed a concern was raised that the unused CS lines could cause
-other hardware malfunction when triggered. So in that spirit the CS
-which *is* used by the connector should be marked as enabled.
-
-- I want to get rid of the spoidev log spam caused by this overlay by
-making the spidev binding implicit. That is for each spi slave the
-spidev device is created automagically. For that the slave must be
-marked as enabled in the board file and that precludes loading another
-driver for the slave through overlay because the re-probe is not
-triggered when the device was already enabled.
-
-Is there a reasonable way to fix this? Re-probing modified nodes
-should be possible. I am not aware of anything that would break given
-facilities for actually loading overlays are not mainlined so far.
-
-Thanks
-
-Michal
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
