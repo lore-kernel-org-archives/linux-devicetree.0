@@ -1,87 +1,66 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] mmc: pwrseq-simple: Add an optional post-power-on-delay
-Date: Wed, 22 Jun 2016 19:59:08 +0200
-Message-ID: <1466618348-32304-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB5VDVO5QKGQE7R2YZYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v4 0/4] perf: Add APM X-Gene SoC Performance Monitoring Unit driver
+Date: Wed, 22 Jun 2016 11:06:55 -0700
+Message-ID: <1466618819-2697-1-git-send-email-ttnguyen@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some devices need a while to boot their firmware after providing clks /
-de-asserting resets before they are ready to receive sdio commands.
+In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
+are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
+memory controller bridges and memory. These PMU devices are loosely
+architected to follow the same model as the PMU for ARM cores.
 
-This commits adds a post-power-on-delay-ms devicetree property to
-mmc-pwrseq-simple for use with such devices.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
- drivers/mmc/core/pwrseq_simple.c                            | 9 +++++++++
- 2 files changed, 11 insertions(+)
+v4:
+ * Alphabetically sorting header files
+ * Remove dynamic allocation for PMU format and event attribute groups
+   Create shared constant attribute groups per each class
+ * Remove perf_sample_data as this perf driver doesn't support sampling
+ * Consistently use the PCP_PMU_V{1,2} defines
+ * Set affinity to make sure the overflow interrupt is handled by the
+   same assigned CPU
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-index ce0e767..e254368 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-@@ -16,6 +16,8 @@ Optional properties:
-   See ../clocks/clock-bindings.txt for details.
- - clock-names : Must include the following entry:
-   "ext_clock" (External clock provided to the card).
-+- post-power-on-delay-ms : Delay in ms after powering the card and
-+	de-asserting the reset-gpios (if any)
- 
- Example:
- 
-diff --git a/drivers/mmc/core/pwrseq_simple.c b/drivers/mmc/core/pwrseq_simple.c
-index 450d907..1304160 100644
---- a/drivers/mmc/core/pwrseq_simple.c
-+++ b/drivers/mmc/core/pwrseq_simple.c
-@@ -16,6 +16,8 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/delay.h>
-+#include <linux/property.h>
- 
- #include <linux/mmc/host.h>
- 
-@@ -24,6 +26,7 @@
- struct mmc_pwrseq_simple {
- 	struct mmc_pwrseq pwrseq;
- 	bool clk_enabled;
-+	u32 post_power_on_delay_ms;
- 	struct clk *ext_clk;
- 	struct gpio_descs *reset_gpios;
- };
-@@ -64,6 +67,9 @@ static void mmc_pwrseq_simple_post_power_on(struct mmc_host *host)
- 	struct mmc_pwrseq_simple *pwrseq = to_pwrseq_simple(host->pwrseq);
- 
- 	mmc_pwrseq_simple_set_gpios_value(pwrseq, 0);
-+
-+	if (pwrseq->post_power_on_delay_ms)
-+		msleep(pwrseq->post_power_on_delay_ms);
- }
- 
- static void mmc_pwrseq_simple_power_off(struct mmc_host *host)
-@@ -111,6 +117,9 @@ static int mmc_pwrseq_simple_probe(struct platform_device *pdev)
- 		return PTR_ERR(pwrseq->reset_gpios);
- 	}
- 
-+	device_property_read_u32(dev, "post-power-on-delay-ms",
-+				 &pwrseq->post_power_on_delay_ms);
-+
- 	pwrseq->pwrseq.dev = dev;
- 	pwrseq->pwrseq.ops = &mmc_pwrseq_simple_ops;
- 	pwrseq->pwrseq.owner = THIS_MODULE;
+v3:
+ * Remove index property use in PMU device sub nodes
+
+v2:
+ * Use bitmask for event asignned counter mask pmu_dev->cntr_assign_mask
+ * Remove unnecessary spinlocks in perf add/del operations
+ * Remove unnecessary condition checks
+ * Enforce CPU assignment to one CPU for perf operarations
+ * Set the task_ctx_nr to perf_invalid_context for perf driver
+ * Remove irrelevant pt_rregs
+ * Change perf sysfs attributes to be fixed instead of dynamic
+ * Fix checking for an ACPI companion device instead of EFI enable
+ * Add documentation for config/config1 fields format and perf tool example
+
+---
+Tai Nguyen (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC PMU driver
+  Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
+  perf: xgene: Add APM X-Gene SoC Performance Monitoring Unit driver
+  arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
+
+ .../devicetree/bindings/perf/apm-xgene-pmu.txt     |  112 ++
+ Documentation/perf/xgene-pmu.txt                   |   48 +
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   58 +
+ drivers/perf/Kconfig                               |    7 +
+ drivers/perf/Makefile                              |    1 +
+ drivers/perf/xgene_pmu.c                           | 1437 ++++++++++++++++++++
+ 7 files changed, 1671 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+ create mode 100644 Documentation/perf/xgene-pmu.txt
+ create mode 100644 drivers/perf/xgene_pmu.c
+
 -- 
-2.7.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
