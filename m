@@ -1,57 +1,68 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 5/8] rtc: ac100: Add clk output support
-Date: Wed, 22 Jun 2016 18:11:55 +0800
-Message-ID: <CAGb2v67DVBZbRb2PWLP8WurPaNin=2Fa=HMAEK_PdBeqv1x+8Q@mail.gmail.com>
-References: <1466391138-12862-1-git-send-email-wens@csie.org>
- <1466391138-12862-6-git-send-email-wens@csie.org> <20160622100206.GV26668@lukather>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 2/7] leds: documentation: 'ide-disk' to 'disk-activity'
+Date: Wed, 22 Jun 2016 11:16:04 +0100
+Message-ID: <20160622101603.GC25837@leverpostej>
+References: <20160608223000.433-1-linz@li-pro.net>
+ <20160608223000.433-2-linz@li-pro.net>
+ <20160621150532.GG3302@leverpostej>
+ <576A447F.2020002@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCMILY6JWQBBBAWJVG5QKGQE3OBSL4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160622100206.GV26668@lukather>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <576A447F.2020002@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Stephan Linz <linz@li-pro.net>, linux-leds@vger.kernel.org, linux-ide@vger.kernel.org, Joseph Jezak <josejx@gentoo.org>, Nico Macrionitis <acrux@cruxppc.org>, =?utf-8?B?SsO2cmc=?= Sommer <joerg@alea.gnuu.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 6:02 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Mon, Jun 20, 2016 at 10:52:15AM +0800, Chen-Yu Tsai wrote:
->> +     /*
->> +      * The ADDA 4 MHz clock is from the codec side of the AC100,
->> +      * which is likely a different power domain. However, boards
->> +      * always have both sides powered on, so it is impossible to
->> +      * test this.
->> +      */
->
-> If that ADDA clock is exposed by the codec, why are you putting it in
-> the RTC?
+On Wed, Jun 22, 2016 at 09:55:43AM +0200, Jacek Anaszewski wrote:
+> On 06/21/2016 05:05 PM, Mark Rutland wrote:
+> >On Thu, Jun 09, 2016 at 12:29:37AM +0200, Stephan Linz wrote:
+> >>Cc: Joseph Jezak <josejx@gentoo.org>
+> >>Cc: Nico Macrionitis <acrux@cruxppc.org>
+> >>Cc: J=C3=B6rg Sommer <joerg@alea.gnuu.de>
+> >>Signed-off-by: Stephan Linz <linz@li-pro.net>
+> >>---
+> >>  Documentation/devicetree/bindings/leds/common.txt    | 2 +-
+> >>  Documentation/devicetree/bindings/leds/leds-gpio.txt | 2 +-
+> >>  Documentation/laptops/asus-laptop.txt                | 2 +-
+> >>  Documentation/leds/leds-class.txt                    | 2 +-
+> >>  4 files changed, 4 insertions(+), 4 deletions(-)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Do=
+cumentation/devicetree/bindings/leds/common.txt
+> >>index af10678..1e97169 100644
+> >>--- a/Documentation/devicetree/bindings/leds/common.txt
+> >>+++ b/Documentation/devicetree/bindings/leds/common.txt
+> >>@@ -26,7 +26,7 @@ Optional properties for child nodes:
+> >>       "default-on" - LED will turn on (but for leds-gpio see "defa=
+ult-state"
+> >>  		    property in Documentation/devicetree/bindings/gpio/led.txt)
+> >>       "heartbeat" - LED "double" flashes at a load average based r=
+ate
+> >>-     "ide-disk" - LED indicates disk activity
+> >>+     "disk-activity" - LED indicates disk activity
+> >>       "timer" - LED flashes at a fixed, configurable rate
+> >
+> >We should not break the binding.
+> >
+> >Code must continue to support "ide-disk", though we can mark it
+> >deprecated in the binding documentation, and update the in-kernel dt=
+s
+> >files to use "disk-activity".
+>=20
+> The code in the version 4 of the patchset supports also "ide-disk".
 
-The thing is it's not entirely clear that it's from the codec side.
-I'm just inferring this from the name. (I'll make the comment clearer.)
-The codec parts of the datasheet don't mention this clock at all.
+Ah, sorry, I missed v4.
 
-Allwinner's SDK puts all the clocks under the RTC module. And the
-are always on, so I can't really turn off the codec and see what
-happens. That and I don't have an oscilloscope or logic analyzer.
+> Stephan, could you send a new version of this patch, with preserved
+> "ide-disk" property, marked as deprecated?
 
-Regards
-ChenYu
+With that, feel free to add:
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Thanks,
+Mark.
