@@ -1,7 +1,8 @@
 From: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 3/4] rtc: rv8803: add device tree compatible names
-Date: Wed, 22 Jun 2016 08:42:21 +0200
-Message-ID: <1466577742-18824-4-git-send-email-dirk.behme@de.bosch.com>
+Subject: [PATCH v2 4/4] rtc: rv8803: Be able to set VDETOFF and
+ SWOFF via devcie tree
+Date: Wed, 22 Jun 2016 08:42:22 +0200
+Message-ID: <1466577742-18824-5-git-send-email-dirk.behme@de.bosch.com>
 References: <1466577742-18824-1-git-send-email-dirk.behme@de.bosch.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -16,53 +17,87 @@ List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:r
 List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/rtc-linux/subscribe>
 To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Knut Wohlrab <Knut.Wohlrab-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Carsten Resch <Carsten.Resch-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Knut Wohlrab <Knut.Wohlrab-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 
-Add device tree compatible names for usage in a compatible
-list of alternative RTC devices.
+There might be designs where the power supply circuit is designed
+in a way that VDETOFF and SWOFF is reuqired to be set. Otherwise the
+RTC detects a power loss. Add a device tree interface for this.
 
-Signed-off-by: Knut Wohlrab <Knut.Wohlrab-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Carsten Resch <Carsten.Resch-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- drivers/rtc/rtc-rv8803.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/rtc/rtc-rv8803.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/drivers/rtc/rtc-rv8803.c b/drivers/rtc/rtc-rv8803.c
-index f623038..e122b51 100644
+index e122b51..32a5686 100644
 --- a/drivers/rtc/rtc-rv8803.c
 +++ b/drivers/rtc/rtc-rv8803.c
-@@ -18,6 +18,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/rtc.h>
-+#include <linux/of.h>
+@@ -50,6 +50,10 @@
+ #define RV8803_CTRL_TIE			BIT(4)
+ #define RV8803_CTRL_UIE			BIT(5)
  
- #define RV8803_SEC			0x00
- #define RV8803_MIN			0x01
-@@ -520,9 +521,19 @@ static const struct i2c_device_id rv8803_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, rv8803_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id rv8803_of_match[] = {
-+	{ .compatible = "microcrystal,rv8803", },
-+	{ .compatible = "epson,rx8900", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rv8803_of_match);
-+#endif
++#define RX8900_BACKUP_CTRL		0x18
++#define RX8900_FLAG_SWOFF		BIT(2)
++#define RX8900_FLAG_VDETOFF		BIT(3)
 +
- static struct i2c_driver rv8803_driver = {
- 	.driver = {
- 		.name = "rtc-rv8803",
-+		.of_match_table = of_match_ptr(rv8803_of_match),
- 	},
- 	.probe		= rv8803_probe,
- 	.remove		= rv8803_remove,
+ struct rv8803_data {
+ 	struct i2c_client *client;
+ 	struct rtc_device *rtc;
+@@ -423,6 +427,35 @@ static struct rtc_class_ops rv8803_rtc_ops = {
+ 	.ioctl = rv8803_ioctl,
+ };
+ 
++static int rx8900_trickle_charger_init(struct rv8803_data *rv8803)
++{
++	struct i2c_client *client = rv8803->client;
++	struct device_node *node = client->dev.of_node;
++	int err;
++	u8 flags;
++
++	if (!node)
++		return 0;
++
++	if (!of_device_is_compatible(node, "epson,rx8900"))
++		return 0;
++
++	err = i2c_smbus_read_byte_data(rv8803->client, RX8900_BACKUP_CTRL);
++	if (err < 0)
++		return err;
++
++	flags = ~(RX8900_FLAG_VDETOFF | RX8900_FLAG_SWOFF) & (u8)err;
++
++	if (of_property_read_bool(node, "epson,vdet-disable"))
++		flags |= RX8900_FLAG_VDETOFF;
++
++	if (of_property_read_bool(node, "trickle-diode-disable"))
++		flags |= RX8900_FLAG_SWOFF;
++
++	return i2c_smbus_write_byte_data(rv8803->client, RX8900_BACKUP_CTRL,
++					 flags);
++}
++
+ static int rv8803_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+@@ -498,6 +531,12 @@ static int rv8803_probe(struct i2c_client *client,
+ 	if (err)
+ 		return err;
+ 
++	err = rx8900_trickle_charger_init(rv8803);
++	if (err) {
++		dev_err(&client->dev, "failed to init charger\n");
++		return err;
++	}
++
+ 	err = device_create_bin_file(&client->dev, &rv8803_nvram_attr);
+ 	if (err)
+ 		return err;
 -- 
 1.9.1
 
