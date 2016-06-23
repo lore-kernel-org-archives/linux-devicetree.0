@@ -1,93 +1,106 @@
-From: Dongdong Liu <liudongdong3@huawei.com>
-Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
-Date: Thu, 23 Jun 2016 13:43:38 +0800
-Message-ID: <576B770A.6060508@huawei.com>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
+Date: Thu, 23 Jun 2016 14:03:49 +0800
+Message-ID: <1466661829.15112.26.camel@mtksdaap41>
+References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
+	 <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465892645-32381-2-git-send-email-po.liu@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Po Liu <po.liu@nxp.com>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh@kernel.org>, Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464578397-29743-3-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi, HS:
 
-
-=D4=DA 2016/6/14 16:24, Po Liu =D0=B4=B5=C0:
-> On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mod=
-e.
-> When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
-> maybe there is interrupt line for aer pme etc. Search the interrupt
-> number in the fdt file. Then fixup the dev->irq with it.
->
-> Signed-off-by: Po Liu <po.liu@nxp.com>
+On Mon, 2016-05-30 at 11:19 +0800, HS Liao wrote:
+> This patch is first version of Mediatek Command Queue(CMDQ) driver. The
+> CMDQ is used to help read/write registers with critical time limitation,
+> such as updating display configuration during the vblank. It controls
+> Global Command Engine (GCE) hardware to achieve this requirement.
+> Currently, CMDQ only supports display related hardwares, but we expect
+> it can be extended to other hardwares for future requirements.
+> 
+> Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
-> changes for V3:
-> 	- Move to quirk;
-> 	- Only correct the irq in RC mode;
->
->   drivers/pci/quirks.c | 29 +++++++++++++++++++++++++++++
->   1 file changed, 29 insertions(+)
->
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index ee72ebe..8b39cce 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -25,6 +25,7 @@
->   #include <linux/sched.h>
->   #include <linux/ktime.h>
->   #include <linux/mm.h>
-> +#include <linux/of_irq.h>
->   #include <asm/dma.h>	/* isa_dma_bridge_buggy */
->   #include "pci.h"
->
-> @@ -4419,3 +4420,31 @@ static void quirk_intel_qat_vf_cap(struct pci_=
-dev *pdev)
->   	}
->   }
->   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat=
-_vf_cap);
-> +
-> +/* If root port doesn't support MSI/MSI-X/INTx in RC mode,
-> + * but use standalone irq. Read the device tree for the aer
-> + * interrupt number.
-> + */
-> +static void quirk_aer_interrupt(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +	u8 header_type;
-> +	struct device_node *np =3D NULL;
-> +
-> +	/* Only for the RC mode device */
-> +	pci_read_config_byte(dev, PCI_HEADER_TYPE, &header_type);
-> +	if ((header_type & 0x7F) !=3D PCI_HEADER_TYPE_BRIDGE)
-> +		return;
+>  drivers/soc/mediatek/Kconfig    |  10 +
+>  drivers/soc/mediatek/Makefile   |   1 +
+>  drivers/soc/mediatek/mtk-cmdq.c | 943 ++++++++++++++++++++++++++++++++++++++++
+>  include/soc/mediatek/cmdq.h     | 197 +++++++++
+>  4 files changed, 1151 insertions(+)
+>  create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
+>  create mode 100644 include/soc/mediatek/cmdq.h
 
-How about that it is changed as below.
+[...]
 
-/* Only for the RC mode device */
-if (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_ROOT_PORT)
-	return;
+> +
+> +/* events for CMDQ and display */
+> +enum cmdq_event {
+> +	/* Display start of frame(SOF) events */
+> +	CMDQ_EVENT_DISP_OVL0_SOF = 11,
+> +	CMDQ_EVENT_DISP_OVL1_SOF = 12,
+> +	CMDQ_EVENT_DISP_RDMA0_SOF = 13,
+> +	CMDQ_EVENT_DISP_RDMA1_SOF = 14,
+> +	CMDQ_EVENT_DISP_RDMA2_SOF = 15,
+> +	CMDQ_EVENT_DISP_WDMA0_SOF = 16,
+> +	CMDQ_EVENT_DISP_WDMA1_SOF = 17,
+> +	/* Display end of frame(EOF) events */
+> +	CMDQ_EVENT_DISP_OVL0_EOF = 39,
+> +	CMDQ_EVENT_DISP_OVL1_EOF = 40,
+> +	CMDQ_EVENT_DISP_RDMA0_EOF = 41,
+> +	CMDQ_EVENT_DISP_RDMA1_EOF = 42,
+> +	CMDQ_EVENT_DISP_RDMA2_EOF = 43,
+> +	CMDQ_EVENT_DISP_WDMA0_EOF = 44,
+> +	CMDQ_EVENT_DISP_WDMA1_EOF = 45,
+> +	/* Mutex end of frame(EOF) events */
+> +	CMDQ_EVENT_MUTEX0_STREAM_EOF = 53,
+> +	CMDQ_EVENT_MUTEX1_STREAM_EOF = 54,
+> +	CMDQ_EVENT_MUTEX2_STREAM_EOF = 55,
+> +	CMDQ_EVENT_MUTEX3_STREAM_EOF = 56,
+> +	CMDQ_EVENT_MUTEX4_STREAM_EOF = 57,
+> +	/* Display underrun events */
+> +	CMDQ_EVENT_DISP_RDMA0_UNDERRUN = 63,
+> +	CMDQ_EVENT_DISP_RDMA1_UNDERRUN = 64,
+> +	CMDQ_EVENT_DISP_RDMA2_UNDERRUN = 65,
+> +	/* Keep this at the end of HW events */
+> +	CMDQ_MAX_HW_EVENT_COUNT = 260,
+> +};
 
-Dongdong
-Thanks
-> +
-> +	if (dev->bus->dev.of_node)
-> +		np =3D dev->bus->dev.of_node;
-> +
-> +	if (IS_ENABLED(CONFIG_OF_IRQ) && np) {
-> +		ret =3D of_irq_get_byname(np, "aer");
-> +		if (ret > 0) {
-> +			dev->no_msi =3D 1;
-> +			dev->irq =3D ret;
-> +		}
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_a=
-er_interrupt);
->
+The value of these symbol is just the GCE-HW-defined value. I think it's
+not appropriate to expose HW-defined value to client. For another SoC
+GCE HW, these definition may change.
+
+One way to solve this problem is to translate symbol to value
+internally. But these events looks like interrupt and the value may vary
+by each SoC, to prevent driver modified frequently, it's better to place
+the value definition in device tree. It may looks like:
+
+mmsys: clock-controller@14000000 {
+	compatible = "mediatek,mt8173-mmsys";
+	mediatek,gce = <&gce>;
+	gce-events = <53 54>;
+	gce-event-names = "MUTEX0_EOF","MUTEX1_EOF";
+}
+
+For cmdq driver, you just need modify interface from
+
+int cmdq_rec_wfe(struct cmdq_rec *rec, enum cmdq_event event)
+int cmdq_rec_clear_event(struct cmdq_rec *rec, enum cmdq_event event)
+
+to
+
+int cmdq_rec_wfe(struct cmdq_rec *rec, u32 event)
+int cmdq_rec_clear_event(struct cmdq_rec *rec, u32 event)
+
+Regards,
+CK
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
