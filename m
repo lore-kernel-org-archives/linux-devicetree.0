@@ -1,54 +1,50 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] regulator: tps65217: Enable suspend configuration
-Date: Thu, 23 Jun 2016 11:26:34 +0100
-Message-ID: <20160623102634.GX28202@sirena.org.uk>
-References: <1466412218-5906-1-git-send-email-j-keerthy@ti.com>
- <1466412218-5906-2-git-send-email-j-keerthy@ti.com>
- <20160621190848.GF28202@sirena.org.uk>
- <576A64EA.4000607@ti.com>
- <20160622101611.GI28202@sirena.org.uk>
- <576A67D9.6080707@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="p11K2BJEgMZL61bg"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <576A67D9.6080707-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, russ.dill-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: display: tegra: Add source clock for SOR
+Date: Thu, 23 Jun 2016 12:27:58 +0200
+Message-ID: <20160623102759.23078-1-thierry.reding@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---p11K2BJEgMZL61bg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The SOR clock can have various sources, with the most commonly used
+being the sor_safe, pll_d2_out0, pll_dp and sor_brick clocks. These
+are configured using a three level mux, of which the first 2 levels
+can be treated as one. The direct parents of the SOR clock are the
+sor_safe, sor_brick and sor_src clocks, whereas the pll_d2_out0 and
+pll_dp clocks can be selected as parents of the sor_src clock via a
+second mux.
 
-On Wed, Jun 22, 2016 at 03:56:33PM +0530, Keerthy wrote:
+Previous generations of Tegra have only supported eDP and LVDS with
+the SOR, where LVDS was never used on publicly available hardware.
+Clocking for this only ever required the first level mux (to select
+between sor_safe and sor_brick).
 
-> I will allocate memory for TPS65217_NUM_REGULATOR strobes during regulator
-> probe. Is this approach okay?
+Tegra210 has a new revision of the SOR that supports HDMI and hence
+needs to support the second level mux to allow selecting pll_d2_out0
+as the SOR clock's parent. This second mux is knows as sor_src, and
+operating system software needs a reference to it in order to select
+the proper parent.
 
-It should be I think.  Some more comments or changelog explaining what's
-going on with the sequencing would also help.
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt          | 1 +
+ 1 file changed, 1 insertion(+)
 
---p11K2BJEgMZL61bg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXa7lZAAoJECTWi3JdVIfQJG8H/i2uB7kAGeoUpdxJ2yswedLK
-sd5zeUAUm7Vd2HMtB3CQmZ+47t9DaO3WkulOgxAdvg+MXVBCfMqgCm8FPD0PKV2v
-+Yt7F98irFgHyQQqwncJSDCbpdcUFeTcjTOnpqAJHWbnjytSgNsq1ZXHOLyBNqhR
-pogKDZj3elndh3CJJlZF2ALUryPc9BZwFx7tIVBVtt8tsndWzatqKv0L9cETJNcf
-GAIqNOYyMswrfjhucFfCW8YqBFHf3JLTaLvoyuPmX2xpwjJQP1mmp26l8PTiP6aa
-yNvnTseBIhJ2iWNPY84e97AksdGA76Fp8bMJRd+/IIcZDtRfoQW1ox8leL25Fv0=
-=XVXs
------END PGP SIGNATURE-----
-
---p11K2BJEgMZL61bg--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+index a3bd8c050c4e..21de27a7f0a1 100644
+--- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
++++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+@@ -208,6 +208,7 @@ of the following host1x client modules:
+     See ../clocks/clock-bindings.txt for details.
+   - clock-names: Must include the following entries:
+     - sor: clock input for the SOR hardware
++    - source: source clock for the SOR clock
+     - parent: input for the pixel clock
+     - dp: reference clock for the SOR clock
+     - safe: safe reference for the SOR clock during power up
+-- 
+2.8.3
