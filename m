@@ -1,118 +1,154 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] mtd: nand: sunxi: add reset line support
-Date: Fri, 24 Jun 2016 07:20:38 +0800
-Message-ID: <1284641466724038@web7h.yandex.ru>
-References: <20160620044838.56904-1-icenowy@aosc.xyz>
-	<20160620044838.56904-2-icenowy@aosc.xyz> <20160623180108.382bbaae@bbrezillon>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] phy: add a driver for the Rockchip SoC internal
+ PCIe PHY
+Date: Thu, 23 Jun 2016 16:37:38 -0700
+Message-ID: <20160623233737.GB21157@google.com>
+References: <1466040179-30973-1-git-send-email-shawn.lin@rock-chips.com>
+ <5763F665.6070403@ti.com>
+ <c88eb16f-e976-ad52-02fb-5ec7b6e261b9@rock-chips.com>
+ <57678ED2.9000707@ti.com>
+ <428a1393-c6b4-163c-ceec-9b79fdd8ad4a@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBS65WG5QKGQEAEYBIDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160623180108.382bbaae@bbrezillon>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <428a1393-c6b4-163c-ceec-9b79fdd8ad4a-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In my opinion, return directly PTR_ERR(nfc->reset) is OK here.
-If devm_reset_control_get_optional() return -EPROBE_DEFER, the code here wi=
-ll also return it. However, if we get other error, why should it return -EP=
-ROBE_DEFER again?
+Hi,
 
-24.06.2016, 00:01, "Boris Brezillon" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> On Mon, 20 Jun 2016 12:48:38 +0800
-> Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
->
->> =C2=A0The NAND controller on some sun8i chips needs its reset line to be
->> =C2=A0deasserted before they can enter working state.
->>
->> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->> =C2=A0---
->> =C2=A0=C2=A0=C2=A0Changes in v2:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Corrected the error checking code of res=
-et line.
->>
->> =C2=A0=C2=A0=C2=A0Changes in v3:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Corrected a more serious error brought i=
-n the "fix" of v2.
->>
->> =C2=A0=C2=A0=C2=A0Changes in v4:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Removed unneeded code block after "else"=
-.
->>
->> =C2=A0=C2=A0=C2=A0Changes in v5:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Added reassertion code in case of initia=
-lization error and device
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0remove.
->>
->> =C2=A0=C2=A0=C2=A0Changes in v6:
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Fixed a resource leak by not using goto =
-to exit in case of error.
->>
->> =C2=A0=C2=A0drivers/mtd/nand/sunxi_nand.c | 28 +++++++++++++++++++++++++=
----
->> =C2=A0=C2=A01 file changed, 25 insertions(+), 3 deletions(-)
->>
->> =C2=A0diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunx=
-i_nand.c
->> =C2=A0index a83a690..08d5e88 100644
->> =C2=A0--- a/drivers/mtd/nand/sunxi_nand.c
->> =C2=A0+++ b/drivers/mtd/nand/sunxi_nand.c
->> =C2=A0@@ -39,6 +39,7 @@
->> =C2=A0=C2=A0#include <linux/gpio.h>
->> =C2=A0=C2=A0#include <linux/interrupt.h>
->> =C2=A0=C2=A0#include <linux/iopoll.h>
->> =C2=A0+#include <linux/reset.h>
->>
->> =C2=A0=C2=A0#define NFC_REG_CTL 0x0000
->> =C2=A0=C2=A0#define NFC_REG_ST 0x0004
->> =C2=A0@@ -269,6 +270,7 @@ struct sunxi_nfc {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0void __iomem=
- *regs;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct clk *=
-ahb_clk;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct clk *=
-mod_clk;
->> =C2=A0+ struct reset_control *reset;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned lon=
-g assigned_cs;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned lon=
-g clk_rate;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct list_=
-head chips;
->> =C2=A0@@ -1871,26 +1873,42 @@ static int sunxi_nfc_probe(struct platform=
-_device *pdev)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0goto out_ahb_clk_unprepare;
->>
->> =C2=A0+ nfc->reset =3D devm_reset_control_get_optional(dev, "ahb");
->> =C2=A0+
->> =C2=A0+ if (!IS_ERR(nfc->reset)) {
->> =C2=A0+ ret =3D reset_control_deassert(nfc->reset);
->> =C2=A0+ if (ret) {
->> =C2=A0+ dev_err(dev, "reset err %d\n", ret);
->> =C2=A0+ goto out_mod_clk_unprepare;
->> =C2=A0+ }
->> =C2=A0+ } else if (PTR_ERR(nfc->reset) !=3D -ENOENT) {
->> =C2=A0+ ret =3D PTR_ERR(nfc->reset);
->
-> You should return -EDEFER_PROBE here.
->
-> And can you please rebase this series on top of nand/next [1]?
->
-> [1]https://github.com/linux-nand/linux/tree/nand/next
+On Thu, Jun 23, 2016 at 10:30:17AM +0800, Shawn Lin wrote:
+> =E5=9C=A8 2016/6/20 14:36, Kishon Vijay Abraham I =E5=86=99=E9=81=93:
+> >On Monday 20 June 2016 06:28 AM, Shawn Lin wrote:
+> >>On 2016/6/17 21:08, Kishon Vijay Abraham I wrote:
+> >>>On Thursday 16 June 2016 06:52 AM, Shawn Lin wrote:
+> >>>>This patch to add a generic PHY driver for rockchip PCIe PHY.
+> >>>>Access the PHY via registers provided by GRF (general register
+> >>>>files) module.
+> >>>>
+> >>>>Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >>>>---
+> >>>>
+> >>>>Changes in v3: None
+> >>>>Changes in v2: None
+> >>>>
+[...]
+> >>>>diff --git a/drivers/phy/phy-rockchip-pcie.c b/drivers/phy/phy-ro=
+ckchip-pcie.c
+> >>>>new file mode 100644
+> >>>>index 0000000..bc6cd17
+> >>>>--- /dev/null
+> >>>>+++ b/drivers/phy/phy-rockchip-pcie.c
+> >>>>@@ -0,0 +1,378 @@
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+[...]
+
+> >>>>+void rockchip_pcie_phy_laneoff(struct phy *phy)
+> >>>>+{
+> >>>>+    u32 status;
+> >>>>+    struct rockchip_pcie_phy *rk_phy =3D phy_get_drvdata(phy);
+> >>>>+    int i;
+> >>>>+
+> >>>>+    for (i =3D 0; i < PHY_MAX_LANE_NUM; i++) {
+> >>>>+        status =3D phy_rd_cfg(rk_phy, PHY_LANE_A_STATUS + i);
+> >>>>+        if (!((status >> PHY_LANE_RX_DET_SHIFT) &
+> >>>>+               PHY_LANE_RX_DET_TH))
+> >>>>+            pr_debug("lane %d is used\n", i);
+> >>>>+        else
+> >>>>+            regmap_write(rk_phy->reg_base,
+> >>>>+                     rk_phy->phy_data->pcie_laneoff,
+> >>>>+                     HIWORD_UPDATE(PHY_LANE_IDLE_OFF,
+> >>>>+                           PHY_LANE_IDLE_MASK,
+> >>>>+                           PHY_LANE_IDLE_A_SHIFT + i));
+> >>>>+    }
+> >>>>+}
+> >>>>+EXPORT_SYMBOL_GPL(rockchip_pcie_phy_laneoff);
+
+Shawn, I can't find an example of how you planned to use this (though I
+can make educated guesses). As such, it's possible there's some
+misunderstanding. Maybe you can include a sample patch for the PCIe
+controller driver?
+
+Related: it might make sense to have the PCIe controller and PHY
+drivers/bindings all in the same patch series (with proper threading,
+which we already talked about off-list).
+
+> >>>Er.. don't use export symbols from phy driver. I think it would be=
+ nice if you
+> >>>can model the driver in such a way that the PCIe driver can contro=
+l individual
+> >>>phy's.
+> >>>
+> >>
+> >>Yes, I was trying to look for a way not to export symbols from
+> >>phy... But I failed to find it as there at least need three
+> >>interaction between controller and phy which made me believe we
+> >>at least need to export one symbol without adding new API for phy.
+
+My interpretation of the above is that Shawn means we might turn off up
+to 3 different lanes (i.e., 3 of 4 supported lanes might be unused).
+
+> >That can be managed by implementing a small state machine within the=
+ PHY driver.
+>=20
+> I don't understand your point of implementing a small state machine
+> within the PHY driver.
+
+I'm not 100% sure I understand, but I think I have a reasonable
+interpretation below.
+
+> Do you mean I need to call vaarious of power_on/off and count the
+> on/off times to decide the state machine?
+>=20
+> I would appreciate it If you could elaborate this a bit more or
+> show me a example. :)
+
+My interpretation: rather than associating a single PCIe controller
+device with a single struct phy that controls up to 4 lanes, Kishon is
+suggesting you should have this driver implement 4 phy objects, one for
+each lane. You'd need to add #phy-cells =3D <1> to the DT binding, and
+implement an ->of_xlate() hook so we can associate/address them
+properly. Then the PCIe controller would call phy_power_off() on each
+lane that's not used.
+
+The state machine would come into play because you have additional powe=
+r
+savings to utilize, but only when all PHYs are off. So the state machin=
+e
+would just track how many of the lane PHYs are still on, and when the
+count reaches 0, you call reset_control_assert(rk_phy->phy_rst).
+
+The DT for this would be:
+
+	pcie0: pcie@f8000000 {
+		compatible =3D "rockchip,rk3399-pcie";
+		...
+		phys =3D <&pcie_phy 0>, <&pcie_phy 1>, <&pcie_phy 2>, <&pcie_phy 3>;
+		phy-names =3D "pcie-lane0", "pcie-lane1", "pcie-lane2", "pcie-lane3";
+		...
+	};
+
+	pcie_phy: pcie-phy {
+		compatible =3D "rockchip,rk3399-pcie-phy";
+		...
+		#phy-cells =3D <1>;
+		...
+	};
+
+(See Documentation/devicetree/bindings/phy/phy-bindings.txt for the
+#phy-cells explanation.)
+
+Is that close to what you're suggesting, Kishon? Seems reasonable enoug=
+h
+to me, even if it's slightly more complicated.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
