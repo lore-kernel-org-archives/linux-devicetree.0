@@ -1,148 +1,98 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] reset: add TI SYSCON based reset driver
-Date: Thu, 23 Jun 2016 18:28:17 +0200
-Message-ID: <1466699297.2278.111.camel@pengutronix.de>
-References: <20160620184607.4380-1-afd@ti.com>
-	 <20160620184607.4380-3-afd@ti.com>
-	 <1466590772.4123.38.camel@pengutronix.de> <576AEB17.7070302@ti.com>
-	 <1466672754.2278.34.camel@pengutronix.de> <576BF20D.8040504@ti.com>
+From: Hoan Tran <hotran@apm.com>
+Subject: Re: [PATCH 1/3] Documentation: dtb: xgene: Add hwmon dts binding documentation
+Date: Thu, 23 Jun 2016 09:42:02 -0700
+Message-ID: <CAFHUOYy7G85O0DiqNds2DJtbg_EZzRE0NjS=7V0gKSEsyQJ8Ow@mail.gmail.com>
+References: <1463415447-29903-1-git-send-email-hotran@apm.com>
+ <1463415447-29903-2-git-send-email-hotran@apm.com> <20160523203044.GA17450@rob-hp-laptop>
+ <CAFHUOYyYt8pE6sggezCR=TFcsimcjakbYmcWFtpLyQ3Et_gZaA@mail.gmail.com>
+ <CABb+yY3uFrknEU65aBCw7G+dfnDdqGTZ_sctktx03GM9b86xaA@mail.gmail.com> <CAFHUOYwva_mry+gKKEsFaBw-L2ey-HHPetjDGqkr0hwcmw_zEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <576BF20D.8040504-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAFHUOYwva_mry+gKKEsFaBw-L2ey-HHPetjDGqkr0hwcmw_zEw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Loc Ho <lho@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 23.06.2016, 09:28 -0500 schrieb Andrew F. Davis:
-> On 06/23/2016 04:05 AM, Philipp Zabel wrote:
-> > Am Mittwoch, den 22.06.2016, 14:46 -0500 schrieb Andrew F. Davis:
-> > [...]
-> >>>> +	depends on HAS_IOMEM
-> >>>> +	select MFD_SYSCON
-> >>>> +	help
-> >>>> +	  This enables the reset driver support for TI devices with
-> >>>> +	  memory-mapped reset registers as part of a syscon device node. If
-> >>>> +	  you wish to use the reset framework for such memory-mapped devices,
-> >>>> +	  say Y here. Otherwise, say N.
-> >>>
-> >>> Actually, do you need the user configurable option at all?
-> >>
-> >> I'm not sure, right now it is selected by other things, but that is true
-> >> for much of Kconfig, it is not platform dependent so it doesn't need to
-> >> only be enabled by arch, it probably isn't hurting anything to leave it?
-> > 
-> > No, that's okay. So the intention is to make it possible to enable it
-> > for COMPILE_TESTs on architectures other than TI?
-> 
-> I was thinking more that it should be usable on non-TI architectures and
-> so can be user enabled if needed.
+On Tue, Jun 7, 2016 at 11:05 AM, Hoan Tran <hotran@apm.com> wrote:
+> Hi Jassi,
+>
+> Thanks for your reply !
+>
+> On Tue, Jun 7, 2016 at 10:20 AM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>> On Tue, May 24, 2016 at 6:31 AM, Hoan Tran <hotran@apm.com> wrote:
+>>> Hi Rob,
+>>>
+>>> Thanks for your review !
+>>>
+>>> On Mon, May 23, 2016 at 1:30 PM, Rob Herring <robh@kernel.org> wrote:
+>>>>
+>>>> On Mon, May 16, 2016 at 09:17:25AM -0700, Hoan Tran wrote:
+>>>> > This patch adds the APM X-Gene hwmon device tree node documentation.
+>>>> >
+>>>> > Signed-off-by: Hoan Tran <hotran@apm.com>
+>>>> > ---
+>>>> >  .../devicetree/bindings/hwmon/apm-xgene-hwmon.txt          | 14 ++++++++++++++
+>>>> >  1 file changed, 14 insertions(+)
+>>>> >  create mode 100644 Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
+>>>> >
+>>>> > diff --git a/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
+>>>> > new file mode 100644
+>>>> > index 0000000..49a482e
+>>>> > --- /dev/null
+>>>> > +++ b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
+>>>> > @@ -0,0 +1,14 @@
+>>>> > +APM X-Gene hwmon driver
+>>>> > +
+>>>> > +Hwmon driver accesses sensors over the "SLIMpro" mailbox.
+>>>>
+>>>> DT bindings describe h/w, not driver data.
+>>> How about this description: "APM X-Gene SOC sensors are accessed over
+>>> the "SLIMpro" mailbox" ?
+>>>> I'm not sure this belongs in
+>>>> DT and perhaps the devices for the mailbox should be created by the
+>>>> mailbox driver.
+>>> I don't think the current mailbox supports it.
+>>>>
+>>>> > +
+>>>> > +Required properties :
+>>>> > + - compatible : should be "apm,xgene-slimpro-hwmon"
+>>>> > + - mboxes : use the label reference for the mailbox as the first parameter.
+>>>> > +         The second parameter is the channel number.
+>>>>
+>>>> When do you expect this to be different mailbox numbers?
+>>> No, this number is not changed. This "mboxes" property is used and
+>>> required by mailbox.c when hwmon driver requests a mailbox channel
+>>>
+>> I think that's inaccurate.
+>>
+>> The h/w and the firmware combined is the "platform" from Linux POV.
+>> Channels are physical resources provided by a mailbox controller.
+>> Currently the firmware listens on Channel-7 but some future revision
+>> might switch to, say, Channel-9.  Or say the same firmware on next
+>> revision of h/w may have to switch to Channel-3 because it has only 4
+>> channels. So I see the mailbox channel number as a hardware property
+>> just like an IRQ (which very often change with SoC iterations).
+>
+> Agree about that. I suppose this number is not changed. But as you
+> said, the mailbox channel number can be changed based on SoC or
+> Firmware. It would be better if this channel number is specified
+> inside a DT node.
+>
+> Hi Rob, do you have any comments ?
+>
+> Thanks
+> Hoan
+>
+>>
+>> Cheers.
 
-Those architectures could also just select it, then. Having the option
-might improve discoverability though.
+Hi Rob,
 
-[...]
-> > So far, I have seen the following variants. Depending on the hardware, a
-> > reset could be:
-> > - asserted by setting a bit
-> > - asserted by clearing a bit
-> > - deasserted by clearing/setting the same bit
-> > - deasserted by setting/clearing the same bit in another register
-> > - triggered to be asserted/deasserted automatically with some specific
-> >   timing that the hardware knows about (in that case the manual
-> >   assert/deassert is not available)
-> > The status of the reset line could be read via
-> > - the same bit that is used to assert/deassert
-> > - the same bit in another register
-> > - not at all
-> > 
-> > What I've not yet seen but surely exists somewhere is the case where
-> > assert/deassert/status bits are at different bit positions either in the
-> > same register or in different registers.
-> 
-> Exactly why I was thinking having a node for the resets would be more
-> future proof, we could add more properties later:
-> 
-> pscrst-dsp: dsp {
-> 	reset-control = <0xa3c 8 RESET_ASSERT_CLEAR>;
-> 	reset-status = <0x83c 8 RESET_ASSERT_CLEAR>;
-> +	reset-deassert = <0x840 3 RESET_ASSERT_SET>;
-> +	reset-toggle-time-ms = <20>;
-> };
-> 
-> While a fixed length array does make for a more condensed binding we
-> don't get much flexibility.
-> 
-> What we could also do is have a longer array then use macros to trim it
-> down for simple cases:
-> 
-> reset-bits = <
-> 	SINGLE_BIT_RESET(0xa3c, 8)
-> 	SINGLE_BIT_RESET(0xa40, 7)
-> 	SINGLE_BIT_RESET(0xa44, 6)
-> >;
+Do you have any comments on Jassi's reply ?
+If not, I'll send another version which included the binding document
+and DT node.
 
-I think there has been opposition in the past against hiding things more
-complex than a single value behind macros.
-
-> Each real entry could have 9 fields that the macro would expand into:
-> 	(assert reg) (assert bit) (assert flag)
-> 	(deassert reg) (deassert bit) (deassert flag)
-> 	(status reg) (status bit) (status flag)
-> 
-> This would be able to handle all of the above cases except the timing
-> one, that case can always be handled by a dedicated driver for that system.
-
-How about seven:
-	(assert reg) (assert bit)
-	(deassert reg) (deassert bit)
- 	(status reg) (status bit)
-        (flags)
-
-reset-bits = <
-	0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_CLEAR|DEASSERT_SET|STATUS_SET)
->;
-
-> My goal here, I would like to believe, aligns with the goals of DT in
-> general, I would like to see one kernel work on many platforms without
-> having to compile-in a bunch of SoC specific info. Some SoCs will need
-> their own reset driver for when they do something unique (like this
-> reset driver I will post next cycle which sends a message to a power
-> management chip for its resets:
-> http://git.ti.com/gitweb/?p=ti-linux-kernel/ti-linux-kernel.git;a=blob;f=drivers/reset/reset-ti-sci.c;h=3636dc176c8b5c4449eefc1fe13df7b912cec73e;hb=refs/heads/ti-lsk-linux-4.4.y
-> )
-> but I see no reason a bunch of different drivers for simple register bit
-> resets with the only difference being a #define offset. I hope that this
-> effort will get ahead of these drivers and reduce the maintenance burden
-> for you.
-
-The problem of reducing the amount of simple drivers is completely
-orthogonal to agreeing on a fitting DT binding. A common driver could
-just as well have static syscon_reset_control arrays per compatible
-compiled in.
-
-> So how much is handled by this driver is up to you, (hopefully without
-> trying to handle every possible case :)).
-
-It's also up to the DT maintainers to approve the bindings.
-
-I have no delusions that we have to find a compromise between
-driver/binding complexity and the number of supported common cases.
-The reason I find it difficult to make a decision is I don't feel like I
-have enough data.
-Should we support separate status reg? Obviously, you need it. Separate
-deassert reg? Questionable. Those devices usually have set/clear
-registers dedicated to resets and as such are not a good fit for this
-driver anyway. assert/deassert/status bits at different positions? Maybe
-not even needed. Support for triggered, self-clearing resets? Maybe
-better handled by a different driver, too.
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Hoan
