@@ -1,11 +1,11 @@
 From: megous@megous.com
-Subject: [PATCH 04/14] dt-bindings: document sun8i_ths
-Date: Thu, 23 Jun 2016 21:20:54 +0200
-Message-ID: <20160623192104.18720-5-megous@megous.com>
+Subject: [PATCH 06/14] ARM: dts: sun8i: Add cpu0 label to sun8i-h3.dtsi
+Date: Thu, 23 Jun 2016 21:20:56 +0200
+Message-ID: <20160623192104.18720-7-megous@megous.com>
 References: <20160623192104.18720-1-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20160623192104.18720-1-megous@megous.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -18,40 +18,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: dev@linux-sunxi.org
-Cc: Ondrej Jirman <megous@megous.com>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Cc: Ondrej Jirman <megous@megous.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogT25kcmVqIEppcm1hbiA8bWVnb3VzQG1lZ291cy5jb20+CgpUaGlzIHBhdGNoIGFkZHMg
-dGhlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIHN1bjhpX3RocyBkcml2ZXIKClNpZ25l
-ZC1vZmYtYnk6IE9uZMWZZWogSmlybWFuIDxtZWdvdXNAbWVnb3VzLmNvbT4KLS0tCiAuLi4vZGV2
-aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3N1bjhpLXRocy50eHQgICAgICB8IDMxICsrKysrKysr
-KysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspCiBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvc3Vu
-OGktdGhzLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy90aGVybWFsL3N1bjhpLXRocy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdGhlcm1hbC9zdW44aS10aHMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
-MDAuLjgyNmNkNTcKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvdGhlcm1hbC9zdW44aS10aHMudHh0CkBAIC0wLDAgKzEsMzEgQEAKKyogc3VuOGkg
-VEhTCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGUgOiAiYWxsd2lubmVyLHN1
-bjhpLWgzLXRocyIKKy0gcmVnIDogQWRkcmVzcyByYW5nZSBvZiB0aGUgdGhlcm1hbCByZWdpc3Rl
-cnMgYW5kIGxvY2F0aW9uIG9mIHRoZSBjYWxpYnJhdGlvbgorICAgICAgICB2YWx1ZQorLSByZXNl
-dHMgOiBNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggZW50cnkgaW4gcmVzZXQtbmFtZXMu
-CisgICAgICAgICAgIHNlZSAuLi9yZXNldC9yZXNldC50eHQgZm9yIGRldGFpbHMKKy0gcmVzZXQt
-bmFtZXMgOiBNdXN0IGluY2x1ZGUgdGhlIG5hbWUgImFoYiIKKy0gY2xvY2tzIDogTXVzdCBjb250
-YWluIGFuIGVudHJ5IGZvciBlYWNoIGVudHJ5IGluIGNsb2NrLW5hbWVzLgorLSBjbG9jay1uYW1l
-cyA6IE11c3QgY29udGFpbiAiYWhiIiBmb3IgdGhlIGJ1cyBnYXRlIGFuZCAidGhzIiBmb3IgdGhl
-IFRIUworICBjbG9jaworCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBudm1lbS1jZWxscyA6IE11
-c3QgY29udGFpbiBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBpbiBudm1lbS1jZWxsLW5hbWVzCist
-IG52bWVtLWNlbGwtbmFtZXMgOiBNdXN0IGNvbnRhaW4gImNhbGlicmF0aW9uIiBmb3IgdGhlIGNl
-bGwgY29udGFpbmluZyB0aGUKKyAgdGVtcGVyYXR1cmUgY2FsaWJyYXRpb24gY2VsbCwgaWYgYXZh
-aWxhYmxlCisKK0V4YW1wbGU6Cit0aHM6IHRoc0AwMWMyNTAwMCB7CisJI3RoZXJtYWwtc2Vuc29y
-LWNlbGxzID0gPDA+OworCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWgzLXRocyI7CisJ
-cmVnID0gPDB4MDFjMjUwMDAgMHg0MDA+OworCWludGVycnVwdHMgPSA8R0lDX1NQSSA2MyBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsKKwlyZXNldHMgPSA8JmJ1c19yc3QgMTM2PjsKKwlyZXNldC1uYW1l
-cyA9ICJhaGIiOworCWNsb2NrcyA9IDwmYnVzX2dhdGVzIDcyPiwgPCZ0aHNfY2xrPjsKKwljbG9j
-ay1uYW1lcyA9ICJhaGIiLCAidGhzIjsKKwludm1lbS1jZWxscyA9IDwmdGhzX2NhbGlicmF0aW9u
-PjsKKwludm1lbS1jZWxsLW5hbWVzID0gImNhbGlicmF0aW9uIjsKK307Ci0tIAoyLjkuMAoKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwK
+From: Ondrej Jirman <megous@megous.com>
+
+Add label to the first cpu so that it can be referenced
+from derived dts files.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 9938972..82faefc 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -52,7 +52,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0>;
+-- 
+2.9.0
