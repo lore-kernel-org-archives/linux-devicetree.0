@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] arm64: dts: hikey: name the GPIO lines
-Date: Fri, 24 Jun 2016 00:33:15 +0200
-Message-ID: <1466721195-9137-1-git-send-email-linus.walleij@linaro.org>
+Subject: [PATCH v2] arm64: dts: hikey: name the GPIO lines
+Date: Fri, 24 Jun 2016 01:06:04 +0200
+Message-ID: <1466723164-9937-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
@@ -29,18 +29,22 @@ Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
+ChangeLog v1->v2:
+- Use the right property name: old patch using "gpio-names" rather
+  than "gpio-line-names" that we agreed upon. Sorry...
+
 This would be nice to have merged for kernel v4.8 so that the
 new chardev ABI can be used to obtain the lines for the external
 connector and use them from userspace from this kernel version.
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 141 +++++++++++++++++++++++++
- 1 file changed, 141 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 143 +++++++++++++++++++++++++
+ 1 file changed, 143 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index e92a30c87a82..cb1d455a5b9b 100644
+index e92a30c87a82..593c7e43de79 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
 +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -66,6 +66,147 @@
+@@ -66,6 +66,149 @@
  			status = "ok";
  		};
  
@@ -69,18 +73,18 @@ index e92a30c87a82..cb1d455a5b9b 100644
 +		 * ones actually used for GPIO.
 +		 */
 +		gpio0: gpio@f8011000 {
-+			gpio-names = "PWR_HOLD", "DSI_SEL", "USB_HUB_RESET_N",
-+			"USB_SEL", "HDMI_PD", "WL_REG_ON", "PWRON_DET",
-+			"5V_HUB_EN";
++			gpio-line-names = "PWR_HOLD", "DSI_SEL",
++			"USB_HUB_RESET_N", "USB_SEL", "HDMI_PD", "WL_REG_ON",
++			"PWRON_DET", "5V_HUB_EN";
 +		};
 +
 +		gpio1: gpio@f8012000 {
-+			gpio-names = "SD_DET", "HDMI_INT", "PMU_IRQ_N",
++			gpio-line-names = "SD_DET", "HDMI_INT", "PMU_IRQ_N",
 +			"WL_HOST_WAKE", "NC", "NC", "NC", "BT_REG_ON";
 +		};
 +
 +		gpio2: gpio@f8013000 {
-+			gpio-names =
++			gpio-line-names =
 +				"GPIO-A", /* LSEC Pin 23: GPIO2_0 */
 +				"GPIO-B", /* LSEC Pin 24: GPIO2_1 */
 +				"GPIO-C", /* LSEC Pin 25: GPIO2_2 */
@@ -91,17 +95,17 @@ index e92a30c87a82..cb1d455a5b9b 100644
 +		};
 +
 +		gpio3: gpio@f8014000 {
-+			gpio-names = "GPIO3_0", "NC", "NC", "", "NC", "",
++			gpio-line-names = "GPIO3_0", "NC", "NC", "", "NC", "",
 +			"WLAN_ACTIVE", "NC", "NC";
 +		};
 +
 +		gpio4: gpio@f7020000 {
-+			gpio-names = "USER_LED1", "USER_LED2", "USER_LED3",
++			gpio-line-names = "USER_LED1", "USER_LED2", "USER_LED3",
 +			"USER_LED4", "SD_SEL", "NC", "NC", "BT_ACTIVE";
 +		};
 +
 +		gpio5: gpio@f7021000 {
-+			gpio-names = "NC", "NC",
++			gpio-line-names = "NC", "NC",
 +			"[UART1_RxD]", /* LSEC Pin 11: UART3_RX */
 +			"[UART1_TxD]", /* LSEC Pin 13: UART3_TX */
 +			"[AUX_SSI1]", "NC",
@@ -110,7 +114,7 @@ index e92a30c87a82..cb1d455a5b9b 100644
 +		};
 +
 +		gpio6: gpio@f7022000 {
-+			gpio-names =
++			gpio-line-names =
 +			"[SPI0_DIN]", /* Pin 10: SPI0_DI */
 +			"[SPI0_DOUT]", /* Pin 14: SPI0_DO */
 +			"[SPI0_CS]", /* Pin 12: SPI0_CS_N */
@@ -120,26 +124,26 @@ index e92a30c87a82..cb1d455a5b9b 100644
 +		};
 +
 +		gpio7: gpio@f7023000 {
-+			gpio-names = "NC", "NC", "NC", "NC",
++			gpio-line-names = "NC", "NC", "NC", "NC",
 +			"[PCM_DI]", /* Pin 22: MODEM_PCM_DI */
 +			"[PCM_DO]", /* Pin 20: MODEM_PCM_DO */
 +			"NC", "NC";
 +		};
 +
 +		gpio8: gpio@f7024000 {
-+			gpio-names = "NC", "[CEC_CLK_19_2MHZ]", "NC",
++			gpio-line-names = "NC", "[CEC_CLK_19_2MHZ]", "NC",
 +			"", "", "", "", "", "";
 +		};
 +
 +		gpio9: gpio@f7025000 {
-+			gpio-names = "",
++			gpio-line-names = "",
 +			"GPIO-J", /* LSEC Pin 32: ISP_PWDN0_GPIO9_1 */
 +			"GPIO-L", /* LSEC Pin 34: ISP_PWDN1_GPIO9_2 */
 +			"NC", "NC", "NC", "NC", "[ISP_CCLK0]";
 +		};
 +
 +		gpio10: gpio@f7026000 {
-+			gpio-names = "BOOT_SEL",
++			gpio-line-names = "BOOT_SEL",
 +			"[ISP_CCLK1]",
 +			"GPIO-I", /* LSEC Pin 31: ISP_RSTB0_GPIO10_2 */
 +			"GPIO-K", /* LSEC Pin 33: ISP_RSTB1_GPIO10_3 */
@@ -149,27 +153,29 @@ index e92a30c87a82..cb1d455a5b9b 100644
 +		};
 +
 +		gpio11: gpio@f7027000 {
-+			gpio-names =
++			gpio-line-names =
 +			"[I2C3_SDA]", /* HSEC Pin 38: ISP1_SDA */
 +			"[I2C3_SCL]", /* HSEC Pin 36: ISP1_SCL */
 +			"", "NC", "NC", "NC", "", "";
 +		};
 +
 +		gpio12: gpio@f7028000 {
-+			gpio-names = "[BT_PCM_XFS]", "[BT_PCM_DI]", "[BT_PCM_DO]",
++			gpio-line-names = "[BT_PCM_XFS]", "[BT_PCM_DI]",
++			"[BT_PCM_DO]",
 +			"NC", "NC", "NC", "NC",
 +			"GPIO-F"; /* LSEC Pin 28: BL_PWM_GPIO12_7 */
 +		};
 +
 +		gpio13: gpio@f7029000 {
-+			gpio-names = "[UART0_RX]", "[UART0_TX]", "[BT_UART1_CTS]",
-+			"[BT_UART1_RTS]", "[BT_UART1_RX]", "[BT_UART1_TX]",
++			gpio-line-names = "[UART0_RX]", "[UART0_TX]",
++			"[BT_UART1_CTS]", "[BT_UART1_RTS]",
++			"[BT_UART1_RX]", "[BT_UART1_TX]",
 +			"[UART0_CTS]", /* LSEC Pin 3: UART2_CTS_N */
 +			"[UART0_RTS]"; /* LSEC Pin 9: UART2_RTS_N */
 +		};
 +
 +		gpio14: gpio@f702a000 {
-+			gpio-names =
++			gpio-line-names =
 +			"[UART0_RxD]", /* LSEC Pin 7: UART2_RX */
 +			"[UART0_TxD]", /* LSEC Pin 5: UART2_TX */
 +			"[I2C0_SCL]", /* LSEC Pin 15: I2C0_SCL */
@@ -180,7 +186,7 @@ index e92a30c87a82..cb1d455a5b9b 100644
 +		};
 +
 +		gpio15: gpio@f702b000 {
-+			gpio-names = "", "", "", "", "", "", "NC", "";
++			gpio-line-names = "", "", "", "", "", "", "NC", "";
 +		};
 +
 +		/* GPIO blocks 16 thru 19 do not appear to be routed to pins */
