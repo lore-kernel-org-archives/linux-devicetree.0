@@ -1,66 +1,67 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] gpio: sx150x: Update OF configuration
-Date: Thu, 23 Jun 2016 10:18:02 +0200
-Message-ID: <576B9B3A.2070808@baylibre.com>
-References: <1466157063-10955-1-git-send-email-narmstrong@baylibre.com>
- <20160620155744.GA1419@rob-hp-laptop>
- <CACRpkdbWPKbQRnO4v9GcY4BMTbp1ivMO6TFa-u-QpRyyZED0oQ@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RESEND PATCH v2 2/5] pwm: omap-dmtimer: Allow for setting
+ dmtimer clock source
+Date: Thu, 23 Jun 2016 10:24:36 +0200
+Message-ID: <20160623082436.GB8136@ulmo.ba.sec>
+References: <1466623341-30130-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+ <1466623341-30130-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbWPKbQRnO4v9GcY4BMTbp1ivMO6TFa-u-QpRyyZED0oQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BwCQnh7xodEAoBMC"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1466623341-30130-3-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, sre@kernel.org, pali.rohar@gmail.com, pavel@ucw.cz
 List-Id: devicetree@vger.kernel.org
 
-On 06/23/2016 10:08 AM, Linus Walleij wrote:
-> On Mon, Jun 20, 2016 at 5:57 PM, Rob Herring <robh@kernel.org> wrote:
->> On Fri, Jun 17, 2016 at 11:51:03AM +0200, Neil Armstrong wrote:
-> 
->>> +Optional Properties:
->>> +- oscio-is-gpo: Boolean, Indicated the oscio pin can be used as additional
->>> +             output gpo port.
->>> +
->>
->>> +- pull-up-ports: Array of port numbers which must have pull-up enabled.
->>> +- pull-down-ports: Array of port numbers which must have pull-down enabled.
->>> +- open-drain-ports: Array of port numbers which must be configured as open-drain,
->>> +                     Push-Pull mode is default.
->>> +- polarity-invert-ports: Array of port numbers whih port polarity must be inverted.
->>
->> Seems like these should be done in a common way.
->>
->> If not, they all need a vendor prefix.
-> 
-> Actually on second look, this takes the sx150 to pin control territory.
-> 
-> I am starting to feel like a move to drivers/pinctrl/* might be warranted.
-> 
-> Neil you worked on other pin controllers IIRC, do you think it would
-> be much work to make a combined GPIO+pinctrl driver and move
-> this over to drivers/pinctrl?
-> 
-> I know refactoring across subsystems can be a pain, but at least
-> I'm maintaining both and happy to help out.
-> 
-> Yours,
-> Linus Walleij
-> 
 
-Hi Linus,
+--BwCQnh7xodEAoBMC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, it would be good to have it as a gpio+pinctrl with only pinconf, but it would show
-the way on how to support external GPIO expanders using the pinctrl framework.
+On Wed, Jun 22, 2016 at 10:22:18PM +0300, Ivaylo Dimitrov wrote:
+> OMAP GP timers can have different input clocks that allow different PWM
+> frequencies. However, there is no other way of setting the clock source b=
+ut
+> through clocks or clock-names properties of the timer itself. This limits
+> PWM functionality to only the frequencies allowed by the particular clock
+> source. Allowing setting the clock source by PWM rather than by timer
+> allows different PWMs to have different ranges by not hard-wiring the clo=
+ck
+> source to the timer.
+>=20
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-omap-dmtimer.txt |  4 ++++
+>  drivers/pwm/pwm-omap-dmtimer.c                             | 12 +++++++-=
+----
+>  2 files changed, 11 insertions(+), 5 deletions(-)
 
-But it is quite challenging and needs quite some work, and actually the current state of the driver is that the OF is broken.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Would you agree to :
- - Push the minimal code to make OF work again, at least for 4.7 ?
- - Engage complete refactoring to transform it in a real gpio+pinctrl driver ?
+--BwCQnh7xodEAoBMC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-For the dt-bindings properties, I can add the vendor prefixes ASAP.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Thanks,
-Neil
+iQIcBAABCAAGBQJXa5zBAAoJEN0jrNd/PrOhwlQQAKJqIX/WVu0eYrxSyfNzKumN
+r0uqDlK8kPVU2XrLSiUsZmSmSLsPWbYLxvJ6b8ONrV0/CEaj6ANuI2F9Sp94u9aU
+Zgl4NUWTSKbHYACj0CWgBk4PwWIbZVUZrWOTTgh73xpo4KhEnWREZjGhiYgZhQRH
+Ji6RfvoRtYpw76ORkiAZ7aO1lcPCBv/fgvC/cuC+0rAwRHHS7cMz0+nd/MC+/+O3
+uM9Mcq+fs1qvQ4kJKGGDMHYTv5FkXQ/eNFmDx03EUEYvOJ57Yhy0TQREH/ZsdEfm
+ELfUqP7UClhqO5/FFcn9wJxIxrQssnQkpCAOks6JIsV6nMYmBwVBapYmP7px4TNL
+6CohXEyx93aG99VbO1L7jvyf1PF1aIUDiNO/qFD6ZYqpcPvlr+64AdokRtfK70a0
+quZ14G7iuMiywclw6Y/CilOjf8t3GCPvIOmNk7ndiE2ca4wDAqyZ7Zohk5H58LFF
+5BZLbdhGh2GYr0ju/s+jBZmq2GsQzkGEv3KsjODIsH5jMxb0v95/418cbcMWLwHh
+6gSLOMiY213xvTPfYY4VOyW6vtKTV09r0s3A3d5478F2k82H8r4D898yZqRpYhOv
+0yBemF/xgWy88Sgpx4wnCJNUbsdwzBs31UwVvNG7IQdnQErUlRHvL2VqOU07pzCe
+75BREWFVSnfAX9zhyEog
+=BVNy
+-----END PGP SIGNATURE-----
+
+--BwCQnh7xodEAoBMC--
