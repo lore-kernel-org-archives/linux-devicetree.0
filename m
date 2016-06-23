@@ -1,260 +1,120 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 1/2] leds: ncp5623: Add device tree binding documentation
-Date: Thu, 23 Jun 2016 13:21:33 +0200
-Message-ID: <576BC63D.1030504@samsung.com>
-References: <1466494154-3786-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1466494154-3786-2-git-send-email-florian.vaussard@heig-vd.ch>
- <57695D02.2000109@samsung.com>
- <59143a9b-ab51-bd3b-e9db-93680415d205@heig-vd.ch>
- <576A5191.4070402@samsung.com>
- <c97adf5a-7c5b-8602-83c1-f85854bd64d6@heig-vd.ch> <576B8E5D.90000@samsung.com>
- <576B9EB1.5040601@heig-vd.ch>
+From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
+Date: Thu, 23 Jun 2016 19:44:11 +0800
+Message-ID: <1466682251.12354.0.camel@mtksdaap41>
+References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
+	 <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
+	 <1466661829.15112.26.camel@mtksdaap41>
+	 <1466668480.12124.15.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <576B9EB1.5040601@heig-vd.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@heig-vd.ch>
-Cc: Florian Vaussard <florian.vaussard@gmail.com>, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466668480.12124.15.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/23/2016 10:32 AM, Florian Vaussard wrote:
-> Hi Jacek,
->
-> On 06/23/2016 09:23 AM, Jacek Anaszewski wrote:
->> On 06/22/2016 04:25 PM, Florian Vaussard wrote:
->>> Hi Jacek,
->>>
->>> Le 22. 06. 16 =E0 10:51, Jacek Anaszewski a =E9crit :
->>>> Hi Florian,
->>>>
->>>> On 06/22/2016 08:08 AM, Florian Vaussard wrote:
->>>>> Hi Jacek,
->>>>>
->>>>> Le 21. 06. 16 =E0 17:28, Jacek Anaszewski a =E9crit :
->>>>>> Hi Florian,
->>>>>>
->>>>>> Thanks for the patch. I have two remarks below.
->>>>>>
->>>>>> On 06/21/2016 09:29 AM, Florian Vaussard wrote:
->>>>>>> Add device tree binding documentation for On Semiconductor NCP5=
-623 I2C
->>>>>>> LED driver. The driver can independently control the PWM of the=
- 3
->>>>>>> channels with 32 levels of intensity.
->>>>>>>
->>>>>>> The current delivered by the current source can be controlled u=
-sing the
->>>>>>> led-max-microamp property. In order to control this value, it i=
-s also
->>>>>>> necessary to know the current on the Iref pin, hence the
->>>>>>> onnn,led-iref-microamp property. It is usually set using an ext=
-ernal
->>>>>>> bias resistor, following Iref =3D Vref/Rbias with Vref=3D0.6V.
->>>>>>>
->>>>>>> Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
->>>>>>> ---
->>>>>>>      .../devicetree/bindings/leds/leds-ncp5623.txt      | 44
->>>>>>> ++++++++++++++++++++++
->>>>>>>      1 file changed, 44 insertions(+)
->>>>>>>      create mode 100644
->>>>>>> Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-ncp562=
-3.txt
->>>>>>> b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->>>>>>> new file mode 100644
->>>>>>> index 0000000..0dc8345
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->>>>>>> @@ -0,0 +1,44 @@
->>>>>>> +* ON Semiconductor - NCP5623 3-Channel LED Driver
->>>>>>> +
->>>>>>> +The NCP5623 is a 3-channel I2C LED driver. The brightness of e=
-ach
->>>>>>> +channel can be independently set using 32 levels. Each LED is =
-represented
->>>>>>> +as a sub-node of the device.
->>>>>>> +
->>>>>>> +Required properties:
->>>>>>> +  - compatible: Should be "onnn,ncp5623"
->>>>>>> +  - reg: I2C slave address (fixed to 0x38)
->>>>>>> +  - #address-cells: must be 1
->>>>>>> +  - #size-cells: must be 0
->>>>>>> +  - onnn,led-iref-microamp: Current on the Iref pin in microam=
-pere
->>>>>>
->>>>>> I think that you don't need this property. Just provide the form=
-ula for
->>>>>> calculating led-max-microamp value, similarly as you're doing th=
-at in
->>>>>> the commit message.
->>>>>>
->>>>>
->>>>> I am not completely sure to understand your suggestion. So at the=
- end, I
->>>>> have to
->>>>> compute the value of the register (let call it 'ILED') that I nee=
-d to send to
->>>>> chip to configure the current source. The formula is:
->>>>>
->>>>> ILED =3D 31 - 2400*Iref/led-max-microamp
->>>>
->>>> led-max-microamp is the maximum current value for given LED.
->>>> According to the documentation it can be calculated as follows:
->>>>
->>>> ILEDmax =3D Iref * 2400 / (31 - n)
->>>>
->>>> Since this is global setting for all LEDs, then I'd always set n t=
-o 30,
->>>> and calculate max_brightness value for each LED separately, basing=
- on
->>>> led-max-microamp property value. Effectively, I'm revoking my prev=
-ious
->>>> statement about setting max_brightness to fixed level.
->>>>
->>>
->>> Ok your proposal simplifies a bit the handling. Thus ILEDmax of the=
- current
->>> source would be always equal to Iref * 2400 and we use the PWM to l=
-imit the
->>> current inside the LED. The only downside of this approach is a red=
-uced number
->>> of possible PWM steps, thus a limited number of RGB colors.
->>
->> Yes, but by max_brightness being always 31, lowering led-max-microam=
-p
->> results in decreasing the amount of current per brightness level.
->> Effectively, a human ability to notice perceived brightness level
->> change also decreases then.
->>
->> In the approach I proposed this limitation is reflected in reduced
->> amount of available brightness levels.
->>
->>> Regarding the DT binding, this would mean something like this:
->>>
->>> ncp5623@38 {
->>>      #address-cells =3D <1>;
->>>      #size-cells =3D <0>;
->>>      compatible =3D "onnn,ncp5623";
->>>      reg =3D <0x38>;
->>>      led-max-microamp =3D <30000>;
->>
->> Please drop it from here. It doesn't need to be configurable.
->> You can hard code this in the driver.
->>
->
-> It is not user configurable, but it is a hardware configuration impos=
-ed by the
-> bias resistor on the Iref pin (ILEDmax =3D 2400*Iref =3D 2400*0.6V/Rb=
-ias). So I
-> cannot hard code it as it can change from one design to another. And =
-I need this
-> piece of information to compute the maximum allowable PWM ratio.
+On Thu, 2016-06-23 at 15:54 +0800, Horng-Shyang Liao wrote:
+> Hi CK,
+> 
+> On Thu, 2016-06-23 at 14:03 +0800, CK Hu wrote:
+> > Hi, HS:
+> > 
+> > On Mon, 2016-05-30 at 11:19 +0800, HS Liao wrote:
+> > [...]
+> > 
+> > > +
+> > > +/* events for CMDQ and display */
+> > > +enum cmdq_event {
+> > > +	/* Display start of frame(SOF) events */
+> > > +	CMDQ_EVENT_DISP_OVL0_SOF = 11,
+> > > +	CMDQ_EVENT_DISP_OVL1_SOF = 12,
+> > > +	CMDQ_EVENT_DISP_RDMA0_SOF = 13,
+> > > +	CMDQ_EVENT_DISP_RDMA1_SOF = 14,
+> > > +	CMDQ_EVENT_DISP_RDMA2_SOF = 15,
+> > > +	CMDQ_EVENT_DISP_WDMA0_SOF = 16,
+> > > +	CMDQ_EVENT_DISP_WDMA1_SOF = 17,
+> > > +	/* Display end of frame(EOF) events */
+> > > +	CMDQ_EVENT_DISP_OVL0_EOF = 39,
+> > > +	CMDQ_EVENT_DISP_OVL1_EOF = 40,
+> > > +	CMDQ_EVENT_DISP_RDMA0_EOF = 41,
+> > > +	CMDQ_EVENT_DISP_RDMA1_EOF = 42,
+> > > +	CMDQ_EVENT_DISP_RDMA2_EOF = 43,
+> > > +	CMDQ_EVENT_DISP_WDMA0_EOF = 44,
+> > > +	CMDQ_EVENT_DISP_WDMA1_EOF = 45,
+> > > +	/* Mutex end of frame(EOF) events */
+> > > +	CMDQ_EVENT_MUTEX0_STREAM_EOF = 53,
+> > > +	CMDQ_EVENT_MUTEX1_STREAM_EOF = 54,
+> > > +	CMDQ_EVENT_MUTEX2_STREAM_EOF = 55,
+> > > +	CMDQ_EVENT_MUTEX3_STREAM_EOF = 56,
+> > > +	CMDQ_EVENT_MUTEX4_STREAM_EOF = 57,
+> > > +	/* Display underrun events */
+> > > +	CMDQ_EVENT_DISP_RDMA0_UNDERRUN = 63,
+> > > +	CMDQ_EVENT_DISP_RDMA1_UNDERRUN = 64,
+> > > +	CMDQ_EVENT_DISP_RDMA2_UNDERRUN = 65,
+> > > +	/* Keep this at the end of HW events */
+> > > +	CMDQ_MAX_HW_EVENT_COUNT = 260,
+> > > +};
+> > 
+> > The value of these symbol is just the GCE-HW-defined value. I think it's
+> > not appropriate to expose HW-defined value to client. For another SoC
+> > GCE HW, these definition may change.
+> 
+> Agree.
+> 
+> > One way to solve this problem is to translate symbol to value
+> > internally. But these events looks like interrupt and the value may vary
+> > by each SoC, to prevent driver modified frequently, it's better to place
+> > the value definition in device tree. It may looks like:
+> > 
+> > mmsys: clock-controller@14000000 {
+> > 	compatible = "mediatek,mt8173-mmsys";
+> > 	mediatek,gce = <&gce>;
+> > 	gce-events = <53 54>;
+> 
+> However, client still needs to know the HW-defined value by using
+> this solution.
+> 
+> > 	gce-event-names = "MUTEX0_EOF","MUTEX1_EOF";
+> > }
+> > 
+> > For cmdq driver, you just need modify interface from
+> > 
+> > int cmdq_rec_wfe(struct cmdq_rec *rec, enum cmdq_event event)
+> > int cmdq_rec_clear_event(struct cmdq_rec *rec, enum cmdq_event event)
+> > 
+> > to
+> > 
+> > int cmdq_rec_wfe(struct cmdq_rec *rec, u32 event)
+> > int cmdq_rec_clear_event(struct cmdq_rec *rec, u32 event)
+> 
+> I think an easy way for this issue is just removing HW-defined values
+> from include/soc/mediatek/cmdq.h (but keeping enum), and then mapping
+> abstract values into real values in driver.
+> The benefit of this solution is that we can keep interface and leave SoC
+> specific code into driver.
+> What do you think?
 
-OK, please keep here the property you initially introduced for that:
+Hi, HS:
 
-onnn,led-iref-microamp
+OK, that's fine.
 
->
->>>
->>>      ledr@0 {
->>>          label =3D "ncp:power:red";
->>>          reg =3D <0>;
->>>          linux,default-trigger =3D "default-on";
->>>          led-max-microamp =3D <5000>;
->>
->> Is 5mA the maximum allowed current value for the LEDs on the board
->> you're using? Is brightness level change easily noticeable by max
->> current set to 5mA and max_brightness set to 31? It would be good
->> to empirically check this configuration.
->>
->
-> No the maximum is 20mA on our board, but limiting to 5mA is safer to =
-avoid
-> blinding the user :) This RGB led is quite powerful...
->
-> Some experiments:
-> 1) When setting the current source at 5mA, the PWM steps are easily n=
-oticeable
-> at low brightness (below 50%). Above the eye is not sensitive enough.=
- Thus on
-> the 32768 possible colours, I agree that not all will be distinguisha=
-ble.
-> 2) When setting the current source at 20mA, the PWM steps are even mo=
-re visible
-> at low brightness. As I have to keep the PWM ratio below 25% to satis=
-fy the 5mA
-> limit, all the 7 steps (brightness =3D [0; 7]) are clearly noticeable=
-=2E This also
-> means only 512 different colours. For sure in this case they are all
-> distinguishable :)
->
-> With your proposal, the hardware fix is probably to decrease Iref by =
-increasing
-> the bias resistor. This way the PWM steps would be smaller and less n=
-oticeable.
-> But a hardware fix is not always possible.
+Regards,
+CK
 
-It would be nice to have all 31 levels available per LED, but is it
-feasible having that ILED register is global for all LEDs? It seems tha=
-t
-we couldn't set different maximum current for each LED then.
-Am I right or I am missing something?
-
->>>      };
->>>
->>>      ledb@1 {
->>>          label =3D "ncp:power:blue";
->>>          reg =3D <1>;
->>>          led-max-microamp =3D <5000>;
->>>      };
->>>
->>>      ledg@2 {
->>>          label =3D "ncp:power:green";
->>>          reg =3D <2>;
->>>          led-max-microamp =3D <5000>;
->>>      };
->>> };
->>>
->>> The led-max-microamp property of the root node is used to infer Ire=
-f, and the
->>> led-max-microamp property inside each LED node is used to compute t=
-he maximum
->>> allowed PWM ratio (thus max_brightness).
->>>
->>> Would it be fine like this?
->>>
->>>> You can compare drivers/leds/leds-aat1290.c and its bindings, as i=
-t
->>>> uses similar approach.
->>>>
->>>
->>> Thanks for the pointer, interesting reading. In this case the flash=
--max-microamp
->>> property is implicitly used to get the value of Rset, and led-max-m=
-icroamp is
->>> used to compute the flash/movie-mode ratio. Indeed similar but not =
-exactly the
->>> same, as the NCP5623 allows a finer control on the current using on=
-e register to
->>> configure the current source and one register for the PWM.
->>
->> Right, but it shows how led-max-microamp can be used to infer
->> max_brightness level. This is quite new DT property with not too man=
-y
->> users, because previously LED class drivers had been defining
->> max_brightness directly in a Device Tree. Nonetheless brightness lev=
-el
->> was eventually considered not suitable unit for describing hardware
->> property.
->>
->
->
+> 
+> > Regards,
+> > CK
+> 
+> Thanks,
+> HS
+> 
+> 
 
 
---=20
-Best regards,
-Jacek Anaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
