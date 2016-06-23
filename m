@@ -1,65 +1,118 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: omap: make gpio numbering deterministical by using
- of aliases
-Date: Thu, 23 Jun 2016 14:08:33 +0200
-Message-ID: <CACRpkdaAcsikDgdbchKkx4i0Pk12qp7gTDUQJvj+kmCOtiRiqA@mail.gmail.com>
-References: <1465898604-16294-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CACRpkdaVRTj4jpGQp9nDKo8RAPDPUaApp4jAdBGRgd45bqo2zQ@mail.gmail.com>
- <20160615072404.GB26768@pengutronix.de> <CACRpkdYK1C5px+A_O1sF99KTPTob9qTQpipEaRLHnNx5=AokLg@mail.gmail.com>
- <20160619010823.GC26875@pengutronix.de> <20160622161644.GD31817@leverpostej>
- <CACRpkdazjgZX3cY2Q6AoQRmX14x-YU6SQ=Q38tZHt8xX6St24g@mail.gmail.com> <576BADFF.3000802@ti.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [v3 PATCH 0/5] Rockchip Type-C and DispplayPort driver
+Date: Thu, 23 Jun 2016 20:50:59 +0800
+Message-ID: <1466686264-6744-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <576BADFF.3000802@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Kevin Hilman <khilman@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 23, 2016 at 11:38 AM, Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
-
->> This solves the big problem with the current global numbering system
->> in /sys/class/gpio/*
->
-> Hm. May be i misunderstood samthing (and sry, if my following question
-> is dummy as I've not followed closely new GPIO ABI development), but..
->
-> - from above description it seems that  global numbering system is not really
-> solved :( instead it's been moved one level up and now the same happens with
-> gpiocipX devices :(
-
-Yes that is true, but also the discovery mechanism is changed so it should
-not be a problem: by traversing /sys/bus/gpio/* you know from the topology
-information which GPIO chip is which. This is the same method that e.g. USB,
-IIO or disks use: you have to complement the device name with bus information
-from sysfs.
-
-/sys/class/gpio/* on the other hand has no such information: it is flat.
-
-But as I wrote in the other mail in response to Mark Rutland: if it is desired
-to have predictable numbering of the GPIO chips the exact same alias
-method can be used for that, and a patch utilizing aliases should fix also
-this for the character device usecase.
-
-My own position on these aliases is "eating popcorn", I'm happy with it,
-happy without it, the people who care need to argue for it with the DT
-maintainers.
-
-> Wouldn't it be reasonable to add possibility to create named/labeled
-> gpiocipX devices from the very beginning, like: "/dev/gpiocipX[_name|label], or "/dev/gpiocip[_name|label]", or ..
->
-> Actually, struct gpio_chip has label field already.
-
-I don't think that would be nice. There is an ioctl() to get that information
-(amongst other stuff) from the device. Check tools/gpio/lsgpio.c
-
-> PS. From my experience, the worst case with dev numbering usually happens after
-> few insmod/rmmod (or sometimes after suspend/resume) iterations - ttyX ;..(.
-
-In the GPIO case I think the numbers will be reused as we're using
-<linux/idr.h> infrastructure (same method as IIO).
-
-Yours,
-Linus Walleij
+CkhpIGFsbAoKVGhpcyBzZXJpZXMgcGF0Y2ggaXMgZm9yIHJvY2tjaGlwIFR5cGUtQyBwaHkgYW5k
+IERpc3BsYXlQb3J0IGNvbnRyb2xsZXIKZHJpdmVyLgoKVGhlIFVTQiBUeXBlLUMgUEhZIGlzIGRl
+c2lnbmVkIHRvIHN1cHBvcnQgdGhlIFVTQjMgYW5kIERQIGFwcGxpY2F0aW9ucy4KVGhlIFBIWSBi
+YXNpY2FsbHkgaGFzIHR3byBtYWluIGNvbXBvbmVudHM6IFVTQjMgYW5kIERpc3BseVBvcnQuIFVT
+QjMKb3BlcmF0ZXMgaW4gU3VwZXJTcGVlZCBtb2RlIGFuZCB0aGUgRFAgY2FuIG9wZXJhdGUgYXQg
+UkJSLCBIQlIgYW5kIEhCUjIKZGF0YSByYXRlcy4gVGhlIFR5cGUtQyBjYWJsZSBvcmllbnRhdGlv
+biBkZXRlY3Rpb24gYW5kIFBvd2VyIERlbGl2ZXJ5CihQRCkgaXMgYWNjb21wbGlzaGVkIHVzaW5n
+IGEgUEQgUEhZIG9yIGEgZXhlcm5hbCBQRCBjaGlwLgoKVGhlIERQIGNvbnRyb2xsZXIgaXMgY29t
+cGxpYW50IHdpdGggRGlzcGxheVBvcnQgU3BlY2lmaWNhdGlvbiwKVmVyc2lvbiAxLjMsIFRoaXMg
+SVAgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSByb2NrY2hpcCB0eXBlLWMgUEhZIElQLgpUaGVyZSBp
+cyBhIHVDUFUgaW4gRFAgY29udHJvbGxlciwgaXQgbmVlZCBhIGZpcm13YXJlIHRvIHdvcmssIHBs
+ZWFzZQpwdXQgdGhlIGZpcm13YXJlIGZpbGUgdG8gL2xpYi9maXJtd2FyZS9jZG4vZHB0eC5iaW4u
+IFRoZSB1Q1BVIGluIGNoYXJnZQpvZiBhdXggY29tbXVuaWNhdGlvbiBhbmQgbGluayB0cmFpbmlu
+ZywgdGhlIGhvc3QgdXNlIG1haWxib3ggdG8KY29tbXVuaWNhdGUgd2l0aCB0aGUgdWNwdS4KClRo
+ZSBQSFkgZHJpdmVyIGhhcyByZWdpc3RlciBhIG5vdGlmaWNhdGlvbiB3aXRoIGV4dGNvbiBBUEks
+IHRvIGdldCB0aGUKYWx0IG1vZGUgZnJvbSBQRCwgdGhlIFBEIGRyaXZlciBuZWVkIGNhbGwgdGhl
+IGRldm1fZXh0Y29uX2Rldl9hbGxvY2F0ZQp0byBjcmVhdGUgYSBleHRjb24gZGV2aWNlIGFuZCB1
+c2UgZXh0Y29uX3NldF9zdGF0ZSB0byBub3RpZnkgUEhZIGFuZApEUCBjb250cm9sbGVyLgoKQWJv
+dXQgdGhlIERQIGF1ZGlvLCBjZG4tZHAgcmVnaXN0ZXJlZCAyIERBSXM6IDAgaXMgSTJTLCAxIGlz
+IFNQRElGLgpXZSBjYW4gcmVmZXJlbmNlIHRoZW0gaW4gc2ltcGxlLWNhcmQuCgpUaGlzIHNlcmll
+cyBpcyBiYXNlZCBvbiBNYXJrIFlhbydzIGJyYW5jaDoKaHR0cHM6Ly9naXRodWIuY29tL21hcmt5
+enEva2VybmVsLWRybS1yb2NrY2hpcC90cmVlL2RybS1yb2NrY2hpcC1uZXh0LTIwMTYtMDUtMjMK
+CkkgdGVzdCB0aGlzIHBhdGNoZXMgb24gdGhlIHJrMzM5OS1ldmIgYm9hcmQsIHdpdGggYSBmdXNi
+MzAyIGRyaXZlciwKdGhpcyBicmFuY2ggaGFzIG5vIHJrMzM5OS5kdHNpLCBzbyB0aGUgcGF0Y2gg
+YWJvdXQgZHRzIGlzIG5vdCBpbmNsdWRlZAppbiB0aGlzIHNlcmllcy4KCgpDaGFuZ2VzIGluIHYz
+OgotIHVzZSBjb21wYXRpYmxlOiByb2NrY2hpcCxyazMzOTktdHlwZWMtcGh5Ci0gdXNlIGRhc2hl
+cyBpbnN0ZWFkIG9mIHVuZGVyc2NvcmVzLgotIHJlbW92ZSB0aGUgcGh5IGZyYW1ld29yayhLaXNo
+b24gVmlqYXkgQWJyYWhhbSBJKQotIGFkZCBwYXJlbnRoZXNlcyBhcm91bmQgdGhlIG1hY3JvCi0g
+dXNlIGEgc2luZ2xlIHNwYWNlIGJldHdlZW4gdHlwZSBhbmQgbmFtZQotIGFkZCBzcGFjZXMgYWZ0
+ZXIgb3BlbmluZyBhbmQgYmVmb3JlIGNsb3NpbmcgYnJhY2VzLgotIHVzZSB1MTYgZm9yIHJlZ2lz
+dGVyIHZhbHVlCi0gcmVtb3ZlIHR5cGUtYyBwaHkgaGVhZGVyIGZpbGUKLSBDb2RpbmdTdHlsZSBv
+cHRpbWl6YXRpb24KLSB1c2Ugc29tZSBjYWJsZSBleHRjb24gdG8gZ2V0IHR5cGUtYyBwb3J0IGlu
+Zm9ybWF0aW9uCi0gYWRkIGEgZXh0Y29uIHRvIG5vdGlmeSBEaXNwbGF5IFBvcnQKLSBhZGQgU29D
+IHNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5nCi0gcmVtb3ZlIHJlZyA9IDwxPjsKLSB1c2UgRVhU
+Q09OX0RJU1BfRFAgYW5kIEVYVENPTl9ESVNQX0RQX0FMVCBjYWJsZSB0byBnZXQgZHAgcG9ydCBz
+dGF0ZS4KLSByZXNldCBzcGRpZiBiZWZvcmUgY29uZmlnIGl0Ci0gbW9kaWZ5IHRoZSBmaXJtd2Fy
+ZSBjbGsgdG8gMTAwTWh6Ci0gcmV0cnkgbG9hZCBmaXJtd2FyZSBpZiBmdyBmaWxlIGlzIHJlcXVl
+c3RlZCB0b28gZWFybHkKCkNoYW5nZXMgaW4gdjI6Ci0gYWRkIHNvbWUgcmVnaXN0ZXJzIGRlc2Ny
+aXB0aW9uCi0gc2VsZWN0IFJFU0VUX0NPTlRST0xMRVIKLSBhbHBoYWJldGljIG9yZGVyCi0gbW9k
+aWZ5IHNvbWUgc3BlbGxpbmcgbWlzdGFrZXMKLSBtYWtlIG1vZGUgY2xlYW5lcgotIHVzZSBib29s
+IGZvciBlbmFibGUvZGlzYWJsZQotIGNoZWNrIGFsbCBvZiB0aGUgcmV0dXJuIHZhbHVlCi0gcmV0
+dXJuIGEgYmV0dGVyIGVyciBudW1iZXIKLSB1c2UgbW9yZSByZWFkeF9wb2xsX3RpbWVvdXQoKQot
+IGNsa19kaXNhYmxlX3VucHJlcGFyZSh0Y3BoeS0+Y2xrX3JlZik7Ci0gcmVtb3ZlIHVudXNlIGZ1
+bmN0aW9ucywgcm9ja2NoaXBfdHlwZWNfcGh5X3Bvd2VyX29uL29mZgotIHJlbW92ZSB1bm5lY2Vz
+c2FyeSB0eXBlY2FzdCBmcm9tIHZvaWQgKgotIHVzZSBkdHMgbm9kZSB0byBkaXN0aW5ndWlzaCBi
+ZXR3ZWVuIHBoeXMuCi0gQWxwaGFiZXRpYyBvcmRlcgotIHJlbW92ZSBleGNlc3MgZXJyb3IgbWVz
+c2FnZQotIHVzZSBkZWZpbmUgY2xrX3JhdGUKLSBjaGVjayBhbGwgcmV0dXJuIHZhbHVlCi0gcmVt
+b3ZlIGRldl9zZXRfbmFtZShkcC0+ZGV2LCAiY2RuLWRwIik7Ci0gdXNlIHNjaGVkdWxlX2RlbGF5
+ZWRfd29yawotIHJlbW92ZSBuZXZlci1jYWxsZWQgZnVuY3Rpb25zCi0gcmVtb3ZlIHNvbWUgdW5u
+ZWNlc3NhcnkgKCkKCkNoYW5nZXMgaW4gdjE6Ci0gYWRkIGV4dGNvbiBub2RlIGRlc2NyaXB0aW9u
+Ci0gbW92ZSB0aGUgcmVnaXN0ZXJzIGluIHBoeSBkcml2ZXIKLSByZW1vdmUgdGhlIHN1ZmZpeCBv
+ZiByZXNldAotIHVwZGF0ZSB0aGUgbGljZW5jZSBub3RlCi0gaW5pdCBjb3JlIGNsb2NrIHRvIDUw
+TUh6Ci0gdXNlIGV4dGNvbiBBUEkKLSByZW1vdmUgdW51c2VkIGdsb2JhbAotIGFkZCBzb21lIGNv
+bW1lbnRzIGZvciBtYWdpYyBudW0KLSBjaGFuZ2UgdXNsZWVwX3JhbmdlKDEwMDAsIDIwMDApIHRv
+dXNsZWVwX3JhbmdlKDEwMDAsIDEwNTApCi0gcmVtb3ZlIF9fZnVuY19fIGZyb20gZGV2X2Vycgot
+IHJldHVybiBlcnIgbnVtYmVyIHdoZW4gZ2V0IGNsayBmYWlsZWQKLSByZW1vdmUgQUREUl9BREog
+ZGVmaW5lCi0gdXNlIGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAidGNwZGNvcmUiKQotIGFkZCBl
+eHRjb24gbm9kZSBkZXNjcmlwdGlvbgotIGFkZCAjc291bmQtZGFpLWNlbGxzIGRlc2NyaXB0aW9u
+Ci0gdXNlIGV4dGNvbiBBUEkKLSB1c2UgaGRtaS1jb2RlYyBmb3IgdGhlIERQIEFzb2MKLSBkbyBu
+b3QgaW5pdGlhbGl6ZSB0aGUgInJldCIKLSBwcmludGsgYSBlcnIgbG9nIHdoZW4gZHJtX29mX2Vu
+Y29kZXJfYWN0aXZlX2VuZHBvaW50X2lkCi0gbW9kaWZ5IHRoZSBkY2xrIHBpbl9wb2wgdG8gYSBz
+aW5nbGUgbGluZQoKQ2hyaXMgWmhvbmcgKDUpOgogIGV4dGNvbjogQWRkIFR5cGUtQyBhbmQgRFAg
+c3VwcG9ydAogIERvY3VtZW50YXRpb246IGJpbmRpbmdzOiBhZGQgZHQgZG9jIGZvciBSb2NrY2hp
+cCBVU0IgVHlwZS1DIFBIWQogIHBoeTogQWRkIFVTQiBUeXBlLUMgUEhZIGRyaXZlciBmb3Igcmsz
+Mzk5CiAgRG9jdW1lbnRhdGlvbjogYmluZGluZ3M6IGFkZCBkdCBkb2N1bWVudGF0aW9uIGZvciBj
+ZG4gRFAgY29udHJvbGxlcgogIGRybS9yb2NrY2hpcDogY2RuLWRwOiBhZGQgY2RuIERQIHN1cHBv
+cnQgZm9yIHJrMzM5OQoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2Nr
+Y2hpcC50eHQgIHwgICA2MSArKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1yb2Nr
+Y2hpcC10eXBlYy50eHQgfCAgIDc0ICsrCiBkcml2ZXJzL2V4dGNvbi9leHRjb24uYyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAgIDYgKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgfCAgICA5ICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
+cC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvY2RuLWRwLWNvcmUuYyAgICAgICAgICAgICB8ICA3MjIgKysrKysrKysrKysrKysKIGRy
+aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtY29yZS5oICAgICAgICAgICAgIHwgIDEwOCAr
+KwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcuYyAgICAgICAgICAgICAgfCAg
+NzMxICsrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLXJlZy5o
+ICAgICAgICAgICAgICB8ICA0MDQgKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9y
+b2NrY2hpcF9kcm1fdm9wLmMgICAgICAgIHwgICAgNiArLQogZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL3JvY2tjaGlwX2RybV92b3AuaCAgICAgICAgfCAgICAyICsKIGRyaXZlcnMvZ3B1L2RybS9y
+b2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMgICAgICAgIHwgICAgMiArCiBkcml2ZXJzL3BoeS9L
+Y29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDggKwogZHJpdmVycy9w
+aHkvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRyaXZl
+cnMvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy5jICAgICAgICAgICAgICAgICAgIHwgMTAyNyArKysr
+KysrKysrKysrKysrKysrKwogaW5jbHVkZS9saW51eC9leHRjb24uaCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgICA2ICsKIDE2IGZpbGVzIGNoYW5nZWQsIDMxNjcgaW5zZXJ0aW9ucygr
+KSwgMSBkZWxldGlvbigtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1y
+b2NrY2hpcC10eXBlYy50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvY2RuLWRwLWNvcmUuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9y
+b2NrY2hpcC9jZG4tZHAtY29yZS5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L3JvY2tjaGlwL2Nkbi1kcC1yZWcuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9jZG4tZHAtcmVnLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BoeS9w
+aHktcm9ja2NoaXAtdHlwZWMuYwoKLS0gCjIuNi4zCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
