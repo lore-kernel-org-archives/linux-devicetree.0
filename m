@@ -1,32 +1,35 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RESEND PATCH v2 0/5] ir-rx51 driver fixes
-Date: Wed, 22 Jun 2016 21:44:36 -0700
-Message-ID: <20160623044436.GK22406@atomide.com>
-References: <1466623341-30130-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466623341-30130-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, sre@kernel.org, pali.rohar@gmail.com, pavel@ucw.cz
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: hikey: set bluetooth led trigger
+Date: Thu, 23 Jun 2016 12:58:43 +0800
+Message-ID: <1466657923-5776-2-git-send-email-guodong.xu@linaro.org>
+References: <1466657923-5776-1-git-send-email-guodong.xu@linaro.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1466657923-5776-1-git-send-email-guodong.xu@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: marcel@holtmann.org, gustavo@padovan.org, johan.hedberg@gmail.com, davem@davemloft.net, xuwei5@hisilicon.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, haojian.zhuang@linaro.org, linus.walleij@linaro.org, tony@atomide.com
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com> [160622 12:25]:
-> ir-rx51 is a driver for Nokia N900 IR transmitter. The current series
-> fixes the remaining problems in the driver:
+Set bluetooth led trigger to hci0-rx, and so LED blinks on hci
+frame receiving.
 
-Thanks for updating these.
+Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Trierry, care to ack the PWM patch?
-
-Mauro, do you want me to set up an immutable branch with all
-these against v4.7-rc1 that we can all merge as needed?
-
-If you want to set up the branch instead, please feel free
-to add my ack.
-
-Regards,
-
-Tony
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index e92a30c..5032792 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -132,7 +132,7 @@
+ 		bt_active_led {
+ 			label = "bt_active";
+ 			gpios = <&gpio4 7 0>; /* <&gpio_bt_active_led>; */
+-			linux,default-trigger = "hci0rx";
++			linux,default-trigger = "hci0-rx";
+ 			default-state = "off";
+ 		};
+ 	};
+-- 
+1.9.1
