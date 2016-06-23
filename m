@@ -1,11 +1,11 @@
 From: megous@megous.com
-Subject: [PATCH 02/14] ARM: clk: sunxi: Add driver for the H3 THS clock
-Date: Thu, 23 Jun 2016 21:20:52 +0200
-Message-ID: <20160623192104.18720-3-megous@megous.com>
+Subject: [PATCH 04/14] dt-bindings: document sun8i_ths
+Date: Thu, 23 Jun 2016 21:20:54 +0200
+Message-ID: <20160623192104.18720-5-megous@megous.com>
 References: <20160623192104.18720-1-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20160623192104.18720-1-megous@megous.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -18,149 +18,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: dev@linux-sunxi.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Josef Gajdusek <atx@atx.name>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: Ondrej Jirman <megous@megous.com>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Josef Gajdusek <atx@atx.name>
-
-This patch adds a driver for the THS clock which is present on the
-Allwinner H3.
-
-Signed-off-by: Josef Gajdusek <atx@atx.name>
----
- Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
- drivers/clk/sunxi/Makefile                        |  1 +
- drivers/clk/sunxi/clk-h3-ths.c                    | 98 +++++++++++++++++++++++
- 3 files changed, 100 insertions(+)
- create mode 100644 drivers/clk/sunxi/clk-h3-ths.c
-
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index 8f7619d..5faae05 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -87,6 +87,7 @@ Required properties:
- 	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
- 	"allwinner,sun4i-a10-ve-clk" - for the Video Engine clock
- 	"allwinner,sun6i-a31-display-clk" - for the display clocks
-+	"allwinner,sun8i-h3-ths-clk" - for THS on H3
- 
- Required properties for all clocks:
- - reg : shall be the control register address for the clock.
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index 39d2044..8e245e3 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -9,6 +9,7 @@ obj-y += clk-a10-mod1.o
- obj-y += clk-a10-pll2.o
- obj-y += clk-a10-ve.o
- obj-y += clk-a20-gmac.o
-+obj-y += clk-h3-ths.o
- obj-y += clk-mod0.o
- obj-y += clk-simple-gates.o
- obj-y += clk-sun4i-display.o
-diff --git a/drivers/clk/sunxi/clk-h3-ths.c b/drivers/clk/sunxi/clk-h3-ths.c
-new file mode 100644
-index 0000000..c1d6d32
---- /dev/null
-+++ b/drivers/clk/sunxi/clk-h3-ths.c
-@@ -0,0 +1,98 @@
-+/*
-+ * sun8i THS clock driver
-+ *
-+ * Copyright (C) 2015 Josef Gajdusek
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+#define SUN8I_H3_THS_CLK_ENABLE				31
-+#define SUN8I_H3_THS_CLK_DIVIDER_SHIFT		0
-+#define SUN8I_H3_THS_CLK_DIVIDER_WIDTH		2
-+
-+static DEFINE_SPINLOCK(sun8i_h3_ths_clk_lock);
-+
-+static const struct clk_div_table sun8i_h3_ths_clk_table[] __initconst = {
-+	{ .val = 0, .div = 1 },
-+	{ .val = 1, .div = 2 },
-+	{ .val = 2, .div = 4 },
-+	{ .val = 3, .div = 6 },
-+	{ } /* sentinel */
-+};
-+
-+static void __init sun8i_h3_ths_clk_setup(struct device_node *node)
-+{
-+	struct clk *clk;
-+	struct clk_gate *gate;
-+	struct clk_divider *div;
-+	const char *parent;
-+	const char *clk_name = node->name;
-+	void __iomem *reg;
-+	int err;
-+
-+	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-+
-+	if (IS_ERR(reg))
-+		return;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		goto err_unmap;
-+
-+	div = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!div)
-+		goto err_gate_free;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+	parent = of_clk_get_parent_name(node, 0);
-+
-+	gate->reg = reg;
-+	gate->bit_idx = SUN8I_H3_THS_CLK_ENABLE;
-+	gate->lock = &sun8i_h3_ths_clk_lock;
-+
-+	div->reg = reg;
-+	div->shift = SUN8I_H3_THS_CLK_DIVIDER_SHIFT;
-+	div->width = SUN8I_H3_THS_CLK_DIVIDER_WIDTH;
-+	div->table = sun8i_h3_ths_clk_table;
-+	div->lock = &sun8i_h3_ths_clk_lock;
-+
-+	clk = clk_register_composite(NULL, clk_name, &parent, 1,
-+								 NULL, NULL,
-+								 &div->hw, &clk_divider_ops,
-+								 &gate->hw, &clk_gate_ops,
-+								 CLK_SET_RATE_PARENT);
-+
-+	if (IS_ERR(clk))
-+		goto err_div_free;
-+
-+	err = of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	if (err)
-+		goto err_unregister_clk;
-+
-+	return;
-+
-+err_unregister_clk:
-+	clk_unregister(clk);
-+err_gate_free:
-+	kfree(gate);
-+err_div_free:
-+	kfree(div);
-+err_unmap:
-+	iounmap(reg);
-+}
-+
-+CLK_OF_DECLARE(sun8i_h3_ths_clk, "allwinner,sun8i-h3-ths-clk",
-+			   sun8i_h3_ths_clk_setup);
--- 
-2.9.0
+RnJvbTogT25kcmVqIEppcm1hbiA8bWVnb3VzQG1lZ291cy5jb20+CgpUaGlzIHBhdGNoIGFkZHMg
+dGhlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIHN1bjhpX3RocyBkcml2ZXIKClNpZ25l
+ZC1vZmYtYnk6IE9uZMWZZWogSmlybWFuIDxtZWdvdXNAbWVnb3VzLmNvbT4KLS0tCiAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3N1bjhpLXRocy50eHQgICAgICB8IDMxICsrKysrKysr
+KysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvc3Vu
+OGktdGhzLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy90aGVybWFsL3N1bjhpLXRocy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdGhlcm1hbC9zdW44aS10aHMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
+MDAuLjgyNmNkNTcKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdGhlcm1hbC9zdW44aS10aHMudHh0CkBAIC0wLDAgKzEsMzEgQEAKKyogc3VuOGkg
+VEhTCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGUgOiAiYWxsd2lubmVyLHN1
+bjhpLWgzLXRocyIKKy0gcmVnIDogQWRkcmVzcyByYW5nZSBvZiB0aGUgdGhlcm1hbCByZWdpc3Rl
+cnMgYW5kIGxvY2F0aW9uIG9mIHRoZSBjYWxpYnJhdGlvbgorICAgICAgICB2YWx1ZQorLSByZXNl
+dHMgOiBNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggZW50cnkgaW4gcmVzZXQtbmFtZXMu
+CisgICAgICAgICAgIHNlZSAuLi9yZXNldC9yZXNldC50eHQgZm9yIGRldGFpbHMKKy0gcmVzZXQt
+bmFtZXMgOiBNdXN0IGluY2x1ZGUgdGhlIG5hbWUgImFoYiIKKy0gY2xvY2tzIDogTXVzdCBjb250
+YWluIGFuIGVudHJ5IGZvciBlYWNoIGVudHJ5IGluIGNsb2NrLW5hbWVzLgorLSBjbG9jay1uYW1l
+cyA6IE11c3QgY29udGFpbiAiYWhiIiBmb3IgdGhlIGJ1cyBnYXRlIGFuZCAidGhzIiBmb3IgdGhl
+IFRIUworICBjbG9jaworCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBudm1lbS1jZWxscyA6IE11
+c3QgY29udGFpbiBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBpbiBudm1lbS1jZWxsLW5hbWVzCist
+IG52bWVtLWNlbGwtbmFtZXMgOiBNdXN0IGNvbnRhaW4gImNhbGlicmF0aW9uIiBmb3IgdGhlIGNl
+bGwgY29udGFpbmluZyB0aGUKKyAgdGVtcGVyYXR1cmUgY2FsaWJyYXRpb24gY2VsbCwgaWYgYXZh
+aWxhYmxlCisKK0V4YW1wbGU6Cit0aHM6IHRoc0AwMWMyNTAwMCB7CisJI3RoZXJtYWwtc2Vuc29y
+LWNlbGxzID0gPDA+OworCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWgzLXRocyI7CisJ
+cmVnID0gPDB4MDFjMjUwMDAgMHg0MDA+OworCWludGVycnVwdHMgPSA8R0lDX1NQSSA2MyBJUlFf
+VFlQRV9MRVZFTF9ISUdIPjsKKwlyZXNldHMgPSA8JmJ1c19yc3QgMTM2PjsKKwlyZXNldC1uYW1l
+cyA9ICJhaGIiOworCWNsb2NrcyA9IDwmYnVzX2dhdGVzIDcyPiwgPCZ0aHNfY2xrPjsKKwljbG9j
+ay1uYW1lcyA9ICJhaGIiLCAidGhzIjsKKwludm1lbS1jZWxscyA9IDwmdGhzX2NhbGlicmF0aW9u
+PjsKKwludm1lbS1jZWxsLW5hbWVzID0gImNhbGlicmF0aW9uIjsKK307Ci0tIAoyLjkuMAoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
