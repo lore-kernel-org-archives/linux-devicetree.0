@@ -1,74 +1,66 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: dts: r8a7794: add SMP support
-Date: Thu, 23 Jun 2016 10:11:04 +0200
-Message-ID: <CAMuHMdXb8dVPbOv0-cskN+owKJbgjcdFwLRW6J8+=XDO3EfCWw@mail.gmail.com>
-References: <14666252.G84Ipxe6EL@wasted.cogentembedded.com>
- <27171008.uuY7altQup@wasted.cogentembedded.com> <CAMuHMdWcVRBxZO85_MhYVvODcbi-GYDNKfQH9LJEcrJRd=p7Vw@mail.gmail.com>
- <adbc6358-d3fb-c608-15c2-c425332435f3@cogentembedded.com> <CAMuHMdWY+hZMFQo7iGaeZkbVnK1cZ9=oyM7RvX_8mhyCuCxD9Q@mail.gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] gpio: sx150x: Update OF configuration
+Date: Thu, 23 Jun 2016 10:18:02 +0200
+Message-ID: <576B9B3A.2070808@baylibre.com>
+References: <1466157063-10955-1-git-send-email-narmstrong@baylibre.com>
+ <20160620155744.GA1419@rob-hp-laptop>
+ <CACRpkdbWPKbQRnO4v9GcY4BMTbp1ivMO6TFa-u-QpRyyZED0oQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWY+hZMFQo7iGaeZkbVnK1cZ9=oyM7RvX_8mhyCuCxD9Q@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbWPKbQRnO4v9GcY4BMTbp1ivMO6TFa-u-QpRyyZED0oQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Wed, Jun 22, 2016 at 12:20 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Wed, Jun 22, 2016 at 12:08 PM, Sergei Shtylyov
-> <sergei.shtylyov@cogentembedded.com> wrote:
->> On 6/22/2016 10:20 AM, Geert Uytterhoeven wrote:
+On 06/23/2016 10:08 AM, Linus Walleij wrote:
+> On Mon, Jun 20, 2016 at 5:57 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Fri, Jun 17, 2016 at 11:51:03AM +0200, Neil Armstrong wrote:
+> 
+>>> +Optional Properties:
+>>> +- oscio-is-gpo: Boolean, Indicated the oscio pin can be used as additional
+>>> +             output gpo port.
+>>> +
 >>
->>>> Add the device tree node for the Advanced Power Management Unit (APMU).
->>>> Use the "enable-method" prop to  point out that the APMU should be used
->>>> for the SMP support.
->>>>
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>
->>>
->>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>
->>>> SMP/PM basically works but you can't offline CPU0 (system hangs)...
->>>
->>>
->>> On #renesas-soc you said it hangs on SILK only, and succeeds on Porter,
->>> with a WARNING in the clk core (which one?) during suspend?
+>>> +- pull-up-ports: Array of port numbers which must have pull-up enabled.
+>>> +- pull-down-ports: Array of port numbers which must have pull-down enabled.
+>>> +- open-drain-ports: Array of port numbers which must be configured as open-drain,
+>>> +                     Push-Pull mode is default.
+>>> +- polarity-invert-ports: Array of port numbers whih port polarity must be inverted.
 >>
->>    Porter is based on R8A7791 (WARNING seemed to be caused by the CAN
->> driver). :-)
->
-> Oh right, mixing up boards.
->
-> Will try on (remote) ALT when I find some time...
+>> Seems like these should be done in a common way.
+>>
+>> If not, they all need a vendor prefix.
+> 
+> Actually on second look, this takes the sx150 to pin control territory.
+> 
+> I am starting to feel like a move to drivers/pinctrl/* might be warranted.
+> 
+> Neil you worked on other pin controllers IIRC, do you think it would
+> be much work to make a combined GPIO+pinctrl driver and move
+> this over to drivers/pinctrl?
+> 
+> I know refactoring across subsystems can be a pain, but at least
+> I'm maintaining both and happy to help out.
+> 
+> Yours,
+> Linus Walleij
+> 
 
-The second CPU boots (irrespective of MD21 setting), but the kernel
-starts spewing:
+Hi Linus,
 
-    clocksource: Switched to clocksource arch_sys_counter
-    WARNING: Underflow in clocksource 'arch_sys_counter' observed,
-time update ignored.
-             Please report this, consider using a different
-clocksource, if possible.
-             Your kernel is probably still fine.
-    WARNING: Underflow in clocksource 'arch_sys_counter' observed,
-time update ignored.
-             Please report this, consider using a different
-clocksource, if possible.
-             Your kernel is probably still fine.
+Yes, it would be good to have it as a gpio+pinctrl with only pinconf, but it would show
+the way on how to support external GPIO expanders using the pinctrl framework.
 
-Seems like the secondary CPU also needs CNTVOFF initialization,
-which is done in the BSP in arch/arm/mach-shmobile/headsmp.S.
+But it is quite challenging and needs quite some work, and actually the current state of the driver is that the OF is broken.
 
-Gr{oetje,eeting}s,
+Would you agree to :
+ - Push the minimal code to make OF work again, at least for 4.7 ?
+ - Engage complete refactoring to transform it in a real gpio+pinctrl driver ?
 
-                        Geert
+For the dt-bindings properties, I can add the vendor prefixes ASAP.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Neil
