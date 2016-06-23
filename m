@@ -1,81 +1,123 @@
-From: megous@megous.com
-Subject: [PATCH 13/14] ARM: dts: sun8i: Add gpio-regulator used on Orange Pi
- One
-Date: Thu, 23 Jun 2016 21:21:03 +0200
-Message-ID: <20160623192104.18720-14-megous@megous.com>
-References: <20160623192104.18720-1-megous@megous.com>
+From: Stephan Linz <linz@li-pro.net>
+Subject: [PATCH v5] leds: documentation: 'ide-disk' to 'disk-activity'
+Date: Thu, 23 Jun 2016 21:38:46 +0200
+Message-ID: <20160623193857.14538-1-linz@li-pro.net>
+References: <576B8467.3060407@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160623192104.18720-1-megous@megous.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dev@linux-sunxi.org
-Cc: Ondrej Jirman <megous@megous.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <576B8467.3060407@samsung.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-ide@vger.kernel.org
+Cc: Stephan Linz <linz@li-pro.net>, Joseph Jezak <josejx@gentoo.org>, =?UTF-8?q?J=C3=B6rg=20Sommer?= <joerg@alea.gnuu.de>, Mark Rutland <mark.rutland@arm.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
-
-Xulong Orange Pi One uses GPIO based regulator that
-switches between two voltages: 1.1V and 1.3V. The
-regulator is controlled from the PL6 pin.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
+Cc: Joseph Jezak <josejx@gentoo.org>
+Cc: J=C3=B6rg Sommer <joerg@alea.gnuu.de>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Stephan Linz <linz@li-pro.net>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Changes in v5:
+  - Keep documentation for the old 'ide-disk' device tree
+    binding, but mark as deprecated and refer to the new
+    trigger 'disk-activity'.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-index 0adf932..ce4ba91 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-@@ -88,6 +88,25 @@
- 			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
- 		};
+Changes in v4:
+  - Keep the 'ide-disk' trigger and add a second one
+    for 'disk-activity'.
+
+Changes in v3:
+  - Port to kernel 4.x
+  - Split into platform independent and dependent parts.
+
+v2: https://patchwork.ozlabs.org/patch/117485/
+v1: http://dev.gentoo.org/~josejx/ata.patch
+---
+ Documentation/devicetree/bindings/leds/common.txt    | 5 ++++-
+ Documentation/devicetree/bindings/leds/leds-gpio.txt | 4 ++--
+ Documentation/laptops/asus-laptop.txt                | 2 +-
+ Documentation/leds/leds-class.txt                    | 2 +-
+ 4 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Docume=
+ntation/devicetree/bindings/leds/common.txt
+index af10678..1c32e31 100644
+--- a/Documentation/devicetree/bindings/leds/common.txt
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -25,8 +25,11 @@ Optional properties for child nodes:
+ 		   system
+      "default-on" - LED will turn on (but for leds-gpio see "default-s=
+tate"
+ 		    property in Documentation/devicetree/bindings/gpio/led.txt)
++     "disk-activity" - LED indicates disk activity, the old name "ide-=
+disk" is
++                       still valid for backward compatibility
+      "heartbeat" - LED "double" flashes at a load average based rate
+-     "ide-disk" - LED indicates disk activity
++     "ide-disk" - LED indicates IDE disk activity (deprecated), do not=
+ use for
++                  new implementation, use the new "disk-activity" name=
+ instead
+      "timer" - LED flashes at a fixed, configurable rate
+=20
+ - led-max-microamp : Maximum LED supply current in microamperes. This =
+property
+diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.txt b/Doc=
+umentation/devicetree/bindings/leds/leds-gpio.txt
+index cbbeb18..5b1b43a 100644
+--- a/Documentation/devicetree/bindings/leds/leds-gpio.txt
++++ b/Documentation/devicetree/bindings/leds/leds-gpio.txt
+@@ -33,9 +33,9 @@ Examples:
+ leds {
+ 	compatible =3D "gpio-leds";
+ 	hdd {
+-		label =3D "IDE Activity";
++		label =3D "Disk Activity";
+ 		gpios =3D <&mcu_pio 0 GPIO_ACTIVE_LOW>;
+-		linux,default-trigger =3D "ide-disk";
++		linux,default-trigger =3D "disk-activity";
  	};
-+
-+	vdd_soc: gpio-regulator {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "soc-vdd-supply";
-+		regulator-min-microvolt = <1100000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-boot-on;
-+		regulator-type = "voltage";
-+
-+		gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>;
-+		states = <1100000 0x0
-+			  1300000 0x1>;
-+
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+	};
-+};
-+
- };
- 
- &ehci1 {
-@@ -131,6 +150,13 @@
- 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
-+
-+	soc_reg0: soc_reg@0 {
-+		allwinner,pins = "PL6";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
- };
- 
- &uart0 {
--- 
+=20
+ 	fault {
+diff --git a/Documentation/laptops/asus-laptop.txt b/Documentation/lapt=
+ops/asus-laptop.txt
+index 79a1bc6..5f28587 100644
+--- a/Documentation/laptops/asus-laptop.txt
++++ b/Documentation/laptops/asus-laptop.txt
+@@ -72,7 +72,7 @@ LEDs
+     echo 1 >  /sys/class/leds/asus::mail/brightness
+   will switch the mail LED on.
+   You can also know if they are on/off by reading their content and us=
+e
+-  kernel triggers like ide-disk or heartbeat.
++  kernel triggers like disk-activity or heartbeat.
+=20
+ Backlight
+ ---------
+diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/led=
+s-class.txt
+index 44f5e6b..f1f7ec9 100644
+--- a/Documentation/leds/leds-class.txt
++++ b/Documentation/leds/leds-class.txt
+@@ -11,7 +11,7 @@ brightness support so will just be turned on for non-=
+zero brightness settings.
+ The class also introduces the optional concept of an LED trigger. A tr=
+igger
+ is a kernel based source of led events. Triggers can either be simple =
+or
+ complex. A simple trigger isn't configurable and is designed to slot i=
+nto
+-existing subsystems with minimal additional code. Examples are the ide=
+-disk,
++existing subsystems with minimal additional code. Examples are the dis=
+k-activity,
+ nand-disk and sharpsl-charge triggers. With led triggers disabled, the=
+ code
+ optimises away.
+=20
+--=20
 2.9.0
+
