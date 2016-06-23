@@ -1,119 +1,31 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [v3 PATCH 2/5] Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
-Date: Thu, 23 Jun 2016 20:51:01 +0800
-Message-ID: <1466686264-6744-3-git-send-email-zyw@rock-chips.com>
-References: <1466686264-6744-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466686264-6744-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 0/2] ASoC: da7219: Convert driver to use generic FW functions
+Date: Thu, 23 Jun 2016 14:57:35 +0200
+Message-ID: <CAJZ5v0hjQ=j+KOV8PMR47vx+=LLZMHqGdrVBZtDsF6WhFGkcQw@mail.gmail.com>
+References: <cover.1466523027.git.Adam.Thomson.Opensource@diasemi.com>
+ <6274a042-da99-e3e6-20f2-37ce2651645c@intel.com> <2E89032DDAA8B9408CB92943514A0337D4644644@SW-EX-MBX01.diasemi.com>
+ <20160621232116.GG28202@sirena.org.uk> <CAJZ5v0g47+igo+Z+gZZE9sOix8oCs7Jy+H-i=HcBUB+RVib3+g@mail.gmail.com>
+ <20160623100148.GV28202@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20160623100148.GV28202@sirena.org.uk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-acpi <linux-acpi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, alsa-devel <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a binding that describes the Rockchip USB Type-C PHY
-for rk3399
+On Thu, Jun 23, 2016 at 12:01 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Jun 22, 2016 at 03:05:26AM +0200, Rafael J. Wysocki wrote:
+>> On Wed, Jun 22, 2016 at 1:21 AM, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > Probably the easiest thing would be a tag for the core change that I can
+>> > pull.
+>
+>> Or you can apply them both if that helps (please consider the first
+>> one as ACKed in that case).
+>
+> That works too, if I do that I'll make a tag in case it needs to get
+> pulled elsewhere.
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
-
----
-
-Changes in v3:
-- use compatible: rockchip,rk3399-typec-phy
-- use dashes instead of underscores.
-
-Changes in v2:
-- add some registers description
-
-Changes in v1:
-- add extcon node description
-- move the registers in phy driver
-- remove the suffix of reset
-
- .../devicetree/bindings/phy/phy-rockchip-typec.txt | 74 ++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-new file mode 100644
-index 0000000..0c5b333
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-@@ -0,0 +1,74 @@
-+* ROCKCHIP type-c PHY
-+---------------------
-+
-+Required properties:
-+ - compatible : must be "rockchip,rk3399-typec-phy"
-+ - reg: Address and length of the usb phy control register set
-+ - rockchip,grf : phandle to the syscon managing the "general
-+   register files"
-+ - clocks : phandle + clock specifier for the phy clocks
-+ - clock-names : string, clock name, must be "tcpdcore", "tcpdphy-ref";
-+ - resets : a list of phandle + reset specifier pairs
-+ - reset-names : string reset name, must be:
-+		 "uphy", "uphy-pipe", "uphy-tcphy"
-+ - extcon : extcon specifier for the Power Delivery
-+
-+Note, there are 2 type-c phys for RK3399, and they are almost identical, except
-+these registers(description below), every register node contains 3 sections:
-+offset, enable bit, write mask bit.
-+ - rockchip,typec-conn-dir : the register of type-c connector direction,
-+   for type-c phy0, it must be <0xe580 0 16>;
-+   for type-c phy1, it must be <0xe58c 0 16>;
-+ - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
-+   control.
-+   for type-c phy0, it must be <0xe580 3 19>;
-+   for type-c phy1, it must be <0xe58c 3 19>;
-+ - rockchip,external-psm : the register of type-c phy external psm clock
-+   selection.
-+   for type-c phy0, it must be <0xe588 14 30>;
-+   for type-c phy1, it must be <0xe594 14 30>;
-+ - rockchip,pipe-status : the register of type-c phy pipe status.
-+   for type-c phy0, it must be <0xe5c0 0 0>;
-+   for type-c phy1, it must be <0xe5c0 16 16>;
-+ - rockchip,uphy-dp-sel : the register of type-c phy selection for DP
-+   for type-c phy0, it must be <0x6268 19 19>;
-+   for type-c phy1, it must be <0x6268 3 19>;
-+
-+Example:
-+	tcphy0: phy@ff7c0000 {
-+		compatible = "rockchip,rk3399-typec-phy";
-+		reg = <0x0 0xff7c0000 0x0 0x40000>;
-+		extcon = <&fusb0>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
-+			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
-+		clock-names = "tcpdcore", "tcpdphy-ref";
-+		resets = <&cru SRST_UPHY0>,
-+			 <&cru SRST_UPHY0_PIPE_L00>,
-+			 <&cru SRST_P_UPHY0_TCPHY>;
-+		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-+		rockchip,typec-conn-dir = <0xe580 0 16>;
-+		rockchip,usb3tousb2-en = <0xe580 3 19>;
-+		rockchip,external-psm = <0xe588 14 30>;
-+		rockchip,pipe-status = <0xe5c0 0 0>;
-+		rockchip,uphy-dp-sel = <0x6268 19 19>;
-+	};
-+
-+	tcphy1: phy@ff800000 {
-+		compatible = "rockchip,rk3399-typec-phy";
-+		reg = <0x0 0xff800000 0x0 0x40000>;
-+		extcon = <&fusb1>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
-+			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
-+		clock-names = "tcpdcore", "tcpdphy-ref";
-+		resets = <&cru SRST_UPHY1>,
-+		         <&cru SRST_UPHY1_PIPE_L00>,
-+			 <&cru SRST_P_UPHY1_TCPHY>;
-+		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-+		rockchip,typec-conn-dir = <0xe58c 0 16>;
-+		rockchip,usb3tousb2-en = <0xe58c 3 19>;
-+		rockchip,external-psm = <0xe594 14 30>;
-+		rockchip,pipe-status = <0xe5c0 16 16>;
-+		rockchip,uphy-dp-sel = <0x6268 3 19>;
-+	};
--- 
-2.6.3
+Sounds good, thanks!
