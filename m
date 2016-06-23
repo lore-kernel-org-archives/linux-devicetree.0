@@ -1,42 +1,75 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 00/13] Add support for Tegra DPAUX pinctrl
-Date: Thu, 23 Jun 2016 11:21:05 +0200
-Message-ID: <CACRpkdYGT9zwyi2Lsd6tyG5dVnPNH+1w9wo+w3=b7YX1pfBJUw@mail.gmail.com>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <20160617165611.GO27475@ulmo.ba.sec> <20160617165842.GP27475@ulmo.ba.sec>
- <CACRpkdaEUUCs3UR9U331wuFTkRswU4tFEg6JLoMVkHeSXfS_sA@mail.gmail.com> <20160623080400.GA8136@ulmo.ba.sec>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160623080400.GA8136-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: sun5i: q8-common: Enable USB-based WiFi
+Date: Thu, 23 Jun 2016 17:29:15 +0800
+Message-ID: <1466674155-3365-1-git-send-email-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 23, 2016 at 10:04 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jun 23, 2016 at 09:49:20AM +0200, Linus Walleij wrote:
->> On Fri, Jun 17, 2016 at 6:58 PM, Thierry Reding
->> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->> > Oh wait... there's the pinctrl helper function that is a build-
->> > dependency. Linus, would you be okay if I took that through the
->> > drm-tegra tree along with the DPAUX driver change, and provide a
->> > stable branch for you to resolve conflicts against if needed?
->>
->> I have already applied it, but I can rebase and pull that patch out
->> on a separate immutable branch and then  merge that branch
->> into my devel and then you can pull it too.
->>
->> Would that work?
->
-> Yes, that would be just fine.
+The early A13 Q8 tablets all use a Realtek WiFi module connected to
+USB1. The module is powered by AXP209's LDO3 at 3.3V.
 
-OK use this:
-https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel-dt-free-map
+Move the related settings from sun5i-a13-q8-tablet.dts to
+sun5i-q8-common.dtsi, for all q8-based tablets.
 
-I merged that into my devel branch too.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+Changes since v1:
 
-Yours,
-Linus Walleij
+  - Move the WiFi module settings from sun5i-a13-q8-tablet.dts
+---
+ arch/arm/boot/dts/sun5i-a13-q8-tablet.dts | 10 ----------
+ arch/arm/boot/dts/sun5i-q8-common.dtsi    |  7 +++++++
+ 2 files changed, 7 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts b/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
+index 72e93acb5a9e..dce77825571d 100644
+--- a/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
++++ b/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
+@@ -48,13 +48,3 @@
+ 	model = "Q8 A13 Tablet";
+ 	compatible = "allwinner,q8-a13", "allwinner,sun5i-a13";
+ };
+-
+-&reg_ldo3 {
+-	regulator-min-microvolt = <3300000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "vcc-wifi";
+-};
+-
+-&usbphy {
+-	usb1_vbus-supply = <&reg_ldo3>;
+-};
+diff --git a/arch/arm/boot/dts/sun5i-q8-common.dtsi b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+index b6af9a498eda..a5de28d12b16 100644
+--- a/arch/arm/boot/dts/sun5i-q8-common.dtsi
++++ b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+@@ -191,6 +191,12 @@
+ 	regulator-name = "avcc";
+ };
+ 
++&reg_ldo3 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-wifi";
++};
++
+ &reg_usb0_vbus {
+ 	gpio = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+ 	status = "okay";
+@@ -231,5 +237,6 @@
+ 	usb0_vbus_det-gpio = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
+ 	usb0_vbus_power-supply = <&usb_power_supply>;
+ 	usb0_vbus-supply = <&reg_usb0_vbus>;
++	usb1_vbus-supply = <&reg_ldo3>;
+ 	status = "okay";
+ };
+-- 
+2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
