@@ -1,98 +1,104 @@
-From: Hoan Tran <hotran@apm.com>
-Subject: Re: [PATCH 1/3] Documentation: dtb: xgene: Add hwmon dts binding documentation
-Date: Thu, 23 Jun 2016 09:42:02 -0700
-Message-ID: <CAFHUOYy7G85O0DiqNds2DJtbg_EZzRE0NjS=7V0gKSEsyQJ8Ow@mail.gmail.com>
-References: <1463415447-29903-1-git-send-email-hotran@apm.com>
- <1463415447-29903-2-git-send-email-hotran@apm.com> <20160523203044.GA17450@rob-hp-laptop>
- <CAFHUOYyYt8pE6sggezCR=TFcsimcjakbYmcWFtpLyQ3Et_gZaA@mail.gmail.com>
- <CABb+yY3uFrknEU65aBCw7G+dfnDdqGTZ_sctktx03GM9b86xaA@mail.gmail.com> <CAFHUOYwva_mry+gKKEsFaBw-L2ey-HHPetjDGqkr0hwcmw_zEw@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 02/14] dt/bindings: update binding for PM domain idle
+ states
+Date: Thu, 23 Jun 2016 18:35:17 +0100
+Message-ID: <20160623173312.GA22204@leverpostej>
+References: <1466624209-27432-1-git-send-email-lina.iyer@linaro.org>
+ <1466624209-27432-3-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAFHUOYwva_mry+gKKEsFaBw-L2ey-HHPetjDGqkr0hwcmw_zEw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Loc Ho <lho@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466624209-27432-3-git-send-email-lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mtitinger-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 7, 2016 at 11:05 AM, Hoan Tran <hotran@apm.com> wrote:
-> Hi Jassi,
->
-> Thanks for your reply !
->
-> On Tue, Jun 7, 2016 at 10:20 AM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
->> On Tue, May 24, 2016 at 6:31 AM, Hoan Tran <hotran@apm.com> wrote:
->>> Hi Rob,
->>>
->>> Thanks for your review !
->>>
->>> On Mon, May 23, 2016 at 1:30 PM, Rob Herring <robh@kernel.org> wrote:
->>>>
->>>> On Mon, May 16, 2016 at 09:17:25AM -0700, Hoan Tran wrote:
->>>> > This patch adds the APM X-Gene hwmon device tree node documentation.
->>>> >
->>>> > Signed-off-by: Hoan Tran <hotran@apm.com>
->>>> > ---
->>>> >  .../devicetree/bindings/hwmon/apm-xgene-hwmon.txt          | 14 ++++++++++++++
->>>> >  1 file changed, 14 insertions(+)
->>>> >  create mode 100644 Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
->>>> >
->>>> > diff --git a/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
->>>> > new file mode 100644
->>>> > index 0000000..49a482e
->>>> > --- /dev/null
->>>> > +++ b/Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
->>>> > @@ -0,0 +1,14 @@
->>>> > +APM X-Gene hwmon driver
->>>> > +
->>>> > +Hwmon driver accesses sensors over the "SLIMpro" mailbox.
->>>>
->>>> DT bindings describe h/w, not driver data.
->>> How about this description: "APM X-Gene SOC sensors are accessed over
->>> the "SLIMpro" mailbox" ?
->>>> I'm not sure this belongs in
->>>> DT and perhaps the devices for the mailbox should be created by the
->>>> mailbox driver.
->>> I don't think the current mailbox supports it.
->>>>
->>>> > +
->>>> > +Required properties :
->>>> > + - compatible : should be "apm,xgene-slimpro-hwmon"
->>>> > + - mboxes : use the label reference for the mailbox as the first parameter.
->>>> > +         The second parameter is the channel number.
->>>>
->>>> When do you expect this to be different mailbox numbers?
->>> No, this number is not changed. This "mboxes" property is used and
->>> required by mailbox.c when hwmon driver requests a mailbox channel
->>>
->> I think that's inaccurate.
->>
->> The h/w and the firmware combined is the "platform" from Linux POV.
->> Channels are physical resources provided by a mailbox controller.
->> Currently the firmware listens on Channel-7 but some future revision
->> might switch to, say, Channel-9.  Or say the same firmware on next
->> revision of h/w may have to switch to Channel-3 because it has only 4
->> channels. So I see the mailbox channel number as a hardware property
->> just like an IRQ (which very often change with SoC iterations).
->
-> Agree about that. I suppose this number is not changed. But as you
-> said, the mailbox channel number can be changed based on SoC or
-> Firmware. It would be better if this channel number is specified
-> inside a DT node.
->
-> Hi Rob, do you have any comments ?
->
-> Thanks
-> Hoan
->
->>
->> Cheers.
+Hi,
 
-Hi Rob,
+On Wed, Jun 22, 2016 at 01:36:37PM -0600, Lina Iyer wrote:
+> From: Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> 
+> Update DT bindings to describe idle states of PM domains.
+> 
+> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Signed-off-by: Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> [Lina: Added state properties, removed state names, wakeup-latency,
+> added of_pm_genpd_init() API, pruned commit text]
+> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> [Ulf: Moved around code to make it compile properly, rebased on top of multiple state support]
+> ---
+>  .../devicetree/bindings/power/power_domain.txt     | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index 025b5e7..41e8dda 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -29,6 +29,43 @@ Optional properties:
+>     specified by this binding. More details about power domain specifier are
+>     available in the next section.
+>  
+> +- power-states : A phandle of an idle-state that shall be soaked into a
+> +                generic domain power state.
 
-Do you have any comments on Jassi's reply ?
-If not, I'll send another version which included the binding document
-and DT node.
+It's somewhat unfortunate that this gives us two possible locations for
+idle state lists (under the /cpus node and in a pm-domains node),
+especially as it's not clear what would happen were a DT to have both.
 
-Thanks
-Hoan
+I would prefer that we extend the existing bindings such that states can
+refer to the power domains which they affect.
+
+> +==Power state==
+> +
+> +A PM domain power state describes an idle state of a domain and must be
+> +have the following properties -
+> +
+> +	- entry-latency-us
+> +		Usage: Not required if wakeup-latency-us is provided.
+> +		Value type: <prop-encoded-array>
+> +		Definition: u32 value representing worst case latency in
+> +		microseconds required to enter the idle state.
+> +		The exit-latency-us duration may be guaranteed
+> +		only after entry-latency-us has passed.
+> +
+> +	- exit-latency-us
+> +		Usage: Not required if wakeup-latency-us is provided.
+> +		Value type: <prop-encoded-array>
+> +		Definition: u32 value representing worst case latency
+> +		in microseconds required to exit the idle state.
+
+These are part of the existing idle state binding
+(Documentation/devicetree/bindings/arm/idle-states.txt), and I would
+prefer that we did not duplicate this nor come up with an independent
+set of idle state bindings.
+
+> +
+> +	- residency-us:
+> +		Usage: Optional
+> +		Value type: <prop-encoded-array>
+> +		Definition: A u32 value representing the time for which a
+> +		domain must be idle in the state to reap power saving benefits
+> +		of entering the state.
+
+This is "min-residency-us" per the existing bindings.
+
+> +
+> +	- state-param:
+> +		Usage: Optional
+> +		Value type: <prop-encoded-array>
+> +		Definition: A u32 value as defined by the state. May be used
+> +		by the driver to hold state related u32 data. In the case of
+> +		PSCI, an extended state-id for the domain may be encoded in
+> +		this value.
+
+This is "arm,psci-suspend-param", per the existing bindings.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
