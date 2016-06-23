@@ -1,114 +1,62 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: sun8i: Add Parrot Board DTS
-Date: Thu, 23 Jun 2016 17:49:10 +0800
-Message-ID: <CAGb2v676iNBUCvZCYFAtNoW1BUqQz7r8y1_uFUGXNLxdLgoSLA@mail.gmail.com>
-References: <1466602902-4022-1-git-send-email-quentin.schulz@free-electrons.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] regulator: core: Allow simultaneous use of enable op
+ and GPIO
+Date: Thu, 23 Jun 2016 11:01:04 +0100
+Message-ID: <20160623100104.GU28202@sirena.org.uk>
+References: <20160622082558.20935-1-acourbot@nvidia.com>
+ <20160622082558.20935-2-acourbot@nvidia.com>
+ <20160622103432.GJ28202@sirena.org.uk>
+ <CAAVeFuK9AV+g0EwTAhr9mFz=ZK5nRR6jnWFhEEsz8+HU7rMKrw@mail.gmail.com>
+ <CAAVeFu+9cgt+teWpA3KYwnBU+NAr+RusVd_XavgW1CuPfY2egA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="R7Dyui215VKdTDYA"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466602902-4022-1-git-send-email-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFu+9cgt+teWpA3KYwnBU+NAr+RusVd_XavgW1CuPfY2egA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 9:41 PM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The Parrot Board is an evaluation board with an Allwinner R16 (assumed
-> to be close to an Allwinner A33), 4GB of eMMC, 512MB of RAM, USB host
-> and OTG, a WiFi/Bluetooth combo chip, a micro SD Card reader, 2
-> controllable buttons, an LVDS port with separated backlight and
-> capacitive touch panel ports, an audio/microphone jack, a camera CSI
-> port, 2 sets of 22 GPIOs and an accelerometer.
->
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->
-> Patch dependencies:
->  - regulator: axp20x: Add support for the (external) drivebus regulator
->  - ARM: dts: axp22x.dtsi: Add reg_drivebus node
->  - ARM: dts: axp22x.dtsi: Add usb_power_supply node
->  - power: axp20x_usb: Add support for usb power-supply on axp22x pmics
->  - mfd: axp20x: Extend axp22x_volatile_ranges
->  - mfd: axp20x: Add axp20x-usb-power-supply for axp22x pmics
->  - phy-sun4i-usb: Add workaround for missing Vbus det interrupts on A31
-> or the micro USB port would not be powered.
->
-> v2:
->  - correct typos,
->  - chose less generic name suffix for nodes (now_parrot_r16),
->  - add comment for i2c childless node,
->  - add comment for two regulators-powered WiFi chip,
->  - add comment to explicit the use of some regulators,
->  - add usb_vbus_power-supply property in usbphy node (this adds a
->    dependance to an other patch),
->
->  arch/arm/boot/dts/Makefile             |   1 +
->  arch/arm/boot/dts/sun8i-r16-parrot.dts | 356 +++++++++++++++++++++++++++++++++
->  2 files changed, 357 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-r16-parrot.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 1ff5434..6c7581f 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -762,6 +762,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->         sun8i-a33-ippo-q8h-v1.2.dtb \
->         sun8i-a33-q8-tablet.dtb \
->         sun8i-a33-sinlinx-sina33.dtb \
-> +       sun8i-r16-parrot.dtb \
->         sun8i-a83t-allwinner-h8homlet-v2.dtb \
->         sun8i-a83t-cubietruck-plus.dtb \
->         sun8i-h3-orangepi-2.dtb \
-> diff --git a/arch/arm/boot/dts/sun8i-r16-parrot.dts b/arch/arm/boot/dts/sun8i-r16-parrot.dts
-> new file mode 100644
-> index 0000000..cd68bfa
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-r16-parrot.dts
-> @@ -0,0 +1,356 @@
 
-[...]
+--R7Dyui215VKdTDYA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +&reg_usb1_vbus {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&usb1_vbus_pin_parrot_r16>;
-> +       gpio = <&pio 3 12 GPIO_ACTIVE_HIGH>; /* PD12 */
-> +       status = "okay";
-> +};
-> +
-> +&uart0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart0_pins_b>;
-> +       status = "okay";
-> +};
-> +
-> +&usb_otg {
-> +       dr_mode = "otg";
-> +       status = "okay";
-> +};
-> +
-> +&usb_power_supply {
-> +       status = "okay";
-> +};
-> +
-> +&usbphy {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&usb0_id_det>;
-> +       usb0_vbus-supply = <&reg_drivevbus>;
-> +       usb0_id_det-gpios = <&pio 3 10 GPIO_ACTIVE_HIGH>; /* PD10 */
-> +       usb0_vbus_power-supply = <&usb_power_supply>;
-> +       usb1_vbus-supply = <&reg_usb1_vbus>; /* USB1 VBUS is always on */
+On Thu, Jun 23, 2016 at 02:29:39PM +0900, Alexandre Courbot wrote:
 
-The comment is misleading, as you have a controllable regulator above.
-Otherwise,
+> There is also another potential problem with not using the enable GPIO
+> in the regulator core: said GPIO can not be shared anymore between
+> several regulators, as this was handled by the core.
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Yeah, but there's more fun there since you'd need to sync up with the
+device specific enable as well - it's not clear that such hardware would
+make sense TBH.
 
-> +};
-> --
-> 2.5.0
->
+> That's not a big issue for our use-case but I just wanted to point it
+> out. Maybe we need a more global solution for shared GPIOs, but I can
+> see a few challenges on the way (e.g. which policy to adopt and how to
+> handle conflicts).
+
+Indeed.  I've never seen such hardware though so...
+
+--R7Dyui215VKdTDYA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXa7NfAAoJECTWi3JdVIfQ2eQH/1bzIB5cI1yVrQZ9M4rQvPX8
+UyvqDtrooec+/1jxceyA8lJuXVBrfqYtEnpZ1swCzmcbpuFYJZ4jXlVhraoRLXVc
+tBQC/kRo+w9FuPh3fRzqr7bMZ5jlPsnhG24wiNS6noZuYsePEg4WSiWiPT1e0umk
+VQ/wemmMpsIOXvsgsCn/nNz8OCL7lMZaW220YS1IsXF9u0nZHfHJ/a95zjY7M0Op
+ax5cto35URAlMOgYuj9HocO4plb2masjc66bRlqFWZHk+v6tYRd9Qyv1IUPgNVfd
+SmE2iTn9ONiC3JsdcTRdqSlsk0mKKu5SMfJtO+9pn8Nbl+RzdFp5csi9Qi1Yats=
+=nOtP
+-----END PGP SIGNATURE-----
+
+--R7Dyui215VKdTDYA--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
