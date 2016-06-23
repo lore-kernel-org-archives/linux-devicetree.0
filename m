@@ -1,203 +1,118 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] arm64: dts: hikey: name the GPIO lines
-Date: Fri, 24 Jun 2016 01:06:04 +0200
-Message-ID: <1466723164-9937-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Mandala <david.mandala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] mtd: nand: sunxi: add reset line support
+Date: Fri, 24 Jun 2016 07:20:38 +0800
+Message-ID: <1284641466724038@web7h.yandex.ru>
+References: <20160620044838.56904-1-icenowy@aosc.xyz>
+	<20160620044838.56904-2-icenowy@aosc.xyz> <20160623180108.382bbaae@bbrezillon>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBS65WG5QKGQEAEYBIDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160623180108.382bbaae@bbrezillon>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This names the GPIO lines on the HiKey board in accordance with
-the 96Board Specification for especially the Low Speed External
-Connector: "GPIO-A" thru "GPIO-L".
+In my opinion, return directly PTR_ERR(nfc->reset) is OK here.
+If devm_reset_control_get_optional() return -EPROBE_DEFER, the code here wi=
+ll also return it. However, if we get other error, why should it return -EP=
+ROBE_DEFER again?
 
-This will make these line names reflect through to userspace
-so that they can easily be identified and used with the new
-character device ABI.
-
-Some care has been taken to name all lines, not just those used
-by the external connectors, also lines that are muxed into some
-other function than GPIO: these are named "[FOO]" so that users
-can see with lsgpio what all lines are used for.
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Mandala <david.mandala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+24.06.2016, 00:01, "Boris Brezillon" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> On Mon, 20 Jun 2016 12:48:38 +0800
+> Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+>
+>> =C2=A0The NAND controller on some sun8i chips needs its reset line to be
+>> =C2=A0deasserted before they can enter working state.
+>>
+>> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> =C2=A0---
+>> =C2=A0=C2=A0=C2=A0Changes in v2:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Corrected the error checking code of res=
+et line.
+>>
+>> =C2=A0=C2=A0=C2=A0Changes in v3:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Corrected a more serious error brought i=
+n the "fix" of v2.
+>>
+>> =C2=A0=C2=A0=C2=A0Changes in v4:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Removed unneeded code block after "else"=
+.
+>>
+>> =C2=A0=C2=A0=C2=A0Changes in v5:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Added reassertion code in case of initia=
+lization error and device
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0remove.
+>>
+>> =C2=A0=C2=A0=C2=A0Changes in v6:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Fixed a resource leak by not using goto =
+to exit in case of error.
+>>
+>> =C2=A0=C2=A0drivers/mtd/nand/sunxi_nand.c | 28 +++++++++++++++++++++++++=
 ---
-ChangeLog v1->v2:
-- Use the right property name: old patch using "gpio-names" rather
-  than "gpio-line-names" that we agreed upon. Sorry...
+>> =C2=A0=C2=A01 file changed, 25 insertions(+), 3 deletions(-)
+>>
+>> =C2=A0diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunx=
+i_nand.c
+>> =C2=A0index a83a690..08d5e88 100644
+>> =C2=A0--- a/drivers/mtd/nand/sunxi_nand.c
+>> =C2=A0+++ b/drivers/mtd/nand/sunxi_nand.c
+>> =C2=A0@@ -39,6 +39,7 @@
+>> =C2=A0=C2=A0#include <linux/gpio.h>
+>> =C2=A0=C2=A0#include <linux/interrupt.h>
+>> =C2=A0=C2=A0#include <linux/iopoll.h>
+>> =C2=A0+#include <linux/reset.h>
+>>
+>> =C2=A0=C2=A0#define NFC_REG_CTL 0x0000
+>> =C2=A0=C2=A0#define NFC_REG_ST 0x0004
+>> =C2=A0@@ -269,6 +270,7 @@ struct sunxi_nfc {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0void __iomem=
+ *regs;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct clk *=
+ahb_clk;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct clk *=
+mod_clk;
+>> =C2=A0+ struct reset_control *reset;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned lon=
+g assigned_cs;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned lon=
+g clk_rate;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct list_=
+head chips;
+>> =C2=A0@@ -1871,26 +1873,42 @@ static int sunxi_nfc_probe(struct platform=
+_device *pdev)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0goto out_ahb_clk_unprepare;
+>>
+>> =C2=A0+ nfc->reset =3D devm_reset_control_get_optional(dev, "ahb");
+>> =C2=A0+
+>> =C2=A0+ if (!IS_ERR(nfc->reset)) {
+>> =C2=A0+ ret =3D reset_control_deassert(nfc->reset);
+>> =C2=A0+ if (ret) {
+>> =C2=A0+ dev_err(dev, "reset err %d\n", ret);
+>> =C2=A0+ goto out_mod_clk_unprepare;
+>> =C2=A0+ }
+>> =C2=A0+ } else if (PTR_ERR(nfc->reset) !=3D -ENOENT) {
+>> =C2=A0+ ret =3D PTR_ERR(nfc->reset);
+>
+> You should return -EDEFER_PROBE here.
+>
+> And can you please rebase this series on top of nand/next [1]?
+>
+> [1]https://github.com/linux-nand/linux/tree/nand/next
 
-This would be nice to have merged for kernel v4.8 so that the
-new chardev ABI can be used to obtain the lines for the external
-connector and use them from userspace from this kernel version.
----
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 143 +++++++++++++++++++++++++
- 1 file changed, 143 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index e92a30c87a82..593c7e43de79 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -66,6 +66,149 @@
- 			status = "ok";
- 		};
- 
-+		/*
-+		 * Legend: proper name = the GPIO line is used as GPIO
-+		 *         NC = not connected (not routed from the SoC)
-+		 *         "[PER]" = pin is muxed for peripheral (not GPIO)
-+		 *         "" = no idea, schematic doesn't say, could be
-+		 *              unrouted (not connected to any external pin)
-+		 *         LSEC = Low Speed External Connector
-+		 *         HSEC = High Speed External Connector
-+		 *
-+		 * Pin assignments taken from LeMaker and CircuitCo Schematics
-+		 * Rev A1.
-+		 *
-+		 * For the lines routed to the external connectors the
-+		 * lines are named after the 96Boards CE Specification 1.0,
-+		 * Appendix "Expansion Connector Signal Description".
-+		 *
-+		 * When the 96Board naming of a line and the schematic name of
-+		 * the same line are in conflict, the 96Board specification
-+		 * takes precedence, which means that the external UART on the
-+		 * LSEC is named UART0 while the schematic and SoC names this
-+		 * UART2. This is only for the informational lines i.e. "[FOO]",
-+		 * the GPIO named lines "GPIO-A" thru "GPIO-L" are the only
-+		 * ones actually used for GPIO.
-+		 */
-+		gpio0: gpio@f8011000 {
-+			gpio-line-names = "PWR_HOLD", "DSI_SEL",
-+			"USB_HUB_RESET_N", "USB_SEL", "HDMI_PD", "WL_REG_ON",
-+			"PWRON_DET", "5V_HUB_EN";
-+		};
-+
-+		gpio1: gpio@f8012000 {
-+			gpio-line-names = "SD_DET", "HDMI_INT", "PMU_IRQ_N",
-+			"WL_HOST_WAKE", "NC", "NC", "NC", "BT_REG_ON";
-+		};
-+
-+		gpio2: gpio@f8013000 {
-+			gpio-line-names =
-+				"GPIO-A", /* LSEC Pin 23: GPIO2_0 */
-+				"GPIO-B", /* LSEC Pin 24: GPIO2_1 */
-+				"GPIO-C", /* LSEC Pin 25: GPIO2_2 */
-+				"GPIO-D", /* LSEC Pin 26: GPIO2_3 */
-+				"GPIO-E", /* LSEC Pin 27: GPIO2_4 */
-+				"USB_ID_DET", "USB_VBUS_DET",
-+				"GPIO-H"; /* LSEC Pin 30: GPIO2_7 */
-+		};
-+
-+		gpio3: gpio@f8014000 {
-+			gpio-line-names = "GPIO3_0", "NC", "NC", "", "NC", "",
-+			"WLAN_ACTIVE", "NC", "NC";
-+		};
-+
-+		gpio4: gpio@f7020000 {
-+			gpio-line-names = "USER_LED1", "USER_LED2", "USER_LED3",
-+			"USER_LED4", "SD_SEL", "NC", "NC", "BT_ACTIVE";
-+		};
-+
-+		gpio5: gpio@f7021000 {
-+			gpio-line-names = "NC", "NC",
-+			"[UART1_RxD]", /* LSEC Pin 11: UART3_RX */
-+			"[UART1_TxD]", /* LSEC Pin 13: UART3_TX */
-+			"[AUX_SSI1]", "NC",
-+			"[PCM_CLK]", /* LSEC Pin 18: MODEM_PCM_XCLK */
-+			"[PCM_FS]"; /* LSEC Pin 16: MODEM_PCM_XFS */
-+		};
-+
-+		gpio6: gpio@f7022000 {
-+			gpio-line-names =
-+			"[SPI0_DIN]", /* Pin 10: SPI0_DI */
-+			"[SPI0_DOUT]", /* Pin 14: SPI0_DO */
-+			"[SPI0_CS]", /* Pin 12: SPI0_CS_N */
-+			"[SPI0_SCLK]", /* Pin 8: SPI0_SCLK */
-+			"NC", "NC", "NC",
-+			"GPIO-G"; /* Pin 29: GPIO6_7_DSI_TE0 */
-+		};
-+
-+		gpio7: gpio@f7023000 {
-+			gpio-line-names = "NC", "NC", "NC", "NC",
-+			"[PCM_DI]", /* Pin 22: MODEM_PCM_DI */
-+			"[PCM_DO]", /* Pin 20: MODEM_PCM_DO */
-+			"NC", "NC";
-+		};
-+
-+		gpio8: gpio@f7024000 {
-+			gpio-line-names = "NC", "[CEC_CLK_19_2MHZ]", "NC",
-+			"", "", "", "", "", "";
-+		};
-+
-+		gpio9: gpio@f7025000 {
-+			gpio-line-names = "",
-+			"GPIO-J", /* LSEC Pin 32: ISP_PWDN0_GPIO9_1 */
-+			"GPIO-L", /* LSEC Pin 34: ISP_PWDN1_GPIO9_2 */
-+			"NC", "NC", "NC", "NC", "[ISP_CCLK0]";
-+		};
-+
-+		gpio10: gpio@f7026000 {
-+			gpio-line-names = "BOOT_SEL",
-+			"[ISP_CCLK1]",
-+			"GPIO-I", /* LSEC Pin 31: ISP_RSTB0_GPIO10_2 */
-+			"GPIO-K", /* LSEC Pin 33: ISP_RSTB1_GPIO10_3 */
-+			"NC", "NC",
-+			"[I2C2_SDA]", /* HSEC Pin 34: ISP0_SDA */
-+			"[I2C2_SCL]"; /* HSEC Pin 32: ISP0_SCL */
-+		};
-+
-+		gpio11: gpio@f7027000 {
-+			gpio-line-names =
-+			"[I2C3_SDA]", /* HSEC Pin 38: ISP1_SDA */
-+			"[I2C3_SCL]", /* HSEC Pin 36: ISP1_SCL */
-+			"", "NC", "NC", "NC", "", "";
-+		};
-+
-+		gpio12: gpio@f7028000 {
-+			gpio-line-names = "[BT_PCM_XFS]", "[BT_PCM_DI]",
-+			"[BT_PCM_DO]",
-+			"NC", "NC", "NC", "NC",
-+			"GPIO-F"; /* LSEC Pin 28: BL_PWM_GPIO12_7 */
-+		};
-+
-+		gpio13: gpio@f7029000 {
-+			gpio-line-names = "[UART0_RX]", "[UART0_TX]",
-+			"[BT_UART1_CTS]", "[BT_UART1_RTS]",
-+			"[BT_UART1_RX]", "[BT_UART1_TX]",
-+			"[UART0_CTS]", /* LSEC Pin 3: UART2_CTS_N */
-+			"[UART0_RTS]"; /* LSEC Pin 9: UART2_RTS_N */
-+		};
-+
-+		gpio14: gpio@f702a000 {
-+			gpio-line-names =
-+			"[UART0_RxD]", /* LSEC Pin 7: UART2_RX */
-+			"[UART0_TxD]", /* LSEC Pin 5: UART2_TX */
-+			"[I2C0_SCL]", /* LSEC Pin 15: I2C0_SCL */
-+			"[I2C0_SDA]", /* LSEC Pin 17: I2C0_SDA */
-+			"[I2C1_SCL]", /* LSEC Pin 19: I2C1_SCL */
-+			"[I2C1_SDA]", /* LSEC Pin 21: I2C1_SDA */
-+			"[I2C2_SCL]", "[I2C2_SDA]";
-+		};
-+
-+		gpio15: gpio@f702b000 {
-+			gpio-line-names = "", "", "", "", "", "", "NC", "";
-+		};
-+
-+		/* GPIO blocks 16 thru 19 do not appear to be routed to pins */
-+
- 		dwmmc_2: dwmmc2@f723f000 {
- 			ti,non-removable;
- 			non-removable;
--- 
-2.4.11
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
