@@ -1,161 +1,143 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v2 24/25] arm64: dts: msm8916: Add display support
-Date: Thu, 23 Jun 2016 19:43:29 +0530
-Message-ID: <1466691210-22779-25-git-send-email-architt@codeaurora.org>
-References: <1466077007-26792-1-git-send-email-architt@codeaurora.org>
- <1466691210-22779-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1466691210-22779-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: robdclark@gmail.com
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, robh@kernel.org, Archit Taneja <architt@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v4 2/2] reset: add TI SYSCON based reset driver
+Date: Thu, 23 Jun 2016 09:28:29 -0500
+Message-ID: <576BF20D.8040504@ti.com>
+References: <20160620184607.4380-1-afd@ti.com>
+ <20160620184607.4380-3-afd@ti.com> <1466590772.4123.38.camel@pengutronix.de>
+ <576AEB17.7070302@ti.com> <1466672754.2278.34.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466672754.2278.34.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The MSM8916 SoC contains a MDP5 based display block, and one DSI output.
-Add the top level MDSS DT node, and the MDP5, DSI and DSI PHY children
-sub-blocks. Establish the link between MDP5's INTF1 output port and DSI's
-input port.
+On 06/23/2016 04:05 AM, Philipp Zabel wrote:
+> Am Mittwoch, den 22.06.2016, 14:46 -0500 schrieb Andrew F. Davis:
+> [...]
+>>>> +	depends on HAS_IOMEM
+>>>> +	select MFD_SYSCON
+>>>> +	help
+>>>> +	  This enables the reset driver support for TI devices with
+>>>> +	  memory-mapped reset registers as part of a syscon device node. If
+>>>> +	  you wish to use the reset framework for such memory-mapped devices,
+>>>> +	  say Y here. Otherwise, say N.
+>>>
+>>> Actually, do you need the user configurable option at all?
+>>
+>> I'm not sure, right now it is selected by other things, but that is true
+>> for much of Kconfig, it is not platform dependent so it doesn't need to
+>> only be enabled by arch, it probably isn't hurting anything to leave it?
+> 
+> No, that's okay. So the intention is to make it possible to enable it
+> for COMPILE_TESTs on architectures other than TI?
+> 
 
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
+I was thinking more that it should be usable on non-TI architectures and
+so can be user enabled if needed.
 
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
-v2:
- - Removed "qcom,dsi-host-index" and "qcom,dsi-phy-index" props
+> [...]
+>>>> +	if (control->toggle)
+>>>> +		return -ENOSYS; /* status not supported for this reset */
+>>>
+>>> That should be -ENOTSUPP.
+>>>
+>>
+>> Will fix.
+>>
+>>> Are you sure that reading status is not supported for your trigger
+>>> resets?
+>>> On i.MX6 the triggered reset bits are self-clearing, for example, but
+>>> only after the reset sequence is finished. So it is possible to read the
+>>> reset status there.
+>>
+>> All the resets we have should have separate status bits, this trigger
+>> flag was added for systems that don't have and readable status bits
+>> (like some trigger resets), maybe the name should be changed?
+> 
+> I misunderstood. With "trigger" I mean a reset line that can't be
+> controlled directly, so the driver should implement .reset() to trigger
+> a reset sequence instead of .assert()/.deassert() to control the level.
+> Whether or not the status can be read is something different.
+> 
+> If you don't need it yet, you could just drop it for now, But if we want
+> to make this as universally useful as possible, we should be sure that
+> we cover most existing cases before defining the binding options.
+> 
+> The hisilicon driver for example has just been changed to syscon. There
+> the assert and deassert bits are in different registers and the status
+> can't be read at all. To support that, too, we'd have to add a third
+> register/bit pair to the binding...
+> 
+> So far, I have seen the following variants. Depending on the hardware, a
+> reset could be:
+> - asserted by setting a bit
+> - asserted by clearing a bit
+> - deasserted by clearing/setting the same bit
+> - deasserted by setting/clearing the same bit in another register
+> - triggered to be asserted/deasserted automatically with some specific
+>   timing that the hardware knows about (in that case the manual
+>   assert/deassert is not available)
+> The status of the reset line could be read via
+> - the same bit that is used to assert/deassert
+> - the same bit in another register
+> - not at all
+> 
+> What I've not yet seen but surely exists somewhere is the case where
+> assert/deassert/status bits are at different bit positions either in the
+> same register or in different registers.
+> 
 
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 117 ++++++++++++++++++++++++++++++++++
- 1 file changed, 117 insertions(+)
+Exactly why I was thinking having a node for the resets would be more
+future proof, we could add more properties later:
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 9681200..fe74fea 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -537,6 +537,123 @@
- 			clocks = <&gcc GCC_PRNG_AHB_CLK>;
- 			clock-names = "core";
- 		};
-+
-+		mdss: mdss@1a00000 {
-+			compatible = "qcom,mdss";
-+			reg = <0x1a00000 0x1000>,
-+			      <0x1ac8000 0x3000>;
-+			reg-names = "mdss_phys", "vbif_phys";
-+
-+			power-domains = <&gcc MDSS_GDSC>;
-+
-+			clocks = <&gcc GCC_MDSS_AHB_CLK>,
-+				 <&gcc GCC_MDSS_AXI_CLK>,
-+				 <&gcc GCC_MDSS_VSYNC_CLK>;
-+			clock-names = "iface_clk",
-+				      "bus_clk",
-+				      "vsync_clk";
-+
-+			interrupts = <0 72 0>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			mdp: mdp@1a01000 {
-+				compatible = "qcom,mdp5";
-+				reg = <0x1a01000 0x90000>;
-+				reg-names = "mdp_phys";
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <0 0>;
-+
-+				clocks = <&gcc GCC_MDSS_AHB_CLK>,
-+					 <&gcc GCC_MDSS_AXI_CLK>,
-+					 <&gcc GCC_MDSS_MDP_CLK>,
-+					 <&gcc GCC_MDSS_VSYNC_CLK>;
-+				clock-names = "iface_clk",
-+					      "bus_clk",
-+					      "core_clk",
-+					      "vsync_clk";
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						mdp5_intf1_out: endpoint {
-+							remote-endpoint = <&dsi0_in>;
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi0: dsi@1a98000 {
-+				compatible = "qcom,mdss-dsi-ctrl";
-+				reg = <0x1a98000 0x25c>;
-+				reg-names = "dsi_ctrl";
-+
-+				interrupt-parent = <&mdss>;
-+				interrupts = <4 0>;
-+
-+				assigned-clocks = <&gcc BYTE0_CLK_SRC>,
-+						  <&gcc PCLK0_CLK_SRC>;
-+				assigned-clock-parents = <&dsi_phy0 0>,
-+							 <&dsi_phy0 1>;
-+
-+				clocks = <&gcc GCC_MDSS_MDP_CLK>,
-+					 <&gcc GCC_MDSS_AHB_CLK>,
-+					 <&gcc GCC_MDSS_AXI_CLK>,
-+					 <&gcc GCC_MDSS_BYTE0_CLK>,
-+					 <&gcc GCC_MDSS_PCLK0_CLK>,
-+					 <&gcc GCC_MDSS_ESC0_CLK>;
-+				clock-names = "mdp_core_clk",
-+					      "iface_clk",
-+					      "bus_clk",
-+					      "byte_clk",
-+					      "pixel_clk",
-+					      "core_clk";
-+				phys = <&dsi_phy0>;
-+				phy-names = "dsi-phy";
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						dsi0_in: endpoint {
-+							remote-endpoint = <&mdp5_intf1_out>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						dsi0_out: endpoint {
-+						};
-+					};
-+				};
-+			};
-+
-+			dsi_phy0: dsi-phy@1a98300 {
-+				compatible = "qcom,dsi-phy-28nm-lp";
-+				reg = <0x1a98300 0xd4>,
-+				      <0x1a98500 0x280>,
-+				      <0x1a98780 0x30>;
-+				reg-names = "dsi_pll",
-+					    "dsi_phy",
-+					    "dsi_phy_regulator";
-+
-+				#clock-cells = <1>;
-+
-+				clocks = <&gcc GCC_MDSS_AHB_CLK>;
-+				clock-names = "iface_clk";
-+			};
-+		};
- 	};
- 
- 	smd {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+pscrst-dsp: dsp {
+	reset-control = <0xa3c 8 RESET_ASSERT_CLEAR>;
+	reset-status = <0x83c 8 RESET_ASSERT_CLEAR>;
++	reset-deassert = <0x840 3 RESET_ASSERT_SET>;
++	reset-toggle-time-ms = <20>;
+};
+
+While a fixed length array does make for a more condensed binding we
+don't get much flexibility.
+
+What we could also do is have a longer array then use macros to trim it
+down for simple cases:
+
+reset-bits = <
+	SINGLE_BIT_RESET(0xa3c, 8)
+	SINGLE_BIT_RESET(0xa40, 7)
+	SINGLE_BIT_RESET(0xa44, 6)
+>;
+
+Each real entry could have 9 fields that the macro would expand into:
+	(assert reg) (assert bit) (assert flag)
+	(deassert reg) (deassert bit) (deassert flag)
+	(status reg) (status bit) (status flag)
+
+This would be able to handle all of the above cases except the timing
+one, that case can always be handled by a dedicated driver for that system.
+
+
+
+My goal here, I would like to believe, aligns with the goals of DT in
+general, I would like to see one kernel work on many platforms without
+having to compile-in a bunch of SoC specific info. Some SoCs will need
+their own reset driver for when they do something unique (like this
+reset driver I will post next cycle which sends a message to a power
+management chip for its resets:
+http://git.ti.com/gitweb/?p=ti-linux-kernel/ti-linux-kernel.git;a=blob;f=drivers/reset/reset-ti-sci.c;h=3636dc176c8b5c4449eefc1fe13df7b912cec73e;hb=refs/heads/ti-lsk-linux-4.4.y
+)
+but I see no reason a bunch of different drivers for simple register bit
+resets with the only difference being a #define offset. I hope that this
+effort will get ahead of these drivers and reduce the maintenance burden
+for you.
+
+So how much is handled by this driver is up to you, (hopefully without
+trying to handle every possible case :)).
+
+Thanks,
+Andrew
