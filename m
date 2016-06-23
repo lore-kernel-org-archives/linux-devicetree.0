@@ -1,27 +1,49 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: sx150x: Update OF configuration
-Date: Thu, 23 Jun 2016 11:08:39 +0200
-Message-ID: <CACRpkdbcaJq+g7YWbv5xYZ=su_-Hpfi1fZP8Ne6o5mOQuDCJhA@mail.gmail.com>
-References: <1466157063-10955-1-git-send-email-narmstrong@baylibre.com>
- <20160620155744.GA1419@rob-hp-laptop> <CACRpkdbWPKbQRnO4v9GcY4BMTbp1ivMO6TFa-u-QpRyyZED0oQ@mail.gmail.com>
- <576B9B3A.2070808@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/4] dt-bindings: vendor-prefixes: Add Sierra Wireless
+Date: Thu, 23 Jun 2016 11:08:49 +0200
+Message-ID: <576BA721.8000408@baylibre.com>
+References: <1466160132-24574-1-git-send-email-narmstrong@baylibre.com>
+ <1466160132-24574-2-git-send-email-narmstrong@baylibre.com>
+ <20160620162822.GA25662@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <576B9B3A.2070808@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160620162822.GA25662@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux@armlinux.org.uk, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 23, 2016 at 10:18 AM, Neil Armstrong
-<narmstrong@baylibre.com> wrote:
+On 06/20/2016 06:28 PM, Rob Herring wrote:
+> On Fri, Jun 17, 2016 at 12:42:09PM +0200, Neil Armstrong wrote:
+>> Add Sierra Wireless as swi vendor prefix.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 2c2500d..45bccd2 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -250,6 +250,7 @@ st	STMicroelectronics
+>>  startek	Startek
+>>  ste	ST-Ericsson
+>>  stericsson	ST-Ericsson
+>> +swi	Sierra Wireless
+> 
+> Can we use the stock ticker 'swir' here.
+> 
+>>  syna	Synaptics Inc.
+>>  synology	Synology, Inc.
+>>  SUNW	Sun Microsystems, Inc
 
-> Would you agree to :
->  - Push the minimal code to make OF work again, at least for 4.7 ?
->  - Engage complete refactoring to transform it in a real gpio+pinctrl driver ?
+Hi Rob,
 
-Sounds like a plan, as long as the DT maintainers agree.
+They already use a lot the "swi" prefix for all their open source platform and SDK.
 
-Yours,
-Linus Walleij
+It would be simpler to stick to "swi".
+
+Neil
