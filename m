@@ -1,56 +1,89 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: omap: make gpio numbering deterministical by using
- of aliases
-Date: Thu, 23 Jun 2016 11:04:12 +0200
-Message-ID: <CACRpkdazjgZX3cY2Q6AoQRmX14x-YU6SQ=Q38tZHt8xX6St24g@mail.gmail.com>
-References: <1465898604-16294-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CACRpkdaVRTj4jpGQp9nDKo8RAPDPUaApp4jAdBGRgd45bqo2zQ@mail.gmail.com>
- <20160615072404.GB26768@pengutronix.de> <CACRpkdYK1C5px+A_O1sF99KTPTob9qTQpipEaRLHnNx5=AokLg@mail.gmail.com>
- <20160619010823.GC26875@pengutronix.de> <20160622161644.GD31817@leverpostej>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 2/2] reset: add TI SYSCON based reset driver
+Date: Thu, 23 Jun 2016 11:05:54 +0200
+Message-ID: <1466672754.2278.34.camel@pengutronix.de>
+References: <20160620184607.4380-1-afd@ti.com>
+	 <20160620184607.4380-3-afd@ti.com>
+	 <1466590772.4123.38.camel@pengutronix.de> <576AEB17.7070302@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160622161644.GD31817@leverpostej>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <576AEB17.7070302@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 6:16 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-
-> In general, our use of aliases is rather ill-defined. It would be nicer
-> if we could address devices in a similar manner to disks or partitions,
-> e.g. by path or uuid, but I don't think we have anything sensible we can
-> use there.
+Am Mittwoch, den 22.06.2016, 14:46 -0500 schrieb Andrew F. Davis:
+[...]
+> >> +	depends on HAS_IOMEM
+> >> +	select MFD_SYSCON
+> >> +	help
+> >> +	  This enables the reset driver support for TI devices with
+> >> +	  memory-mapped reset registers as part of a syscon device node. If
+> >> +	  you wish to use the reset framework for such memory-mapped devices,
+> >> +	  say Y here. Otherwise, say N.
+> > 
+> > Actually, do you need the user configurable option at all?
 >
-> Given that, I can see the use of an alias to provide a consistent way of
-> referring to a particular gpiochip (and maybe we need to expose the
-> alises information somehow to userspace), but IMO that's independent of
-> any global ID space, probe ordering, etc.
+> I'm not sure, right now it is selected by other things, but that is true
+> for much of Kconfig, it is not platform dependent so it doesn't need to
+> only be enabled by arch, it probably isn't hurting anything to leave it?
 
->From the kernel point of view the way forward to identify and refer to
-a particular gpiochip is using /dev/gpiochipN the character device.
+No, that's okay. So the intention is to make it possible to enable it
+for COMPILE_TESTs on architectures other than TI?
 
-If complete topology of the bus placement etc is needed, userspace
-can traverse /sys/bus/gpio/*
+[...]
+> >> +	if (control->toggle)
+> >> +		return -ENOSYS; /* status not supported for this reset */
+> > 
+> > That should be -ENOTSUPP.
+> > 
+> 
+> Will fix.
+> 
+> > Are you sure that reading status is not supported for your trigger
+> > resets?
+> > On i.MX6 the triggered reset bits are self-clearing, for example, but
+> > only after the reset sequence is finished. So it is possible to read the
+> > reset status there.
+> 
+> All the resets we have should have separate status bits, this trigger
+> flag was added for systems that don't have and readable status bits
+> (like some trigger resets), maybe the name should be changed?
 
-This solves the big problem with the current global numbering system
-in /sys/class/gpio/*
+I misunderstood. With "trigger" I mean a reset line that can't be
+controlled directly, so the driver should implement .reset() to trigger
+a reset sequence instead of .assert()/.deassert() to control the level.
+Whether or not the status can be read is something different.
 
-So what this alias should address would be two things:
+If you don't need it yet, you could just drop it for now, But if we want
+to make this as universally useful as possible, we should be sure that
+we cover most existing cases before defining the binding options.
 
-- Solve the immediate issue of the global number space for the
-  legacy sysfs ABI, but also:
+The hisilicon driver for example has just been changed to syscon. There
+the assert and deassert bits are in different registers and the status
+can't be read at all. To support that, too, we'd have to add a third
+register/bit pair to the binding...
 
-- Determine which chip is gpiochip0, gpiochip1, .. etc in the
-  new ABI, so the devices get consistent numbering.
+So far, I have seen the following variants. Depending on the hardware, a
+reset could be:
+- asserted by setting a bit
+- asserted by clearing a bit
+- deasserted by clearing/setting the same bit
+- deasserted by setting/clearing the same bit in another register
+- triggered to be asserted/deasserted automatically with some specific
+  timing that the hardware knows about (in that case the manual
+  assert/deassert is not available)
+The status of the reset line could be read via
+- the same bit that is used to assert/deassert
+- the same bit in another register
+- not at all
 
-The latter is lightly frowned upon by the udev people: they think it
-is more proper to traverse /sys to get topological information about
-the devices.
+What I've not yet seen but surely exists somewhere is the case where
+assert/deassert/status bits are at different bit positions either in the
+same register or in different registers.
 
-I would appreciate if a patch to add alias handling would take care
-of both these things if we apply it.
-
-Yours,
-Linus Walleij
+regards
+Philipp
