@@ -1,207 +1,182 @@
 From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] PCI: Rockchip: Add Rockchip PCIe controller
- support
-Date: Thu, 23 Jun 2016 10:15:04 +0800
-Message-ID: <a18b7027-5627-7827-ce28-059cc5819d08@rock-chips.com>
-References: <1466041835-1695-1-git-send-email-shawn.lin@rock-chips.com>
- <20160623002919.GA21157@google.com>
- <dcdc3402-22d9-473a-d9ae-b9bd994c24a6@rock-chips.com>
- <20160623013527.GA46876@google.com>
+Subject: Re: [PATCH v3 2/2] phy: add a driver for the Rockchip SoC internal
+ PCIe PHY
+Date: Thu, 23 Jun 2016 10:30:17 +0800
+Message-ID: <428a1393-c6b4-163c-ceec-9b79fdd8ad4a@rock-chips.com>
+References: <1466040179-30973-1-git-send-email-shawn.lin@rock-chips.com>
+ <5763F665.6070403@ti.com>
+ <c88eb16f-e976-ad52-02fb-5ec7b6e261b9@rock-chips.com>
+ <57678ED2.9000707@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160623013527.GA46876-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <57678ED2.9000707-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2016/6/23 9:35, Brian Norris =E5=86=99=E9=81=93:
-> Hi,
->
-> On Thu, Jun 23, 2016 at 09:09:46AM +0800, Shawn Lin wrote:
->> =E5=9C=A8 2016/6/23 8:29, Brian Norris =E5=86=99=E9=81=93:
->>> On Thu, Jun 16, 2016 at 09:50:35AM +0800, Shawn Lin wrote:
->
-> [...]
->
->>>> +	/* 500ms timeout value should be enough for gen1/2 taining */
->>>> +	timeout =3D jiffies + msecs_to_jiffies(500);
->>>> +
->>>> +	err =3D -ETIMEDOUT;
->>>> +	while (time_before(jiffies, timeout)) {
->>>> +		status =3D pcie_read(port, PCIE_CLIENT_BASIC_STATUS1);
->>>> +		if (((status >> PCIE_CLIENT_LINK_STATUS_SHIFT) &
->>>> +		      PCIE_CLIENT_LINK_STATUS_MASK) =3D=3D
->>>> +		      PCIE_CLIENT_LINK_STATUS_UP) {
->>>> +			dev_dbg(port->dev, "pcie link training gen1 pass!\n");
->>>> +			err =3D 0;
->>>> +			break;
->>>> +		}
->>>> +		msleep(20);
->>>> +	}
->>>
->>> Technically, the above timeout loop is not quite correct. Possible =
-error
->>> case: we can fail with a timeout after 500 ms if the training compl=
-etes
->>> between the 480-500 ms time window. This can happen because you're
->>> doing:
->>>
->>> (1) read register: if complete, then terminate successfully
->>> (2) delay
->>> (3) check for timeout: if time is up, return error
->>>
->>> You actually need:
->>>
->>> (1) read register: if complete, then terminate successfully
->>> (2) delay
->>> (3) check for timeout: if time is up, repeat (1), and then report e=
-rror
->>>
->>> You can examine the logic for readx_poll_timeout() in
->>> include/linux/iopoll.h to see an example of a proper timeout loop. =
-You
->>> could even try to use one of the helpers there, except that your
->>> pcie_read() takes 2 args.
->>
->> I see, thanks.
->>
->>>
->>>> +	if (err) {
->>>> +		dev_err(port->dev, "pcie link training gen1 timeout!\n");
->>>> +		return err;
->>>> +	}
->>>> +
->>>> +	/*
->>>> +	 * Enable retrain for gen2. This should be configured only after
->>>> +	 * gen1 finished.
->>>> +	 */
->>>> +	status =3D pcie_read(port,
->>>> +			   PCIR_RC_CONFIG_LCS + PCIE_RC_CONFIG_BASE);
->>>> +	status |=3D PCIE_CORE_LCSR_RETAIN_LINK;
->>>> +	pcie_write(port, status,
->>>> +		   PCIR_RC_CONFIG_LCS + PCIE_RC_CONFIG_BASE);
->>>
->>> I'm not really an expert on this, but how are you actually "retrain=
-ing
->>> for gen2"? Is that just the behavior of the core, that it retries a=
-t the
->>> higher rate on the 2nd training attempt? I'm just confused, since y=
-ou
->>> set PCIE_CLIENT_GEN_SEL_2 above, so you've already allowed either g=
-en1
->>> or gen2 negotiation AFAICT, and so seemingly you might already have
->>> negotiated at gen2.
->>
->>
->> Not really. I allow the core to enable gen2, but it needs a extra
->> setting of retrain after finishing gen1. It's not so strange as it
->> depends on the vendor's design. So I have to say it fits the
->> designer's expectation.
->
-> OK.
->
->>>> +	err =3D -ETIMEDOUT;
->>>> +
->>>> +	while (time_before(jiffies, timeout)) {
->>>
->>> You never reset 'timeout' when starting this loop. So you only have=
- a
->>> cumulative 500 ms to do both the gen1 and gen2 loops. Is that
->>> intentional? (I feel like this comment was made on an earlier revis=
-ion
->>> of this driver, though I haven't read everything thoroughly.)
->>
->> yes, I don't have any docs to let me know how long should I wait for
->> gen1/2 to be finished. Maybe someday it will be augmented to a large=
-r
->> value if finding a device actually need a longer time. But the only
->> thing I can say is that it's from my test for many pcie devices
->> currently.
->>
->>
->> Do you agree?
->
-> I'm not suggesting increasing the timeout, exactly; I'm suggesting th=
-at
-> you should set some minimum timeout for each training loop, instead o=
-f
-> reusing the same deadline. i.e., something like this before the secon=
-d
-> loop:
->
-> 	/* Reset the deadline for gen2 */
-> 	timeout =3D jiffies + msecs_to_jiffies(500);
-
-
-ok, I will update it.
-
->
-> As it stands, if the first loop takes 490 ms, that leaves you only 10=
- ms
-> for the second loop. And I think it'd be confusing if we ever see the
-> first loop take a "long" time, and then we time out on the second --
-> we'd be blaming the gen2 training for gen1's slowness.
->
->>>> +		status =3D pcie_read(port, PCIE_CORE_CTRL_MGMT_BASE);
->>>> +		if (((status >> PCIE_CORE_PL_CONF_SPEED_SHIFT) &
->>>> +		      PCIE_CORE_PL_CONF_SPEED_MASK) =3D=3D
->>>> +		      PCIE_CORE_PL_CONF_SPEED_50G) {
->>>> +			dev_dbg(port->dev, "pcie link training gen2 pass!\n");
->>>> +			err =3D 0;
->>>> +			break;
->>>> +		}
->>>> +		msleep(20);
->>>> +	}
->>>
->>> Similar problem with your timeout loop, as mentioned above. Althoug=
-h I
->>> confused about what you do in the error case here...
->>>
->>>> +	if (err)
->>>> +		dev_dbg(port->dev, "pcie link training gen2 timeout, force to g=
-en1!\n");
->>>
->>> ... how are you forcing gen1? I don't see any code that indicates t=
-his.
->>> Should you at least be checking that there aren't some kind of trai=
-ning
->>> errors, and that we settled back on gen1/2.5G?
->>
->> yes, when failing gen2,  my pcie controller will fallback to gen1
->> automatically.
->
-> OK. Well maybe the text should say something like "falling back" inst=
-ead
-> of "force"?
->
-
-Sounds good, will fix. Thanks.
-
->> if we pass the gen1 then fail to train gen2, a dbg msg here is enoug=
-h
->> here to let we know that we should check the HW signal. Of course we
->> should make sure that this device supports gen2.
->
-> OK.
->
-> [...]
->
-> Brian
->
->
->
-
-
---=20
-Best Regards
-Shawn Lin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgS2lzaG9uLAoK5ZyoIDIwMTYvNi8yMCAxNDozNiwgS2lzaG9uIFZpamF5IEFicmFoYW0gSSDl
+hpnpgZM6Cj4gSGksCj4KPiBPbiBNb25kYXkgMjAgSnVuZSAyMDE2IDA2OjI4IEFNLCBTaGF3biBM
+aW4gd3JvdGU6Cj4+IEhpIEtpc2hvbiwKPj4KPj4gT24gMjAxNi82LzE3IDIxOjA4LCBLaXNob24g
+VmlqYXkgQWJyYWhhbSBJIHdyb3RlOgo+Pj4gSGksCj4+Pgo+Pj4gT24gVGh1cnNkYXkgMTYgSnVu
+ZSAyMDE2IDA2OjUyIEFNLCBTaGF3biBMaW4gd3JvdGU6Cj4+Pj4gVGhpcyBwYXRjaCB0byBhZGQg
+YSBnZW5lcmljIFBIWSBkcml2ZXIgZm9yIHJvY2tjaGlwIFBDSWUgUEhZLgo+Pj4+IEFjY2VzcyB0
+aGUgUEhZIHZpYSByZWdpc3RlcnMgcHJvdmlkZWQgYnkgR1JGIChnZW5lcmFsIHJlZ2lzdGVyCj4+
+Pj4gZmlsZXMpIG1vZHVsZS4KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IFNoYXduIExpbiA8c2hh
+d24ubGluQHJvY2stY2hpcHMuY29tPgo+Pj4+IC0tLQo+Pj4+Cj4+Pj4gQ2hhbmdlcyBpbiB2Mzog
+Tm9uZQo+Pj4+IENoYW5nZXMgaW4gdjI6IE5vbmUKPj4+Pgo+Pj4+ICBkcml2ZXJzL3BoeS9LY29u
+ZmlnICAgICAgICAgICAgIHwgICA3ICsKPj4+PiAgZHJpdmVycy9waHkvTWFrZWZpbGUgICAgICAg
+ICAgICB8ICAgMSArCj4+Pj4gIGRyaXZlcnMvcGh5L3BoeS1yb2NrY2hpcC1wY2llLmMgfCAzNzgg
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4+ICAzIGZpbGVzIGNo
+YW5nZWQsIDM4NiBpbnNlcnRpb25zKCspCj4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L3BoeS9waHktcm9ja2NoaXAtcGNpZS5jCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
+aHkvS2NvbmZpZyBiL2RyaXZlcnMvcGh5L0tjb25maWcKPj4+PiBpbmRleCBiODY5Yjk4Li5kNGZj
+MjkzIDEwMDY0NAo+Pj4+IC0tLSBhL2RyaXZlcnMvcGh5L0tjb25maWcKPj4+PiArKysgYi9kcml2
+ZXJzL3BoeS9LY29uZmlnCj4+Pj4gQEAgLTM2MSw2ICszNjEsMTMgQEAgY29uZmlnIFBIWV9ST0NL
+Q0hJUF9EUAo+Pj4+ICAgICAgaGVscAo+Pj4+ICAgICAgICBFbmFibGUgdGhpcyB0byBzdXBwb3J0
+IHRoZSBSb2NrY2hpcCBEaXNwbGF5IFBvcnQgUEhZLgo+Pj4+Cj4+Pj4gK2NvbmZpZyBQSFlfUk9D
+S0NISVBfUENJRQo+Pj4+ICsgICAgdHJpc3RhdGUgIlJvY2tjaGlwIFBDSWUgUEhZIERyaXZlciIK
+Pj4+PiArICAgIGRlcGVuZHMgb24gQVJDSF9ST0NLQ0hJUCAmJiBPRgo+Pj4+ICsgICAgc2VsZWN0
+IEdFTkVSSUNfUEhZCj4+Pj4gKyAgICBoZWxwCj4+Pj4gKyAgICAgIEVuYWJsZSB0aGlzIHRvIHN1
+cHBvcnQgdGhlIFJvY2tjaGlwIFBDSWUgUEhZLgo+Pj4+ICsKPj4+PiAgY29uZmlnIFBIWV9TVF9T
+UEVBUjEzMTBfTUlQSFkKPj4+PiAgICAgIHRyaXN0YXRlICJTVCBTUEVBUjEzMTAtTUlQSFkgZHJp
+dmVyIgo+Pj4+ICAgICAgc2VsZWN0IEdFTkVSSUNfUEhZCj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGh5L01ha2VmaWxlIGIvZHJpdmVycy9waHkvTWFrZWZpbGUKPj4+PiBpbmRleCA5YzNlNzNj
+Li43MjVlNTVkIDEwMDY0NAo+Pj4+IC0tLSBhL2RyaXZlcnMvcGh5L01ha2VmaWxlCj4+Pj4gKysr
+IGIvZHJpdmVycy9waHkvTWFrZWZpbGUKPj4+PiBAQCAtMzksNiArMzksNyBAQCBvYmotJChDT05G
+SUdfUEhZX0VYWU5PUzVfVVNCRFJEKSAgICArPSBwaHktZXh5bm9zNS11c2JkcmQubwo+Pj4+ICBv
+YmotJChDT05GSUdfUEhZX1FDT01fQVBRODA2NF9TQVRBKSAgICArPSBwaHktcWNvbS1hcHE4MDY0
+LXNhdGEubwo+Pj4+ICBvYmotJChDT05GSUdfUEhZX1JPQ0tDSElQX1VTQikgKz0gcGh5LXJvY2tj
+aGlwLXVzYi5vCj4+Pj4gIG9iai0kKENPTkZJR19QSFlfUk9DS0NISVBfRU1NQykgKz0gcGh5LXJv
+Y2tjaGlwLWVtbWMubwo+Pj4+ICtvYmotJChDT05GSUdfUEhZX1JPQ0tDSElQX1BDSUUpICs9IHBo
+eS1yb2NrY2hpcC1wY2llLm8KPj4+PiAgb2JqLSQoQ09ORklHX1BIWV9ST0NLQ0hJUF9EUCkgICAg
+ICAgICs9IHBoeS1yb2NrY2hpcC1kcC5vCj4+Pj4gIG9iai0kKENPTkZJR19QSFlfUUNPTV9JUFE4
+MDZYX1NBVEEpICAgICs9IHBoeS1xY29tLWlwcTgwNngtc2F0YS5vCj4+Pj4gIG9iai0kKENPTkZJ
+R19QSFlfU1RfU1BFQVIxMzEwX01JUEhZKSAgICArPSBwaHktc3BlYXIxMzEwLW1pcGh5Lm8KPj4+
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waHkvcGh5LXJvY2tjaGlwLXBjaWUuYyBiL2RyaXZlcnMv
+cGh5L3BoeS1yb2NrY2hpcC1wY2llLmMKPj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4+IGlu
+ZGV4IDAwMDAwMDAuLmJjNmNkMTcKPj4+PiAtLS0gL2Rldi9udWxsCj4+Pj4gKysrIGIvZHJpdmVy
+cy9waHkvcGh5LXJvY2tjaGlwLXBjaWUuYwo+Pj4+IEBAIC0wLDAgKzEsMzc4IEBACj4+Pj4gKy8q
+Cj4+Pj4gKyAqIFJvY2tjaGlwIFBDSWUgUEhZIGRyaXZlcgo+Pj4+ICsgKgo+Pj4+ICsgKiBDb3B5
+cmlnaHQgKEMpIDIwMTYgU2hhd24gTGluIDxzaGF3bi5saW5Acm9jay1jaGlwcy5jb20+Cj4+Pj4g
+KyAqIENvcHlyaWdodCAoQykgMjAxNiBST0NLQ0hJUCwgSW5jLgo+Pj4+ICsgKgo+Pj4+ICsgKiBU
+aGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5k
+L29yIG1vZGlmeQo+Pj4+ICsgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFs
+IFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBieQo+Pj4+ICsgKiB0aGUgRnJlZSBTb2Z0d2Fy
+ZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLgo+Pj4+ICsgKgo+
+Pj4+ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3
+aWxsIGJlIHVzZWZ1bCwKPj4+PiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0
+IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YKPj4+PiArICogTUVSQ0hBTlRBQklMSVRZIG9y
+IEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQo+Pj4+ICsgKiBHTlUg
+R2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgo+Pj4+ICsgKi8KPj4+PiAr
+Cj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPj4+PiArI2luY2x1ZGUgPGxpbnV4L2RlbGF5
+Lmg+Cj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9pby5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgvbWZk
+L3N5c2Nvbi5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4+Pj4gKyNpbmNsdWRl
+IDxsaW51eC9vZi5oPgo+Pj4+ICsjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPgo+Pj4+ICsj
+aW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KPj4+PiArI2luY2x1ZGUgPGxpbnV4L3BoeS9w
+aHkuaD4KPj4+PiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+Pj4+ICsjaW5j
+bHVkZSA8bGludXgvcmVnbWFwLmg+Cj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9yZXNldC5oPgo+Pj4+
+ICsKPj4+PiArLyoKPj4+PiArICogVGhlIGhpZ2hlciAxNi1iaXQgb2YgdGhpcyByZWdpc3RlciBp
+cyB1c2VkIGZvciB3cml0ZSBwcm90ZWN0aW9uCj4+Pj4gKyAqIG9ubHkgaWYgQklUKHggKyAxNikg
+c2V0IHRvIDEgdGhlIEJJVCh4KSBjYW4gYmUgd3JpdHRlbi4KPj4+PiArICovCj4+Pj4gKyNkZWZp
+bmUgSElXT1JEX1VQREFURSh2YWwsIG1hc2ssIHNoaWZ0KSBcCj4+Pj4gKyAgICAgICAgKCh2YWwp
+IDw8IChzaGlmdCkgfCAobWFzaykgPDwgKChzaGlmdCkgKyAxNikpCj4+Pj4gKwo+Pj4+ICsjZGVm
+aW5lIFBIWV9NQVhfTEFORV9OVU0gICAgICA0Cj4+Pj4gKyNkZWZpbmUgUEhZX0NGR19EQVRBX1NI
+SUZUICAgIDcKPj4+PiArI2RlZmluZSBQSFlfQ0ZHX0FERFJfU0hJRlQgICAgMQo+Pj4+ICsjZGVm
+aW5lIFBIWV9DRkdfREFUQV9NQVNLICAgICAweGYKPj4+PiArI2RlZmluZSBQSFlfQ0ZHX0FERFJf
+TUFTSyAgICAgMHgzZgo+Pj4+ICsjZGVmaW5lIFBIWV9DRkdfUkRfTUFTSyAgICAgICAweDNmZgo+
+Pj4+ICsjZGVmaW5lIFBIWV9DRkdfV1JfRU5BQkxFICAgICAxCj4+Pj4gKyNkZWZpbmUgUEhZX0NG
+R19XUl9ESVNBQkxFICAgIDEKPj4+PiArI2RlZmluZSBQSFlfQ0ZHX1dSX1NISUZUICAgICAgMAo+
+Pj4+ICsjZGVmaW5lIFBIWV9DRkdfV1JfTUFTSyAgICAgICAxCj4+Pj4gKyNkZWZpbmUgUEhZX0NG
+R19QTExfTE9DSyAgICAgIDB4MTAKPj4+PiArI2RlZmluZSBQSFlfQ0ZHX0NMS19URVNUICAgICAg
+MHgxMAo+Pj4+ICsjZGVmaW5lIFBIWV9DRkdfQ0xLX1NDQyAgICAgICAweDEyCj4+Pj4gKyNkZWZp
+bmUgUEhZX0NGR19TRVBFX1JBVEUgICAgIEJJVCgzKQo+Pj4+ICsjZGVmaW5lIFBIWV9DRkdfUExM
+XzEwME0gICAgICBCSVQoMykKPj4+PiArI2RlZmluZSBQSFlfUExMX0xPQ0tFRCAgICAgICAgQklU
+KDkpCj4+Pj4gKyNkZWZpbmUgUEhZX1BMTF9PVVRQVVQgICAgICAgIEJJVCgxMCkKPj4+PiArI2Rl
+ZmluZSBQSFlfTEFORV9BX1NUQVRVUyAgICAgMHgzMAo+Pj4+ICsjZGVmaW5lIFBIWV9MQU5FX0Jf
+U1RBVFVTICAgICAweDMxCj4+Pj4gKyNkZWZpbmUgUEhZX0xBTkVfQ19TVEFUVVMgICAgIDB4MzIK
+Pj4+PiArI2RlZmluZSBQSFlfTEFORV9EX1NUQVRVUyAgICAgMHgzMwo+Pj4+ICsjZGVmaW5lIFBI
+WV9MQU5FX1JYX0RFVF9TSElGVCAxMQo+Pj4+ICsjZGVmaW5lIFBIWV9MQU5FX1JYX0RFVF9USCAg
+ICAweDEKPj4+PiArI2RlZmluZSBQSFlfTEFORV9JRExFX09GRiAgICAgMHgxCj4+Pj4gKyNkZWZp
+bmUgUEhZX0xBTkVfSURMRV9NQVNLICAgIDB4MQo+Pj4+ICsjZGVmaW5lIFBIWV9MQU5FX0lETEVf
+QV9TSElGVCAzCj4+Pj4gKyNkZWZpbmUgUEhZX0xBTkVfSURMRV9CX1NISUZUIDQKPj4+PiArI2Rl
+ZmluZSBQSFlfTEFORV9JRExFX0NfU0hJRlQgNQo+Pj4+ICsjZGVmaW5lIFBIWV9MQU5FX0lETEVf
+RF9TSElGVCA2Cj4+Pj4gKwo+Pj4+ICtzdHJ1Y3Qgcm9ja2NoaXBfcGNpZV9kYXRhIHsKPj4+PiAr
+ICAgIHVuc2lnbmVkIGludCBwY2llX2NvbmY7Cj4+Pj4gKyAgICB1bnNpZ25lZCBpbnQgcGNpZV9z
+dGF0dXM7Cj4+Pj4gKyAgICB1bnNpZ25lZCBpbnQgcGNpZV9sYW5lb2ZmOwo+Pj4+ICt9Owo+Pj4+
+ICsKPj4+PiArc3RydWN0IHJvY2tjaGlwX3BjaWVfcGh5IHsKPj4+PiArICAgIHN0cnVjdCByb2Nr
+Y2hpcF9wY2llX2RhdGEgKnBoeV9kYXRhOwo+Pj4+ICsgICAgc3RydWN0IHJlZ21hcCAqcmVnX2Jh
+c2U7Cj4+Pj4gKyAgICBzdHJ1Y3QgcmVzZXRfY29udHJvbCAqcGh5X3JzdDsKPj4+PiArICAgIHN0
+cnVjdCBjbGsgKmNsa19wY2llcGh5X3JlZjsKPj4+PiArfTsKPj4+PiArCj4+Pj4gK3N0YXRpYyBp
+bmxpbmUgdm9pZCBwaHlfd3JfY2ZnKHN0cnVjdCByb2NrY2hpcF9wY2llX3BoeSAqcmtfcGh5LAo+
+Pj4+ICsgICAgICAgICAgICAgICAgICB1MzIgYWRkciwgdTMyIGRhdGEpCj4+Pj4gK3sKPj4+PiAr
+ICAgIHJlZ21hcF93cml0ZShya19waHktPnJlZ19iYXNlLCBya19waHktPnBoeV9kYXRhLT5wY2ll
+X2NvbmYsCj4+Pj4gKyAgICAgICAgICAgICBISVdPUkRfVVBEQVRFKGRhdGEsCj4+Pj4gKyAgICAg
+ICAgICAgICAgICAgICBQSFlfQ0ZHX0RBVEFfTUFTSywKPj4+PiArICAgICAgICAgICAgICAgICAg
+IFBIWV9DRkdfREFUQV9TSElGVCkgfAo+Pj4+ICsgICAgICAgICAgICAgSElXT1JEX1VQREFURShh
+ZGRyLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgUEhZX0NGR19BRERSX01BU0ssCj4+Pj4gKyAg
+ICAgICAgICAgICAgICAgICBQSFlfQ0ZHX0FERFJfU0hJRlQpKTsKPj4+PiArICAgIHVkZWxheSgx
+KTsKPj4+PiArICAgIHJlZ21hcF93cml0ZShya19waHktPnJlZ19iYXNlLCBya19waHktPnBoeV9k
+YXRhLT5wY2llX2NvbmYsCj4+Pj4gKyAgICAgICAgICAgICBISVdPUkRfVVBEQVRFKFBIWV9DRkdf
+V1JfRU5BQkxFLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgUEhZX0NGR19XUl9NQVNLLAo+Pj4+
+ICsgICAgICAgICAgICAgICAgICAgUEhZX0NGR19XUl9TSElGVCkpOwo+Pj4+ICsgICAgdWRlbGF5
+KDEpOwo+Pj4+ICsgICAgcmVnbWFwX3dyaXRlKHJrX3BoeS0+cmVnX2Jhc2UsIHJrX3BoeS0+cGh5
+X2RhdGEtPnBjaWVfY29uZiwKPj4+PiArICAgICAgICAgICAgIEhJV09SRF9VUERBVEUoUEhZX0NG
+R19XUl9ESVNBQkxFLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgUEhZX0NGR19XUl9NQVNLLAo+
+Pj4+ICsgICAgICAgICAgICAgICAgICAgUEhZX0NGR19XUl9TSElGVCkpOwo+Pj4+ICt9Cj4+Pj4g
+Kwo+Pj4+ICtzdGF0aWMgaW5saW5lIHUzMiBwaHlfcmRfY2ZnKHN0cnVjdCByb2NrY2hpcF9wY2ll
+X3BoeSAqcmtfcGh5LAo+Pj4+ICsgICAgICAgICAgICAgICAgIHUzMiBhZGRyKQo+Pj4+ICt7Cj4+
+Pj4gKyAgICB1MzIgdmFsOwo+Pj4+ICsKPj4+PiArICAgIHJlZ21hcF93cml0ZShya19waHktPnJl
+Z19iYXNlLCBya19waHktPnBoeV9kYXRhLT5wY2llX2NvbmYsCj4+Pj4gKyAgICAgICAgICAgICBI
+SVdPUkRfVVBEQVRFKGFkZHIsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICBQSFlfQ0ZHX1JEX01B
+U0ssCj4+Pj4gKyAgICAgICAgICAgICAgICAgICBQSFlfQ0ZHX0FERFJfU0hJRlQpKTsKPj4+PiAr
+ICAgIHJlZ21hcF9yZWFkKHJrX3BoeS0+cmVnX2Jhc2UsCj4+Pj4gKyAgICAgICAgICAgIHJrX3Bo
+eS0+cGh5X2RhdGEtPnBjaWVfc3RhdHVzLAo+Pj4+ICsgICAgICAgICAgICAmdmFsKTsKPj4+PiAr
+ICAgIHJldHVybiB2YWw7Cj4+Pj4gK30KPj4+PiArCj4+Pj4gK3ZvaWQgcm9ja2NoaXBfcGNpZV9w
+aHlfbGFuZW9mZihzdHJ1Y3QgcGh5ICpwaHkpCj4+Pj4gK3sKPj4+PiArICAgIHUzMiBzdGF0dXM7
+Cj4+Pj4gKyAgICBzdHJ1Y3Qgcm9ja2NoaXBfcGNpZV9waHkgKnJrX3BoeSA9IHBoeV9nZXRfZHJ2
+ZGF0YShwaHkpOwo+Pj4+ICsgICAgaW50IGk7Cj4+Pj4gKwo+Pj4+ICsgICAgZm9yIChpID0gMDsg
+aSA8IFBIWV9NQVhfTEFORV9OVU07IGkrKykgewo+Pj4+ICsgICAgICAgIHN0YXR1cyA9IHBoeV9y
+ZF9jZmcocmtfcGh5LCBQSFlfTEFORV9BX1NUQVRVUyArIGkpOwo+Pj4+ICsgICAgICAgIGlmICgh
+KChzdGF0dXMgPj4gUEhZX0xBTkVfUlhfREVUX1NISUZUKSAmCj4+Pj4gKyAgICAgICAgICAgICAg
+IFBIWV9MQU5FX1JYX0RFVF9USCkpCj4+Pj4gKyAgICAgICAgICAgIHByX2RlYnVnKCJsYW5lICVk
+IGlzIHVzZWRcbiIsIGkpOwo+Pj4+ICsgICAgICAgIGVsc2UKPj4+PiArICAgICAgICAgICAgcmVn
+bWFwX3dyaXRlKHJrX3BoeS0+cmVnX2Jhc2UsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHJr
+X3BoeS0+cGh5X2RhdGEtPnBjaWVfbGFuZW9mZiwKPj4+PiArICAgICAgICAgICAgICAgICAgICAg
+SElXT1JEX1VQREFURShQSFlfTEFORV9JRExFX09GRiwKPj4+PiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgUEhZX0xBTkVfSURMRV9NQVNLLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBQSFlfTEFORV9JRExFX0FfU0hJRlQgKyBpKSk7Cj4+Pj4gKyAgICB9Cj4+Pj4gK30KPj4+
+PiArRVhQT1JUX1NZTUJPTF9HUEwocm9ja2NoaXBfcGNpZV9waHlfbGFuZW9mZik7Cj4+Pgo+Pj4g
+RXIuLiBkb24ndCB1c2UgZXhwb3J0IHN5bWJvbHMgZnJvbSBwaHkgZHJpdmVyLiBJIHRoaW5rIGl0
+IHdvdWxkIGJlIG5pY2UgaWYgeW91Cj4+PiBjYW4gbW9kZWwgdGhlIGRyaXZlciBpbiBzdWNoIGEg
+d2F5IHRoYXQgdGhlIFBDSWUgZHJpdmVyIGNhbiBjb250cm9sIGluZGl2aWR1YWwKPj4+IHBoeSdz
+Lgo+Pj4KPj4KPj4gWWVzLCBJIHdhcyB0cnlpbmcgdG8gbG9vayBmb3IgYSB3YXkgbm90IHRvIGV4
+cG9ydCBzeW1ib2xzIGZyb20KPj4gcGh5Li4uIEJ1dCBJIGZhaWxlZCB0byBmaW5kIGl0IGFzIHRo
+ZXJlIGF0IGxlYXN0IG5lZWQgdGhyZWUKPj4gaW50ZXJhY3Rpb24gYmV0d2VlbiBjb250cm9sbGVy
+IGFuZCBwaHkgd2hpY2ggbWFkZSBtZSBiZWxpZXZlIHdlCj4+IGF0IGxlYXN0IG5lZWQgdG8gZXhw
+b3J0IG9uZSBzeW1ib2wgd2l0aG91dCBhZGRpbmcgbmV3IEFQSSBmb3IgcGh5Lgo+Cj4gVGhhdCBj
+YW4gYmUgbWFuYWdlZCBieSBpbXBsZW1lbnRpbmcgYSBzbWFsbCBzdGF0ZSBtYWNoaW5lIHdpdGhp
+biB0aGUgUEhZIGRyaXZlci4KCkkgZG9uJ3QgdW5kZXJzdGFuZCB5b3VyIHBvaW50IG9mIGltcGxl
+bWVudGluZyBhIHNtYWxsIHN0YXRlIG1hY2hpbmUKd2l0aGluIHRoZSBQSFkgZHJpdmVyLgoKRG8g
+eW91IG1lYW4gSSBuZWVkIHRvIGNhbGwgdmFhcmlvdXMgb2YgcG93ZXJfb24vb2ZmIGFuZCBjb3Vu
+dCB0aGUKb24vb2ZmIHRpbWVzIHRvIGRlY2lkZSB0aGUgc3RhdGUgbWFjaGluZT8KCkkgd291bGQg
+YXBwcmVjaWF0ZSBpdCBJZiB5b3UgY291bGQgZWxhYm9yYXRlIHRoaXMgYSBiaXQgbW9yZSBvcgpz
+aG93IG1lIGEgZXhhbXBsZS4gOikKCgpUaGFua3MuCgoKPj4KPj4gQW5kIEkgZm91bmQgbG90cyBv
+ZiBwaHkgZHJpdmVycyBleHBvcnQgc3ltYm9scyB0aGUgc2FtZSB3YXkgYXMgbWluZS4KPj4gRG9l
+cyBpdCBzb3VuZCBva2F5IGZvciBtZSB0byBkbyB0aGUgc2FtZSB0aGluZyBoZXJlPyA6KQo+Cj4g
+VGhhdCdzIG5vdCBhIGdvb2QgcmVhc29uLiBJJ2xsIHRyeSB0byBhdm9pZCBoYXZpbmcgZXhwb3J0
+IHN5bWJvbHMgaW5zaWRlIHBoeQo+IGRyaXZlci4KPgo+IFRoYW5rcwo+IEtpc2hvbgo+Cj4KPgoK
+Ci0tIApCZXN0IFJlZ2FyZHMKU2hhd24gTGluCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJv
+Y2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
