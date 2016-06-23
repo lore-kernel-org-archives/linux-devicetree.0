@@ -1,65 +1,65 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun5i: q8-common: Enable USB-based WiFi
-Date: Thu, 23 Jun 2016 14:01:26 +0200
-Message-ID: <20160623120126.GB3785@lukather>
-References: <1466674155-3365-1-git-send-email-wens@csie.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: omap: make gpio numbering deterministical by using
+ of aliases
+Date: Thu, 23 Jun 2016 14:08:33 +0200
+Message-ID: <CACRpkdaAcsikDgdbchKkx4i0Pk12qp7gTDUQJvj+kmCOtiRiqA@mail.gmail.com>
+References: <1465898604-16294-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <CACRpkdaVRTj4jpGQp9nDKo8RAPDPUaApp4jAdBGRgd45bqo2zQ@mail.gmail.com>
+ <20160615072404.GB26768@pengutronix.de> <CACRpkdYK1C5px+A_O1sF99KTPTob9qTQpipEaRLHnNx5=AokLg@mail.gmail.com>
+ <20160619010823.GC26875@pengutronix.de> <20160622161644.GD31817@leverpostej>
+ <CACRpkdazjgZX3cY2Q6AoQRmX14x-YU6SQ=Q38tZHt8xX6St24g@mail.gmail.com> <576BADFF.3000802@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+pHx0qQiF2pBVqBT"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1466674155-3365-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <576BADFF.3000802@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Kevin Hilman <khilman@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 23, 2016 at 11:38 AM, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 
---+pHx0qQiF2pBVqBT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> This solves the big problem with the current global numbering system
+>> in /sys/class/gpio/*
+>
+> Hm. May be i misunderstood samthing (and sry, if my following question
+> is dummy as I've not followed closely new GPIO ABI development), but..
+>
+> - from above description it seems that  global numbering system is not really
+> solved :( instead it's been moved one level up and now the same happens with
+> gpiocipX devices :(
 
-On Thu, Jun 23, 2016 at 05:29:15PM +0800, Chen-Yu Tsai wrote:
-> The early A13 Q8 tablets all use a Realtek WiFi module connected to
-> USB1. The module is powered by AXP209's LDO3 at 3.3V.
->=20
-> Move the related settings from sun5i-a13-q8-tablet.dts to
-> sun5i-q8-common.dtsi, for all q8-based tablets.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Yes that is true, but also the discovery mechanism is changed so it should
+not be a problem: by traversing /sys/bus/gpio/* you know from the topology
+information which GPIO chip is which. This is the same method that e.g. USB,
+IIO or disks use: you have to complement the device name with bus information
+from sysfs.
 
-Applied, thanks!
-Maxime
+/sys/class/gpio/* on the other hand has no such information: it is flat.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+But as I wrote in the other mail in response to Mark Rutland: if it is desired
+to have predictable numbering of the GPIO chips the exact same alias
+method can be used for that, and a patch utilizing aliases should fix also
+this for the character device usecase.
 
---+pHx0qQiF2pBVqBT
-Content-Type: application/pgp-signature; name="signature.asc"
+My own position on these aliases is "eating popcorn", I'm happy with it,
+happy without it, the people who care need to argue for it with the DT
+maintainers.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> Wouldn't it be reasonable to add possibility to create named/labeled
+> gpiocipX devices from the very beginning, like: "/dev/gpiocipX[_name|label], or "/dev/gpiocip[_name|label]", or ..
+>
+> Actually, struct gpio_chip has label field already.
 
-iQIcBAEBAgAGBQJXa8+WAAoJEBx+YmzsjxAgeQAP/RgHFHzMU2e7oJvVB/cgx7w2
-nbgTSIHUQMx5Spqcx6yGCbQ/mf0/SYShFoDelyu90r9qBijyqO9zP14g4Pmzik9Y
-k5W2S54QxXqHnA4U2Sl69qHpBT/q5BPg+1TILdveoMWBXtlv+GwoonnoiaDA3JSz
-GX8jz+8WFQksKbFtyuWkptdHvhcIo3Wj9kFCCLnLPIC4wxuIdaVaRF6Bf02JH5Ru
-dmuWCZQgYdcAuC4R6Wm4FbfIX8mBnA+1QiG39e4KJ1zltcoxMQiw3thsB+QmKxe1
-4I1PYHNpL8UQz8uF3xeAPKWHoRjsEIAruzYtbqwcMiobz0Rv7X249piKnTpcKljA
-uuN7o6a+YoWmpv5GGU93tG7dhuTvIPHhgDXhhx/+3Su3I2hOdDSmU4IIML4cANWx
-1l6L+3c2rqZNxeqZPpU08HyFZUH1Th2SXliMkpKuh0HjyuGlXtT7oEN/nxAGqCfi
-AfltoknpgwDo1QlYLgzMxIwmupnlQLbXPmBXb62WqbW4Hh12GSjuY2NwpHTxIRYf
-MJO2Edr+bACUOe8KbQUJMD1ltVzIEsf5SdAlub+7sqoCLmduEU0wwHSQ/Sz8y61x
-5rA98i22cT/iKr1gsHT/BU4LStqeMvo4z/4Xw7jUn3brnFyelLtv8m7CMcFV9VoH
-CC7zzYc7bI/VBIkN9LD0
-=HuES
------END PGP SIGNATURE-----
+I don't think that would be nice. There is an ioctl() to get that information
+(amongst other stuff) from the device. Check tools/gpio/lsgpio.c
 
---+pHx0qQiF2pBVqBT--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> PS. From my experience, the worst case with dev numbering usually happens after
+> few insmod/rmmod (or sometimes after suspend/resume) iterations - ttyX ;..(.
+
+In the GPIO case I think the numbers will be reused as we're using
+<linux/idr.h> infrastructure (same method as IIO).
+
+Yours,
+Linus Walleij
