@@ -1,71 +1,59 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v3 2/7] leds: documentation: 'ide-disk' to 'disk-activity'
-Date: Thu, 23 Jun 2016 08:40:39 +0200
-Message-ID: <576B8467.3060407@samsung.com>
-References: <20160608223000.433-1-linz@li-pro.net>
- <20160608223000.433-2-linz@li-pro.net> <20160621150532.GG3302@leverpostej>
- <576A447F.2020002@samsung.com> <576AB746.70509@li-pro.net>
+From: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4 1/1] net: ethernet: Add TSE PCS support to
+ dwmac-socfpga
+Date: Thu, 23 Jun 2016 00:02:31 -0700
+Message-ID: <1466665351.23554.16.camel@ubuntu>
+References: <1466498771-18971-1-git-send-email-thloh@altera.com>
+	 <3759495.N5GR8CgQvA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <576AB746.70509@li-pro.net>
-Sender: linux-leds-owner@vger.kernel.org
-To: linz@li-pro.net
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, linux-ide@vger.kernel.org, Joseph Jezak <josejx@gentoo.org>, Nico Macrionitis <acrux@cruxppc.org>, =?UTF-8?B?SsO2cmcgU29tbWVy?= <joerg@alea.gnuu.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3759495.N5GR8CgQvA@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thloh85-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/22/2016 06:05 PM, Stephan Linz wrote:
-> Hi Jacek,
->
-> Am 22.06.2016 um 09:55 schrieb Jacek Anaszewski:
->> On 06/21/2016 05:05 PM, Mark Rutland wrote:
->>> On Thu, Jun 09, 2016 at 12:29:37AM +0200, Stephan Linz wrote:
->>>> Cc: Joseph Jezak <josejx@gentoo.org>
->>>> Cc: Nico Macrionitis <acrux@cruxppc.org>
->>>> Cc: J=C3=B6rg Sommer <joerg@alea.gnuu.de>
->>>> Signed-off-by: Stephan Linz <linz@li-pro.net>
->>>> ---
->>>>    Documentation/devicetree/bindings/leds/common.txt    | 2 +-
->>>>    Documentation/devicetree/bindings/leds/leds-gpio.txt | 2 +-
->>>>    Documentation/laptops/asus-laptop.txt                | 2 +-
->>>>    Documentation/leds/leds-class.txt                    | 2 +-
->>>>    4 files changed, 4 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/common.txt
->>>> b/Documentation/devicetree/bindings/leds/common.txt
->>>> index af10678..1e97169 100644
->>>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>>> @@ -26,7 +26,7 @@ Optional properties for child nodes:
->>>>         "default-on" - LED will turn on (but for leds-gpio see
->>>> "default-state"
->>>>                property in
->>>> Documentation/devicetree/bindings/gpio/led.txt)
->>>>         "heartbeat" - LED "double" flashes at a load average based=
- rate
->>>> -     "ide-disk" - LED indicates disk activity
->>>> +     "disk-activity" - LED indicates disk activity
->>>>         "timer" - LED flashes at a fixed, configurable rate
->>>
->>> We should not break the binding.
->>>
->>> Code must continue to support "ide-disk", though we can mark it
->>> deprecated in the binding documentation, and update the in-kernel d=
-ts
->>> files to use "disk-activity".
->>
->> The code in the version 4 of the patchset supports also "ide-disk".
->>
->> Stephan, could you send a new version of this patch, with preserved
->> "ide-disk" property, marked as deprecated?
->
-> Yes, I can. I'll submit a new v5 patch set. You can pick out then the
-> right patch for the LED for-next branch, okay?
+Hi Arnd,
 
-You don't need to submit whole patch set, only the affected patch.
+On Tue, 2016-06-21 at 11:34 +0200, Arnd Bergmann wrote:
+> On Tuesday, June 21, 2016 1:46:11 AM CEST thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> > diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> > index 72d82d6..dd10f2f 100644
+> > --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> > +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> > @@ -17,9 +17,26 @@ Required properties:
+> >  Optional properties:
+> >  altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
+> >  		DWMAC controller is connected emac splitter.
+> > +phy-mode: The phy mode the ethernet operates in
+> > +altr,sgmii_to_sgmii_converter: phandle to the TSE SGMII converter
+> > +
+> 
+> Please use '-' instead of '_' in the property names.
 
---=20
-Best regards,
-Jacek Anaszewski
+Overlooked this when I were fixing v4, I'll get this fixed.
+
+> 
+> Can you explain in the patch description why you can't reference
+> the converter using the normal "phy-handle" property and implement
+> the converter as a phy driver?
+> 
+
+The converter isn't a PHY, but an adapter that handles data stream, and
+the phandle is only used to reset the adapter in software's context,
+thus it doesn't seem to be correct to implement it as a phy driver. 
+Does that answer your question?
+If so, do you think we need to document this in the patch description in
+this case?
+
+> 	Arnd
+> 
+
+Thanks
+Tien Hock
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
