@@ -1,28 +1,27 @@
-From: deadcom@gmail.com
+From: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Subject: Re: [PATCH v3] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
-Date: Thu, 23 Jun 2016 04:01:53 -0700 (PDT)
-Message-ID: <8e5b45fe-f60b-419f-8b00-b816ffe5d98c@googlegroups.com>
+Date: Thu, 23 Jun 2016 04:07:13 -0700 (PDT)
+Message-ID: <2618ba96-c3c5-4db6-b860-d212e7045f23@googlegroups.com>
 References: <1466418769-8384-1-git-send-email-stefan.mavrodiev@gmail.com>
  <20160622132222.GX26668@lukather>
+Reply-To: Stefan.Mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/mixed;
- boundary="----=_Part_395_557646352.1466679714127"
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+	boundary="----=_Part_498_352963308.1466680034067"
+Return-path: <linux-sunxi+bncBCSP3JM3Y4JBBYUFV65QKGQE3C2LYGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20160622132222.GX26668@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-sunxi <linux-sunxi@googlegroups.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.co, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, stefan.mavrodiev@gmail.com, wens@csie.org, robh+dt@kernel.org, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-AbSShOkvfpQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_395_557646352.1466679714127
+------=_Part_498_352963308.1466680034067
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
@@ -43,16 +42,17 @@ Content-Transfer-Encoding: quoted-printable
 > Oh? So it ships already? Nice!
 
 Not yet, but very soon will.
+
 >=20
-> > Signed-off-by: Stefan Mavrodiev <stefan.mavrodiev@gmail.com>
+> > Signed-off-by: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > > ---
 > > Changes for v2:
-> > =09- Removed unused power nodes
-> > =09- Removed default-trigger for green led
-> > =09- Removed "always-on" option for LCD power
+> > 	- Removed unused power nodes
+> > 	- Removed default-trigger for green led
+> > 	- Removed "always-on" option for LCD power
 > >=20
 > > Changes for v3:
-> > =09- Nodes are sorted alphabetically
+> > 	- Nodes are sorted alphabetically
 > >=20
 > >  arch/arm/boot/dts/Makefile                |   1 +
 > >  arch/arm/boot/dts/sun8i-a33-olinuxino.dts | 207 ++++++++++++++++++++++=
@@ -65,16 +65,16 @@ Not yet, but very soon will.
 > > --- a/arch/arm/boot/dts/Makefile
 > > +++ b/arch/arm/boot/dts/Makefile
 > > @@ -760,6 +760,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
-> >  =09sun8i-a33-ippo-q8h-v1.2.dtb \
-> >  =09sun8i-a33-q8-tablet.dtb \
-> >  =09sun8i-a33-sinlinx-sina33.dtb \
-> > +=09sun8i-a33-olinuxino.dtb \
+> >  	sun8i-a33-ippo-q8h-v1.2.dtb \
+> >  	sun8i-a33-q8-tablet.dtb \
+> >  	sun8i-a33-sinlinx-sina33.dtb \
+> > +	sun8i-a33-olinuxino.dtb \
 >=20
 > This should be ordered alphabetically.
 >=20
-> >  =09sun8i-a83t-allwinner-h8homlet-v2.dtb \
-> >  =09sun8i-a83t-cubietruck-plus.dtb \
-> >  =09sun8i-h3-orangepi-2.dtb \
+> >  	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+> >  	sun8i-a83t-cubietruck-plus.dtb \
+> >  	sun8i-h3-orangepi-2.dtb \
 > > diff --git a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts b/arch/arm/boot/=
 dts/sun8i-a33-olinuxino.dts
 > > new file mode 100644
@@ -83,8 +83,8 @@ dts/sun8i-a33-olinuxino.dts
 > > +++ b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
 > > @@ -0,0 +1,207 @@
 > > +/*
-> > + * Copyright 2016 - Stefan Mavrodiev <stefan.mavrodiev@gmail.com>
-> > + *                  Olimex LTD. <support@olimex.com>
+> > + * Copyright 2016 - Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > + *                  Olimex LTD. <support-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
 > > + *
 > > + * This file is dual-licensed: you can use it either under the terms
 > > + * of the GPL or the X11 license, at your option. Note that this dual
@@ -135,173 +135,174 @@ the
 > > +#include <dt-bindings/pinctrl/sun4i-a10.h>
 > > +
 > > +/ {
-> > +=09model =3D "A33-OLinuXino";
+> > +	model =3D "A33-OLinuXino";
 >=20
 > Olimex A33-Olinuxino
 >=20
-> > +=09compatible =3D "allwinner,sun8i-a33";
+> > +	compatible =3D "allwinner,sun8i-a33";
 >=20
 > And you should have an extra compatible for your board here.
 >=20
 > > +
-> > +=09aliases {
-> > +=09=09serial0 =3D &uart0;
-> > +=09};
+> > +	aliases {
+> > +		serial0 =3D &uart0;
+> > +	};
 > > +
-> > +=09chosen {
-> > +=09=09stdout-path =3D "serial0:115200n8";
-> > +=09};
+> > +	chosen {
+> > +		stdout-path =3D "serial0:115200n8";
+> > +	};
 > > +
-> > +=09leds {
-> > +=09=09compatible =3D "gpio-leds";
-> > +=09=09pinctrl-names =3D "default";
-> > +=09=09pinctrl-0 =3D <&led_pin_olinuxino>;
+> > +	leds {
+> > +		compatible =3D "gpio-leds";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&led_pin_olinuxino>;
 > > +
-> > +=09=09green {
-> > +=09=09=09label =3D "olinuxino:green:usr";
+> > +		green {
+> > +			label =3D "olinuxino:green:usr";
 >=20
 > The first part of the label is usually the board name, a33-olinuxino
 > in that case.
 >=20
-> > +=09=09=09gpios =3D <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LED2 */
-> > +=09=09};
-> > +=09};
+> > +			gpios =3D <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LED2 */
+> > +		};
+> > +	};
 > > +};
 > > +
 > > +&ehci0 {
-> > +=09status =3D "okay";
+> > +	status =3D "okay";
 > > +};
 > > +
 > > +&mmc0 {
-> > +=09pinctrl-names =3D "default";
-> > +=09pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin_olinuxino>;
-> > +=09vmmc-supply =3D <&reg_dcdc1>;
-> > +=09bus-width =3D <4>;
-> > +=09cd-gpios =3D <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
-> > +=09cd-inverted;
-> > +=09status =3D "okay";
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin_olinuxino>;
+> > +	vmmc-supply =3D <&reg_dcdc1>;
+> > +	bus-width =3D <4>;
+> > +	cd-gpios =3D <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+> > +	cd-inverted;
+> > +	status =3D "okay";
 > > +};
 > > +
 > > +&ohci0 {
-> > +=09status =3D "okay";
+> > +	status =3D "okay";
 > > +};
 > > +
 > > +&pio {
-> > +=09led_pin_olinuxino: led_pins@0 {
-> > +=09=09allwinner,pins =3D "PB7";
-> > +=09        allwinner,function =3D "gpio_out";
-> > +=09=09allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> > +=09=09allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> > +	led_pin_olinuxino: led_pins@0 {
+> > +		allwinner,pins =3D "PB7";
+> > +	        allwinner,function =3D "gpio_out";
+> > +		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> > +		allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
 > > +    };
 > > +
-> > +=09mmc0_cd_pin_olinuxino: mmc0_cd_pin@0 {
-> > +=09=09allwinner,pins =3D "PB4";
-> > +=09=09allwinner,function =3D "gpio_in";
-> > +=09=09allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> > +=09=09allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> > +=09};
+> > +	mmc0_cd_pin_olinuxino: mmc0_cd_pin@0 {
+> > +		allwinner,pins =3D "PB4";
+> > +		allwinner,function =3D "gpio_in";
+> > +		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> > +		allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> > +	};
 > > +};
 > > +
 > > +&r_rsb {
-> > +=09status =3D "okay";
+> > +	status =3D "okay";
 > > +
-> > +=09axp22x: pmic@3a3 {
-> > +=09=09compatible =3D "x-powers,axp223";
-> > +=09=09reg =3D <0x3a3>;
-> > +=09=09interrupt-parent =3D <&nmi_intc>;
-> > +=09=09interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
-> > +=09=09eldoin-supply =3D <&reg_dcdc1>;
-> > +=09};
+> > +	axp22x: pmic@3a3 {
+> > +		compatible =3D "x-powers,axp223";
+> > +		reg =3D <0x3a3>;
+> > +		interrupt-parent =3D <&nmi_intc>;
+> > +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> > +		eldoin-supply =3D <&reg_dcdc1>;
+> > +	};
 > > +};
 > > +
 > > +#include "axp22x.dtsi"
 > > +
 > > +&reg_aldo1 {
-> > +=09regulator-always-on;
-> > +=09regulator-min-microvolt =3D <3300000>;
-> > +=09regulator-max-microvolt =3D <3300000>;
-> > +=09regulator-name =3D "vcc-io";
+> > +	regulator-always-on;
+> > +	regulator-min-microvolt =3D <3300000>;
+> > +	regulator-max-microvolt =3D <3300000>;
+> > +	regulator-name =3D "vcc-io";
 > > +};
 > > +
 > > +&reg_aldo2 {
-> > +=09regulator-always-on;
-> > +=09regulator-min-microvolt =3D <2350000>;
-> > +=09regulator-max-microvolt =3D <2650000>;
-> > +=09regulator-name =3D "vdd-dll";
+> > +	regulator-always-on;
+> > +	regulator-min-microvolt =3D <2350000>;
+> > +	regulator-max-microvolt =3D <2650000>;
+> > +	regulator-name =3D "vdd-dll";
 > > +};
 > > +
 > > +&reg_aldo3 {
-> > +=09regulator-always-on;
-> > +=09regulator-min-microvolt =3D <3300000>;
-> > +=09regulator-max-microvolt =3D <3300000>;
-> > +=09regulator-name =3D "vcc-avcc";
+> > +	regulator-always-on;
+> > +	regulator-min-microvolt =3D <3300000>;
+> > +	regulator-max-microvolt =3D <3300000>;
+> > +	regulator-name =3D "vcc-avcc";
 > > +};
 > > +
 > > +&reg_dc1sw {
-> > +=09regulator-name =3D "vcc-lcd";
+> > +	regulator-name =3D "vcc-lcd";
 > > +};
 > > +
 > > +&reg_dc5ldo {
-> > +=09regulator-always-on;
-> > +=09regulator-min-microvolt =3D <900000>;
-> > +=09regulator-max-microvolt =3D <1400000>;
-> > +=09regulator-name =3D "vdd-cpus";
+> > +	regulator-always-on;
+> > +	regulator-min-microvolt =3D <900000>;
+> > +	regulator-max-microvolt =3D <1400000>;
+> > +	regulator-name =3D "vdd-cpus";
 > > +};
 > > +
 > > +&reg_dcdc1 {
-> > +=09regulator-always-on;
-> > +=09regulator-min-microvolt =3D <3300000>;
-> > +=09regulator-max-microvolt =3D <3300000>;
-> > +=09regulator-name =3D "vcc-dsi";
+> > +	regulator-always-on;
+> > +	regulator-min-microvolt =3D <3300000>;
+> > +	regulator-max-microvolt =3D <3300000>;
+> > +	regulator-name =3D "vcc-dsi";
 > > +};
 > > +
 > > +&reg_dcdc2 {
-> > +=09regulator-always-on;
-> > +=09regulator-min-microvolt =3D <900000>;
-> > +=09regulator-max-microvolt =3D <1400000>;
-> > +=09regulator-name =3D "vdd-sys";
+> > +	regulator-always-on;
+> > +	regulator-min-microvolt =3D <900000>;
+> > +	regulator-max-microvolt =3D <1400000>;
+> > +	regulator-name =3D "vdd-sys";
 > > +};
 > > +
 > > +&reg_dcdc3 {
-> > +=09regulator-always-on;
-> > +=09regulator-min-microvolt =3D <900000>;
-> > +=09regulator-max-microvolt =3D <1400000>;
-> > +=09regulator-name =3D "vdd-cpu";
+> > +	regulator-always-on;
+> > +	regulator-min-microvolt =3D <900000>;
+> > +	regulator-max-microvolt =3D <1400000>;
+> > +	regulator-name =3D "vdd-cpu";
 > > +};
 > > +
 > > +&reg_dcdc5 {
-> > +=09regulator-always-on;
-> > +=09regulator-min-microvolt =3D <1500000>;
-> > +=09regulator-max-microvolt =3D <1500000>;
-> > +=09regulator-name =3D "vcc-dram";
+> > +	regulator-always-on;
+> > +	regulator-min-microvolt =3D <1500000>;
+> > +	regulator-max-microvolt =3D <1500000>;
+> > +	regulator-name =3D "vcc-dram";
 > > +};
 > > +
 > > +&reg_rtc_ldo {
-> > +=09regulator-name =3D "vcc-rtc";
+> > +	regulator-name =3D "vcc-rtc";
 > > +};
 > > +
 > > +&simplefb_lcd {
-> > +=09vcc-lcd-supply =3D <&reg_dc1sw>;
+> > +	vcc-lcd-supply =3D <&reg_dc1sw>;
 > > +};
 > > +
 > > +&uart0 {
-> > +=09pinctrl-names =3D "default";
-> > +=09pinctrl-0 =3D <&uart0_pins_b>;
-> > +=09status =3D "okay";
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&uart0_pins_b>;
+> > +	status =3D "okay";
 > > +};
 > > +
 > > +&usb_otg {
-> > +=09dr_mode =3D "host";
-> > +=09status =3D "okay";
+> > +	dr_mode =3D "host";
+> > +	status =3D "okay";
 > > +};
 > > +
 > > +&usbphy {
-> > +=09usb0_vbus-supply =3D <&reg_vcc5v0>;
-> > +=09status =3D "okay";
+> > +	usb0_vbus-supply =3D <&reg_vcc5v0>;
+> > +	status =3D "okay";
 > > +
 > > +};
 >=20
 > It doesn't work as USB OTG ?
+>=20
 
 The hardware should work as OTG. In FEL mode it works as device, and in cur=
 rent dt configuration - as host. I've spend some time trying to make it wor=
@@ -310,7 +311,6 @@ k as otg, but didn't succeed.=20
 There are some hardware differences between our board and other a33, but if=
  you say that OTG work, I'll spend some additional time working on it.
 
->=20
 > Thanks,
 > Maxime
 >=20
@@ -319,19 +319,11 @@ There are some hardware differences between our board and other a33, but if=
 > Embedded Linux, Kernel and Android engineering
 > http://free-electrons.com
 
-Regards,
-Stefan Mavrodiev
-Olimex LTD.
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-------=_Part_395_557646352.1466679714127
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-------=_Part_395_557646352.1466679714127--
+------=_Part_498_352963308.1466680034067--
