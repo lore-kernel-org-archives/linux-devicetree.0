@@ -1,203 +1,130 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] leds: ncp5623: Add device tree binding documentation
-Date: Thu, 23 Jun 2016 09:23:09 +0200
-Message-ID: <576B8E5D.90000@samsung.com>
-References: <1466494154-3786-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1466494154-3786-2-git-send-email-florian.vaussard@heig-vd.ch>
- <57695D02.2000109@samsung.com>
- <59143a9b-ab51-bd3b-e9db-93680415d205@heig-vd.ch>
- <576A5191.4070402@samsung.com>
- <c97adf5a-7c5b-8602-83c1-f85854bd64d6@heig-vd.ch>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/2] regulator: pwm: Support for enable GPIO
+Date: Thu, 23 Jun 2016 16:39:44 +0900
+Message-ID: <20160623073945.11642-1-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <c97adf5a-7c5b-8602-83c1-f85854bd64d6-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
-Cc: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/22/2016 04:25 PM, Florian Vaussard wrote:
-> Hi Jacek,
->
-> Le 22. 06. 16 =E0 10:51, Jacek Anaszewski a =E9crit :
->> Hi Florian,
->>
->> On 06/22/2016 08:08 AM, Florian Vaussard wrote:
->>> Hi Jacek,
->>>
->>> Le 21. 06. 16 =E0 17:28, Jacek Anaszewski a =E9crit :
->>>> Hi Florian,
->>>>
->>>> Thanks for the patch. I have two remarks below.
->>>>
->>>> On 06/21/2016 09:29 AM, Florian Vaussard wrote:
->>>>> Add device tree binding documentation for On Semiconductor NCP562=
-3 I2C
->>>>> LED driver. The driver can independently control the PWM of the 3
->>>>> channels with 32 levels of intensity.
->>>>>
->>>>> The current delivered by the current source can be controlled usi=
-ng the
->>>>> led-max-microamp property. In order to control this value, it is =
-also
->>>>> necessary to know the current on the Iref pin, hence the
->>>>> onnn,led-iref-microamp property. It is usually set using an exter=
-nal
->>>>> bias resistor, following Iref =3D Vref/Rbias with Vref=3D0.6V.
->>>>>
->>>>> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
->>>>> ---
->>>>>     .../devicetree/bindings/leds/leds-ncp5623.txt      | 44
->>>>> ++++++++++++++++++++++
->>>>>     1 file changed, 44 insertions(+)
->>>>>     create mode 100644 Documentation/devicetree/bindings/leds/led=
-s-ncp5623.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-ncp5623.=
-txt
->>>>> b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->>>>> new file mode 100644
->>>>> index 0000000..0dc8345
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->>>>> @@ -0,0 +1,44 @@
->>>>> +* ON Semiconductor - NCP5623 3-Channel LED Driver
->>>>> +
->>>>> +The NCP5623 is a 3-channel I2C LED driver. The brightness of eac=
-h
->>>>> +channel can be independently set using 32 levels. Each LED is re=
-presented
->>>>> +as a sub-node of the device.
->>>>> +
->>>>> +Required properties:
->>>>> +  - compatible: Should be "onnn,ncp5623"
->>>>> +  - reg: I2C slave address (fixed to 0x38)
->>>>> +  - #address-cells: must be 1
->>>>> +  - #size-cells: must be 0
->>>>> +  - onnn,led-iref-microamp: Current on the Iref pin in microampe=
-re
->>>>
->>>> I think that you don't need this property. Just provide the formul=
-a for
->>>> calculating led-max-microamp value, similarly as you're doing that=
- in
->>>> the commit message.
->>>>
->>>
->>> I am not completely sure to understand your suggestion. So at the e=
-nd, I have to
->>> compute the value of the register (let call it 'ILED') that I need =
-to send to
->>> chip to configure the current source. The formula is:
->>>
->>> ILED =3D 31 - 2400*Iref/led-max-microamp
->>
->> led-max-microamp is the maximum current value for given LED.
->> According to the documentation it can be calculated as follows:
->>
->> ILEDmax =3D Iref * 2400 / (31 - n)
->>
->> Since this is global setting for all LEDs, then I'd always set n to =
-30,
->> and calculate max_brightness value for each LED separately, basing o=
-n
->> led-max-microamp property value. Effectively, I'm revoking my previo=
-us
->> statement about setting max_brightness to fixed level.
->>
->
-> Ok your proposal simplifies a bit the handling. Thus ILEDmax of the c=
-urrent
-> source would be always equal to Iref * 2400 and we use the PWM to lim=
-it the
-> current inside the LED. The only downside of this approach is a reduc=
-ed number
-> of possible PWM steps, thus a limited number of RGB colors.
+Add an optional enable GPIO to the pwm-regulator driver.
 
-Yes, but by max_brightness being always 31, lowering led-max-microamp
-results in decreasing the amount of current per brightness level.
-Effectively, a human ability to notice perceived brightness level
-change also decreases then.
+Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes since v1:
+- Do not try to be smart and use the core enable GPIO as this introduces an
+  incompatible behavior. Probe and manipulate the GPIO in pwm-regulator.
+- Use standard enable-gpios name for GPIO property
 
-In the approach I proposed this limitation is reflected in reduced
-amount of available brightness levels.
+ .../bindings/regulator/pwm-regulator.txt           |  7 +++++-
+ drivers/regulator/pwm-regulator.c                  | 26 ++++++++++++++++++++++
+ 2 files changed, 32 insertions(+), 1 deletion(-)
 
-> Regarding the DT binding, this would mean something like this:
->
-> ncp5623@38 {
-> 	#address-cells =3D <1>;
-> 	#size-cells =3D <0>;
-> 	compatible =3D "onnn,ncp5623";
-> 	reg =3D <0x38>;
-> 	led-max-microamp =3D <30000>;
-
-Please drop it from here. It doesn't need to be configurable.
-You can hard code this in the driver.
-
->
-> 	ledr@0 {
-> 		label =3D "ncp:power:red";
-> 		reg =3D <0>;
-> 		linux,default-trigger =3D "default-on";
-> 		led-max-microamp =3D <5000>;
-
-Is 5mA the maximum allowed current value for the LEDs on the board
-you're using? Is brightness level change easily noticeable by max
-current set to 5mA and max_brightness set to 31? It would be good
-to empirically check this configuration.
-
-> 	};
->
-> 	ledb@1 {
-> 		label =3D "ncp:power:blue";
-> 		reg =3D <1>;
-> 		led-max-microamp =3D <5000>;
-> 	};
->
-> 	ledg@2 {
-> 		label =3D "ncp:power:green";
-> 		reg =3D <2>;
-> 		led-max-microamp =3D <5000>;
-> 	};
-> };
->
-> The led-max-microamp property of the root node is used to infer Iref,=
- and the
-> led-max-microamp property inside each LED node is used to compute the=
- maximum
-> allowed PWM ratio (thus max_brightness).
->
-> Would it be fine like this?
->
->> You can compare drivers/leds/leds-aat1290.c and its bindings, as it
->> uses similar approach.
->>
->
-> Thanks for the pointer, interesting reading. In this case the flash-m=
-ax-microamp
-> property is implicitly used to get the value of Rset, and led-max-mic=
-roamp is
-> used to compute the flash/movie-mode ratio. Indeed similar but not ex=
-actly the
-> same, as the NCP5623 allows a finer control on the current using one =
-register to
-> configure the current source and one register for the PWM.
-
-Right, but it shows how led-max-microamp can be used to infer
-max_brightness level. This is quite new DT property with not too many
-users, because previously LED class drivers had been defining
-max_brightness directly in a Device Tree. Nonetheless brightness level
-was eventually considered not suitable unit for describing hardware
-property.
-
---=20
-Best regards,
-Jacek Anaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+index ed936f0f34f2..dd6f59cf1455 100644
+--- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+@@ -38,13 +38,18 @@ NB: To be clear, if voltage-table is provided, then the device will be used
+ in Voltage Table Mode.  If no voltage-table is provided, then the device will
+ be used in Continuous Voltage Mode.
+ 
++Optional properties:
++--------------------
++- enable-gpios:		GPIO to use to enable/disable the regulator
++
+ Any property defined as part of the core regulator binding can also be used.
+ (See: ../regulator/regulator.txt)
+ 
+-Continuous Voltage Example:
++Continuous Voltage With Enable GPIO Example:
+ 	pwm_regulator {
+ 		compatible = "pwm-regulator;
+ 		pwms = <&pwm1 0 8448 0>;
++		enable-gpios = <&gpio0 23 GPIO_ACTIVE_HIGH>;
+ 		regulator-min-microvolt = <1016000>;
+ 		regulator-max-microvolt = <1114000>;
+ 		regulator-name = "vdd_logic";
+diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
+index ab3cc0235843..90f8b7fd0437 100644
+--- a/drivers/regulator/pwm-regulator.c
++++ b/drivers/regulator/pwm-regulator.c
+@@ -20,6 +20,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/pwm.h>
++#include <linux/gpio/consumer.h>
+ 
+ struct pwm_regulator_data {
+ 	/*  Shared */
+@@ -38,6 +39,9 @@ struct pwm_regulator_data {
+ 
+ 	/* Continuous voltage */
+ 	int volt_uV;
++
++	/* Enable GPIO */
++	struct gpio_desc *enb_gpio;
+ };
+ 
+ struct pwm_voltages {
+@@ -94,6 +98,9 @@ static int pwm_regulator_enable(struct regulator_dev *dev)
+ {
+ 	struct pwm_regulator_data *drvdata = rdev_get_drvdata(dev);
+ 
++	if (drvdata->enb_gpio)
++		gpiod_set_value_cansleep(drvdata->enb_gpio, 1);
++
+ 	return pwm_enable(drvdata->pwm);
+ }
+ 
+@@ -103,6 +110,9 @@ static int pwm_regulator_disable(struct regulator_dev *dev)
+ 
+ 	pwm_disable(drvdata->pwm);
+ 
++	if (drvdata->enb_gpio)
++		gpiod_set_value_cansleep(drvdata->enb_gpio, 0);
++
+ 	return 0;
+ }
+ 
+@@ -110,6 +120,9 @@ static int pwm_regulator_is_enabled(struct regulator_dev *dev)
+ {
+ 	struct pwm_regulator_data *drvdata = rdev_get_drvdata(dev);
+ 
++	if (drvdata->enb_gpio && !gpiod_get_value_cansleep(drvdata->enb_gpio))
++		return false;
++
+ 	return pwm_is_enabled(drvdata->pwm);
+ }
+ 
+@@ -248,6 +261,7 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+ 	struct regulator_dev *regulator;
+ 	struct regulator_config config = { };
+ 	struct device_node *np = pdev->dev.of_node;
++	enum gpiod_flags gpio_flags;
+ 	int ret;
+ 
+ 	if (!np) {
+@@ -285,6 +299,18 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	if (init_data->constraints.boot_on || init_data->constraints.always_on)
++		gpio_flags = GPIOD_OUT_HIGH;
++	else
++		gpio_flags = GPIOD_OUT_LOW;
++	drvdata->enb_gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
++						    gpio_flags);
++	if (IS_ERR(drvdata->enb_gpio)) {
++		ret = PTR_ERR(drvdata->enb_gpio);
++		dev_err(&pdev->dev, "Failed to get enable GPIO: %d\n", ret);
++		return ret;
++	}
++
+ 	/*
+ 	 * FIXME: pwm_apply_args() should be removed when switching to the
+ 	 * atomic PWM API.
+-- 
+2.8.3
