@@ -1,31 +1,108 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 00/13] Add support for Tegra DPAUX pinctrl
-Date: Thu, 23 Jun 2016 09:49:20 +0200
-Message-ID: <CACRpkdaEUUCs3UR9U331wuFTkRswU4tFEg6JLoMVkHeSXfS_sA@mail.gmail.com>
-References: <1466165027-17917-1-git-send-email-jonathanh@nvidia.com>
- <20160617165611.GO27475@ulmo.ba.sec> <20160617165842.GP27475@ulmo.ba.sec>
+From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] CMDQ: Mediatek CMDQ driver
+Date: Thu, 23 Jun 2016 15:54:40 +0800
+Message-ID: <1466668480.12124.15.camel@mtksdaap41>
+References: <1464578397-29743-1-git-send-email-hs.liao@mediatek.com>
+	 <1464578397-29743-3-git-send-email-hs.liao@mediatek.com>
+	 <1466661829.15112.26.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160617165842.GP27475-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466661829.15112.26.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 6:58 PM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi CK,
 
-> Oh wait... there's the pinctrl helper function that is a build-
-> dependency. Linus, would you be okay if I took that through the
-> drm-tegra tree along with the DPAUX driver change, and provide a
-> stable branch for you to resolve conflicts against if needed?
+On Thu, 2016-06-23 at 14:03 +0800, CK Hu wrote:
+> Hi, HS:
+> 
+> On Mon, 2016-05-30 at 11:19 +0800, HS Liao wrote:
+> [...]
+> 
+> > +
+> > +/* events for CMDQ and display */
+> > +enum cmdq_event {
+> > +	/* Display start of frame(SOF) events */
+> > +	CMDQ_EVENT_DISP_OVL0_SOF = 11,
+> > +	CMDQ_EVENT_DISP_OVL1_SOF = 12,
+> > +	CMDQ_EVENT_DISP_RDMA0_SOF = 13,
+> > +	CMDQ_EVENT_DISP_RDMA1_SOF = 14,
+> > +	CMDQ_EVENT_DISP_RDMA2_SOF = 15,
+> > +	CMDQ_EVENT_DISP_WDMA0_SOF = 16,
+> > +	CMDQ_EVENT_DISP_WDMA1_SOF = 17,
+> > +	/* Display end of frame(EOF) events */
+> > +	CMDQ_EVENT_DISP_OVL0_EOF = 39,
+> > +	CMDQ_EVENT_DISP_OVL1_EOF = 40,
+> > +	CMDQ_EVENT_DISP_RDMA0_EOF = 41,
+> > +	CMDQ_EVENT_DISP_RDMA1_EOF = 42,
+> > +	CMDQ_EVENT_DISP_RDMA2_EOF = 43,
+> > +	CMDQ_EVENT_DISP_WDMA0_EOF = 44,
+> > +	CMDQ_EVENT_DISP_WDMA1_EOF = 45,
+> > +	/* Mutex end of frame(EOF) events */
+> > +	CMDQ_EVENT_MUTEX0_STREAM_EOF = 53,
+> > +	CMDQ_EVENT_MUTEX1_STREAM_EOF = 54,
+> > +	CMDQ_EVENT_MUTEX2_STREAM_EOF = 55,
+> > +	CMDQ_EVENT_MUTEX3_STREAM_EOF = 56,
+> > +	CMDQ_EVENT_MUTEX4_STREAM_EOF = 57,
+> > +	/* Display underrun events */
+> > +	CMDQ_EVENT_DISP_RDMA0_UNDERRUN = 63,
+> > +	CMDQ_EVENT_DISP_RDMA1_UNDERRUN = 64,
+> > +	CMDQ_EVENT_DISP_RDMA2_UNDERRUN = 65,
+> > +	/* Keep this at the end of HW events */
+> > +	CMDQ_MAX_HW_EVENT_COUNT = 260,
+> > +};
+> 
+> The value of these symbol is just the GCE-HW-defined value. I think it's
+> not appropriate to expose HW-defined value to client. For another SoC
+> GCE HW, these definition may change.
 
-I have already applied it, but I can rebase and pull that patch out
-on a separate immutable branch and then  merge that branch
-into my devel and then you can pull it too.
+Agree.
 
-Would that work?
+> One way to solve this problem is to translate symbol to value
+> internally. But these events looks like interrupt and the value may vary
+> by each SoC, to prevent driver modified frequently, it's better to place
+> the value definition in device tree. It may looks like:
+> 
+> mmsys: clock-controller@14000000 {
+> 	compatible = "mediatek,mt8173-mmsys";
+> 	mediatek,gce = <&gce>;
+> 	gce-events = <53 54>;
 
-Yours,
-Linus Walleij
+However, client still needs to know the HW-defined value by using
+this solution.
+
+> 	gce-event-names = "MUTEX0_EOF","MUTEX1_EOF";
+> }
+> 
+> For cmdq driver, you just need modify interface from
+> 
+> int cmdq_rec_wfe(struct cmdq_rec *rec, enum cmdq_event event)
+> int cmdq_rec_clear_event(struct cmdq_rec *rec, enum cmdq_event event)
+> 
+> to
+> 
+> int cmdq_rec_wfe(struct cmdq_rec *rec, u32 event)
+> int cmdq_rec_clear_event(struct cmdq_rec *rec, u32 event)
+
+I think an easy way for this issue is just removing HW-defined values
+from include/soc/mediatek/cmdq.h (but keeping enum), and then mapping
+abstract values into real values in driver.
+The benefit of this solution is that we can keep interface and leave SoC
+specific code into driver.
+What do you think?
+
+> Regards,
+> CK
+
+Thanks,
+HS
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
