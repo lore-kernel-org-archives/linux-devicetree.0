@@ -1,74 +1,53 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] drm/tegra: sor: Use sor1_src clock to set parent for
- HDMI
-Date: Fri, 24 Jun 2016 14:16:45 -0500
-Message-ID: <20160624191645.GA23255@rob-hp-laptop>
-References: <20160623102759.23078-1-thierry.reding@gmail.com>
- <20160623102759.23078-2-thierry.reding@gmail.com>
+Subject: Re: [v3 PATCH 2/5] Documentation: bindings: add dt doc for Rockchip
+ USB Type-C PHY
+Date: Fri, 24 Jun 2016 14:19:31 -0500
+Message-ID: <20160624191931.GA26329@rob-hp-laptop>
+References: <1466686264-6744-1-git-send-email-zyw@rock-chips.com>
+ <1466686264-6744-3-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160623102759.23078-2-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1466686264-6744-3-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 23, 2016 at 12:27:59PM +0200, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Thu, Jun 23, 2016 at 08:51:01PM +0800, Chris Zhong wrote:
+> This patch adds a binding that describes the Rockchip USB Type-C PHY
+> for rk3399
 > 
-> When running in HDMI mode, the sor1 IP block needs to use the sor1_src
-> as parent clock, and in turn configure the sor1_src to use pll_d2_out0
-> as its parent.
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Reviewed-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/gpu/drm/tegra/sor.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
-> index 6887e52318e2..7405c39f6db3 100644
-> --- a/drivers/gpu/drm/tegra/sor.c
-> +++ b/drivers/gpu/drm/tegra/sor.c
-> @@ -172,6 +172,7 @@ struct tegra_sor {
->  	struct clk *clk_parent;
->  	struct clk *clk_brick;
->  	struct clk *clk_safe;
-> +	struct clk *clk_src;
->  	struct clk *clk_dp;
->  	struct clk *clk;
->  
-> @@ -2140,7 +2141,11 @@ static void tegra_sor_hdmi_enable(struct drm_encoder *encoder)
->  	tegra_sor_writel(sor, 0x00000000, SOR_XBAR_POL);
->  
->  	/* switch to parent clock */
-> -	err = tegra_sor_set_parent_clock(clk, sor->clk_parent);
-> +	err = clk_set_parent(sor->clk_src, sor->clk_parent);
-> +	if (err < 0)
-> +		dev_err(sor->dev, "failed to set source clock: %d\n", err);
-> +
-> +	err = tegra_sor_set_parent_clock(sor, sor->clk_src);
->  	if (err < 0)
->  		dev_err(sor->dev, "failed to set parent clock: %d\n", err);
->  
-> @@ -2645,6 +2650,13 @@ static int tegra_sor_probe(struct platform_device *pdev)
->  		goto remove;
->  	}
->  
-> +	sor->clk_src = devm_clk_get(&pdev->dev, "source");
-> +	if (IS_ERR(sor->clk_src)) {
-> +		err = PTR_ERR(sor->clk_src);
-> +		dev_err(&pdev->dev, "failed to get source clock: %d\n", err);
-> +		goto remove;
-
-Shouldn't this fallback to current behavior without this clock?
-
-> +	}
-> +
->  	sor->clk_parent = devm_clk_get(&pdev->dev, "parent");
->  	if (IS_ERR(sor->clk_parent)) {
->  		err = PTR_ERR(sor->clk_parent);
-> -- 
-> 2.8.3
+> Changes in v3:
+> - use compatible: rockchip,rk3399-typec-phy
+> - use dashes instead of underscores.
 > 
+> Changes in v2:
+> - add some registers description
+> 
+> Changes in v1:
+> - add extcon node description
+> - move the registers in phy driver
+> - remove the suffix of reset
+> 
+>  .../devicetree/bindings/phy/phy-rockchip-typec.txt | 74 ++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
