@@ -1,33 +1,48 @@
 From: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: at91: Add pinctrl information to ethernet node.
-Date: Fri, 24 Jun 2016 19:01:08 +0530
-Message-ID: <1466775069-606-1-git-send-email-raashidmuhammed@zilogic.com>
+Subject: [PATCH 2/2] ARM: dts: at91: Modify information in LED nodes.
+Date: Fri, 24 Jun 2016 19:01:09 +0530
+Message-ID: <1466775069-606-2-git-send-email-raashidmuhammed@zilogic.com>
+References: <1466775069-606-1-git-send-email-raashidmuhammed@zilogic.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466775069-606-1-git-send-email-raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add missing pinctrl information to ethernet node.
+Add power led node and rename status led node.
 
 Signed-off-by: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
 Reviewed-by: Vijay Kumar B. <vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/at91-sam9_l9260.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/at91-sam9_l9260.dts | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/at91-sam9_l9260.dts b/arch/arm/boot/dts/at91-sam9_l9260.dts
-index 349a461..be409f2 100644
+index be409f2..814753a 100644
 --- a/arch/arm/boot/dts/at91-sam9_l9260.dts
 +++ b/arch/arm/boot/dts/at91-sam9_l9260.dts
-@@ -49,6 +49,7 @@
- 			};
+@@ -106,11 +106,16 @@
+ 	leds {
+ 		compatible = "gpio-leds";
  
- 			macb0: ethernet@fffc4000 {
-+				pinctrl-0 = <&pinctrl_macb_rmii &pinctrl_macb_rmii_mii_alt>;
- 				phy-mode = "mii";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+-		b0 {
+-			label = "b0";
+-			gpios = <&pioA 6 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "heartbeat";
++		pwr_led {
++			label = "sam9-l9260:yellow:pwr";
++			gpios = <&pioA 9 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "cpu0";
+ 		};
+ 
++		status_led {
++			label = "sam9-l9260:green:status";
++			gpios = <&pioA 6 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "timer";
++		};
+ 	};
+ };
 -- 
 2.1.4
 
