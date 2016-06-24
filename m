@@ -1,52 +1,60 @@
-From: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: at91: Modify information in LED nodes.
-Date: Fri, 24 Jun 2016 19:01:09 +0530
-Message-ID: <1466775069-606-2-git-send-email-raashidmuhammed@zilogic.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 2/2] ARM: dts: at91: Modify information in LED nodes.
+Date: Fri, 24 Jun 2016 15:40:10 +0200
+Message-ID: <20160624134010.GN5809@piout.net>
 References: <1466775069-606-1-git-send-email-raashidmuhammed@zilogic.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466775069-606-1-git-send-email-raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
+ <1466775069-606-2-git-send-email-raashidmuhammed@zilogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1466775069-606-2-git-send-email-raashidmuhammed@zilogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Raashid Muhammed <raashidmuhammed@zilogic.com>
+Cc: nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add power led node and rename status led node.
+Hi,
 
-Signed-off-by: Raashid Muhammed <raashidmuhammed-1MQmoylvZ5VBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Vijay Kumar B. <vijaykumar-NDm7FNP0skFg9hUCZPvPmw@public.gmane.org>
----
- arch/arm/boot/dts/at91-sam9_l9260.dts | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+On 24/06/2016 at 19:01:09 +0530, Raashid Muhammed wrote :
+> Add power led node and rename status led node.
+> 
 
-diff --git a/arch/arm/boot/dts/at91-sam9_l9260.dts b/arch/arm/boot/dts/at91-sam9_l9260.dts
-index be409f2..814753a 100644
---- a/arch/arm/boot/dts/at91-sam9_l9260.dts
-+++ b/arch/arm/boot/dts/at91-sam9_l9260.dts
-@@ -106,11 +106,16 @@
- 	leds {
- 		compatible = "gpio-leds";
- 
--		b0 {
--			label = "b0";
--			gpios = <&pioA 6 GPIO_ACTIVE_HIGH>;
--			linux,default-trigger = "heartbeat";
-+		pwr_led {
-+			label = "sam9-l9260:yellow:pwr";
-+			gpios = <&pioA 9 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "cpu0";
- 		};
- 
-+		status_led {
-+			label = "sam9-l9260:green:status";
-+			gpios = <&pioA 6 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "timer";
-+		};
- 	};
- };
+Well, I'm ok with the change but this does more:
+
+> Signed-off-by: Raashid Muhammed <raashidmuhammed@zilogic.com>
+> Reviewed-by: Vijay Kumar B. <vijaykumar@bravegnu.org>
+> ---
+>  arch/arm/boot/dts/at91-sam9_l9260.dts | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91-sam9_l9260.dts b/arch/arm/boot/dts/at91-sam9_l9260.dts
+> index be409f2..814753a 100644
+> --- a/arch/arm/boot/dts/at91-sam9_l9260.dts
+> +++ b/arch/arm/boot/dts/at91-sam9_l9260.dts
+> @@ -106,11 +106,16 @@
+>  	leds {
+>  		compatible = "gpio-leds";
+>  
+> -		b0 {
+> -			label = "b0";
+> -			gpios = <&pioA 6 GPIO_ACTIVE_HIGH>;
+> -			linux,default-trigger = "heartbeat";
+> +		pwr_led {
+> +			label = "sam9-l9260:yellow:pwr";
+> +			gpios = <&pioA 9 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "cpu0";
+>  		};
+>  
+> +		status_led {
+> +			label = "sam9-l9260:green:status";
+> +			gpios = <&pioA 6 GPIO_ACTIVE_LOW>;
+> +			linux,default-trigger = "timer";
+
+This trigger is also switched from heartbeat to timer, is this
+intentional?
+
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
