@@ -1,51 +1,68 @@
-From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 8/8] iommu/rockchip: Enable Rockchip IOMMU on ARM64
-Date: Fri, 24 Jun 2016 10:13:33 +0800
-Message-ID: <1466734413-7453-9-git-send-email-zhengsq@rock-chips.com>
-References: <1466734413-7453-1-git-send-email-zhengsq@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1466734413-7453-1-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Chris Lapa <chris@lapa.com.au>
+Subject: [PATCH v5 0/7] max8903: Add device tree support and misc fixes
+Date: Fri, 24 Jun 2016 12:26:05 +1000
+Message-ID: <1466735172-13372-1-git-send-email-chris@cpdesign.com.au>
+References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+In-Reply-To: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+Sender: linux-pm-owner@vger.kernel.org
+To: k.kozlowski@samsung.com, dwmw2@infradead.org, dbaryshkov@gmail.com, sre@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Chris Lapa <chris@lapa.com.au>
 List-Id: devicetree@vger.kernel.org
 
-From: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Chris Lapa <chris@lapa.com.au>
 
-This patch makes it possible to compile the rockchip-iommu driver on
-ARM64, so that it can be used with 64-bit SoCs equipped with this type
-of IOMMU.
+This patch set adds device tree support for the MAX8903 battery charger.
+It also cleans up logic with dc_valid, dok and dcm pins as well as
+fixing up validity checking of gpios.
 
-Signed-off-by: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/iommu/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I verified these patches work on a board I have here, which uses the
+DC power side (not the USB portition) of the MAX8903.
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index ad08603..5572621 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -218,7 +218,7 @@ config OMAP_IOMMU_DEBUG
- 
- config ROCKCHIP_IOMMU
- 	bool "Rockchip IOMMU Support"
--	depends on ARM
-+	depends on ARM || ARM64
- 	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	select IOMMU_API
- 	select ARM_DMA_USE_IOMMU
+Changes v4 -> v5:
+ * Changes compatible field from max8903_charger to max8903 in 1/7 and 7/7
+ * Improves DT documentation to include direction and state for each gpio
+
+Changes v3 -> v4:
+ * Fixed formatting, such as multiline strings and indentation mistakes
+ * Moved gpio setup code into max8903_setup_gpios() in 3/7
+ * Fixed typo in 5/7
+ * Renamed of_node to np in 7/7
+
+Changes v2 -> v3:
+ * Separate requesting of gpio's into its own commit
+ * Fixed up validity checking of GPIO's
+ * Remove dc_valid and usb_valid from device tree
+ * Remove some unncessary init to psy_cfg.num_supplicants and psy_cfg.supplied_to
+ * Reorder patches so device tree implementation is final patch
+
+Changes v1 -> v2:
+ * Separate DT bindings documentation into its own commit
+ * Add maxim prefix to DT compatible field
+ * Add gpios suffix to gpio's in DT
+ * Remove malloc failed error message
+
+
+Chris Lapa (7):
+  max8903: adds documentation for device tree bindings.
+  max8903: store pointer to pdata instead of copying it.
+  max8903: cleans up confusing relationship between dc_valid, dok and
+    dcm.
+  max8903: adds requesting of gpios.
+  max8903: removes non zero validity checks on gpios.
+  max8903: remove unnecessary 'out of memory' error message.
+  max8903: adds support for initiation via device tree
+
+ .../devicetree/bindings/power/max8903-charger.txt  |  25 +++
+ arch/arm/boot/dts/dairytest-servo.dtsi             |  36 ++++
+ drivers/power/max8903_charger.c                    | 239 +++++++++++++++------
+ include/linux/power/max8903_charger.h              |   6 +-
+ 4 files changed, 240 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/max8903-charger.txt
+ create mode 100644 arch/arm/boot/dts/dairytest-servo.dtsi
+
 -- 
 1.9.1
+
