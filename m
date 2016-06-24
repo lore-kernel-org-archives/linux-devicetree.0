@@ -1,74 +1,74 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt/bindings: Add bindings for Micro
- Crystal rv8803
-Date: Fri, 24 Jun 2016 09:48:49 +0200
-Message-ID: <20160624074849.GK5809@piout.net>
-References: <1466577742-18824-1-git-send-email-dirk.behme@de.bosch.com>
- <1466577742-18824-3-git-send-email-dirk.behme@de.bosch.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] ASoC: sunxi: Add i2s controller support
+Date: Fri, 24 Jun 2016 16:00:00 +0800
+Message-ID: <CAGb2v64=15sv8GKDKDMA4VOkdE35=TwuX0D0m5JDpVbw6RYn_w@mail.gmail.com>
+References: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBYWLWO5QKGQEFBS2UEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1466577742-18824-3-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160615211123.31068-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gianfranco-25KmuZRQ+wx0ubjbjo6WXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/2016 at 08:42:20 +0200, Dirk Behme wrote :
-> From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-> 
-> ... and Epson RX8900 real time clock
-> 
-> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  .../devicetree/bindings/rtc/epson,rx8900.txt       | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx8900.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/epson,rx8900.txt b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
-> new file mode 100644
-> index 0000000..3f61e51
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
-> @@ -0,0 +1,22 @@
-> +Real Time Clock driver for:
-> +  - Epson RX8900
-> +  - Micro Crystal rv8803
-> +
-> +Required properties:
-> +- compatible: should be: "microcrystal,rv8803" or "epson,rx8900"
-> +- reg : the I2C address of the device for I2C
-> +
-> +Optional properties:
-> +- epson,vdet-disable : boolean, if present will disable voltage detector.
-> +  Should be set if no backup battery is used.
+On Thu, Jun 16, 2016 at 5:11 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi everyone,
+>
+> This is the second version of the I2S support for the controller foun=
+d
+> in the Allwinner A10 and later SoCs.
+>
+> Playback has been tested with an UDA1380 on an A20-Olinuxino. Capture
+> is not implemented yet, but will come eventually.
+>
+> Let me know what you think,
+> Maxime
+>
+> Changes from v1:
+>   - Fixed bogus indentation and spurious whitespaces / newlines
+>   - Moved the device initialisation in the probe to the startup funct=
+ion
+>   - Disabled the device in shutdown
+>   - Removed function to get wss and sr to inline them in hw_params
+>   - Changed the way to access the divider array
+>   - Checked clk_set_rate return code
+>   - Fixed condition for invalid bclk and mclk dividers
+>   - Added sound-dai-cells to the bindings documentation required prop=
+erties
+>
+> Emilio L=C3=B3pez (1):
+>   ARM: sun7i: Add mod1 clock nodes
+>
+> Maxime Ripard (3):
+>   ASoC: sunxi: Add A10 I2S controller binding documentation
+>   ASoC: sunxi: Add Allwinner A10 Digital Audio driver
+>   ARM: sun7i: Add DAI nodes
+>
+>  .../devicetree/bindings/sound/sun4i-i2s.txt        |  34 +
+>  arch/arm/boot/dts/sun7i-a20.dtsi                   |  87 ++-
+>  sound/soc/sunxi/Kconfig                            |   9 +
+>  sound/soc/sunxi/Makefile                           |   2 +-
+>  sound/soc/sunxi/sun4i-i2s.c                        | 703 +++++++++++=
+++++++++++
+>  5 files changed, 832 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/sun4i-i2s=
+=2Etxt
+>  create mode 100644 sound/soc/sunxi/sun4i-i2s.c
 
-I guess we need to make that one generic. I would use
-voltage-detection-disable.
+Tested-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Andrey, can you use that one instead of
-dallas,disable-oscillator-stop-flag ?
+on a BPI-M1+ with a TI PCM5122-based PiFi DAC+ v2.0, a Raspberry Pi B+
+compatible DAC shield.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+I kept getting low but audible pops though. Not sure if it's the
+ad-hoc setup or some other factor.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
