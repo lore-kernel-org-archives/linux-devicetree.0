@@ -1,46 +1,53 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] arm64: dts: r8a7796: Add SYSC PM Domains
-Date: Fri, 24 Jun 2016 12:05:42 +0900
-Message-ID: <20160624030541.GB14973@verge.net.au>
-References: <1464685726-21611-1-git-send-email-geert+renesas@glider.be>
- <20160606013359.GE4859@verge.net.au>
- <20160606015301.GB2317@verge.net.au>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 06/14] ARM: dts: sun8i: Add cpu0 label to sun8i-h3.dtsi
+Date: Fri, 24 Jun 2016 11:48:23 +0800
+Message-ID: <CAGb2v66eskVAxdz8VtjBJBCO7VV9WL4bdFDVrPWrSmxk4RASCw@mail.gmail.com>
+References: <20160623192104.18720-1-megous@megous.com> <20160623192104.18720-7-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160606015301.GB2317@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <damm+renesas@opensource.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160623192104.18720-7-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 10:53:02AM +0900, Simon Horman wrote:
-> On Mon, Jun 06, 2016 at 10:33:59AM +0900, Simon Horman wrote:
-> > On Tue, May 31, 2016 at 11:08:43AM +0200, Geert Uytterhoeven wrote:
-> > > 	Hi Simon, Magnus,
-> > > 
-> > > This patch series adds support for the power areas exposed by the System
-> > > Controller on the Renesas R-Car M3-W SoC to the DTS.
-> > > 
-> > > This series is against Simon's "[PATCH v3 0/3] arm64: Add Renesas
-> > > R8A7796 SoC support".  It has a build and runtime dependency on my series
-> > > "[PATCH v2 0/3] soc: renesas: rcar-sysc: Add support for R-Car M3-W power
-> > > areas".
-> > > 
-> > > For your convenience, I've pushed this series to the
-> > > topic/r8a7796-sysc-dt-v1 branch of
-> > > https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git.
-> > > This has been tested on r8a7796/salvator-x.
-> > 
-> > Thanks, I have tentatively queued this up.
-> 
-> Bother, I spoke to soon.
-> 
-> There is a compile-time dependency on 8a7796-cpg-mssr.h in the basic
-> support for r8a7796 which this series depends on.  So "[PATCH 0/4] clk:
-> renesas: cpg-mssr: Add support for R-Car M3-W" needs to be present. I have
-> deferred these patches pending that. 
-> 
+On Fri, Jun 24, 2016 at 3:20 AM,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>
+> Add label to the first cpu so that it can be referenced
+> from derived dts files.
+>
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+> index 9938972..82faefc 100644
+> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> @@ -52,7 +52,7 @@
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+> -               cpu@0 {
+> +               cpu0: cpu@0 {
+>                         compatible = "arm,cortex-a7";
+>                         device_type = "cpu";
+>                         reg = <0>;
 
-I have requeued this.
+Can you also set the cpu clock here? It is part of the SoC
+and does not belong in the board DTS files.
+
+Otherwise this one looks good.
+
+ChenYu
+
+> --
+> 2.9.0
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
