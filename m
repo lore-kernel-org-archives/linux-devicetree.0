@@ -1,93 +1,60 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ubi: open volumes define in device tree
-Date: Fri, 24 Jun 2016 15:45:45 -0300
-Message-ID: <CAAEAJfATWJL0fGEcBup+cWzhHUe_4CF4XHWuvp4NYOesmaTyZw@mail.gmail.com>
-References: <1466277476-14853-1-git-send-email-hauke@hauke-m.de> <1466277476-14853-2-git-send-email-hauke@hauke-m.de>
+From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] dt-bindings: Document the STM32 USB OTG DWC2 core binding
+Date: Fri, 24 Jun 2016 15:51:18 -0300
+Message-ID: <CAF3+Tqe05kXExob_62w80BBbXz6p01-WwXM1+R6ecp0JtsgviA@mail.gmail.com>
+References: <1466562349-5043-1-git-send-email-bruherrera@gmail.com>
+ <1466562349-5043-3-git-send-email-bruherrera@gmail.com> <20160624154118.GA4598@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466277476-14853-2-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+In-Reply-To: <20160624154118.GA4598@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.seppala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18 June 2016 at 16:17, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
-> This makes it possible to define a volume to open in device tree. Thi=
-s
-> is helpful when a root file system is on a ubi layer. Without this
-> patch it is only possible to device with with kernel command line
-> parameters.
+On Fri, Jun 24, 2016 at 12:41 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Jun 21, 2016 at 11:25:49PM -0300, Bruno Herrera wrote:
+>> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+>> index 20a68bf..79e5370 100644
+>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+>> @@ -11,6 +11,7 @@ Required properties:
+>>    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
+>>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
+>>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
+>> +  - st,stm32-fsotg: The DWC2 USB controller instance in STM32F4 SoCs in FS mode;
 >
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/ubi.txt | 22 +++++++++++++++++
->  drivers/mtd/ubi/build.c                       | 34 +++++++++++++++++=
-++++++++++
->  2 files changed, 56 insertions(+)
+> This should go above snps,dwc2.
 >
-> diff --git a/Documentation/devicetree/bindings/mtd/ubi.txt b/Document=
-ation/devicetree/bindings/mtd/ubi.txt
-> index 5fcd47e..f87a7d8 100644
-> --- a/Documentation/devicetree/bindings/mtd/ubi.txt
-> +++ b/Documentation/devicetree/bindings/mtd/ubi.txt
-> @@ -13,6 +13,16 @@ Describe of a UBI layer in device tree.
->                         which have to be assigned to the newly create=
-d UBI
->                         device (assigned automatically by default)
->
-> +Partitions on a UBI layer can be defined:
-> +
-> + - compatible:                 "ubi,volume"
-> + - name:               name of the ubi volume to open
-> + - ubi-mode:           mode of the ubi volume to open value:
-> +                       UBI_READONLY:   1
-> +                       UBI_READWRITE:  2
-> +                       UBI_EXCLUSIVE:  3
-> +                       UBI_METAONLY:   4
-> +
->  Example:
->
->  partitions {
-> @@ -29,5 +39,17 @@ partitions {
->                 label =3D "system_sw";
->                 reg =3D <0x1c0000 0xc800000>;
->                 compatible =3D "ubi,device";
-> +
-> +               rootfsA@0 {
-> +                       compatible =3D "ubi,volume";
-> +                       name =3D "rootfsA";
-> +                       ubi-mode =3D <1>;
-> +               };
-> +
-> +               data_vol@0 {
-> +                       compatible =3D "ubi,volume";
-> +                       name =3D "data_vol";
-> +                       ubi-mode =3D <2>;
-> +               };
->         };
->  };
-> diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
-> index 16baeb5..1c22533 100644
-> --- a/drivers/mtd/ubi/build.c
-> +++ b/drivers/mtd/ubi/build.c
-> @@ -1,6 +1,7 @@
->  /*
->   * Copyright (c) International Business Machines Corp., 2006
->   * Copyright (c) Nokia Corporation, 2007
-> + * Copyright (c) 2016 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->   *
+Ok, tks!
 
-A tangential comment for this and other patches.
+> What determines FS mode vs. HS?
+>
+Its more HW design decision.
+STM32F429/439/469 has two OTG controllers, one that is FS (internal
+phy) and other that is HS (but can also work in FS mode with
+internal/external phy)
+This bind work with both cores FS and HS working with the internal PHY.
 
-There's no need to add your copyright when you are submitting
-small contributions.
---=20
-Ezequiel Garc=C3=ADa, VanguardiaSur
-www.vanguardiasur.com.ar
+I tested the following configurations:
+1 - STM32F429I-DISCOv1 board (OTG HS working in FS mode internal PHY)
+2 - STM32F469I-DISCO board (OTG FS)
+
+I did not tested OTG HS core working in FS mode with external PHY (I2C).
+
+>>  - reg : Should contain 1 register range (address and length)
+>>  - interrupts : Should contain 1 interrupt
+>>  - clocks: clock provider specifier
+>> --
+>> 2.7.4 (Apple Git-66)
+>>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
