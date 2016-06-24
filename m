@@ -1,61 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH/RFC 1/6] spi: Document DT bindings for SPI controllers in
- slave mode
-Date: Fri, 24 Jun 2016 12:06:49 -0500
-Message-ID: <20160624170649.GA22305@rob-hp-laptop>
-References: <1466602929-4191-1-git-send-email-geert+renesas@glider.be>
- <1466602929-4191-2-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCHv5 5/8] Documentation: dt: socfpga: Add Arria10 Ethernet
+ binding
+Date: Fri, 24 Jun 2016 12:07:42 -0500
+Message-ID: <20160624170742.GA22939@rob-hp-laptop>
+References: <1466603939-7526-1-git-send-email-tthayer@opensource.altera.com>
+ <1466603939-7526-6-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466602929-4191-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1466603939-7526-6-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 03:42:04PM +0200, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 31 ++++++++++++++---------
->  1 file changed, 19 insertions(+), 12 deletions(-)
+On Wed, Jun 22, 2016 at 08:58:56AM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index 17822860cb98c34d..bcd024e0bb9e0009 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -1,17 +1,23 @@
->  SPI (Serial Peripheral Interface) busses
->  
-> -SPI busses can be described with a node for the SPI master device
-> -and a set of child nodes for each SPI slave on the bus.  For this
-> -discussion, it is assumed that the system's SPI controller is in
-> -SPI master mode.  This binding does not describe SPI controllers
-> -in slave mode.
-> +SPI busses can be described with a node for the SPI controller device
-> +and a set of child nodes for each SPI slave on the bus.  The system's SPI
-> +controller may be described for use in SPI master mode or in SPI slave mode,
-> +but not for both at the same time.
->  
-> -The SPI master node requires the following properties:
-> +The SPI controller node requires the following properties:
-> +- compatible      - name of SPI bus controller following generic names
-> +		recommended practice.
-> +
-> +In master mode, the SPI controller node requires the following additional
-> +properties:
->  - #address-cells  - number of cells required to define a chip select
->  		address on the SPI bus.
->  - #size-cells     - should be zero.
-> -- compatible      - name of SPI bus controller following generic names
-> -		recommended practice.
-> +
-> +In slave node, the SPI controller node requires the presence of a child node
-> +named "slave", further following the practices for SPI slave nodes below.
-> +
+> Add the device tree bindings needed to support the Altera Ethernet
+> FIFO buffers on the Arria10 chip.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v2  No Change
+> v3  Change to common compatible string based on maintainer comments
+>     Add local IRQ values.
+> v4  Add compatible string for parent node.
+> v5  Change parent phandle name to altr,ecc-parent
+> ---
+>  .../bindings/arm/altera/socfpga-eccmgr.txt         |   24 ++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 
-I wouldn't create a child node. Just add a property for slave mode and 
-put the timing mode properties in controller node.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
