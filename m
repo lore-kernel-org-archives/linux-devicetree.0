@@ -1,92 +1,124 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v5 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Fri, 24 Jun 2016 09:35:01 +0200
-Message-ID: <20160624093501.5dc6d276@bbrezillon>
-References: <1466153854-30272-1-git-send-email-songjun.wu@atmel.com>
-	<1466153854-30272-3-git-send-email-songjun.wu@atmel.com>
-	<20160620132508.GA32585@rob-hp-laptop>
-	<850f10c3-ea9a-11da-4279-7b0ad2c52bb6@atmel.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH] ARM: at91/dt: sama5d2_xplained: Update the pmic node
+Date: Fri, 24 Jun 2016 15:32:05 +0800
+Message-ID: <1466753525-4742-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <850f10c3-ea9a-11da-4279-7b0ad2c52bb6@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Wu, Songjun" <songjun.wu@atmel.com>
-Cc: Rob Herring <robh@kernel.org>, laurent.pinchart@ideasonboard.com, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Jun 2016 13:54:09 +0800
-"Wu, Songjun" <songjun.wu@atmel.com> wrote:
+Due to introducing the new driver - ACT8945A MFD drive,
+change the pmic device node to align with the ACT8945A
+regulator and charger drivers.
 
-> Hi Rob,
-> 
-> Thank you for your comments.
-> 
-> On 6/20/2016 21:25, Rob Herring wrote:
-> > On Fri, Jun 17, 2016 at 04:57:14PM +0800, Songjun Wu wrote:  
-> >> DT binding documentation for ISC driver.
-> >>
-> >> Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
-> >> ---
-> >>
-> >> Changes in v5:
-> >> - Add clock names.
-> >>
-> >> Changes in v4:
-> >> - Remove the isc clock nodes.
-> >>
-> >> Changes in v3:
-> >> - Remove the 'atmel,sensor-preferred'.
-> >> - Modify the isc clock node according to the Rob's remarks.
-> >>
-> >> Changes in v2:
-> >> - Remove the unit address of the endpoint.
-> >> - Add the unit address to the clock node.
-> >> - Avoid using underscores in node names.
-> >> - Drop the "0x" in the unit address of the i2c node.
-> >> - Modify the description of 'atmel,sensor-preferred'.
-> >> - Add the description for the ISC internal clock.
-> >>
-> >>  .../devicetree/bindings/media/atmel-isc.txt        | 64 ++++++++++++++++++++++
-> >>  1 file changed, 64 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> >> new file mode 100644
-> >> index 0000000..9558a77
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> >> @@ -0,0 +1,64 @@
-> >> +Atmel Image Sensor Controller (ISC)
-> >> +----------------------------------------------
-> >> +
-> >> +Required properties for ISC:
-> >> +- compatible
-> >> +	Must be "atmel,sama5d2-isc".
-> >> +- reg
-> >> +	Physical base address and length of the registers set for the device.
-> >> +- interrupts
-> >> +	Should contain IRQ line for the ISC.
-> >> +- clocks
-> >> +	List of clock specifiers, corresponding to entries in
-> >> +	the clock-names property;
-> >> +	Please refer to clock-bindings.txt.
-> >> +- clock-names
-> >> +	Required elements: "hclock".  
-> >
-> > What about the 2 other clocks in the example?
-> >  
-> The other clocks is optional, not required.
-> Do you have any suggestion?
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+---
 
-Just add a second look at the sama5d2 and iscck gck are not optional.
-What we call optional clocks are clocks that are not necessarily
-required depending on the IP revision or external clocks that are board
-dependent. This is not the case here: iscck and gck are internal to the
-SoC, and are always available. Whether you want to use them or not is a
-different question, and should not be encoded in the clocks/clock-names
-properties.
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 41 ++++++++++++++++++++++-------
+ 1 file changed, 32 insertions(+), 9 deletions(-)
 
-To sum-up, define those 3 clocks as required and document their names.
+diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+index eb4f1ac..0b9a59d 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+@@ -158,56 +158,64 @@
+ 				i2c-sda-hold-time-ns = <350>;
+ 				status = "okay";
+ 
+-				pmic: act8865@5b {
+-					compatible = "active-semi,act8865";
++				pmic@5b {
++					compatible = "active-semi,act8945a";
+ 					reg = <0x5b>;
+ 					active-semi,vsel-high;
++					active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
++					active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
++					active-semi,irq_gpios = <&pioA 45 GPIO_ACTIVE_LOW>;
++					active-semi,input-voltage-threshold-microvolt = <6600>;
++					active-semi,precondition-timeout = <40>;
++					active-semi,total-timeout = <3>;
++					pinctrl-names = "default";
++					pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
+ 					status = "okay";
+ 
+ 					regulators {
+-						vdd_1v35_reg: DCDC_REG1 {
++						vdd_1v35_reg: REG_DCDC1 {
+ 							regulator-name = "VDD_1V35";
+ 							regulator-min-microvolt = <1350000>;
+ 							regulator-max-microvolt = <1350000>;
+ 							regulator-always-on;
+ 						};
+ 
+-						vdd_1v2_reg: DCDC_REG2 {
++						vdd_1v2_reg: REG_DCDC2 {
+ 							regulator-name = "VDD_1V2";
+ 							regulator-min-microvolt = <1100000>;
+ 							regulator-max-microvolt = <1300000>;
+ 							regulator-always-on;
+ 						};
+ 
+-						vdd_3v3_reg: DCDC_REG3 {
++						vdd_3v3_reg: REG_DCDC3 {
+ 							regulator-name = "VDD_3V3";
+ 							regulator-min-microvolt = <3300000>;
+ 							regulator-max-microvolt = <3300000>;
+ 							regulator-always-on;
+ 						};
+ 
+-						vdd_fuse_reg: LDO_REG1 {
++						vdd_fuse_reg: REG_LDO1 {
+ 							regulator-name = "VDD_FUSE";
+ 							regulator-min-microvolt = <2500000>;
+ 							regulator-max-microvolt = <2500000>;
+ 							regulator-always-on;
+ 						};
+ 
+-						vdd_3v3_lp_reg: LDO_REG2 {
++						vdd_3v3_lp_reg: REG_LDO2 {
+ 							regulator-name = "VDD_3V3_LP";
+ 							regulator-min-microvolt = <3300000>;
+ 							regulator-max-microvolt = <3300000>;
+ 							regulator-always-on;
+ 						};
+ 
+-						vdd_led_reg: LDO_REG3 {
++						vdd_led_reg: REG_LDO3 {
+ 							regulator-name = "VDD_LED";
+ 							regulator-min-microvolt = <3300000>;
+ 							regulator-max-microvolt = <3300000>;
+ 							regulator-always-on;
+ 						};
+ 
+-						vdd_sdhc_1v8_reg: LDO_REG4 {
++						vdd_sdhc_1v8_reg: REG_LDO4 {
+ 							regulator-name = "VDD_SDHC_1V8";
+ 							regulator-min-microvolt = <1800000>;
+ 							regulator-max-microvolt = <1800000>;
+@@ -309,6 +317,21 @@
+ 					bias-disable;
+ 				};
+ 
++				pinctrl_charger_chglev: charger_chglev {
++					pinmux = <PIN_PA12__GPIO>;
++					bias-disable;
++				};
++
++				pinctrl_charger_irq: charger_irq {
++					pinmux = <PIN_PB13__GPIO>;
++					bias-disable;
++				};
++
++				pinctrl_charger_lbo: charger_lbo {
++					pinmux = <PIN_PC8__GPIO>;
++					bias-pull-up;
++				};
++
+ 				pinctrl_flx0_default: flx0_default {
+ 					pinmux = <PIN_PB28__FLEXCOM0_IO0>,
+ 						 <PIN_PB29__FLEXCOM0_IO1>;
+-- 
+2.7.4
