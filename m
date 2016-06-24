@@ -1,53 +1,58 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2 02/15] drivers: net: cpsw: check return code from pm runtime calls
-Date: Fri, 24 Jun 2016 21:23:42 +0300
-Message-ID: <20160624182355.23515-3-grygorii.strashko@ti.com>
-References: <20160624182355.23515-1-grygorii.strashko@ti.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Implement the -a option to pad dtb aligned
+Date: Fri, 24 Jun 2016 11:41:03 -0700
+Message-ID: <576D7EBF.6000507@gmail.com>
+References: <1466767161-599-1-git-send-email-timwang@asrmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160624182355.23515-1-grygorii.strashko@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466767161-599-1-git-send-email-timwang-XOWFcpiLszpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Wang <timwang-XOWFcpiLszpWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wtt_usst-9Onoh4P/yGk@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add missed check of return code from PM runtime get() calls.
+Hi Tim,
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+On 06/24/16 04:19, Tim Wang wrote:
+> There is one condition that need cat the dtb files
+> into one dtb.img which can support several boards
+> use same SoC platform.
+> 
+> And the original dtb file size is not aligned to any base.
+> This may cause "Synchronous Abort" when load from a unligned
+> address on some SoC machine, such as ARM.
+> 
+> So this patch implement the -a <aligned number> option to
+> pad zero at the end of dtb files and make the dtb size aligned
+> to <aligned number>.
+> 
+> Then, the aligned dtbs can cat together and load without "Synchronous
+> Abort".
+> 
+> Signed-off-by: Tim Wang <timwang-XOWFcpiLszpWk0Htik3J/w@public.gmane.org>
+> ---
+>  dtc.c      |  9 ++++++++-
+>  dtc.h      |  1 +
+>  flattree.c | 10 ++++++++++
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 736c77a..c76f9db 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -1253,7 +1253,11 @@ static int cpsw_ndo_open(struct net_device *ndev)
- 	int i, ret;
- 	u32 reg;
- 
--	pm_runtime_get_sync(&priv->pdev->dev);
-+	ret = pm_runtime_get_sync(&priv->pdev->dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&priv->pdev->dev);
-+		return ret;
-+	}
- 
- 	if (!cpsw_common_res_usage_state(priv))
- 		cpsw_intr_disable(priv);
-@@ -2322,7 +2326,11 @@ static int cpsw_probe(struct platform_device *pdev)
- 	/* Need to enable clocks with runtime PM api to access module
- 	 * registers
- 	 */
--	pm_runtime_get_sync(&pdev->dev);
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
-+		goto clean_runtime_disable_ret;
-+	}
- 	priv->version = readl(&priv->regs->id_ver);
- 	pm_runtime_put_sync(&pdev->dev);
- 
--- 
-2.9.0
+[ ... ]
+
+The MAINTAINERS file is not very helpful in this case.
+You need to send dtc patches to the devicetree-compiler list
+
+  devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+Subscription info is at
+
+  http://vger.kernel.org/vger-lists.html#devicetree-compiler
+
+After changes are made by the dtc maintainer, we pull the new
+version of dtc into the Linux tree.
+
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
