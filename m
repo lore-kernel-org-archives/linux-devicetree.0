@@ -1,87 +1,74 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt/bindings: Add bindings for Micro
- Crystal rv8803
-Date: Fri, 24 Jun 2016 12:14:12 -0700
-Message-ID: <CAHQ1cqF7ByYz9stnL_-siMJHGoyuLNAPwjcWA_fWRqy7WeMF=A@mail.gmail.com>
-References: <1466577742-18824-1-git-send-email-dirk.behme@de.bosch.com>
- <1466577742-18824-3-git-send-email-dirk.behme@de.bosch.com> <20160624074849.GK5809@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] drm/tegra: sor: Use sor1_src clock to set parent for
+ HDMI
+Date: Fri, 24 Jun 2016 14:16:45 -0500
+Message-ID: <20160624191645.GA23255@rob-hp-laptop>
+References: <20160623102759.23078-1-thierry.reding@gmail.com>
+ <20160623102759.23078-2-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDKOBWPM5ABRBBMNW25QKGQEXRGR4UQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160624074849.GK5809-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160623102759.23078-2-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 24, 2016 at 12:48 AM, Alexandre Belloni
-<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On 22/06/2016 at 08:42:20 +0200, Dirk Behme wrote :
->> From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
->>
->> ... and Epson RX8900 real time clock
->>
->> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>  .../devicetree/bindings/rtc/epson,rx8900.txt       | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx8900.txt
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/epson,rx8900.txt b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
->> new file mode 100644
->> index 0000000..3f61e51
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
->> @@ -0,0 +1,22 @@
->> +Real Time Clock driver for:
->> +  - Epson RX8900
->> +  - Micro Crystal rv8803
->> +
->> +Required properties:
->> +- compatible: should be: "microcrystal,rv8803" or "epson,rx8900"
->> +- reg : the I2C address of the device for I2C
->> +
->> +Optional properties:
->> +- epson,vdet-disable : boolean, if present will disable voltage detector.
->> +  Should be set if no backup battery is used.
->
-> I guess we need to make that one generic. I would use
-> voltage-detection-disable.
->
-> Andrey, can you use that one instead of
-> dallas,disable-oscillator-stop-flag ?
->
+On Thu, Jun 23, 2016 at 12:27:59PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> When running in HDMI mode, the sor1 IP block needs to use the sor1_src
+> as parent clock, and in turn configure the sor1_src to use pll_d2_out0
+> as its parent.
+> 
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/gpu/drm/tegra/sor.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
+> index 6887e52318e2..7405c39f6db3 100644
+> --- a/drivers/gpu/drm/tegra/sor.c
+> +++ b/drivers/gpu/drm/tegra/sor.c
+> @@ -172,6 +172,7 @@ struct tegra_sor {
+>  	struct clk *clk_parent;
+>  	struct clk *clk_brick;
+>  	struct clk *clk_safe;
+> +	struct clk *clk_src;
+>  	struct clk *clk_dp;
+>  	struct clk *clk;
+>  
+> @@ -2140,7 +2141,11 @@ static void tegra_sor_hdmi_enable(struct drm_encoder *encoder)
+>  	tegra_sor_writel(sor, 0x00000000, SOR_XBAR_POL);
+>  
+>  	/* switch to parent clock */
+> -	err = tegra_sor_set_parent_clock(clk, sor->clk_parent);
+> +	err = clk_set_parent(sor->clk_src, sor->clk_parent);
+> +	if (err < 0)
+> +		dev_err(sor->dev, "failed to set source clock: %d\n", err);
+> +
+> +	err = tegra_sor_set_parent_clock(sor, sor->clk_src);
+>  	if (err < 0)
+>  		dev_err(sor->dev, "failed to set parent clock: %d\n", err);
+>  
+> @@ -2645,6 +2650,13 @@ static int tegra_sor_probe(struct platform_device *pdev)
+>  		goto remove;
+>  	}
+>  
+> +	sor->clk_src = devm_clk_get(&pdev->dev, "source");
+> +	if (IS_ERR(sor->clk_src)) {
+> +		err = PTR_ERR(sor->clk_src);
+> +		dev_err(&pdev->dev, "failed to get source clock: %d\n", err);
+> +		goto remove;
 
-AFAIU from reading RX8900 datasheet, it has two power rails main and a
-backup one, so setting this property disables circuitry responsible
-for detecting main power rail failure and switching to a backup one.
+Shouldn't this fallback to current behavior without this clock?
 
-DS1341 has only one power rail and setting
-"dallas,disable-oscillator-stop-flag" will disable circuitry
-responsible for detection of failure of the oscillator ticking its
-internal clock.
-
-IMHO, those functionalities don't have much in common and using the
-same property would be confusing for users of that binding on DS1341,
-but it's a boolean so there's not technical reason I couldn't.
-
-Thanks,
-Andrey Smirnov
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> +	}
+> +
+>  	sor->clk_parent = devm_clk_get(&pdev->dev, "parent");
+>  	if (IS_ERR(sor->clk_parent)) {
+>  		err = PTR_ERR(sor->clk_parent);
+> -- 
+> 2.8.3
+> 
