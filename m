@@ -1,124 +1,90 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH] ARM: at91/dt: sama5d2_xplained: Update the pmic node
-Date: Fri, 24 Jun 2016 15:32:05 +0800
-Message-ID: <1466753525-4742-1-git-send-email-wenyou.yang@atmel.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] rtc: rv8803: Be able to set VDETOFF
+ and SWOFF via devcie tree
+Date: Fri, 24 Jun 2016 09:44:07 +0200
+Message-ID: <20160624074407.GJ5809@piout.net>
+References: <1466577742-18824-1-git-send-email-dirk.behme@de.bosch.com>
+ <1466577742-18824-5-git-send-email-dirk.behme@de.bosch.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wenyou Yang <wenyou.yang@atmel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBSOJWO5QKGQEHZTSWRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1466577742-18824-5-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Carsten Resch <Carsten.Resch-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Due to introducing the new driver - ACT8945A MFD drive,
-change the pmic device node to align with the ACT8945A
-regulator and charger drivers.
+On 22/06/2016 at 08:42:22 +0200, Dirk Behme wrote :
+> From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+> 
+> There might be designs where the power supply circuit is designed
+> in a way that VDETOFF and SWOFF is reuqired to be set. Otherwise the
+> RTC detects a power loss. Add a device tree interface for this.
+> 
+> Signed-off-by: Carsten Resch <Carsten.Resch-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  drivers/rtc/rtc-rv8803.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-rv8803.c b/drivers/rtc/rtc-rv8803.c
+> index e122b51..32a5686 100644
+> --- a/drivers/rtc/rtc-rv8803.c
+> +++ b/drivers/rtc/rtc-rv8803.c
+> @@ -50,6 +50,10 @@
+>  #define RV8803_CTRL_TIE			BIT(4)
+>  #define RV8803_CTRL_UIE			BIT(5)
+>  
+> +#define RX8900_BACKUP_CTRL		0x18
+> +#define RX8900_FLAG_SWOFF		BIT(2)
+> +#define RX8900_FLAG_VDETOFF		BIT(3)
+> +
+>  struct rv8803_data {
+>  	struct i2c_client *client;
+>  	struct rtc_device *rtc;
+> @@ -423,6 +427,35 @@ static struct rtc_class_ops rv8803_rtc_ops = {
+>  	.ioctl = rv8803_ioctl,
+>  };
+>  
+> +static int rx8900_trickle_charger_init(struct rv8803_data *rv8803)
+> +{
+> +	struct i2c_client *client = rv8803->client;
+> +	struct device_node *node = client->dev.of_node;
+> +	int err;
+> +	u8 flags;
+> +
+> +	if (!node)
+> +		return 0;
+> +
+> +	if (!of_device_is_compatible(node, "epson,rx8900"))
+> +		return 0;
+> +
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
----
+Can you use the i2c_device_id instead of of_device_is_compatible to
+avoid matching on yet another string?
 
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 41 ++++++++++++++++++++++-------
- 1 file changed, 32 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index eb4f1ac..0b9a59d 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -158,56 +158,64 @@
- 				i2c-sda-hold-time-ns = <350>;
- 				status = "okay";
- 
--				pmic: act8865@5b {
--					compatible = "active-semi,act8865";
-+				pmic@5b {
-+					compatible = "active-semi,act8945a";
- 					reg = <0x5b>;
- 					active-semi,vsel-high;
-+					active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
-+					active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
-+					active-semi,irq_gpios = <&pioA 45 GPIO_ACTIVE_LOW>;
-+					active-semi,input-voltage-threshold-microvolt = <6600>;
-+					active-semi,precondition-timeout = <40>;
-+					active-semi,total-timeout = <3>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
- 					status = "okay";
- 
- 					regulators {
--						vdd_1v35_reg: DCDC_REG1 {
-+						vdd_1v35_reg: REG_DCDC1 {
- 							regulator-name = "VDD_1V35";
- 							regulator-min-microvolt = <1350000>;
- 							regulator-max-microvolt = <1350000>;
- 							regulator-always-on;
- 						};
- 
--						vdd_1v2_reg: DCDC_REG2 {
-+						vdd_1v2_reg: REG_DCDC2 {
- 							regulator-name = "VDD_1V2";
- 							regulator-min-microvolt = <1100000>;
- 							regulator-max-microvolt = <1300000>;
- 							regulator-always-on;
- 						};
- 
--						vdd_3v3_reg: DCDC_REG3 {
-+						vdd_3v3_reg: REG_DCDC3 {
- 							regulator-name = "VDD_3V3";
- 							regulator-min-microvolt = <3300000>;
- 							regulator-max-microvolt = <3300000>;
- 							regulator-always-on;
- 						};
- 
--						vdd_fuse_reg: LDO_REG1 {
-+						vdd_fuse_reg: REG_LDO1 {
- 							regulator-name = "VDD_FUSE";
- 							regulator-min-microvolt = <2500000>;
- 							regulator-max-microvolt = <2500000>;
- 							regulator-always-on;
- 						};
- 
--						vdd_3v3_lp_reg: LDO_REG2 {
-+						vdd_3v3_lp_reg: REG_LDO2 {
- 							regulator-name = "VDD_3V3_LP";
- 							regulator-min-microvolt = <3300000>;
- 							regulator-max-microvolt = <3300000>;
- 							regulator-always-on;
- 						};
- 
--						vdd_led_reg: LDO_REG3 {
-+						vdd_led_reg: REG_LDO3 {
- 							regulator-name = "VDD_LED";
- 							regulator-min-microvolt = <3300000>;
- 							regulator-max-microvolt = <3300000>;
- 							regulator-always-on;
- 						};
- 
--						vdd_sdhc_1v8_reg: LDO_REG4 {
-+						vdd_sdhc_1v8_reg: REG_LDO4 {
- 							regulator-name = "VDD_SDHC_1V8";
- 							regulator-min-microvolt = <1800000>;
- 							regulator-max-microvolt = <1800000>;
-@@ -309,6 +317,21 @@
- 					bias-disable;
- 				};
- 
-+				pinctrl_charger_chglev: charger_chglev {
-+					pinmux = <PIN_PA12__GPIO>;
-+					bias-disable;
-+				};
-+
-+				pinctrl_charger_irq: charger_irq {
-+					pinmux = <PIN_PB13__GPIO>;
-+					bias-disable;
-+				};
-+
-+				pinctrl_charger_lbo: charger_lbo {
-+					pinmux = <PIN_PC8__GPIO>;
-+					bias-pull-up;
-+				};
-+
- 				pinctrl_flx0_default: flx0_default {
- 					pinmux = <PIN_PB28__FLEXCOM0_IO0>,
- 						 <PIN_PB29__FLEXCOM0_IO1>;
 -- 
-2.7.4
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
