@@ -1,7 +1,7 @@
 From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v2 3/5] Documentation: DT: dma: Delete binding doc for AXI DMA
-Date: Fri, 24 Jun 2016 10:51:24 +0530
-Message-ID: <1466745686-23898-4-git-send-email-appanad@xilinx.com>
+Subject: [PATCH v2 4/5] dmaengine: dma: Rename driver and config
+Date: Fri, 24 Jun 2016 10:51:25 +0530
+Message-ID: <1466745686-23898-5-git-send-email-appanad@xilinx.com>
 References: <1466745686-23898-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,89 +12,72 @@ To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The AXI DMA support is added to the existing AXI VDMA
-driver. Device tree binding information also updated
-in the VDMA binding doc.
+In the existing vdma driver support for
+AXI DMA and CDMA got added so the driver is no
+longer VDMA specific.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This patch renames the driver and DT binding doc to xilinx_dma
+and updates the Kconfig description for all the DMAS.
+
 Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
 ---
---> Added Rob Acked-by.
+Changes for v2:
+---> None.
 
- .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |   65 --------------------
- 1 files changed, 0 insertions(+), 65 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+ .../dma/xilinx/{xilinx_vdma.txt => xilinx_dma.txt} |    0
+ drivers/dma/Kconfig                                |   11 ++++++++---
+ drivers/dma/xilinx/Makefile                        |    2 +-
+ drivers/dma/xilinx/{xilinx_vdma.c => xilinx_dma.c} |    0
+ 4 files changed, 9 insertions(+), 4 deletions(-)
+ rename Documentation/devicetree/bindings/dma/xilinx/{xilinx_vdma.txt => xilinx_dma.txt} (100%)
+ rename drivers/dma/xilinx/{xilinx_vdma.c => xilinx_dma.c} (100%)
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-deleted file mode 100644
-index 3cf0072..0000000
---- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-+++ /dev/null
-@@ -1,65 +0,0 @@
--Xilinx AXI DMA engine, it does transfers between memory and AXI4 stream
--target devices. It can be configured to have one channel or two channels.
--If configured as two channels, one is to transmit to the device and another
--is to receive from the device.
--
--Required properties:
--- compatible: Should be "xlnx,axi-dma-1.00.a"
--- #dma-cells: Should be <1>, see "dmas" property below
--- reg: Should contain DMA registers location and length.
--- dma-channel child node: Should have at least one channel and can have up to
--	two channels per device. This node specifies the properties of each
--	DMA channel (see child node properties below).
--
--Optional properties:
--- xlnx,include-sg: Tells whether configured for Scatter-mode in
--	the hardware.
--
--Required child node properties:
--- compatible: It should be either "xlnx,axi-dma-mm2s-channel" or
--	"xlnx,axi-dma-s2mm-channel".
--- interrupts: Should contain per channel DMA interrupts.
--- xlnx,datawidth: Should contain the stream data width, take values
--	{32,64...1024}.
--
--Option child node properties:
--- xlnx,include-dre: Tells whether hardware is configured for Data
--	Realignment Engine.
--
--Example:
--++++++++
--
--axi_dma_0: axidma@40400000 {
--	compatible = "xlnx,axi-dma-1.00.a";
--	#dma_cells = <1>;
--	reg = < 0x40400000 0x10000 >;
--	dma-channel@40400000 {
--		compatible = "xlnx,axi-dma-mm2s-channel";
--		interrupts = < 0 59 4 >;
--		xlnx,datawidth = <0x40>;
--	} ;
--	dma-channel@40400030 {
--		compatible = "xlnx,axi-dma-s2mm-channel";
--		interrupts = < 0 58 4 >;
--		xlnx,datawidth = <0x40>;
--	} ;
--} ;
--
--
--* DMA client
--
--Required properties:
--- dmas: a list of <[DMA device phandle] [Channel ID]> pairs,
--	where Channel ID is '0' for write/tx and '1' for read/rx
--	channel.
--- dma-names: a list of DMA channel names, one per "dmas" entry
--
--Example:
--++++++++
--
--dmatest_0: dmatest@0 {
--	compatible ="xlnx,axi-dma-test-1.00.a";
--	dmas = <&axi_dma_0 0
--		&axi_dma_0 1>;
--	dma-names = "dma0", "dma1";
--} ;
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+rename to Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 8c98779..1f39f3e 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -519,19 +519,24 @@ config XGENE_DMA
+ 	help
+ 	  Enable support for the APM X-Gene SoC DMA engine.
+ 
+-config XILINX_VDMA
+-	tristate "Xilinx AXI VDMA Engine"
++config XILINX_DMA
++	tristate "Xilinx AXI DMAS Engine"
+ 	depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
+ 	select DMA_ENGINE
+ 	help
+ 	  Enable support for Xilinx AXI VDMA Soft IP.
+ 
+-	  This engine provides high-bandwidth direct memory access
++	  AXI VDMA engine provides high-bandwidth direct memory access
+ 	  between memory and AXI4-Stream video type target
+ 	  peripherals including peripherals which support AXI4-
+ 	  Stream Video Protocol.  It has two stream interfaces/
+ 	  channels, Memory Mapped to Stream (MM2S) and Stream to
+ 	  Memory Mapped (S2MM) for the data transfers.
++	  AXI CDMA engine provides high-bandwidth direct memory access
++	  between a memory-mapped source address and a memory-mapped
++	  destination address.
++	  AXI DMA engine provides high-bandwidth one dimensional direct
++	  memory access between memory and AXI4-Stream target peripherals.
+ 
+ config ZX_DMA
+ 	tristate "ZTE ZX296702 DMA support"
+diff --git a/drivers/dma/xilinx/Makefile b/drivers/dma/xilinx/Makefile
+index 3c4e9f2..af9e69a 100644
+--- a/drivers/dma/xilinx/Makefile
++++ b/drivers/dma/xilinx/Makefile
+@@ -1 +1 @@
+-obj-$(CONFIG_XILINX_VDMA) += xilinx_vdma.o
++obj-$(CONFIG_XILINX_DMA) += xilinx_dma.o
+diff --git a/drivers/dma/xilinx/xilinx_vdma.c b/drivers/dma/xilinx/xilinx_dma.c
+similarity index 100%
+rename from drivers/dma/xilinx/xilinx_vdma.c
+rename to drivers/dma/xilinx/xilinx_dma.c
 -- 
 1.7.1
