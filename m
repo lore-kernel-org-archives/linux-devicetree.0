@@ -1,82 +1,114 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/7] Documentation: of: add type property
-Date: Fri, 24 Jun 2016 12:41:39 -0500
-Message-ID: <CAL_JsqKxYUXJoAmYQOiSVdodKmrEPqVgm84ZVhhEw=FuJQhZTw@mail.gmail.com>
-References: <87fus3xr2q.wl%kuninori.morimoto.gx@renesas.com> <87eg7nxr00.wl%kuninori.morimoto.gx@renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] Documentation: Add sbs-manager device tree node
+ documentation
+Date: Fri, 24 Jun 2016 12:50:14 -0500
+Message-ID: <20160624175014.GA29990@rob-hp-laptop>
+References: <1466622436-27963-1-git-send-email-karl-heinz@schneider-inet.de>
+ <1466622436-27963-2-git-send-email-karl-heinz@schneider-inet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87eg7nxr00.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Mark Brown <broonie@linaro.org>, Mark Brown <broonie@kernel.org>, Laurent <laurent.pinchart@ideasonboard.com>, Guennadi <g.liakhovetski@gmx.de>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Linux-Kernel <linux-kernel@vger.kernel.org>, Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1466622436-27963-2-git-send-email-karl-heinz@schneider-inet.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 23, 2016 at 9:32 PM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->
-> OF graph is used mainly from V4L2, but ALSA needs to use it too.
-> Then, ALSA needs to know each port/endpoint type, otherwise it
-> can't detect ALSA port/endpoint correctly.
-
-Bindings should be defined in terms of hardware, not Linux subsystems.
-
-> This patch enables to use type property on OF graph.
->
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On Wed, Jun 22, 2016 at 09:07:15PM +0200, Karl-Heinz Schneider wrote:
+> This patch adds device tree documentation for the sbs-manager
+> 
+> Reviewed-by: Phil Reid <preid@electromag.com.au>
+> Signed-off-by: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
 > ---
->  Documentation/devicetree/bindings/graph.txt | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
-> index fcb1c6a..b5b9040 100644
-> --- a/Documentation/devicetree/bindings/graph.txt
-> +++ b/Documentation/devicetree/bindings/graph.txt
-> @@ -110,6 +110,32 @@ device-2 {
->          };
->  };
->
-> +port / endpoint type
-> +--------------------
+>  .../devicetree/bindings/power/sbs,sbs-manager.txt  | 58 ++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt b/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+> new file mode 100644
+> index 0000000..d52b466
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+> @@ -0,0 +1,58 @@
+> +Binding for sbs-manager
 > +
-> +Each ports / port / endpoint can have its type if needed.
+> +Required properties:
+> +- compatible: should be "sbs,sbs-manager" or "lltc,ltc1760" if device is a
+> +    ltc1760.
 
-I think type should only apply to a port. ports is only a grouping for
-multiple ports. endpoints are just the connection. A port is a single
-data flow, so 2 endpoints on a port reflect 2 possible connections for
-that data flow.
+sbs is not a vendor. What chip is sbs-manager? I suspect you should drop 
+it and only list specific chips.
 
-> +child node can take over parent node type. below example indicates
-> +device0 type is "typeA" && "typeB",
-> +device1 type is "typeA" && "typeB" && "typeC".
+> +- reg: integer, i2c address of the device. Should be <0xa>.
+> +
+> +Optional properties:
+> +- sbsm,i2c-retry-count: integer, number of retries for trying to read or write
+> +    to registers. Default: 1
 
-This does not make sense to me. A concrete example perhaps using HDMI
-audio would be helpful.
+Seems like a driver setting. Is having a retry in the driver a problem 
+if the h/w works and never actually needs it?
 
 > +
-> +device {
-> +       ports {
-> +               type = "typeA";
+> +From OS view the device is basically an i2c-mux used to communicate with up to
+> +four smart battery devices at address 0xb. The driver actually implements this
+> +behaviour. So standard i2c-mux nodes can be used to register up to four slave
+> +batteries. Channels will be numerated as 1, 2, 4 and 8.
 > +
-> +               port@0 {
-> +                       type = "typeB";
+> +Example:
 > +
-> +                       device0: endpoint@0 {
-> +                       };
+> +batman@0a {
+> +    compatible = "sbs,sbs-manager";
+> +    reg = <0x0a>;
+> +    sbsm,i2c-retry-count = <3>;
+> +    #address-cells = <1>;
+> +    #size-cells = <0>;
 > +
-> +                       device1: endpoint@1 {
-> +                               type = "typeC";
-> +                       };
-> +               };
-> +               ...
-> +       };
+> +    channel1@1 {
+
+channel@1
+
+Do we have a standard node name for mux nodes? If not, we should.
+
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        reg = <1>;
+> +
+> +        battery1@0b {
+
+battery@b
+
+> +            compatible = "sbs-battery";
+
+This should be an actual battery model. Or all this information is 
+generic, you don't really need it in DT.
+
+> +            reg = <0x0b>;
+> +        };
+> +    };
+> +
+> +    channel2@2 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        reg = <2>;
+> +
+> +        battery2@0b {
+> +            compatible = "sbs-battery";
+> +            reg = <0x0b>;
+> +        };
+> +    };
+> +
+> +    channel3@4 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        reg = <4>;
+> +
+> +        battery3@0b {
+> +            compatible = "sbs-battery";
+> +            reg = <0x0b>;
+> +        };
+> +    };
 > +};
-> +
->
->  Required properties
->  -------------------
-> --
+> -- 
 > 1.9.1
->
+> 
