@@ -1,135 +1,137 @@
-From: Tim Wang <timwang-XOWFcpiLszpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] Implement the -a option to pad dtb aligned
-Date: Fri, 24 Jun 2016 19:19:21 +0800
-Message-ID: <1466767161-599-1-git-send-email-timwang@asrmicro.com>
+From: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
+Subject: Re: [PATCH] drivers/of: add option to load a default Device Tree
+Date: Fri, 24 Jun 2016 10:15:05 +0200
+Message-ID: <86d0de95-9b74-81ca-bcf4-e6e41b95ea9a@odyssee-systemes.fr>
+References: <1466607954-2821-1-git-send-email-franck.jullien@odyssee-systemes.fr>
+ <576C2A22.2020103@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <576C2A22.2020103-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wtt_usst-9Onoh4P/yGk@public.gmane.org, Tim Wang <timwang-XOWFcpiLszpWk0Htik3J/w@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There is one condition that need cat the dtb files
-into one dtb.img which can support several boards
-use same SoC platform.
 
-And the original dtb file size is not aligned to any base.
-This may cause "Synchronous Abort" when load from a unligned
-address on some SoC machine, such as ARM.
+Le 23/06/2016 =E0 20:27, Frank Rowand a =E9crit :
+> On 06/22/16 08:05, Franck Jullien wrote:
+>> Even if a platform doesn't use a device tree during its
+>> boot process it can be useful to enable CONFIG_OF and get
+>> an empty device tree.
+>>
+>> Then, devices can use device tree overlays to populate this
+>> default tree.
+>=20
+>=20
+> Hi Franck,
+>=20
+> Can you elaborate on the problem that you are trying to
+> solve and the use cases that you are envisioning?
+>=20
+> Thanks,
+>=20
+> Frank
+>=20
 
-So this patch implement the -a <aligned number> option to
-pad zero at the end of dtb files and make the dtb size aligned
-to <aligned number>.
+Hi,
 
-Then, the aligned dtbs can cat together and load without "Synchronous
-Abort".
+The idea behind this patch is to describe devices that are in a FPGA
+which is itself connected to the platform through PCIe. The platform
+might not use a devicetree for its own configuration. That's why we nee=
+d
+this patch.
 
-Signed-off-by: Tim Wang <timwang-XOWFcpiLszpWk0Htik3J/w@public.gmane.org>
----
- dtc.c      |  9 ++++++++-
- dtc.h      |  1 +
- flattree.c | 10 ++++++++++
- 3 files changed, 19 insertions(+), 1 deletion(-)
+There is an ongoing  discussion about this subject [1].
 
-diff --git a/dtc.c b/dtc.c
-index 5fa23c4..1749d26 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -30,6 +30,7 @@ int quiet;		/* Level of quietness */
- int reservenum;		/* Number of memory reservation slots */
- int minsize;		/* Minimum blob size */
- int padsize;		/* Additional padding to blob */
-+int align_size;		/* Additional padding to blob accroding to the align size */
- int phandle_format = PHANDLE_BOTH;	/* Use linux,phandle or phandle properties */
- 
- static void fill_fullpaths(struct node *tree, const char *prefix)
-@@ -53,7 +54,7 @@ static void fill_fullpaths(struct node *tree, const char *prefix)
- #define FDT_VERSION(version)	_FDT_VERSION(version)
- #define _FDT_VERSION(version)	#version
- static const char usage_synopsis[] = "dtc [options] <input file>";
--static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sW:E:hv";
-+static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:a:fb:i:H:sW:E:hv";
- static struct option const usage_long_opts[] = {
- 	{"quiet",            no_argument, NULL, 'q'},
- 	{"in-format",         a_argument, NULL, 'I'},
-@@ -64,6 +65,7 @@ static struct option const usage_long_opts[] = {
- 	{"reserve",           a_argument, NULL, 'R'},
- 	{"space",             a_argument, NULL, 'S'},
- 	{"pad",               a_argument, NULL, 'p'},
-+	{"align",             a_argument, NULL, 'a'},
- 	{"boot-cpu",          a_argument, NULL, 'b'},
- 	{"force",            no_argument, NULL, 'f'},
- 	{"include",           a_argument, NULL, 'i'},
-@@ -91,6 +93,7 @@ static const char * const usage_opts_help[] = {
- 	"\n\tMake space for <number> reserve map entries (for dtb and asm output)",
- 	"\n\tMake the blob at least <bytes> long (extra space)",
- 	"\n\tAdd padding to the blob of <bytes> long (extra space)",
-+	"\n\tMake the blob align to the <bytes> (extra space)",
- 	"\n\tSet the physical boot cpu",
- 	"\n\tTry to produce output even if the input tree has errors",
- 	"\n\tAdd a path to search for include files",
-@@ -169,6 +172,7 @@ int main(int argc, char *argv[])
- 	reservenum = 0;
- 	minsize    = 0;
- 	padsize    = 0;
-+	align_size = 0;
- 
- 	while ((opt = util_getopt_long()) != EOF) {
- 		switch (opt) {
-@@ -196,6 +200,9 @@ int main(int argc, char *argv[])
- 		case 'p':
- 			padsize = strtol(optarg, NULL, 0);
- 			break;
-+		case 'a':
-+			align_size = strtol(optarg, NULL, 0);
-+			break;
- 		case 'f':
- 			force = true;
- 			break;
-diff --git a/dtc.h b/dtc.h
-index 56212c8..b406d21 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -53,6 +53,7 @@ extern int quiet;		/* Level of quietness */
- extern int reservenum;		/* Number of memory reservation slots */
- extern int minsize;		/* Minimum blob size */
- extern int padsize;		/* Additional padding to blob */
-+extern int align_size;		/* Additional padding to blob accroding to the align size */
- extern int phandle_format;	/* Use linux,phandle or phandle properties */
- 
- #define PHANDLE_LEGACY	0x1
-diff --git a/flattree.c b/flattree.c
-index ec14954..733e32e 100644
---- a/flattree.c
-+++ b/flattree.c
-@@ -413,6 +413,13 @@ void dt_to_blob(FILE *f, struct boot_info *bi, int version)
- 		fdt.totalsize = cpu_to_fdt32(tsize);
- 	}
- 
-+	if (align_size > 0) {
-+		int tsize = fdt32_to_cpu(fdt.totalsize);
-+		padlen += (align_size - tsize % align_size);
-+		tsize += padlen;
-+		fdt.totalsize = cpu_to_fdt32(tsize);
-+	}
-+
- 	/*
- 	 * Assemble the blob: start with the header, add with alignment
- 	 * the reserve buffer, add the reserve map terminating zeroes,
-@@ -572,6 +579,9 @@ void dt_to_asm(FILE *f, struct boot_info *bi, int version)
- 	if (padsize > 0) {
- 		fprintf(f, "\t.space\t%d, 0\n", padsize);
- 	}
-+	if (align_size > 0) {
-+		fprintf(f, "\t.space\t%d, 0\n", align_size);
-+	}
- 	emit_label(f, symprefix, "blob_abs_end");
- 
- 	data_free(strbuf);
--- 
-1.9.1
+I have a working setup (on a x86_64) using this principle. I have
+created a pci resources proxy module which is parent of all devices on
+the FPGA. This is an example of binding:
 
+	proxy: pci1337_0001 {
+		#address-cells =3D <1>;
+		#size-cells =3D <1>;
+		#interrupt-cells =3D <1>;
+		vendor-id =3D <0x00001337>;
+		device-id =3D <0x00000001>;
+		compatible =3D "pci1337,0001",
+			     "generic,pci-proxy";
+		interrupt-controller;
+		/* Ranges will be overwritten during probe */
+		ranges =3D <0 0 0xA0000000 0x100000     /* BAR 0 */
+			  1 0 0xB0000000 0x100000     /* BAR 1 */
+			  2 0 0xC0000000 0x100000>;   /* BAR 2 */
+	};
+
+Ranges are dynamically updated on probe with regards to FPGA bars.
+This node is attached to the tree (an empty tree in my case) from the
+client module.
+
+Then FPGA devices nodes are added using overlay. This is an example:
+
+/dts-v1/;
+/ {
+	#address-cells =3D <1>;
+	#size-cells =3D <1>;
+
+	fragment@0 {
+		target-path =3D "/pci1337_0001";
+		__overlay__ {
+
+			#address-cells =3D <2>;
+			#size-cells =3D <1>;
+			interrupt-parent =3D <&proxy>;
+
+			osc: oscillator {
+				compatible =3D "fixed-clock";
+				#clock-cells =3D <1>;
+				clock-frequency  =3D <148500000>;
+				clock-output-names =3D "osc";
+			};
+			enet0: ethoc {
+				compatible =3D "opencores,ethoc";
+				reg =3D <1 0x50000 0x100>;
+				interrupts =3D <0>;
+			};
+			gpio0: gpio {
+				#gpio-cells =3D <2>;
+				compatible =3D "xlnx,xps-gpio-1.00.a";
+				reg =3D <0 0x30000 0x10000>;
+				gpio-controller;
+			};
+		};
+	};
+
+
+};
+
+Interrupts property are dynamically modified before the overlay is
+applied. By the way, I had to do a little hack here in the pci-proxy.
+I did not declare a new interrupt domain. What I did is to get the PCI
+interrupt domain (IO-APIC on my platform):
+
+irq_data =3D irq_get_irq_data(priv->pci_dev->irq);
+domain_parent =3D irq_data->domain;
+
+and then set fwnode of IO-APIC to pci-proxy fwnode so
+irq_create_of_mapping get IO-APIC's domain:
+
+domain_parent->fwnode =3D &np->fwnode;
+
+There might be a better way to make things work.
+
+Beside this patch I needed to export of_attach_node and of_detach_node.
+This will be another patch.
+
+Thank you for your interest.
+
+=46ranck.
+
+[1] http://www.spinics.net/lists/dmaengine/msg09869.html
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
