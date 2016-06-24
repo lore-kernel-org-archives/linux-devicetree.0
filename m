@@ -1,49 +1,65 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2 03/15] drivers: net: cpsw: remove pm runtime calls from suspend callbacks
-Date: Fri, 24 Jun 2016 21:23:43 +0300
-Message-ID: <20160624182355.23515-4-grygorii.strashko@ti.com>
-References: <20160624182355.23515-1-grygorii.strashko@ti.com>
+From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ubi: mount partitions specified in device tree
+Date: Fri, 24 Jun 2016 15:28:58 -0300
+Message-ID: <CAAEAJfC8mYnohRxKg0b-onbGadk0vPDty=7Bh8emP92mazB=aA@mail.gmail.com>
+References: <1466277476-14853-1-git-send-email-hauke@hauke-m.de>
+ <5765A14F.6020201@nod.at> <48242f26-7812-6957-6bf5-c12989b875b4@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160624182355.23515-1-grygorii.strashko@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <48242f26-7812-6957-6bf5-c12989b875b4-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PM runtime is properly handled in cpsw_ndo_open/stop(), as result it
-isn't required to duplicate these calls in .suspend()/.resume()
-callbacks. Moreover, it might cause unnecessary RPM resume of CPSW
-during System suspend in the case it's already suspended because
-all ethX interfaces are down already, before System suspend started.
+On 18 June 2016 at 16:35, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
+> On 06/18/2016 09:30 PM, Richard Weinberger wrote:
+>> Am 18.06.2016 um 21:17 schrieb Hauke Mehrtens:
+>>> This makes it possible to open a ubi layer in device tree, this is
+>>> helpful when the rootfs is on a ubi layer. It loops though all mtd
+>>> partitions and mounts the partition which is compatible with
+>>> "ubi,volume". The same was only possible with kernel command line
+>>> arguments before.
+>>>
+>>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/mtd/ubi.txt | 33 ++++++++++++++
+>>>  drivers/mtd/ubi/block.c                       | 63 +++++++++++++++=
+++++++++++++
+>>>  2 files changed, 96 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/mtd/ubi.txt
+>>
+>> Some time ago I thought about an UBI DT binding too, but
+>> I have been told that device tree is only for describing the hardwar=
+e
+>> and nothing else.
+>> So I fear this will be rejected by DT folks.
+>
+> There are some devices on the market that are storing the root file
+> system in an ubi layer.
+> To make this work there are currently two options.
+> 1. patch the kernel to specify which partitions to open in the code.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw.c | 4 ----
- 1 file changed, 4 deletions(-)
+I wouldn't go as far as to claim this an option.
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index c76f9db..ba81d4e 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -2573,8 +2573,6 @@ static int cpsw_suspend(struct device *dev)
- 			cpsw_ndo_stop(ndev);
- 	}
- 
--	pm_runtime_put_sync(&pdev->dev);
--
- 	/* Select sleep pin state */
- 	pinctrl_pm_select_sleep_state(&pdev->dev);
- 
-@@ -2587,8 +2585,6 @@ static int cpsw_resume(struct device *dev)
- 	struct net_device	*ndev = platform_get_drvdata(pdev);
- 	struct cpsw_priv	*priv = netdev_priv(ndev);
- 
--	pm_runtime_get_sync(&pdev->dev);
--
- 	/* Select default pin state */
- 	pinctrl_pm_select_default_state(&pdev->dev);
- 
--- 
-2.9.0
+> 2. provide some kernel command line parameter which specifies what to=
+ open.
+>
+
+There's another option: use an initramfs, where you can do whatever you=
+ want
+to find your UBI and mount it.
+
+=46rankly, I don't see a real need for this in the devicetree, other th=
+an solving
+someone's particular workflow/use case.
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
