@@ -1,73 +1,133 @@
-From: Raashid Muhammed <raashidmuhammed@zilogic.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: Modify information in LED nodes.
-Date: Fri, 24 Jun 2016 19:34:45 +0530
-Message-ID: <87d1n6fzrk.fsf@zilogic.com>
-References: <1466775069-606-1-git-send-email-raashidmuhammed@zilogic.com>
- <1466775069-606-2-git-send-email-raashidmuhammed@zilogic.com>
- <20160624134010.GN5809@piout.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 08/12] doc: binding: pwrseq-usb-generic: add binding doc
+ for generic usb power sequence driver
+Date: Fri, 24 Jun 2016 10:25:05 -0500
+Message-ID: <CAL_Jsq+1r0r1NONoyeU5=jSJR9tEV=1rN8CidWroqA+a_OrYAw@mail.gmail.com>
+References: <1466158165-9380-1-git-send-email-peter.chen@nxp.com>
+ <1466158165-9380-9-git-send-email-peter.chen@nxp.com> <CAL_JsqLvs0s2TyfqPM5vtmyY81_X84VjCGjsGYbTgT4syOfp9Q@mail.gmail.com>
+ <20160620112651.GA26936@shlinux2> <20160620161607.GA11427@rob-hp-laptop>
+ <20160621021117.GD26936@shlinux2> <20160621212653.GA22764@rob-hp-laptop> <CAPDyKFroH6AGObKGZoZ-6=Sb3Zii6gXdm_wO3fuc2BAx6fpFHg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20160624134010.GN5809@piout.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, nicolas.ferre@atmel.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, plagnioj@jcrosoft.com, Raashid Muhammed <raashidmuhammed@zilogic.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFroH6AGObKGZoZ-6=Sb3Zii6gXdm_wO3fuc2BAx6fpFHg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Peter Chen <hzpeterchen@gmail.com>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Stephen Boyd <stephen.boyd@linaro.org>, oscar@naiandei.net, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Linux USB List <linux-usb@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, troy.kisky@boundarydevices.com, Javier Martinez Canillas <javier@osg.samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-
-Alexandre Belloni writes:
-
-> Hi,
->
-> On 24/06/2016 at 19:01:09 +0530, Raashid Muhammed wrote :
->> Add power led node and rename status led node.
+On Wed, Jun 22, 2016 at 4:09 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> On 21 June 2016 at 23:26, Rob Herring <robh@kernel.org> wrote:
+>> On Tue, Jun 21, 2016 at 10:11:17AM +0800, Peter Chen wrote:
+>>> On Mon, Jun 20, 2016 at 11:16:07AM -0500, Rob Herring wrote:
+>>> > On Mon, Jun 20, 2016 at 07:26:51PM +0800, Peter Chen wrote:
+>>> > > On Fri, Jun 17, 2016 at 12:16:48PM -0500, Rob Herring wrote:
+>>> > > > On Fri, Jun 17, 2016 at 5:09 AM, Peter Chen <peter.chen@nxp.com> wrote:
+>>> > > > > Add binding doc for generic usb power sequence driver, and update
+>>> > > > > generic usb device binding-doc accordingly.
 >>
->
-> Well, I'm ok with the change but this does more:
->
->> Signed-off-by: Raashid Muhammed <raashidmuhammed@zilogic.com>
->> Reviewed-by: Vijay Kumar B. <vijaykumar@bravegnu.org>
->> ---
->>  arch/arm/boot/dts/at91-sam9_l9260.dts | 13 +++++++++----
->>  1 file changed, 9 insertions(+), 4 deletions(-)
+>> [...]
 >>
->> diff --git a/arch/arm/boot/dts/at91-sam9_l9260.dts b/arch/arm/boot/dts/at91-sam9_l9260.dts
->> index be409f2..814753a 100644
->> --- a/arch/arm/boot/dts/at91-sam9_l9260.dts
->> +++ b/arch/arm/boot/dts/at91-sam9_l9260.dts
->> @@ -106,11 +106,16 @@
->>  	leds {
->>  		compatible = "gpio-leds";
->>
->> -		b0 {
->> -			label = "b0";
->> -			gpios = <&pioA 6 GPIO_ACTIVE_HIGH>;
->> -			linux,default-trigger = "heartbeat";
->> +		pwr_led {
->> +			label = "sam9-l9260:yellow:pwr";
->> +			gpios = <&pioA 9 GPIO_ACTIVE_HIGH>;
->> +			linux,default-trigger = "cpu0";
->>  		};
->>
->> +		status_led {
->> +			label = "sam9-l9260:green:status";
->> +			gpios = <&pioA 6 GPIO_ACTIVE_LOW>;
->> +			linux,default-trigger = "timer";
+>>> > >           clocks = <&clks IMX6SX_CLK_CKO>;
+>>> > >
+>>> > >           #address-cells = <1>;
+>>> > >           #size-cells = <0>;
+>>> > >           ethernet: asix@1 {
+>>> > >                   compatible = "usbb95,1708";
+>>> > >                   reg = <1>;
+>>> > >
+>>> > >                   power-sequence;
+>>> > >                   reset-gpios = <&gpio4 6 GPIO_ACTIVE_LOW>; /* ethernet_rst */
+>>> > >                   reset-duration-us = <15>;
+>>> > >                   clocks = <&clks IMX6SX_CLK_IPG>;
+>>> > >           };
+>>> > >   };
+>>> > > };
+>>> > >
+>>> > > If the node has property "power-sequence", the pwrseq core will create
+>>> > > related platform device, and the driver under pwrseq driver will handle
+>>> > > power sequence stuffs.
+>>> >
+>>> > This I have issue with. If you are creating a platform device here, you
+>>> > are trying to work-around limitations in the linux driver model.
 >
-> This trigger is also switched from heartbeat to timer, is this
-> intentional?
+> I somewhat understand your point.
+>
+> Although, having the option to use a driver (which requires a device)
+> has turned out to be quite convenient from many aspects - at least in
+> the mmc case.
+>
+> Certainly one can do without it, but in the end using a driver avoids
+> open coding.
 
-Yes, that is intentional. I should have included that in the commit
-message.
+Why would it be open coded? Just create library functions to parse the
+node and implement the generic pwr-seq steps.
 
---
-Sent with my mu4e
+>>> My current solution like below, but it seems you didn't agree with that.
+>>> I just double confirm here, if you don't, I give up the solution for
+>>> using generic power sequence framework.
+>>>
+>>> In drivers/usb/core/hub.c
+>>>
+>>>       for_each_child_of_node(parent->of_node, node) {
+>>>               hdev_pwrseq = pwrseq_alloc(node, "usb_pwrseq_generic");
+>>>               if (!IS_ERR_OR_NULL(hdev_pwrseq)) {
+>>>                       pwrseq_node = kzalloc(sizeof(pwrseq_node), GFP_KERNEL);
+>>>                       if (!pwrseq_node) {
+>>>                               ret = -ENOMEM;
+>>>                               goto err1;
+>>>                       }
+>>>                       /* power on sequence */
+>>>                       ret = pwrseq_pre_power_on(hdev_pwrseq);
+>>
+>> Why does this function need to do anything more than:
+>>
+>> - Check if the child has a "power-sequence" property
+>> - Get the "reset-gpios" GPIO
+>> - Assert reset for specified/default time
+>> - Deassert reset
+>>
+>> Then continue on as normal. That seems straight-forward to me.
+>>
+>> There is no reason you need a platform device in the mix. Perhaps trying
+>> to move the MMC pwr-seq code is pointless as it adds needless
+>> complexity.
+>
+> Complexity?
+>
+> The problem we are tying to solve, is to make the various platform/SoC
+> specific power sequences to be able to live in generic drivers.
+>
+> One could decide to encode the sequences inside the driver code
+> itself, but it will soon turn into a mess and more importantly, lots
+> of open coding as to support different platforms/SoCs. To most kernel
+> hackers I don't think this is an option to consider.
+
+I'm not proposing open coding, but having generic library functions.
+I'm not saying the mmc pwr-seq has to change from being a driver
+either. Leave it as is. I'm only talking about Krzysztof's new
+proposal.
+
+> The MMC pwr-seq code/drivers tries to address these issues - in a
+> somewhat generic way.
+> Initially we have decided to start with only a few flavours of
+> supported sequences and so far these have been sufficient.
+
+Only a few because we've pushed back against defining state machines in DT.
+
+> Finally, I am indeed concerned that it so hard to agree on a solution
+> to deal with generic power sequences. There have been many attempts
+> throughout the last ~4-5 years, but peoples strong opinions about
+> different approaches mad them all fail. Isn't it time to finally just
+> pick a solution and stick with it, even if it doesn't meet all peoples
+> expectations?
+
+No. I'm pretty that is not how kernel development works. Features get
+merged when all are happy (or not paying attention).
+
+>From what I recall, all attempts have worked around the problem that
+the driver model has no way to either force probe or provide a
+pre-probe hook on probeable buses. This then leads to the work-around
+defining the DT binding.
+
+Rob
