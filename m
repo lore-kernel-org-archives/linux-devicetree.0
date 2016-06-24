@@ -1,65 +1,135 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
-Date: Fri, 24 Jun 2016 12:16:42 +0200
-Message-ID: <20160624101642.GC3785@lukather>
-References: <1466418769-8384-1-git-send-email-stefan.mavrodiev@gmail.com>
- <20160622132222.GX26668@lukather>
- <2618ba96-c3c5-4db6-b860-d212e7045f23@googlegroups.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WplhKdTI2c8ulnbP"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBC4RWS5QKGQEITELUMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <2618ba96-c3c5-4db6-b860-d212e7045f23-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-AbSShOkvfpQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Tim Wang <timwang-XOWFcpiLszpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] Implement the -a option to pad dtb aligned
+Date: Fri, 24 Jun 2016 19:19:21 +0800
+Message-ID: <1466767161-599-1-git-send-email-timwang@asrmicro.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wtt_usst-9Onoh4P/yGk@public.gmane.org, Tim Wang <timwang-XOWFcpiLszpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+There is one condition that need cat the dtb files
+into one dtb.img which can support several boards
+use same SoC platform.
 
---WplhKdTI2c8ulnbP
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+And the original dtb file size is not aligned to any base.
+This may cause "Synchronous Abort" when load from a unligned
+address on some SoC machine, such as ARM.
 
-On Thu, Jun 23, 2016 at 04:07:13AM -0700, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > > +&usb_otg {
-> > > +	dr_mode = "host";
-> > > +	status = "okay";
-> > > +};
-> > > +
-> > > +&usbphy {
-> > > +	usb0_vbus-supply = <&reg_vcc5v0>;
-> > > +	status = "okay";
-> > > +
-> > > +};
-> > 
-> > It doesn't work as USB OTG ?
-> > 
-> 
-> The hardware should work as OTG. In FEL mode it works as device, and
-> in current dt configuration - as host. I've spend some time trying
-> to make it work as otg, but didn't succeed.
-> 
-> There are some hardware differences between our board and other a33,
-> but if you say that OTG work, I'll spend some additional time
-> working on it.
+So this patch implement the -a <aligned number> option to
+pad zero at the end of dtb files and make the dtb size aligned
+to <aligned number>.
 
-Yes, I've been testing and got it to work on at least two other A33
-boards (the R16 Parrot and the Sinlinx SinA33). You can look at the
-Parrot DT, you should have everything you need (but you will most
-likely need linux-next).
+Then, the aligned dtbs can cat together and load without "Synchronous
+Abort".
 
-Maxime
+Signed-off-by: Tim Wang <timwang-XOWFcpiLszpWk0Htik3J/w@public.gmane.org>
+---
+ dtc.c      |  9 ++++++++-
+ dtc.h      |  1 +
+ flattree.c | 10 ++++++++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
 
+diff --git a/dtc.c b/dtc.c
+index 5fa23c4..1749d26 100644
+--- a/dtc.c
++++ b/dtc.c
+@@ -30,6 +30,7 @@ int quiet;		/* Level of quietness */
+ int reservenum;		/* Number of memory reservation slots */
+ int minsize;		/* Minimum blob size */
+ int padsize;		/* Additional padding to blob */
++int align_size;		/* Additional padding to blob accroding to the align size */
+ int phandle_format = PHANDLE_BOTH;	/* Use linux,phandle or phandle properties */
+ 
+ static void fill_fullpaths(struct node *tree, const char *prefix)
+@@ -53,7 +54,7 @@ static void fill_fullpaths(struct node *tree, const char *prefix)
+ #define FDT_VERSION(version)	_FDT_VERSION(version)
+ #define _FDT_VERSION(version)	#version
+ static const char usage_synopsis[] = "dtc [options] <input file>";
+-static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sW:E:hv";
++static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:a:fb:i:H:sW:E:hv";
+ static struct option const usage_long_opts[] = {
+ 	{"quiet",            no_argument, NULL, 'q'},
+ 	{"in-format",         a_argument, NULL, 'I'},
+@@ -64,6 +65,7 @@ static struct option const usage_long_opts[] = {
+ 	{"reserve",           a_argument, NULL, 'R'},
+ 	{"space",             a_argument, NULL, 'S'},
+ 	{"pad",               a_argument, NULL, 'p'},
++	{"align",             a_argument, NULL, 'a'},
+ 	{"boot-cpu",          a_argument, NULL, 'b'},
+ 	{"force",            no_argument, NULL, 'f'},
+ 	{"include",           a_argument, NULL, 'i'},
+@@ -91,6 +93,7 @@ static const char * const usage_opts_help[] = {
+ 	"\n\tMake space for <number> reserve map entries (for dtb and asm output)",
+ 	"\n\tMake the blob at least <bytes> long (extra space)",
+ 	"\n\tAdd padding to the blob of <bytes> long (extra space)",
++	"\n\tMake the blob align to the <bytes> (extra space)",
+ 	"\n\tSet the physical boot cpu",
+ 	"\n\tTry to produce output even if the input tree has errors",
+ 	"\n\tAdd a path to search for include files",
+@@ -169,6 +172,7 @@ int main(int argc, char *argv[])
+ 	reservenum = 0;
+ 	minsize    = 0;
+ 	padsize    = 0;
++	align_size = 0;
+ 
+ 	while ((opt = util_getopt_long()) != EOF) {
+ 		switch (opt) {
+@@ -196,6 +200,9 @@ int main(int argc, char *argv[])
+ 		case 'p':
+ 			padsize = strtol(optarg, NULL, 0);
+ 			break;
++		case 'a':
++			align_size = strtol(optarg, NULL, 0);
++			break;
+ 		case 'f':
+ 			force = true;
+ 			break;
+diff --git a/dtc.h b/dtc.h
+index 56212c8..b406d21 100644
+--- a/dtc.h
++++ b/dtc.h
+@@ -53,6 +53,7 @@ extern int quiet;		/* Level of quietness */
+ extern int reservenum;		/* Number of memory reservation slots */
+ extern int minsize;		/* Minimum blob size */
+ extern int padsize;		/* Additional padding to blob */
++extern int align_size;		/* Additional padding to blob accroding to the align size */
+ extern int phandle_format;	/* Use linux,phandle or phandle properties */
+ 
+ #define PHANDLE_LEGACY	0x1
+diff --git a/flattree.c b/flattree.c
+index ec14954..733e32e 100644
+--- a/flattree.c
++++ b/flattree.c
+@@ -413,6 +413,13 @@ void dt_to_blob(FILE *f, struct boot_info *bi, int version)
+ 		fdt.totalsize = cpu_to_fdt32(tsize);
+ 	}
+ 
++	if (align_size > 0) {
++		int tsize = fdt32_to_cpu(fdt.totalsize);
++		padlen += (align_size - tsize % align_size);
++		tsize += padlen;
++		fdt.totalsize = cpu_to_fdt32(tsize);
++	}
++
+ 	/*
+ 	 * Assemble the blob: start with the header, add with alignment
+ 	 * the reserve buffer, add the reserve map terminating zeroes,
+@@ -572,6 +579,9 @@ void dt_to_asm(FILE *f, struct boot_info *bi, int version)
+ 	if (padsize > 0) {
+ 		fprintf(f, "\t.space\t%d, 0\n", padsize);
+ 	}
++	if (align_size > 0) {
++		fprintf(f, "\t.space\t%d, 0\n", align_size);
++	}
+ 	emit_label(f, symprefix, "blob_abs_end");
+ 
+ 	data_free(strbuf);
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---WplhKdTI2c8ulnbP--
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
