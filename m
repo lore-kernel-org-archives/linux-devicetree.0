@@ -1,78 +1,44 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] Documentation: DT: Add iproc-static-adc binding
-Date: Fri, 24 Jun 2016 10:43:23 -0500
-Message-ID: <20160624154323.GA6046@rob-hp-laptop>
-References: <1466575913-5027-1-git-send-email-raveendra.padasalagi@broadcom.com>
- <1466575913-5027-2-git-send-email-raveendra.padasalagi@broadcom.com>
+Subject: Re: [PATCH v2 1/4] devicetree: Add Micro Crystal AG
+ vendor id
+Date: Fri, 24 Jun 2016 10:43:57 -0500
+Message-ID: <20160624154357.GA7139@rob-hp-laptop>
+References: <1466577742-18824-1-git-send-email-dirk.behme@de.bosch.com>
+ <1466577742-18824-2-git-send-email-dirk.behme@de.bosch.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDJIP47K7MERBP5KWW5QKGQEPSLLAOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1466575913-5027-2-git-send-email-raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+In-Reply-To: <1466577742-18824-2-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 11:41:51AM +0530, Raveendra Padasalagi wrote:
-> The patch adds devicetree binding document for broadcom's
-> iproc-static-adc controller driver.
+On Wed, Jun 22, 2016 at 08:42:19AM +0200, Dirk Behme wrote:
+> From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 > 
-> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  .../bindings/iio/adc/brcm,iproc-static-adc.txt     | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt b/Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt
-> new file mode 100644
-> index 0000000..a82076e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt
-> @@ -0,0 +1,38 @@
-> +* Broadcom's IPROC Static ADC controller
-> +
-> +Broadcom iProc ADC controller has 8 channels 10bit ADC.
-> +Allows user to convert analog input voltage values to digital.
-> +
-> +Required properties:
-> +
-> +- compatible: Must be "brcm,iproc-static-adc"
-> +
-> +- adc-syscon: Handler of syscon node defining physical base address of the
-> +  controller and length of memory mapped region.
-> +
-> +- #io-channel-cells = <1>; As ADC has multiple outputs
-> +  refer to Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
-> +
-> +- clocks: Clock used for this block.
-> +
-> +- clock-names: Clock name should be given as tsc_clk.
-> +
-> +- interrupts: interrupt line number.
-> +
-> +For example:
-> +
-> +	ts_adc_syscon: ts_adc_syscon@180a6000 {
-> +		compatible = "brcm,iproc-ts-adc-syscon","syscon";
-> +		reg = <0x180a6000 0xc30>;
-> +	};
-> +
-> +	adc: adc@180a6000 {
-> +		compatible = "brcm,iproc-static-adc";
-> +		adc-syscon = <&ts_adc_syscon>;
-> +		#io-channel-cells = <1>;
-> +		io-channel-ranges;
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Not documented.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +		clocks = <&asiu_clks BCM_CYGNUS_ASIU_ADC_CLK>;
-> +		clock-names = "tsc_clk";
-> +		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
-> +		status = "disabled";
-> +	};
-> -- 
-> 1.9.1
-> 
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
