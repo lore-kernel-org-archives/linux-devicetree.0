@@ -1,87 +1,31 @@
-From: Anthony Felice <tony.felice@timesys.com>
-Subject: [PATCH 4/4] ARM: imx_v6_v7_defconfig: enable useful configurations
- for Vybrid
-Date: Fri, 24 Jun 2016 15:44:46 -0400
-Message-ID: <1466797486-31558-5-git-send-email-tony.felice@timesys.com>
-References: <1466797486-31558-1-git-send-email-tony.felice@timesys.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
+Date: Fri, 24 Jun 2016 21:58:01 +0200
+Message-ID: <3635389.HlLpm27c0G@phil>
+References: <1466505005-86122-1-git-send-email-frank.wang@rock-chips.com> <1466505005-86122-3-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466797486-31558-1-git-send-email-tony.felice@timesys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dri-devel@lists.freedesktop.org, shawnguo@kernel.org, tony.felice@timesys.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, maitysanchayan@gmail.com, damien.riegel@savoirfairelinux.com, linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, linux@armlinux.org.uk, stefan@agner.ch, sre@kernel.org, mwelling@ieee.org, robh+dt@kernel.org, geert@linux-m68k.org, kernel@pengutronix.de, linux-input@vger.kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466505005-86122-3-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable configuration options useful for the Vybrid Tower platform:
-- CRTouch Touchscreen support.
-- DRM support for Freescale DCU.
+Am Dienstag, 21. Juni 2016, 18:30:05 schrieb Frank Wang:
+> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+> than rk3288 and before, and most of phy-related registers are also
+> different from the past, so a new phy driver is required necessarily.
+> 
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Suggested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Suggested-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Suggested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Regenerated config using savedefconfig (which removes some configs
-which are now enabled by default).
-
-Signed-off-by: Anthony Felice <tony.felice@timesys.com>
----
- arch/arm/configs/imx_v6_v7_defconfig | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 21339ce..0b9de5c 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -1,6 +1,5 @@
- CONFIG_KERNEL_LZO=y
- CONFIG_SYSVIPC=y
--CONFIG_FHANDLE=y
- CONFIG_NO_HZ=y
- CONFIG_HIGH_RES_TIMERS=y
- CONFIG_IKCONFIG=y
-@@ -72,7 +71,6 @@ CONFIG_IP_PNP_DHCP=y
- # CONFIG_INET_XFRM_MODE_TRANSPORT is not set
- # CONFIG_INET_XFRM_MODE_TUNNEL is not set
- # CONFIG_INET_XFRM_MODE_BEET is not set
--# CONFIG_INET_LRO is not set
- CONFIG_NETFILTER=y
- CONFIG_CAN=y
- CONFIG_CAN_FLEXCAN=y
-@@ -170,6 +168,7 @@ CONFIG_TOUCHSCREEN_TSC2007=y
- CONFIG_TOUCHSCREEN_STMPE=y
- CONFIG_TOUCHSCREEN_SX8654=y
- CONFIG_TOUCHSCREEN_COLIBRI_VF50=y
-+CONFIG_TOUCHSCREEN_CRTOUCH=y
- CONFIG_INPUT_MISC=y
- CONFIG_INPUT_MMA8450=y
- CONFIG_SERIO_SERPORT=m
-@@ -227,12 +226,12 @@ CONFIG_MEDIA_USB_SUPPORT=y
- CONFIG_USB_VIDEO_CLASS=m
- CONFIG_V4L_PLATFORM_DRIVERS=y
- CONFIG_SOC_CAMERA=y
--CONFIG_VIDEO_MX3=y
- CONFIG_V4L_MEM2MEM_DRIVERS=y
- CONFIG_VIDEO_CODA=y
- CONFIG_SOC_CAMERA_OV2640=y
- CONFIG_IMX_IPUV3_CORE=y
- CONFIG_DRM=y
-+CONFIG_DRM_FSL_DCU=y
- CONFIG_DRM_PANEL_SIMPLE=y
- CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
- CONFIG_DRM_IMX=y
-@@ -333,7 +332,6 @@ CONFIG_VF610_ADC=y
- CONFIG_PWM=y
- CONFIG_PWM_FSL_FTM=y
- CONFIG_PWM_IMX=y
--CONFIG_NVMEM=y
- CONFIG_NVMEM_IMX_OCOTP=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT2_FS_XATTR=y
--- 
-2.7.4
+still looks nice, so still
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
