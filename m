@@ -1,35 +1,26 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] of: fix memory leak related to safe_name()
-Date: Fri, 24 Jun 2016 15:38:27 -0500
-Message-ID: <CAL_JsqK=h5EC4RR4xpn-JioAbdLfmQFNt8MJk=UF==WvDWy-wQ@mail.gmail.com>
-References: <5762E732.1030908@gmail.com> <CA+7wUsziB9P24bXnSrLB_t-KOZ2CVj9p5xZYsCnr5DNZL8mg+w@mail.gmail.com>
+From: Guenter Roeck <groeck@google.com>
+Subject: Re: [PATCH v7 2/2] phy: rockchip-inno-usb2: add a new driver for
+ Rockchip usb2phy
+Date: Fri, 24 Jun 2016 13:44:51 -0700
+Message-ID: <CABXOdTc5+43ntiq4haS1mXRqcOoaw1AyAAv0Oz77nrZJ-0V9Hg@mail.gmail.com>
+References: <1466505005-86122-1-git-send-email-frank.wang@rock-chips.com> <1466505005-86122-3-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+7wUsziB9P24bXnSrLB_t-KOZ2CVj9p5xZYsCnr5DNZL8mg+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <mathieu.malaterre-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466505005-86122-3-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wang <frank.wang@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Douglas Anderson <dianders@chromium.org>, Guenter Roeck <linux@roeck-us.net>, Guenter Roeck <groeck@chromium.org>, jwerner@chromium.org, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Ziyuan Xu <xzy.xu@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, william.wu@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 17, 2016 at 2:51 AM, Mathieu Malaterre
-<mathieu.malaterre-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> v3 tested here multiple times ! memleak is now gone.
+On Tue, Jun 21, 2016 at 3:30 AM, Frank Wang <frank.wang@rock-chips.com> wrote:
+> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
+> than rk3288 and before, and most of phy-related registers are also
+> different from the past, so a new phy driver is required necessarily.
 >
-> Tested-by: Mathieu Malaterre <mathieu.malaterre-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Thanks
->
-> On Thu, Jun 16, 2016 at 7:51 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
->>
->> Fix a memory leak resulting from memory allocation in safe_name().
->> This patch fixes all call sites of safe_name().
+> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+> Suggested-by: Heiko Stuebner <heiko@sntech.de>
+> Suggested-by: Guenter Roeck <linux@roeck-us.net>
+> Suggested-by: Doug Anderson <dianders@chromium.org>
 
-Applied, thanks.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
