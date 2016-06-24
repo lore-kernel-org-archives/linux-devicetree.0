@@ -1,17 +1,17 @@
 From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] rtc: rv8803: add device tree
- compatible names
-Date: Fri, 24 Jun 2016 09:00:21 +0200
-Message-ID: <20160624070021.GH5809@piout.net>
+Subject: Re: [PATCH v2 1/4] devicetree: Add Micro Crystal AG
+ vendor id
+Date: Fri, 24 Jun 2016 09:00:41 +0200
+Message-ID: <20160624070041.GI5809@piout.net>
 References: <1466577742-18824-1-git-send-email-dirk.behme@de.bosch.com>
- <1466577742-18824-4-git-send-email-dirk.behme@de.bosch.com>
+ <1466577742-18824-2-git-send-email-dirk.behme@de.bosch.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBBVVWO5QKGQEM7JC2CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBGVVWO5QKGQEA3MGBCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1466577742-18824-4-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1466577742-18824-2-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
@@ -19,58 +19,33 @@ List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:r
 List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/rtc-linux/subscribe>
 To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Knut Wohlrab <Knut.Wohlrab-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/2016 at 08:42:21 +0200, Dirk Behme wrote :
-> From: Knut Wohlrab <Knut.Wohlrab-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-> 
-> Add device tree compatible names for usage in a compatible
-> list of alternative RTC devices.
+On 22/06/2016 at 08:42:19 +0200, Dirk Behme wrote :
+> From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 > 
 
-This patch is unnecessary, the i2c subsystem is making sure the driver
-is probed without it.
+Please always include a commit message.
 
-> Signed-off-by: Knut Wohlrab <Knut.Wohlrab-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 > Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  drivers/rtc/rtc-rv8803.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/rtc/rtc-rv8803.c b/drivers/rtc/rtc-rv8803.c
-> index f623038..e122b51 100644
-> --- a/drivers/rtc/rtc-rv8803.c
-> +++ b/drivers/rtc/rtc-rv8803.c
-> @@ -18,6 +18,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/rtc.h>
-> +#include <linux/of.h>
->  
->  #define RV8803_SEC			0x00
->  #define RV8803_MIN			0x01
-> @@ -520,9 +521,19 @@ static const struct i2c_device_id rv8803_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, rv8803_id);
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id rv8803_of_match[] = {
-> +	{ .compatible = "microcrystal,rv8803", },
-> +	{ .compatible = "epson,rx8900", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, rv8803_of_match);
-> +#endif
-> +
->  static struct i2c_driver rv8803_driver = {
->  	.driver = {
->  		.name = "rtc-rv8803",
-> +		.of_match_table = of_match_ptr(rv8803_of_match),
->  	},
->  	.probe		= rv8803_probe,
->  	.remove		= rv8803_remove,
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 2c2500d..7a1d5ea 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -158,6 +158,7 @@ melexis	Melexis N.V.
+>  merrii	Merrii Technology Co., Ltd.
+>  micrel	Micrel Inc.
+>  microchip	Microchip Technology Inc.
+> +microcrystal	Micro Crystal AG
+>  micron	Micron Technology Inc.
+>  minix	MINIX Technology Ltd.
+>  mitsubishi	Mitsubishi Electric Corporation
 > -- 
 > 1.9.1
 > 
