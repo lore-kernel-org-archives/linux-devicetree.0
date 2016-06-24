@@ -1,53 +1,37 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: magn: DT bindings for AK8974
-Date: Fri, 24 Jun 2016 22:48:53 +0200
-Message-ID: <CACRpkdbM9RPU3uLzTFfZWXSjqNk13fsi35nMEOnBoEhikuxOQA@mail.gmail.com>
-References: <1466608276-10401-1-git-send-email-linus.walleij@linaro.org> <20160624171952.GA23588@rob-hp-laptop>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] firmware: Amlogic: Add secure monitor driver
+Date: Fri, 24 Jun 2016 23:05:14 +0200
+Message-ID: <20160624210514.GB5083@localhost>
+References: <1466339944-602-1-git-send-email-carlo@caione.org>
+ <1466339944-602-2-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160624171952.GA23588@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samu Onkalo <samu.p.onkalo-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466339944-602-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 24, 2016 at 7:19 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jun 22, 2016 at 05:11:16PM +0200, Linus Walleij wrote:
->> This adds device tree bindings for the AK8974 magnetometer, similar
->> to those for the AK8975.
->
-> Seems like they should be shared, but there don't appear to be any
-> datasheets for 8974 to really tell. Really only matters if the
-> programming models are similar.
+On 19/06/16 14:38, Carlo Caione wrote:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> 
+> Introduce a driver to provide calls into secure monitor mode.
+> 
+> In the Amlogic SoCs these calls are used for multiple reasons: access to
+> NVMEM, set USB boot, enable JTAG, etc...
+> 
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-I have schematics of the component mounted, so I know what the
-pins are named. Apart from that only the opaque driver from Samu.
-(Found his new mail and mailed him, also requested the datasheet
-from AKM, no response so far.)
+Hey Mark,
+can you take a look to this patch? Not sure who is supposed to ACK /
+review it.
 
->> +- avdd-supply: regulator supply for the analog voltage
->> +  (see regulator/regulator.txt)
->> +- dvdd-supply: regulator supply for the digital voltage
->> +  (see regulator/regulator.txt)
->
-> This is probably more correct than single vdd-supply for 8975 which in
-> fact has 2 supplies.
+Thanks,
 
-Yes. But they did change the names. AK8974 is avdd and dvdd
-whereas AK8975 has vdd (same as avdd) and vid (same as dvdd).
-I have no idea why this arbitrary naming is happening :/
-
->> +- interrupts: data ready (DRDY) and interrupt (INT1) lines
->> +  from the chip, the DRDY interrupt must be placed first.
->> +  The interrupts can be triggered on rising or falling
->> +  edges alike.
->
-> The ak8975 probably should be an interrupt instead of gpio, too...
-
-Yes. Or well. "data ready" is usually used as interrupt but to the
-circuit designers it's just a signal which tells when the state machine
-has finished.
-
-Yours,
-Linus Walleij
+-- 
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
