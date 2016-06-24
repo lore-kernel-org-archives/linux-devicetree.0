@@ -1,88 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: Add binding for brcm,bcm2835-sdhost.
-Date: Fri, 24 Jun 2016 10:55:41 -0500
-Message-ID: <20160624155541.GA12266@rob-hp-laptop>
-References: <1466595738-2229-1-git-send-email-kraxel@redhat.com>
- <1466595738-2229-2-git-send-email-kraxel@redhat.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] ARM: davinci: da8xx: Add CFGCHIP syscon platform
+ declaration.
+Date: Fri, 24 Jun 2016 11:00:24 -0500
+Message-ID: <576D5918.40906@lechnology.com>
+References: <1462837612-7803-1-git-send-email-david@lechnology.com>
+ <1462837612-7803-3-git-send-email-david@lechnology.com>
+ <7e0373cf-2ae9-e205-2226-0ded6894b709@cogentembedded.com>
+ <57320FE6.60003@lechnology.com> <5745893C.5040603@ti.com>
+ <576AC5CD.2010107@lechnology.com> <576CCFE9.7020005@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466595738-2229-2-git-send-email-kraxel@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Eric Anholt <eric@anholt.net>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <576CCFE9.7020005-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 01:42:14PM +0200, Gerd Hoffmann wrote:
-> From: Eric Anholt <eric@anholt.net>
-> 
-> This is the other SD controller on the platform, which can be swapped
-> to the role of SD card host using pin muxing.
-> 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  .../devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt |  3 +++
->  .../bindings/mmc/brcm,bcm2835-sdhost.txt           | 24 ++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-> index 59476fb..3cc74e2 100644
-> --- a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhci.txt
-> @@ -15,4 +15,7 @@ sdhci: sdhci {
->  	interrupts = <2 30>;
->  	clocks = <&clk_mmc>;
->  	bus-width = <4>;
-> +	dmas = <&dma 13>,
-> +	       <&dma 13>;
-> +	dma-names = "tx", "rx";
+>>
+>> Re: USB needing fixed, I'm not sure how to do this and I won't have time
+>> for at least the next 2 or 3 months to do anything about it. The problem
+>> is that the MUSB can't detect the ID pin. As a workaround, it is
+>> detecting the VBUS state and using that to determine the ID pin state.
+>> So, when you attach a self-powered device, it tells the VBUS to turn
+>> off, which in turn triggers the workaround to say that the ID pin has
+>> changed state.
+>
+> I seem to be missing the original problem report. Can you provide a link
+> to the discussion?
+>
+> Thanks,
+> Sekhar
+>
 
-This looks like it should be separate patch.
-
->  };
-> diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-> new file mode 100644
-> index 0000000..074992c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
-> @@ -0,0 +1,24 @@
-> +Broadcom BCM2835 SDHOST controller
-> +
-> +This file documents differences between the core properties described
-> +by mmc.txt and the properties that represent the BCM2835 controller.
-> +
-> +Required properties:
-> +- compatible: Should be "brcm,bcm2835-sdhci".
-
-Doesn't match the example.
-
-> +- clocks: The clock feeding the SDHOST controller.
-
-reg?
-
-interrupts?
-
-> +
-> +Optional properties:
-> +- dmas: DMA channels for read and write.
-> +          See Documentation/devicetree/bindings/dma/dma.txt for details
-
-dma-names?
-
-> +
-> +Example:
-> +
-> +sdhost: sdhost@7e202000 {
-> +	compatible = "brcm,bcm2835-sdhost";
-> +	reg = <0x7e202000 0x100>;
-> +	interrupts = <2 24>;
-> +	clocks = <&clocks BCM2835_CLOCK_VPU>;
-> +	dmas = <&dma 13>,
-> +	       <&dma 13>;
-> +	dma-names = "tx", "rx";
-> +};
-> -- 
-> 1.8.3.1
-> 
+Here is the thread: https://lkml.org/lkml/2016/5/9/942
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
