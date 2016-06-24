@@ -1,84 +1,82 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: magn: DT bindings for AK8974
-Date: Fri, 24 Jun 2016 12:19:52 -0500
-Message-ID: <20160624171952.GA23588@rob-hp-laptop>
-References: <1466608276-10401-1-git-send-email-linus.walleij@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/7] Documentation: of: add type property
+Date: Fri, 24 Jun 2016 12:41:39 -0500
+Message-ID: <CAL_JsqKxYUXJoAmYQOiSVdodKmrEPqVgm84ZVhhEw=FuJQhZTw@mail.gmail.com>
+References: <87fus3xr2q.wl%kuninori.morimoto.gx@renesas.com> <87eg7nxr00.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1466608276-10401-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samu Onkalo <samu.p.onkalo-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87eg7nxr00.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@linaro.org>, Mark Brown <broonie@kernel.org>, Laurent <laurent.pinchart@ideasonboard.com>, Guennadi <g.liakhovetski@gmx.de>, Grant Likely <grant.likely@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Linux-Kernel <linux-kernel@vger.kernel.org>, Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 22, 2016 at 05:11:16PM +0200, Linus Walleij wrote:
-> This adds device tree bindings for the AK8974 magnetometer, similar
-> to those for the AK8975.
+On Thu, Jun 23, 2016 at 9:32 PM, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+>
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>
+> OF graph is used mainly from V4L2, but ALSA needs to use it too.
+> Then, ALSA needs to know each port/endpoint type, otherwise it
+> can't detect ALSA port/endpoint correctly.
 
-Seems like they should be shared, but there don't appear to be any 
-datasheets for 8974 to really tell. Really only matters if the 
-programming models are similar.
+Bindings should be defined in terms of hardware, not Linux subsystems.
 
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Samu Onkalo <samu.p.onkalo-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> This patch enables to use type property on OF graph.
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > ---
->  .../bindings/iio/magnetometer/ak8974.txt           | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
-> new file mode 100644
-> index 000000000000..967f8e9b9319
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
-> @@ -0,0 +1,28 @@
-> +* Asahi Kasei AK8974 magnetometer sensor
+>  Documentation/devicetree/bindings/graph.txt | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
+> index fcb1c6a..b5b9040 100644
+> --- a/Documentation/devicetree/bindings/graph.txt
+> +++ b/Documentation/devicetree/bindings/graph.txt
+> @@ -110,6 +110,32 @@ device-2 {
+>          };
+>  };
+>
+> +port / endpoint type
+> +--------------------
 > +
-> +Required properties:
-> +
-> +- compatible : should be "asahi-kasei,ak8974"
-> +- reg : the I2C address of the magnetometer
-> +
-> +Optional properties:
-> +
-> +- avdd-supply: regulator supply for the analog voltage
-> +  (see regulator/regulator.txt)
-> +- dvdd-supply: regulator supply for the digital voltage
-> +  (see regulator/regulator.txt)
+> +Each ports / port / endpoint can have its type if needed.
 
-This is probably more correct than single vdd-supply for 8975 which in 
-fact has 2 supplies.
+I think type should only apply to a port. ports is only a grouping for
+multiple ports. endpoints are just the connection. A port is a single
+data flow, so 2 endpoints on a port reflect 2 possible connections for
+that data flow.
 
-> +- interrupts: data ready (DRDY) and interrupt (INT1) lines
-> +  from the chip, the DRDY interrupt must be placed first.
-> +  The interrupts can be triggered on rising or falling
-> +  edges alike.
+> +child node can take over parent node type. below example indicates
+> +device0 type is "typeA" && "typeB",
+> +device1 type is "typeA" && "typeB" && "typeC".
 
-The ak8975 probably should be an interrupt instead of gpio, too...
+This does not make sense to me. A concrete example perhaps using HDMI
+audio would be helpful.
 
 > +
-> +Example:
+> +device {
+> +       ports {
+> +               type = "typeA";
 > +
-> +ak8974@0f {
-> +	compatible = "asahi-kasei,ak8974";
-> +	reg = <0x0f>;
-> +	avdd-supply = <&foo_reg>;
-> +	dvdd-supply = <&bar_reg>;
-> +	interrupts = <0 IRQ_TYPE_EDGE_RISING>,
-> +		     <1 IRQ_TYPE_EDGE_RISING>;
+> +               port@0 {
+> +                       type = "typeB";
+> +
+> +                       device0: endpoint@0 {
+> +                       };
+> +
+> +                       device1: endpoint@1 {
+> +                               type = "typeC";
+> +                       };
+> +               };
+> +               ...
+> +       };
 > +};
-> -- 
-> 2.4.11
-> 
+> +
+>
+>  Required properties
+>  -------------------
 > --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 1.9.1
+>
