@@ -1,53 +1,110 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 06/14] ARM: dts: sun8i: Add cpu0 label to sun8i-h3.dtsi
-Date: Fri, 24 Jun 2016 11:48:23 +0800
-Message-ID: <CAGb2v66eskVAxdz8VtjBJBCO7VV9WL4bdFDVrPWrSmxk4RASCw@mail.gmail.com>
-References: <20160623192104.18720-1-megous@megous.com> <20160623192104.18720-7-megous@megous.com>
+From: Jongsung Kim <neidhard.kim@lge.com>
+Subject: [PATCH] clk: fixed-factor: add optional dt-binding clock-flags
+Date: Fri, 24 Jun 2016 12:49:48 +0900
+Message-ID: <1466740188-51682-1-git-send-email-neidhard.kim@lge.com>
+References: <20160621005910.GN1521@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160623192104.18720-7-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160621005910.GN1521@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chanho Min <chanho.min@lge.com>, Jongsung Kim <neidhard.kim@lge.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 24, 2016 at 3:20 AM,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->
-> Add label to the first cpu so that it can be referenced
-> from derived dts files.
->
-> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index 9938972..82faefc 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -52,7 +52,7 @@
->                 #address-cells = <1>;
->                 #size-cells = <0>;
->
-> -               cpu@0 {
-> +               cpu0: cpu@0 {
->                         compatible = "arm,cortex-a7";
->                         device_type = "cpu";
->                         reg = <0>;
+There is no way to set additional flags for a DT-initialized fixed-
+factor-clock, and it can be problematic i.e., when the clock rate
+needs to be changed. [1][2]
 
-Can you also set the cpu clock here? It is part of the SoC
-and does not belong in the board DTS files.
+This patch introduces an optional dt-binding named "clock-flags" to
+be used for passing any needed flags from dts.
 
-Otherwise this one looks good.
+[1] http://www.spinics.net/lists/linux-clk/msg09040.html
+[2] https://lkml.org/lkml/2016/6/20/1025
 
-ChenYu
+Signed-off-by: Jongsung Kim <neidhard.kim@lge.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+---
+ .../bindings/clock/fixed-factor-clock.txt          |  4 ++++
+ drivers/clk/clk-fixed-factor.c                     |  4 +++-
+ include/dt-bindings/clk/clk.h                      | 22 ++++++++++++++++++++++
+ 3 files changed, 29 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/clk/clk.h
 
-> --
-> 2.9.0
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
+index 1bae8527..3e1b79e 100644
+--- a/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
++++ b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
+@@ -13,12 +13,16 @@ Required properties:
+ 
+ Optional properties:
+ - clock-output-names : From common clock binding.
++- clock-flags : Additional flags to be used.
+ 
+ Example:
++	#include <dt-bindings/clk/clk.h>
++
+ 	clock {
+ 		compatible = "fixed-factor-clock";
+ 		clocks = <&parentclk>;
+ 		#clock-cells = <0>;
+ 		clock-div = <2>;
+ 		clock-mult = <1>;
++		clock-flags = <CLK_SET_RATE_PARENT>;
+ 	};
+diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
+index 75cd6c7..da3cd9c 100644
+--- a/drivers/clk/clk-fixed-factor.c
++++ b/drivers/clk/clk-fixed-factor.c
+@@ -150,6 +150,7 @@ void __init of_fixed_factor_clk_setup(struct device_node *node)
+ 	struct clk *clk;
+ 	const char *clk_name = node->name;
+ 	const char *parent_name;
++	unsigned long flags = 0;
+ 	u32 div, mult;
+ 
+ 	if (of_property_read_u32(node, "clock-div", &div)) {
+@@ -166,8 +167,9 @@ void __init of_fixed_factor_clk_setup(struct device_node *node)
+ 
+ 	of_property_read_string(node, "clock-output-names", &clk_name);
+ 	parent_name = of_clk_get_parent_name(node, 0);
++	of_property_read_u32(node, "clock-flags", &flags);
+ 
+-	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
++	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, flags,
+ 					mult, div);
+ 	if (!IS_ERR(clk))
+ 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+diff --git a/include/dt-bindings/clk/clk.h b/include/dt-bindings/clk/clk.h
+new file mode 100644
+index 0000000..1834933
+--- /dev/null
++++ b/include/dt-bindings/clk/clk.h
+@@ -0,0 +1,22 @@
++/*
++ * See include/linux/clk-provider.h for more information.
++ */
++
++#ifndef __DT_BINDINGS_CLK_CLK_H
++#define __DT_BINDINGS_CLK_CLK_H
++
++#define BIT(nr)	(1UL << (nr))
++
++#define CLK_SET_RATE_GATE		BIT(0)
++#define CLK_SET_PARENT_GATE		BIT(1)
++#define CLK_SET_RATE_PARENT		BIT(2)
++#define CLK_IGNORE_UNUSED		BIT(3)
++#define CLK_IS_BASIC			BIT(5)
++#define CLK_GET_RATE_NOCACHE		BIT(6)
++#define CLK_SET_RATE_NO_REPARENT	BIT(7)
++#define CLK_GET_ACCURACY_NOCACHE	BIT(8)
++#define CLK_RECALC_NEW_RATES		BIT(9)
++#define CLK_SET_RATE_UNGATE		BIT(10)
++#define CLK_IS_CRITICAL			BIT(11)
++
++#endif
+-- 
+2.7.4
+
