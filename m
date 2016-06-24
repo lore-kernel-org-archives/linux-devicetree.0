@@ -1,7 +1,7 @@
 From: Jongsung Kim <neidhard.kim@lge.com>
-Subject: [PATCH] clk: fixed-factor: add optional dt-binding clock-flags
-Date: Fri, 24 Jun 2016 12:49:48 +0900
-Message-ID: <1466740188-51682-1-git-send-email-neidhard.kim@lge.com>
+Subject: [PATCH v2] clk: fixed-factor: add optional dt-binding clock-flags
+Date: Fri, 24 Jun 2016 13:12:52 +0900
+Message-ID: <1466741572-58802-1-git-send-email-neidhard.kim@lge.com>
 References: <20160621005910.GN1521@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -21,6 +21,9 @@ be used for passing any needed flags from dts.
 
 [1] http://www.spinics.net/lists/linux-clk/msg09040.html
 [2] https://lkml.org/lkml/2016/6/20/1025
+
+Changes since v1:
+ - fix possible build failure when using gcc-5 or gcc-6
 
 Signed-off-by: Jongsung Kim <neidhard.kim@lge.com>
 Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
@@ -55,14 +58,14 @@ index 1bae8527..3e1b79e 100644
 +		clock-flags = <CLK_SET_RATE_PARENT>;
  	};
 diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index 75cd6c7..da3cd9c 100644
+index 75cd6c7..e626cad 100644
 --- a/drivers/clk/clk-fixed-factor.c
 +++ b/drivers/clk/clk-fixed-factor.c
 @@ -150,6 +150,7 @@ void __init of_fixed_factor_clk_setup(struct device_node *node)
  	struct clk *clk;
  	const char *clk_name = node->name;
  	const char *parent_name;
-+	unsigned long flags = 0;
++	u32 flags = 0;
  	u32 div, mult;
  
  	if (of_property_read_u32(node, "clock-div", &div)) {
