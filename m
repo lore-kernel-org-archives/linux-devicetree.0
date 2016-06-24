@@ -1,37 +1,76 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] firmware: Amlogic: Add secure monitor driver
-Date: Fri, 24 Jun 2016 23:05:14 +0200
-Message-ID: <20160624210514.GB5083@localhost>
-References: <1466339944-602-1-git-send-email-carlo@caione.org>
- <1466339944-602-2-git-send-email-carlo@caione.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 4/5] pwm: tegra: Add DT node compatible for Tegra186
+Date: Fri, 24 Jun 2016 15:30:32 -0600
+Message-ID: <576DA678.7020907@wwwdotorg.org>
+References: <1466596043-27262-1-git-send-email-ldewangan@nvidia.com>
+ <1466596043-27262-5-git-send-email-ldewangan@nvidia.com>
+ <20160622124614.GG26943@ulmo.ba.sec> <20160624161015.GA13727@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1466339944-602-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20160624161015.GA13727@rob-hp-laptop>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, gnurou@gmail.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/06/16 14:38, Carlo Caione wrote:
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> 
-> Introduce a driver to provide calls into secure monitor mode.
-> 
-> In the Amlogic SoCs these calls are used for multiple reasons: access to
-> NVMEM, set USB boot, enable JTAG, etc...
-> 
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+On 06/24/2016 10:10 AM, Rob Herring wrote:
+> On Wed, Jun 22, 2016 at 02:46:14PM +0200, Thierry Reding wrote:
+>> On Wed, Jun 22, 2016 at 05:17:22PM +0530, Laxman Dewangan wrote:
+>>> Tegra186 has 8 different PWM controller and each controller has only
+>>> one output. Earlier generation SoCs have the 4 PWM output per controller.
+>>>
+>>> Add DT node compatible for Tegra186.
+>>>
+>>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 10 ++++++----
+>>>   1 file changed, 6 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+>>> index c52f03b..2851b2d 100644
+>>> --- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+>>> +++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+>>> @@ -1,10 +1,12 @@
+>>>   Tegra SoC PWFM controller
+>>>
+>>>   Required properties:
+>>> -- compatible: For Tegra20, must contain "nvidia,tegra20-pwm".  For Tegra30,
+>>> -  must contain "nvidia,tegra30-pwm".  Otherwise, must contain
+>>> -  "nvidia,<chip>-pwm", plus one of the above, where <chip> is tegra114,
+>>> -  tegra124, tegra132, or tegra210.
+>>> +- compatible: For Tegra20, must contain "nvidia,tegra20-pwm".
+>>> +	      For Tegra30, must contain "nvidia,tegra30-pwm".
+>>> +	      For Tegra114, Tegra124, Tegra132, Tegra210 must contain
+>>> +	      "nvidia,<chip>-pwm", plus one of the above, where <chip> is
+>>> +	      tegra114, tegra124, tegra132, or tegra210.
+>>> +	      For Tegra186, must contain "nvidia,tegra186-pwm".
+>>
+>> Rob, I recall discussing this with you a couple of weeks ago, but fail
+>> to remember the outcome and can't find a link to the discussion either.
+>> Wasn't there a new standard way of documenting this kind of compatible
+>> string list?
+>
+> We did? This is fine for me. However, "plus one of the above" is not
+> clear. That means either is valid? If all are "the same" I would expect
+> that only nvidia,tegra20-pwm is the fallback. I'm guessing this is
+> docuemnting what happened in practice though. Probably should update the
+> doc and dts files to reflect desired practice rather than what may be in
+> the wild.
 
-Hey Mark,
-can you take a look to this patch? Not sure who is supposed to ACK /
-review it.
+FWIW, I've started listing the legal values as explicit separate bullet 
+items rather than prose. See the example below - all those entries are 
+just one string simply due to the HW design it represents, but each 
+entry could be a list (i.e. is a complete compatible value):
 
-Thanks,
+- compatible
+     Array of strings.
+     One of:
+     - "nvidia,tegra186-gpio".
+     - "nvidia,tegra186-gpio-aon".
 
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+could be expanded as e.g.
+
+     - "nvidia,tegra999-gpio", "nvidia,tegra186-gpio"
+     ...
