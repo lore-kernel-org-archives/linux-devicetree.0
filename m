@@ -1,60 +1,87 @@
-From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt-bindings: Document the STM32 USB OTG DWC2 core binding
-Date: Fri, 24 Jun 2016 15:51:18 -0300
-Message-ID: <CAF3+Tqe05kXExob_62w80BBbXz6p01-WwXM1+R6ecp0JtsgviA@mail.gmail.com>
-References: <1466562349-5043-1-git-send-email-bruherrera@gmail.com>
- <1466562349-5043-3-git-send-email-bruherrera@gmail.com> <20160624154118.GA4598@rob-hp-laptop>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dt/bindings: Add bindings for Micro
+ Crystal rv8803
+Date: Fri, 24 Jun 2016 12:14:12 -0700
+Message-ID: <CAHQ1cqF7ByYz9stnL_-siMJHGoyuLNAPwjcWA_fWRqy7WeMF=A@mail.gmail.com>
+References: <1466577742-18824-1-git-send-email-dirk.behme@de.bosch.com>
+ <1466577742-18824-3-git-send-email-dirk.behme@de.bosch.com> <20160624074849.GK5809@piout.net>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160624154118.GA4598@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.seppala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Return-path: <rtc-linux+bncBDKOBWPM5ABRBBMNW25QKGQEXRGR4UQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160624074849.GK5809-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 24, 2016 at 12:41 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Jun 21, 2016 at 11:25:49PM -0300, Bruno Herrera wrote:
->> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Fri, Jun 24, 2016 at 12:48 AM, Alexandre Belloni
+<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On 22/06/2016 at 08:42:20 +0200, Dirk Behme wrote :
+>> From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+>>
+>> ... and Epson RX8900 real time clock
+>>
+>> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 >> ---
->>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
->>  1 file changed, 1 insertion(+)
+>>  .../devicetree/bindings/rtc/epson,rx8900.txt       | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx8900.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->> index 20a68bf..79e5370 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->> @@ -11,6 +11,7 @@ Required properties:
->>    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
->>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
->>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
->> +  - st,stm32-fsotg: The DWC2 USB controller instance in STM32F4 SoCs in FS mode;
+>> diff --git a/Documentation/devicetree/bindings/rtc/epson,rx8900.txt b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
+>> new file mode 100644
+>> index 0000000..3f61e51
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
+>> @@ -0,0 +1,22 @@
+>> +Real Time Clock driver for:
+>> +  - Epson RX8900
+>> +  - Micro Crystal rv8803
+>> +
+>> +Required properties:
+>> +- compatible: should be: "microcrystal,rv8803" or "epson,rx8900"
+>> +- reg : the I2C address of the device for I2C
+>> +
+>> +Optional properties:
+>> +- epson,vdet-disable : boolean, if present will disable voltage detector.
+>> +  Should be set if no backup battery is used.
 >
-> This should go above snps,dwc2.
+> I guess we need to make that one generic. I would use
+> voltage-detection-disable.
 >
-Ok, tks!
-
-> What determines FS mode vs. HS?
+> Andrey, can you use that one instead of
+> dallas,disable-oscillator-stop-flag ?
 >
-Its more HW design decision.
-STM32F429/439/469 has two OTG controllers, one that is FS (internal
-phy) and other that is HS (but can also work in FS mode with
-internal/external phy)
-This bind work with both cores FS and HS working with the internal PHY.
 
-I tested the following configurations:
-1 - STM32F429I-DISCOv1 board (OTG HS working in FS mode internal PHY)
-2 - STM32F469I-DISCO board (OTG FS)
+AFAIU from reading RX8900 datasheet, it has two power rails main and a
+backup one, so setting this property disables circuitry responsible
+for detecting main power rail failure and switching to a backup one.
 
-I did not tested OTG HS core working in FS mode with external PHY (I2C).
+DS1341 has only one power rail and setting
+"dallas,disable-oscillator-stop-flag" will disable circuitry
+responsible for detection of failure of the oscillator ticking its
+internal clock.
 
->>  - reg : Should contain 1 register range (address and length)
->>  - interrupts : Should contain 1 interrupt
->>  - clocks: clock provider specifier
->> --
->> 2.7.4 (Apple Git-66)
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+IMHO, those functionalities don't have much in common and using the
+same property would be confusing for users of that binding on DS1341,
+but it's a boolean so there's not technical reason I couldn't.
+
+Thanks,
+Andrey Smirnov
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
