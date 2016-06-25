@@ -1,71 +1,99 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] scripts/dtc: dt_to_config, use full path for dtx_diff
-Date: Fri, 24 Jun 2016 17:56:25 -0700
-Message-ID: <576DD6B9.2040303@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 06/14] ARM: dts: sun8i: Add cpu0 label to sun8i-h3.dtsi
+Date: Sat, 25 Jun 2016 09:02:48 +0800
+Message-ID: <CAGb2v665O75vQEfo5WdWtWJSbKEbLi6MBAHbgZC7pyrOCOu+6g@mail.gmail.com>
+References: <20160623192104.18720-1-megous@megous.com> <20160623192104.18720-7-megous@megous.com>
+ <CAGb2v66eskVAxdz8VtjBJBCO7VV9WL4bdFDVrPWrSmxk4RASCw@mail.gmail.com> <adaf7f61-af80-cc02-8c47-af721b86f81e@megous.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBUNQW65QKGQEVCE4ISQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <adaf7f61-af80-cc02-8c47-af721b86f81e-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+On Sat, Jun 25, 2016 at 6:51 AM, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wro=
+te:
+> Hello,
+>
+> comments below.
+>
+> On 24.6.2016 05:48, Chen-Yu Tsai wrote:
+>> On Fri, Jun 24, 2016 at 3:20 AM,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+>>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Add label to the first cpu so that it can be referenced
+>>> from derived dts files.
+>>>
+>>> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-=
+h3.dtsi
+>>> index 9938972..82faefc 100644
+>>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+>>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+>>> @@ -52,7 +52,7 @@
+>>>                 #address-cells =3D <1>;
+>>>                 #size-cells =3D <0>;
+>>>
+>>> -               cpu@0 {
+>>> +               cpu0: cpu@0 {
+>>>                         compatible =3D "arm,cortex-a7";
+>>>                         device_type =3D "cpu";
+>>>                         reg =3D <0>;
+>>
+>> Can you also set the cpu clock here? It is part of the SoC
+>> and does not belong in the board DTS files.
+>
+> Do you mean operating-points, or something else? Different SBCs will
+> probably require different combinations of operating points just for
+> safety's sake, because they have different regulators and [some have
+> botched] thermal designs, so it might make sense to customize it for
+> differnt boards, and I don't feel adventurous enough setting it for all
+> H3 boards out there.
 
-Do not require dtx_diff to be in $PATH.
+I meant clocks =3D <...> and clock-latency =3D <...>.
 
-dt_to_config already needs to be run from the root directory of a kernel
-tree so use scripts/dtc/dtx_diff instead of dtx_diff.
+These 2 are part of the SoC.
 
-Signed-off-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
----
- scripts/dtc/dt_to_config |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+The OPP can stay in the board files. It's a pity there's no standard
+OPP table for H3 though. :(
 
-Index: b/scripts/dtc/dt_to_config
-===================================================================
---- a/scripts/dtc/dt_to_config
-+++ b/scripts/dtc/dt_to_config
-@@ -871,19 +871,10 @@ sub read_dts()
- 		exit 3;
- 	}
- 
--	if (! `which dtx_diff`) {
--		print STDERR "\n";
--		print STDERR "file 'dtx_diff' is not executable or does not exist\n";
--		print STDERR "   Is scripts/dtc/ in the shell \$PATH variable?\n";
--		print STDERR "   Are you in the root directory of a kernel tree?\n";
--		print STDERR "\n";
--		exit 3;
--	}
--
--	if (!open(DT_FILE, "-|", "dtx_diff $file")) {
-+	if (!open(DT_FILE, "-|", "$dtx_diff $file")) {
- 		print STDERR "\n";
- 		print STDERR "shell command failed:\n";
--		print STDERR "   dtx_diff $file\n";
-+		print STDERR "   $dtx_diff $file\n";
- 		print STDERR "\n";
- 		exit 3;
- 	}
-@@ -1207,6 +1198,15 @@ if ($white_list_config) {
- 	}
- }
- 
-+if (-x "scripts/dtc/dtx_diff") {
-+	$dtx_diff = "scripts/dtc/dtx_diff";
-+} else {
-+
-+	print STDERR "\n";
-+	print STDERR "$script_name must be run from the root directory of a Linux kernel tree\n";
-+	print STDERR "\n";
-+	exit 3;
-+}
- 
- for $file (@ARGV) {
- 	&read_dts($file);
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
+
+>
+> Or is this comment related to the missing cpu clock rate message I see
+> on every boot?
+>
+> [    0.058912] /cpus/cpu@0 missing clock-frequency property
+>
+> regards,
+>   Ondrej
+>
+>> Otherwise this one looks good.
+>>
+>> ChenYu
+>>
+>>> --
+>>> 2.9.0
+>>>
+>
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
