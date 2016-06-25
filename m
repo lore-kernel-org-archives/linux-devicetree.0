@@ -1,8 +1,8 @@
 From: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Subject: [PATCH v2 07/14] ARM: dts: sun8i: Use sun8i-h3-pll1-clk
- for pll1 in H3
-Date: Sat, 25 Jun 2016 05:45:04 +0200
-Message-ID: <20160625034511.7966-8-megous@megous.com>
+Subject: [PATCH v2 05/14] dt-bindings: document SY8106A
+ regulator driver
+Date: Sat, 25 Jun 2016 05:45:02 +0200
+Message-ID: <20160625034511.7966-6-megous@megous.com>
 References: <20160625034511.7966-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -17,35 +17,46 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:VOLTAGE AND CURRENT REGULATOR FRAMEWORK" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-PLL1 on H3 requires special factors application algorithm,
-when the rate is changed. This algorithm was extracted
-from the arisc code that handles frequency scaling
-in the BSP kernel.
-
-This algorithm is implemented by sun8i-h3-pll1-clk.
+This patch adds the binding documentation for the
+sy8106a regulator driver.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/regulator/sy8106a-regulator.txt        | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 4a4926b..b3247f4 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -106,7 +106,7 @@
- 
- 		pll1: clk@01c20000 {
- 			#clock-cells = <0>;
--			compatible = "allwinner,sun8i-a23-pll1-clk";
-+			compatible = "allwinner,sun8i-h3-pll1-clk";
- 			reg = <0x01c20000 0x4>;
- 			clocks = <&osc24M>;
- 			clock-output-names = "pll1";
+diff --git a/Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt b/Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt
+new file mode 100644
+index 0000000..1e623a34
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt
+@@ -0,0 +1,21 @@
++SY8106A Voltage regulator
++
++Required properties:
++- compatible: Must be "silergy,sy8106a"
++- reg: I2C slave address - must be <0x65>
++
++Any property defined as part of the core regulator binding, defined in
++regulator.txt, can also be used.
++
++Example:
++
++	sy8106a {
++		compatible = "silergy,sy8106a";
++		reg = <0x65>;
++		regulator-name = "sy8106a-vdd";
++		regulator-min-microvolt = <1000000>;
++		regulator-max-microvolt = <1400000>;
++		regulator-ramp-delay = <200>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
 -- 
 2.9.0
