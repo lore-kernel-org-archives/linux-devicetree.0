@@ -1,160 +1,153 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v2 14/15] clk: sunxi-ng: Add H3 clocks
-Date: Fri, 24 Jun 2016 17:28:37 -0700
-Message-ID: <146681451703.35033.17009542256505173233@resonance>
-References: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
- <20160607204154.31967-15-maxime.ripard@free-electrons.com>
+From: Andrew Duggan <aduggan@synaptics.com>
+Subject: Re: [PATCH v3] Input: synaptics-rmi4: Support regulator supplies
+Date: Fri, 24 Jun 2016 17:40:00 -0700
+Message-ID: <576DD2E0.9000002@synaptics.com>
+References: <1465622722-31714-1-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160607204154.31967-15-maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1465622722-31714-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Christopher Heiny <cheiny@synaptics.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On 06/10/2016 10:25 PM, Bjorn Andersson wrote:
+> From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>
+> Support the two supplies - vdd and vio - to make it possible to control
+> power to the Synaptics chip.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Nice series! Looks really great to me. :-)
+Reviewed-by: Andrew Duggan <aduggan@synaptics.com>
 
-Quoting Maxime Ripard (2016-06-07 13:41:53)
-> +static SUNXI_CCU_NKMP_WITH_GATE_LOCK(pll_cpux_clk, "pll-cpux",
-> +                                    "osc24M", 0x000,
-> +                                    8, 5,      /* N */
-> +                                    4, 2,      /* K */
-> +                                    0, 2,      /* M */
-> +                                    16, 2,     /* P */
-> +                                    BIT(31),   /* gate */
-> +                                    BIT(28),   /* lock */
-> +                                    0);
-
-I'm more of a fan of expanding the struct with designated initializers
-versus macro use, but that's only personal preference.
-
-> +static const char * const ahb2_parents[] = { "ahb1" , "pll-periph0" };
-> +static struct ccu_mux ahb2_clk = {
-> +       .mux            = {
-> +               .shift  = 0,
-> +               .width  = 1,
+> ---
+>   .../devicetree/bindings/input/rmi4/rmi_i2c.txt     |  9 +++++
+>   drivers/input/rmi4/rmi_i2c.c                       | 41 ++++++++++++++++++++++
+>   2 files changed, 50 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+> index 95fa715c6046..ec908b91fd90 100644
+> --- a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+> @@ -22,6 +22,15 @@ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>   - syna,reset-delay-ms: The number of milliseconds to wait after resetting the
+>   			device.
+>   
+> +- syna,startup-delay-ms: The number of milliseconds to wait after powering on
+> +			 the device.
 > +
-> +               .fixed_prediv   = {
-> +                       .index  = 1,
-> +                       .div    = 2,
-> +               },
-> +       },
+> +- vdd-supply: VDD power supply.
+> +See ../regulator/regulator.txt
 > +
-> +       .common         = {
-> +               .reg            = 0x05c,
-> +               .features       = CCU_FEATURE_FIXED_PREDIV,
-> +               .hw.init        = SUNXI_HW_INIT_PARENTS("ahb2",
-> +                                                       ahb2_parents,
-
-Note that it's possible to initialize the parent strings here if you
-prefer:
-
-	.hw.init = &(struct clk_init_data){
-		   .parent_names = (const char *[]){ "ahb1",
-		   				     "pll-periph0" };
-
-Similar to the above, no big deal, just an observation.
-
-> +static struct ccu_common *sun8i_h3_ccu_clks[] = {
-> +       [CLK_PLL_CPUX]          = &pll_cpux_clk.common,
-> +       [CLK_PLL_AUDIO_BASE]    = &pll_audio_base_clk.common,
-> +       [CLK_PLL_AUDIO]         = &pll_audio_clk.common,
-
-OK, it looks like you followed the qcom clk driver approach here, which
-is a nice way to do things. However, as Stephen alluded to in his
-response to the cover letter, the clk_hw_* api's are an even more
-friendly interface for clock providers. For example, check out the gxbb
-clk driver probe:
-
-	static int gxbb_clkc_probe(struct platform_device *pdev)
-	{
-		void __iomem *clk_base;
-		int ret, clkid, i;
-		struct device *dev = &pdev->dev;
-	
-		/*  Generic clocks and PLLs */
-		clk_base = of_iomap(dev->of_node, 0);
-		if (!clk_base) {
-			pr_err("%s: Unable to map clk base\n", __func__);
-			return -ENXIO;
-		}
-	
-		/* Populate base address for PLLs */
-		for (i = 0; i < ARRAY_SIZE(gxbb_clk_plls); i++)
-			gxbb_clk_plls[i]->base = clk_base;
-	
-		/* Populate base address for MPLLs */
-		for (i = 0; i < ARRAY_SIZE(gxbb_clk_mplls); i++)
-			gxbb_clk_mplls[i]->base = clk_base;
-
-		...
-
-		/*
-		 * register all clks
-		 */
-		for (clkid = 0; clkid < NR_CLKS; clkid++) {
-			ret = devm_clk_hw_register(dev, gxbb_hw_onecell_data.hws[clkid]);
-			if (ret)
-				goto iounmap;
-		}
-
-The nice thing about struct ccu_common is that you don't have to walk
-the list of clocks for each separate clock type like the above probe
-function does. I'm still thinking of the best way to solve this
-generically. Maybe add a .base member struct clk_hw? I dunno, and I've
-resisted the urge to add stuff to struct clk_hw in the past... But I
-really want to minimize this .probe as much as possible, and I do not
-want every clock provider driver to be forced to invent something like
-struct ccu_common every time. Anyways, that is not a blocker for your
-implementation to be merged, but Stephen's question in patch #4 got me
-thinking about this again...
-
-The real nice part is the call to devm_clk_hw_register. That uses the
-new clk_hw_* apis and struct clk_hw_onecell_data, which is initialized
-statically like so:
-
-	static struct clk_hw_onecell_data gxbb_hw_onecell_data = {
-		.hws = {
-			[CLKID_SYS_PLL]	     = &gxbb_sys_pll.hw,
-			[CLKID_CPUCLK]	      = &gxbb_cpu_clk.hw,
-			...
-		},
-		.num = NR_CLKS,
-	};
-
-Unfortunately I believe it impossible to replace NR_CLKS with some
-ARRAY_SIZE stuff because C. As Stephen mentioned, please use this method
-instead.
-
-> diff --git a/include/dt-bindings/clock/sun8i-h3.h b/include/dt-bindings/clock/sun8i-h3.h
-> new file mode 100644
-> index 000000000000..96eced56e7a2
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/sun8i-h3.h
-> @@ -0,0 +1,162 @@
-> +#ifndef _DT_BINDINGS_CLK_SUN8I_H3_H_
-> +#define _DT_BINDINGS_CLK_SUN8I_H3_H_
+> +- vio-supply: VIO power supply
+> +See ../regulator/regulator.txt
 > +
-> +#define CLK_PLL_CPUX           0
-> +#define CLK_PLL_AUDIO_BASE     1
-> +#define CLK_PLL_AUDIO          2
-> +#define CLK_PLL_AUDIO_2X       3
-> +#define CLK_PLL_AUDIO_4X       4
+>   Function Parameters:
+>   Parameters specific to RMI functions are contained in child nodes of the rmi device
+>    node. Documentation for the parameters of each function can be found in:
+> diff --git a/drivers/input/rmi4/rmi_i2c.c b/drivers/input/rmi4/rmi_i2c.c
+> index a96a326b53bd..71dc6cdde8ac 100644
+> --- a/drivers/input/rmi4/rmi_i2c.c
+> +++ b/drivers/input/rmi4/rmi_i2c.c
+> @@ -11,6 +11,8 @@
+>   #include <linux/rmi.h>
+>   #include <linux/irq.h>
+>   #include <linux/of.h>
+> +#include <linux/delay.h>
+> +#include <linux/regulator/consumer.h>
+>   #include "rmi_driver.h"
+>   
+>   #define BUFFER_SIZE_INCREMENT 32
+> @@ -37,6 +39,9 @@ struct rmi_i2c_xport {
+>   
+>   	u8 *tx_buf;
+>   	size_t tx_buf_size;
+> +
+> +	struct regulator_bulk_data supplies[2];
+> +	u32 startup_delay;
+>   };
+>   
+>   #define RMI_PAGE_SELECT_REGISTER 0xff
+> @@ -246,6 +251,24 @@ static int rmi_i2c_probe(struct i2c_client *client,
+>   		return -ENODEV;
+>   	}
+>   
+> +	rmi_i2c->supplies[0].supply = "vdd";
+> +	rmi_i2c->supplies[1].supply = "vio";
+> +	retval = devm_regulator_bulk_get(&client->dev,
+> +					 ARRAY_SIZE(rmi_i2c->supplies),
+> +					 rmi_i2c->supplies);
+> +	if (retval < 0)
+> +		return retval;
+> +
+> +	retval = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
+> +				       rmi_i2c->supplies);
+> +	if (retval < 0)
+> +		return retval;
+> +
+> +	of_property_read_u32(client->dev.of_node, "syna,startup-delay-ms",
+> +			     &rmi_i2c->startup_delay);
+> +
+> +	msleep(rmi_i2c->startup_delay);
+> +
+>   	rmi_i2c->client = client;
+>   	mutex_init(&rmi_i2c->page_mutex);
+>   
+> @@ -286,6 +309,7 @@ static int rmi_i2c_remove(struct i2c_client *client)
+>   	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+>   
+>   	rmi_unregister_transport_device(&rmi_i2c->xport);
+> +	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+>   
+>   	return 0;
+>   }
+> @@ -308,6 +332,9 @@ static int rmi_i2c_suspend(struct device *dev)
+>   			dev_warn(dev, "Failed to enable irq for wake: %d\n",
+>   				ret);
+>   	}
+> +
+> +	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+> +
+>   	return ret;
+>   }
+>   
+> @@ -317,6 +344,12 @@ static int rmi_i2c_resume(struct device *dev)
+>   	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+>   	int ret;
+>   
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+> +	if (ret)
+> +		return ret;
+> +
+> +	msleep(rmi_i2c->startup_delay);
+> +
+>   	enable_irq(rmi_i2c->irq);
+>   	if (device_may_wakeup(&client->dev)) {
+>   		ret = disable_irq_wake(rmi_i2c->irq);
+> @@ -346,6 +379,8 @@ static int rmi_i2c_runtime_suspend(struct device *dev)
+>   
+>   	disable_irq(rmi_i2c->irq);
+>   
+> +	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+> +
+>   	return 0;
+>   }
+>   
+> @@ -355,6 +390,12 @@ static int rmi_i2c_runtime_resume(struct device *dev)
+>   	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+>   	int ret;
+>   
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+> +	if (ret)
+> +		return ret;
+> +
+> +	msleep(rmi_i2c->startup_delay);
+> +
+>   	enable_irq(rmi_i2c->irq);
+>   
+>   	ret = rmi_driver_resume(rmi_i2c->xport.rmi_dev);
 
-Are you sure you want to expose all of these clocks as part of the ABI?
-I exposed the bare minimum clocks for the gxbb driver in the DT shared
-header (we can always add more later) and kept the rest internal to the
-kernel source.
-
-A side benefit of this is that NR_CLKS can live inside the kernel and
-not be part of the binding.
-
-Otherwise this series looks really great. Thanks for tackling such a
-huge task!
-
-Regards,
-Mike
