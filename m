@@ -1,86 +1,119 @@
-From: Wan Zongshun <vw@iommu.org>
-Subject: [PATCH 0/6] ARM: NUC900: Add NUC970 SoC support
-Date: Sat, 25 Jun 2016 18:37:16 +0800
-Message-ID: <1466851042-22239-1-git-send-email-vw@iommu.org>
+From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 06/14] ARM: dts: sun8i: Add cpu0 label to sun8i-h3.dtsi
+Date: Sat, 25 Jun 2016 16:50:24 +0200
+Message-ID: <380ebf34-fd4a-ea2d-f9cf-68b8ede44757@megous.com>
+References: <20160623192104.18720-1-megous@megous.com>
+ <20160623192104.18720-7-megous@megous.com>
+ <CAGb2v66eskVAxdz8VtjBJBCO7VV9WL4bdFDVrPWrSmxk4RASCw@mail.gmail.com>
+ <adaf7f61-af80-cc02-8c47-af721b86f81e@megous.com>
+ <CAGb2v665O75vQEfo5WdWtWJSbKEbLi6MBAHbgZC7pyrOCOu+6g@mail.gmail.com>
+ <20160625070208.GA4000@lukather>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Wan Zongshun <vw@iommu.org>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBMNUXK5QKGQEQW7NJ4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160625070208.GA4000@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 25.6.2016 09:02, Maxime Ripard wrote:
+> On Sat, Jun 25, 2016 at 09:02:48AM +0800, Chen-Yu Tsai wrote:
+>> On Sat, Jun 25, 2016 at 6:51 AM, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> =
+wrote:
+>>> Hello,
+>>>
+>>> comments below.
+>>>
+>>> On 24.6.2016 05:48, Chen-Yu Tsai wrote:
+>>>> On Fri, Jun 24, 2016 at 3:20 AM,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+>>>>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>>>>
+>>>>> Add label to the first cpu so that it can be referenced
+>>>>> from derived dts files.
+>>>>>
+>>>>> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>>>> ---
+>>>>>  arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
+>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8=
+i-h3.dtsi
+>>>>> index 9938972..82faefc 100644
+>>>>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+>>>>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+>>>>> @@ -52,7 +52,7 @@
+>>>>>                 #address-cells =3D <1>;
+>>>>>                 #size-cells =3D <0>;
+>>>>>
+>>>>> -               cpu@0 {
+>>>>> +               cpu0: cpu@0 {
+>>>>>                         compatible =3D "arm,cortex-a7";
+>>>>>                         device_type =3D "cpu";
+>>>>>                         reg =3D <0>;
+>>>>
+>>>> Can you also set the cpu clock here? It is part of the SoC
+>>>> and does not belong in the board DTS files.
+>>>
+>>> Do you mean operating-points, or something else? Different SBCs will
+>>> probably require different combinations of operating points just for
+>>> safety's sake, because they have different regulators and [some have
+>>> botched] thermal designs, so it might make sense to customize it for
+>>> differnt boards, and I don't feel adventurous enough setting it for all
+>>> H3 boards out there.
+>>
+>> I meant clocks =3D <...> and clock-latency =3D <...>.
+>>
+>> These 2 are part of the SoC.
+>>
+>> The OPP can stay in the board files. It's a pity there's no standard
+>> OPP table for H3 though. :(
+>=20
+> This has never been the case, and we always had some deviation in the
+> FEX files for all the SoCs.
+>=20
+> If we could come up with standard OPPs that work for every one,
+> there's no reason it can't happen here.
+>=20
+> I don't really see why the thermal design should change anything. If a
+> boards heats faster, it will throttle down to a lower OPP faster, but
+> those OPPs are not going to change.
 
-This patch series added Nuvoton new SoC NUC970 development board
-support, this nuc970 belongs to nuc900 series, but many features are
-not compatible with old nuc900 SoCs like nuc910, nuc920.
+I've no way to test, but I've been told some Sinovoip boards are really
+bad in this regard (SoC is not even well thermally connected to the
+PCB/PCB not having copper layer to spread the heat). Thermal sensor
+readings happen at fixed intervals, so the question is if you can heat
+up the soc from say 80=C2=B0C (first trip point) to over 110=C2=B0C in less=
+ than
+that period (330ms currently).
 
-Those patches are basing on old w90x900 codes, and are using standard
-linux subsystem interface, such as dts, driver/clk, driver/clocksource
-, driver/irqchip drivers.
+I say it shouldn't be a problem, if that small thing is drawing say 2W
+at max load. It will burn or trigger a second trip point before the
+first one has a chance to trigger and the kernel will shut down. I
+remember tkaiser saying that he has to run that board at 240MHz max. But
+perhaps I'm misremembering.
 
-The old w90x900 plat such as nuc910,nuc960 codes will also be changed
-to new style according to nuc970 codes after those patches was accepted.
+I'm just speculating.
 
-Wan Zongshun (6):
-  ARM: NUC900: Add nuc970 machine support
-  ARM: dts: nuc900: Add nuc970 dts files
-  Clocksource: add nuc970 clocksource driver
-  irqchip: add irqchip driver for nuc900
-  clk: add Clock driver for nuc970
-  nuc900: add nuc970 platform defconfig file
+regards,
+  Ondrej
 
- .../devicetree/bindings/arm/nuvoton/nuc970.txt     |   30 +
- arch/arm/boot/dts/Makefile                         |    1 +
- arch/arm/boot/dts/nuc970-evb.dts                   |   20 +
- arch/arm/boot/dts/nuc970.dtsi                      |   93 ++
- arch/arm/configs/nuc970_defconfig                  | 1278 ++++++++++++++++++++
- arch/arm/mach-w90x900/Kconfig                      |   25 +
- arch/arm/mach-w90x900/Makefile                     |    3 +
- arch/arm/mach-w90x900/include/mach/irqs.h          |   69 ++
- .../mach-w90x900/include/mach/nuc970-regs-aic.h    |   53 +
- .../mach-w90x900/include/mach/nuc970-regs-gcr.h    |   56 +
- .../mach-w90x900/include/mach/nuc970-regs-timer.h  |   44 +
- arch/arm/mach-w90x900/mach-nuc970.c                |  144 +++
- drivers/clk/Makefile                               |    1 +
- drivers/clk/nuc900/Makefile                        |    6 +
- drivers/clk/nuc900/clk-apll.c                      |  168 +++
- drivers/clk/nuc900/clk-ccf.h                       |   53 +
- drivers/clk/nuc900/clk-nuc970.c                    |  920 ++++++++++++++
- drivers/clk/nuc900/clk-upll.c                      |   83 ++
- drivers/clocksource/Kconfig                        |    8 +
- drivers/clocksource/Makefile                       |    1 +
- drivers/clocksource/timer-nuc900.c                 |  207 ++++
- drivers/irqchip/Makefile                           |    1 +
- drivers/irqchip/irq-nuc900.c                       |  104 ++
- include/dt-bindings/clock/nuc970-clock.h           |  233 ++++
- 24 files changed, 3601 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
- create mode 100644 arch/arm/boot/dts/nuc970-evb.dts
- create mode 100644 arch/arm/boot/dts/nuc970.dtsi
- create mode 100644 arch/arm/configs/nuc970_defconfig
- create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
- create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-gcr.h
- create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
- create mode 100644 arch/arm/mach-w90x900/mach-nuc970.c
- create mode 100644 drivers/clk/nuc900/Makefile
- create mode 100644 drivers/clk/nuc900/clk-apll.c
- create mode 100644 drivers/clk/nuc900/clk-ccf.h
- create mode 100644 drivers/clk/nuc900/clk-nuc970.c
- create mode 100644 drivers/clk/nuc900/clk-upll.c
- create mode 100644 drivers/clocksource/timer-nuc900.c
- create mode 100644 drivers/irqchip/irq-nuc900.c
- create mode 100644 include/dt-bindings/clock/nuc970-clock.h
 
--- 
-2.7.4
+
+> Maxime
+>=20
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
