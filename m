@@ -1,7 +1,8 @@
 From: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Subject: [PATCH v2 10/14] ARM: dts: sun8i: Add r_twi I2C controller
-Date: Sat, 25 Jun 2016 05:45:07 +0200
-Message-ID: <20160625034511.7966-11-megous@megous.com>
+Subject: [PATCH v2 12/14] ARM: dts: sun8i: Setup CPU operating
+ points for Onrage PI PC
+Date: Sat, 25 Jun 2016 05:45:09 +0200
+Message-ID: <20160625034511.7966-13-megous@megous.com>
 References: <20160625034511.7966-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -21,65 +22,70 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-H3 SoC contains I2C controller optionally available
-on the PL0 and PL1 pins. This patch makes this controller
-available.
-
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Orange PI PC uses SY8106A regulator for fine grained CPUX voltage
+regulation. Setup appropriate operating points for the board.
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 48 ++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 56f211e..e32f211 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -322,8 +322,9 @@
- 			reg = <0x01f01428 0x4>;
- 			#clock-cells = <1>;
- 			clocks = <&apb0>;
--			clock-indices = <0>, <1>;
--			clock-output-names = "apb0_pio", "apb0_ir";
-+			clock-indices = <0>, <1>, <6>;
-+			clock-output-names = "apb0_pio", "apb0_ir", "apb0_i2c";
-+
- 		};
- 
- 		ir_clk: ir_clk@01f01454 {
-@@ -656,6 +657,20 @@
- 			status = "disabled";
- 		};
- 
-+		r_twi: i2c@01f02400 {
-+			compatible = "allwinner,sun6i-a31-i2c";
-+			reg = <0x01f02400 0x400>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&r_twi_pins_a>;
-+			clocks = <&apb0_gates 6>;
-+			clock-frequency = <100000>;
-+			resets = <&apb0_reset 6>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		gic: interrupt-controller@01c81000 {
- 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
- 			reg = <0x01c81000 0x1000>,
-@@ -707,6 +722,13 @@
- 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
-+
-+			r_twi_pins_a: r_twi@0 {
-+				allwinner,pins = "PL0", "PL1";
-+				allwinner,function = "s_twi";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
- 		};
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+index 79f0b49..1b029e9 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+@@ -90,6 +90,54 @@
  	};
  };
+ 
++&cpu0 {
++	operating-points = <
++		/* kHz	  uV */
++		1512000	1400000
++		1440000	1400000
++		1368000	1340000
++		1344000	1340000
++		1296000	1340000
++		1248000	1300000
++		1224000	1300000
++		1200000	1300000
++		1104000	1200000
++		1008000	1140000
++		960000	1100000
++		648000	1100000
++		480000	1100000
++		240000	1100000
++		120000	1100000
++		>;
++	#cooling-cells = <2>;
++	cooling-min-level = <0>;
++	cooling-max-level = <14>;
++	cpu0-supply = <&vdd_cpu>;
++};
++
++&cpu_thermal {
++	cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device = <&cpu0 (-1) (-1)>;
++		};
++	};
++
++	trips {
++		cpu_alert0: cpu_alert0 {
++			temperature = <80000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++
++		cpu_crit: cpu_crit {
++			temperature = <100000>;
++			hysteresis = <2000>;
++			type = "critical";
++		};
++	};
++};
++
+ &r_twi {
+ 	status = "okay";
+ 
 -- 
 2.9.0
