@@ -1,446 +1,1306 @@
-From: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 2/6] ARM: dts: nuc900: Add nuc970 dts files
-Date: Sat, 25 Jun 2016 18:37:18 +0800
-Message-ID: <1466851042-22239-3-git-send-email-vw@iommu.org>
+From: Wan Zongshun <vw@iommu.org>
+Subject: [PATCH 6/6] nuc900: add nuc970 platform defconfig file
+Date: Sat, 25 Jun 2016 18:37:22 +0800
+Message-ID: <1466851042-22239-7-git-send-email-vw@iommu.org>
 References: <1466851042-22239-1-git-send-email-vw@iommu.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466851042-22239-1-git-send-email-vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466851042-22239-1-git-send-email-vw@iommu.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Wan Zongshun <vw@iommu.org>, Wan Zongshun <mcuos.com@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add dts support for nuc970 platform.
+Add nuc970_defconfig file support.
 
-Signed-off-by: Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
 ---
- .../devicetree/bindings/arm/nuvoton/nuc970.txt     |  30 +++
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/nuc970-evb.dts                   |  20 ++
- arch/arm/boot/dts/nuc970.dtsi                      |  93 ++++++++
- include/dt-bindings/clock/nuc970-clock.h           | 233 +++++++++++++++++++++
- 5 files changed, 377 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
- create mode 100644 arch/arm/boot/dts/nuc970-evb.dts
- create mode 100644 arch/arm/boot/dts/nuc970.dtsi
- create mode 100644 include/dt-bindings/clock/nuc970-clock.h
+ arch/arm/configs/nuc970_defconfig | 1278 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 1278 insertions(+)
+ create mode 100644 arch/arm/configs/nuc970_defconfig
 
-diff --git a/Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt b/Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
+diff --git a/arch/arm/configs/nuc970_defconfig b/arch/arm/configs/nuc970_defconfig
 new file mode 100644
-index 0000000..df8637a
+index 0000000..3ee776c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
-@@ -0,0 +1,30 @@
-+Nuvoton NUC970 SoC platform Device Tree Bindings
-+------------------------------------------
++++ b/arch/arm/configs/nuc970_defconfig
+@@ -0,0 +1,1278 @@
++#
++# Automatically generated file; DO NOT EDIT.
++# Linux/arm 4.7.0-rc3 Kernel Configuration
++#
++CONFIG_ARM=y
++CONFIG_SYS_SUPPORTS_APM_EMULATION=y
++CONFIG_HAVE_PROC_CPU=y
++CONFIG_STACKTRACE_SUPPORT=y
++CONFIG_LOCKDEP_SUPPORT=y
++CONFIG_TRACE_IRQFLAGS_SUPPORT=y
++CONFIG_RWSEM_XCHGADD_ALGORITHM=y
++CONFIG_FIX_EARLYCON_MEM=y
++CONFIG_GENERIC_HWEIGHT=y
++CONFIG_GENERIC_CALIBRATE_DELAY=y
++CONFIG_NEED_DMA_MAP_STATE=y
++CONFIG_ARCH_SUPPORTS_UPROBES=y
++CONFIG_VECTORS_BASE=0xffff0000
++CONFIG_ARM_PATCH_PHYS_VIRT=y
++CONFIG_GENERIC_BUG=y
++CONFIG_PGTABLE_LEVELS=2
++CONFIG_DEFCONFIG_LIST="/lib/modules/$UNAME_RELEASE/.config"
++CONFIG_IRQ_WORK=y
++CONFIG_BUILDTIME_EXTABLE_SORT=y
 +
-+Boards with the NUC970 SoC shall have the following properties:
++#
++# General setup
++#
++CONFIG_BROKEN_ON_SMP=y
++CONFIG_INIT_ENV_ARG_LIMIT=32
++CONFIG_CROSS_COMPILE=""
++# CONFIG_COMPILE_TEST is not set
++CONFIG_LOCALVERSION=""
++# CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_HAVE_KERNEL_GZIP=y
++CONFIG_HAVE_KERNEL_LZMA=y
++CONFIG_HAVE_KERNEL_XZ=y
++CONFIG_HAVE_KERNEL_LZO=y
++CONFIG_HAVE_KERNEL_LZ4=y
++CONFIG_KERNEL_GZIP=y
++# CONFIG_KERNEL_LZMA is not set
++# CONFIG_KERNEL_XZ is not set
++# CONFIG_KERNEL_LZO is not set
++# CONFIG_KERNEL_LZ4 is not set
++CONFIG_DEFAULT_HOSTNAME="(none)"
++CONFIG_SWAP=y
++CONFIG_SYSVIPC=y
++CONFIG_SYSVIPC_SYSCTL=y
++# CONFIG_CROSS_MEMORY_ATTACH is not set
++CONFIG_FHANDLE=y
++# CONFIG_USELIB is not set
 +
-+Root node required properties:
-+- compatible: Should be "nuvoton,nuc970evb", "nuvoton,nuc970"
++#
++# IRQ subsystem
++#
++CONFIG_GENERIC_IRQ_PROBE=y
++CONFIG_GENERIC_IRQ_SHOW=y
++CONFIG_GENERIC_IRQ_SHOW_LEVEL=y
++CONFIG_HARDIRQS_SW_RESEND=y
++CONFIG_GENERIC_IRQ_CHIP=y
++CONFIG_IRQ_DOMAIN=y
++CONFIG_HANDLE_DOMAIN_IRQ=y
++# CONFIG_IRQ_DOMAIN_DEBUG is not set
++CONFIG_IRQ_FORCED_THREADING=y
++CONFIG_GENERIC_CLOCKEVENTS=y
 +
-+Timer required properties:
-+- compatible: Should be "nuvoton,tmr"
-+- reg: Should contain registers location and length
-+- interrupts: hwirq is direct mapping to irq number
-+- clocks: phandle to input clock.
++#
++# Timers subsystem
++#
++CONFIG_TICK_ONESHOT=y
++CONFIG_NO_HZ_COMMON=y
++# CONFIG_HZ_PERIODIC is not set
++CONFIG_NO_HZ_IDLE=y
++CONFIG_NO_HZ=y
++CONFIG_HIGH_RES_TIMERS=y
 +
-+Clock required properties:
-+- compatible: Should be "nuvoton,clk"
-+- reg: Should contain registers location and length
++#
++# CPU/Task time and stats accounting
++#
++CONFIG_TICK_CPU_ACCOUNTING=y
++# CONFIG_VIRT_CPU_ACCOUNTING_GEN is not set
++# CONFIG_IRQ_TIME_ACCOUNTING is not set
++CONFIG_BSD_PROCESS_ACCT=y
++CONFIG_BSD_PROCESS_ACCT_V3=y
 +
-+Interrupt-controller required properties
-+- compatible: Should be "nuvoton,aic"
-+- reg: Should contain registers location and length
-+- interrupt-cells: set to 1
++#
++# RCU Subsystem
++#
++CONFIG_PREEMPT_RCU=y
++# CONFIG_RCU_EXPERT is not set
++CONFIG_SRCU=y
++# CONFIG_TASKS_RCU is not set
++CONFIG_RCU_STALL_COMMON=y
++# CONFIG_TREE_RCU_TRACE is not set
++# CONFIG_RCU_EXPEDITE_BOOT is not set
++# CONFIG_BUILD_BIN2C is not set
++# CONFIG_IKCONFIG is not set
++CONFIG_LOG_BUF_SHIFT=17
++CONFIG_NMI_LOG_BUF_SHIFT=13
++CONFIG_GENERIC_SCHED_CLOCK=y
++CONFIG_CGROUPS=y
++# CONFIG_MEMCG is not set
++# CONFIG_BLK_CGROUP is not set
++CONFIG_CGROUP_SCHED=y
++CONFIG_FAIR_GROUP_SCHED=y
++# CONFIG_CFS_BANDWIDTH is not set
++CONFIG_RT_GROUP_SCHED=y
++# CONFIG_CGROUP_PIDS is not set
++CONFIG_CGROUP_FREEZER=y
++CONFIG_CPUSETS=y
++CONFIG_PROC_PID_CPUSET=y
++CONFIG_CGROUP_DEVICE=y
++CONFIG_CGROUP_CPUACCT=y
++CONFIG_CGROUP_PERF=y
++# CONFIG_CGROUP_DEBUG is not set
++# CONFIG_CHECKPOINT_RESTORE is not set
++CONFIG_NAMESPACES=y
++CONFIG_UTS_NS=y
++CONFIG_IPC_NS=y
++# CONFIG_USER_NS is not set
++CONFIG_PID_NS=y
++# CONFIG_SCHED_AUTOGROUP is not set
++# CONFIG_SYSFS_DEPRECATED is not set
++# CONFIG_RELAY is not set
++CONFIG_BLK_DEV_INITRD=y
++CONFIG_INITRAMFS_SOURCE="../rootfs"
++CONFIG_INITRAMFS_ROOT_UID=0
++CONFIG_INITRAMFS_ROOT_GID=0
++CONFIG_RD_GZIP=y
++CONFIG_RD_BZIP2=y
++CONFIG_RD_LZMA=y
++CONFIG_RD_XZ=y
++CONFIG_RD_LZO=y
++CONFIG_RD_LZ4=y
++CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y
++# CONFIG_CC_OPTIMIZE_FOR_SIZE is not set
++CONFIG_SYSCTL=y
++CONFIG_ANON_INODES=y
++CONFIG_HAVE_UID16=y
++# CONFIG_EXPERT is not set
++CONFIG_UID16=y
++CONFIG_MULTIUSER=y
++# CONFIG_SGETMASK_SYSCALL is not set
++CONFIG_SYSFS_SYSCALL=y
++# CONFIG_SYSCTL_SYSCALL is not set
++CONFIG_KALLSYMS=y
++# CONFIG_KALLSYMS_ABSOLUTE_PERCPU is not set
++CONFIG_KALLSYMS_BASE_RELATIVE=y
++CONFIG_PRINTK=y
++CONFIG_PRINTK_NMI=y
++CONFIG_BUG=y
++CONFIG_ELF_CORE=y
++CONFIG_BASE_FULL=y
++CONFIG_FUTEX=y
++CONFIG_EPOLL=y
++CONFIG_SIGNALFD=y
++CONFIG_TIMERFD=y
++CONFIG_EVENTFD=y
++# CONFIG_BPF_SYSCALL is not set
++CONFIG_SHMEM=y
++CONFIG_AIO=y
++CONFIG_ADVISE_SYSCALLS=y
++# CONFIG_USERFAULTFD is not set
++CONFIG_MEMBARRIER=y
++# CONFIG_EMBEDDED is not set
++CONFIG_HAVE_PERF_EVENTS=y
++CONFIG_PERF_USE_VMALLOC=y
 +
-+GCR register required properties:
-+- compatible: Should be "nuvoton,gcr"
-+- reg: Should contain registers location and length
++#
++# Kernel Performance Events And Counters
++#
++CONFIG_PERF_EVENTS=y
++CONFIG_VM_EVENT_COUNTERS=y
++CONFIG_SLUB_DEBUG=y
++# CONFIG_COMPAT_BRK is not set
++# CONFIG_SLAB is not set
++CONFIG_SLUB=y
++# CONFIG_SYSTEM_DATA_VERIFICATION is not set
++# CONFIG_PROFILING is not set
++CONFIG_KEXEC_CORE=y
++CONFIG_HAVE_OPROFILE=y
++# CONFIG_KPROBES is not set
++# CONFIG_JUMP_LABEL is not set
++# CONFIG_UPROBES is not set
++# CONFIG_HAVE_64BIT_ALIGNED_ACCESS is not set
++CONFIG_ARCH_USE_BUILTIN_BSWAP=y
++CONFIG_HAVE_KPROBES=y
++CONFIG_HAVE_KRETPROBES=y
++CONFIG_HAVE_OPTPROBES=y
++CONFIG_HAVE_NMI=y
++CONFIG_HAVE_ARCH_TRACEHOOK=y
++CONFIG_HAVE_DMA_CONTIGUOUS=y
++CONFIG_GENERIC_SMP_IDLE_THREAD=y
++CONFIG_GENERIC_IDLE_POLL_SETUP=y
++CONFIG_HAVE_REGS_AND_STACK_ACCESS_API=y
++CONFIG_HAVE_CLK=y
++CONFIG_HAVE_DMA_API_DEBUG=y
++CONFIG_HAVE_PERF_REGS=y
++CONFIG_HAVE_PERF_USER_STACK_DUMP=y
++CONFIG_HAVE_ARCH_JUMP_LABEL=y
++CONFIG_ARCH_WANT_IPC_PARSE_VERSION=y
++CONFIG_HAVE_CC_STACKPROTECTOR=y
++# CONFIG_CC_STACKPROTECTOR is not set
++CONFIG_CC_STACKPROTECTOR_NONE=y
++# CONFIG_CC_STACKPROTECTOR_REGULAR is not set
++# CONFIG_CC_STACKPROTECTOR_STRONG is not set
++CONFIG_HAVE_CONTEXT_TRACKING=y
++CONFIG_HAVE_VIRT_CPU_ACCOUNTING_GEN=y
++CONFIG_HAVE_IRQ_TIME_ACCOUNTING=y
++CONFIG_HAVE_MOD_ARCH_SPECIFIC=y
++CONFIG_MODULES_USE_ELF_REL=y
++CONFIG_ARCH_HAS_ELF_RANDOMIZE=y
++CONFIG_HAVE_ARCH_MMAP_RND_BITS=y
++CONFIG_HAVE_EXIT_THREAD=y
++CONFIG_ARCH_MMAP_RND_BITS_MIN=8
++CONFIG_ARCH_MMAP_RND_BITS_MAX=16
++CONFIG_ARCH_MMAP_RND_BITS=8
++# CONFIG_HAVE_ARCH_HASH is not set
++# CONFIG_ISA_BUS_API is not set
++CONFIG_CLONE_BACKWARDS=y
++CONFIG_OLD_SIGSUSPEND3=y
++CONFIG_OLD_SIGACTION=y
++# CONFIG_CPU_NO_EFFICIENT_FFS is not set
 +
-+Uart required properties:
-+- compatible: Should be "nuvoton,nuc970-uart"
-+- reg: Should contain registers location and length
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 06b6c2d..c2e2a53 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -891,6 +891,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
- dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
- dtb-$(CONFIG_ARCH_ASPEED) += aspeed-bmc-opp-palmetto.dtb \
- 	aspeed-ast2500-evb.dtb
-+dtb-$(CONFIG_SOC_NUC970) += nuc970-evb.dtb
- endif
- 
- dtstree		:= $(srctree)/$(src)
-diff --git a/arch/arm/boot/dts/nuc970-evb.dts b/arch/arm/boot/dts/nuc970-evb.dts
-new file mode 100644
-index 0000000..bd56ad1
---- /dev/null
-+++ b/arch/arm/boot/dts/nuc970-evb.dts
-@@ -0,0 +1,20 @@
-+/*
-+ * Copyright 2016 Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++#
++# GCOV-based kernel profiling
++#
++# CONFIG_GCOV_KERNEL is not set
++CONFIG_ARCH_HAS_GCOV_PROFILE_ALL=y
++CONFIG_HAVE_GENERIC_DMA_COHERENT=y
++CONFIG_SLABINFO=y
++CONFIG_RT_MUTEXES=y
++CONFIG_BASE_SMALL=0
++CONFIG_MODULES=y
++# CONFIG_MODULE_FORCE_LOAD is not set
++CONFIG_MODULE_UNLOAD=y
++# CONFIG_MODULE_FORCE_UNLOAD is not set
++# CONFIG_MODVERSIONS is not set
++# CONFIG_MODULE_SRCVERSION_ALL is not set
++# CONFIG_MODULE_SIG is not set
++# CONFIG_MODULE_COMPRESS is not set
++# CONFIG_TRIM_UNUSED_KSYMS is not set
++CONFIG_MODULES_TREE_LOOKUP=y
++CONFIG_BLOCK=y
++CONFIG_LBDAF=y
++CONFIG_BLK_DEV_BSG=y
++# CONFIG_BLK_DEV_BSGLIB is not set
++# CONFIG_BLK_DEV_INTEGRITY is not set
++# CONFIG_BLK_CMDLINE_PARSER is not set
 +
-+/dts-v1/;
-+#include "nuc970.dtsi"
++#
++# Partition Types
++#
++# CONFIG_PARTITION_ADVANCED is not set
++CONFIG_MSDOS_PARTITION=y
++CONFIG_EFI_PARTITION=y
 +
-+/ {
-+	model = "NUC970 EVB Board";
-+	compatible = "nuvoton,nuc970evb", "nuvoton,nuc970";
++#
++# IO Schedulers
++#
++CONFIG_IOSCHED_NOOP=y
++CONFIG_IOSCHED_DEADLINE=y
++CONFIG_IOSCHED_CFQ=y
++# CONFIG_DEFAULT_DEADLINE is not set
++CONFIG_DEFAULT_CFQ=y
++# CONFIG_DEFAULT_NOOP is not set
++CONFIG_DEFAULT_IOSCHED="cfq"
++CONFIG_UNINLINE_SPIN_UNLOCK=y
++CONFIG_ARCH_SUPPORTS_ATOMIC_RMW=y
++CONFIG_FREEZER=y
 +
-+};
++#
++# System Type
++#
++CONFIG_MMU=y
++# CONFIG_ARCH_MULTIPLATFORM is not set
++# CONFIG_ARCH_CLPS711X is not set
++# CONFIG_ARCH_GEMINI is not set
++# CONFIG_ARCH_EBSA110 is not set
++# CONFIG_ARCH_EP93XX is not set
++# CONFIG_ARCH_FOOTBRIDGE is not set
++# CONFIG_ARCH_NETX is not set
++# CONFIG_ARCH_IOP13XX is not set
++# CONFIG_ARCH_IOP32X is not set
++# CONFIG_ARCH_IOP33X is not set
++# CONFIG_ARCH_IXP4XX is not set
++# CONFIG_ARCH_DOVE is not set
++# CONFIG_ARCH_KS8695 is not set
++CONFIG_ARCH_W90X900=y
++# CONFIG_ARCH_LPC32XX is not set
++# CONFIG_ARCH_PXA is not set
++# CONFIG_ARCH_RPC is not set
++# CONFIG_ARCH_SA1100 is not set
++# CONFIG_ARCH_S3C24XX is not set
++# CONFIG_ARCH_DAVINCI is not set
++# CONFIG_ARCH_OMAP1 is not set
++CONFIG_SOC_NUC970=y
 +
-diff --git a/arch/arm/boot/dts/nuc970.dtsi b/arch/arm/boot/dts/nuc970.dtsi
-new file mode 100644
-index 0000000..8a6c225
---- /dev/null
-+++ b/arch/arm/boot/dts/nuc970.dtsi
-@@ -0,0 +1,93 @@
-+/*
-+ * Copyright 2016 Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++#
++# W90P910 Machines
++#
++# CONFIG_MACH_W90P910EVB is not set
 +
-+#include "skeleton.dtsi"
-+#include <dt-bindings/clock/nuc970-clock.h>
++#
++# NUC950 Machines
++#
++# CONFIG_MACH_W90P950EVB is not set
 +
-+/ {
-+	compatible = "nuvoton,nuc970evb", "nuvoton,nuc970";
++#
++# NUC960 Machines
++#
++# CONFIG_MACH_W90N960EVB is not set
 +
-+	interrupt-parent = <&aic>;
++#
++# NUC970 Machines
++#
++CONFIG_MACH_NUC970EVB=y
 +
-+	aliases {
-+		serial0 = &uart0;
-+	};
++#
++# Processor Type
++#
++CONFIG_CPU_ARM926T=y
++CONFIG_CPU_32v5=y
++CONFIG_CPU_ABRT_EV5TJ=y
++CONFIG_CPU_PABRT_LEGACY=y
++CONFIG_CPU_CACHE_VIVT=y
++CONFIG_CPU_COPY_V4WB=y
++CONFIG_CPU_TLB_V4WBI=y
++CONFIG_CPU_CP15=y
++CONFIG_CPU_CP15_MMU=y
++CONFIG_CPU_USE_DOMAINS=y
 +
-+	memory {
-+		reg = <0x00000000 0x04000000>;
-+	};
++#
++# Processor Features
++#
++# CONFIG_ARCH_PHYS_ADDR_T_64BIT is not set
++CONFIG_ARM_THUMB=y
++# CONFIG_CPU_ICACHE_DISABLE is not set
++# CONFIG_CPU_DCACHE_DISABLE is not set
++# CONFIG_CPU_DCACHE_WRITETHROUGH is not set
++# CONFIG_CPU_CACHE_ROUND_ROBIN is not set
++CONFIG_NEED_KUSER_HELPERS=y
++CONFIG_KUSER_HELPERS=y
++# CONFIG_CACHE_L2X0 is not set
++CONFIG_ARM_L1_CACHE_SHIFT=5
++# CONFIG_DEBUG_RODATA is not set
++CONFIG_MULTI_IRQ_HANDLER=y
 +
-+	cpus {
-+		#address-cells = <0>;
-+		#size-cells = <0>;
++#
++# Bus support
++#
++# CONFIG_PCI_DOMAINS_GENERIC is not set
++# CONFIG_PCI_SYSCALL is not set
++# CONFIG_PCCARD is not set
 +
-+		cpu {
-+			compatible = "arm,arm926ej-s";
-+			device_type = "cpu";
-+		};
-+	};
++#
++# Kernel Features
++#
++CONFIG_VMSPLIT_3G=y
++# CONFIG_VMSPLIT_3G_OPT is not set
++# CONFIG_VMSPLIT_2G is not set
++# CONFIG_VMSPLIT_1G is not set
++CONFIG_PAGE_OFFSET=0xC0000000
++CONFIG_ARCH_NR_GPIO=0
++# CONFIG_PREEMPT_NONE is not set
++# CONFIG_PREEMPT_VOLUNTARY is not set
++CONFIG_PREEMPT=y
++CONFIG_PREEMPT_COUNT=y
++CONFIG_HZ_FIXED=0
++CONFIG_HZ_100=y
++# CONFIG_HZ_200 is not set
++# CONFIG_HZ_250 is not set
++# CONFIG_HZ_300 is not set
++# CONFIG_HZ_500 is not set
++# CONFIG_HZ_1000 is not set
++CONFIG_HZ=100
++CONFIG_SCHED_HRTICK=y
++CONFIG_AEABI=y
++CONFIG_OABI_COMPAT=y
++# CONFIG_ARCH_SPARSEMEM_DEFAULT is not set
++# CONFIG_ARCH_SELECT_MEMORY_MODEL is not set
++CONFIG_HAVE_ARCH_PFN_VALID=y
++# CONFIG_HIGHMEM is not set
++CONFIG_CPU_SW_DOMAIN_PAN=y
++CONFIG_HW_PERF_EVENTS=y
++CONFIG_ARCH_WANT_GENERAL_HUGETLB=y
++# CONFIG_ARM_MODULE_PLTS is not set
++CONFIG_FLATMEM=y
++CONFIG_FLAT_NODE_MEM_MAP=y
++CONFIG_HAVE_MEMBLOCK=y
++CONFIG_NO_BOOTMEM=y
++# CONFIG_HAVE_BOOTMEM_INFO_NODE is not set
++CONFIG_SPLIT_PTLOCK_CPUS=999999
++CONFIG_COMPACTION=y
++CONFIG_MIGRATION=y
++# CONFIG_PHYS_ADDR_T_64BIT is not set
++# CONFIG_KSM is not set
++CONFIG_DEFAULT_MMAP_MIN_ADDR=4096
++CONFIG_NEED_PER_CPU_KM=y
++# CONFIG_CLEANCACHE is not set
++# CONFIG_FRONTSWAP is not set
++# CONFIG_CMA is not set
++# CONFIG_ZPOOL is not set
++# CONFIG_ZBUD is not set
++# CONFIG_ZSMALLOC is not set
++CONFIG_GENERIC_EARLY_IOREMAP=y
++# CONFIG_IDLE_PAGE_TRACKING is not set
++CONFIG_FORCE_MAX_ZONEORDER=11
++CONFIG_ALIGNMENT_TRAP=y
++# CONFIG_UACCESS_WITH_MEMCPY is not set
++# CONFIG_SECCOMP is not set
++CONFIG_SWIOTLB=y
++CONFIG_IOMMU_HELPER=y
++# CONFIG_PARAVIRT is not set
++# CONFIG_PARAVIRT_TIME_ACCOUNTING is not set
 +
-+	ahb@B0000000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0xB0000000 0x9000>;
-+		ranges;
++#
++# Boot options
++#
++CONFIG_USE_OF=y
++CONFIG_ATAGS=y
++# CONFIG_DEPRECATED_PARAM_STRUCT is not set
++CONFIG_ZBOOT_ROM_TEXT=0
++CONFIG_ZBOOT_ROM_BSS=0
++CONFIG_ARM_APPENDED_DTB=y
++# CONFIG_ARM_ATAG_DTB_COMPAT is not set
++CONFIG_CMDLINE="root=/dev/ram0 console=ttyS0,115200n8 rdinit=/sbin/init mem=64M"
++CONFIG_CMDLINE_FROM_BOOTLOADER=y
++# CONFIG_CMDLINE_EXTEND is not set
++# CONFIG_CMDLINE_FORCE is not set
++# CONFIG_XIP_KERNEL is not set
++CONFIG_KEXEC=y
++CONFIG_ATAGS_PROC=y
++# CONFIG_CRASH_DUMP is not set
++# CONFIG_AUTO_ZRELADDR is not set
 +
-+		gcr: gcr@B0000000 {
-+			compatible = "nuvoton,gcr";
-+			reg = <0xB0000000 0x200>;
-+		};
++#
++# CPU Power Management
++#
 +
-+		clks: clk@B0000200 {
-+			compatible = "nuvoton,clk";
-+			reg = <0xB0000200 0x200>;
-+			#clock-cells = <1>;
-+		};
++#
++# CPU Frequency scaling
++#
++# CONFIG_CPU_FREQ is not set
 +
-+	};
++#
++# CPU Idle
++#
++# CONFIG_CPU_IDLE is not set
++# CONFIG_ARCH_NEEDS_CPU_IDLE_COUPLED is not set
 +
-+	apb@B8000000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0xB8000000 0xF000>;
-+		ranges;
++#
++# Floating point emulation
++#
 +
-+		aic: interrupt-controller@B8002000 {
-+			compatible = "nuvoton,aic";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			reg = <0xB8002000 0x1000>;
-+		};
++#
++# At least one emulation must be selected
++#
++CONFIG_FPE_NWFPE=y
++# CONFIG_FPE_NWFPE_XP is not set
++# CONFIG_FPE_FASTFPE is not set
++# CONFIG_VFP is not set
 +
++#
++# Userspace binary formats
++#
++CONFIG_BINFMT_ELF=y
++CONFIG_ELFCORE=y
++# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
++CONFIG_BINFMT_SCRIPT=y
++# CONFIG_HAVE_AOUT is not set
++# CONFIG_BINFMT_MISC is not set
++CONFIG_COREDUMP=y
 +
-+		tmr@0xB8001000 {
-+			compatible = "nuvoton,tmr";
-+			reg = <0xB8001000 0x1000>;
-+			interrupts = <16>;
-+			clocks = <&clks TIMER0_GATE>,
-+				 <&clks TIMER1_GATE>;
-+			clock-names = "timer0", "timer1";
++#
++# Power management options
++#
++# CONFIG_SUSPEND is not set
++# CONFIG_HIBERNATION is not set
++# CONFIG_PM is not set
++# CONFIG_APM_EMULATION is not set
++CONFIG_ARCH_SUSPEND_POSSIBLE=y
++# CONFIG_ARM_CPU_SUSPEND is not set
++CONFIG_ARCH_HIBERNATION_POSSIBLE=y
++# CONFIG_NET is not set
++CONFIG_HAVE_CBPF_JIT=y
 +
-+		};
++#
++# Device Drivers
++#
 +
-+		uart0: serial@B8000000 {
-+			compatible = "nuvoton,nuc970-uart";
-+			reg = <0xB8000000 0x1000>;
-+			interrupts = <36>;
-+			clocks = <&clks UART0_GATE>,
-+				 <&clks UART0_ECLK_GATE>;
-+			clock-names = "uart0", "uart0_eclk";
-+			clock-frequency = <12000000>;
-+		};
-+	};
-+};
-diff --git a/include/dt-bindings/clock/nuc970-clock.h b/include/dt-bindings/clock/nuc970-clock.h
-new file mode 100644
-index 0000000..cbfcc77
---- /dev/null
-+++ b/include/dt-bindings/clock/nuc970-clock.h
-@@ -0,0 +1,233 @@
-+/*
-+ * Copyright 2016 Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++#
++# Generic Driver Options
++#
++CONFIG_UEVENT_HELPER=y
++CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_STANDALONE is not set
++# CONFIG_PREVENT_FIRMWARE_BUILD is not set
++CONFIG_FW_LOADER=y
++# CONFIG_FIRMWARE_IN_KERNEL is not set
++CONFIG_EXTRA_FIRMWARE=""
++# CONFIG_FW_LOADER_USER_HELPER_FALLBACK is not set
++CONFIG_ALLOW_DEV_COREDUMP=y
++# CONFIG_SYS_HYPERVISOR is not set
++# CONFIG_GENERIC_CPU_DEVICES is not set
++CONFIG_SOC_BUS=y
++# CONFIG_DMA_SHARED_BUFFER is not set
 +
-+#ifndef __DT_BINDINGS_CLOCK_NUC970_H
-+#define __DT_BINDINGS_CLOCK_NUC970_H
++#
++# Bus devices
++#
++# CONFIG_ARM_CCN is not set
++# CONFIG_BRCMSTB_GISB_ARB is not set
++# CONFIG_VEXPRESS_CONFIG is not set
++# CONFIG_MTD is not set
++CONFIG_DTC=y
++CONFIG_OF=y
++# CONFIG_OF_UNITTEST is not set
++CONFIG_OF_FLATTREE=y
++CONFIG_OF_EARLY_FLATTREE=y
++CONFIG_OF_ADDRESS=y
++CONFIG_OF_IRQ=y
++CONFIG_OF_RESERVED_MEM=y
++# CONFIG_OF_OVERLAY is not set
++CONFIG_ARCH_MIGHT_HAVE_PC_PARPORT=y
++# CONFIG_PARPORT is not set
++CONFIG_BLK_DEV=y
++# CONFIG_BLK_DEV_NULL_BLK is not set
++# CONFIG_BLK_DEV_COW_COMMON is not set
++# CONFIG_BLK_DEV_LOOP is not set
 +
-+/*SOURCE*/
++#
++# DRBD disabled because PROC_FS or INET not selected
++#
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_COUNT=16
++CONFIG_BLK_DEV_RAM_SIZE=16384
++# CONFIG_CDROM_PKTCDVD is not set
++# CONFIG_MG_DISK is not set
 +
-+#define	XIN			0
-+#define	APLL			1
-+#define	UPLL			2
-+#define	XIN32K			3
-+#define	XIN128_DIV		4
++#
++# Misc devices
++#
++# CONFIG_SENSORS_LIS3LV02D is not set
++# CONFIG_DUMMY_IRQ is not set
++# CONFIG_ENCLOSURE_SERVICES is not set
++# CONFIG_SRAM is not set
++# CONFIG_C2PORT is not set
 +
-+/*ECLK*/
++#
++# EEPROM support
++#
++# CONFIG_EEPROM_93CX6 is not set
 +
-+#define	USB_APLLDIV		5
-+#define	USB_UPLLDIV		6
-+#define	USB_ECLK_MUX		7
-+#define	USB_ECLK_DIV		8
-+#define	USB_ECLK_GATE		9
-+#define	SD_APLLDIV		10
-+#define	SD_UPLLDIV		11
-+#define	SD_ECLK_MUX		12
-+#define	SD_ECLK_DIV		13
-+#define	SD_ECLK_GATE		14
-+#define	LCD_APLLDIV		15
-+#define	LCD_UPLLDIV		16
-+#define	LCD_ECLK_MUX		17
-+#define	LCD_ECLK_DIV		18
-+#define	LCD_ECLK_GATE		19
-+#define	ADC_APLLDIV		20
-+#define	ADC_UPLLDIV		21
-+#define	ADC_ECLK_MUX		22
-+#define	ADC_ECLK_DIV		23
-+#define	ADC_ECLK_GATE		24
-+#define	AUDIO_APLLDIV		25
-+#define	AUDIO_UPLLDIV		26
-+#define	AUDIO_ECLK_MUX		27
-+#define	AUDIO_ECLK_DIV		28
-+#define	AUDIO_ECLK_GATE		29
-+#define	CAP_APLLDIV		30
-+#define	CAP_UPLLDIV		31
-+#define	CAP_ECLK_MUX		32
-+#define	CAP_ECLK_DIV		33
-+#define	CAP_ECLK_GATE		34
-+#define	SDH_APLLDIV		35
-+#define	SDH_UPLLDIV		36
-+#define	SDH_ECLK_MUX		37
-+#define	SDH_ECLK_DIV		38
-+#define	SDH_ECLK_GATE		39
-+#define	EMMC_APLLDIV		40
-+#define	EMMC_UPLLDIV		41
-+#define	EMMC_ECLK_MUX		42
-+#define	EMMC_ECLK_DIV		43
-+#define	EMMC_ECLK_GATE		44
-+#define	UART0_APLLDIV		45
-+#define	UART0_UPLLDIV		46
-+#define	UART0_ECLK_MUX		47
-+#define	UART0_ECLK_DIV		48
-+#define	UART0_ECLK_GATE		49
-+#define	UART1_APLLDIV		50
-+#define	UART1_UPLLDIV		51
-+#define	UART1_ECLK_MUX		52
-+#define	UART1_ECLK_DIV		53
-+#define	UART1_ECLK_GATE		54
-+#define	UART2_APLLDIV		55
-+#define	UART2_UPLLDIV		56
-+#define	UART2_ECLK_MUX		57
-+#define	UART2_ECLK_DIV		58
-+#define	UART2_ECLK_GATE		59
-+#define	UART3_APLLDIV		60
-+#define	UART3_UPLLDIV		61
-+#define	UART3_ECLK_MUX		62
-+#define	UART3_ECLK_DIV		63
-+#define	UART3_ECLK_GATE		64
-+#define	UART4_APLLDIV		65
-+#define	UART4_UPLLDIV		66
-+#define	UART4_ECLK_MUX		67
-+#define	UART4_ECLK_DIV		68
-+#define	UART4_ECLK_GATE		69
-+#define	UART5_APLLDIV		70
-+#define	UART5_UPLLDIV		71
-+#define	UART5_ECLK_MUX		72
-+#define	UART5_ECLK_DIV		73
-+#define	UART5_ECLK_GATE		74
-+#define	UART6_APLLDIV		75
-+#define	UART6_UPLLDIV		76
-+#define	UART6_ECLK_MUX		77
-+#define	UART6_ECLK_DIV		78
-+#define	UART6_ECLK_GATE		79
-+#define	UART7_APLLDIV		80
-+#define	UART7_UPLLDIV		81
-+#define	UART7_ECLK_MUX		82
-+#define	UART7_ECLK_DIV		83
-+#define	UART7_ECLK_GATE		84
-+#define	UART8_APLLDIV		85
-+#define	UART8_UPLLDIV		86
-+#define	UART8_ECLK_MUX		87
-+#define	UART8_ECLK_DIV		88
-+#define	UART8_ECLK_GATE		89
-+#define	UART9_APLLDIV		90
-+#define	UART9_UPLLDIV		91
-+#define	UART9_ECLK_MUX		92
-+#define	UART9_ECLK_DIV		93
-+#define	UART9_ECLK_GATE		94
-+#define	UART10_APLLDIV		95
-+#define	UART10_UPLLDIV		96
-+#define	UART10_ECLK_MUX		97
-+#define	UART10_ECLK_DIV		98
-+#define	UART10_ECLK_GATE	99
-+#define	SYSTEM_APLLDIV		100
-+#define	SYSTEM_UPLLDIV		101
-+#define	SYSTEM_ECLK_MUX		102
-+#define	SYSTEM_ECLK_DIV		103
-+#define	SYSTEM_ECLK_GATE	104
-+#define	GPIO_ECLK_MUX		105
-+#define	GPIO_ECLK_DIV		106
-+#define	GPIO_ECLK_GATE		107
-+#define	KPI_ECLK_MUX		108
-+#define	KPI_ECLK_DIV		109
-+#define	KPI_ECLK_GATE		110
-+#define	ETIMER0_ECLK_MUX	111
-+#define	ETIMER0_ECLK_GATE	12
-+#define	ETIMER1_ECLK_MUX	113
-+#define	ETIMER1_ECLK_GATE	114
-+#define	ETIMER2_ECLK_MUX	115
-+#define	ETIMER2_ECLK_GATE	116
-+#define	ETIMER3_ECLK_MUX	117
-+#define	ETIMER3_ECLK_GATE	118
-+#define	WWDT_ECLK_MUX		119
-+#define	WWDT_ECLK_GATE		120
-+#define	WDT_ECLK_MUX		121
-+#define	WDT_ECLK_GATE		122
-+#define	SMC0_ECLK_DIV		123
-+#define	SMC0_ECLK_GATE		124
-+#define	SMC0_GATE		125
-+#define	SMC1_ECLK_DIV		126
-+#define	SMC1_ECLK_GATE		127
-+#define	SMC1_GATE		128
++#
++# Texas Instruments shared transport line discipline
++#
 +
-+/*SYS*/
++#
++# Altera FPGA firmware download module
++#
 +
-+#define	SYS_MUX			129
-+#define	SYS_DIV			130
-+#define	CPU_DIV			131
-+#define	CPU_GATE		132
-+#define	DDR_GATE		133
++#
++# Intel MIC Bus Driver
++#
 +
-+/*HCLK*/
++#
++# SCIF Bus Driver
++#
 +
-+#define	HCLK_GATE		134
-+#define	HCLK1_DIV		135
-+#define	GDMA_GATE		136
-+#define	EBI_GATE		137
-+#define	TIC_GATE		138
-+#define	SRAM_GATE		139
-+#define	HCLKN_DIV		140
-+#define	DRAM_GATE		141
-+#define	HCLK234_DIV		142
-+#define	USBH_GATE		143
-+#define	EMAC1_GATE		144
-+#define	EMAC1_ECLK_DIV		145
-+#define	EMAC1_ECLK_GATE		146
-+#define	USBD_GATE		147
-+#define	FMI_GATE		148
-+#define	NAND_GATE		149
-+#define	EMMC_GATE		150
-+#define	CRYPTO_GATE		151
-+#define	JPEG_GATE		152
-+#define	JPEG_ECLK_DIV		153
-+#define	JPEG_ECLK_GATE		154
-+#define	GE2D_GATE		155
-+#define	GE2D_ECLK_DIV		156
-+#define	GE2D_ECLK_GATE		157
-+#define	EMAC0_GATE		158
-+#define	EMAC0_ECLK_DIV		159
-+#define	EMAC0_ECLK_GATE		160
-+#define	SDH_GATE		161
-+#define	AUDIO_GATE		162
-+#define	LCD_GATE		163
-+#define	CAP_GATE		164
-+#define	SENSOR_GATE		165
++#
++# VOP Bus Driver
++#
 +
-+/*PCLK*/
++#
++# Intel MIC Host Driver
++#
 +
-+#define	PCLK_DIV		166
-+#define	PCLK4096_DIV		167
-+#define	I2C0_GATE		168
-+#define	I2C1_GATE		169
-+#define	SPI0_GATE		170
-+#define	SPI1_GATE		171
-+#define	UART0_GATE		172
-+#define	UART1_GATE		173
-+#define	UART2_GATE		174
-+#define	UART3_GATE		175
-+#define	UART4_GATE		176
-+#define	UART5_GATE		177
-+#define	UART6_GATE		178
-+#define	UART7_GATE		179
-+#define	UART8_GATE		180
-+#define	UART9_GATE		181
-+#define	UART10_GATE		182
-+#define	TIMER0_GATE		183
-+#define	TIMER1_GATE		184
-+#define	TIMER2_GATE		185
-+#define	TIMER3_GATE		186
-+#define	TIMER4_GATE		187
-+#define	WDT_GATE		188
-+#define	RTC_GATE		189
-+#define	WWDT_GATE		190
-+#define	GPIO_GATE		191
-+#define	ADC_GATE		192
-+#define	KPI_GATE		193
-+#define	MTPC_GATE		194
-+#define	PWM_GATE		195
-+#define	ETIMER0_GATE		196
-+#define	ETIMER1_GATE		197
-+#define	ETIMER2_GATE		198
-+#define	ETIMER3_GATE		199
-+#define	CAN0_GATE		200
-+#define	CAN1_GATE		201
-+#define	NUC970_CLK_MAX		202
++#
++# Intel MIC Card Driver
++#
 +
-+#endif
++#
++# SCIF Driver
++#
++
++#
++# Intel MIC Coprocessor State Management (COSM) Drivers
++#
++
++#
++# VOP Driver
++#
++# CONFIG_ECHO is not set
++# CONFIG_CXL_BASE is not set
++# CONFIG_CXL_KERNEL_API is not set
++# CONFIG_CXL_EEH is not set
++
++#
++# SCSI device support
++#
++CONFIG_SCSI_MOD=y
++# CONFIG_RAID_ATTRS is not set
++CONFIG_SCSI=y
++CONFIG_SCSI_DMA=y
++# CONFIG_SCSI_MQ_DEFAULT is not set
++# CONFIG_SCSI_PROC_FS is not set
++
++#
++# SCSI support type (disk, tape, CD-ROM)
++#
++CONFIG_BLK_DEV_SD=y
++# CONFIG_CHR_DEV_ST is not set
++# CONFIG_CHR_DEV_OSST is not set
++# CONFIG_BLK_DEV_SR is not set
++# CONFIG_CHR_DEV_SG is not set
++# CONFIG_CHR_DEV_SCH is not set
++# CONFIG_SCSI_CONSTANTS is not set
++# CONFIG_SCSI_LOGGING is not set
++# CONFIG_SCSI_SCAN_ASYNC is not set
++
++#
++# SCSI Transports
++#
++# CONFIG_SCSI_SPI_ATTRS is not set
++# CONFIG_SCSI_SAS_ATTRS is not set
++# CONFIG_SCSI_SAS_LIBSAS is not set
++# CONFIG_SCSI_SRP_ATTRS is not set
++# CONFIG_SCSI_LOWLEVEL is not set
++# CONFIG_SCSI_DH is not set
++# CONFIG_SCSI_OSD_INITIATOR is not set
++# CONFIG_ATA is not set
++# CONFIG_MD is not set
++# CONFIG_TARGET_CORE is not set
++# CONFIG_NVM is not set
++
++#
++# Input device support
++#
++CONFIG_INPUT=y
++# CONFIG_INPUT_FF_MEMLESS is not set
++# CONFIG_INPUT_POLLDEV is not set
++# CONFIG_INPUT_SPARSEKMAP is not set
++# CONFIG_INPUT_MATRIXKMAP is not set
++
++#
++# Userland interfaces
++#
++# CONFIG_INPUT_MOUSEDEV is not set
++# CONFIG_INPUT_JOYDEV is not set
++# CONFIG_INPUT_EVDEV is not set
++# CONFIG_INPUT_EVBUG is not set
++
++#
++# Input Device Drivers
++#
++# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_INPUT_JOYSTICK is not set
++# CONFIG_INPUT_TABLET is not set
++# CONFIG_INPUT_TOUCHSCREEN is not set
++# CONFIG_INPUT_MISC is not set
++# CONFIG_RMI4_CORE is not set
++
++#
++# Hardware I/O ports
++#
++# CONFIG_SERIO is not set
++# CONFIG_GAMEPORT is not set
++
++#
++# Character devices
++#
++CONFIG_TTY=y
++CONFIG_VT=y
++CONFIG_CONSOLE_TRANSLATIONS=y
++CONFIG_VT_CONSOLE=y
++CONFIG_HW_CONSOLE=y
++CONFIG_VT_HW_CONSOLE_BINDING=y
++CONFIG_UNIX98_PTYS=y
++# CONFIG_LEGACY_PTYS is not set
++# CONFIG_SERIAL_NONSTANDARD is not set
++# CONFIG_TRACE_SINK is not set
++CONFIG_DEVMEM=y
++CONFIG_DEVKMEM=y
++
++#
++# Serial drivers
++#
++# CONFIG_SERIAL_8250 is not set
++
++#
++# Non-8250 serial port support
++#
++CONFIG_SERIAL_NUC970=y
++CONFIG_SERIAL_NUC970_CONSOLE=y
++# CONFIG_SERIAL_EARLYCON_ARM_SEMIHOST is not set
++# CONFIG_SERIAL_UARTLITE is not set
++CONFIG_SERIAL_CORE=y
++CONFIG_SERIAL_CORE_CONSOLE=y
++# CONFIG_SERIAL_SCCNXP is not set
++# CONFIG_SERIAL_BCM63XX is not set
++# CONFIG_SERIAL_ALTERA_JTAGUART is not set
++# CONFIG_SERIAL_ALTERA_UART is not set
++# CONFIG_SERIAL_XILINX_PS_UART is not set
++# CONFIG_SERIAL_MPS2_UART is not set
++# CONFIG_SERIAL_ARC is not set
++# CONFIG_SERIAL_FSL_LPUART is not set
++# CONFIG_SERIAL_CONEXANT_DIGICOLOR is not set
++# CONFIG_SERIAL_ST_ASC is not set
++# CONFIG_SERIAL_STM32 is not set
++# CONFIG_HVC_DCC is not set
++# CONFIG_IPMI_HANDLER is not set
++# CONFIG_HW_RANDOM is not set
++# CONFIG_R3964 is not set
++# CONFIG_RAW_DRIVER is not set
++# CONFIG_TCG_TPM is not set
++# CONFIG_XILLYBUS is not set
++
++#
++# I2C support
++#
++# CONFIG_I2C is not set
++# CONFIG_SPI is not set
++# CONFIG_SPMI is not set
++# CONFIG_HSI is not set
++
++#
++# PPS support
++#
++# CONFIG_PPS is not set
++
++#
++# PPS generators support
++#
++
++#
++# PTP clock support
++#
++
++#
++# Enable PHYLIB and NETWORK_PHY_TIMESTAMPING to see the additional clocks.
++#
++CONFIG_ARCH_HAVE_CUSTOM_GPIO_H=y
++CONFIG_ARCH_REQUIRE_GPIOLIB=y
++CONFIG_GPIOLIB=y
++CONFIG_GPIO_DEVRES=y
++CONFIG_OF_GPIO=y
++# CONFIG_GPIO_SYSFS is not set
++
++#
++# Memory mapped GPIO drivers
++#
++# CONFIG_GPIO_74XX_MMIO is not set
++# CONFIG_GPIO_ALTERA is not set
++# CONFIG_GPIO_DWAPB is not set
++# CONFIG_GPIO_EM is not set
++# CONFIG_GPIO_GENERIC_PLATFORM is not set
++# CONFIG_GPIO_GRGPIO is not set
++# CONFIG_GPIO_MPC8XXX is not set
++# CONFIG_GPIO_XILINX is not set
++# CONFIG_GPIO_ZEVIO is not set
++# CONFIG_GPIO_ZX is not set
++
++#
++# MFD GPIO expanders
++#
++# CONFIG_W1 is not set
++# CONFIG_POWER_SUPPLY is not set
++# CONFIG_POWER_RESET is not set
++# CONFIG_POWER_AVS is not set
++# CONFIG_HWMON is not set
++# CONFIG_THERMAL is not set
++# CONFIG_WATCHDOG is not set
++CONFIG_SSB_POSSIBLE=y
++
++#
++# Sonics Silicon Backplane
++#
++# CONFIG_SSB is not set
++CONFIG_BCMA_POSSIBLE=y
++
++#
++# Broadcom specific AMBA
++#
++# CONFIG_BCMA is not set
++
++#
++# Multifunction device drivers
++#
++# CONFIG_MFD_CORE is not set
++# CONFIG_MFD_ATMEL_FLEXCOM is not set
++# CONFIG_MFD_ATMEL_HLCDC is not set
++# CONFIG_MFD_CROS_EC is not set
++# CONFIG_MFD_ASIC3 is not set
++# CONFIG_MFD_HI6421_PMIC is not set
++# CONFIG_HTC_EGPIO is not set
++# CONFIG_HTC_PASIC3 is not set
++# CONFIG_MFD_KEMPLD is not set
++# CONFIG_MFD_MT6397 is not set
++# CONFIG_MFD_PM8921_CORE is not set
++# CONFIG_MFD_SM501 is not set
++# CONFIG_ABX500_CORE is not set
++# CONFIG_MFD_SYSCON is not set
++# CONFIG_MFD_TI_AM335X_TSCADC is not set
++# CONFIG_MFD_TMIO is not set
++# CONFIG_MFD_T7L66XB is not set
++# CONFIG_MFD_TC6387XB is not set
++# CONFIG_MFD_TC6393XB is not set
++# CONFIG_REGULATOR is not set
++# CONFIG_MEDIA_SUPPORT is not set
++
++#
++# Graphics support
++#
++# CONFIG_DRM is not set
++
++#
++# ACP (Audio CoProcessor) Configuration
++#
++
++#
++# Frame buffer Devices
++#
++# CONFIG_FB is not set
++# CONFIG_BACKLIGHT_LCD_SUPPORT is not set
++# CONFIG_VGASTATE is not set
++
++#
++# Console display driver support
++#
++CONFIG_DUMMY_CONSOLE=y
++# CONFIG_SOUND is not set
++
++#
++# HID support
++#
++# CONFIG_HID is not set
++CONFIG_USB_OHCI_LITTLE_ENDIAN=y
++# CONFIG_USB_SUPPORT is not set
++# CONFIG_UWB is not set
++# CONFIG_MMC is not set
++# CONFIG_MEMSTICK is not set
++# CONFIG_NEW_LEDS is not set
++# CONFIG_ACCESSIBILITY is not set
++CONFIG_EDAC_ATOMIC_SCRUB=y
++CONFIG_EDAC_SUPPORT=y
++# CONFIG_EDAC is not set
++CONFIG_RTC_LIB=y
++# CONFIG_RTC_CLASS is not set
++# CONFIG_DMADEVICES is not set
++
++#
++# DMABUF options
++#
++# CONFIG_SYNC_FILE is not set
++# CONFIG_AUXDISPLAY is not set
++# CONFIG_UIO is not set
++# CONFIG_VIRT_DRIVERS is not set
++
++#
++# Virtio drivers
++#
++# CONFIG_VIRTIO_MMIO is not set
++
++#
++# Microsoft Hyper-V guest support
++#
++# CONFIG_STAGING is not set
++# CONFIG_GOLDFISH is not set
++# CONFIG_CHROME_PLATFORMS is not set
++CONFIG_CLKDEV_LOOKUP=y
++CONFIG_HAVE_CLK_PREPARE=y
++CONFIG_COMMON_CLK=y
++
++#
++# Common Clock Framework
++#
++# CONFIG_CLK_QORIQ is not set
++# CONFIG_COMMON_CLK_NXP is not set
++# CONFIG_COMMON_CLK_PXA is not set
++# CONFIG_COMMON_CLK_PIC32 is not set
++# CONFIG_COMMON_CLK_OXNAS is not set
++
++#
++# Hardware Spinlock drivers
++#
++
++#
++# Clock Source drivers
++#
++CONFIG_CLKSRC_OF=y
++CONFIG_CLKSRC_PROBE=y
++CONFIG_CLKSRC_MMIO=y
++# CONFIG_ARM_TIMER_SP804 is not set
++# CONFIG_ATMEL_PIT is not set
++# CONFIG_SH_TIMER_CMT is not set
++# CONFIG_SH_TIMER_MTU2 is not set
++# CONFIG_SH_TIMER_TMU is not set
++# CONFIG_EM_TIMER_STI is not set
++CONFIG_NUC900_TIMER=y
++# CONFIG_MAILBOX is not set
++# CONFIG_IOMMU_SUPPORT is not set
++
++#
++# Remoteproc drivers
++#
++# CONFIG_STE_MODEM_RPROC is not set
++
++#
++# Rpmsg drivers
++#
++
++#
++# SOC (System On Chip) specific Drivers
++#
++# CONFIG_SOC_BRCMSTB is not set
++# CONFIG_SUNXI_SRAM is not set
++# CONFIG_SOC_TI is not set
++# CONFIG_PM_DEVFREQ is not set
++# CONFIG_EXTCON is not set
++# CONFIG_MEMORY is not set
++# CONFIG_IIO is not set
++# CONFIG_PWM is not set
++CONFIG_IRQCHIP=y
++CONFIG_ARM_GIC_MAX_NR=1
++# CONFIG_IPACK_BUS is not set
++# CONFIG_RESET_CONTROLLER is not set
++# CONFIG_FMC is not set
++
++#
++# PHY Subsystem
++#
++# CONFIG_GENERIC_PHY is not set
++# CONFIG_PHY_PXA_28NM_HSIC is not set
++# CONFIG_PHY_PXA_28NM_USB2 is not set
++# CONFIG_BCM_KONA_USB2_PHY is not set
++# CONFIG_POWERCAP is not set
++# CONFIG_MCB is not set
++
++#
++# Performance monitor support
++#
++CONFIG_ARM_PMU=y
++# CONFIG_RAS is not set
++
++#
++# Android
++#
++# CONFIG_ANDROID is not set
++# CONFIG_NVMEM is not set
++# CONFIG_STM is not set
++# CONFIG_INTEL_TH is not set
++
++#
++# FPGA Configuration Support
++#
++# CONFIG_FPGA is not set
++
++#
++# Firmware Drivers
++#
++# CONFIG_FIRMWARE_MEMMAP is not set
++# CONFIG_FW_CFG_SYSFS is not set
++
++#
++# File systems
++#
++# CONFIG_EXT2_FS is not set
++# CONFIG_EXT3_FS is not set
++# CONFIG_EXT4_FS is not set
++# CONFIG_REISERFS_FS is not set
++# CONFIG_JFS_FS is not set
++# CONFIG_XFS_FS is not set
++# CONFIG_GFS2_FS is not set
++# CONFIG_BTRFS_FS is not set
++# CONFIG_NILFS2_FS is not set
++# CONFIG_F2FS_FS is not set
++CONFIG_FS_POSIX_ACL=y
++CONFIG_EXPORTFS=y
++CONFIG_FILE_LOCKING=y
++CONFIG_MANDATORY_FILE_LOCKING=y
++# CONFIG_FS_ENCRYPTION is not set
++# CONFIG_FSNOTIFY is not set
++# CONFIG_DNOTIFY is not set
++# CONFIG_INOTIFY_USER is not set
++# CONFIG_FANOTIFY is not set
++# CONFIG_QUOTA is not set
++# CONFIG_QUOTACTL is not set
++# CONFIG_AUTOFS4_FS is not set
++# CONFIG_FUSE_FS is not set
++# CONFIG_OVERLAY_FS is not set
++
++#
++# Caches
++#
++# CONFIG_FSCACHE is not set
++
++#
++# CD-ROM/DVD Filesystems
++#
++# CONFIG_ISO9660_FS is not set
++# CONFIG_UDF_FS is not set
++
++#
++# DOS/FAT/NT Filesystems
++#
++CONFIG_FAT_FS=y
++CONFIG_MSDOS_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_FAT_DEFAULT_CODEPAGE=437
++CONFIG_FAT_DEFAULT_IOCHARSET="iso8859-1"
++# CONFIG_FAT_DEFAULT_UTF8 is not set
++# CONFIG_NTFS_FS is not set
++
++#
++# Pseudo filesystems
++#
++CONFIG_PROC_FS=y
++CONFIG_PROC_SYSCTL=y
++CONFIG_PROC_PAGE_MONITOR=y
++# CONFIG_PROC_CHILDREN is not set
++CONFIG_KERNFS=y
++CONFIG_SYSFS=y
++CONFIG_TMPFS=y
++CONFIG_TMPFS_POSIX_ACL=y
++CONFIG_TMPFS_XATTR=y
++# CONFIG_HUGETLB_PAGE is not set
++# CONFIG_CONFIGFS_FS is not set
++CONFIG_MISC_FILESYSTEMS=y
++# CONFIG_ORANGEFS_FS is not set
++# CONFIG_ADFS_FS is not set
++# CONFIG_AFFS_FS is not set
++# CONFIG_HFS_FS is not set
++# CONFIG_HFSPLUS_FS is not set
++# CONFIG_BEFS_FS is not set
++# CONFIG_BFS_FS is not set
++# CONFIG_EFS_FS is not set
++# CONFIG_LOGFS is not set
++# CONFIG_CRAMFS is not set
++# CONFIG_SQUASHFS is not set
++# CONFIG_VXFS_FS is not set
++# CONFIG_MINIX_FS is not set
++# CONFIG_OMFS_FS is not set
++# CONFIG_HPFS_FS is not set
++# CONFIG_QNX4FS_FS is not set
++# CONFIG_QNX6FS_FS is not set
++CONFIG_ROMFS_FS=y
++CONFIG_ROMFS_BACKED_BY_BLOCK=y
++CONFIG_ROMFS_ON_BLOCK=y
++# CONFIG_PSTORE is not set
++# CONFIG_SYSV_FS is not set
++# CONFIG_UFS_FS is not set
++CONFIG_NLS=y
++CONFIG_NLS_DEFAULT="iso8859-1"
++CONFIG_NLS_CODEPAGE_437=y
++# CONFIG_NLS_CODEPAGE_737 is not set
++# CONFIG_NLS_CODEPAGE_775 is not set
++# CONFIG_NLS_CODEPAGE_850 is not set
++# CONFIG_NLS_CODEPAGE_852 is not set
++# CONFIG_NLS_CODEPAGE_855 is not set
++# CONFIG_NLS_CODEPAGE_857 is not set
++# CONFIG_NLS_CODEPAGE_860 is not set
++# CONFIG_NLS_CODEPAGE_861 is not set
++# CONFIG_NLS_CODEPAGE_862 is not set
++# CONFIG_NLS_CODEPAGE_863 is not set
++# CONFIG_NLS_CODEPAGE_864 is not set
++# CONFIG_NLS_CODEPAGE_865 is not set
++# CONFIG_NLS_CODEPAGE_866 is not set
++# CONFIG_NLS_CODEPAGE_869 is not set
++# CONFIG_NLS_CODEPAGE_936 is not set
++# CONFIG_NLS_CODEPAGE_950 is not set
++# CONFIG_NLS_CODEPAGE_932 is not set
++# CONFIG_NLS_CODEPAGE_949 is not set
++# CONFIG_NLS_CODEPAGE_874 is not set
++# CONFIG_NLS_ISO8859_8 is not set
++# CONFIG_NLS_CODEPAGE_1250 is not set
++# CONFIG_NLS_CODEPAGE_1251 is not set
++# CONFIG_NLS_ASCII is not set
++CONFIG_NLS_ISO8859_1=y
++# CONFIG_NLS_ISO8859_2 is not set
++# CONFIG_NLS_ISO8859_3 is not set
++# CONFIG_NLS_ISO8859_4 is not set
++# CONFIG_NLS_ISO8859_5 is not set
++# CONFIG_NLS_ISO8859_6 is not set
++# CONFIG_NLS_ISO8859_7 is not set
++# CONFIG_NLS_ISO8859_9 is not set
++# CONFIG_NLS_ISO8859_13 is not set
++# CONFIG_NLS_ISO8859_14 is not set
++# CONFIG_NLS_ISO8859_15 is not set
++# CONFIG_NLS_KOI8_R is not set
++# CONFIG_NLS_KOI8_U is not set
++# CONFIG_NLS_MAC_ROMAN is not set
++# CONFIG_NLS_MAC_CELTIC is not set
++# CONFIG_NLS_MAC_CENTEURO is not set
++# CONFIG_NLS_MAC_CROATIAN is not set
++# CONFIG_NLS_MAC_CYRILLIC is not set
++# CONFIG_NLS_MAC_GAELIC is not set
++# CONFIG_NLS_MAC_GREEK is not set
++# CONFIG_NLS_MAC_ICELAND is not set
++# CONFIG_NLS_MAC_INUIT is not set
++# CONFIG_NLS_MAC_ROMANIAN is not set
++# CONFIG_NLS_MAC_TURKISH is not set
++# CONFIG_NLS_UTF8 is not set
++
++#
++# Kernel hacking
++#
++
++#
++# printk and dmesg options
++#
++# CONFIG_PRINTK_TIME is not set
++CONFIG_MESSAGE_LOGLEVEL_DEFAULT=7
++# CONFIG_DYNAMIC_DEBUG is not set
++
++#
++# Compile-time checks and compiler options
++#
++# CONFIG_ENABLE_WARN_DEPRECATED is not set
++# CONFIG_ENABLE_MUST_CHECK is not set
++CONFIG_FRAME_WARN=1024
++# CONFIG_STRIP_ASM_SYMS is not set
++# CONFIG_UNUSED_SYMBOLS is not set
++CONFIG_DEBUG_FS=y
++# CONFIG_HEADERS_CHECK is not set
++# CONFIG_DEBUG_SECTION_MISMATCH is not set
++CONFIG_SECTION_MISMATCH_WARN_ONLY=y
++CONFIG_FRAME_POINTER=y
++# CONFIG_MAGIC_SYSRQ is not set
++# CONFIG_DEBUG_KERNEL is not set
++
++#
++# Memory Debugging
++#
++# CONFIG_PAGE_EXTENSION is not set
++# CONFIG_PAGE_POISONING is not set
++# CONFIG_SLUB_DEBUG_ON is not set
++# CONFIG_SLUB_STATS is not set
++CONFIG_HAVE_DEBUG_KMEMLEAK=y
++CONFIG_DEBUG_MEMORY_INIT=y
++
++#
++# Debug Lockups and Hangs
++#
++# CONFIG_PANIC_ON_OOPS is not set
++CONFIG_PANIC_ON_OOPS_VALUE=0
++CONFIG_PANIC_TIMEOUT=0
++# CONFIG_SCHED_INFO is not set
++# CONFIG_DEBUG_TIMEKEEPING is not set
++
++#
++# Lock Debugging (spinlocks, mutexes, etc...)
++#
++# CONFIG_STACKTRACE is not set
++CONFIG_DEBUG_BUGVERBOSE=y
++
++#
++# RCU Debugging
++#
++# CONFIG_PROVE_RCU is not set
++# CONFIG_SPARSE_RCU_POINTER is not set
++# CONFIG_TORTURE_TEST is not set
++CONFIG_RCU_CPU_STALL_TIMEOUT=300
++CONFIG_HAVE_FUNCTION_TRACER=y
++CONFIG_HAVE_FUNCTION_GRAPH_TRACER=y
++CONFIG_HAVE_DYNAMIC_FTRACE=y
++CONFIG_HAVE_FTRACE_MCOUNT_RECORD=y
++CONFIG_HAVE_SYSCALL_TRACEPOINTS=y
++CONFIG_HAVE_C_RECORDMCOUNT=y
++CONFIG_TRACING_SUPPORT=y
++# CONFIG_FTRACE is not set
++
++#
++# Runtime Testing
++#
++# CONFIG_LKDTM is not set
++# CONFIG_ATOMIC64_SELFTEST is not set
++# CONFIG_TEST_HEXDUMP is not set
++# CONFIG_TEST_STRING_HELPERS is not set
++# CONFIG_TEST_KSTRTOX is not set
++# CONFIG_TEST_PRINTF is not set
++# CONFIG_TEST_BITMAP is not set
++# CONFIG_TEST_UUID is not set
++# CONFIG_TEST_RHASHTABLE is not set
++# CONFIG_TEST_HASH is not set
++# CONFIG_DMA_API_DEBUG is not set
++# CONFIG_TEST_LKM is not set
++# CONFIG_TEST_USER_COPY is not set
++# CONFIG_TEST_FIRMWARE is not set
++# CONFIG_TEST_UDELAY is not set
++# CONFIG_MEMTEST is not set
++# CONFIG_TEST_STATIC_KEYS is not set
++# CONFIG_SAMPLES is not set
++CONFIG_HAVE_ARCH_KGDB=y
++# CONFIG_UBSAN is not set
++CONFIG_ARCH_HAS_DEVMEM_IS_ALLOWED=y
++CONFIG_STRICT_DEVMEM=y
++# CONFIG_IO_STRICT_DEVMEM is not set
++# CONFIG_ARM_UNWIND is not set
++# CONFIG_DEBUG_USER is not set
++CONFIG_DEBUG_LL_INCLUDE="mach/debug-macro.S"
++# CONFIG_DEBUG_UART_8250 is not set
++CONFIG_UNCOMPRESS_INCLUDE="mach/uncompress.h"
++# CONFIG_DEBUG_SET_MODULE_RONX is not set
++# CONFIG_CORESIGHT is not set
++
++#
++# Security options
++#
++# CONFIG_KEYS is not set
++# CONFIG_SECURITY_DMESG_RESTRICT is not set
++# CONFIG_SECURITY is not set
++# CONFIG_SECURITYFS is not set
++CONFIG_DEFAULT_SECURITY_DAC=y
++CONFIG_DEFAULT_SECURITY=""
++# CONFIG_CRYPTO is not set
++# CONFIG_BINARY_PRINTF is not set
++
++#
++# Library routines
++#
++CONFIG_BITREVERSE=y
++# CONFIG_HAVE_ARCH_BITREVERSE is not set
++CONFIG_RATIONAL=y
++CONFIG_GENERIC_STRNCPY_FROM_USER=y
++CONFIG_GENERIC_STRNLEN_USER=y
++CONFIG_GENERIC_PCI_IOMAP=y
++CONFIG_GENERIC_IO=y
++CONFIG_ARCH_USE_CMPXCHG_LOCKREF=y
++# CONFIG_CRC_CCITT is not set
++# CONFIG_CRC16 is not set
++# CONFIG_CRC_T10DIF is not set
++# CONFIG_CRC_ITU_T is not set
++CONFIG_CRC32=y
++# CONFIG_CRC32_SELFTEST is not set
++CONFIG_CRC32_SLICEBY8=y
++# CONFIG_CRC32_SLICEBY4 is not set
++# CONFIG_CRC32_SARWATE is not set
++# CONFIG_CRC32_BIT is not set
++# CONFIG_CRC7 is not set
++# CONFIG_LIBCRC32C is not set
++# CONFIG_CRC8 is not set
++# CONFIG_AUDIT_ARCH_COMPAT_GENERIC is not set
++# CONFIG_RANDOM32_SELFTEST is not set
++CONFIG_ZLIB_INFLATE=y
++CONFIG_LZO_DECOMPRESS=y
++CONFIG_LZ4_DECOMPRESS=y
++CONFIG_XZ_DEC=y
++CONFIG_XZ_DEC_X86=y
++CONFIG_XZ_DEC_POWERPC=y
++CONFIG_XZ_DEC_IA64=y
++CONFIG_XZ_DEC_ARM=y
++CONFIG_XZ_DEC_ARMTHUMB=y
++CONFIG_XZ_DEC_SPARC=y
++CONFIG_XZ_DEC_BCJ=y
++# CONFIG_XZ_DEC_TEST is not set
++CONFIG_DECOMPRESS_GZIP=y
++CONFIG_DECOMPRESS_BZIP2=y
++CONFIG_DECOMPRESS_LZMA=y
++CONFIG_DECOMPRESS_XZ=y
++CONFIG_DECOMPRESS_LZO=y
++CONFIG_DECOMPRESS_LZ4=y
++CONFIG_GENERIC_ALLOCATOR=y
++CONFIG_HAS_IOMEM=y
++CONFIG_HAS_IOPORT_MAP=y
++CONFIG_HAS_DMA=y
++CONFIG_GENERIC_ATOMIC64=y
++CONFIG_ARCH_HAS_ATOMIC64_DEC_IF_POSITIVE=y
++# CONFIG_CORDIC is not set
++# CONFIG_DDR is not set
++# CONFIG_IRQ_POLL is not set
++CONFIG_LIBFDT=y
++# CONFIG_SG_SPLIT is not set
++CONFIG_SG_POOL=y
++# CONFIG_ARCH_HAS_SG_CHAIN is not set
++# CONFIG_VIRTUALIZATION is not set
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
