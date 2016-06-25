@@ -1,7 +1,7 @@
 From: Wan Zongshun <vw@iommu.org>
 Subject: [PATCH 0/6] ARM: NUC900: Add NUC970 SoC support
-Date: Sat, 25 Jun 2016 18:32:24 +0800
-Message-ID: <1466850744-21909-1-git-send-email-vw@iommu.org>
+Date: Sat, 25 Jun 2016 18:34:26 +0800
+Message-ID: <1466850866-22033-1-git-send-email-vw@iommu.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org
