@@ -1,91 +1,75 @@
-From: wenpan <wenpan@hisilicon.com>
-Subject: Re: [PATCH] i2c: hibvt: add Hisilicon BVT I2C controller driver
-Date: Sat, 25 Jun 2016 15:53:05 +0800
-Message-ID: <c28b42aa-f9dd-a13b-59d7-71b97f81cea1@hisilicon.com>
-References: <1466585726-28467-1-git-send-email-wenpan@hisilicon.com>
- <20160622102509.GD25837@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160622102509.GD25837@leverpostej>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com
+From: Wan Zongshun <vw@iommu.org>
+Subject: [PATCH 0/6] ARM: NUC900: Add NUC970 SoC support
+Date: Sat, 25 Jun 2016 18:32:24 +0800
+Message-ID: <1466850744-21909-1-git-send-email-vw@iommu.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Wan Zongshun <vw@iommu.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+This patch series added Nuvoton new SoC NUC970 development board
+support, this nuc970 belongs to nuc900 series, but many features are
+not compatible with old nuc900 SoCs like nuc910, nuc920.
 
-Hi Mark,
+Those patches are basing on old w90x900 codes, and are using standard
+linux subsystem interface, such as dts, driver/clk, driver/clocksource
+, driver/irqchip drivers.
 
-On 2016/6/22 18:25, Mark Rutland wrote:
-> On Wed, Jun 22, 2016 at 04:55:26PM +0800, Pan Wen wrote:
->> add Hisilicon BVT I2C controller driver support.
->>
->> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
->> ---
->>  .../devicetree/bindings/i2c/i2c-hibvt.txt          |  24 +
->>  drivers/i2c/busses/Kconfig                         |  10 +
->>  drivers/i2c/busses/Makefile                        |   1 +
->>  drivers/i2c/busses/i2c-hibvt.c                     | 736 +++++++++++++++++++++
->>  4 files changed, 771 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
->>  create mode 100644 drivers/i2c/busses/i2c-hibvt.c
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
->> new file mode 100644
->> index 0000000..3aa2cee
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
->> @@ -0,0 +1,24 @@
->> +Hisilicon BVT I2C master controller
->> +
->> +Required properties:
->> +- compatible: should be "hisilicon,hibvt-i2c".
->> +- reg: physical base address of the controller and length of memory mapped.
->> +     region.
->> +- interrupts: interrupt number to the cpu.
->> +- clocks: phandles to input clocks.
->> +
->> +Optional properties:
->> +- clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000.
->> +
->> +Other properties:
->> +see Documentation/devicetree/bindings/i2c/i2c.txt.
->> +
->> +Examples:
->> +i2c_bus0: i2c@12110000 {
->> +	compatible = "hisilicon,hibvt-i2c";
->> +	reg = <0x12110000 0x100>;
->> +	interrupts = <20>;
->> +	clocks = <&crg_ctrl HI3516CV300_APB_CLK>;
->> +	clock-names = "apb_pclk";
->> +	clock-frequency = <100000>;
->> +};
-> 
-> The clock-names property was not described above, and the driver doesn't
-> appear to use it.
-> 
-> Please explciitly describe the clock-names you expect, and use them in
-> the driver. If there is a single clock, then you can simply drop the
-> clock-names property from the example.
-> 
-> Thanks,
-> Mark.
-> 
+The old w90x900 plat such as nuc910,nuc960 codes will also be changed
+to new style according to nuc970 codes after those patches was accepted.
 
-OK. Thanks for your comments. I will drop the clock-names property from the example in next version.
+Wan Zongshun (6):
+  ARM: NUC900: Add nuc970 machine support
+  ARM: dts: nuc900: Add nuc970 dts files
+  Clocksource: add nuc970 clocksource driver
+  irqchip: add irqchip driver for nuc900
+  clk: add Clock driver for nuc970
+  nuc900: add nuc970 platform defconfig file
 
-Thanks,
+ .../devicetree/bindings/arm/nuvoton/nuc970.txt     |   30 +
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/nuc970-evb.dts                   |   20 +
+ arch/arm/boot/dts/nuc970.dtsi                      |   93 ++
+ arch/arm/configs/nuc970_defconfig                  | 1278 ++++++++++++++++++++
+ arch/arm/mach-w90x900/Kconfig                      |   25 +
+ arch/arm/mach-w90x900/Makefile                     |    3 +
+ arch/arm/mach-w90x900/include/mach/irqs.h          |   69 ++
+ .../mach-w90x900/include/mach/nuc970-regs-aic.h    |   53 +
+ .../mach-w90x900/include/mach/nuc970-regs-gcr.h    |   56 +
+ .../mach-w90x900/include/mach/nuc970-regs-timer.h  |   44 +
+ arch/arm/mach-w90x900/mach-nuc970.c                |  144 +++
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/nuc900/Makefile                        |    6 +
+ drivers/clk/nuc900/clk-apll.c                      |  168 +++
+ drivers/clk/nuc900/clk-ccf.h                       |   53 +
+ drivers/clk/nuc900/clk-nuc970.c                    |  920 ++++++++++++++
+ drivers/clk/nuc900/clk-upll.c                      |   83 ++
+ drivers/clocksource/Kconfig                        |    8 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/timer-nuc900.c                 |  207 ++++
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-nuc900.c                       |  104 ++
+ include/dt-bindings/clock/nuc970-clock.h           |  233 ++++
+ 24 files changed, 3601 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
+ create mode 100644 arch/arm/boot/dts/nuc970-evb.dts
+ create mode 100644 arch/arm/boot/dts/nuc970.dtsi
+ create mode 100644 arch/arm/configs/nuc970_defconfig
+ create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
+ create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-gcr.h
+ create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
+ create mode 100644 arch/arm/mach-w90x900/mach-nuc970.c
+ create mode 100644 drivers/clk/nuc900/Makefile
+ create mode 100644 drivers/clk/nuc900/clk-apll.c
+ create mode 100644 drivers/clk/nuc900/clk-ccf.h
+ create mode 100644 drivers/clk/nuc900/clk-nuc970.c
+ create mode 100644 drivers/clk/nuc900/clk-upll.c
+ create mode 100644 drivers/clocksource/timer-nuc900.c
+ create mode 100644 drivers/irqchip/irq-nuc900.c
+ create mode 100644 include/dt-bindings/clock/nuc970-clock.h
 
-Pan.
-
->> +	i2c->clk = devm_clk_get(&pdev->dev, NULL);
->> +	if (IS_ERR(i2c->clk)) {
->> +		dev_err(i2c->dev, "cannot get clock\n");
->> +		return -ENOENT;
->> +	}
->> +	clk_prepare_enable(i2c->clk);
-> 
-> .
-> 
+-- 
+2.7.4
