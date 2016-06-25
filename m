@@ -1,13 +1,11 @@
 From: Wan Zongshun <vw@iommu.org>
-Subject: [PATCH 3/6] Clocksource: add nuc970 clocksource driver
-Date: Sat, 25 Jun 2016 18:37:19 +0800
-Message-ID: <1466851042-22239-4-git-send-email-vw@iommu.org>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
+Subject: [PATCH 0/6] ARM: NUC900: Add NUC970 SoC support
+Date: Sat, 25 Jun 2016 18:37:16 +0800
+Message-ID: <1466851042-22239-1-git-send-email-vw@iommu.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466851042-22239-1-git-send-email-vw@iommu.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,309 +16,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org
-Cc: Wan Zongshun <vw@iommu.org>, Arnd Bergmann <arnd@arndb.de>, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Wan Zongshun <vw@iommu.org>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add nuc970 clocksource driver support.
+Hi,
 
-Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
----
- .../mach-w90x900/include/mach/nuc970-regs-timer.h  |  44 +++++
- drivers/clocksource/Kconfig                        |   8 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/timer-nuc900.c                 | 207 +++++++++++++++++++++
- 4 files changed, 260 insertions(+)
+This patch series added Nuvoton new SoC NUC970 development board
+support, this nuc970 belongs to nuc900 series, but many features are
+not compatible with old nuc900 SoCs like nuc910, nuc920.
+
+Those patches are basing on old w90x900 codes, and are using standard
+linux subsystem interface, such as dts, driver/clk, driver/clocksource
+, driver/irqchip drivers.
+
+The old w90x900 plat such as nuc910,nuc960 codes will also be changed
+to new style according to nuc970 codes after those patches was accepted.
+
+Wan Zongshun (6):
+  ARM: NUC900: Add nuc970 machine support
+  ARM: dts: nuc900: Add nuc970 dts files
+  Clocksource: add nuc970 clocksource driver
+  irqchip: add irqchip driver for nuc900
+  clk: add Clock driver for nuc970
+  nuc900: add nuc970 platform defconfig file
+
+ .../devicetree/bindings/arm/nuvoton/nuc970.txt     |   30 +
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/nuc970-evb.dts                   |   20 +
+ arch/arm/boot/dts/nuc970.dtsi                      |   93 ++
+ arch/arm/configs/nuc970_defconfig                  | 1278 ++++++++++++++++++++
+ arch/arm/mach-w90x900/Kconfig                      |   25 +
+ arch/arm/mach-w90x900/Makefile                     |    3 +
+ arch/arm/mach-w90x900/include/mach/irqs.h          |   69 ++
+ .../mach-w90x900/include/mach/nuc970-regs-aic.h    |   53 +
+ .../mach-w90x900/include/mach/nuc970-regs-gcr.h    |   56 +
+ .../mach-w90x900/include/mach/nuc970-regs-timer.h  |   44 +
+ arch/arm/mach-w90x900/mach-nuc970.c                |  144 +++
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/nuc900/Makefile                        |    6 +
+ drivers/clk/nuc900/clk-apll.c                      |  168 +++
+ drivers/clk/nuc900/clk-ccf.h                       |   53 +
+ drivers/clk/nuc900/clk-nuc970.c                    |  920 ++++++++++++++
+ drivers/clk/nuc900/clk-upll.c                      |   83 ++
+ drivers/clocksource/Kconfig                        |    8 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/timer-nuc900.c                 |  207 ++++
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-nuc900.c                       |  104 ++
+ include/dt-bindings/clock/nuc970-clock.h           |  233 ++++
+ 24 files changed, 3601 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
+ create mode 100644 arch/arm/boot/dts/nuc970-evb.dts
+ create mode 100644 arch/arm/boot/dts/nuc970.dtsi
+ create mode 100644 arch/arm/configs/nuc970_defconfig
+ create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
+ create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-gcr.h
  create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
+ create mode 100644 arch/arm/mach-w90x900/mach-nuc970.c
+ create mode 100644 drivers/clk/nuc900/Makefile
+ create mode 100644 drivers/clk/nuc900/clk-apll.c
+ create mode 100644 drivers/clk/nuc900/clk-ccf.h
+ create mode 100644 drivers/clk/nuc900/clk-nuc970.c
+ create mode 100644 drivers/clk/nuc900/clk-upll.c
  create mode 100644 drivers/clocksource/timer-nuc900.c
+ create mode 100644 drivers/irqchip/irq-nuc900.c
+ create mode 100644 include/dt-bindings/clock/nuc970-clock.h
 
-diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h b/arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
-new file mode 100644
-index 0000000..43d7e8b
---- /dev/null
-+++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
-@@ -0,0 +1,44 @@
-+/*
-+ * Copyright 2016 Wan Zongshun <mcuos.com@gmail.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#ifndef __ASM_ARCH_REGS_TIMER_H
-+#define __ASM_ARCH_REGS_TIMER_H
-+
-+/* Timer Registers */
-+
-+#define TMR_BA			0x0
-+
-+#define REG_TMR_TCSR0		(TMR_BA+0x00)
-+#define REG_TMR_TICR0		(TMR_BA+0x04)
-+#define REG_TMR_TDR0		(TMR_BA+0x08)
-+
-+
-+#define REG_TMR_TCSR1		(TMR_BA+0x10)
-+#define REG_TMR_TICR1		(TMR_BA+0x14)
-+#define REG_TMR_TDR1		(TMR_BA+0x18)
-+
-+
-+#define REG_TMR_TCSR2		(TMR_BA+0x20)
-+#define REG_TMR_TICR2		(TMR_BA+0x24)
-+#define REG_TMR_TDR2		(TMR_BA+0x28)
-+
-+#define REG_TMR_TCSR3		(TMR_BA+0x30)
-+#define REG_TMR_TICR3		(TMR_BA+0x34)
-+#define REG_TMR_TDR3		(TMR_BA+0x38)
-+
-+#define REG_TMR_TCSR4		(TMR_BA+0x40)
-+#define REG_TMR_TICR4		(TMR_BA+0x44)
-+#define REG_TMR_TDR4		(TMR_BA+0x48)
-+
-+#define REG_TMR_TISR		(TMR_BA+0x60)
-+
-+
-+#endif /*  __ASM_ARCH_REGS_TIMER_H */
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 47352d2..441c5ee 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -427,4 +427,12 @@ config CLKSRC_ST_LPC
- 	  Enable this option to use the Low Power controller timer
- 	  as clocksource.
- 
-+config NUC900_TIMER
-+        bool "Clocksource timer for nuc900 platform" if COMPILE_TEST
-+        depends on ARM
-+        select CLKSRC_OF if OF
-+        select CLKSRC_MMIO
-+        help
-+          Enables the clocksource for the NUC900 platform.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 473974f..fcc2cc7 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -67,3 +67,4 @@ obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
- obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
- obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
- obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
-+obj-$(CONFIG_ARCH_W90X900)		+= timer-nuc900.o
-diff --git a/drivers/clocksource/timer-nuc900.c b/drivers/clocksource/timer-nuc900.c
-new file mode 100644
-index 0000000..6ba025c
---- /dev/null
-+++ b/drivers/clocksource/timer-nuc900.c
-@@ -0,0 +1,207 @@
-+/*
-+ * Copyright 2016 Wan Zongshun <mcuos.com@gmail.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/interrupt.h>
-+#include <linux/jiffies.h>
-+#include <linux/clockchips.h>
-+#include <linux/types.h>
-+#include <linux/clk.h>
-+
-+#include <linux/io.h>
-+#include <asm/mach/time.h>
-+
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+#include <mach/mfp.h>
-+#include <mach/map.h>
-+#include <mach/nuc970-regs-timer.h>
-+#include <mach/hardware.h>
-+#include <mach/regs-clock.h>
-+
-+#define RESETINT	0x1f
-+#define PERIOD		(0x01 << 27)
-+#define ONESHOT		(0x00 << 27)
-+#define COUNTEN		(0x01 << 30)
-+#define INTEN		(0x01 << 29)
-+
-+#define TICKS_PER_SEC	100
-+/* Divider = prescale + 1 */
-+#define PRESCALE	0x63
-+
-+#define	TDR_SHIFT	24
-+#define	TDR_MASK	((1 << TDR_SHIFT) - 1)
-+
-+static unsigned int timer0_load;
-+static void __iomem *tmr_base;
-+
-+static int nuc970_clockevent_set_oneshot(struct clock_event_device *evt)
-+{
-+	unsigned int val;
-+
-+	val = __raw_readl(tmr_base + REG_TMR_TCSR0);
-+	val &= ~(0x03 << 27);
-+
-+	val |= (ONESHOT | COUNTEN | INTEN | PRESCALE);
-+
-+	__raw_writel(val, tmr_base + REG_TMR_TCSR0);
-+	return 0;
-+}
-+
-+static int nuc970_clockevent_set_periodic(struct clock_event_device *evt)
-+{
-+	unsigned int val;
-+
-+	val = __raw_readl(tmr_base + REG_TMR_TCSR0);
-+	val &= ~(0x03 << 27);
-+
-+	__raw_writel(timer0_load, tmr_base + REG_TMR_TICR0);
-+	val |= (PERIOD | COUNTEN | INTEN | PRESCALE);
-+
-+	__raw_writel(val, tmr_base + REG_TMR_TCSR0);
-+
-+	return 0;
-+}
-+
-+static int nuc970_clockevent_setnextevent(unsigned long evt,
-+		struct clock_event_device *clk)
-+{
-+	unsigned int tcsr, tdelta;
-+
-+	tcsr = __raw_readl(tmr_base + REG_TMR_TCSR0);
-+	tdelta = __raw_readl(tmr_base + REG_TMR_TICR0) -
-+			     __raw_readl(tmr_base + REG_TMR_TDR0);
-+
-+	__raw_writel(evt, tmr_base + REG_TMR_TICR0);
-+
-+	if (!(tcsr & COUNTEN) && ((tdelta > 2) || (tdelta == 0)))
-+		__raw_writel(__raw_readl(tmr_base + REG_TMR_TCSR0) | COUNTEN,
-+			     tmr_base + REG_TMR_TCSR0);
-+
-+	return 0;
-+}
-+
-+static int nuc970_clockevent_shutdown(struct clock_event_device *evt)
-+{
-+	unsigned int val = __raw_readl(tmr_base + REG_TMR_TCSR0) &
-+				       ~(0x03 << 27);
-+
-+	__raw_writel(val, tmr_base + REG_TMR_TCSR0);
-+
-+	return 0;
-+}
-+
-+static struct clock_event_device nuc970_clockevent_device = {
-+	.name			= "nuc970-timer0",
-+	.shift			= 32,
-+	.features		= CLOCK_EVT_FEAT_PERIODIC |
-+				  CLOCK_EVT_FEAT_ONESHOT,
-+	.set_state_shutdown	= nuc970_clockevent_shutdown,
-+	.set_state_periodic	= nuc970_clockevent_set_periodic,
-+	.set_state_oneshot	= nuc970_clockevent_set_oneshot,
-+	.set_next_event		= nuc970_clockevent_setnextevent,
-+	.tick_resume		= nuc970_clockevent_shutdown,
-+	.rating			= 300,
-+};
-+
-+/*IRQ handler for the timer*/
-+static irqreturn_t nuc970_timer0_interrupt(int irq, void *dev_id)
-+{
-+	struct clock_event_device *evt = &nuc970_clockevent_device;
-+
-+	__raw_writel(0x01, tmr_base + REG_TMR_TISR);
-+
-+	evt->event_handler(evt);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct irqaction nuc970_timer0_irq = {
-+	.name		= "nuc970-timer0",
-+	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
-+	.handler	= nuc970_timer0_interrupt,
-+};
-+
-+static void __init nuc970_clock_source_event_init(void __iomem *base, int irq,
-+						  struct clk *clk_timer0,
-+						  struct clk *clk_timer1)
-+{
-+	unsigned int val;
-+	unsigned int rate = 0;
-+
-+	/* Get the timer base address */
-+	tmr_base = base;
-+
-+	/*Clocksource init*/
-+	WARN_ON(clk_prepare_enable(clk_timer1));
-+
-+	__raw_writel(0x00, tmr_base + REG_TMR_TCSR1);
-+
-+	rate = clk_get_rate(clk_timer1) / (PRESCALE + 1);
-+
-+	__raw_writel(0xffffffff, tmr_base + REG_TMR_TICR1);
-+
-+	val = __raw_readl(tmr_base + REG_TMR_TCSR1);
-+	val |= (COUNTEN | PERIOD | PRESCALE);
-+	__raw_writel(val, tmr_base + REG_TMR_TCSR1);
-+
-+	clocksource_mmio_init(tmr_base + REG_TMR_TDR1, "nuc970-timer1",
-+			      rate, 200, TDR_SHIFT,
-+			      clocksource_mmio_readl_down);
-+
-+	/*Clockevents init*/
-+	WARN_ON(clk_prepare_enable(clk_timer0));
-+
-+	__raw_writel(0x00, tmr_base + REG_TMR_TCSR0);
-+
-+	rate = clk_get_rate(clk_timer0) / (PRESCALE + 1);
-+
-+	timer0_load = (rate / TICKS_PER_SEC);
-+
-+	__raw_writel(RESETINT, tmr_base + REG_TMR_TISR);
-+
-+	setup_irq(irq, &nuc970_timer0_irq);
-+
-+	nuc970_clockevent_device.cpumask = cpumask_of(0);
-+
-+	clockevents_config_and_register(&nuc970_clockevent_device, rate,
-+					0xf, 0xffffffff);
-+}
-+
-+static void __init nuc970_timer_of_init(struct device_node *node)
-+{
-+	struct clk *clk_timer0, *clk_timer1;
-+	void __iomem *base;
-+	int irq;
-+
-+	base = of_iomap(node, 0);
-+	if (!base)
-+		panic("%s: Unable to map timer base\n", node->full_name);
-+
-+	clk_timer0 = of_clk_get_by_name(node, "timer0");
-+	if (IS_ERR(clk_timer0))
-+		panic("%s: Unable to get clk_timer0\n", node->full_name);
-+
-+	clk_timer1 = of_clk_get_by_name(node, "timer1");
-+	if (IS_ERR(clk_timer1))
-+		panic("%s: Unable to get clk_timer1\n", node->full_name);
-+
-+	irq = irq_of_parse_and_map(node, 0);
-+	if (irq <= 0)
-+		panic("%s: Unable to get irq\n", node->full_name);
-+
-+	nuc970_clock_source_event_init(base, irq, clk_timer0, clk_timer1);
-+}
-+
-+CLOCKSOURCE_OF_DECLARE(nuc970, "nuvoton,tmr", nuc970_timer_of_init);
 -- 
 2.7.4
