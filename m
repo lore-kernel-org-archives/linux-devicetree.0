@@ -1,7 +1,8 @@
 From: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Subject: [PATCH v2 09/14] ARM: dts: sun8i: Add cpu0 label to sun8i-h3.dtsi
-Date: Sat, 25 Jun 2016 05:45:06 +0200
-Message-ID: <20160625034511.7966-10-megous@megous.com>
+Subject: [PATCH v2 07/14] ARM: dts: sun8i: Use sun8i-h3-pll1-clk
+ for pll1 in H3
+Date: Sat, 25 Jun 2016 05:45:04 +0200
+Message-ID: <20160625034511.7966-8-megous@megous.com>
 References: <20160625034511.7966-1-megous@megous.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
@@ -21,31 +22,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Add label to the first cpu so that it can be referenced
-from derived dts files.
+PLL1 on H3 requires special factors application algorithm,
+when the rate is changed. This algorithm was extracted
+from the arisc code that handles frequency scaling
+in the BSP kernel.
+
+This algorithm is implemented by sun8i-h3-pll1-clk.
 
 Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 ---
-v2
-- move clocks/clock-latency to sun8i-h3.dtsi  
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index d3c29cc..56f211e 100644
+index 4a4926b..b3247f4 100644
 --- a/arch/arm/boot/dts/sun8i-h3.dtsi
 +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -52,7 +52,9 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+@@ -106,7 +106,7 @@
  
--		cpu@0 {
-+		cpu0: cpu@0 {
-+			clocks = <&cpu>;
-+			clock-latency = <244144>; /* 8 32k periods */
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <0>;
+ 		pll1: clk@01c20000 {
+ 			#clock-cells = <0>;
+-			compatible = "allwinner,sun8i-a23-pll1-clk";
++			compatible = "allwinner,sun8i-h3-pll1-clk";
+ 			reg = <0x01c20000 0x4>;
+ 			clocks = <&osc24M>;
+ 			clock-output-names = "pll1";
 -- 
 2.9.0
