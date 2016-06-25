@@ -1,326 +1,91 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V3] ARM: dts: sun7i: Add dts file for
- Bananapi M1 Plus board
-Date: Sat, 25 Jun 2016 09:47:53 +0200
-Message-ID: <20160625074753.GF4000@lukather>
-References: <20160622095723.GU26668@lukather>
- <20160624061134.9500-1-luoyi.ly@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: wenpan <wenpan@hisilicon.com>
+Subject: Re: [PATCH] i2c: hibvt: add Hisilicon BVT I2C controller driver
+Date: Sat, 25 Jun 2016 15:53:05 +0800
+Message-ID: <c28b42aa-f9dd-a13b-59d7-71b97f81cea1@hisilicon.com>
+References: <1466585726-28467-1-git-send-email-wenpan@hisilicon.com>
+ <20160622102509.GD25837@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XStn23h1fwudRqtG"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNHOXC5QKGQEEJDAPWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160624061134.9500-1-luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160622102509.GD25837@leverpostej>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: wsa@the-dreams.de, robh+dt@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
 
---XStn23h1fwudRqtG
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 
-Hi,
+Hi Mark,
 
-Thanks for sending a new version.
-
-However, it's usually done in a new thread, not as a reply to a
-previous mail. If you're not using it, git send-email does all the
-magic for you.
-
-On Fri, Jun 24, 2016 at 02:11:34PM +0800, luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 2016/6/22 18:25, Mark Rutland wrote:
+> On Wed, Jun 22, 2016 at 04:55:26PM +0800, Pan Wen wrote:
+>> add Hisilicon BVT I2C controller driver support.
+>>
+>> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+>> ---
+>>  .../devicetree/bindings/i2c/i2c-hibvt.txt          |  24 +
+>>  drivers/i2c/busses/Kconfig                         |  10 +
+>>  drivers/i2c/busses/Makefile                        |   1 +
+>>  drivers/i2c/busses/i2c-hibvt.c                     | 736 +++++++++++++++++++++
+>>  4 files changed, 771 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+>>  create mode 100644 drivers/i2c/busses/i2c-hibvt.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+>> new file mode 100644
+>> index 0000000..3aa2cee
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+>> @@ -0,0 +1,24 @@
+>> +Hisilicon BVT I2C master controller
+>> +
+>> +Required properties:
+>> +- compatible: should be "hisilicon,hibvt-i2c".
+>> +- reg: physical base address of the controller and length of memory mapped.
+>> +     region.
+>> +- interrupts: interrupt number to the cpu.
+>> +- clocks: phandles to input clocks.
+>> +
+>> +Optional properties:
+>> +- clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000.
+>> +
+>> +Other properties:
+>> +see Documentation/devicetree/bindings/i2c/i2c.txt.
+>> +
+>> +Examples:
+>> +i2c_bus0: i2c@12110000 {
+>> +	compatible = "hisilicon,hibvt-i2c";
+>> +	reg = <0x12110000 0x100>;
+>> +	interrupts = <20>;
+>> +	clocks = <&crg_ctrl HI3516CV300_APB_CLK>;
+>> +	clock-names = "apb_pclk";
+>> +	clock-frequency = <100000>;
+>> +};
 > 
-> Add support for the Bananapi M1 Plus A20 development board from
-> sinovoip.com.cn . This board is nearly a clone of the Lemaker's
-> Bananapro, but differ with the wlan chipset connection and i2s pinout.
-> And I also enable the integrated audio codec on default.
+> The clock-names property was not described above, and the driver doesn't
+> appear to use it.
 > 
-> Signed-off-by: Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-
-Having a changelog of all the changes you made here (right after ---)
-would be great.
-
->  arch/arm/boot/dts/Makefile                       |   1 +
->  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 230 +++++++++++++++++++++++
->  2 files changed, 231 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> Please explciitly describe the clock-names you expect, and use them in
+> the driver. If there is a single clock, then you can simply drop the
+> clock-names property from the example.
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index e06a5ab..fde407f 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -685,6 +685,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
->  	sun6i-a31s-yones-toptech-bs1078-v2.dtb
->  dtb-$(CONFIG_MACH_SUN7I) += \
->  	sun7i-a20-bananapi.dtb \
-> +	sun7i-a20-bananapi-m1-plus.dtb \
->  	sun7i-a20-bananapro.dtb \
->  	sun7i-a20-cubieboard2.dtb \
->  	sun7i-a20-cubietruck.dtb \
-> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> new file mode 100644
-> index 0000000..6efc9aa
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> @@ -0,0 +1,230 @@
-> +/*
-> + * Copyright 2016 Luo Yi <luoyi.ly-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * Thanks to the original work by Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *	 modify it under the terms of the GNU General Public License as
-> + *	 published by the Free Software Foundation; either version 2 of the
-> + *	 License, or (at your option) any later version.
-> + *
-> + *	 This file is distributed in the hope that it will be useful,
-> + *	 but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *	 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *	 GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *	 obtaining a copy of this software and associated documentation
-> + *	 files (the "Software"), to deal in the Software without
-> + *	 restriction, including without limitation the rights to use,
-> + *	 copy, modify, merge, publish, distribute, sublicense, and/or
-> + *	 sell copies of the Software, and to permit persons to whom the
-> + *	 Software is furnished to do so, subject to the following
-> + *	 conditions:
-> + *
-> + *	 The above copyright notice and this permission notice shall be
-> + *	 included in all copies or substantial portions of the Software.
-> + *
-> + *	 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *	 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *	 OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *	 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *	 HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *	 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *	 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *	 OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun7i-a20.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	model = "Banana Pi BPI-M1-Plus";
-> +	compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&led_pins_bananapi>;
-> +
-> +		green {
-> +			label = "bananapi-m1-plus:green:usr";
-> +			gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		red {
-> +			label = "bananapi-m1-plus:red:usr";
-> +			gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "default-on";
-
-As Chen-Yu already told you, we don't enforce any trigger by default.
-
-> +		};
-> +
-> +	};
-> +
-> +	mmc3_pwrseq: mmc3_pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&mmc3_pwrseq_pin_bananapim1plus>;
-> +		reset-gpios = <&pio 7 22 GPIO_ACTIVE_LOW>; /* PH22 WL-PMU-EN */
-> +	};
-> +
-> +	reg_gmac_3v3: gmac-3v3 {
-> +		compatible = "regulator-fixed";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&gmac_power_pin_bananapi>;
-> +		regulator-name = "gmac-3v3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		startup-delay-us = <100000>;
-> +		enable-active-high;
-> +		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> +
-> +&ahci {
-> +	status = "okay";
-> +};
-> +
-> +&codec {
-> +	status = "okay";
-> +};
-> +
-> +&ehci0 {
-> +	status = "okay";
-> +};
-> +
-> +&ehci1 {
-> +	status = "okay";
-> +};
-> +
-> +&gmac {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&gmac_pins_rgmii_a>;
-> +	phy = <&phy1>;
-> +	phy-mode = "rgmii";
-> +	phy-supply = <&reg_gmac_3v3>;
-> +	status = "okay";
-> +
-> +	phy1: ethernet-phy@1 {
-> +		reg = <1>;
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c0_pins_a>;
-> +	status = "okay";
-> +
-> +	axp209: pmic@34 {
-> +		compatible = "x-powers,axp209";
-> +		reg = <0x34>;
-> +		interrupt-parent = <&nmi_intc>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-
-What's the point of adding the PMIC if you're not adding any of its
-drivers?
-
-> +	};
-> +};
-> +
-> +&ir0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&ir0_rx_pins_a>;
-> +	status = "okay";
-> +};
-> +
-> +&mmc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	bus-width = <4>;
-> +	cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-> +	cd-inverted;
-> +	status = "okay";
-> +};
-> +
-> +&mmc3 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc3_pins_a>;
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	mmc-pwrseq = <&mmc3_pwrseq>;
-> +	bus-width = <4>;
-> +	non-removable;
-> +	enable-sdio-wakeup;
-> +	status = "okay";
-> +
-> +	brcmf: bcrmf@1 {
-> +		reg = <1>;
-> +		compatible = "brcm,bcm4329-fmac";
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "host-wake";
-> +	};
-> +};
-> +
-> +&mmc3_pins_a {
-> +	/* AP6210 requires pull-up */
-> +	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +};
-> +
-> +&ohci0 {
-> +	status = "okay";
-> +};
-> +
-> +&ohci1 {
-> +	status = "okay";
-> +};
-> +
-> +&pio {
-> +	gmac_power_pin_bananapi: gmac_power_pin@0 {
-> +		allwinner,pins = "PH23";
-> +		allwinner,function = "gpio_out";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
-> +
-> +	led_pins_bananapi: led_pins@0 {
-> +		allwinner,pins = "PH24", "PG2";
-> +		allwinner,function = "gpio_out";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
-> +
-> +	mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
-> +		allwinner,pins = "PH10";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +	};
-> +
-> +	mmc3_pwrseq_pin_bananapim1plus: mmc3_pwrseq_pin@0 {
-> +		allwinner,pins = "PH22";
-> +		allwinner,function = "gpio_out";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins_a>;
-> +	status = "okay";
-> +};
-> -- 
-> 2.9.0
+> Thanks,
+> Mark.
 > 
 
-It looks good otherwise.
+OK. Thanks for your comments. I will drop the clock-names property from the example in next version.
 
-Thanks!
-Maxime
+Thanks,
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---XStn23h1fwudRqtG--
+Pan.
+
+>> +	i2c->clk = devm_clk_get(&pdev->dev, NULL);
+>> +	if (IS_ERR(i2c->clk)) {
+>> +		dev_err(i2c->dev, "cannot get clock\n");
+>> +		return -ENOENT;
+>> +	}
+>> +	clk_prepare_enable(i2c->clk);
+> 
+> .
+> 
