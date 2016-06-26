@@ -1,69 +1,44 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: [PATCH 2/2] of: fdt: mark unflattened tree as detached
-Date: Sun, 26 Jun 2016 22:11:59 +0200
-Message-ID: <01da4c372750e6618638a0320e7ea2f656da3ae5.1466971467.git.hramrach@gmail.com>
-References: <cover.1466971467.git.hramrach@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1466971467.git.hramrach@gmail.com>
-In-Reply-To: <cover.1466971467.git.hramrach@gmail.com>
-References: <cover.1466971467.git.hramrach@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Michal Suchanek <hramrach@gmail.com>
+From: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/4] iio: potentiometer: mcp4531: New parts, DT and typo
+Date: Sun, 26 Jun 2016 22:22:43 +0200
+Message-ID: <1466972567-9580-1-git-send-email-florian.vaussard@heig-vd.ch>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The tree returned from of_fdt_unflatten_tree cannot be attached to the
-live tree because it is not marked as detached so mark it as such. The
-dt resolver checks the flag and refuses to process the tree otherwise.
+Hello,
 
-Signed-off-by: Michal Suchanek <hramrach@gmail.com>
+This series first adds support for parts missing from mcp4531 driver
+(MCP454x, MCP456x, MCP464x and MCP466x). It then introduces the necessary
+device tree binding to perform DT boot. Finally it fixes a typo in the
+Kconfig.
+
+Tested with MCP4561-103 and MCP4561-503 (DT boot).
+
+Best regards,
+Florian
+
 ---
- drivers/of/fdt.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Since v1:
+- Applied Acks
+- Moved the binding to i2c/trivial-devices.txt
+- Fixed data pointer handling in struct of_device_id
+- Renamed struct of_device_id to mcp4531_of_match
+- New patch to fix typo in Kconfig
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3349d2a..7b075cf 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -384,7 +384,8 @@ static void * unflatten_dt_node(const void *blob,
-  */
- static void __unflatten_device_tree(const void *blob,
- 			     struct device_node **mynodes,
--			     void * (*dt_alloc)(u64 size, u64 align))
-+			     void * (*dt_alloc)(u64 size, u64 align),
-+			     bool detached)
- {
- 	unsigned long size;
- 	int start;
-@@ -428,6 +429,10 @@ static void __unflatten_device_tree(const void *blob,
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
- 		pr_warning("End of tree marker overwritten: %08x\n",
- 			   be32_to_cpup(mem + size));
-+	if (detached) {
-+		of_node_set_flag(*mynodes, OF_DETACHED);
-+		pr_debug("unflattened tree is detached\n");
-+	}
- 
- 	pr_debug(" <- unflatten_device_tree()\n");
- }
-@@ -451,7 +456,7 @@ void of_fdt_unflatten_tree(const unsigned long *blob,
- 			struct device_node **mynodes)
- {
- 	mutex_lock(&of_fdt_unflatten_mutex);
--	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-+	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc, true);
- 	mutex_unlock(&of_fdt_unflatten_mutex);
- }
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
-@@ -1119,7 +1124,8 @@ bool __init early_init_dt_scan(void *params)
- void __init unflatten_device_tree(void)
- {
- 	__unflatten_device_tree(initial_boot_params, &of_root,
--				early_init_dt_alloc_memory_arch);
-+				early_init_dt_alloc_memory_arch,
-+				false);
- 
- 	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
- 	of_alias_scan(early_init_dt_alloc_memory_arch);
+Florian Vaussard (4):
+  iio: potentiometer: mcp4531: Add support for MCP454x, MCP456x, MCP464x
+    and MCP466x
+  iio: potentiometer: mcp4531: Add device tree binding documentation
+  iio: potentiometer: mcp4531: Add device tree binding
+  iio: potentiometer: Fix typo in Kconfig
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |  64 ++++
+ drivers/iio/potentiometer/Kconfig                  |  12 +-
+ drivers/iio/potentiometer/mcp4531.c                | 345 ++++++++++++++++++++-
+ 3 files changed, 415 insertions(+), 6 deletions(-)
+
 -- 
-2.8.1
+2.5.5
