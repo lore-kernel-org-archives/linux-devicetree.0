@@ -1,296 +1,94 @@
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 20/21] phy: Add support for Qualcomm's USB HSIC phy
-Date: Sun, 26 Jun 2016 00:28:37 -0700
-Message-ID: <20160626072838.28082-21-stephen.boyd@linaro.org>
-References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add BCM53125 Device Tree nodes
+Date: Sun, 26 Jun 2016 10:05:50 +0200
+Message-ID: <20160626080550.GG4000@lukather>
+References: <1465690459-30751-1-git-send-email-f.fainelli@gmail.com>
+ <1465690459-30751-2-git-send-email-f.fainelli@gmail.com>
+ <CAGb2v64u74cXG0R-MSMtDBxBpg2tFoifQwqbvWL-+3pG=GLVTQ@mail.gmail.com>
+ <576F450B.3080207@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3607uds81ZQvwCD0"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160626072838.28082-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <576F450B.3080207-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The HSIC USB controller on qcom SoCs has an integrated all
-digital phy controlled via the ULPI viewport.
 
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |  60 ++++++++
- drivers/phy/Kconfig                                |   7 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-qcom-usb-hsic.c                    | 161 +++++++++++++++++++++
- 4 files changed, 229 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
- create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
+--3607uds81ZQvwCD0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
-new file mode 100644
-index 000000000000..6b1c6aad2962
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
-@@ -0,0 +1,60 @@
-+Qualcomm's USB HSIC PHY
-+
-+PROPERTIES
-+
-+- compatible:
-+    Usage: required
-+    Value type: <string>
-+    Definition: Should contain "qcom,usb-hsic-phy"
-+
-+- #phy-cells:
-+    Usage: required
-+    Value type: <u32>
-+    Definition: Should contain 0
-+
-+- clocks:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: Should contain clock specifier for phy, calibration and
-+                optionally a calibration sleep clock
-+
-+- clock-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "phy, "cal" and optionally "cal_sleep"
-+
-+- pinctrl-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "init" and "default" in that order
-+
-+- pinctrl-0:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: List of pinctrl settings to apply to keep HSIC pins in a glitch
-+                free state
-+
-+- pinctrl-1:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: List of pinctrl settings to apply to mux out the HSIC pins
-+
-+EXAMPLE
-+
-+usb-controller {
-+	ulpi {
-+		phy {
-+			compatible = "qcom,usb-hsic-phy";
-+			#phy-cells = <0>;
-+			pinctrl-names = "init", "default";
-+			pinctrl-0 = <&hsic_sleep>;
-+			pinctrl-1 = <&hsic_default>;
-+			clocks = <&gcc GCC_USB_HSIC_CLK>,
-+				 <&gcc GCC_USB_HSIC_IO_CAL_CLK>,
-+				 <&gcc GCC_USB_HSIC_IO_CAL_SLEEP_CLK>;
-+			clock-names = "phy", "cal", "cal_sleep";
-+			assigned-clocks = <&gcc GCC_USB_HSIC_IO_CAL_CLK>;
-+			assigned-clock-rates = <960000>;
-+		};
-+	};
-+};
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index b869b98835f4..a2866949dc97 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -406,6 +406,13 @@ config PHY_QCOM_UFS
- 	help
- 	  Support for UFS PHY on QCOM chipsets.
- 
-+config PHY_QCOM_USB_HSIC
-+	tristate "Qualcomm USB HSIC ULPI PHY module"
-+	depends on USB_ULPI_BUS
-+	select GENERIC_PHY
-+	help
-+	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
-+
- config PHY_TUSB1210
- 	tristate "TI TUSB1210 ULPI PHY module"
- 	depends on USB_ULPI_BUS
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 9c3e73ccabc4..982e84a290ec 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -49,6 +49,7 @@ obj-$(CONFIG_PHY_STIH41X_USB)		+= phy-stih41x-usb.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-+obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
- obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
- obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-diff --git a/drivers/phy/phy-qcom-usb-hsic.c b/drivers/phy/phy-qcom-usb-hsic.c
-new file mode 100644
-index 000000000000..a81b2f8bfe37
---- /dev/null
-+++ b/drivers/phy/phy-qcom-usb-hsic.c
-@@ -0,0 +1,161 @@
-+/**
-+ * Copyright (C) 2016 Linaro Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/module.h>
-+#include <linux/ulpi/driver.h>
-+#include <linux/ulpi/regs.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/pinctrl-state.h>
-+#include <linux/delay.h>
-+#include <linux/clk.h>
-+
-+#include "ulpi_phy.h"
-+
-+#define ULPI_HSIC_CFG		0x30
-+#define ULPI_HSIC_IO_CAL	0x33
-+
-+struct qcom_usb_hsic_phy {
-+	struct ulpi *ulpi;
-+	struct phy *phy;
-+	struct pinctrl *pctl;
-+	struct clk *phy_clk;
-+	struct clk *cal_clk;
-+	struct clk *cal_sleep_clk;
-+};
-+
-+static int qcom_usb_hsic_phy_power_on(struct phy *phy)
-+{
-+	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
-+	struct ulpi *ulpi = uphy->ulpi;
-+	struct pinctrl_state *pins_default;
-+	int ret;
-+
-+	ret = clk_prepare_enable(uphy->phy_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(uphy->cal_clk);
-+	if (ret)
-+		goto err_cal;
-+
-+	ret = clk_prepare_enable(uphy->cal_sleep_clk);
-+	if (ret)
-+		goto err_sleep;
-+
-+	/* Set periodic calibration interval to ~2.048sec in HSIC_IO_CAL_REG */
-+	ret = ulpi_write(ulpi, ULPI_HSIC_IO_CAL, 0xff);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Enable periodic IO calibration in HSIC_CFG register */
-+	ret = ulpi_write(ulpi, ULPI_HSIC_CFG, 0xa8);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Configure pins for HSIC functionality */
-+	pins_default = pinctrl_lookup_state(uphy->pctl, PINCTRL_STATE_DEFAULT);
-+	if (IS_ERR(pins_default))
-+		return PTR_ERR(pins_default);
-+
-+	ret = pinctrl_select_state(uphy->pctl, pins_default);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	 /* Enable HSIC mode in HSIC_CFG register */
-+	ret = ulpi_write(ulpi, ULPI_SET(ULPI_HSIC_CFG), 0x01);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Disable auto-resume */
-+	ret = ulpi_write(ulpi, ULPI_CLR(ULPI_IFC_CTRL),
-+			 ULPI_IFC_CTRL_AUTORESUME);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	return ret;
-+err_ulpi:
-+	clk_disable_unprepare(uphy->cal_sleep_clk);
-+err_sleep:
-+	clk_disable_unprepare(uphy->cal_clk);
-+err_cal:
-+	clk_disable_unprepare(uphy->phy_clk);
-+	return ret;
-+}
-+
-+static int qcom_usb_hsic_phy_power_off(struct phy *phy)
-+{
-+	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
-+
-+	clk_disable_unprepare(uphy->cal_sleep_clk);
-+	clk_disable_unprepare(uphy->cal_clk);
-+	clk_disable_unprepare(uphy->phy_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops qcom_usb_hsic_phy_ops = {
-+	.power_on = qcom_usb_hsic_phy_power_on,
-+	.power_off = qcom_usb_hsic_phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int qcom_usb_hsic_phy_probe(struct ulpi *ulpi)
-+{
-+	struct qcom_usb_hsic_phy *uphy;
-+	struct phy_provider *p;
-+	struct clk *clk;
-+
-+	uphy = devm_kzalloc(&ulpi->dev, sizeof(*uphy), GFP_KERNEL);
-+	if (!uphy)
-+		return -ENOMEM;
-+	ulpi_set_drvdata(ulpi, uphy);
-+
-+	uphy->ulpi = ulpi;
-+	uphy->pctl = devm_pinctrl_get(&ulpi->dev);
-+	if (IS_ERR(uphy->pctl))
-+		return PTR_ERR(uphy->pctl);
-+
-+	uphy->phy_clk = clk = devm_clk_get(&ulpi->dev, "phy");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->cal_clk = clk = devm_clk_get(&ulpi->dev, "cal");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
-+				    &qcom_usb_hsic_phy_ops);
-+	if (IS_ERR(uphy->phy))
-+		return PTR_ERR(uphy->phy);
-+	phy_set_drvdata(uphy->phy, uphy);
-+
-+	p = devm_of_phy_provider_register(&ulpi->dev, of_phy_simple_xlate);
-+	return PTR_ERR_OR_ZERO(p);
-+}
-+
-+
-+static const struct of_device_id qcom_usb_hsic_phy_match[] = {
-+	{ .compatible = "qcom,usb-hsic-phy", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, qcom_usb_hsic_phy_match);
-+
-+static struct ulpi_driver qcom_usb_hsic_phy_driver = {
-+	.probe = qcom_usb_hsic_phy_probe,
-+	.driver = {
-+		.name = "qcom_usb_hsic_phy",
-+		.of_match_table = qcom_usb_hsic_phy_match
-+	},
-+};
-+module_ulpi_driver(qcom_usb_hsic_phy_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm USB HSIC phy");
-+MODULE_LICENSE("GPL v2");
--- 
-2.9.0.rc2.8.ga28705d
+Hi Florian,
 
+On Sat, Jun 25, 2016 at 07:59:23PM -0700, Florian Fainelli wrote:
+> Le 23/06/2016 22:48, Chen-Yu Tsai a =E9crit :
+> >> diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot=
+/dts/sun7i-a20-lamobo-r1.dts
+> >> index 5ee43d8bf174..697582397dcf 100644
+> >> --- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+> >> +++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+> >> @@ -110,13 +110,67 @@
+> >>  &gmac {
+> >>         pinctrl-names =3D "default";
+> >>         pinctrl-0 =3D <&gmac_pins_rgmii_a>;
+> >> -       phy =3D <&phy1>;
+> >>         phy-mode =3D "rgmii";
+> >>         phy-supply =3D <&reg_gmac_3v3>;
+> >>         status =3D "okay";
+> >>
+> >> -       phy1: ethernet-phy@1 {
+> >> -               reg =3D <1>;
+> >> +       fixed-link {
+> >> +               speed =3D <1000>;
+> >> +               full-duplex;
+> >> +       };
+> >> +
+> >> +       mdio1 {
+> >=20
+> > mdio will suffice.
+>=20
+> There is another label in sun7i-a20.dtsi named mdio which is for the
+> MDIO controller node matching allwinner,sun4i-a10-mdio, which is not the
+> one we want here, we want the MDIO controller associated with the
+> Synopsys GMAC.
+
+Yes, but it's in a different node, and you're not using any labels, so
+I don't really see how that would conflict.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--3607uds81ZQvwCD0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXb4zeAAoJEBx+YmzsjxAgntQP/1MvlCOtV/07VByDJcDF+TsF
+uCtSdYpu6kaiUCPlTeURPgBgP6R9Dr2Qt5WuCPq26tEwqWO/3YK/4mXHRS8d0HL8
+N5ow9c36Nr6lK6OfZyzpZ7DkUUQ/0iVtO24KHVoQETtlENWMII6io46rDFgTysh7
+dHESSFcgQhL7/cNz4kikebbGcJcrqoHtJlrF0PRv9qjCpBhxEGrhzndjwspLQe7e
+37EFyrEbZOMLrOF11POujQ52BjXYswEo/XLR8LTG+cvAMZusWrR4FBMJMuszx9uu
+Cr10vACHZfPmwzM9UnAWXMTtLOGHY0W2aN1Wh8Lj0I4kVj2Jk7BOcxi+n0hRmhxq
+4a+VwNEAMViW7jRU8PfZpw2T1bKVc2gnm8Fn/3iRfr/YHRiFPckNh2j9Nx77af/2
+gD3S1xti1NpD13b9g8DX72mdHmZWSg1Iaxm8MYd/rHhnvex2R527g9+G78TkTsKD
+/HTdSSyzOZHDLmJIKMZFjBSS4sLeKyQbv8Oeac+4NOKMgj7cKHJBT7ca6YCDefKw
+ptWvVo287pVX/ywAluIjDOcI8wfJ1jc9SBOd93nyVh8KsWawN9YdMkAi+BlwS7L1
+UfIUocCP32ItWOkrTwSAhteFZU6u+AosGnW2V1d+vuw+YRbpwB/rkFgpCoiVCGnc
+7Yi24rgi9veftc465/cR
+=bWNT
+-----END PGP SIGNATURE-----
+
+--3607uds81ZQvwCD0--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
