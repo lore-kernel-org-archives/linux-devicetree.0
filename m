@@ -1,50 +1,42 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 1/2] Documentation: Add sbs-manager device tree node
- documentation
-Date: Mon, 27 Jun 2016 00:35:17 +0200
-Message-ID: <83b7648c-43d6-7a32-29bb-65f2606399fd@axentia.se>
-References: <1466622436-27963-1-git-send-email-karl-heinz@schneider-inet.de>
- <1466622436-27963-2-git-send-email-karl-heinz@schneider-inet.de>
- <20160624175014.GA29990@rob-hp-laptop>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: add ap_pwroff and ddrio_pwroff pins for rk3399
+Date: Mon, 27 Jun 2016 01:09:08 +0200
+Message-ID: <3506480.G5PcqxtUXs@phil>
+References: <1465935671-13890-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160624175014.GA29990@rob-hp-laptop>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Phil Reid <preid@electromag.com.au>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1465935671-13890-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-06-24 19:50, Rob Herring wrote:
-> On Wed, Jun 22, 2016 at 09:07:15PM +0200, Karl-Heinz Schneider wrote:
->> This patch adds device tree documentation for the sbs-manager
-
-*snip*
-
->> +
->> +From OS view the device is basically an i2c-mux used to communicate with up to
->> +four smart battery devices at address 0xb. The driver actually implements this
->> +behaviour. So standard i2c-mux nodes can be used to register up to four slave
->> +batteries. Channels will be numerated as 1, 2, 4 and 8.
->> +
->> +Example:
->> +
->> +batman@0a {
->> +    compatible = "sbs,sbs-manager";
->> +    reg = <0x0a>;
->> +    sbsm,i2c-retry-count = <3>;
->> +    #address-cells = <1>;
->> +    #size-cells = <0>;
->> +
->> +    channel1@1 {
+Am Dienstag, 14. Juni 2016, 13:21:11 schrieb Douglas Anderson:
+> There are two sleep related pins on rk3399: ap_pwroff and ddrio_pwroff.
+> Let's add the definition of these two pins to rk3399's main dtsi file so
+> that boards can use them.
 > 
-> channel@1
+> These two pins are similar to the global_pwroff and ddrio_pwroff pins in
+> rk3288 and are expected to be used in the same way: boards will likely
+> want to configure these pinctrl settings in their global pinctrl hog
+> list.
 > 
-> Do we have a standard node name for mux nodes? If not, we should.
+> Note that on rk3288 there were two additional pins in the "sleep"
+> section: "ddr0_retention" and "ddr1_retention".  On rk3288 designs these
+> pins appeared to actually route from rk3288 back to rk3288.  Presumably
+> on rk3399 this is simply not needed since the pins don't appear to exist
+> there.
+> 
+> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-No name is enforced by the i2c mux support code, but I think "i2c"
-dominates, and quite possibly it is the only documented name?
+applied to my dts64 branch for 4.8
 
-Cheers,
-Peter
+
+Thanks
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
