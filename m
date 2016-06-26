@@ -1,71 +1,49 @@
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Subject: Re: [RFC v4 0/7] extcon: usb-gpio: fixes and improvements
-Date: Sun, 26 Jun 2016 18:39:05 +0200
-Message-ID: <57700529.7090707@math.uni-bielefeld.de>
-References: <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] iio: pressure: bmp280: augment DT bindings
+Date: Sun, 26 Jun 2016 17:47:40 +0100
+Message-ID: <058533b8-a0a7-b7fa-9745-d72eb2a2db21@kernel.org>
+References: <1466176341-17442-1-git-send-email-linus.walleij@linaro.org>
+ <20160620164645.GA3191@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: rogerq@ti.com, Peter Chen <peter.chen@freescale.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, balbi@ti.com, kishon@ti.com, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160620164645.GA3191@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On 20/06/16 17:46, Rob Herring wrote:
+> On Fri, Jun 17, 2016 at 05:12:18PM +0200, Linus Walleij wrote:
+>> This adds standard device tree bindings for a reset GPIO line, and
+>> the VDDD and VDDA power regulators.
+>>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/iio/pressure/bmp085.txt | 11 +++++++++--
+>>  1 file changed, 9 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+>> index d7a6deb6b21e..06ad5feaea28 100644
+>> --- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+>> +++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+>> @@ -1,7 +1,7 @@
+>> -BMP085/BMP18x digital pressure sensors
+>> +BMP085/BMP18x/BMP28x digital pressure sensors
+>>  
+>>  Required properties:
+>> -- compatible: bosch,bmp085
+>> +- compatible: "bosch,bmp085" or "bosch,bmp180" or "bosch,bmp280"
+> 
+> One per line is preferred, but I wouldn't respin just for that.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+Applied to the togreg branch of iio.git - initially pushed out
+as testing.
 
-just wanted to ask on which kernel branch the patchset is based on. At
-least for me the set doesn't apply cleanly to 4.7-rc4.
+thanks,
 
-With best wishes,
-Tobias
-
-
-Krzysztof Kozlowski wrote:
-> Hi,
-> 
-> 
-> Some time ago, Robert tried to add VBUS detection to extcon-usb-gpio
-> driver [1].  There was a discussion about patch #2 ("extcon: usb-gpio:
-> add support for VBUS detection").
-> 
-> The final conclusion was that Chanwoo will add VBUS/ID notifiers [2].
-> That unfortunately never happened so this patchset is a follow up.
-> 
-> 1. Add VBUS/ID cable state notifiers to extcon, so USB controllers
->    could use it.
-> 2. Add VBUS detection to extcon-usb-gpio driver.
-> 
-> Some parts are based on old Robert's work, some are new, some are
-> reworked.
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-> [1] http://thread.gmane.org/gmane.linux.kernel/1923192/focus=1923193
-> [2] http://thread.gmane.org/gmane.linux.kernel/1923192/focus=1941152
-> 
-> 
-> Krzysztof Kozlowski (5):
->   Revert "extcon: usb-gpio: switch to use pm wakeirq apis"
->   extcon: Add raw VBUS and ID cable states
->   extcon: usb-gpio: Add support for VBUS detection
->   ARM: exynos_defconfig: Enable EXTCON_USB_GPIO for Odroid XU3 USB OTG
->   ARM: dts: exynos: Add extcon-usb-gpio node for Odroid XU3
-> 
-> Robert Baldyga (2):
->   Documentation: extcon: usb-gpio: update usb-gpio binding description
->   extcon: usb-gpio: make debounce value configurable in devicetree
-> 
->  .../devicetree/bindings/extcon/extcon-usb-gpio.txt |  28 ++++-
->  arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |  21 ++++
->  arch/arm/boot/dts/exynos5422-odroidxu3.dts         |  21 ++++
->  arch/arm/configs/exynos_defconfig                  |   1 +
->  drivers/extcon/extcon-usb-gpio.c                   | 138 +++++++++++++++++----
->  drivers/extcon/extcon.c                            |   3 +
->  include/linux/extcon.h                             |   8 +-
->  7 files changed, 190 insertions(+), 30 deletions(-)
-> 
+Jonathan
