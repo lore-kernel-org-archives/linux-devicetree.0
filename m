@@ -1,108 +1,66 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v3 5/5] mfd: rn5t618: register restart handler
-Date: Sat, 25 Jun 2016 18:15:15 -0700
-Message-ID: <20160626011515.4428-6-stefan@agner.ch>
-References: <20160626011515.4428-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160626011515.4428-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org
-Cc: b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Stefan Agner <stefan@agner.ch>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add BCM53125 Device Tree nodes
+Date: Sat, 25 Jun 2016 19:59:23 -0700
+Message-ID: <576F450B.3080207@gmail.com>
+References: <1465690459-30751-1-git-send-email-f.fainelli@gmail.com>
+ <1465690459-30751-2-git-send-email-f.fainelli@gmail.com>
+ <CAGb2v64u74cXG0R-MSMtDBxBpg2tFoifQwqbvWL-+3pG=GLVTQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGb2v64u74cXG0R-MSMtDBxBpg2tFoifQwqbvWL-+3pG=GLVTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the PMIC's repower capability for reboots. Register a restart
-handler and use a slightly elevated priority of 192 since the PMIC
-has suprior reset capability (causing a system wide reset).
+Le 23/06/2016 22:48, Chen-Yu Tsai a =C3=A9crit :
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/bo=
+ot/dts/sun7i-a20-lamobo-r1.dts
+>> index 5ee43d8bf174..697582397dcf 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+>> @@ -110,13 +110,67 @@
+>>  &gmac {
+>>         pinctrl-names =3D "default";
+>>         pinctrl-0 =3D <&gmac_pins_rgmii_a>;
+>> -       phy =3D <&phy1>;
+>>         phy-mode =3D "rgmii";
+>>         phy-supply =3D <&reg_gmac_3v3>;
+>>         status =3D "okay";
+>>
+>> -       phy1: ethernet-phy@1 {
+>> -               reg =3D <1>;
+>> +       fixed-link {
+>> +               speed =3D <1000>;
+>> +               full-duplex;
+>> +       };
+>> +
+>> +       mdio1 {
+>=20
+> mdio will suffice.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
----
- drivers/mfd/rn5t618.c | 42 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 36 insertions(+), 6 deletions(-)
+There is another label in sun7i-a20.dtsi named mdio which is for the
+MDIO controller node matching allwinner,sun4i-a10-mdio, which is not th=
+e
+one we want here, we want the MDIO controller associated with the
+Synopsys GMAC.
 
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index 1831740..14f3b5f 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -12,11 +12,13 @@
-  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
- 
-+#include <linux/delay.h>
- #include <linux/i2c.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/rn5t618.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/reboot.h>
- #include <linux/regmap.h>
- 
- static const struct mfd_cell rn5t618_cells[] = {
-@@ -50,17 +52,37 @@ static const struct regmap_config rn5t618_regmap_config = {
- };
- 
- static struct rn5t618 *rn5t618_pm_power_off;
-+static struct notifier_block rn5t618_restart_handler;
- 
--static void rn5t618_power_off(void)
-+static void rn5t618_trigger_poweroff_sequence(bool repower)
- {
- 	/* disable automatic repower-on */
- 	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_REPCNT,
--			   RN5T618_REPCNT_REPWRON, 0);
-+			   RN5T618_REPCNT_REPWRON, repower);
- 	/* start power-off sequence */
- 	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_SLPCNT,
- 			   RN5T618_SLPCNT_SWPWROFF, RN5T618_SLPCNT_SWPWROFF);
- }
- 
-+static void rn5t618_power_off(void)
-+{
-+	rn5t618_trigger_poweroff_sequence(false);
-+}
-+
-+static int rn5t618_restart(struct notifier_block *this,
-+			    unsigned long mode, void *cmd)
-+{
-+	rn5t618_trigger_poweroff_sequence(true);
-+
-+	/*
-+	 * Repower factor detection on PMIC side is not instant. 1ms
-+	 * proved to be enouth time until reset takes effect.
-+	 */
-+	mdelay(1);
-+
-+	return NOTIFY_DONE;
-+}
-+
- static const struct of_device_id rn5t618_of_match[] = {
- 	{ .compatible = "ricoh,rn5t567", .data = (void *)RN5T567 },
- 	{ .compatible = "ricoh,rn5t618", .data = (void *)RN5T618 },
-@@ -102,13 +124,21 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
-+	rn5t618_pm_power_off = priv;
- 	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
--		if (!pm_power_off) {
--			rn5t618_pm_power_off = priv;
-+		if (!pm_power_off)
- 			pm_power_off = rn5t618_power_off;
--		} else {
-+		else
- 			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
--		}
-+	}
-+
-+	rn5t618_restart_handler.notifier_call = rn5t618_restart;
-+	rn5t618_restart_handler.priority = 192;
-+
-+	ret = register_restart_handler(&rn5t618_restart_handler);
-+	if (ret) {
-+		dev_err(&i2c->dev, "cannot register restart handler, %d\n", ret);
-+		return ret;
- 	}
- 
- 	return 0;
--- 
-2.8.3
+>=20
+>> +               compatible =3D "snps,dwmac-mdio";
+>> +               #address-cells =3D <1>;
+>> +               #size-cells =3D <0>;
+>> +
+>> +               switch: ethernet-switch@30 {
+>=20
+> 30 decimal or 0x30 hex? We typically use hex values here.
+
+30 decimal, will fix that.
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
