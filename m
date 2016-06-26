@@ -1,40 +1,81 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 05/14] dt-bindings: document SY8106A
- regulator driver
-Date: Sun, 26 Jun 2016 12:27:20 +0100
-Message-ID: <20160626112720.GL28202@sirena.org.uk>
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-6-megous@megous.com>
-Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/2] ASoC: da7219: Convert driver to use generic FW
+ functions
+Date: Sun, 26 Jun 2016 12:42:06 +0100
+Message-ID: <20160626114206.GM28202@sirena.org.uk>
+References: <cover.1466523027.git.Adam.Thomson.Opensource@diasemi.com>
+ <6274a042-da99-e3e6-20f2-37ce2651645c@intel.com>
+ <2E89032DDAA8B9408CB92943514A0337D4644644@SW-EX-MBX01.diasemi.com>
+ <20160621232116.GG28202@sirena.org.uk>
+ <CAJZ5v0g47+igo+Z+gZZE9sOix8oCs7Jy+H-i=HcBUB+RVib3+g@mail.gmail.com>
+ <20160623100148.GV28202@sirena.org.uk>
+ <CAJZ5v0hjQ=j+KOV8PMR47vx+=LLZMHqGdrVBZtDsF6WhFGkcQw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="u3KzC5IXcIj3OgFK"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBBH7YX25QKGQE4IHVW7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+	protocol="application/pgp-signature"; boundary="PoUpPrJlcBv0qM6G"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160625034511.7966-6-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:VOLTAGE AND CURRENT REGULATOR FRAMEWORK" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJZ5v0hjQ=j+KOV8PMR47vx+=LLZMHqGdrVBZtDsF6WhFGkcQw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-acpi <linux-acpi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, alsa-devel <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
 List-Id: devicetree@vger.kernel.org
 
 
---u3KzC5IXcIj3OgFK
-Content-Type: text/plain; charset=UTF-8
+--PoUpPrJlcBv0qM6G
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Jun 25, 2016 at 05:45:02AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> 
-> This patch adds the binding documentation for the
-> sy8106a regulator driver.
+On Thu, Jun 23, 2016 at 02:57:35PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Jun 23, 2016 at 12:01 PM, Mark Brown <broonie@kernel.org> wrote:
 
-Please submit patches using subject lines reflecting the style for the
-subsystem.  This makes it easier for people to identify relevant
-patches.
---u3KzC5IXcIj3OgFK--
+> > That works too, if I do that I'll make a tag in case it needs to get
+> > pulled elsewhere.
+
+> Sounds good, thanks!
+
+The following changes since commit 1a695a905c18548062509178b98bc91e67510864:
+
+  Linux 4.7-rc1 (2016-05-29 09:29:24 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git tags/dev-prop-named-child
+
+for you to fetch changes up to 613e97218ccbd7f33895cad4525d861810a9d5d5:
+
+  device property: Add function to search for named child of device (2016-06-26 12:39:03 +0100)
+
+----------------------------------------------------------------
+device property: Add function to search for named child of device
+
+This adds a function to the device property API allowing us to look up
+the named child of a device.
+
+----------------------------------------------------------------
+Adam Thomson (1):
+      device property: Add function to search for named child of device
+
+ drivers/base/property.c  | 28 ++++++++++++++++++++++++++++
+ include/acpi/acpi_bus.h  |  7 +++++++
+ include/linux/acpi.h     |  6 ++++++
+ include/linux/of.h       | 14 +++++++-------
+ include/linux/property.h |  3 +++
+ 5 files changed, 51 insertions(+), 7 deletions(-)
+
+--PoUpPrJlcBv0qM6G
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXb7+LAAoJECTWi3JdVIfQGOwH/irmsQV2M9wEm6hToXlbABV4
+ViP4eMVAOo3ltNWL+y0vmwQoy1JNUR5HhO2sLE3ybO2LpScK8F0oYybg4izaNoEV
+z7pFB1Cdiv1szC9UG+upXRwgoSG0Z3gnItzNc8u9vtxX0n+UHQ2AYTYqaqjkGDrE
+gwcrzUo066eOr3fY90c/Pgyqe8Fv6pTYEG9JxjuZjvltc9AHWhKqtyeBdHvd9hML
+BUVntyH6Bk+Ld2vORS129hESSonAypkQSB9kr5fn+3BCAIXa/qUOfPS2afjLFUUl
+JkmomWgRVoaeFgpETtIqYGD2OF+SVA/fKWebdE+OGdaEliXpglGkCw8BskUoE0o=
+=Slty
+-----END PGP SIGNATURE-----
+
+--PoUpPrJlcBv0qM6G--
