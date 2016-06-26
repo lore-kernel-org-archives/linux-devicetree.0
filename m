@@ -1,53 +1,46 @@
 From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 5/8] rtc: ac100: Add clk output support
-Date: Sun, 26 Jun 2016 02:45:57 +0200
-Message-ID: <20160626004557.GX5809@piout.net>
-References: <1466391138-12862-1-git-send-email-wens@csie.org>
- <1466391138-12862-6-git-send-email-wens@csie.org>
+Subject: Re: [PATCH 0/4] support control with using GPIO lines
+Date: Sun, 26 Jun 2016 02:55:34 +0200
+Message-ID: <20160626005534.GY5809@piout.net>
+References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
+ <20160410151237.GD5377@piout.net>
+ <1460301781.17404.171.camel@gmail.com>
+ <20160410153855.GG5377@piout.net>
+ <20160412012518.GQ3351@sirena.org.uk>
+ <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A@mail.gmail.com>
+ <20160427135012.GP3217@sirena.org.uk>
+ <1461765799.2957.4.camel@gmail.com>
+ <CAC5umyhLZ7Nvakf84qS73HG=H39mjYf5Lv=BPFnqZt-rTrZvCA@mail.gmail.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBRWLXS5QKGQETHDXFOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBB6QXS5QKGQEYC6AC4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1466391138-12862-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <CAC5umyhLZ7Nvakf84qS73HG=H39mjYf5Lv=BPFnqZt-rTrZvCA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
 List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/06/2016 at 10:52:15 +0800, Chen-Yu Tsai wrote :
-> +struct ac100_clk32k {
-> +	struct clk_hw hw;
-> +	struct regmap *regmap;
-> +	u8 offset;
-> +};
-> +
-> +#define to_ac100_clk32k(_hw) container_of(_hw, struct ac100_clk32k, hw)
-> +
-> +#define AC100_RTC_32K_NAME	"ac100-rtc-32k"
-> +#define AC100_RTC_32K_RATE	32768
-> +#define AC100_ADDA_4M_NAME	"ac100-adda-4M"
-> +#define AC100_ADDA_4M_RATE	4000000
-> +#define AC100_CLK32K_NUM	3
-> +
-> +static const char * const ac100_clk32k_names[] = {
-> +	"ac100-clk32k-ap",
-> +	"ac100-clk32k-bb",
-> +	"ac100-clk32k-md",
-> +};
-> +
+Hi,
 
-Well, naming things is hard but I don't feel ac100_clk32k and
-ac100-clk32k are good prefixes for those clocks as they are actually
-dividing a 32KHz or 4MHz clock (one configuration out of 128 is 32KHz).
+On 29/04/2016 at 14:40:25 +0900, Akinobu Mita wrote :
+> So I think that the way like the patch 3 and 4 in this series showed
+> is reasonable.  And rtc-ds2404, rtc-moxart, and rtc-v3020 do something
+> similar.
+> 
+> If there is no complaint, I'll resend patch 3 and 4 with small fixes.
 
-Else, I don't have any objection.
+Are you still planning to send a new version? I understand you had some
+fixes.
+
+Thanks!
 
 -- 
 Alexandre Belloni, Free Electrons
