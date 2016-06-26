@@ -1,38 +1,65 @@
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 05/14] dt-bindings: document SY8106A
- regulator driver
-Date: Sun, 26 Jun 2016 17:10:06 +0200
-Message-ID: <e8508fa7-bd98-9171-0c9a-59e059573692@megous.com>
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-6-megous@megous.com>
- <20160626112720.GL28202@sirena.org.uk>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v3,5/5] mfd: rn5t618: register restart handler
+Date: Sun, 26 Jun 2016 08:13:18 -0700
+Message-ID: <20160626151318.GA15869@roeck-us.net>
+References: <20160626011515.4428-6-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBT7AX65QKGQE2DBQM4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160626112720.GL28202-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:VOLTAGE AND CURRENT REGULATOR FRAMEWORK" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160626011515.4428-6-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org, b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 26.6.2016 13:27, Mark Brown wrote:
-> On Sat, Jun 25, 2016 at 05:45:02AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
->> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->>
->> This patch adds the binding documentation for the
->> sy8106a regulator driver.
+On Sat, Jun 25, 2016 at 06:15:15PM -0700, Stefan Agner wrote:
+> Use the PMIC's repower capability for reboots. Register a restart
+> handler and use a slightly elevated priority of 192 since the PMIC
+> has suprior reset capability (causing a system wide reset).
 > 
-> Please submit patches using subject lines reflecting the style for the
-> subsystem.  This makes it easier for people to identify relevant
-> patches.
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> ---
+>  drivers/mfd/rn5t618.c | 42 ++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 36 insertions(+), 6 deletions(-)
 > 
+> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+> index 1831740..14f3b5f 100644
+> --- a/drivers/mfd/rn5t618.c
+> +++ b/drivers/mfd/rn5t618.c
+> @@ -12,11 +12,13 @@
+>   * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>   */
+>  
+> +#include <linux/delay.h>
+>  #include <linux/i2c.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/rn5t618.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> +#include <linux/reboot.h>
+>  #include <linux/regmap.h>
+>  
+>  static const struct mfd_cell rn5t618_cells[] = {
+> @@ -50,17 +52,37 @@ static const struct regmap_config rn5t618_regmap_config = {
+>  };
+>  
+>  static struct rn5t618 *rn5t618_pm_power_off;
+> +static struct notifier_block rn5t618_restart_handler;
+>  
+> -static void rn5t618_power_off(void)
+> +static void rn5t618_trigger_poweroff_sequence(bool repower)
+>  {
+>  	/* disable automatic repower-on */
+>  	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_REPCNT,
+> -			   RN5T618_REPCNT_REPWRON, 0);
+> +			   RN5T618_REPCNT_REPWRON, repower);
 
-Hello, I assume that means "regulator: dt-bindings: ..." in this case.
-I'll keep that in mind in the future. Thank you.
+This only works because RN5T618_REPCNT_REPWRON happens to be BIT(0).
+Better would be
+
+			RN5T618_REPCNT_REPWRON,
+			repower ?  RN5T618_REPCNT_REPWRON : 0
+
+Guenter
