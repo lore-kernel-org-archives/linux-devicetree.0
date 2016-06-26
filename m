@@ -1,54 +1,38 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 5/8] rtc: ac100: Add clk output support
-Date: Sun, 26 Jun 2016 22:58:07 +0800
-Message-ID: <CAGb2v64YnSz5MnnF==ZeeqZw4yBY2R=dNVdyi9BczVR5WCNZ3g@mail.gmail.com>
-References: <1466391138-12862-1-git-send-email-wens@csie.org>
- <1466391138-12862-6-git-send-email-wens@csie.org> <20160626004557.GX5809@piout.net>
+From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 05/14] dt-bindings: document SY8106A
+ regulator driver
+Date: Sun, 26 Jun 2016 17:10:06 +0200
+Message-ID: <e8508fa7-bd98-9171-0c9a-59e059573692@megous.com>
+References: <20160625034511.7966-1-megous@megous.com>
+ <20160625034511.7966-6-megous@megous.com>
+ <20160626112720.GL28202@sirena.org.uk>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160626004557.GX5809@piout.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, rtc-linux@googlegroups.com, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBT7AX65QKGQE2DBQM4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160626112720.GL28202-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:VOLTAGE AND CURRENT REGULATOR FRAMEWORK" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 26, 2016 at 8:45 AM, Alexandre Belloni
-<alexandre.belloni@free-electrons.com> wrote:
-> On 20/06/2016 at 10:52:15 +0800, Chen-Yu Tsai wrote :
->> +struct ac100_clk32k {
->> +     struct clk_hw hw;
->> +     struct regmap *regmap;
->> +     u8 offset;
->> +};
->> +
->> +#define to_ac100_clk32k(_hw) container_of(_hw, struct ac100_clk32k, hw)
->> +
->> +#define AC100_RTC_32K_NAME   "ac100-rtc-32k"
->> +#define AC100_RTC_32K_RATE   32768
->> +#define AC100_ADDA_4M_NAME   "ac100-adda-4M"
->> +#define AC100_ADDA_4M_RATE   4000000
->> +#define AC100_CLK32K_NUM     3
->> +
->> +static const char * const ac100_clk32k_names[] = {
->> +     "ac100-clk32k-ap",
->> +     "ac100-clk32k-bb",
->> +     "ac100-clk32k-md",
->> +};
->> +
->
-> Well, naming things is hard but I don't feel ac100_clk32k and
-> ac100-clk32k are good prefixes for those clocks as they are actually
-> dividing a 32KHz or 4MHz clock (one configuration out of 128 is 32KHz).
+On 26.6.2016 13:27, Mark Brown wrote:
+> On Sat, Jun 25, 2016 at 05:45:02AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>
+>> This patch adds the binding documentation for the
+>> sy8106a regulator driver.
+> 
+> Please submit patches using subject lines reflecting the style for the
+> subsystem.  This makes it easier for people to identify relevant
+> patches.
+> 
 
-I agree it's a bit misleading. There are 2 names used throughout the
-datasheet: 1) CKOn_RTC for the pin names, and 2) CLK32Kxx for the
-register names and block diagram.
-
-I'll switch to the pin names, since this is probably what is shown on
-board schematics.
-
-> Else, I don't have any objection.
-
-Thanks!
-ChenYu
+Hello, I assume that means "regulator: dt-bindings: ..." in this case.
+I'll keep that in mind in the future. Thank you.
