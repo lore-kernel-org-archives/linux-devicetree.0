@@ -1,94 +1,62 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add BCM53125 Device Tree nodes
-Date: Sun, 26 Jun 2016 10:05:50 +0200
-Message-ID: <20160626080550.GG4000@lukather>
-References: <1465690459-30751-1-git-send-email-f.fainelli@gmail.com>
- <1465690459-30751-2-git-send-email-f.fainelli@gmail.com>
- <CAGb2v64u74cXG0R-MSMtDBxBpg2tFoifQwqbvWL-+3pG=GLVTQ@mail.gmail.com>
- <576F450B.3080207@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3607uds81ZQvwCD0"
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v2 0/5] ARM: dts: imx7d: add i.MX 7Solo and Colibri iMX7S/D dts
+Date: Sun, 26 Jun 2016 01:47:50 -0700
+Message-ID: <20160626084755.21925-1-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <576F450B.3080207-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: max.krummenacher-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The two SoC's i.MX 7Solo and i.MX 7Dual are very similar, but there
+are some differences worth dividing the current i.MX 7Dual base device
+tree. This patchset adds new base device tree imx7s.dtsi which is meant
+to be used for i.MX 7Solo boards. Note that the SoC _family_ is called
+imx7d/IMX7D throughout the kernel.
 
---3607uds81ZQvwCD0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The third patch uses the new PMIC device tree binding (merge pending,
+bindings have been acked by Rob Herring):
+https://lkml.org/lkml/2016/6/25/212
 
-Hi Florian,
+Changes since v1:
+- Add additional commit before recreating imx7d.dtsi to keep diffstat nice
+- Define SD-card detect to be GPIO_ACTIVE_LOW
+- Use compatible toradex,colibri-imx7(s|d)-eval-v3 (with dashes and v3)
+- Various device tree properties fixed/altered as suggested by Shawn
+- Specify 1P0D regulator supply
 
-On Sat, Jun 25, 2016 at 07:59:23PM -0700, Florian Fainelli wrote:
-> Le 23/06/2016 22:48, Chen-Yu Tsai a =E9crit :
-> >> diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot=
-/dts/sun7i-a20-lamobo-r1.dts
-> >> index 5ee43d8bf174..697582397dcf 100644
-> >> --- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-> >> +++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-> >> @@ -110,13 +110,67 @@
-> >>  &gmac {
-> >>         pinctrl-names =3D "default";
-> >>         pinctrl-0 =3D <&gmac_pins_rgmii_a>;
-> >> -       phy =3D <&phy1>;
-> >>         phy-mode =3D "rgmii";
-> >>         phy-supply =3D <&reg_gmac_3v3>;
-> >>         status =3D "okay";
-> >>
-> >> -       phy1: ethernet-phy@1 {
-> >> -               reg =3D <1>;
-> >> +       fixed-link {
-> >> +               speed =3D <1000>;
-> >> +               full-duplex;
-> >> +       };
-> >> +
-> >> +       mdio1 {
-> >=20
-> > mdio will suffice.
->=20
-> There is another label in sun7i-a20.dtsi named mdio which is for the
-> MDIO controller node matching allwinner,sun4i-a10-mdio, which is not the
-> one we want here, we want the MDIO controller associated with the
-> Synopsys GMAC.
+Stefan Agner (5):
+  ARM: imx: add support for i.MX 7Solo
+  ARM: dts: imx7d: use imx7s.dtsi as base device tree
+  ARM: dts: imx7d: recreate imx7d.dtsi with i.MX 7Dual specifics
+  ARM: dts: imx7d: move input header into base device tree
+  ARM: dts: imx7: add Toradex Colibri iMX7S/iMX7D support
 
-Yes, but it's in a different node, and you're not using any labels, so
-I don't really see how that would conflict.
+ arch/arm/boot/dts/Makefile                  |   4 +-
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 148 +++++
+ arch/arm/boot/dts/imx7-colibri.dtsi         | 571 +++++++++++++++++
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts     |   1 -
+ arch/arm/boot/dts/imx7d-colibri-eval-v3.dts |  66 ++
+ arch/arm/boot/dts/imx7d-colibri.dtsi        |  54 ++
+ arch/arm/boot/dts/imx7d-nitrogen7.dts       |   1 -
+ arch/arm/boot/dts/imx7d-sdb.dts             |   1 -
+ arch/arm/boot/dts/imx7d.dtsi                | 923 ++--------------------------
+ arch/arm/boot/dts/imx7s-colibri-eval-v3.dts |  51 ++
+ arch/arm/boot/dts/imx7s-colibri.dtsi        |  50 ++
+ arch/arm/boot/dts/imx7s.dtsi                | 881 ++++++++++++++++++++++++++
+ arch/arm/mach-imx/mach-imx7d.c              |   1 +
+ 13 files changed, 1873 insertions(+), 879 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+ create mode 100644 arch/arm/boot/dts/imx7-colibri.dtsi
+ create mode 100644 arch/arm/boot/dts/imx7d-colibri-eval-v3.dts
+ create mode 100644 arch/arm/boot/dts/imx7d-colibri.dtsi
+ create mode 100644 arch/arm/boot/dts/imx7s-colibri-eval-v3.dts
+ create mode 100644 arch/arm/boot/dts/imx7s-colibri.dtsi
+ create mode 100644 arch/arm/boot/dts/imx7s.dtsi
 
-Maxime
+-- 
+2.8.3
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---3607uds81ZQvwCD0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXb4zeAAoJEBx+YmzsjxAgntQP/1MvlCOtV/07VByDJcDF+TsF
-uCtSdYpu6kaiUCPlTeURPgBgP6R9Dr2Qt5WuCPq26tEwqWO/3YK/4mXHRS8d0HL8
-N5ow9c36Nr6lK6OfZyzpZ7DkUUQ/0iVtO24KHVoQETtlENWMII6io46rDFgTysh7
-dHESSFcgQhL7/cNz4kikebbGcJcrqoHtJlrF0PRv9qjCpBhxEGrhzndjwspLQe7e
-37EFyrEbZOMLrOF11POujQ52BjXYswEo/XLR8LTG+cvAMZusWrR4FBMJMuszx9uu
-Cr10vACHZfPmwzM9UnAWXMTtLOGHY0W2aN1Wh8Lj0I4kVj2Jk7BOcxi+n0hRmhxq
-4a+VwNEAMViW7jRU8PfZpw2T1bKVc2gnm8Fn/3iRfr/YHRiFPckNh2j9Nx77af/2
-gD3S1xti1NpD13b9g8DX72mdHmZWSg1Iaxm8MYd/rHhnvex2R527g9+G78TkTsKD
-/HTdSSyzOZHDLmJIKMZFjBSS4sLeKyQbv8Oeac+4NOKMgj7cKHJBT7ca6YCDefKw
-ptWvVo287pVX/ywAluIjDOcI8wfJ1jc9SBOd93nyVh8KsWawN9YdMkAi+BlwS7L1
-UfIUocCP32ItWOkrTwSAhteFZU6u+AosGnW2V1d+vuw+YRbpwB/rkFgpCoiVCGnc
-7Yi24rgi9veftc465/cR
-=bWNT
------END PGP SIGNATURE-----
-
---3607uds81ZQvwCD0--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
