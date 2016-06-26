@@ -1,29 +1,43 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [v2] media: rc: fix Meson IR decoder
-Date: Sun, 26 Jun 2016 23:06:20 +0200
-Message-ID: <20160626210622.5257-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 2/2] ARM: dts: meson: fixed size of the meson-ir registers
+Date: Sun, 26 Jun 2016 23:06:22 +0200
+Message-ID: <20160626210622.5257-3-martin.blumenstingl@googlemail.com>
+References: <20160626210622.5257-1-martin.blumenstingl@googlemail.com>
 Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20160626210622.5257-1-martin.blumenstingl@googlemail.com>
 Sender: linux-media-owner@vger.kernel.org
 To: b.galvani@gmail.com, linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, mchehab@kernel.org, tobetter@gmail.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, mchehab@kernel.org, tobetter@gmail.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The meson-ir driver uses the wrong offset (at least according to
-Amlogic's reference driver as well as the datasheets of the
-Meson8b/S805 and GXBB/S905).
-This means that we are getting incorrect durations (REG1_TIME_IV)
-reported from the hardware.
+According to the reference driver (and the datasheet of the newer
+Meson8b/S805 and GXBB/S905 SoCs) there are 14 registers, each 32 bit
+wide.
+Adjust the register size to reflect that, as register offset 0x20 is
+now also needed by the meson-ir driver.
 
-This problem was also noticed by some people trying to use this on an
-ODROID-C1 and ODROID-C2 - the workaround there (probably because the
-datasheets were not publicy available yet at that time) was to switch
-to ir_raw_event_store_edge (which leaves it up to the kernel to measure
-the duration of a pulse). See [0] and [1] for the corresponding
-patches.
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+changes in v1 -> v2:
+- new patch, this is needed because we are now trying to read/write
+  offset 0x20 which is beyond the space which was reserved previously
+  
 
-Please note that I was only able to test this on an GXBB/S905 based
-device (due to lack of other hardware).
+ arch/arm/boot/dts/meson.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-[0] https://github.com/erdoukki/linux-amlogic-1/commit/969b2e2242fb14a13cb651f9a1cf771b599c958b
-[1] http://forum.odroid.com/viewtopic.php?f=135&t=20504
+diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+index 8c77c87..0f5722a 100644
+--- a/arch/arm/boot/dts/meson.dtsi
++++ b/arch/arm/boot/dts/meson.dtsi
+@@ -147,7 +147,7 @@
+ 
+ 		ir_receiver: ir-receiver@c8100480 {
+ 			compatible= "amlogic,meson6-ir";
+-			reg = <0xc8100480 0x20>;
++			reg = <0xc8100480 0x34>;
+ 			interrupts = <0 15 1>;
+ 			status = "disabled";
+ 		};
+-- 
+2.9.0
