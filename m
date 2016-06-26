@@ -1,25 +1,37 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2] net: stmmac: dwmac-rk: add rk3228-specific data
-Date: Sun, 26 Jun 2016 15:45:57 -0400 (EDT)
-Message-ID: <20160626.154557.2260848143510311898.davem@davemloft.net>
-References: <1466512409-18855-1-git-send-email-zhengxing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466512409-18855-1-git-send-email-zhengxing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zhengxing@rock-chips.com
-Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, roger.chen@rock-chips.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+From: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] iio: adc: max1363: Add device tree support
+Date: Sun, 26 Jun 2016 22:04:02 +0200
+Message-ID: <1466971444-5333-1-git-send-email-florian.vaussard@heig-vd.ch>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xing Zheng <zhengxing@rock-chips.com>
-Date: Tue, 21 Jun 2016 20:33:28 +0800
+Hello,
 
-> Add constants and callback functions for the dwmac on rk3228/rk3229 socs.
-> As can be seen, the base structure is the same, only registers and the
-> bits in them moved slightly.
-> 
-> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+This series introduces the necessary device tree binding to
+perform DT boot.
 
-Applied, thanks.
+Tested with MAX11644 (DT boot).
+
+Best regards,
+Florian
+
+---
+Since v1:
+- First patch applied by Jonathan
+- Added DT maintainer's Ack
+- Fixed handling of data pointer in struct of_device_id
+
+Florian Vaussard (2):
+  iio: adc: max1363: Add device tree binding documentation
+  iio: adc: max1363: Add device tree binding
+
+ .../devicetree/bindings/iio/adc/max1363.txt        |  63 ++++++++
+ drivers/iio/adc/max1363.c                          | 169 ++++++++++++++++++++-
+ 2 files changed, 231 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/max1363.txt
+
+-- 
+2.5.5
