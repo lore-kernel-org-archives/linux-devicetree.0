@@ -1,304 +1,342 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 2/3] powerpc/dts: fix STMicroelectronics compatible strings
-Date: Sun, 26 Jun 2016 02:34:05 -0700
-Message-ID: <20160626093406.26785-2-stefan@agner.ch>
-References: <20160626093406.26785-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160626093406.26785-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, mark.rutland@arm.com, arnd@arndb.de, shawnguo@kernel.org, mpe@ellerman.id.au, paulus@samba.org, benh@kernel.crashing.org
-Cc: scottwood@freescale.com, dinguyen@opensource.altera.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4] wlcore: spi: add wl18xx support
+Date: Sun, 26 Jun 2016 10:10:54 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B3613BF60@DFRE01.ent.ti.com>
+References: <1466935675-14696-1-git-send-email-eyalr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466935675-14696-1-git-send-email-eyalr-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Replace the non-standard vendor prefix stm and st-micro with st for
-STMicroelectronics. The drivers do not specify the vendor prefixes
-since the I2C Core strips them away from the DT provided compatible
-string. Therefore, changing existing device trees does not have any
-impact on device detection.
+Add support for using with both wl12xx and wl18xx.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+- all wilink family needs special init command for entering wspi mode.
+  extra clock cycles should be sent after the spi init command while the
+  cs pin is high.
+- Use inverted chip select for sending a dummy 4 bytes command that
+  completes the init stage.
+
+Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
 ---
- arch/powerpc/boot/dts/ac14xx.dts           | 2 +-
- arch/powerpc/boot/dts/akebono.dts          | 2 +-
- arch/powerpc/boot/dts/bluestone.dts        | 2 +-
- arch/powerpc/boot/dts/canyonlands.dts      | 2 +-
- arch/powerpc/boot/dts/currituck.dts        | 2 +-
- arch/powerpc/boot/dts/fsl/mpc8569mds.dts   | 2 +-
- arch/powerpc/boot/dts/fsl/p1022rdk.dts     | 2 +-
- arch/powerpc/boot/dts/glacier.dts          | 2 +-
- arch/powerpc/boot/dts/icon.dts             | 2 +-
- arch/powerpc/boot/dts/mpc5121ads.dts       | 2 +-
- arch/powerpc/boot/dts/mpc8349emitx.dts     | 2 +-
- arch/powerpc/boot/dts/mpc836x_rdk.dts      | 2 +-
- arch/powerpc/boot/dts/pdm360ng.dts         | 2 +-
- arch/powerpc/boot/dts/sam440ep.dts         | 2 +-
- arch/powerpc/boot/dts/xcalibur1501.dts     | 2 +-
- arch/powerpc/boot/dts/xpedite5200.dts      | 2 +-
- arch/powerpc/boot/dts/xpedite5200_xmon.dts | 2 +-
- arch/powerpc/boot/dts/xpedite5301.dts      | 2 +-
- arch/powerpc/boot/dts/xpedite5330.dts      | 2 +-
- arch/powerpc/boot/dts/xpedite5370.dts      | 2 +-
- 20 files changed, 20 insertions(+), 20 deletions(-)
+v1->v2:update device tree bindings configuration
+v2->v3:revert from manual gpio manipulation. use inverted chip select instead
+for sending the extra init cycle which, achieves the same hardware purpose.
+update device tree bindings docucmentation accordingly
+v3->v4: Remove redundant data form binding documentation and fix chip select
+number mismatch in wl1271 example
 
-diff --git a/arch/powerpc/boot/dts/ac14xx.dts b/arch/powerpc/boot/dts/ac14xx.dts
-index a1b8837..27fcabc 100644
---- a/arch/powerpc/boot/dts/ac14xx.dts
-+++ b/arch/powerpc/boot/dts/ac14xx.dts
-@@ -231,7 +231,7 @@
- 			};
+ .../bindings/net/wireless/ti,wlcore,spi.txt        |  41 +++++--
+ drivers/net/wireless/ti/wlcore/spi.c               | 124 +++++++++++++++++----
+ 2 files changed, 137 insertions(+), 28 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+index 9180724..8f9ced0 100644
+--- a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
++++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+@@ -1,19 +1,30 @@
+-* Texas Instruments wl1271 wireless lan controller
++* Texas Instruments wl12xx/wl18xx wireless lan controller
  
- 			rtc@68 {
--				compatible = "stm,m41t00";
-+				compatible = "st,m41t00";
- 				reg = <0x68>;
- 			};
- 		};
-diff --git a/arch/powerpc/boot/dts/akebono.dts b/arch/powerpc/boot/dts/akebono.dts
-index f92ecfe..e61d5dc 100644
---- a/arch/powerpc/boot/dts/akebono.dts
-+++ b/arch/powerpc/boot/dts/akebono.dts
-@@ -224,7 +224,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				rtc@68 {
--					compatible = "stm,m41t80", "m41st85";
-+					compatible = "st,m41t80", "m41st85";
- 					reg = <0x68>;
- 				};
- 			};
-diff --git a/arch/powerpc/boot/dts/bluestone.dts b/arch/powerpc/boot/dts/bluestone.dts
-index 7daaca3..b0b26d8 100644
---- a/arch/powerpc/boot/dts/bluestone.dts
-+++ b/arch/powerpc/boot/dts/bluestone.dts
-@@ -279,7 +279,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				rtc@68 {
--					compatible = "stm,m41t80";
-+					compatible = "st,m41t80";
- 					reg = <0x68>;
- 					interrupt-parent = <&UIC0>;
- 					interrupts = <0x9 0x8>;
-diff --git a/arch/powerpc/boot/dts/canyonlands.dts b/arch/powerpc/boot/dts/canyonlands.dts
-index 549c24c..0d6ac92 100644
---- a/arch/powerpc/boot/dts/canyonlands.dts
-+++ b/arch/powerpc/boot/dts/canyonlands.dts
-@@ -319,7 +319,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-                                 rtc@68 {
--                                        compatible = "stm,m41t80";
-+                                        compatible = "st,m41t80";
-                                         reg = <0x68>;
- 					interrupt-parent = <&UIC2>;
- 					interrupts = <0x19 0x8>;
-diff --git a/arch/powerpc/boot/dts/currituck.dts b/arch/powerpc/boot/dts/currituck.dts
-index d2c8a87..4191e18 100644
---- a/arch/powerpc/boot/dts/currituck.dts
-+++ b/arch/powerpc/boot/dts/currituck.dts
-@@ -116,7 +116,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-                                 rtc@68 {
--                                        compatible = "stm,m41t80", "m41st85";
-+                                        compatible = "st,m41t80", "m41st85";
-                                         reg = <0x68>;
-                                 };
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8569mds.dts b/arch/powerpc/boot/dts/fsl/mpc8569mds.dts
-index a95ff7d..8e94448 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8569mds.dts
-+++ b/arch/powerpc/boot/dts/fsl/mpc8569mds.dts
-@@ -232,7 +232,7 @@
- 			mode = "cpu-qe";
+-The wl1271 chip can be connected via SPI or via SDIO. This
++The wl12xx/wl18xx chips can be connected via SPI or via SDIO. This
+ document describes the binding for the SPI connected chip.
  
- 			serial-flash@0 {
--				compatible = "stm,m25p40";
-+				compatible = "st,m25p40";
- 				reg = <0>;
- 				spi-max-frequency = <25000000>;
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/p1022rdk.dts b/arch/powerpc/boot/dts/fsl/p1022rdk.dts
-index d505d7c..29e8af1 100644
---- a/arch/powerpc/boot/dts/fsl/p1022rdk.dts
-+++ b/arch/powerpc/boot/dts/fsl/p1022rdk.dts
-@@ -57,7 +57,7 @@
- 				clock-frequency = <12288000>;
- 			};
- 			rtc@68 {
--				compatible = "stm,m41t62";
-+				compatible = "st,m41t62";
- 				reg = <0x68>;
- 			};
- 			adt7461@4c{
-diff --git a/arch/powerpc/boot/dts/glacier.dts b/arch/powerpc/boot/dts/glacier.dts
-index 2000060..a7a802f 100644
---- a/arch/powerpc/boot/dts/glacier.dts
-+++ b/arch/powerpc/boot/dts/glacier.dts
-@@ -287,7 +287,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				rtc@68 {
--					compatible = "stm,m41t80";
-+					compatible = "st,m41t80";
- 					reg = <0x68>;
- 					interrupt-parent = <&UIC2>;
- 					interrupts = <0x19 0x8>;
-diff --git a/arch/powerpc/boot/dts/icon.dts b/arch/powerpc/boot/dts/icon.dts
-index abcd0ca..9c94fd7 100644
---- a/arch/powerpc/boot/dts/icon.dts
-+++ b/arch/powerpc/boot/dts/icon.dts
-@@ -256,7 +256,7 @@
- 				#size-cells = <0>;
+ Required properties:
+-- compatible :          Should be "ti,wl1271"
++- compatible :          Should be one of the following:
++    * "ti,wl1271"
++    * "ti,wl1273"
++    * "ti,wl1281"
++    * "ti,wl1283"
++    * "ti,wl1801"
++    * "ti,wl1805"
++    * "ti,wl1807"
++    * "ti,wl1831"
++    * "ti,wl1835"
++    * "ti,wl1837"
+ - reg :                 Chip select address of device
+ - spi-max-frequency :   Maximum SPI clocking speed of device in Hz
+-- ref-clock-frequency : Reference clock frequency
+ - interrupt-parent, interrupts :
+                         Should contain parameters for 1 interrupt line.
+                         Interrupt parameters: parent, line number, type.
+-- vwlan-supply :        Point the node of the regulator that powers/enable the wl1271 chip
++- vwlan-supply :        Point the node of the regulator that powers/enable the
++                        wl12xx/wl18xx chip
  
-                                 rtc@68 {
--                                        compatible = "stm,m41t00";
-+                                        compatible = "st,m41t00";
-                                         reg = <0x68>;
-                                 };
- 			};
-diff --git a/arch/powerpc/boot/dts/mpc5121ads.dts b/arch/powerpc/boot/dts/mpc5121ads.dts
-index c228a0a..75888ce 100644
---- a/arch/powerpc/boot/dts/mpc5121ads.dts
-+++ b/arch/powerpc/boot/dts/mpc5121ads.dts
-@@ -99,7 +99,7 @@
- 			};
+ Optional properties:
++- ref-clock-frequency : Reference clock frequency (should be set for wl12xx)
+ - clock-xtal :          boolean, clock is generated from XTAL
  
- 			rtc@68 {
--				compatible = "stm,m41t62";
-+				compatible = "st,m41t62";
- 				reg = <0x68>;
- 			};
- 		};
-diff --git a/arch/powerpc/boot/dts/mpc8349emitx.dts b/arch/powerpc/boot/dts/mpc8349emitx.dts
-index cf85424..90aed3a 100644
---- a/arch/powerpc/boot/dts/mpc8349emitx.dts
-+++ b/arch/powerpc/boot/dts/mpc8349emitx.dts
-@@ -92,7 +92,7 @@
- 			dfsrr;
+ - Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -21,16 +32,28 @@ Optional properties:
  
- 			eeprom: at24@50 {
--				compatible = "st-micro,24c256";
-+				compatible = "st,24c256";
- 				reg = <0x50>;
- 			};
+ Examples:
  
-diff --git a/arch/powerpc/boot/dts/mpc836x_rdk.dts b/arch/powerpc/boot/dts/mpc836x_rdk.dts
-index daeacbd..47c5fc6 100644
---- a/arch/powerpc/boot/dts/mpc836x_rdk.dts
-+++ b/arch/powerpc/boot/dts/mpc836x_rdk.dts
-@@ -416,7 +416,7 @@
- 			gpios = <&qe_pio_e 18 0>;
++For wl12xx family:
+ &spi1 {
+-	wl1271@1 {
++	wlcore: wlcore@1 {
+ 		compatible = "ti,wl1271";
+-
+ 		reg = <1>;
+ 		spi-max-frequency = <48000000>;
+-		clock-xtal;
+-		ref-clock-frequency = <38400000>;
+ 		interrupt-parent = <&gpio3>;
+ 		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+ 		vwlan-supply = <&vwlan_fixed>;
++		clock-xtal;
++		ref-clock-frequency = <38400000>;
++	};
++};
++
++For wl18xx family:
++&spi0 {
++	wlcore: wlcore@0 {
++		compatible = "ti,wl1835";
++		reg = <0>;
++		spi-max-frequency = <48000000>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <27 IRQ_TYPE_EDGE_RISING>;
++		vwlan-supply = <&vwlan_fixed>;
+ 	};
+ };
+diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
+index 020ac1a..bd1253d 100644
+--- a/drivers/net/wireless/ti/wlcore/spi.c
++++ b/drivers/net/wireless/ti/wlcore/spi.c
+@@ -70,16 +70,30 @@
+ #define WSPI_MAX_CHUNK_SIZE    4092
  
- 			flash {
--				compatible = "stm,nand512-a";
-+				compatible = "st,nand512-a";
- 			};
- 		};
+ /*
+- * only support SPI for 12xx - this code should be reworked when 18xx
+- * support is introduced
++ * wl18xx driver aggregation buffer size is (13 * PAGE_SIZE) compared to
++ * (4 * PAGE_SIZE) for wl12xx, so use the larger buffer needed for wl18xx
+  */
+-#define SPI_AGGR_BUFFER_SIZE (4 * PAGE_SIZE)
++#define SPI_AGGR_BUFFER_SIZE (13 * PAGE_SIZE)
  
-diff --git a/arch/powerpc/boot/dts/pdm360ng.dts b/arch/powerpc/boot/dts/pdm360ng.dts
-index 871c16d..0cec724 100644
---- a/arch/powerpc/boot/dts/pdm360ng.dts
-+++ b/arch/powerpc/boot/dts/pdm360ng.dts
-@@ -103,7 +103,7 @@
- 			};
+ /* Maximum number of SPI write chunks */
+ #define WSPI_MAX_NUM_OF_CHUNKS \
+ 	((SPI_AGGR_BUFFER_SIZE / WSPI_MAX_CHUNK_SIZE) + 1)
  
- 			rtc@68 {
--				compatible = "stm,m41t00";
-+				compatible = "st,m41t00";
- 				reg = <0x68>;
- 			};
- 		};
-diff --git a/arch/powerpc/boot/dts/sam440ep.dts b/arch/powerpc/boot/dts/sam440ep.dts
-index f0663be..088361c 100644
---- a/arch/powerpc/boot/dts/sam440ep.dts
-+++ b/arch/powerpc/boot/dts/sam440ep.dts
-@@ -196,7 +196,7 @@
- 				interrupt-parent = <&UIC0>;
- 				interrupts = <2 4>;
- 				rtc@68 {
--					compatible = "stm,m41t80";
-+					compatible = "st,m41t80";
- 					reg = <0x68>;
- 				};
- 			};
-diff --git a/arch/powerpc/boot/dts/xcalibur1501.dts b/arch/powerpc/boot/dts/xcalibur1501.dts
-index c409cba..1f2952d 100644
---- a/arch/powerpc/boot/dts/xcalibur1501.dts
-+++ b/arch/powerpc/boot/dts/xcalibur1501.dts
-@@ -238,7 +238,7 @@
- 			};
  
- 			rtc@68 {
--				compatible = "stm,m41t00",
-+				compatible = "st,m41t00",
- 				             "dallas,ds1338";
- 				reg = <0x68>;
- 			};
-diff --git a/arch/powerpc/boot/dts/xpedite5200.dts b/arch/powerpc/boot/dts/xpedite5200.dts
-index 8fd7b70..5b10e56 100644
---- a/arch/powerpc/boot/dts/xpedite5200.dts
-+++ b/arch/powerpc/boot/dts/xpedite5200.dts
-@@ -130,7 +130,7 @@
- 			};
++struct wilink_familiy_data {
++	char name[8];
++};
++
++const struct wilink_familiy_data *wilink_data;
++
++static const struct wilink_familiy_data wl18xx_data = {
++	.name = "wl18xx",
++};
++
++static const struct wilink_familiy_data wl12xx_data = {
++	.name = "wl12xx",
++};
++
+ struct wl12xx_spi_glue {
+ 	struct device *dev;
+ 	struct platform_device *core;
+@@ -119,6 +133,7 @@ static void wl12xx_spi_init(struct device *child)
+ 	struct wl12xx_spi_glue *glue = dev_get_drvdata(child->parent);
+ 	struct spi_transfer t;
+ 	struct spi_message m;
++	struct spi_device *spi = to_spi_device(glue->dev);
+ 	u8 *cmd = kzalloc(WSPI_INIT_CMD_LEN, GFP_KERNEL);
  
- 			rtc@68 {
--				compatible = "stm,m41t00",
-+				compatible = "st,m41t00",
- 					     "dallas,ds1338";
- 				reg = <0x68>;
- 			};
-diff --git a/arch/powerpc/boot/dts/xpedite5200_xmon.dts b/arch/powerpc/boot/dts/xpedite5200_xmon.dts
-index 0baa828..646acfb 100644
---- a/arch/powerpc/boot/dts/xpedite5200_xmon.dts
-+++ b/arch/powerpc/boot/dts/xpedite5200_xmon.dts
-@@ -134,7 +134,7 @@
- 			};
+ 	if (!cmd) {
+@@ -151,6 +166,7 @@ static void wl12xx_spi_init(struct device *child)
+ 		cmd[6] |= WSPI_INIT_CMD_EN_FIXEDBUSY;
  
- 			rtc@68 {
--				compatible = "stm,m41t00",
-+				compatible = "st,m41t00",
- 					     "dallas,ds1338";
- 				reg = <0x68>;
- 			};
-diff --git a/arch/powerpc/boot/dts/xpedite5301.dts b/arch/powerpc/boot/dts/xpedite5301.dts
-index 04cb410..7bcc94f 100644
---- a/arch/powerpc/boot/dts/xpedite5301.dts
-+++ b/arch/powerpc/boot/dts/xpedite5301.dts
-@@ -231,7 +231,7 @@
- 			};
+ 	cmd[7] = crc7_be(0, cmd+2, WSPI_INIT_CMD_CRC_LEN) | WSPI_INIT_CMD_END;
++
+ 	/*
+ 	 * The above is the logical order; it must actually be stored
+ 	 * in the buffer byte-swapped.
+@@ -163,6 +179,28 @@ static void wl12xx_spi_init(struct device *child)
+ 	spi_message_add_tail(&t, &m);
  
- 			rtc@68 {
--				compatible = "stm,m41t00",
-+				compatible = "st,m41t00",
- 				             "dallas,ds1338";
- 				reg = <0x68>;
- 			};
-diff --git a/arch/powerpc/boot/dts/xpedite5330.dts b/arch/powerpc/boot/dts/xpedite5330.dts
-index 73f8620..86df8bc 100644
---- a/arch/powerpc/boot/dts/xpedite5330.dts
-+++ b/arch/powerpc/boot/dts/xpedite5330.dts
-@@ -267,7 +267,7 @@
- 			};
+ 	spi_sync(to_spi_device(glue->dev), &m);
++
++	/* Send extra clocks with inverted CS (high). this is required
++	 * by the wilink family in order to successfully enter WSPI mode.
++	 */
++	spi->mode ^= SPI_CS_HIGH;
++	memset(&m, 0, sizeof(m));
++	spi_message_init(&m);
++
++	cmd[0] = 0xff;
++	cmd[1] = 0xff;
++	cmd[2] = 0xff;
++	cmd[3] = 0xff;
++	__swab32s((u32 *)cmd);
++
++	t.tx_buf = cmd;
++	t.len = 4;
++	spi_message_add_tail(&t, &m);
++
++	spi_sync(to_spi_device(glue->dev), &m);
++
++	/* Restore chip select configration to normal */
++	spi->mode ^= SPI_CS_HIGH;
+ 	kfree(cmd);
+ }
  
- 			rtc@68 {
--				compatible = "stm,m41t00",
-+				compatible = "st,m41t00",
- 				             "dallas,ds1338";
- 				reg = <0x68>;
- 			};
-diff --git a/arch/powerpc/boot/dts/xpedite5370.dts b/arch/powerpc/boot/dts/xpedite5370.dts
-index cd0ea2b..b8ade09 100644
---- a/arch/powerpc/boot/dts/xpedite5370.dts
-+++ b/arch/powerpc/boot/dts/xpedite5370.dts
-@@ -229,7 +229,7 @@
- 			};
+@@ -270,22 +308,25 @@ static int __must_check wl12xx_spi_raw_read(struct device *child, int addr,
+ 	return 0;
+ }
  
- 			rtc@68 {
--				compatible = "stm,m41t00",
-+				compatible = "st,m41t00",
- 				             "dallas,ds1338";
- 				reg = <0x68>;
- 			};
+-static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
+-					     void *buf, size_t len, bool fixed)
++static int __wl12xx_spi_raw_write(struct device *child, int addr,
++				  void *buf, size_t len, bool fixed)
+ {
+ 	struct wl12xx_spi_glue *glue = dev_get_drvdata(child->parent);
+-	/* SPI write buffers - 2 for each chunk */
+-	struct spi_transfer t[2 * WSPI_MAX_NUM_OF_CHUNKS];
++	struct spi_transfer *t;
+ 	struct spi_message m;
+ 	u32 commands[WSPI_MAX_NUM_OF_CHUNKS]; /* 1 command per chunk */
+ 	u32 *cmd;
+ 	u32 chunk_len;
+ 	int i;
+ 
++	/* SPI write buffers - 2 for each chunk */
++	t = kzalloc(sizeof(*t) * 2 * WSPI_MAX_NUM_OF_CHUNKS, GFP_KERNEL);
++	if (!t)
++		return -ENOMEM;
++
+ 	WARN_ON(len > SPI_AGGR_BUFFER_SIZE);
+ 
+ 	spi_message_init(&m);
+-	memset(t, 0, sizeof(t));
+ 
+ 	cmd = &commands[0];
+ 	i = 0;
+@@ -318,9 +359,26 @@ static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
+ 
+ 	spi_sync(to_spi_device(glue->dev), &m);
+ 
++	kfree(t);
+ 	return 0;
+ }
+ 
++static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
++					     void *buf, size_t len, bool fixed)
++{
++	int ret;
++
++	/* The ELP wakeup write may fail the first time due to internal
++	 * hardware latency. It is safer to send the wakeup command twice to
++	 * avoid unexpected failures.
++	 */
++	if (addr == HW_ACCESS_ELP_CTRL_REG)
++		ret = __wl12xx_spi_raw_write(child, addr, buf, len, fixed);
++	ret = __wl12xx_spi_raw_write(child, addr, buf, len, fixed);
++
++	return ret;
++}
++
+ /**
+  * wl12xx_spi_set_power - power on/off the wl12xx unit
+  * @child: wl12xx device handle.
+@@ -349,17 +407,38 @@ static int wl12xx_spi_set_power(struct device *child, bool enable)
+ 	return ret;
+ }
+ 
++/**
++ * wl12xx_spi_set_block_size
++ *
++ * This function is not needed for spi mode, but need to be present.
++ * Without it defined the wlcore fallback to use the wrong packet
++ * allignment on tx.
++ */
++static void wl12xx_spi_set_block_size(struct device *child,
++				      unsigned int blksz)
++{
++}
++
+ static struct wl1271_if_operations spi_ops = {
+ 	.read		= wl12xx_spi_raw_read,
+ 	.write		= wl12xx_spi_raw_write,
+ 	.reset		= wl12xx_spi_reset,
+ 	.init		= wl12xx_spi_init,
+ 	.power		= wl12xx_spi_set_power,
+-	.set_block_size = NULL,
++	.set_block_size = wl12xx_spi_set_block_size,
+ };
+ 
+ static const struct of_device_id wlcore_spi_of_match_table[] = {
+-	{ .compatible = "ti,wl1271" },
++	{ .compatible = "ti,wl1271", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1273", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1281", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1283", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1801", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1805", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1807", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1831", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1835", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1837", .data = &wl18xx_data},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, wlcore_spi_of_match_table);
+@@ -375,18 +454,24 @@ static int wlcore_probe_of(struct spi_device *spi, struct wl12xx_spi_glue *glue,
+ 			   struct wlcore_platdev_data *pdev_data)
+ {
+ 	struct device_node *dt_node = spi->dev.of_node;
+-	int ret;
++	const struct of_device_id *of_id;
++
++	of_id = of_match_node(wlcore_spi_of_match_table, dt_node);
++	if (!of_id)
++		return -ENODEV;
++
++	wilink_data = of_id->data;
++	dev_info(&spi->dev, "selected chip familiy is %s\n",
++		 wilink_data->name);
+ 
+ 	if (of_find_property(dt_node, "clock-xtal", NULL))
+ 		pdev_data->ref_clock_xtal = true;
+ 
+-	ret = of_property_read_u32(dt_node, "ref-clock-frequency",
+-				   &pdev_data->ref_clock_freq);
+-	if (IS_ERR_VALUE(ret)) {
+-		dev_err(glue->dev,
+-			"can't get reference clock frequency (%d)\n", ret);
+-		return ret;
+-	}
++	/* optional clock frequency params */
++	of_property_read_u32(dt_node, "ref-clock-frequency",
++			     &pdev_data->ref_clock_freq);
++	of_property_read_u32(dt_node, "tcxo-clock-frequency",
++			     &pdev_data->tcxo_clock_freq);
+ 
+ 	return 0;
+ }
+@@ -437,7 +522,8 @@ static int wl1271_probe(struct spi_device *spi)
+ 		return ret;
+ 	}
+ 
+-	glue->core = platform_device_alloc("wl12xx", PLATFORM_DEVID_AUTO);
++	glue->core = platform_device_alloc(wilink_data->name,
++					   PLATFORM_DEVID_AUTO);
+ 	if (!glue->core) {
+ 		dev_err(glue->dev, "can't allocate platform_device\n");
+ 		return -ENOMEM;
 -- 
-2.8.3
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
