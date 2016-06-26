@@ -1,57 +1,70 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] iio: adc: max1363: Add device tree binding
- documentation
-Date: Sun, 26 Jun 2016 18:02:52 +0100
-Message-ID: <173a38ed-07c0-edf4-1445-a22f76feaf13@kernel.org>
-References: <1466492969-2185-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1466492969-2185-3-git-send-email-florian.vaussard@heig-vd.ch>
- <20160621214951.GA11679@rob-hp-laptop>
- <b48960b5-1965-b2cc-037b-eba4e7bbb7cb@heig-vd.ch>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun7i: Add BCM53125 Device Tree nodes
+Date: Sun, 26 Jun 2016 10:26:43 -0700
+Message-ID: <57701053.9090903@gmail.com>
+References: <1465690459-30751-1-git-send-email-f.fainelli@gmail.com>
+ <1465690459-30751-2-git-send-email-f.fainelli@gmail.com>
+ <CAGb2v64u74cXG0R-MSMtDBxBpg2tFoifQwqbvWL-+3pG=GLVTQ@mail.gmail.com>
+ <576F450B.3080207@gmail.com> <20160626080550.GG4000@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b48960b5-1965-b2cc-037b-eba4e7bbb7cb-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160626080550.GG4000@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/16 07:18, Florian Vaussard wrote:
-> Hi Rob,
+Le 26/06/2016 01:05, Maxime Ripard a =C3=A9crit :
+> Hi Florian,
 >=20
-> Le 21. 06. 16 =E0 23:49, Rob Herring a =E9crit :
->> On Tue, Jun 21, 2016 at 09:09:28AM +0200, Florian Vaussard wrote:
->>> Add the device tree documentation for all the supported parts. Mand=
-atory
->>> binding is the compatible string and the slave I2C address.
+> On Sat, Jun 25, 2016 at 07:59:23PM -0700, Florian Fainelli wrote:
+>> Le 23/06/2016 22:48, Chen-Yu Tsai a =C3=A9crit :
+>>>> diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/=
+boot/dts/sun7i-a20-lamobo-r1.dts
+>>>> index 5ee43d8bf174..697582397dcf 100644
+>>>> --- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+>>>> +++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+>>>> @@ -110,13 +110,67 @@
+>>>>  &gmac {
+>>>>         pinctrl-names =3D "default";
+>>>>         pinctrl-0 =3D <&gmac_pins_rgmii_a>;
+>>>> -       phy =3D <&phy1>;
+>>>>         phy-mode =3D "rgmii";
+>>>>         phy-supply =3D <&reg_gmac_3v3>;
+>>>>         status =3D "okay";
+>>>>
+>>>> -       phy1: ethernet-phy@1 {
+>>>> -               reg =3D <1>;
+>>>> +       fixed-link {
+>>>> +               speed =3D <1000>;
+>>>> +               full-duplex;
+>>>> +       };
+>>>> +
+>>>> +       mdio1 {
 >>>
->>> Optional properties can be used to specify the Vcc / Vref regulator=
-s, as
->>> well as the IRQ line if available.
->>>
->>> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/iio/adc/max1363.txt        | 63 ++++++++++=
-++++++++++++
->>>  1 file changed, 63 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/max13=
-63.txt
+>>> mdio will suffice.
 >>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Can you resend this with the updated patch 3 and Rob's ack applied.
+>> There is another label in sun7i-a20.dtsi named mdio which is for the
+>> MDIO controller node matching allwinner,sun4i-a10-mdio, which is not=
+ the
+>> one we want here, we want the MDIO controller associated with the
+>> Synopsys GMAC.
+>=20
+> Yes, but it's in a different node, and you're not using any labels, s=
+o
+> I don't really see how that would conflict.
 
-Thanks
+=46air enough, I sent a v2 which uses "mdio-gmac" as a label, should I
+respin a v3 which just uses "mdio"?
 
-Jonathan
->>
->=20
-> Thanks for the review.
->=20
-> Florian
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" =
-in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+v2 is here;
+http://www.spinics.net/lists/arm-kernel/msg514007.html
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
