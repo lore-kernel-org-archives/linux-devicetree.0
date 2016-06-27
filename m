@@ -1,67 +1,174 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: RTC support for AMlogic devies
-Date: Mon, 27 Jun 2016 20:49:28 +0100
-Message-ID: <70b8eaf9-b07c-8a56-8205-58bf6475a3f4@codethink.co.uk>
-References: <1467039135-26588-1-git-send-email-ben.dooks@codethink.co.uk>
- <m2bn2mtut1.fsf@baylibre.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] iio: ad5755: Add DT binding documentation
+Date: Mon, 27 Jun 2016 21:10:05 +0100
+Message-ID: <791b49df-254a-ddd0-1406-0ad235c7cc56@kernel.org>
+References: <20160627082718.2087-1-sean.nyekjaer@prevas.dk>
+ <20160627082718.2087-2-sean.nyekjaer@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCEPJZEDQIBBBUMGY25QKGQEDWP3TYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <m2bn2mtut1.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160627082718.2087-2-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/06/16 18:18, Kevin Hilman wrote:
-> Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> writes:
+On 27/06/16 09:27, Sean Nyekjaer wrote:
+> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Please remember to pick up previous Acks etc such as Rob's
+when posting a new version with changes that don't affect it.
+
+Applied both to the togreg branch of iio.git.
+
+Thanks,
+
+Jonathan
+> ---
+> Changes since v4:
+> - Appended -hz to dc-dc-freq
+> - Added adi,dc-dc-max-microvolt
+> - Added reg property
 > 
->> This series is support for the RTC block on some of the AMLogic
->> Meson ARM SoCs.
->>
->> The first patch is the driver, followed by device-tree patches
->> and enablement for the ODRoid-C1 (where it has been tested)
+> Changes since v3:
+> - replaced '_' with '-'
+> - Now used actual values instead of register values.
 > 
-> In the cover letter, please be explicit about any dependencies that are
-> not upstream.  This series applies to mainline (v4.7-rc*) but does not
-> build.  I tested it with my v4.7/integ branch and it seems to work.
-
-I think this is just the DT bindings for the reset controller which
-are currently in -next.
-
-> The series also has a handful of checkpatch warnings that should be
-> addressed (see: http://hastebin.com/tacurokasu.pas)
-
-The msleep() ones I think are not a big isuse. The line length could
-be solved, but at the moment is one of the few issues that are in the
-rtc-meson.c driver.
-
-The documentation one is solved by the patch adding the device-tree
-binding information.
-
-> Other than that, I gave it a quick spin on meson8b-odroidc1 using
-> tools/testing/selftests/timers/rtctest.c, and the basic time stuff seems
-> to be working:
-
-Thank you.
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> Changes since v2:
+>  - Removed defines, alot easier to read
+> 
+>  .../devicetree/bindings/iio/dac/ad5755.txt         | 124 +++++++++++++++++++++
+>  1 file changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5755.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+> new file mode 100644
+> index 0000000..f0bbd7e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
+> @@ -0,0 +1,124 @@
+> +* Analog Device AD5755 IIO Multi-Channel DAC Linux Driver
+> +
+> +Required properties:
+> + - compatible: Has to contain one of the following:
+> +	adi,ad5755
+> +	adi,ad5755-1
+> +	adi,ad5757
+> +	adi,ad5735
+> +	adi,ad5737
+> +
+> + - reg: spi chip select number for the device
+> + - spi-cpha or spi-cpol: is the only modes that is supported
+> +
+> +Recommended properties:
+> + - spi-max-frequency: Definition as per
+> +		Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Optional properties:
+> +See include/dt-bindings/iio/ad5755.h
+> + - adi,ext-dc-dc-compenstation-resistor: boolean set if the hardware have an
+> +					 external resistor and thereby bypasses
+> +					 the internal compensation resistor.
+> + - adi,dc-dc-phase:
+> +	Valid values for DC DC Phase control is:
+> +	0: All dc-to-dc converters clock on the same edge.
+> +	1: Channel A and Channel B clock on the same edge,
+> +	   Channel C and Channel D clock on opposite edges.
+> +	2: Channel A and Channel C clock on the same edge,
+> +	   Channel B and Channel D clock on opposite edges.
+> +	3: Channel A, Channel B, Channel C, and Channel D
+> +	   clock 90 degrees out of phase from each other.
+> + - adi,dc-dc-freq-hz:
+> +	Valid values for DC DC frequency is [Hz]:
+> +	250000
+> +	410000
+> +	650000
+> + - adi,dc-dc-max-microvolt:
+> +	Valid values for the maximum allowed Vboost voltage supplied by
+> +	the dc-to-dc converter is:
+> +	23000000
+> +	24500000
+> +	27000000
+> +	29500000
+> +
+> +Optional for every channel:
+> + - adi,mode:
+> +	Valid values for DAC modes is:
+> +	0: 0 V to 5 V voltage range.
+> +	1: 0 V to 10 V voltage range.
+> +	2: Plus minus 5 V voltage range.
+> +	3: Plus minus 10 V voltage range.
+> +	4: 4 mA to 20 mA current range.
+> +	5: 0 mA to 20 mA current range.
+> +	6: 0 mA to 24 mA current range.
+> + - adi,ext-current-sense-resistor: boolean set if the hardware a external
+> +				   current sense resistor.
+> + - adi,enable-voltage-overrange: boolean enable voltage overrange
+> + - adi,slew: Array of slewrate settings should contain 3 fields:
+> +	1: Should be either 0 or 1 in order to enable or disable slewrate.
+> +	2: Slew rate settings:
+> +		Valid values for the slew rate update frequency:
+> +		64000
+> +		32000
+> +		16000
+> +		8000
+> +		4000
+> +		2000
+> +		1000
+> +		500
+> +		250
+> +		125
+> +		64
+> +		32
+> +		16
+> +		8
+> +		4
+> +		0
+> +	3: Slew step size:
+> +		Valid values for the step size LSBs:
+> +		1
+> +		2
+> +		4
+> +		16
+> +		32
+> +		64
+> +		128
+> +		256
+> +
+> +Example:
+> +dac@0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	compatible = "adi,ad5755";
+> +	reg = <0>;
+> +	spi-max-frequency = <1000000>;
+> +	spi-cpha;
+> +	adi,dc-dc-phase = <0>;
+> +	adi,dc-dc-freq-hz = <410000>;
+> +	adi,dc-dc-max-microvolt = <23000000>;
+> +	channel@0 {
+> +		reg = <0>;
+> +		adi,mode = <4>;
+> +		adi,ext-current-sense-resistor;
+> +		adi,slew = <0 64000 1>;
+> +	};
+> +	channel@1 {
+> +		reg = <1>;
+> +		adi,mode = <4>;
+> +		adi,ext-current-sense-resistor;
+> +		adi,slew = <0 64000 1>;
+> +	};
+> +	channel@2 {
+> +		reg = <2>;
+> +		adi,mode = <4>;
+> +		adi,ext-current-sense-resistor;
+> +		adi,slew = <0 64000 1>;
+> +	};
+> +	channel@3 {
+> +		reg = <3>;
+> +		adi,mode = <4>;
+> +		adi,ext-current-sense-resistor;
+> +		adi,slew = <0 64000 1>;
+> +	};
+> +};
+> 
