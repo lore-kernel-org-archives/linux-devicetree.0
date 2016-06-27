@@ -1,108 +1,86 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH v2 1/8] mfd: tps65218: Remove redundant read wrapper
-Date: Mon, 27 Jun 2016 20:00:53 +0530
-Message-ID: <5771389D.5000103@ti.com>
-References: <1467025305-13464-1-git-send-email-j-keerthy@ti.com>
- <1467025305-13464-2-git-send-email-j-keerthy@ti.com>
- <20160627122331.GB24377@dell>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
+Date: Mon, 27 Jun 2016 17:34:22 +0300
+Message-ID: <20160627143422.GB21398@kuha.fi.intel.com>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+ <20160626072838.28082-3-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160627122331.GB24377@dell>
+Content-Disposition: inline
+In-Reply-To: <20160626072838.28082-3-stephen.boyd@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Keerthy <j-keerthy@ti.com>
-Cc: broonie@kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
+I'm fine with most of the patch, except..
+
+On Sun, Jun 26, 2016 at 12:28:19AM -0700, Stephen Boyd wrote:
+> @@ -39,7 +42,10 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
+>  	struct ulpi *ulpi = to_ulpi_dev(dev);
+>  	const struct ulpi_device_id *id;
+>  
+> -	for (id = drv->id_table; id->vendor; id++)
+> +	if (of_driver_match_device(dev, driver))
+> +		return 1;
+
+I don't like this part. We should match separately like that only
+if the bus does not support native enumeration, and of course ULPI
+with its vendor and product IDs does. There really should always be
+IDs to match with here. So exceptions have to be solved before we
+attempt matching.
+
+Since we also have to support platforms where the PHY is initially
+powered off and reading the IDs from the registers is not possible
+because of that, I think we should consider getting the product and
+vendor IDs optionally from device properties. Something like this:
 
 
-On Monday 27 June 2016 05:53 PM, Lee Jones wrote:
-> On Mon, 27 Jun 2016, Keerthy wrote:
->
->> Currently read directly calls the repmap read function. Hence
->> remove the redundant wrapper and use regmap read wherever
->> needed.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   drivers/mfd/tps65218.c                 | 16 +---------------
->>   drivers/regulator/tps65218-regulator.c |  3 ++-
->>   include/linux/mfd/tps65218.h           |  2 --
->>   3 files changed, 3 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
->> index 80b9dc3..f20a531 100644
->> --- a/drivers/mfd/tps65218.c
->> +++ b/drivers/mfd/tps65218.c
->> @@ -34,20 +34,6 @@
->>   #define TPS65218_PASSWORD_REGS_UNLOCK   0x7D
->>
->>   /**
->> - * tps65218_reg_read: Read a single tps65218 register.
->> - *
->> - * @tps: Device to read from.
->> - * @reg: Register to read.
->> - * @val: Contians the value
->> - */
->> -int tps65218_reg_read(struct tps65218 *tps, unsigned int reg,
->> -			unsigned int *val)
->> -{
->> -	return regmap_read(tps->regmap, reg, val);
->> -}
->> -EXPORT_SYMBOL_GPL(tps65218_reg_read);
->> -
->
-> What about the calls in the GPIO and Misc drivers?
+diff --git a/drivers/usb/common/ulpi.c b/drivers/usb/common/ulpi.c
+index 01c0c04..6228a85 100644
+--- a/drivers/usb/common/ulpi.c
++++ b/drivers/usb/common/ulpi.c
+@@ -152,7 +152,7 @@ EXPORT_SYMBOL_GPL(ulpi_unregister_driver);
+ 
+ /* -------------------------------------------------------------------------- */
+ 
+-static int ulpi_register(struct device *dev, struct ulpi *ulpi)
++static int ulpi_read_id(struct ulpi *ulpi)
+ {
+        int ret;
+ 
+@@ -174,6 +174,21 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+        ulpi->id.product = ulpi_read(ulpi, ULPI_PRODUCT_ID_LOW);
+        ulpi->id.product |= ulpi_read(ulpi, ULPI_PRODUCT_ID_HIGH) << 8;
+ 
++       return 0;
++}
++
++static int ulpi_register(struct device *dev, struct ulpi *ulpi)
++{
++       int ret;
++
++       ret = device_property_read_u16(dev, "ulpi-vendor", &ulpi->id.vendor);
++       ret |= device_property_read_u16(dev, "ulpi-product", &ulpi->id.product);
++       if (ret) {
++               ret = ulpi_read_id(ulpi);
++               if (ret)
++                       return ret;
++       }
++
+        ulpi->dev.parent = dev;
+        ulpi->dev.bus = &ulpi_bus;
+        ulpi->dev.type = &ulpi_dev_type;
 
-Thanks Lee Jones for catching this. I will send an updated v3 of the set.
 
->
->> -/**
->>    * tps65218_reg_write: Write a single tps65218 register.
->>    *
->>    * @tps65218: Device to write to.
->> @@ -93,7 +79,7 @@ static int tps65218_update_bits(struct tps65218 *tps, unsigned int reg,
->>   	int ret;
->>   	unsigned int data;
->>
->> -	ret = tps65218_reg_read(tps, reg, &data);
->> +	ret = regmap_read(tps->regmap, reg, &data);
->>   	if (ret) {
->>   		dev_err(tps->dev, "Read from reg 0x%x failed\n", reg);
->>   		return ret;
->> diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
->> index a5e5634..679ab2f 100644
->> --- a/drivers/regulator/tps65218-regulator.c
->> +++ b/drivers/regulator/tps65218-regulator.c
->> @@ -22,6 +22,7 @@
->>   #include <linux/err.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/of_device.h>
->> +#include <linux/regmap.h>
->>   #include <linux/regulator/of_regulator.h>
->>   #include <linux/regulator/driver.h>
->>   #include <linux/regulator/machine.h>
->> @@ -224,7 +225,7 @@ static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
->>   	unsigned int index;
->>   	struct tps65218 *tps = rdev_get_drvdata(dev);
->>
->> -	retval = tps65218_reg_read(tps, dev->desc->csel_reg, &index);
->> +	retval = regmap_read(tps->regmap, dev->desc->csel_reg, &index);
->>   	if (retval < 0)
->>   		return retval;
->>
->> diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
->> index d58f3b5..7c9241f 100644
->> --- a/include/linux/mfd/tps65218.h
->> +++ b/include/linux/mfd/tps65218.h
->> @@ -276,8 +276,6 @@ struct tps65218 {
->>   	struct regmap *regmap;
->>   };
->>
->> -int tps65218_reg_read(struct tps65218 *tps, unsigned int reg,
->> -					unsigned int *val);
->>   int tps65218_reg_write(struct tps65218 *tps, unsigned int reg,
->>   			unsigned int val, unsigned int level);
->>   int tps65218_set_bits(struct tps65218 *tps, unsigned int reg,
->
+That should cover both cases. You would just have to create the IDs
+yourself in this case.
+
+
+Thanks,
+
+-- 
+heikki
