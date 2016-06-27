@@ -1,7 +1,7 @@
 From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: [PATCH 2/4] meson-rtc: add device-tree binding
-Date: Mon, 27 Jun 2016 15:52:13 +0100
-Message-ID: <1467039135-26588-3-git-send-email-ben.dooks@codethink.co.uk>
+Subject: [PATCH 3/4] ARM: dts: amlogic: add rtc node for meson8b
+Date: Mon, 27 Jun 2016 15:52:14 +0100
+Message-ID: <1467039135-26588-4-git-send-email-ben.dooks@codethink.co.uk>
 References: <1467039135-26588-1-git-send-email-ben.dooks@codethink.co.uk>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -19,41 +19,31 @@ To: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, rtc-linux-/J
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the AMLogic Meson RTC.
+Add the DT node for the RTC support.
 
 Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/rtc-amlogic.txt         | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
+ arch/arm/boot/dts/meson8b.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-amlogic.txt b/Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
-new file mode 100644
-index 0000000..efc7672
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
-@@ -0,0 +1,21 @@
-+* AMlogic Meson RTC
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 2bfe401..ff97aa8 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -149,6 +149,13 @@
+ 			status = "disabled";
+ 		};
+ 
++		rtc: rtc@c8100740 {
++			compatible = "amlogic,meson8b-rtc";
++			reg = <0xc8100740 0x14>;
++			resets = <&reset RESET_RTC>;
++			status = "disabled";
++		};
 +
-+Required properties:
-+- compatible: should be one of the following describing the hardware:
-+	* "amlogic,meson6-rtc"
-+	* "amlogic,meson8-rtc"
-+	* "amlogic,meson8b-rtc"
-+
-+- reg: physical register space for the controller's memory mapped registers.
-+
-+Optional properties:
-+- resets: reset controller reference to allow reset of the controller
-+- interrupts: single interrupt reference if interrupt support needed
-+
-+Example:
-+
-+	rtc: rtc@c8100740 {
-+		compatible = "amlogic,meson6-rtc";
-+		reg = <0xc8100740 0x14>;
-+		status = "disabled";
-+	};
+ 		clkc: clock-controller@c1104000 {
+ 			#clock-cells = <1>;
+ 			compatible = "amlogic,meson8b-clkc";
 -- 
 2.8.1
 
