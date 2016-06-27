@@ -1,68 +1,51 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 0/4] ASoC: sunxi: Add i2s controller support
-Date: Mon, 27 Jun 2016 20:32:38 +0200
-Message-ID: <20160627183238.GW4000@lukather>
-References: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ulNsWUvGrZAj8PMr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Andrea Venturi <ennesimamail.av@gmail.com>, Code Kipper <codekipper@gmail.com>, gianfranco@moddevices.com
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [RFC 3/3] dts: beaglebone: Portable connector BB_RELAY_4PORT definition
+Date: Mon, 27 Jun 2016 21:52:39 +0300
+Message-ID: <7FD05D1D-6827-476B-A4A2-304A7FE7A1D2@konsulko.com>
+References: <1464986273-12039-1-git-send-email-pantelis.antoniou@konsulko.com> <1464986273-12039-4-git-send-email-pantelis.antoniou@konsulko.com> <577168BD.5030409@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <577168BD.5030409@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robherring2@gmail.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <stephen.boyd@linaro.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Frank,
 
---ulNsWUvGrZAj8PMr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Mark,
-
-On Wed, Jun 15, 2016 at 11:11:19PM +0200, Maxime Ripard wrote:
-> Hi everyone,
+> On Jun 27, 2016, at 20:56 , Frank Rowand <frowand.list@gmail.com> wro=
+te:
 >=20
-> This is the second version of the I2S support for the controller found
-> in the Allwinner A10 and later SoCs.
+> On 06/03/16 13:37, Pantelis Antoniou wrote:
+>> Example of a portable connector port for the BB_RELAY_4PORT cape
+>>=20
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+>> ---
+>> arch/arm/boot/dts/am335x-bone-common.dtsi | 48 +++++++++++++++++++++=
+++++++++++
+>> 1 file changed, 48 insertions(+)
 >=20
-> Playback has been tested with an UDA1380 on an A20-Olinuxino. Capture
-> is not implemented yet, but will come eventually.
+> Pantelis,
 >=20
-> Let me know what you think,
-> Maxime
+> Can you provide a pointer to information about the cape?
+>=20
 
-Any comments on this one?
+This is the cape in question.
 
-Thanks,
-Maxime
+http://elinux.org/CircuitCo:Relay_Cape
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+The standard overlay for it is at:
 
---ulNsWUvGrZAj8PMr
-Content-Type: application/pgp-signature; name="signature.asc"
+https://github.com/RobertCNelson/bb.org-overlays/blob/master/src/arm/BB=
+-RELAY-4PORT-00A0.dts
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> Thanks,
+>=20
+> Frank
+>=20
 
-iQIcBAEBAgAGBQJXcXFGAAoJEBx+YmzsjxAgXEgP/jct/b40Gd+FoW6BQBbDKbtN
-BScNUiMuxtg4EoF1frdtfH88oPM+6o1/5/xaVpXrlW8vAclF+BZHeu2f9OPgGuRn
-CmaWA1WqKRLb68XI0pymfAMT7htoehfqg5PKcwAuDw8rn3ZFfFgJAB4UvVfXcSg/
-S60LvjKNADTbGkICYkwmpJKAVuBt87eI5WyHj53QqU4z+ft4cG+EfTTeIbF3NSJG
-iQ2hYSuKVpwh5hMO1Jqc2RcnSnC80pbqaE/dO6iU71PgmjUteP5YSPayFcRg0yfX
-uUzTbc2ibzImHEnTEltqwIKxu8dqMvYpWGHvdFRvtVXEMhEZO2tdrTSq5jNsNFhO
-Lh7tPHIsCFhKhHDGDj/LQVG+KXSntxmIAW/4jOseO1gP/hxiV8Qa3NTJeh9BY3Bb
-mnvHe3Nq9A72GBGSpYphNLR4IYTJih9sFFcxm92qEMVuAsLtZHEFcKQ7SewbF4pJ
-WDbHACwjsAZD0IxNYtTTznP5VnQM4RI5nnoyg2qSpKw2CM44rdXkIqd7sQzq/9Vi
-nZCqp8y893/bvE3SJ9SM4A86to3ZuSf7aImbRuyhBzCZPdZxkO8LhnYoQEg+e302
-+VlQ9zYgohU3NEZNG9W7+uvODzsHeixvse1it+og+0lhygz4phwRGch4MByGoYLH
-ucwuMNTGPi4yCukTsaFE
-=LeZS
------END PGP SIGNATURE-----
+Regards
 
---ulNsWUvGrZAj8PMr--
+=97 Pantelis
