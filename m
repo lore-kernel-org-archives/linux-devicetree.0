@@ -1,78 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] drm: Add DT bindings documentation for OpenCores
- VGA/LCD controller
-Date: Mon, 27 Jun 2016 10:24:53 -0500
-Message-ID: <CAL_JsqL2n1gfPmaByV=UbofR8WWiz9bcYsB5_ix6a9dOn=G8GA@mail.gmail.com>
-References: <1465479199-9810-1-git-send-email-andrea.merello@gmail.com>
- <20160610173621.GA17641@rob-hp-laptop>
- <CAN8YU5MnscQdeC4nx=_YcTmG8peS=mp3vLnvH13dqBfTovM46Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Documentation: Add sbs-manager device tree node documentation
+Date: Mon, 27 Jun 2016 10:28:35 -0500
+Message-ID: <CAL_JsqKTQLD72Vx-PaFRiUegNhY30pmD7ewEXtoLNj4mj8=phA@mail.gmail.com>
+References: <1466622436-27963-1-git-send-email-karl-heinz@schneider-inet.de>
+ <1466622436-27963-2-git-send-email-karl-heinz@schneider-inet.de>
+ <20160624175014.GA29990@rob-hp-laptop> <83b7648c-43d6-7a32-29bb-65f2606399fd@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAN8YU5MnscQdeC4nx=_YcTmG8peS=mp3vLnvH13dqBfTovM46Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrea Merello <andrea.merello@gmail.com>
-Cc: Claudio Lorini <claudio.lorini@iit.it>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Francesco Diotalevi <francesco.diotalevi@iit.it>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <83b7648c-43d6-7a32-29bb-65f2606399fd@axentia.se>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Phil Reid <preid@electromag.com.au>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMjcsIDIwMTYgYXQgNjoyMSBBTSwgQW5kcmVhIE1lcmVsbG8KPGFuZHJlYS5t
-ZXJlbGxvQGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgNzozNiBQ
-TSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4+IE9uIFRodSwgSnVuIDA5
-LCAyMDE2IGF0IDAzOjMzOjE5UE0gKzAyMDAsIEFuZHJlYSBNZXJlbGxvIHdyb3RlOgo+Pj4gU2ln
-bmVkLW9mZi1ieTogQW5kcmVhIE1lcmVsbG8gPGFuZHJlYS5tZXJlbGxvQGdtYWlsLmNvbT4KPj4+
-IENjOiBTdGVmYW4gS3Jpc3RpYW5zc29uIDxzdGVmYW4ua3Jpc3RpYW5zc29uQHNhdW5hbGFodGku
-Zmk+Cj4+PiBDYzogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPj4+IENj
-OiBGcmFuY2VzY28gRGlvdGFsZXZpIDxmcmFuY2VzY28uZGlvdGFsZXZpQGlpdC5pdD4KPj4+IENj
-OiBDbGF1ZGlvIExvcmluaSA8Y2xhdWRpby5sb3JpbmlAaWl0Lml0Pgo+Pj4gLS0tCj4+PiAgLi4u
-L2JpbmRpbmdzL2Rpc3BsYXkvb3BlbmNvcmVzLG9jZHJtLnR4dCAgICAgICAgICAgfCAyNyArKysr
-KysrKysrKysrKysrKysrKysrCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKykK
-Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvb3BlbmNvcmVzLG9jZHJtLnR4dAo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9vcGVuY29yZXMsb2Nkcm0udHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvb3BlbmNvcmVzLG9jZHJt
-LnR4dAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGluZGV4IDAwMDAwMDAuLjhkMzZkZTUK
-Pj4+IC0tLSAvZGV2L251bGwKPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L29wZW5jb3JlcyxvY2RybS50eHQKPj4+IEBAIC0wLDAgKzEsMjcgQEAKPj4+
-ICtPcGVuQ29yZXMgVkdBL0xDRCBjb250cm9sbGVyCj4+PiArCj4+PiArUmVxdWlyZWQgcHJvcGVy
-dGllczoKPj4+ICstIGNvbXBhdGlibGU6ICJvcGVuY29yZXMsb2Nkcm0iCj4+Cj4+IE5hbWUgdGhp
-cyBiYXNlZCBvbiB3aGF0IHRoZSBoL3cgYmxvY2sgaXMgY2FsbGVkLCBub3QgYSBMaW51eCBzdWJz
-eXN0ZW0uCj4KPiBPay4KPgo+IFNvbWV0aGluZyBsaWtlICJvcGVuY29yZXMsdmlkZW8iID8KClRo
-ZSBWR0EvTENEIGNvbnRyb2xsZXIgSVAgYmxvY2sgaXMganVzdCBjYWxsZWQgInZpZGVvIj8KCj4g
-VGhlIG9sZGVyIGZyYW1lYnVmZmVyIGRyaXZlciBoYXMgIm9wZW5jb3JlcyxvY2ZiIjsgSSBhc3N1
-bWVkIHRoZQo+IHN1ZmZpeCAtZmIgd2FzIGJlY2F1c2Ugb2YgaXQgaXMgYSAiZnJhbWVidWZmZXIi
-IF9kcml2ZXJfLCBidXQgbWF5YmUgaXQKPiBpcyBiZWNhdXNlIHRoZXkgY29uc2lkZXIgaXQgYSAi
-ZnJhbWVidWZmZXIiIF9kZXZpY2VfLgoKQ291bGQgYmUgZWl0aGVyLiBUaGUgRkIgYW5kIERSTSAi
-YmluZGluZ3MiIGhhdmUgYmVlbiBmbGF3ZWQgaW4KZ2VuZXJhbC4gVGhlIGJpbmRpbmdzIHNob3Vs
-ZCBkZXNjcmliZSBoYXJkd2FyZSBibG9ja3MgYW5kIHRoZQpjb25uZWN0aW9ucyBiZXR3ZWVuIHRo
-ZW0sIG5vdCB3aGF0IHRoZSBrZXJuZWwgc3Vic3lzdGVtIHdhbnRzLgoKPiBNYXliZSBJIGNhbiBr
-ZWVwIHRoZSBzYW1lICJjb21wYXRpYmxlIiBzdHJpbmc/IElzIGl0IG9rIHRvIGhhdmUgdHdvCj4g
-ZHJpdmVycyAobWF5YmUgdGVtcG9yYXJpbHksIHVudGlsIHRoZSBvbGRlciBvbmUgZmFkZXMgb3V0
-KSB3aXRoIHRoZQo+IHNhbWUgImNvbXBhdGlibGUiID8KCkluIHByaW5jaXBhbCwgdGhhdCBpcyBl
-eGFjdGx5IGhvdyBpdCBzaG91bGQgd29yay4gSG93ZXZlciwgdGhlIEZCCmJpbmRpbmcgaXMgcHJv
-YmFibHkgaW5jb21wbGV0ZSBvciBmbGF3ZWQuIElmIGtlZXBpbmcgdGhlIGNvbXBhdGlibGUKc3Ry
-aW5nIGlzIGVub3VnaCBmb3IgaXQgdG8gd29yaywgdGhlbiB0aGF0IGlzIGZpbmUuCgo+PiBJcyB0
-aGVyZSBhbnkgc29ydCBvZiB2ZXJzaW9uaW5nIGZvciBPcGVuQ29yZSBJUCB0aGF0IHlvdSBjYW4g
-aW5jbHVkZSBpbgo+PiB0aGUgbmFtZT8KPgo+IE5vdCBzdXJlIGFib3V0IHRoaXMuIEknbGwgY2hl
-Y2suCj4KPj4+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhl
-IGNvbnRyb2xsZXIncyByZWdpc3RlcnMuCj4+PiArLSBjbG9ja3M6IE11c3QgY29udGFpbiBhbiBl
-bnRyeSBmb3IgdGhlIHBpeGVsY2xvY2sgZ2VuZXJhdG9yLgo+Pj4gKyAgU2VlIC4uL2Nsb2Nrcy9j
-bG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4+PiArCj4+PiArUmVxdWlyZWQgc3ViLW5v
-ZGVzOgo+Pj4gKy0gcG9ydDogdGhlIGNvbm5lY3Rpb24gdG8gYSBEUk0gYnJpZGdlLiAgVGhlIGNv
-bm5lY3Rpb24gaXMgbW9kZWxsZWQKPj4KPj4gRG9uJ3QgaW5jbHVkZSBMaW51eCBkcml2ZXIgZGV0
-YWlscyAoRFJNKSBpbiBiaW5kaW5ncy4KPgo+IFlvdSBtZWFuIHRlbGxpbmcgdGhhdCB0aGUgcG9y
-dCBtdXN0IGJlIGEgY29ubmVjdGlvbiB0byBhIERSTSBicmlkZ2UsCj4gbGVhdmluZyBvdXQgZnVy
-dGhlciBkZXRhaWxzPwoKVGhlIGJpbmRpbmcgaXRzZWxmIGFuZCBkZXNjcmlwdGlvbiBzaG91bGQg
-bm90IGNvbnRhaW4gdGhlIHdvcmQgRFJNLgpKdXN0IHNheSBjb25uZWN0aW9uIHRvIGJyaWRnZSBj
-aGlwIG9yIGNvbm5lY3Rvci4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Sun, Jun 26, 2016 at 5:35 PM, Peter Rosin <peda@axentia.se> wrote:
+> On 2016-06-24 19:50, Rob Herring wrote:
+>> On Wed, Jun 22, 2016 at 09:07:15PM +0200, Karl-Heinz Schneider wrote:
+>>> This patch adds device tree documentation for the sbs-manager
+>
+> *snip*
+>
+>>> +
+>>> +From OS view the device is basically an i2c-mux used to communicate with up to
+>>> +four smart battery devices at address 0xb. The driver actually implements this
+>>> +behaviour. So standard i2c-mux nodes can be used to register up to four slave
+>>> +batteries. Channels will be numerated as 1, 2, 4 and 8.
+>>> +
+>>> +Example:
+>>> +
+>>> +batman@0a {
+>>> +    compatible = "sbs,sbs-manager";
+>>> +    reg = <0x0a>;
+>>> +    sbsm,i2c-retry-count = <3>;
+>>> +    #address-cells = <1>;
+>>> +    #size-cells = <0>;
+>>> +
+>>> +    channel1@1 {
+>>
+>> channel@1
+>>
+>> Do we have a standard node name for mux nodes? If not, we should.
+>
+> No name is enforced by the i2c mux support code, but I think "i2c"
+> dominates, and quite possibly it is the only documented name?
+
+The kernel generally doesn't care what node names are, but standard
+naming is convention. If "i2c" is most common, then go with that.
+
+Rob
