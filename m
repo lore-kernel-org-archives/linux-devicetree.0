@@ -1,61 +1,191 @@
-From: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] leds: Add driver for NCP5623 3-channel I2C LED driver
-Date: Mon, 27 Jun 2016 07:46:49 +0200
-Message-ID: <51f6c4d4-e5af-97b6-e7d9-61f0093de134@heig-vd.ch>
-References: <1466494154-3786-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1466494154-3786-3-git-send-email-florian.vaussard@heig-vd.ch>
- <57695D45.60107@samsung.com> <20160626214902.GB21026@amd>
+From: Florian Vaussard <florian.vaussard@heig-vd.ch>
+Subject: Re: [PATCH v2 2/4] iio: potentiometer: mcp4531: Add device tree
+ binding documentation
+Date: Mon, 27 Jun 2016 07:31:27 +0200
+Message-ID: <629bcb90-80bd-efad-2efc-fe36bfbb6959@heig-vd.ch>
+References: <1466972567-9580-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1466972567-9580-3-git-send-email-florian.vaussard@heig-vd.ch>
+ <32d8162f-bb62-2c90-d194-0023320be392@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160626214902.GB21026@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaussard Florian <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <32d8162f-bb62-2c90-d194-0023320be392@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, Florian Vaussard <florian.vaussard@gmail.com>, devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Slawomir Stepien <sst@poczta.fm>, Joachim Eastwood <manabian@gmail.com>, Matt Ranostay <mranostay@gmail.com>, Cristina Moraru <cristina.moraru09@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Vaussard Florian <florian.vaussard@heig-vd.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+Hello Peter,
 
-Le 26. 06. 16 =E0 23:49, Pavel Machek a =E9crit :
-> Hi!
->=20
->>> +struct ncp5623_led {
->>> +	bool active;
->>> +	unsigned int led_no;
->>> +	struct led_classdev ldev;
->>> +	struct work_struct work;
->>> +	struct ncp5623_priv *priv;
->>> +};
->>> +
->>> +struct ncp5623_priv {
->>> +	struct ncp5623_led leds[NCP5623_MAX_LEDS];
+Le 26. 06. 16 =E0 23:38, Peter Rosin a =E9crit :
+> On 2016-06-26 22:22, Florian Vaussard wrote:
+>> Add the device tree documentation for all the supported parts. Apart=
+ the
+>> compatible string and standard I2C binding, no other binding is curr=
+ently
+>> needed.
 >>
->> Please allocate memory dynamically, depending on the number
->> of LEDs defined in a Device Tree.
->=20
-> MAX_LEDs is three. Are you sure overhead of dynamic allocation is
-> worth it?
->=20
-> And if this is for RGB leds... very probably device will want to use
-> all 3 channels.
+>> Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
+>> ---
+>>  .../devicetree/bindings/i2c/trivial-devices.txt    | 64 +++++++++++=
++++++++++++
+>>  1 file changed, 64 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.t=
+xt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+>> index 53987449..4ffe9a9 100644
+>> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+>> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+>> @@ -56,6 +56,70 @@ maxim,ds1050		5 Bit Programmable, Pulse-Width Mod=
+ulator
+>>  maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
+>>  maxim,max6625		9-Bit/12-Bit Temperature Sensors with I=B2C-Compatib=
+le Serial Interface
+>>  mc,rv3029c2		Real Time Clock Module with I2C-Bus
+>> +microchip,mcp4531-502	Microchip 8-bit Single I2C Digital Potentiome=
+ter (5k)
+>                                           ^
+> You have mixed up 7/8-bit, here and below.
 >=20
 
-I was about to raise the same question during the v2 of this patch. In =
-addition
-to your arguments, this also changes the way this array is indexed.
+Oh you are right, stupid me. I will fix.
 
-Currently the LED number is used as index, but with dynamic allocation =
-I have to
-use an abstract index. This makes some logic a bit harder, especially t=
-o check
-if the same LED is declared twice in the device tree (duplicated 'reg' =
-property).
-
-Best,
+Thanks,
 =46lorian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> Cheers,
+> Peter
+>=20
+>> +microchip,mcp4531-103	Microchip 8-bit Single I2C Digital Potentiome=
+ter (10k)
+>> +microchip,mcp4531-503	Microchip 8-bit Single I2C Digital Potentiome=
+ter (50k)
+>> +microchip,mcp4531-104	Microchip 8-bit Single I2C Digital Potentiome=
+ter (100k)
+>> +microchip,mcp4532-502	Microchip 8-bit Single I2C Digital Potentiome=
+ter (5k)
+>> +microchip,mcp4532-103	Microchip 8-bit Single I2C Digital Potentiome=
+ter (10k)
+>> +microchip,mcp4532-503	Microchip 8-bit Single I2C Digital Potentiome=
+ter (50k)
+>> +microchip,mcp4532-104	Microchip 8-bit Single I2C Digital Potentiome=
+ter (100k)
+>> +microchip,mcp4541-502	Microchip 8-bit Single I2C Digital Potentiome=
+ter with NV Memory (5k)
+>> +microchip,mcp4541-103	Microchip 8-bit Single I2C Digital Potentiome=
+ter with NV Memory (10k)
+>> +microchip,mcp4541-503	Microchip 8-bit Single I2C Digital Potentiome=
+ter with NV Memory (50k)
+>> +microchip,mcp4541-104	Microchip 8-bit Single I2C Digital Potentiome=
+ter with NV Memory (100k)
+>> +microchip,mcp4542-502	Microchip 8-bit Single I2C Digital Potentiome=
+ter with NV Memory (5k)
+>> +microchip,mcp4542-103	Microchip 8-bit Single I2C Digital Potentiome=
+ter with NV Memory (10k)
+>> +microchip,mcp4542-503	Microchip 8-bit Single I2C Digital Potentiome=
+ter with NV Memory (50k)
+>> +microchip,mcp4542-104	Microchip 8-bit Single I2C Digital Potentiome=
+ter with NV Memory (100k)
+>> +microchip,mcp4551-502	Microchip 7-bit Single I2C Digital Potentiome=
+ter (5k)
+>> +microchip,mcp4551-103	Microchip 7-bit Single I2C Digital Potentiome=
+ter (10k)
+>> +microchip,mcp4551-503	Microchip 7-bit Single I2C Digital Potentiome=
+ter (50k)
+>> +microchip,mcp4551-104	Microchip 7-bit Single I2C Digital Potentiome=
+ter (100k)
+>> +microchip,mcp4552-502	Microchip 7-bit Single I2C Digital Potentiome=
+ter (5k)
+>> +microchip,mcp4552-103	Microchip 7-bit Single I2C Digital Potentiome=
+ter (10k)
+>> +microchip,mcp4552-503	Microchip 7-bit Single I2C Digital Potentiome=
+ter (50k)
+>> +microchip,mcp4552-104	Microchip 7-bit Single I2C Digital Potentiome=
+ter (100k)
+>> +microchip,mcp4561-502	Microchip 7-bit Single I2C Digital Potentiome=
+ter with NV Memory (5k)
+>> +microchip,mcp4561-103	Microchip 7-bit Single I2C Digital Potentiome=
+ter with NV Memory (10k)
+>> +microchip,mcp4561-503	Microchip 7-bit Single I2C Digital Potentiome=
+ter with NV Memory (50k)
+>> +microchip,mcp4561-104	Microchip 7-bit Single I2C Digital Potentiome=
+ter with NV Memory (100k)
+>> +microchip,mcp4562-502	Microchip 7-bit Single I2C Digital Potentiome=
+ter with NV Memory (5k)
+>> +microchip,mcp4562-103	Microchip 7-bit Single I2C Digital Potentiome=
+ter with NV Memory (10k)
+>> +microchip,mcp4562-503	Microchip 7-bit Single I2C Digital Potentiome=
+ter with NV Memory (50k)
+>> +microchip,mcp4562-104	Microchip 7-bit Single I2C Digital Potentiome=
+ter with NV Memory (100k)
+>> +microchip,mcp4631-502	Microchip 8-bit Dual I2C Digital Potentiomete=
+r (5k)
+>> +microchip,mcp4631-103	Microchip 8-bit Dual I2C Digital Potentiomete=
+r (10k)
+>> +microchip,mcp4631-503	Microchip 8-bit Dual I2C Digital Potentiomete=
+r (50k)
+>> +microchip,mcp4631-104	Microchip 8-bit Dual I2C Digital Potentiomete=
+r (100k)
+>> +microchip,mcp4632-502	Microchip 8-bit Dual I2C Digital Potentiomete=
+r (5k)
+>> +microchip,mcp4632-103	Microchip 8-bit Dual I2C Digital Potentiomete=
+r (10k)
+>> +microchip,mcp4632-503	Microchip 8-bit Dual I2C Digital Potentiomete=
+r (50k)
+>> +microchip,mcp4632-104	Microchip 8-bit Dual I2C Digital Potentiomete=
+r (100k)
+>> +microchip,mcp4641-502	Microchip 8-bit Dual I2C Digital Potentiomete=
+r with NV Memory (5k)
+>> +microchip,mcp4641-103	Microchip 8-bit Dual I2C Digital Potentiomete=
+r with NV Memory (10k)
+>> +microchip,mcp4641-503	Microchip 8-bit Dual I2C Digital Potentiomete=
+r with NV Memory (50k)
+>> +microchip,mcp4641-104	Microchip 8-bit Dual I2C Digital Potentiomete=
+r with NV Memory (100k)
+>> +microchip,mcp4642-502	Microchip 8-bit Dual I2C Digital Potentiomete=
+r with NV Memory (5k)
+>> +microchip,mcp4642-103	Microchip 8-bit Dual I2C Digital Potentiomete=
+r with NV Memory (10k)
+>> +microchip,mcp4642-503	Microchip 8-bit Dual I2C Digital Potentiomete=
+r with NV Memory (50k)
+>> +microchip,mcp4642-104	Microchip 8-bit Dual I2C Digital Potentiomete=
+r with NV Memory (100k)
+>> +microchip,mcp4651-502	Microchip 7-bit Dual I2C Digital Potentiomete=
+r (5k)
+>> +microchip,mcp4651-103	Microchip 7-bit Dual I2C Digital Potentiomete=
+r (10k)
+>> +microchip,mcp4651-503	Microchip 7-bit Dual I2C Digital Potentiomete=
+r (50k)
+>> +microchip,mcp4651-104	Microchip 7-bit Dual I2C Digital Potentiomete=
+r (100k)
+>> +microchip,mcp4652-502	Microchip 7-bit Dual I2C Digital Potentiomete=
+r (5k)
+>> +microchip,mcp4652-103	Microchip 7-bit Dual I2C Digital Potentiomete=
+r (10k)
+>> +microchip,mcp4652-503	Microchip 7-bit Dual I2C Digital Potentiomete=
+r (50k)
+>> +microchip,mcp4652-104	Microchip 7-bit Dual I2C Digital Potentiomete=
+r (100k)
+>> +microchip,mcp4661-502	Microchip 7-bit Dual I2C Digital Potentiomete=
+r with NV Memory (5k)
+>> +microchip,mcp4661-103	Microchip 7-bit Dual I2C Digital Potentiomete=
+r with NV Memory (10k)
+>> +microchip,mcp4661-503	Microchip 7-bit Dual I2C Digital Potentiomete=
+r with NV Memory (50k)
+>> +microchip,mcp4661-104	Microchip 7-bit Dual I2C Digital Potentiomete=
+r with NV Memory (100k)
+>> +microchip,mcp4662-502	Microchip 7-bit Dual I2C Digital Potentiomete=
+r with NV Memory (5k)
+>> +microchip,mcp4662-103	Microchip 7-bit Dual I2C Digital Potentiomete=
+r with NV Memory (10k)
+>> +microchip,mcp4662-503	Microchip 7-bit Dual I2C Digital Potentiomete=
+r with NV Memory (50k)
+>> +microchip,mcp4662-104	Microchip 7-bit Dual I2C Digital Potentiomete=
+r with NV Memory (100k)
+>>  national,lm63		Temperature sensor with integrated fan control
+>>  national,lm75		I2C TEMP SENSOR
+>>  national,lm80		Serial Interface ACPI-Compatible Microprocessor Syst=
+em Hardware Monitor
+>>
+>=20
