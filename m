@@ -1,65 +1,77 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: linux-next: Tree for Jun 27 (pinctrl && !CONFIG_OF)
-Date: Mon, 27 Jun 2016 23:36:29 +0200
-Message-ID: <735717690.oeI6DkomRc@wuerfel>
-References: <20160627163939.20e454d5@canb.auug.org.au> <57716D3D.4070302@infradead.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <57716D3D.4070302@infradead.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>, Alexander Stein <alexanders83@web.de>
+From: Tai Nguyen <ttnguyen@apm.com>
+Subject: [PATCH v5 0/4] perf: Add APM X-Gene SoC Performance Monitoring Unit driver
+Date: Mon, 27 Jun 2016 14:54:14 -0700
+Message-ID: <1467064458-22143-1-git-send-email-ttnguyen@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, Tai Nguyen <ttnguyen@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 27, 2016 11:15:25 AM CEST Randy Dunlap wrote:
-> On 06/26/16 23:39, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20160624:
-> > 
-> 
-> on i386, when CONFIG_OF is not enabled ...
-> but OF_GPIO is enabled due to this in drivers/gpio/Kconfig:
-> 
-> config OF_GPIO
->         def_bool y
->         depends on OF || COMPILE_TEST
-> 
-> (above from commit 1e4a80640338924b9f9fd7a121ac31d08134410a
-> from Alexander Stein <alexanders83@web.de>)
-> 
-> 
-> ../drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:381:20: error: 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
-> ../drivers/pinctrl/bcm/pinctrl-cygnus-mux.c:739:20: error: 'pinconf_generic_dt_node_to_map_group' undeclared here (not in a function)
-> ../drivers/pinctrl/bcm/pinctrl-nsp-gpio.c:365:20: error: 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
-> 
-> because that function is only present when CONFIG_OF is enabled.
-> 
-> 
-> Also, why does that commit (1e4a80640338924b9f9fd7a121ac31d08134410a)
-> not have any other S-O-B lines in it?  like whoever merged it?
+In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
+are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
+memory controller bridges and memory. These PMU devices are loosely
+architected to follow the same model as the PMU for ARM cores.
 
-(adding Linus Walleij and Alexander Stein to Cc)
+Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
+---
 
-Unfortunately, the changelog also doesn't say what triggered that
-change. I guess there was a driver that did 'select OF_GPIO'
-and had a dependency on COMPILE_TEST, though I don't see any
-driver doing that in linux-next.
+v5:
+ * Remove hw_perf_event::extra_reg field use
+   Change GET_CNTR to use hw_perf_event::idx
+   Change GET_AGENTID/GET_AGEN1ID to use hw_perf_event::config_base
+ * Use compound literal structure defines for format and event attribute groups
+   to statically define them at compile time
+ * Bitwise invert the meaning of agent mask in config1 field.
+ * Fix update pmu_counter_event pointer before starting event
+ * Add reset of pmu_dev->pmu_counter_event to NULL in xgene_perf_del
+ * Use exactly half of max period to fix the overflow counter issue and account
+   for the possiblity of extreme interrupt latency
+ * Use spin lock instead of interrupt masking in overflow interrupt handler
+ * Remove unnecessary update of hw_perf_event::period_left
 
-I think the commit should just be reverted, it clearly breaks
-stuff, and whatever needs it can be fixed in a better way.
+v4:
+ * Alphabetically sorting header files
+ * Remove dynamic allocation for PMU format and event attribute groups
+   Create shared constant attribute groups per each class
+ * Remove perf_sample_data as this perf driver doesn't support sampling
+ * Consistently use the PCP_PMU_V{1,2} defines
+ * Set affinity to make sure the overflow interrupt is handled by the
+   same assigned CPU
 
-Specifically, we have three ways that the OF_GPIO symbol 
-is used:
+v3:
+ * Remove index property use in PMU device sub nodes
 
-a) it is implicitly enabled when both GPIOLIB and OF are turned on
-b) some drivers 'depends on OF_GPIO'
-c) some other drivers 'select OF_GPIO'
+v2:
+ * Use bitmask for event asignned counter mask pmu_dev->cntr_assign_mask
+ * Remove unnecessary spinlocks in perf add/del operations
+ * Remove unnecessary condition checks
+ * Enforce CPU assignment to one CPU for perf operarations
+ * Set the task_ctx_nr to perf_invalid_context for perf driver
+ * Remove irrelevant pt_rregs
+ * Change perf sysfs attributes to be fixed instead of dynamic
+ * Fix checking for an ACPI companion device instead of EFI enable
+ * Add documentation for config/config1 fields format and perf tool example
 
-The combination of b) and c) can easily lead to circular dependencies,
-and is also confusing. It would be better to change all of those
-to 'depends on'.
+---
 
-	Arnd
+Tai Nguyen (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC PMU driver
+  Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
+  perf: xgene: Add APM X-Gene SoC Performance Monitoring Unit driver
+  arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
+
+ .../devicetree/bindings/perf/apm-xgene-pmu.txt     |  112 ++
+ Documentation/perf/xgene-pmu.txt                   |   48 +
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   58 +
+ drivers/perf/Kconfig                               |    7 +
+ drivers/perf/Makefile                              |    1 +
+ drivers/perf/xgene_pmu.c                           | 1359 ++++++++++++++++++++
+ 7 files changed, 1593 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+ create mode 100644 Documentation/perf/xgene-pmu.txt
+ create mode 100644 drivers/perf/xgene_pmu.c
+
+-- 
+1.9.1
