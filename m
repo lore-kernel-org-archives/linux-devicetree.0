@@ -1,100 +1,52 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH] dt-bindings: i2c: add bindings for nxp,pca9541
-Date: Mon, 27 Jun 2016 12:11:22 +0200
-Message-ID: <1467022282-21062-1-git-send-email-peda@axentia.se>
+From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] support control with using GPIO lines
+Date: Mon, 27 Jun 2016 19:23:23 +0900
+Message-ID: <CAC5umyizTq+widuMa2s24D2BdJHddL5a9meD1mE+64Suu11r0Q@mail.gmail.com>
+References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
+ <20160410151237.GD5377@piout.net> <1460301781.17404.171.camel@gmail.com>
+ <20160410153855.GG5377@piout.net> <20160412012518.GQ3351@sirena.org.uk>
+ <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A@mail.gmail.com>
+ <20160427135012.GP3217@sirena.org.uk> <1461765799.2957.4.camel@gmail.com>
+ <CAC5umyhLZ7Nvakf84qS73HG=H39mjYf5Lv=BPFnqZt-rTrZvCA@mail.gmail.com> <20160626005534.GY5809@piout.net>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Jiri Slaby <jslaby@suse.cz>, Guenter Roeck <linux@roeck-us.net>, linux-i2c@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCPM5SUWUYIRBL75YO5QKGQEQSCB7FA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160626005534.GY5809-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fill the gap for this pre-existing driver.
+2016-06-26 9:55 GMT+09:00 Alexandre Belloni
+<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> Hi,
+>
+> On 29/04/2016 at 14:40:25 +0900, Akinobu Mita wrote :
+>> So I think that the way like the patch 3 and 4 in this series showed
+>> is reasonable.  And rtc-ds2404, rtc-moxart, and rtc-v3020 do something
+>> similar.
+>>
+>> If there is no complaint, I'll resend patch 3 and 4 with small fixes.
+>
+> Are you still planning to send a new version? I understand you had some
+> fixes.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- .../devicetree/bindings/i2c/i2c-arb-pca9541.txt    | 33 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
+I'll be sending the updated patches.  The update contains white space fixes
+reported by checkpatch.pl and simplification for ds1302_ops.
 
-Hi!
-
-I'm wondering about this driver. It is not a trivial device, and yet it
-has historically relied on the i2c core matching the chip w/o vendor
-prefix. This is not ideal. But what to do about the driver implementing
-this in terms of an i2c-mux, somthing which the chip is not; It is an
-i2c arbitrator. It just happens to rely on the i2c mux core also handling
-i2c gates and i2c arbitrators. But that seems like a Linux detail. So I
-don't know what to do here?
-
-That is, the patch - as is - describes something that would be trivial to
-support today, but at the same time it seems to be too tied to Linux.
-
-The problem is that the i2c@0 intermediate node is not really needed, but
-at the same time removing it would cause a disruption for the driver since
-it can't really use the i2c mux core if that node isn't there. I don't
-see a simple way to fix that in the i2c mux core either (but admittedly
-haven't given it too much thought).
-
-Any suggestions?
-
-Cheers,
-Peter
-
-PS. The driver source is in drivers/i2c/muxes/i2c-mux-pca9541.c
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt b/Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
-new file mode 100644
-index 000000000000..edbe84935906
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
-@@ -0,0 +1,33 @@
-+* NXP PCA9541 I2C bus master selector
-+
-+Required Properties:
-+
-+  - compatible: Must be "nxp,pca9541"
-+
-+  - reg: The I2C address of the device.
-+
-+  The following required properties are defined externally:
-+
-+  - Standard I2C mux properties. See i2c-mux.txt in this directory.
-+  - I2C child bus nodes. See i2c-mux.txt in this directory.
-+
-+
-+Example:
-+
-+	i2c-arbitrator@74 {
-+		compatible = "nxp,pca9541";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x74>;
-+
-+		i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			eeprom@54 {
-+				compatible = "at,24c08";
-+				reg = <0x54>;
-+			};
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e1b090f86e0d..3dd44d0d166c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5521,6 +5521,7 @@ S:	Maintained
- F:	Documentation/i2c/i2c-topology
- F:	Documentation/i2c/muxes/
- F:	Documentation/devicetree/bindings/i2c/i2c-mux*
-+F:	Documentation/devicetree/bindings/i2c/i2c-arb*
- F:	drivers/i2c/i2c-mux.c
- F:	drivers/i2c/muxes/
- F:	include/linux/i2c-mux.h
 -- 
-2.1.4
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
