@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v5 1/2] Documentation: dt: reset: Add TI syscon reset binding
-Date: Mon, 27 Jun 2016 12:12:16 -0500
-Message-ID: <20160627171217.4715-2-afd@ti.com>
+Subject: [PATCH v5 2/2] reset: add TI SYSCON based reset driver
+Date: Mon, 27 Jun 2016 12:12:17 -0500
+Message-ID: <20160627171217.4715-3-afd@ti.com>
 References: <20160627171217.4715-1-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,160 +12,294 @@ To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pa
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add TI syscon reset controller binding. This will hook to the reset
-framework and use syscon/regmap to set reset bits. This allows reset
-control of individual SoC subsytems and devices with memory-mapped
-reset registers in a common register memory space.
+Add a reset-controller driver for performing reset management of
+various devices present on the SoC, with the reset registers shared
+between devices in a common register memory space. This driver uses
+the syscon/regmap frameworks to actually implement the various reset
+functionalities needed by the reset consumer devices.
 
 Signed-off-by: Andrew F. Davis <afd@ti.com>
+[s-anna@ti.com: add documentation, syscon name change]
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- .../devicetree/bindings/reset/ti-syscon-reset.txt  | 91 ++++++++++++++++++++++
- include/dt-bindings/reset/ti-syscon.h              | 38 +++++++++
- 2 files changed, 129 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
- create mode 100644 include/dt-bindings/reset/ti-syscon.h
+ drivers/reset/Kconfig           |  10 ++
+ drivers/reset/Makefile          |   1 +
+ drivers/reset/reset-ti-syscon.c | 237 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 248 insertions(+)
+ create mode 100644 drivers/reset/reset-ti-syscon.c
 
-diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index ab37f4d..4be1b8c 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -17,6 +17,16 @@ if RESET_CONTROLLER
+ config RESET_OXNAS
+ 	bool
+ 
++config TI_SYSCON_RESET
++	tristate "TI SYSCON Reset Driver"
++	depends on HAS_IOMEM
++	select MFD_SYSCON
++	help
++	  This enables the reset driver support for TI devices with
++	  memory-mapped reset registers as part of a syscon device node. If
++	  you wish to use the reset framework for such memory-mapped devices,
++	  say Y here. Otherwise, say N.
++
+ source "drivers/reset/sti/Kconfig"
+ source "drivers/reset/hisilicon/Kconfig"
+ 
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 03dc1bb..5d65a93 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -10,3 +10,4 @@ obj-$(CONFIG_ARCH_HISI) += hisilicon/
+ obj-$(CONFIG_ARCH_ZYNQ) += reset-zynq.o
+ obj-$(CONFIG_ATH79) += reset-ath79.o
+ obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
++obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
+diff --git a/drivers/reset/reset-ti-syscon.c b/drivers/reset/reset-ti-syscon.c
 new file mode 100644
-index 0000000..164c7f3
+index 0000000..47f0ffd
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-@@ -0,0 +1,91 @@
-+TI SysCon Reset Controller
-+=======================
-+
-+Almost all SoCs have hardware modules that require reset control in addition
-+to clock and power control for their functionality. The reset control is
-+typically provided by means of memory-mapped I/O registers. These registers are
-+sometimes a part of a larger register space region implementing various
-+functionalities. This register range is best represented as a syscon node to
-+allow multiple entities to access their relevant registers in the common
-+register space.
-+
-+A SysCon Reset Controller node defines a device that uses a syscon node
-+and provides reset management functionality for various hardware modules
-+present on the SoC.
-+
-+SysCon Reset Controller Node
-+============================
-+Each of the reset provider/controller nodes should be a child of a syscon
-+node and have the following properties.
-+
-+Required properties:
-+--------------------
-+ - compatible		: Should be,
-+			    "ti,k2e-pscrst"
-+			    "ti,k2l-pscrst"
-+			    "ti,k2hk-pscrst"
-+			    "ti,syscon-reset"
-+ - #reset-cells		: Should be 1. Please see the reset consumer node below
-+			  for usage details
-+ - ti,reset-bits	: Contains the reset control register information
-+			  Should contain 7 cells for each reset exposed to
-+			  consumers, defined as:
-+			    Cell #1 : offset of the reset assert control
-+			              register from the syscon register base
-+			    Cell #2 : bit position of the reset in the reset
-+			              assert control register
-+			    Cell #3 : offset of the reset deassert control
-+			              register from the syscon register base
-+			    Cell #4 : bit position of the reset in the reset
-+			              deassert control register
-+			    Cell #5 : offset of the reset status register
-+			              from the syscon register base
-+			    Cell #6 : bit position of the reset in the
-+			              reset status register
-+			    Cell #7 : Flags used to control reset behavior,
-+			              availible flags defined in the DT include
-+			              file <dt-bindings/reset/ti-syscon.h>
-+
-+SysCon Reset Consumer Nodes
-+===========================
-+Each of the reset consumer nodes should have the following properties,
-+in addition to their own properties.
-+
-+Required properties:
-+--------------------
-+ - resets	: A phandle to the reset controller node and an index number
-+		  to a reset specifier as defined above.
-+
-+Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
-+common reset controller usage by consumers.
-+
-+Example:
-+--------
-+The following example demonstrates a syscon node, the reset controller node
-+using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
-+Edison SoC.
-+
-+/ {
-+	soc {
-+		psc: power-sleep-controller@02350000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x02350000 0x1000>;
-+
-+			pscrst: psc-reset {
-+				compatible = "ti,k2e-pscrst", "ti,syscon-reset";
-+				#reset-cells = <1>;
-+
-+				ti,reset-bits = <
-+					0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_SET|DEASSERT_CLEAR|STATUS_SET)   /* 0: pcrst-dsp0 */
-+					0xa40 5 0xa44 3 0     0 (ASSERT_SET|DEASSERT_CLEAR|STATUS_NONE)  /* 1: pcrst-example */
-+				>;
-+			};
-+		};
-+
-+		dsp0: dsp0 {
-+			...
-+			resets = <&pscrst 0>;
-+			...
-+		};
-+	};
-+};
-diff --git a/include/dt-bindings/reset/ti-syscon.h b/include/dt-bindings/reset/ti-syscon.h
-new file mode 100644
-index 0000000..884fd91
---- /dev/null
-+++ b/include/dt-bindings/reset/ti-syscon.h
-@@ -0,0 +1,38 @@
++++ b/drivers/reset/reset-ti-syscon.c
+@@ -0,0 +1,237 @@
 +/*
-+ * TI Syscon Reset definitions
++ * TI SYSCON regmap reset driver
 + *
 + * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
++ *	Andrew F. Davis <afd@ti.com>
++ *	Suman Anna <afd@ti.com>
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
 + */
 +
-+#ifndef __DT_BINDINGS_RESET_TI_SYSCON_H__
-+#define __DT_BINDINGS_RESET_TI_SYSCON_H__
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/reset-controller.h>
 +
-+/*
-+ * The reset does not support the feature and corresponding
-+ * values are not valid
++#include <dt-bindings/reset/ti-syscon.h>
++
++/**
++ * struct ti_syscon_reset_control - reset control structure
++ * @assert_offset: reset assert control register offset from syscon base
++ * @assert_bit: reset assert bit in the reset assert control register
++ * @deassert_offset: reset deassert control register offset from syscon base
++ * @deassert_bit: reset deassert bit in the reset deassert control register
++ * @status_offset: reset status register offset from syscon base
++ * @status_bit: reset status bit in the reset status register
++ * @flags: reset flag indicating how the (de)assert and status are handled
 + */
-+#define ASSERT_NONE	(1 << 0)
-+#define DEASSERT_NONE	(1 << 1)
-+#define STATUS_NONE	(1 << 2)
++struct ti_syscon_reset_control {
++	unsigned int assert_offset;
++	unsigned int assert_bit;
++	unsigned int deassert_offset;
++	unsigned int deassert_bit;
++	unsigned int status_offset;
++	unsigned int status_bit;
++	u32 flags;
++};
 +
-+/* When set this function is activated by setting(vs clearing) this bit */
-+#define ASSERT_SET	(1 << 3)
-+#define DEASSERT_SET	(1 << 4)
-+#define STATUS_SET	(1 << 5)
++/**
++ * struct ti_syscon_reset_data - reset controller information structure
++ * @rcdev: reset controller entity
++ * @regmap: regmap handle containing the memory-mapped reset registers
++ * @controls: array of reset controls
++ * @nr_controls: number of controls in control array
++ */
++struct ti_syscon_reset_data {
++	struct reset_controller_dev rcdev;
++	struct regmap *regmap;
++	struct ti_syscon_reset_control *controls;
++	unsigned int nr_controls;
++};
 +
-+/* The following are the inverse of the above and are added for consistency */
-+#define ASSERT_CLEAR	(0 << 3)
-+#define DEASSERT_CLEAR	(0 << 4)
-+#define STATUS_CLEAR	(0 << 5)
++#define to_ti_syscon_reset_data(rcdev)	\
++	container_of(rcdev, struct ti_syscon_reset_data, rcdev)
 +
-+#endif
++/**
++ * ti_syscon_reset_assert() - assert device reset
++ * @rcdev: reset controller entity
++ * @id: ID of the reset to be asserted
++ *
++ * This function implements the reset driver op to assert a device's reset.
++ * This asserts the reset in a manner prescribed by the reset flags.
++ *
++ * Return: 0 for successful request, else a corresponding error value
++ */
++static int ti_syscon_reset_assert(struct reset_controller_dev *rcdev,
++				  unsigned long id)
++{
++	struct ti_syscon_reset_data *data = to_ti_syscon_reset_data(rcdev);
++	struct ti_syscon_reset_control *control;
++	unsigned int mask, value;
++
++	if (id >= data->nr_controls)
++		return -EINVAL;
++
++	control = &data->controls[id];
++
++	if (control->flags & ASSERT_NONE)
++		return -ENOTSUPP; /* assert not supported for this reset */
++
++	mask = BIT(control->assert_bit);
++	value = (control->flags & ASSERT_SET) ? mask : 0x0;
++
++	return regmap_update_bits(data->regmap, control->assert_offset, mask, value);
++}
++
++/**
++ * ti_syscon_reset_deassert() - deassert device reset
++ * @rcdev: reset controller entity
++ * @id: ID of reset to be deasserted
++ *
++ * This function implements the reset driver op to deassert a device's reset.
++ * This deasserts the reset in a manner prescribed by the reset flags.
++ *
++ * Return: 0 for successful request, else a corresponding error value
++ */
++static int ti_syscon_reset_deassert(struct reset_controller_dev *rcdev,
++				    unsigned long id)
++{
++	struct ti_syscon_reset_data *data = to_ti_syscon_reset_data(rcdev);
++	struct ti_syscon_reset_control *control;
++	unsigned int mask, value;
++
++	if (id >= data->nr_controls)
++		return -EINVAL;
++
++	control = &data->controls[id];
++
++	if (control->flags & DEASSERT_NONE)
++		return -ENOTSUPP; /* deassert not supported for this reset */
++
++	mask = BIT(control->deassert_bit);
++	value = (control->flags & DEASSERT_SET) ? mask : 0x0;
++
++	return regmap_update_bits(data->regmap, control->deassert_offset, mask, value);
++}
++
++/**
++ * ti_syscon_reset_status() - check device reset status
++ * @rcdev: reset controller entity
++ * @id: ID of the reset for which the status is being requested
++ *
++ * This function implements the reset driver op to return the status of a
++ * device's reset.
++ *
++ * Return: 0 if reset is deasserted, true if reset is asserted, else a
++ * corresponding error value
++ */
++static int ti_syscon_reset_status(struct reset_controller_dev *rcdev,
++				  unsigned long id)
++{
++	struct ti_syscon_reset_data *data = to_ti_syscon_reset_data(rcdev);
++	struct ti_syscon_reset_control *control;
++	unsigned int reset_state;
++	int ret;
++
++	if (id >= data->nr_controls)
++		return -EINVAL;
++
++	control = &data->controls[id];
++
++	if (control->flags & STATUS_NONE)
++		return -ENOTSUPP; /* status not supported for this reset */
++
++	ret = regmap_read(data->regmap, control->status_offset, &reset_state);
++	if (ret)
++		return ret;
++
++	return (reset_state & BIT(control->status_bit)) &&
++			(control->flags & STATUS_SET);
++}
++
++static struct reset_control_ops ti_syscon_reset_ops = {
++	.assert		= ti_syscon_reset_assert,
++	.deassert	= ti_syscon_reset_deassert,
++	.status		= ti_syscon_reset_status,
++};
++
++static int ti_syscon_reset_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct ti_syscon_reset_data *data;
++	struct regmap *regmap;
++	const __be32 *list;
++	struct ti_syscon_reset_control *controls;
++	int size, nr_controls, i;
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	regmap = syscon_node_to_regmap(np->parent);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	list = of_get_property(np, "ti,reset-bits", &size);
++	if (!list || (size / sizeof(*list)) % 7 != 0) {
++		dev_err(dev, "invalid DT reset description\n");
++		return -EINVAL;
++	}
++
++	nr_controls = (size / sizeof(*list)) / 7;
++	controls = devm_kzalloc(dev, nr_controls * sizeof(*controls), GFP_KERNEL);
++	if (!controls)
++		return -ENOMEM;
++
++	for (i = 0; i < nr_controls; i++) {
++		controls[i].assert_offset = be32_to_cpup(list++);
++		controls[i].assert_bit = be32_to_cpup(list++);
++		controls[i].deassert_offset = be32_to_cpup(list++);
++		controls[i].deassert_bit = be32_to_cpup(list++);
++		controls[i].status_offset = be32_to_cpup(list++);
++		controls[i].status_bit = be32_to_cpup(list++);
++		controls[i].flags = be32_to_cpup(list++);
++	}
++
++	data->rcdev.ops = &ti_syscon_reset_ops;
++	data->rcdev.owner = THIS_MODULE;
++	data->rcdev.of_node = np;
++	data->rcdev.nr_resets = nr_controls;
++	data->regmap = regmap;
++	data->controls = controls;
++	data->nr_controls = nr_controls;
++
++	platform_set_drvdata(pdev, data);
++
++	return devm_reset_controller_register(dev, &data->rcdev);
++}
++
++static const struct of_device_id ti_syscon_reset_of_match[] = {
++	{ .compatible = "ti,syscon-reset", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, ti_syscon_reset_of_match);
++
++static struct platform_driver ti_syscon_reset_driver = {
++	.probe = ti_syscon_reset_probe,
++	.driver = {
++		.name = "ti-syscon-reset",
++		.of_match_table = ti_syscon_reset_of_match,
++	},
++};
++module_platform_driver(ti_syscon_reset_driver);
++
++MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
++MODULE_AUTHOR("Suman Anna <s-anna@ti.com>");
++MODULE_DESCRIPTION("TI SYSCON Regmap Reset Driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.9.0
