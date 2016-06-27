@@ -1,180 +1,78 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] reset: add TI SYSCON based reset driver
-Date: Mon, 27 Jun 2016 10:23:13 -0500
-Message-ID: <577144E1.1010100@ti.com>
-References: <20160620184607.4380-1-afd@ti.com>
- <20160620184607.4380-3-afd@ti.com> <1466590772.4123.38.camel@pengutronix.de>
- <576AEB17.7070302@ti.com> <1466672754.2278.34.camel@pengutronix.de>
- <576BF20D.8040504@ti.com> <1466699297.2278.111.camel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] drm: Add DT bindings documentation for OpenCores
+ VGA/LCD controller
+Date: Mon, 27 Jun 2016 10:24:53 -0500
+Message-ID: <CAL_JsqL2n1gfPmaByV=UbofR8WWiz9bcYsB5_ix6a9dOn=G8GA@mail.gmail.com>
+References: <1465479199-9810-1-git-send-email-andrea.merello@gmail.com>
+ <20160610173621.GA17641@rob-hp-laptop>
+ <CAN8YU5MnscQdeC4nx=_YcTmG8peS=mp3vLnvH13dqBfTovM46Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466699297.2278.111.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAN8YU5MnscQdeC4nx=_YcTmG8peS=mp3vLnvH13dqBfTovM46Q@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrea Merello <andrea.merello@gmail.com>
+Cc: Claudio Lorini <claudio.lorini@iit.it>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Francesco Diotalevi <francesco.diotalevi@iit.it>
 List-Id: devicetree@vger.kernel.org
 
-On 06/23/2016 11:28 AM, Philipp Zabel wrote:
-> Am Donnerstag, den 23.06.2016, 09:28 -0500 schrieb Andrew F. Davis:
->> On 06/23/2016 04:05 AM, Philipp Zabel wrote:
->>> Am Mittwoch, den 22.06.2016, 14:46 -0500 schrieb Andrew F. Davis:
->>> [...]
->>>>>> +	depends on HAS_IOMEM
->>>>>> +	select MFD_SYSCON
->>>>>> +	help
->>>>>> +	  This enables the reset driver support for TI devices with
->>>>>> +	  memory-mapped reset registers as part of a syscon device node. If
->>>>>> +	  you wish to use the reset framework for such memory-mapped devices,
->>>>>> +	  say Y here. Otherwise, say N.
->>>>>
->>>>> Actually, do you need the user configurable option at all?
->>>>
->>>> I'm not sure, right now it is selected by other things, but that is true
->>>> for much of Kconfig, it is not platform dependent so it doesn't need to
->>>> only be enabled by arch, it probably isn't hurting anything to leave it?
->>>
->>> No, that's okay. So the intention is to make it possible to enable it
->>> for COMPILE_TESTs on architectures other than TI?
->>
->> I was thinking more that it should be usable on non-TI architectures and
->> so can be user enabled if needed.
-> 
-> Those architectures could also just select it, then. Having the option
-> might improve discoverability though.
-> 
-> [...]
->>> So far, I have seen the following variants. Depending on the hardware, a
->>> reset could be:
->>> - asserted by setting a bit
->>> - asserted by clearing a bit
->>> - deasserted by clearing/setting the same bit
->>> - deasserted by setting/clearing the same bit in another register
->>> - triggered to be asserted/deasserted automatically with some specific
->>>   timing that the hardware knows about (in that case the manual
->>>   assert/deassert is not available)
->>> The status of the reset line could be read via
->>> - the same bit that is used to assert/deassert
->>> - the same bit in another register
->>> - not at all
->>>
->>> What I've not yet seen but surely exists somewhere is the case where
->>> assert/deassert/status bits are at different bit positions either in the
->>> same register or in different registers.
->>
->> Exactly why I was thinking having a node for the resets would be more
->> future proof, we could add more properties later:
->>
->> pscrst-dsp: dsp {
->> 	reset-control = <0xa3c 8 RESET_ASSERT_CLEAR>;
->> 	reset-status = <0x83c 8 RESET_ASSERT_CLEAR>;
->> +	reset-deassert = <0x840 3 RESET_ASSERT_SET>;
->> +	reset-toggle-time-ms = <20>;
->> };
->>
->> While a fixed length array does make for a more condensed binding we
->> don't get much flexibility.
->>
->> What we could also do is have a longer array then use macros to trim it
->> down for simple cases:
->>
->> reset-bits = <
->> 	SINGLE_BIT_RESET(0xa3c, 8)
->> 	SINGLE_BIT_RESET(0xa40, 7)
->> 	SINGLE_BIT_RESET(0xa44, 6)
->>> ;
-> 
-> I think there has been opposition in the past against hiding things more
-> complex than a single value behind macros.
-> 
->> Each real entry could have 9 fields that the macro would expand into:
->> 	(assert reg) (assert bit) (assert flag)
->> 	(deassert reg) (deassert bit) (deassert flag)
->> 	(status reg) (status bit) (status flag)
->>
->> This would be able to handle all of the above cases except the timing
->> one, that case can always be handled by a dedicated driver for that system.
-> 
-> How about seven:
-> 	(assert reg) (assert bit)
-> 	(deassert reg) (deassert bit)
->  	(status reg) (status bit)
->         (flags)
-> 
-> reset-bits = <
-> 	0xa3c 8 0xa3c 8 0x83c 8 (ASSERT_CLEAR|DEASSERT_SET|STATUS_SET)
->> ;
-> 
-
-I like this, we could also add a none flag:
-
-STATUS_SET
-STATUS_CLEAR
-STATUS_NONE
-
-to note that this reset doesn't support this and that the numbers given
-are not valid.
-
->> My goal here, I would like to believe, aligns with the goals of DT in
->> general, I would like to see one kernel work on many platforms without
->> having to compile-in a bunch of SoC specific info. Some SoCs will need
->> their own reset driver for when they do something unique (like this
->> reset driver I will post next cycle which sends a message to a power
->> management chip for its resets:
->> http://git.ti.com/gitweb/?p=ti-linux-kernel/ti-linux-kernel.git;a=blob;f=drivers/reset/reset-ti-sci.c;h=3636dc176c8b5c4449eefc1fe13df7b912cec73e;hb=refs/heads/ti-lsk-linux-4.4.y
->> )
->> but I see no reason a bunch of different drivers for simple register bit
->> resets with the only difference being a #define offset. I hope that this
->> effort will get ahead of these drivers and reduce the maintenance burden
->> for you.
-> 
-> The problem of reducing the amount of simple drivers is completely
-> orthogonal to agreeing on a fitting DT binding. A common driver could
-> just as well have static syscon_reset_control arrays per compatible
-> compiled in.
-> 
->> So how much is handled by this driver is up to you, (hopefully without
->> trying to handle every possible case :)).
-> 
-> It's also up to the DT maintainers to approve the bindings.
-> 
-
-Looks like it got an ACK, almost makes me not want to touch it now :/
-
-> I have no delusions that we have to find a compromise between
-> driver/binding complexity and the number of supported common cases.
-> The reason I find it difficult to make a decision is I don't feel like I
-> have enough data.
-> Should we support separate status reg? Obviously, you need it. Separate
-> deassert reg? Questionable. Those devices usually have set/clear
-> registers dedicated to resets and as such are not a good fit for this
-> driver anyway. assert/deassert/status bits at different positions? Maybe
-> not even needed. Support for triggered, self-clearing resets? Maybe
-> better handled by a different driver, too.
-> 
-
-Well we can look at existing drivers, a quick looks seems to indicate
-the above scheme can handle the reset types currently handled by:
-
-hi6220_reset.c
-reset-ath79.c
-reset-meson.c
-reset-pistachio.c
-reset-socfpga.c
-reset-sunxi.c
-reset-zynq.c
-
-this is most of the current single bit reset drivers, the only ones that
-cannot be handled are ones with timing constraints and ones that need
-reset hardware setup. So I would say this is a good base set for
-covering many simple reset controllers.
-
-I'll push v5 with fixes from these comments and the DT changes here shortly.
-
-Thanks,
-Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBKdW4gMjcsIDIwMTYgYXQgNjoyMSBBTSwgQW5kcmVhIE1lcmVsbG8KPGFuZHJlYS5t
+ZXJlbGxvQGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gRnJpLCBKdW4gMTAsIDIwMTYgYXQgNzozNiBQ
+TSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4+IE9uIFRodSwgSnVuIDA5
+LCAyMDE2IGF0IDAzOjMzOjE5UE0gKzAyMDAsIEFuZHJlYSBNZXJlbGxvIHdyb3RlOgo+Pj4gU2ln
+bmVkLW9mZi1ieTogQW5kcmVhIE1lcmVsbG8gPGFuZHJlYS5tZXJlbGxvQGdtYWlsLmNvbT4KPj4+
+IENjOiBTdGVmYW4gS3Jpc3RpYW5zc29uIDxzdGVmYW4ua3Jpc3RpYW5zc29uQHNhdW5hbGFodGku
+Zmk+Cj4+PiBDYzogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPj4+IENj
+OiBGcmFuY2VzY28gRGlvdGFsZXZpIDxmcmFuY2VzY28uZGlvdGFsZXZpQGlpdC5pdD4KPj4+IENj
+OiBDbGF1ZGlvIExvcmluaSA8Y2xhdWRpby5sb3JpbmlAaWl0Lml0Pgo+Pj4gLS0tCj4+PiAgLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvb3BlbmNvcmVzLG9jZHJtLnR4dCAgICAgICAgICAgfCAyNyArKysr
+KysrKysrKysrKysrKysrKysrCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKykK
+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvb3BlbmNvcmVzLG9jZHJtLnR4dAo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9vcGVuY29yZXMsb2Nkcm0udHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvb3BlbmNvcmVzLG9jZHJt
+LnR4dAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGluZGV4IDAwMDAwMDAuLjhkMzZkZTUK
+Pj4+IC0tLSAvZGV2L251bGwKPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L29wZW5jb3JlcyxvY2RybS50eHQKPj4+IEBAIC0wLDAgKzEsMjcgQEAKPj4+
+ICtPcGVuQ29yZXMgVkdBL0xDRCBjb250cm9sbGVyCj4+PiArCj4+PiArUmVxdWlyZWQgcHJvcGVy
+dGllczoKPj4+ICstIGNvbXBhdGlibGU6ICJvcGVuY29yZXMsb2Nkcm0iCj4+Cj4+IE5hbWUgdGhp
+cyBiYXNlZCBvbiB3aGF0IHRoZSBoL3cgYmxvY2sgaXMgY2FsbGVkLCBub3QgYSBMaW51eCBzdWJz
+eXN0ZW0uCj4KPiBPay4KPgo+IFNvbWV0aGluZyBsaWtlICJvcGVuY29yZXMsdmlkZW8iID8KClRo
+ZSBWR0EvTENEIGNvbnRyb2xsZXIgSVAgYmxvY2sgaXMganVzdCBjYWxsZWQgInZpZGVvIj8KCj4g
+VGhlIG9sZGVyIGZyYW1lYnVmZmVyIGRyaXZlciBoYXMgIm9wZW5jb3JlcyxvY2ZiIjsgSSBhc3N1
+bWVkIHRoZQo+IHN1ZmZpeCAtZmIgd2FzIGJlY2F1c2Ugb2YgaXQgaXMgYSAiZnJhbWVidWZmZXIi
+IF9kcml2ZXJfLCBidXQgbWF5YmUgaXQKPiBpcyBiZWNhdXNlIHRoZXkgY29uc2lkZXIgaXQgYSAi
+ZnJhbWVidWZmZXIiIF9kZXZpY2VfLgoKQ291bGQgYmUgZWl0aGVyLiBUaGUgRkIgYW5kIERSTSAi
+YmluZGluZ3MiIGhhdmUgYmVlbiBmbGF3ZWQgaW4KZ2VuZXJhbC4gVGhlIGJpbmRpbmdzIHNob3Vs
+ZCBkZXNjcmliZSBoYXJkd2FyZSBibG9ja3MgYW5kIHRoZQpjb25uZWN0aW9ucyBiZXR3ZWVuIHRo
+ZW0sIG5vdCB3aGF0IHRoZSBrZXJuZWwgc3Vic3lzdGVtIHdhbnRzLgoKPiBNYXliZSBJIGNhbiBr
+ZWVwIHRoZSBzYW1lICJjb21wYXRpYmxlIiBzdHJpbmc/IElzIGl0IG9rIHRvIGhhdmUgdHdvCj4g
+ZHJpdmVycyAobWF5YmUgdGVtcG9yYXJpbHksIHVudGlsIHRoZSBvbGRlciBvbmUgZmFkZXMgb3V0
+KSB3aXRoIHRoZQo+IHNhbWUgImNvbXBhdGlibGUiID8KCkluIHByaW5jaXBhbCwgdGhhdCBpcyBl
+eGFjdGx5IGhvdyBpdCBzaG91bGQgd29yay4gSG93ZXZlciwgdGhlIEZCCmJpbmRpbmcgaXMgcHJv
+YmFibHkgaW5jb21wbGV0ZSBvciBmbGF3ZWQuIElmIGtlZXBpbmcgdGhlIGNvbXBhdGlibGUKc3Ry
+aW5nIGlzIGVub3VnaCBmb3IgaXQgdG8gd29yaywgdGhlbiB0aGF0IGlzIGZpbmUuCgo+PiBJcyB0
+aGVyZSBhbnkgc29ydCBvZiB2ZXJzaW9uaW5nIGZvciBPcGVuQ29yZSBJUCB0aGF0IHlvdSBjYW4g
+aW5jbHVkZSBpbgo+PiB0aGUgbmFtZT8KPgo+IE5vdCBzdXJlIGFib3V0IHRoaXMuIEknbGwgY2hl
+Y2suCj4KPj4+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhl
+IGNvbnRyb2xsZXIncyByZWdpc3RlcnMuCj4+PiArLSBjbG9ja3M6IE11c3QgY29udGFpbiBhbiBl
+bnRyeSBmb3IgdGhlIHBpeGVsY2xvY2sgZ2VuZXJhdG9yLgo+Pj4gKyAgU2VlIC4uL2Nsb2Nrcy9j
+bG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4+PiArCj4+PiArUmVxdWlyZWQgc3ViLW5v
+ZGVzOgo+Pj4gKy0gcG9ydDogdGhlIGNvbm5lY3Rpb24gdG8gYSBEUk0gYnJpZGdlLiAgVGhlIGNv
+bm5lY3Rpb24gaXMgbW9kZWxsZWQKPj4KPj4gRG9uJ3QgaW5jbHVkZSBMaW51eCBkcml2ZXIgZGV0
+YWlscyAoRFJNKSBpbiBiaW5kaW5ncy4KPgo+IFlvdSBtZWFuIHRlbGxpbmcgdGhhdCB0aGUgcG9y
+dCBtdXN0IGJlIGEgY29ubmVjdGlvbiB0byBhIERSTSBicmlkZ2UsCj4gbGVhdmluZyBvdXQgZnVy
+dGhlciBkZXRhaWxzPwoKVGhlIGJpbmRpbmcgaXRzZWxmIGFuZCBkZXNjcmlwdGlvbiBzaG91bGQg
+bm90IGNvbnRhaW4gdGhlIHdvcmQgRFJNLgpKdXN0IHNheSBjb25uZWN0aW9uIHRvIGJyaWRnZSBj
+aGlwIG9yIGNvbm5lY3Rvci4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
