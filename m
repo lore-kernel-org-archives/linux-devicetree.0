@@ -1,7 +1,7 @@
 From: Tai Nguyen <ttnguyen@apm.com>
-Subject: [PATCH v5 2/4] Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
-Date: Mon, 27 Jun 2016 14:54:16 -0700
-Message-ID: <1467064458-22143-3-git-send-email-ttnguyen@apm.com>
+Subject: [PATCH v5 4/4] arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
+Date: Mon, 27 Jun 2016 14:54:18 -0700
+Message-ID: <1467064458-22143-5-git-send-email-ttnguyen@apm.com>
 References: <1467064458-22143-1-git-send-email-ttnguyen@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1467064458-22143-1-git-send-email-ttnguyen@apm.com>
@@ -11,129 +11,78 @@ Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@l
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/perf/apm-xgene-pmu.txt     | 112 +++++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+ arch/arm64/boot/dts/apm/apm-storm.dtsi | 58 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-new file mode 100644
-index 0000000..afb11cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-@@ -0,0 +1,112 @@
-+* APM X-Gene SoC PMU bindings
+diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+index fe30f76..62806e0 100644
+--- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+@@ -566,6 +566,64 @@
+ 			};
+ 		};
+ 
++		pmu: pmu@78810000 {
++			compatible = "apm,xgene-pmu-v2";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			regmap-csw = <&csw>;
++			regmap-mcba = <&mcba>;
++			regmap-mcbb = <&mcbb>;
++			reg = <0x0 0x78810000 0x0 0x1000>;
++			interrupts = <0x0 0x22 0x4>;
 +
-+This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
-+The following PMU devices are supported:
++			pmul3c@7e610000 {
++				compatible = "apm,xgene-pmu-l3c";
++				reg = <0x0 0x7e610000 0x0 0x1000>;
++			};
 +
-+  L3C			- L3 cache controller
-+  IOB			- IO bridge
-+  MCB			- Memory controller bridge
-+  MC			- Memory controller
++			pmuiob@7e940000 {
++				compatible = "apm,xgene-pmu-iob";
++				reg = <0x0 0x7e940000 0x0 0x1000>;
++			};
 +
-+The following section describes the SoC PMU DT node binding.
++			pmucmcb@7e710000 {
++				compatible = "apm,xgene-pmu-mcb";
++				reg = <0x0 0x7e710000 0x0 0x1000>;
++				enable-bit-index = <0>;
++			};
 +
-+Required properties:
-+- compatible		: Shall be "apm,xgene-pmu" for revision 1 or
-+                          "apm,xgene-pmu-v2" for revision 2.
-+- regmap-csw		: Regmap of the CPU switch fabric (CSW) resource.
-+- regmap-mcba		: Regmap of the MCB-A (memory bridge) resource.
-+- regmap-mcbb		: Regmap of the MCB-B (memory bridge) resource.
-+- reg			: First resource shall be the CPU bus PMU resource.
-+- interrupts            : Interrupt-specifier for PMU IRQ.
++			pmucmcb@7e730000 {
++				compatible = "apm,xgene-pmu-mcb";
++				reg = <0x0 0x7e730000 0x0 0x1000>;
++				enable-bit-index = <1>;
++			};
 +
-+Required properties for L3C subnode:
-+- compatible		: Shall be "apm,xgene-pmu-l3c".
-+- reg			: First resource shall be the L3C PMU resource.
++			pmucmc@7e810000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e810000 0x0 0x1000>;
++				enable-bit-index = <0>;
++			};
 +
-+Required properties for IOB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-iob".
-+- reg			: First resource shall be the IOB PMU resource.
++			pmucmc@7e850000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e850000 0x0 0x1000>;
++				enable-bit-index = <1>;
++			};
 +
-+Required properties for MCB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mcb".
-+- reg			: First resource shall be the MCB PMU resource.
-+- enable-bit-index	: The bit indicates if the according MCB is enabled.
++			pmucmc@7e890000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e890000 0x0 0x1000>;
++				enable-bit-index = <2>;
++			};
 +
-+Required properties for MC subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mc".
-+- reg			: First resource shall be the MC PMU resource.
-+- enable-bit-index	: The bit indicates if the according MC is enabled.
-+
-+Example:
-+	csw: csw@7e200000 {
-+		compatible = "apm,xgene-csw", "syscon";
-+		reg = <0x0 0x7e200000 0x0 0x1000>;
-+	};
-+
-+	mcba: mcba@7e700000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e700000 0x0 0x1000>;
-+	};
-+
-+	mcbb: mcbb@7e720000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e720000 0x0 0x1000>;
-+	};
-+
-+	pmu: pmu@78810000 {
-+		compatible = "apm,xgene-pmu-v2";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		regmap-csw = <&csw>;
-+		regmap-mcba = <&mcba>;
-+		regmap-mcbb = <&mcbb>;
-+		reg = <0x0 0x78810000 0x0 0x1000>;
-+		interrupts = <0x0 0x22 0x4>;
-+
-+		pmul3c@7e610000 {
-+			compatible = "apm,xgene-pmu-l3c";
-+			reg = <0x0 0x7e610000 0x0 0x1000>;
++			pmucmc@7e8d0000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e8d0000 0x0 0x1000>;
++				enable-bit-index = <3>;
++			};
 +		};
 +
-+		pmuiob@7e940000 {
-+			compatible = "apm,xgene-pmu-iob";
-+			reg = <0x0 0x7e940000 0x0 0x1000>;
-+		};
-+
-+		pmucmcb@7e710000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e710000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmcb@7e730000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e730000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e810000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e810000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmc@7e850000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e850000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e890000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e890000 0x0 0x1000>;
-+			enable-bit-index = <2>;
-+		};
-+
-+		pmucmc@7e8d0000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e8d0000 0x0 0x1000>;
-+			enable-bit-index = <3>;
-+		};
-+	};
+ 		pcie0: pcie@1f2b0000 {
+ 			status = "disabled";
+ 			device_type = "pci";
 -- 
 1.9.1
