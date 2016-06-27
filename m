@@ -1,52 +1,45 @@
-From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] support control with using GPIO lines
-Date: Mon, 27 Jun 2016 19:23:23 +0900
-Message-ID: <CAC5umyizTq+widuMa2s24D2BdJHddL5a9meD1mE+64Suu11r0Q@mail.gmail.com>
-References: <1460300366-25248-1-git-send-email-akinobu.mita@gmail.com>
- <20160410151237.GD5377@piout.net> <1460301781.17404.171.camel@gmail.com>
- <20160410153855.GG5377@piout.net> <20160412012518.GQ3351@sirena.org.uk>
- <CAC5umyguFq7vBenkJYM8AWCNJ3oGBKzKAMHHMsO=+OFHtE4b0A@mail.gmail.com>
- <20160427135012.GP3217@sirena.org.uk> <1461765799.2957.4.camel@gmail.com>
- <CAC5umyhLZ7Nvakf84qS73HG=H39mjYf5Lv=BPFnqZt-rTrZvCA@mail.gmail.com> <20160626005534.GY5809@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v2 0/8] mfd/regulator: tps65218: Clean ups
+Date: Mon, 27 Jun 2016 16:31:37 +0530
+Message-ID: <1467025305-13464-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCPM5SUWUYIRBL75YO5QKGQEQSCB7FA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160626005534.GY5809-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, broonie@kernel.org, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-2016-06-26 9:55 GMT+09:00 Alexandre Belloni
-<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> Hi,
->
-> On 29/04/2016 at 14:40:25 +0900, Akinobu Mita wrote :
->> So I think that the way like the patch 3 and 4 in this series showed
->> is reasonable.  And rtc-ds2404, rtc-moxart, and rtc-v3020 do something
->> similar.
->>
->> If there is no complaint, I'll resend patch 3 and 4 with small fixes.
->
-> Are you still planning to send a new version? I understand you had some
-> fixes.
+The series cleans up mainly the regulator driver and implements
+the device tree parsing using the regulator framework. Removes
+all the redundant compatibles for the individual regulators.
 
-I'll be sending the updated patches.  The update contains white space fixes
-reported by checkpatch.pl and simplification for ds1302_ops.
+One of the patch removes redundant read wrapper and makes
+use of regmap_read wherever necessary.
+
+The series is checked for all the regulator registrations on
+am437x-gp-evm and am437x-sk-evm.
+
+Keerthy (8):
+  mfd: tps65218: Remove redundant read wrapper
+  Documentation: regulator: tps65218: Updates according to changes with
+    parsing
+  mfd: tps65218: Use mfd_add_devices instead of of_platform_populate
+  regulator: tps65218: Remove all the compatibles
+  ARM: dts: AM437X-GP-EVM: Remove redundant regulator compatibles
+  ARM: dts: AM437X-SK-EVM: Remove redundant regulator compatibles
+  ARM: dts: AM437X-CM-T43: Remove redundant regulator compatibles
+  ARM: dts: AM43X-EPOS-EVM: Remove redundant regulator compatibles
+
+ .../devicetree/bindings/regulator/tps65218.txt     |  88 +++++++++++---
+ arch/arm/boot/dts/am437x-cm-t43.dts                |   6 -
+ arch/arm/boot/dts/am437x-gp-evm.dts                |   6 -
+ arch/arm/boot/dts/am437x-sk-evm.dts                |   5 -
+ arch/arm/boot/dts/am43x-epos-evm.dts               |   7 --
+ drivers/mfd/tps65218.c                             |  24 ++--
+ drivers/regulator/tps65218-regulator.c             | 134 ++++++++-------------
+ include/linux/mfd/tps65218.h                       |   2 -
+ 8 files changed, 127 insertions(+), 145 deletions(-)
 
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+1.9.1
