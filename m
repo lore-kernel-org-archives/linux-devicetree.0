@@ -1,115 +1,82 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] dt-bindings: i2c: add bindings for nxp,pca9541
-Date: Mon, 27 Jun 2016 06:17:36 -0700
-Message-ID: <57712770.3040204@roeck-us.net>
-References: <1467022282-21062-1-git-send-email-peda@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1467022282-21062-1-git-send-email-peda@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, devicetree@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Jiri Slaby <jslaby@suse.cz>, linux-i2c@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: da850: Add new ECAP and EPWM bindings
+Date: Mon, 27 Jun 2016 09:14:02 -0500
+Message-ID: <1467036842-20913-1-git-send-email-fcooper@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Cc: "Cooper Jr., Franklin" <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2016 03:11 AM, Peter Rosin wrote:
-> Fill the gap for this pre-existing driver.
->
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->   .../devicetree/bindings/i2c/i2c-arb-pca9541.txt    | 33 ++++++++++++++++++++++
->   MAINTAINERS                                        |  1 +
->   2 files changed, 34 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
->
-> Hi!
->
-> I'm wondering about this driver. It is not a trivial device, and yet it
-> has historically relied on the i2c core matching the chip w/o vendor
-> prefix. This is not ideal. But what to do about the driver implementing
-> this in terms of an i2c-mux, somthing which the chip is not; It is an
-> i2c arbitrator. It just happens to rely on the i2c mux core also handling
-> i2c gates and i2c arbitrators. But that seems like a Linux detail. So I
-> don't know what to do here?
->
+From: "Cooper Jr., Franklin" <fcooper-l0cyMroinI0@public.gmane.org>
 
-The concept of arbitrators didn't exist when I wrote the driver. I would not
-have a problem with renaming the file if that is what you are asking for.
+Switch to a new ECAP and EPWM bindings that doesn't depend on hwmod to
+provide the various required clocks.
 
-> That is, the patch - as is - describes something that would be trivial to
-> support today, but at the same time it seems to be too tied to Linux.
->
-> The problem is that the i2c@0 intermediate node is not really needed, but
-> at the same time removing it would cause a disruption for the driver since
-> it can't really use the i2c mux core if that node isn't there. I don't
-> see a simple way to fix that in the i2c mux core either (but admittedly
-> haven't given it too much thought).
->
+Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
 
-The gpio arbitrator uses the same principle as well. Why not just leave it
-alone ? Besides, I think it is a good idea to have it, since it groups
-the i2c devices behind the chip together. I would not consider that to be
-a Linuxism, but a design choice.
+This patch is a da850 specific version of:
+ARM: dts: am437x/am33xx/da850: Add new ECAP and EPWM bindings
+https://patchwork.kernel.org/patch/9005661/
 
-Guenter
+This patch was created since the da850 portion didn't apply cleanly in
+the original patch.
 
-> Any suggestions?
->
-> Cheers,
-> Peter
->
-> PS. The driver source is in drivers/i2c/muxes/i2c-mux-pca9541.c
->
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt b/Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
-> new file mode 100644
-> index 000000000000..edbe84935906
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
-> @@ -0,0 +1,33 @@
-> +* NXP PCA9541 I2C bus master selector
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must be "nxp,pca9541"
-> +
-> +  - reg: The I2C address of the device.
-> +
-> +  The following required properties are defined externally:
-> +
-> +  - Standard I2C mux properties. See i2c-mux.txt in this directory.
-> +  - I2C child bus nodes. See i2c-mux.txt in this directory.
-> +
-> +
-> +Example:
-> +
-> +	i2c-arbitrator@74 {
-> +		compatible = "nxp,pca9541";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x74>;
-> +
-> +		i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			eeprom@54 {
-> +				compatible = "at,24c08";
-> +				reg = <0x54>;
-> +			};
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e1b090f86e0d..3dd44d0d166c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5521,6 +5521,7 @@ S:	Maintained
->   F:	Documentation/i2c/i2c-topology
->   F:	Documentation/i2c/muxes/
->   F:	Documentation/devicetree/bindings/i2c/i2c-mux*
-> +F:	Documentation/devicetree/bindings/i2c/i2c-arb*
->   F:	drivers/i2c/i2c-mux.c
->   F:	drivers/i2c/muxes/
->   F:	include/linux/i2c-mux.h
->
+ arch/arm/boot/dts/da850.dtsi | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 25f0f8e..09cf663 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -274,31 +274,36 @@
+ 			status = "disabled";
+ 		};
+ 		ehrpwm0: pwm@300000 {
+-			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
++			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
++				     "ti,am33xx-ehrpwm";
+ 			#pwm-cells = <3>;
+ 			reg = <0x300000 0x2000>;
+ 			status = "disabled";
+ 		};
+ 		ehrpwm1: pwm@302000 {
+-			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
++			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
++				     "ti,am33xx-ehrpwm";
+ 			#pwm-cells = <3>;
+ 			reg = <0x302000 0x2000>;
+ 			status = "disabled";
+ 		};
+ 		ecap0: ecap@306000 {
+-			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
++			compatible = "ti,da850-ecap", "ti,am3352-ecap",
++				     "ti,am33xx-ecap";
+ 			#pwm-cells = <3>;
+ 			reg = <0x306000 0x80>;
+ 			status = "disabled";
+ 		};
+ 		ecap1: ecap@307000 {
+-			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
++			compatible = "ti,da850-ecap", "ti,am3352-ecap",
++				     "ti,am33xx-ecap";
+ 			#pwm-cells = <3>;
+ 			reg = <0x307000 0x80>;
+ 			status = "disabled";
+ 		};
+ 		ecap2: ecap@308000 {
+-			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
++			compatible = "ti,da850-ecap", "ti,am3352-ecap",
++				     "ti,am33xx-ecap";
+ 			#pwm-cells = <3>;
+ 			reg = <0x308000 0x80>;
+ 			status = "disabled";
+-- 
+2.7.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
