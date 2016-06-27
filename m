@@ -1,65 +1,112 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3] ARM: sun8i: Add Parrot Board DTS
-Date: Mon, 27 Jun 2016 11:22:04 +0200
-Message-ID: <20160627092204.GU4000@lukather>
-References: <1466763001-24117-1-git-send-email-quentin.schulz@free-electrons.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v4 01/13] devicetree: bindings: Renesas APMU and SMP
+ Enable method
+Date: Mon, 27 Jun 2016 11:44:26 +0200
+Message-ID: <CAMuHMdWvbWS=-tjcHo_iKpYMOtTd_e1y_dHjfrKOTh7PuezwhQ@mail.gmail.com>
+References: <1466072862-28030-1-git-send-email-geert+renesas@glider.be> <1466072862-28030-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xku3GkZTJumTa1rO"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466763001-24117-1-git-send-email-quentin.schulz@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, thomas.petazzoni@free-electrons.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466072862-28030-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keita Kobayashi <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 16, 2016 at 12:27 PM, Geert Uytterhoeven
+<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+>
+> Add DT binding documentation for the APMU hardware and add "renesas,apmu"
+> to the list of enable methods for the ARM cpus.
+>
+> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> v4:
+>   - s/reigsters/registers/,
+>   - Use "renesas,<soctype>-apmu" instead of "renesas,apmu-<soctype>",
+>
+> v3:
+>   - s/Until/Unit/g,
+>
+> v2:
+>   - No changes.
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
+>  .../devicetree/bindings/power/renesas,apmu.txt     | 31 ++++++++++++++++++++++
+>  2 files changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/renesas,apmu.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 3f0cbbb8395f84ef..fa7520eb6387edbe 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -204,6 +204,7 @@ nodes to be present and contain the properties described below.
+>                             "qcom,gcc-msm8660"
+>                             "qcom,kpss-acc-v1"
+>                             "qcom,kpss-acc-v2"
+> +                           "renesas,apmu"
 
---xku3GkZTJumTa1rO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 24, 2016 at 12:10:01PM +0200, Quentin Schulz wrote:
-> The Parrot Board is an evaluation board with an Allwinner R16 (assumed
-> to be close to an Allwinner A33), 4GB of eMMC, 512MB of RAM, USB host
-> and OTG, a WiFi/Bluetooth combo chip, a micro SD Card reader, 2
-> controllable buttons, an LVDS port with separated backlight and
-> capacitive touch panel ports, an audio/microphone jack, a camera CSI
-> port, 2 sets of 22 GPIOs and an accelerometer.
->=20
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-
-Fixed the longer by 80 chars issue you had, and applied.
-
+Any Acked-by from the ARM people?
 Thanks!
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+>                             "rockchip,rk3036-smp"
+>                             "rockchip,rk3066-smp"
+>                             "ste,dbx500-smp"
+> diff --git a/Documentation/devicetree/bindings/power/renesas,apmu.txt b/Documentation/devicetree/bindings/power/renesas,apmu.txt
+> new file mode 100644
+> index 0000000000000000..84404c9edff73d97
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/renesas,apmu.txt
+> @@ -0,0 +1,31 @@
+> +DT bindings for the Renesas Advanced Power Management Unit
+> +
+> +Renesas R-Car line of SoCs utilize one or more APMU hardware units
+> +for CPU core power domain control including SMP boot and CPU Hotplug.
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "renesas,<soctype>-apmu", "renesas,apmu" as fallback.
+> +             Examples with soctypes are:
+> +               - "renesas,r8a7790-apmu" (R-Car H2)
+> +               - "renesas,r8a7791-apmu" (R-Car M2-W)
+> +               - "renesas,r8a7792-apmu" (R-Car V2H)
+> +               - "renesas,r8a7793-apmu" (R-Car M2-N)
+> +               - "renesas,r8a7794-apmu" (R-Car E2)
+> +
+> +- reg: Base address and length of the I/O registers used by the APMU.
+> +
+> +- cpus: This node contains a list of CPU cores, which should match the order
+> +  of CPU cores used by the WUPCR and PSTR registers in the Advanced Power
+> +  Management Unit section of the device's datasheet.
+> +
+> +
+> +Example:
+> +
+> +This shows the r8a7791 APMU that can control CPU0 and CPU1.
+> +
+> +       apmu@e6152000 {
+> +               compatible = "renesas,r8a7791-apmu", "renesas,apmu";
+> +               reg = <0 0xe6152000 0 0x188>;
+> +               cpus = <&cpu0 &cpu1>;
+> +       };
+> --
+> 1.9.1
 
---xku3GkZTJumTa1rO
-Content-Type: application/pgp-signature; name="signature.asc"
+Gr{oetje,eeting}s,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+                        Geert
 
-iQIcBAEBAgAGBQJXcPA7AAoJEBx+YmzsjxAgZwoP/Rvhuz08dyfsoaOg2Qh3dLil
-50CEbRZWXWIstPQB4DEiytSOAqDpRHXM2tT+bhEkWk2ciHdUsyv/cJ31jdzj9xT3
-4N6qKCplYOF9fbr/TxNRR2/nMoWzmHllJT4UtZ5eXYMs3c4CCVPJtY5ytaQ4qBvk
-gnN1svRpBnRQk4SuIoyXbj6YsinikUJFwgjmLesKMv+AUZZipwD1vlAHE5FAMgay
-jJUzVMTMZbzEIWM/TCMj2q9C2X3NzfY6W+DZyJplqeer9+Njb0XkqdWpqUi6U0hw
-4JzIylUT6u8lIwUqOEHkfVmTFeChU8fd6Q30yOk+COnmJZLiXUkmtY0SZDjpGR8X
-nOhzK+KnmrAlXPDXnz0GejkE6R2GBEmVvVVJqC6dQfpl3pUZBFrfQW4g1GT2Haiu
-cHMJLxpDtIeexIk2FSKnDSJ4oddyFcvCvbySTwnUy0No6SS0dCKqFdNdsq2S40OM
-PTYW/67H+i8oiydhfClajCwu2Ru4AbOXweb3CairCfOOvjXxwJaC199swetT9vEW
-3Xpq9JhjjU+V+wUzSiRx3lmp2i+psDiX9vK4ZqboU+hYTKmrizR0oLBAskcFGW9P
-45DIeA09QjiM5EfbnePpu7JwELb3QH3PpuRplY931O9hFHNr+gN7tQqsM1adfor0
-cYu5vZedwHe5AodwlorT
-=TW7K
------END PGP SIGNATURE-----
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
---xku3GkZTJumTa1rO--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
