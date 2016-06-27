@@ -1,69 +1,78 @@
 From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v2 1/2] rtc: ds1302: add register access
  abstraction layer
-Date: Mon, 27 Jun 2016 14:44:32 +0200
-Message-ID: <20160627124432.GI29249@piout.net>
+Date: Mon, 27 Jun 2016 14:45:20 +0200
+Message-ID: <20160627124520.GJ29249@piout.net>
 References: <1467026362-29446-1-git-send-email-akinobu.mita@gmail.com>
  <1467026362-29446-2-git-send-email-akinobu.mita@gmail.com>
  <1467028249.3182.11.camel@gmail.com>
+ <20160627124432.GI29249@piout.net>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBMN7YS5QKGQE2LTLX4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBYN7YS5QKGQE3TIY3RI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1467028249.3182.11.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160627124432.GI29249-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
 List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/rtc-linux/subscribe>
-To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/06/2016 at 14:50:49 +0300, Sergei Ianovich wrote :
-> On Mon, 2016-06-27 at 20:19 +0900, Akinobu Mita wrote:
-> > The rtc-ds1302 driver now implemented using SPI 3wire mode.
-> > But I would like to access it with using three wires connected to
-> > GPIO
-> > lines.
+Forgot to add Mark in Cc:
+
+On 27/06/2016 at 14:44:32 +0200, Alexandre Belloni wrote :
+> On 27/06/2016 at 14:50:49 +0300, Sergei Ianovich wrote :
+> > On Mon, 2016-06-27 at 20:19 +0900, Akinobu Mita wrote:
+> > > The rtc-ds1302 driver now implemented using SPI 3wire mode.
+> > > But I would like to access it with using three wires connected to
+> > > GPIO
+> > > lines.
+> > >=20
+> > > This adds abstraction layer for DS1302 register access in order to
+> > > prepare to support for using GPIO lines.=C2=A0=C2=A0This enables to s=
+hare
+> > > common
+> > > code between SPI driver and GPIO driver.
 > >=20
-> > This adds abstraction layer for DS1302 register access in order to
-> > prepare to support for using GPIO lines.=C2=A0=C2=A0This enables to sha=
-re
-> > common
-> > code between SPI driver and GPIO driver.
+> > I don't think this is the right way. DS-1302 is an SPI device, not a
+> > GPIO one. It can be connected to a hardware SPI controller or a
+> > software one (on top of GPIO or memory).
+> >=20
+> > Your patch re-adds Microwire SPI control logic to RTC subsystem, which
+> > was cleared by my rewrite of drivers/rtc/rtc-ds1302.c. The logic is
+> > already present in=C2=A0bitbang_txrx_be_cpha0_lsb() in=C2=A0drivers/spi=
+/spi-
+> > lp8841-rtc.c.
+> >=20
+> > I still think you need to implement=C2=A0spi-gpio-3wire with LSB-first
+> > support in SPI subsystem instead. It wasn't done when I was adding
+> > LP8841 support, because LP8841 was the only use case of Microwire SPI
+> > control logic. If you add it, drivers/spi/spi-lp8841-rtc.c can be
+> > removed and replaced by a GPIO driver to host a new spi-gpio-3wire
+> > device.
 >=20
-> I don't think this is the right way. DS-1302 is an SPI device, not a
-> GPIO one. It can be connected to a hardware SPI controller or a
-> software one (on top of GPIO or memory).
+> Well, back in April, we concluded it was not easily doable after
+> discussing with Mark and there was still issues after implementing it in
+> spi-gpio.
 >=20
-> Your patch re-adds Microwire SPI control logic to RTC subsystem, which
-> was cleared by my rewrite of drivers/rtc/rtc-ds1302.c. The logic is
-> already present in=C2=A0bitbang_txrx_be_cpha0_lsb() in=C2=A0drivers/spi/s=
-pi-
-> lp8841-rtc.c.
+> My understanding is that while microwire seems compatible with SPI mode
+> 0, it actually isn't and this should be treated as a different mode.
+> If we want to do something generic, I think we should have a
+> microwire-gpio driver. Maybe in the SPI subsystem?
 >=20
-> I still think you need to implement=C2=A0spi-gpio-3wire with LSB-first
-> support in SPI subsystem instead. It wasn't done when I was adding
-> LP8841 support, because LP8841 was the only use case of Microwire SPI
-> control logic. If you add it, drivers/spi/spi-lp8841-rtc.c can be
-> removed and replaced by a GPIO driver to host a new spi-gpio-3wire
-> device.
-
-Well, back in April, we concluded it was not easily doable after
-discussing with Mark and there was still issues after implementing it in
-spi-gpio.
-
-My understanding is that while microwire seems compatible with SPI mode
-0, it actually isn't and this should be treated as a different mode.
-If we want to do something generic, I think we should have a
-microwire-gpio driver. Maybe in the SPI subsystem?
-
-How do yo currently select microwire mode for PX270?
+> How do yo currently select microwire mode for PX270?
+>=20
+> --=20
+> Alexandre Belloni, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
 
 --=20
 Alexandre Belloni, Free Electrons
