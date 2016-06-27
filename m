@@ -1,48 +1,61 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [RESEND PATCH v2 1/5] ir-rx51: Fix build after multiarch changes
- broke it
-Date: Mon, 27 Jun 2016 21:19:19 +0300
-Message-ID: <57716E27.2040702@gmail.com>
-References: <1466623341-30130-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <1466623341-30130-2-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <201606231948.51640@pali>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 1/3] watchdog: renesas-wdt: Add support for the r8a7796
+ wdt
+Date: Mon, 27 Jun 2016 20:23:18 +0200
+Message-ID: <20160627182318.GC3505@katana>
+References: <1467049847-7469-1-git-send-email-geert+renesas@glider.be>
+ <1467049847-7469-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <201606231948.51640@pali>
-Sender: linux-pwm-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, sre@kernel.org, pavel@ucw.cz, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Clx92ZfkiYIKRjnr"
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467049847-7469-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--Clx92ZfkiYIKRjnr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 23.06.2016 20:48, Pali Roh=C3=A1r wrote:
-> On Wednesday 22 June 2016 21:22:17 Ivaylo Dimitrov wrote:
->> The ir-rx51 driver for n900 has been disabled since the multiarch
->> changes as plat include directory no longer is SoC specific.
->>
->> Let's fix it with minimal changes to pass the dmtimer calls in
->> pdata. Then the following changes can be done while things can
->> be tested to be working for each change:
->>
->> 1. Change the non-pwm dmtimer to use just hrtimer if possible
->>
->> 2. Change the pwm dmtimer to use Linux PWM API with the new
->>     drivers/pwm/pwm-omap-dmtimer.c and remove the direct calls
->>     to dmtimer functions
->>
->> 3. Parse configuration from device tree and drop the pdata
->>
->> Note compilation of this depends on the previous patch
->> "ARM: OMAP2+: Add more functions to pwm pdata for ir-rx51".
->
-> I think that this extensive description is not needed for commit
-> message. Just for email discussion.
->
+On Mon, Jun 27, 2016 at 07:50:45PM +0200, Geert Uytterhoeven wrote:
+> Document support for the Watchdog Timer (WDT) Controller in the Renesas
+> R-Car M3-W (r8a7796) SoC.
+>=20
+> No driver update is needed.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-I guess Tony can strip the description a bit before applying.
+Acked-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 
-Ivo
+
+--Clx92ZfkiYIKRjnr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXcW8WAAoJEBQN5MwUoCm2WzUQAIk6UrihvGjy1f+l0rosPgJI
+AL+74iAFqQ7cRIIBwjWOYby29wQdDJRUS1OxZ4DSa9yqSRACxe0r+ZJRdew1xmt6
+HTZG/3UDhUWvrHI9SxYRyD2SH6SA3SINDBDIc3rVpS+JRxRtQTmrg43NcG43YQOT
+FHPLuzeAm7RspmAToS/fuDFUzBBfzxYcQUrvvNcDtpND5lDENb2Hh2F+Sx8dmv1F
+WdWy5g9YjXK0D/Ye9ML6nfNJxti7Ua9WrBu2Mg1jBt58AoOlHz+NASDdK+GokxHh
+kPRWengjXpq+X3r4MP0LkPiNJLBPLRP5PffaT/TaoHZVc0QiweeFa6eAo9ceGnP7
+YMEauCyuzCh2TqrNdQn90rCoBGB+ef37GyiqA7Ob2yMZq0HDgHfa3a5D6F8iz9rm
+cKOxUGW1+5RdVfPJBa/B1Pi4KGIgz9LvpAJRL7F3PTp1ML1sLattvgORscmC3ad+
+DG+hh6dVLdNCnXTFW9pq9LuBS+jtV9SdVhoz+S5M8Y1p1+zP7bVhkGOh9B01HWoB
+18hpjoayo4Sgbkf0G3df5Hdd3x+oyA1eAz2EX/pwnNU9K6ZIg6b9d4p8iKHc1ULN
+SanhB/Ac4IeRqzNqqYCi4N2aZ667joPnPGJ3dSmyvnqWj5Iw2P1wITgWRG15taZz
+XbnW2GY6q5PQSGsvDjO2
+=tVlx
+-----END PGP SIGNATURE-----
+
+--Clx92ZfkiYIKRjnr--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
