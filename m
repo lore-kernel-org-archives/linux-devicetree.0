@@ -1,82 +1,108 @@
-From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: da850: Add new ECAP and EPWM bindings
-Date: Mon, 27 Jun 2016 09:14:02 -0500
-Message-ID: <1467036842-20913-1-git-send-email-fcooper@ti.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
-Cc: "Cooper Jr., Franklin" <fcooper-l0cyMroinI0@public.gmane.org>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH v2 1/8] mfd: tps65218: Remove redundant read wrapper
+Date: Mon, 27 Jun 2016 20:00:53 +0530
+Message-ID: <5771389D.5000103@ti.com>
+References: <1467025305-13464-1-git-send-email-j-keerthy@ti.com>
+ <1467025305-13464-2-git-send-email-j-keerthy@ti.com>
+ <20160627122331.GB24377@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160627122331.GB24377@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Keerthy <j-keerthy@ti.com>
+Cc: broonie@kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Cooper Jr., Franklin" <fcooper-l0cyMroinI0@public.gmane.org>
 
-Switch to a new ECAP and EPWM bindings that doesn't depend on hwmod to
-provide the various required clocks.
 
-Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
+On Monday 27 June 2016 05:53 PM, Lee Jones wrote:
+> On Mon, 27 Jun 2016, Keerthy wrote:
+>
+>> Currently read directly calls the repmap read function. Hence
+>> remove the redundant wrapper and use regmap read wherever
+>> needed.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>   drivers/mfd/tps65218.c                 | 16 +---------------
+>>   drivers/regulator/tps65218-regulator.c |  3 ++-
+>>   include/linux/mfd/tps65218.h           |  2 --
+>>   3 files changed, 3 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+>> index 80b9dc3..f20a531 100644
+>> --- a/drivers/mfd/tps65218.c
+>> +++ b/drivers/mfd/tps65218.c
+>> @@ -34,20 +34,6 @@
+>>   #define TPS65218_PASSWORD_REGS_UNLOCK   0x7D
+>>
+>>   /**
+>> - * tps65218_reg_read: Read a single tps65218 register.
+>> - *
+>> - * @tps: Device to read from.
+>> - * @reg: Register to read.
+>> - * @val: Contians the value
+>> - */
+>> -int tps65218_reg_read(struct tps65218 *tps, unsigned int reg,
+>> -			unsigned int *val)
+>> -{
+>> -	return regmap_read(tps->regmap, reg, val);
+>> -}
+>> -EXPORT_SYMBOL_GPL(tps65218_reg_read);
+>> -
+>
+> What about the calls in the GPIO and Misc drivers?
 
-This patch is a da850 specific version of:
-ARM: dts: am437x/am33xx/da850: Add new ECAP and EPWM bindings
-https://patchwork.kernel.org/patch/9005661/
+Thanks Lee Jones for catching this. I will send an updated v3 of the set.
 
-This patch was created since the da850 portion didn't apply cleanly in
-the original patch.
-
- arch/arm/boot/dts/da850.dtsi | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 25f0f8e..09cf663 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -274,31 +274,36 @@
- 			status = "disabled";
- 		};
- 		ehrpwm0: pwm@300000 {
--			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
-+			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
-+				     "ti,am33xx-ehrpwm";
- 			#pwm-cells = <3>;
- 			reg = <0x300000 0x2000>;
- 			status = "disabled";
- 		};
- 		ehrpwm1: pwm@302000 {
--			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
-+			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
-+				     "ti,am33xx-ehrpwm";
- 			#pwm-cells = <3>;
- 			reg = <0x302000 0x2000>;
- 			status = "disabled";
- 		};
- 		ecap0: ecap@306000 {
--			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+			compatible = "ti,da850-ecap", "ti,am3352-ecap",
-+				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x306000 0x80>;
- 			status = "disabled";
- 		};
- 		ecap1: ecap@307000 {
--			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+			compatible = "ti,da850-ecap", "ti,am3352-ecap",
-+				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x307000 0x80>;
- 			status = "disabled";
- 		};
- 		ecap2: ecap@308000 {
--			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+			compatible = "ti,da850-ecap", "ti,am3352-ecap",
-+				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x308000 0x80>;
- 			status = "disabled";
--- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> -/**
+>>    * tps65218_reg_write: Write a single tps65218 register.
+>>    *
+>>    * @tps65218: Device to write to.
+>> @@ -93,7 +79,7 @@ static int tps65218_update_bits(struct tps65218 *tps, unsigned int reg,
+>>   	int ret;
+>>   	unsigned int data;
+>>
+>> -	ret = tps65218_reg_read(tps, reg, &data);
+>> +	ret = regmap_read(tps->regmap, reg, &data);
+>>   	if (ret) {
+>>   		dev_err(tps->dev, "Read from reg 0x%x failed\n", reg);
+>>   		return ret;
+>> diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
+>> index a5e5634..679ab2f 100644
+>> --- a/drivers/regulator/tps65218-regulator.c
+>> +++ b/drivers/regulator/tps65218-regulator.c
+>> @@ -22,6 +22,7 @@
+>>   #include <linux/err.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/of_device.h>
+>> +#include <linux/regmap.h>
+>>   #include <linux/regulator/of_regulator.h>
+>>   #include <linux/regulator/driver.h>
+>>   #include <linux/regulator/machine.h>
+>> @@ -224,7 +225,7 @@ static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
+>>   	unsigned int index;
+>>   	struct tps65218 *tps = rdev_get_drvdata(dev);
+>>
+>> -	retval = tps65218_reg_read(tps, dev->desc->csel_reg, &index);
+>> +	retval = regmap_read(tps->regmap, dev->desc->csel_reg, &index);
+>>   	if (retval < 0)
+>>   		return retval;
+>>
+>> diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
+>> index d58f3b5..7c9241f 100644
+>> --- a/include/linux/mfd/tps65218.h
+>> +++ b/include/linux/mfd/tps65218.h
+>> @@ -276,8 +276,6 @@ struct tps65218 {
+>>   	struct regmap *regmap;
+>>   };
+>>
+>> -int tps65218_reg_read(struct tps65218 *tps, unsigned int reg,
+>> -					unsigned int *val);
+>>   int tps65218_reg_write(struct tps65218 *tps, unsigned int reg,
+>>   			unsigned int val, unsigned int level);
+>>   int tps65218_set_bits(struct tps65218 *tps, unsigned int reg,
+>
