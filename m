@@ -1,54 +1,68 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 3/3] arm64: dts: r8a7796/salvator-x: Enable watchdog timer
-Date: Mon, 27 Jun 2016 20:23:51 +0200
-Message-ID: <20160627182351.GE3505@katana>
-References: <1467049847-7469-1-git-send-email-geert+renesas@glider.be>
- <1467049847-7469-4-git-send-email-geert+renesas@glider.be>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 0/4] ASoC: sunxi: Add i2s controller support
+Date: Mon, 27 Jun 2016 20:32:38 +0200
+Message-ID: <20160627183238.GW4000@lukather>
+References: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Qz2CZ664xQdCRdPu"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="ulNsWUvGrZAj8PMr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467049847-7469-4-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Andrea Venturi <ennesimamail.av@gmail.com>, Code Kipper <codekipper@gmail.com>, gianfranco@moddevices.com
 List-Id: devicetree@vger.kernel.org
 
 
---Qz2CZ664xQdCRdPu
+--ulNsWUvGrZAj8PMr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 27, 2016 at 07:50:47PM +0200, Geert Uytterhoeven wrote:
-> Enable the Watchdog Timer (WDT) controller on the Renesas Salvator-X
-> board equipped with an R-Car M3-W (r8a7796) SoC.
+Hi Mark,
+
+On Wed, Jun 15, 2016 at 11:11:19PM +0200, Maxime Ripard wrote:
+> Hi everyone,
 >=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> This is the second version of the I2S support for the controller found
+> in the Allwinner A10 and later SoCs.
+>=20
+> Playback has been tested with an UDA1380 on an A20-Olinuxino. Capture
+> is not implemented yet, but will come eventually.
+>=20
+> Let me know what you think,
+> Maxime
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Any comments on this one?
 
+Thanks,
+Maxime
 
---Qz2CZ664xQdCRdPu
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--ulNsWUvGrZAj8PMr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXcW83AAoJEBQN5MwUoCm2PIIQAKytv+a+ZqIwJ6lLn1imAxu0
-G1nxkYSdorg79QIW7kGSrXneR1TXfsIjSs7r+4FhmtdPrj0Nyo6yj1alLVS/dcif
-6jWagpCmWfg2Q12Gf9InzDmvO/vqYoH7dve8Li5RlPlJdW1JTWZa769cJnLM92NV
-qyDYK5Jj0eFBkieKZvN70BieyS+ulIKpIfGU/wrAqSMsutJ+ZLN7Nxc+Zr3aCP/e
-IUR6EKgE/0KRilGIsDB0oqhdwvt1A3XbOJ3vVpYVQi95tMMLAm3B88SawygfjOTo
-eQLSfXkqSi525VqxZBcRS7IhvujhSE7k+ndy9Gvn80NSD9lNco3fxxFfyZ8Y1maM
-KLmgVTNOSkxKJhMiUEMP7VcbZ1OaFKLyOOl8PllOhHphPFAhxeYoVlcq51onBVYu
-FAVwKl0CIJXYvNag7ik1Af12w5Bw+mEJkrs9inNkK2wqDTLqQtksOj+vjvv7cOGu
-hDAhq9t6DaFHwecLE7WFlV+FO0e1hwQakXtemC3JykQRlq2Ib50pBub8gDBRBu8M
-6aoHX90bO/avtkND9yib4LqFf8piCn1kV8UIGDmEdNVX0lnIOEVbeityKDY6PZkA
-zSsQrs5/15mYTkzL/waPOwahiD+XRIZo2iVEq1hybwVC0IZJuSqndaZs5N1ZXF2x
-NNbPYZ6Mh+UUWFmU2kmP
-=nFGM
+iQIcBAEBAgAGBQJXcXFGAAoJEBx+YmzsjxAgXEgP/jct/b40Gd+FoW6BQBbDKbtN
+BScNUiMuxtg4EoF1frdtfH88oPM+6o1/5/xaVpXrlW8vAclF+BZHeu2f9OPgGuRn
+CmaWA1WqKRLb68XI0pymfAMT7htoehfqg5PKcwAuDw8rn3ZFfFgJAB4UvVfXcSg/
+S60LvjKNADTbGkICYkwmpJKAVuBt87eI5WyHj53QqU4z+ft4cG+EfTTeIbF3NSJG
+iQ2hYSuKVpwh5hMO1Jqc2RcnSnC80pbqaE/dO6iU71PgmjUteP5YSPayFcRg0yfX
+uUzTbc2ibzImHEnTEltqwIKxu8dqMvYpWGHvdFRvtVXEMhEZO2tdrTSq5jNsNFhO
+Lh7tPHIsCFhKhHDGDj/LQVG+KXSntxmIAW/4jOseO1gP/hxiV8Qa3NTJeh9BY3Bb
+mnvHe3Nq9A72GBGSpYphNLR4IYTJih9sFFcxm92qEMVuAsLtZHEFcKQ7SewbF4pJ
+WDbHACwjsAZD0IxNYtTTznP5VnQM4RI5nnoyg2qSpKw2CM44rdXkIqd7sQzq/9Vi
+nZCqp8y893/bvE3SJ9SM4A86to3ZuSf7aImbRuyhBzCZPdZxkO8LhnYoQEg+e302
++VlQ9zYgohU3NEZNG9W7+uvODzsHeixvse1it+og+0lhygz4phwRGch4MByGoYLH
+ucwuMNTGPi4yCukTsaFE
+=LeZS
 -----END PGP SIGNATURE-----
 
---Qz2CZ664xQdCRdPu--
+--ulNsWUvGrZAj8PMr--
