@@ -1,112 +1,100 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 01/13] devicetree: bindings: Renesas APMU and SMP
- Enable method
-Date: Mon, 27 Jun 2016 11:44:26 +0200
-Message-ID: <CAMuHMdWvbWS=-tjcHo_iKpYMOtTd_e1y_dHjfrKOTh7PuezwhQ@mail.gmail.com>
-References: <1466072862-28030-1-git-send-email-geert+renesas@glider.be> <1466072862-28030-2-git-send-email-geert+renesas@glider.be>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH] dt-bindings: i2c: add bindings for nxp,pca9541
+Date: Mon, 27 Jun 2016 12:11:22 +0200
+Message-ID: <1467022282-21062-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466072862-28030-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keita Kobayashi <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Jiri Slaby <jslaby@suse.cz>, Guenter Roeck <linux@roeck-us.net>, linux-i2c@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 16, 2016 at 12:27 PM, Geert Uytterhoeven
-<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
-> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
->
-> Add DT binding documentation for the APMU hardware and add "renesas,apmu"
-> to the list of enable methods for the ARM cpus.
->
-> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> v4:
->   - s/reigsters/registers/,
->   - Use "renesas,<soctype>-apmu" instead of "renesas,apmu-<soctype>",
->
-> v3:
->   - s/Until/Unit/g,
->
-> v2:
->   - No changes.
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->  .../devicetree/bindings/power/renesas,apmu.txt     | 31 ++++++++++++++++++++++
->  2 files changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/renesas,apmu.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 3f0cbbb8395f84ef..fa7520eb6387edbe 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -204,6 +204,7 @@ nodes to be present and contain the properties described below.
->                             "qcom,gcc-msm8660"
->                             "qcom,kpss-acc-v1"
->                             "qcom,kpss-acc-v2"
-> +                           "renesas,apmu"
+Fill the gap for this pre-existing driver.
 
-Any Acked-by from the ARM people?
-Thanks!
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ .../devicetree/bindings/i2c/i2c-arb-pca9541.txt    | 33 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
 
->                             "rockchip,rk3036-smp"
->                             "rockchip,rk3066-smp"
->                             "ste,dbx500-smp"
-> diff --git a/Documentation/devicetree/bindings/power/renesas,apmu.txt b/Documentation/devicetree/bindings/power/renesas,apmu.txt
-> new file mode 100644
-> index 0000000000000000..84404c9edff73d97
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/renesas,apmu.txt
-> @@ -0,0 +1,31 @@
-> +DT bindings for the Renesas Advanced Power Management Unit
-> +
-> +Renesas R-Car line of SoCs utilize one or more APMU hardware units
-> +for CPU core power domain control including SMP boot and CPU Hotplug.
-> +
-> +Required properties:
-> +
-> +- compatible: Should be "renesas,<soctype>-apmu", "renesas,apmu" as fallback.
-> +             Examples with soctypes are:
-> +               - "renesas,r8a7790-apmu" (R-Car H2)
-> +               - "renesas,r8a7791-apmu" (R-Car M2-W)
-> +               - "renesas,r8a7792-apmu" (R-Car V2H)
-> +               - "renesas,r8a7793-apmu" (R-Car M2-N)
-> +               - "renesas,r8a7794-apmu" (R-Car E2)
-> +
-> +- reg: Base address and length of the I/O registers used by the APMU.
-> +
-> +- cpus: This node contains a list of CPU cores, which should match the order
-> +  of CPU cores used by the WUPCR and PSTR registers in the Advanced Power
-> +  Management Unit section of the device's datasheet.
-> +
-> +
-> +Example:
-> +
-> +This shows the r8a7791 APMU that can control CPU0 and CPU1.
-> +
-> +       apmu@e6152000 {
-> +               compatible = "renesas,r8a7791-apmu", "renesas,apmu";
-> +               reg = <0 0xe6152000 0 0x188>;
-> +               cpus = <&cpu0 &cpu1>;
-> +       };
-> --
-> 1.9.1
+Hi!
 
-Gr{oetje,eeting}s,
+I'm wondering about this driver. It is not a trivial device, and yet it
+has historically relied on the i2c core matching the chip w/o vendor
+prefix. This is not ideal. But what to do about the driver implementing
+this in terms of an i2c-mux, somthing which the chip is not; It is an
+i2c arbitrator. It just happens to rely on the i2c mux core also handling
+i2c gates and i2c arbitrators. But that seems like a Linux detail. So I
+don't know what to do here?
 
-                        Geert
+That is, the patch - as is - describes something that would be trivial to
+support today, but at the same time it seems to be too tied to Linux.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+The problem is that the i2c@0 intermediate node is not really needed, but
+at the same time removing it would cause a disruption for the driver since
+it can't really use the i2c mux core if that node isn't there. I don't
+see a simple way to fix that in the i2c mux core either (but admittedly
+haven't given it too much thought).
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Any suggestions?
+
+Cheers,
+Peter
+
+PS. The driver source is in drivers/i2c/muxes/i2c-mux-pca9541.c
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt b/Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
+new file mode 100644
+index 000000000000..edbe84935906
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
+@@ -0,0 +1,33 @@
++* NXP PCA9541 I2C bus master selector
++
++Required Properties:
++
++  - compatible: Must be "nxp,pca9541"
++
++  - reg: The I2C address of the device.
++
++  The following required properties are defined externally:
++
++  - Standard I2C mux properties. See i2c-mux.txt in this directory.
++  - I2C child bus nodes. See i2c-mux.txt in this directory.
++
++
++Example:
++
++	i2c-arbitrator@74 {
++		compatible = "nxp,pca9541";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x74>;
++
++		i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			eeprom@54 {
++				compatible = "at,24c08";
++				reg = <0x54>;
++			};
++		};
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e1b090f86e0d..3dd44d0d166c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5521,6 +5521,7 @@ S:	Maintained
+ F:	Documentation/i2c/i2c-topology
+ F:	Documentation/i2c/muxes/
+ F:	Documentation/devicetree/bindings/i2c/i2c-mux*
++F:	Documentation/devicetree/bindings/i2c/i2c-arb*
+ F:	drivers/i2c/i2c-mux.c
+ F:	drivers/i2c/muxes/
+ F:	include/linux/i2c-mux.h
+-- 
+2.1.4
