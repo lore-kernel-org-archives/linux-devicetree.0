@@ -1,68 +1,42 @@
 From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: [PATCH v2 2/4] meson-rtc: add device-tree binding
-Date: Mon, 27 Jun 2016 17:44:07 +0100
-Message-ID: <1467045849-495-3-git-send-email-ben.dooks@codethink.co.uk>
+Subject: [PATCH v2 4/4] ARM: meson: enable RTC for ODroid-C1
+Date: Mon, 27 Jun 2016 17:44:09 +0100
+Message-ID: <1467045849-495-5-git-send-email-ben.dooks@codethink.co.uk>
 References: <1467045849-495-1-git-send-email-ben.dooks@codethink.co.uk>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCEPJZEDQIBBBXNPYW5QKGQEKQGYDQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the AMLogic Meson RTC.
+Now the RTC node has been added, enable it on the ODroid-C1
+board. Note, the C1 does not have a battery by default, so
+the RTC will error out on those boards. The C1+ does have
+power to the RTC block whilst the external power is applied.
 
 Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/rtc-amlogic.txt         | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-amlogic.txt b/Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
-new file mode 100644
-index 0000000..efc7672
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
-@@ -0,0 +1,21 @@
-+* AMlogic Meson RTC
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index e50f1a1..5c7826f 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -76,3 +76,8 @@
+ 	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
+ };
 +
-+Required properties:
-+- compatible: should be one of the following describing the hardware:
-+	* "amlogic,meson6-rtc"
-+	* "amlogic,meson8-rtc"
-+	* "amlogic,meson8b-rtc"
++&rtc {
++	status = "okay";
++};
 +
-+- reg: physical register space for the controller's memory mapped registers.
-+
-+Optional properties:
-+- resets: reset controller reference to allow reset of the controller
-+- interrupts: single interrupt reference if interrupt support needed
-+
-+Example:
-+
-+	rtc: rtc@c8100740 {
-+		compatible = "amlogic,meson6-rtc";
-+		reg = <0xc8100740 0x14>;
-+		status = "disabled";
-+	};
 -- 
 2.8.1
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
