@@ -1,159 +1,168 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: dwc2: Add support for STM32F429/439/469 USB OTG
- in FS mode with internal PHY
-Date: Mon, 27 Jun 2016 15:51:45 -0700
-Message-ID: <436eef12-6204-d621-8574-92aea2d374fd@synopsys.com>
-References: <1466562349-5043-1-git-send-email-bruherrera@gmail.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v3 2/2] phy: add a driver for the Rockchip SoC internal
+ PCIe PHY
+Date: Mon, 27 Jun 2016 16:23:01 -0700
+Message-ID: <20160627232301.GA101555@google.com>
+References: <1466040179-30973-1-git-send-email-shawn.lin@rock-chips.com>
+ <5763F665.6070403@ti.com>
+ <c88eb16f-e976-ad52-02fb-5ec7b6e261b9@rock-chips.com>
+ <57678ED2.9000707@ti.com>
+ <428a1393-c6b4-163c-ceec-9b79fdd8ad4a@rock-chips.com>
+ <20160623233737.GB21157@google.com>
+ <180dc842-3daf-a8b2-b333-fb51e4bc4f2a@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466562349-5043-1-git-send-email-bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "a.seppala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <a.seppala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <180dc842-3daf-a8b2-b333-fb51e4bc4f2a@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Wenrui Li <wenrui.li@rock-chips.com>, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/21/2016 7:26 PM, Bruno Herrera wrote:
-> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Shawn,
 
-Please add a commit message describing the purpose of your changes,
-some information about the platform you're adding, and the special
-handling of the GGPIO.
+On Fri, Jun 24, 2016 at 09:37:41AM +0800, Shawn Lin wrote:
+> =E5=9C=A8 2016/6/24 7:37, Brian Norris =E5=86=99=E9=81=93:
+> >On Thu, Jun 23, 2016 at 10:30:17AM +0800, Shawn Lin wrote:
+> >>=E5=9C=A8 2016/6/20 14:36, Kishon Vijay Abraham I =E5=86=99=E9=81=93=
+:
+> >>>On Monday 20 June 2016 06:28 AM, Shawn Lin wrote:
+> >>>>On 2016/6/17 21:08, Kishon Vijay Abraham I wrote:
+> >>>>>On Thursday 16 June 2016 06:52 AM, Shawn Lin wrote:
 
-> ---
->  drivers/usb/dwc2/core.c     | 18 ++++++++++++++++++
->  drivers/usb/dwc2/core.h     |  5 +++++
->  drivers/usb/dwc2/hcd.c      | 12 +++++++++++-
->  drivers/usb/dwc2/hw.h       |  2 ++
->  drivers/usb/dwc2/platform.c | 37 +++++++++++++++++++++++++++++++++++++
->  5 files changed, 73 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/dwc2/core.c b/drivers/usb/dwc2/core.c
-> index 4135a5f..83fbed6 100644
-> --- a/drivers/usb/dwc2/core.c
-> +++ b/drivers/usb/dwc2/core.c
-> @@ -1276,6 +1276,23 @@ static void dwc2_set_param_hibernation(struct dwc2_hsotg *hsotg,
->  	hsotg->core_params->hibernation = val;
->  }
->  
-> +static void dwc2_set_param_stm32_powerdown(struct dwc2_hsotg *hsotg,
-> +		int val)
-> +{
-> +	if (DWC2_OUT_OF_BOUNDS(val, 0, 1)) {
-> +		if (val >= 0) {
-> +			dev_err(hsotg->dev,
-> +				"'%d' invalid for parameter power down\n",
-> +				val);
-> +			dev_err(hsotg->dev, "power down must be 0 or 1\n");
-> +		}
-> +		val = 0;
-> +		dev_dbg(hsotg->dev, "Setting power down to %d\n", val);
-> +	}
-> +
-> +	hsotg->core_params->stm32_powerdown = val;
-> +}
-> +
->  /*
->   * This function is called during module intialization to pass module parameters
->   * for the DWC_otg core.
-> @@ -1323,6 +1340,7 @@ void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
->  	dwc2_set_param_uframe_sched(hsotg, params->uframe_sched);
->  	dwc2_set_param_external_id_pin_ctl(hsotg, params->external_id_pin_ctl);
->  	dwc2_set_param_hibernation(hsotg, params->hibernation);
-> +	dwc2_set_param_stm32_powerdown(hsotg, params->stm32_powerdown);
->  }
->  
->  /*
-> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-> index 3c58d63..d3e4fcb 100644
-> --- a/drivers/usb/dwc2/core.h
-> +++ b/drivers/usb/dwc2/core.h
-> @@ -386,6 +386,10 @@ enum dwc2_ep0_state {
->   *			needed.
->   *			0 - No (default)
->   *			1 - Yes
-> + * @stm32_powerdown:	Enable STM32 specific USB FS transceiver power down
-> + *			control.
-> + *			0 = USB FS transceiver disabled (default)
-> + *			1 = USB FS transceiver enabled
->   *
->   * The following parameters may be specified when starting the module. These
->   * parameters define how the DWC_otg controller should be configured. A
-> @@ -426,6 +430,7 @@ struct dwc2_core_params {
->  	int uframe_sched;
->  	int external_id_pin_ctl;
->  	int hibernation;
-> +	int stm32_powerdown;
->  };
->  
->  /**
-> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-> index 2df3d04..4f9bb93 100644
-> --- a/drivers/usb/dwc2/hcd.c
-> +++ b/drivers/usb/dwc2/hcd.c
-> @@ -118,7 +118,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
->  
->  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->  {
-> -	u32 usbcfg, i2cctl;
-> +	u32 usbcfg, usbgpio, i2cctl;
+> >>>>>>+void rockchip_pcie_phy_laneoff(struct phy *phy)
+> >>>>>>+{
+> >>>>>>+    u32 status;
+> >>>>>>+    struct rockchip_pcie_phy *rk_phy =3D phy_get_drvdata(phy);
+> >>>>>>+    int i;
+> >>>>>>+
+> >>>>>>+    for (i =3D 0; i < PHY_MAX_LANE_NUM; i++) {
+> >>>>>>+        status =3D phy_rd_cfg(rk_phy, PHY_LANE_A_STATUS + i);
+> >>>>>>+        if (!((status >> PHY_LANE_RX_DET_SHIFT) &
+> >>>>>>+               PHY_LANE_RX_DET_TH))
+> >>>>>>+            pr_debug("lane %d is used\n", i);
+> >>>>>>+        else
+> >>>>>>+            regmap_write(rk_phy->reg_base,
+> >>>>>>+                     rk_phy->phy_data->pcie_laneoff,
+> >>>>>>+                     HIWORD_UPDATE(PHY_LANE_IDLE_OFF,
+> >>>>>>+                           PHY_LANE_IDLE_MASK,
+> >>>>>>+                           PHY_LANE_IDLE_A_SHIFT + i));
+> >>>>>>+    }
+> >>>>>>+}
+> >>>>>>+EXPORT_SYMBOL_GPL(rockchip_pcie_phy_laneoff);
+> >
+> >Shawn, I can't find an example of how you planned to use this (thoug=
+h I
+> >can make educated guesses). As such, it's possible there's some
+> >misunderstanding. Maybe you can include a sample patch for the PCIe
+> >controller driver?
+>=20
+> It will be called after rockchip_pcie_init_port for phy to disable
+> the unused lanes.
 
-The convention in this driver would be to just call 'usbgpio' -> 'ggpio'
-
->  	int retval = 0;
->  
->  	/*
-> @@ -142,6 +142,16 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->  				return retval;
->  			}
->  		}
-> +
-> +		if (hsotg->core_params->stm32_powerdown > 0) {
-> +			dev_dbg(hsotg->dev, "STM32 FS PHY enabling transceiver\n");
-> +			/* STM32 uses the GGPIO register as general core
-> +			 * configuration register.
-> +			 */
-> +			usbgpio = dwc2_readl(hsotg->regs + GGPIO);
-> +			usbgpio |= STM32_OTG_GCCFG_PWRDWN;
-> +			dwc2_writel(usbgpio, hsotg->regs + GGPIO);
-> +		}
->  	}
->  
->  	/*
-> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
-> index 281b57b..d5f9294 100644
-> --- a/drivers/usb/dwc2/hw.h
-> +++ b/drivers/usb/dwc2/hw.h
-> @@ -224,6 +224,8 @@
->  
->  #define GPVNDCTL			HSOTG_REG(0x0034)
->  #define GGPIO				HSOTG_REG(0x0038)
-> +#define STM32_OTG_GCCFG_PWRDWN		(1 << 16)
-> +
-
-Also, bitfields for GGPIO should be named: GGPIO_xxx
+A real, working patch would be nice. FWIW, when I try the following
+diff, my PCIe WiFi dies gloriously:
 
 
->  #define GUID				HSOTG_REG(0x003c)
->  #define GSNPSID				HSOTG_REG(0x0040)
->  #define GHWCFG1				HSOTG_REG(0x0044)
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> index fc6f525..d806b94 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -84,6 +84,7 @@ static const struct dwc2_core_params params_hi6220 = {
->  	.uframe_sched			= 0,
->  	.external_id_pin_ctl		= -1,
->  	.hibernation			= -1,
-> +	.stm32_powerdown		= 0,
+diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-r=
+ockchip.c
+index 661d6e04af71..fbb3dd8da0c7 100644
+--- a/drivers/pci/host/pcie-rockchip.c
++++ b/drivers/pci/host/pcie-rockchip.c
+@@ -373,6 +373,8 @@ static struct pci_ops rockchip_pcie_ops =3D {
+ 	.write =3D rockchip_pcie_wr_conf,
+ };
+=20
++extern void rockchip_pcie_phy_laneoff(struct phy *phy);
++
+ /**
+  * rockchip_pcie_init_port - Initialize hardware
+  * @port: PCIe port information
+@@ -533,6 +535,8 @@ static int rockchip_pcie_init_port(struct rockchip_=
+pcie_port *port)
+ 	pcie_write(port, 0x0,
+ 		   PCIE_CORE_AXI_CONF_BASE + PCIE_CORE_OB_REGION_DESC1);
+=20
++	rockchip_pcie_phy_laneoff(port->phy);
++
+ 	return 0;
+ }
+=20
 
-You can probably just leave this out of unrelated configurations since
-it will default to 0.
+> >Related: it might make sense to have the PCIe controller and PHY
+> >drivers/bindings all in the same patch series (with proper threading=
+,
+> >which we already talked about off-list).
+> >
+> >>>>>Er.. don't use export symbols from phy driver. I think it would =
+be nice if you
+> >>>>>can model the driver in such a way that the PCIe driver can cont=
+rol individual
+> >>>>>phy's.
+> >>>>>
+> >>>>
+> >>>>Yes, I was trying to look for a way not to export symbols from
+> >>>>phy... But I failed to find it as there at least need three
+> >>>>interaction between controller and phy which made me believe we
+> >>>>at least need to export one symbol without adding new API for phy=
+=2E
+> >
+> >My interpretation of the above is that Shawn means we might turn off=
+ up
+> >to 3 different lanes (i.e., 3 of 4 supported lanes might be unused).
+>=20
+> yes, pcie drivers support up to 4 lanes. But the device may only
+> support x2. This is beyound the awareness of PCIe controller, so pcie
+> controller can't tell which one(s) should be turned off.
 
-Regards,
-John
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Are you sure the PCIe controller can't know? I'm pretty sure it has kno=
+w
+how many lanes are in use. And your controller even has this coded in
+it:
+
+	status =3D pcie_read(port, PCIE_CORE_CTRL_MGMT_BASE);
+	status =3D  0x1 << ((status >> PCIE_CORE_PL_CONF_LANE_SHIFT) &
+			   PCIE_CORE_PL_CONF_LANE_MASK);
+	dev_dbg(port->dev, "current link width is x%d\n", status);
+
+So, doesn't that mean that out of lanes {0, 1, 2, 3}, that every lane
+other than 0 <=3D lane < width is unused? So you can just disable those=
+,
+and have the same effect as the rockchip_pcie_phy_laneoff() function?
+
+> >>>That can be managed by implementing a small state machine within t=
+he PHY driver.
+> >>
+> >>I don't understand your point of implementing a small state machine
+> >>within the PHY driver.
+> >
+> >I'm not 100% sure I understand, but I think I have a reasonable
+> >interpretation below.
+> >
+> >>Do you mean I need to call vaarious of power_on/off and count the
+> >>on/off times to decide the state machine?
+> >>
+> >>I would appreciate it If you could elaborate this a bit more or
+> >>show me a example. :)
+> >
+> >My interpretation: rather than associating a single PCIe controller
+> >device with a single struct phy that controls up to 4 lanes, Kishon =
+is
+> >suggesting you should have this driver implement 4 phy objects, one =
+for
+> >each lane. You'd need to add #phy-cells =3D <1> to the DT binding, a=
+nd
+> >implement an ->of_xlate() hook so we can associate/address them
+> >properly. Then the PCIe controller would call phy_power_off() on eac=
+h
+> >lane that's not used.
+>=20
+> As I say above, even we have 4 phy objects, PCIe controller still
+> doesn't know which one(s) to be turned off, so you have to call 4 tim=
+es
+> phy_power_off if I understand it correctly. This doesn't look
+> okay to me.
+
+Brian
