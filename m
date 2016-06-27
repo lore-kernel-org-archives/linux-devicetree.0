@@ -1,68 +1,125 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
-Date: Mon, 27 Jun 2016 12:47:35 +0000
-Message-ID: <C89496FEAE474D468F30D558A9468D9F26CF4FCD@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
- <20160602225815.GA5508@rob-hp-laptop>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 3/7] phy: Add set_mode callback
+Date: Mon, 27 Jun 2016 18:17:49 +0530
+Message-ID: <57712075.1090202@ti.com>
+References: <1462837203-12125-1-git-send-email-david@lechnology.com>
+ <1462837203-12125-4-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160602225815.GA5508@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hyun Kwon <hyunk@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Radhey Shyam Pandey <radheys@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1462837203-12125-4-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, nsekhar@ti.com, khilman@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>
+Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Ping!!
+Hi,
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Friday, June 03, 2016 4:28 AM
-> To: Nava kishore Manne <navam@xilinx.com>
-> Cc: pawel.moll@arm.com; mark.rutland@arm.com;
-> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
-> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
-> balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
-> <hyunk@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Radhey
-> Shyam Pandey <radheys@xilinx.com>; devicetree@vger.kernel.org; linux-
-> arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
+On Tuesday 10 May 2016 05:09 AM, David Lechner wrote:
+> The initial use for this is for PHYs that have a mode related to USB OTG.
+> There are several SoCs (e.g. TI OMAP and DA8xx) that have a mode setting
+> in the USB PHY to override OTG VBUS and ID signals.
 > 
-> On Mon, May 30, 2016 at 10:16:38PM +0530, Nava kishore Manne wrote:
-> > This patch updates the driver to support 64-bit DMA addressing.
-> >
-> > Signed-off-by: Nava kishore Manne <navam@xilinx.com>
-> > ---
-> > Changes for v4:
-> > 		-Used boolen property insted of addrwith property in the DT
-> > 		 as suggested by Arnd Bergmann.
-> > 		-Adopt the DT relevant changes into the driver.
-> >
-> > Changes for v3:
-> >                 -Added new compatable string for 5.00 IP version as suggested by
-> >                  Arnd Bergmann.
-> >                 -Used write_fn() insted of lo_hi_writeq() as suggested by
-> >                  Arnd Bergmann.
-> >
-> > Changes for v2:
-> >                 -Added dma-ranges property in device tree as suggested by Arnd
-> Bergmann.
-> >                 -Modified the driver code based on the xlnx,addrwidth.
-> >
-> >  .../devicetree/bindings/usb/udc-xilinx.txt         |  5 ++-
+> Of course, the enum can be expaned in the future to include modes for
+> other types of PHYs as well.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: David Lechner <david@lechnology.com>
+
+I've created a immutable branch for this patch and it can be found here.
+git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
+tags/phy-set-mode
+
+I've merged this tag to my -next.
+
+Thanks
+Kishon
+
+> ---
+>  drivers/phy/phy-core.c  | 15 +++++++++++++++
+>  include/linux/phy/phy.h | 17 +++++++++++++++++
+>  2 files changed, 32 insertions(+)
 > 
-> >  drivers/usb/gadget/udc/udc-xilinx.c                | 52
-> +++++++++++++++++++++-
-> >  2 files changed, 54 insertions(+), 3 deletions(-)
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index e7e574d..fe0344c 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -342,6 +342,21 @@ int phy_power_off(struct phy *phy)
+>  }
+>  EXPORT_SYMBOL_GPL(phy_power_off);
+>  
+> +int phy_set_mode(struct phy *phy, enum phy_mode mode)
+> +{
+> +	int ret;
+> +
+> +	if (!phy || !phy->ops->set_mode)
+> +		return 0;
+> +
+> +	mutex_lock(&phy->mutex);
+> +	ret = phy->ops->set_mode(phy, mode);
+> +	mutex_unlock(&phy->mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(phy_set_mode);
+> +
+>  /**
+>   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+>   * @np: device_node for which to get the phy
+> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> index 8cf05e3..4248ade 100644
+> --- a/include/linux/phy/phy.h
+> +++ b/include/linux/phy/phy.h
+> @@ -22,12 +22,20 @@
+>  
+>  struct phy;
+>  
+> +enum phy_mode {
+> +	PHY_MODE_INVALID,
+> +	PHY_MODE_USB_HOST,
+> +	PHY_MODE_USB_DEVICE,
+> +	PHY_MODE_USB_OTG,
+> +};
+> +
+>  /**
+>   * struct phy_ops - set of function pointers for performing phy operations
+>   * @init: operation to be performed for initializing phy
+>   * @exit: operation to be performed while exiting
+>   * @power_on: powering on the phy
+>   * @power_off: powering off the phy
+> + * @set_mode: set the mode of the phy
+>   * @owner: the module owner containing the ops
+>   */
+>  struct phy_ops {
+> @@ -35,6 +43,7 @@ struct phy_ops {
+>  	int	(*exit)(struct phy *phy);
+>  	int	(*power_on)(struct phy *phy);
+>  	int	(*power_off)(struct phy *phy);
+> +	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
+>  	struct module *owner;
+>  };
+>  
+> @@ -119,6 +128,7 @@ int phy_init(struct phy *phy);
+>  int phy_exit(struct phy *phy);
+>  int phy_power_on(struct phy *phy);
+>  int phy_power_off(struct phy *phy);
+> +int phy_set_mode(struct phy *phy, enum phy_mode mode);
+>  static inline int phy_get_bus_width(struct phy *phy)
+>  {
+>  	return phy->attrs.bus_width;
+> @@ -224,6 +234,13 @@ static inline int phy_power_off(struct phy *phy)
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
+> +{
+> +	if (!phy)
+> +		return 0;
+> +	return -ENOSYS;
+> +}
+> +
+>  static inline int phy_get_bus_width(struct phy *phy)
+>  {
+>  	return -ENOSYS;
+> 
