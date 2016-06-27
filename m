@@ -1,137 +1,83 @@
-From: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] leds: ncp5623: Add device tree binding
- documentation
-Date: Mon, 27 Jun 2016 10:59:22 +0200
-Message-ID: <a209d1e5-7996-c603-f18d-c0005d254d92@heig-vd.ch>
-References: <1467010990-28070-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1467010990-28070-2-git-send-email-florian.vaussard@heig-vd.ch>
- <5770DF98.7010900@samsung.com>
- <4125a334-2e15-285d-2721-c007b30ed65d@heig-vd.ch>
- <5770E4EB.4040609@samsung.com>
+From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 00/10] arm64: tegra: add BPMP support
+Date: Mon, 27 Jun 2016 17:02:38 +0800
+Message-ID: <20160627090248.23621-1-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5770E4EB.4040609-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaussard Florian <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+This series introduce the first announced Boot and Power Management Processor
+(BPMP) for the new generation Tegra SoCs, which is designed for boot
+process handling and offloading the power management tasks from the CPU.
 
-Le 27. 06. 16 =E0 10:33, Jacek Anaszewski a =E9crit :
-> On 06/27/2016 10:30 AM, Florian Vaussard wrote:
->> Hi Jacek,
->>
->> Le 27. 06. 16 =E0 10:11, Jacek Anaszewski a =E9crit :
->>> Hi Florian,
->>>
->>> On 06/27/2016 09:03 AM, Florian Vaussard wrote:
->>>> Add device tree binding documentation for On Semiconductor NCP5623=
- I2C
->>>> LED driver. The driver can independently control the PWM of the 3
->>>> channels with 32 levels of intensity.
->>>>
->>>> The current delivered by the current source can also be controlled=
-=2E To
->>>> do so, the led-max-microamp property is used by each LED sub-node.=
- The
->>>> maximum value is then found and used as a limit to compute the fin=
-al
->>>> intensity of the current source. If a LED happens to have a lower =
-limit,
->>>> the PWM is then used to limit the current to the requested value.
->>>>
->>>> In order to control the current source, it is also necessary to kn=
-ow
->>>> the current on the Iref pin, hence the onnn,led-iref-microamp prop=
-erty.
->>>> It is usually set using an external bias resistor, following
->>>> Iref =3D Vref/Rbias with Vref=3D0.6V.
->>>>
->>>> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
->>>> ---
->>>>    .../devicetree/bindings/leds/leds-ncp5623.txt      | 60
->>>> ++++++++++++++++++++++
->>>>    1 file changed, 60 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds-=
-ncp5623.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/leds-ncp5623.t=
-xt
->>>> b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->>>> new file mode 100644
->>>> index 0000000..77dd7ad
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
->>>> @@ -0,0 +1,60 @@
->>>> +* ON Semiconductor - NCP5623 3-Channel LED Driver
->>>> +
->>>> +The NCP5623 is a 3-channel I2C LED driver. The brightness of each
->>>> +channel can be independently set using 32 levels. Each LED is rep=
-resented
->>>> +as a sub-node of the device.
->>>> +
->>>> +Required properties:
->>>> +  - compatible: Should be "onnn,ncp5623"
->>>> +  - reg: I2C slave address (fixed to 0x38)
->>>> +  - #address-cells: must be 1
->>>> +  - #size-cells: must be 0
->>>> +  - onnn,led-iref-microamp: Current on the Iref pin in microamper=
-e. It depends
->>>> +    on the value of the external bias resistor Rbias, following
->>>> +    Iref =3D Vref / Rbias with Vref =3D 0.6V. This is used to set=
- the intensity of
->>>> +    the current that can be provided by the internal current sour=
-ce, based on
->>>> +    the maximum current permitted by LED sub-nodes (see below), b=
-ut no more
->>>> than
->>>> +    Imax =3D 2400 * Iref.
->>>> +
->>>> +LED sub-nodes
->>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>> +
->>>> +Required properties:
->>>> +  - reg : LED channel number (0..2)
->>>> +  - led-max-microamp: Maximum allowable current inside the LED in=
- microampere.
->>>> +    This property is used to limit the PWM ratio, based on the in=
-tensity of
->>>> the
->>>> +    internal current source (see above).
->>>> +
->>>> +Optional properties:
->>>> +  - label: Used for naming LEDs
->>>
->>> Instead of the above description use same reference to common led
->>> bindings as below.
->>>
->>
->> Ok.
->>
->> BTW I saw the thread about the "default-state" property on the DT li=
-st and
->> realized that it was not implemented in my driver. I wonder if stand=
-ard LED
->> properties (with label and default-trigger) should not be parsed by =
-LED core
->> (i.e. using a helper function) to avoid such mistake. This could als=
-o remove
->> some boilerplate code in other LED drivers.
->=20
-> Yes, generic DT parser is a nice-to-have feature for the LED subsyste=
-m.
-> Would you like to implement it?
->=20
+We also add some very initial and basic support for Tegra186 SoC, which
+supports debug console and initrd for initial bring up currently. More drivers
+and functions can be supported based on this later.
 
-Sure, if it can be useful. I will have a look in the coming days.
+Thanks,
+Joseph
 
-Best,
-=46lorian
+Joseph Lo (10):
+  Documentation: dt-bindings: mailbox: tegra: Add binding for HSP
+    mailbox
+  mailbox: tegra-hsp: Add HSP(Hardware Synchronization Primitives)
+    driver
+  Documentation: dt-bindings: firmware: tegra: add bindings of the BPMP
+  firmware: tegra: add IVC library
+  firmware: tegra: add BPMP support
+  soc/tegra: Add Tegra186 support
+  arm64: defconfig: Enable Tegra186 SoC
+  arm64: dts: tegra: Add Tegra186 support
+  arm64: dts: tegra: Add NVIDIA Tegra186 P3310 main board support
+  arm64: dts: tegra: Add NVIDIA P2771 board support
+
+ .../bindings/firmware/nvidia,tegra186-bpmp.txt     |   61 +
+ .../bindings/mailbox/nvidia,tegra186-hsp.txt       |   42 +
+ arch/arm64/boot/dts/nvidia/Makefile                |    1 +
+ arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |    8 +
+ arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi     |   30 +
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           |   77 +
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/firmware/Kconfig                           |    1 +
+ drivers/firmware/Makefile                          |    1 +
+ drivers/firmware/tegra/Kconfig                     |   25 +
+ drivers/firmware/tegra/Makefile                    |    2 +
+ drivers/firmware/tegra/bpmp.c                      |  713 +++++++++
+ drivers/firmware/tegra/ivc.c                       |  659 ++++++++
+ drivers/mailbox/Kconfig                            |    9 +
+ drivers/mailbox/Makefile                           |    2 +
+ drivers/mailbox/tegra-hsp.c                        |  306 ++++
+ drivers/soc/tegra/Kconfig                          |   14 +
+ include/dt-bindings/mailbox/tegra-hsp.h            |   20 +
+ include/soc/tegra/bpmp.h                           |   29 +
+ include/soc/tegra/bpmp_abi.h                       | 1601 ++++++++++++++++++++
+ include/soc/tegra/ivc.h                            |  102 ++
+ 21 files changed, 3704 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra186.dtsi
+ create mode 100644 drivers/firmware/tegra/Kconfig
+ create mode 100644 drivers/firmware/tegra/Makefile
+ create mode 100644 drivers/firmware/tegra/bpmp.c
+ create mode 100644 drivers/firmware/tegra/ivc.c
+ create mode 100644 drivers/mailbox/tegra-hsp.c
+ create mode 100644 include/dt-bindings/mailbox/tegra-hsp.h
+ create mode 100644 include/soc/tegra/bpmp.h
+ create mode 100644 include/soc/tegra/bpmp_abi.h
+ create mode 100644 include/soc/tegra/ivc.h
+
+-- 
+2.9.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
