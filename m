@@ -1,67 +1,64 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 01/10 v3] iio: pressure: bmp280: augment DT bindings
-Date: Mon, 27 Jun 2016 18:30:11 +0200
-Message-ID: <1467045020-2665-2-git-send-email-linus.walleij@linaro.org>
-References: <1467045020-2665-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467045020-2665-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Christoph Mair <christoph.mair-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vlad Dogaru <vlad.dogaru-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Eric Andersson <eric.andersson-TStm8jYLEPpl57MIdRCFDg@public.gmane.org>, Neil Brown <neilb-l3A5Bk7waGM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] ASoC: max98504: Add max98504 speaker amplifier
+ driver
+Date: Mon, 27 Jun 2016 17:33:12 +0100
+Message-ID: <20160627163312.GB17217@sirena.org.uk>
+References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
+ <1466678715-19962-5-git-send-email-s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="R3G7APHDIzY6R/pk"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466678715-19962-5-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds standard device tree bindings for a reset GPIO line, and
-the VDDD and VDDA power regulators.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLov v2->v3:
-- None, just resending in case Jonathan prefers this binding doc
-ChangeLog v1->v2:
-- Order compatible string on single lines
-- Add "bosch,bme280" for the new sensor from Matt
----
- Documentation/devicetree/bindings/iio/pressure/bmp085.txt | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+--R3G7APHDIzY6R/pk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-index d7a6deb6b21e..c7198a03c906 100644
---- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-+++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-@@ -1,7 +1,11 @@
--BMP085/BMP18x digital pressure sensors
-+BMP085/BMP18x/BMP28x digital pressure sensors
- 
- Required properties:
--- compatible: bosch,bmp085
-+- compatible: must be one of:
-+  "bosch,bmp085"
-+  "bosch,bmp180"
-+  "bosch,bmp280"
-+  "bosch,bme280"
- 
- Optional properties:
- - chip-id: configurable chip id for non-default chip revisions
-@@ -10,6 +14,10 @@ Optional properties:
-   value range is 0-3 with rising sensitivity.
- - interrupt-parent: should be the phandle for the interrupt controller
- - interrupts: interrupt mapping for IRQ
-+- reset-gpios: a GPIO line handling reset of the sensor: as the line is
-+  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
-+- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
-+- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
- 
- Example:
- 
-@@ -21,4 +29,7 @@ pressure@77 {
- 	default-oversampling = <2>;
- 	interrupt-parent = <&gpio0>;
- 	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
-+	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-+	vddd-supply = <&foo>;
-+	vdda-supply = <&bar>;
- };
--- 
-2.4.11
+On Thu, Jun 23, 2016 at 12:45:13PM +0200, Sylwester Nawrocki wrote:
+
+> +	/* Select analog input by default */
+> +	regmap_write(map, MAX98504_REG_SPEAKER_SOURCE_SELECT, 0x1);
+
+This should be done by userspace configuration, just leave the chip at
+power on defaults.  This is policy so that we don't have people trying
+to patch their configurations into the kernel.
+
+> +	/* Brownout protection enable */
+> +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_ENABLE, 0x1);
+> +	/* Threshold 2.9V, 3dB speaker attenuation*/
+> +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(1), 0x33);
+> +	/* Attack hold time 10 ms */
+> +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(2), 0x0a);
+> +	/* Brownout hold time 255 ms, brownout release time 255 ms */
+> +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(3), 0xff);
+> +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(4), 0xff);
+
+Should these be DT properties?
+
+--R3G7APHDIzY6R/pk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXcVVHAAoJECTWi3JdVIfQbaMH/0DhY1a5e1xSY6ha+04KNm2V
+tTO3HF6X8qcMQuPn7nrF2K69lr9vO0Pd5z0v0lNf3Fk719uEuP+L4X9GWRgp7JgI
+VbFTgwqA5Sd9hy1hWu9P1R52EHcvxJf3I9gMyDY2wyuXvlPRq9jNfJrYSKPbuJU3
+pJp1Oo8gfy6TnIAL7T8dm/YrjWWcA590rgmVd3ELklf1fTMTkStUkaY78DHijN4G
+0BUmE5/sc1a30onom/CMO6jJnr5GFgynGTyHhHPZuKqosJFz1/btjqtj7nX5w1FW
+jcexU1vbbu4ijBsvstcQmBC26gZH4BgKTG7UkwF58NwkooCkVJAk1I4QjXdVKpQ=
+=8xJo
+-----END PGP SIGNATURE-----
+
+--R3G7APHDIzY6R/pk--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
