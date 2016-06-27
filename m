@@ -1,77 +1,55 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v2 7/8] ARM: dts: AM437X-CM-T43: Remove redundant regulator compatibles
-Date: Mon, 27 Jun 2016 16:31:44 +0530
-Message-ID: <1467025305-13464-8-git-send-email-j-keerthy@ti.com>
-References: <1467025305-13464-1-git-send-email-j-keerthy@ti.com>
+From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] support control with using GPIO lines
+Date: Mon, 27 Jun 2016 20:19:20 +0900
+Message-ID: <1467026362-29446-1-git-send-email-akinobu.mita@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467025305-13464-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, broonie@kernel.org, tony@atomide.com
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, j-keerthy@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCPM5SUWUYIRBT4XYS5QKGQEIWELKUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With the device tree parsing using the regulator framework
-there is a no longer a need for separate compatibles for
-individual regulator nodes. Hence removing them all.
+This series adds support access to DS1302 with GPIO lines.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- arch/arm/boot/dts/am437x-cm-t43.dts | 6 ------
- 1 file changed, 6 deletions(-)
+This series first introduces the abstraction layer for the register
+access which enables to share the most code between existing spi driver
+and new platform driver, and then adds the platform driver using GPIO.
 
-diff --git a/arch/arm/boot/dts/am437x-cm-t43.dts b/arch/arm/boot/dts/am437x-cm-t43.dts
-index 9551c47..9e92d48 100644
---- a/arch/arm/boot/dts/am437x-cm-t43.dts
-+++ b/arch/arm/boot/dts/am437x-cm-t43.dts
-@@ -209,7 +209,6 @@
- 		#interrupt-cells = <2>;
- 
- 		dcdc1: regulator-dcdc1 {
--			compatible = "ti,tps65218-dcdc1";
- 			regulator-name = "vdd_core";
- 			regulator-min-microvolt = <912000>;
- 			regulator-max-microvolt = <1144000>;
-@@ -218,7 +217,6 @@
- 		};
- 
- 		dcdc2: regulator-dcdc2 {
--			compatible = "ti,tps65218-dcdc2";
- 			regulator-name = "vdd_mpu";
- 			regulator-min-microvolt = <912000>;
- 			regulator-max-microvolt = <1378000>;
-@@ -227,7 +225,6 @@
- 		};
- 
- 		dcdc3: regulator-dcdc3 {
--			compatible = "ti,tps65218-dcdc3";
- 			regulator-name = "vdcdc3";
- 			regulator-suspend-enable;
- 			regulator-min-microvolt = <1500000>;
-@@ -237,7 +234,6 @@
- 		};
- 
- 		dcdc5: regulator-dcdc5 {
--			compatible = "ti,tps65218-dcdc5";
- 			regulator-name = "v1_0bat";
- 			regulator-min-microvolt = <1000000>;
- 			regulator-max-microvolt = <1000000>;
-@@ -246,7 +242,6 @@
- 		};
- 
- 		dcdc6: regulator-dcdc6 {
--			compatible = "ti,tps65218-dcdc6";
- 			regulator-name = "v1_8bat";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
-@@ -255,7 +250,6 @@
- 		};
- 
- 		ldo1: regulator-ldo1 {
--			compatible = "ti,tps65218-ldo1";
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 			regulator-boot-on;
+Changes from v1
+* Remove two fixes which have already been merged
+* Remove readbyte and writebyte ops from ds1302_ops because they were
+  just special cases for readburst and writeburst ops
+* Place Kconfig entry under Platform RTC drivers
+
+Akinobu Mita (2):
+  rtc: ds1302: add register access abstraction layer
+  rtc: ds1302: support control with using GPIO lines
+
+ .../devicetree/bindings/rtc/maxim-ds1302.txt       |  13 +
+ drivers/rtc/Kconfig                                |  17 +-
+ drivers/rtc/rtc-ds1302.c                           | 509 ++++++++++++++++++---
+ 3 files changed, 456 insertions(+), 83 deletions(-)
+
+Cc: Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 -- 
-1.9.1
+2.7.4
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
