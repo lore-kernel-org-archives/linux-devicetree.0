@@ -1,175 +1,87 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH v2] ARM: at91: Document new TCB bindings
-Date: Mon, 27 Jun 2016 17:05:01 +0200
-Message-ID: <1467039901-11297-1-git-send-email-alexandre.belloni@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] rtc: ds1302: add register access
+ abstraction layer
+Date: Mon, 27 Jun 2016 18:15:17 +0300
+Message-ID: <1467040517.3182.34.camel@gmail.com>
+References: <1467026362-29446-1-git-send-email-akinobu.mita@gmail.com>	
+ <1467026362-29446-2-git-send-email-akinobu.mita@gmail.com>	
+ <1467028249.3182.11.camel@gmail.com> <20160627124432.GI29249@piout.net>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <rtc-linux+bncBDUOXGMN6YKBBCEGYW5QKGQEQJQ6CEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160627124432.GI29249-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current binding for the TCB is not flexible enough for some use cases
-and prevents proper utilization of all the channels.
+On Mon, 2016-06-27 at 14:44 +0200, Alexandre Belloni wrote:
+> On 27/06/2016 at 14:50:49 +0300, Sergei Ianovich wrote :
+> > I don't think this is the right way. DS-1302 is an SPI device, not
+> > a
+> > GPIO one. It can be connected to a hardware SPI controller or a
+> > software one (on top of GPIO or memory).
+> >=20
+> > Your patch re-adds Microwire SPI control logic to RTC subsystem, which
+> > was cleared by my rewrite of drivers/rtc/rtc-ds1302.c. The logic is
+> > already present in=C2=A0bitbang_txrx_be_cpha0_lsb() in=C2=A0drivers/spi=
+/spi-
+> > lp8841-rtc.c.
+> >=20
+> > I still think you need to implement=C2=A0spi-gpio-3wire with LSB-first
+> > support in SPI subsystem instead. It wasn't done when I was adding
+> > LP8841 support, because LP8841 was the only use case of Microwire SPI
+> > control logic. If you add it, drivers/spi/spi-lp8841-rtc.c can be
+> > removed and replaced by a GPIO driver to host a new spi-gpio-3wire
+> > device.
+>=20
+> Well, back in April, we concluded it was not easily doable after
+> discussing with Mark and there was still issues after implementing it in
+> spi-gpio.
 
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
+> My understanding is that while microwire seems compatible with SPI mode
+> 0, it actually isn't and this should be treated as a different mode.
+> If we want to do something generic, I think we should have a
+> microwire-gpio driver. Maybe in the SPI subsystem?
 
-Changes in v2:
- - added slow_clk in the examples
- - removed linuxisms
+I've seen Akinobu Mita report that he added support for 3wire to spi-
+gpio, and it didn't work. That's not a big difference from where we are
+now, when there is just no support for 3wire. Adding a working support
+for 3wire to spi-gpio needs 2^4 - 2^2 =3D 12 new bitbang functions to
+handle 3wire and lsb-first modes. It is a bit difficult to test all of
+them. I don't have enough hardware for example. In addition, it is
+unlikely that a 3wire GPIO SPI master would host more than a single
+device. That's why I think it is easier to add a new spi-gpio-3wire (or
+spi-gpio-microwire) driver.
 
-Rob, does that fit what you wanted? I prefer getting your ack on that one before
-resending a 48 patches series.
+> How do yo currently select microwire mode for PX270?
 
+I didn't say I use PXA270 to drive this RTC. I just say it is possible.
+The driver needs to set bits 5:4 of SSCR0_1/2/3 register to 0b10.
+Microwire mode will be selected for a built-in SPI port. All bitbanging
+will be done by the chip, the driver will just need to set up DMA
+transfer. This is an example of a pretty sophisticated hardware
+controller.
 
- .../devicetree/bindings/arm/atmel-at91.txt         | 32 -----------
- .../devicetree/bindings/mfd/atmel-tcb.txt          | 62 ++++++++++++++++++++++
- .../devicetree/bindings/pwm/atmel-tcb-pwm.txt      | 12 +++--
- 3 files changed, 69 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+I actually use a simple software controller in LP8841. The driver is
+in=C2=A0drivers/spi/spi-lp8841-rtc.c.
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-index e1f5ad855f14..3dc758403d03 100644
---- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-@@ -60,38 +60,6 @@ System Timer (ST) required properties:
- Its subnodes can be:
- - watchdog: compatible should be "atmel,at91rm9200-wdt"
- 
--TC/TCLIB Timer required properties:
--- compatible: Should be "atmel,<chip>-tcb".
--  <chip> can be "at91rm9200" or "at91sam9x5"
--- reg: Should contain registers location and length
--- interrupts: Should contain all interrupts for the TC block
--  Note that you can specify several interrupt cells if the TC
--  block has one interrupt per channel.
--- clock-names: tuple listing input clock names.
--	Required elements: "t0_clk", "slow_clk"
--	Optional elements: "t1_clk", "t2_clk"
--- clocks: phandles to input clocks.
--
--Examples:
--
--One interrupt per TC block:
--	tcb0: timer@fff7c000 {
--		compatible = "atmel,at91rm9200-tcb";
--		reg = <0xfff7c000 0x100>;
--		interrupts = <18 4>;
--		clocks = <&tcb0_clk>;
--		clock-names = "t0_clk";
--	};
--
--One interrupt per TC channel in a TC block:
--	tcb1: timer@fffdc000 {
--		compatible = "atmel,at91rm9200-tcb";
--		reg = <0xfffdc000 0x100>;
--		interrupts = <26 4 27 4 28 4>;
--		clocks = <&tcb1_clk>;
--		clock-names = "t0_clk";
--	};
--
- RSTC Reset Controller required properties:
- - compatible: Should be "atmel,<chip>-rstc".
-   <chip> can be "at91sam9260" or "at91sam9g45" or "sama5d3"
-diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-new file mode 100644
-index 000000000000..71c8d83c01a7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-@@ -0,0 +1,62 @@
-+* Device tree bindings for Atmel Timer Counter Blocks
-+- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
-+  <chip> can be "at91rm9200" or "at91sam9x5"
-+- reg: Should contain registers location and length
-+- #address-cells: has to be 1
-+- #size-cells: has to be 0
-+- interrupts: Should contain all interrupts for the TC block
-+  Note that you can specify several interrupt cells if the TC
-+  block has one interrupt per channel.
-+- clock-names: tuple listing input clock names.
-+	Required elements: "t0_clk", "slow_clk"
-+	Optional elements: "t1_clk", "t2_clk"
-+- clocks: phandles to input clocks.
-+
-+The TCB can expose multiple subdevices:
-+ * a clocksource and clockevent device
-+   - compatible: Should be "atmel,tcb-free-running-timer"
-+   - reg: Should contain the TCB channels to be used. If the
-+     counter width is 16 bits (at91rm9200-tcb), two consecutive
-+     channels are needed. Else, only one channel will be used.
-+
-+ * a clockevent device
-+   - compatible: Should be "atmel,tcb-programmable-timer"
-+   - reg: Should contain the TCB channel to be used
-+
-+ * a PWM chip: see ../pwm/atmel-tcb-pwm.txt
-+
-+Examples:
-+
-+One interrupt per TC block:
-+	tcb0: timer@fff7c000 {
-+		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0xfff7c000 0x100>;
-+		interrupts = <18 4>;
-+		clocks = <&tcb0_clk>, <&clk32k>;
-+		clock-names = "t0_clk", "slow_clk";
-+
-+		timer@0 {
-+			compatible = "atmel,tcb-free-running-timer";
-+			reg = <0>, <1>;
-+		};
-+
-+		timer@2 {
-+			compatible = "atmel,tcb-programmable-timer";
-+			reg = <2>;
-+		};
-+	};
-+
-+One interrupt per TC channel in a TC block:
-+	tcb1: timer@fffdc000 {
-+		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0xfffdc000 0x100>;
-+		interrupts = <26 4>, <27 4>, <28 4>;
-+		clocks = <&tcb1_clk>, <&clk32k>;
-+		clock-names = "t0_clk", "slow_clk";
-+	};
-+
-+
-diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-index 8031148bcf85..ab8fbd5ba184 100644
---- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-@@ -2,15 +2,17 @@ Atmel TCB PWM controller
- 
- Required properties:
- - compatible: should be "atmel,tcb-pwm"
-+- reg: tcb channel to use. Each channel can export 2 PWMs
- - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
-   the cells format. The only third cell flag supported by this binding is
-   PWM_POLARITY_INVERTED.
--- tc-block: The Timer Counter block to use as a PWM chip.
- 
- Example:
- 
--pwm {
--	compatible = "atmel,tcb-pwm";
--	#pwm-cells = <3>;
--	tc-block = <1>;
-+tcb0: timer@f800c000 {
-+	pwm@0 {
-+		compatible = "atmel,tcb-pwm";
-+		reg = <0>;
-+		#pwm-cells = <3>;
-+	};
- };
--- 
-2.8.1
+--=20
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+---=20
+You received this message because you are subscribed to the Google Groups "=
+rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
