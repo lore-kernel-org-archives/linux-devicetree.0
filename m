@@ -1,803 +1,97 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] iio: Add driver for Broadcom iproc-static-adc
-Date: Mon, 27 Jun 2016 20:11:25 +0100
-Message-ID: <18e69abe-47f8-68b3-c7b9-ea6a8a4363b6@kernel.org>
-References: <1466575913-5027-1-git-send-email-raveendra.padasalagi@broadcom.com>
- <1466575913-5027-3-git-send-email-raveendra.padasalagi@broadcom.com>
- <df1a9bbc-0bac-2ccc-e676-c5b17d604b5a@kernel.org>
- <CAAFb_vrJzS1d5MRZqZFXzdVD1CT5SpA7pOFT3=VYNjx=aT3dbA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 5/8] rtc: ac100: Add clk output support
+Date: Mon, 27 Jun 2016 21:23:21 +0200
+Message-ID: <20160627192321.GX4000@lukather>
+References: <1466391138-12862-1-git-send-email-wens@csie.org>
+ <1466391138-12862-6-git-send-email-wens@csie.org>
+ <20160622100206.GV26668@lukather>
+ <CAGb2v67DVBZbRb2PWLP8WurPaNin=2Fa=HMAEK_PdBeqv1x+8Q@mail.gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAFb_vrJzS1d5MRZqZFXzdVD1CT5SpA7pOFT3=VYNjx=aT3dbA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="o/BvujNCPFVhiGON"
+Return-path: <rtc-linux+bncBDSJBYGBRIMBBKX2YW5QKGQESXDTJEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67DVBZbRb2PWLP8WurPaNin=2Fa=HMAEK_PdBeqv1x+8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/06/16 07:25, Raveendra Padasalagi wrote:
-> On Sun, Jun 26, 2016 at 4:08 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On 22/06/16 07:11, Raveendra Padasalagi wrote:
->>> This patch adds basic driver implementation for Broadcom's
->>> static adc controller used in iProc SoC's family.
->>>
->>> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> A few tiny nitpicks.. Otherwise, looking good to me.
->>
->> Thanks,
->>
->> Jonathan
-> 
-> Thank you.  I have provided my view on naming "indio_dev->name" below.
-> Need your opinion/suggestion on the same to address it.
-> 
->>> ---
->>>  drivers/iio/adc/Kconfig         |  12 +
->>>  drivers/iio/adc/Makefile        |   1 +
->>>  drivers/iio/adc/bcm_iproc_adc.c | 648 ++++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 661 insertions(+)
->>>  create mode 100644 drivers/iio/adc/bcm_iproc_adc.c
->>>
->>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->>> index 25378c5..1de31bd 100644
->>> --- a/drivers/iio/adc/Kconfig
->>> +++ b/drivers/iio/adc/Kconfig
->>> @@ -153,6 +153,18 @@ config AXP288_ADC
->>>         To compile this driver as a module, choose M here: the module will be
->>>         called axp288_adc.
->>>
->>> +config BCM_IPROC_ADC
->>> +     tristate "Broadcom IPROC ADC driver"
->>> +     depends on ARCH_BCM_IPROC || COMPILE_TEST
->>> +     depends on MFD_SYSCON
->>> +     default ARCH_BCM_CYGNUS
->>> +     help
->>> +       Say Y here if you want to add support for the Broadcom static
->>> +       ADC driver.
->>> +
->>> +       Broadcom iProc ADC driver. Broadcom iProc ADC controller has 8
->>> +       channels. The driver allows the user to read voltage values.
->>> +
->>>  config BERLIN2_ADC
->>>       tristate "Marvell Berlin2 ADC driver"
->>>       depends on ARCH_BERLIN
->>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
->>> index 38638d4..0ba0d50 100644
->>> --- a/drivers/iio/adc/Makefile
->>> +++ b/drivers/iio/adc/Makefile
->>> @@ -16,6 +16,7 @@ obj-$(CONFIG_AD799X) += ad799x.o
->>>  obj-$(CONFIG_AT91_ADC) += at91_adc.o
->>>  obj-$(CONFIG_AT91_SAMA5D2_ADC) += at91-sama5d2_adc.o
->>>  obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
->>> +obj-$(CONFIG_BCM_IPROC_ADC) += bcm_iproc_adc.o
->>>  obj-$(CONFIG_BERLIN2_ADC) += berlin2-adc.o
->>>  obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
->>>  obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
->>> diff --git a/drivers/iio/adc/bcm_iproc_adc.c b/drivers/iio/adc/bcm_iproc_adc.c
->>> new file mode 100644
->>> index 0000000..e10f6ce
->>> --- /dev/null
->>> +++ b/drivers/iio/adc/bcm_iproc_adc.c
->>> @@ -0,0 +1,648 @@
->>> +/*
->>> + * Copyright 2016 Broadcom
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License, version 2, as
->>> + * published by the Free Software Foundation (the "GPL").
->>> + *
->>> + * This program is distributed in the hope that it will be useful, but
->>> + * WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
->>> + * General Public License version 2 (GPLv2) for more details.
->>> + *
->>> + * You should have received a copy of the GNU General Public License
->>> + * version 2 (GPLv2) along with this source code.
->>> + */
->>> +
->>> +#include <linux/module.h>
->>> +#include <linux/of.h>
->>> +#include <linux/io.h>
->>> +#include <linux/clk.h>
->>> +#include <linux/mfd/syscon.h>
->>> +#include <linux/regmap.h>
->>> +#include <linux/delay.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/platform_device.h>
->>> +
->>> +#include <linux/iio/iio.h>
->>> +
->>> +/* Below Register's are common to IPROC ADC and Touchscreen IP */
->>> +#define IPROC_REGCTL1                        0x00
->>> +#define IPROC_REGCTL2                        0x04
->>> +#define IPROC_INTERRUPT_THRES                0x08
->>> +#define IPROC_INTERRUPT_MASK         0x0c
->>> +#define IPROC_INTERRUPT_STATUS               0x10
->>> +#define IPROC_ANALOG_CONTROL         0x1c
->>> +#define IPROC_CONTROLLER_STATUS              0x14
->>> +#define IPROC_AUX_DATA                       0x20
->>> +#define IPROC_SOFT_BYPASS_CONTROL    0x38
->>> +#define IPROC_SOFT_BYPASS_DATA               0x3C
->>> +
->>> +/* IPROC ADC Channel register offsets */
->>> +#define IPROC_ADC_CHANNEL_REGCTL1            0x800
->>> +#define IPROC_ADC_CHANNEL_REGCTL2            0x804
->>> +#define IPROC_ADC_CHANNEL_STATUS             0x808
->>> +#define IPROC_ADC_CHANNEL_INTERRUPT_STATUS   0x80c
->>> +#define IPROC_ADC_CHANNEL_INTERRUPT_MASK     0x810
->>> +#define IPROC_ADC_CHANNEL_DATA                       0x814
->>> +#define IPROC_ADC_CHANNEL_OFFSET             0x20
->>> +
->>> +/* Bit definitions for IPROC_REGCTL2 */
->>> +#define IPROC_ADC_AUXIN_SCAN_ENA     BIT(0)
->>> +#define IPROC_ADC_PWR_LDO            BIT(5)
->>> +#define IPROC_ADC_PWR_ADC            BIT(4)
->>> +#define IPROC_ADC_PWR_BG             BIT(3)
->>> +#define IPROC_ADC_CONTROLLER_EN              BIT(17)
->>> +
->>> +/* Bit definitions for IPROC_INTERRUPT_MASK and IPROC_INTERRUPT_STATUS */
->>> +#define IPROC_ADC_AUXDATA_RDY_INTR   BIT(3)
->>> +#define IPROC_ADC_INTR                       9
->>> +#define IPROC_ADC_INTR_MASK          (0xFF << IPROC_ADC_INTR)
->>> +
->>> +/* Bit definitions for IPROC_ANALOG_CONTROL */
->>> +#define IPROC_ADC_CHANNEL_SEL                11
->>> +#define IPROC_ADC_CHANNEL_SEL_MASK   (0x7 << IPROC_ADC_CHANNEL_SEL)
->>> +
->>> +/* Bit definitions for IPROC_ADC_CHANNEL_REGCTL1 */
->>> +#define IPROC_ADC_CHANNEL_ROUNDS     0x2
->>> +#define IPROC_ADC_CHANNEL_ROUNDS_MASK        (0x3F << IPROC_ADC_CHANNEL_ROUNDS)
->>> +#define IPROC_ADC_CHANNEL_MODE               0x1
->>> +#define IPROC_ADC_CHANNEL_MODE_MASK  (0x1 << IPROC_ADC_CHANNEL_MODE)
->>> +#define IPROC_ADC_CHANNEL_MODE_TDM   0x1
->>> +#define IPROC_ADC_CHANNEL_MODE_SNAPSHOT 0x0
->>> +#define IPROC_ADC_CHANNEL_ENABLE     0x0
->>> +#define IPROC_ADC_CHANNEL_ENABLE_MASK        0x1
->>> +
->>> +/* Bit definitions for IPROC_ADC_CHANNEL_REGCTL2 */
->>> +#define IPROC_ADC_CHANNEL_WATERMARK  0x0
->>> +#define IPROC_ADC_CHANNEL_WATERMARK_MASK \
->>> +             (0x3F << IPROC_ADC_CHANNEL_WATERMARK)
->>> +
->>> +#define IPROC_ADC_WATER_MARK_LEVEL   0x1
->>> +
->>> +/* Bit definitions for IPROC_ADC_CHANNEL_STATUS */
->>> +#define IPROC_ADC_CHANNEL_DATA_LOST          0x0
->>> +#define IPROC_ADC_CHANNEL_DATA_LOST_MASK     \
->>> +             (0x0 << IPROC_ADC_CHANNEL_DATA_LOST)
->>> +#define IPROC_ADC_CHANNEL_VALID_ENTERIES     0x1
->>> +#define IPROC_ADC_CHANNEL_VALID_ENTERIES_MASK        \
->>> +             (0xFF << IPROC_ADC_CHANNEL_VALID_ENTERIES)
->>> +#define IPROC_ADC_CHANNEL_TOTAL_ENTERIES     0x9
->>> +#define IPROC_ADC_CHANNEL_TOTAL_ENTERIES_MASK        \
->>> +             (0xFF << IPROC_ADC_CHANNEL_TOTAL_ENTERIES)
->>> +
->>> +/* Bit definitions for IPROC_ADC_CHANNEL_INTERRUPT_MASK */
->>> +#define IPROC_ADC_CHANNEL_WTRMRK_INTR                        0x0
->>> +#define IPROC_ADC_CHANNEL_WTRMRK_INTR_MASK           \
->>> +             (0x1 << IPROC_ADC_CHANNEL_WTRMRK_INTR)
->>> +#define IPROC_ADC_CHANNEL_FULL_INTR                  0x1
->>> +#define IPROC_ADC_CHANNEL_FULL_INTR_MASK             \
->>> +             (0x1 << IPROC_ADC_IPROC_ADC_CHANNEL_FULL_INTR)
->>> +#define IPROC_ADC_CHANNEL_EMPTY_INTR                 0x2
->>> +#define IPROC_ADC_CHANNEL_EMPTY_INTR_MASK            \
->>> +             (0x1 << IPROC_ADC_CHANNEL_EMPTY_INTR)
->>> +
->>> +#define IPROC_ADC_WATER_MARK_INTR_ENABLE             0x1
->>> +
->>> +/* Number of time to retry a set of the interrupt mask reg */
->>> +#define IPROC_ADC_INTMASK_RETRY_ATTEMPTS             10
->>> +
->>> +#define IPROC_ADC_READ_TIMEOUT        (HZ*2)
->>> +
->>> +#define iproc_adc_dbg_reg(dev, priv, reg) \
->>> +do { \
->>> +     u32 val; \
->>> +     regmap_read(priv->regmap, reg, &val); \
->>> +     dev_dbg(dev, "%20s= 0x%08x\n", #reg, val); \
->>> +} while (0)
->>> +
->>> +struct iproc_adc_priv {
->>> +     struct regmap *regmap;
->>> +     struct clk *adc_clk;
->>> +     struct mutex mutex;
->>> +     int  irqno;
->>> +     int chan_val;
->>> +     int chan_id;
->>> +     struct completion completion;
->>> +};
->>> +
->>> +static void iproc_adc_reg_dump(struct iio_dev *indio_dev)
->>> +{
->>> +     struct iproc_adc_priv *adc_priv;
->>> +     struct device *dev = &indio_dev->dev;
->>> +
->>> +     adc_priv = iio_priv(indio_dev);
->> Trivial, but I'd just do this in one line with the declaration of
->> the local variable.
->>
->> struct iprov_adc_priv *adc_priv = iio_priv(indio_dev);
-> 
-> Yes, I missed it to fix. Will address in the next patch.
-> Thanks.
->>
->>> +
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_REGCTL1);
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_REGCTL2);
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_INTERRUPT_THRES);
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_INTERRUPT_MASK);
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_INTERRUPT_STATUS);
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_CONTROLLER_STATUS);
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_ANALOG_CONTROL);
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_AUX_DATA);
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_SOFT_BYPASS_CONTROL);
->>> +     iproc_adc_dbg_reg(dev, adc_priv, IPROC_SOFT_BYPASS_DATA);
->>> +}
->>> +
->>> +static irqreturn_t iproc_adc_interrupt_handler(int irq, void *data)
->>> +{
->>> +     u32 channel_intr_status;
->>> +     u32 intr_status;
->>> +     u32 intr_mask;
->>> +     struct iio_dev *indio_dev = data;
->>> +     struct iproc_adc_priv *adc_priv = iio_priv(indio_dev);
->>> +
->>> +     /*
->>> +      * This interrupt is shared with the touchscreen driver.
->>> +      * Make sure this interrupt is intended for us.
->>> +      * Handle only ADC channel specific interrupts.
->>> +      */
->>> +     regmap_read(adc_priv->regmap, IPROC_INTERRUPT_STATUS, &intr_status);
->>> +     regmap_read(adc_priv->regmap, IPROC_INTERRUPT_MASK, &intr_mask);
->>> +     intr_status = intr_status & intr_mask;
->>> +     channel_intr_status = (intr_status & IPROC_ADC_INTR_MASK) >>
->>> +                             IPROC_ADC_INTR;
->>> +     if (channel_intr_status)
->>> +             return IRQ_WAKE_THREAD;
->>> +
->>> +     return IRQ_NONE;
->>> +}
->>> +
->>> +static irqreturn_t iproc_adc_interrupt_thread(int irq, void *data)
->>> +{
->>> +     irqreturn_t retval = IRQ_NONE;
->>> +     struct iproc_adc_priv *adc_priv;
->>> +     struct iio_dev *indio_dev = data;
->>> +     unsigned int valid_entries;
->>> +     u32 intr_status;
->>> +     u32 intr_channels;
->>> +     u32 channel_status;
->>> +     u32 ch_intr_status;
->>> +
->>> +     adc_priv = iio_priv(indio_dev);
->>> +
->>> +     regmap_read(adc_priv->regmap, IPROC_INTERRUPT_STATUS, &intr_status);
->>> +     dev_dbg(&indio_dev->dev, "iproc_adc_interrupt_thread(),INTRPT_STS:%x\n",
->>> +                     intr_status);
->>> +
->>> +     intr_channels = (intr_status & IPROC_ADC_INTR_MASK) >> IPROC_ADC_INTR;
->>> +     if (intr_channels) {
->>> +             regmap_read(adc_priv->regmap,
->>> +                         IPROC_ADC_CHANNEL_INTERRUPT_STATUS +
->>> +                         IPROC_ADC_CHANNEL_OFFSET * adc_priv->chan_id,
->>> +                         &ch_intr_status);
->>> +
->>> +             if (ch_intr_status & IPROC_ADC_CHANNEL_WTRMRK_INTR_MASK) {
->>> +                     regmap_read(adc_priv->regmap,
->>> +                                     IPROC_ADC_CHANNEL_STATUS +
->>> +                                     IPROC_ADC_CHANNEL_OFFSET *
->>> +                                     adc_priv->chan_id,
->>> +                                     &channel_status);
->>> +
->>> +                     valid_entries = ((channel_status &
->>> +                             IPROC_ADC_CHANNEL_VALID_ENTERIES_MASK) >>
->>> +                             IPROC_ADC_CHANNEL_VALID_ENTERIES);
->>> +                     if (valid_entries >= 1) {
->>> +                             regmap_read(adc_priv->regmap,
->>> +                                     IPROC_ADC_CHANNEL_DATA +
->>> +                                     IPROC_ADC_CHANNEL_OFFSET *
->>> +                                     adc_priv->chan_id,
->>> +                                     &adc_priv->chan_val);
->>> +                             complete(&adc_priv->completion);
->>> +                     } else {
->>> +                             dev_err(&indio_dev->dev,
->>> +                                     "No data rcvd on channel %d\n",
->>> +                                     adc_priv->chan_id);
->>> +                     }
->>> +                     regmap_write(adc_priv->regmap,
->>> +                                     IPROC_ADC_CHANNEL_INTERRUPT_MASK +
->>> +                                     IPROC_ADC_CHANNEL_OFFSET *
->>> +                                     adc_priv->chan_id,
->>> +                                     (ch_intr_status &
->>> +                                     ~(IPROC_ADC_CHANNEL_WTRMRK_INTR_MASK)));
->>> +             }
->>> +             regmap_write(adc_priv->regmap,
->>> +                             IPROC_ADC_CHANNEL_INTERRUPT_STATUS +
->>> +                             IPROC_ADC_CHANNEL_OFFSET * adc_priv->chan_id,
->>> +                             ch_intr_status);
->>> +             regmap_write(adc_priv->regmap, IPROC_INTERRUPT_STATUS,
->>> +                             intr_channels);
->>> +             retval = IRQ_HANDLED;
->>> +     }
->>> +
->>> +     return retval;
->>> +}
->>> +
->>> +static int iproc_adc_do_read(struct iio_dev *indio_dev,
->>> +                        int channel,
->>> +                        u16 *p_adc_data)
->>> +{
->>> +     int read_len = 0;
->>> +     u32 val;
->>> +     u32 mask;
->>> +     u32 val_check;
->>> +     int failed_cnt = 0;
->>> +     struct iproc_adc_priv *adc_priv = iio_priv(indio_dev);
->>> +
->>> +     mutex_lock(&adc_priv->mutex);
->>> +
->>> +     /*
->>> +      * After a read is complete the ADC interrupts will be disabled so
->>> +      * we can assume this section of code is safe from interrupts.
->>> +      */
->>> +     adc_priv->chan_val = -1;
->>> +     adc_priv->chan_id = channel;
->>> +
->>> +     reinit_completion(&adc_priv->completion);
->>> +     /* Clear any pending interrupt */
->>> +     regmap_update_bits(adc_priv->regmap, IPROC_INTERRUPT_STATUS,
->>> +                     IPROC_ADC_INTR_MASK | IPROC_ADC_AUXDATA_RDY_INTR,
->>> +                     ((0x0 << channel) << IPROC_ADC_INTR) |
->>> +                     IPROC_ADC_AUXDATA_RDY_INTR);
->>> +
->>> +     /* Configure channel for snapshot mode and enable  */
->>> +     val = (BIT(IPROC_ADC_CHANNEL_ROUNDS) |
->>> +             (IPROC_ADC_CHANNEL_MODE_SNAPSHOT << IPROC_ADC_CHANNEL_MODE) |
->>> +             (0x1 << IPROC_ADC_CHANNEL_ENABLE));
->>> +
->>> +     mask = IPROC_ADC_CHANNEL_ROUNDS_MASK | IPROC_ADC_CHANNEL_MODE_MASK |
->>> +             IPROC_ADC_CHANNEL_ENABLE_MASK;
->>> +     regmap_update_bits(adc_priv->regmap, (IPROC_ADC_CHANNEL_REGCTL1 +
->>> +                             IPROC_ADC_CHANNEL_OFFSET * channel),
->>> +                             mask, val);
->>> +
->>> +     /* Set the Watermark for a channel */
->>> +     regmap_update_bits(adc_priv->regmap, (IPROC_ADC_CHANNEL_REGCTL2 +
->>> +                                     IPROC_ADC_CHANNEL_OFFSET * channel),
->>> +                                     IPROC_ADC_CHANNEL_WATERMARK_MASK,
->>> +                                     0x1);
->>> +
->>> +     /* Enable water mark interrupt */
->>> +     regmap_update_bits(adc_priv->regmap, (IPROC_ADC_CHANNEL_INTERRUPT_MASK +
->>> +                                     IPROC_ADC_CHANNEL_OFFSET *
->>> +                                     channel),
->>> +                                     IPROC_ADC_CHANNEL_WTRMRK_INTR_MASK,
->>> +                                     IPROC_ADC_WATER_MARK_INTR_ENABLE);
->>> +     regmap_read(adc_priv->regmap, IPROC_INTERRUPT_MASK, &val);
->>> +
->>> +     /* Enable ADC interrupt for a channel */
->>> +     val |= (BIT(channel) << IPROC_ADC_INTR);
->>> +     regmap_write(adc_priv->regmap, IPROC_INTERRUPT_MASK, val);
->>> +
->>> +     /*
->>> +      * There seems to be a very rare issue where writing to this register
->>> +      * does not take effect.  To work around the issue we will try multiple
->>> +      * writes.  In total we will spend about 10*10 = 100 us attempting this.
->>> +      * Testing has shown that this may loop a few time, but we have never
->>> +      * hit the full count.
->>> +      */
->>> +     regmap_read(adc_priv->regmap, IPROC_INTERRUPT_MASK, &val_check);
->>> +     while (val_check != val) {
->>> +             failed_cnt++;
->>> +
->>> +             if (failed_cnt > IPROC_ADC_INTMASK_RETRY_ATTEMPTS)
->>> +                     break;
->>> +
->>> +             udelay(10);
->>> +             regmap_update_bits(adc_priv->regmap, IPROC_INTERRUPT_MASK,
->>> +                             IPROC_ADC_INTR_MASK,
->>> +                             ((0x1 << channel) <<
->>> +                             IPROC_ADC_INTR));
->>> +
->>> +             regmap_read(adc_priv->regmap, IPROC_INTERRUPT_MASK, &val_check);
->>> +     }
->>> +
->>> +     if (failed_cnt) {
->>> +             dev_dbg(&indio_dev->dev,
->>> +                     "IntMask failed (%d times)", failed_cnt);
->>> +             if (failed_cnt > IPROC_ADC_INTMASK_RETRY_ATTEMPTS) {
->>> +                     dev_err(&indio_dev->dev,
->>> +                             "IntMask set failed. Read will likely fail.");
->>> +                     read_len = -EIO;
->>> +                     goto adc_err;
->>> +             };
->>> +     }
->>> +     regmap_read(adc_priv->regmap, IPROC_INTERRUPT_MASK, &val_check);
->>> +
->>> +     if (wait_for_completion_timeout(&adc_priv->completion,
->>> +             IPROC_ADC_READ_TIMEOUT) > 0) {
->>> +
->>> +             /* Only the lower 16 bits are relevant */
->>> +             *p_adc_data = adc_priv->chan_val & 0xFFFF;
->>> +             read_len = sizeof(*p_adc_data);
->>> +
->>> +     } else {
->>> +             /*
->>> +              * We never got the interrupt, something went wrong.
->>> +              * Perhaps the interrupt may still be coming, we do not want
->>> +              * that now.  Lets disable the ADC interrupt, and clear the
->>> +              * status to put it back in to normal state.
->>> +              */
->>> +             read_len = -ETIMEDOUT;
->>> +             goto adc_err;
->>> +     }
->>> +     mutex_unlock(&adc_priv->mutex);
->>> +
->>> +     return read_len;
->>> +
->>> +adc_err:
->>> +     regmap_update_bits(adc_priv->regmap, IPROC_INTERRUPT_MASK,
->>> +                        IPROC_ADC_INTR_MASK,
->>> +                        ((0x0 << channel) << IPROC_ADC_INTR));
->>> +
->>> +     regmap_update_bits(adc_priv->regmap, IPROC_INTERRUPT_STATUS,
->>> +                        IPROC_ADC_INTR_MASK,
->>> +                        ((0x0 << channel) << IPROC_ADC_INTR));
->>> +
->>> +     dev_err(&indio_dev->dev, "Timed out waiting for ADC data!\n");
->>> +     iproc_adc_reg_dump(indio_dev);
->>> +     mutex_unlock(&adc_priv->mutex);
->>> +
->>> +     return read_len;
->>> +}
->>> +
->>> +static int iproc_adc_enable(struct iio_dev *indio_dev)
->>> +{
->>> +     u32 val;
->>> +     u32 channel_id;
->>> +     struct iproc_adc_priv *adc_priv = iio_priv(indio_dev);
->>> +     int ret;
->>> +
->>> +     /* Set i_amux = 3b'000, select channel 0 */
->>> +     ret = regmap_update_bits(adc_priv->regmap, IPROC_ANALOG_CONTROL,
->>> +                             IPROC_ADC_CHANNEL_SEL_MASK, 0);
->>> +     if (ret) {
->>> +             dev_err(&indio_dev->dev,
->>> +                     "failed to write IPROC_ANALOG_CONTROL %d\n", ret);
->>> +             return ret;
->>> +     }
->>> +     adc_priv->chan_val = -1;
->>> +
->>> +     /*
->>> +      * PWR up LDO, ADC, and Band Gap (0 to enable)
->>> +      * Also enable ADC controller (set high)
->>> +      */
->>> +     ret = regmap_read(adc_priv->regmap, IPROC_REGCTL2, &val);
->>> +     if (ret) {
->>> +             dev_err(&indio_dev->dev,
->>> +                     "failed to read IPROC_REGCTL2 %d\n", ret);
->>> +             return ret;
->>> +     }
->>> +
->>> +     val &= ~(IPROC_ADC_PWR_LDO | IPROC_ADC_PWR_ADC | IPROC_ADC_PWR_BG);
->>> +
->>> +     ret = regmap_write(adc_priv->regmap, IPROC_REGCTL2, val);
->>> +     if (ret) {
->>> +             dev_err(&indio_dev->dev,
->>> +                     "failed to write IPROC_REGCTL2 %d\n", ret);
->>> +             return ret;
->>> +     }
->>> +
->>> +     ret = regmap_read(adc_priv->regmap, IPROC_REGCTL2, &val);
->>> +     if (ret) {
->>> +             dev_err(&indio_dev->dev,
->>> +                     "failed to read IPROC_REGCTL2 %d\n", ret);
->>> +             return ret;
->>> +     }
->>> +
->>> +     val |= IPROC_ADC_CONTROLLER_EN;
->>> +     ret = regmap_write(adc_priv->regmap, IPROC_REGCTL2, val);
->>> +     if (ret) {
->>> +             dev_err(&indio_dev->dev,
->>> +                     "failed to write IPROC_REGCTL2 %d\n", ret);
->>> +             return ret;
->>> +     }
->>> +
->>> +     for (channel_id = 0; channel_id < indio_dev->num_channels;
->>> +             channel_id++) {
->>> +             ret = regmap_write(adc_priv->regmap,
->>> +                             IPROC_ADC_CHANNEL_INTERRUPT_MASK +
->>> +                             IPROC_ADC_CHANNEL_OFFSET * channel_id, 0);
->>> +             if (ret) {
->>> +                     dev_err(&indio_dev->dev,
->>> +                         "failed to write ADC_CHANNEL_INTERRUPT_MASK %d\n",
->>> +                         ret);
->>> +                     return ret;
->>> +             }
->>> +
->>> +             ret = regmap_write(adc_priv->regmap,
->>> +                             IPROC_ADC_CHANNEL_INTERRUPT_STATUS +
->>> +                             IPROC_ADC_CHANNEL_OFFSET * channel_id, 0);
->>> +             if (ret) {
->>> +                     dev_err(&indio_dev->dev,
->>> +                         "failed to write ADC_CHANNEL_INTERRUPT_STATUS %d\n",
->>> +                         ret);
->>> +                     return ret;
->>> +             }
->>> +     }
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static void iproc_adc_disable(struct iio_dev *indio_dev)
->>> +{
->>> +     u32 val;
->>> +     int ret;
->>> +     struct iproc_adc_priv *adc_priv = iio_priv(indio_dev);
->>> +
->>> +     ret = regmap_read(adc_priv->regmap, IPROC_REGCTL2, &val);
->>> +     if (ret) {
->>> +             dev_err(&indio_dev->dev,
->>> +                     "failed to read IPROC_REGCTL2 %d\n", ret);
->>> +             return;
->>> +     }
->>> +
->>> +     val &= ~IPROC_ADC_CONTROLLER_EN;
->>> +     ret = regmap_write(adc_priv->regmap, IPROC_REGCTL2, val);
->>> +     if (ret) {
->>> +             dev_err(&indio_dev->dev,
->>> +                     "failed to write IPROC_REGCTL2 %d\n", ret);
->>> +             return;
->>> +     }
->>> +}
->>> +
->>> +static int iproc_adc_read_raw(struct iio_dev *indio_dev,
->>> +                       struct iio_chan_spec const *chan,
->>> +                       int *val,
->>> +                       int *val2,
->>> +                       long mask)
->>> +{
->>> +     u16 adc_data;
->>> +     int err;
->>> +
->>> +     switch (mask) {
->>> +     case IIO_CHAN_INFO_RAW:
->>> +             err =  iproc_adc_do_read(indio_dev, chan->channel, &adc_data);
->>> +             if (err < 0)
->>> +                     return err;
->>> +             *val = adc_data;
->>> +             return IIO_VAL_INT;
->>> +     case IIO_CHAN_INFO_SCALE:
->>> +             switch (chan->type) {
->>> +             case IIO_VOLTAGE:
->>> +                     *val = 1800;
->>> +                     *val2 = 10;
->>> +                     return IIO_VAL_FRACTIONAL_LOG2;
->>> +             default:
->>> +                     return -EINVAL;
->>> +             }
->>> +     default:
->>> +             return -EINVAL;
->>> +     }
->>> +}
->>> +
->>> +static const struct iio_info iproc_adc_iio_info = {
->>> +     .read_raw = &iproc_adc_read_raw,
->>> +     .driver_module = THIS_MODULE,
->>> +};
->>> +
->>> +#define IPROC_ADC_CHANNEL(_index, _id) {                \
->>> +     .type = IIO_VOLTAGE,                            \
->>> +     .indexed = 1,                                   \
->>> +     .channel = _index,                              \
->>> +     .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),   \
->>> +     .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
->>> +     .datasheet_name = _id,                          \
->>> +}
->>> +
->>> +static const struct iio_chan_spec iproc_adc_iio_channels[] = {
->>> +     IPROC_ADC_CHANNEL(0, "adc0"),
->>> +     IPROC_ADC_CHANNEL(1, "adc1"),
->>> +     IPROC_ADC_CHANNEL(2, "adc2"),
->>> +     IPROC_ADC_CHANNEL(3, "adc3"),
->>> +     IPROC_ADC_CHANNEL(4, "adc4"),
->>> +     IPROC_ADC_CHANNEL(5, "adc5"),
->>> +     IPROC_ADC_CHANNEL(6, "adc6"),
->>> +     IPROC_ADC_CHANNEL(7, "adc7"),
->>> +};
->>> +
->>> +static int iproc_adc_probe(struct platform_device *pdev)
->>> +{
->>> +     struct iproc_adc_priv *adc_priv;
->>> +     struct iio_dev *indio_dev = NULL;
->>> +     int ret;
->>> +
->>> +     indio_dev = devm_iio_device_alloc(&pdev->dev,
->>> +                                     sizeof(*adc_priv));
->>> +     if (!indio_dev) {
->>> +             dev_err(&pdev->dev, "failed to allocate iio device\n");
->>> +             return -ENOMEM;
->>> +     }
->>> +
->>> +     adc_priv = iio_priv(indio_dev);
->>> +     platform_set_drvdata(pdev, indio_dev);
->>> +
->>> +     mutex_init(&adc_priv->mutex);
->>> +
->>> +     init_completion(&adc_priv->completion);
->>> +
->>> +     adc_priv->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
->>> +                        "adc-syscon");
->>> +     if (IS_ERR(adc_priv->regmap)) {
->>> +             dev_err(&pdev->dev, "failed to get handle for tsc syscon\n");
->>> +             ret = PTR_ERR(adc_priv->regmap);
->>> +             return ret;
->>> +     }
->>> +
->>> +     adc_priv->adc_clk = devm_clk_get(&pdev->dev, "tsc_clk");
->>> +     if (IS_ERR(adc_priv->adc_clk)) {
->>> +             dev_err(&pdev->dev,
->>> +                     "failed getting clock tsc_clk\n");
->>> +             ret = PTR_ERR(adc_priv->adc_clk);
->>> +             return ret;
->>> +     }
->>> +
->>> +     adc_priv->irqno = platform_get_irq(pdev, 0);
->>> +     if (adc_priv->irqno <= 0) {
->>> +             dev_err(&pdev->dev, "platform_get_irq failed\n");
->>> +             ret = -ENODEV;
->>> +             return ret;
->>> +     }
->>> +
->>> +     ret = regmap_update_bits(adc_priv->regmap, IPROC_REGCTL2,
->>> +                             IPROC_ADC_AUXIN_SCAN_ENA, 0);
->>> +     if (ret) {
->>> +             dev_err(&pdev->dev, "failed to write IPROC_REGCTL2 %d\n", ret);
->>> +             return ret;
->>> +     }
->>> +
->>> +     ret = devm_request_threaded_irq(&pdev->dev, adc_priv->irqno,
->>> +                             iproc_adc_interrupt_thread,
->>> +                             iproc_adc_interrupt_handler,
->>> +                             IRQF_SHARED, "iproc-adc", indio_dev);
->>> +     if (ret) {
->>> +             dev_err(&pdev->dev, "request_irq error %d\n", ret);
->>> +             return ret;
->>> +     }
->>> +
->>> +     ret = clk_prepare_enable(adc_priv->adc_clk);
->>> +     if (ret) {
->>> +             dev_err(&pdev->dev,
->>> +                     "clk_prepare_enable failed %d\n", ret);
->>> +             return ret;
->>> +     }
->>> +
->>> +     ret = iproc_adc_enable(indio_dev);
->>> +     if (ret) {
->>> +             dev_err(&pdev->dev, "failed to enable adc %d\n", ret);
->>> +             goto err_adc_enable;
->>> +     }
->>> +
->>> +     indio_dev->name = dev_name(&pdev->dev);
->> This name should reflect the part name rather than anything else.
->> Here this is easy as there is only one part name. I'd just put
->> it in directly here.
-> 
-> I thought putting in the part name directly here would hard code and
-> looked at the other ADC IIO drivers and found to be using the dev_name()
-> call.
-Yeah, that's a bit of an oops. 
-> 
-> "adc: adc@180a6000" this is the current node name used for adc in .dts file
-> so it will take adc@180a6000 as the name and export it to sysfs.
-> 
-> If I have to put the name directly then it should look like "adc" ??
-> or "iproc-static-adc" ?
-> then there wouldn't be a direct reference to the device name in .dts file.
-iproc-static-adc preferred.  The fact it is adc is way to generic.
 
-The idea is that it is a loosely human readable indicator of which of a set
-of ADCs on a board we are looking at.  It's not ideal as there might be
-more than one of a type, but better than nothing perhaps.
+--o/BvujNCPFVhiGON
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-The devicetree name is easily found for a device:
-Stealing from a recent example posted by Leonard in the thread
- [was iio: tmp006: Set correct iio name] how to support multiple instances of same device type
+On Wed, Jun 22, 2016 at 06:11:55PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Jun 22, 2016 at 6:02 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Mon, Jun 20, 2016 at 10:52:15AM +0800, Chen-Yu Tsai wrote:
+> >> +     /*
+> >> +      * The ADDA 4 MHz clock is from the codec side of the AC100,
+> >> +      * which is likely a different power domain. However, boards
+> >> +      * always have both sides powered on, so it is impossible to
+> >> +      * test this.
+> >> +      */
+> >
+> > If that ADDA clock is exposed by the codec, why are you putting it in
+> > the RTC?
+> 
+> The thing is it's not entirely clear that it's from the codec side.
+> I'm just inferring this from the name. (I'll make the comment clearer.)
+> The codec parts of the datasheet don't mention this clock at all.
+> 
+> Allwinner's SDK puts all the clocks under the RTC module. And the
+> are always on, so I can't really turn off the codec and see what
+> happens. That and I don't have an oscilloscope or logic analyzer.
 
-# ssh -t local2222 udevadm info /sys/bus/iio/devices/iio:device0
-DEVNAME=/dev/iio:device0
-DEVTYPE=iio_device
-MAJOR=250
-MINOR=0
-OF_COMPATIBLE_0=inv,mpu6500
-OF_COMPATIBLE_N=1
-OF_FULLNAME=/spi/mpu6500@0
-OF_NAME=mpu6500
-SUBSYSTEM=iio
+Why not just create a separate clock driver then?
 
-> 
-> So I think it's better to keep the name captured from the call
-> dev_name(&pdev->dev);
-> 
-> Please suggest whether to put the name directly or keep the existing method.
-Direct name please.
-> 
->>> +     indio_dev->dev.parent = &pdev->dev;
->>> +     indio_dev->dev.of_node = pdev->dev.of_node;
->>> +     indio_dev->info = &iproc_adc_iio_info;
->>> +     indio_dev->modes = INDIO_DIRECT_MODE;
->>> +     indio_dev->channels = iproc_adc_iio_channels;
->>> +     indio_dev->num_channels = ARRAY_SIZE(iproc_adc_iio_channels);
->>> +
->>> +     ret = iio_device_register(indio_dev);
->>> +     if (ret) {
->>> +             dev_err(&pdev->dev, "iio_device_register failed:err %d\n", ret);
->>> +             goto err_clk;
->>> +     }
->>> +
->>> +     return 0;
->>> +
->>> +err_clk:
->>> +     iproc_adc_disable(indio_dev);
->>> +err_adc_enable:
->>> +     clk_disable_unprepare(adc_priv->adc_clk);
->>> +
->>> +     return ret;
->>> +}
->>> +
->>> +static int iproc_adc_remove(struct platform_device *pdev)
->>> +{
->>> +     struct iio_dev *indio_dev = platform_get_drvdata(pdev);
->>> +     struct iproc_adc_priv *adc_priv = iio_priv(indio_dev);
->>> +
->>> +     iio_device_unregister(indio_dev);
->>> +     iproc_adc_disable(indio_dev);
->>> +     clk_disable_unprepare(adc_priv->adc_clk);
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static const struct of_device_id iproc_adc_of_match[] = {
->>> +     {.compatible = "brcm,iproc-static-adc", },
->>> +     { },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, iproc_adc_of_match);
->>> +
->>> +static struct platform_driver iproc_adc_driver = {
->>> +     .probe  = iproc_adc_probe,
->>> +     .remove = iproc_adc_remove,
->>> +     .driver = {
->>> +             .name   = "iproc-static-adc",
->>> +             .of_match_table = of_match_ptr(iproc_adc_of_match),
->>> +     },
->>> +};
->> 1 blank line is always enough.  Here actually, no blank lines is
->> the convention given the connection between the next line and the
->> structure.
-> 
-> Yes, will fix it in the next patch.
-> 
->>> +
->>> +
->>> +module_platform_driver(iproc_adc_driver);
->>> +
->>> +MODULE_DESCRIPTION("IPROC ADC driver");
->>> +MODULE_AUTHOR("Broadcom");
->> Module author should be an individual ideally (it's an email address
->> to pester!)  Given you are signing off, you are the obvious choice.
->> If several people were involved, you can have multiple MODULE_AUTHOR
->> entries. One person for each one though.
-> 
-> Yes, will fix it in the next patch.
-> 
->>> +MODULE_LICENSE("GPL v2");
->>>
->>
+Thanks,
+Maxime
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--o/BvujNCPFVhiGON
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXcX0pAAoJEBx+YmzsjxAgH5oP/1SDE/ZGU8JvaVyGamQnRemk
+hGoiDYWZ5t0/fradi68lkp9imwYvPCxd8EfG6vyVw+J4/4QBXdKijPc4s5XzRuNU
+CaS46PpfxpPkk4UHSEjxCoXY6RHZCsexl7AIdZWXuUxinyLqqEjI3vV/rZvtdh3L
+68tJsyfuamITQAkcAKp+z6g4BY3pTA8sZHJPt1NsmApHD2d5Px6qIlsRSnPNVXNa
+h6yvocYDeZbDqcKrWax77ZN+FROvdNdA9PcJgAJDgi1WCsirlKBZ6CxueR8ME2rd
+JxfGUJecdpijXhNdA39mkvMnAJ3OPBrsupLeox2pd3zN+v9IPvd4Qz3Rwp1PYk91
+jvq9jmxaU5IvidDA7Mf1aV0k464S33J1oTWGMwsg2+qaciRg0RhH3Gd4KDGdEL7x
+7TU2ftZE3ni+sUHBVHUgvJB07QNhZsVYmLb/7uZo5JmhGwKMcMKZTJ5wIdUbAodz
+kMhD8KwJ22W7camroq2odh8DQouAOki3uS4IkAMbSx/ztr8gkUnVhHl6YbjsvCqM
+V7dVQSTYbV3RN+CtOxyKbaRWbDLXx6AiC4tJCpr3cRbZ6XvCG5A+nC7yNQf0w/i/
+XYk54xexFTZO54b0wUqSkpw/cgfj5LDkxcstTYMDRPj/B1kVUnoqAHuAWtUvzvhh
+FvvgltlJclLztLZyRr9T
+=Vh/U
+-----END PGP SIGNATURE-----
+
+--o/BvujNCPFVhiGON--
