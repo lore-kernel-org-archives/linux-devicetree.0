@@ -1,150 +1,125 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 01/10] Documentation: dt-bindings: mailbox: tegra: Add
- binding for HSP mailbox
-Date: Mon, 27 Jun 2016 09:55:49 -0600
-Message-ID: <57714C85.50802@wwwdotorg.org>
-References: <20160627090248.23621-1-josephl@nvidia.com>
- <20160627090248.23621-2-josephl@nvidia.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] perf: xgene: Add APM X-Gene SoC Performance
+ Monitoring Unit driver
+Date: Mon, 27 Jun 2016 17:00:40 +0100
+Message-ID: <20160627160036.GB29321@leverpostej>
+References: <1466618819-2697-1-git-send-email-ttnguyen@apm.com>
+ <1466618819-2697-4-git-send-email-ttnguyen@apm.com>
+ <20160623143201.GI8836@leverpostej>
+ <CACgAJHyprybnpQuKqvD9rXstQBwoeVG+uGtEBp-pppcfSGMKgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160627090248.23621-2-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACgAJHyprybnpQuKqvD9rXstQBwoeVG+uGtEBp-pppcfSGMKgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2016 03:02 AM, Joseph Lo wrote:
-> Add DT binding for the Hardware Synchronization Primitives (HSP). The
-> HSP is designed for the processors to share resources and communicate
-> together. It provides a set of hardware synchronization primitives for
-> interprocessor communication. So the interprocessor communication (IPC)
-> protocols can use hardware synchronization primitive, when operating
-> between two processors not in an SMP relationship.
+Hi,
 
-This binding is quite different to the binding you sent to internal IP 
-review. I wonder why it changed? Specific comments below:
+On Sat, Jun 25, 2016 at 10:54:20AM -0700, Tai Tri Nguyen wrote:
+> On Thu, Jun 23, 2016 at 7:32 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Wed, Jun 22, 2016 at 11:06:58AM -0700, Tai Nguyen wrote:
+> > > +#define _GET_CNTR(ev)     (ev->hw.extra_reg.reg)
+> > > +#define _GET_EVENTID(ev)  (ev->hw.config & 0xFFULL)
+> > > +#define _GET_AGENTID(ev)  (ev->hw.extra_reg.config & 0xFFFFFFFFULL)
+> > > +#define _GET_AGENT1ID(ev) ((ev->hw.extra_reg.config >> 32) & 0xFFFFFFFFULL)
+> >
+> > I don't think you need to use the extra_reg fields for this. It's a
+> > little bit confusing to use them, as the extra_reg (and branch_reg)
+> > fields are for separately allocated PMU state.
+> >
+> > _GET_CNTR can use hw_perf_event::idx,  and _GET_AGENT*_ID can use
+> > config_base.
+> 
+> I need a 64 bit field for GET_AGENT*ID. The config_base is only 32 bit.
+> Can you please suggest another field?
 
-> diff --git a/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+Judging by <linux/perf_event.h> config_base is an unsigned long, which
+will be 64 bit for arm64, which is the only place this is used.
 
-> +NVIDIA Tegra Hardware Synchronization Primitives (HSP)
-> +
-> +The HSP modules are used for the processors to share resources and communicate
-> +together. It provides a set of hardware synchronization primitives for
-> +interprocessor communication. So the interprocessor communication (IPC)
-> +protocols can use hardware synchronization primitives, when operating between
-> +two processors not in an SMP relationship.
-> +
-> +The features that HSP supported are shared mailboxes, shared semaphores,
-> +arbitrated semaphores and doorbells.
-> +
-> +Required properties:
-> +- name : Should be hsp
-> +- compatible : Should be "nvidia,tegra<chip>-hsp"
+So unless I've missed something, that should be ok, no?
 
-I think this should explicitly list the value values of the compatible 
-property, rather than being a generic/wildcard description:
+> > > +static u64 xgene_perf_event_update(struct perf_event *event)
+> > > +{
+> > > +     struct xgene_pmu_dev *pmu_dev = to_pmu_dev(event->pmu);
+> > > +     struct hw_perf_event *hwc = &event->hw;
+> > > +     u64 delta, prev_raw_count, new_raw_count;
+> > > +
+> > > +again:
+> > > +     prev_raw_count = local64_read(&hwc->prev_count);
+> > > +     new_raw_count = pmu_dev->max_period;
+> >
+> > I don't understand this. Why are we not reading the counter here?
+> >
+> > This means that the irq handler won't be reading the counter, which
+> > means we're throwing away events, and I suspect other cases are broken
+> > too.
+> >
+> 
+> When the overflow interrupt occurs, the PMU counter wraps to 0 and
+> continues to run.
+> This event_update function is called only to handle the The PMU
+> counter overflow interrupt occurs.
+> I'm assuming that when the overflow happens, the read back counter
+> value is the max period.
 
-- compatible
-     Array of strings.
-     One of:
-   - "nvidia,tegra186-hsp"
+Well, it could be a larger value depending on the latency.
 
-If/when this binding supports other SoCs in the future, we'll add more 
-entries into that list.
+> Is this assumption incorrect? Do you have any suggestion what I should
+> do. Because if I read the counter register,
+> it returns the minor wrapped around value.
+> Or should it be: new_count = counter read + max period?
 
-> +- reg : Offset and length of the register set for the device
-> +- interrupts : Should contain the HSP interrupts
-> +- interrupt-names: Should contain the names of the HSP interrupts that the
-> +		   client are using.
-> +		   "doorbell"
+We handle the wraparound when we caluclate the delta below. By setting
+the interrupt to occur within half of the max period (as per the arm-cci
+driver), we avoid (with a high degree of certainty) the risk of
+overtaking the prev raw count again before handlnig the IRQ.
 
-The binding should describe the HW, and not be affected by anything 
-"that the client(s) are using". If there are multiple interrupts, we 
-should list them all here, from the start.
+The raw_* values above should be the *raw* values from the HW, as their
+names imply.
 
-When revising this, I would consider the following wording canonical:
+> > > +     if (local64_cmpxchg(&hwc->prev_count, prev_raw_count,
+> > > +                         new_raw_count) != prev_raw_count)
+> > > +             goto again;
+> > > +
+> > > +     delta = (new_raw_count - prev_raw_count) & pmu_dev->max_period;
+> > > +
+> > > +     local64_add(delta, &event->count);
+> > > +     local64_sub(delta, &hwc->period_left);
+> >
+> > Given we aren't sampling, does the period left matter? It looks like
+> > drivers are inconsistent w.r.t. this, and I'm not immediately sure :(
+> 
+> I tried to drop it and  the perf event count still works properly for me.
+> I'll remove it.
 
-- interrupt-names
-     Array of strings.
-     Contains a list of names for the interrupts described by the
-     interrupts property. May contain the following entries, in any
-     order:
-     - "doorbell"
-     - "..." (no doubt many more items will be listed here, e.g.
-       for semaphores, etc.).
-     Users of this binding MUST look up entries in the interrupts
-     property by name, using this interrupts-names property to do so.
-- interrupts
-     Array of interrupt specifiers.
-     Must contain one entry per entry in the interrupt-names property,
-     in a matching order.
+[...]
 
-> +- nvidia,hsp-function : Specifies one of the HSP functions that the HSP unit
-> +			will be supported. The function ID can be found in the
-> +			header file <dt-bindings/mailbox/tegra-hsp.h>.
+> > > +static irqreturn_t xgene_pmu_isr(int irq, void *dev_id)
+> > > +{
+> > > +     struct xgene_pmu_dev_ctx *ctx, *temp_ctx;
+> > > +     struct xgene_pmu *xgene_pmu = dev_id;
+> > > +     u32 val;
+> > > +
+> > > +     xgene_pmu_mask_int(xgene_pmu);
+> >
+> > Why do you need to mask the IRQ? This handler is called in hard IRQ
+> > context.
+> 
+> Right. Let me change to use raw_spin_lock_irqsave here.
 
-This property wasn't in the internal patch.
+Interesting; I see we do that in the CCI PMU driver. What are we trying
+to protect?
 
-This doesn't make sense. The HW feature-set is fixed. This sounds like 
-some kind of software configuration option, or a way to allow different 
-drivers to handle different aspects of the HW? In general, the binding 
-shouldn't be influenced by software structure. Please delete this property.
+We don't do that in the CPU PMU drivers, and I'm missng something here.
+Hopefully I'm just being thick...
 
-Now, if you're attempting to set up a binding where each function 
-(semaphores, shared mailboxes, doorbells, etc.) has a different DT node, 
-then (a) splitting up HW modules into sub-blocks has usually turned out 
-to be a mistake in the past, and (b) the differences should likely be 
-represented by using a different compatible property for each 
-sub-component, rather than via a custom property.
-
-
-The following properties were included in the internal patch:
-
-                 nvidia,num-SM = <0x8>;
-                 nvidia,num-AS = <0x2>;
-                 nvidia,num-SS = <0x2>;
-                 nvidia,num-DB = <0x7>;
-                 nvidia,num-SI = <0x8>;
-
-... yet aren't here. True the compatible value implies those values; was 
-that why the properties were removed?
-
-> +Example:
-> +
-> +hsp_top: hsp@3c00000 {
-...
-> +bpmp@d0000000 {
-> +	...
-> +	mboxes = <&hsp_top HSP_DB_MASTER_BPMP>;
-> +	...
-> +};
-
-I'd suggest not including the bpmp node in the example, since it's not 
-part of the HSP node. If you do, recall that bpmp has no reg property 
-and hence the node name shouldn't include a unit address.
-
-> diff --git a/include/dt-bindings/mailbox/tegra-hsp.h b/include/dt-bindings/mailbox/tegra-hsp.h
-
-This file should probably be named tegra186-hsp, since I doubt the 
-master ID values will be stable between chips.
-
-> +/*
-> + * This header provides constants for binding nvidia,tegra<chip>-hsp.
-
-That should say "186" not "<chip>"
-
-> +#ifndef _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
-> +#define _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
-
-The two changes mentioned above would be consistent with that include 
-guard's name including the text "186".
-
-> +#define HSP_SHARED_MAILBOX		0
-> +#define HSP_SHARED_SEMAPHORE		1
-> +#define HSP_ARBITRATED_SEMAPHORE	2
-> +#define HSP_DOORBELL			3
-
-I think those should be removed, along with the nvidia,hsp-function 
-property.
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
