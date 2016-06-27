@@ -1,105 +1,116 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Add BCM53125 Device Tree nodes
-Date: Mon, 27 Jun 2016 10:09:34 +0200
-Message-ID: <20160627080934.GS4000@lukather>
-References: <1465690459-30751-1-git-send-email-f.fainelli@gmail.com>
- <1465690459-30751-2-git-send-email-f.fainelli@gmail.com>
- <CAGb2v64u74cXG0R-MSMtDBxBpg2tFoifQwqbvWL-+3pG=GLVTQ@mail.gmail.com>
- <576F450B.3080207@gmail.com>
- <20160626080550.GG4000@lukather>
- <57701053.9090903@gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 1/2] leds: ncp5623: Add device tree binding documentation
+Date: Mon, 27 Jun 2016 10:11:04 +0200
+Message-ID: <5770DF98.7010900@samsung.com>
+References: <1467010990-28070-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1467010990-28070-2-git-send-email-florian.vaussard@heig-vd.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JWOY2/vB4uO4FuME"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57701053.9090903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1467010990-28070-2-git-send-email-florian.vaussard@heig-vd.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@gmail.com>
+Cc: devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
 List-Id: devicetree@vger.kernel.org
 
+Hi Florian,
 
---JWOY2/vB4uO4FuME
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06/27/2016 09:03 AM, Florian Vaussard wrote:
+> Add device tree binding documentation for On Semiconductor NCP5623 I2C
+> LED driver. The driver can independently control the PWM of the 3
+> channels with 32 levels of intensity.
+>
+> The current delivered by the current source can also be controlled. To
+> do so, the led-max-microamp property is used by each LED sub-node. The
+> maximum value is then found and used as a limit to compute the final
+> intensity of the current source. If a LED happens to have a lower limit,
+> the PWM is then used to limit the current to the requested value.
+>
+> In order to control the current source, it is also necessary to know
+> the current on the Iref pin, hence the onnn,led-iref-microamp property.
+> It is usually set using an external bias resistor, following
+> Iref = Vref/Rbias with Vref=0.6V.
+>
+> Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
+> ---
+>   .../devicetree/bindings/leds/leds-ncp5623.txt      | 60 ++++++++++++++++++++++
+>   1 file changed, 60 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-ncp5623.txt
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-ncp5623.txt b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
+> new file mode 100644
+> index 0000000..77dd7ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
+> @@ -0,0 +1,60 @@
+> +* ON Semiconductor - NCP5623 3-Channel LED Driver
+> +
+> +The NCP5623 is a 3-channel I2C LED driver. The brightness of each
+> +channel can be independently set using 32 levels. Each LED is represented
+> +as a sub-node of the device.
+> +
+> +Required properties:
+> +  - compatible: Should be "onnn,ncp5623"
+> +  - reg: I2C slave address (fixed to 0x38)
+> +  - #address-cells: must be 1
+> +  - #size-cells: must be 0
+> +  - onnn,led-iref-microamp: Current on the Iref pin in microampere. It depends
+> +    on the value of the external bias resistor Rbias, following
+> +    Iref = Vref / Rbias with Vref = 0.6V. This is used to set the intensity of
+> +    the current that can be provided by the internal current source, based on
+> +    the maximum current permitted by LED sub-nodes (see below), but no more than
+> +    Imax = 2400 * Iref.
+> +
+> +LED sub-nodes
+> +=============
+> +
+> +Required properties:
+> +  - reg : LED channel number (0..2)
+> +  - led-max-microamp: Maximum allowable current inside the LED in microampere.
+> +    This property is used to limit the PWM ratio, based on the intensity of the
+> +    internal current source (see above).
+> +
+> +Optional properties:
+> +  - label: Used for naming LEDs
 
-On Sun, Jun 26, 2016 at 10:26:43AM -0700, Florian Fainelli wrote:
-> Le 26/06/2016 01:05, Maxime Ripard a =E9crit :
-> > Hi Florian,
-> >=20
-> > On Sat, Jun 25, 2016 at 07:59:23PM -0700, Florian Fainelli wrote:
-> >> Le 23/06/2016 22:48, Chen-Yu Tsai a =E9crit :
-> >>>> diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/bo=
-ot/dts/sun7i-a20-lamobo-r1.dts
-> >>>> index 5ee43d8bf174..697582397dcf 100644
-> >>>> --- a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-> >>>> +++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-> >>>> @@ -110,13 +110,67 @@
-> >>>>  &gmac {
-> >>>>         pinctrl-names =3D "default";
-> >>>>         pinctrl-0 =3D <&gmac_pins_rgmii_a>;
-> >>>> -       phy =3D <&phy1>;
-> >>>>         phy-mode =3D "rgmii";
-> >>>>         phy-supply =3D <&reg_gmac_3v3>;
-> >>>>         status =3D "okay";
-> >>>>
-> >>>> -       phy1: ethernet-phy@1 {
-> >>>> -               reg =3D <1>;
-> >>>> +       fixed-link {
-> >>>> +               speed =3D <1000>;
-> >>>> +               full-duplex;
-> >>>> +       };
-> >>>> +
-> >>>> +       mdio1 {
-> >>>
-> >>> mdio will suffice.
-> >>
-> >> There is another label in sun7i-a20.dtsi named mdio which is for the
-> >> MDIO controller node matching allwinner,sun4i-a10-mdio, which is not t=
-he
-> >> one we want here, we want the MDIO controller associated with the
-> >> Synopsys GMAC.
-> >=20
-> > Yes, but it's in a different node, and you're not using any labels, so
-> > I don't really see how that would conflict.
->=20
-> Fair enough, I sent a v2 which uses "mdio-gmac" as a label, should I
-> respin a v3 which just uses "mdio"?
+Instead of the above description use same reference to common led
+bindings as below.
 
-Yes, please do, thanks!
+> +  - default-trigger: see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example
+> +=======
+> +
+> +led1: ncp5623@38 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	compatible = "onnn,ncp5623";
+> +	reg = <0x38>;
+> +	onnn,led-iref-microamp = <10>;
+> +
+> +	led1r@0 {
+> +		label = "ncp:power:red";
+> +		linux,default-trigger = "default-on";
+> +		reg = <0>;
+> +		led-max-microamp = <20000>;
+> +	};
+> +
+> +	led1b@1 {
+> +		label = "ncp:power:blue";
+> +		reg = <1>;
+> +		led-max-microamp = <20000>;
+> +	};
+> +
+> +	led1g@2 {
+> +		label = "ncp:power:green";
+> +		reg = <2>;
+> +		led-max-microamp = <20000>;
+> +	};
+> +};
+>
 
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---JWOY2/vB4uO4FuME
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXcN8+AAoJEBx+YmzsjxAglQcP/3GTkK/fTPH0m7/lx3+flDPG
-/xVMb7TeWKgx63L+Sek099hy8G/YjaMMmEN36HsrK4dazWv7RHMuUkJlQCKQO4Cy
-gMOJ4VdkC05/cwFW12TwbqrnQRDDYTP5pXsnb9uOXu5y+1FLeWraDbdwcvHb6lrl
-RPtVBDNzI2ky6b23Kq8r4jcsWUNGes6xU7viEwmjnM5SHjJwib/jUYHSfjF0xMhR
-MlxAm4UkKTNhFfd1+4YpwbvD8OxRkYlnfzvbmqHGGolW8ozHV2x8irduozKceYz6
-wZO2bRf5+aAjoVBYH80LLxhx908njyCmKE1FbQHkwNuiOivzHAZbqSP289zdQnxz
-VgEY538iyhCBgvdxXfjc8HR024O85pQjAosTmCM/g4qspjp2eheiKMhmJOYSrkKI
-Ctoy2wFsdQP/c9b73dy+suVq4obEuzkQSq10XCTz76KwmQfhZyX6xOFWz7a3ZYIN
-SCO9HPbt6OPPLhg8eRLMDEFL8MdkE5JPsoslKoEl+8yPNY7GgOWFIfUr1Q7Q68Jn
-ZW5frJjNTsfCiyCbrlqkvaogmNIg1fc4aEC+nd39O4yioNGFlgrGH9YqxWZ/9zPs
-kR/LJs2AGAbs0+3vZy+BY1tl/YBoVlPlFHaMjZukBSww7T6v7bVmMr6OwyojchSj
-VgGkzmW09UjX1KQBddZi
-=SL9V
------END PGP SIGNATURE-----
-
---JWOY2/vB4uO4FuME--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best regards,
+Jacek Anaszewski
