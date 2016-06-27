@@ -1,174 +1,143 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] iio: ad5755: Add DT binding documentation
-Date: Mon, 27 Jun 2016 21:10:05 +0100
-Message-ID: <791b49df-254a-ddd0-1406-0ad235c7cc56@kernel.org>
-References: <20160627082718.2087-1-sean.nyekjaer@prevas.dk>
- <20160627082718.2087-2-sean.nyekjaer@prevas.dk>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 11/15] clk: sunxi-ng: Add N-M-factor clock support
+Date: Mon, 27 Jun 2016 22:29:37 +0200
+Message-ID: <20160627202937.GY4000@lukather>
+References: <20160607204154.31967-1-maxime.ripard@free-electrons.com>
+ <20160607204154.31967-12-maxime.ripard@free-electrons.com>
+ <20160609094101.426a13c4c61aa6cb11df16fc@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160627082718.2087-2-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0786ZyFfTSxuegBe"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160609094101.426a13c4c61aa6cb11df16fc@free.fr>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/06/16 09:27, Sean Nyekjaer wrote:
-> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Please remember to pick up previous Acks etc such as Rob's
-when posting a new version with changes that don't affect it.
 
-Applied both to the togreg branch of iio.git.
+--0786ZyFfTSxuegBe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+Hi,
 
-Jonathan
-> ---
-> Changes since v4:
-> - Appended -hz to dc-dc-freq
-> - Added adi,dc-dc-max-microvolt
-> - Added reg property
-> 
-> Changes since v3:
-> - replaced '_' with '-'
-> - Now used actual values instead of register values.
-> 
-> Changes since v2:
->  - Removed defines, alot easier to read
-> 
->  .../devicetree/bindings/iio/dac/ad5755.txt         | 124 +++++++++++++++++++++
->  1 file changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5755.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
-> new file mode 100644
-> index 0000000..f0bbd7e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
-> @@ -0,0 +1,124 @@
-> +* Analog Device AD5755 IIO Multi-Channel DAC Linux Driver
-> +
-> +Required properties:
-> + - compatible: Has to contain one of the following:
-> +	adi,ad5755
-> +	adi,ad5755-1
-> +	adi,ad5757
-> +	adi,ad5735
-> +	adi,ad5737
-> +
-> + - reg: spi chip select number for the device
-> + - spi-cpha or spi-cpol: is the only modes that is supported
-> +
-> +Recommended properties:
-> + - spi-max-frequency: Definition as per
-> +		Documentation/devicetree/bindings/spi/spi-bus.txt
-> +
-> +Optional properties:
-> +See include/dt-bindings/iio/ad5755.h
-> + - adi,ext-dc-dc-compenstation-resistor: boolean set if the hardware have an
-> +					 external resistor and thereby bypasses
-> +					 the internal compensation resistor.
-> + - adi,dc-dc-phase:
-> +	Valid values for DC DC Phase control is:
-> +	0: All dc-to-dc converters clock on the same edge.
-> +	1: Channel A and Channel B clock on the same edge,
-> +	   Channel C and Channel D clock on opposite edges.
-> +	2: Channel A and Channel C clock on the same edge,
-> +	   Channel B and Channel D clock on opposite edges.
-> +	3: Channel A, Channel B, Channel C, and Channel D
-> +	   clock 90 degrees out of phase from each other.
-> + - adi,dc-dc-freq-hz:
-> +	Valid values for DC DC frequency is [Hz]:
-> +	250000
-> +	410000
-> +	650000
-> + - adi,dc-dc-max-microvolt:
-> +	Valid values for the maximum allowed Vboost voltage supplied by
-> +	the dc-to-dc converter is:
-> +	23000000
-> +	24500000
-> +	27000000
-> +	29500000
-> +
-> +Optional for every channel:
-> + - adi,mode:
-> +	Valid values for DAC modes is:
-> +	0: 0 V to 5 V voltage range.
-> +	1: 0 V to 10 V voltage range.
-> +	2: Plus minus 5 V voltage range.
-> +	3: Plus minus 10 V voltage range.
-> +	4: 4 mA to 20 mA current range.
-> +	5: 0 mA to 20 mA current range.
-> +	6: 0 mA to 24 mA current range.
-> + - adi,ext-current-sense-resistor: boolean set if the hardware a external
-> +				   current sense resistor.
-> + - adi,enable-voltage-overrange: boolean enable voltage overrange
-> + - adi,slew: Array of slewrate settings should contain 3 fields:
-> +	1: Should be either 0 or 1 in order to enable or disable slewrate.
-> +	2: Slew rate settings:
-> +		Valid values for the slew rate update frequency:
-> +		64000
-> +		32000
-> +		16000
-> +		8000
-> +		4000
-> +		2000
-> +		1000
-> +		500
-> +		250
-> +		125
-> +		64
-> +		32
-> +		16
-> +		8
-> +		4
-> +		0
-> +	3: Slew step size:
-> +		Valid values for the step size LSBs:
-> +		1
-> +		2
-> +		4
-> +		16
-> +		32
-> +		64
-> +		128
-> +		256
-> +
-> +Example:
-> +dac@0 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "adi,ad5755";
-> +	reg = <0>;
-> +	spi-max-frequency = <1000000>;
-> +	spi-cpha;
-> +	adi,dc-dc-phase = <0>;
-> +	adi,dc-dc-freq-hz = <410000>;
-> +	adi,dc-dc-max-microvolt = <23000000>;
-> +	channel@0 {
-> +		reg = <0>;
-> +		adi,mode = <4>;
-> +		adi,ext-current-sense-resistor;
-> +		adi,slew = <0 64000 1>;
-> +	};
-> +	channel@1 {
-> +		reg = <1>;
-> +		adi,mode = <4>;
-> +		adi,ext-current-sense-resistor;
-> +		adi,slew = <0 64000 1>;
-> +	};
-> +	channel@2 {
-> +		reg = <2>;
-> +		adi,mode = <4>;
-> +		adi,ext-current-sense-resistor;
-> +		adi,slew = <0 64000 1>;
-> +	};
-> +	channel@3 {
-> +		reg = <3>;
-> +		adi,mode = <4>;
-> +		adi,ext-current-sense-resistor;
-> +		adi,slew = <0 64000 1>;
-> +	};
-> +};
-> 
+On Thu, Jun 09, 2016 at 09:41:01AM +0200, Jean-Francois Moine wrote:
+> On Tue,  7 Jun 2016 22:41:50 +0200
+> Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+>=20
+> > Introduce support for clocks that multiply and divide using linear fact=
+ors.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> >=20
+> > ---
+> > Changes from v1:
+> >   - Fixed the maximums for both factors passed to the rational factor
+> >     computation.
+> > ---
+> >  drivers/clk/sunxi-ng/Makefile |   1 +
+> >  drivers/clk/sunxi-ng/ccu_nm.c | 114 ++++++++++++++++++++++++++++++++++=
+++++++++
+> >  drivers/clk/sunxi-ng/ccu_nm.h |  95 +++++++++++++++++++++++++++++++++++
+> >  3 files changed, 210 insertions(+)
+> >  create mode 100644 drivers/clk/sunxi-ng/ccu_nm.c
+> >  create mode 100644 drivers/clk/sunxi-ng/ccu_nm.h
+> >=20
+> > diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makef=
+ile
+> > index a201fad6b11d..5c7ae1ad1082 100644
+> > --- a/drivers/clk/sunxi-ng/Makefile
+> > +++ b/drivers/clk/sunxi-ng/Makefile
+> > @@ -9,4 +9,5 @@ obj-y +=3D ccu_gate.o
+> >  obj-y +=3D ccu_mp.o
+> >  obj-y +=3D ccu_mux.o
+> >  obj-y +=3D ccu_nk.o
+> > +obj-y +=3D ccu_nm.o
+> >  obj-y +=3D ccu_phase.o
+> > diff --git a/drivers/clk/sunxi-ng/ccu_nm.c b/drivers/clk/sunxi-ng/ccu_n=
+m.c
+> > new file mode 100644
+> > index 000000000000..e35ddd8eec8b
+> > --- /dev/null
+> > +++ b/drivers/clk/sunxi-ng/ccu_nm.c
+> > @@ -0,0 +1,114 @@
+> > +/*
+> > + * Copyright (C) 2016 Maxime Ripard
+> > + * Maxime Ripard <maxime.ripard@free-electrons.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License as
+> > + * published by the Free Software Foundation; either version 2 of
+> > + * the License, or (at your option) any later version.
+> > + */
+> > +
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/rational.h>
+> > +
+> > +#include "ccu_frac.h"
+> > +#include "ccu_gate.h"
+> > +#include "ccu_nm.h"
+> 	[snip]
+> > +static unsigned long ccu_nm_recalc_rate(struct clk_hw *hw,
+> > +					unsigned long parent_rate)
+> > +{
+> > +	struct ccu_nm *nm =3D hw_to_ccu_nm(hw);
+> > +	unsigned long n, m;
+> > +	u32 reg;
+> > +
+> > +	if (ccu_frac_helper_is_enabled(&nm->common, &nm->frac))
+> > +		return ccu_frac_helper_read_rate(&nm->common, &nm->frac);
+> > +
+> > +	reg =3D readl(nm->common.base + nm->common.reg);
+> > +
+> > +	n =3D reg >> nm->n.shift;
+> > +	n &=3D (1 << nm->n.width) - 1;
+> > +
+> > +	m =3D reg >> nm->m.shift;
+> > +	m &=3D (1 << nm->m.width) - 1;
+> > +
+> > +	return parent_rate * (n + 1) / (m + 1);
+>=20
+> In the H3, 'm' is a pre-divider (audio and video PLLs):
+>=20
+> 	return parent_rate / (m + 1) * (n + 1);
+
+That's true, but the "true" N-M clocks exist and are using this
+formula (like the Audio PLL on A10's).
+
+If (and when) that causes some rounding issues, we can always add
+pre-divider support to N-Clocks that we are going to need anyway for
+the older SoCs.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--0786ZyFfTSxuegBe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXcYyxAAoJEBx+YmzsjxAgy8IQAK3ieSbN2byn5uWey4B5e6F0
+49phxN9nF9xGWWeiIW9bHNgC18t/v0+5/JhtpxWyq0W+R4YQnPcNSbS4MZStUXES
+dJCo4ycNCAiyrlgljXRhFbE3heZIz4Ot8u9VEpbnmFRWqUYksmNYFVvcfqNspXH6
+iyRExzBfvMAcc5wRGTd/eezlcb+LzUN7LSAEP7kGB2mjZSooJWu8J/w/cHQjxOVZ
+N51s417w3xxTLEoHWn3GEuD6y5GHnddHD0eqAyzSX2f+ubb+D8BJkMa7ths93Ok5
+qr7W95YEQNbjHP6W+q/AOrvF4fKRtSFC4eScE9ux+vFfYXA2CWmuelmbTz324RDU
+sPuoKXt02ma9lYKtFZyerbbICbFsCAKS3VYUKfa9trZne4VC9IXvwq6TTQg2E1TG
+vucz0TixnVQ2ru1VXv/qrxV1LqOMem9NReRY+VBrR9kdnoi0wMqEk5THTL0Dwivv
+SAcBOuiV54f7HHU7EA5VvjTI6ilxjL2CTqgavXMidQYUSkd+V0Xj1cPoGqieSP2V
+h94IKJ26XRnFQn+nq08RlW9fjwoxrKE/4WyafihP/2gXJ+RFWiA+EOPJnC9+o5Sr
+Ey0oSxR5eofwUGLVztw+tAdmOApHL0W3UhepzoKJVC1uS/2FOiKT3WQkbVhuU2X0
+Oo2xm5Er57DS5EJ/oP1O
+=6ZjI
+-----END PGP SIGNATURE-----
+
+--0786ZyFfTSxuegBe--
