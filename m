@@ -1,49 +1,61 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 2/2] remoteproc: qcom: Introduce WCNSS peripheral
- image loader
-Date: Tue, 28 Jun 2016 14:22:19 -0700
-Message-ID: <20160628212219.GG1190@tuxbot>
-References: <1467147506-753-1-git-send-email-bjorn.andersson@linaro.org>
- <1467147506-753-2-git-send-email-bjorn.andersson@linaro.org>
- <115043528.GxNIb9dTCg@wuerfel>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/2] drm/fsl-dcu: update the panel dt binding document
+Date: Tue, 28 Jun 2016 14:18:27 -0700
+Message-ID: <8e8820c0ccfa8e1348a038959da850f8@agner.ch>
+References: <1467106748-19314-1-git-send-email-meng.yi@nxp.com>
+ <20160628210748.GA10847@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <115043528.GxNIb9dTCg@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Ohad Ben-Cohen <ohad@wizery.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160628210748.GA10847@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: jianwei.wang.chn@gmail.com, Meng Yi <meng.yi@nxp.com>, devicetree@vger.kernel.org, emil.l.velikov@gmail.com, dri-devel@lists.freedesktop.org, shawnguo@kernel.org, alexander.stein@systec-electronic.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 28 Jun 14:05 PDT 2016, Arnd Bergmann wrote:
-
-> On Tuesday, June 28, 2016 1:58:26 PM CEST Bjorn Andersson wrote:
-> > 
-> > +config QCOM_WCNSS_PIL
-> > +       tristate "Qualcomm WCNSS Peripheral Image Loader"
-> > +       depends on OF && ARCH_QCOM
-> > +       select QCOM_MDT_LOADER
-> > +       select QCOM_SCM
-> > +       select REMOTEPROC
-> > +       help
-> > +         Say y here to support the Peripherial Image Loader for the Qualcomm
-> > +         Wireless Connectivity Subsystem.
-> > +
-> > 
-> 
-> 	"depends on QCOM_SMEM"
-> 
-> This showed up in Linux-next today and caused a build error:
-> 
-> drivers/remoteproc/built-in.o: In function `q6v5_fatal_interrupt':
-> qcom_q6v5_pil.c:(.text+0x2428): undefined reference to `qcom_smem_get'
-> drivers/remoteproc/built-in.o: In function `q6v5_wdog_interrupt':
-> qcom_q6v5_pil.c:(.text+0x2498): undefined reference to `qcom_smem_get'
-> 
-
-I was convinced I had stubs for those, sorry for not making sure. I
-amended rproc-next with this.
-
-Thanks,
-Bjorn
+T24gMjAxNi0wNi0yOCAxNDowNywgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBKdW4gMjgs
+IDIwMTYgYXQgMDU6Mzk6MDdQTSArMDgwMCwgTWVuZyBZaSB3cm90ZToKPj4gZHJvcHBlZCB0aGUg
+b2xkICJmc2wscGFuZWwiIHByb3BlcnR5LCB1c2luZyB0aGUgb2ZfZ3JhcGggZHQKPj4gYmluZGlu
+ZyBzeW50YXgKPj4KPj4gU2lnbmVkLW9mZi1ieTogTWVuZyBZaSA8bWVuZy55aUBueHAuY29tPgo+
+PiAtLS0KPj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxk
+Y3UudHh0IHwgOSArKysrKysrLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyks
+IDIgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9mc2wsZGN1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0Cj4+IGluZGV4IGFlNTVjZGUuLmY0NGNmNWIg
+MTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2ZzbCxkY3UudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2ZzbCxkY3UudHh0Cj4+IEBAIC0xMiw3ICsxMiw3IEBAIFJlcXVpcmVkIHByb3BlcnRp
+ZXM6Cj4+ICAtIGNsb2NrLW5hbWVzOgkJU2hvdWxkIGJlICJkY3UiIGFuZCAicGl4Igo+PiAgCQkJ
+U2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4+ICAtIGJpZy1l
+bmRpYW4JCUJvb2xlYW4gcHJvcGVydHksIExTMTAyMUEgRENVIHJlZ2lzdGVycyBhcmUgYmlnLWVu
+ZGlhbi4KPj4gLS0gZnNsLHBhbmVsOgkJVGhlIHBoYW5kbGUgdG8gcGFuZWwgbm9kZS4KPj4gKy0g
+cG9ydAkJCVZpZGVvIHBvcnQgZm9yIHRoZSBwYW5lbCBvdXRwdXQKPj4KPj4gIE9wdGlvbmFsIHBy
+b3BlcnRpZXM6Cj4+ICAtIGZzbCx0Y29uOgkJVGhlIHBoYW5kbGUgdG8gdGhlIHRpbWluZyBjb250
+cm9sbGVyIG5vZGUuCj4+IEBAIC0yNCw2ICsyNCwxMSBAQCBkY3U6IGRjdUAyY2UwMDAwIHsKPj4g
+IAljbG9ja3MgPSA8JnBsYXRmb3JtX2NsayAwPiwgPCZwbGF0Zm9ybV9jbGsgMD47Cj4+ICAJY2xv
+Y2stbmFtZXMgPSAiZGN1IiwgInBpeCI7Cj4+ICAJYmlnLWVuZGlhbjsKPj4gLQlmc2wscGFuZWwg
+PSA8JnBhbmVsPjsKPj4gIAlmc2wsdGNvbiA9IDwmdGNvbj47Cj4+ICsKPj4gKwlwb3J0OiBwb3J0
+QDAgewo+IAo+IERyb3AgdGhlIHVuaXQgYWRkcmVzcy4gV2l0aCB0aGF0LAoKSSB3YXMgZ29pbmcg
+dG8gc2F5IGFkZCBhIGNvcnJlc3BvbmRpbmcgcmVnIHByb3BlcnR5IGFuZCBzcGVjaWZ5CmFkZHJl
+c3MtY2VsbHMuCgpTbyBpcyBpdCBvayB0byBhbHNvIGNyZWF0ZSBhIHBvcnQgd2l0aG91dCBhZGRy
+ZXNzPwoKSWYgeWVzLCB3ZSBzaG91bGQgcHJvYmFibHkgYmUgY29uc2lzdGVudCBhbmQgYWxzbyBu
+b3QgdXNlIHRoZSB1bml0CmFkZHJlc3MgaW4gcGF0Y2ggMi8yIChzaW5jZSB0aGF0IHBhbmVsIGFs
+c28gaGFzIG9ubHkgb25lIHBvcnQpLgoKLS0KU3RlZmFuCgo+IAo+IEFja2VkLWJ5OiBSb2IgSGVy
+cmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IAo+PiArCQlkY3Vfb3V0OiBlbmRwb2ludCB7Cj4+ICsJ
+CQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX291dD47Cj4+ICsJCX07Cj4+ICsJfTsKPj4gIH07
+Cj4+IC0tCj4+IDIuMS4wLjI3Lmc5NmRiMzI0Cj4+Cj4+IC0tCj4+IFRvIHVuc3Vic2NyaWJlIGZy
+b20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+
+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+PiBN
+b3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1p
+bmZvLmh0bWwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
