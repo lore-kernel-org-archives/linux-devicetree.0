@@ -1,15 +1,15 @@
 From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH 20/21] phy: Add support for Qualcomm's USB HSIC phy
-Date: Tue, 28 Jun 2016 14:58:16 -0700
-Message-ID: <146715109651.31418.4819151138932336863@sboyd-linaro>
+Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
+Date: Tue, 28 Jun 2016 15:09:21 -0700
+Message-ID: <146715176149.31418.10938517376423447782@sboyd-linaro>
 References: <20160626072838.28082-1-stephen.boyd@linaro.org>
- <20160626072838.28082-21-stephen.boyd@linaro.org>
- <57723A21.3060602@baylibre.com>
+ <20160626072838.28082-3-stephen.boyd@linaro.org>
+ <20160628205642.GP3737@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <57723A21.3060602@baylibre.com>
+In-Reply-To: <20160628205642.GP3737@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,56 +19,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, linux-usb@vger.kernel.org
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Neil Armstrong (2016-06-28 01:49:37)
-> On 06/26/2016 09:28 AM, Stephen Boyd wrote:
-> > +     uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
-> > +     if (IS_ERR(clk))
-> > +             return PTR_ERR(clk);
+Quoting Rob Herring (2016-06-28 13:56:42)
+> On Sun, Jun 26, 2016 at 12:28:19AM -0700, Stephen Boyd wrote:
+> > The qcom HSIC ulpi phy doesn't have any bits set in the vendor or
+> > product id ulpi registers. This makes it impossible to make a
+> > ulpi driver match against the id registers. Add support to
+> > discover the ulpi phys via DT to help alleviate this problem.
+> > We'll look for a ulpi bus node underneath the device registering
+> > the ulpi viewport (or the parent of that device to support
+> > chipidea's device layout) and then match up the phy node
+> > underneath that with the ulpi device that's created.
+> > 
+> > The side benefit of this is that we can use standard DT
+> > properties in the phy node like clks, regulators, gpios, etc.
+> > because we don't have firmware like ACPI to turn these things on
+> > for us. And we can use the DT phy binding to point our phy
+> > consumer to the phy provider.
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Cc: <devicetree@vger.kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/usb/ulpi.txt | 20 +++++++++
+> >  drivers/usb/common/ulpi.c                      | 56 +++++++++++++++++++++++++-
+> >  2 files changed, 74 insertions(+), 2 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/ulpi.txt b/Documentation/devicetree/bindings/usb/ulpi.txt
+> > new file mode 100644
+> > index 000000000000..ca179dc4bd50
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/ulpi.txt
+> > @@ -0,0 +1,20 @@
+> > +ULPI bus binding
+> > +----------------
+> > +
+> > +Phys that are behind a ULPI connection can be described with the following
+> > +binding. The host controller shall have a "ulpi" named node as a child, and
+> > +that node shall have one enabled node underneath it representing the ulpi
+> > +device on the bus.
 > 
-> Hi Stephen,
-> 
-> In the bindings the cal_sleep is marked optional, and I think should be since AFAIK
-> it's not present on MDM9615 for example.
+> This needs to co-exist with the USB bus binding which has the controller 
+> ports for the child nodes. Maybe use the phy binding?
 
-The cal_sleep clk is just the sleep clk then (should be a board clk in
-DT). Sometimes there's a gate in GCC to allow us to turn it off, other
-times there isn't. Either way, it's always wired there so I'll update
-the binding to say it isn't optional.
-
-> 
-> Also MDM9615 HSIC requires "core", "alt-core", "phy", "cal" and "iface" clocks.
-> I assume "core" can be attributed to the main chipidea node, but I think "alt-core" and "iface" should be also optionnal.
-
-Looking at the downstream sources I see this:
-
-        "core_clk"     -> usb_hsic_sys_clk
-        "iface_clk"    -> usb_hsic_p_clk
-        "alt_core_clk" -> usb_hsic_xcvr_clk
-
-        "cal_clk"      -> usb_hsic_hsio_cal_clk
-        "phy_clk"      -> usb_hsic_clk
-
-"core_clk" would be the core clk in ci_hdrc_msm. "iface_clk" would be
-the iface clk in ci_hdrc_msm. "cal_clk" would be the cal clk in the hsic
-phy and "phy_clk" would be the phy clk in the hsic phy.
-
-That leaves alt_core_clk which seems to be a clock that needs to be on
-during the reset assert/deassert and possibly for LPM and USB1.1 FS
-modes. Sometimes it's referred to as the "housekeeping" clk. Due to the
-way resets are done on msm8974 and later SoCs it looks like this clk was
-removed. I can make this an optional clk in the ci_hdrc_msm driver, or
-we can have two versions of the ci_hdrc_msm compatible string, one for a
-device that has the housekeeping clk and one for the device that
-doesn't.
-
-> 
-> Finally, it misses an optional reset line AFAIK mandatory on MDM9615.
-> 
-
->From what I can tell downstream, all those clks point to the same bit 0
-of HSIC_RESET register? So there isn't any phy reset, just the chipidea
-controller wrapper reset bit, which should go into the wrapper node?
+Which binding is that? bindings/usb/usb-device.txt? This ulpi binding is
+to describe phys that are accessed through the ulpi "viewport" in the
+usb controller. So controller ports don't come into the picture here.
