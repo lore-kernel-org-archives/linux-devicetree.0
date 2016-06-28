@@ -1,119 +1,108 @@
-Return-Path: <broonie@sirena.org.uk>
-From: Mark Brown <broonie@kernel.org>
-In-Reply-To: <1465870678-30128-2-git-send-email-wens@csie.org>
-Message-Id: <E1bIKXK-0005rN-JW@finisterre>
-Date: Wed, 29 Jun 2016 19:48:34 +0100
-Subject: Applied "regmap: Support bulk writes for devices without raw formatting" to the regmap tree
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+MIME-Version: 1.0
+In-Reply-To: <20160628041750.GA1190@tuxbot>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+	<20160626072838.28082-2-stephen.boyd@linaro.org>
+	<20160628041750.GA1190@tuxbot>
+Date: Mon, 27 Jun 2016 23:39:16 -0500
+Message-ID: <CAL_JsqKVvcmxY9T51y3Dx+OfYqRY8yC72WafgJwKta8=YAJKEA@mail.gmail.com>
+Subject: Re: [PATCH 01/21] of: device: Support loading a module with OF based modalias
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Stephen Boyd <stephen.boyd@linaro.org>, Linux USB List <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The patch
+On Mon, Jun 27, 2016 at 11:17 PM, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+> On Sun 26 Jun 00:28 PDT 2016, Stephen Boyd wrote:
+>
+>> In the case of ULPI devices, we want to be able to load the
+>> driver before registering the device so that we don't get stuck
+>> in a loop waiting for the phy module to appear and failing usb
+>> controller probe. Currently we request the ulpi module via the
+>> ulpi ids, but in the DT case we might need to request it with the
+>> OF based modalias instead. Add a common function that allows
+>> anyone to request a module with the OF based modalias.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: <devicetree@vger.kernel.org>
+>> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+>> ---
+>>  drivers/of/device.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of_device.h |  6 ++++++
+>>  2 files changed, 56 insertions(+)
+>>
+>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>> index fd5cfad7c403..f275e5beb736 100644
+>> --- a/drivers/of/device.c
+>> +++ b/drivers/of/device.c
+>> @@ -226,6 +226,56 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+>>       return tsize;
+>>  }
+>>
+>> +static ssize_t of_device_modalias_size(struct device *dev)
+>> +{
+>> +     const char *compat;
+>> +     int cplen, i;
+>> +     ssize_t csize;
+>> +
+>> +     if ((!dev) || (!dev->of_node))
+>> +             return -ENODEV;
+>> +
+>> +     /* Name & Type */
+>> +     csize = 5 + strlen(dev->of_node->name) + strlen(dev->of_node->type);
+>
+> It would be clearer if you replaced 5 with strlen("of:NT"), but...
 
-   regmap: Support bulk writes for devices without raw formatting
+Is the compiler smart enough to replace that with a constant 5? At least a comment of where 5 comes from as I was wondering.
 
-has been applied to the regmap tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 5bf75b44972a7edffa9f52cddb291d66bc16a4d6 Mon Sep 17 00:00:00 2001
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Mon, 20 Jun 2016 10:52:11 +0800
-Subject: [PATCH] regmap: Support bulk writes for devices without raw
- formatting
-
-When doing a bulk writes from a device which lacks raw I/O support we
-fall back to doing register at a time reads but we still use the raw
-formatters in order to render the data into the word size used by the
-device (since bulk reads still operate on the device word size rather
-than unsigned ints).  This means that devices without raw formatting
-such as those that provide reg_read() are not supported.  Provide
-handling for them by copying the values read into native endian values
-of the appropriate size.
-
-This complements commit d5b98eb12420 ("regmap: Support bulk reads for
-devices without raw formatting").
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/base/regmap/regmap.c | 31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index df2d2ef5d6b3..51fa7d66a393 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1777,8 +1777,6 @@ int regmap_bulk_write(struct regmap *map, unsigned int reg, const void *val,
- 	size_t val_bytes = map->format.val_bytes;
- 	size_t total_size = val_bytes * val_count;
- 
--	if (map->bus && !map->format.parse_inplace)
--		return -EINVAL;
- 	if (!IS_ALIGNED(reg, map->reg_stride))
- 		return -EINVAL;
- 
-@@ -1789,7 +1787,8 @@ int regmap_bulk_write(struct regmap *map, unsigned int reg, const void *val,
- 	 *
- 	 * The first if block is used for memory mapped io. It does not allow
- 	 * val_bytes of 3 for example.
--	 * The second one is used for busses which do not have this limitation
-+	 * The second one is for busses that do not provide raw I/O.
-+	 * The third one is used for busses which do not have these limitations
- 	 * and can write arbitrary value lengths.
- 	 */
- 	if (!map->bus) {
-@@ -1825,6 +1824,32 @@ int regmap_bulk_write(struct regmap *map, unsigned int reg, const void *val,
- 		}
- out:
- 		map->unlock(map->lock_arg);
-+	} else if (map->bus && !map->format.parse_inplace) {
-+		const u8 *u8 = val;
-+		const u16 *u16 = val;
-+		const u32 *u32 = val;
-+		unsigned int ival;
-+
-+		for (i = 0; i < val_count; i++) {
-+			switch (map->format.val_bytes) {
-+			case 4:
-+				ival = u32[i];
-+				break;
-+			case 2:
-+				ival = u16[i];
-+				break;
-+			case 1:
-+				ival = u8[i];
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+
-+			ret = regmap_write(map, reg + (i * map->reg_stride),
-+					   ival);
-+			if (ret)
-+				return ret;
-+		}
- 	} else if (map->use_single_write ||
- 		   (map->max_raw_write && map->max_raw_write < total_size)) {
- 		int chunk_stride = map->reg_stride;
--- 
-2.8.1
+>> +
+>> +     /* Get compatible property if any */
+>> +     compat = of_get_property(dev->of_node, "compatible", &cplen);
+>> +     if (!compat)
+>> +             return csize;
+>> +
+>> +     /* Find true end (we tolerate multiple \0 at the end */
+>> +     for (i = (cplen - 1); i >= 0 && !compat[i]; i--)
+>> +             cplen--;
+>> +     if (!cplen)
+>> +             return csize;
+>> +     cplen++;
+>> +
+>> +     /* Check space (need cplen+1 chars including final \0) */
+>> +     return csize + cplen;
+>> +}
+>
+> ...if I understand of_device_get_modalias() correctly you should be able
+> to replace this function with:
+>
+>   size = of_device_get_modalias(dev, NULL, 0);
+>
+> snprintf() will not write to NULL, csize will be larger than 0 so tsize
+> will be returned before it will memcpy() to the buffer.
+>
+>> +
+>> +int of_device_request_module(struct device *dev)
+>> +{
+>> +     char *str;
+>> +     ssize_t size;
+>> +     int ret;
+>> +
+>> +     size = of_device_modalias_size(dev);
+>> +     if (size < 0)
+>> +             return size;
+>> +
+>> +     str = kmalloc(size + 1, GFP_KERNEL);
+>> +     if (!str)
+>> +             return -ENOMEM;
+>> +
+>> +     of_device_get_modalias(dev, str, size);
+>> +     str[size] = '\0';
+>> +     ret = request_module(str);
+>> +     kfree(str);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>
+> Regards,
+> Bjorn
