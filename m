@@ -1,35 +1,28 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] ASoC: Add DT bindings documentation for max98504
- amplifier
-Date: Tue, 28 Jun 2016 15:55:03 -0500
-Message-ID: <20160628205503.GC3737@rob-hp-laptop>
-References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
- <1466678715-19962-4-git-send-email-s.nawrocki@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] clk: fixed-factor: add optional dt-binding clock-flags
+Date: Tue, 28 Jun 2016 15:55:18 -0500
+Message-ID: <20160628205518.GF3737@rob-hp-laptop>
+References: <20160621005910.GN1521@codeaurora.org>
+ <1466741572-58802-1-git-send-email-neidhard.kim@lge.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466678715-19962-4-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <1466741572-58802-1-git-send-email-neidhard.kim@lge.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jongsung Kim <neidhard.kim@lge.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chanho Min <chanho.min@lge.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 23, 2016 at 12:45:12PM +0200, Sylwester Nawrocki wrote:
-> This patch adds DT bindings documentation for Maxim MAX98504
-> speaker amplifier.
+On Fri, Jun 24, 2016 at 01:12:52PM +0900, Jongsung Kim wrote:
+> There is no way to set additional flags for a DT-initialized fixed-
+> factor-clock, and it can be problematic i.e., when the clock rate
+> needs to be changed. [1][2]
 > 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Changes since v1:
->  - added 'interrupts' property.
-> ---
->  .../devicetree/bindings/sound/max98504.txt         | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/max98504.txt
+> This patch introduces an optional dt-binding named "clock-flags" to
+> be used for passing any needed flags from dts.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't think we want this in DT. If we did, the flags would need some 
+documentation about what the flags mean.
+
+Rob
