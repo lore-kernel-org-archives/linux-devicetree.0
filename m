@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 1/4] dt-bindings: media: meson-ir: Add Meson8b and GXBB compatible strings
-Date: Tue, 28 Jun 2016 21:17:59 +0200
-Message-ID: <20160628191802.21227-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 4/4] ARM64: dts: meson-gxbb: Enable the the IR decoder on supported boards
+Date: Tue, 28 Jun 2016 21:18:02 +0200
+Message-ID: <20160628191802.21227-5-martin.blumenstingl@googlemail.com>
 References: <20160626210622.5257-1-martin.blumenstingl@googlemail.com>
  <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
 Return-path: <linux-media-owner@vger.kernel.org>
@@ -11,32 +11,51 @@ To: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, mchehab@kernel.org, devicetree@vger.kernel.org, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+Enable the Infrared Remote Controller on boards which have an Infrared
+receiver.
 
-New bindings are needed as the register layout on the newer platforms
-is slightly different compared to Meson6b.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- Documentation/devicetree/bindings/media/meson-ir.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 4 ++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi     | 4 ++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 4 ++++
+ 3 files changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/meson-ir.txt b/Documentation/devicetree/bindings/media/meson-ir.txt
-index 407848e..e7e3f3c 100644
---- a/Documentation/devicetree/bindings/media/meson-ir.txt
-+++ b/Documentation/devicetree/bindings/media/meson-ir.txt
-@@ -1,7 +1,10 @@
- * Amlogic Meson IR remote control receiver
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index b06bf8a..9a451ce 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -120,3 +120,7 @@
+ 	vmmc-supply = <&mmc_iv>;
+ 	voltage-ranges = <1800 3300>;
+ };
++
++&ir {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index 5dfd849..2650bb7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -102,3 +102,7 @@
+ 	voltage-ranges = <1800 3300>;
+ 	vmmc-supply = <&mmc_iv>;
+ };
++
++&ir {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index 54bb7c7..934deb9 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -60,3 +60,7 @@
+ 	pinctrl-names = "default";
  
- Required properties:
-- - compatible	: should be "amlogic,meson6-ir"
-+ - compatible	: depending on the platform this should be one of:
-+		  - "amlogic,meson6-ir"
-+		  - "amlogic,meson8b-ir"
-+		  - "amlogic,meson-gxbb-ir"
-  - reg		: physical base address and length of the device registers
-  - interrupts	: a single specifier for the interrupt from the device
- 
+ };
++
++&ir {
++	status = "okay";
++};
 -- 
 2.9.0
