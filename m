@@ -1,50 +1,83 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 03/14] dt-bindings: document sun8i_ths -
- H3 thermal sensor driver
-Date: Tue, 28 Jun 2016 15:56:27 -0500
-Message-ID: <20160628205627.GM3737@rob-hp-laptop>
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-4-megous@megous.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/6] ARM: dts: nuc900: Add nuc970 dts files
+Date: Tue, 28 Jun 2016 15:56:33 -0500
+Message-ID: <20160628205633.GN3737@rob-hp-laptop>
+References: <1466851042-22239-1-git-send-email-vw@iommu.org>
+ <1466851042-22239-3-git-send-email-vw@iommu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDJIP47K7MERBBGJZO5QKGQEBXNOXKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160625034511.7966-4-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466851042-22239-3-git-send-email-vw@iommu.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wan Zongshun <vw@iommu.org>
+Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Wan Zongshun <mcuos.com@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 25, 2016 at 05:45:00AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->=20
-> This patch adds the binding documentation for the
-> sun8i_ths driver. This is a driver for thermal sensor
-> found in Allwinner H3 SoC.
->=20
-> Signed-off-by: Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+On Sat, Jun 25, 2016 at 06:37:18PM +0800, Wan Zongshun wrote:
+> This patch is to add dts support for nuc970 platform.
+> 
+> Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
 > ---
->  .../devicetree/bindings/thermal/sun8i-ths.txt      | 26 ++++++++++++++++=
-++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-ths.t=
-xt
+>  .../devicetree/bindings/arm/nuvoton/nuc970.txt     |  30 +++
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/nuc970-evb.dts                   |  20 ++
+>  arch/arm/boot/dts/nuc970.dtsi                      |  93 ++++++++
+>  include/dt-bindings/clock/nuc970-clock.h           | 233 +++++++++++++++++++++
+>  5 files changed, 377 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
+>  create mode 100644 arch/arm/boot/dts/nuc970-evb.dts
+>  create mode 100644 arch/arm/boot/dts/nuc970.dtsi
+>  create mode 100644 include/dt-bindings/clock/nuc970-clock.h
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt b/Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
+> new file mode 100644
+> index 0000000..df8637a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
+> @@ -0,0 +1,30 @@
+> +Nuvoton NUC970 SoC platform Device Tree Bindings
+> +------------------------------------------
+> +
+> +Boards with the NUC970 SoC shall have the following properties:
+> +
+> +Root node required properties:
+> +- compatible: Should be "nuvoton,nuc970evb", "nuvoton,nuc970"
+> +
+> +Timer required properties:
 
-I guess the example will change for the clocks some, but otherwise:
+This should go in bindings/timer/
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> +- compatible: Should be "nuvoton,tmr"
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Needs an SoC specific compatible string
+
+> +- reg: Should contain registers location and length
+> +- interrupts: hwirq is direct mapping to irq number
+> +- clocks: phandle to input clock.
+> +
+> +Clock required properties:
+
+This should go in bindings/clock/
+
+> +- compatible: Should be "nuvoton,clk"
+
+SoC specific...
+
+> +- reg: Should contain registers location and length
+> +
+> +Interrupt-controller required properties
+
+And so on...
+
+> +- compatible: Should be "nuvoton,aic"
+> +- reg: Should contain registers location and length
+> +- interrupt-cells: set to 1
+> +
+> +GCR register required properties:
+> +- compatible: Should be "nuvoton,gcr"
+> +- reg: Should contain registers location and length
+> +
+> +Uart required properties:
+> +- compatible: Should be "nuvoton,nuc970-uart"
+> +- reg: Should contain registers location and length
