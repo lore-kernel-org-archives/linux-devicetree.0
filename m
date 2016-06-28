@@ -1,73 +1,47 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v6 3/6] input: tps65218-pwrbutton: Add platform_device_id
- table
-Date: Tue, 28 Jun 2016 10:04:41 -0700
-Message-ID: <20160628170441.GA13114@dtor-ws>
-References: <1467117054-12943-1-git-send-email-j-keerthy@ti.com>
- <1467117054-12943-4-git-send-email-j-keerthy@ti.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/8] arm64: dts: db820c: add basic board support
+Date: Tue, 28 Jun 2016 10:17:59 -0700
+Message-ID: <20160628171759.GZ1521@codeaurora.org>
+References: <1466452907-23290-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1466452907-23290-2-git-send-email-srinivas.kandagatla@linaro.org>
+ <57687B08.9060900@codeaurora.org>
+ <5769058D.9020008@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1467117054-12943-4-git-send-email-j-keerthy@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: gnurou@gmail.com, devicetree@vger.kernel.org, tony@atomide.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <5769058D.9020008-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 06:00:51PM +0530, Keerthy wrote:
-> platform_device_id table is needed for adding the tps65218-pwrbutton
-> module to the mfd_cell array.
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+On 06/21, Srinivas Kandagatla wrote:
+> I agree, this should match up with the dtbTool. I have been manually
+> patching up dtb to include the board-id, pmic id stuff.
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Uh oh :/
 
-> ---
 > 
-> Changes in v4:
+> I will fix it in next version,
 > 
->   * Added the missing ';' for struct platform_device_id.
+> Did not look at full details but, For some reason dtbTool does not
+> support multiple compatible strings, do you think it makes sense to
+> add this support in dtb tool to cope up with compatible strings
+> like:
 > 
->  drivers/input/misc/tps65218-pwrbutton.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+> compatible = "qcom,apq8096-db820c", "qcom,apq8096-sbc";
 > 
-> diff --git a/drivers/input/misc/tps65218-pwrbutton.c b/drivers/input/misc/tps65218-pwrbutton.c
-> index 2bba8de..33d141a 100644
-> --- a/drivers/input/misc/tps65218-pwrbutton.c
-> +++ b/drivers/input/misc/tps65218-pwrbutton.c
-> @@ -113,12 +113,19 @@ static const struct of_device_id of_tps65218_pwr_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, of_tps65218_pwr_match);
->  
-> +static const struct platform_device_id tps65218_pwrbtn_id_table[] = {
-> +	{ "tps65218-pwrbutton", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, tps65218_pwrbtn_id_table);
-> +
->  static struct platform_driver tps65218_pwron_driver = {
->  	.probe	= tps65218_pwron_probe,
->  	.driver	= {
->  		.name	= "tps65218_pwrbutton",
->  		.of_match_table = of_tps65218_pwr_match,
->  	},
-> +	.id_table = tps65218_pwrbtn_id_table,
->  };
->  module_platform_driver(tps65218_pwron_driver);
->  
-> -- 
-> 1.9.1
-> 
+
+Hmm I suppose we can add support to look for the first compatible
+that matches something that we can generate an id for? That would
+allow us to have the LK compatible and then whatever is more
+specific than that which the bootloader doesn't care about.
 
 -- 
-Dmitry
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
