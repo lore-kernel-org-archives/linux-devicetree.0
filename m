@@ -1,179 +1,38 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v3 1/2] dt-binding: remoteproc: Introduce Qualcomm WCNSS
- loader binding
-Date: Tue, 28 Jun 2016 13:58:25 -0700
-Message-ID: <1467147506-753-1-git-send-email-bjorn.andersson@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/5] dt-bindings: Add support for LG LP079QX1-SP0V
+ 1536x2048 panel
+Date: Tue, 28 Jun 2016 15:59:43 -0500
+Message-ID: <20160628205943.GA6556@rob-hp-laptop>
+References: <1467089288-18355-1-git-send-email-ykk@rock-chips.com>
+ <1467089472-18584-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1467089472-18584-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-
-The document defines the binding for a component that loads firmware for
-and boots the Qualcomm WCNSS core.
-
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v2:
-- None
-
- .../bindings/remoteproc/qcom,wcnss-pil.txt         | 132 +++++++++++++++++++++
- 1 file changed, 132 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-new file mode 100644
-index 000000000000..0d2361ebe3d7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-@@ -0,0 +1,132 @@
-+Qualcomm WCNSS Peripheral Image Loader
-+
-+This document defines the binding for a component that loads and boots firmware
-+on the Qualcomm WCNSS core.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,riva-pil",
-+		    "qcom,pronto-v1-pil",
-+		    "qcom,pronto-v2-pil"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must specify the base address and size of the CCU, DXE and
-+		    PMU register blocks
-+
-+- reg-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "ccu", "dxe", "pmu"
-+
-+- interrupts-extended:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must list the watchdog and fatal IRQs and may specify the
-+		    ready, handover and stop-ack IRQs
-+
-+- interrupt-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: should be "wdog", "fatal", optionally followed by "ready",
-+		    "handover", "stop-ack"
-+
-+- vddmx-supply:
-+- vddcx-supply:
-+- vddpx-supply:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the regulators to be held on behalf of the
-+		    booting of the WCNSS core
-+
-+- qcom,smem-states:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the SMEM state used to indicate to WCNSS that
-+		    it should shut down
-+
-+- qcom,smem-state-names:
-+	Usage: optional
-+	Value type: <stringlist>
-+	Definition: should be "stop"
-+
-+- memory-region:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to reserved-memory node for the remote processor
-+		    see ../reserved-memory/reserved-memory.txt
-+
-+= SUBNODES
-+A single subnode of the WCNSS PIL describes the attached rf module and its
-+resource dependencies.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,wcn3620",
-+		    "qcom,wcn3660",
-+		    "qcom,wcn3680"
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the xo clock and optionally the rf clock
-+
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: should be "xo", optionally followed by "rf"
-+
-+- vddxo-supply:
-+- vddrfa-supply:
-+- vddpa-supply:
-+- vdddig-supply:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the regulators to be held on behalf of the
-+		    booting of the WCNSS core
-+
-+= EXAMPLE
-+The following example describes the resources needed to boot control the WCNSS,
-+with attached WCN3680, as it is commonly found on MSM8974 boards.
-+
-+pronto@fb204000 {
-+	compatible = "qcom,pronto-v2-pil";
-+	reg = <0xfb204000 0x2000>, <0xfb202000 0x1000>, <0xfb21b000 0x3000>;
-+	reg-names = "ccu", "dxe", "pmu";
-+
-+	interrupts-extended = <&intc 0 149 1>,
-+			      <&wcnss_smp2p_slave 0 0>,
-+			      <&wcnss_smp2p_slave 1 0>,
-+			      <&wcnss_smp2p_slave 2 0>,
-+			      <&wcnss_smp2p_slave 3 0>;
-+	interrupt-names = "wdog", "fatal", "ready", "handover", "stop-ack";
-+
-+	vddmx-supply = <&pm8841_s1>;
-+	vddcx-supply = <&pm8841_s2>;
-+	vddpx-supply = <&pm8941_s3>;
-+
-+	qcom,smem-states = <&wcnss_smp2p_out 0>;
-+	qcom,smem-state-names = "stop";
-+
-+	memory-region = <&wcnss_region>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&wcnss_pin_a>;
-+
-+	iris {
-+		compatible = "qcom,wcn3680";
-+
-+		clocks = <&rpmcc RPM_CXO_CLK_SRC>, <&rpmcc RPM_CXO_A2>;
-+		clock-names = "xo", "rf";
-+
-+		vddxo-supply = <&pm8941_l6>;
-+		vddrfa-supply = <&pm8941_l11>;
-+		vddpa-supply = <&pm8941_l19>;
-+		vdddig-supply = <&pm8941_s3>;
-+	};
-+};
--- 
-2.5.0
+T24gVHVlLCBKdW4gMjgsIDIwMTYgYXQgMTI6NTE6MTJQTSArMDgwMCwgWWFraXIgWWFuZyB3cm90
+ZToKPiBUaGUgTEcgTFAwNzlRWDEtU1AwViBpcyBhbiA3LjkiIFFYR0EgVEZUIHdpdGggTEVEIEJh
+Y2tsaWdodCB1bml0IGFuZAo+IDMyIHBpbnMgZURQIGludGVyZmFjZS4gVGhpcyBtb2R1bGUgc3Vw
+cG9ydHMgMTUzNngyMDQ4IG1vZGUuCj4gCj4gU2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtr
+QHJvY2stY2hpcHMuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL2xnLGxwMDc5cXgxLXNwMHYudHh0ICAgICAgICAgfCA3ICsrKysrKysKPiAgMSBmaWxl
+IGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbGcsbHAwNzlxeDEtc3Awdi50
+eHQKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
