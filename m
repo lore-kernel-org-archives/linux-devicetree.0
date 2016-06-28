@@ -1,47 +1,57 @@
-From: Tien Hock Loh <thloh@altera.com>
-Subject: Re: [PATCH V5 1/1] net: ethernet: Add TSE PCS support to
- dwmac-socfpga
-Date: Tue, 28 Jun 2016 02:58:55 -0700
-Message-ID: <1467107935.2700.2.camel@ubuntu>
-References: <1466759603-30769-1-git-send-email-thloh@altera.com>
-	 <20160628.053450.2071467949973087029.davem@davemloft.net>
-	 <20160628.054815.1440008157228833144.davem@davemloft.net>
+From: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 2/2] drm/fsl-dcu: update panel syntax to of_graph dt binding
+Date: Tue, 28 Jun 2016 17:39:08 +0800
+Message-ID: <1467106748-19314-2-git-send-email-meng.yi@nxp.com>
+References: <1467106748-19314-1-git-send-email-meng.yi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160628.054815.1440008157228833144.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, preid@electromag.com.au, dinguyen@opensource.altera.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thloh85@gmail.com, cnphoon@altera.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467106748-19314-1-git-send-email-meng.yi-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+Cc: airlied-cv59FeDIM0c@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-My fault, I wasn't testing against building as module, was always
-building as part of the kernel. I'll get it fixed and put another patch
-for review.
+add of_graph dt binding for panel, and "fsl,panel" property
+is deprecated
 
-Thanks
-Tien Hock
+Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm/boot/dts/ls1021a-twr.dts | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-On Tue, 2016-06-28 at 05:48 -0400, David Miller wrote:
-> From: David Miller <davem@davemloft.net>
-> Date: Tue, 28 Jun 2016 05:34:50 -0400 (EDT)
-> 
-> > From: <thloh@altera.com>
-> > Date: Fri, 24 Jun 2016 02:13:23 -0700
-> > 
-> >> From: Tien Hock Loh <thloh@altera.com>
-> >> 
-> >> This adds support for TSE PCS that uses SGMII adapter when the phy-mode of
-> >> the dwmac is set to sgmii.
-> >> 
-> >> Signed-off-by: Tien Hock Loh <thloh@altera.com>
-> >> Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> > 
-> > Applied to net-next, thanks.
-> 
-> I had to revert, this breaks the build:
-> 
-> ERROR: "tse_pcs_fix_mac_speed" [drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.ko] undefined!
-> ERROR: "tse_pcs_init" [drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.ko] undefined!
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+index 75ecaed..eec920b 100644
+--- a/arch/arm/boot/dts/ls1021a-twr.dts
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -108,12 +108,22 @@
+ 
+ 	panel: panel {
+ 		compatible = "nec,nl4827hc19-05b";
++		port@0 {
++			panel_out: endpoint {
++				remote-endpoint = <&dcu_out>;
++			};
++		};
+ 	};
+ };
+ 
+ &dcu {
+-	fsl,panel = <&panel>;
+ 	status = "okay";
++
++	port: port@0 {
++		dcu_out: endpoint {
++			remote-endpoint = <&panel_out>;
++		};
++	};
+ };
+ 
+ &dspi1 {
+-- 
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
