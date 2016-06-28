@@ -1,217 +1,75 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: hikey: name the GPIO lines
-Date: Tue, 28 Jun 2016 18:38:48 +0100
-Message-ID: <5772B628.3070507@hisilicon.com>
-References: <1466723164-9937-1-git-send-email-linus.walleij@linaro.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 4/6] ASoC: max98504: Add max98504
+ speaker amplifier driver
+Date: Tue, 28 Jun 2016 19:59:35 +0200
+Message-ID: <5772BB07.4000609@samsung.com>
+References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
+ <1466678715-19962-5-git-send-email-s.nawrocki@samsung.com>
+ <20160627163312.GB17217@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466723164-9937-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Mandala <david.mandala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-reply-to: <20160627163312.GB17217@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, inki.dae@samsung.com, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On 06/27/2016 06:33 PM, Mark Brown wrote:
+> On Thu, Jun 23, 2016 at 12:45:13PM +0200, Sylwester Nawrocki wrote:
+> 
+>> > +	/* Select analog input by default */
+>> > +	regmap_write(map, MAX98504_REG_SPEAKER_SOURCE_SELECT, 0x1);
+>
+> This should be done by userspace configuration, just leave the chip at
+> power on defaults.  This is policy so that we don't have people trying
+> to patch their configurations into the kernel.
 
-On 24/06/2016 00:06, Linus Walleij wrote:
-> This names the GPIO lines on the HiKey board in accordance with
-> the 96Board Specification for especially the Low Speed External
-> Connector: "GPIO-A" thru "GPIO-L".
-> 
-> This will make these line names reflect through to userspace
-> so that they can easily be identified and used with the new
-> character device ABI.
-> 
-> Some care has been taken to name all lines, not just those used
-> by the external connectors, also lines that are muxed into some
-> other function than GPIO: these are named "[FOO]" so that users
-> can see with lsgpio what all lines are used for.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: David Mandala <david.mandala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+OK, I will remove this and update the UCM configuration files instead.
 
-Applied to hisilicon soc tree.
-Thanks!
+>> > +	/* Brownout protection enable */
+>> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_ENABLE, 0x1);
+>> > +	/* Threshold 2.9V, 3dB speaker attenuation*/
+>> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(1), 0x33);
+>> > +	/* Attack hold time 10 ms */
+>> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(2), 0x0a);
+>> > +	/* Brownout hold time 255 ms, brownout release time 255 ms */
+>> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(3), 0xff);
+>> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(4), 0xff);
+>
+> Should these be DT properties?
 
-Best Regards,
-Wei
+I'm not sure, these properties define the speaker gain decrease pattern
+during VBAT brownout, it seems a system integration detail and will most
+likely differ from board to board.  I'd assume it's acceptable to put
+these in DT, looking at other bindings.  I've prepared something like
+this:
 
-> ---
-> ChangeLog v1->v2:
-> - Use the right property name: old patch using "gpio-names" rather
->   than "gpio-line-names" that we agreed upon. Sorry...
-> 
-> This would be nice to have merged for kernel v4.8 so that the
-> new chardev ABI can be used to obtain the lines for the external
-> connector and use them from userspace from this kernel version.
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 143 +++++++++++++++++++++++++
->  1 file changed, 143 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> index e92a30c87a82..593c7e43de79 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> @@ -66,6 +66,149 @@
->  			status = "ok";
->  		};
->  
-> +		/*
-> +		 * Legend: proper name = the GPIO line is used as GPIO
-> +		 *         NC = not connected (not routed from the SoC)
-> +		 *         "[PER]" = pin is muxed for peripheral (not GPIO)
-> +		 *         "" = no idea, schematic doesn't say, could be
-> +		 *              unrouted (not connected to any external pin)
-> +		 *         LSEC = Low Speed External Connector
-> +		 *         HSEC = High Speed External Connector
-> +		 *
-> +		 * Pin assignments taken from LeMaker and CircuitCo Schematics
-> +		 * Rev A1.
-> +		 *
-> +		 * For the lines routed to the external connectors the
-> +		 * lines are named after the 96Boards CE Specification 1.0,
-> +		 * Appendix "Expansion Connector Signal Description".
-> +		 *
-> +		 * When the 96Board naming of a line and the schematic name of
-> +		 * the same line are in conflict, the 96Board specification
-> +		 * takes precedence, which means that the external UART on the
-> +		 * LSEC is named UART0 while the schematic and SoC names this
-> +		 * UART2. This is only for the informational lines i.e. "[FOO]",
-> +		 * the GPIO named lines "GPIO-A" thru "GPIO-L" are the only
-> +		 * ones actually used for GPIO.
-> +		 */
-> +		gpio0: gpio@f8011000 {
-> +			gpio-line-names = "PWR_HOLD", "DSI_SEL",
-> +			"USB_HUB_RESET_N", "USB_SEL", "HDMI_PD", "WL_REG_ON",
-> +			"PWRON_DET", "5V_HUB_EN";
-> +		};
-> +
-> +		gpio1: gpio@f8012000 {
-> +			gpio-line-names = "SD_DET", "HDMI_INT", "PMU_IRQ_N",
-> +			"WL_HOST_WAKE", "NC", "NC", "NC", "BT_REG_ON";
-> +		};
-> +
-> +		gpio2: gpio@f8013000 {
-> +			gpio-line-names =
-> +				"GPIO-A", /* LSEC Pin 23: GPIO2_0 */
-> +				"GPIO-B", /* LSEC Pin 24: GPIO2_1 */
-> +				"GPIO-C", /* LSEC Pin 25: GPIO2_2 */
-> +				"GPIO-D", /* LSEC Pin 26: GPIO2_3 */
-> +				"GPIO-E", /* LSEC Pin 27: GPIO2_4 */
-> +				"USB_ID_DET", "USB_VBUS_DET",
-> +				"GPIO-H"; /* LSEC Pin 30: GPIO2_7 */
-> +		};
-> +
-> +		gpio3: gpio@f8014000 {
-> +			gpio-line-names = "GPIO3_0", "NC", "NC", "", "NC", "",
-> +			"WLAN_ACTIVE", "NC", "NC";
-> +		};
-> +
-> +		gpio4: gpio@f7020000 {
-> +			gpio-line-names = "USER_LED1", "USER_LED2", "USER_LED3",
-> +			"USER_LED4", "SD_SEL", "NC", "NC", "BT_ACTIVE";
-> +		};
-> +
-> +		gpio5: gpio@f7021000 {
-> +			gpio-line-names = "NC", "NC",
-> +			"[UART1_RxD]", /* LSEC Pin 11: UART3_RX */
-> +			"[UART1_TxD]", /* LSEC Pin 13: UART3_TX */
-> +			"[AUX_SSI1]", "NC",
-> +			"[PCM_CLK]", /* LSEC Pin 18: MODEM_PCM_XCLK */
-> +			"[PCM_FS]"; /* LSEC Pin 16: MODEM_PCM_XFS */
-> +		};
-> +
-> +		gpio6: gpio@f7022000 {
-> +			gpio-line-names =
-> +			"[SPI0_DIN]", /* Pin 10: SPI0_DI */
-> +			"[SPI0_DOUT]", /* Pin 14: SPI0_DO */
-> +			"[SPI0_CS]", /* Pin 12: SPI0_CS_N */
-> +			"[SPI0_SCLK]", /* Pin 8: SPI0_SCLK */
-> +			"NC", "NC", "NC",
-> +			"GPIO-G"; /* Pin 29: GPIO6_7_DSI_TE0 */
-> +		};
-> +
-> +		gpio7: gpio@f7023000 {
-> +			gpio-line-names = "NC", "NC", "NC", "NC",
-> +			"[PCM_DI]", /* Pin 22: MODEM_PCM_DI */
-> +			"[PCM_DO]", /* Pin 20: MODEM_PCM_DO */
-> +			"NC", "NC";
-> +		};
-> +
-> +		gpio8: gpio@f7024000 {
-> +			gpio-line-names = "NC", "[CEC_CLK_19_2MHZ]", "NC",
-> +			"", "", "", "", "", "";
-> +		};
-> +
-> +		gpio9: gpio@f7025000 {
-> +			gpio-line-names = "",
-> +			"GPIO-J", /* LSEC Pin 32: ISP_PWDN0_GPIO9_1 */
-> +			"GPIO-L", /* LSEC Pin 34: ISP_PWDN1_GPIO9_2 */
-> +			"NC", "NC", "NC", "NC", "[ISP_CCLK0]";
-> +		};
-> +
-> +		gpio10: gpio@f7026000 {
-> +			gpio-line-names = "BOOT_SEL",
-> +			"[ISP_CCLK1]",
-> +			"GPIO-I", /* LSEC Pin 31: ISP_RSTB0_GPIO10_2 */
-> +			"GPIO-K", /* LSEC Pin 33: ISP_RSTB1_GPIO10_3 */
-> +			"NC", "NC",
-> +			"[I2C2_SDA]", /* HSEC Pin 34: ISP0_SDA */
-> +			"[I2C2_SCL]"; /* HSEC Pin 32: ISP0_SCL */
-> +		};
-> +
-> +		gpio11: gpio@f7027000 {
-> +			gpio-line-names =
-> +			"[I2C3_SDA]", /* HSEC Pin 38: ISP1_SDA */
-> +			"[I2C3_SCL]", /* HSEC Pin 36: ISP1_SCL */
-> +			"", "NC", "NC", "NC", "", "";
-> +		};
-> +
-> +		gpio12: gpio@f7028000 {
-> +			gpio-line-names = "[BT_PCM_XFS]", "[BT_PCM_DI]",
-> +			"[BT_PCM_DO]",
-> +			"NC", "NC", "NC", "NC",
-> +			"GPIO-F"; /* LSEC Pin 28: BL_PWM_GPIO12_7 */
-> +		};
-> +
-> +		gpio13: gpio@f7029000 {
-> +			gpio-line-names = "[UART0_RX]", "[UART0_TX]",
-> +			"[BT_UART1_CTS]", "[BT_UART1_RTS]",
-> +			"[BT_UART1_RX]", "[BT_UART1_TX]",
-> +			"[UART0_CTS]", /* LSEC Pin 3: UART2_CTS_N */
-> +			"[UART0_RTS]"; /* LSEC Pin 9: UART2_RTS_N */
-> +		};
-> +
-> +		gpio14: gpio@f702a000 {
-> +			gpio-line-names =
-> +			"[UART0_RxD]", /* LSEC Pin 7: UART2_RX */
-> +			"[UART0_TxD]", /* LSEC Pin 5: UART2_TX */
-> +			"[I2C0_SCL]", /* LSEC Pin 15: I2C0_SCL */
-> +			"[I2C0_SDA]", /* LSEC Pin 17: I2C0_SDA */
-> +			"[I2C1_SCL]", /* LSEC Pin 19: I2C1_SCL */
-> +			"[I2C1_SDA]", /* LSEC Pin 21: I2C1_SDA */
-> +			"[I2C2_SCL]", "[I2C2_SDA]";
-> +		};
-> +
-> +		gpio15: gpio@f702b000 {
-> +			gpio-line-names = "", "", "", "", "", "", "NC", "";
-> +		};
-> +
-> +		/* GPIO blocks 16 thru 19 do not appear to be routed to pins */
-> +
->  		dwmmc_2: dwmmc2@f723f000 {
->  			ti,non-removable;
->  			non-removable;
-> 
+------8<--------
+Optional properties:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- maxim,brownout-threshold - the VBAT brownout threshold, the value must be
+  from 0, 1...21 range, corresponding to 2.6V, 2.65V...3.65V voltage range
+- maxim,brownout-attenuation - the brownout attenuation to the speaker gain
+  applied during the "attack hold" and "timed hold" phase, the value must be
+  from 0...6 (dB) range
+- maxim,brownout-attack-hold-ms - the brownout attack hold phase time in ms,
+  0...255 (VBATBROWN_ATTK_HOLD, register 0x0018)
+- maxim,brownout-timed-hold-ms - the brownout timed hold phase time in ms,
+  0...255 (VBATBROWN_TIME_HOLD, register 0x0019)
+- maxim,brownout-release-rate-ms - the brownout release phase step time in ms,
+  0...255 (VBATBROWN_RELEASE, register 0x001A)
+
+The default value when the above properties are not specified is 0,
+the maxim,brownout-level property must be specified to actually enable
+the VBAT brownout protection.
+------8<--------
