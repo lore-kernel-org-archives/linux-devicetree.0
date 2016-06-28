@@ -1,108 +1,104 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 01/21] of: device: Support loading a module with OF based
- modalias
-Date: Mon, 27 Jun 2016 21:17:50 -0700
-Message-ID: <20160628041750.GA1190@tuxbot>
-References: <20160626072838.28082-1-stephen.boyd@linaro.org>
- <20160626072838.28082-2-stephen.boyd@linaro.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] dmaengine: vdma: Add support for mulit-channel dma
+ mode
+Date: Tue, 28 Jun 2016 10:04:59 +0530
+Message-ID: <20160628043459.GR22564@localhost>
+References: <1465549954-30220-1-git-send-email-appanad@xilinx.com>
+ <1465549954-30220-3-git-send-email-appanad@xilinx.com>
+ <20160621155502.GB16910@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B8248@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160621163340.GE16910@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B84A9@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160626072838.28082-2-stephen.boyd@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A5B84A9-4lKfpRxZ5enZMOc0yg5rMog+Gb3gawCHQz34XiSyOiE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun 26 Jun 00:28 PDT 2016, Stephen Boyd wrote:
-
-> In the case of ULPI devices, we want to be able to load the
-> driver before registering the device so that we don't get stuck
-> in a loop waiting for the phy module to appear and failing usb
-> controller probe. Currently we request the ulpi module via the
-> ulpi ids, but in the DT case we might need to request it with the
-> OF based modalias instead. Add a common function that allows
-> anyone to request a module with the OF based modalias.
+On Wed, Jun 22, 2016 at 07:04:28AM +0000, Appana Durga Kedareswara Rao wrote:
+> > > >
+> > > > Can you elobrate what you meant by Multichannel mode? This patch
+> > > > seems to do two things, one is to add interleaved dma support and
+> > > > something else. Can you explain the latter part?
+> > >
+> > > AXI DMA has two Stream interfaces (Memory to Stream MM2S and Stream to
+> > > Memory S2MM)
+> > 
+> > what is a stream in this context?
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> ---
->  drivers/of/device.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_device.h |  6 ++++++
->  2 files changed, 56 insertions(+)
+> Stream means I/O transfer (Memory to I/O and I/O to Memory).
+> Sorry if I confused you.
 > 
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index fd5cfad7c403..f275e5beb736 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -226,6 +226,56 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
->  	return tsize;
->  }
->  
-> +static ssize_t of_device_modalias_size(struct device *dev)
-> +{
-> +	const char *compat;
-> +	int cplen, i;
-> +	ssize_t csize;
-> +
-> +	if ((!dev) || (!dev->of_node))
-> +		return -ENODEV;
-> +
-> +	/* Name & Type */
-> +	csize = 5 + strlen(dev->of_node->name) + strlen(dev->of_node->type);
+> > 
+> > > In Multi-Channel dma mode each stream interface can be configured up to 16
+> > channels.
+> > > In Multi-channel DMA mode IP supports only interleaved transfers (2-D
+> > transfers).
+> > 
+> > 
+> > >
+> > > >
+> > > > >  /**
+> > > > > + * struct xilinx_mcdma_config - DMA Multi channel configuration
+> > > > > +structure
+> > > > > + * @tdest: Channel to operate on
+> > > > > + * @tid:   Channel configuration
+> > > > > + * @tuser: Tuser configuration
+> > > > > + * @ax_user: ax_user value
+> > > > > + * @ax_cache: ax_cache value
+> > > > > + */
+> > > > > +struct xilinx_mcdma_config {
+> > > > > +	u8 tdest;
+> > > > > +	u8 tid;
+> > > > > +	u8 tuser;
+> > > > > +	u8 ax_user;
+> > > > > +	u8 ax_cache;
+> > > >
+> > > > can you describe these in details, what do these do, what are the
+> > > > values to be programmed?
+> > >
+> > > As said above In Multi-Channel Mode each Stream interface can be
+> > > Configured up to 16 channels each channel is differentiated based on the tdest
+> > and tid values.
+> > 
+> > Then why are you not registering 16 channels for this? That should give you
+> > channel to operate on!
+> 
+> The number of channels are configurable.
+> We are registering number of Channels that h/w configured for.
+> 
+> Will fix in the next version. Will remove this config.
+> And based on the channel type will configure the h/w.
 
-It would be clearer if you replaced 5 with strlen("of:NT"), but...
+Looking at this you should redesign!
 
-> +
-> +	/* Get compatible property if any */
-> +	compat = of_get_property(dev->of_node, "compatible", &cplen);
-> +	if (!compat)
-> +		return csize;
-> +
-> +	/* Find true end (we tolerate multiple \0 at the end */
-> +	for (i = (cplen - 1); i >= 0 && !compat[i]; i--)
-> +		cplen--;
-> +	if (!cplen)
-> +		return csize;
-> +	cplen++;
-> +
-> +	/* Check space (need cplen+1 chars including final \0) */
-> +	return csize + cplen;
-> +}
+The vchan was designed to operate on 'virtual' channels. The hardware
+channels can be independent of that.
 
-...if I understand of_device_get_modalias() correctly you should be able
-to replace this function with:
+Your IP seems to be a good fit for that approach. Do not link the two and
+separate them. User can have a virtual channel. In your driver, you can
+manage hardware channels...
 
-  size = of_device_get_modalias(dev, NULL, 0);
+> 
+> > 
+> > >
+> > > tdest:
+> > > TDEST provides routing information for the data stream.
+> > 
+> > pls elobrate
+> 
+> Need to configure this with the channel number that
+> We would like to transfer data.
 
-snprintf() will not write to NULL, csize will be larger than 0 so tsize
-will be returned before it will memcpy() to the buffer.
+This should be internal to driver...
 
-> +
-> +int of_device_request_module(struct device *dev)
-> +{
-> +	char *str;
-> +	ssize_t size;
-> +	int ret;
-> +
-> +	size = of_device_modalias_size(dev);
-> +	if (size < 0)
-> +		return size;
-> +
-> +	str = kmalloc(size + 1, GFP_KERNEL);
-> +	if (!str)
-> +		return -ENOMEM;
-> +
-> +	of_device_get_modalias(dev, str, size);
-> +	str[size] = '\0';
-> +	ret = request_module(str);
-> +	kfree(str);
-> +
-> +	return ret;
-> +}
-> +
-
-Regards,
-Bjorn
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
