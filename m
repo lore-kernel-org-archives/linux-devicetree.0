@@ -1,32 +1,53 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 19/19] sh: Renesas R0P751RLC0011RL (a.k.a R2Dplus) support
-Date: Tue, 28 Jun 2016 09:54:24 +0200
-Message-ID: <CAMuHMdWBR+D_4v7E0Xm=vNVzCbqOJG-7KwK=Az9HPaQPZVe73A@mail.gmail.com>
-References: <1467095795-5082-1-git-send-email-ysato@users.sourceforge.jp> <1467095795-5082-20-git-send-email-ysato@users.sourceforge.jp>
+Subject: Re: [PATCH v3 12/19] sh: irqchip: SH7751 IRQCHIP Driver
+Date: Tue, 28 Jun 2016 09:55:57 +0200
+Message-ID: <CAMuHMdXSm14n+KFLfDtL7nOD8JbkC2GwHKr9HUJz09o6cH70+g@mail.gmail.com>
+References: <1467095795-5082-1-git-send-email-ysato@users.sourceforge.jp> <1467095795-5082-13-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467095795-5082-20-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1467095795-5082-13-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-sh-owner@vger.kernel.org
 To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
+
+Hi Sato-san,
 
 On Tue, Jun 28, 2016 at 8:36 AM, Yoshinori Sato
 <ysato@users.sourceforge.jp> wrote:
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  .../interrupt-controller/renesas-r2dplus.txt       | 41 ++++++++++
->  arch/sh/boot/dts/Makefile                          |  1 +
->  arch/sh/boot/dts/r2dplus.dts                       | 84 +++++++++++++++++++++
->  drivers/irqchip/Makefile                           |  2 +-
->  drivers/irqchip/irq-renesas-r2dplus.c              | 88 ++++++++++++++++++++++
->  5 files changed, 215 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
->  create mode 100644 arch/sh/boot/dts/r2dplus.dts
->  create mode 100644 drivers/irqchip/irq-renesas-r2dplus.c
+> index 0000000..2bc6f22f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
+> @@ -0,0 +1,25 @@
+> +DT bindings for the SH7751 interrupt controller
+> +
+> +Required properties:
+> +
+> +  - compatible: has to be "renesas,sh7751-intc".
+> +
+> +  - reg: Base address and length of interrupt controller register
+> +         and extend register.
+> +
+> +  - interrupt-controller: Identifies the node as an interrupt controller.
+> +
+> +  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined
+> +    in interrupts.txt in this directory.
+> +
+> +Example
+> +-------
+> +
+> +       shintc: interrupt-controller@ffd00000 {
+> +               compatible = "renesas,sh7751-intc";
+> +               #interrupt-cells = <2>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
 
-Same comments as for landisk.
+Why do you need #address-cells and #size-cells?
+
+> +               interrupt-controller;
+> +               reg = <0xffd00000 14>, <0xfe080000 128>;
+> +       };
 
 Gr{oetje,eeting}s,
 
