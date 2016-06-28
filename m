@@ -1,61 +1,70 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 0/4] Add Meson 8b / GXBB support to the IR driver
-Date: Tue, 28 Jun 2016 21:17:58 +0200
-Message-ID: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
-References: <20160626210622.5257-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20160626210622.5257-1-martin.blumenstingl@googlemail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, mchehab@kernel.org, devicetree@vger.kernel.org, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 4/6] ASoC: max98504: Add max98504 speaker
+ amplifier driver
+Date: Tue, 28 Jun 2016 20:31:43 +0100
+Message-ID: <20160628193143.GA17217@sirena.org.uk>
+References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
+ <1466678715-19962-5-git-send-email-s.nawrocki@samsung.com>
+ <20160627163312.GB17217@sirena.org.uk>
+ <5772BB07.4000609@samsung.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bWJzwVwZrZVVyQvz"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5772BB07.4000609-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Newer Amlogic platforms (Meson 8b and GXBB) use a slightly different
-register layout for their Infrared Remoete Controller. The decoder mode
-is now configured in another register. Without the changes to the
-meson-ir driver we are simply getting incorrect "durations" reported
-from the hardware (because the hardware is not in time measurement aka
-software decode mode).
 
-This problem was also noticed by some people trying to use this on an
-ODROID-C1 and ODROID-C2 - the workaround there (probably because the
-datasheets were not publicy available yet at that time) was to switch
-to ir_raw_event_store_edge (which leaves it up to the kernel to measure
-the duration of a pulse). See [0] and [1] for the corresponding
-patches.
+--bWJzwVwZrZVVyQvz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Tue, Jun 28, 2016 at 07:59:35PM +0200, Sylwester Nawrocki wrote:
+> On 06/27/2016 06:33 PM, Mark Brown wrote:
+> > On Thu, Jun 23, 2016 at 12:45:13PM +0200, Sylwester Nawrocki wrote:
 
-Changes in v3:
-- based on the patches of Neil Armstrong
-- depending on the platform either the old (default) or new registers
-  (this has to be enabled explicitly by using "amlogic,meson8b-ir" or
-  "amlogic,meson-gxbb-ir")
-- the changes to arch/arm/boot/dts/meson.dtsi are not part of this
-  series anymore, because the size specified there is valid for the
-  Meson 6b version of the IR decoder
-- Add the IR decoder to meson-gxbb.dtsi and enable it on the supported
-  boards
+> >> > +	/* Brownout protection enable */
+> >> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_ENABLE, 0x1);
+> >> > +	/* Threshold 2.9V, 3dB speaker attenuation*/
+> >> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(1), 0x33);
+> >> > +	/* Attack hold time 10 ms */
+> >> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(2), 0x0a);
+> >> > +	/* Brownout hold time 255 ms, brownout release time 255 ms */
+> >> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(3), 0xff);
+> >> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(4), 0xff);
 
+> > Should these be DT properties?
 
-[0] https://github.com/erdoukki/linux-amlogic-1/commit/969b2e2242fb14a13cb651f9a1cf771b599c958b
-[1] http://forum.odroid.com/viewtopic.php?f=135&t=20504
+> I'm not sure, these properties define the speaker gain decrease pattern
+> during VBAT brownout, it seems a system integration detail and will most
+> likely differ from board to board.  I'd assume it's acceptable to put
+> these in DT, looking at other bindings.  I've prepared something like
+> this:
 
+Exactly, yes - it depends on the characteristics of the speaker which is
+hardware.  Your proposals look OK.
 
-Martin Blumenstingl (1):
-  ARM64: dts: meson-gxbb: Enable the the IR decoder on supported boards
+--bWJzwVwZrZVVyQvz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Neil Armstrong (3):
-  dt-bindings: media: meson-ir: Add Meson8b and GXBB compatible strings
-  media: rc: meson-ir: Add support for newer versions of the IR decoder
-  ARM64: meson-gxbb: Add Infrared Remote Controller decoder
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
- .../devicetree/bindings/media/meson-ir.txt         |  5 +++-
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  4 +++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  4 +++
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  4 +++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  7 ++++++
- drivers/media/rc/meson-ir.c                        | 29 ++++++++++++++++++----
- 6 files changed, 47 insertions(+), 6 deletions(-)
+iQEcBAEBCAAGBQJXctCeAAoJECTWi3JdVIfQ7AoH/3lfeqMgbw8bXiy4M43euDkV
+P79RywbR4uAS2LLKVqISbKFU9Cuw/RYOTXLANBfrbAOiWe9MbJN9/Ufj3BVf0xPm
+iKVig8hO7M2+V2dC293JV84eiY9lRon5c/kWG1XzyTODl3WW1ucQnms90snEU0dI
+OKgGZYdD5sAIkDKrUOOvLtbDy5vFCAXucW7yjiXSBrBVK1KwnliLt6jod6qgr+Py
+FXe3PT4Zh04ZUG9skVgTSDgNcCUbYwXe5qFHVuBb9e/1o1mW2E55Z0Vv8NQMl58x
+CeeRfcM/dcbkIEKhgXuLJ3M0YvvXtHfFdgPuFK2hNDytxJM+l7xXinvKAxNSlXw=
+=3jhd
+-----END PGP SIGNATURE-----
 
--- 
-2.9.0
+--bWJzwVwZrZVVyQvz--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
