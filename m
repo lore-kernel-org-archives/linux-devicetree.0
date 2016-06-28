@@ -1,37 +1,61 @@
-From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 0/2] OV5647 sensor driver
-Date: Tue, 28 Jun 2016 12:59:57 +0100
-Message-ID: <cover.1467107991.git.roliveir@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 4/5] mfd: rn5t618: register power off callback
+ optionally
+Date: Tue, 28 Jun 2016 13:01:37 +0100
+Message-ID: <20160628120137.GE24982@dell>
+References: <20160628062757.24490-1-stefan@agner.ch>
+ <20160628062757.24490-5-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160628062757.24490-5-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org, b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, 27 Jun 2016, Stefan Agner wrote:
 
-This patch adds support for the Omnivision OV5647 sensor.
+> Only register power off if the PMIC is defined as system power
+> controller (see Documentation/devicetree/bindings/power/
+> power-controller.txt).
+>=20
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> ---
+>  drivers/mfd/rn5t618.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 
-At the moment it only supports 640x480 in Raw 8.
+=46or my own reference:
+  Acked-by: Lee Jones <lee.jones@linaro.org>
+ =20
+> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+> index c86160d..1831740 100644
+> --- a/drivers/mfd/rn5t618.c
+> +++ b/drivers/mfd/rn5t618.c
+> @@ -102,9 +102,13 @@ static int rn5t618_i2c_probe(struct i2c_client *=
+i2c,
+>  		return ret;
+>  	}
+> =20
+> -	if (!pm_power_off) {
+> -		rn5t618_pm_power_off =3D priv;
+> -		pm_power_off =3D rn5t618_power_off;
+> +	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
+> +		if (!pm_power_off) {
+> +			rn5t618_pm_power_off =3D priv;
+> +			pm_power_off =3D rn5t618_power_off;
+> +		} else {
+> +			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
+> +		}
+>  	}
+> =20
+>  	return 0;
 
-Ramiro Oliveira (2):
-  Add OV5647 device tree documentation
-  Add support for Omnivision OV5647
-
- .../devicetree/bindings/media/i2c/ov5647.txt       |  19 +
- MAINTAINERS                                        |   7 +
- drivers/media/i2c/Kconfig                          |  12 +
- drivers/media/i2c/Makefile                         |   1 +
- drivers/media/i2c/ov5647.c                         | 891 +++++++++++++++++++++
- 5 files changed, 930 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
- create mode 100644 drivers/media/i2c/ov5647.c
-
--- 
-2.8.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
