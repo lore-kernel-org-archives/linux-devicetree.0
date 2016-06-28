@@ -1,33 +1,163 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH V5 1/1] net: ethernet: Add TSE PCS support to
- dwmac-socfpga
-Date: Tue, 28 Jun 2016 05:34:50 -0400 (EDT)
-Message-ID: <20160628.053450.2071467949973087029.davem@davemloft.net>
-References: <1466759603-30769-1-git-send-email-thloh@altera.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] ARM: dts: keystone: specify usb mode explicitly
+Date: Tue, 28 Jun 2016 12:42:45 +0300
+Message-ID: <20160628094245.9521-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466759603-30769-1-git-send-email-thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thloh85-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Date: Fri, 24 Jun 2016 02:13:23 -0700
+The USB OTG mode is not supported by Kestone 2 devices, as result, the
+USB devices enumeration and detection will not work properly when
+kernel is built with CONFIG_USB_DWC3_DUAL_ROLE=y (default for multi
+platform build):
+ - it's required to load gadget drivers manually to make host mode
+work and this confuses current Keystone 2 users
+ - device mode is not working, because port can't detect and switch to
+peripheral/host mode dynamically.
 
-> From: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> 
-> This adds support for TSE PCS that uses SGMII adapter when the phy-mode of
-> the dwmac is set to sgmii.
-> 
-> Signed-off-by: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hence, specify usb mode explicitly in DT: usb0 = "host" for all KS2
+devices and usb1 = "peripheral" for K2E.
 
-Applied to net-next, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cc: Sekhar Nori <nsekhar@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ arch/arm/boot/dts/keystone-k2e-evm.dts  | 12 ++++++++++--
+ arch/arm/boot/dts/keystone-k2e.dtsi     |  4 ++--
+ arch/arm/boot/dts/keystone-k2hk-evm.dts |  6 +++++-
+ arch/arm/boot/dts/keystone-k2l-evm.dts  |  6 +++++-
+ arch/arm/boot/dts/keystone.dtsi         |  4 ++--
+ 5 files changed, 24 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
+index 4c32ebc..ae1ebe7 100644
+--- a/arch/arm/boot/dts/keystone-k2e-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
+@@ -47,18 +47,26 @@
+ 	status = "okay";
+ };
+ 
+-&usb {
++&keystone_usb0 {
+ 	status = "okay";
+ };
+ 
++&usb0 {
++	dr_mode = "host";
++};
++
+ &usb1_phy {
+ 	status = "okay";
+ };
+ 
+-&usb1 {
++&keystone_usb1 {
+ 	status = "okay";
+ };
+ 
++&usb1 {
++	dr_mode = "peripheral";
++};
++
+ &i2c0 {
+ 	dtt@50 {
+ 		compatible = "at,24c1024";
+diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
+index 96b349f..3540a1d 100644
+--- a/arch/arm/boot/dts/keystone-k2e.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e.dtsi
+@@ -61,7 +61,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usb1: usb@25000000 {
++		keystone_usb1: usb@25000000 {
+ 			compatible = "ti,keystone-dwc3";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -74,7 +74,7 @@
+ 			dma-ranges;
+ 			status = "disabled";
+ 
+-			dwc3@25010000 {
++			usb1: dwc3@25010000 {
+ 				compatible = "synopsys,dwc3";
+ 				reg = <0x25010000 0x70000>;
+ 				interrupts = <GIC_SPI 414 IRQ_TYPE_EDGE_RISING>;
+diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+index b38b344..2156ff9 100644
+--- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+@@ -83,10 +83,14 @@
+ 	status = "okay";
+ };
+ 
+-&usb {
++&keystone_usb0 {
+ 	status = "okay";
+ };
+ 
++&usb0 {
++	dr_mode = "host";
++};
++
+ &aemif {
+ 	cs0 {
+ 		#address-cells = <2>;
+diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
+index 7f9c2e9..056b42f 100644
+--- a/arch/arm/boot/dts/keystone-k2l-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
+@@ -32,10 +32,14 @@
+ 	status = "okay";
+ };
+ 
+-&usb {
++&keystone_usb0 {
+ 	status = "okay";
+ };
+ 
++&usb0 {
++	dr_mode = "host";
++};
++
+ &i2c0 {
+ 	dtt@50 {
+ 		compatible = "at,24c1024";
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index e34b226..96c9943 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -188,7 +188,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usb: usb@2680000 {
++		keystone_usb0: usb@2680000 {
+ 			compatible = "ti,keystone-dwc3";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -201,7 +201,7 @@
+ 			dma-ranges;
+ 			status = "disabled";
+ 
+-			dwc3@2690000 {
++			usb0: dwc3@2690000 {
+ 				compatible = "synopsys,dwc3";
+ 				reg = <0x2690000 0x70000>;
+ 				interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+-- 
+2.9.0
