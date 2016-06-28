@@ -1,136 +1,122 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] mfd: rn5t618: register restart handler
-Date: Tue, 28 Jun 2016 13:03:56 +0100
-Message-ID: <20160628120356.GF24982@dell>
-References: <20160628062757.24490-1-stefan@agner.ch>
- <20160628062757.24490-6-stefan@agner.ch>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [v4 PATCH 0/5] Rockchip Type-C and DispplayPort driver
+Date: Tue, 28 Jun 2016 20:24:36 +0800
+Message-ID: <1467116681-9330-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160628062757.24490-6-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, max.oss.09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, wulf@rock-chips.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 Jun 2016, Stefan Agner wrote:
-
-> Use the PMIC's repower capability for reboots. Register a restart
-> handler and use a slightly elevated priority of 192 since the PMIC
-> has suprior reset capability (causing a system wide reset).
->=20
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> Reviewed-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/mfd/rn5t618.c | 43 +++++++++++++++++++++++++++++++++++++----=
---
->  1 file changed, 37 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-> index 1831740..b3ca6df 100644
-> --- a/drivers/mfd/rn5t618.c
-> +++ b/drivers/mfd/rn5t618.c
-> @@ -12,11 +12,13 @@
->   * along with this program. If not, see <http://www.gnu.org/licenses=
-/>.
->   */
-> =20
-> +#include <linux/delay.h>
->  #include <linux/i2c.h>
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/rn5t618.h>
->  #include <linux/module.h>
->  #include <linux/of_device.h>
-> +#include <linux/reboot.h>
->  #include <linux/regmap.h>
-> =20
->  static const struct mfd_cell rn5t618_cells[] =3D {
-> @@ -50,17 +52,38 @@ static const struct regmap_config rn5t618_regmap_=
-config =3D {
->  };
-> =20
->  static struct rn5t618 *rn5t618_pm_power_off;
-> +static struct notifier_block rn5t618_restart_handler;
-> =20
-> -static void rn5t618_power_off(void)
-> +static void rn5t618_trigger_poweroff_sequence(bool repower)
->  {
->  	/* disable automatic repower-on */
->  	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_REPCNT,
-> -			   RN5T618_REPCNT_REPWRON, 0);
-> +			   RN5T618_REPCNT_REPWRON,
-> +			   repower ? RN5T618_REPCNT_REPWRON : 0);
->  	/* start power-off sequence */
->  	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_SLPCNT,
->  			   RN5T618_SLPCNT_SWPWROFF, RN5T618_SLPCNT_SWPWROFF);
->  }
-> =20
-> +static void rn5t618_power_off(void)
-> +{
-> +	rn5t618_trigger_poweroff_sequence(false);
-> +}
-> +
-> +static int rn5t618_restart(struct notifier_block *this,
-> +			    unsigned long mode, void *cmd)
-> +{
-> +	rn5t618_trigger_poweroff_sequence(true);
-> +
-> +	/*
-> +	 * Repower factor detection on PMIC side is not instant. 1ms
-> +	 * proved to be enouth time until reset takes effect.
-
-Spell check.
-
-Please fix this, add all the Acks you received and resubmit the set.
-
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> +	 */
-> +	mdelay(1);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
->  static const struct of_device_id rn5t618_of_match[] =3D {
->  	{ .compatible =3D "ricoh,rn5t567", .data =3D (void *)RN5T567 },
->  	{ .compatible =3D "ricoh,rn5t618", .data =3D (void *)RN5T618 },
-> @@ -102,13 +125,21 @@ static int rn5t618_i2c_probe(struct i2c_client =
-*i2c,
->  		return ret;
->  	}
-> =20
-> +	rn5t618_pm_power_off =3D priv;
->  	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
-> -		if (!pm_power_off) {
-> -			rn5t618_pm_power_off =3D priv;
-> +		if (!pm_power_off)
->  			pm_power_off =3D rn5t618_power_off;
-> -		} else {
-> +		else
->  			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
-> -		}
-> +	}
-> +
-> +	rn5t618_restart_handler.notifier_call =3D rn5t618_restart;
-> +	rn5t618_restart_handler.priority =3D 192;
-> +
-> +	ret =3D register_restart_handler(&rn5t618_restart_handler);
-> +	if (ret) {
-> +		dev_err(&i2c->dev, "cannot register restart handler, %d\n", ret);
-> +		return ret;
->  	}
-> =20
->  	return 0;
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkhpIGFsbAoKVGhpcyBzZXJpZXMgcGF0Y2ggaXMgZm9yIHJvY2tjaGlwIFR5cGUtQyBwaHkgYW5k
+IERpc3BsYXlQb3J0IGNvbnRyb2xsZXIKZHJpdmVyLgoKVGhlIFVTQiBUeXBlLUMgUEhZIGlzIGRl
+c2lnbmVkIHRvIHN1cHBvcnQgdGhlIFVTQjMgYW5kIERQIGFwcGxpY2F0aW9ucy4KVGhlIFBIWSBi
+YXNpY2FsbHkgaGFzIHR3byBtYWluIGNvbXBvbmVudHM6IFVTQjMgYW5kIERpc3BseVBvcnQuIFVT
+QjMKb3BlcmF0ZXMgaW4gU3VwZXJTcGVlZCBtb2RlIGFuZCB0aGUgRFAgY2FuIG9wZXJhdGUgYXQg
+UkJSLCBIQlIgYW5kIEhCUjIKZGF0YSByYXRlcy4gVGhlIFR5cGUtQyBjYWJsZSBvcmllbnRhdGlv
+biBkZXRlY3Rpb24gYW5kIFBvd2VyIERlbGl2ZXJ5CihQRCkgaXMgYWNjb21wbGlzaGVkIHVzaW5n
+IGEgUEQgUEhZIG9yIGEgZXhlcm5hbCBQRCBjaGlwLgoKVGhlIERQIGNvbnRyb2xsZXIgaXMgY29t
+cGxpYW50IHdpdGggRGlzcGxheVBvcnQgU3BlY2lmaWNhdGlvbiwKVmVyc2lvbiAxLjMsIFRoaXMg
+SVAgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSByb2NrY2hpcCB0eXBlLWMgUEhZIElQLgpUaGVyZSBp
+cyBhIHVDUFUgaW4gRFAgY29udHJvbGxlciwgaXQgbmVlZCBhIGZpcm13YXJlIHRvIHdvcmssIHBs
+ZWFzZQpwdXQgdGhlIGZpcm13YXJlIGZpbGUgdG8gL2xpYi9maXJtd2FyZS9jZG4vZHB0eC5iaW4u
+IFRoZSB1Q1BVIGluIGNoYXJnZQpvZiBhdXggY29tbXVuaWNhdGlvbiBhbmQgbGluayB0cmFpbmlu
+ZywgdGhlIGhvc3QgdXNlIG1haWxib3ggdG8KY29tbXVuaWNhdGUgd2l0aCB0aGUgdWNwdS4KClRo
+ZSBEUCBjb250b2xsZXIgaGFzIHJlZ2lzdGVyIGEgbm90aWZpY2F0aW9uIHdpdGggZXh0Y29uIEFQ
+SSwgdG8gZ2V0IHRoZQphbHQgbW9kZSBmcm9tIFBELCB0aGUgUEQgZHJpdmVyIG5lZWQgY2FsbCB0
+aGUgZGV2bV9leHRjb25fZGV2X2FsbG9jYXRlCnRvIGNyZWF0ZSBhIGV4dGNvbiBkZXZpY2UgYW5k
+IHVzZSBleHRjb25fc2V0X3N0YXRlIHRvIG5vdGlmeSBEUApjb250cm9sbGVyLgoKQWJvdXQgdGhl
+IERQIGF1ZGlvLCBjZG4tZHAgcmVnaXN0ZXJlZCAyIERBSXM6IDAgaXMgSTJTLCAxIGlzIFNQRElG
+LgpXZSBjYW4gcmVmZXJlbmNlIHRoZW0gaW4gc2ltcGxlLWNhcmQuCgpUaGlzIHNlcmllcyBpcyBi
+YXNlZCBvbiBNYXJrIFlhbydzIGJyYW5jaDoKaHR0cHM6Ly9naXRodWIuY29tL21hcmt5enEva2Vy
+bmVsLWRybS1yb2NrY2hpcC90cmVlL2RybS1yb2NrY2hpcC1uZXh0LTIwMTYtMDUtMjMKCkkgdGVz
+dCB0aGlzIHBhdGNoZXMgb24gdGhlIHJrMzM5OS1ldmIgYm9hcmQsIHdpdGggYSBmdXNiMzAyIGRy
+aXZlciwKdGhpcyBicmFuY2ggaGFzIG5vIHJrMzM5OS5kdHNpLCBzbyB0aGUgcGF0Y2ggYWJvdXQg
+ZHRzIGlzIG5vdCBpbmNsdWRlZAppbiB0aGlzIHNlcmllcy4KCgpDaGFuZ2VzIGluIHY0OgotIHJl
+bW92ZSBEUCBhbHQgbW9kZQotIGFkZCBhICNwaHktY2VsbHMgbm9kZQotIHNlbGVjdCBFWFRDT04K
+LSB1c2UgcGh5IGZyYW1ld29yayB0byBjb250cm9sIHRoZSBVU0IzIGFuZCBEUCBmdW5jdGlvbgot
+IHJlbmFtZSBQSU5fTUFQXyB0byBQSU5fQVNTSUdOXwotIGFkZCBhIHJlc2V0IG5vZGUKLSBzdXBw
+b3J0IDIgcGh5cwotIHVzZSBwaHkgZnJhbWV3b3JrIHRvIGNvbnRyb2wgRFAgcGh5Ci0gc3VwcG9y
+dCAyIHBoeXMKCkNoYW5nZXMgaW4gdjM6Ci0gdXNlIGNvbXBhdGlibGU6IHJvY2tjaGlwLHJrMzM5
+OS10eXBlYy1waHkKLSB1c2UgZGFzaGVzIGluc3RlYWQgb2YgdW5kZXJzY29yZXMuCi0gcmVtb3Zl
+IHRoZSBwaHkgZnJhbWV3b3JrKEtpc2hvbiBWaWpheSBBYnJhaGFtIEkpCi0gYWRkIHBhcmVudGhl
+c2VzIGFyb3VuZCB0aGUgbWFjcm8KLSB1c2UgYSBzaW5nbGUgc3BhY2UgYmV0d2VlbiB0eXBlIGFu
+ZCBuYW1lCi0gYWRkIHNwYWNlcyBhZnRlciBvcGVuaW5nIGFuZCBiZWZvcmUgY2xvc2luZyBicmFj
+ZXMuCi0gdXNlIHUxNiBmb3IgcmVnaXN0ZXIgdmFsdWUKLSByZW1vdmUgdHlwZS1jIHBoeSBoZWFk
+ZXIgZmlsZQotIENvZGluZ1N0eWxlIG9wdGltaXphdGlvbgotIHVzZSBzb21lIGNhYmxlIGV4dGNv
+biB0byBnZXQgdHlwZS1jIHBvcnQgaW5mb3JtYXRpb24KLSBhZGQgYSBleHRjb24gdG8gbm90aWZ5
+IERpc3BsYXkgUG9ydAotIGFkZCBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcKLSByZW1v
+dmUgcmVnID0gPDE+OwotIHVzZSBFWFRDT05fRElTUF9EUCBhbmQgRVhUQ09OX0RJU1BfRFBfQUxU
+IGNhYmxlIHRvIGdldCBkcCBwb3J0IHN0YXRlLgotIHJlc2V0IHNwZGlmIGJlZm9yZSBjb25maWcg
+aXQKLSBtb2RpZnkgdGhlIGZpcm13YXJlIGNsayB0byAxMDBNaHoKLSByZXRyeSBsb2FkIGZpcm13
+YXJlIGlmIGZ3IGZpbGUgaXMgcmVxdWVzdGVkIHRvbyBlYXJseQoKQ2hhbmdlcyBpbiB2MjoKLSBh
+ZGQgc29tZSByZWdpc3RlcnMgZGVzY3JpcHRpb24KLSBzZWxlY3QgUkVTRVRfQ09OVFJPTExFUgot
+IGFscGhhYmV0aWMgb3JkZXIKLSBtb2RpZnkgc29tZSBzcGVsbGluZyBtaXN0YWtlcwotIG1ha2Ug
+bW9kZSBjbGVhbmVyCi0gdXNlIGJvb2wgZm9yIGVuYWJsZS9kaXNhYmxlCi0gY2hlY2sgYWxsIG9m
+IHRoZSByZXR1cm4gdmFsdWUKLSByZXR1cm4gYSBiZXR0ZXIgZXJyIG51bWJlcgotIHVzZSBtb3Jl
+IHJlYWR4X3BvbGxfdGltZW91dCgpCi0gY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHRjcGh5LT5jbGtf
+cmVmKTsKLSByZW1vdmUgdW51c2UgZnVuY3Rpb25zLCByb2NrY2hpcF90eXBlY19waHlfcG93ZXJf
+b24vb2ZmCi0gcmVtb3ZlIHVubmVjZXNzYXJ5IHR5cGVjYXN0IGZyb20gdm9pZCAqCi0gdXNlIGR0
+cyBub2RlIHRvIGRpc3Rpbmd1aXNoIGJldHdlZW4gcGh5cy4KLSBBbHBoYWJldGljIG9yZGVyCi0g
+cmVtb3ZlIGV4Y2VzcyBlcnJvciBtZXNzYWdlCi0gdXNlIGRlZmluZSBjbGtfcmF0ZQotIGNoZWNr
+IGFsbCByZXR1cm4gdmFsdWUKLSByZW1vdmUgZGV2X3NldF9uYW1lKGRwLT5kZXYsICJjZG4tZHAi
+KTsKLSB1c2Ugc2NoZWR1bGVfZGVsYXllZF93b3JrCi0gcmVtb3ZlIG5ldmVyLWNhbGxlZCBmdW5j
+dGlvbnMKLSByZW1vdmUgc29tZSB1bm5lY2Vzc2FyeSAoKQoKQ2hhbmdlcyBpbiB2MToKLSBhZGQg
+ZXh0Y29uIG5vZGUgZGVzY3JpcHRpb24KLSBtb3ZlIHRoZSByZWdpc3RlcnMgaW4gcGh5IGRyaXZl
+cgotIHJlbW92ZSB0aGUgc3VmZml4IG9mIHJlc2V0Ci0gdXBkYXRlIHRoZSBsaWNlbmNlIG5vdGUK
+LSBpbml0IGNvcmUgY2xvY2sgdG8gNTBNSHoKLSB1c2UgZXh0Y29uIEFQSQotIHJlbW92ZSB1bnVz
+ZWQgZ2xvYmFsCi0gYWRkIHNvbWUgY29tbWVudHMgZm9yIG1hZ2ljIG51bQotIGNoYW5nZSB1c2xl
+ZXBfcmFuZ2UoMTAwMCwgMjAwMCkgdG91c2xlZXBfcmFuZ2UoMTAwMCwgMTA1MCkKLSByZW1vdmUg
+X19mdW5jX18gZnJvbSBkZXZfZXJyCi0gcmV0dXJuIGVyciBudW1iZXIgd2hlbiBnZXQgY2xrIGZh
+aWxlZAotIHJlbW92ZSBBRERSX0FESiBkZWZpbmUKLSB1c2UgZGV2bV9jbGtfZ2V0KCZwZGV2LT5k
+ZXYsICJ0Y3BkY29yZSIpCi0gYWRkIGV4dGNvbiBub2RlIGRlc2NyaXB0aW9uCi0gYWRkICNzb3Vu
+ZC1kYWktY2VsbHMgZGVzY3JpcHRpb24KLSB1c2UgZXh0Y29uIEFQSQotIHVzZSBoZG1pLWNvZGVj
+IGZvciB0aGUgRFAgQXNvYwotIGRvIG5vdCBpbml0aWFsaXplIHRoZSAicmV0IgotIHByaW50ayBh
+IGVyciBsb2cgd2hlbiBkcm1fb2ZfZW5jb2Rlcl9hY3RpdmVfZW5kcG9pbnRfaWQKLSBtb2RpZnkg
+dGhlIGRjbGsgcGluX3BvbCB0byBhIHNpbmdsZSBsaW5lCgpDaHJpcyBaaG9uZyAoNSk6CiAgZXh0
+Y29uOiBBZGQgVHlwZS1DIGFuZCBEUCBzdXBwb3J0CiAgRG9jdW1lbnRhdGlvbjogYmluZGluZ3M6
+IGFkZCBkdCBkb2MgZm9yIFJvY2tjaGlwIFVTQiBUeXBlLUMgUEhZCiAgcGh5OiBBZGQgVVNCIFR5
+cGUtQyBQSFkgZHJpdmVyIGZvciByazMzOTkKICBEb2N1bWVudGF0aW9uOiBiaW5kaW5nczogYWRk
+IGR0IGRvY3VtZW50YXRpb24gZm9yIGNkbiBEUCBjb250cm9sbGVyCiAgZHJtL3JvY2tjaGlwOiBj
+ZG4tZHA6IGFkZCBjZG4gRFAgc3VwcG9ydCBmb3IgcmszMzk5CgogLi4uL2JpbmRpbmdzL2Rpc3Bs
+YXkvcm9ja2NoaXAvY2RuLWRwLXJvY2tjaGlwLnR4dCAgfCAgNjcgKysKIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtdHlwZWMudHh0IHwgIDc3ICsrCiBkcml2ZXJzL2V4
+dGNvbi9leHRjb24uYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNSArCiBkcml2ZXJz
+L2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgOSArCiBkcml2
+ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgMSArCiBk
+cml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuYyAgICAgICAgICAgICB8IDc2MSAr
+KysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuaCAg
+ICAgICAgICAgICB8IDExMyArKysKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtcmVn
+LmMgICAgICAgICAgICAgIHwgNzMxICsrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9y
+b2NrY2hpcC9jZG4tZHAtcmVnLmggICAgICAgICAgICAgIHwgNDA0ICsrKysrKysrKwogZHJpdmVy
+cy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuYyAgICAgICAgfCAgIDYgKy0KIGRy
+aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wLmggICAgICAgIHwgICAyICsK
+IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMgICAgICAgIHwgICAy
+ICsKIGRyaXZlcnMvcGh5L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICA5ICsKIGRyaXZlcnMvcGh5L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgICAxICsKIGRyaXZlcnMvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy5jICAgICAgICAgICAgICAg
+ICAgIHwgOTYzICsrKysrKysrKysrKysrKysrKysrKwogaW5jbHVkZS9saW51eC9leHRjb24uaCAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKwogMTYgZmlsZXMgY2hhbmdlZCwgMzE1
+NSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvY2RuLWRwLXJvY2tj
+aGlwLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9waHkvcGh5LXJvY2tjaGlwLXR5cGVjLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtY29yZS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1jb3JlLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLXJlZy5jCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcuaAogY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy5jCgotLSAKMi42LjMKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
