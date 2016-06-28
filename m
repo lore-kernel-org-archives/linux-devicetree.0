@@ -1,66 +1,24 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] drm/fsl-dcu: update the panel dt binding document
-Date: Tue, 28 Jun 2016 16:07:49 -0500
-Message-ID: <20160628210748.GA10847@rob-hp-laptop>
-References: <1467106748-19314-1-git-send-email-meng.yi@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] Add OV5647 device tree documentation
+Date: Tue, 28 Jun 2016 16:08:32 -0500
+Message-ID: <20160628210832.GA11517@rob-hp-laptop>
+References: <cover.1467107991.git.roliveir@synopsys.com>
+ <dc3a66f09f705b8bb5b88bc3140b743bb101bcf1.1467107991.git.roliveir@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467106748-19314-1-git-send-email-meng.yi-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <dc3a66f09f705b8bb5b88bc3140b743bb101bcf1.1467107991.git.roliveir@synopsys.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 05:39:07PM +0800, Meng Yi wrote:
-> dropped the old "fsl,panel" property, using the of_graph dt
-> binding syntax
-> 
-> Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+On Tue, Jun 28, 2016 at 12:59:58PM +0100, Ramiro Oliveira wrote:
+> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
 > ---
->  Documentation/devicetree/bindings/display/fsl,dcu.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/fsl,dcu.txt b/Documentation/devicetree/bindings/display/fsl,dcu.txt
-> index ae55cde..f44cf5b 100644
-> --- a/Documentation/devicetree/bindings/display/fsl,dcu.txt
-> +++ b/Documentation/devicetree/bindings/display/fsl,dcu.txt
-> @@ -12,7 +12,7 @@ Required properties:
->  - clock-names:		Should be "dcu" and "pix"
->  			See ../clocks/clock-bindings.txt for details.
->  - big-endian		Boolean property, LS1021A DCU registers are big-endian.
-> -- fsl,panel:		The phandle to panel node.
-> +- port			Video port for the panel output
->  
->  Optional properties:
->  - fsl,tcon:		The phandle to the timing controller node.
-> @@ -24,6 +24,11 @@ dcu: dcu@2ce0000 {
->  	clocks = <&platform_clk 0>, <&platform_clk 0>;
->  	clock-names = "dcu", "pix";
->  	big-endian;
-> -	fsl,panel = <&panel>;
->  	fsl,tcon = <&tcon>;
-> +
-> +	port: port@0 {
+>  .../devicetree/bindings/media/i2c/ov5647.txt          | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
 
-Drop the unit address. With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> +		dcu_out: endpoint {
-> +			remote-endpoint = <&panel_out>;
-> +		};
-> +	};
->  };
-> -- 
-> 2.1.0.27.g96db324
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
