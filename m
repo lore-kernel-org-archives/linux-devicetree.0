@@ -1,79 +1,81 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: AMLogic RTC series (second round)
-Date: Tue, 28 Jun 2016 09:22:11 +0200
-Message-ID: <577225A3.9010409@baylibre.com>
-References: <1467045849-495-1-git-send-email-ben.dooks@codethink.co.uk>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH 2/4] dmaengine: vdma: Add support for mulit-channel dma
+ mode
+Date: Tue, 28 Jun 2016 07:24:38 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5B9BD5@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1465549954-30220-1-git-send-email-appanad@xilinx.com>
+ <1465549954-30220-3-git-send-email-appanad@xilinx.com>
+ <20160621155502.GB16910@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B8248@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160621163340.GE16910@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B84A9@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160628043459.GR22564@localhost>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5B9B9E@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDAYD2P3QYGRBJ6LZC5QKGQEP4W6OUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A5B9B9E@XAP-PVEXMBX01.xlnx.xilinx.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Appana Durga Kedareswara Rao <appanad@xilinx.com>, Vinod Koul <vinod.koul@intel.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2016 06:44 PM, Ben Dooks wrote:
-> Apologies, forgot to put the RTC driver through checkpatch
-> before sending. This gets rid of most of the warnings.
+Hi Vinod,
+
+	
+ 
+> > > > > > >  /**
+> > > > > > > + * struct xilinx_mcdma_config - DMA Multi channel
+> > > > > > > +configuration structure
+> > > > > > > + * @tdest: Channel to operate on
+> > > > > > > + * @tid:   Channel configuration
+> > > > > > > + * @tuser: Tuser configuration
+> > > > > > > + * @ax_user: ax_user value
+> > > > > > > + * @ax_cache: ax_cache value  */ struct xilinx_mcdma_config
+> > > > > > > +{
+> > > > > > > +	u8 tdest;
+> > > > > > > +	u8 tid;
+> > > > > > > +	u8 tuser;
+> > > > > > > +	u8 ax_user;
+> > > > > > > +	u8 ax_cache;
+> > > > > >
+> > > > > > can you describe these in details, what do these do, what are
+> > > > > > the values to be programmed?
+> > > > >
+> > > > > As said above In Multi-Channel Mode each Stream interface can be
+> > > > > Configured up to 16 channels each channel is differentiated
+> > > > > based on the tdest
+> > > > and tid values.
+> > > >
+> > > > Then why are you not registering 16 channels for this? That should
+> > > > give you channel to operate on!
+> > >
+> > > The number of channels are configurable.
+> > > We are registering number of Channels that h/w configured for.
+> > >
+> > > Will fix in the next version. Will remove this config.
+> > > And based on the channel type will configure the h/w.
+> >
+> > Looking at this you should redesign!
+> >
+> > The vchan was designed to operate on 'virtual' channels. The hardware
+> > channels can be independent of that.
+> >
+> > Your IP seems to be a good fit for that approach. Do not link the two
+> > and separate them. User can have a virtual channel. In your driver,
+> > you can manage hardware channels...
 > 
-> 
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
-> 
+> Fixed it in the v2 and posted the v2 series.
+> Please go thought it...
 
-Hi Ben,
+Sorry forgot to write explanation.
+Without the need of virtual channels fixed it in the driver itself.
+During probe based on the number of channels configuring the h/w
+Accordingly user no need to aware of this configuration. User can request DMA
+Channel in normal way the using dma_request_slave_channel or dma_request_channel
+ Posted v2 series please go through it.
 
-The patchset looks good but misses some quick introduction on how
-the RTC works, it seems to be connected to an internal serial bus,
-do you have some informations about this ?
-
-Then, the cover letter of your patchset should contain much more informations
-that "git format-patch --cover-letter" generates.
-
-My personal workflow when I have a set ready is :
-
-* run checkpatch on C files and check my changes
-# scripts/checkpatch.pl -f path/to/my/driver.c
-* I identify the number of patches to include
-* I generate the patches with cover-letter, signoff and eventually subject-prefix, here for 4 commits
-# git format-patch --cover-letter -s -4 --subject-prefix "PATCH v2" -o my_drivers_patches_v2
-* Then I complete the cover letter in my_drivers_patches_v2/0000-cover-letter
-* I also reference a small changelog between patchset version and identify the previous cover letter via it's message id
-Use the http://lkml.kernel.org service to reference a message-id, i.e this email I answer would be referenced by :
-http://lkml.kernel.org/r/1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org
-while looking at the email headers at :
-Message-Id: <1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-* Then I look again all the patches and check all the descriptions
-* I re-run a checkpatch.pl on all the patches (and ignore errors on the cover letter)
-# scripts/checkpatch.pl my_drivers_patches_v2/*
-* I identify all the maintainers and mailing lists
-# scripts/get_maintainer.pl my_drivers_patches_v2/*
-* Personally, I fill the CC: and To: in the headers of each patches, only adding the devicetree mailing list on DT related patches
-* Then I send them via git send-email
-# git send-email my_drivers_patches_v2/*
-=> here you can also select the recipients
-=> you can also do a dry run or send yourself the patchset to check before final sending
-
-Another rule is time, please wait at least 1 week after the last review before send another run,
-and give yourself more time to check the integrity of the patchset.
-
-Neil
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Regards,
+Kedar.
