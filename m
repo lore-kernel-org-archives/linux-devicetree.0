@@ -1,41 +1,91 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [RFC PATCH 3/5] thermal: Add support for the thermal sensor on
- A23/33
-Date: Tue, 28 Jun 2016 22:03:10 +0800
-Message-ID: <203181467122590@web5g.yandex.ru>
-References: <20160628101325.2522-1-icenowy@aosc.xyz>
- <20160628101325.2522-3-icenowy@aosc.xyz> <20160628114640.GE5550@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160628114640.GE5550@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "emilio@elopez.com.ar" <emilio@elopez.com.ar>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "wens@csie.org" <wens@csie.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v5 01/13] devicetree: bindings: Renesas APMU and SMP Enable method
+Date: Tue, 28 Jun 2016 16:10:30 +0200
+Message-ID: <1467123042-8468-2-git-send-email-geert+renesas@glider.be>
+References: <1467123042-8468-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1467123042-8468-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Keita Kobayashi <keita.kobayashi.ym@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgoyOC4wNi4yMDE2LCAxOTo0NiwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gSGksCj4KPiBUaGFua3MgZm9yIHdvcmtpbmcgb24gdGhpcy4KPgo+
-IE9uIFR1ZSwgSnVuIDI4LCAyMDE2IGF0IDA2OjEzOjIzUE0gKzA4MDAsIEljZW5vd3kgWmhlbmcg
-d3JvdGU6Cj4+IMKgVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBzdW44aXczIHRoZXJt
-YWwgc2Vuc29yIG9uCj4+IMKgQWxsd2lubmVyIEEyMy8zMyBTb0NzLgo+Pgo+PiDCoFNpZ25lZC1v
-ZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4KPiBUaGUgSVAgaXMgYXdm
-dWxseSBzaW1pbGFyIHRvIHRoZSBBMzEncywgd2hpY2ggYWxyZWFkeSBoYXMgYSBkcml2ZXIKPiAo
-ZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9zdW40aS10cy5jKS4KPgo+IFRoZXJlJ3Mgbm8gcmVh
-c29uIHRvIGFkZCBhIG5ldyBvbmUgaGVyZS4KPgo+IFRoYW5rcywKPiBNYXhpbWUKPgo+IC0tCj4g
-TWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFu
-ZCBBbmRyb2lkIGVuZ2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKT3IuLi4g
-c2hvdWxkIEkgc3BsaXQgdGhlIFBMTDIgZHJpdmVyIGludG8gYW5vdGhlciBwYXRjaCBzZXQ/Cgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+From: Magnus Damm <damm+renesas@opensource.se>
+
+Add DT binding documentation for the APMU hardware and add "renesas,apmu"
+to the list of enable methods for the ARM cpus.
+
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+---
+v5:
+  - Add Acked-by,
+
+v4:
+  - s/reigsters/registers/,
+  - Use "renesas,<soctype>-apmu" instead of "renesas,apmu-<soctype>",
+
+v3:
+  - s/Until/Unit/g,
+
+v2:
+  - No changes.
+---
+ Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
+ .../devicetree/bindings/power/renesas,apmu.txt     | 31 ++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/renesas,apmu.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 3f0cbbb8395f84ef..fa7520eb6387edbe 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -204,6 +204,7 @@ nodes to be present and contain the properties described below.
+ 			    "qcom,gcc-msm8660"
+ 			    "qcom,kpss-acc-v1"
+ 			    "qcom,kpss-acc-v2"
++			    "renesas,apmu"
+ 			    "rockchip,rk3036-smp"
+ 			    "rockchip,rk3066-smp"
+ 			    "ste,dbx500-smp"
+diff --git a/Documentation/devicetree/bindings/power/renesas,apmu.txt b/Documentation/devicetree/bindings/power/renesas,apmu.txt
+new file mode 100644
+index 0000000000000000..84404c9edff73d97
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/renesas,apmu.txt
+@@ -0,0 +1,31 @@
++DT bindings for the Renesas Advanced Power Management Unit
++
++Renesas R-Car line of SoCs utilize one or more APMU hardware units
++for CPU core power domain control including SMP boot and CPU Hotplug.
++
++Required properties:
++
++- compatible: Should be "renesas,<soctype>-apmu", "renesas,apmu" as fallback.
++	      Examples with soctypes are:
++		- "renesas,r8a7790-apmu" (R-Car H2)
++		- "renesas,r8a7791-apmu" (R-Car M2-W)
++		- "renesas,r8a7792-apmu" (R-Car V2H)
++		- "renesas,r8a7793-apmu" (R-Car M2-N)
++		- "renesas,r8a7794-apmu" (R-Car E2)
++
++- reg: Base address and length of the I/O registers used by the APMU.
++
++- cpus: This node contains a list of CPU cores, which should match the order
++  of CPU cores used by the WUPCR and PSTR registers in the Advanced Power
++  Management Unit section of the device's datasheet.
++
++
++Example:
++
++This shows the r8a7791 APMU that can control CPU0 and CPU1.
++
++	apmu@e6152000 {
++		compatible = "renesas,r8a7791-apmu", "renesas,apmu";
++		reg = <0 0xe6152000 0 0x188>;
++		cpus = <&cpu0 &cpu1>;
++	};
+-- 
+1.9.1
