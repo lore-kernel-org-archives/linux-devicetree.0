@@ -1,128 +1,44 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 01/10] Documentation: dt-bindings: mailbox: tegra: Add
- binding for HSP mailbox
-Date: Tue, 28 Jun 2016 13:08:02 -0600
-Message-ID: <5772CB12.5080408@wwwdotorg.org>
-References: <20160627090248.23621-1-josephl@nvidia.com>
- <20160627090248.23621-2-josephl@nvidia.com> <57714C85.50802@wwwdotorg.org>
- <57724039.7080007@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57724039.7080007-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 3/4] ARM64: meson-gxbb: Add Infrared Remote Controller decoder
+Date: Tue, 28 Jun 2016 21:18:01 +0200
+Message-ID: <20160628191802.21227-4-martin.blumenstingl@googlemail.com>
+References: <20160626210622.5257-1-martin.blumenstingl@googlemail.com>
+ <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, mchehab@kernel.org, devicetree@vger.kernel.org, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/28/2016 03:15 AM, Joseph Lo wrote:
-> On 06/27/2016 11:55 PM, Stephen Warren wrote:
->> On 06/27/2016 03:02 AM, Joseph Lo wrote:
->>> Add DT binding for the Hardware Synchronization Primitives (HSP). The
->>> HSP is designed for the processors to share resources and communicate
->>> together. It provides a set of hardware synchronization primitives for
->>> interprocessor communication. So the interprocessor communication (IPC)
->>> protocols can use hardware synchronization primitive, when operating
->>> between two processors not in an SMP relationship.
->>
->> This binding is quite different to the binding you sent to internal IP
->> review. I wonder why it changed? Specific comments below:
->
-> Due to some enhancements for supporting multiple functions of HSP
-> sub-modules in the same driver, I re-wrote some parts of the bindings
-> and driver.
->
->>> diff --git
->>> a/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
->>> b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+From: Neil Armstrong <narmstrong@baylibre.com>
 
->>> +- reg : Offset and length of the register set for the device
->>> +- interrupts : Should contain the HSP interrupts
->>> +- interrupt-names: Should contain the names of the HSP interrupts
->>> that the
->>> +           client are using.
->>> +           "doorbell"
->>
->> The binding should describe the HW, and not be affected by anything
->> "that the client(s) are using". If there are multiple interrupts, we
->> should list them all here, from the start.
->>
->> When revising this, I would consider the following wording canonical:
->>
->> - interrupt-names
->>      Array of strings.
->>      Contains a list of names for the interrupts described by the
->>      interrupts property. May contain the following entries, in any
->>      order:
->>      - "doorbell"
->>      - "..." (no doubt many more items will be listed here, e.g.
->>        for semaphores, etc.).
- >
-> I think I will just list "doorbell" for now. And adding more later once
-> we add other HSP sub-module support.
+This adds the Infrared Remote Controller node so boards with an IR
+remote can simply enable it.
 
-That should be OK; adding more entries in interrupt-names is backwards 
-compatible. Still, since the HW is fixed, it would be nice to just get 
-the complete list documented up front if possible.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
->>> +- nvidia,hsp-function : Specifies one of the HSP functions that the HSP unit
->>> +            will be supported. The function ID can be found in the
->>> +            header file <dt-bindings/mailbox/tegra-hsp.h>.
->>
->> This property wasn't in the internal patch.
->>
->> This doesn't make sense. The HW feature-set is fixed. This sounds like
->> some kind of software configuration option, or a way to allow different
->> drivers to handle different aspects of the HW? In general, the binding
->> shouldn't be influenced by software structure. Please delete this
->> property.
->>
->> Now, if you're attempting to set up a binding where each function
->> (semaphores, shared mailboxes, doorbells, etc.) has a different DT node,
->> then (a) splitting up HW modules into sub-blocks has usually turned out
->> to be a mistake in the past, and (b) the differences should likely be
->> represented by using a different compatible property for each
->> sub-component, rather than via a custom property.
->
-> Currently the usage of HSP HW in the downstream kernel is something like
-> the model below.
->
-> remote_processor_A-\
-> remote_processor_B--->hsp@1000 (doorbell func) <-> host CPU
-> remote_processor_C-/
->
-> remote_processor_D -> hsp@2000 (shared mailbox) <-> CPU
->
-> remote_processor_E -> hsp@3000 (shared mailbox) <-> CPU
->
-> I am thinking if we can just add the appropriate compatible strings for
-> it to replace "nvidia,tegra186-hsp". e.g. "nvidia,tegra186-hsp-doorbell"
-> and "nvidia,tegra186-hsp-sharedmailbox". So the driver can probe and
-> initialize correctly depend on the compatible property. How do you think
-> about it? Is this the same as the (b) you mentioned above?
-
-Yes, that would be (b) above.
-
-However, please do note (a): I expect that splitting things up will turn 
-out to be a mistake, as it has for other HW modules in the past. I would 
-far rather see a single hsp node in DT, since there is a single HSP 
-block in HW. Sure that block has multiple sub-functions. However, there 
-is common logic that affects all of those sub-functions and binds 
-everything into a single HW module. If you represent the HW module using 
-multiple different DT nodes, it will be hard to correctly represent that 
-common logic. Conversely, I see no real advantage to splitting up the DT 
-node. I strongly believe we should have a single "hsp" node in DT.
-
-Internally, the SW driver for that node can be structured however you 
-want; it could register with multiple subsystems (mailbox, ...) with 
-just one struct device, or the HSP driver could be an MFD device with 
-sub-drivers for each separate piece of functionality the HW implements. 
-All this can easily be done even while using a single DT node. And 
-furthermore, we can add this SW structure later if/when we actually need 
-it; in other words, there's no need to change your current patches right 
-now, except to remove the nvidia,hsp-function DT property.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 6c23965..fa88f80 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -213,6 +213,13 @@
+ 				clocks = <&xtal>;
+ 				status = "disabled";
+ 			};
++
++			ir: ir@580 {
++				compatible = "amlogic,meson-gxbb-ir";
++				reg = <0x0 0x00580 0x0 0x40>;
++				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		periphs: periphs@c8834000 {
+-- 
+2.9.0
