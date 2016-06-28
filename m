@@ -1,67 +1,62 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 0/7] max8903: Add device tree support and misc fixes
-Date: Tue, 28 Jun 2016 20:16:37 +0200
-Message-ID: <20160628181636.GA2391@earth>
-References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
- <1466735172-13372-1-git-send-email-chris@cpdesign.com.au>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
+Date: Tue, 28 Jun 2016 11:27:12 -0700
+Message-ID: <146713843204.31418.2851512559600064552@sboyd-linaro>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+ <20160626072838.28082-3-stephen.boyd@linaro.org>
+ <20160627143422.GB21398@kuha.fi.intel.com>
+ <146706544012.30684.15569003844798199881@sboyd-linaro>
+ <20160628114205.GA3378@kuha.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466735172-13372-1-git-send-email-chris@cpdesign.com.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: Chris Lapa <chris@lapa.com.au>
-Cc: k.kozlowski@samsung.com, dwmw2@infradead.org, dbaryshkov@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160628114205.GA3378@kuha.fi.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Heikki Krogerus (2016-06-28 04:42:05)
+> On Mon, Jun 27, 2016 at 03:10:40PM -0700, Stephen Boyd wrote:
+> > 
+> > Right, I would have to make up some IDs in this case. I suppose I can
+> > use the qcom vendor ID 0x05c6 and then product ids 0 and 1 for HS phy
+> > and HSIC phy? That doesn't make me feel great because it's all made up,
+> > but I guess there's no other option. I hope they don't decide to start
+> > populating these ids in the future though and then we may have
+> > conflicting product ids. If that happens I suppose we can do a
+> > workaround based on compatible strings in the DT node. Fun!
+> > 
+> > Nice side effect of all that is I can drop requesting the module by DT
+> > aliases and things become simpler. I'll try this out.
+> 
+> I was hoping that we could manage with product id 0 as an exception (I
+> failed to consider that you have multiple PHYs to deal with). I don't
+> think we can just come up with product id > 0.
+> 
+> I guess we should have the of_driver_match_device() call after all.
+> Let's just call it conditionally, only in cases where there is no
+> product ID, to make me feel a bit more better. I don't want to make it
+> too easy to use.
+> 
+> The properties for the vendor and product ID are still something that
+> we need to introduce in any case. We have the powered off problem on
+> all kinds of platforms, and not all of them use DT. Please feel free
+> to incorporate the diff into the patch you had for the powered off
+> case if you are OK with it. So I think in your case you would just
+> need to addthe correct ulpi-vendor id 0x05c6 and ulpi-product id 0 to
+> the chipidea device node, and I think this would work.
+> 
 
---TB36FDmn/VVEgNH/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Chris,
-
-On Fri, Jun 24, 2016 at 12:26:05PM +1000, Chris Lapa wrote:
-> This patch set adds device tree support for the MAX8903 battery charger.
-> It also cleans up logic with dc_valid, dok and dcm pins as well as
-> fixing up validity checking of gpios.
->=20
-> I verified these patches work on a board I have here, which uses the
-> DC power side (not the USB portition) of the MAX8903.
-
-I queued this into my for-next branch, except for the dtsi file,
-which I dropped from your first patch. Please submit it separately
-to the correct maintainers.
-
-[...]
-
->  arch/arm/boot/dts/dairytest-servo.dtsi             |  36 ++++
-
-[...]
-
--- Sebastian
-
---TB36FDmn/VVEgNH/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXcr8AAAoJENju1/PIO/qaOQUP/RMzfEVdrAt5DmDYhz9BxmD6
-ZThtqLFqODoeNoH+jccrqHvmJC1Tam6PMe7s1loLkIaKRqVS6KL5rscomgaSYO+c
-eVIPw6DjaOF7FUh/BQ07mp9rttY3EYCqNVKkkKhr8BmPJWkFWpA01fUGvf6qH25D
-4OIadufKXAJKvVKsMABm1kEcS85SQgyttT47I+dwS2MMNkgh3paa6gzcd2iyc13u
-rUApnu9CdTCXsK8EIjI7HBG8lIy/dwZogFTgGy9XbeKGVG2fp6qvPtuO9d3AXa4v
-nH2hvUFPgeAOT4uuZOFuqBnZVFY32p1jazCdawtWy86rdwUv+pD5nBd09PsMIfp1
-ImluCBAmiIQgKnHF48ABLKlZAZ508XZ9B9BCiiid5Ch/DY1KCYjKJbRUJe9fc6rz
-QRSgP4HmwWtkPI5VCS2+VrdIxgoKKgimTV8ZN8pTb27Mt9GqKqcnN4z4J0YH/j2n
-6vCy/veyBWUt27WGbeu/j9STrUGV+Jt4abFLgAG3kJ1S4UJRyBhT5aE3tEnGc+ay
-WxkSV2viOMCMMZ7U9cN0Zmn9wCMULmvm+9kZsKzS5PA2XsKMLahJ2aW/nx+B+BmO
-E14T2RW/X5xE5Y2FOdT7zYStfQVOAlxaflVrcXGypNvXgNnCLU8g37WtajAOefZk
-B8+MdTsJAJk1RL0kINOr
-=0SUI
------END PGP SIGNATURE-----
-
---TB36FDmn/VVEgNH/--
+Hmm ok. I'll have to bring back all the module loading and uevent stuff
+based on DT compatible strings then. We'll have the same product id on
+HSIC and HS phys, but that isn't a big deal.
