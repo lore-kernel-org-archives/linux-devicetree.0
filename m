@@ -1,52 +1,74 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Applied "ASoC: cs35l33: Add device tree bindings file for
- cs35l33" to the asoc tree
-Date: Tue, 28 Jun 2016 22:45:07 +0100
-Message-ID: <20160628214507.GF17217@sirena.org.uk>
-References: <1466441119-8488-2-git-send-email-Paul.Handrigan@cirrus.com>
- <E1bHZa3-0005Ao-0c@debutante>
- <20160628205717.GV3737@rob-hp-laptop>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH 20/21] phy: Add support for Qualcomm's USB HSIC phy
+Date: Tue, 28 Jun 2016 14:58:16 -0700
+Message-ID: <146715109651.31418.4819151138932336863@sboyd-linaro>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+ <20160626072838.28082-21-stephen.boyd@linaro.org>
+ <57723A21.3060602@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="A9k63Mnmpo23fVdx"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160628205717.GV3737@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <57723A21.3060602@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, linux-usb@vger.kernel.org
+Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Neil Armstrong (2016-06-28 01:49:37)
+> On 06/26/2016 09:28 AM, Stephen Boyd wrote:
+> > +     uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
+> > +     if (IS_ERR(clk))
+> > +             return PTR_ERR(clk);
+> 
+> Hi Stephen,
+> 
+> In the bindings the cal_sleep is marked optional, and I think should be since AFAIK
+> it's not present on MDM9615 for example.
 
---A9k63Mnmpo23fVdx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The cal_sleep clk is just the sleep clk then (should be a board clk in
+DT). Sometimes there's a gate in GCC to allow us to turn it off, other
+times there isn't. Either way, it's always wired there so I'll update
+the binding to say it isn't optional.
 
-On Tue, Jun 28, 2016 at 03:57:17PM -0500, Rob Herring wrote:
+> 
+> Also MDM9615 HSIC requires "core", "alt-core", "phy", "cal" and "iface" clocks.
+> I assume "core" can be attributed to the main chipidea node, but I think "alt-core" and "iface" should be also optionnal.
 
-> This version has comments from me and there's a newer version that I=20
-> acked. On a plane, so I don't have a link handy.
+Looking at the downstream sources I see this:
 
-Please submit incremental patches for anything that's missing.
+        "core_clk"     -> usb_hsic_sys_clk
+        "iface_clk"    -> usb_hsic_p_clk
+        "alt_core_clk" -> usb_hsic_xcvr_clk
 
---A9k63Mnmpo23fVdx
-Content-Type: application/pgp-signature; name="signature.asc"
+        "cal_clk"      -> usb_hsic_hsio_cal_clk
+        "phy_clk"      -> usb_hsic_clk
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+"core_clk" would be the core clk in ci_hdrc_msm. "iface_clk" would be
+the iface clk in ci_hdrc_msm. "cal_clk" would be the cal clk in the hsic
+phy and "phy_clk" would be the phy clk in the hsic phy.
 
-iQEcBAEBCAAGBQJXcu/iAAoJECTWi3JdVIfQzS0H/2K+or9rkZqwCg9USaBKFCGL
-1WapFGjKSiA5fhSf0Vgicq/H6igTx7Tunaq04CpAhmHLUguM+0Wb0uP05srWE7Sb
-Ad9fxdxXDundsOJVDs2z6w9kkkFI+Y+WWReGl5k47G7x2Rb3EqG6QnsZ4HWjQkY5
-LztqOL66n5zbh5vyUibD05OQHpw7D/IpeHRYUhfvOI1kCbF2L2y74suSm3JS1yl/
-duBtycZ1dshwcZefIh/XkuE8MsO7hQWlCFUf98UlTSE8eGBwOyXZJH3hLEwTr3lu
-XPROVrTHoziyUYkb0qUnAqTsmPenO1bgivOkElBfnH2Gb/BfUMJVh+cjacREz+k=
-=Lths
------END PGP SIGNATURE-----
+That leaves alt_core_clk which seems to be a clock that needs to be on
+during the reset assert/deassert and possibly for LPM and USB1.1 FS
+modes. Sometimes it's referred to as the "housekeeping" clk. Due to the
+way resets are done on msm8974 and later SoCs it looks like this clk was
+removed. I can make this an optional clk in the ci_hdrc_msm driver, or
+we can have two versions of the ci_hdrc_msm compatible string, one for a
+device that has the housekeeping clk and one for the device that
+doesn't.
 
---A9k63Mnmpo23fVdx--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Finally, it misses an optional reset line AFAIK mandatory on MDM9615.
+> 
+
+>From what I can tell downstream, all those clks point to the same bit 0
+of HSIC_RESET register? So there isn't any phy reset, just the chipidea
+controller wrapper reset bit, which should go into the wrapper node?
