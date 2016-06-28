@@ -1,64 +1,92 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v4 4/6] gpio: tps65218-gpio: Add platform_device_id table
-Date: Tue, 28 Jun 2016 14:52:07 +0530
-Message-ID: <1467105729-28249-5-git-send-email-j-keerthy@ti.com>
-References: <1467105729-28249-1-git-send-email-j-keerthy@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: hisilicon: Add Fast Ethernet MAC driver
+Date: Tue, 28 Jun 2016 11:34:26 +0200
+Message-ID: <4787248.HAfgOdBKVY@wuerfel>
+References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com> <247637090.PhpfAhp4VJ@wuerfel> <5772418F.9040101@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467105729-28249-1-git-send-email-j-keerthy@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dmitry.torokhov@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, tony@atomide.com
-Cc: devicetree@vger.kernel.org, j-keerthy@ti.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5772418F.9040101-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dongpo Li <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-platform_device_id table is needed for adding the tps65218-gpio
-module to the mfd_cell array.
+On Tuesday, June 28, 2016 5:21:19 PM CEST Dongpo Li wrote:
+> On 2016/6/15 5:20, Arnd Bergmann wrote:
+> > On Tuesday, June 14, 2016 9:17:44 PM CEST Li Dongpo wrote:
+> >> On 2016/6/13 17:06, Arnd Bergmann wrote:
+> >>> On Monday, June 13, 2016 2:07:56 PM CEST Dongpo Li wrote:
+> >>> You tx function uses BQL to optimize the queue length, and that
+> >>> is great. You also check xmit reclaim for rx interrupts, so
+> >>> as long as you have both rx and tx traffic, this should work
+> >>> great.
+> >>>
+> >>> However, I notice that you only have a 'tx fifo empty'
+> >>> interrupt triggering the napi poll, so I guess on a tx-only
+> >>> workload you will always end up pushing packets into the
+> >>> queue until BQL throttles tx, and then get the interrupt
+> >>> after all packets have been sent, which will cause BQL to
+> >>> make the queue longer up to the maximum queue size, and that
+> >>> negates the effect of BQL.
+> >>>
+> >>> Is there any way you can get a tx interrupt earlier than
+> >>> this in order to get a more balanced queue, or is it ok
+> >>> to just rely on rx packets to come in occasionally, and
+> >>> just use the tx fifo empty interrupt as a fallback?
+> >>>
+> >> In tx direction, there are only two kinds of interrupts, 'tx fifo empty'
+> >> and 'tx one packet finish'. I didn't use 'tx one packet finish' because
+> >> it would lead to high hardware interrupts rate. This has been verified in
+> >> our chips. It's ok to just use tx fifo empty interrupt.
+> > 
+> > I'm not convinced by the explanation, I don't think that has anything
+> > to do with the hardware design, but instead is about the correctness
+> > of the BQL logic with your driver.
+> > 
+> > Maybe your xmit function can do something like
+> > 
+> >       if (dql_avail(netdev_get_tx_queue(dev, 0)->dql) < 0)
+> >               enable per-packet interrupt
+> >       else
+> >               use only fifo-empty interrupt
+> > 
+> > That way, you don't get a lot of interrupts when the system is
+> > in a state of packets being received and sent continuously,
+> > but if you get to the point where your tx queue fills up
+> > and no rx interrupts arrive, you don't have to wait for it
+> > to become completely empty before adding new packets, and
+> > BQL won't keep growing the queue.
+> > 
+> Hi, Arnd
+> I tried enable per-packet interrupt when tx queue full in xmit function
+> and disable it in NAPI poll. But the number of interrupts are a little
+> bigger than only using fifo-empty interrupt.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
+Right, I'd expect that to be the case, it basically means that the
+algorithm works as expected.
 
-Changes in v4:
+Just to be sure you didn't have extra interrupts: you only enable the
+per-packet interrupts if interrupts are currently enabled, not in
+NAPI polling mode, right?
 
-  * Retained the compatible strings in order to interrogate the DT in the
-    normal way.
+> The other hand, this is a fast ethernet MAC. Its maximum speed is 100Mbps.
+> This speed is very easily achived and the efficiency of the BQL is not
+> so important. What we focus on is the lower cpu utilization.
+> So I think it is okay to just use the tx fifo empty interrupt.
 
- drivers/gpio/gpio-tps65218.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+BQL is not about efficiency, it's about keeping the latency down, which
+is at least as important for low-throughput devices as it is for faster
+ones. I don't think that disabling BQL here would be the right answer,
+you'd just end up with the maximum TX queue length all the time.
 
-diff --git a/drivers/gpio/gpio-tps65218.c b/drivers/gpio/gpio-tps65218.c
-index 0f9d9bd..0961f3a 100644
---- a/drivers/gpio/gpio-tps65218.c
-+++ b/drivers/gpio/gpio-tps65218.c
-@@ -231,6 +231,12 @@ static const struct of_device_id tps65218_dt_match[] = {
- };
- MODULE_DEVICE_TABLE(of, tps65218_dt_match);
- 
-+static const struct platform_device_id tps65218_gpio_id_table[] = {
-+	{ "tps65218-gpio", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(platform, tps65218_gpio_id_table);
-+
- static struct platform_driver tps65218_gpio_driver = {
- 	.driver = {
- 		.name = "tps65218-gpio",
-@@ -238,6 +244,7 @@ static struct platform_driver tps65218_gpio_driver = {
- 	},
- 	.probe = tps65218_gpio_probe,
- 	.remove = tps65218_gpio_remove,
-+	.id_table = tps65218_gpio_id_table,
- };
- 
- module_platform_driver(tps65218_gpio_driver);
--- 
-1.9.1
+Your queue length is 12 packets of 1500 bytes, meaning that you have 1.4ms
+of latency at 100mbit/s rate, or 14ms for 10mbit/s. This is much less
+than most, but it's probably still worth using BQL on it.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
