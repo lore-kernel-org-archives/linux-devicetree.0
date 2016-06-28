@@ -1,60 +1,291 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 08/92] arm64: dts: rockchip: Add rktimer device node for rk3399
-Date: Tue, 28 Jun 2016 12:30:27 +0200
-Message-ID: <1467109911-11060-8-git-send-email-daniel.lezcano@linaro.org>
-References: <577251A4.7030508@linaro.org>
- <1467109911-11060-1-git-send-email-daniel.lezcano@linaro.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v5 6/6] regulator: tps65218: Remove all the compatibles
+Date: Tue, 28 Jun 2016 16:18:47 +0530
+Message-ID: <1467110927-31145-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1467109911-11060-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-Cc: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Remove all the individual compatibles for all the regulators
+and introduce id_table and update the driver accordingly
+to parse device tree nodes using the regulator framework.
 
-Add a 'rktimer' node in the device treee for the ARM64 rk3399 SoC.
-
-Signed-off-by: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in v6:
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 46f325a..f0c0d76 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -492,6 +492,14 @@
- 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
- 	};
+  * Rebased to latest linux-next.
+  * Added dynamic allocation for strobes as part of rebasing.
+
+Bootlog on am437x-sk-evm: http://pastebin.ubuntu.com/18019348/
  
-+	rktimer: rktimer@ff850000 {
-+		compatible = "rockchip,rk3399-timer";
-+		reg = <0x0 0xff850000 0x0 0x1000>;
-+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru PCLK_TIMER0>, <&cru SCLK_TIMER00>;
-+		clock-names = "pclk", "timer";
-+	};
+ drivers/regulator/tps65218-regulator.c | 152 +++++++++++++--------------------
+ include/linux/mfd/tps65218.h           |   1 +
+ 2 files changed, 58 insertions(+), 95 deletions(-)
+
+diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
+index 03d5657..6c92d97 100644
+--- a/drivers/regulator/tps65218-regulator.c
++++ b/drivers/regulator/tps65218-regulator.c
+@@ -31,10 +31,11 @@
+ enum tps65218_regulators { DCDC1, DCDC2, DCDC3, DCDC4,
+ 			   DCDC5, DCDC6, LDO1, LS3 };
+ 
+-#define TPS65218_REGULATOR(_name, _id, _type, _ops, _n, _vr, _vm, _er, _em, \
+-			   _cr, _cm, _lr, _nlr, _delay, _fuv, _sr, _sm)	\
++#define TPS65218_REGULATOR(_name, _of, _id, _type, _ops, _n, _vr, _vm, _er, \
++			   _em, _cr, _cm, _lr, _nlr, _delay, _fuv, _sr, _sm) \
+ 	{							\
+ 		.name			= _name,		\
++		.of_match		= _of,			\
+ 		.id			= _id,			\
+ 		.ops			= &_ops,		\
+ 		.n_voltages		= _n,			\
+@@ -55,14 +56,6 @@ enum tps65218_regulators { DCDC1, DCDC2, DCDC3, DCDC4,
+ 		.bypass_mask	= _sm,				\
+ 	}							\
+ 
+-#define TPS65218_INFO(_id, _nm, _min, _max)	\
+-	[_id] = {					\
+-		.id		= _id,			\
+-		.name		= _nm,			\
+-		.min_uV		= _min,			\
+-		.max_uV		= _max,			\
+-	}
+-
+ static const struct regulator_linear_range dcdc1_dcdc2_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(850000, 0x0, 0x32, 10000),
+ 	REGULATOR_LINEAR_RANGE(1375000, 0x33, 0x3f, 25000),
+@@ -78,36 +71,6 @@ static const struct regulator_linear_range dcdc4_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(1600000, 0x10, 0x34, 50000),
+ };
+ 
+-static struct tps_info tps65218_pmic_regs[] = {
+-	TPS65218_INFO(DCDC1, "DCDC1", 850000, 1675000),
+-	TPS65218_INFO(DCDC2, "DCDC2", 850000, 1675000),
+-	TPS65218_INFO(DCDC3, "DCDC3", 900000, 3400000),
+-	TPS65218_INFO(DCDC4, "DCDC4", 1175000, 3400000),
+-	TPS65218_INFO(DCDC5, "DCDC5", 1000000, 1000000),
+-	TPS65218_INFO(DCDC6, "DCDC6", 1800000, 1800000),
+-	TPS65218_INFO(LDO1, "LDO1", 900000, 3400000),
+-	TPS65218_INFO(LS3, "LS3", -1, -1),
+-};
+-
+-#define TPS65218_OF_MATCH(comp, label) \
+-	{ \
+-		.compatible = comp, \
+-		.data = &label, \
+-	}
+-
+-static const struct of_device_id tps65218_of_match[] = {
+-	TPS65218_OF_MATCH("ti,tps65218-dcdc1", tps65218_pmic_regs[DCDC1]),
+-	TPS65218_OF_MATCH("ti,tps65218-dcdc2", tps65218_pmic_regs[DCDC2]),
+-	TPS65218_OF_MATCH("ti,tps65218-dcdc3", tps65218_pmic_regs[DCDC3]),
+-	TPS65218_OF_MATCH("ti,tps65218-dcdc4", tps65218_pmic_regs[DCDC4]),
+-	TPS65218_OF_MATCH("ti,tps65218-dcdc5", tps65218_pmic_regs[DCDC5]),
+-	TPS65218_OF_MATCH("ti,tps65218-dcdc6", tps65218_pmic_regs[DCDC6]),
+-	TPS65218_OF_MATCH("ti,tps65218-ldo1", tps65218_pmic_regs[LDO1]),
+-	TPS65218_OF_MATCH("ti,tps65218-ls3", tps65218_pmic_regs[LS3]),
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(of, tps65218_of_match);
+-
+ static int tps65218_pmic_set_voltage_sel(struct regulator_dev *dev,
+ 					 unsigned selector)
+ {
+@@ -181,17 +144,16 @@ static int tps65218_pmic_set_suspend_disable(struct regulator_dev *dev)
+ 	if (rid < TPS65218_DCDC_1 || rid > TPS65218_LDO_1)
+ 		return -EINVAL;
+ 
+-	if (!tps->info[rid]->strobe) {
++	if (!tps->strobes[rid]) {
+ 		if (rid == TPS65218_DCDC_3)
+-			tps->info[rid]->strobe = 3;
++			tps->strobes[rid] = 3;
+ 		else
+ 			return -EINVAL;
+ 	}
+ 
+ 	return tps65218_set_bits(tps, dev->desc->bypass_reg,
+ 				 dev->desc->bypass_mask,
+-				 tps->info[rid]->strobe,
+-				 TPS65218_PROTECT_L1);
++				 tps->strobes[rid], TPS65218_PROTECT_L1);
+ }
+ 
+ /* Operations permitted on DCDC1, DCDC2 */
+@@ -293,104 +255,104 @@ static struct regulator_ops tps65218_dcdc56_pmic_ops = {
+ };
+ 
+ static const struct regulator_desc regulators[] = {
+-	TPS65218_REGULATOR("DCDC1", TPS65218_DCDC_1, REGULATOR_VOLTAGE,
+-			   tps65218_dcdc12_ops, 64, TPS65218_REG_CONTROL_DCDC1,
++	TPS65218_REGULATOR("DCDC1", "regulator-dcdc1", TPS65218_DCDC_1,
++			   REGULATOR_VOLTAGE, tps65218_dcdc12_ops, 64,
++			   TPS65218_REG_CONTROL_DCDC1,
+ 			   TPS65218_CONTROL_DCDC1_MASK, TPS65218_REG_ENABLE1,
+ 			   TPS65218_ENABLE1_DC1_EN, 0, 0, dcdc1_dcdc2_ranges,
+ 			   2, 4000, 0, TPS65218_REG_SEQ3,
+ 			   TPS65218_SEQ3_DC1_SEQ_MASK),
+-	TPS65218_REGULATOR("DCDC2", TPS65218_DCDC_2, REGULATOR_VOLTAGE,
+-			   tps65218_dcdc12_ops, 64, TPS65218_REG_CONTROL_DCDC2,
++	TPS65218_REGULATOR("DCDC2", "regulator-dcdc2", TPS65218_DCDC_2,
++			   REGULATOR_VOLTAGE, tps65218_dcdc12_ops, 64,
++			   TPS65218_REG_CONTROL_DCDC2,
+ 			   TPS65218_CONTROL_DCDC2_MASK, TPS65218_REG_ENABLE1,
+ 			   TPS65218_ENABLE1_DC2_EN, 0, 0, dcdc1_dcdc2_ranges,
+ 			   2, 4000, 0, TPS65218_REG_SEQ3,
+ 			   TPS65218_SEQ3_DC2_SEQ_MASK),
+-	TPS65218_REGULATOR("DCDC3", TPS65218_DCDC_3, REGULATOR_VOLTAGE,
+-			   tps65218_ldo1_dcdc34_ops, 64,
++	TPS65218_REGULATOR("DCDC3", "regulator-dcdc3", TPS65218_DCDC_3,
++			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 64,
+ 			   TPS65218_REG_CONTROL_DCDC3,
+ 			   TPS65218_CONTROL_DCDC3_MASK, TPS65218_REG_ENABLE1,
+ 			   TPS65218_ENABLE1_DC3_EN, 0, 0, ldo1_dcdc3_ranges, 2,
+ 			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC3_SEQ_MASK),
+-	TPS65218_REGULATOR("DCDC4", TPS65218_DCDC_4, REGULATOR_VOLTAGE,
+-			   tps65218_ldo1_dcdc34_ops, 53,
++	TPS65218_REGULATOR("DCDC4", "regulator-dcdc4", TPS65218_DCDC_4,
++			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 53,
+ 			   TPS65218_REG_CONTROL_DCDC4,
+ 			   TPS65218_CONTROL_DCDC4_MASK, TPS65218_REG_ENABLE1,
+ 			   TPS65218_ENABLE1_DC4_EN, 0, 0, dcdc4_ranges, 2,
+ 			   0, 0, TPS65218_REG_SEQ4, TPS65218_SEQ4_DC4_SEQ_MASK),
+-	TPS65218_REGULATOR("DCDC5", TPS65218_DCDC_5, REGULATOR_VOLTAGE,
+-			   tps65218_dcdc56_pmic_ops, 1, -1, -1,
+-			   TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC5_EN, 0, 0,
+-			   NULL, 0, 0, 1000000, TPS65218_REG_SEQ5,
++	TPS65218_REGULATOR("DCDC5", "regulator-dcdc5", TPS65218_DCDC_5,
++			   REGULATOR_VOLTAGE, tps65218_dcdc56_pmic_ops, 1, -1,
++			   -1, TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC5_EN, 0,
++			   0, NULL, 0, 0, 1000000, TPS65218_REG_SEQ5,
+ 			   TPS65218_SEQ5_DC5_SEQ_MASK),
+-	TPS65218_REGULATOR("DCDC6", TPS65218_DCDC_6, REGULATOR_VOLTAGE,
+-			   tps65218_dcdc56_pmic_ops, 1, -1, -1,
+-			   TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC6_EN, 0, 0,
+-			   NULL, 0, 0, 1800000, TPS65218_REG_SEQ5,
++	TPS65218_REGULATOR("DCDC6", "regulator-dcdc6", TPS65218_DCDC_6,
++			   REGULATOR_VOLTAGE, tps65218_dcdc56_pmic_ops, 1, -1,
++			   -1, TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC6_EN, 0,
++			   0, NULL, 0, 0, 1800000, TPS65218_REG_SEQ5,
+ 			   TPS65218_SEQ5_DC6_SEQ_MASK),
+-	TPS65218_REGULATOR("LDO1", TPS65218_LDO_1, REGULATOR_VOLTAGE,
+-			   tps65218_ldo1_dcdc34_ops, 64,
++	TPS65218_REGULATOR("LDO1", "regulator-ldo1", TPS65218_LDO_1,
++			   REGULATOR_VOLTAGE, tps65218_ldo1_dcdc34_ops, 64,
+ 			   TPS65218_REG_CONTROL_LDO1,
+ 			   TPS65218_CONTROL_LDO1_MASK, TPS65218_REG_ENABLE2,
+ 			   TPS65218_ENABLE2_LDO1_EN, 0, 0, ldo1_dcdc3_ranges,
+ 			   2, 0, 0, TPS65218_REG_SEQ6,
+ 			   TPS65218_SEQ6_LDO1_SEQ_MASK),
+-	TPS65218_REGULATOR("LS3", TPS65218_LS_3, REGULATOR_CURRENT,
+-			   tps65218_ls3_ops, 0, 0, 0, TPS65218_REG_ENABLE2,
+-			   TPS65218_ENABLE2_LS3_EN, TPS65218_REG_CONFIG2,
+-			   TPS65218_CONFIG2_LS3ILIM_MASK, NULL, 0, 0, 0, 0, 0),
++	TPS65218_REGULATOR("LS3", "regulator-ls3", TPS65218_LS_3,
++			   REGULATOR_CURRENT, tps65218_ls3_ops, 0, 0, 0,
++			   TPS65218_REG_ENABLE2, TPS65218_ENABLE2_LS3_EN,
++			   TPS65218_REG_CONFIG2, TPS65218_CONFIG2_LS3ILIM_MASK,
++			   NULL, 0, 0, 0, 0, 0),
+ };
+ 
+ static int tps65218_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct tps65218 *tps = dev_get_drvdata(pdev->dev.parent);
+-	struct regulator_init_data *init_data;
+-	const struct tps_info	*template;
+ 	struct regulator_dev *rdev;
+-	const struct of_device_id	*match;
+ 	struct regulator_config config = { };
+-	int id, ret;
++	int i, ret;
+ 	unsigned int val;
+ 
+-	match = of_match_device(tps65218_of_match, &pdev->dev);
+-	if (!match)
+-		return -ENODEV;
+-
+-	template = match->data;
+-	id = template->id;
+-	init_data = of_get_regulator_init_data(&pdev->dev, pdev->dev.of_node,
+-					       &regulators[id]);
+-
+-	platform_set_drvdata(pdev, tps);
+-
+-	tps->info[id] = &tps65218_pmic_regs[id];
+ 	config.dev = &pdev->dev;
+-	config.init_data = init_data;
++	config.dev->of_node = tps->dev->of_node;
+ 	config.driver_data = tps;
+ 	config.regmap = tps->regmap;
+-	config.of_node = pdev->dev.of_node;
+ 
+-	rdev = devm_regulator_register(&pdev->dev, &regulators[id], &config);
+-	if (IS_ERR(rdev)) {
+-		dev_err(tps->dev, "failed to register %s regulator\n",
+-			pdev->name);
+-		return PTR_ERR(rdev);
+-	}
++	/* Allocate memory for strobes */
++	tps->strobes = devm_kzalloc(&pdev->dev, sizeof(u8) *
++				    TPS65218_NUM_REGULATOR, GFP_KERNEL);
+ 
+-	ret = tps65218_reg_read(tps, regulators[id].bypass_reg, &val);
+-	if (ret)
+-		return ret;
++	for (i = 0; i < ARRAY_SIZE(regulators); i++) {
++		rdev = devm_regulator_register(&pdev->dev, &regulators[i],
++					       &config);
++		if (IS_ERR(rdev)) {
++			dev_err(tps->dev, "failed to register %s regulator\n",
++				pdev->name);
++			return PTR_ERR(rdev);
++		}
+ 
+-	tps->info[id]->strobe = val & regulators[id].bypass_mask;
++		ret = regmap_read(tps->regmap, regulators[i].bypass_reg, &val);
++		if (ret)
++			return ret;
 +
- 	spdif: spdif@ff870000 {
- 		compatible = "rockchip,rk3399-spdif";
- 		reg = <0x0 0xff870000 0x0 0x1000>;
++		tps->strobes[i] = val & regulators[i].bypass_mask;
++	}
+ 
+ 	return 0;
+ }
+ 
++static const struct platform_device_id tps65218_regulator_id_table[] = {
++	{ "tps65218-regulator", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(platform, tps65218_regulator_id_table);
++
+ static struct platform_driver tps65218_regulator_driver = {
+ 	.driver = {
+ 		.name = "tps65218-pmic",
+-		.of_match_table = tps65218_of_match,
+ 	},
+ 	.probe = tps65218_regulator_probe,
++	.id_table = tps65218_regulator_id_table,
+ };
+ 
+ module_platform_driver(tps65218_regulator_driver);
+diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
+index c37ba3e..93160c6b 100644
+--- a/include/linux/mfd/tps65218.h
++++ b/include/linux/mfd/tps65218.h
+@@ -276,6 +276,7 @@ struct tps65218 {
+ 	struct regulator_desc desc[TPS65218_NUM_REGULATOR];
+ 	struct tps_info *info[TPS65218_NUM_REGULATOR];
+ 	struct regmap *regmap;
++	u8 *strobes;
+ };
+ 
+ int tps65218_reg_write(struct tps65218 *tps, unsigned int reg,
 -- 
 1.9.1
