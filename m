@@ -1,93 +1,79 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: AMLogic RTC series (second round)
-Date: Tue, 28 Jun 2016 11:19:47 +0100
-Message-ID: <aea5e2f4-2440-a192-e15a-1f4ff5a30a1c@codethink.co.uk>
-References: <1467045849-495-1-git-send-email-ben.dooks@codethink.co.uk>
- <577225A3.9010409@baylibre.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 07/12] dt-bindings: i2c: Add support for 'i2c-bus' subnode
+Date: Tue, 28 Jun 2016 12:20:15 +0200
+Message-ID: <9ce42fd3-972f-8487-f3b3-a2cfe28dc394@axentia.se>
+References: <1466697545-11868-1-git-send-email-jonathanh@nvidia.com>
+ <1466697545-11868-8-git-send-email-jonathanh@nvidia.com>
+ <0e9ab029-ed95-c3cb-61f5-6acd9da12a24@axentia.se>
+ <57723371.4060806@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCEPJZEDQIBBBTU6ZG5QKGQE5IZJEMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <577225A3.9010409-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <57723371.4060806@nvidia.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/06/16 08:22, Neil Armstrong wrote:
-> On 06/27/2016 06:44 PM, Ben Dooks wrote:
->> Apologies, forgot to put the RTC driver through checkpatch
->> before sending. This gets rid of most of the warnings.
->>
->>
->> _______________________________________________
->> linux-amlogic mailing list
->> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-amlogic
->>
+On 2016-06-28 10:21, Jon Hunter wrote:
 > 
-> Hi Ben,
+> On 27/06/16 13:04, Peter Rosin wrote:
+>> On 2016-06-23 17:59, Jon Hunter wrote:
+>>> The I2C driver core for boards using device-tree assumes any subnode of
+>>> an I2C adapter in the device-tree blob as being a I2C slave device.
+>>> Although this makes complete sense, some I2C adapters may have subnodes
+>>> which are not I2C slaves but subnodes presenting other features. For
+>>> example some Tegra devices have an I2C interface which may share its
+>>> pins with other devices and to share these pins subnodes for
+>>> representing these pins so they have be shared via the pinctrl framework
+>>> are needed.
+>>>
+>>> To allow I2C adapters to have non-I2C specific subnodes in device-tree
+>>> that are not parsed by the I2C driver core by adding support for a
+>>> 'i2c-bus' subnode where I2C slaves can be placed. If the 'i2c-bus'
+>>> subnode is present then all I2C slaves must be placed under this subnode.
+>>>
+>>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/i2c/i2c.txt | 8 ++++++++
+>>>  1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+>>> index f31b2ad1552b..71bea55d4c1b 100644
+>>> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+>>> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+>>> @@ -32,6 +32,14 @@ wants to support one of the below features, it should adapt the bindings below.
+>>>  - clock-frequency
+>>>  	frequency of bus clock in Hz.
+>>>  
+>>> +- i2c-bus
+>>> +	For I2C adapters that have child nodes that are a mixture of both I2C
+>>> +	devices and non-I2C devices (such as a pin controller), the 'i2c-bus'
+>>> +	subnode can be used for populating I2C devices. If the 'i2c-bus'
+>>> +	subnode is present, only subnodes of this will be considered as I2C
+>>> +	slaves. The properties, '#address-cells' and '#size-cells' must be
+>>> +	defined under this subnode if present.
+>>
+>> Hmmm, those #-properties are listed above, under "Required properties", which
+>> is no longer 100% true. Maybe rephrase to
+>>
+>> 	slaves. The required properties '#address-cells' and '#size-cells'
+>> 	must be	defined under this subnode instead, if this subnode is present.
+>>
+>> to make the rules (even) clearer?
 > 
-> The patchset looks good but misses some quick introduction on how
-> the RTC works, it seems to be connected to an internal serial bus,
-> do you have some informations about this ?
-
-I might add a few lines into the rtc-meson.c driver, but that's all
-detailed in the datasheet (for once this seems to be documented enough
-to be able to function)
-
-> Then, the cover letter of your patchset should contain much more informations
-> that "git format-patch --cover-letter" generates.
-
-I may just re-submit once patch to add the RTC and the binding
-documentation, and then wait until the reset controller bits have
-landed before submitting the
-
-> My personal workflow when I have a set ready is :
+> I see what you are saying but I wonder if the following is better ...
 > 
-> * run checkpatch on C files and check my changes
-> # scripts/checkpatch.pl -f path/to/my/driver.c
-> * I identify the number of patches to include
-> * I generate the patches with cover-letter, signoff and eventually subject-prefix, here for 4 commits
-> # git format-patch --cover-letter -s -4 --subject-prefix "PATCH v2" -o my_drivers_patches_v2
-> * Then I complete the cover letter in my_drivers_patches_v2/0000-cover-letter
-> * I also reference a small changelog between patchset version and identify the previous cover letter via it's message id
-> Use the http://lkml.kernel.org service to reference a message-id, i.e this email I answer would be referenced by :
-> http://lkml.kernel.org/r/1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org
+>  slaves. The required properties '#address-cells' and '#size-cells'
+>  must be defined under this subnode if present and not the parent node.
 
-I keep a copy of sent email anyway, so can get the message-ids out of it.
+Naaw, I don't like that either, I associate the last "and not" with the
+"if present" part and not the intended "under this subnode". Then I go
+WTF when I fail to parse. Maybe just add an example instead...
 
-> while looking at the email headers at :
-> Message-Id: <1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-> * Then I look again all the patches and check all the descriptions
-> * I re-run a checkpatch.pl on all the patches (and ignore errors on the cover letter)
-> # scripts/checkpatch.pl my_drivers_patches_v2/*
-> * I identify all the maintainers and mailing lists
-> # scripts/get_maintainer.pl my_drivers_patches_v2/*
-> * Personally, I fill the CC: and To: in the headers of each patches, only adding the devicetree mailing list on DT related patches
-> * Then I send them via git send-email
-> # git send-email my_drivers_patches_v2/*
-> => here you can also select the recipients
-> => you can also do a dry run or send yourself the patchset to check before final sending
+Or just forget me ever saying anything. Sorry for making a fuss over this.
 
-I got sparse and checkpatch confused, and only did sparse on the series.
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Cheers,
+Peter
