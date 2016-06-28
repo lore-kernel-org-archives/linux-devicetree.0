@@ -1,144 +1,94 @@
-From: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v6 2/4] Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
-Date: Tue, 28 Jun 2016 11:50:43 -0700
-Message-ID: <1467139845-29753-3-git-send-email-ttnguyen@apm.com>
-References: <1467139845-29753-1-git-send-email-ttnguyen@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467139845-29753-1-git-send-email-ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+From: Tai Nguyen <ttnguyen@apm.com>
+Subject: [PATCH v6 0/4] perf: Add APM X-Gene SoC Performance Monitoring Unit
+ driver
+Date: Tue, 28 Jun 2016 11:50:41 -0700
+Message-ID: <1467139845-29753-1-git-send-email-ttnguyen@apm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com
+Cc: devicetree@vger.kernel.org, patches@apm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tai Nguyen <ttnguyen@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/perf/apm-xgene-pmu.txt     | 112 +++++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
+are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
+memory controller bridges and memory. These PMU devices are loosely
+architected to follow the same model as the PMU for ARM cores.
 
-diff --git a/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-new file mode 100644
-index 0000000..afb11cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-@@ -0,0 +1,112 @@
-+* APM X-Gene SoC PMU bindings
-+
-+This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
-+The following PMU devices are supported:
-+
-+  L3C			- L3 cache controller
-+  IOB			- IO bridge
-+  MCB			- Memory controller bridge
-+  MC			- Memory controller
-+
-+The following section describes the SoC PMU DT node binding.
-+
-+Required properties:
-+- compatible		: Shall be "apm,xgene-pmu" for revision 1 or
-+                          "apm,xgene-pmu-v2" for revision 2.
-+- regmap-csw		: Regmap of the CPU switch fabric (CSW) resource.
-+- regmap-mcba		: Regmap of the MCB-A (memory bridge) resource.
-+- regmap-mcbb		: Regmap of the MCB-B (memory bridge) resource.
-+- reg			: First resource shall be the CPU bus PMU resource.
-+- interrupts            : Interrupt-specifier for PMU IRQ.
-+
-+Required properties for L3C subnode:
-+- compatible		: Shall be "apm,xgene-pmu-l3c".
-+- reg			: First resource shall be the L3C PMU resource.
-+
-+Required properties for IOB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-iob".
-+- reg			: First resource shall be the IOB PMU resource.
-+
-+Required properties for MCB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mcb".
-+- reg			: First resource shall be the MCB PMU resource.
-+- enable-bit-index	: The bit indicates if the according MCB is enabled.
-+
-+Required properties for MC subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mc".
-+- reg			: First resource shall be the MC PMU resource.
-+- enable-bit-index	: The bit indicates if the according MC is enabled.
-+
-+Example:
-+	csw: csw@7e200000 {
-+		compatible = "apm,xgene-csw", "syscon";
-+		reg = <0x0 0x7e200000 0x0 0x1000>;
-+	};
-+
-+	mcba: mcba@7e700000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e700000 0x0 0x1000>;
-+	};
-+
-+	mcbb: mcbb@7e720000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e720000 0x0 0x1000>;
-+	};
-+
-+	pmu: pmu@78810000 {
-+		compatible = "apm,xgene-pmu-v2";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		regmap-csw = <&csw>;
-+		regmap-mcba = <&mcba>;
-+		regmap-mcbb = <&mcbb>;
-+		reg = <0x0 0x78810000 0x0 0x1000>;
-+		interrupts = <0x0 0x22 0x4>;
-+
-+		pmul3c@7e610000 {
-+			compatible = "apm,xgene-pmu-l3c";
-+			reg = <0x0 0x7e610000 0x0 0x1000>;
-+		};
-+
-+		pmuiob@7e940000 {
-+			compatible = "apm,xgene-pmu-iob";
-+			reg = <0x0 0x7e940000 0x0 0x1000>;
-+		};
-+
-+		pmucmcb@7e710000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e710000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmcb@7e730000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e730000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e810000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e810000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmc@7e850000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e850000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e890000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e890000 0x0 0x1000>;
-+			enable-bit-index = <2>;
-+		};
-+
-+		pmucmc@7e8d0000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e8d0000 0x0 0x1000>;
-+			enable-bit-index = <3>;
-+		};
-+	};
+Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
+---
+
+v6:
+ * Add IRQF_NOBALANCING and IRQF_NO_THREAD flags to the PMU overflow interrupt
+   Exclude the interrupt from irq balancing and prevent the context from being
+   threaded
+
+v5:
+ * Remove hw_perf_event::extra_reg field use
+   Change GET_CNTR to use hw_perf_event::idx
+   Change GET_AGENTID/GET_AGEN1ID to use hw_perf_event::config_base
+ * Use compound literal structure defines for format and event attribute groups
+   to statically define them at compile time
+ * Bitwise invert the meaning of agent mask in config1 field.
+ * Fix update pmu_counter_event pointer before starting event
+ * Add reset of pmu_dev->pmu_counter_event to NULL in xgene_perf_del
+ * Use exactly half of max period to fix the overflow counter issue and account
+   for the possiblity of extreme interrupt latency
+ * Use spin lock instead of interrupt masking in overflow interrupt handler
+ * Remove unnecessary update of hw_perf_event::period_left
+
+v4:
+ * Alphabetically sorting header files
+ * Remove dynamic allocation for PMU format and event attribute groups
+   Create shared constant attribute groups per each class
+ * Remove perf_sample_data as this perf driver doesn't support sampling
+ * Consistently use the PCP_PMU_V{1,2} defines
+ * Set affinity to make sure the overflow interrupt is handled by the
+   same assigned CPU
+
+v3:
+ * Remove index property use in PMU device sub nodes
+
+v2:
+ * Use bitmask for event asignned counter mask pmu_dev->cntr_assign_mask
+ * Remove unnecessary spinlocks in perf add/del operations
+ * Remove unnecessary condition checks
+ * Enforce CPU assignment to one CPU for perf operarations
+ * Set the task_ctx_nr to perf_invalid_context for perf driver
+ * Remove irrelevant pt_rregs
+ * Change perf sysfs attributes to be fixed instead of dynamic
+ * Fix checking for an ACPI companion device instead of EFI enable
+ * Add documentation for config/config1 fields format and perf tool example
+
+---
+
+Tai Nguyen (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC PMU driver
+  Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
+  perf: xgene: Add APM X-Gene SoC Performance Monitoring Unit driver
+  arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
+
+ .../devicetree/bindings/perf/apm-xgene-pmu.txt     |  112 ++
+ Documentation/perf/xgene-pmu.txt                   |   48 +
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   58 +
+ drivers/perf/Kconfig                               |    7 +
+ drivers/perf/Makefile                              |    1 +
+ drivers/perf/xgene_pmu.c                           | 1360 ++++++++++++++++++++
+ 7 files changed, 1594 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+ create mode 100644 Documentation/perf/xgene-pmu.txt
+ create mode 100644 drivers/perf/xgene_pmu.c
+
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
