@@ -1,72 +1,85 @@
-From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Subject: [PATCH v4 1/3] Documentation: DT: Add iproc-static-adc binding
-Date: Tue, 28 Jun 2016 13:10:34 +0530
-Message-ID: <1467099636-31855-2-git-send-email-raveendra.padasalagi@broadcom.com>
-References: <1467099636-31855-1-git-send-email-raveendra.padasalagi@broadcom.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 03/10] input: tps65218-pwrbutton: Add
+ platform_device_id table
+Date: Tue, 28 Jun 2016 08:41:10 +0100
+Message-ID: <20160628074110.GH6720@dell>
+References: <1467093980-11458-1-git-send-email-j-keerthy@ti.com>
+ <1467093980-11458-4-git-send-email-j-keerthy@ti.com>
+ <20160628064948.GB6720@dell>
+ <57721F71.5010700@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467099636-31855-1-git-send-email-raveendra.padasalagi@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <57721F71.5010700@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Richardson <jonathar@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Anup Patel <anup.patel@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+To: Keerthy <a0393675@ti.com>
+Cc: Keerthy <j-keerthy@ti.com>, dmitry.torokhov@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch adds devicetree binding document for broadcom's
-iproc-static-adc controller driver.
+On Tue, 28 Jun 2016, Keerthy wrote:
 
-Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
----
- .../bindings/iio/adc/brcm,iproc-static-adc.txt     | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt
+>=20
+>=20
+> On Tuesday 28 June 2016 12:19 PM, Lee Jones wrote:
+> >On Tue, 28 Jun 2016, Keerthy wrote:
+> >
+> >>platform_device_id table is needed for adding the tps65218-pwrbutto=
+n
+> >>module to the mfd_cell array.
+> >>
+> >>Signed-off-by: Keerthy <j-keerthy@ti.com>
+> >>---
+> >>  drivers/input/misc/tps65218-pwrbutton.c | 7 +++++++
+> >>  1 file changed, 7 insertions(+)
+> >>
+> >>diff --git a/drivers/input/misc/tps65218-pwrbutton.c b/drivers/inpu=
+t/misc/tps65218-pwrbutton.c
+> >>index 2bba8de..a0cb7d2 100644
+> >>--- a/drivers/input/misc/tps65218-pwrbutton.c
+> >>+++ b/drivers/input/misc/tps65218-pwrbutton.c
+> >>@@ -113,12 +113,19 @@ static const struct of_device_id of_tps65218_=
+pwr_match[] =3D {
+> >>  };
+> >>  MODULE_DEVICE_TABLE(of, of_tps65218_pwr_match);
+> >>
+> >>+static const struct platform_device_id tps65218_pwrbtn_id_table[] =
+=3D {
+> >>+	{ "tps65218-pwrbutton", },
+> >>+	{ /* sentinel */ }
+> >>+}
+> >
+> >Missing ';'.  Did you build test this?
+>=20
+> Oops sorry for the mess. Yes i built and booted. While reviewing and =
+just
+> before sending i have accidentally deleted. I will send a v4 in a bit=
+=2E I
+> will send v4 of this patch.
+>=20
+> I just checked now. It somehow compiles silently even with the ';' mi=
+ssing!
+> I will send a v4.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt b/Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt
-new file mode 100644
-index 0000000..caaaed7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt
-@@ -0,0 +1,41 @@
-+* Broadcom's IPROC Static ADC controller
-+
-+Broadcom iProc ADC controller has 8 channels 10bit ADC.
-+Allows user to convert analog input voltage values to digital.
-+
-+Required properties:
-+
-+- compatible: Must be "brcm,iproc-static-adc"
-+
-+- adc-syscon: Handler of syscon node defining physical base address of the
-+  controller and length of memory mapped region.
-+
-+- #io-channel-cells = <1>; As ADC has multiple outputs
-+  refer to Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
-+
-+- io-channel-ranges:
-+  refer to Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
-+
-+- clocks: Clock used for this block.
-+
-+- clock-names: Clock name should be given as tsc_clk.
-+
-+- interrupts: interrupt line number.
-+
-+For example:
-+
-+	ts_adc_syscon: ts_adc_syscon@180a6000 {
-+		compatible = "brcm,iproc-ts-adc-syscon","syscon";
-+		reg = <0x180a6000 0xc30>;
-+	};
-+
-+	adc: adc@180a6000 {
-+		compatible = "brcm,iproc-static-adc";
-+		adc-syscon = <&ts_adc_syscon>;
-+		#io-channel-cells = <1>;
-+		io-channel-ranges;
-+		clocks = <&asiu_clks BCM_CYGNUS_ASIU_ADC_CLK>;
-+		clock-names = "tsc_clk";
-+		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+	};
--- 
-1.9.1
+Are you sure this driver is enable in the CONFIG?
+
+> >>+MODULE_DEVICE_TABLE(platform, tps65218_pwrbtn_id_table);
+> >>+
+> >>  static struct platform_driver tps65218_pwron_driver =3D {
+> >>  	.probe	=3D tps65218_pwron_probe,
+> >>  	.driver	=3D {
+> >>  		.name	=3D "tps65218_pwrbutton",
+> >>  		.of_match_table =3D of_tps65218_pwr_match,
+> >>  	},
+> >>+	.id_table =3D tps65218_pwrbtn_id_table,
+> >>  };
+> >>  module_platform_driver(tps65218_pwron_driver);
+> >>
+> >
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
