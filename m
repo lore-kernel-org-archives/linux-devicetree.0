@@ -1,236 +1,156 @@
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v3 18/19] sh: IO-DATA HDL-U (a,k.a landisk) support
-Date: Tue, 28 Jun 2016 15:36:34 +0900
-Message-ID: <1467095795-5082-19-git-send-email-ysato@users.sourceforge.jp>
+Subject: [PATCH v3 13/19] sh: SH7751 core dtsi
+Date: Tue, 28 Jun 2016 15:36:29 +0900
+Message-ID: <1467095795-5082-14-git-send-email-ysato@users.sourceforge.jp>
 References: <1467095795-5082-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1467095795-5082-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-sh@kernel.org, linux-kernel@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- .../interrupt-controller/iodata-landisk.txt        | 34 ++++++++++
- arch/sh/boot/dts/Makefile                          |  2 +
- arch/sh/boot/dts/landisk.dts                       | 62 ++++++++++++++++++
- drivers/irqchip/Makefile                           |  2 +-
- drivers/irqchip/irq-io-landisk.c                   | 73 ++++++++++++++++++++++
- 5 files changed, 172 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
- create mode 100644 arch/sh/boot/dts/landisk.dts
- create mode 100644 drivers/irqchip/irq-io-landisk.c
+ arch/sh/boot/dts/sh7751.dtsi                       | 85 ++++++++++++++++++++++
+ include/dt-bindings/clock/renesas-sh7750.h         | 26 +++++++
+ include/dt-bindings/interrupt-controller/sh_intc.h |  2 +
+ 3 files changed, 113 insertions(+)
+ create mode 100644 arch/sh/boot/dts/sh7751.dtsi
+ create mode 100644 include/dt-bindings/clock/renesas-sh7750.h
+ create mode 100644 include/dt-bindings/interrupt-controller/sh_intc.h
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+diff --git a/arch/sh/boot/dts/sh7751.dtsi b/arch/sh/boot/dts/sh7751.dtsi
 new file mode 100644
-index 0000000..9f87f2c
+index 0000000..07179b2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
-@@ -0,0 +1,34 @@
-+DT bindings for the I/O DATA HDL-U interrupt controller
-+
-+Required properties:
-+
-+  - compatible: has to be "iodata,landisk-intc".
-+
-+  - reg: Base address and length of interrupt controller register.
-+
-+  - interrupt-controller: Identifies the node as an interrupt controller.
-+
-+  - #address-cells: has to be <0>.
-+
-+  - #interrupt-cells: has to be <1>: an interrupt index.
-+
-+  - interrupt-map: Interrupt mapping on parent controller.
-+
-+Example
-+-------
-+
-+	cpldintc: cpld@b0000000 {
-+		compatible = "iodata,landisk-intc";
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		reg = <0xb0000000 8>;
-+		interrupt-map=<0 &shintc evt2irq(0x2a0)>,
-+		              <1 &shintc evt2irq(0x2c0)>,
-+		              <2 &shintc evt2irq(0x2e0)>,
-+			      <3 &shintc evt2irq(0x300)>,
-+		              <4 &shintc evt2irq(0x320)>,
-+			      <5 &shintc evt2irq(0x340)>,
-+		              <6 &shintc evt2irq(0x360)>,
-+			      <7 &shintc evt2irq(0x380)>;
-+	};
-diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
-index 38fdc38..cf5aec4 100644
---- a/arch/sh/boot/dts/Makefile
-+++ b/arch/sh/boot/dts/Makefile
-@@ -1,5 +1,7 @@
- obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
- 
-+dtb-y += landisk.dtb
-+
- dtstree		:= $(srctree)/$(src)
- clean-files := *.dtb.S
- always	    := $(dtb-y)
-diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
-new file mode 100644
-index 0000000..240d11b
---- /dev/null
-+++ b/arch/sh/boot/dts/landisk.dts
-@@ -0,0 +1,62 @@
-+/dts-v1/;
-+
-+#include "sh7751.dtsi"
-+
-+/ {
-+	model = "I/O DATA HDL-U";
-+	compatible = "iodata,hdl-u";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&shintc>;
-+	chosen {
-+		stdout-path = &sci1;
-+		bootargs = "console=ttySC1,115200";
-+	};
-+	aliases {
-+		serial0 = &sci0;
-+		serial1 = &sci1;
-+	};
-+
-+	memory@0c000000 {
-+		device_type = "memory";
-+		reg = <0x0c000000 0x4000000>;
-+	};
-+	cpldintc: cpld@b0000000 {
-+		compatible = "iodata,landisk-intc";
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		reg = <0xb0000000 8>;
-+		interrupt-map=<0 &shintc evt2irq(0x2a0)>,
-+		              <1 &shintc evt2irq(0x2c0)>,
-+		              <2 &shintc evt2irq(0x2e0)>,
-+			      <3 &shintc evt2irq(0x300)>,
-+		              <4 &shintc evt2irq(0x320)>,
-+			      <5 &shintc evt2irq(0x340)>,
-+		              <6 &shintc evt2irq(0x360)>,
-+			      <7 &shintc evt2irq(0x380)>;
-+	};
-+};
-+
-+&oclk {
-+	clock-frequency = <22222222>;
-+};
-+
-+&sci0 {
-+	status = "ok";
-+};
-+
-+&sci1 {
-+	status = "ok";
-+};
-+
-+&pci {
-+	compatible = "renesas,sh7751-pci", "iodata,landisk-pci";
-+	interrupt-map-mask = <0x1800 0 7>;
-+	interrupt-map = <0x0000 0 1 &cpldintc 0>,
-+	                <0x0800 0 1 &cpldintc 1>,
-+	                <0x1000 0 1 &cpldintc 2>,
-+	                <0x1000 0 2 &cpldintc 3>,
-+	                <0x1000 0 3 &cpldintc 0>;
-+	status = "ok";
-+};
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 2ab5735..5e225cf 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -69,4 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
--obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o
-+obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o irq-io-landisk.o
-diff --git a/drivers/irqchip/irq-io-landisk.c b/drivers/irqchip/irq-io-landisk.c
-new file mode 100644
-index 0000000..73419a2
---- /dev/null
-+++ b/drivers/irqchip/irq-io-landisk.c
-@@ -0,0 +1,73 @@
++++ b/arch/sh/boot/dts/sh7751.dtsi
+@@ -0,0 +1,85 @@
 +/*
-+ * IO-DATA LANDISK CPLD IRQ driver
++ * Device Tree Source for the SH7751
 + *
-+ * Copyright 2016 Yoshinori Sato <ysato@users.sourceforge.jp>
++ * Copyright (C) 2016 Yoshinori Sato
 + */
 +
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
++#include <dt-bindings/interrupt-controller/sh_intc.h>
++#include <dt-bindings/clock/renesas-sh7750.h>
 +
-+static void landisk_mask_irq(struct irq_data *data)
-+{
-+	u8 mask = __raw_readb(data->chip_data + 5);
++/ {
++	oclk: oscillator {
++                #clock-cells = <0>;
++                compatible = "fixed-clock";
++                clock-frequency = <0>;
++        };
++	cpg: cpg@ffc00000 {
++                compatible = "renesas,sh7750-cpg";
++                clocks = <&oclk>;
++                #clock-cells = <1>;
++		renesas,mult = <12>;
++                reg = <0xffc00000 32>, <0xfe0a0000 16>;
++        };
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++		      compatible = "renesas,sh4", "renesas,sh";
++		      clock-frequency = <266666666>;
++		};
++	};
++	shintc: interrupt-controller@ffd00000 {
++		compatible = "renesas,sh7751-intc";
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-controller;
++		reg = <0xffd00000 14>, <0xfe080000 128>;
 +
-+	mask &= ~(1 << (data->irq - 5));
-+	__raw_writeb(mask, data->chip_data + 5);
-+}
++	};
++	sci0: serial@ffe00000 {
++		compatible = "renesas,sci";
++		reg = <0xffe00000 0x20>;
++		interrupts = <evt2irq(0x4e0) 0
++		              evt2irq(0x500) 0
++		              evt2irq(0x540) 0
++		              evt2irq(0x520) 0>;
++		clocks = <&cpg SH7750_CLK_SCI>;
++		clock-names = "fck";
++		status = "disabled";
++	};
++	sci1: serial@ffe80000 {
++		compatible = "renesas,scif";
++		reg = <0xffe80000 0x100>;
++		interrupts = <evt2irq(0x700) 0
++			      evt2irq(0x720) 0
++			      evt2irq(0x760) 0
++			      evt2irq(0x740) 0>;
++		clocks = <&cpg SH7750_CLK_SCIF>;
++		clock-names = "fck";
++		status = "disabled";
++	};
++	tmu: timer@ffd80000 {
++		compatible = "renesas,tmu";
++		reg = <0xffd80000 12>;
++		interrupts = <evt2irq(0x400) 0
++			      evt2irq(0x420) 0
++			      evt2irq(0x440) 0>;
++		clocks = <&cpg SH7750_CLK_TMU0>;
++		clock-names = "fck";
++		renesas,channels-mask = <0x03>;
++	};
++	pci: pci-controller@fe200000 {
++		compatible = "renesas,sh7751-pci";
++		device_type = "pci";
++		bus-range = <0 0>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0x02000000 0x00000000 0xfd000000 0xfd000000 0x00000000 0x01000000>,
++		         <0x01000000 0x00000000 0xfe240000 0x00000000 0x00000000 0x00040000>;
++		reg = <0xfe200000 0x0400>, <0xff800000 0x0030>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0x1800 0 7>;
++		status = "disabled";
++	};
++}; 
+\ No newline at end of file
+diff --git a/include/dt-bindings/clock/renesas-sh7750.h b/include/dt-bindings/clock/renesas-sh7750.h
+new file mode 100644
+index 0000000..546c0b1
+--- /dev/null
++++ b/include/dt-bindings/clock/renesas-sh7750.h
+@@ -0,0 +1,26 @@
++/*
++ * Copyright (C) 2016 Yoshinori Sato
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef __DT_BINDINGS_CLOCK_RENESAS_SH7750_H__
++#define __DT_BINDINGS_CLOCK_RENESAS_SH7750_H__
 +
-+static void landisk_unmask_irq(struct irq_data *data)
-+{
-+	u8 mask = __raw_readb(data->chip_data + 5);
++#define SH7750_CLK_SCI	0
++#define SH7750_CLK_RTC	1
++#define SH7750_CLK_TMU0	2
++#define SH7750_CLK_TMU1	3
++#define SH7750_CLK_TMU2	4
++#define SH7750_CLK_SCIF	5
++#define SH7750_CLK_DMAC	6
++#define SH7750_CLK_UBC	7
++#define SH7750_CLK_SQ	8
++#define SH7750_CLK_INTC 9
++#define SH7750_CLK_TMU3	10
++#define SH7750_CLK_TMU4	11
++#define SH7750_CLK_PCIC	12
 +
-+	mask |= (1 << (data->irq - 5));
-+	__raw_writeb(mask, data->chip_data + 5);
-+}
-+
-+static struct irq_chip cpld_irq_chip = {
-+	.name		= "LANDISK-CPLD",
-+	.irq_unmask	= landisk_unmask_irq,
-+	.irq_mask	= landisk_mask_irq,
-+};
-+
-+static int cpld_map(struct irq_domain *d, unsigned int virq,
-+		    irq_hw_number_t hw_irq_num)
-+{
-+	irq_set_chip_and_handler(virq, &cpld_irq_chip,
-+				 handle_simple_irq);
-+	irq_set_chip_data(virq, d->host_data);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops irq_ops = {
-+	.xlate	= irq_domain_xlate_onecell,
-+	.map	= cpld_map,
-+};
-+
-+static int __init landisk_intc_of_init(struct device_node *intc,
-+				    struct device_node *parent)
-+{
-+	struct irq_domain *domain, *pdomain;
-+	int num_irqpin;
-+	void *baseaddr;
-+
-+	baseaddr = of_iomap(intc, 0);
-+	pdomain = irq_find_host(parent);
-+	of_get_property(intc, "interrupt-map", &num_irqpin);
-+	num_irqpin /= sizeof(u32) * 3;
-+	printk("%s %d\n", __func__, num_irqpin);
-+	domain = irq_domain_create_hierarchy(pdomain, 0, num_irqpin,
-+					     of_node_to_fwnode(intc),
-+					     &irq_ops, baseaddr);
-+	if (!domain)
-+		panic("%s: unable to create IRQ domain\n", intc->full_name);
-+	irq_domain_associate_many(domain, 5, 0, 8);
-+	return 0;
-+}
-+
-+IRQCHIP_DECLARE(cpld_intc, "iodata,landisk-intc", landisk_intc_of_init);
++#endif /* __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/interrupt-controller/sh_intc.h b/include/dt-bindings/interrupt-controller/sh_intc.h
+new file mode 100644
+index 0000000..8c9dcdc
+--- /dev/null
++++ b/include/dt-bindings/interrupt-controller/sh_intc.h
+@@ -0,0 +1,2 @@
++#define evt2irq(evt)		(((evt) >> 5) - 16)
++#define irq2evt(irq)		(((irq) + 16) << 5)
 -- 
 2.7.0
-
