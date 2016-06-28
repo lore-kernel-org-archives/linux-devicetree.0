@@ -1,62 +1,72 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
-Date: Tue, 28 Jun 2016 11:27:12 -0700
-Message-ID: <146713843204.31418.2851512559600064552@sboyd-linaro>
-References: <20160626072838.28082-1-stephen.boyd@linaro.org>
- <20160626072838.28082-3-stephen.boyd@linaro.org>
- <20160627143422.GB21398@kuha.fi.intel.com>
- <146706544012.30684.15569003844798199881@sboyd-linaro>
- <20160628114205.GA3378@kuha.fi.intel.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: [PATCH 0/3] clk: sunxi: Simpler driver for Allwinner's clocks
+Date: Tue, 28 Jun 2016 19:44:58 +0200
+Message-ID: <cover.1467135898.git.moinejf@free.fr>
+Reply-To: moinejf-GANU6spQydw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160628114205.GA3378@kuha.fi.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBPMJZO5QKGQE3OAKEHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Heikki Krogerus (2016-06-28 04:42:05)
-> On Mon, Jun 27, 2016 at 03:10:40PM -0700, Stephen Boyd wrote:
-> > 
-> > Right, I would have to make up some IDs in this case. I suppose I can
-> > use the qcom vendor ID 0x05c6 and then product ids 0 and 1 for HS phy
-> > and HSIC phy? That doesn't make me feel great because it's all made up,
-> > but I guess there's no other option. I hope they don't decide to start
-> > populating these ids in the future though and then we may have
-> > conflicting product ids. If that happens I suppose we can do a
-> > workaround based on compatible strings in the DT node. Fun!
-> > 
-> > Nice side effect of all that is I can drop requesting the module by DT
-> > aliases and things become simpler. I'll try this out.
-> 
-> I was hoping that we could manage with product id 0 as an exception (I
-> failed to consider that you have multiple PHYs to deal with). I don't
-> think we can just come up with product id > 0.
-> 
-> I guess we should have the of_driver_match_device() call after all.
-> Let's just call it conditionally, only in cases where there is no
-> product ID, to make me feel a bit more better. I don't want to make it
-> too easy to use.
-> 
-> The properties for the vendor and product ID are still something that
-> we need to introduce in any case. We have the powered off problem on
-> all kinds of platforms, and not all of them use DT. Please feel free
-> to incorporate the diff into the patch you had for the powered off
-> case if you are OK with it. So I think in your case you would just
-> need to addthe correct ulpi-vendor id 0x05c6 and ulpi-product id 0 to
-> the chipidea device node, and I think this would work.
-> 
+The 'sunxi-ng' proposal from Maxime Ripard did a great advance in
+handling the clocks of Allwinner's SoCs, but it appeared that it
+was not easy to extend its functions and handle some other SoCs as
+the A83T.
 
-Hmm ok. I'll have to bring back all the module loading and uevent stuff
-based on DT compatible strings then. We'll have the same product id on
-HSIC and HS phys, but that isn't a big deal.
+This patch series proposes a more flexible and simpler structure.
+The basic idea is to have the same structure for all clocks.
+All parameters (multipliers, dividers, mux, gates..) may be defined
+or not in each clock. An 'extra' pointer permits to handle rare
+or specific functions.
+
+The notion of 'bus gates' appearing in previous drivers and DTs
+are of no interest outside the clock driver itself. So, this
+driver maps the bus gate and clock gate operations to the standard
+clock functions 'prepare/unprepare' and 'enable/disable'.
+
+The reset functions are included in this driver.
+As often, the resets occur at probe time, at the same time as the
+clock prepare calls, this driver optionally proposes to hide them
+by doing a 'reset and enable bus gate' on clock prepare (and same
+in inverse order on clock unprepare).
+
+This driver has been tested on a Banana Pi M3 (A83T):
+- working: UART0, USB0, MMC0, THS, video (DE + LCD1 + HDMI)
+- not tested yet: HDMI audio (the EDID cannot be read
+				preventing audio to be enabled)
+- not working: MMC1 (wifi), MMC2 (eMMC)
+
+(sorry, Maxime, but I think that my implementation is easier to
+ extend than yours)
+
+Jean-Francois Moine (3):
+  clk: sunxi: Add a driver for the CCU
+  clk: sunxi: Add the A83T clocks
+  dt: sun8i: Define the clocks of the A83T
+
+ Documentation/devicetree/bindings/clock/sunxi.txt |   7 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi                 |  16 +-
+ drivers/clk/sunxi/Makefile                        |   3 +
+ drivers/clk/sunxi/ccu-sun8i-a83t.c                | 858 +++++++++++++++++++
+ drivers/clk/sunxi/ccu.c                           | 980 ++++++++++++++++++++++
+ drivers/clk/sunxi/ccu.h                           | 153 ++++
+ include/dt-bindings/clock/sun8i-a83t.h            |  97 +++
+ include/dt-bindings/reset/sun8i-a83t.h            |  62 ++
+ 8 files changed, 2169 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/clk/sunxi/ccu-sun8i-a83t.c
+ create mode 100644 drivers/clk/sunxi/ccu.c
+ create mode 100644 drivers/clk/sunxi/ccu.h
+ create mode 100644 include/dt-bindings/clock/sun8i-a83t.h
+ create mode 100644 include/dt-bindings/reset/sun8i-a83t.h
+
+-- 
+2.9.0
