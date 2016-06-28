@@ -1,61 +1,65 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/2] drm/fsl-dcu: update the panel dt binding document
-Date: Tue, 28 Jun 2016 14:18:27 -0700
-Message-ID: <8e8820c0ccfa8e1348a038959da850f8@agner.ch>
-References: <1467106748-19314-1-git-send-email-meng.yi@nxp.com>
- <20160628210748.GA10847@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: sun7i: Add BCM53125 switch nodes to the
+ lamobo-r1 board
+Date: Tue, 28 Jun 2016 23:24:36 +0200
+Message-ID: <20160628212436.GH5550@lukather>
+References: <1467074756-8402-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160628210748.GA10847@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: jianwei.wang.chn@gmail.com, Meng Yi <meng.yi@nxp.com>, devicetree@vger.kernel.org, emil.l.velikov@gmail.com, dri-devel@lists.freedesktop.org, shawnguo@kernel.org, alexander.stein@systec-electronic.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7J16OGEJ/mt06A90"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467074756-8402-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNi0wNi0yOCAxNDowNywgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBKdW4gMjgs
-IDIwMTYgYXQgMDU6Mzk6MDdQTSArMDgwMCwgTWVuZyBZaSB3cm90ZToKPj4gZHJvcHBlZCB0aGUg
-b2xkICJmc2wscGFuZWwiIHByb3BlcnR5LCB1c2luZyB0aGUgb2ZfZ3JhcGggZHQKPj4gYmluZGlu
-ZyBzeW50YXgKPj4KPj4gU2lnbmVkLW9mZi1ieTogTWVuZyBZaSA8bWVuZy55aUBueHAuY29tPgo+
-PiAtLS0KPj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxk
-Y3UudHh0IHwgOSArKysrKysrLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyks
-IDIgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9mc2wsZGN1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0Cj4+IGluZGV4IGFlNTVjZGUuLmY0NGNmNWIg
-MTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2ZzbCxkY3UudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2ZzbCxkY3UudHh0Cj4+IEBAIC0xMiw3ICsxMiw3IEBAIFJlcXVpcmVkIHByb3BlcnRp
-ZXM6Cj4+ICAtIGNsb2NrLW5hbWVzOgkJU2hvdWxkIGJlICJkY3UiIGFuZCAicGl4Igo+PiAgCQkJ
-U2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4+ICAtIGJpZy1l
-bmRpYW4JCUJvb2xlYW4gcHJvcGVydHksIExTMTAyMUEgRENVIHJlZ2lzdGVycyBhcmUgYmlnLWVu
-ZGlhbi4KPj4gLS0gZnNsLHBhbmVsOgkJVGhlIHBoYW5kbGUgdG8gcGFuZWwgbm9kZS4KPj4gKy0g
-cG9ydAkJCVZpZGVvIHBvcnQgZm9yIHRoZSBwYW5lbCBvdXRwdXQKPj4KPj4gIE9wdGlvbmFsIHBy
-b3BlcnRpZXM6Cj4+ICAtIGZzbCx0Y29uOgkJVGhlIHBoYW5kbGUgdG8gdGhlIHRpbWluZyBjb250
-cm9sbGVyIG5vZGUuCj4+IEBAIC0yNCw2ICsyNCwxMSBAQCBkY3U6IGRjdUAyY2UwMDAwIHsKPj4g
-IAljbG9ja3MgPSA8JnBsYXRmb3JtX2NsayAwPiwgPCZwbGF0Zm9ybV9jbGsgMD47Cj4+ICAJY2xv
-Y2stbmFtZXMgPSAiZGN1IiwgInBpeCI7Cj4+ICAJYmlnLWVuZGlhbjsKPj4gLQlmc2wscGFuZWwg
-PSA8JnBhbmVsPjsKPj4gIAlmc2wsdGNvbiA9IDwmdGNvbj47Cj4+ICsKPj4gKwlwb3J0OiBwb3J0
-QDAgewo+IAo+IERyb3AgdGhlIHVuaXQgYWRkcmVzcy4gV2l0aCB0aGF0LAoKSSB3YXMgZ29pbmcg
-dG8gc2F5IGFkZCBhIGNvcnJlc3BvbmRpbmcgcmVnIHByb3BlcnR5IGFuZCBzcGVjaWZ5CmFkZHJl
-c3MtY2VsbHMuCgpTbyBpcyBpdCBvayB0byBhbHNvIGNyZWF0ZSBhIHBvcnQgd2l0aG91dCBhZGRy
-ZXNzPwoKSWYgeWVzLCB3ZSBzaG91bGQgcHJvYmFibHkgYmUgY29uc2lzdGVudCBhbmQgYWxzbyBu
-b3QgdXNlIHRoZSB1bml0CmFkZHJlc3MgaW4gcGF0Y2ggMi8yIChzaW5jZSB0aGF0IHBhbmVsIGFs
-c28gaGFzIG9ubHkgb25lIHBvcnQpLgoKLS0KU3RlZmFuCgo+IAo+IEFja2VkLWJ5OiBSb2IgSGVy
-cmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IAo+PiArCQlkY3Vfb3V0OiBlbmRwb2ludCB7Cj4+ICsJ
-CQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX291dD47Cj4+ICsJCX07Cj4+ICsJfTsKPj4gIH07
-Cj4+IC0tCj4+IDIuMS4wLjI3Lmc5NmRiMzI0Cj4+Cj4+IC0tCj4+IFRvIHVuc3Vic2NyaWJlIGZy
-b20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+
-PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+PiBN
-b3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1p
-bmZvLmh0bWwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--7J16OGEJ/mt06A90
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 27, 2016 at 05:45:56PM -0700, Florian Fainelli wrote:
+> Now that we have a proper binding for Ethernet switches hanging off
+> different buses, and a driver for the BCM53125 switch, add its Device
+> Tree as a child MDIO node, at MDIO address 30 (Broadcom pseudo-PHY
+> address) and describe the ports layout of the Lamobo R1 board.
+>=20
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Applied, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--7J16OGEJ/mt06A90
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXcusUAAoJEBx+YmzsjxAgxukP/ifWt/PzlqDsCN7inmegMFn8
+GFZPCtpSDl9eLZz4+wyQ5PMmgoxEDYfmGPVnwJ4g0nHzTMeyZrs0X/hz9pi9PVLv
+yJJzhbhFZq+TDyOTwupKKAc5Nig534HM9Rh5JVhCnkoRdr1SxG1iEqtgHhYKcI/O
+tEGkogifWb9bgN30cY5qSz1Q6J9MBPbtCEbLOAeLRfvdQNl7GHa4lai46Afya8Cn
+uhbSkLjT404pvs8p3bs7MwhzSmLD4kIbV0tHSpsWXytPEs7OudsPF8RMDhTuVi4G
+XJDYluRPlBm14RsnitBvDsBGyj3p0pNW+4XiUheUZOkS2Brtt+UVcfZjyVxseZWA
+5XhqLxO2FXah8UE7GosPs1ysvuUR9P/rzvtltxZ0cHdWhO7axa0qm9brLoS1Rbsm
+xbH0tSzu9DG7CzE8RNWW3MlEUvN+J+VBgQUjIwtqW2tPsbSJHbIznU5yPFUZi5iX
+boC80kzBNUmOqNqobmriy28dOpyJRrC0NHxDyFenSbJnJRMkSjs6PpUwNVKiVYSR
+3jvCac3Ybe7wcHwfOZM/ozd40fdzNrXzgilUEppmJfmUSazjOuSa3tuW4Of+tKDy
+PgT+DgEnblSnCokB4mPJEqvXsirW4cf+zxZ14K1EV1wTNHuSSET2JnqLDNs2khuf
+UmFChgqCymYouGe5UUNx
+=AxCo
+-----END PGP SIGNATURE-----
+
+--7J16OGEJ/mt06A90--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
