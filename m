@@ -1,58 +1,126 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/6] firmware: Amlogic: Add secure monitor driver
-Date: Tue, 28 Jun 2016 12:29:02 +0100
-Message-ID: <20160628112901.GJ31744@leverpostej>
-References: <1466339944-602-1-git-send-email-carlo@caione.org>
- <1466339944-602-2-git-send-email-carlo@caione.org>
- <20160627172805.GA30514@leverpostej>
- <20160628081057.GA3171@localhost>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
+Date: Tue, 28 Jun 2016 14:42:05 +0300
+Message-ID: <20160628114205.GA3378@kuha.fi.intel.com>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+ <20160626072838.28082-3-stephen.boyd@linaro.org>
+ <20160627143422.GB21398@kuha.fi.intel.com>
+ <146706544012.30684.15569003844798199881@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160628081057.GA3171@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <carlo@caione.org>
-Cc: devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, bjdooks@googlemail.com, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, matthias.bgg@gmail.com, linux-amlogic@lists.infradead.org, maxime.ripard@free-electrons.com, linux@endlessm.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <146706544012.30684.15569003844798199881@sboyd-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, Jun 28, 2016 at 10:10:57AM +0200, Carlo Caione wrote:
-> On 27/06/16 18:28, Mark Rutland wrote:
-> > On Sun, Jun 19, 2016 at 02:38:59PM +0200, Carlo Caione wrote:
-> > > +	np = of_find_matching_node_and_match(NULL, meson_sm_ids, &matched_np);
-> > > +	if (!np) {
-> > > +		pr_err("no matching node\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
+On Mon, Jun 27, 2016 at 03:10:40PM -0700, Stephen Boyd wrote:
+> Quoting Heikki Krogerus (2016-06-27 07:34:22)
+> > Hi,
 > > 
-> > This is going to be pointlessly noisy on every non-amlogic board out
-> > there.
+> > I'm fine with most of the patch, except..
+> > 
+> > On Sun, Jun 26, 2016 at 12:28:19AM -0700, Stephen Boyd wrote:
+> > > @@ -39,7 +42,10 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
+> > >       struct ulpi *ulpi = to_ulpi_dev(dev);
+> > >       const struct ulpi_device_id *id;
+> > >  
+> > > -     for (id = drv->id_table; id->vendor; id++)
+> > > +     if (of_driver_match_device(dev, driver))
+> > > +             return 1;
+> > 
+> > I don't like this part. We should match separately like that only
+> > if the bus does not support native enumeration, and of course ULPI
+> > with its vendor and product IDs does. There really should always be
+> > IDs to match with here. So exceptions have to be solved before we
+> > attempt matching.
+> > 
+> > Since we also have to support platforms where the PHY is initially
+> > powered off and reading the IDs from the registers is not possible
+> > because of that, I think we should consider getting the product and
+> > vendor IDs optionally from device properties. Something like this:
 > 
-> ouch, right
+> Ok, I'm a little worried about conflating the powered off problem with
+> this product/vendor ID missing problem. But if you're ok with that I'll
+> combine the two patches into one using your approach below.
 > 
-> > Please make this a platform driver, such that this is only called when a
-> > node is present, avoiding some mess there.
+> > 
+> > 
+> > diff --git a/drivers/usb/common/ulpi.c b/drivers/usb/common/ulpi.c
+> > index 01c0c04..6228a85 100644
+> > --- a/drivers/usb/common/ulpi.c
+> > +++ b/drivers/usb/common/ulpi.c
+> > @@ -152,7 +152,7 @@ EXPORT_SYMBOL_GPL(ulpi_unregister_driver);
+> >  
+> >  /* -------------------------------------------------------------------------- */
+> >  
+> > -static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+> > +static int ulpi_read_id(struct ulpi *ulpi)
+> >  {
+> >         int ret;
+> >  
+> > @@ -174,6 +174,21 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+> >         ulpi->id.product = ulpi_read(ulpi, ULPI_PRODUCT_ID_LOW);
+> >         ulpi->id.product |= ulpi_read(ulpi, ULPI_PRODUCT_ID_HIGH) << 8;
+> >  
+> > +       return 0;
+> > +}
+> > +
+> > +static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+> > +{
+> > +       int ret;
+> > +
+> > +       ret = device_property_read_u16(dev, "ulpi-vendor", &ulpi->id.vendor);
+> > +       ret |= device_property_read_u16(dev, "ulpi-product", &ulpi->id.product);
+> > +       if (ret) {
+> > +               ret = ulpi_read_id(ulpi);
+> > +               if (ret)
+> > +                       return ret;
+> > +       }
+> > +
+> >         ulpi->dev.parent = dev;
+> >         ulpi->dev.bus = &ulpi_bus;
+> >         ulpi->dev.type = &ulpi_dev_type;
+> > 
+> > 
+> > That should cover both cases. You would just have to create the IDs
+> > yourself in this case.
+> > 
 > 
-> Since Rob required this to be under /firmware (and using no "simple-bus"
-> compatible to trigger the automatic creation) making it a platform
-> driver just adds a lot of boilerplate code. If this doesn't mean a NACK
-> on your side, I still would leave the code as is with the
-> device_initcall() calling the init.
+> Right, I would have to make up some IDs in this case. I suppose I can
+> use the qcom vendor ID 0x05c6 and then product ids 0 and 1 for HS phy
+> and HSIC phy? That doesn't make me feel great because it's all made up,
+> but I guess there's no other option. I hope they don't decide to start
+> populating these ids in the future though and then we may have
+> conflicting product ids. If that happens I suppose we can do a
+> workaround based on compatible strings in the DT node. Fun!
+> 
+> Nice side effect of all that is I can drop requesting the module by DT
+> aliases and things become simpler. I'll try this out.
 
-Ok. So long as this isn't noisy where the node is not present, that's
-fine by me.
+I was hoping that we could manage with product id 0 as an exception (I
+failed to consider that you have multiple PHYs to deal with). I don't
+think we can just come up with product id > 0.
+
+I guess we should have the of_driver_match_device() call after all.
+Let's just call it conditionally, only in cases where there is no
+product ID, to make me feel a bit more better. I don't want to make it
+too easy to use.
+
+The properties for the vendor and product ID are still something that
+we need to introduce in any case. We have the powered off problem on
+all kinds of platforms, and not all of them use DT. Please feel free
+to incorporate the diff into the patch you had for the powered off
+case if you are OK with it. So I think in your case you would just
+need to addthe correct ulpi-vendor id 0x05c6 and ulpi-product id 0 to
+the chipidea device node, and I think this would work.
+
+Sorry about the hassle.
+
 
 Thanks,
-Mark.
+
+-- 
+heikki
