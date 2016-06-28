@@ -1,33 +1,25 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] devicetree: Add vendor prefix for Inverse Path
-Date: Tue, 28 Jun 2016 16:10:05 -0500
-Message-ID: <20160628211005.GA11978@rob-hp-laptop>
-References: <20160628125444.16531-1-andrej@inversepath.com>
- <20160628125444.16531-2-andrej@inversepath.com>
+Subject: Re: [PATCH 5/7] dt-bindings: gpio: Update gpio bindings for LS2088A
+Date: Tue, 28 Jun 2016 16:10:39 -0500
+Message-ID: <20160628211039.GA12684@rob-hp-laptop>
+References: <1467125341-2380-1-git-send-email-abhimanyu.saini@nxp.com>
+ <1467125341-2380-6-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160628125444.16531-2-andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>
+In-Reply-To: <1467125341-2380-6-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 02:54:43PM +0200, andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org wrote:
-> From: Andrej Rosano <andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>
-> 
-> Inverse Path is an information security consulting company:
-> https://inversepath.com
-> 
-> Signed-off-by: Andrej Rosano <andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>
+On Tue, Jun 28, 2016 at 08:18:59PM +0530, Abhimanyu Saini wrote:
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please add acks when posting new versions.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
