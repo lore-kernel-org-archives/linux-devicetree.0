@@ -1,122 +1,138 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [v4 PATCH 0/5] Rockchip Type-C and DispplayPort driver
-Date: Tue, 28 Jun 2016 20:24:36 +0800
-Message-ID: <1467116681-9330-1-git-send-email-zyw@rock-chips.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [v4 PATCH 2/5] Documentation: bindings: add dt doc for Rockchip USB
+ Type-C PHY
+Date: Tue, 28 Jun 2016 20:24:38 +0800
+Message-ID: <1467116681-9330-3-git-send-email-zyw@rock-chips.com>
+References: <1467116681-9330-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, wulf@rock-chips.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1467116681-9330-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CkhpIGFsbAoKVGhpcyBzZXJpZXMgcGF0Y2ggaXMgZm9yIHJvY2tjaGlwIFR5cGUtQyBwaHkgYW5k
-IERpc3BsYXlQb3J0IGNvbnRyb2xsZXIKZHJpdmVyLgoKVGhlIFVTQiBUeXBlLUMgUEhZIGlzIGRl
-c2lnbmVkIHRvIHN1cHBvcnQgdGhlIFVTQjMgYW5kIERQIGFwcGxpY2F0aW9ucy4KVGhlIFBIWSBi
-YXNpY2FsbHkgaGFzIHR3byBtYWluIGNvbXBvbmVudHM6IFVTQjMgYW5kIERpc3BseVBvcnQuIFVT
-QjMKb3BlcmF0ZXMgaW4gU3VwZXJTcGVlZCBtb2RlIGFuZCB0aGUgRFAgY2FuIG9wZXJhdGUgYXQg
-UkJSLCBIQlIgYW5kIEhCUjIKZGF0YSByYXRlcy4gVGhlIFR5cGUtQyBjYWJsZSBvcmllbnRhdGlv
-biBkZXRlY3Rpb24gYW5kIFBvd2VyIERlbGl2ZXJ5CihQRCkgaXMgYWNjb21wbGlzaGVkIHVzaW5n
-IGEgUEQgUEhZIG9yIGEgZXhlcm5hbCBQRCBjaGlwLgoKVGhlIERQIGNvbnRyb2xsZXIgaXMgY29t
-cGxpYW50IHdpdGggRGlzcGxheVBvcnQgU3BlY2lmaWNhdGlvbiwKVmVyc2lvbiAxLjMsIFRoaXMg
-SVAgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSByb2NrY2hpcCB0eXBlLWMgUEhZIElQLgpUaGVyZSBp
-cyBhIHVDUFUgaW4gRFAgY29udHJvbGxlciwgaXQgbmVlZCBhIGZpcm13YXJlIHRvIHdvcmssIHBs
-ZWFzZQpwdXQgdGhlIGZpcm13YXJlIGZpbGUgdG8gL2xpYi9maXJtd2FyZS9jZG4vZHB0eC5iaW4u
-IFRoZSB1Q1BVIGluIGNoYXJnZQpvZiBhdXggY29tbXVuaWNhdGlvbiBhbmQgbGluayB0cmFpbmlu
-ZywgdGhlIGhvc3QgdXNlIG1haWxib3ggdG8KY29tbXVuaWNhdGUgd2l0aCB0aGUgdWNwdS4KClRo
-ZSBEUCBjb250b2xsZXIgaGFzIHJlZ2lzdGVyIGEgbm90aWZpY2F0aW9uIHdpdGggZXh0Y29uIEFQ
-SSwgdG8gZ2V0IHRoZQphbHQgbW9kZSBmcm9tIFBELCB0aGUgUEQgZHJpdmVyIG5lZWQgY2FsbCB0
-aGUgZGV2bV9leHRjb25fZGV2X2FsbG9jYXRlCnRvIGNyZWF0ZSBhIGV4dGNvbiBkZXZpY2UgYW5k
-IHVzZSBleHRjb25fc2V0X3N0YXRlIHRvIG5vdGlmeSBEUApjb250cm9sbGVyLgoKQWJvdXQgdGhl
-IERQIGF1ZGlvLCBjZG4tZHAgcmVnaXN0ZXJlZCAyIERBSXM6IDAgaXMgSTJTLCAxIGlzIFNQRElG
-LgpXZSBjYW4gcmVmZXJlbmNlIHRoZW0gaW4gc2ltcGxlLWNhcmQuCgpUaGlzIHNlcmllcyBpcyBi
-YXNlZCBvbiBNYXJrIFlhbydzIGJyYW5jaDoKaHR0cHM6Ly9naXRodWIuY29tL21hcmt5enEva2Vy
-bmVsLWRybS1yb2NrY2hpcC90cmVlL2RybS1yb2NrY2hpcC1uZXh0LTIwMTYtMDUtMjMKCkkgdGVz
-dCB0aGlzIHBhdGNoZXMgb24gdGhlIHJrMzM5OS1ldmIgYm9hcmQsIHdpdGggYSBmdXNiMzAyIGRy
-aXZlciwKdGhpcyBicmFuY2ggaGFzIG5vIHJrMzM5OS5kdHNpLCBzbyB0aGUgcGF0Y2ggYWJvdXQg
-ZHRzIGlzIG5vdCBpbmNsdWRlZAppbiB0aGlzIHNlcmllcy4KCgpDaGFuZ2VzIGluIHY0OgotIHJl
-bW92ZSBEUCBhbHQgbW9kZQotIGFkZCBhICNwaHktY2VsbHMgbm9kZQotIHNlbGVjdCBFWFRDT04K
-LSB1c2UgcGh5IGZyYW1ld29yayB0byBjb250cm9sIHRoZSBVU0IzIGFuZCBEUCBmdW5jdGlvbgot
-IHJlbmFtZSBQSU5fTUFQXyB0byBQSU5fQVNTSUdOXwotIGFkZCBhIHJlc2V0IG5vZGUKLSBzdXBw
-b3J0IDIgcGh5cwotIHVzZSBwaHkgZnJhbWV3b3JrIHRvIGNvbnRyb2wgRFAgcGh5Ci0gc3VwcG9y
-dCAyIHBoeXMKCkNoYW5nZXMgaW4gdjM6Ci0gdXNlIGNvbXBhdGlibGU6IHJvY2tjaGlwLHJrMzM5
-OS10eXBlYy1waHkKLSB1c2UgZGFzaGVzIGluc3RlYWQgb2YgdW5kZXJzY29yZXMuCi0gcmVtb3Zl
-IHRoZSBwaHkgZnJhbWV3b3JrKEtpc2hvbiBWaWpheSBBYnJhaGFtIEkpCi0gYWRkIHBhcmVudGhl
-c2VzIGFyb3VuZCB0aGUgbWFjcm8KLSB1c2UgYSBzaW5nbGUgc3BhY2UgYmV0d2VlbiB0eXBlIGFu
-ZCBuYW1lCi0gYWRkIHNwYWNlcyBhZnRlciBvcGVuaW5nIGFuZCBiZWZvcmUgY2xvc2luZyBicmFj
-ZXMuCi0gdXNlIHUxNiBmb3IgcmVnaXN0ZXIgdmFsdWUKLSByZW1vdmUgdHlwZS1jIHBoeSBoZWFk
-ZXIgZmlsZQotIENvZGluZ1N0eWxlIG9wdGltaXphdGlvbgotIHVzZSBzb21lIGNhYmxlIGV4dGNv
-biB0byBnZXQgdHlwZS1jIHBvcnQgaW5mb3JtYXRpb24KLSBhZGQgYSBleHRjb24gdG8gbm90aWZ5
-IERpc3BsYXkgUG9ydAotIGFkZCBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcKLSByZW1v
-dmUgcmVnID0gPDE+OwotIHVzZSBFWFRDT05fRElTUF9EUCBhbmQgRVhUQ09OX0RJU1BfRFBfQUxU
-IGNhYmxlIHRvIGdldCBkcCBwb3J0IHN0YXRlLgotIHJlc2V0IHNwZGlmIGJlZm9yZSBjb25maWcg
-aXQKLSBtb2RpZnkgdGhlIGZpcm13YXJlIGNsayB0byAxMDBNaHoKLSByZXRyeSBsb2FkIGZpcm13
-YXJlIGlmIGZ3IGZpbGUgaXMgcmVxdWVzdGVkIHRvbyBlYXJseQoKQ2hhbmdlcyBpbiB2MjoKLSBh
-ZGQgc29tZSByZWdpc3RlcnMgZGVzY3JpcHRpb24KLSBzZWxlY3QgUkVTRVRfQ09OVFJPTExFUgot
-IGFscGhhYmV0aWMgb3JkZXIKLSBtb2RpZnkgc29tZSBzcGVsbGluZyBtaXN0YWtlcwotIG1ha2Ug
-bW9kZSBjbGVhbmVyCi0gdXNlIGJvb2wgZm9yIGVuYWJsZS9kaXNhYmxlCi0gY2hlY2sgYWxsIG9m
-IHRoZSByZXR1cm4gdmFsdWUKLSByZXR1cm4gYSBiZXR0ZXIgZXJyIG51bWJlcgotIHVzZSBtb3Jl
-IHJlYWR4X3BvbGxfdGltZW91dCgpCi0gY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHRjcGh5LT5jbGtf
-cmVmKTsKLSByZW1vdmUgdW51c2UgZnVuY3Rpb25zLCByb2NrY2hpcF90eXBlY19waHlfcG93ZXJf
-b24vb2ZmCi0gcmVtb3ZlIHVubmVjZXNzYXJ5IHR5cGVjYXN0IGZyb20gdm9pZCAqCi0gdXNlIGR0
-cyBub2RlIHRvIGRpc3Rpbmd1aXNoIGJldHdlZW4gcGh5cy4KLSBBbHBoYWJldGljIG9yZGVyCi0g
-cmVtb3ZlIGV4Y2VzcyBlcnJvciBtZXNzYWdlCi0gdXNlIGRlZmluZSBjbGtfcmF0ZQotIGNoZWNr
-IGFsbCByZXR1cm4gdmFsdWUKLSByZW1vdmUgZGV2X3NldF9uYW1lKGRwLT5kZXYsICJjZG4tZHAi
-KTsKLSB1c2Ugc2NoZWR1bGVfZGVsYXllZF93b3JrCi0gcmVtb3ZlIG5ldmVyLWNhbGxlZCBmdW5j
-dGlvbnMKLSByZW1vdmUgc29tZSB1bm5lY2Vzc2FyeSAoKQoKQ2hhbmdlcyBpbiB2MToKLSBhZGQg
-ZXh0Y29uIG5vZGUgZGVzY3JpcHRpb24KLSBtb3ZlIHRoZSByZWdpc3RlcnMgaW4gcGh5IGRyaXZl
-cgotIHJlbW92ZSB0aGUgc3VmZml4IG9mIHJlc2V0Ci0gdXBkYXRlIHRoZSBsaWNlbmNlIG5vdGUK
-LSBpbml0IGNvcmUgY2xvY2sgdG8gNTBNSHoKLSB1c2UgZXh0Y29uIEFQSQotIHJlbW92ZSB1bnVz
-ZWQgZ2xvYmFsCi0gYWRkIHNvbWUgY29tbWVudHMgZm9yIG1hZ2ljIG51bQotIGNoYW5nZSB1c2xl
-ZXBfcmFuZ2UoMTAwMCwgMjAwMCkgdG91c2xlZXBfcmFuZ2UoMTAwMCwgMTA1MCkKLSByZW1vdmUg
-X19mdW5jX18gZnJvbSBkZXZfZXJyCi0gcmV0dXJuIGVyciBudW1iZXIgd2hlbiBnZXQgY2xrIGZh
-aWxlZAotIHJlbW92ZSBBRERSX0FESiBkZWZpbmUKLSB1c2UgZGV2bV9jbGtfZ2V0KCZwZGV2LT5k
-ZXYsICJ0Y3BkY29yZSIpCi0gYWRkIGV4dGNvbiBub2RlIGRlc2NyaXB0aW9uCi0gYWRkICNzb3Vu
-ZC1kYWktY2VsbHMgZGVzY3JpcHRpb24KLSB1c2UgZXh0Y29uIEFQSQotIHVzZSBoZG1pLWNvZGVj
-IGZvciB0aGUgRFAgQXNvYwotIGRvIG5vdCBpbml0aWFsaXplIHRoZSAicmV0IgotIHByaW50ayBh
-IGVyciBsb2cgd2hlbiBkcm1fb2ZfZW5jb2Rlcl9hY3RpdmVfZW5kcG9pbnRfaWQKLSBtb2RpZnkg
-dGhlIGRjbGsgcGluX3BvbCB0byBhIHNpbmdsZSBsaW5lCgpDaHJpcyBaaG9uZyAoNSk6CiAgZXh0
-Y29uOiBBZGQgVHlwZS1DIGFuZCBEUCBzdXBwb3J0CiAgRG9jdW1lbnRhdGlvbjogYmluZGluZ3M6
-IGFkZCBkdCBkb2MgZm9yIFJvY2tjaGlwIFVTQiBUeXBlLUMgUEhZCiAgcGh5OiBBZGQgVVNCIFR5
-cGUtQyBQSFkgZHJpdmVyIGZvciByazMzOTkKICBEb2N1bWVudGF0aW9uOiBiaW5kaW5nczogYWRk
-IGR0IGRvY3VtZW50YXRpb24gZm9yIGNkbiBEUCBjb250cm9sbGVyCiAgZHJtL3JvY2tjaGlwOiBj
-ZG4tZHA6IGFkZCBjZG4gRFAgc3VwcG9ydCBmb3IgcmszMzk5CgogLi4uL2JpbmRpbmdzL2Rpc3Bs
-YXkvcm9ja2NoaXAvY2RuLWRwLXJvY2tjaGlwLnR4dCAgfCAgNjcgKysKIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtdHlwZWMudHh0IHwgIDc3ICsrCiBkcml2ZXJzL2V4
-dGNvbi9leHRjb24uYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNSArCiBkcml2ZXJz
-L2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgOSArCiBkcml2
-ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgMSArCiBk
-cml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuYyAgICAgICAgICAgICB8IDc2MSAr
-KysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuaCAg
-ICAgICAgICAgICB8IDExMyArKysKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtcmVn
-LmMgICAgICAgICAgICAgIHwgNzMxICsrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9y
-b2NrY2hpcC9jZG4tZHAtcmVnLmggICAgICAgICAgICAgIHwgNDA0ICsrKysrKysrKwogZHJpdmVy
-cy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3AuYyAgICAgICAgfCAgIDYgKy0KIGRy
-aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wLmggICAgICAgIHwgICAyICsK
-IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMgICAgICAgIHwgICAy
-ICsKIGRyaXZlcnMvcGh5L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-ICA5ICsKIGRyaXZlcnMvcGh5L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgICAxICsKIGRyaXZlcnMvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy5jICAgICAgICAgICAgICAg
-ICAgIHwgOTYzICsrKysrKysrKysrKysrKysrKysrKwogaW5jbHVkZS9saW51eC9leHRjb24uaCAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKwogMTYgZmlsZXMgY2hhbmdlZCwgMzE1
-NSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvY2RuLWRwLXJvY2tj
-aGlwLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9waHkvcGh5LXJvY2tjaGlwLXR5cGVjLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtY29yZS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1jb3JlLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLXJlZy5jCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcuaAogY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy5jCgotLSAKMi42LjMKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This patch adds a binding that describes the Rockchip USB Type-C PHY
+for rk3399
+
+Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Reviewed-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+---
+
+Changes in v4:
+- add a #phy-cells node
+
+Changes in v3:
+- use compatible: rockchip,rk3399-typec-phy
+- use dashes instead of underscores.
+
+Changes in v2:
+- add some registers description
+
+Changes in v1:
+- add extcon node description
+- move the registers in phy driver
+- remove the suffix of reset
+
+ .../devicetree/bindings/phy/phy-rockchip-typec.txt | 77 ++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+new file mode 100644
+index 0000000..b1c6ef3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+@@ -0,0 +1,77 @@
++* ROCKCHIP type-c PHY
++---------------------
++
++Required properties:
++ - compatible : must be "rockchip,rk3399-typec-phy"
++ - reg: Address and length of the usb phy control register set
++ - rockchip,grf : phandle to the syscon managing the "general
++   register files"
++ - clocks : phandle + clock specifier for the phy clocks
++ - clock-names : string, clock name, must be "tcpdcore", "tcpdphy-ref";
++ - resets : a list of phandle + reset specifier pairs
++ - reset-names : string reset name, must be:
++		 "uphy", "uphy-pipe", "uphy-tcphy"
++ - extcon : extcon specifier for the Power Delivery
++ - #phy-cells: must be 0. See ./phy-bindings.txt for details.
++
++Note, there are 2 type-c phys for RK3399, and they are almost identical, except
++these registers(description below), every register node contains 3 sections:
++offset, enable bit, write mask bit.
++ - rockchip,typec-conn-dir : the register of type-c connector direction,
++   for type-c phy0, it must be <0xe580 0 16>;
++   for type-c phy1, it must be <0xe58c 0 16>;
++ - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
++   control.
++   for type-c phy0, it must be <0xe580 3 19>;
++   for type-c phy1, it must be <0xe58c 3 19>;
++ - rockchip,external-psm : the register of type-c phy external psm clock
++   selection.
++   for type-c phy0, it must be <0xe588 14 30>;
++   for type-c phy1, it must be <0xe594 14 30>;
++ - rockchip,pipe-status : the register of type-c phy pipe status.
++   for type-c phy0, it must be <0xe5c0 0 0>;
++   for type-c phy1, it must be <0xe5c0 16 16>;
++ - rockchip,uphy-dp-sel : the register of type-c phy selection for DP
++   for type-c phy0, it must be <0x6268 19 19>;
++   for type-c phy1, it must be <0x6268 3 19>;
++
++Example:
++	tcphy0: phy@ff7c0000 {
++		compatible = "rockchip,rk3399-typec-phy";
++		reg = <0x0 0xff7c0000 0x0 0x40000>;
++		rockchip,grf = <&grf>;
++		#phy-cells = <0>;
++		extcon = <&fusb0>;
++		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
++			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
++		clock-names = "tcpdcore", "tcpdphy-ref";
++		resets = <&cru SRST_UPHY0>,
++			 <&cru SRST_UPHY0_PIPE_L00>,
++			 <&cru SRST_P_UPHY0_TCPHY>;
++		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
++		rockchip,typec-conn-dir = <0xe580 0 16>;
++		rockchip,usb3tousb2-en = <0xe580 3 19>;
++		rockchip,external-psm = <0xe588 14 30>;
++		rockchip,pipe-status = <0xe5c0 0 0>;
++		rockchip,uphy-dp-sel = <0x6268 19 19>;
++	};
++
++	tcphy1: phy@ff800000 {
++		compatible = "rockchip,rk3399-typec-phy";
++		reg = <0x0 0xff800000 0x0 0x40000>;
++		rockchip,grf = <&grf>;
++		#phy-cells = <0>;
++		extcon = <&fusb1>;
++		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
++			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
++		clock-names = "tcpdcore", "tcpdphy-ref";
++		resets = <&cru SRST_UPHY1>,
++		         <&cru SRST_UPHY1_PIPE_L00>,
++			 <&cru SRST_P_UPHY1_TCPHY>;
++		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
++		rockchip,typec-conn-dir = <0xe58c 0 16>;
++		rockchip,usb3tousb2-en = <0xe58c 3 19>;
++		rockchip,external-psm = <0xe594 14 30>;
++		rockchip,pipe-status = <0xe5c0 16 16>;
++		rockchip,uphy-dp-sel = <0x6268 3 19>;
++	};
+-- 
+2.6.3
