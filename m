@@ -1,161 +1,79 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH v3 01/10] mfd: tps65218: Remove redundant read wrapper
-Date: Tue, 28 Jun 2016 12:31:56 +0530
-Message-ID: <577220E4.9060708@ti.com>
-References: <1467093980-11458-1-git-send-email-j-keerthy@ti.com>
- <1467093980-11458-2-git-send-email-j-keerthy@ti.com>
- <20160628070055.GF6720@dell>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: AMLogic RTC series (second round)
+Date: Tue, 28 Jun 2016 09:22:11 +0200
+Message-ID: <577225A3.9010409@baylibre.com>
+References: <1467045849-495-1-git-send-email-ben.dooks@codethink.co.uk>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160628070055.GF6720@dell>
-Sender: linux-input-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Keerthy <j-keerthy@ti.com>
-Cc: dmitry.torokhov@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDAYD2P3QYGRBJ6LZC5QKGQEP4W6OUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/27/2016 06:44 PM, Ben Dooks wrote:
+> Apologies, forgot to put the RTC driver through checkpatch
+> before sending. This gets rid of most of the warnings.
+> 
+> 
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> 
 
+Hi Ben,
 
-On Tuesday 28 June 2016 12:30 PM, Lee Jones wrote:
-> On Tue, 28 Jun 2016, Keerthy wrote:
->
->> Currently read directly calls the repmap read function. Hence
->> remove the redundant wrapper and use regmap read wherever
->> needed.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>
->> Changes in v3:
->>
->>    * Cleaned up tps65218-pwrbutton and gpio drivers to remove
->>      tps65218_reg_read instances.
->>
->>   drivers/gpio/gpio-tps65218.c            |  3 ++-
->>   drivers/input/misc/tps65218-pwrbutton.c |  3 ++-
->>   drivers/mfd/tps65218.c                  | 16 +---------------
->>   drivers/regulator/tps65218-regulator.c  |  3 ++-
->>   include/linux/mfd/tps65218.h            |  2 --
->>   5 files changed, 7 insertions(+), 20 deletions(-)
->
-> I like the idea.  So, as long as the patch is properly build tested:
->
-> For the MFD part:
->    Acked-by: Lee Jones <lee.jones@linaro.org>
+The patchset looks good but misses some quick introduction on how
+the RTC works, it seems to be connected to an internal serial bus,
+do you have some informations about this ?
 
-I will do the testing again. Post a v4. With all the suggested changes. 
-Thanks for the review.
+Then, the cover letter of your patchset should contain much more informations
+that "git format-patch --cover-letter" generates.
 
->
->> diff --git a/drivers/gpio/gpio-tps65218.c b/drivers/gpio/gpio-tps65218.c
->> index 0eaeac8..0f9d9bd 100644
->> --- a/drivers/gpio/gpio-tps65218.c
->> +++ b/drivers/gpio/gpio-tps65218.c
->> @@ -16,6 +16,7 @@
->>   #include <linux/errno.h>
->>   #include <linux/gpio/driver.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->>   #include <linux/mfd/tps65218.h>
->>
->>   struct tps65218_gpio {
->> @@ -30,7 +31,7 @@ static int tps65218_gpio_get(struct gpio_chip *gc, unsigned offset)
->>   	unsigned int val;
->>   	int ret;
->>
->> -	ret = tps65218_reg_read(tps65218, TPS65218_REG_ENABLE2, &val);
->> +	ret = regmap_read(tps65218->regmap, TPS65218_REG_ENABLE2, &val);
->>   	if (ret)
->>   		return ret;
->>
->> diff --git a/drivers/input/misc/tps65218-pwrbutton.c b/drivers/input/misc/tps65218-pwrbutton.c
->> index a39b626..2bba8de 100644
->> --- a/drivers/input/misc/tps65218-pwrbutton.c
->> +++ b/drivers/input/misc/tps65218-pwrbutton.c
->> @@ -22,6 +22,7 @@
->>   #include <linux/module.h>
->>   #include <linux/of.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->>   #include <linux/slab.h>
->>
->>   struct tps65218_pwrbutton {
->> @@ -36,7 +37,7 @@ static irqreturn_t tps65218_pwr_irq(int irq, void *_pwr)
->>   	unsigned int reg;
->>   	int error;
->>
->> -	error = tps65218_reg_read(pwr->tps, TPS65218_REG_STATUS, &reg);
->> +	error = regmap_read(pwr->tps->regmap, TPS65218_REG_STATUS, &reg);
->>   	if (error) {
->>   		dev_err(pwr->dev, "can't read register: %d\n", error);
->>   		goto out;
->> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
->> index 80b9dc3..f20a531 100644
->> --- a/drivers/mfd/tps65218.c
->> +++ b/drivers/mfd/tps65218.c
->> @@ -34,20 +34,6 @@
->>   #define TPS65218_PASSWORD_REGS_UNLOCK   0x7D
->>
->>   /**
->> - * tps65218_reg_read: Read a single tps65218 register.
->> - *
->> - * @tps: Device to read from.
->> - * @reg: Register to read.
->> - * @val: Contians the value
->> - */
->> -int tps65218_reg_read(struct tps65218 *tps, unsigned int reg,
->> -			unsigned int *val)
->> -{
->> -	return regmap_read(tps->regmap, reg, val);
->> -}
->> -EXPORT_SYMBOL_GPL(tps65218_reg_read);
->> -
->> -/**
->>    * tps65218_reg_write: Write a single tps65218 register.
->>    *
->>    * @tps65218: Device to write to.
->> @@ -93,7 +79,7 @@ static int tps65218_update_bits(struct tps65218 *tps, unsigned int reg,
->>   	int ret;
->>   	unsigned int data;
->>
->> -	ret = tps65218_reg_read(tps, reg, &data);
->> +	ret = regmap_read(tps->regmap, reg, &data);
->>   	if (ret) {
->>   		dev_err(tps->dev, "Read from reg 0x%x failed\n", reg);
->>   		return ret;
->> diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
->> index a5e5634..679ab2f 100644
->> --- a/drivers/regulator/tps65218-regulator.c
->> +++ b/drivers/regulator/tps65218-regulator.c
->> @@ -22,6 +22,7 @@
->>   #include <linux/err.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/of_device.h>
->> +#include <linux/regmap.h>
->>   #include <linux/regulator/of_regulator.h>
->>   #include <linux/regulator/driver.h>
->>   #include <linux/regulator/machine.h>
->> @@ -224,7 +225,7 @@ static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
->>   	unsigned int index;
->>   	struct tps65218 *tps = rdev_get_drvdata(dev);
->>
->> -	retval = tps65218_reg_read(tps, dev->desc->csel_reg, &index);
->> +	retval = regmap_read(tps->regmap, dev->desc->csel_reg, &index);
->>   	if (retval < 0)
->>   		return retval;
->>
->> diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
->> index d58f3b5..7c9241f 100644
->> --- a/include/linux/mfd/tps65218.h
->> +++ b/include/linux/mfd/tps65218.h
->> @@ -276,8 +276,6 @@ struct tps65218 {
->>   	struct regmap *regmap;
->>   };
->>
->> -int tps65218_reg_read(struct tps65218 *tps, unsigned int reg,
->> -					unsigned int *val);
->>   int tps65218_reg_write(struct tps65218 *tps, unsigned int reg,
->>   			unsigned int val, unsigned int level);
->>   int tps65218_set_bits(struct tps65218 *tps, unsigned int reg,
->
+My personal workflow when I have a set ready is :
+
+* run checkpatch on C files and check my changes
+# scripts/checkpatch.pl -f path/to/my/driver.c
+* I identify the number of patches to include
+* I generate the patches with cover-letter, signoff and eventually subject-prefix, here for 4 commits
+# git format-patch --cover-letter -s -4 --subject-prefix "PATCH v2" -o my_drivers_patches_v2
+* Then I complete the cover letter in my_drivers_patches_v2/0000-cover-letter
+* I also reference a small changelog between patchset version and identify the previous cover letter via it's message id
+Use the http://lkml.kernel.org service to reference a message-id, i.e this email I answer would be referenced by :
+http://lkml.kernel.org/r/1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org
+while looking at the email headers at :
+Message-Id: <1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+* Then I look again all the patches and check all the descriptions
+* I re-run a checkpatch.pl on all the patches (and ignore errors on the cover letter)
+# scripts/checkpatch.pl my_drivers_patches_v2/*
+* I identify all the maintainers and mailing lists
+# scripts/get_maintainer.pl my_drivers_patches_v2/*
+* Personally, I fill the CC: and To: in the headers of each patches, only adding the devicetree mailing list on DT related patches
+* Then I send them via git send-email
+# git send-email my_drivers_patches_v2/*
+=> here you can also select the recipients
+=> you can also do a dry run or send yourself the patchset to check before final sending
+
+Another rule is time, please wait at least 1 week after the last review before send another run,
+and give yourself more time to check the integrity of the patchset.
+
+Neil
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
