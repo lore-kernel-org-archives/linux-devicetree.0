@@ -1,83 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] ARM: dts: nuc900: Add nuc970 dts files
-Date: Tue, 28 Jun 2016 15:56:33 -0500
-Message-ID: <20160628205633.GN3737@rob-hp-laptop>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
- <1466851042-22239-3-git-send-email-vw@iommu.org>
+Subject: Re: [PATCH] usb: misc: Add driver for usb4604
+Date: Tue, 28 Jun 2016 15:56:37 -0500
+Message-ID: <20160628205637.GO3737@rob-hp-laptop>
+References: <20160626052454.7743-1-stephen.boyd@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466851042-22239-3-git-send-email-vw@iommu.org>
+In-Reply-To: <20160626052454.7743-1-stephen.boyd@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wan Zongshun <vw@iommu.org>
-Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Wan Zongshun <mcuos.com@gmail.com>
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 25, 2016 at 06:37:18PM +0800, Wan Zongshun wrote:
-> This patch is to add dts support for nuc970 platform.
+On Sat, Jun 25, 2016 at 10:24:54PM -0700, Stephen Boyd wrote:
+> This is a minimal driver to support bringing a usb4604 device
+> from microchip out of reset and into hub mode. The usb4604 device
+> is related to the usb3503 device, but it didn't seem close enough
+> to warrant putting both into the same file. This patch borrows
+> some of the usb3503 structure and trims it down to just handle
+> the optional reset gpio and adds the i2c command to put the
+> device into hub mode.
 > 
-> Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
+> Datasheet: http://ww1.microchip.com/downloads/en/DeviceDoc/00001716A.pdf
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
 > ---
->  .../devicetree/bindings/arm/nuvoton/nuc970.txt     |  30 +++
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/nuc970-evb.dts                   |  20 ++
->  arch/arm/boot/dts/nuc970.dtsi                      |  93 ++++++++
->  include/dt-bindings/clock/nuc970-clock.h           | 233 +++++++++++++++++++++
->  5 files changed, 377 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
->  create mode 100644 arch/arm/boot/dts/nuc970-evb.dts
->  create mode 100644 arch/arm/boot/dts/nuc970.dtsi
->  create mode 100644 include/dt-bindings/clock/nuc970-clock.h
+>  Documentation/devicetree/bindings/usb/usb4604.txt |  19 +++
+>  drivers/usb/misc/Kconfig                          |   6 +
+>  drivers/usb/misc/Makefile                         |   1 +
+>  drivers/usb/misc/usb4604.c                        | 175 ++++++++++++++++++++++
+>  4 files changed, 201 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb4604.txt
+>  create mode 100644 drivers/usb/misc/usb4604.c
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt b/Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
+> diff --git a/Documentation/devicetree/bindings/usb/usb4604.txt b/Documentation/devicetree/bindings/usb/usb4604.txt
 > new file mode 100644
-> index 0000000..df8637a
+> index 000000000000..82506d17712c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
-> @@ -0,0 +1,30 @@
-> +Nuvoton NUC970 SoC platform Device Tree Bindings
-> +------------------------------------------
+> +++ b/Documentation/devicetree/bindings/usb/usb4604.txt
+> @@ -0,0 +1,19 @@
+> +SMSC USB4604 High-Speed Hub Controller
 > +
-> +Boards with the NUC970 SoC shall have the following properties:
+> +Required properties:
+> +- compatible: Should be "smsc,usb4604"
 > +
-> +Root node required properties:
-> +- compatible: Should be "nuvoton,nuc970evb", "nuvoton,nuc970"
+> +Optional properties:
+> +- reg: Specifies the i2c slave address, it is required and should be 0x2d
+> +       if I2C is used.
+> +- reset-gpios: Should specify GPIO for reset.
+> +- initial-mode: Should specify initial mode.
+> +                (1 for HUB mode, 2 for STANDBY mode)
+
+I was going to ask what would be the purpose of standby mode, and 
+say it needs a vendor prefix, but I see you are re-using this from the 
+3503.
+
 > +
-> +Timer required properties:
+> +Examples:
+> +	usb-hub@2d {
 
-This should go in bindings/timer/
+I'm not sure what we'll do when/if we need this as a USB bus child node.
 
-> +- compatible: Should be "nuvoton,tmr"
+Acked-by: Rob Herring <robh@kernel.org>
 
-Needs an SoC specific compatible string
-
-> +- reg: Should contain registers location and length
-> +- interrupts: hwirq is direct mapping to irq number
-> +- clocks: phandle to input clock.
-> +
-> +Clock required properties:
-
-This should go in bindings/clock/
-
-> +- compatible: Should be "nuvoton,clk"
-
-SoC specific...
-
-> +- reg: Should contain registers location and length
-> +
-> +Interrupt-controller required properties
-
-And so on...
-
-> +- compatible: Should be "nuvoton,aic"
-> +- reg: Should contain registers location and length
-> +- interrupt-cells: set to 1
-> +
-> +GCR register required properties:
-> +- compatible: Should be "nuvoton,gcr"
-> +- reg: Should contain registers location and length
-> +
-> +Uart required properties:
-> +- compatible: Should be "nuvoton,nuc970-uart"
-> +- reg: Should contain registers location and length
+> +		compatible = "smsc,usb4604";
+> +		reg = <0x2d>;
+> +		reset-gpios = <&gpx3 5 1>;
+> +		initial-mode = <1>;
+> +	};
