@@ -1,61 +1,95 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V3 2/4] clk: Combine DT binding doc for max77686 and max77802
-Date: Tue, 28 Jun 2016 16:58:36 +0530
-Message-ID: <57725F64.4030903@nvidia.com>
-References: <1466160667-28451-1-git-send-email-ldewangan@nvidia.com> <1466160667-28451-3-git-send-email-ldewangan@nvidia.com> <20160620163947.GA27492@rob-hp-laptop> <5768E2AD.8070004@nvidia.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [RFC PATCH 3/5] thermal: Add support for the thermal sensor on
+ A23/33
+Date: Tue, 28 Jun 2016 13:46:40 +0200
+Message-ID: <20160628114640.GE5550@lukather>
+References: <20160628101325.2522-1-icenowy@aosc.xyz>
+ <20160628101325.2522-3-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5768E2AD.8070004@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Content-Type: multipart/mixed; boundary="===============0738689973533869486=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160628101325.2522-3-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, emilio@elopez.com.ar, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, edubezval@gmail.com, wens@csie.org, robh+dt@kernel.org, rui.zhang@intel.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Tuesday 21 June 2016 12:16 PM, Laxman Dewangan wrote:
->
-> On Monday 20 June 2016 10:09 PM, Rob Herring wrote:
->> On Fri, Jun 17, 2016 at 04:21:05PM +0530, Laxman Dewangan wrote:
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/clock/maxim,max77686.txt 
->>> b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
->>> index 9c40739..4d973b5 100644
->>> --- a/Documentation/devicetree/bindings/clock/maxim,max77686.txt
->>> +++ b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
->>> @@ -1,11 +1,15 @@
->>> -Binding for Maxim MAX77686 32k clock generator block
->>> +Binding for Maxim MAX77686/MAX77802 32k clock generator block
->>>   -This is a part of device tree bindings of MAX77686 multi-function 
->>> device.
->>> -More information can be found in bindings/mfd/max77686.txt file.
->>> +This is a part of device tree bindings of MAX77686/MAX77802 
->>> multi-function
->>> +device. More information can be found in bindings/mfd/max77686.txt 
->>> file for
->>> +MAX77686 and bindings/mfd/max77802.txt for MAX77802.
->>>     The MAX77686 contains three 32.768khz clock outputs that can be 
->>> controlled
->>>   (gated/ungated) over I2C.
->>>   +The MAX77802 contains two 32.768khz clock outputs that can be 
->>> controlled
->>> +(gated/ungated) over I2C.
->>> +
->>>   Following properties should be presend in main device node of the 
->>> MFD chip.
->>>     Required properties:
->> I'd expect to see compatible strings updated...
->>
->
-> There is no separate compatible string for clock. The clock nodes is 
-> the parent node only and the compatible described in the parent DT 
-> binding doc.
->
->
-> Do we also need to add same thing here?
+--===============0738689973533869486==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2qXFWqzzG3v1+95a"
+Content-Disposition: inline
 
-Are you fine with the above? As there is no compatible string for clock 
-(clock does not have separate node), do I still need to add explicitly here?
+
+--2qXFWqzzG3v1+95a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+Thanks for working on this.
+
+On Tue, Jun 28, 2016 at 06:13:23PM +0800, Icenowy Zheng wrote:
+> This patch adds support for the sun8iw3 thermal sensor on
+> Allwinner A23/33 SoCs.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+
+The IP is awfully similar to the A31's, which already has a driver
+(drivers/input/touchscreen/sun4i-ts.c).
+
+There's no reason to add a new one here.
+
+Thanks,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--2qXFWqzzG3v1+95a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXcmOgAAoJEBx+YmzsjxAgCloP/RDSvYyA518FR5v7//CArHXA
+lnT7ifb8uLBI1mCT+zGOOcjf21yY4R7Jms+OEhqMAMfhk/LLuFcK6naK6pCRBbdc
+7c9uIjcYlDyQCuUWEae5pUJLpHV1oLydZ6oLKh+nQ6YRBgV5r//7z7utP4Efap11
+TzHwe6P9OLYkqLcRt5m8ofHF+jeSMXmaCPiEgPeVJvaBuSi4bIc1rBXPQypri8Y0
+tcbvktoVsbjJ9WVLhnk+KZQuR9O28bc0Mb6iscUEX1CV89T1O+zOCj+WE5xkc/cD
+xjXL9L+wUdRx6KuH1x4F9kMi0fbmAg78vdXfRbf0SDfTCxPCt6xDZOhhOnO23MwQ
+nr4Te9lMZUAjAHo+r4qxeLWCg5RORE10BfpGLgOMRRaESKqBZIgN36XoSK3aF/2D
+nVpxgOBISlH0eFkAsQSMlIucFKWMj2vm0YpRL1FW51o7/fc0dzWGMSxN17xSmyhV
+8I46kFehqH4rcYAJBnmt7ByhXC7JQOKzv5lnEgK1lpc9DLqVJdZyimOQNUkSdF6b
+uYOnL6wPvCX1RkuIPq2j9R6wV/00jQrGT5m2kFnuyGhogX/0fV3/imdHISKDXCjU
+g3osaLOxk4KMpzDEViU//5ykTi8M7943zNIXboVJxUAM5l4J72LZH1ERz8NnyP1F
+MJl9wkGzjOx/h92stazQ
+=wERd
+-----END PGP SIGNATURE-----
+
+--2qXFWqzzG3v1+95a--
+
+
+--===============0738689973533869486==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0738689973533869486==--
