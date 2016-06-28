@@ -1,55 +1,60 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [RFC PATCH 3/5] thermal: Add support for the thermal sensor on
- A23/33
-Date: Tue, 28 Jun 2016 13:46:40 +0200
-Message-ID: <20160628114640.GE5550@lukather>
-References: <20160628101325.2522-1-icenowy@aosc.xyz>
- <20160628101325.2522-3-icenowy@aosc.xyz>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 01/14] ARM: clk: sunxi: Add driver for
+ the H3 THS clock
+Date: Tue, 28 Jun 2016 13:52:16 +0200
+Message-ID: <20160628115216.GF5550@lukather>
+References: <20160625034511.7966-1-megous@megous.com>
+ <20160625034511.7966-2-megous@megous.com>
+ <20160625071338.GC4000@lukather>
+ <6a37450f-35fe-3296-da4b-10f7d645e2b9@megous.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0738689973533869486=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160628101325.2522-3-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, emilio@elopez.com.ar, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, edubezval@gmail.com, wens@csie.org, robh+dt@kernel.org, rui.zhang@intel.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5CUMAwwhRxlRszMD"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB66JZG5QKGQEQKDM52A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <6a37450f-35fe-3296-da4b-10f7d645e2b9-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============0738689973533869486==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2qXFWqzzG3v1+95a"
-Content-Disposition: inline
-
-
---2qXFWqzzG3v1+95a
-Content-Type: text/plain; charset=us-ascii
+--5CUMAwwhRxlRszMD
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Thanks for working on this.
-
-On Tue, Jun 28, 2016 at 06:13:23PM +0800, Icenowy Zheng wrote:
-> This patch adds support for the sun8iw3 thermal sensor on
-> Allwinner A23/33 SoCs.
+On Sat, Jun 25, 2016 at 05:23:12PM +0200, Ond=C5=99ej Jirman wrote:
+> Hi Maxime,
 >=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> I try to base everything on the torvalds's kernel.
+>=20
+> I did notice the patches. Is there some main git tree/branch where this
+> work is tracked in? I'd gladly use it.
 
-The IP is awfully similar to the A31's, which already has a driver
-(drivers/input/touchscreen/sun4i-ts.c).
+I just pushed it, branch sunxi/pen/clk-rework, on my github repo:
+https://github.com/mripard/linux
 
-There's no reason to add a new one here.
+> Also there's a PLL1 rate application patch, that would need to be ported
+> to the new CCU code, in the case I would use it as a base for this work.
+> Given that the new CCU code is your work and it's fresh in your mind, do
+> you have suggestion how to approach it?
+>=20
+> It is [PATCH v2 06/14] in this series.
 
-Thanks,
+Yes, it's still in my queue of things to review, let's discuss this on
+this patch thread.
+
+Thanks!
 Maxime
 
 --=20
@@ -57,39 +62,32 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---2qXFWqzzG3v1+95a
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--5CUMAwwhRxlRszMD
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXcmOgAAoJEBx+YmzsjxAgCloP/RDSvYyA518FR5v7//CArHXA
-lnT7ifb8uLBI1mCT+zGOOcjf21yY4R7Jms+OEhqMAMfhk/LLuFcK6naK6pCRBbdc
-7c9uIjcYlDyQCuUWEae5pUJLpHV1oLydZ6oLKh+nQ6YRBgV5r//7z7utP4Efap11
-TzHwe6P9OLYkqLcRt5m8ofHF+jeSMXmaCPiEgPeVJvaBuSi4bIc1rBXPQypri8Y0
-tcbvktoVsbjJ9WVLhnk+KZQuR9O28bc0Mb6iscUEX1CV89T1O+zOCj+WE5xkc/cD
-xjXL9L+wUdRx6KuH1x4F9kMi0fbmAg78vdXfRbf0SDfTCxPCt6xDZOhhOnO23MwQ
-nr4Te9lMZUAjAHo+r4qxeLWCg5RORE10BfpGLgOMRRaESKqBZIgN36XoSK3aF/2D
-nVpxgOBISlH0eFkAsQSMlIucFKWMj2vm0YpRL1FW51o7/fc0dzWGMSxN17xSmyhV
-8I46kFehqH4rcYAJBnmt7ByhXC7JQOKzv5lnEgK1lpc9DLqVJdZyimOQNUkSdF6b
-uYOnL6wPvCX1RkuIPq2j9R6wV/00jQrGT5m2kFnuyGhogX/0fV3/imdHISKDXCjU
-g3osaLOxk4KMpzDEViU//5ykTi8M7943zNIXboVJxUAM5l4J72LZH1ERz8NnyP1F
-MJl9wkGzjOx/h92stazQ
-=wERd
+iQIcBAEBAgAGBQJXcmTwAAoJEBx+YmzsjxAguPYQAKtoPbrkHdAmkUsLsRQqJg0H
++hB7Ga0FWtCus+vgiRTVRAO9dboXz/MiCHr2kC3pLSuK2/T4jk9tufPrDy4ynUc+
+AFllBgCxfenK5oE18yhY0ZLBOeJRzhBT9GuuYIGMF1x8ps3Kx3HqAqn+OVWnZjVM
+pgV9Fm/jSt+VWQ+SfSqbDj4p8jtLwIDfcGgRGBQ5z3momDCNKsXyC5CJGOwznV/s
++OPsmaFwxtdDIq9RqSjzBjunFxP03Y0E7veCB9iUaSYbKEBhG4+ZEbDkapDslA0r
+cg93cfAgRdQaPyxjzH4PccHLqASIdpBBmdS45JTN9ciB1+lG2i0f6u5kCYel+FZI
+31RY/07kFZab7E32kFDc7fOTz+S59e4RjQk0Mmp5wMyh1n0Y/ccyRyywGvHoRDQx
+r8mGuPX2IsJSLww95u/zC64aukB4TsTz2+WjPKWE2w1B8HK1KnYq32s2eXAwqYaa
+6OZkPmaPjZb3SlTUWAubJN0a4zUOP46HoTtpKtX59Cy4Flp26TZck/IDRiz5s5J5
+cgIs5iyKIEMGOqOEZmWnLxtKJIfbr7hB+IR7XVJr0mmHpUSO52RcpY39Q508HtYj
+Er53IW1r5v43hyGTa4NTglvR7xblio+CsgAa/BVbQgaOaM3Gau1+9SMkPuP4smkn
+BqmHUfDcB96uyLRj9JUU
+=95dk
 -----END PGP SIGNATURE-----
 
---2qXFWqzzG3v1+95a--
-
-
---===============0738689973533869486==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0738689973533869486==--
+--5CUMAwwhRxlRszMD--
