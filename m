@@ -1,73 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
-Date: Tue, 28 Jun 2016 15:56:42 -0500
-Message-ID: <20160628205642.GP3737@rob-hp-laptop>
-References: <20160626072838.28082-1-stephen.boyd@linaro.org>
- <20160626072838.28082-3-stephen.boyd@linaro.org>
+Subject: Re: [PATCH 1/3] Documentation: dt: i2c: use correct
+ STMicroelectronics vendor prefix
+Date: Tue, 28 Jun 2016 15:56:47 -0500
+Message-ID: <20160628205647.GQ3737@rob-hp-laptop>
+References: <20160626093406.26785-1-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160626072838.28082-3-stephen.boyd@linaro.org>
+In-Reply-To: <20160626093406.26785-1-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: wsa@the-dreams.de, mark.rutland@arm.com, arnd@arndb.de, shawnguo@kernel.org, mpe@ellerman.id.au, paulus@samba.org, benh@kernel.crashing.org, scottwood@freescale.com, dinguyen@opensource.altera.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 26, 2016 at 12:28:19AM -0700, Stephen Boyd wrote:
-> The qcom HSIC ulpi phy doesn't have any bits set in the vendor or
-> product id ulpi registers. This makes it impossible to make a
-> ulpi driver match against the id registers. Add support to
-> discover the ulpi phys via DT to help alleviate this problem.
-> We'll look for a ulpi bus node underneath the device registering
-> the ulpi viewport (or the parent of that device to support
-> chipidea's device layout) and then match up the phy node
-> underneath that with the ulpi device that's created.
+On Sun, Jun 26, 2016 at 02:34:04AM -0700, Stefan Agner wrote:
+> The documentation currently uses the non-standard vendor prefix stm
+> and st-micro for STMicroelectronics. The drivers do not specify the
+> vendor prefixes since the I2C Core strips them away from the DT
+> provided compatible string. Therefor, changing documentation and
+> existing device trees does not have any impact on device detection.
+
+For Linux at least...
+
 > 
-> The side benefit of this is that we can use standard DT
-> properties in the phy node like clks, regulators, gpios, etc.
-> because we don't have firmware like ACPI to turn these things on
-> for us. And we can use the DT phy binding to point our phy
-> consumer to the phy provider.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: <devicetree@vger.kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 > ---
->  Documentation/devicetree/bindings/usb/ulpi.txt | 20 +++++++++
->  drivers/usb/common/ulpi.c                      | 56 +++++++++++++++++++++++++-
->  2 files changed, 74 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
+> Hi,
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/ulpi.txt b/Documentation/devicetree/bindings/usb/ulpi.txt
-> new file mode 100644
-> index 000000000000..ca179dc4bd50
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ulpi.txt
-> @@ -0,0 +1,20 @@
-> +ULPI bus binding
-> +----------------
-> +
-> +Phys that are behind a ULPI connection can be described with the following
-> +binding. The host controller shall have a "ulpi" named node as a child, and
-> +that node shall have one enabled node underneath it representing the ulpi
-> +device on the bus.
+> Mark mentioned that issue already once in the past, see:
+> http://lkml.iu.edu/hypermail/linux/kernel/1309.0/01686.html
+> 
+> Not sure through which trees this patches should flow, I guess
+> the first through Wolfram's tree, the ARM changes through Arnd
+> or Shawns tree (mostly Freescale boards are affected), not sure
+> about the PowerPC changes...
 
-This needs to co-exist with the USB bus binding which has the controller 
-ports for the child nodes. Maybe use the phy binding?
+I can take the series. dts files shouldn't be changing causing 
+conflicts.
 
-> +
-> +EXAMPLE
-> +-------
-> +
-> +usb {
-> +	compatible = "vendor,usb-controller";
-> +
-> +	ulpi {
-> +		phy {
-> +			compatible = "vendor,phy";
-> +		};
-> +	};
-> +};
+Rob
