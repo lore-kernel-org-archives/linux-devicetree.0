@@ -1,112 +1,65 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [v4 PATCH 4/5] Documentation: bindings: add dt documentation for cdn DP controller
-Date: Tue, 28 Jun 2016 20:24:40 +0800
-Message-ID: <1467116681-9330-5-git-send-email-zyw@rock-chips.com>
-References: <1467116681-9330-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467116681-9330-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, wulf@rock-chips.com
-Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Mark Yao <mark.yao@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH v4 0/6] mfd: tps65218: Clean ups
+Date: Tue, 28 Jun 2016 17:57:07 +0530
+Message-ID: <57726D1B.4050008@ti.com>
+References: <1467105729-28249-1-git-send-email-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1467105729-28249-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>, dmitry.torokhov@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a binding that describes the cdn DP controller for
-rk3399.
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
 
----
+On Tuesday 28 June 2016 02:52 PM, Keerthy wrote:
+> The series cleans up mainly the regulator driver and implements
+> the device tree parsing using the regulator framework. Removes
+> all the redundant compatibles for the individual regulators.
+> Adds platform_device_id table for the gpio and power button modules.
+>
+> One of the patch removes redundant read wrapper and makes
+> use of regmap_read wherever necessary.
+>
+> The series is checked for all the regulator registrations on
+> am437x-gp-evm and am437x-sk-evm.
+>
+> Boot log on am437x-sk-evm: http://pastebin.ubuntu.com/18016754/
 
-Changes in v4:
-- add a reset node
-- support 2 phys
+Seems like with https://lkml.org/lkml/2016/6/24/122 pulled in. Only
+mfd and regulator patches need a bit of re-basing. I am sending a v6
+of the series with all the driver patches.
 
-Changes in v3:
-- add SoC specific compatible string
-- remove reg = <1>;
-
-Changes in v2: None
-Changes in v1:
-- add extcon node description
-- add #sound-dai-cells description
-
- .../bindings/display/rockchip/cdn-dp-rockchip.txt  | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
-new file mode 100644
-index 0000000..bf0b2ce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
-@@ -0,0 +1,67 @@
-+Rockchip RK3399 specific extensions to the cdn Display Port
-+================================
-+
-+Required properties:
-+- compatible: must be "rockchip,rk3399-cdn-dp"
-+
-+- reg: physical base address of the controller and length
-+
-+- clocks: from common clock binding: handle to dp clock.
-+
-+- clock-names: from common clock binding:
-+	       Required elements: "core-clk" "pclk" "spdif"
-+
-+- resets : a list of phandle + reset specifier pairs
-+- reset-names : string reset name, must be:
-+		"spdif"
-+
-+- rockchip,grf: this soc should set GRF regs, so need get grf here.
-+
-+- ports: contain a port nodes with endpoint definitions as defined in
-+	 Documentation/devicetree/bindings/media/video-interfaces.txt.
-+	 contained 2 endpoints, connecting to the output of vop.
-+
-+- phys: from general PHY binding: the phandle for the PHY device.
-+
-+- extcon: extcon specifier for the Power Delivery
-+
-+- #sound-dai-cells = it must be 1 if your system is using 2 DAIs: I2S, SPDIF
-+
-+-------------------------------------------------------------------------------
-+
-+Example:
-+	cdn_dp: dp@fec00000 {
-+		compatible = "rockchip,rk3399-cdn-dp";
-+		reg = <0x0 0xfec00000 0x0 0x100000>;
-+		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_DP_CORE>, <&cru PCLK_DP_CTRL>,
-+			 <&cru SCLK_SPDIF_REC_DPTX>;
-+		clock-names = "core-clk", "pclk", "spdif";
-+		phys = <&tcphy0>, <&tcphy1>;
-+		resets = <&cru SRST_DPTX_SPDIF_REC>;
-+		reset-names = "spdif";
-+		extcon = <&fusb0>, <&fusb1>;
-+		rockchip,grf = <&grf>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		#sound-dai-cells = <1>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dp_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				dp_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_dp>;
-+				};
-+
-+				dp_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_dp>;
-+				};
-+			};
-+		};
-+	};
--- 
-2.6.3
+>
+> Changes in v4:
+>
+> For gpio-tps65218 reatined the compatible table.
+> Fixed missing ';' in the power button patch.
+> Fixed comments on the Documentation patch.
+> Split the Device Tree patches to a separate series.
+>
+> Changes in v3:
+>
+> Missed making corresponding changes in the power button and gpio
+> drivers. Added couple of patches to fix them to use mfd_cell way
+> of parsing.
+>
+> Keerthy (6):
+>    mfd: tps65218: Remove redundant read wrapper
+>    Documentation: regulator: tps65218: Update examples
+>    input: tps65218-pwrbutton: Add platform_device_id table
+>    gpio: tps65218-gpio: Add platform_device_id table
+>    mfd: tps65218: Use mfd_add_devices instead of of_platform_populate
+>    regulator: tps65218: Remove all the compatibles
+>
+>   .../devicetree/bindings/regulator/tps65218.txt     |  87 ++++++++++---
+>   drivers/gpio/gpio-tps65218.c                       |  10 +-
+>   drivers/input/misc/tps65218-pwrbutton.c            |  10 +-
+>   drivers/mfd/tps65218.c                             |  32 ++---
+>   drivers/regulator/tps65218-regulator.c             | 134 ++++++++-------------
+>   include/linux/mfd/tps65218.h                       |   2 -
+>   6 files changed, 152 insertions(+), 123 deletions(-)
+>
