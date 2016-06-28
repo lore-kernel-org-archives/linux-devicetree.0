@@ -1,39 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] ASoC: samsung: Add DT bindings documentation for
- TM2 sound subsystem
-Date: Tue, 28 Jun 2016 15:55:08 -0500
-Message-ID: <20160628205508.GD3737@rob-hp-laptop>
-References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
- <1466678715-19962-6-git-send-email-s.nawrocki@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/5] dmaengine: dma: Use different channel names for
+ each dma
+Date: Tue, 28 Jun 2016 15:55:24 -0500
+Message-ID: <20160628205524.GG3737@rob-hp-laptop>
+References: <1466745686-23898-1-git-send-email-appanad@xilinx.com>
+ <1466745686-23898-6-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466678715-19962-6-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <1466745686-23898-6-git-send-email-appanad@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 23, 2016 at 12:45:14PM +0200, Sylwester Nawrocki wrote:
-> This patch adds DT binding documentation for Exnos5433 based TM2
-> and TM2E boards sound subsystem.
+On Fri, Jun 24, 2016 at 10:51:26AM +0530, Kedareswara rao Appana wrote:
+> Current driver assumes that child node channel name is either
+> "xlnx,axi-vdma-mm2s-channel" or "xlnx,axi-vdma-s2mm-channel"
+> which is confusing the users of AXI DMA and CDMA.
+> This patch fixes this issue by using different channel
+> names for the AXI DMA and AXI CDMA child nodes.
 > 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
 > ---
-> Changes since initial version:
->  - dropped clocks, clock-names properties, instead properties from
->    the CODEC node will be used,
->  - property renames: 'samsung,model' -> 'model', 'samsung,i2s-controller'
->    -> 'i2s-controller', 'samsung,speaker-amplifier' -> 'audio-amplifier',
->  - added 'audio-codec' property.
-> ---
->  .../bindings/sound/samsung,tm2-audio.txt           | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+> Chanes for v2:
+> ---> New patch.
+> 
+>  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |    6 +++++-
+>  drivers/dma/xilinx/xilinx_dma.c                    |    8 ++++++--
+>  2 files changed, 11 insertions(+), 3 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
