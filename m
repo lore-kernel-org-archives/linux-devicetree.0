@@ -1,81 +1,161 @@
-From: Alexander Stein <alexanders83@web.de>
-Subject: Re: linux-next: Tree for Jun 27 (pinctrl && !CONFIG_OF)
-Date: Tue, 28 Jun 2016 09:00:47 +0200
-Message-ID: <2044946.aGLaEK2W6I@ws-stein>
-References: <20160627163939.20e454d5@canb.auug.org.au> <57716D3D.4070302@infradead.org> <735717690.oeI6DkomRc@wuerfel>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH v3 01/10] mfd: tps65218: Remove redundant read wrapper
+Date: Tue, 28 Jun 2016 12:31:56 +0530
+Message-ID: <577220E4.9060708@ti.com>
+References: <1467093980-11458-1-git-send-email-j-keerthy@ti.com>
+ <1467093980-11458-2-git-send-email-j-keerthy@ti.com>
+ <20160628070055.GF6720@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <735717690.oeI6DkomRc@wuerfel>
-Sender: linux-next-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160628070055.GF6720@dell>
+Sender: linux-input-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Keerthy <j-keerthy@ti.com>
+Cc: dmitry.torokhov@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 27 June 2016 23:36:29, Arnd Bergmann wrote:
-> On Monday, June 27, 2016 11:15:25 AM CEST Randy Dunlap wrote:
-> > On 06/26/16 23:39, Stephen Rothwell wrote:
-> > > Hi all,
-> > 
-> > > Changes since 20160624:
-> > on i386, when CONFIG_OF is not enabled ...
-> > but OF_GPIO is enabled due to this in drivers/gpio/Kconfig:
-> > 
-> > config OF_GPIO
-> > 
-> >         def_bool y
-> >         depends on OF || COMPILE_TEST
-> > 
-> > (above from commit 1e4a80640338924b9f9fd7a121ac31d08134410a
-> > from Alexander Stein <alexanders83@web.de>)
-> > 
-> > 
-> > ../drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:381:20: error:
-> > 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
-> > ../drivers/pinctrl/bcm/pinctrl-cygnus-mux.c:739:20: error:
-> > 'pinconf_generic_dt_node_to_map_group' undeclared here (not in a
-> > function) ../drivers/pinctrl/bcm/pinctrl-nsp-gpio.c:365:20: error:
-> > 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
-> > 
-> > because that function is only present when CONFIG_OF is enabled.
-> > 
-> > 
-> > Also, why does that commit (1e4a80640338924b9f9fd7a121ac31d08134410a)
-> > not have any other S-O-B lines in it?  like whoever merged it?
-> 
-> (adding Linus Walleij and Alexander Stein to Cc)
-> 
-> Unfortunately, the changelog also doesn't say what triggered that
-> change. I guess there was a driver that did 'select OF_GPIO'
-> and had a dependency on COMPILE_TEST, though I don't see any
-> driver doing that in linux-next.
 
-It was the first change of the changes done in my branch 
-https://github.com/AlexanderStein/linux/tree/gpio-compile-test
- in order to compile test as much gpio drivers as possible. Yet, pinctrl 
-drivers were out of my scope.
 
-> I think the commit should just be reverted, it clearly breaks
-> stuff, and whatever needs it can be fixed in a better way.
+On Tuesday 28 June 2016 12:30 PM, Lee Jones wrote:
+> On Tue, 28 Jun 2016, Keerthy wrote:
+>
+>> Currently read directly calls the repmap read function. Hence
+>> remove the redundant wrapper and use regmap read wherever
+>> needed.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>
+>> Changes in v3:
+>>
+>>    * Cleaned up tps65218-pwrbutton and gpio drivers to remove
+>>      tps65218_reg_read instances.
+>>
+>>   drivers/gpio/gpio-tps65218.c            |  3 ++-
+>>   drivers/input/misc/tps65218-pwrbutton.c |  3 ++-
+>>   drivers/mfd/tps65218.c                  | 16 +---------------
+>>   drivers/regulator/tps65218-regulator.c  |  3 ++-
+>>   include/linux/mfd/tps65218.h            |  2 --
+>>   5 files changed, 7 insertions(+), 20 deletions(-)
+>
+> I like the idea.  So, as long as the patch is properly build tested:
+>
+> For the MFD part:
+>    Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Why not depend PINCTRL_IPROC_GPIO on CONFIG_OF as Randy stated 
-pinconf_generic_dt_node_to_map_pin and friends are only present if CONFIG_OF 
-is enabled. Depending on OF_GPIO only is enough under the assumption a) you 
-made below.
-Also what about providing dummy implementation for those missing function in 
-case CONFIG_OF is disabled, my preference as more code can be compile tested.
+I will do the testing again. Post a v4. With all the suggested changes. 
+Thanks for the review.
 
-> Specifically, we have three ways that the OF_GPIO symbol
-> is used:
-> 
-> a) it is implicitly enabled when both GPIOLIB and OF are turned on
-
-or if COMPILE_TEST is enabled
-
-I think a problem in this and possibly other cases is that COMPILE_TEST 
-loosens the Kconfig dependencies to some degree. How to proceed? Allow compile 
-testing drivers only if some optional settings are enabled?
-
-Best regards,
-Alexander
+>
+>> diff --git a/drivers/gpio/gpio-tps65218.c b/drivers/gpio/gpio-tps65218.c
+>> index 0eaeac8..0f9d9bd 100644
+>> --- a/drivers/gpio/gpio-tps65218.c
+>> +++ b/drivers/gpio/gpio-tps65218.c
+>> @@ -16,6 +16,7 @@
+>>   #include <linux/errno.h>
+>>   #include <linux/gpio/driver.h>
+>>   #include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>>   #include <linux/mfd/tps65218.h>
+>>
+>>   struct tps65218_gpio {
+>> @@ -30,7 +31,7 @@ static int tps65218_gpio_get(struct gpio_chip *gc, unsigned offset)
+>>   	unsigned int val;
+>>   	int ret;
+>>
+>> -	ret = tps65218_reg_read(tps65218, TPS65218_REG_ENABLE2, &val);
+>> +	ret = regmap_read(tps65218->regmap, TPS65218_REG_ENABLE2, &val);
+>>   	if (ret)
+>>   		return ret;
+>>
+>> diff --git a/drivers/input/misc/tps65218-pwrbutton.c b/drivers/input/misc/tps65218-pwrbutton.c
+>> index a39b626..2bba8de 100644
+>> --- a/drivers/input/misc/tps65218-pwrbutton.c
+>> +++ b/drivers/input/misc/tps65218-pwrbutton.c
+>> @@ -22,6 +22,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/of.h>
+>>   #include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>>   #include <linux/slab.h>
+>>
+>>   struct tps65218_pwrbutton {
+>> @@ -36,7 +37,7 @@ static irqreturn_t tps65218_pwr_irq(int irq, void *_pwr)
+>>   	unsigned int reg;
+>>   	int error;
+>>
+>> -	error = tps65218_reg_read(pwr->tps, TPS65218_REG_STATUS, &reg);
+>> +	error = regmap_read(pwr->tps->regmap, TPS65218_REG_STATUS, &reg);
+>>   	if (error) {
+>>   		dev_err(pwr->dev, "can't read register: %d\n", error);
+>>   		goto out;
+>> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+>> index 80b9dc3..f20a531 100644
+>> --- a/drivers/mfd/tps65218.c
+>> +++ b/drivers/mfd/tps65218.c
+>> @@ -34,20 +34,6 @@
+>>   #define TPS65218_PASSWORD_REGS_UNLOCK   0x7D
+>>
+>>   /**
+>> - * tps65218_reg_read: Read a single tps65218 register.
+>> - *
+>> - * @tps: Device to read from.
+>> - * @reg: Register to read.
+>> - * @val: Contians the value
+>> - */
+>> -int tps65218_reg_read(struct tps65218 *tps, unsigned int reg,
+>> -			unsigned int *val)
+>> -{
+>> -	return regmap_read(tps->regmap, reg, val);
+>> -}
+>> -EXPORT_SYMBOL_GPL(tps65218_reg_read);
+>> -
+>> -/**
+>>    * tps65218_reg_write: Write a single tps65218 register.
+>>    *
+>>    * @tps65218: Device to write to.
+>> @@ -93,7 +79,7 @@ static int tps65218_update_bits(struct tps65218 *tps, unsigned int reg,
+>>   	int ret;
+>>   	unsigned int data;
+>>
+>> -	ret = tps65218_reg_read(tps, reg, &data);
+>> +	ret = regmap_read(tps->regmap, reg, &data);
+>>   	if (ret) {
+>>   		dev_err(tps->dev, "Read from reg 0x%x failed\n", reg);
+>>   		return ret;
+>> diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
+>> index a5e5634..679ab2f 100644
+>> --- a/drivers/regulator/tps65218-regulator.c
+>> +++ b/drivers/regulator/tps65218-regulator.c
+>> @@ -22,6 +22,7 @@
+>>   #include <linux/err.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/of_device.h>
+>> +#include <linux/regmap.h>
+>>   #include <linux/regulator/of_regulator.h>
+>>   #include <linux/regulator/driver.h>
+>>   #include <linux/regulator/machine.h>
+>> @@ -224,7 +225,7 @@ static int tps65218_pmic_get_current_limit(struct regulator_dev *dev)
+>>   	unsigned int index;
+>>   	struct tps65218 *tps = rdev_get_drvdata(dev);
+>>
+>> -	retval = tps65218_reg_read(tps, dev->desc->csel_reg, &index);
+>> +	retval = regmap_read(tps->regmap, dev->desc->csel_reg, &index);
+>>   	if (retval < 0)
+>>   		return retval;
+>>
+>> diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
+>> index d58f3b5..7c9241f 100644
+>> --- a/include/linux/mfd/tps65218.h
+>> +++ b/include/linux/mfd/tps65218.h
+>> @@ -276,8 +276,6 @@ struct tps65218 {
+>>   	struct regmap *regmap;
+>>   };
+>>
+>> -int tps65218_reg_read(struct tps65218 *tps, unsigned int reg,
+>> -					unsigned int *val);
+>>   int tps65218_reg_write(struct tps65218 *tps, unsigned int reg,
+>>   			unsigned int val, unsigned int level);
+>>   int tps65218_set_bits(struct tps65218 *tps, unsigned int reg,
+>
