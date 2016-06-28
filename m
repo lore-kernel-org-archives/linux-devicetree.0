@@ -1,55 +1,67 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v3 9/9] iommu/arm-smmu: Set PRIVCFG in stage 1 STEs
-Date: Tue, 28 Jun 2016 16:48:28 +0100
-Message-ID: <9f731605877ae85aaaac98a614882be7186d0843.1467123945.git.robin.murphy@arm.com>
-References: <cover.1467123945.git.robin.murphy@arm.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] configfs: Remove ppos increment in configfs_write_bin_file
+Date: Tue, 28 Jun 2016 18:30:28 +0200
+Message-ID: <5772A624.6040801@denx.de>
+References: <1463581011-9910-1-git-send-email-marex@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1467123945.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1463581011-9910-1-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implement the SMMUv3 equivalent of d346180e70b9 ("iommu/arm-smmu: Treat
-all device transactions as unprivileged"), so that once again those
-pesky DMA controllers with their privileged instruction fetches don't
-unexpectedly fault in stage 1 domains due to VMSAv8 rules.
+On 05/18/2016 04:16 PM, Marek Vasut wrote:
+> The simple_write_to_buffer() already increments the @ppos on success,
+> see fs/libfs.c simple_write_to_buffer() comment:
+> 
+> "
+> On success, the number of bytes written is returned and the offset @ppos
+> advanced by this number, or negative value is returned on error.
+> "
+> 
+> If the configfs_write_bin_file() is invoked with @count smaller than the
+> total length of the written binary file, it will be invoked multiple times.
+> Since configfs_write_bin_file() increments @ppos on success, after calling
+> simple_write_to_buffer(), the @ppos is incremented twice.
+> 
+> Subsequent invocation of configfs_write_bin_file() will result in the next
+> piece of data being written to the offset twice as long as the length of
+> the previous write, thus creating buffer with "holes" in it.
+> 
+> The simple testcase using DTO follows:
+>   $ mkdir /sys/kernel/config/device-tree/overlays/1
+>   $ dd bs=1 if=foo.dtbo of=/sys/kernel/config/device-tree/overlays/1/dtbo
+> Without this patch, the testcase will result in twice as big buffer in the
+> kernel, which is then passed to the cfs_overlay_item_dtbo_write() .
+> 
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Cc: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+> Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
-Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
----
+Bump, could this be applied please ?
 
-v3: New.
-
- drivers/iommu/arm-smmu-v3.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 735690e03818..e4c3916efba9 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -263,6 +263,9 @@
- #define STRTAB_STE_1_SHCFG_INCOMING	1UL
- #define STRTAB_STE_1_SHCFG_SHIFT	44
- 
-+#define STRTAB_STE_1_PRIVCFG_UNPRIV	2UL
-+#define STRTAB_STE_1_PRIVCFG_SHIFT	48
-+
- #define STRTAB_STE_2_S2VMID_SHIFT	0
- #define STRTAB_STE_2_S2VMID_MASK	0xffffUL
- #define STRTAB_STE_2_VTCR_SHIFT		32
-@@ -1070,7 +1073,9 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
- #ifdef CONFIG_PCI_ATS
- 			 STRTAB_STE_1_EATS_TRANS << STRTAB_STE_1_EATS_SHIFT |
- #endif
--			 STRTAB_STE_1_STRW_NSEL1 << STRTAB_STE_1_STRW_SHIFT);
-+			 STRTAB_STE_1_STRW_NSEL1 << STRTAB_STE_1_STRW_SHIFT |
-+			 STRTAB_STE_1_PRIVCFG_UNPRIV <<
-+			 STRTAB_STE_1_PRIVCFG_SHIFT);
- 
- 		if (smmu->features & ARM_SMMU_FEAT_STALLS)
- 			dst[1] |= cpu_to_le64(STRTAB_STE_1_S1STALLD);
--- 
-2.8.1.dirty
+> ---
+>  fs/configfs/file.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/fs/configfs/file.c b/fs/configfs/file.c
+> index 33b7ee3..bbc1252 100644
+> --- a/fs/configfs/file.c
+> +++ b/fs/configfs/file.c
+> @@ -357,8 +357,6 @@ configfs_write_bin_file(struct file *file, const char __user *buf,
+>  
+>  	len = simple_write_to_buffer(buffer->bin_buffer,
+>  			buffer->bin_buffer_size, ppos, buf, count);
+> -	if (len > 0)
+> -		*ppos += len;
+>  out:
+>  	mutex_unlock(&buffer->mutex);
+>  	return len;
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
