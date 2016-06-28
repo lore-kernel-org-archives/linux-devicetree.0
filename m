@@ -1,91 +1,87 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v5 01/13] devicetree: bindings: Renesas APMU and SMP Enable method
-Date: Tue, 28 Jun 2016 16:10:30 +0200
-Message-ID: <1467123042-8468-2-git-send-email-geert+renesas@glider.be>
-References: <1467123042-8468-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1467123042-8468-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Keita Kobayashi <keita.kobayashi.ym@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 3/4] perf: xgene: Add APM X-Gene SoC Performance
+ Monitoring Unit driver
+Date: Tue, 28 Jun 2016 15:14:01 +0100
+Message-ID: <20160628141400.GN31744@leverpostej>
+References: <1466618819-2697-1-git-send-email-ttnguyen@apm.com>
+ <1466618819-2697-4-git-send-email-ttnguyen@apm.com>
+ <20160623143201.GI8836@leverpostej>
+ <CACgAJHyprybnpQuKqvD9rXstQBwoeVG+uGtEBp-pppcfSGMKgQ@mail.gmail.com>
+ <20160627160036.GB29321@leverpostej>
+ <CACgAJHzM-hzJJDr-HzZyDQ0SUg0PEd5SYKo8YPnRCDCVA9JuJg@mail.gmail.com>
+ <20160628111355.GI31744@leverpostej>
+ <577279E2.6070202@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <577279E2.6070202@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Tai Tri Nguyen <ttnguyen@apm.com>, Will Deacon <will.deacon@arm.com>, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+On Tue, Jun 28, 2016 at 02:21:38PM +0100, Marc Zyngier wrote:
+> On 28/06/16 12:13, Mark Rutland wrote:
+> > On Mon, Jun 27, 2016 at 10:54:07AM -0700, Tai Tri Nguyen wrote:
+> >> On Mon, Jun 27, 2016 at 9:00 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> >>> On Sat, Jun 25, 2016 at 10:54:20AM -0700, Tai Tri Nguyen wrote:
+> >>>> On Thu, Jun 23, 2016 at 7:32 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> >>>>> On Wed, Jun 22, 2016 at 11:06:58AM -0700, Tai Nguyen wrote:
+> >>>>>> +static irqreturn_t xgene_pmu_isr(int irq, void *dev_id)
+> >>>>>> +{
+> >>>>>> +     struct xgene_pmu_dev_ctx *ctx, *temp_ctx;
+> >>>>>> +     struct xgene_pmu *xgene_pmu = dev_id;
+> >>>>>> +     u32 val;
+> >>>>>> +
+> >>>>>> +     xgene_pmu_mask_int(xgene_pmu);
+> >>>>>
+> >>>>> Why do you need to mask the IRQ? This handler is called in hard IRQ
+> >>>>> context.
+> >>>>
+> >>>> Right. Let me change to use raw_spin_lock_irqsave here.
+> >>>
+> >>> Interesting; I see we do that in the CCI PMU driver. What are we trying
+> >>> to protect?
+> >>>
+> >>> We don't do that in the CPU PMU drivers, and I'm missng something here.
+> >>> Hopefully I'm just being thick...
+> >>
+> >> For me, we can't guarantee that the interrupt doesn't happen on the other CPUs.
+> >> The irqbalancer may change the SMP affinity.
+> > 
+> > The perf core requires things to occur on the same CPU for correct
+> > synchronisation.
+> > 
+> > If an IRQ balancer can change the IRQ affinity behind our back, we have
+> > much bigger problems that affect other uncore PMU drivers.
+> > 
+> > Marc, is there a sensible way to prevent irq balancers from changing the
+> > affinity of an IRQ, e.g. a kernel-side pinning mechanism, or some way we
+> > can be notified and reject changes?
+> 
+> You can get notified (see irq_set_affinity_notifier), but there no way
+> to veto the change.
 
-Add DT binding documentation for the APMU hardware and add "renesas,apmu"
-to the list of enable methods for the ARM cpus.
+:(
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
----
-v5:
-  - Add Acked-by,
+> What should probably be done is to set the affinity hint
+> (irq_set_affinity_hint), and use the notifier to migrate the context
+> if possible. Note that you'll be called in process context, which will
+> race against interrupts being delivered on the new CPU.
 
-v4:
-  - s/reigsters/registers/,
-  - Use "renesas,<soctype>-apmu" instead of "renesas,apmu-<soctype>",
+I'll have to go digging into what exactly perf_pmu_migrate_context
+requires. Given the race, I'm not sure if that's going to work. It's
+certainly not going to be self contained.
 
-v3:
-  - s/Until/Unit/g,
+That also won't work for CPU PMUs, where it makes no sense to migrate
+context or IRQs.  For those we appear to already be using have
+IRQF_NOBALANCING, which sounds like exactly what we want.
 
-v2:
-  - No changes.
----
- Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
- .../devicetree/bindings/power/renesas,apmu.txt     | 31 ++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/renesas,apmu.txt
+That appears to influence irq_can_set_affinity(), which the procfs
+helpers check.
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 3f0cbbb8395f84ef..fa7520eb6387edbe 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -204,6 +204,7 @@ nodes to be present and contain the properties described below.
- 			    "qcom,gcc-msm8660"
- 			    "qcom,kpss-acc-v1"
- 			    "qcom,kpss-acc-v2"
-+			    "renesas,apmu"
- 			    "rockchip,rk3036-smp"
- 			    "rockchip,rk3066-smp"
- 			    "ste,dbx500-smp"
-diff --git a/Documentation/devicetree/bindings/power/renesas,apmu.txt b/Documentation/devicetree/bindings/power/renesas,apmu.txt
-new file mode 100644
-index 0000000000000000..84404c9edff73d97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/renesas,apmu.txt
-@@ -0,0 +1,31 @@
-+DT bindings for the Renesas Advanced Power Management Unit
-+
-+Renesas R-Car line of SoCs utilize one or more APMU hardware units
-+for CPU core power domain control including SMP boot and CPU Hotplug.
-+
-+Required properties:
-+
-+- compatible: Should be "renesas,<soctype>-apmu", "renesas,apmu" as fallback.
-+	      Examples with soctypes are:
-+		- "renesas,r8a7790-apmu" (R-Car H2)
-+		- "renesas,r8a7791-apmu" (R-Car M2-W)
-+		- "renesas,r8a7792-apmu" (R-Car V2H)
-+		- "renesas,r8a7793-apmu" (R-Car M2-N)
-+		- "renesas,r8a7794-apmu" (R-Car E2)
-+
-+- reg: Base address and length of the I/O registers used by the APMU.
-+
-+- cpus: This node contains a list of CPU cores, which should match the order
-+  of CPU cores used by the WUPCR and PSTR registers in the Advanced Power
-+  Management Unit section of the device's datasheet.
-+
-+
-+Example:
-+
-+This shows the r8a7791 APMU that can control CPU0 and CPU1.
-+
-+	apmu@e6152000 {
-+		compatible = "renesas,r8a7791-apmu", "renesas,apmu";
-+		reg = <0 0xe6152000 0 0x188>;
-+		cpus = <&cpu0 &cpu1>;
-+	};
--- 
-1.9.1
+Tai, can you try requesting the IRQ with the IRQF_NOBALANCING flag?
+
+Thanks,
+Mark.
