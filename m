@@ -1,85 +1,73 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] leds: ncp5623: Add device tree binding
- documentation
-Date: Tue, 28 Jun 2016 15:56:59 -0500
-Message-ID: <20160628205659.GS3737@rob-hp-laptop>
-References: <1467010990-28070-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1467010990-28070-2-git-send-email-florian.vaussard@heig-vd.ch>
- <5770DF98.7010900@samsung.com>
+Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
+Date: Tue, 28 Jun 2016 15:56:42 -0500
+Message-ID: <20160628205642.GP3737@rob-hp-laptop>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+ <20160626072838.28082-3-stephen.boyd@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5770DF98.7010900@samsung.com>
+In-Reply-To: <20160626072838.28082-3-stephen.boyd@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Florian Vaussard <florian.vaussard@gmail.com>, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 27, 2016 at 10:11:04AM +0200, Jacek Anaszewski wrote:
-> Hi Florian,
+On Sun, Jun 26, 2016 at 12:28:19AM -0700, Stephen Boyd wrote:
+> The qcom HSIC ulpi phy doesn't have any bits set in the vendor or
+> product id ulpi registers. This makes it impossible to make a
+> ulpi driver match against the id registers. Add support to
+> discover the ulpi phys via DT to help alleviate this problem.
+> We'll look for a ulpi bus node underneath the device registering
+> the ulpi viewport (or the parent of that device to support
+> chipidea's device layout) and then match up the phy node
+> underneath that with the ulpi device that's created.
 > 
-> On 06/27/2016 09:03 AM, Florian Vaussard wrote:
-> >Add device tree binding documentation for On Semiconductor NCP5623 I2C
-> >LED driver. The driver can independently control the PWM of the 3
-> >channels with 32 levels of intensity.
-> >
-> >The current delivered by the current source can also be controlled. To
-> >do so, the led-max-microamp property is used by each LED sub-node. The
-> >maximum value is then found and used as a limit to compute the final
-> >intensity of the current source. If a LED happens to have a lower limit,
-> >the PWM is then used to limit the current to the requested value.
-> >
-> >In order to control the current source, it is also necessary to know
-> >the current on the Iref pin, hence the onnn,led-iref-microamp property.
-> >It is usually set using an external bias resistor, following
-> >Iref = Vref/Rbias with Vref=0.6V.
-> >
-> >Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
-> >---
-> >  .../devicetree/bindings/leds/leds-ncp5623.txt      | 60 ++++++++++++++++++++++
-> >  1 file changed, 60 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-ncp5623.txt
-> >
-> >diff --git a/Documentation/devicetree/bindings/leds/leds-ncp5623.txt b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
-> >new file mode 100644
-> >index 0000000..77dd7ad
-> >--- /dev/null
-> >+++ b/Documentation/devicetree/bindings/leds/leds-ncp5623.txt
-> >@@ -0,0 +1,60 @@
-> >+* ON Semiconductor - NCP5623 3-Channel LED Driver
-> >+
-> >+The NCP5623 is a 3-channel I2C LED driver. The brightness of each
-> >+channel can be independently set using 32 levels. Each LED is represented
-> >+as a sub-node of the device.
-> >+
-> >+Required properties:
-> >+  - compatible: Should be "onnn,ncp5623"
-> >+  - reg: I2C slave address (fixed to 0x38)
-> >+  - #address-cells: must be 1
-> >+  - #size-cells: must be 0
-> >+  - onnn,led-iref-microamp: Current on the Iref pin in microampere. It depends
-> >+    on the value of the external bias resistor Rbias, following
-> >+    Iref = Vref / Rbias with Vref = 0.6V. This is used to set the intensity of
-> >+    the current that can be provided by the internal current source, based on
-> >+    the maximum current permitted by LED sub-nodes (see below), but no more than
-> >+    Imax = 2400 * Iref.
-> >+
-> >+LED sub-nodes
-> >+=============
-> >+
-> >+Required properties:
-> >+  - reg : LED channel number (0..2)
-> >+  - led-max-microamp: Maximum allowable current inside the LED in microampere.
-> >+    This property is used to limit the PWM ratio, based on the intensity of the
-> >+    internal current source (see above).
-> >+
-> >+Optional properties:
-> >+  - label: Used for naming LEDs
+> The side benefit of this is that we can use standard DT
+> properties in the phy node like clks, regulators, gpios, etc.
+> because we don't have firmware like ACPI to turn these things on
+> for us. And we can use the DT phy binding to point our phy
+> consumer to the phy provider.
 > 
-> Instead of the above description use same reference to common led
-> bindings as below.
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/usb/ulpi.txt | 20 +++++++++
+>  drivers/usb/common/ulpi.c                      | 56 +++++++++++++++++++++++++-
+>  2 files changed, 74 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
 > 
-> >+  - default-trigger: see Documentation/devicetree/bindings/leds/common.txt
+> diff --git a/Documentation/devicetree/bindings/usb/ulpi.txt b/Documentation/devicetree/bindings/usb/ulpi.txt
+> new file mode 100644
+> index 000000000000..ca179dc4bd50
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ulpi.txt
+> @@ -0,0 +1,20 @@
+> +ULPI bus binding
+> +----------------
+> +
+> +Phys that are behind a ULPI connection can be described with the following
+> +binding. The host controller shall have a "ulpi" named node as a child, and
+> +that node shall have one enabled node underneath it representing the ulpi
+> +device on the bus.
 
-And this is missing the linux prefix.
+This needs to co-exist with the USB bus binding which has the controller 
+ports for the child nodes. Maybe use the phy binding?
+
+> +
+> +EXAMPLE
+> +-------
+> +
+> +usb {
+> +	compatible = "vendor,usb-controller";
+> +
+> +	ulpi {
+> +		phy {
+> +			compatible = "vendor,phy";
+> +		};
+> +	};
+> +};
