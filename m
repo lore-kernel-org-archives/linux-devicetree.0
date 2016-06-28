@@ -1,94 +1,180 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: linux-next: Tree for Jun 27 (pinctrl && !CONFIG_OF)
-Date: Tue, 28 Jun 2016 10:37:52 +0200
-Message-ID: <3990550.tEk9cGVQPW@wuerfel>
-References: <20160627163939.20e454d5@canb.auug.org.au> <735717690.oeI6DkomRc@wuerfel> <2044946.aGLaEK2W6I@ws-stein>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 20/21] phy: Add support for Qualcomm's USB HSIC phy
+Date: Tue, 28 Jun 2016 10:49:37 +0200
+Message-ID: <57723A21.3060602@baylibre.com>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+ <20160626072838.28082-21-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2044946.aGLaEK2W6I@ws-stein>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Stein <alexanders83@web.de>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160626072838.28082-21-stephen.boyd@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>, linux-usb@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, June 28, 2016 9:00:47 AM CEST Alexander Stein wrote:
-> On Monday 27 June 2016 23:36:29, Arnd Bergmann wrote:
-> > On Monday, June 27, 2016 11:15:25 AM CEST Randy Dunlap wrote:
-> > > On 06/26/16 23:39, Stephen Rothwell wrote:
-> > > > Hi all,
-> > > 
-> > > > Changes since 20160624:
-> > > on i386, when CONFIG_OF is not enabled ...
-> > > but OF_GPIO is enabled due to this in drivers/gpio/Kconfig:
-> > > 
-> > > config OF_GPIO
-> > > 
-> > >         def_bool y
-> > >         depends on OF || COMPILE_TEST
-> > > 
-> > > (above from commit 1e4a80640338924b9f9fd7a121ac31d08134410a
-> > > from Alexander Stein <alexanders83@web.de>)
-> > > 
-> > > 
-> > > ../drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:381:20: error:
-> > > 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
-> > > ../drivers/pinctrl/bcm/pinctrl-cygnus-mux.c:739:20: error:
-> > > 'pinconf_generic_dt_node_to_map_group' undeclared here (not in a
-> > > function) ../drivers/pinctrl/bcm/pinctrl-nsp-gpio.c:365:20: error:
-> > > 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
-> > > 
-> > > because that function is only present when CONFIG_OF is enabled.
-> > > 
-> > > 
-> > > Also, why does that commit (1e4a80640338924b9f9fd7a121ac31d08134410a)
-> > > not have any other S-O-B lines in it?  like whoever merged it?
-> > 
-> > (adding Linus Walleij and Alexander Stein to Cc)
-> > 
-> > Unfortunately, the changelog also doesn't say what triggered that
-> > change. I guess there was a driver that did 'select OF_GPIO'
-> > and had a dependency on COMPILE_TEST, though I don't see any
-> > driver doing that in linux-next.
+On 06/26/2016 09:28 AM, Stephen Boyd wrote:
+> The HSIC USB controller on qcom SoCs has an integrated all
+> digital phy controlled via the ULPI viewport.
 > 
-> It was the first change of the changes done in my branch 
-> https://github.com/AlexanderStein/linux/tree/gpio-compile-test
->  in order to compile test as much gpio drivers as possible. Yet, pinctrl 
-> drivers were out of my scope.
-
-I see
-
-> > I think the commit should just be reverted, it clearly breaks
-> > stuff, and whatever needs it can be fixed in a better way.
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |  60 ++++++++
+>  drivers/phy/Kconfig                                |   7 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-qcom-usb-hsic.c                    | 161 +++++++++++++++++++++
+>  4 files changed, 229 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+>  create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
 > 
-> Why not depend PINCTRL_IPROC_GPIO on CONFIG_OF as Randy stated 
-> pinconf_generic_dt_node_to_map_pin and friends are only present if CONFIG_OF 
-> is enabled. Depending on OF_GPIO only is enough under the assumption a) you 
-> made below.
-> Also what about providing dummy implementation for those missing function in 
-> case CONFIG_OF is disabled, my preference as more code can be compile tested.
->
-> > Specifically, we have three ways that the OF_GPIO symbol
-> > is used:
-> > 
-> > a) it is implicitly enabled when both GPIOLIB and OF are turned on
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+> new file mode 100644
+> index 000000000000..6b1c6aad2962
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+> @@ -0,0 +1,60 @@
+> +Qualcomm's USB HSIC PHY
+> +
+> +PROPERTIES
+> +
+> +- compatible:
+> +    Usage: required
+> +    Value type: <string>
+> +    Definition: Should contain "qcom,usb-hsic-phy"
+> +
+> +- #phy-cells:
+> +    Usage: required
+> +    Value type: <u32>
+> +    Definition: Should contain 0
+> +
+> +- clocks:
+> +    Usage: required
+> +    Value type: <prop-encoded-array>
+> +    Definition: Should contain clock specifier for phy, calibration and
+> +                optionally a calibration sleep clock
+> +
+> +- clock-names:
+> +    Usage: required
+> +    Value type: <stringlist>
+> +    Definition: Should contain "phy, "cal" and optionally "cal_sleep"
+> +
+
+[...]
+
+> +
+> +static int qcom_usb_hsic_phy_power_on(struct phy *phy)
+> +{
+> +	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
+> +	struct ulpi *ulpi = uphy->ulpi;
+> +	struct pinctrl_state *pins_default;
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(uphy->phy_clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(uphy->cal_clk);
+> +	if (ret)
+> +		goto err_cal;
+> +
+> +	ret = clk_prepare_enable(uphy->cal_sleep_clk);
+> +	if (ret)
+> +		goto err_sleep;
+> +
+
+[...]
+
+> +
+> +	return ret;
+> +err_ulpi:
+> +	clk_disable_unprepare(uphy->cal_sleep_clk);
+> +err_sleep:
+> +	clk_disable_unprepare(uphy->cal_clk);
+> +err_cal:
+> +	clk_disable_unprepare(uphy->phy_clk);
+> +	return ret;
+> +}
+> +
+> +static int qcom_usb_hsic_phy_power_off(struct phy *phy)
+> +{
+> +	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
+> +
+> +	clk_disable_unprepare(uphy->cal_sleep_clk);
+> +	clk_disable_unprepare(uphy->cal_clk);
+> +	clk_disable_unprepare(uphy->phy_clk);
+
+[...]
+
+> +static int qcom_usb_hsic_phy_probe(struct ulpi *ulpi)
+> +{
+> +	struct qcom_usb_hsic_phy *uphy;
+> +	struct phy_provider *p;
+> +	struct clk *clk;
+> +
+> +	uphy = devm_kzalloc(&ulpi->dev, sizeof(*uphy), GFP_KERNEL);
+> +	if (!uphy)
+> +		return -ENOMEM;
+> +	ulpi_set_drvdata(ulpi, uphy);
+> +
+> +	uphy->ulpi = ulpi;
+> +	uphy->pctl = devm_pinctrl_get(&ulpi->dev);
+> +	if (IS_ERR(uphy->pctl))
+> +		return PTR_ERR(uphy->pctl);
+> +
+> +	uphy->phy_clk = clk = devm_clk_get(&ulpi->dev, "phy");
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	uphy->cal_clk = clk = devm_clk_get(&ulpi->dev, "cal");
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+
+Hi Stephen,
+
+In the bindings the cal_sleep is marked optional, and I think should be since AFAIK
+it's not present on MDM9615 for example.
+
+Also MDM9615 HSIC requires "core", "alt-core", "phy", "cal" and "iface" clocks.
+I assume "core" can be attributed to the main chipidea node, but I think "alt-core" and "iface" should be also optionnal.
+
+Finally, it misses an optional reset line AFAIK mandatory on MDM9615.
+
+Neil
+
+> +
+> +	uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
+> +				    &qcom_usb_hsic_phy_ops);
+> +	if (IS_ERR(uphy->phy))
+> +		return PTR_ERR(uphy->phy);
+> +	phy_set_drvdata(uphy->phy, uphy);
+> +
+> +	p = devm_of_phy_provider_register(&ulpi->dev, of_phy_simple_xlate);
+> +	return PTR_ERR_OR_ZERO(p);
+> +}
+> +
+> +
+> +static const struct of_device_id qcom_usb_hsic_phy_match[] = {
+> +	{ .compatible = "qcom,usb-hsic-phy", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_usb_hsic_phy_match);
+> +
+> +static struct ulpi_driver qcom_usb_hsic_phy_driver = {
+> +	.probe = qcom_usb_hsic_phy_probe,
+> +	.driver = {
+> +		.name = "qcom_usb_hsic_phy",
+> +		.of_match_table = qcom_usb_hsic_phy_match
+> +	},
+> +};
+> +module_ulpi_driver(qcom_usb_hsic_phy_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm USB HSIC phy");
+> +MODULE_LICENSE("GPL v2");
 > 
-> or if COMPILE_TEST is enabled
-> 
-> I think a problem in this and possibly other cases is that COMPILE_TEST 
-> loosens the Kconfig dependencies to some degree. How to proceed? Allow compile 
-> testing drivers only if some optional settings are enabled?
-
-I think we can start by reverting your patch: for compile-testing we can
-always enable CONFIG_OF these days, which will also turn on OF_GPIO.
-
-Compile-testing drivers that need OF_GPIO while OF is disabled makes
-no sense to me, it's not a configuration that anybody can ever use
-and it adds no build coverage.
-
-I think we should also drop all 'select OF_GPIO' statements, AFAICT
-we have just proven that they are all redundant because they would
-have otherwise broken things. This should be a separate cleanup patch.
-
-	Arnd
