@@ -1,126 +1,61 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
-Date: Tue, 28 Jun 2016 14:42:05 +0300
-Message-ID: <20160628114205.GA3378@kuha.fi.intel.com>
-References: <20160626072838.28082-1-stephen.boyd@linaro.org>
- <20160626072838.28082-3-stephen.boyd@linaro.org>
- <20160627143422.GB21398@kuha.fi.intel.com>
- <146706544012.30684.15569003844798199881@sboyd-linaro>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V3 2/4] clk: Combine DT binding doc for max77686 and max77802
+Date: Tue, 28 Jun 2016 16:58:36 +0530
+Message-ID: <57725F64.4030903@nvidia.com>
+References: <1466160667-28451-1-git-send-email-ldewangan@nvidia.com> <1466160667-28451-3-git-send-email-ldewangan@nvidia.com> <20160620163947.GA27492@rob-hp-laptop> <5768E2AD.8070004@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <146706544012.30684.15569003844798199881@sboyd-linaro>
+In-Reply-To: <5768E2AD.8070004@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 27, 2016 at 03:10:40PM -0700, Stephen Boyd wrote:
-> Quoting Heikki Krogerus (2016-06-27 07:34:22)
-> > Hi,
-> > 
-> > I'm fine with most of the patch, except..
-> > 
-> > On Sun, Jun 26, 2016 at 12:28:19AM -0700, Stephen Boyd wrote:
-> > > @@ -39,7 +42,10 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
-> > >       struct ulpi *ulpi = to_ulpi_dev(dev);
-> > >       const struct ulpi_device_id *id;
-> > >  
-> > > -     for (id = drv->id_table; id->vendor; id++)
-> > > +     if (of_driver_match_device(dev, driver))
-> > > +             return 1;
-> > 
-> > I don't like this part. We should match separately like that only
-> > if the bus does not support native enumeration, and of course ULPI
-> > with its vendor and product IDs does. There really should always be
-> > IDs to match with here. So exceptions have to be solved before we
-> > attempt matching.
-> > 
-> > Since we also have to support platforms where the PHY is initially
-> > powered off and reading the IDs from the registers is not possible
-> > because of that, I think we should consider getting the product and
-> > vendor IDs optionally from device properties. Something like this:
-> 
-> Ok, I'm a little worried about conflating the powered off problem with
-> this product/vendor ID missing problem. But if you're ok with that I'll
-> combine the two patches into one using your approach below.
-> 
-> > 
-> > 
-> > diff --git a/drivers/usb/common/ulpi.c b/drivers/usb/common/ulpi.c
-> > index 01c0c04..6228a85 100644
-> > --- a/drivers/usb/common/ulpi.c
-> > +++ b/drivers/usb/common/ulpi.c
-> > @@ -152,7 +152,7 @@ EXPORT_SYMBOL_GPL(ulpi_unregister_driver);
-> >  
-> >  /* -------------------------------------------------------------------------- */
-> >  
-> > -static int ulpi_register(struct device *dev, struct ulpi *ulpi)
-> > +static int ulpi_read_id(struct ulpi *ulpi)
-> >  {
-> >         int ret;
-> >  
-> > @@ -174,6 +174,21 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
-> >         ulpi->id.product = ulpi_read(ulpi, ULPI_PRODUCT_ID_LOW);
-> >         ulpi->id.product |= ulpi_read(ulpi, ULPI_PRODUCT_ID_HIGH) << 8;
-> >  
-> > +       return 0;
-> > +}
-> > +
-> > +static int ulpi_register(struct device *dev, struct ulpi *ulpi)
-> > +{
-> > +       int ret;
-> > +
-> > +       ret = device_property_read_u16(dev, "ulpi-vendor", &ulpi->id.vendor);
-> > +       ret |= device_property_read_u16(dev, "ulpi-product", &ulpi->id.product);
-> > +       if (ret) {
-> > +               ret = ulpi_read_id(ulpi);
-> > +               if (ret)
-> > +                       return ret;
-> > +       }
-> > +
-> >         ulpi->dev.parent = dev;
-> >         ulpi->dev.bus = &ulpi_bus;
-> >         ulpi->dev.type = &ulpi_dev_type;
-> > 
-> > 
-> > That should cover both cases. You would just have to create the IDs
-> > yourself in this case.
-> > 
-> 
-> Right, I would have to make up some IDs in this case. I suppose I can
-> use the qcom vendor ID 0x05c6 and then product ids 0 and 1 for HS phy
-> and HSIC phy? That doesn't make me feel great because it's all made up,
-> but I guess there's no other option. I hope they don't decide to start
-> populating these ids in the future though and then we may have
-> conflicting product ids. If that happens I suppose we can do a
-> workaround based on compatible strings in the DT node. Fun!
-> 
-> Nice side effect of all that is I can drop requesting the module by DT
-> aliases and things become simpler. I'll try this out.
+Hi Rob,
 
-I was hoping that we could manage with product id 0 as an exception (I
-failed to consider that you have multiple PHYs to deal with). I don't
-think we can just come up with product id > 0.
+On Tuesday 21 June 2016 12:16 PM, Laxman Dewangan wrote:
+>
+> On Monday 20 June 2016 10:09 PM, Rob Herring wrote:
+>> On Fri, Jun 17, 2016 at 04:21:05PM +0530, Laxman Dewangan wrote:
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/clock/maxim,max77686.txt 
+>>> b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
+>>> index 9c40739..4d973b5 100644
+>>> --- a/Documentation/devicetree/bindings/clock/maxim,max77686.txt
+>>> +++ b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
+>>> @@ -1,11 +1,15 @@
+>>> -Binding for Maxim MAX77686 32k clock generator block
+>>> +Binding for Maxim MAX77686/MAX77802 32k clock generator block
+>>>   -This is a part of device tree bindings of MAX77686 multi-function 
+>>> device.
+>>> -More information can be found in bindings/mfd/max77686.txt file.
+>>> +This is a part of device tree bindings of MAX77686/MAX77802 
+>>> multi-function
+>>> +device. More information can be found in bindings/mfd/max77686.txt 
+>>> file for
+>>> +MAX77686 and bindings/mfd/max77802.txt for MAX77802.
+>>>     The MAX77686 contains three 32.768khz clock outputs that can be 
+>>> controlled
+>>>   (gated/ungated) over I2C.
+>>>   +The MAX77802 contains two 32.768khz clock outputs that can be 
+>>> controlled
+>>> +(gated/ungated) over I2C.
+>>> +
+>>>   Following properties should be presend in main device node of the 
+>>> MFD chip.
+>>>     Required properties:
+>> I'd expect to see compatible strings updated...
+>>
+>
+> There is no separate compatible string for clock. The clock nodes is 
+> the parent node only and the compatible described in the parent DT 
+> binding doc.
+>
+>
+> Do we also need to add same thing here?
 
-I guess we should have the of_driver_match_device() call after all.
-Let's just call it conditionally, only in cases where there is no
-product ID, to make me feel a bit more better. I don't want to make it
-too easy to use.
-
-The properties for the vendor and product ID are still something that
-we need to introduce in any case. We have the powered off problem on
-all kinds of platforms, and not all of them use DT. Please feel free
-to incorporate the diff into the patch you had for the powered off
-case if you are OK with it. So I think in your case you would just
-need to addthe correct ulpi-vendor id 0x05c6 and ulpi-product id 0 to
-the chipidea device node, and I think this would work.
-
-Sorry about the hassle.
-
-
-Thanks,
-
--- 
-heikki
+Are you fine with the above? As there is no compatible string for clock 
+(clock does not have separate node), do I still need to add explicitly here?
