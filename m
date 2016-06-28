@@ -1,72 +1,88 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 07/12] dt-bindings: i2c: Add support for 'i2c-bus' subnode
-Date: Tue, 28 Jun 2016 09:21:05 +0100
-Message-ID: <57723371.4060806@nvidia.com>
-References: <1466697545-11868-1-git-send-email-jonathanh@nvidia.com>
- <1466697545-11868-8-git-send-email-jonathanh@nvidia.com>
- <0e9ab029-ed95-c3cb-61f5-6acd9da12a24@axentia.se>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: Tree for Jun 27 (pinctrl && !CONFIG_OF)
+Date: Tue, 28 Jun 2016 01:25:07 -0700
+Message-ID: <57723463.8070402@infradead.org>
+References: <20160627163939.20e454d5@canb.auug.org.au>
+ <57716D3D.4070302@infradead.org> <735717690.oeI6DkomRc@wuerfel>
+ <2044946.aGLaEK2W6I@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <0e9ab029-ed95-c3cb-61f5-6acd9da12a24@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2044946.aGLaEK2W6I@ws-stein>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexander Stein <alexanders83@web.de>, Arnd Bergmann <arnd@arndb.de>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDI3LzA2LzE2IDEzOjA0LCBQZXRlciBSb3NpbiB3cm90ZToKPiBPbiAyMDE2LTA2LTIzIDE3
-OjU5LCBKb24gSHVudGVyIHdyb3RlOgo+PiBUaGUgSTJDIGRyaXZlciBjb3JlIGZvciBib2FyZHMg
-dXNpbmcgZGV2aWNlLXRyZWUgYXNzdW1lcyBhbnkgc3Vibm9kZSBvZgo+PiBhbiBJMkMgYWRhcHRl
-ciBpbiB0aGUgZGV2aWNlLXRyZWUgYmxvYiBhcyBiZWluZyBhIEkyQyBzbGF2ZSBkZXZpY2UuCj4+
-IEFsdGhvdWdoIHRoaXMgbWFrZXMgY29tcGxldGUgc2Vuc2UsIHNvbWUgSTJDIGFkYXB0ZXJzIG1h
-eSBoYXZlIHN1Ym5vZGVzCj4+IHdoaWNoIGFyZSBub3QgSTJDIHNsYXZlcyBidXQgc3Vibm9kZXMg
-cHJlc2VudGluZyBvdGhlciBmZWF0dXJlcy4gRm9yCj4+IGV4YW1wbGUgc29tZSBUZWdyYSBkZXZp
-Y2VzIGhhdmUgYW4gSTJDIGludGVyZmFjZSB3aGljaCBtYXkgc2hhcmUgaXRzCj4+IHBpbnMgd2l0
-aCBvdGhlciBkZXZpY2VzIGFuZCB0byBzaGFyZSB0aGVzZSBwaW5zIHN1Ym5vZGVzIGZvcgo+PiBy
-ZXByZXNlbnRpbmcgdGhlc2UgcGlucyBzbyB0aGV5IGhhdmUgYmUgc2hhcmVkIHZpYSB0aGUgcGlu
-Y3RybCBmcmFtZXdvcmsKPj4gYXJlIG5lZWRlZC4KPj4KPj4gVG8gYWxsb3cgSTJDIGFkYXB0ZXJz
-IHRvIGhhdmUgbm9uLUkyQyBzcGVjaWZpYyBzdWJub2RlcyBpbiBkZXZpY2UtdHJlZQo+PiB0aGF0
-IGFyZSBub3QgcGFyc2VkIGJ5IHRoZSBJMkMgZHJpdmVyIGNvcmUgYnkgYWRkaW5nIHN1cHBvcnQg
-Zm9yIGEKPj4gJ2kyYy1idXMnIHN1Ym5vZGUgd2hlcmUgSTJDIHNsYXZlcyBjYW4gYmUgcGxhY2Vk
-LiBJZiB0aGUgJ2kyYy1idXMnCj4+IHN1Ym5vZGUgaXMgcHJlc2VudCB0aGVuIGFsbCBJMkMgc2xh
-dmVzIG11c3QgYmUgcGxhY2VkIHVuZGVyIHRoaXMgc3Vibm9kZS4KPj4KPj4gU2lnbmVkLW9mZi1i
-eTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+Cj4+IEFja2VkLWJ5OiBUaGllcnJ5
-IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPgo+PiAtLS0KPj4gIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLnR4dCB8IDggKysrKysrKysKPj4gIDEgZmlsZSBjaGFu
-Z2VkLCA4IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9pMmMvaTJjLnR4dAo+PiBpbmRleCBmMzFiMmFkMTU1MmIuLjcxYmVhNTVkNGMxYiAx
-MDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMu
-dHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLnR4
-dAo+PiBAQCAtMzIsNiArMzIsMTQgQEAgd2FudHMgdG8gc3VwcG9ydCBvbmUgb2YgdGhlIGJlbG93
-IGZlYXR1cmVzLCBpdCBzaG91bGQgYWRhcHQgdGhlIGJpbmRpbmdzIGJlbG93Lgo+PiAgLSBjbG9j
-ay1mcmVxdWVuY3kKPj4gIAlmcmVxdWVuY3kgb2YgYnVzIGNsb2NrIGluIEh6Lgo+PiAgCj4+ICst
-IGkyYy1idXMKPj4gKwlGb3IgSTJDIGFkYXB0ZXJzIHRoYXQgaGF2ZSBjaGlsZCBub2RlcyB0aGF0
-IGFyZSBhIG1peHR1cmUgb2YgYm90aCBJMkMKPj4gKwlkZXZpY2VzIGFuZCBub24tSTJDIGRldmlj
-ZXMgKHN1Y2ggYXMgYSBwaW4gY29udHJvbGxlciksIHRoZSAnaTJjLWJ1cycKPj4gKwlzdWJub2Rl
-IGNhbiBiZSB1c2VkIGZvciBwb3B1bGF0aW5nIEkyQyBkZXZpY2VzLiBJZiB0aGUgJ2kyYy1idXMn
-Cj4+ICsJc3Vibm9kZSBpcyBwcmVzZW50LCBvbmx5IHN1Ym5vZGVzIG9mIHRoaXMgd2lsbCBiZSBj
-b25zaWRlcmVkIGFzIEkyQwo+PiArCXNsYXZlcy4gVGhlIHByb3BlcnRpZXMsICcjYWRkcmVzcy1j
-ZWxscycgYW5kICcjc2l6ZS1jZWxscycgbXVzdCBiZQo+PiArCWRlZmluZWQgdW5kZXIgdGhpcyBz
-dWJub2RlIGlmIHByZXNlbnQuCj4gCj4gSG1tbSwgdGhvc2UgIy1wcm9wZXJ0aWVzIGFyZSBsaXN0
-ZWQgYWJvdmUsIHVuZGVyICJSZXF1aXJlZCBwcm9wZXJ0aWVzIiwgd2hpY2gKPiBpcyBubyBsb25n
-ZXIgMTAwJSB0cnVlLiBNYXliZSByZXBocmFzZSB0bwo+IAo+IAlzbGF2ZXMuIFRoZSByZXF1aXJl
-ZCBwcm9wZXJ0aWVzICcjYWRkcmVzcy1jZWxscycgYW5kICcjc2l6ZS1jZWxscycKPiAJbXVzdCBi
-ZQlkZWZpbmVkIHVuZGVyIHRoaXMgc3Vibm9kZSBpbnN0ZWFkLCBpZiB0aGlzIHN1Ym5vZGUgaXMg
-cHJlc2VudC4KPiAKPiB0byBtYWtlIHRoZSBydWxlcyAoZXZlbikgY2xlYXJlcj8KCkkgc2VlIHdo
-YXQgeW91IGFyZSBzYXlpbmcgYnV0IEkgd29uZGVyIGlmIHRoZSBmb2xsb3dpbmcgaXMgYmV0dGVy
-IC4uLgoKIHNsYXZlcy4gVGhlIHJlcXVpcmVkIHByb3BlcnRpZXMgJyNhZGRyZXNzLWNlbGxzJyBh
-bmQgJyNzaXplLWNlbGxzJwogbXVzdCBiZSBkZWZpbmVkIHVuZGVyIHRoaXMgc3Vibm9kZSBpZiBw
-cmVzZW50IGFuZCBub3QgdGhlIHBhcmVudCBub2RlLgoKQ2hlZXJzCkpvbgoKLS0gCm52cHVibGlj
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 06/28/16 00:00, Alexander Stein wrote:
+> On Monday 27 June 2016 23:36:29, Arnd Bergmann wrote:
+>> On Monday, June 27, 2016 11:15:25 AM CEST Randy Dunlap wrote:
+>>> On 06/26/16 23:39, Stephen Rothwell wrote:
+>>>> Hi all,
+>>>
+>>>> Changes since 20160624:
+>>> on i386, when CONFIG_OF is not enabled ...
+>>> but OF_GPIO is enabled due to this in drivers/gpio/Kconfig:
+>>>
+>>> config OF_GPIO
+>>>
+>>>         def_bool y
+>>>         depends on OF || COMPILE_TEST
+>>>
+>>> (above from commit 1e4a80640338924b9f9fd7a121ac31d08134410a
+>>> from Alexander Stein <alexanders83@web.de>)
+>>>
+>>>
+>>> ../drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:381:20: error:
+>>> 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
+>>> ../drivers/pinctrl/bcm/pinctrl-cygnus-mux.c:739:20: error:
+>>> 'pinconf_generic_dt_node_to_map_group' undeclared here (not in a
+>>> function) ../drivers/pinctrl/bcm/pinctrl-nsp-gpio.c:365:20: error:
+>>> 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
+>>>
+>>> because that function is only present when CONFIG_OF is enabled.
+>>>
+>>>
+>>> Also, why does that commit (1e4a80640338924b9f9fd7a121ac31d08134410a)
+>>> not have any other S-O-B lines in it?  like whoever merged it?
+>>
+>> (adding Linus Walleij and Alexander Stein to Cc)
+>>
+>> Unfortunately, the changelog also doesn't say what triggered that
+>> change. I guess there was a driver that did 'select OF_GPIO'
+>> and had a dependency on COMPILE_TEST, though I don't see any
+>> driver doing that in linux-next.
+> 
+> It was the first change of the changes done in my branch 
+> https://github.com/AlexanderStein/linux/tree/gpio-compile-test
+>  in order to compile test as much gpio drivers as possible. Yet, pinctrl 
+> drivers were out of my scope.
+> 
+>> I think the commit should just be reverted, it clearly breaks
+>> stuff, and whatever needs it can be fixed in a better way.
+> 
+> Why not depend PINCTRL_IPROC_GPIO on CONFIG_OF as Randy stated 
+> pinconf_generic_dt_node_to_map_pin and friends are only present if CONFIG_OF 
+> is enabled. Depending on OF_GPIO only is enough under the assumption a) you 
+> made below.
+> Also what about providing dummy implementation for those missing function in 
+> case CONFIG_OF is disabled, my preference as more code can be compile tested.
+
+IMO we shouldn't have to make function stubs just for COMPILE_TEST.
+
+
+>> Specifically, we have three ways that the OF_GPIO symbol
+>> is used:
+>>
+>> a) it is implicitly enabled when both GPIOLIB and OF are turned on
+> 
+> or if COMPILE_TEST is enabled
+> 
+> I think a problem in this and possibly other cases is that COMPILE_TEST 
+> loosens the Kconfig dependencies to some degree. How to proceed? Allow compile 
+> testing drivers only if some optional settings are enabled?
+
+
+-- 
+~Randy
