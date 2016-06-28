@@ -1,348 +1,72 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] firmware: Amlogic: Add secure monitor driver
-Date: Tue, 28 Jun 2016 10:10:57 +0200
-Message-ID: <20160628081057.GA3171@localhost>
-References: <1466339944-602-1-git-send-email-carlo@caione.org>
- <1466339944-602-2-git-send-email-carlo@caione.org>
- <20160627172805.GA30514@leverpostej>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 07/12] dt-bindings: i2c: Add support for 'i2c-bus' subnode
+Date: Tue, 28 Jun 2016 09:21:05 +0100
+Message-ID: <57723371.4060806@nvidia.com>
+References: <1466697545-11868-1-git-send-email-jonathanh@nvidia.com>
+ <1466697545-11868-8-git-send-email-jonathanh@nvidia.com>
+ <0e9ab029-ed95-c3cb-61f5-6acd9da12a24@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160627172805.GA30514@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0e9ab029-ed95-c3cb-61f5-6acd9da12a24@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/06/16 18:28, Mark Rutland wrote:
-> Hi,
-> 
-> On Sun, Jun 19, 2016 at 02:38:59PM +0200, Carlo Caione wrote:
-
-[...]
-> > +#include <stdarg.h>
-> > +#include <asm/cacheflush.h>
-> > +#include <asm/compiler.h>
-> 
-> As far as I can see, these aren't necessary. There aren't any variadic
-> functions, there's no cache maintenance. I'm guessing compiler.h is left
-> over from pre-SMCCCC code that used __asmeq().
-
-Also I forgot to clean-up the headers list from the previous iterations.
-
-> > +#include <linux/arm-smccc.h>
-> > +#include <linux/io.h>
-> > +#include <linux/ioport.h>
-> > +#include <linux/module.h>
-> 
-> Likewise for ioport.h and module.h. All the io accessors we use are in
-> io.h, and we only need export.h for EXPORT_SYMBOL().
-
-ok
-
-> > +#include <linux/platform_device.h>
-> 
-> This isn't a platform_driver. Was it meant to be? It would be nicer if
-> so, using builtin_platform_driver and having the usual infrastrucutre
-> drive the matching.
-
-It was a platform driver in the first versions but I changed to this
-form after Rob suggested to have it in the /firmware node and without
-compatibility to the "simple-bus".
-
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/smp.h>
-> 
-> We don't appear to use anything from smp.h any more, so I beleive that
-> can go too.
-
-ok
-
-> > +#include <linux/firmware/meson/meson_sm.h>
-> 
-> You also need <linux/printk.h>, and <linux/bug.h> for pr_* and WARN_ON
-> respectively. I believe that <linux/types.h> is mean to be included for
-> u32 and friends, though they're defined through some magic in transitive
-> includes.
-
-ok
-
-[...]
-> > +static u32 meson_sm_get_cmd(const struct meson_sm_chip *chip, unsigned int cmd_index)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; chip->cmd[i].smc_id; i++)
-> > +		if (chip->cmd[i].index == cmd_index)
-> > +			return chip->cmd[i].smc_id;
-> > +
-> > +	return 0;
-> > +}
-> 
-> Given that the sentinel has index == 0 and smc_id == 0, you could
-> simplify this to something like:
-> 
-> 	struct meson_sm_cmd *cmd = chip->cmd;
-> 
-> 	while (cmd->smc_id && cmd->index != cmd_index)
-> 		cmd++;
-> 
-> 	return cmd->smc_id;
-
-yeah, better I think
-
-> > +
-> > +static u32 __meson_sm_call(u32 cmd, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
-> > +{
-> > +	struct arm_smccc_res res;
-> > +
-> > +	arm_smccc_smc(cmd, arg0, arg1, arg2, arg3, arg4, 0, 0, &res);
-> > +	return res.a0;
-> > +}
-> > +
-> > +static void __iomem *meson_sm_map_shmem(u32 cmd_shmem, unsigned int size)
-> > +{
-> > +	u32 sm_phy_base;
-> > +
-> > +	sm_phy_base = __meson_sm_call(cmd_shmem, 0, 0, 0, 0, 0);
-> > +	if (!sm_phy_base)
-> > +		return 0;
-> > +
-> > +	return ioremap_cache(sm_phy_base, size);
-> > +}
-> 
-> Does this work on !4K page kernels?
-> 
-> Above I saw that for GXBB the shmem_size was 0x1000. I can imagine that
-> mapping an extra 60K with cacheable attributes isn't going to be safe,
-> even if the kernel happens to do that.
-
-Agree
-
-> Either we need to handle that, or rule out working for !4K kernels
-> (either with a Kconfig dependency, or some runtime detection).
-
-Probably it's better to stay on the safe side and just to rule !4K
-kernels out with Kconfig
-
-[...]
-> > + * Return:	size of sent data on success, a negative value on error
-> > + */
-> > +int meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
-> > +			unsigned int b_size, unsigned int cmd_index,
-> > +			u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
-> > +{
-> > +	u32 size;
-> 
-> The b_size vs size thing is somewhat confusing.
-> 
-> could we s/size/written/ and s/b_size/size/ ?
-
-ok
-
-> > +
-> > +	if (b_size > fw->chip->shmem_size)
-> > +		return -EINVAL;
-> > +
-> > +	if (!fw->chip->cmd_shmem_in_base)
-> > +		return -EINVAL;
-> > +
-> > +	memcpy(fw->sm_shmem_in_base, buffer, b_size);
-> > +
-> > +	if (meson_sm_call(fw, cmd_index, &size, arg0, arg1, arg2, arg3, arg4) < 0)
-> > +		return -EINVAL;
-> > +
-> > +	if (!size)
-> > +		return -EINVAL;
-> > +
-> > +	return size;
-> > +}
-> > +EXPORT_SYMBOL(meson_sm_call_write);
-> > +
-> > +/**
-> > + * meson_sm_get_fw - get Meson firmware struct
-> > + *
-> > + * Return:		Meson secure-monitor firmware struct on success, NULL on error
-> > + */
-> > +struct meson_sm_firmware *meson_sm_get_fw(void)
-> > +{
-> > +	/*
-> > +	 * Returns NULL is the firmware device is not ready.
-> > +	 */
-> > +	if (!fw.chip)
-> > +		return NULL;
-> > +
-> > +	return &fw;
-> > +}
-> > +EXPORT_SYMBOL(meson_sm_get_fw);
-> 
-> Do any external callers actually need direct access to the fw struct
-> fields? Or is this just so they can pass this to meson_sm_call and
-> friends?
-> 
-> Given we have a singleton anyway, can't we just have the meson_sm_call*
-> functions check whether fw is initialised, and return -ENOENT/-ENXIO if
-> not?
-
-Yes, the meson_sm_get_fw() was used to enforce probe ordering when the
-driver was a platform driver. Since this is now probed on
-device_initcall() I think we can safely remove this.
-
-> > +
-> > +static const struct of_device_id meson_sm_ids[] = {
-> > +	{ .compatible = "amlogic,meson-gxbb-sm", .data = &gxbb_chip },
-> > +	{ /* sentinel */ },
-> > +};
-> > +
-> > +int __init meson_sm_init(void)
-> > +{
-> > +	const struct meson_sm_chip *chip;
-> > +	const struct of_device_id *matched_np;
-> > +	struct device_node *np;
-> > +
-> > +	np = of_find_matching_node_and_match(NULL, meson_sm_ids, &matched_np);
-> > +	if (!np) {
-> > +		pr_err("no matching node\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> 
-> This is going to be pointlessly noisy on every non-amlogic board out
-> there.
-
-ouch, right
-
-> Please make this a platform driver, such that this is only called when a
-> node is present, avoiding some mess there.
-
-Since Rob required this to be under /firmware (and using no "simple-bus"
-compatible to trigger the automatic creation) making it a platform
-driver just adds a lot of boilerplate code. If this doesn't mean a NACK
-on your side, I still would leave the code as is with the
-device_initcall() calling the init.
-
-> > +	chip = matched_np->data;
-> > +	if (!chip) {
-> > +		pr_err("unable to setup secure-monitor data\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> Using a platform driver would also avoid the necessity of this check, so
-> long as you know each of_device_id entry has a valid data field.
-> 
-> > +
-> > +	if (chip->cmd_shmem_in_base) {
-> > +		fw.sm_shmem_in_base = meson_sm_map_shmem(chip->cmd_shmem_in_base,
-> > +							 chip->shmem_size);
-> > +		if (WARN_ON(!fw.sm_shmem_in_base))
-> > +			goto out;
-> > +	}
-> 
-> As above, I'm worried this may explode on !4K kernels (and also somewhat
-> worried that it might not blow up here, but rather elsewhere at
-> runtime).
-
-ok
-
-> > +
-> > +	if (chip->cmd_shmem_out_base) {
-> > +		fw.sm_shmem_out_base = meson_sm_map_shmem(chip->cmd_shmem_out_base,
-> > +							  chip->shmem_size);
-> > +		if (WARN_ON(!fw.sm_shmem_out_base))
-> > +			goto out;
-> > +	}
-> > +
-> > +	fw.chip = chip;
-> > +	pr_info("secure-monitor enabled\n");
-> 
-> This may be ambiguous to those not familiar with this driver. It would
-> be worth having:
-> 
-> #define pr_fmt(fmt) "meson-sm: " fmt
-> 
-> before the include of <linux/printk.h>, which would make it clear that
-> the log messages came from this particular secure monitor driver.
-
-good idea
-
-> > +
-> > +	return 0;
-> > +
-> > +out:
-> > +	if (fw.sm_shmem_in_base)
-> > +		iounmap(fw.sm_shmem_in_base);
-> > +
-> > +	return -EINVAL;
-> 
-> It would be nicer to have:
-> 
-> out_in_base:
-> 	iounmap(fw.sm_shmem_in_base);
-> out:
-> 	return -EINVAL
-> 
-> With the earlier gotos fixed up appropriately.
-
-agreed
-
-> > +}
-> > +device_initcall(meson_sm_init);
-> > diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
-> > new file mode 100644
-> > index 0000000..81136b0
-> > --- /dev/null
-> > +++ b/include/linux/firmware/meson/meson_sm.h
-> > @@ -0,0 +1,32 @@
-> > +/*
-> > + * Copyright (C) 2016 Endless Mobile, Inc.
-> > + * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License
-> > + * version 2 as published by the Free Software Foundation.
-> > + *
-> > + * You should have received a copy of the GNU General Public License
-> > + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +#ifndef _MESON_SM_FW_H_
-> > +#define _MESON_SM_FW_H_
-> > +
-> > +#define SM_EFUSE_READ		0
-> > +#define SM_EFUSE_WRITE		1
-> > +#define SM_EFUSE_USER_MAX	2
-> 
-> This looks like enum material, even if only for the definitions here.
-
-ok
-
-> > +
-> > +struct meson_sm_firmware;
-> > +
-> > +int meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_index,
-> > +		  u32 *ret, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
-> > +int meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
-> > +			unsigned int b_size, unsigned int cmd_index,
-> > +			u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
-> > +int meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,
-> > +		       unsigned int cmd_index, u32 arg0, u32 arg1,
-> > +		       u32 arg2, u32 arg3, u32 arg4);
-> > +struct meson_sm_firmware *meson_sm_get_fw(void);
-> 
-> As above, I'm not sure if it makes sense for meson_sm_firmware to leak
-> into drivers, though you may have a use-case for that describe in a
-> previous bit of reply.
-
-Not really, as written before that was used to enforce probe ordering.
-I'll take that out in the next revision.
-
-Thank you for your review,
-
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ck9uIDI3LzA2LzE2IDEzOjA0LCBQZXRlciBSb3NpbiB3cm90ZToKPiBPbiAyMDE2LTA2LTIzIDE3
+OjU5LCBKb24gSHVudGVyIHdyb3RlOgo+PiBUaGUgSTJDIGRyaXZlciBjb3JlIGZvciBib2FyZHMg
+dXNpbmcgZGV2aWNlLXRyZWUgYXNzdW1lcyBhbnkgc3Vibm9kZSBvZgo+PiBhbiBJMkMgYWRhcHRl
+ciBpbiB0aGUgZGV2aWNlLXRyZWUgYmxvYiBhcyBiZWluZyBhIEkyQyBzbGF2ZSBkZXZpY2UuCj4+
+IEFsdGhvdWdoIHRoaXMgbWFrZXMgY29tcGxldGUgc2Vuc2UsIHNvbWUgSTJDIGFkYXB0ZXJzIG1h
+eSBoYXZlIHN1Ym5vZGVzCj4+IHdoaWNoIGFyZSBub3QgSTJDIHNsYXZlcyBidXQgc3Vibm9kZXMg
+cHJlc2VudGluZyBvdGhlciBmZWF0dXJlcy4gRm9yCj4+IGV4YW1wbGUgc29tZSBUZWdyYSBkZXZp
+Y2VzIGhhdmUgYW4gSTJDIGludGVyZmFjZSB3aGljaCBtYXkgc2hhcmUgaXRzCj4+IHBpbnMgd2l0
+aCBvdGhlciBkZXZpY2VzIGFuZCB0byBzaGFyZSB0aGVzZSBwaW5zIHN1Ym5vZGVzIGZvcgo+PiBy
+ZXByZXNlbnRpbmcgdGhlc2UgcGlucyBzbyB0aGV5IGhhdmUgYmUgc2hhcmVkIHZpYSB0aGUgcGlu
+Y3RybCBmcmFtZXdvcmsKPj4gYXJlIG5lZWRlZC4KPj4KPj4gVG8gYWxsb3cgSTJDIGFkYXB0ZXJz
+IHRvIGhhdmUgbm9uLUkyQyBzcGVjaWZpYyBzdWJub2RlcyBpbiBkZXZpY2UtdHJlZQo+PiB0aGF0
+IGFyZSBub3QgcGFyc2VkIGJ5IHRoZSBJMkMgZHJpdmVyIGNvcmUgYnkgYWRkaW5nIHN1cHBvcnQg
+Zm9yIGEKPj4gJ2kyYy1idXMnIHN1Ym5vZGUgd2hlcmUgSTJDIHNsYXZlcyBjYW4gYmUgcGxhY2Vk
+LiBJZiB0aGUgJ2kyYy1idXMnCj4+IHN1Ym5vZGUgaXMgcHJlc2VudCB0aGVuIGFsbCBJMkMgc2xh
+dmVzIG11c3QgYmUgcGxhY2VkIHVuZGVyIHRoaXMgc3Vibm9kZS4KPj4KPj4gU2lnbmVkLW9mZi1i
+eTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+Cj4+IEFja2VkLWJ5OiBUaGllcnJ5
+IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPgo+PiAtLS0KPj4gIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLnR4dCB8IDggKysrKysrKysKPj4gIDEgZmlsZSBjaGFu
+Z2VkLCA4IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9pMmMvaTJjLnR4dAo+PiBpbmRleCBmMzFiMmFkMTU1MmIuLjcxYmVhNTVkNGMxYiAx
+MDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMu
+dHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLnR4
+dAo+PiBAQCAtMzIsNiArMzIsMTQgQEAgd2FudHMgdG8gc3VwcG9ydCBvbmUgb2YgdGhlIGJlbG93
+IGZlYXR1cmVzLCBpdCBzaG91bGQgYWRhcHQgdGhlIGJpbmRpbmdzIGJlbG93Lgo+PiAgLSBjbG9j
+ay1mcmVxdWVuY3kKPj4gIAlmcmVxdWVuY3kgb2YgYnVzIGNsb2NrIGluIEh6Lgo+PiAgCj4+ICst
+IGkyYy1idXMKPj4gKwlGb3IgSTJDIGFkYXB0ZXJzIHRoYXQgaGF2ZSBjaGlsZCBub2RlcyB0aGF0
+IGFyZSBhIG1peHR1cmUgb2YgYm90aCBJMkMKPj4gKwlkZXZpY2VzIGFuZCBub24tSTJDIGRldmlj
+ZXMgKHN1Y2ggYXMgYSBwaW4gY29udHJvbGxlciksIHRoZSAnaTJjLWJ1cycKPj4gKwlzdWJub2Rl
+IGNhbiBiZSB1c2VkIGZvciBwb3B1bGF0aW5nIEkyQyBkZXZpY2VzLiBJZiB0aGUgJ2kyYy1idXMn
+Cj4+ICsJc3Vibm9kZSBpcyBwcmVzZW50LCBvbmx5IHN1Ym5vZGVzIG9mIHRoaXMgd2lsbCBiZSBj
+b25zaWRlcmVkIGFzIEkyQwo+PiArCXNsYXZlcy4gVGhlIHByb3BlcnRpZXMsICcjYWRkcmVzcy1j
+ZWxscycgYW5kICcjc2l6ZS1jZWxscycgbXVzdCBiZQo+PiArCWRlZmluZWQgdW5kZXIgdGhpcyBz
+dWJub2RlIGlmIHByZXNlbnQuCj4gCj4gSG1tbSwgdGhvc2UgIy1wcm9wZXJ0aWVzIGFyZSBsaXN0
+ZWQgYWJvdmUsIHVuZGVyICJSZXF1aXJlZCBwcm9wZXJ0aWVzIiwgd2hpY2gKPiBpcyBubyBsb25n
+ZXIgMTAwJSB0cnVlLiBNYXliZSByZXBocmFzZSB0bwo+IAo+IAlzbGF2ZXMuIFRoZSByZXF1aXJl
+ZCBwcm9wZXJ0aWVzICcjYWRkcmVzcy1jZWxscycgYW5kICcjc2l6ZS1jZWxscycKPiAJbXVzdCBi
+ZQlkZWZpbmVkIHVuZGVyIHRoaXMgc3Vibm9kZSBpbnN0ZWFkLCBpZiB0aGlzIHN1Ym5vZGUgaXMg
+cHJlc2VudC4KPiAKPiB0byBtYWtlIHRoZSBydWxlcyAoZXZlbikgY2xlYXJlcj8KCkkgc2VlIHdo
+YXQgeW91IGFyZSBzYXlpbmcgYnV0IEkgd29uZGVyIGlmIHRoZSBmb2xsb3dpbmcgaXMgYmV0dGVy
+IC4uLgoKIHNsYXZlcy4gVGhlIHJlcXVpcmVkIHByb3BlcnRpZXMgJyNhZGRyZXNzLWNlbGxzJyBh
+bmQgJyNzaXplLWNlbGxzJwogbXVzdCBiZSBkZWZpbmVkIHVuZGVyIHRoaXMgc3Vibm9kZSBpZiBw
+cmVzZW50IGFuZCBub3QgdGhlIHBhcmVudCBub2RlLgoKQ2hlZXJzCkpvbgoKLS0gCm52cHVibGlj
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
