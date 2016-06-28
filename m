@@ -1,631 +1,347 @@
-From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v12] mtd: spi-nor: add hisilicon spi-nor flash controller driver
-Date: Tue, 28 Jun 2016 15:48:19 +0800
-Message-ID: <1467100099-6172-1-git-send-email-xuejiancheng@hisilicon.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] firmware: Amlogic: Add secure monitor driver
+Date: Tue, 28 Jun 2016 10:10:57 +0200
+Message-ID: <20160628081057.GA3171@localhost>
+References: <1466339944-602-1-git-send-email-carlo@caione.org>
+ <1466339944-602-2-git-send-email-carlo@caione.org>
+ <20160627172805.GA30514@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160627172805.GA30514@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Binquan Peng <pengbinquan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add hisilicon spi-nor flash controller driver
+On 27/06/16 18:28, Mark Rutland wrote:
+> Hi,
+> 
+> On Sun, Jun 19, 2016 at 02:38:59PM +0200, Carlo Caione wrote:
 
-Signed-off-by: Binquan Peng <pengbinquan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Reviewed-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
-change log
-v12:
-1)Made SPI_HISI_SFC depend on HAS_DMA to fix the kbuild test robot error.
-2)Added "Reviewed-by Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>" and 
-"Reviewed-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>" in the commit message.
-v11:
-Fixed issues pointed by Brian Norris and Cyrille Pitchen.
-1)Changed hisi_spi_nor_read_reg()/write_reg() to configure registers
-without sniffing the opcodes.
-2)Deleted hisi_spi_nor_erase() and used default implementation instead.
-3)Changed hisi_spi_nor_dma_transfer() to return a integer type value
-instead of nothing.
-4)Simplified hisi_spi_nor_read()/write() as Brian suggested.
+[...]
+> > +#include <stdarg.h>
+> > +#include <asm/cacheflush.h>
+> > +#include <asm/compiler.h>
+> 
+> As far as I can see, these aren't necessary. There aren't any variadic
+> functions, there's no cache maintenance. I'm guessing compiler.h is left
+> over from pre-SMCCCC code that used __asmeq().
 
-v10:
-Fixed issues pointed by Marek Vasut.
-1)Droped the underscores in the argument names of some macros' definition.
-2)Changed some varibles to correct type.
-3)Rewrote hisi_spi_nor_read/write for readability.
-4)Added new functions hisi_spi_nor_register/unregister_all
-5)Changed to dynamically allocation for spi_nor embeded in hifmc_host.
-Fixed issues pointed by Brian Norris.
-1)Replaced some headers with more accurate ones.
-v9:
-Fixed issues pointed by Jagan Teki.
-v8:
-Fixed issues pointed by Ezequiel Garcia and Brian Norris.
-Moved dts binding file to mtd directory.
-Changed the compatible string more specific.
-v7:
-Rebased to v4.5-rc3.
-Fixed issues pointed by Ezequiel Garcia.
-v6:
-Based on v4.5-rc2
-Fixed issues pointed by Ezequiel Garcia.
-v5:
-Fixed a compile error.
-v4:
-Rebased to v4.5-rc1
-v3:
-Added a compatible string "hisilicon,hi3519-sfc".
-v2:
-Fixed some compiling warings.
- .../bindings/mtd/hisilicon,fmc-spi-nor.txt         |  24 +
- drivers/mtd/spi-nor/Kconfig                        |   7 +
- drivers/mtd/spi-nor/Makefile                       |   1 +
- drivers/mtd/spi-nor/hisi-sfc.c                     | 489 +++++++++++++++++++++
- 4 files changed, 521 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
- create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
+Also I forgot to clean-up the headers list from the previous iterations.
 
-diff --git a/Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt b/Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
-new file mode 100644
-index 0000000..7498152
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
-@@ -0,0 +1,24 @@
-+HiSilicon SPI-NOR Flash Controller
-+
-+Required properties:
-+- compatible : Should be "hisilicon,fmc-spi-nor" and one of the following strings:
-+		"hisilicon,hi3519-spi-nor"
-+- address-cells : Should be 1.
-+- size-cells : Should be 0.
-+- reg : Offset and length of the register set for the controller device.
-+- reg-names : Must include the following two entries: "control", "memory".
-+- clocks : handle to spi-nor flash controller clock.
-+
-+Example:
-+spi-nor-controller@10000000 {
-+	compatible = "hisilicon,hi3519-spi-nor", "hisilicon,fmc-spi-nor";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
-+	reg-names = "control", "memory";
-+	clocks = <&clock HI3519_FMC_CLK>;
-+	spi-nor@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+	};
-+};
-diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-index d42c98e..6f14f2b 100644
---- a/drivers/mtd/spi-nor/Kconfig
-+++ b/drivers/mtd/spi-nor/Kconfig
-@@ -38,6 +38,13 @@ config SPI_FSL_QUADSPI
- 	  This controller does not support generic SPI. It only supports
- 	  SPI NOR.
- 
-+config SPI_HISI_SFC
-+	tristate "Hisilicon SPI-NOR Flash Controller(SFC)"
-+	depends on ARCH_HISI || COMPILE_TEST
-+	depends on HAS_IOMEM && HAS_DMA
-+	help
-+	  This enables support for hisilicon SPI-NOR flash controller.
-+
- config SPI_NXP_SPIFI
- 	tristate "NXP SPI Flash Interface (SPIFI)"
- 	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
-diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index 0bf3a7f8..8a6fa69 100644
---- a/drivers/mtd/spi-nor/Makefile
-+++ b/drivers/mtd/spi-nor/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
- obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
-+obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
- obj-$(CONFIG_MTD_MT81xx_NOR)    += mtk-quadspi.o
- obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
-diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/hisi-sfc.c
-new file mode 100644
-index 0000000..44664c3
---- /dev/null
-+++ b/drivers/mtd/spi-nor/hisi-sfc.c
-@@ -0,0 +1,489 @@
-+/*
-+ * HiSilicon SPI Nor Flash Controller Driver
-+ *
-+ * Copyright (c) 2015-2016 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/spi-nor.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+/* Hardware register offsets and field definitions */
-+#define FMC_CFG				0x00
-+#define FMC_CFG_OP_MODE_MASK		BIT_MASK(0)
-+#define FMC_CFG_OP_MODE_BOOT		0
-+#define FMC_CFG_OP_MODE_NORMAL		1
-+#define FMC_CFG_FLASH_SEL(type)		(((type) & 0x3) << 1)
-+#define FMC_CFG_FLASH_SEL_MASK		0x6
-+#define FMC_ECC_TYPE(type)		(((type) & 0x7) << 5)
-+#define FMC_ECC_TYPE_MASK		GENMASK(7, 5)
-+#define SPI_NOR_ADDR_MODE_MASK		BIT_MASK(10)
-+#define SPI_NOR_ADDR_MODE_3BYTES	(0x0 << 10)
-+#define SPI_NOR_ADDR_MODE_4BYTES	(0x1 << 10)
-+#define FMC_GLOBAL_CFG			0x04
-+#define FMC_GLOBAL_CFG_WP_ENABLE	BIT(6)
-+#define FMC_SPI_TIMING_CFG		0x08
-+#define TIMING_CFG_TCSH(nr)		(((nr) & 0xf) << 8)
-+#define TIMING_CFG_TCSS(nr)		(((nr) & 0xf) << 4)
-+#define TIMING_CFG_TSHSL(nr)		((nr) & 0xf)
-+#define CS_HOLD_TIME			0x6
-+#define CS_SETUP_TIME			0x6
-+#define CS_DESELECT_TIME		0xf
-+#define FMC_INT				0x18
-+#define FMC_INT_OP_DONE			BIT(0)
-+#define FMC_INT_CLR			0x20
-+#define FMC_CMD				0x24
-+#define FMC_CMD_CMD1(cmd)		((cmd) & 0xff)
-+#define FMC_ADDRL			0x2c
-+#define FMC_OP_CFG			0x30
-+#define OP_CFG_FM_CS(cs)		((cs) << 11)
-+#define OP_CFG_MEM_IF_TYPE(type)	(((type) & 0x7) << 7)
-+#define OP_CFG_ADDR_NUM(addr)		(((addr) & 0x7) << 4)
-+#define OP_CFG_DUMMY_NUM(dummy)		((dummy) & 0xf)
-+#define FMC_DATA_NUM			0x38
-+#define FMC_DATA_NUM_CNT(cnt)		((cnt) & GENMASK(13, 0))
-+#define FMC_OP				0x3c
-+#define FMC_OP_DUMMY_EN			BIT(8)
-+#define FMC_OP_CMD1_EN			BIT(7)
-+#define FMC_OP_ADDR_EN			BIT(6)
-+#define FMC_OP_WRITE_DATA_EN		BIT(5)
-+#define FMC_OP_READ_DATA_EN		BIT(2)
-+#define FMC_OP_READ_STATUS_EN		BIT(1)
-+#define FMC_OP_REG_OP_START		BIT(0)
-+#define FMC_DMA_LEN			0x40
-+#define FMC_DMA_LEN_SET(len)		((len) & GENMASK(27, 0))
-+#define FMC_DMA_SADDR_D0		0x4c
-+#define HIFMC_DMA_MAX_LEN		(4096)
-+#define HIFMC_DMA_MASK			(HIFMC_DMA_MAX_LEN - 1)
-+#define FMC_OP_DMA			0x68
-+#define OP_CTRL_RD_OPCODE(code)		(((code) & 0xff) << 16)
-+#define OP_CTRL_WR_OPCODE(code)		(((code) & 0xff) << 8)
-+#define OP_CTRL_RW_OP(op)		((op) << 1)
-+#define OP_CTRL_DMA_OP_READY		BIT(0)
-+#define FMC_OP_READ			0x0
-+#define FMC_OP_WRITE			0x1
-+#define FMC_WAIT_TIMEOUT		1000000
-+
-+enum hifmc_iftype {
-+	IF_TYPE_STD,
-+	IF_TYPE_DUAL,
-+	IF_TYPE_DIO,
-+	IF_TYPE_QUAD,
-+	IF_TYPE_QIO,
-+};
-+
-+struct hifmc_priv {
-+	u32 chipselect;
-+	u32 clkrate;
-+	struct hifmc_host *host;
-+};
-+
-+#define HIFMC_MAX_CHIP_NUM		2
-+struct hifmc_host {
-+	struct device *dev;
-+	struct mutex lock;
-+
-+	void __iomem *regbase;
-+	void __iomem *iobase;
-+	struct clk *clk;
-+	void *buffer;
-+	dma_addr_t dma_buffer;
-+
-+	struct spi_nor	*nor[HIFMC_MAX_CHIP_NUM];
-+	u32 num_chip;
-+};
-+
-+static inline int wait_op_finish(struct hifmc_host *host)
-+{
-+	u32 reg;
-+
-+	return readl_poll_timeout(host->regbase + FMC_INT, reg,
-+		(reg & FMC_INT_OP_DONE), 0, FMC_WAIT_TIMEOUT);
-+}
-+
-+static int get_if_type(enum read_mode flash_read)
-+{
-+	enum hifmc_iftype if_type;
-+
-+	switch (flash_read) {
-+	case SPI_NOR_DUAL:
-+		if_type = IF_TYPE_DUAL;
-+		break;
-+	case SPI_NOR_QUAD:
-+		if_type = IF_TYPE_QUAD;
-+		break;
-+	case SPI_NOR_NORMAL:
-+	case SPI_NOR_FAST:
-+	default:
-+		if_type = IF_TYPE_STD;
-+		break;
-+	}
-+
-+	return if_type;
-+}
-+
-+static void hisi_spi_nor_init(struct hifmc_host *host)
-+{
-+	u32 reg;
-+
-+	reg = TIMING_CFG_TCSH(CS_HOLD_TIME)
-+		| TIMING_CFG_TCSS(CS_SETUP_TIME)
-+		| TIMING_CFG_TSHSL(CS_DESELECT_TIME);
-+	writel(reg, host->regbase + FMC_SPI_TIMING_CFG);
-+}
-+
-+static int hisi_spi_nor_prep(struct spi_nor *nor, enum spi_nor_ops ops)
-+{
-+	struct hifmc_priv *priv = nor->priv;
-+	struct hifmc_host *host = priv->host;
-+	int ret;
-+
-+	mutex_lock(&host->lock);
-+
-+	ret = clk_set_rate(host->clk, priv->clkrate);
-+	if (ret)
-+		goto out;
-+
-+	ret = clk_prepare_enable(host->clk);
-+	if (ret)
-+		goto out;
-+
-+	return 0;
-+
-+out:
-+	mutex_unlock(&host->lock);
-+	return ret;
-+}
-+
-+static void hisi_spi_nor_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
-+{
-+	struct hifmc_priv *priv = nor->priv;
-+	struct hifmc_host *host = priv->host;
-+
-+	clk_disable_unprepare(host->clk);
-+	mutex_unlock(&host->lock);
-+}
-+
-+static int hisi_spi_nor_op_reg(struct spi_nor *nor,
-+				u8 opcode, int len, u8 optype)
-+{
-+	struct hifmc_priv *priv = nor->priv;
-+	struct hifmc_host *host = priv->host;
-+	u32 reg;
-+
-+	reg = FMC_CMD_CMD1(opcode);
-+	writel(reg, host->regbase + FMC_CMD);
-+
-+	reg = FMC_DATA_NUM_CNT(len);
-+	writel(reg, host->regbase + FMC_DATA_NUM);
-+
-+	reg = OP_CFG_FM_CS(priv->chipselect);
-+	writel(reg, host->regbase + FMC_OP_CFG);
-+
-+	writel(0xff, host->regbase + FMC_INT_CLR);
-+	reg = FMC_OP_CMD1_EN | FMC_OP_REG_OP_START | optype;
-+	writel(reg, host->regbase + FMC_OP);
-+
-+	return wait_op_finish(host);
-+}
-+
-+static int hisi_spi_nor_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
-+		int len)
-+{
-+	struct hifmc_priv *priv = nor->priv;
-+	struct hifmc_host *host = priv->host;
-+	int ret;
-+
-+	ret = hisi_spi_nor_op_reg(nor, opcode, len, FMC_OP_READ_DATA_EN);
-+	if (ret)
-+		return ret;
-+
-+	memcpy_fromio(buf, host->iobase, len);
-+	return 0;
-+}
-+
-+static int hisi_spi_nor_write_reg(struct spi_nor *nor, u8 opcode,
-+				u8 *buf, int len)
-+{
-+	struct hifmc_priv *priv = nor->priv;
-+	struct hifmc_host *host = priv->host;
-+
-+	if (len)
-+		memcpy_toio(host->iobase, buf, len);
-+
-+	return hisi_spi_nor_op_reg(nor, opcode, len, FMC_OP_WRITE_DATA_EN);
-+}
-+
-+static int hisi_spi_nor_dma_transfer(struct spi_nor *nor, loff_t start_off,
-+		dma_addr_t dma_buf, size_t len, u8 op_type)
-+{
-+	struct hifmc_priv *priv = nor->priv;
-+	struct hifmc_host *host = priv->host;
-+	u8 if_type = 0;
-+	u32 reg;
-+
-+	reg = readl(host->regbase + FMC_CFG);
-+	reg &= ~(FMC_CFG_OP_MODE_MASK | SPI_NOR_ADDR_MODE_MASK);
-+	reg |= FMC_CFG_OP_MODE_NORMAL;
-+	reg |= (nor->addr_width == 4) ? SPI_NOR_ADDR_MODE_4BYTES
-+		: SPI_NOR_ADDR_MODE_3BYTES;
-+	writel(reg, host->regbase + FMC_CFG);
-+
-+	writel(start_off, host->regbase + FMC_ADDRL);
-+	writel(dma_buf, host->regbase + FMC_DMA_SADDR_D0);
-+	writel(FMC_DMA_LEN_SET(len), host->regbase + FMC_DMA_LEN);
-+
-+	reg = OP_CFG_FM_CS(priv->chipselect);
-+	if_type = get_if_type(nor->flash_read);
-+	reg |= OP_CFG_MEM_IF_TYPE(if_type);
-+	if (op_type == FMC_OP_READ)
-+		reg |= OP_CFG_DUMMY_NUM(nor->read_dummy >> 3);
-+	writel(reg, host->regbase + FMC_OP_CFG);
-+
-+	writel(0xff, host->regbase + FMC_INT_CLR);
-+	reg = OP_CTRL_RW_OP(op_type) | OP_CTRL_DMA_OP_READY;
-+	reg |= (op_type == FMC_OP_READ)
-+		? OP_CTRL_RD_OPCODE(nor->read_opcode)
-+		: OP_CTRL_WR_OPCODE(nor->program_opcode);
-+	writel(reg, host->regbase + FMC_OP_DMA);
-+
-+	return wait_op_finish(host);
-+}
-+
-+static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
-+		size_t *retlen, u_char *read_buf)
-+{
-+	struct hifmc_priv *priv = nor->priv;
-+	struct hifmc_host *host = priv->host;
-+	size_t offset;
-+	int ret;
-+
-+	for (offset = 0; offset < len; offset += HIFMC_DMA_MAX_LEN) {
-+		size_t trans = min_t(size_t, HIFMC_DMA_MAX_LEN, len - offset);
-+
-+		ret = hisi_spi_nor_dma_transfer(nor,
-+			from + offset, host->dma_buffer, trans, FMC_OP_READ);
-+		if (ret) {
-+			dev_warn(nor->dev, "DMA read timeout\n");
-+			return ret;
-+		}
-+		memcpy(read_buf + offset, host->buffer, trans);
-+		*retlen += trans;
-+	}
-+
-+	return 0;
-+}
-+
-+static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
-+			size_t len, size_t *retlen, const u_char *write_buf)
-+{
-+	struct hifmc_priv *priv = nor->priv;
-+	struct hifmc_host *host = priv->host;
-+	size_t offset;
-+	int ret;
-+
-+	for (offset = 0; offset < len; offset += HIFMC_DMA_MAX_LEN) {
-+		size_t trans = min_t(size_t, HIFMC_DMA_MAX_LEN, len - offset);
-+
-+		memcpy(host->buffer, write_buf + offset, trans);
-+		ret = hisi_spi_nor_dma_transfer(nor,
-+			to + offset, host->dma_buffer, trans, FMC_OP_WRITE);
-+		if (ret) {
-+			dev_warn(nor->dev, "DMA write timeout\n");
-+			return;
-+		}
-+		*retlen += len;
-+	}
-+}
-+
-+/**
-+ * Get spi flash device information and register it as a mtd device.
-+ */
-+static int hisi_spi_nor_register(struct device_node *np,
-+				struct hifmc_host *host)
-+{
-+	struct device *dev = host->dev;
-+	struct spi_nor *nor;
-+	struct hifmc_priv *priv;
-+	struct mtd_info *mtd;
-+	int ret;
-+
-+	nor = devm_kzalloc(dev, sizeof(*nor), GFP_KERNEL);
-+	if (!nor)
-+		return -ENOMEM;
-+
-+	nor->dev = dev;
-+	spi_nor_set_flash_node(nor, np);
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_u32(np, "reg", &priv->chipselect);
-+	if (ret) {
-+		dev_err(dev, "There's no reg property for %s\n",
-+			np->full_name);
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(np, "spi-max-frequency",
-+			&priv->clkrate);
-+	if (ret) {
-+		dev_err(dev, "There's no spi-max-frequency property for %s\n",
-+			np->full_name);
-+		return ret;
-+	}
-+	priv->host = host;
-+	nor->priv = priv;
-+
-+	nor->prepare = hisi_spi_nor_prep;
-+	nor->unprepare = hisi_spi_nor_unprep;
-+	nor->read_reg = hisi_spi_nor_read_reg;
-+	nor->write_reg = hisi_spi_nor_write_reg;
-+	nor->read = hisi_spi_nor_read;
-+	nor->write = hisi_spi_nor_write;
-+	nor->erase = NULL;
-+	ret = spi_nor_scan(nor, NULL, SPI_NOR_QUAD);
-+	if (ret)
-+		return ret;
-+
-+	mtd = &nor->mtd;
-+	mtd->name = np->name;
-+	ret = mtd_device_register(mtd, NULL, 0);
-+	if (ret)
-+		return ret;
-+
-+	host->nor[host->num_chip] = nor;
-+	host->num_chip++;
-+	return 0;
-+}
-+
-+static void hisi_spi_nor_unregister_all(struct hifmc_host *host)
-+{
-+	int i;
-+
-+	for (i = 0; i < host->num_chip; i++)
-+		mtd_device_unregister(&host->nor[i]->mtd);
-+}
-+
-+static int hisi_spi_nor_register_all(struct hifmc_host *host)
-+{
-+	struct device *dev = host->dev;
-+	struct device_node *np;
-+	int ret;
-+
-+	for_each_available_child_of_node(dev->of_node, np) {
-+		ret = hisi_spi_nor_register(np, host);
-+		if (ret)
-+			goto fail;
-+
-+		if (host->num_chip == HIFMC_MAX_CHIP_NUM) {
-+			dev_warn(dev, "Flash device number exceeds the maximum chipselect number\n");
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+
-+fail:
-+	hisi_spi_nor_unregister_all(host);
-+	return ret;
-+}
-+
-+static int hisi_spi_nor_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	struct hifmc_host *host;
-+	int ret;
-+
-+	host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
-+	if (!host)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, host);
-+	host->dev = dev;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
-+	host->regbase = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(host->regbase))
-+		return PTR_ERR(host->regbase);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "memory");
-+	host->iobase = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(host->iobase))
-+		return PTR_ERR(host->iobase);
-+
-+	host->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(host->clk))
-+		return PTR_ERR(host->clk);
-+
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-+	if (ret) {
-+		dev_warn(dev, "Unable to set dma mask\n");
-+		return ret;
-+	}
-+
-+	host->buffer = dmam_alloc_coherent(dev, HIFMC_DMA_MAX_LEN,
-+			&host->dma_buffer, GFP_KERNEL);
-+	if (!host->buffer)
-+		return -ENOMEM;
-+
-+	mutex_init(&host->lock);
-+	clk_prepare_enable(host->clk);
-+	hisi_spi_nor_init(host);
-+	ret = hisi_spi_nor_register_all(host);
-+	if (ret)
-+		mutex_destroy(&host->lock);
-+
-+	clk_disable_unprepare(host->clk);
-+	return ret;
-+}
-+
-+static int hisi_spi_nor_remove(struct platform_device *pdev)
-+{
-+	struct hifmc_host *host = platform_get_drvdata(pdev);
-+
-+	hisi_spi_nor_unregister_all(host);
-+	mutex_destroy(&host->lock);
-+	clk_disable_unprepare(host->clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id hisi_spi_nor_dt_ids[] = {
-+	{ .compatible = "hisilicon,fmc-spi-nor"},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, hisi_spi_nor_dt_ids);
-+
-+static struct platform_driver hisi_spi_nor_driver = {
-+	.driver = {
-+		.name	= "hisi-sfc",
-+		.of_match_table = hisi_spi_nor_dt_ids,
-+	},
-+	.probe	= hisi_spi_nor_probe,
-+	.remove	= hisi_spi_nor_remove,
-+};
-+module_platform_driver(hisi_spi_nor_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("HiSilicon SPI Nor Flash Controller Driver");
+> > +#include <linux/arm-smccc.h>
+> > +#include <linux/io.h>
+> > +#include <linux/ioport.h>
+> > +#include <linux/module.h>
+> 
+> Likewise for ioport.h and module.h. All the io accessors we use are in
+> io.h, and we only need export.h for EXPORT_SYMBOL().
+
+ok
+
+> > +#include <linux/platform_device.h>
+> 
+> This isn't a platform_driver. Was it meant to be? It would be nicer if
+> so, using builtin_platform_driver and having the usual infrastrucutre
+> drive the matching.
+
+It was a platform driver in the first versions but I changed to this
+form after Rob suggested to have it in the /firmware node and without
+compatibility to the "simple-bus".
+
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/smp.h>
+> 
+> We don't appear to use anything from smp.h any more, so I beleive that
+> can go too.
+
+ok
+
+> > +#include <linux/firmware/meson/meson_sm.h>
+> 
+> You also need <linux/printk.h>, and <linux/bug.h> for pr_* and WARN_ON
+> respectively. I believe that <linux/types.h> is mean to be included for
+> u32 and friends, though they're defined through some magic in transitive
+> includes.
+
+ok
+
+[...]
+> > +static u32 meson_sm_get_cmd(const struct meson_sm_chip *chip, unsigned int cmd_index)
+> > +{
+> > +	unsigned int i;
+> > +
+> > +	for (i = 0; chip->cmd[i].smc_id; i++)
+> > +		if (chip->cmd[i].index == cmd_index)
+> > +			return chip->cmd[i].smc_id;
+> > +
+> > +	return 0;
+> > +}
+> 
+> Given that the sentinel has index == 0 and smc_id == 0, you could
+> simplify this to something like:
+> 
+> 	struct meson_sm_cmd *cmd = chip->cmd;
+> 
+> 	while (cmd->smc_id && cmd->index != cmd_index)
+> 		cmd++;
+> 
+> 	return cmd->smc_id;
+
+yeah, better I think
+
+> > +
+> > +static u32 __meson_sm_call(u32 cmd, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+> > +{
+> > +	struct arm_smccc_res res;
+> > +
+> > +	arm_smccc_smc(cmd, arg0, arg1, arg2, arg3, arg4, 0, 0, &res);
+> > +	return res.a0;
+> > +}
+> > +
+> > +static void __iomem *meson_sm_map_shmem(u32 cmd_shmem, unsigned int size)
+> > +{
+> > +	u32 sm_phy_base;
+> > +
+> > +	sm_phy_base = __meson_sm_call(cmd_shmem, 0, 0, 0, 0, 0);
+> > +	if (!sm_phy_base)
+> > +		return 0;
+> > +
+> > +	return ioremap_cache(sm_phy_base, size);
+> > +}
+> 
+> Does this work on !4K page kernels?
+> 
+> Above I saw that for GXBB the shmem_size was 0x1000. I can imagine that
+> mapping an extra 60K with cacheable attributes isn't going to be safe,
+> even if the kernel happens to do that.
+
+Agree
+
+> Either we need to handle that, or rule out working for !4K kernels
+> (either with a Kconfig dependency, or some runtime detection).
+
+Probably it's better to stay on the safe side and just to rule !4K
+kernels out with Kconfig
+
+[...]
+> > + * Return:	size of sent data on success, a negative value on error
+> > + */
+> > +int meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
+> > +			unsigned int b_size, unsigned int cmd_index,
+> > +			u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4)
+> > +{
+> > +	u32 size;
+> 
+> The b_size vs size thing is somewhat confusing.
+> 
+> could we s/size/written/ and s/b_size/size/ ?
+
+ok
+
+> > +
+> > +	if (b_size > fw->chip->shmem_size)
+> > +		return -EINVAL;
+> > +
+> > +	if (!fw->chip->cmd_shmem_in_base)
+> > +		return -EINVAL;
+> > +
+> > +	memcpy(fw->sm_shmem_in_base, buffer, b_size);
+> > +
+> > +	if (meson_sm_call(fw, cmd_index, &size, arg0, arg1, arg2, arg3, arg4) < 0)
+> > +		return -EINVAL;
+> > +
+> > +	if (!size)
+> > +		return -EINVAL;
+> > +
+> > +	return size;
+> > +}
+> > +EXPORT_SYMBOL(meson_sm_call_write);
+> > +
+> > +/**
+> > + * meson_sm_get_fw - get Meson firmware struct
+> > + *
+> > + * Return:		Meson secure-monitor firmware struct on success, NULL on error
+> > + */
+> > +struct meson_sm_firmware *meson_sm_get_fw(void)
+> > +{
+> > +	/*
+> > +	 * Returns NULL is the firmware device is not ready.
+> > +	 */
+> > +	if (!fw.chip)
+> > +		return NULL;
+> > +
+> > +	return &fw;
+> > +}
+> > +EXPORT_SYMBOL(meson_sm_get_fw);
+> 
+> Do any external callers actually need direct access to the fw struct
+> fields? Or is this just so they can pass this to meson_sm_call and
+> friends?
+> 
+> Given we have a singleton anyway, can't we just have the meson_sm_call*
+> functions check whether fw is initialised, and return -ENOENT/-ENXIO if
+> not?
+
+Yes, the meson_sm_get_fw() was used to enforce probe ordering when the
+driver was a platform driver. Since this is now probed on
+device_initcall() I think we can safely remove this.
+
+> > +
+> > +static const struct of_device_id meson_sm_ids[] = {
+> > +	{ .compatible = "amlogic,meson-gxbb-sm", .data = &gxbb_chip },
+> > +	{ /* sentinel */ },
+> > +};
+> > +
+> > +int __init meson_sm_init(void)
+> > +{
+> > +	const struct meson_sm_chip *chip;
+> > +	const struct of_device_id *matched_np;
+> > +	struct device_node *np;
+> > +
+> > +	np = of_find_matching_node_and_match(NULL, meson_sm_ids, &matched_np);
+> > +	if (!np) {
+> > +		pr_err("no matching node\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> 
+> This is going to be pointlessly noisy on every non-amlogic board out
+> there.
+
+ouch, right
+
+> Please make this a platform driver, such that this is only called when a
+> node is present, avoiding some mess there.
+
+Since Rob required this to be under /firmware (and using no "simple-bus"
+compatible to trigger the automatic creation) making it a platform
+driver just adds a lot of boilerplate code. If this doesn't mean a NACK
+on your side, I still would leave the code as is with the
+device_initcall() calling the init.
+
+> > +	chip = matched_np->data;
+> > +	if (!chip) {
+> > +		pr_err("unable to setup secure-monitor data\n");
+> > +		return -EINVAL;
+> > +	}
+> 
+> Using a platform driver would also avoid the necessity of this check, so
+> long as you know each of_device_id entry has a valid data field.
+> 
+> > +
+> > +	if (chip->cmd_shmem_in_base) {
+> > +		fw.sm_shmem_in_base = meson_sm_map_shmem(chip->cmd_shmem_in_base,
+> > +							 chip->shmem_size);
+> > +		if (WARN_ON(!fw.sm_shmem_in_base))
+> > +			goto out;
+> > +	}
+> 
+> As above, I'm worried this may explode on !4K kernels (and also somewhat
+> worried that it might not blow up here, but rather elsewhere at
+> runtime).
+
+ok
+
+> > +
+> > +	if (chip->cmd_shmem_out_base) {
+> > +		fw.sm_shmem_out_base = meson_sm_map_shmem(chip->cmd_shmem_out_base,
+> > +							  chip->shmem_size);
+> > +		if (WARN_ON(!fw.sm_shmem_out_base))
+> > +			goto out;
+> > +	}
+> > +
+> > +	fw.chip = chip;
+> > +	pr_info("secure-monitor enabled\n");
+> 
+> This may be ambiguous to those not familiar with this driver. It would
+> be worth having:
+> 
+> #define pr_fmt(fmt) "meson-sm: " fmt
+> 
+> before the include of <linux/printk.h>, which would make it clear that
+> the log messages came from this particular secure monitor driver.
+
+good idea
+
+> > +
+> > +	return 0;
+> > +
+> > +out:
+> > +	if (fw.sm_shmem_in_base)
+> > +		iounmap(fw.sm_shmem_in_base);
+> > +
+> > +	return -EINVAL;
+> 
+> It would be nicer to have:
+> 
+> out_in_base:
+> 	iounmap(fw.sm_shmem_in_base);
+> out:
+> 	return -EINVAL
+> 
+> With the earlier gotos fixed up appropriately.
+
+agreed
+
+> > +}
+> > +device_initcall(meson_sm_init);
+> > diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
+> > new file mode 100644
+> > index 0000000..81136b0
+> > --- /dev/null
+> > +++ b/include/linux/firmware/meson/meson_sm.h
+> > @@ -0,0 +1,32 @@
+> > +/*
+> > + * Copyright (C) 2016 Endless Mobile, Inc.
+> > + * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License
+> > + * version 2 as published by the Free Software Foundation.
+> > + *
+> > + * You should have received a copy of the GNU General Public License
+> > + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> > + */
+> > +
+> > +#ifndef _MESON_SM_FW_H_
+> > +#define _MESON_SM_FW_H_
+> > +
+> > +#define SM_EFUSE_READ		0
+> > +#define SM_EFUSE_WRITE		1
+> > +#define SM_EFUSE_USER_MAX	2
+> 
+> This looks like enum material, even if only for the definitions here.
+
+ok
+
+> > +
+> > +struct meson_sm_firmware;
+> > +
+> > +int meson_sm_call(struct meson_sm_firmware *fw, unsigned int cmd_index,
+> > +		  u32 *ret, u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
+> > +int meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
+> > +			unsigned int b_size, unsigned int cmd_index,
+> > +			u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
+> > +int meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,
+> > +		       unsigned int cmd_index, u32 arg0, u32 arg1,
+> > +		       u32 arg2, u32 arg3, u32 arg4);
+> > +struct meson_sm_firmware *meson_sm_get_fw(void);
+> 
+> As above, I'm not sure if it makes sense for meson_sm_firmware to leak
+> into drivers, though you may have a use-case for that describe in a
+> previous bit of reply.
+
+Not really, as written before that was used to enforce probe ordering.
+I'll take that out in the next revision.
+
+Thank you for your review,
+
 -- 
-1.9.1
-
+Carlo Caione
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
