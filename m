@@ -1,81 +1,60 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH 2/4] dmaengine: vdma: Add support for mulit-channel dma
- mode
-Date: Tue, 28 Jun 2016 07:24:38 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5B9BD5@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1465549954-30220-1-git-send-email-appanad@xilinx.com>
- <1465549954-30220-3-git-send-email-appanad@xilinx.com>
- <20160621155502.GB16910@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A5B8248@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160621163340.GE16910@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A5B84A9@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160628043459.GR22564@localhost>
- <C246CAC1457055469EF09E3A7AC4E11A4A5B9B9E@XAP-PVEXMBX01.xlnx.xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A5B9B9E@XAP-PVEXMBX01.xlnx.xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Appana Durga Kedareswara Rao <appanad@xilinx.com>, Vinod Koul <vinod.koul@intel.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+From: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/3] Add Broadcom iproc-static-adc controller driver
+Date: Tue, 28 Jun 2016 13:10:33 +0530
+Message-ID: <1467099636-31855-1-git-send-email-raveendra.padasalagi@broadcom.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+This patchset contains initial driver for Broadcom's
+iproc static adc controller. The patchset is based on v4.7-rc1
+tag and its tested on Broadcom Cygnus SoC.
 
-	
- 
-> > > > > > >  /**
-> > > > > > > + * struct xilinx_mcdma_config - DMA Multi channel
-> > > > > > > +configuration structure
-> > > > > > > + * @tdest: Channel to operate on
-> > > > > > > + * @tid:   Channel configuration
-> > > > > > > + * @tuser: Tuser configuration
-> > > > > > > + * @ax_user: ax_user value
-> > > > > > > + * @ax_cache: ax_cache value  */ struct xilinx_mcdma_config
-> > > > > > > +{
-> > > > > > > +	u8 tdest;
-> > > > > > > +	u8 tid;
-> > > > > > > +	u8 tuser;
-> > > > > > > +	u8 ax_user;
-> > > > > > > +	u8 ax_cache;
-> > > > > >
-> > > > > > can you describe these in details, what do these do, what are
-> > > > > > the values to be programmed?
-> > > > >
-> > > > > As said above In Multi-Channel Mode each Stream interface can be
-> > > > > Configured up to 16 channels each channel is differentiated
-> > > > > based on the tdest
-> > > > and tid values.
-> > > >
-> > > > Then why are you not registering 16 channels for this? That should
-> > > > give you channel to operate on!
-> > >
-> > > The number of channels are configurable.
-> > > We are registering number of Channels that h/w configured for.
-> > >
-> > > Will fix in the next version. Will remove this config.
-> > > And based on the channel type will configure the h/w.
-> >
-> > Looking at this you should redesign!
-> >
-> > The vchan was designed to operate on 'virtual' channels. The hardware
-> > channels can be independent of that.
-> >
-> > Your IP seems to be a good fit for that approach. Do not link the two
-> > and separate them. User can have a virtual channel. In your driver,
-> > you can manage hardware channels...
-> 
-> Fixed it in the v2 and posted the v2 series.
-> Please go thought it...
+The patches can be fetched from iproc-adc-v4 branch of
+https://github.com/Broadcom/arm64-linux.git
 
-Sorry forgot to write explanation.
-Without the need of virtual channels fixed it in the driver itself.
-During probe based on the number of channels configuring the h/w
-Accordingly user no need to aware of this configuration. User can request DMA
-Channel in normal way the using dma_request_slave_channel or dma_request_channel
- Posted v2 series please go through it.
 
-Regards,
-Kedar.
+Changes since v3:
+ - Assigned indio_dev->name to be iproc-static-adc.
+ - Modified Module Author to include the name and email address.
+ - Modified DT binding document to include reference to IIO core
+   docs for property io-channel-ranges.
+
+Changes since v2:
+ - Addressed various comments given by Jonathan Cameron and
+   Peter Meerwald-Stadler on driver source code related to linux
+   coding style and clean-up of code. Lot of source code change
+   happened especially due to redefining the #defines.
+ - Added code to support IIO_CHAN_INFO_SCALE mask to return
+   scale value in iproc_adc_read_raw().
+ - Removed #address-cells, #size-cells properties in DT binding
+   document and dts file as adc will not have any child nodes as
+   noticed by Rob Herring.
+
+Changes since v1:
+ - Modified Kconfig file to add more informative information
+   in Broadcom Adc driver configuration menu.
+ - Added Broadcom Adc driver menu config in the alphabetical
+   order in Kconfig
+ - Addressed various comments given by Peter Meerwald-Stadler
+   on driver source code, Including issues related to linux
+   coding style and race conditions.
+
+Raveendra Padasalagi (3):
+  Documentation: DT: Add iproc-static-adc binding
+  iio: Add driver for Broadcom iproc-static-adc
+  ARM:dts-Add dt node for Broadcom iproc-static-adc
+
+ .../bindings/iio/adc/brcm,iproc-static-adc.txt     |  41 ++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  11 +
+ drivers/iio/adc/Kconfig                            |  12 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/bcm_iproc_adc.c                    | 644 +++++++++++++++++++++
+ 5 files changed, 709 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/brcm,iproc-static-adc.txt
+ create mode 100644 drivers/iio/adc/bcm_iproc_adc.c
+
+-- 
+1.9.1
