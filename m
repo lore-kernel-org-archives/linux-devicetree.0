@@ -1,90 +1,93 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [RFC PATCH 5/5] ARM: sun8i: enable ths node for A23/33
-Date: Tue, 28 Jun 2016 18:13:25 +0800
-Message-ID: <20160628101325.2522-5-icenowy@aosc.xyz>
-References: <20160628101325.2522-1-icenowy@aosc.xyz>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: AMLogic RTC series (second round)
+Date: Tue, 28 Jun 2016 11:19:47 +0100
+Message-ID: <aea5e2f4-2440-a192-e15a-1f4ff5a30a1c@codethink.co.uk>
+References: <1467045849-495-1-git-send-email-ben.dooks@codethink.co.uk>
+ <577225A3.9010409@baylibre.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160628101325.2522-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, maxime.ripard@free-electrons.com, wens@csie.org, emilio@elopez.com.ar
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCEPJZEDQIBBBTU6ZG5QKGQE5IZJEMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <577225A3.9010409-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 16 ++++++++++++++++
- arch/arm/boot/dts/sun8i-a23.dtsi     |  4 ++++
- arch/arm/boot/dts/sun8i-a33.dtsi     |  4 ++++
- 3 files changed, 24 insertions(+)
+On 28/06/16 08:22, Neil Armstrong wrote:
+> On 06/27/2016 06:44 PM, Ben Dooks wrote:
+>> Apologies, forgot to put the RTC driver through checkpatch
+>> before sending. This gets rid of most of the warnings.
+>>
+>>
+>> _______________________________________________
+>> linux-amlogic mailing list
+>> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+>>
+> 
+> Hi Ben,
+> 
+> The patchset looks good but misses some quick introduction on how
+> the RTC works, it seems to be connected to an internal serial bus,
+> do you have some informations about this ?
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index a340cea..04df1ca 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -66,6 +66,14 @@
- 		};
- 	};
- 
-+	thermal-zones {
-+		cpu_thermal: cpu_thermal {
-+			polling-delay-passive = <330>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&ths 0>;
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -473,6 +481,14 @@
- 			status = "disabled";
- 		};
- 
-+		ths: ths@01c25000 {
-+			#thermal-sensor-cells = <0>;
-+			/* compatible is in per-cpu dtsi file */
-+			reg = <0x01c25000 0x44>;
-+			clocks = <&pll2 0>;
-+			clock-names = "pll2";
-+		};
-+
- 		uart0: serial@01c28000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01c28000 0x400>;
-diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
-index 92e6616..41f0d9e 100644
---- a/arch/arm/boot/dts/sun8i-a23.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23.dtsi
-@@ -124,3 +124,7 @@
- 		     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
- 		     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
- };
-+
-+&ths {
-+	compatible = "allwinner,sun8i-a23-ths";
-+};
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index 001d840..2273124 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -173,3 +173,7 @@
- 	};
- 
- };
-+
-+&ths {
-+	compatible = "allwinner,sun8i-a33-ths";
-+};
+I might add a few lines into the rtc-meson.c driver, but that's all
+detailed in the datasheet (for once this seems to be documented enough
+to be able to function)
+
+> Then, the cover letter of your patchset should contain much more informations
+> that "git format-patch --cover-letter" generates.
+
+I may just re-submit once patch to add the RTC and the binding
+documentation, and then wait until the reset controller bits have
+landed before submitting the
+
+> My personal workflow when I have a set ready is :
+> 
+> * run checkpatch on C files and check my changes
+> # scripts/checkpatch.pl -f path/to/my/driver.c
+> * I identify the number of patches to include
+> * I generate the patches with cover-letter, signoff and eventually subject-prefix, here for 4 commits
+> # git format-patch --cover-letter -s -4 --subject-prefix "PATCH v2" -o my_drivers_patches_v2
+> * Then I complete the cover letter in my_drivers_patches_v2/0000-cover-letter
+> * I also reference a small changelog between patchset version and identify the previous cover letter via it's message id
+> Use the http://lkml.kernel.org service to reference a message-id, i.e this email I answer would be referenced by :
+> http://lkml.kernel.org/r/1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org
+
+I keep a copy of sent email anyway, so can get the message-ids out of it.
+
+> while looking at the email headers at :
+> Message-Id: <1467045849-495-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> * Then I look again all the patches and check all the descriptions
+> * I re-run a checkpatch.pl on all the patches (and ignore errors on the cover letter)
+> # scripts/checkpatch.pl my_drivers_patches_v2/*
+> * I identify all the maintainers and mailing lists
+> # scripts/get_maintainer.pl my_drivers_patches_v2/*
+> * Personally, I fill the CC: and To: in the headers of each patches, only adding the devicetree mailing list on DT related patches
+> * Then I send them via git send-email
+> # git send-email my_drivers_patches_v2/*
+> => here you can also select the recipients
+> => you can also do a dry run or send yourself the patchset to check before final sending
+
+I got sparse and checkpatch confused, and only did sparse on the series.
+
 -- 
-2.9.0
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
