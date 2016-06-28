@@ -1,78 +1,81 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH v3 06/10] gpio: tps65218: Remove the compatible
-Date: Tue, 28 Jun 2016 12:29:58 +0530
-Message-ID: <5772206E.7020509@ti.com>
-References: <1467093980-11458-1-git-send-email-j-keerthy@ti.com>
- <1467093980-11458-7-git-send-email-j-keerthy@ti.com>
- <20160628065235.GC6720@dell>
+From: Alexander Stein <alexanders83@web.de>
+Subject: Re: linux-next: Tree for Jun 27 (pinctrl && !CONFIG_OF)
+Date: Tue, 28 Jun 2016 09:00:47 +0200
+Message-ID: <2044946.aGLaEK2W6I@ws-stein>
+References: <20160627163939.20e454d5@canb.auug.org.au> <57716D3D.4070302@infradead.org> <735717690.oeI6DkomRc@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160628065235.GC6720@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Keerthy <j-keerthy@ti.com>
-Cc: dmitry.torokhov@gmail.com, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <735717690.oeI6DkomRc@wuerfel>
+Sender: linux-next-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 27 June 2016 23:36:29, Arnd Bergmann wrote:
+> On Monday, June 27, 2016 11:15:25 AM CEST Randy Dunlap wrote:
+> > On 06/26/16 23:39, Stephen Rothwell wrote:
+> > > Hi all,
+> > 
+> > > Changes since 20160624:
+> > on i386, when CONFIG_OF is not enabled ...
+> > but OF_GPIO is enabled due to this in drivers/gpio/Kconfig:
+> > 
+> > config OF_GPIO
+> > 
+> >         def_bool y
+> >         depends on OF || COMPILE_TEST
+> > 
+> > (above from commit 1e4a80640338924b9f9fd7a121ac31d08134410a
+> > from Alexander Stein <alexanders83@web.de>)
+> > 
+> > 
+> > ../drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:381:20: error:
+> > 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
+> > ../drivers/pinctrl/bcm/pinctrl-cygnus-mux.c:739:20: error:
+> > 'pinconf_generic_dt_node_to_map_group' undeclared here (not in a
+> > function) ../drivers/pinctrl/bcm/pinctrl-nsp-gpio.c:365:20: error:
+> > 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
+> > 
+> > because that function is only present when CONFIG_OF is enabled.
+> > 
+> > 
+> > Also, why does that commit (1e4a80640338924b9f9fd7a121ac31d08134410a)
+> > not have any other S-O-B lines in it?  like whoever merged it?
+> 
+> (adding Linus Walleij and Alexander Stein to Cc)
+> 
+> Unfortunately, the changelog also doesn't say what triggered that
+> change. I guess there was a driver that did 'select OF_GPIO'
+> and had a dependency on COMPILE_TEST, though I don't see any
+> driver doing that in linux-next.
 
+It was the first change of the changes done in my branch 
+https://github.com/AlexanderStein/linux/tree/gpio-compile-test
+ in order to compile test as much gpio drivers as possible. Yet, pinctrl 
+drivers were out of my scope.
 
-On Tuesday 28 June 2016 12:22 PM, Lee Jones wrote:
-> On Tue, 28 Jun 2016, Keerthy wrote:
->
->> Remove the individual compatible for the gpio module.
->> Introduce id_table and update the driver accordingly
->> to parse device tree nodes by just using the mfd compatible.
->
-> Aren't there any OF calls in this driver?
->
+> I think the commit should just be reverted, it clearly breaks
+> stuff, and whatever needs it can be fixed in a better way.
 
-There is one assignment.
+Why not depend PINCTRL_IPROC_GPIO on CONFIG_OF as Randy stated 
+pinconf_generic_dt_node_to_map_pin and friends are only present if CONFIG_OF 
+is enabled. Depending on OF_GPIO only is enough under the assumption a) you 
+made below.
+Also what about providing dummy implementation for those missing function in 
+case CONFIG_OF is disabled, my preference as more code can be compile tested.
 
-ps65218_gpio->gpio_chip.of_node = pdev->dev.of_node;
+> Specifically, we have three ways that the OF_GPIO symbol
+> is used:
+> 
+> a) it is implicitly enabled when both GPIOLIB and OF are turned on
 
+or if COMPILE_TEST is enabled
 
-> You can use the MFD API to pass through compatible strings in order to
-> interrogate the DT in the normal way.  There isn't usually a reason to
-> remove DT support just because you start using the MFD API.
+I think a problem in this and possibly other cases is that COMPILE_TEST 
+loosens the Kconfig dependencies to some degree. How to proceed? Allow compile 
+testing drivers only if some optional settings are enabled?
 
-Okay. I will do it the way i am doing for tps65218-pwrbutton.
-
-Thanks for the review.
-
->
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>   drivers/gpio/gpio-tps65218.c | 10 +++++-----
->>   1 file changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-tps65218.c b/drivers/gpio/gpio-tps65218.c
->> index 0f9d9bd..06fd61f 100644
->> --- a/drivers/gpio/gpio-tps65218.c
->> +++ b/drivers/gpio/gpio-tps65218.c
->> @@ -225,19 +225,19 @@ static int tps65218_gpio_remove(struct platform_device *pdev)
->>   	return 0;
->>   }
->>
->> -static const struct of_device_id tps65218_dt_match[] = {
->> -	{ .compatible = "ti,tps65218-gpio" },
->> -	{  }
->> +static const struct platform_device_id tps65218_gpio_id_table[] = {
->> +	{ "tps65218-gpio", },
->> +	{ /* sentinel */ }
->>   };
->> -MODULE_DEVICE_TABLE(of, tps65218_dt_match);
->> +MODULE_DEVICE_TABLE(platform, tps65218_gpio_id_table);
->>
->>   static struct platform_driver tps65218_gpio_driver = {
->>   	.driver = {
->>   		.name = "tps65218-gpio",
->> -		.of_match_table = of_match_ptr(tps65218_dt_match)
->>   	},
->>   	.probe = tps65218_gpio_probe,
->>   	.remove = tps65218_gpio_remove,
->> +	.id_table = tps65218_gpio_id_table,
->>   };
->>
->>   module_platform_driver(tps65218_gpio_driver);
->
+Best regards,
+Alexander
