@@ -1,100 +1,65 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 2/4] mfd: cros_ec: add EC_PWM function definitions
-Date: Tue, 28 Jun 2016 16:31:40 +0100
-Message-ID: <20160628153140.GD29166@dell>
-References: <1466193495-95801-1-git-send-email-briannorris@chromium.org>
- <1466193495-95801-3-git-send-email-briannorris@chromium.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3 0/9] Generic DT bindings for PCI IOMMUs and ARM SMMUv3
+Date: Tue, 28 Jun 2016 16:48:19 +0100
+Message-ID: <cover.1467123945.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466193495-95801-3-git-send-email-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Jun 2016, Brian Norris wrote:
+I didn't want the ongoing SMMUv2 rework delaying getting this out any
+longer, so here's the SMMUv3-flavoured parts of the respin to address
+the last round of comments[1] plus some new bits which fell out of the
+woodwork along the way. This time I've actually fully tested the
+platform device/multiple ID support as well (turns out I was being a
+bit thick and our model does have some suitable peripherals after all).
 
-> The EC_CMD_PWM_{GET,SET}_DUTY commands allow us to control a PWM that=
- is
-> attached to the EC, rather than the main host SoC. The API provides
-> functionality-based (e.g., keyboard light, backlight) or index-based
-> addressing of the PWM(s). Duty cycles are represented by a 16-bit val=
-ue,
-> where 0 maps to 0% duty cycle and U16_MAX maps to 100%. The period
-> cannot be controlled.
->=20
-> This command set is more generic than, e.g.,
-> EC_CMD_PWM_{GET,SET}_KEYBOARD_BACKLIGHT and could possibly used to
-> replace it on future products.
->=20
-> Let's update the command header to include the definitions.
->=20
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> v3:
->  * convert from 65535 to 0xffff
->=20
-> v2:
->  * no changes
-> ---
->  include/linux/mfd/cros_ec_commands.h | 31 ++++++++++++++++++++++++++=
-+++++
->  1 file changed, 31 insertions(+)
+As ever, branch at git://linux-arm.org/linux-rm iommu/generic-v3
 
-=46or my own reference:
-  Acked-by: Lee Jones <lee.jones@linaro.org>
- =20
-> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd=
-/cros_ec_commands.h
-> index 13b630c10d4c..7e7a8d4b4551 100644
-> --- a/include/linux/mfd/cros_ec_commands.h
-> +++ b/include/linux/mfd/cros_ec_commands.h
-> @@ -949,6 +949,37 @@ struct ec_params_pwm_set_fan_duty {
->  	uint32_t percent;
->  } __packed;
-> =20
-> +#define EC_CMD_PWM_SET_DUTY 0x25
-> +/* 16 bit duty cycle, 0xffff =3D 100% */
-> +#define EC_PWM_MAX_DUTY 0xffff
-> +
-> +enum ec_pwm_type {
-> +	/* All types, indexed by board-specific enum pwm_channel */
-> +	EC_PWM_TYPE_GENERIC =3D 0,
-> +	/* Keyboard backlight */
-> +	EC_PWM_TYPE_KB_LIGHT,
-> +	/* Display backlight */
-> +	EC_PWM_TYPE_DISPLAY_LIGHT,
-> +	EC_PWM_TYPE_COUNT,
-> +};
-> +
-> +struct ec_params_pwm_set_duty {
-> +	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY =3D 100% */
-> +	uint8_t pwm_type;  /* ec_pwm_type */
-> +	uint8_t index;     /* Type-specific index, or 0 if unique */
-> +} __packed;
-> +
-> +#define EC_CMD_PWM_GET_DUTY 0x26
-> +
-> +struct ec_params_pwm_get_duty {
-> +	uint8_t pwm_type;  /* ec_pwm_type */
-> +	uint8_t index;     /* Type-specific index, or 0 if unique */
-> +} __packed;
-> +
-> +struct ec_response_pwm_get_duty {
-> +	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY =3D 100% */
-> +} __packed;
-> +
->  /*******************************************************************=
-**********/
->  /*
->   * Lightbar commands. This looks worse than it is. Since we only use=
- one HOST
+Robin.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+[1]:http://thread.gmane.org/gmane.linux.kernel.iommu/13936
+
+Lorenzo Pieralisi (1):
+  arm64: mm: change IOMMU notifier action to attach DMA ops
+
+Mark Rutland (1):
+  Docs: dt: add PCI IOMMU map bindings
+
+Robin Murphy (7):
+  iommu/of: Consolidate device creation workarounds
+  of/irq: Break out msi-map lookup (again)
+  iommu/of: Handle iommu-map property for PCI
+  iommu/of: Introduce iommu_fwspec
+  iommu/arm-smmu: Implement of_xlate() for SMMUv3
+  iommu/arm-smmu: Support non-PCI devices with SMMUv3
+  iommu/arm-smmu: Set PRIVCFG in stage 1 STEs
+
+ .../devicetree/bindings/pci/pci-iommu.txt          | 171 ++++++++++++
+ arch/arm64/mm/dma-mapping.c                        |  22 +-
+ drivers/iommu/Kconfig                              |   2 +-
+ drivers/iommu/arm-smmu-v3.c                        | 307 ++++++++++-----------
+ drivers/iommu/exynos-iommu.c                       |  20 +-
+ drivers/iommu/mtk_iommu.c                          |   8 +-
+ drivers/iommu/of_iommu.c                           |  96 ++++++-
+ drivers/of/irq.c                                   |  78 +-----
+ drivers/of/of_pci.c                                | 102 +++++++
+ include/linux/of_iommu.h                           |  18 ++
+ include/linux/of_pci.h                             |  10 +
+ 11 files changed, 554 insertions(+), 280 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
+
+-- 
+2.8.1.dirty
