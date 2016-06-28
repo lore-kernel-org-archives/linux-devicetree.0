@@ -1,28 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] clk: fixed-factor: add optional dt-binding clock-flags
-Date: Tue, 28 Jun 2016 15:55:18 -0500
-Message-ID: <20160628205518.GF3737@rob-hp-laptop>
-References: <20160621005910.GN1521@codeaurora.org>
- <1466741572-58802-1-git-send-email-neidhard.kim@lge.com>
+Subject: Re: [PATCH 2/4] input: touchscreen: crtouch_ts: Add driver
+Date: Tue, 28 Jun 2016 15:55:44 -0500
+Message-ID: <20160628205544.GH3737@rob-hp-laptop>
+References: <1466797486-31558-1-git-send-email-tony.felice@timesys.com>
+ <1466797486-31558-3-git-send-email-tony.felice@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1466741572-58802-1-git-send-email-neidhard.kim@lge.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jongsung Kim <neidhard.kim@lge.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chanho Min <chanho.min@lge.com>
+In-Reply-To: <1466797486-31558-3-git-send-email-tony.felice@timesys.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Anthony Felice <tony.felice@timesys.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, maitysanchayan@gmail.com, damien.riegel@savoirfairelinux.com, linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, linux@armlinux.org.uk, sre@kernel.org, mwelling@ieee.org, geert@linux-m68k.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, linux-input@vger.kernel.org, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 24, 2016 at 01:12:52PM +0900, Jongsung Kim wrote:
-> There is no way to set additional flags for a DT-initialized fixed-
-> factor-clock, and it can be problematic i.e., when the clock rate
-> needs to be changed. [1][2]
-> 
-> This patch introduces an optional dt-binding named "clock-flags" to
-> be used for passing any needed flags from dts.
-
-I don't think we want this in DT. If we did, the flags would need some 
-documentation about what the flags mean.
-
-Rob
+T24gRnJpLCBKdW4gMjQsIDIwMTYgYXQgMDM6NDQ6NDRQTSAtMDQwMCwgQW50aG9ueSBGZWxpY2Ug
+d3JvdGU6Cj4gQWRkIGRyaXZlciBmb3IgdGhlIFZ5YnJpZCBUb3dlciBDUlRvdWNoLWJhc2VkIHRv
+dWNoc2NyZWVuLiBUaGlzIGlzCj4gcmVxdWlyZWQgZm9yIHRoZSB0b3VjaHNjcmVlbiBvbiB0aGUg
+VFdSLUxDRC1SR0IgdG8gd29yayBvbiB0aGUgVnlicmlkCj4gVG93ZXIgcGxhdGZvcm0uCj4gCj4g
+VGhlcmUgaXMgYSBrbm93biBpc3N1ZSB3aXRoIHRoaXMgZHJpdmVyOiByYXJlbHksIFNXMSBvbiB0
+aGUgVFdSLUxDRC1SR0IKPiBtb2R1bGUgbmVlZHMgdG8gYmUgcHJlc3NlZCBpbiBvcmRlciBmb3Ig
+dGhlIHRvdWNoc2NyZWVuIHRvIGJlZ2luCj4gZnVuY3Rpb25pbmcuCj4gCj4gU2lnbmVkLW9mZi1i
+eTogQW50aG9ueSBGZWxpY2UgPHRvbnkuZmVsaWNlQHRpbWVzeXMuY29tPgo+IC0tLQo+ICAuLi4v
+YmluZGluZ3MvaW5wdXQvdG91Y2hzY3JlZW4vY3J0b3VjaF90cy50eHQgICAgICB8ICAxNCArKwo+
+ICBkcml2ZXJzL2lucHV0L3RvdWNoc2NyZWVuL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAx
+MCArCj4gIGRyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vTWFrZWZpbGUgICAgICAgICAgICAgICAg
+IHwgICAxICsKPiAgZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9jcnRvdWNoX3RzLmMgICAgICAg
+ICAgICAgfCAyNzkgKysrKysrKysrKysrKysrKysrKysrCj4gIDQgZmlsZXMgY2hhbmdlZCwgMzA0
+IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9jcnRvdWNoX3RzLnR4dAo+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9jcnRvdWNoX3RzLmMKPiAKPiBk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3RvdWNo
+c2NyZWVuL2NydG91Y2hfdHMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2lucHV0L3RvdWNoc2NyZWVuL2NydG91Y2hfdHMudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+PiBpbmRleCAwMDAwMDAwLi5jZmI5NjZjCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9jcnRvdWNoX3RzLnR4
+dAo+IEBAIC0wLDAgKzEsMTQgQEAKPiArKiBGcmVlc2NhbGUgQ1JUT1VDSCBiYXNlZCB0b3VjaHNj
+cmVlbgo+ICsKPiArUmVxdWlyZWQgUHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlIG11c3QgYmUg
+ZnNsLGNydG91Y2hfdHMKPiArLSByZWc6IEkyQyBhZGRyZXNzIG9mIHRoZSB0b3VjaHNjcmVlbgo+
+ICstIGlycS1ncGlvOiBHUElPIHRvIHVzZSBhcyBldmVudCBJUlEKPiArCj4gK0V4YW1wbGU6Cj4g
+Kwo+ICsJdG91Y2g6IGNydG91Y2hANDkgewoKdG91Y2hzY3JlZW5ANDkKCj4gKwkJY29tcGF0aWJs
+ZSA9ICJmc2wsY3J0b3VjaF90cyI7CgpVc2UgJy0nLCBub3QgJ18nLgoKPiArCQlyZWcgPSA8MHg0
+OT47Cj4gKwkJaXJxLWdwaW8gPSA8JmdwaW8wIDIxIEdQSU9fQUNUSVZFX0hJR0g+OwoKQXMgRG1p
+dHJ5IHNhaWQuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
