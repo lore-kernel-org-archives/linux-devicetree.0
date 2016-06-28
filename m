@@ -1,91 +1,60 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 05/92] dt-bindings: Document rk3399 rk-timer bindings
-Date: Tue, 28 Jun 2016 12:30:24 +0200
-Message-ID: <1467109911-11060-5-git-send-email-daniel.lezcano@linaro.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 11/92] of: Add a new macro to declare_of for one parameter function returning a value
+Date: Tue, 28 Jun 2016 12:30:30 +0200
+Message-ID: <1467109911-11060-11-git-send-email-daniel.lezcano@linaro.org>
 References: <577251A4.7030508@linaro.org>
  <1467109911-11060-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467109911-11060-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467109911-11060-1-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+The macro OF_DECLARE_1 expect a void (*func)(struct device_node *) while the
+OF_DECLARE_2 expect a int (*func)(struct device_node *, struct device_node *).
 
-Add a compatible string for rk3399 SoC because the timer is slightly different
-from the older SoCs. So rename the file name from rockchip,rk3288-timer.txt to
-rockchip,rk-timer.txt and clarify rockchip,rk3288-timer supported SoCs.
+The second one allows to pass an init function returning a value, which make
+possible to call the functions in the table and check the return value in order
+to catch at a higher level the errors and handle them from there instead of
+doing a panic in each driver (well at least this is the case for the clkevt).
 
-Signed-off-by: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Unfortunately the OF_DECLARE_1 does not allow that and that lead to some code
+duplication and crappyness in the drivers.
+
+The OF_DECLARE_1 is used by all the clk drivers and the clocksource/clockevent
+drivers. It is not possible to do the change in one shot as we have to change
+all the init functions.
+
+The OF_DECLARE_2 specifies an init function prototype with two parameters with
+the node and its parent. The latter won't be used, ever, in the timer drivers.
+
+Introduce a OF_DECLARE_1_RET macro to be used, and hopefully we can smoothly
+and iteratively change the users of OF_DECLARE_1 to use the new macro instead.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/timer/rockchip,rk-timer.txt  | 20 ++++++++++++++++++++
- .../bindings/timer/rockchip,rk3288-timer.txt         | 18 ------------------
- 2 files changed, 20 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
- delete mode 100644 Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
+ include/linux/of.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-new file mode 100644
-index 0000000..a41b184
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-@@ -0,0 +1,20 @@
-+Rockchip rk timer
-+
-+Required properties:
-+- compatible: shall be one of:
-+  "rockchip,rk3288-timer" - for rk3066, rk3036, rk3188, rk322x, rk3288, rk3368
-+  "rockchip,rk3399-timer" - for rk3399
-+- reg: base address of the timer register starting with TIMERS CONTROL register
-+- interrupts: should contain the interrupts for Timer0
-+- clocks : must contain an entry for each entry in clock-names
-+- clock-names : must include the following entries:
-+  "timer", "pclk"
-+
-+Example:
-+	timer: timer@ff810000 {
-+		compatible = "rockchip,rk3288-timer";
-+		reg = <0xff810000 0x20>;
-+		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&xin24m>, <&cru PCLK_TIMER>;
-+		clock-names = "timer", "pclk";
-+	};
-diff --git a/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt b/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
-deleted file mode 100644
-index 87f0b00..0000000
---- a/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--Rockchip rk3288 timer
--
--Required properties:
--- compatible: shall be "rockchip,rk3288-timer"
--- reg: base address of the timer register starting with TIMERS CONTROL register
--- interrupts: should contain the interrupts for Timer0
--- clocks : must contain an entry for each entry in clock-names
--- clock-names : must include the following entries:
--  "timer", "pclk"
--
--Example:
--	timer: timer@ff810000 {
--		compatible = "rockchip,rk3288-timer";
--		reg = <0xff810000 0x20>;
--		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&xin24m>, <&cru PCLK_TIMER>;
--		clock-names = "timer", "pclk";
--	};
+diff --git a/include/linux/of.h b/include/linux/of.h
+index c7292e8..552943d 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1009,10 +1009,13 @@ static inline int of_get_available_child_count(const struct device_node *np)
+ #endif
+ 
+ typedef int (*of_init_fn_2)(struct device_node *, struct device_node *);
++typedef int (*of_init_fn_1_ret)(struct device_node *);
+ typedef void (*of_init_fn_1)(struct device_node *);
+ 
+ #define OF_DECLARE_1(table, name, compat, fn) \
+ 		_OF_DECLARE(table, name, compat, fn, of_init_fn_1)
++#define OF_DECLARE_1_RET(table, name, compat, fn) \
++		_OF_DECLARE(table, name, compat, fn, of_init_fn_1_ret)
+ #define OF_DECLARE_2(table, name, compat, fn) \
+ 		_OF_DECLARE(table, name, compat, fn, of_init_fn_2)
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
