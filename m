@@ -1,44 +1,66 @@
 From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v1 1/5] dt-bindings: Add support for LG LP079QX1-SP0V
- 1536x2048 panel
-Date: Tue, 28 Jun 2016 12:51:12 +0800
-Message-ID: <1467089472-18584-1-git-send-email-ykk@rock-chips.com>
+Subject: [PATCH v1 2/5] drm/panel: simple: Add support for LG LP079QX1-SP0V 1536x2048 panel
+Date: Tue, 28 Jun 2016 12:51:15 +0800
+Message-ID: <1467089475-18627-1-git-send-email-ykk@rock-chips.com>
 References: <1467089288-18355-1-git-send-email-ykk@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1467089288-18355-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Cc: Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIExHIExQMDc5UVgxLVNQMFYgaXMgYW4gNy45IiBRWEdBIFRGVCB3aXRoIExFRCBCYWNrbGln
-aHQgdW5pdCBhbmQKMzIgcGlucyBlRFAgaW50ZXJmYWNlLiBUaGlzIG1vZHVsZSBzdXBwb3J0cyAx
-NTM2eDIwNDggbW9kZS4KClNpZ25lZC1vZmYtYnk6IFlha2lyIFlhbmcgPHlra0Byb2NrLWNoaXBz
-LmNvbT4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2xnLGxwMDc5
-cXgxLXNwMHYudHh0ICAgICAgICAgfCA3ICsrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2Vy
-dGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9wYW5lbC9sZyxscDA3OXF4MS1zcDB2LnR4dAoKZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2xnLGxwMDc5cXgx
-LXNwMHYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
-ZWwvbGcsbHAwNzlxeDEtc3Awdi50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAw
-MC4uYjk4NzdhYwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L3BhbmVsL2xnLGxwMDc5cXgxLXNwMHYudHh0CkBAIC0wLDAgKzEsNyBA
-QAorTEcgTFAwNzlRWDEtU1AwViA3LjkiICgxNTM2eDIwNDggcGl4ZWxzKSBURlQgTENEIHBhbmVs
-CisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAibGcsbHAw
-NzlxeDEtc3AwdiIKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxl
-LXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4dCBp
-biB0aGlzIGRpcmVjdG9yeS4KLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+The LG LP079QX1-SP0V is an 7.9" QXGA TFT with LED Backlight unit and
+32 pins eDP interface. This module supports 1536x2048 mode.
+
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+---
+ drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 3a7bdf1..072c994 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1017,6 +1017,29 @@ static const struct panel_desc lg_lb070wv8 = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+ };
+ 
++static const struct drm_display_mode lg_lp079qx1_sp0v_mode = {
++	.clock = 200000,
++	.hdisplay = 1536,
++	.hsync_start = 1536 + 12,
++	.hsync_end = 1536 + 12 + 16,
++	.htotal = 1536 + 12 + 16 + 48,
++	.vdisplay = 2048,
++	.vsync_start = 2048 + 8,
++	.vsync_end = 2048 + 8 + 4,
++	.vtotal = 2048 + 8 + 4 + 8,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++};
++
++static const struct panel_desc lg_lp079qx1_sp0v = {
++	.modes = &lg_lp079qx1_sp0v_mode,
++	.num_modes = 1,
++	.size = {
++		.width = 129,
++		.height = 171,
++	},
++};
++
+ static const struct drm_display_mode lg_lp120up1_mode = {
+ 	.clock = 162300,
+ 	.hdisplay = 1920,
+@@ -1457,6 +1480,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "lg,lb070wv8",
+ 		.data = &lg_lb070wv8,
+ 	}, {
++		.compatible = "lg,lp079qx1-sp0v",
++		.data = &lg_lp079qx1_sp0v,
++	}, {
+ 		.compatible = "lg,lp120up1",
+ 		.data = &lg_lp120up1,
+ 	}, {
+-- 
+1.9.1
