@@ -1,37 +1,59 @@
 From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v1 4/5] ARM: dts: rockchip: add the panel power supply for rk3288-evb board with act8846 pmu
-Date: Tue, 28 Jun 2016 12:51:21 +0800
-Message-ID: <1467089481-18713-1-git-send-email-ykk@rock-chips.com>
+Subject: [PATCH v1 3/5] ARM: dts: rockchip: add eDP/panel display device nodes
+ for rk3288-evb
+Date: Tue, 28 Jun 2016 12:51:18 +0800
+Message-ID: <1467089478-18670-1-git-send-email-ykk@rock-chips.com>
 References: <1467089288-18355-1-git-send-email-ykk@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1467089288-18355-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Yakir Yang <ykk@rock-chips.com>
+Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Panel regulator is controller by a normal GPIO, so we need to
-write a regulator-fixed node for it.
-
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
- arch/arm/boot/dts/rk3288-evb-act8846.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-index 452ca24..041dd5d 100644
---- a/arch/arm/boot/dts/rk3288-evb-act8846.dts
-+++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-@@ -206,6 +206,10 @@
- 	};
- };
- 
-+&panel {
-+	power-supply = <&vcc_lcd>;
-+};
-+
- &pinctrl {
- 	lcd {
- 		lcd_en: lcd-en  {
--- 
-1.9.1
+VGhlIGRlZmF1bHQgZURQIHBhbmVsIG9uIFJLMzI4OCBFVkIgYm9hcmQgaXMgTEcgTFAwNzlRWDEt
+U1AwViBURlQgTENELAp3ZSBoYXZlbid0IGRlY2xhcmVkIHRoZSBwYW5lbCByZWd1bGF0b3IgaW4g
+dGhlICdwYW5lbC1zaW1wbGUnIGRldmljZQpub2RlIGhlcmUsIHNvIHRoZSBzcGVjaWZpYyBib2Fy
+ZCBsaWtlIEFDVDg4NDYgLyBSSzgwODAgbmVlZCB0byBzdXBwb3J0CnRoZSBwYW5lbCBwb3dlciBz
+dXBwbHkuCgpTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Ci0t
+LQogYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LWV2Yi5kdHNpIHwgNDMgKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgNDIgaW5zZXJ0aW9ucygr
+KSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1l
+dmIuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1ldmIuZHRzaQppbmRleCA5NjMzNjVk
+Li5mMjkzYzQ0IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9yazMyODgtZXZiLmR0c2kK
+KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LWV2Yi5kdHNpCkBAIC00OCw3ICs0OCw3IEBA
+CiAJCXJlZyA9IDwweDAgMHg4MDAwMDAwMD47CiAJfTsKIAotCWJhY2tsaWdodCB7CisJYmFja2xp
+Z2h0OiBiYWNrbGlnaHQgewogCQljb21wYXRpYmxlID0gInB3bS1iYWNrbGlnaHQiOwogCQlicmln
+aHRuZXNzLWxldmVscyA9IDwKIAkJCSAgMCAgIDEgICAyICAgMyAgIDQgICA1ICAgNiAgIDcKQEAg
+LTk3LDYgKzk3LDIwIEBACiAJCSNjbG9jay1jZWxscyA9IDwwPjsKIAl9OwogCisJcGFuZWw6IHBh
+bmVsIHsKKwkJY29tcGF0aWJsZSA9ImxnLGxwMDc5cXgxLXNwMHYiLCAic2ltcGxlLXBhbmVsIjsK
+KwkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+OworCQllbmFibGUtZ3Bpb3MgPSA8JmdwaW83IDQg
+R1BJT19BQ1RJVkVfSElHSD47CisJCXBpbmN0cmwtMCA9IDwmbGNkX2NzPjsKKwkJcG9ydHMgewor
+CQkJcGFuZWxfaW46IHBvcnQgeworCQkJCXBhbmVsX2luX2VkcDogZW5kcG9pbnQgeworCQkJCQly
+ZW1vdGUtZW5kcG9pbnQgPSA8JmVkcF9vdXRfcGFuZWw+OworCQkJCX07CisJCQl9OworCQl9Owor
+CX07CisKIAlncGlvLWtleXMgewogCQljb21wYXRpYmxlID0gImdwaW8ta2V5cyI7CiAJCWF1dG9y
+ZXBlYXQ7CkBAIC0yMTYsNiArMjMwLDI3IEBACiAJc3RhdHVzID0gIm9rYXkiOwogfTsKIAorJmVk
+cF9waHkgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZlZHAgeworCWZvcmNlLWhwZDsKKwlz
+dGF0dXMgPSAib2theSI7CisKKwlwb3J0cyB7CisJCWVkcF9vdXQ6IHBvcnRAMSB7CisJCQlyZWcg
+PSA8MT47CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxzID0gPDA+Owor
+CQkJZWRwX291dF9wYW5lbDogZW5kcG9pbnQgeworCQkJCXJlZyA9IDwwPjsKKwkJCQlyZW1vdGUt
+ZW5kcG9pbnQgPSA8JnBhbmVsX2luX2VkcD47CisJCQl9OworCQl9OworCX07Cit9OworCiAmaTJj
+MCB7CiAJc3RhdHVzID0gIm9rYXkiOwogfTsKQEAgLTMyMiw2ICszNTcsMTIgQEAKIAkJCXJvY2tj
+aGlwLHBpbnMgPSA8MCA2IFJLX0ZVTkNfR1BJTyAmcGNmZ19wdWxsX25vbmU+OwogCQl9OwogCX07
+CisKKwlsY2QgeworCQlsY2RfY3M6IGxjZC1jcyB7CisJCQlyb2NrY2hpcCxwaW5zID0gPDcgNCBS
+S19GVU5DX0dQSU8gJnBjZmdfcHVsbF9ub25lPjsKKwkJfTsKKwl9OwogfTsKIAogJnVzYnBoeSB7
+Ci0tIAoxLjkuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
