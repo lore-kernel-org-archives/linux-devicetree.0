@@ -1,84 +1,67 @@
-From: Tai Tri Nguyen <ttnguyen@apm.com>
-Subject: Re: [PATCH v4 3/4] perf: xgene: Add APM X-Gene SoC Performance
- Monitoring Unit driver
-Date: Tue, 28 Jun 2016 11:05:50 -0700
-Message-ID: <CACgAJHy+dcDeq_Zr+7kCKKCpXK2qeyXjxuAOQjULdooT3G6RHw@mail.gmail.com>
-References: <1466618819-2697-1-git-send-email-ttnguyen@apm.com>
- <1466618819-2697-4-git-send-email-ttnguyen@apm.com>
- <20160623143201.GI8836@leverpostej>
- <CACgAJHyprybnpQuKqvD9rXstQBwoeVG+uGtEBp-pppcfSGMKgQ@mail.gmail.com>
- <20160627160036.GB29321@leverpostej>
- <CACgAJHzM-hzJJDr-HzZyDQ0SUg0PEd5SYKo8YPnRCDCVA9JuJg@mail.gmail.com>
- <20160628111355.GI31744@leverpostej> <577279E2.6070202@arm.com>
- <20160628141400.GN31744@leverpostej>
- <CACgAJHzNe68wDxkk5Uc8M8vHsjL5XoppmPys=37LqBWR5m5zxw@mail.gmail.com>
- <20160628165941.GS31744@leverpostej>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v5 0/7] max8903: Add device tree support and misc fixes
+Date: Tue, 28 Jun 2016 20:16:37 +0200
+Message-ID: <20160628181636.GA2391@earth>
+References: <1464849897-21527-3-git-send-email-chris@lapa.com.au>
+ <1466735172-13372-1-git-send-email-chris@cpdesign.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160628165941.GS31744@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, patches <patches@apm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1466735172-13372-1-git-send-email-chris@cpdesign.com.au>
+Sender: linux-pm-owner@vger.kernel.org
+To: Chris Lapa <chris@lapa.com.au>
+Cc: k.kozlowski@samsung.com, dwmw2@infradead.org, dbaryshkov@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-On Tue, Jun 28, 2016 at 9:59 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Tue, Jun 28, 2016 at 09:39:36AM -0700, Tai Tri Nguyen wrote:
->> Hi Mark,
->>
->> On Tue, Jun 28, 2016 at 7:14 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > On Tue, Jun 28, 2016 at 02:21:38PM +0100, Marc Zyngier wrote:
->> >> On 28/06/16 12:13, Mark Rutland wrote:
->> >> > Marc, is there a sensible way to prevent irq balancers from changing the
->> >> > affinity of an IRQ, e.g. a kernel-side pinning mechanism, or some way we
->> >> > can be notified and reject changes?
->> >>
->> >> You can get notified (see irq_set_affinity_notifier), but there no way
->> >> to veto the change.
->> >
->> > :(
->> >
->> >> What should probably be done is to set the affinity hint
->> >> (irq_set_affinity_hint), and use the notifier to migrate the context
->> >> if possible. Note that you'll be called in process context, which will
->> >> race against interrupts being delivered on the new CPU.
->> >
->> > I'll have to go digging into what exactly perf_pmu_migrate_context
->> > requires. Given the race, I'm not sure if that's going to work. It's
->> > certainly not going to be self contained.
->> >
->> > That also won't work for CPU PMUs, where it makes no sense to migrate
->> > context or IRQs.  For those we appear to already be using have
->> > IRQF_NOBALANCING, which sounds like exactly what we want.
->> >
->> > That appears to influence irq_can_set_affinity(), which the procfs
->> > helpers check.
->> >
->> > Tai, can you try requesting the IRQ with the IRQF_NOBALANCING flag?
->>
->> This seems to work.
->> I also tried to change smp_affinity through procfs and it returns write error.
->> The interrupt seems to be excluded from irq balancing.
->> Should I make the change?
->
-> Yes please. I believe you also need IRQF_NO_THREAD per the CPU PMU
-> drivers, so please add both flags. I'll do the same for the CCN and CCI
-> PMU drivers.
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Btw, please skip the v5 I've sent out yesterday. I'll soon send the v6
-with this change.
+Hi Chris,
 
-Thanks,
--- 
-Tai
+On Fri, Jun 24, 2016 at 12:26:05PM +1000, Chris Lapa wrote:
+> This patch set adds device tree support for the MAX8903 battery charger.
+> It also cleans up logic with dc_valid, dok and dcm pins as well as
+> fixing up validity checking of gpios.
+>=20
+> I verified these patches work on a board I have here, which uses the
+> DC power side (not the USB portition) of the MAX8903.
+
+I queued this into my for-next branch, except for the dtsi file,
+which I dropped from your first patch. Please submit it separately
+to the correct maintainers.
+
+[...]
+
+>  arch/arm/boot/dts/dairytest-servo.dtsi             |  36 ++++
+
+[...]
+
+-- Sebastian
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXcr8AAAoJENju1/PIO/qaOQUP/RMzfEVdrAt5DmDYhz9BxmD6
+ZThtqLFqODoeNoH+jccrqHvmJC1Tam6PMe7s1loLkIaKRqVS6KL5rscomgaSYO+c
+eVIPw6DjaOF7FUh/BQ07mp9rttY3EYCqNVKkkKhr8BmPJWkFWpA01fUGvf6qH25D
+4OIadufKXAJKvVKsMABm1kEcS85SQgyttT47I+dwS2MMNkgh3paa6gzcd2iyc13u
+rUApnu9CdTCXsK8EIjI7HBG8lIy/dwZogFTgGy9XbeKGVG2fp6qvPtuO9d3AXa4v
+nH2hvUFPgeAOT4uuZOFuqBnZVFY32p1jazCdawtWy86rdwUv+pD5nBd09PsMIfp1
+ImluCBAmiIQgKnHF48ABLKlZAZ508XZ9B9BCiiid5Ch/DY1KCYjKJbRUJe9fc6rz
+QRSgP4HmwWtkPI5VCS2+VrdIxgoKKgimTV8ZN8pTb27Mt9GqKqcnN4z4J0YH/j2n
+6vCy/veyBWUt27WGbeu/j9STrUGV+Jt4abFLgAG3kJ1S4UJRyBhT5aE3tEnGc+ay
+WxkSV2viOMCMMZ7U9cN0Zmn9wCMULmvm+9kZsKzS5PA2XsKMLahJ2aW/nx+B+BmO
+E14T2RW/X5xE5Y2FOdT7zYStfQVOAlxaflVrcXGypNvXgNnCLU8g37WtajAOefZk
+B8+MdTsJAJk1RL0kINOr
+=0SUI
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
