@@ -1,75 +1,84 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2 4/6] ASoC: max98504: Add max98504
- speaker amplifier driver
-Date: Tue, 28 Jun 2016 19:59:35 +0200
-Message-ID: <5772BB07.4000609@samsung.com>
-References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
- <1466678715-19962-5-git-send-email-s.nawrocki@samsung.com>
- <20160627163312.GB17217@sirena.org.uk>
+From: Tai Tri Nguyen <ttnguyen@apm.com>
+Subject: Re: [PATCH v4 3/4] perf: xgene: Add APM X-Gene SoC Performance
+ Monitoring Unit driver
+Date: Tue, 28 Jun 2016 11:05:50 -0700
+Message-ID: <CACgAJHy+dcDeq_Zr+7kCKKCpXK2qeyXjxuAOQjULdooT3G6RHw@mail.gmail.com>
+References: <1466618819-2697-1-git-send-email-ttnguyen@apm.com>
+ <1466618819-2697-4-git-send-email-ttnguyen@apm.com>
+ <20160623143201.GI8836@leverpostej>
+ <CACgAJHyprybnpQuKqvD9rXstQBwoeVG+uGtEBp-pppcfSGMKgQ@mail.gmail.com>
+ <20160627160036.GB29321@leverpostej>
+ <CACgAJHzM-hzJJDr-HzZyDQ0SUg0PEd5SYKo8YPnRCDCVA9JuJg@mail.gmail.com>
+ <20160628111355.GI31744@leverpostej> <577279E2.6070202@arm.com>
+ <20160628141400.GN31744@leverpostej>
+ <CACgAJHzNe68wDxkk5Uc8M8vHsjL5XoppmPys=37LqBWR5m5zxw@mail.gmail.com>
+ <20160628165941.GS31744@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-reply-to: <20160627163312.GB17217@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, inki.dae@samsung.com, ideal.song@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160628165941.GS31744@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, patches <patches@apm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2016 06:33 PM, Mark Brown wrote:
-> On Thu, Jun 23, 2016 at 12:45:13PM +0200, Sylwester Nawrocki wrote:
-> 
->> > +	/* Select analog input by default */
->> > +	regmap_write(map, MAX98504_REG_SPEAKER_SOURCE_SELECT, 0x1);
+Hi Mark,
+
+On Tue, Jun 28, 2016 at 9:59 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Tue, Jun 28, 2016 at 09:39:36AM -0700, Tai Tri Nguyen wrote:
+>> Hi Mark,
+>>
+>> On Tue, Jun 28, 2016 at 7:14 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> > On Tue, Jun 28, 2016 at 02:21:38PM +0100, Marc Zyngier wrote:
+>> >> On 28/06/16 12:13, Mark Rutland wrote:
+>> >> > Marc, is there a sensible way to prevent irq balancers from changing the
+>> >> > affinity of an IRQ, e.g. a kernel-side pinning mechanism, or some way we
+>> >> > can be notified and reject changes?
+>> >>
+>> >> You can get notified (see irq_set_affinity_notifier), but there no way
+>> >> to veto the change.
+>> >
+>> > :(
+>> >
+>> >> What should probably be done is to set the affinity hint
+>> >> (irq_set_affinity_hint), and use the notifier to migrate the context
+>> >> if possible. Note that you'll be called in process context, which will
+>> >> race against interrupts being delivered on the new CPU.
+>> >
+>> > I'll have to go digging into what exactly perf_pmu_migrate_context
+>> > requires. Given the race, I'm not sure if that's going to work. It's
+>> > certainly not going to be self contained.
+>> >
+>> > That also won't work for CPU PMUs, where it makes no sense to migrate
+>> > context or IRQs.  For those we appear to already be using have
+>> > IRQF_NOBALANCING, which sounds like exactly what we want.
+>> >
+>> > That appears to influence irq_can_set_affinity(), which the procfs
+>> > helpers check.
+>> >
+>> > Tai, can you try requesting the IRQ with the IRQF_NOBALANCING flag?
+>>
+>> This seems to work.
+>> I also tried to change smp_affinity through procfs and it returns write error.
+>> The interrupt seems to be excluded from irq balancing.
+>> Should I make the change?
 >
-> This should be done by userspace configuration, just leave the chip at
-> power on defaults.  This is policy so that we don't have people trying
-> to patch their configurations into the kernel.
+> Yes please. I believe you also need IRQF_NO_THREAD per the CPU PMU
+> drivers, so please add both flags. I'll do the same for the CCN and CCI
+> PMU drivers.
 
-OK, I will remove this and update the UCM configuration files instead.
+Btw, please skip the v5 I've sent out yesterday. I'll soon send the v6
+with this change.
 
->> > +	/* Brownout protection enable */
->> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_ENABLE, 0x1);
->> > +	/* Threshold 2.9V, 3dB speaker attenuation*/
->> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(1), 0x33);
->> > +	/* Attack hold time 10 ms */
->> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(2), 0x0a);
->> > +	/* Brownout hold time 255 ms, brownout release time 255 ms */
->> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(3), 0xff);
->> > +	regmap_write(map, MAX98504_REG_PVDD_BROWNOUT_CONFIG(4), 0xff);
->
-> Should these be DT properties?
-
-I'm not sure, these properties define the speaker gain decrease pattern
-during VBAT brownout, it seems a system integration detail and will most
-likely differ from board to board.  I'd assume it's acceptable to put
-these in DT, looking at other bindings.  I've prepared something like
-this:
-
-------8<--------
-Optional properties:
-
-- maxim,brownout-threshold - the VBAT brownout threshold, the value must be
-  from 0, 1...21 range, corresponding to 2.6V, 2.65V...3.65V voltage range
-- maxim,brownout-attenuation - the brownout attenuation to the speaker gain
-  applied during the "attack hold" and "timed hold" phase, the value must be
-  from 0...6 (dB) range
-- maxim,brownout-attack-hold-ms - the brownout attack hold phase time in ms,
-  0...255 (VBATBROWN_ATTK_HOLD, register 0x0018)
-- maxim,brownout-timed-hold-ms - the brownout timed hold phase time in ms,
-  0...255 (VBATBROWN_TIME_HOLD, register 0x0019)
-- maxim,brownout-release-rate-ms - the brownout release phase step time in ms,
-  0...255 (VBATBROWN_RELEASE, register 0x001A)
-
-The default value when the above properties are not specified is 0,
-the maxim,brownout-level property must be specified to actually enable
-the VBAT brownout protection.
-------8<--------
+Thanks,
+-- 
+Tai
