@@ -1,43 +1,62 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] meson-rtc: add device-tree binding
-Date: Tue, 28 Jun 2016 15:57:31 -0500
-Message-ID: <20160628205731.GW3737@rob-hp-laptop>
-References: <1467045849-495-1-git-send-email-ben.dooks@codethink.co.uk>
- <1467045849-495-3-git-send-email-ben.dooks@codethink.co.uk>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/6] Documentation: dt: mtd: gpmi: document the clocks
+ and clock-names in DT property
+Date: Tue, 28 Jun 2016 15:55:51 -0500
+Message-ID: <20160628205551.GI3737@rob-hp-laptop>
+References: <1466804411-19874-1-git-send-email-han.xu@nxp.com>
+ <1466804411-19874-3-git-send-email-han.xu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDJIP47K7MERBQ6JZO5QKGQE6LNFU4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1467045849-495-3-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1466804411-19874-3-git-send-email-han.xu@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Han Xu <han.xu@nxp.com>
+Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, richard@nod.at, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, galak@codeaurora.org, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 27, 2016 at 05:44:07PM +0100, Ben Dooks wrote:
-> Add documentation for the AMLogic Meson RTC.
+On Fri, Jun 24, 2016 at 04:40:07PM -0500, Han Xu wrote:
+> add the clocks and clock-names in DT property, gpmi-io clock is
+> mandatory for all platforms, but some platforms, such as i.MX6Q may
+> need more extra clocks for submodules. More details please refer to the
+> SoC reference manual.
 > 
-> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> Signed-off-by: Han Xu <han.xu@nxp.com>
 > ---
->  .../devicetree/bindings/rtc/rtc-amlogic.txt         | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
+>  Documentation/devicetree/bindings/mtd/gpmi-nand.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> index d02acaf..a2fd034 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.txt
+> @@ -13,6 +13,13 @@ Required properties:
+>      and GPMI DMA channel ID.
+>      Refer to dma.txt and fsl-mxs-dma.txt for details.
+>    - dma-names: Must be "rx-tx".
+> +  - clocks : The clocks needed by the gpmi controller. This field varies
+> +    depends on the SoC design, "gpmi-io" is mandatory but some platforms may
+> +    need several extra clocks, such as i.MX6 series, which requires "gpmi_apb,
+> +    gpmi_bch, gpmi_bch_apb and per1_bch" for all submodules, while i.MX7 only
+> +    need gpmi_bch_apb. Please refer to the HW design manual.
+> +  - clock-names : the name of the clocks, please refer to the HW design
+> +    manual.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+No please list the names here (I assume what is above?). Also need to 
+specify the order of the clocks. It would be clearest if you list things 
+by exact compatible strings.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Rob
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
