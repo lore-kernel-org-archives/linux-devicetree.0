@@ -1,274 +1,141 @@
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v4 13/22] sh: irqchip: SH7751 IRQCHIP Driver
-Date: Wed, 29 Jun 2016 22:40:58 +0900
-Message-ID: <1467207667-15768-14-git-send-email-ysato@users.sourceforge.jp>
-References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH 2/2] clk: sunxi: Add a driver for the PLL2 on A31/23/33
+Date: Wed, 29 Jun 2016 22:01:14 +0800
+Message-ID: <20160629140114.58756-2-icenowy@aosc.xyz>
+References: <20160629140114.58756-1-icenowy@aosc.xyz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160629140114.58756-1-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, emilio@elopez.com.ar
+Cc: devicetree@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Changes v4
-- update example
-
-Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../interrupt-controller/renesas,sh7751-intc.txt   |  25 ++++
- arch/sh/Kconfig                                    |   6 +-
- arch/sh/boards/Kconfig                             |   1 +
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-renesas-sh7751.c               | 141 +++++++++++++++++++++
- 6 files changed, 176 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
- create mode 100644 drivers/irqchip/irq-renesas-sh7751.c
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
-new file mode 100644
-index 0000000..2bc6f22f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.txt
-@@ -0,0 +1,23 @@
-+DT bindings for the SH7751 interrupt controller
-+
-+Required properties:
-+
-+  - compatible: has to be "renesas,sh7751-intc".
-+
-+  - reg: Base address and length of interrupt controller register
-+         and extend register.
-+
-+  - interrupt-controller: Identifies the node as an interrupt controller.
-+
-+  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined
-+    in interrupts.txt in this directory.
-+
-+Example
-+-------
-+
-+	shintc: interrupt-controller@ffd00000 {
-+		compatible = "renesas,sh7751-intc";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0xffd00000 14>, <0xfe080000 128>;
-+	};
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index d06cac1..fee4333 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -29,7 +29,7 @@ config SUPERH
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_REGS_AND_STACK_ACCESS_API
--	select MAY_HAVE_SPARSE_IRQ
-+	select MAY_HAVE_SPARSE_IRQ if !SH_DEVICE_TREE
- 	select IRQ_FORCED_THREADING
- 	select RTC_LIB
- 	select GENERIC_ATOMIC64
-@@ -69,7 +69,7 @@ config SUPERH32
- 	select HAVE_MIXED_BREAKPOINTS_REGS
- 	select PERF_EVENTS
- 	select ARCH_HIBERNATION_POSSIBLE if MMU
--	select SPARSE_IRQ
-+	select SPARSE_IRQ if !SH_DEVICE_TREE
- 	select HAVE_CC_STACKPROTECTOR
- 
- config SUPERH64
-@@ -863,7 +863,7 @@ config PCI
- 	depends on SYS_SUPPORTS_PCI
- 	select PCI_DOMAINS
- 	select GENERIC_PCI_IOMAP
--	select NO_GENERIC_PCI_IOPORT_MAP
-+	select NO_GENERIC_PCI_IOPORT_MAP if !SH_DEVICE_TREE
- 	help
- 	  Find out whether you have a PCI motherboard. PCI is the name of a
- 	  bus system, i.e. the way the CPU talks to the other stuff inside
-diff --git a/arch/sh/boards/Kconfig b/arch/sh/boards/Kconfig
-index cfde921..d33ae46 100644
---- a/arch/sh/boards/Kconfig
-+++ b/arch/sh/boards/Kconfig
-@@ -15,6 +15,7 @@ config SH_DEVICE_TREE
- 	select GENERIC_IOMAP
- 	select COMMON_CLK
- 	select SYS_SUPPORTS_PCI
-+	select GENERIC_IRQ_CHIP
- 	help
- 	  Select Board Described by Device Tree to build a kernel that
- 	  does not hard-code any board-specific knowledge but instead uses
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index fa33c50..fd7f842 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -251,6 +251,11 @@ config LS_SCFG_MSI
- 	depends on PCI && PCI_MSI
- 	select PCI_MSI_IRQ_DOMAIN
- 
-+config RENESAS_SH_INTC
-+	def_bool y if SH_DEVICE_TREE
-+	select IRQ_DOMAIN
-+	select IRQ_DOMAIN_HIERARCHY
-+
- config PARTITION_PERCPU
- 	bool
- 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 38853a1..2ab5735 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -69,3 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
-+obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o
-diff --git a/drivers/irqchip/irq-renesas-sh7751.c b/drivers/irqchip/irq-renesas-sh7751.c
-new file mode 100644
-index 0000000..1710978
---- /dev/null
-+++ b/drivers/irqchip/irq-renesas-sh7751.c
-@@ -0,0 +1,141 @@
-+/*
-+ * SH7751 interrupt contoller driver
-+ *
-+ * Copyright 2016 Yoshinori Sato <ysato@users.sourceforge.jp>
-+ */
-+
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of.h>
-+#include <linux/io.h>
-+
-+static struct sh7751_intc_regs {
-+	void *icr;
-+	void *ipr;
-+	void *intpri00;
-+	void *intreq00;
-+	void *intmsk00;
-+	void *intmskclr00;
-+} sh7751_regs;
-+
-+static const unsigned int ipr_table[] = {
-+	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, /* 0 - 7 */
-+	0x41, 0xff, 0xff, 0x40, 0xff, 0xff, 0xff, 0xff, /* 8 - 15 */
-+	0x03, 0x02, 0x01, 0x01, 0x00, 0x00, 0x00, 0x11, /* 16 - 23 */
-+	0x11, 0x11, 0x11, 0x13, 0x12, 0x12, 0xff, 0xff, /* 24 - 31 */
-+	0x30, 0x33, 0x32, 0x32, 0x32, 0x32, 0x32, 0x21, /* 32 - 39 */
-+	0x21, 0x21, 0x21, 0x21, 0x32, 0x32, 0x32, 0x32, /* 40 - 47 */
-+	0xff, 0xff, 0xff, 0x40, 0xff, 0xff, 0xff, 0xff, /* 48 - 55 */
-+	0xff, 0xff, 0xff, 0x40, 0xff, 0xff, 0xff, 0xff, /* 56 - 63 */
-+};
-+
-+static const unsigned int pri_table[] = {
-+	0, 4, 4, 4, 4, 4, 4, 4,
-+	8, 32, 32, 32, 12, 32, 32, 32,
-+};
-+
-+static void sh_disable_irq(struct irq_data *data)
-+{
-+	int pos;
-+	unsigned int addr;
-+	unsigned long pri;
-+	int irq = data->irq;
-+	struct sh7751_intc_regs *reg = data->chip_data;
-+
-+	if (irq < 64) {
-+		if (ipr_table[irq] != 0xff) {
-+			addr = (ipr_table[irq] & 0xf0) >> 2;
-+			pos = (ipr_table[irq] & 0x0f) << 4;
-+			pri = ~(0x000f << pos);
-+			pri &= __raw_readw(reg->ipr + addr);
-+			__raw_writew(pri, reg->ipr + addr);
-+		}
-+	} else {
-+		if (pri_table[irq - 64] < 32) {
-+			pos = pri_table[irq - 64];
-+			pri = ~(0x000f << pos);
-+			pri &= __raw_readw(reg->intpri00);
-+			__raw_writew(pri, reg->intpri00);
-+		}
-+	}
-+}
-+
-+static void sh_enable_irq(struct irq_data *data)
-+{
-+	int pos;
-+	unsigned int addr;
-+	unsigned long pri;
-+	int irq = data->irq;
-+	struct sh7751_intc_regs *reg = data->chip_data;
-+
-+	if (irq < 64) {
-+		if (ipr_table[irq] != 0xff) {
-+			addr = (ipr_table[irq] & 0xf0) >> 2;
-+			pos = (ipr_table[irq] & 0x0f) * 4;
-+			pri = ~(0x000f << pos);
-+			pri &= __raw_readw(reg->ipr + addr);
-+			pri |= 1 << pos;
-+			__raw_writew(pri, reg->ipr + addr);
-+		}
-+	} else {
-+		if (pri_table[irq - 64] < 32) {
-+			pos = pri_table[irq - 64];
-+			pri = ~(0x000f << pos);
-+			pri &= __raw_readw(reg->intpri00);
-+			pri |= 1 << pos;
-+			__raw_writew(pri, reg->intpri00);
-+		}
-+	}
-+}
-+
-+static struct irq_chip sh_irq_chip = {
-+	.name		= "SH-IPR",
-+	.irq_unmask	= sh_enable_irq,
-+	.irq_mask	= sh_disable_irq,
-+};
-+
-+static __init int irq_map(struct irq_domain *h, unsigned int virq,
-+			  irq_hw_number_t hw_irq_num)
-+{
-+	irq_set_chip_and_handler(virq, &sh_irq_chip, handle_level_irq);
-+	irq_get_irq_data(virq)->chip_data = h->host_data;
-+	irq_modify_status(virq, IRQ_NOREQUEST, IRQ_NOPROBE);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops irq_ops = {
-+	.map    = irq_map,
-+	.xlate  = irq_domain_xlate_onecell,
-+};
-+
-+static int __init sh_intc_7751_init(struct device_node *intc,
-+				    struct device_node *parent)
-+{
-+	struct irq_domain *domain;
-+	void *intc_baseaddr;
-+	void *intc_baseaddr2;
-+
-+	intc_baseaddr = of_iomap(intc, 0);
-+	intc_baseaddr2 = of_iomap(intc, 1);
-+	if (!intc_baseaddr || !intc_baseaddr2)
-+		panic("INTC regsiter not defined");
-+
-+	sh7751_regs.icr = intc_baseaddr;
-+	sh7751_regs.ipr = intc_baseaddr + 4;
-+	sh7751_regs.intpri00 = intc_baseaddr2;
-+	sh7751_regs.intreq00 = intc_baseaddr2 + 0x20;
-+	sh7751_regs.intmsk00 = intc_baseaddr2 + 0x40;
-+	sh7751_regs.intmskclr00 = intc_baseaddr2 + 0x60;
-+
-+	domain = irq_domain_add_linear(intc, NR_IRQS, &irq_ops, &sh7751_regs);
-+	if (!domain)
-+		panic("%s: unable to create IRQ domain\n", intc->full_name);
-+
-+	irq_set_default_host(domain);
-+	return 0;
-+}
-+
-+IRQCHIP_DECLARE(sh_7751_intc, "renesas,sh7751-intc", sh_intc_7751_init);
--- 
-2.7.0
+VGhpcyBpcyBiYXNlZCBvbiB0aGUgUExMMiBkcml2ZXIgZm9yIEExMC8yMC4KClNpZ25lZC1vZmYt
+Ynk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Ci0tLQogZHJpdmVycy9jbGsvc3Vu
+eGkvTWFrZWZpbGUgICAgICAgfCAgIDEgKwogZHJpdmVycy9jbGsvc3VueGkvY2xrLWEzMS1wbGwy
+LmMgfCAxOTQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVz
+IGNoYW5nZWQsIDE5NSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9j
+bGsvc3VueGkvY2xrLWEzMS1wbGwyLmMKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9zdW54aS9N
+YWtlZmlsZSBiL2RyaXZlcnMvY2xrL3N1bnhpL01ha2VmaWxlCmluZGV4IDM5ZDIwNDQuLjk1MTk5
+MmUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xrL3N1bnhpL01ha2VmaWxlCisrKyBiL2RyaXZlcnMv
+Y2xrL3N1bnhpL01ha2VmaWxlCkBAIC05LDYgKzksNyBAQCBvYmoteSArPSBjbGstYTEwLW1vZDEu
+bwogb2JqLXkgKz0gY2xrLWExMC1wbGwyLm8KIG9iai15ICs9IGNsay1hMTAtdmUubwogb2JqLXkg
+Kz0gY2xrLWEyMC1nbWFjLm8KK29iai15ICs9IGNsay1hMzEtcGxsMi5vCiBvYmoteSArPSBjbGst
+bW9kMC5vCiBvYmoteSArPSBjbGstc2ltcGxlLWdhdGVzLm8KIG9iai15ICs9IGNsay1zdW40aS1k
+aXNwbGF5Lm8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3N1bnhpL2Nsay1hMzEtcGxsMi5jIGIv
+ZHJpdmVycy9jbGsvc3VueGkvY2xrLWEzMS1wbGwyLmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
+ZXggMDAwMDAwMC4uMTQ5YTQ4YQotLS0gL2Rldi9udWxsCisrKyBiL2RyaXZlcnMvY2xrL3N1bnhp
+L2Nsay1hMzEtcGxsMi5jCkBAIC0wLDAgKzEsMTk0IEBACisvKgorICogQ29weXJpZ2h0IDIwMTMg
+RW1pbGlvIEzDs3BlegorICogRW1pbGlvIEzDs3BleiA8ZW1pbGlvQGVsb3Blei5jb20uYXI+Cisg
+KgorICogQ29weXJpZ2h0IDIwMTUgTWF4aW1lIFJpcGFyZAorICogTWF4aW1lIFJpcGFyZCA8bWF4
+aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+CisgKgorICogQ29weXJpZ2h0IDIwMTYgSWNl
+bm93eSBaaGVuZworICogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4KKyAqCisgKiBU
+aGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5k
+L29yIG1vZGlmeQorICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJs
+aWMgTGljZW5zZSBhcyBwdWJsaXNoZWQgYnkKKyAqIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRp
+b247IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhlIExpY2Vuc2UsIG9yCisgKiAoYXQgeW91ciBvcHRp
+b24pIGFueSBsYXRlciB2ZXJzaW9uLgorICoKKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRl
+ZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLAorICogYnV0IFdJVEhPVVQgQU5Z
+IFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YKKyAqIE1FUkNI
+QU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUK
+KyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuCisgKi8KKwor
+I2luY2x1ZGUgPGxpbnV4L2Nsay1wcm92aWRlci5oPgorI2luY2x1ZGUgPGxpbnV4L29mLmg+Cisj
+aW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPgorI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KKwor
+I2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL3N1bjRpLWExMC1wbGwyLmg+CisKKyNkZWZpbmUg
+U1VONklfUExMMl9FTkFCTEUJCTMxCisKKyNkZWZpbmUgU1VONklfUExMMl9QUkVfRElWX1NISUZU
+CTAKKyNkZWZpbmUgU1VONklfUExMMl9QUkVfRElWX1dJRFRICTUKKyNkZWZpbmUgU1VONklfUExM
+Ml9QUkVfRElWX01BU0sJR0VOTUFTSyhTVU42SV9QTEwyX1BSRV9ESVZfV0lEVEggLSAxLCAwKQor
+CisjZGVmaW5lIFNVTjZJX1BMTDJfTl9TSElGVAkJOAorI2RlZmluZSBTVU42SV9QTEwyX05fV0lE
+VEgJCTcKKyNkZWZpbmUgU1VONklfUExMMl9OX01BU0sJCUdFTk1BU0soU1VONklfUExMMl9OX1dJ
+RFRIIC0gMSwgMCkKKworI2RlZmluZSBTVU42SV9QTEwyX1BPU1RfRElWX1NISUZUCTE2CisjZGVm
+aW5lIFNVTjZJX1BMTDJfUE9TVF9ESVZfV0lEVEgJNAorI2RlZmluZSBTVU42SV9QTEwyX1BPU1Rf
+RElWX01BU0sJR0VOTUFTSyhTVU42SV9QTEwyX1BPU1RfRElWX1dJRFRIIC0gMSwgMCkKKworI2Rl
+ZmluZSBTVU42SV9QTEwyX1BPU1RfRElWX1ZBTFVFCTQKKworI2RlZmluZSBTVU42SV9QTEwyX09V
+VFBVVFMJCTQKKworc3RhdGljIERFRklORV9TUElOTE9DSyhzdW42aV9wbGwyX2xvY2spOworCitz
+dGF0aWMgdm9pZCBfX2luaXQgc3VuNmlfcGxsMl9zZXR1cChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5v
+ZGUpCit7CisJY29uc3QgY2hhciAqY2xrX25hbWUgPSBub2RlLT5uYW1lLCAqcGFyZW50OworCXN0
+cnVjdCBjbGsgKipjbGtzLCAqYmFzZV9jbGssICpwcmVkaXZfY2xrOworCXN0cnVjdCBjbGtfb25l
+Y2VsbF9kYXRhICpjbGtfZGF0YTsKKwlzdHJ1Y3QgY2xrX211bHRpcGxpZXIgKm11bHQ7CisJc3Ry
+dWN0IGNsa19nYXRlICpnYXRlOworCXZvaWQgX19pb21lbSAqcmVnOworCXUzMiB2YWw7CisKKwly
+ZWcgPSBvZl9pb19yZXF1ZXN0X2FuZF9tYXAobm9kZSwgMCwgb2Zfbm9kZV9mdWxsX25hbWUobm9k
+ZSkpOworCWlmIChJU19FUlIocmVnKSkKKwkJcmV0dXJuOworCisJY2xrX2RhdGEgPSBremFsbG9j
+KHNpemVvZigqY2xrX2RhdGEpLCBHRlBfS0VSTkVMKTsKKwlpZiAoIWNsa19kYXRhKQorCQlnb3Rv
+IGVycl91bm1hcDsKKworCWNsa3MgPSBrY2FsbG9jKFNVTjZJX1BMTDJfT1VUUFVUUywgc2l6ZW9m
+KHN0cnVjdCBjbGsgKiksIEdGUF9LRVJORUwpOworCWlmICghY2xrcykKKwkJZ290byBlcnJfZnJl
+ZV9kYXRhOworCisJcGFyZW50ID0gb2ZfY2xrX2dldF9wYXJlbnRfbmFtZShub2RlLCAwKTsKKwlw
+cmVkaXZfY2xrID0gY2xrX3JlZ2lzdGVyX2RpdmlkZXIoTlVMTCwgInBsbDItcHJlZGl2IiwKKwkJ
+CQkJICBwYXJlbnQsIDAsIHJlZywKKwkJCQkJICBTVU42SV9QTEwyX1BSRV9ESVZfU0hJRlQsCisJ
+CQkJCSAgU1VONklfUExMMl9QUkVfRElWX1dJRFRILAorCQkJCQkgIENMS19ESVZJREVSX09ORV9C
+QVNFRCB8CisJCQkJCSAgQ0xLX0RJVklERVJfQUxMT1dfWkVSTywKKwkJCQkJICAmc3VuNmlfcGxs
+Ml9sb2NrKTsKKwlpZiAoIXByZWRpdl9jbGspIHsKKwkJcHJfZXJyKCJDb3VsZG4ndCByZWdpc3Rl
+ciB0aGUgcHJlZGl2IGNsb2NrXG4iKTsKKwkJZ290byBlcnJfZnJlZV9hcnJheTsKKwl9CisKKwkv
+KiBTZXR1cCB0aGUgZ2F0ZSBwYXJ0IG9mIHRoZSBQTEwyICovCisJZ2F0ZSA9IGt6YWxsb2Moc2l6
+ZW9mKHN0cnVjdCBjbGtfZ2F0ZSksIEdGUF9LRVJORUwpOworCWlmICghZ2F0ZSkKKwkJZ290byBl
+cnJfdW5yZWdpc3Rlcl9wcmVkaXY7CisKKwlnYXRlLT5yZWcgPSByZWc7CisJZ2F0ZS0+Yml0X2lk
+eCA9IFNVTjZJX1BMTDJfRU5BQkxFOworCWdhdGUtPmxvY2sgPSAmc3VuNmlfcGxsMl9sb2NrOwor
+CisJLyogU2V0dXAgdGhlIG11bHRpcGxpZXIgcGFydCBvZiB0aGUgUExMMiAqLworCW11bHQgPSBr
+emFsbG9jKHNpemVvZihzdHJ1Y3QgY2xrX211bHRpcGxpZXIpLCBHRlBfS0VSTkVMKTsKKwlpZiAo
+IW11bHQpCisJCWdvdG8gZXJyX2ZyZWVfZ2F0ZTsKKworCW11bHQtPnJlZyA9IHJlZzsKKwltdWx0
+LT5zaGlmdCA9IFNVTjZJX1BMTDJfTl9TSElGVDsKKwltdWx0LT53aWR0aCA9IDc7CisJbXVsdC0+
+ZmxhZ3MgPSBDTEtfTVVMVElQTElFUl9aRVJPX0JZUEFTUyB8CisJCQlDTEtfTVVMVElQTElFUl9S
+T1VORF9DTE9TRVNUOworCW11bHQtPmxvY2sgPSAmc3VuNmlfcGxsMl9sb2NrOworCisJcGFyZW50
+ID0gX19jbGtfZ2V0X25hbWUocHJlZGl2X2Nsayk7CisJYmFzZV9jbGsgPSBjbGtfcmVnaXN0ZXJf
+Y29tcG9zaXRlKE5VTEwsICJwbGwyLWJhc2UiLAorCQkJCQkgICZwYXJlbnQsIDEsCisJCQkJCSAg
+TlVMTCwgTlVMTCwKKwkJCQkJICAmbXVsdC0+aHcsICZjbGtfbXVsdGlwbGllcl9vcHMsCisJCQkJ
+CSAgJmdhdGUtPmh3LCAmY2xrX2dhdGVfb3BzLAorCQkJCQkgIENMS19TRVRfUkFURV9QQVJFTlQp
+OworCWlmICghYmFzZV9jbGspIHsKKwkJcHJfZXJyKCJDb3VsZG4ndCByZWdpc3RlciB0aGUgYmFz
+ZSBtdWx0aXBsaWVyIGNsb2NrXG4iKTsKKwkJZ290byBlcnJfZnJlZV9tdWx0aXBsaWVyOworCX0K
+KworCXBhcmVudCA9IF9fY2xrX2dldF9uYW1lKGJhc2VfY2xrKTsKKworCS8qCisJICogUExMMi0x
+eAorCSAqCisJICogVGhpcyBpcyBzdXBwb3NlZCB0byBoYXZlIGEgcG9zdCBkaXZpZGVyLCBidXQg
+d2Ugd29uJ3QgbmVlZAorCSAqIHRvIHVzZSBpdCwgd2UganVzdCBuZWVkIHRvIGluaXRpYWxpc2Ug
+aXQgdG8gNCwgYW5kIHVzZSBhCisJICogZml4ZWQgZGl2aWRlci4KKwkgKi8KKwl2YWwgPSByZWFk
+bChyZWcpOworCXZhbCAmPSB+KFNVTjZJX1BMTDJfUE9TVF9ESVZfTUFTSyA8PCBTVU42SV9QTEwy
+X1BPU1RfRElWX1NISUZUKTsKKwl2YWwgfD0gKFNVTjZJX1BMTDJfUE9TVF9ESVZfVkFMVUUgLSAx
+KQorCSAgICAgICA8PCBTVU42SV9QTEwyX1BPU1RfRElWX1NISUZUOworCXdyaXRlbCh2YWwsIHJl
+Zyk7CisKKwlvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZ19pbmRleChub2RlLCAiY2xvY2stb3V0cHV0
+LW5hbWVzIiwKKwkJCQkgICAgICBTVU40SV9BMTBfUExMMl8xWCwgJmNsa19uYW1lKTsKKwljbGtz
+W1NVTjRJX0ExMF9QTEwyXzFYXSA9IGNsa19yZWdpc3Rlcl9maXhlZF9mYWN0b3IoTlVMTCwgY2xr
+X25hbWUsCisJCQkJCQkJICAgIHBhcmVudCwKKwkJCQkJCQkgICAgQ0xLX1NFVF9SQVRFX1BBUkVO
+VCwKKwkJCQkJCQkgICAgMSwKKwkJCQkJCQkgICAgU1VONklfUExMMl9QT1NUX0RJVl9WQUxVRSk7
+CisJV0FSTl9PTihJU19FUlIoY2xrc1tTVU40SV9BMTBfUExMMl8xWF0pKTsKKworCS8qCisJICog
+UExMMi0yeAorCSAqCisJICogVGhpcyBjbG9jayBkb2Vzbid0IHVzZSB0aGUgcG9zdCBkaXZpZGVy
+LCBhbmQgcmVhbGx5IGlzIGp1c3QKKwkgKiBhIGZpeGVkIGRpdmlkZXIgZnJvbSB0aGUgUExMMiBi
+YXNlIGNsb2NrLgorCSAqLworCW9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nX2luZGV4KG5vZGUsICJj
+bG9jay1vdXRwdXQtbmFtZXMiLAorCQkJCSAgICAgIFNVTjRJX0ExMF9QTEwyXzJYLCAmY2xrX25h
+bWUpOworCWNsa3NbU1VONElfQTEwX1BMTDJfMlhdID0gY2xrX3JlZ2lzdGVyX2ZpeGVkX2ZhY3Rv
+cihOVUxMLCBjbGtfbmFtZSwKKwkJCQkJCQkgICAgcGFyZW50LAorCQkJCQkJCSAgICBDTEtfU0VU
+X1JBVEVfUEFSRU5ULAorCQkJCQkJCSAgICAxLCAyKTsKKwlXQVJOX09OKElTX0VSUihjbGtzW1NV
+TjRJX0ExMF9QTEwyXzJYXSkpOworCisJLyogUExMMi00eCAqLworCW9mX3Byb3BlcnR5X3JlYWRf
+c3RyaW5nX2luZGV4KG5vZGUsICJjbG9jay1vdXRwdXQtbmFtZXMiLAorCQkJCSAgICAgIFNVTjRJ
+X0ExMF9QTEwyXzRYLCAmY2xrX25hbWUpOworCWNsa3NbU1VONElfQTEwX1BMTDJfNFhdID0gY2xr
+X3JlZ2lzdGVyX2ZpeGVkX2ZhY3RvcihOVUxMLCBjbGtfbmFtZSwKKwkJCQkJCQkgICAgcGFyZW50
+LAorCQkJCQkJCSAgICBDTEtfU0VUX1JBVEVfUEFSRU5ULAorCQkJCQkJCSAgICAxLCAxKTsKKwlX
+QVJOX09OKElTX0VSUihjbGtzW1NVTjRJX0ExMF9QTEwyXzRYXSkpOworCisJLyogUExMMi04eCAq
+LworCW9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nX2luZGV4KG5vZGUsICJjbG9jay1vdXRwdXQtbmFt
+ZXMiLAorCQkJCSAgICAgIFNVTjRJX0ExMF9QTEwyXzhYLCAmY2xrX25hbWUpOworCWNsa3NbU1VO
+NElfQTEwX1BMTDJfOFhdID0gY2xrX3JlZ2lzdGVyX2ZpeGVkX2ZhY3RvcihOVUxMLCBjbGtfbmFt
+ZSwKKwkJCQkJCQkgICAgcGFyZW50LAorCQkJCQkJCSAgICBDTEtfU0VUX1JBVEVfUEFSRU5ULAor
+CQkJCQkJCSAgICAyLCAxKTsKKwlXQVJOX09OKElTX0VSUihjbGtzW1NVTjRJX0ExMF9QTEwyXzhY
+XSkpOworCisJY2xrX2RhdGEtPmNsa3MgPSBjbGtzOworCWNsa19kYXRhLT5jbGtfbnVtID0gU1VO
+NklfUExMMl9PVVRQVVRTOworCW9mX2Nsa19hZGRfcHJvdmlkZXIobm9kZSwgb2ZfY2xrX3NyY19v
+bmVjZWxsX2dldCwgY2xrX2RhdGEpOworCisJcmV0dXJuOworCitlcnJfZnJlZV9tdWx0aXBsaWVy
+OgorCWtmcmVlKG11bHQpOworZXJyX2ZyZWVfZ2F0ZToKKwlrZnJlZShnYXRlKTsKK2Vycl91bnJl
+Z2lzdGVyX3ByZWRpdjoKKwljbGtfdW5yZWdpc3Rlcl9kaXZpZGVyKHByZWRpdl9jbGspOworZXJy
+X2ZyZWVfYXJyYXk6CisJa2ZyZWUoY2xrcyk7CitlcnJfZnJlZV9kYXRhOgorCWtmcmVlKGNsa19k
+YXRhKTsKK2Vycl91bm1hcDoKKwlpb3VubWFwKHJlZyk7Cit9CisKK0NMS19PRl9ERUNMQVJFKHN1
+bjZpX3BsbDIsICJhbGx3aW5uZXIsc3VuNmktYTMxLXBsbDItY2xrIiwKKwkgICAgICAgc3VuNmlf
+cGxsMl9zZXR1cCk7Ci0tIAoyLjkuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
