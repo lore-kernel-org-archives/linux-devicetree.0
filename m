@@ -1,18 +1,18 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "mfd: rn5t618: Register power off callback optionally" to the regulator tree
-Date: Wed, 29 Jun 2016 19:05:18 +0100
-Message-ID: <E1bIJrS-0003eP-5Y@finisterre>
-References: <20160626011515.4428-5-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160626011515.4428-5-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, max.oss.09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ARM: dts: meson: minix-neo-x8: define PMIC as power controller" to the regulator tree
+Date: Wed, 29 Jun 2016 19:05:31 +0100
+Message-ID: <E1bIJrf-0003iU-F2@finisterre>
+References: <20160605001749.4062-2-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160605001749.4062-2-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: Carlo Caione <carlo@endlessm.com>, Lee Jones <lee.jones@linaro.org>lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org, b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   mfd: rn5t618: Register power off callback optionally
+   ARM: dts: meson: minix-neo-x8: define PMIC as power controller
 
 has been applied to the regulator tree at
 
@@ -37,47 +37,35 @@ to this mail.
 Thanks,
 Mark
 
->From fd65ae4cb65a9e41af44e37318afb39045d86bf2 Mon Sep 17 00:00:00 2001
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Date: Tue, 28 Jun 2016 22:53:21 -0700
-Subject: [PATCH] mfd: rn5t618: Register power off callback optionally
+>From 229d641d72d1ecfd21186a52c38d012149097eec Mon Sep 17 00:00:00 2001
+From: Stefan Agner <stefan@agner.ch>
+Date: Tue, 28 Jun 2016 22:53:18 -0700
+Subject: [PATCH] ARM: dts: meson: minix-neo-x8: define PMIC as power
+ controller
 
-Only register power off if the PMIC is defined as system power
-controller (see Documentation/devicetree/bindings/power/
-power-controller.txt).
+The PMIC driver used to register itself as poweroff controller by
+default, hence assuming that this device is using the PMIC as
+system power controller.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Acked-by: Carlo Caione <carlo@endlessm.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/mfd/rn5t618.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/meson8-minix-neo-x8.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index c86160d3a773..1831740d9016 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -102,9 +102,13 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
+diff --git a/arch/arm/boot/dts/meson8-minix-neo-x8.dts b/arch/arm/boot/dts/meson8-minix-neo-x8.dts
+index 4f536bb1f002..8bceb8d343f6 100644
+--- a/arch/arm/boot/dts/meson8-minix-neo-x8.dts
++++ b/arch/arm/boot/dts/meson8-minix-neo-x8.dts
+@@ -80,6 +80,7 @@
+ 	pmic@32 {
+ 		compatible = "ricoh,rn5t618";
+ 		reg = <0x32>;
++		system-power-controller;
  
--	if (!pm_power_off) {
--		rn5t618_pm_power_off = priv;
--		pm_power_off = rn5t618_power_off;
-+	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
-+		if (!pm_power_off) {
-+			rn5t618_pm_power_off = priv;
-+			pm_power_off = rn5t618_power_off;
-+		} else {
-+			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
-+		}
- 	}
- 
- 	return 0;
+ 		regulators {
+ 		};
 -- 
 2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
