@@ -1,35 +1,57 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 29 Jun 2016 10:17:07 +0200
-Message-ID: <5301045.3F9gkJcz60@wuerfel>
-References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Wed, 29 Jun 2016 09:19:17 +0100
+Message-ID: <57738485.4010602@arm.com>
+References: <1463114260-8724-1-git-send-email-oss@buserror.net>
+ <57737F24.5050906@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57737F24.5050906-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dingtinahong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, June 24, 2016 6:46:48 PM CEST Timur Tabi wrote:
-> +       /* The EMAC itself is capable of 64-bit DMA. If the SOC limits that
-> +        * range, then we expect platform code to adjust the mask accordingly.
-> +        */
-> +       ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "could not set DMA mask\n");
-> +               return ret;
-> +       }
+On 29/06/16 08:56, Hanjun Guo wrote:
+> Hello Scott,
 > 
+> On 2016/5/13 12:37, Scott Wood wrote:
+> [...]
+>>  
+>> +#ifdef CONFIG_ARM64
+>> +static __always_inline void rewrite_tval(const int access,
+>> +		unsigned long evt, struct clock_event_device *clk)
+>> +{
+>> +	u64 cval_old, cval_new;
+>> +	int timeout = 200;
+>> +
+>> +	do {
+>> +		cval_old = __arch_counter_get_cntvct();
+>> +		arch_timer_reg_write(access, ARCH_TIMER_REG_TVAL, evt, clk);
+> 
+> For not memory mapped timer, it will call arch_timer_reg_write_cp15() which has
+> isb() at the end of arch_timer_reg_write_cp15()...
+> 
+>> +		cval_new = __arch_counter_get_cntvct();
+> 
+> So there is isb() between counter retry read, I think it's likely cval_new will
+> not be equal with cval_old when the cntvct is correct (time lapse is more than
+> one arch timer cycle).
 
-The comment does not match the code: if the platform has no IOMMU
-and the bus limit is smaller than the memory, dma_set_mask_and_coherent()
-will fail, and the driver should instead ensure that the buffers are
-allocated from the 32-bit area.
+Are you saying that the isb will delay the execution of the read so much
+that your timer will always change? Well, if your timer is in the GHz
+range, maybe. But that also implies that it is out of spec (it should be
+in the 1-50MHz range).
 
-Alternatively, adjust the comment to explain that this is a limitation
-in the driver that can be lifted if necessary.
+Thanks,
 
-	Arnd 
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
