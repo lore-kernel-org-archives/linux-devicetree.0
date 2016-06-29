@@ -1,105 +1,68 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [RFC PATCH 3/5] thermal: Add support for the thermal sensor on
- A23/33
-Date: Wed, 29 Jun 2016 14:10:21 +0200
-Message-ID: <20160629121021.GD6095@lukather>
-References: <20160628101325.2522-1-icenowy@aosc.xyz>
- <20160628101325.2522-3-icenowy@aosc.xyz>
- <20160628114640.GE5550@lukather> <60021467122182@web19j.yandex.ru>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 29 Jun 2016 07:17:29 -0500
+Message-ID: <5773BC59.5010404@codeaurora.org>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
+ <5301045.3F9gkJcz60@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5696923692927816473=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <60021467122182@web19j.yandex.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "emilio@elopez.com.ar" <emilio@elopez.com.ar>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "wens@csie.org" <wens@csie.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <5301045.3F9gkJcz60@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Arnd Bergmann wrote:
+> On Friday, June 24, 2016 6:46:48 PM CEST Timur Tabi wrote:
+>> >+       /* The EMAC itself is capable of 64-bit DMA. If the SOC limits that
+>> >+        * range, then we expect platform code to adjust the mask accordingly.
+>> >+        */
+>> >+       ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+>> >+       if (ret) {
+>> >+               dev_err(&pdev->dev, "could not set DMA mask\n");
+>> >+               return ret;
+>> >+       }
+>> >
+> The comment does not match the code: if the platform has no IOMMU
+> and the bus limit is smaller than the memory, dma_set_mask_and_coherent()
+> will fail, and the driver should instead ensure that the buffers are
+> allocated from the 32-bit area.
+>
+> Alternatively, adjust the comment to explain that this is a limitation
+> in the driver that can be lifted if necessary.
 
---===============5696923692927816473==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ytoMbUMiTKPMT3hY"
-Content-Disposition: inline
+I'm not sure I understand.  The EMAC hardware is capable of 64-bit DMA. 
+  This is true on every platform -- the hardware registers that take bus 
+addresses are 64-bit.  The driver itself has no limitations.
 
+And that's what the dma_set_mask_and_coherent() does.  It tells the 
+kernel what the device is capable of.
 
---ytoMbUMiTKPMT3hY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+However, on some SOCs, only a subset of those address lines are 
+connected to the memory bus.  So for instance, some platforms only have 
+32 bits connected.
 
-Hi,
+There's no way for the EMAC driver to know this, so it expects other 
+code in the kernel to adjust.  I'm not exactly sure what this code is 
+supposed to be, because I get conflicting information.  At one point, I 
+thought that the dma-ranges property would handle that.  The kernel 
+would parse that property, see that the DMA range is limited to 32 bits, 
+and adjust the DMA mask accordingly.  However, with dma-ranges in the 
+parent node, I don't see how that can work.
 
-On Tue, Jun 28, 2016 at 09:56:22PM +0800, Icenowy Zheng wrote:
-> The reason for a dedicate driver is:
-> 1. This IP have only thermal function, so it's not suitable to use a
-> driver at drivers/input/touchscreen/.
+So my question is, how do I handle the situation where a subset of the 
+DMA address lines are masked off by the SOC?  I've seen code like this:
 
-That's not a problem, and it's being worked on [1].
+ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+if (ret)
+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
 
-> 2. Control Register are quite different.
-
-That's not a problem either, there's just a bit that you don't need to
-set in the control 1 register, and that's pretty much it. It doesn't
-justify a whole new driver.
-
-> 3. This IP uses AUDIO PLL (PLL2) as its clock!
-
-It's listed as the input, but all the rest of the documentation refers
-only to 24MHz, which seems to indicate that it's only running on the
-oscillator, which would make much more sense.
-
-Thanks,
-Maxime
-
-1: http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/439487.h=
-tml
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---ytoMbUMiTKPMT3hY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXc7qtAAoJEBx+YmzsjxAg+gAQAKuIc+HZO+maeW9Ukek80wGz
-6Z+szxNy/rnxw2yv7uB/RNBPeCovY1huC6TTwrpXeKrUnpynRTHt5++CcL0Ps+4Y
-YB+DrTssXiKc9YVHSoCcsZrZrlf85M2Y0jmL8IT6ZOfIdLBKQWc3ODNrgnDRqKu0
-X0mgEI6oTM32XkVXqAR+1n6xKpx1TF9A7WJqFJHAdJ1QxhAzuTvZ8uiAd7BNUREM
-wYfX4/toqj3WuZutpqx+3gRjDLQSmu5GGdcvoXT5nhMH7FxObrBEpLZVydzL4O4n
-aKuM0d5aUJkWJwPDehRCASzcMnqkXZlIj0ve4kPsd6YcA2sW/LN9qjDQY5i/Dwfe
-A0gv+uyVEzeWyEeR/sxWsO/joAG1GxbqPopuqhurHahZoCkd5WoJtOSk+JHY92ib
-2C0Nep4dsGXuM+44AARe8LKKMtEbdQDJVIYTijheZ7bJ0BQnvUBr/DFdH/Bs6Qow
-+fhjXVrpghXhzmKCktbRTpnB96+Hj07hha6iB1pSpB810IhF4v+BXjSvTRBEbpZf
-ifMjFKXAtyEW4nozTlL9RhD7dsQnrQG58Zs3b/OTWTKbaRZh17G/c9XPd6XQEUii
-Z9dUXWd1LFKsNC+B2nFgWtHtIHgn+xWiW+Cud0FrNuSsP6GliOVb2kEbssd5v2ZN
-/Ae9RO6SDMjTiz7o9zaS
-=Mevt
------END PGP SIGNATURE-----
-
---ytoMbUMiTKPMT3hY--
-
-
---===============5696923692927816473==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5696923692927816473==--
+But this has never made any sense to me.  If DMA_BIT_MASK(64) fails, 
+then how can DMA_BIT_MASK(32) succeed?
+	
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
