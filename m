@@ -1,161 +1,154 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 06/14] ARM: dts: sun8i: Add cpu0 label to sun8i-h3.dtsi
-Date: Wed, 29 Jun 2016 22:45:53 +0200
-Message-ID: <20160629204553.GJ6095@lukather>
-References: <20160623192104.18720-1-megous@megous.com>
- <20160623192104.18720-7-megous@megous.com>
- <CAGb2v66eskVAxdz8VtjBJBCO7VV9WL4bdFDVrPWrSmxk4RASCw@mail.gmail.com>
- <adaf7f61-af80-cc02-8c47-af721b86f81e@megous.com>
- <CAGb2v665O75vQEfo5WdWtWJSbKEbLi6MBAHbgZC7pyrOCOu+6g@mail.gmail.com>
- <20160625070208.GA4000@lukather>
- <380ebf34-fd4a-ea2d-f9cf-68b8ede44757@megous.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: John Youn <John.Youn@synopsys.com>
+Subject: Re: [PATCH 1/3] usb: dwc2: Add support for STM32F429/439/469 USB OTG
+ in FS mode with internal PHY
+Date: Wed, 29 Jun 2016 13:58:34 -0700
+Message-ID: <e7a712ee-c064-3393-c9ea-f80aeb3240cd@synopsys.com>
+References: <1466562349-5043-1-git-send-email-bruherrera@gmail.com>
+ <436eef12-6204-d621-8574-92aea2d374fd@synopsys.com>
+ <CAF3+Tqe=6JxiZ=iefKw=2wD5RQt3d-Mb960H4zum1tFoR08Dhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sU4rRG038CsJurvk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDPH2C5QKGQEMEHLKXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <380ebf34-fd4a-ea2d-f9cf-68b8ede44757-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAF3+Tqe=6JxiZ=iefKw=2wD5RQt3d-Mb960H4zum1tFoR08Dhg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bruno Herrera <bruherrera@gmail.com>, John Youn <John.Youn@synopsys.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "balbi@kernel.org" <balbi@kernel.org>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "a.seppala@gmail.com" <a.seppala@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 6/29/2016 12:47 PM, Bruno Herrera wrote:
+> On Mon, Jun 27, 2016 at 7:51 PM, John Youn <John.Youn@synopsys.com> wrote:
+>> On 6/21/2016 7:26 PM, Bruno Herrera wrote:
+>>> Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
+>>
+>> Please add a commit message describing the purpose of your changes,
+>> some information about the platform you're adding, and the special
+>> handling of the GGPIO.
+>>
+> Ok, no problem.
+> 
+>>> ---
+>>>  drivers/usb/dwc2/core.c     | 18 ++++++++++++++++++
+>>>  drivers/usb/dwc2/core.h     |  5 +++++
+>>>  drivers/usb/dwc2/hcd.c      | 12 +++++++++++-
+>>>  drivers/usb/dwc2/hw.h       |  2 ++
+>>>  drivers/usb/dwc2/platform.c | 37 +++++++++++++++++++++++++++++++++++++
+>>>  5 files changed, 73 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/usb/dwc2/core.c b/drivers/usb/dwc2/core.c
+>>> index 4135a5f..83fbed6 100644
+>>> --- a/drivers/usb/dwc2/core.c
+>>> +++ b/drivers/usb/dwc2/core.c
+>>> @@ -1276,6 +1276,23 @@ static void dwc2_set_param_hibernation(struct dwc2_hsotg *hsotg,
+>>>       hsotg->core_params->hibernation = val;
+>>>  }
+>>>
+>>> +static void dwc2_set_param_stm32_powerdown(struct dwc2_hsotg *hsotg,
+>>> +             int val)
+>>> +{
+>>> +     if (DWC2_OUT_OF_BOUNDS(val, 0, 1)) {
+>>> +             if (val >= 0) {
+>>> +                     dev_err(hsotg->dev,
+>>> +                             "'%d' invalid for parameter power down\n",
+>>> +                             val);
+>>> +                     dev_err(hsotg->dev, "power down must be 0 or 1\n");
+>>> +             }
+>>> +             val = 0;
+>>> +             dev_dbg(hsotg->dev, "Setting power down to %d\n", val);
+>>> +     }
+>>> +
+>>> +     hsotg->core_params->stm32_powerdown = val;
+>>> +}
+>>> +
+>>>  /*
+>>>   * This function is called during module intialization to pass module parameters
+>>>   * for the DWC_otg core.
+>>> @@ -1323,6 +1340,7 @@ void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
+>>>       dwc2_set_param_uframe_sched(hsotg, params->uframe_sched);
+>>>       dwc2_set_param_external_id_pin_ctl(hsotg, params->external_id_pin_ctl);
+>>>       dwc2_set_param_hibernation(hsotg, params->hibernation);
+>>> +     dwc2_set_param_stm32_powerdown(hsotg, params->stm32_powerdown);
+>>>  }
+>>>
+>>>  /*
+>>> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+>>> index 3c58d63..d3e4fcb 100644
+>>> --- a/drivers/usb/dwc2/core.h
+>>> +++ b/drivers/usb/dwc2/core.h
+>>> @@ -386,6 +386,10 @@ enum dwc2_ep0_state {
+>>>   *                   needed.
+>>>   *                   0 - No (default)
+>>>   *                   1 - Yes
+>>> + * @stm32_powerdown: Enable STM32 specific USB FS transceiver power down
+>>> + *                   control.
+>>> + *                   0 = USB FS transceiver disabled (default)
+>>> + *                   1 = USB FS transceiver enabled
+>>>   *
+>>>   * The following parameters may be specified when starting the module. These
+>>>   * parameters define how the DWC_otg controller should be configured. A
+>>> @@ -426,6 +430,7 @@ struct dwc2_core_params {
+>>>       int uframe_sched;
+>>>       int external_id_pin_ctl;
+>>>       int hibernation;
+>>> +     int stm32_powerdown;
+>>>  };
+>>>
+>>>  /**
+>>> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
+>>> index 2df3d04..4f9bb93 100644
+>>> --- a/drivers/usb/dwc2/hcd.c
+>>> +++ b/drivers/usb/dwc2/hcd.c
+>>> @@ -118,7 +118,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
+>>>
+>>>  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>>>  {
+>>> -     u32 usbcfg, i2cctl;
+>>> +     u32 usbcfg, usbgpio, i2cctl;
+>>
+>> The convention in this driver would be to just call 'usbgpio' -> 'ggpio'
+> 
+> OK.
+>>
+>>>       int retval = 0;
+>>>
+>>>       /*
+>>> @@ -142,6 +142,16 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>>>                               return retval;
+>>>                       }
+>>>               }
+>>> +
+>>> +             if (hsotg->core_params->stm32_powerdown > 0) {
+>>> +                     dev_dbg(hsotg->dev, "STM32 FS PHY enabling transceiver\n");
+>>> +                     /* STM32 uses the GGPIO register as general core
+>>> +                      * configuration register.
+>>> +                      */
+>>> +                     usbgpio = dwc2_readl(hsotg->regs + GGPIO);
+>>> +                     usbgpio |= STM32_OTG_GCCFG_PWRDWN;
+>>> +                     dwc2_writel(usbgpio, hsotg->regs + GGPIO);
+>>> +             }
+>>>       }
+>>>
+>>>       /*
+>>> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
+>>> index 281b57b..d5f9294 100644
+>>> --- a/drivers/usb/dwc2/hw.h
+>>> +++ b/drivers/usb/dwc2/hw.h
+>>> @@ -224,6 +224,8 @@
+>>>
+>>>  #define GPVNDCTL                     HSOTG_REG(0x0034)
+>>>  #define GGPIO                                HSOTG_REG(0x0038)
+>>> +#define STM32_OTG_GCCFG_PWRDWN               (1 << 16)
+>>> +
+>>
+>> Also, bitfields for GGPIO should be named: GGPIO_xxx
+> 
+> Could it be -> GGPIO_STM32_OTG_GCCFG_PWRDWN
+> From my understand the GGPIO are platform/vendor dependent so in the
+> future some other vendor could use the same bit for other purpose.
+> Should we keep it defined here or only in the scope it is used?
 
---sU4rRG038CsJurvk
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here is fine. We already have overlapping bitfield definitions for
+some registers due to differences in host or device mode.
 
-Hi,
-
-On Sat, Jun 25, 2016 at 04:50:24PM +0200, Ond=C5=99ej Jirman wrote:
-> On 25.6.2016 09:02, Maxime Ripard wrote:
-> > On Sat, Jun 25, 2016 at 09:02:48AM +0800, Chen-Yu Tsai wrote:
-> >> On Sat, Jun 25, 2016 at 6:51 AM, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org=
-> wrote:
-> >>> Hello,
-> >>>
-> >>> comments below.
-> >>>
-> >>> On 24.6.2016 05:48, Chen-Yu Tsai wrote:
-> >>>> On Fri, Jun 24, 2016 at 3:20 AM,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
-> >>>>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> >>>>>
-> >>>>> Add label to the first cpu so that it can be referenced
-> >>>>> from derived dts files.
-> >>>>>
-> >>>>> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> >>>>> ---
-> >>>>>  arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
-> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/su=
-n8i-h3.dtsi
-> >>>>> index 9938972..82faefc 100644
-> >>>>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> >>>>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> >>>>> @@ -52,7 +52,7 @@
-> >>>>>                 #address-cells =3D <1>;
-> >>>>>                 #size-cells =3D <0>;
-> >>>>>
-> >>>>> -               cpu@0 {
-> >>>>> +               cpu0: cpu@0 {
-> >>>>>                         compatible =3D "arm,cortex-a7";
-> >>>>>                         device_type =3D "cpu";
-> >>>>>                         reg =3D <0>;
-> >>>>
-> >>>> Can you also set the cpu clock here? It is part of the SoC
-> >>>> and does not belong in the board DTS files.
-> >>>
-> >>> Do you mean operating-points, or something else? Different SBCs will
-> >>> probably require different combinations of operating points just for
-> >>> safety's sake, because they have different regulators and [some have
-> >>> botched] thermal designs, so it might make sense to customize it for
-> >>> differnt boards, and I don't feel adventurous enough setting it for a=
-ll
-> >>> H3 boards out there.
-> >>
-> >> I meant clocks =3D <...> and clock-latency =3D <...>.
-> >>
-> >> These 2 are part of the SoC.
-> >>
-> >> The OPP can stay in the board files. It's a pity there's no standard
-> >> OPP table for H3 though. :(
-> >=20
-> > This has never been the case, and we always had some deviation in the
-> > FEX files for all the SoCs.
-> >=20
-> > If we could come up with standard OPPs that work for every one,
-> > there's no reason it can't happen here.
-> >=20
-> > I don't really see why the thermal design should change anything. If a
-> > boards heats faster, it will throttle down to a lower OPP faster, but
-> > those OPPs are not going to change.
->=20
-> I've no way to test, but I've been told some Sinovoip boards are really
-> bad in this regard (SoC is not even well thermally connected to the
-> PCB/PCB not having copper layer to spread the heat). Thermal sensor
-> readings happen at fixed intervals, so the question is if you can heat
-> up the soc from say 80=C2=B0C (first trip point) to over 110=C2=B0C in le=
-ss than
-> that period (330ms currently).
->=20
-> I say it shouldn't be a problem, if that small thing is drawing say 2W
-> at max load. It will burn or trigger a second trip point before the
-> first one has a chance to trigger and the kernel will shut down. I
-> remember tkaiser saying that he has to run that board at 240MHz max. But
-> perhaps I'm misremembering.
->=20
-> I'm just speculating.
-
-Yes, but that's just poor thermal design. What I was saying is that
-even if we really need to throttle the SoC to 240 MHz on that board
-because it heats too much, the couple of the frequency and the voltage
-will likely be the same across all boards. It's just the amount of
-time we'll spend using it that will differ.
-
-But that's just my understanding, I might be speaking non-sense :)
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---sU4rRG038CsJurvk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXdDOBAAoJEBx+YmzsjxAg/pEP/3+AAWn5HopdZzJibDfvJ1uH
-nUmVD1Jay9oizAxf+QEVFKNM700NVkEFVJIz4Vnu6glfCwAP+RT+MQg7StctwXTs
-YtKl2AMbPcv2AfvAA9LqW3tbhqrZKGcQd8YLLDqnwu9yRFA8EGUtcdmZUczIUdX/
-N/Cby4vKi7bDoVvtjYEB+i5VDRGPQXzs/3UOJrE/eyvlKGm0mcMBkDRmzNs6mt5d
-nW5nYACi6iQtkLNXEGcOVvWhi/hWGafHI8stjulfG5x8wkxdthj1u1tlaNosCika
-zgio7LwDNN5YzX9O3Ll7z1gnJq4VNAS/S9yl2OU3g4Dk/STTZM3yLM3jS2ejf/cQ
-rDgXVeV9HJ9yoN4sUN5T7R8f9LogxWsQxNDcKcgfAOaVSozWtV6algQQQpWfnFe2
-DgldgvsK4MEejPNnsiUrLSwD4wntYKhFWmSjp7R4/74dbUsAtPU3Qf47NmwIXNcT
-q+HmF2I6y6Ycmi15CgvhcUGKlTqASdk8N9+ma0TM6EnW5SKsKMGfmOAoV/yVDzBw
-LSRUUd52C+Uh3HeHdTXpJNa5w5A50fMKNI3+B5ktLF5IANC7t9xQK/4pGn3xFrph
-f5X0sDpBVP8UP5q1BNT9q/QrdBVvqENnEuUl/jO3nMDq9FS27E53BBYmvf6yAuLV
-vmZ1yHaIvMWhLJSXIbGR
-=rg3R
------END PGP SIGNATURE-----
-
---sU4rRG038CsJurvk--
+Regards,
+John
