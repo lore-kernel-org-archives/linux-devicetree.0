@@ -1,53 +1,107 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Wed, 29 Jun 2016 22:07:21 +0200
-Message-ID: <6119590.gPKNGsSJ3t@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <6402170.5s0abZDqlD@wuerfel> <1467230078.2598.2.camel@plaes.org>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 29 Jun 2016 15:16:04 -0500
+Message-ID: <57742C84.6000903@codeaurora.org>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
+ <3914163.aNiIdzedWT@wuerfel> <5773ED4F.4050401@codeaurora.org>
+ <11472258.9SNjZdPb6l@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBYWT2C5QKGQEVEHQ5VY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1467230078.2598.2.camel-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <11472258.9SNjZdPb6l@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 29, 2016 10:54:38 PM CEST Priit Laes wrote:
-> On Wed, 2016-06-29 at 21:33 +0200, Arnd Bergmann wrote:
+Arnd Bergmann wrote:
 
-> > What is the size of this nvram file? As it's board specific, I wonder
-> > if we can simply include it inside of the DT verbatim. I remember
-> > doing that (in the pre-dtb days, on real open firmware) for the
-> > "spidernet"
-> > ethernet driver.
-> 
-> It contains a bit too much info:
-> 
-> This is what CubieTruck requires:
-> 
-> http://dl.cubieboard.org/public/Cubieboard/benn/firmware/ap6210/nvram_a
-> p6210.txt
+>> Sure, but in theory, my for-loop is correct, right?  Wouldn't there be
+>> some value in setting a 36-bit or 40-bit DMA mask if it works?  We have
+>> a platform where memory starts at a 40-bit address, so some devices have
+>> a 44-bit address bus.  If a 64-bit mask doesn't work, then a 32-bit mask
+>> certainly wont.
+>
+> The question is whether it makes any difference to the driver: what decision
+> does the driver make differently if it has set a 44-bit mask?
 
-Ah, I had not realized that this is a text based interface rather than
-a small binary blob with fixed offsets.
+> We don't have ZONE_DMA44 (and it's very unlikely that we will introduce
+> it), so neither the driver nor the network stack can actually act on the
+> fact that a 64-bit mask failed but a 44-bit mask succeeded.
 
-On the other hand, each line in there could be translated easily into
-a separate DT property, and some of them (manfid/prodid, macaddr, ...)
-look like they directly correspond to properties we already have.
+A 44-bit mask would have access to much larger regions of memory than a 
+32-bit mask.  Maybe one day we will have a version of dma_alloc_coherent 
+that uses the DMA mask to specify an actual range of physical addresses 
+to allocate from.  In this situation, a mask of 44 would be much better 
+than a mask of 32.
 
-As Arend said there is also the option of having a chip specific
-nvram file (brcmfmac43362-sdio.txt) as a fallback when there is no
-more specific module. How many of the lines in your example would
-actually differ between the two? Does this affect all of them, or
-just a subset that could be turned into a smaller set of DT
-properties?
+It just seems wrong for driver to hard-code 64-bit and 32-bit masks and 
+pretend like those are the only two sizes.  Very few 64-bit SOCs have a 
+full 64-bit address bus.  Most have actually around 36-48 bits.  If 
+dma_set_mask(64) fails on these systems, then every driver will fall 
+back to 32 bits, even though they can technically access all of DDR.
 
-	Arnd
+Maybe we need a function like this:
+
+int dma_find_best_mask(struct device *dev, unsigned int max)
+{
+	struct dma_map_ops *ops = get_dma_ops(dev);
+	unsigned int mask;
+	int ret;
+
+	if (!ops || !ops->dma_supported)
+		return max;
+
+	for (mask = max; mask >= 32; mask--) {
+		ret = ops->dma_supported(dev, mask);
+		if (ret < 0)
+			return ret;
+
+		if (ret > 0)
+			return mask;
+	}
+
+	return -ENOMEM;
+}
+
+You pass a mask size that you know is the maximum that the device could 
+support (in my case, 64).  It then returns a number that should be 
+passed to dma_set_mask().
+
+>>> Platforms will also allow allow the driver to set a mask that
+>>> is larger than what the bus supports, as long as all RAM is
+>>> reachable by the bus.
+>>
+>> And that check (like all others) is made in the dma_set_mask call?
+>
+> Yes. Regarding the system you mentioned: I understand that it has
+> no memory in ZONE_DMA32 and no IOMMU (btw, that also means 32-bit
+> PCI devices are fundamentally broken), and the bus can only address
+> the lower 44 bit of address space.
+
+Actually, we have an IOMMU, and the size of the address space depends on 
+the SOC.  Some SOCs have 32 bits, some have over 40.  The EMAC is the 
+same on all of these SOCs.
+
+> Does this system support more than 15TB of RAM? If not, then there
+> is no problem, and if it  does, I think your best way out is not
+> to disable SWIOTLB. That will be a slower compared to a system
+> with an IOMMU or the fictional ZONE_DMA44, but it should work
+> correctly. In either case (less than 15TB without swiotlb, or
+> more than 15TB with swiotlb), the driver should just ask for
+> a 64-bit mask and that will succeed.
+
+Some SOCs can support over 15TB.  They all have IOMMUs.
+
+Apparently, dma_set_mask(64) won't always succeed.  If the SOC has fewer 
+DMA address lines than total memory, then a mask of 64 will fail.
+
+I don't want to implement a solution that just happens to work on the 
+EMAC.  I'm trying to come up with a generic solution that can work in 
+any driver on any SOC, whether you use device tree or ACPI.
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation collaborative project.
