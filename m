@@ -1,240 +1,335 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 00/14] clk: sunxi: introduce "modern" clock support
-Date: Wed, 29 Jun 2016 21:05:21 +0200
-Message-ID: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v3 07/14] clk: sunxi-ng: Add divider
+Date: Wed, 29 Jun 2016 21:05:28 +0200
+Message-ID: <20160629190535.11855-8-maxime.ripard@free-electrons.com>
+References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, devicetree@vger.kernel.org, Jean-Francois Moine <moinejf@free.fr>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jean-Francois Moine <moinejf@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add support for the various dividers (linear, table or pow-of-two based)
+found in the CCU.
 
-This is the third attempt at introducing clock support for the
-Allwinner SoCs following the current model used by pretty much all the
-other SoCs.
-
-Such a conversion has been suggested on a regular basis by Mike and
-Stephen, and here is a first implementation.
-
-This new approach has a good number of advantages, some due to the new
-binding itself, some due to the lessons learned with the current code
-we have.
-
-Beside from having a binding similar to the other SoCs, which helps
-developer hopping from one SoC to the other, it also reduces the
-amount of binding review that needs to be done, something that Rob
-already complained about a few times.
-Now that we are following the DT-as-an-ABI rule, the new binding will
-also make our life way easier, since we reduce the exposed surface
-greatly. The former binding, while making quite easy to mix and match
-clocks when bringing up new SoCs, was also exposing way too much
-implementation details that would hold us back when wanting to
-refactor, consolidate, or fix some shortcomings in the current
-implementation. In the new approach, the only thing that we're
-exposing is the clock index, meaning that we can change the
-implementation as much as we want.
-
-This rewrite is also the occasion to layer things up quite differently
-in our clock core.
-
-The current code had a bunch of shortcomings. Most of the code was
-relying on our clk-factor code, which was factoring away a few things
-like the clock registration, ie boilerplate, but didn't factor the
-logic to compute a clock rate, while the huge majority are computed
-from some variation of a formula, which could actually be shared.
-
-Which meant that every time we had to add new code to help clk-factors
-compute the actual factors used, even though a clock with the same
-formual was probably already supported. This eventually lead to a huge
-number of clocks driver patches, and to review, which is also
-something Stephen complained about.
-
-The new approach takes a different approach by adding a bunch of clock
-drivers based on the formula they use to compute their rate and / or
-the features they have (mux, gate, etc.). The SoC will only have to
-provide the data for the driver to know how many options it has,
-without adding any extra code.
-
-To reduce the amount of code duplication between those drivers, a
-bunch of helpers have also been introduced to deal with the common
-features (pre-dividers, gate, muxes, etc.). This will also be very
-easy to extend to support new features missing for now (mostly the
-fractional stuff as of today).
-
-Since this is a complete rewrite, it probably has a bunch of bugs
-and/or limitations not yet found. My plan would be to start using that
-approach on the A64, A83T and H3 which are in their early support
-stage to be the test-bed for this new framework, before switching the
-older and more featureful SoCs to it eventually.
-
-Because of the DT ABI, the older drivers will remain in-tree
-obviously, otherwise things would break pretty badly.
-
-The current code has been tested on the H3 and an Orange Pi PC,
-including making sure that MMC still works, so the general approach
-seems ok.
-
-Let me know what you think,
-Maxime
-
-Changes from v2:
-  * Switched to Kconfig, and selected the rational lib Kconfig option
-  * Added a better define and comment for the Audio PLL register, and
-    why we need to poke it.
-  * Removed the PLL locks and gate feature flags
-  * Fixed the missing gate define in the CCU divider macro
-  * Switched to clk_hw_register
-  * Removed our implementation of the fixed factor clocks and used the
-    CCF one.
-  * Initialise clk_hw_onecell_data statically
-  * Only expose in the dt-bindings header the clocks that should be
-    use by the devices, and not the internal ones.
-  * Fixed a typo in the DT documentation
-
-Changes from v1:
-  * Common parts:
-      - Moved the register mapping out of the common probe function and
-        into the SoC specific part to be able to do some quirks
-      - Changed the LOCK feature to PLL_LOCK
-      - Fixed a bug in the iteration over the clock array
-      - Changed the clock register offset to an u16
-      - Added fractional support
-      - Added comments to define the formulas of the various clock classes
-      - Fixed an off-by-one issue in the GENMASK calls
-      - Added macros for all the simple clocks
-      - Added the DT documentation
-
-  * H3 part
-      - Only build when MACH_SUN8I is set
-      - Use a static PLL2-1x divider
-      - Used common parents definitions when possible
-      - Fixed the mux width of a bunch of clocks
-      - Fixed the parent of USB OTG bus clocks
-
-  * Dividers
-      - Dropped the various classes of dividers and merged them into a
-        single one
-
-  * Fixed factor
-      - Added support for CLK_SET_RATE_PARENT in fixed factor clocks
-      - Changed the operands order in the rate computation
-
-  * Mux:
-      - Moved the header introduction from the patch adding the common
-        parts to the patch adding the mux
-
-  * N-M:
-      - Fixed the maximum passed to the rational function
-
-  * N-K-M:
-      - Declared the find_best function static
-      - Fixed the set_rate function that was always writing the factors
-        at the same offset
-      - Used a structure for all the find_best arguments
-
-  * N-K-M-P:
-      - Fixed the parent rate computation in the rational_best call
-      - Used a structure for all the find_best arguments
-
-  * Phase:
-      - Renamed some variables as suggested    
-
-Maxime Ripard (14):
-  dt-bindings: sunxi: Add CCU binding documentation
-  clk: sunxi-ng: Add common infrastructure
-  clk: sunxi-ng: Add fractional lib
-  clk: sunxi-ng: Add gate clock support
-  clk: sunxi-ng: Add mux clock support
-  clk: sunxi-ng: Add phase clock support
-  clk: sunxi-ng: Add divider
-  clk: sunxi-ng: Add M-P factor clock support
-  clk: sunxi-ng: Add N-K-factor clock support
-  clk: sunxi-ng: Add N-M-factor clock support
-  clk: sunxi-ng: Add N-K-M Factor clock
-  clk: sunxi-ng: Add N-K-M-P factor clock
-  clk: sunxi-ng: Add H3 clocks
-  ARM: dt: sun8i: switch the H3 to the new CCU driver
-
- .../devicetree/bindings/clock/sunxi-ccu.txt        |  24 +
- arch/arm/boot/dts/sun8i-h3.dtsi                    | 312 ++------
- drivers/clk/Kconfig                                |   1 +
- drivers/clk/Makefile                               |   1 +
- drivers/clk/sunxi-ng/Kconfig                       |  65 ++
- drivers/clk/sunxi-ng/Makefile                      |  20 +
- drivers/clk/sunxi-ng/ccu-sun8i-h3.c                | 826 +++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu-sun8i-h3.h                |  62 ++
- drivers/clk/sunxi-ng/ccu_common.c                  |  90 +++
- drivers/clk/sunxi-ng/ccu_common.h                  |  85 +++
- drivers/clk/sunxi-ng/ccu_div.c                     | 136 ++++
- drivers/clk/sunxi-ng/ccu_div.h                     | 133 ++++
- drivers/clk/sunxi-ng/ccu_frac.c                    | 110 +++
- drivers/clk/sunxi-ng/ccu_frac.h                    |  53 ++
- drivers/clk/sunxi-ng/ccu_gate.c                    |  82 ++
- drivers/clk/sunxi-ng/ccu_gate.h                    |  52 ++
- drivers/clk/sunxi-ng/ccu_mp.c                      | 158 ++++
- drivers/clk/sunxi-ng/ccu_mp.h                      |  77 ++
- drivers/clk/sunxi-ng/ccu_mult.h                    |  15 +
- drivers/clk/sunxi-ng/ccu_mux.c                     | 187 +++++
- drivers/clk/sunxi-ng/ccu_mux.h                     |  91 +++
- drivers/clk/sunxi-ng/ccu_nk.c                      | 147 ++++
- drivers/clk/sunxi-ng/ccu_nk.h                      |  71 ++
- drivers/clk/sunxi-ng/ccu_nkm.c                     | 153 ++++
- drivers/clk/sunxi-ng/ccu_nkm.h                     |  68 ++
- drivers/clk/sunxi-ng/ccu_nkmp.c                    | 167 +++++
- drivers/clk/sunxi-ng/ccu_nkmp.h                    |  71 ++
- drivers/clk/sunxi-ng/ccu_nm.c                      | 114 +++
- drivers/clk/sunxi-ng/ccu_nm.h                      |  91 +++
- drivers/clk/sunxi-ng/ccu_phase.c                   | 126 ++++
- drivers/clk/sunxi-ng/ccu_phase.h                   |  50 ++
- drivers/clk/sunxi-ng/ccu_reset.c                   |  55 ++
- drivers/clk/sunxi-ng/ccu_reset.h                   |  40 +
- include/dt-bindings/clock/sun8i-h3-ccu.h           | 145 ++++
- include/dt-bindings/reset/sun8i-h3-ccu.h           | 103 +++
- 35 files changed, 3729 insertions(+), 252 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/sunxi-ccu.txt
- create mode 100644 drivers/clk/sunxi-ng/Kconfig
- create mode 100644 drivers/clk/sunxi-ng/Makefile
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-h3.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun8i-h3.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_common.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_common.h
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ drivers/clk/sunxi-ng/Kconfig   |   4 ++
+ drivers/clk/sunxi-ng/Makefile  |   1 +
+ drivers/clk/sunxi-ng/ccu_div.c | 136 +++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu_div.h | 133 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 274 insertions(+)
  create mode 100644 drivers/clk/sunxi-ng/ccu_div.c
  create mode 100644 drivers/clk/sunxi-ng/ccu_div.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_frac.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_frac.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_gate.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_gate.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_mp.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_mp.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_mult.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_mux.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_mux.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_nk.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_nk.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_nkm.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_nkm.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_nkmp.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_nkmp.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_nm.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_nm.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_phase.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_phase.h
- create mode 100644 drivers/clk/sunxi-ng/ccu_reset.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_reset.h
- create mode 100644 include/dt-bindings/clock/sun8i-h3-ccu.h
- create mode 100644 include/dt-bindings/reset/sun8i-h3-ccu.h
 
+diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
+index 3a3bc4368a2a..7e65e776e7a8 100644
+--- a/drivers/clk/sunxi-ng/Kconfig
++++ b/drivers/clk/sunxi-ng/Kconfig
+@@ -6,6 +6,10 @@ if SUNXI_CCU
+ 
+ # Base clock types
+ 
++config SUNXI_CCU_DIV
++	bool
++	select SUNXI_CCU_MUX
++
+ config SUNXI_CCU_FRAC
+ 	bool
+ 
+diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
+index a0c53c56ebfe..4bc5b6168560 100644
+--- a/drivers/clk/sunxi-ng/Makefile
++++ b/drivers/clk/sunxi-ng/Makefile
+@@ -3,6 +3,7 @@ obj-$(CONFIG_SUNXI_CCU)		+= ccu_common.o
+ obj-$(CONFIG_SUNXI_CCU)		+= ccu_reset.o
+ 
+ # Base clock types
++obj-$(CONFIG_SUNXI_CCU_DIV)	+= ccu_div.o
+ obj-$(CONFIG_SUNXI_CCU_FRAC)	+= ccu_frac.o
+ obj-$(CONFIG_SUNXI_CCU_GATE)	+= ccu_gate.o
+ obj-$(CONFIG_SUNXI_CCU_MUX)	+= ccu_mux.o
+diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
+new file mode 100644
+index 000000000000..8659b4cb6c20
+--- /dev/null
++++ b/drivers/clk/sunxi-ng/ccu_div.c
+@@ -0,0 +1,136 @@
++/*
++ * Copyright (C) 2016 Maxime Ripard
++ * Maxime Ripard <maxime.ripard@free-electrons.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#include <linux/clk-provider.h>
++
++#include "ccu_gate.h"
++#include "ccu_div.h"
++
++static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
++					unsigned long parent_rate,
++					unsigned long rate,
++					void *data)
++{
++	struct ccu_div *cd = data;
++	unsigned long val;
++
++	/*
++	 * We can't use divider_round_rate that assumes that there's
++	 * several parents, while we might be called to evaluate
++	 * several different parents.
++	 */
++	val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
++			      cd->div.flags);
++
++	return divider_recalc_rate(&cd->common.hw, parent_rate, val,
++				   cd->div.table, cd->div.flags);
++}
++
++static void ccu_div_disable(struct clk_hw *hw)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_gate_helper_disable(&cd->common, cd->enable);
++}
++
++static int ccu_div_enable(struct clk_hw *hw)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_gate_helper_enable(&cd->common, cd->enable);
++}
++
++static int ccu_div_is_enabled(struct clk_hw *hw)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_gate_helper_is_enabled(&cd->common, cd->enable);
++}
++
++static unsigned long ccu_div_recalc_rate(struct clk_hw *hw,
++					unsigned long parent_rate)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++	unsigned long val;
++	u32 reg;
++
++	reg = readl(cd->common.base + cd->common.reg);
++	val = reg >> cd->div.shift;
++	val &= (1 << cd->div.width) - 1;
++
++	ccu_mux_helper_adjust_parent_for_prediv(&cd->common, &cd->mux, -1,
++						&parent_rate);
++
++	return divider_recalc_rate(hw, parent_rate, val, cd->div.table,
++				   cd->div.flags);
++}
++
++static int ccu_div_determine_rate(struct clk_hw *hw,
++				struct clk_rate_request *req)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_mux_helper_determine_rate(&cd->common, &cd->mux,
++					     req, ccu_div_round_rate, cd);
++}
++
++static int ccu_div_set_rate(struct clk_hw *hw, unsigned long rate,
++			   unsigned long parent_rate)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++	unsigned long flags;
++	unsigned long val;
++	u32 reg;
++
++	ccu_mux_helper_adjust_parent_for_prediv(&cd->common, &cd->mux, -1,
++						&parent_rate);
++
++	val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
++			      cd->div.flags);
++
++	spin_lock_irqsave(cd->common.lock, flags);
++
++	reg = readl(cd->common.base + cd->common.reg);
++	reg &= ~GENMASK(cd->div.width + cd->div.shift - 1, cd->div.shift);
++
++	writel(reg | (val << cd->div.shift),
++	       cd->common.base + cd->common.reg);
++
++	spin_unlock_irqrestore(cd->common.lock, flags);
++
++	return 0;
++}
++
++static u8 ccu_div_get_parent(struct clk_hw *hw)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_mux_helper_get_parent(&cd->common, &cd->mux);
++}
++
++static int ccu_div_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_mux_helper_set_parent(&cd->common, &cd->mux, index);
++}
++
++const struct clk_ops ccu_div_ops = {
++	.disable	= ccu_div_disable,
++	.enable		= ccu_div_enable,
++	.is_enabled	= ccu_div_is_enabled,
++
++	.get_parent	= ccu_div_get_parent,
++	.set_parent	= ccu_div_set_parent,
++
++	.determine_rate	= ccu_div_determine_rate,
++	.recalc_rate	= ccu_div_recalc_rate,
++	.set_rate	= ccu_div_set_rate,
++};
+diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
+new file mode 100644
+index 000000000000..653ade5769b3
+--- /dev/null
++++ b/drivers/clk/sunxi-ng/ccu_div.h
+@@ -0,0 +1,133 @@
++/*
++ * Copyright (c) 2016 Maxime Ripard. All rights reserved.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _CCU_DIV_H_
++#define _CCU_DIV_H_
++
++#include <linux/clk-provider.h>
++
++#include "ccu_common.h"
++#include "ccu_mux.h"
++
++struct _ccu_div {
++	u8			shift;
++	u8			width;
++
++	u32			flags;
++
++	struct clk_div_table	*table;
++};
++
++#define _SUNXI_CCU_DIV_TABLE_FLAGS(_shift, _width, _table, _flags)	\
++	{								\
++		.shift	= _shift,					\
++		.width	= _width,					\
++		.flags	= _flags,					\
++		.table	= _table,					\
++	}
++
++#define _SUNXI_CCU_DIV_FLAGS(_shift, _width, _flags)			\
++	_SUNXI_CCU_DIV_TABLE_FLAGS(_shift, _width, NULL, _flags)
++
++#define _SUNXI_CCU_DIV_TABLE(_shift, _width, _table)			\
++	_SUNXI_CCU_DIV_TABLE_FLAGS(_shift, _width, _table, 0)
++
++#define _SUNXI_CCU_DIV(_shift, _width)					\
++	_SUNXI_CCU_DIV_TABLE_FLAGS(_shift, _width, NULL, 0)
++
++struct ccu_div {
++	u32			enable;
++
++	struct _ccu_div		div;
++	struct ccu_mux_internal	mux;
++	struct ccu_common	common;
++};
++
++#define SUNXI_CCU_DIV_TABLE_WITH_GATE(_struct, _name, _parent, _reg,	\
++				      _shift, _width,			\
++				      _table, _gate, _flags)		\
++	struct ccu_div _struct = {					\
++		.div		= _SUNXI_CCU_DIV_TABLE(_shift, _width,	\
++						       _table),		\
++		.enable		= _gate,				\
++		.common	= {						\
++			.reg		= _reg,				\
++			.hw.init	= CLK_HW_INIT(_name,		\
++						      _parent,		\
++						      &ccu_div_ops,	\
++						      _flags),		\
++		}							\
++	}
++
++
++#define SUNXI_CCU_DIV_TABLE(_struct, _name, _parent, _reg,		\
++			    _shift, _width,				\
++			    _table, _flags)				\
++	SUNXI_CCU_DIV_TABLE_WITH_GATE(_struct, _name, _parent, _reg,	\
++				      _shift, _width, _table, 0,	\
++				      _flags)
++
++#define SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,	\
++				  _mshift, _mwidth, _muxshift, _muxwidth, \
++				  _gate, _flags)			\
++	struct ccu_div _struct = {					\
++		.enable	= _gate,					\
++		.div	= _SUNXI_CCU_DIV(_mshift, _mwidth),		\
++		.mux	= SUNXI_CLK_MUX(_muxshift, _muxwidth),		\
++		.common	= {						\
++			.reg		= _reg,				\
++			.hw.init	= CLK_HW_INIT_PARENTS(_name,	\
++							      _parents, \
++							      &ccu_div_ops, \
++							      _flags),	\
++		},							\
++	}
++
++#define SUNXI_CCU_M_WITH_MUX(_struct, _name, _parents, _reg,		\
++			     _mshift, _mwidth, _muxshift, _muxwidth,	\
++			     _flags)					\
++	SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,	\
++				  _mshift, _mwidth, _muxshift, _muxwidth, \
++				  0, _flags)
++
++
++#define SUNXI_CCU_M_WITH_GATE(_struct, _name, _parent, _reg,		\
++			      _mshift, _mwidth,	_gate,			\
++			      _flags)					\
++	struct ccu_div _struct = {					\
++		.enable	= _gate,					\
++		.div	= _SUNXI_CCU_DIV(_mshift, _mwidth),		\
++		.common	= {						\
++			.reg		= _reg,				\
++			.hw.init	= CLK_HW_INIT(_name,		\
++						      _parent,		\
++						      &ccu_div_ops,	\
++						      _flags),		\
++		},							\
++	}
++
++#define SUNXI_CCU_M(_struct, _name, _parent, _reg, _mshift, _mwidth,	\
++		    _flags)						\
++	SUNXI_CCU_M_WITH_GATE(_struct, _name, _parent, _reg,		\
++			      _mshift, _mwidth, 0, _flags)
++
++static inline struct ccu_div *hw_to_ccu_div(struct clk_hw *hw)
++{
++	struct ccu_common *common = hw_to_ccu_common(hw);
++
++	return container_of(common, struct ccu_div, common);
++}
++
++extern const struct clk_ops ccu_div_ops;
++
++#endif /* _CCU_DIV_H_ */
 -- 
 2.9.0
