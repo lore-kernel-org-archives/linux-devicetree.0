@@ -1,110 +1,490 @@
-From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Wed, 29 Jun 2016 20:57:35 +0200
-Message-ID: <fa0bf74d-cba3-0853-753c-64fe049105aa@broadcom.com>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
- <CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
- <b49a9e4b-d591-d978-8005-413f39ebf2bd@redhat.com>
- <871t3gdj6p.fsf@purkki.adurom.net>
- <ea10ff70-26e6-e151-5cea-c54bd12a054c@redhat.com>
- <f8995599-115d-87e5-7928-c029b48584f1@broadcom.com>
-Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRYNGWEWYDBBJ5U2C5QKGQEABZY24Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <f8995599-115d-87e5-7928-c029b48584f1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 14/14] ARM: dt: sun8i: switch the H3 to the new CCU driver
+Date: Wed, 29 Jun 2016 21:05:35 +0200
+Message-ID: <20160629190535.11855-15-maxime.ripard@free-electrons.com>
+References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jean-Francois Moine <moinejf@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29-6-2016 20:51, Arend Van Spriel wrote:
-> On 29-6-2016 20:01, Hans de Goede wrote:
->> Hi,
->>
->> On 29-06-16 19:00, Kalle Valo wrote:
->>> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
->>>
->>>> Hi,
->>>>
->>>> On 29-06-16 16:42, Jonas Gorski wrote:
->>>>> Hi,
->>>>>
->>>>> On 29 June 2016 at 16:04, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>>>> Add a brcm,nvram_file_name dt property to allow overruling the default
->>>>>> nvram filename for sdio devices. The idea is that we can specify a
->>>>>> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
->>>>>> with an ap6210 wifi sdio module and ship this in linux-firmware, so
->>>>>> that wifi will work out of the box, without requiring users to find
->>>>>> and then manually install the right nvram file for their board.
->>>>>
->>>>> Directly defining a filename doesn't seem like a good OS-agnostic
->>>>> approach. Maybe an alternative would be to add a model-property to the
->>>>> nodes (this is allowed) and make brcmfmac to request
->>>>> "FWFILENAME-<model>" as firmware if set? That would leave it to the OS
->>>>> on how the filename is set.
->>>>
->>>> It only defines the base-filename, not the entire path, how / where
->>>> this file is searched for / loaded-from is then left up to the os
->>>
->>> It's still a bad idea. The filename, including the path, should be
->>> created in the driver. Can't you provide chipname (or similar) via
->>> device tree and then the driver can choose what image to use?
->>
->> No, the driver already does that, but this is not ...
->>
->>> Can you tell more about the naming the firmware image, how does it work
->>> exactly?
->>
->> About firmware, this is about the nvram file which is board specific,
->> rather then chip specific.
-> 
-> The nvram filename is determined pretty much the same as the firmware
-> filename, but indeed the nvram data is board specific. This is main
-> reason why we do not submit nvram files to linux-firmware, because we
-> simply do not have those files.
-> 
->> Typical wifi devices will have some sort of non volatile storage
->> on board to not only store the ethernet(mac) address, but also
->> to contain e.g. info about the antenna gain so that the firmware
->> and/or the driver can take the antenna gain into account and ensure
->> that they never exceed the maximum allowed broadcast strength.
->>
->> However on some embedded devices there is no non-volatile storage
->> for the wifi (for cost reasons) and instead this configuration info
->> (which is board / pcb specific) is loaded in the form of a
->> file which contains the contents which would normally be in the
->> non-volatile storage.
->>
->> Since we are dealing with a per-board config-file here, which is
->> loaded from the os filesystem we really need to specify a basename
->> here as the list of possible boards is endless, so we cannot
->> have a lookup table in the driver.
+Now that we have a different clock representation, switch to it.
 
-As a note: For BT Marcel was playing with the idea of having a lookup
-table on the file system which would be loaded by the driver.
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ arch/arm/boot/dts/sun8i-h3.dtsi | 312 ++++++++--------------------------------
+ 1 file changed, 60 insertions(+), 252 deletions(-)
 
-> As Jonas mentioned the general principle of device tree is to be
-> agnostic with regards to OS and/or driver as you undoubtedly know. His
-> proposal seems like a usable solution for your problem while complying
-> to the device tree principle. So instead of overriding the default
-> brcmfmac should modify it when dt specifies the "module" property, ie:
-> 
-> no "module" in DT:	nvram filename = brcm/brcmfmac43362-sdio.txt
-> "module=ap6210" in DT:	nvram filename = brcm/brcmfmac43362-ap6210.txt
-> 
-> By the way, the example in the bindings file does not seem to specify a
-> basename, but path+basename+fileext.
-
-Hans,
-
-Another btw: Kalle has taken over maintainer job from John.
-
-Regards,
-Arend
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 3c37f7e2b079..fdf9fdbda267 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -42,8 +42,10 @@
+ 
+ #include "skeleton.dtsi"
+ 
++#include <dt-bindings/clock/sun8i-h3-ccu.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/sun4i-a10.h>
++#include <dt-bindings/reset/sun8i-h3-ccu.h>
+ 
+ / {
+ 	interrupt-parent = <&gic>;
+@@ -104,191 +106,6 @@
+ 			clock-output-names = "osc32k";
+ 		};
+ 
+-		pll1: clk@01c20000 {
+-			#clock-cells = <0>;
+-			compatible = "allwinner,sun8i-a23-pll1-clk";
+-			reg = <0x01c20000 0x4>;
+-			clocks = <&osc24M>;
+-			clock-output-names = "pll1";
+-		};
+-
+-		/* dummy clock until actually implemented */
+-		pll5: pll5_clk {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <0>;
+-			clock-output-names = "pll5";
+-		};
+-
+-		pll6: clk@01c20028 {
+-			#clock-cells = <1>;
+-			compatible = "allwinner,sun6i-a31-pll6-clk";
+-			reg = <0x01c20028 0x4>;
+-			clocks = <&osc24M>;
+-			clock-output-names = "pll6", "pll6x2";
+-		};
+-
+-		pll6d2: pll6d2_clk {
+-			#clock-cells = <0>;
+-			compatible = "fixed-factor-clock";
+-			clock-div = <2>;
+-			clock-mult = <1>;
+-			clocks = <&pll6 0>;
+-			clock-output-names = "pll6d2";
+-		};
+-
+-		/* dummy clock until pll6 can be reused */
+-		pll8: pll8_clk {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <1>;
+-			clock-output-names = "pll8";
+-		};
+-
+-		cpu: cpu_clk@01c20050 {
+-			#clock-cells = <0>;
+-			compatible = "allwinner,sun4i-a10-cpu-clk";
+-			reg = <0x01c20050 0x4>;
+-			clocks = <&osc32k>, <&osc24M>, <&pll1>, <&pll1>;
+-			clock-output-names = "cpu";
+-		};
+-
+-		axi: axi_clk@01c20050 {
+-			#clock-cells = <0>;
+-			compatible = "allwinner,sun4i-a10-axi-clk";
+-			reg = <0x01c20050 0x4>;
+-			clocks = <&cpu>;
+-			clock-output-names = "axi";
+-		};
+-
+-		ahb1: ahb1_clk@01c20054 {
+-			#clock-cells = <0>;
+-			compatible = "allwinner,sun6i-a31-ahb1-clk";
+-			reg = <0x01c20054 0x4>;
+-			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6 0>;
+-			clock-output-names = "ahb1";
+-		};
+-
+-		ahb2: ahb2_clk@01c2005c {
+-			#clock-cells = <0>;
+-			compatible = "allwinner,sun8i-h3-ahb2-clk";
+-			reg = <0x01c2005c 0x4>;
+-			clocks = <&ahb1>, <&pll6d2>;
+-			clock-output-names = "ahb2";
+-		};
+-
+-		apb1: apb1_clk@01c20054 {
+-			#clock-cells = <0>;
+-			compatible = "allwinner,sun4i-a10-apb0-clk";
+-			reg = <0x01c20054 0x4>;
+-			clocks = <&ahb1>;
+-			clock-output-names = "apb1";
+-		};
+-
+-		apb2: apb2_clk@01c20058 {
+-			#clock-cells = <0>;
+-			compatible = "allwinner,sun4i-a10-apb1-clk";
+-			reg = <0x01c20058 0x4>;
+-			clocks = <&osc32k>, <&osc24M>, <&pll6 0>, <&pll6 0>;
+-			clock-output-names = "apb2";
+-		};
+-
+-		bus_gates: clk@01c20060 {
+-			#clock-cells = <1>;
+-			compatible = "allwinner,sun8i-h3-bus-gates-clk";
+-			reg = <0x01c20060 0x14>;
+-			clocks = <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
+-			clock-names = "ahb1", "ahb2", "apb1", "apb2";
+-			clock-indices = <5>, <6>, <8>,
+-					<9>, <10>, <13>,
+-					<14>, <17>, <18>,
+-					<19>, <20>,
+-					<21>, <23>,
+-					<24>, <25>,
+-					<26>, <27>,
+-					<28>, <29>,
+-					<30>, <31>, <32>,
+-					<35>, <36>, <37>,
+-					<40>, <41>, <43>,
+-					<44>, <52>, <53>,
+-					<54>, <64>,
+-					<65>, <69>, <72>,
+-					<76>, <77>, <78>,
+-					<96>, <97>, <98>,
+-					<112>, <113>,
+-					<114>, <115>,
+-					<116>, <128>, <135>;
+-			clock-output-names = "bus_ce", "bus_dma", "bus_mmc0",
+-					     "bus_mmc1", "bus_mmc2", "bus_nand",
+-					     "bus_sdram", "bus_gmac", "bus_ts",
+-					     "bus_hstimer", "bus_spi0",
+-					     "bus_spi1", "bus_otg",
+-					     "bus_otg_ehci0", "bus_ehci1",
+-					     "bus_ehci2", "bus_ehci3",
+-					     "bus_otg_ohci0", "bus_ohci1",
+-					     "bus_ohci2", "bus_ohci3", "bus_ve",
+-					     "bus_lcd0", "bus_lcd1", "bus_deint",
+-					     "bus_csi", "bus_tve", "bus_hdmi",
+-					     "bus_de", "bus_gpu", "bus_msgbox",
+-					     "bus_spinlock", "bus_codec",
+-					     "bus_spdif", "bus_pio", "bus_ths",
+-					     "bus_i2s0", "bus_i2s1", "bus_i2s2",
+-					     "bus_i2c0", "bus_i2c1", "bus_i2c2",
+-					     "bus_uart0", "bus_uart1",
+-					     "bus_uart2", "bus_uart3",
+-					     "bus_scr", "bus_ephy", "bus_dbg";
+-		};
+-
+-		mmc0_clk: clk@01c20088 {
+-			#clock-cells = <1>;
+-			compatible = "allwinner,sun4i-a10-mmc-clk";
+-			reg = <0x01c20088 0x4>;
+-			clocks = <&osc24M>, <&pll6 0>, <&pll8>;
+-			clock-output-names = "mmc0",
+-					     "mmc0_output",
+-					     "mmc0_sample";
+-		};
+-
+-		mmc1_clk: clk@01c2008c {
+-			#clock-cells = <1>;
+-			compatible = "allwinner,sun4i-a10-mmc-clk";
+-			reg = <0x01c2008c 0x4>;
+-			clocks = <&osc24M>, <&pll6 0>, <&pll8>;
+-			clock-output-names = "mmc1",
+-					     "mmc1_output",
+-					     "mmc1_sample";
+-		};
+-
+-		mmc2_clk: clk@01c20090 {
+-			#clock-cells = <1>;
+-			compatible = "allwinner,sun4i-a10-mmc-clk";
+-			reg = <0x01c20090 0x4>;
+-			clocks = <&osc24M>, <&pll6 0>, <&pll8>;
+-			clock-output-names = "mmc2",
+-					     "mmc2_output",
+-					     "mmc2_sample";
+-		};
+-
+-		usb_clk: clk@01c200cc {
+-			#clock-cells = <1>;
+-			#reset-cells = <1>;
+-			compatible = "allwinner,sun8i-h3-usb-clk";
+-			reg = <0x01c200cc 0x4>;
+-			clocks = <&osc24M>;
+-			clock-output-names = "usb_phy0", "usb_phy1",
+-					     "usb_phy2", "usb_phy3",
+-					     "usb_ohci0", "usb_ohci1",
+-					     "usb_ohci2", "usb_ohci3";
+-		};
+-
+-		mbus_clk: clk@01c2015c {
+-			#clock-cells = <0>;
+-			compatible = "allwinner,sun8i-a23-mbus-clk";
+-			reg = <0x01c2015c 0x4>;
+-			clocks = <&osc24M>, <&pll6 1>, <&pll5>;
+-			clock-output-names = "mbus";
+-		};
+-
+ 		apb0: apb0_clk {
+ 			compatible = "fixed-factor-clock";
+ 			#clock-cells = <0>;
+@@ -327,23 +144,23 @@
+ 			compatible = "allwinner,sun8i-h3-dma";
+ 			reg = <0x01c02000 0x1000>;
+ 			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bus_gates 6>;
+-			resets = <&ahb_rst 6>;
++			clocks = <&ccu CLK_BUS_DMA>;
++			resets = <&ccu RST_BUS_DMA>;
+ 			#dma-cells = <1>;
+ 		};
+ 
+ 		mmc0: mmc@01c0f000 {
+ 			compatible = "allwinner,sun5i-a13-mmc";
+ 			reg = <0x01c0f000 0x1000>;
+-			clocks = <&bus_gates 8>,
+-				 <&mmc0_clk 0>,
+-				 <&mmc0_clk 1>,
+-				 <&mmc0_clk 2>;
++			clocks = <&ccu CLK_BUS_MMC0>,
++				 <&ccu CLK_MMC0>,
++				 <&ccu CLK_MMC0_OUTPUT>,
++				 <&ccu CLK_MMC0_SAMPLE>;
+ 			clock-names = "ahb",
+ 				      "mmc",
+ 				      "output",
+ 				      "sample";
+-			resets = <&ahb_rst 8>;
++			resets = <&ccu RST_BUS_MMC0>;
+ 			reset-names = "ahb";
+ 			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
+@@ -354,15 +171,15 @@
+ 		mmc1: mmc@01c10000 {
+ 			compatible = "allwinner,sun5i-a13-mmc";
+ 			reg = <0x01c10000 0x1000>;
+-			clocks = <&bus_gates 9>,
+-				 <&mmc1_clk 0>,
+-				 <&mmc1_clk 1>,
+-				 <&mmc1_clk 2>;
++			clocks = <&ccu CLK_BUS_MMC1>,
++				 <&ccu CLK_MMC1>,
++				 <&ccu CLK_MMC1_OUTPUT>,
++				 <&ccu CLK_MMC1_SAMPLE>;
+ 			clock-names = "ahb",
+ 				      "mmc",
+ 				      "output",
+ 				      "sample";
+-			resets = <&ahb_rst 9>;
++			resets = <&ccu RST_BUS_MMC1>;
+ 			reset-names = "ahb";
+ 			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
+@@ -373,15 +190,15 @@
+ 		mmc2: mmc@01c11000 {
+ 			compatible = "allwinner,sun5i-a13-mmc";
+ 			reg = <0x01c11000 0x1000>;
+-			clocks = <&bus_gates 10>,
+-				 <&mmc2_clk 0>,
+-				 <&mmc2_clk 1>,
+-				 <&mmc2_clk 2>;
++			clocks = <&ccu CLK_BUS_MMC2>,
++				 <&ccu CLK_MMC2>,
++				 <&ccu CLK_MMC2_OUTPUT>,
++				 <&ccu CLK_MMC2_SAMPLE>;
+ 			clock-names = "ahb",
+ 				      "mmc",
+ 				      "output",
+ 				      "sample";
+-			resets = <&ahb_rst 10>;
++			resets = <&ccu RST_BUS_MMC2>;
+ 			reset-names = "ahb";
+ 			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
+@@ -401,18 +218,18 @@
+ 				    "pmu1",
+ 				    "pmu2",
+ 				    "pmu3";
+-			clocks = <&usb_clk 8>,
+-				 <&usb_clk 9>,
+-				 <&usb_clk 10>,
+-				 <&usb_clk 11>;
++			clocks = <&ccu CLK_USB_PHY0>,
++				 <&ccu CLK_USB_PHY1>,
++				 <&ccu CLK_USB_PHY2>,
++				 <&ccu CLK_USB_PHY3>;
+ 			clock-names = "usb0_phy",
+ 				      "usb1_phy",
+ 				      "usb2_phy",
+ 				      "usb3_phy";
+-			resets = <&usb_clk 0>,
+-				 <&usb_clk 1>,
+-				 <&usb_clk 2>,
+-				 <&usb_clk 3>;
++			resets = <&ccu RST_USB_PHY0>,
++				 <&ccu RST_USB_PHY1>,
++				 <&ccu RST_USB_PHY2>,
++				 <&ccu RST_USB_PHY3>;
+ 			reset-names = "usb0_reset",
+ 				      "usb1_reset",
+ 				      "usb2_reset",
+@@ -425,8 +242,8 @@
+ 			compatible = "allwinner,sun8i-h3-ehci", "generic-ehci";
+ 			reg = <0x01c1b000 0x100>;
+ 			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bus_gates 25>, <&bus_gates 29>;
+-			resets = <&ahb_rst 25>, <&ahb_rst 29>;
++			clocks = <&ccu CLK_BUS_EHCI1>, <&ccu CLK_BUS_OHCI1>;
++			resets = <&ccu RST_BUS_EHCI1>, <&ccu RST_BUS_OHCI1>;
+ 			phys = <&usbphy 1>;
+ 			phy-names = "usb";
+ 			status = "disabled";
+@@ -436,9 +253,9 @@
+ 			compatible = "allwinner,sun8i-h3-ohci", "generic-ohci";
+ 			reg = <0x01c1b400 0x100>;
+ 			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bus_gates 29>, <&bus_gates 25>,
+-				 <&usb_clk 17>;
+-			resets = <&ahb_rst 29>, <&ahb_rst 25>;
++			clocks = <&ccu CLK_BUS_EHCI1>, <&ccu CLK_BUS_OHCI1>,
++				 <&ccu CLK_USB_OHCI1>;
++			resets = <&ccu RST_BUS_EHCI1>, <&ccu RST_BUS_OHCI1>;
+ 			phys = <&usbphy 1>;
+ 			phy-names = "usb";
+ 			status = "disabled";
+@@ -448,8 +265,8 @@
+ 			compatible = "allwinner,sun8i-h3-ehci", "generic-ehci";
+ 			reg = <0x01c1c000 0x100>;
+ 			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bus_gates 26>, <&bus_gates 30>;
+-			resets = <&ahb_rst 26>, <&ahb_rst 30>;
++			clocks = <&ccu CLK_BUS_EHCI2>, <&ccu CLK_BUS_OHCI2>;
++			resets = <&ccu RST_BUS_EHCI2>, <&ccu RST_BUS_OHCI2>;
+ 			phys = <&usbphy 2>;
+ 			phy-names = "usb";
+ 			status = "disabled";
+@@ -459,9 +276,9 @@
+ 			compatible = "allwinner,sun8i-h3-ohci", "generic-ohci";
+ 			reg = <0x01c1c400 0x100>;
+ 			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bus_gates 30>, <&bus_gates 26>,
+-				 <&usb_clk 18>;
+-			resets = <&ahb_rst 30>, <&ahb_rst 26>;
++			clocks = <&ccu CLK_BUS_EHCI2>, <&ccu CLK_BUS_OHCI2>,
++				 <&ccu CLK_USB_OHCI2>;
++			resets = <&ccu RST_BUS_EHCI2>, <&ccu RST_BUS_OHCI2>;
+ 			phys = <&usbphy 2>;
+ 			phy-names = "usb";
+ 			status = "disabled";
+@@ -471,8 +288,8 @@
+ 			compatible = "allwinner,sun8i-h3-ehci", "generic-ehci";
+ 			reg = <0x01c1d000 0x100>;
+ 			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bus_gates 27>, <&bus_gates 31>;
+-			resets = <&ahb_rst 27>, <&ahb_rst 31>;
++			clocks = <&ccu CLK_BUS_EHCI3>, <&ccu CLK_BUS_OHCI3>;
++			resets = <&ccu RST_BUS_EHCI3>, <&ccu RST_BUS_OHCI3>;
+ 			phys = <&usbphy 3>;
+ 			phy-names = "usb";
+ 			status = "disabled";
+@@ -482,20 +299,29 @@
+ 			compatible = "allwinner,sun8i-h3-ohci", "generic-ohci";
+ 			reg = <0x01c1d400 0x100>;
+ 			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bus_gates 31>, <&bus_gates 27>,
+-				 <&usb_clk 19>;
+-			resets = <&ahb_rst 31>, <&ahb_rst 27>;
++			clocks = <&ccu CLK_BUS_EHCI3>, <&ccu CLK_BUS_OHCI3>,
++				 <&ccu CLK_USB_OHCI3>;
++			resets = <&ccu RST_BUS_EHCI3>, <&ccu RST_BUS_OHCI3>;
+ 			phys = <&usbphy 3>;
+ 			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
++		ccu: clock@01c20000 {
++			compatible = "allwinner,sun8i-h3-ccu";
++			reg = <0x01c20000 0x400>;
++			clocks = <&osc24M>, <&osc32k>;
++			clock-names = "hosc", "losc";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++
+ 		pio: pinctrl@01c20800 {
+ 			compatible = "allwinner,sun8i-h3-pinctrl";
+ 			reg = <0x01c20800 0x400>;
+ 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bus_gates 69>;
++			clocks = <&ccu CLK_BUS_PIO>;
+ 			gpio-controller;
+ 			#gpio-cells = <3>;
+ 			interrupt-controller;
+@@ -549,24 +375,6 @@
+ 			};
+ 		};
+ 
+-		ahb_rst: reset@01c202c0 {
+-			#reset-cells = <1>;
+-			compatible = "allwinner,sun6i-a31-ahb1-reset";
+-			reg = <0x01c202c0 0xc>;
+-		};
+-
+-		apb1_rst: reset@01c202d0 {
+-			#reset-cells = <1>;
+-			compatible = "allwinner,sun6i-a31-clock-reset";
+-			reg = <0x01c202d0 0x4>;
+-		};
+-
+-		apb2_rst: reset@01c202d8 {
+-			#reset-cells = <1>;
+-			compatible = "allwinner,sun6i-a31-clock-reset";
+-			reg = <0x01c202d8 0x4>;
+-		};
+-
+ 		timer@01c20c00 {
+ 			compatible = "allwinner,sun4i-a10-timer";
+ 			reg = <0x01c20c00 0xa0>;
+@@ -587,8 +395,8 @@
+ 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&bus_gates 112>;
+-			resets = <&apb2_rst 16>;
++			clocks = <&ccu CLK_BUS_UART0>;
++			resets = <&ccu RST_BUS_UART0>;
+ 			dmas = <&dma 6>, <&dma 6>;
+ 			dma-names = "rx", "tx";
+ 			status = "disabled";
+@@ -600,8 +408,8 @@
+ 			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&bus_gates 113>;
+-			resets = <&apb2_rst 17>;
++			clocks = <&ccu CLK_BUS_UART1>;
++			resets = <&ccu RST_BUS_UART1>;
+ 			dmas = <&dma 7>, <&dma 7>;
+ 			dma-names = "rx", "tx";
+ 			status = "disabled";
+@@ -613,8 +421,8 @@
+ 			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&bus_gates 114>;
+-			resets = <&apb2_rst 18>;
++			clocks = <&ccu CLK_BUS_UART2>;
++			resets = <&ccu RST_BUS_UART2>;
+ 			dmas = <&dma 8>, <&dma 8>;
+ 			dma-names = "rx", "tx";
+ 			status = "disabled";
+@@ -626,8 +434,8 @@
+ 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&bus_gates 115>;
+-			resets = <&apb2_rst 19>;
++			clocks = <&ccu CLK_BUS_UART3>;
++			resets = <&ccu RST_BUS_UART3>;
+ 			dmas = <&dma 9>, <&dma 9>;
+ 			dma-names = "rx", "tx";
+ 			status = "disabled";
+-- 
+2.9.0
