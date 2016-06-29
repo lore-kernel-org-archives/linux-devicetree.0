@@ -1,65 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 29 Jun 2016 17:04:45 +0200
-Message-ID: <5679359.84lXZytcOR@wuerfel>
-References: <1466812008-26686-1-git-send-email-timur@codeaurora.org> <4312386.60Y44nCzSI@wuerfel> <5773DC52.4010703@codeaurora.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name dt property
+Date: Wed, 29 Jun 2016 17:16:32 +0200
+Message-ID: <b49a9e4b-d591-d978-8005-413f39ebf2bd@redhat.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+ <CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5773DC52.4010703@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBWOMZ65QKGQEM4RBEBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 29, 2016 9:33:54 AM CEST Timur Tabi wrote:
-> Arnd Bergmann wrote:
-> > If the ranges property lists the bus as dma capable for only the
-> > lower 32 bits, then dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-> > should fail, otherwise dma_alloc_coherent() will return an invalid
-> > memory area.
-> 
-> That seems wrong.  dma_alloc_coherent() should be smart enough to 
-> restrict itself to the the dma-ranges property.  Isn't that why the 
-> property exists?  When dma_alloc_coherent() looks for memory, it should 
-> knows it has to create a 32-bit address.  That's why we have ZONE_DMA.
+Hi,
 
-No, dma_alloc_coherent() is documented to use the dma_mask as
-its reference, it's supposed to be independent of the underlying
-bus.
+On 29-06-16 16:42, Jonas Gorski wrote:
+> Hi,
+>
+> On 29 June 2016 at 16:04, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Add a brcm,nvram_file_name dt property to allow overruling the default
+>> nvram filename for sdio devices. The idea is that we can specify a
+>> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
+>> with an ap6210 wifi sdio module and ship this in linux-firmware, so
+>> that wifi will work out of the box, without requiring users to find
+>> and then manually install the right nvram file for their board.
+>
+> Directly defining a filename doesn't seem like a good OS-agnostic
+> approach. Maybe an alternative would be to add a model-property to the
+> nodes (this is allowed) and make brcmfmac to request
+> "FWFILENAME-<model>" as firmware if set? That would leave it to the OS
+> on how the filename is set.
 
-dma-ranges is just how we communicate the limitation of the
-bus to the kernel, but relying on dma-ranges itself would fail
-to consider drivers that impose additional limitations, i.e.
-when a device needs a smaller mask and calls 'dma_set_mask(dev,
-DMA_BIT_MASK(24))' or something like that.
+It only defines the base-filename, not the entire path, how / where
+this file is searched for / loaded-from is then left up to the os
 
-> > Another twist is how arm64 currently uses SWIOTLB unconditionally:
-> > As long as SWIOTLB (or iommu) is enabled, dma_set_mask_and_coherent()
-> > should succeed for any mask(), but not actually update the mask of the
-> > device to more than the bus can handle.
-> 
-> That just seems like a bug in ARM64 SWIOTLB.  SWIOTLB should inject 
-> itself when the driver tries to map memory outside of its DMA range.
+Regards,
 
-Again, the dma mask is how swiotlb_map_*() finds whether a page
-needs a bounce buffer or not, so it has to be set to whatever
-the device can address.
-
-> Without SWIOTLB/IOMMU, dma_alloc_coherent() should be aware of the 
-> platform-specific limitations of each device and ensure that it only 
-> allocates memory that conforms *all* limitations.  For example, if the 
-> platform is capable of 64-bit DMA, but a legacy device can only handle 
-> 32-bit bus addresses, then the driver should do this:
-> 
-> 	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
-
-That's also not how it works: each device starts out with a 32-bit mask,
-because that's what historically all PCI devices can do. If a device
-is 64-bit DMA capable, it can extend the mask by passing DMA_BIT_MASK(64)
-(or whatever it can support), and the platform code checks if that's
-possible.
-
-
-	Arnd
+Hans
