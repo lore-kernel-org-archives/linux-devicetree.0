@@ -1,61 +1,71 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/6] Clocksource: add nuc970 clocksource driver
-Date: Wed, 29 Jun 2016 17:25:39 +0200
-Message-ID: <4184925.Jh1dkPbmzX@wuerfel>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org> <1466851042-22239-4-git-send-email-vw@iommu.org>
+Subject: Re: [PATCH 4/6] irqchip: add irqchip driver for nuc900
+Date: Wed, 29 Jun 2016 17:27:53 +0200
+Message-ID: <8706947.5rzUDVsB2F@wuerfel>
+References: <1466851042-22239-1-git-send-email-vw@iommu.org> <1466851042-22239-5-git-send-email-vw@iommu.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466851042-22239-4-git-send-email-vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
+In-Reply-To: <1466851042-22239-5-git-send-email-vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, June 25, 2016 6:37:19 PM CEST Wan Zongshun wrote:
-> This patch is to add nuc970 clocksource driver support.
-> 
-> Signed-off-by: Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../mach-w90x900/include/mach/nuc970-regs-timer.h  |  44 +++++
->  drivers/clocksource/Kconfig                        |   8 +
->  drivers/clocksource/Makefile                       |   1 +
->  drivers/clocksource/timer-nuc900.c                 | 207 +++++++++++++++++++++
->  4 files changed, 260 insertions(+)
->  create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
->  create mode 100644 drivers/clocksource/timer-nuc900.c
-> 
-> diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h b/arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
+On Saturday, June 25, 2016 6:37:20 PM CEST Wan Zongshun wrote:
+> +#define IRQ_WDT		W90X900_IRQ(1)
+> +#define IRQ_WWDT	W90X900_IRQ(2)
+> +#define IRQ_LVD		W90X900_IRQ(3)
+> +#define IRQ_EXT0	W90X900_IRQ(4)
+> +#define IRQ_EXT1	W90X900_IRQ(5)
+> +#define IRQ_EXT2	W90X900_IRQ(6)
+> +#define IRQ_EXT3	W90X900_IRQ(7)
+> +#define IRQ_EXT4	W90X900_IRQ(8)
+> +#define IRQ_EXT5	W90X900_IRQ(9)
+> +#define IRQ_EXT6	W90X900_IRQ(10)
+
+I'd suggest dropping the list, the contents are now in the dts.
+
+> diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h b/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
 > new file mode 100644
-> index 0000000..43d7e8b
+> index 0000000..7a77016
 > --- /dev/null
-> +++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
+> +++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
+> @@ -0,0 +1,53 @@
+> +#ifndef __ASM_ARCH_REGS_AIC_H
+> +#define __ASM_ARCH_REGS_AIC_H
+> +
+> +/*NUC970 AIC regs*/
+> +
+> +#define	REG_AIC_SCR1	0x00
+> +#define	REG_AIC_SCR2	0x04
+> +#define	REG_AIC_SCR3	0x08
+> +#define	REG_AIC_SCR4	0x0C
+> +#define	REG_AIC_SCR5	0x10
 
-Please move the contents of the header file into the driver. We try to not
-have any new mach/*.h headers.
+And like the clk driver, these should all be in the irqchip driver instead
+of a separate header.
 
 > +
-> +static unsigned int timer0_load;
-> +static void __iomem *tmr_base;
-> +
-> +static int nuc970_clockevent_set_oneshot(struct clock_event_device *evt)
+> +static void __iomem *aic_base;
+> +static struct irq_domain *aic_domain;
+> +#define MAKE_HWIRQ(irqnum)	(irqnum)
+
+The macro appears to be unused.
+
+> +static void nuc970_irq_mask(struct irq_data *d)
 > +{
-> +	unsigned int val;
-> +
-> +	val = __raw_readl(tmr_base + REG_TMR_TCSR0);
-> +	val &= ~(0x03 << 27);
-> +
-> +	val |= (ONESHOT | COUNTEN | INTEN | PRESCALE);
-> +
-> +	__raw_writel(val, tmr_base + REG_TMR_TCSR0);
-> +	return 0;
+> +	if (d->irq < 32)
+> +		__raw_writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
+> +	else
+> +		__raw_writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
 > +}
-> +
 
-writel() instead of __raw_writel()
+writel()
 
 	Arnd
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
