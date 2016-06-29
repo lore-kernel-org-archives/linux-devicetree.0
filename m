@@ -1,45 +1,115 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 29 Jun 2016 10:10:59 -0500
-Message-ID: <5773E503.3070404@codeaurora.org>
-References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
- <4312386.60Y44nCzSI@wuerfel> <5773DC52.4010703@codeaurora.org>
- <5679359.84lXZytcOR@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/6] ARM: dts: nuc900: Add nuc970 dts files
+Date: Wed, 29 Jun 2016 17:24:10 +0200
+Message-ID: <4179493.MLDazV8SdP@wuerfel>
+References: <1466851042-22239-1-git-send-email-vw@iommu.org> <1466851042-22239-3-git-send-email-vw@iommu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5679359.84lXZytcOR@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466851042-22239-3-git-send-email-vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
-> That's also not how it works: each device starts out with a 32-bit mask,
-> because that's what historically all PCI devices can do. If a device
-> is 64-bit DMA capable, it can extend the mask by passing DMA_BIT_MASK(64)
-> (or whatever it can support), and the platform code checks if that's
-> possible.
+On Saturday, June 25, 2016 6:37:18 PM CEST Wan Zongshun wrote:
+> This patch is to add dts support for nuc970 platform.
+> 
+> Signed-off-by: Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/nuvoton/nuc970.txt     |  30 +++
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/nuc970-evb.dts                   |  20 ++
+>  arch/arm/boot/dts/nuc970.dtsi                      |  93 ++++++++
+>  include/dt-bindings/clock/nuc970-clock.h           | 233 +++++++++++++++++++++
+>  5 files changed, 377 insertions(+)
 
-So if it's not possible, then dma_set_mask returns an error, and the 
-driver should try a smaller mask?  Doesn't that mean that every driver 
-for a 64-bit device should do this:
+I'd suggest splitting this into multiple patches: the binding, the dts files and the header.
 
-	for (i = 64; i >=32; i--) {
-		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(i));
-		if (!ret)
-			break;
-	}
+> +Boards with the NUC970 SoC shall have the following properties:
+> +
+> +Root node required properties:
+> +- compatible: Should be "nuvoton,nuc970evb", "nuvoton,nuc970"
 
-	if (ret)
-		return ret;
+Better don't mention "nuvoton,nuc970evb", as that is the board specific
+identifier: we don't want to have to list every single board.
 
-Sure, this is overkill, but it seems to me that the driver does not 
-really know what mask is actually valid, so it has to find the largest 
-mask that works.
+> +Timer required properties:
+> +- compatible: Should be "nuvoton,tmr"
+> +- reg: Should contain registers location and length
+> +- interrupts: hwirq is direct mapping to irq number
+> +- clocks: phandle to input clock.
+> +
+> +Clock required properties:
+> +- compatible: Should be "nuvoton,clk"
+> +- reg: Should contain registers location and length
+> +
+> +Interrupt-controller required properties
+> +- compatible: Should be "nuvoton,aic"
+> +- reg: Should contain registers location and length
+> +- interrupt-cells: set to 1
+> +
+> +GCR register required properties:
+> +- compatible: Should be "nuvoton,gcr"
+> +- reg: Should contain registers location and length
 
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
+These compatible strings are all very generic, and should contain the
+SoC name.
+
+> diff --git a/arch/arm/boot/dts/nuc970.dtsi b/arch/arm/boot/dts/nuc970.dtsi
+> new file mode 100644
+> index 0000000..8a6c225
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/nuc970.dtsi
+> @@ -0,0 +1,93 @@
+> +/*
+> + * Copyright 2016 Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include "skeleton.dtsi"
+> +#include <dt-bindings/clock/nuc970-clock.h>
+> +
+> +/ {
+> +	compatible = "nuvoton,nuc970evb", "nuvoton,nuc970";
+> +
+> +	interrupt-parent = <&aic>;
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	memory {
+> +		reg = <0x00000000 0x04000000>;
+> +	};
+
+Better split this into SoC-specific and board-specific contents, the
+aliases and memory should go into the board.dts file, along with the
+alias for the serial port.
+
+> +	ahb@B0000000 {
+
+Don't capatilize the hexadecimal numbers.
+
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0xB0000000 0x9000>;
+> +		ranges;
+
+A simple-bus should not have a 'reg' property. You can have a 'ranges'
+though, to translate the addresses in the child nodes.
+
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
