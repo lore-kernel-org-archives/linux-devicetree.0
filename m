@@ -1,59 +1,73 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 09/14] clk: sunxi-ng: Add N-K-factor clock support
-Date: Wed, 29 Jun 2016 21:05:30 +0200
-Message-ID: <20160629190535.11855-10-maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 12/14] clk: sunxi-ng: Add N-K-M-P factor clock
+Date: Wed, 29 Jun 2016 21:05:33 +0200
+Message-ID: <20160629190535.11855-13-maxime.ripard@free-electrons.com>
 References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jean-Francois Moine <moinejf@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, devicetree@vger.kernel.org, Jean-Francois Moine <moinejf@free.fr>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Introduce support for clocks that use a combination of two linear
-multipliers.
+multipliers (N and K factors), one linear divider (M) and one power of two
+divider (P).
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/clk/sunxi-ng/Kconfig  |   4 ++
- drivers/clk/sunxi-ng/Makefile |   1 +
- drivers/clk/sunxi-ng/ccu_nk.c | 147 ++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu_nk.h |  71 ++++++++++++++++++++
- 4 files changed, 223 insertions(+)
- create mode 100644 drivers/clk/sunxi-ng/ccu_nk.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_nk.h
+ drivers/clk/sunxi-ng/Kconfig    |   5 ++
+ drivers/clk/sunxi-ng/Makefile   |   1 +
+ drivers/clk/sunxi-ng/ccu_nkmp.c | 167 ++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu_nkmp.h |  71 +++++++++++++++++
+ 4 files changed, 244 insertions(+)
+ create mode 100644 drivers/clk/sunxi-ng/ccu_nkmp.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu_nkmp.h
 
 diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
-index fc970b5a28c6..2eb0fc6b41d5 100644
+index 4c571b86bfd1..24fc9e4cc546 100644
 --- a/drivers/clk/sunxi-ng/Kconfig
 +++ b/drivers/clk/sunxi-ng/Kconfig
-@@ -24,6 +24,10 @@ config SUNXI_CCU_PHASE
+@@ -33,6 +33,11 @@ config SUNXI_CCU_NKM
+ 	select RATIONAL
+ 	select SUNXI_CCU_GATE
  
- # Multi-factor clocks
- 
-+config SUNXI_CCU_NK
++config SUNXI_CCU_NKMP
 +	bool
++	select RATIONAL
 +	select SUNXI_CCU_GATE
 +
- config SUNXI_CCU_MP
+ config SUNXI_CCU_NM
  	bool
- 	select SUNXI_CCU_GATE
+ 	select RATIONAL
 diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
-index 501dec9451f4..22951e60f876 100644
+index 2d6fdca0d3cc..5c342cc698d2 100644
 --- a/drivers/clk/sunxi-ng/Makefile
 +++ b/drivers/clk/sunxi-ng/Makefile
-@@ -10,4 +10,5 @@ obj-$(CONFIG_SUNXI_CCU_MUX)	+= ccu_mux.o
- obj-$(CONFIG_SUNXI_CCU_PHASE)	+= ccu_phase.o
- 
+@@ -12,5 +12,6 @@ obj-$(CONFIG_SUNXI_CCU_PHASE)	+= ccu_phase.o
  # Multi-factor clocks
-+obj-$(CONFIG_SUNXI_CCU_NK)	+= ccu_nk.o
+ obj-$(CONFIG_SUNXI_CCU_NK)	+= ccu_nk.o
+ obj-$(CONFIG_SUNXI_CCU_NKM)	+= ccu_nkm.o
++obj-$(CONFIG_SUNXI_CCU_NKMP)	+= ccu_nkmp.o
+ obj-$(CONFIG_SUNXI_CCU_NM)	+= ccu_nm.o
  obj-$(CONFIG_SUNXI_CCU_MP)	+= ccu_mp.o
-diff --git a/drivers/clk/sunxi-ng/ccu_nk.c b/drivers/clk/sunxi-ng/ccu_nk.c
+diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c b/drivers/clk/sunxi-ng/ccu_nkmp.c
 new file mode 100644
-index 000000000000..4470ffc8cf0d
+index 000000000000..9f2b98e19dc9
 --- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu_nk.c
-@@ -0,0 +1,147 @@
++++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
+@@ -0,0 +1,167 @@
 +/*
 + * Copyright (C) 2016 Maxime Ripard
 + * Maxime Ripard <maxime.ripard@free-electrons.com>
@@ -68,144 +82,164 @@ index 000000000000..4470ffc8cf0d
 +#include <linux/rational.h>
 +
 +#include "ccu_gate.h"
-+#include "ccu_nk.h"
++#include "ccu_nkmp.h"
 +
-+void ccu_nk_find_best(unsigned long parent, unsigned long rate,
-+		      unsigned int max_n, unsigned int max_k,
-+		      unsigned int *n, unsigned int *k)
++struct _ccu_nkmp {
++	unsigned long	n, max_n;
++	unsigned long	k, max_k;
++	unsigned long	m, max_m;
++	unsigned long	p, max_p;
++};
++
++static void ccu_nkmp_find_best(unsigned long parent, unsigned long rate,
++			       struct _ccu_nkmp *nkmp)
 +{
 +	unsigned long best_rate = 0;
-+	unsigned int best_k = 0, best_n = 0;
-+	unsigned int _k, _n;
++	unsigned long best_n = 0, best_k = 0, best_m = 0, best_p = 0;
++	unsigned long _n, _k, _m, _p;
 +
-+	for (_k = 1; _k <= max_k; _k++) {
-+		for (_n = 1; _n <= max_n; _n++) {
-+			unsigned long tmp_rate = parent * _n * _k;
++	for (_k = 1; _k <= nkmp->max_k; _k++) {
++		for (_p = 0; _p <= nkmp->max_p; _p++) {
++			unsigned long tmp_rate;
++
++			rational_best_approximation(rate / _k, parent >> _p,
++						    nkmp->max_n, nkmp->max_m,
++						    &_n, &_m);
++
++			tmp_rate = (parent * _n * _k >> _p) / _m;
 +
 +			if (tmp_rate > rate)
 +				continue;
 +
 +			if ((rate - tmp_rate) < (rate - best_rate)) {
 +				best_rate = tmp_rate;
-+				best_k = _k;
 +				best_n = _n;
++				best_k = _k;
++				best_m = _m;
++				best_p = _p;
 +			}
 +		}
 +	}
 +
-+	*k = best_k;
-+	*n = best_n;
++	nkmp->n = best_n;
++	nkmp->k = best_k;
++	nkmp->m = best_m;
++	nkmp->p = best_p;
 +}
 +
-+static void ccu_nk_disable(struct clk_hw *hw)
++static void ccu_nkmp_disable(struct clk_hw *hw)
 +{
-+	struct ccu_nk *nk = hw_to_ccu_nk(hw);
++	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
 +
-+	return ccu_gate_helper_disable(&nk->common, nk->enable);
++	return ccu_gate_helper_disable(&nkmp->common, nkmp->enable);
 +}
 +
-+static int ccu_nk_enable(struct clk_hw *hw)
++static int ccu_nkmp_enable(struct clk_hw *hw)
 +{
-+	struct ccu_nk *nk = hw_to_ccu_nk(hw);
++	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
 +
-+	return ccu_gate_helper_enable(&nk->common, nk->enable);
++	return ccu_gate_helper_enable(&nkmp->common, nkmp->enable);
 +}
 +
-+static int ccu_nk_is_enabled(struct clk_hw *hw)
++static int ccu_nkmp_is_enabled(struct clk_hw *hw)
 +{
-+	struct ccu_nk *nk = hw_to_ccu_nk(hw);
++	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
 +
-+	return ccu_gate_helper_is_enabled(&nk->common, nk->enable);
++	return ccu_gate_helper_is_enabled(&nkmp->common, nkmp->enable);
 +}
 +
-+static unsigned long ccu_nk_recalc_rate(struct clk_hw *hw,
++static unsigned long ccu_nkmp_recalc_rate(struct clk_hw *hw,
 +					unsigned long parent_rate)
 +{
-+	struct ccu_nk *nk = hw_to_ccu_nk(hw);
-+	unsigned long rate, n, k;
++	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
++	unsigned long n, m, k, p;
 +	u32 reg;
 +
-+	reg = readl(nk->common.base + nk->common.reg);
++	reg = readl(nkmp->common.base + nkmp->common.reg);
 +
-+	n = reg >> nk->n.shift;
-+	n &= (1 << nk->n.width) - 1;
++	n = reg >> nkmp->n.shift;
++	n &= (1 << nkmp->n.width) - 1;
 +
-+	k = reg >> nk->k.shift;
-+	k &= (1 << nk->k.width) - 1;
++	k = reg >> nkmp->k.shift;
++	k &= (1 << nkmp->k.width) - 1;
 +
-+	rate = parent_rate * (n + 1) * (k + 1);
++	m = reg >> nkmp->m.shift;
++	m &= (1 << nkmp->m.width) - 1;
 +
-+	if (nk->common.features & CCU_FEATURE_FIXED_POSTDIV)
-+		rate /= nk->fixed_post_div;
++	p = reg >> nkmp->p.shift;
++	p &= (1 << nkmp->p.width) - 1;
 +
-+	return rate;
++	return (parent_rate * (n + 1) * (k + 1) >> p) / (m + 1);
 +}
 +
-+static long ccu_nk_round_rate(struct clk_hw *hw, unsigned long rate,
++static long ccu_nkmp_round_rate(struct clk_hw *hw, unsigned long rate,
 +			      unsigned long *parent_rate)
 +{
-+	struct ccu_nk *nk = hw_to_ccu_nk(hw);
-+	unsigned int n, k;
++	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
++	struct _ccu_nkmp _nkmp;
 +
-+	if (nk->common.features & CCU_FEATURE_FIXED_POSTDIV)
-+		rate *= nk->fixed_post_div;
++	_nkmp.max_n = 1 << nkmp->n.width;
++	_nkmp.max_k = 1 << nkmp->k.width;
++	_nkmp.max_m = 1 << nkmp->m.width;
++	_nkmp.max_p = (1 << nkmp->p.width) - 1;
 +
-+	ccu_nk_find_best(*parent_rate, rate,
-+			 1 << nk->n.width, 1 << nk->k.width,
-+			 &n, &k);
++	ccu_nkmp_find_best(*parent_rate, rate,
++			   &_nkmp);
 +
-+	rate = *parent_rate * n * k;
-+	if (nk->common.features & CCU_FEATURE_FIXED_POSTDIV)
-+		rate = rate / nk->fixed_post_div;
-+
-+	return rate;
++	return (*parent_rate * _nkmp.n * _nkmp.k >> _nkmp.p) / _nkmp.m;
 +}
 +
-+static int ccu_nk_set_rate(struct clk_hw *hw, unsigned long rate,
++static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
 +			   unsigned long parent_rate)
 +{
-+	struct ccu_nk *nk = hw_to_ccu_nk(hw);
++	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
++	struct _ccu_nkmp _nkmp;
 +	unsigned long flags;
-+	unsigned int n, k;
 +	u32 reg;
 +
-+	if (nk->common.features & CCU_FEATURE_FIXED_POSTDIV)
-+		rate = rate * nk->fixed_post_div;
++	_nkmp.max_n = 1 << nkmp->n.width;
++	_nkmp.max_k = 1 << nkmp->k.width;
++	_nkmp.max_m = 1 << nkmp->m.width;
++	_nkmp.max_p = (1 << nkmp->p.width) - 1;
 +
-+	ccu_nk_find_best(parent_rate, rate,
-+			 1 << nk->n.width, 1 << nk->k.width,
-+			 &n, &k);
++	ccu_nkmp_find_best(parent_rate, rate, &_nkmp);
 +
-+	spin_lock_irqsave(nk->common.lock, flags);
++	spin_lock_irqsave(nkmp->common.lock, flags);
 +
-+	reg = readl(nk->common.base + nk->common.reg);
-+	reg &= ~GENMASK(nk->n.width + nk->n.shift - 1, nk->n.shift);
-+	reg &= ~GENMASK(nk->k.width + nk->k.shift - 1, nk->k.shift);
++	reg = readl(nkmp->common.base + nkmp->common.reg);
++	reg &= ~GENMASK(nkmp->n.width + nkmp->n.shift - 1, nkmp->n.shift);
++	reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
++	reg &= ~GENMASK(nkmp->m.width + nkmp->m.shift - 1, nkmp->m.shift);
++	reg &= ~GENMASK(nkmp->p.width + nkmp->p.shift - 1, nkmp->p.shift);
 +
-+	writel(reg | ((k - 1) << nk->k.shift) | ((n - 1) << nk->n.shift),
-+	       nk->common.base + nk->common.reg);
++	reg |= (_nkmp.n - 1) << nkmp->n.shift;
++	reg |= (_nkmp.k - 1) << nkmp->k.shift;
++	reg |= (_nkmp.m - 1) << nkmp->m.shift;
++	reg |= _nkmp.p << nkmp->p.shift;
 +
-+	spin_unlock_irqrestore(nk->common.lock, flags);
++	writel(reg, nkmp->common.base + nkmp->common.reg);
 +
-+	ccu_helper_wait_for_lock(&nk->common, nk->lock);
++	spin_unlock_irqrestore(nkmp->common.lock, flags);
++
++	ccu_helper_wait_for_lock(&nkmp->common, nkmp->lock);
 +
 +	return 0;
 +}
 +
-+const struct clk_ops ccu_nk_ops = {
-+	.disable	= ccu_nk_disable,
-+	.enable		= ccu_nk_enable,
-+	.is_enabled	= ccu_nk_is_enabled,
++const struct clk_ops ccu_nkmp_ops = {
++	.disable	= ccu_nkmp_disable,
++	.enable		= ccu_nkmp_enable,
++	.is_enabled	= ccu_nkmp_is_enabled,
 +
-+	.recalc_rate	= ccu_nk_recalc_rate,
-+	.round_rate	= ccu_nk_round_rate,
-+	.set_rate	= ccu_nk_set_rate,
++	.recalc_rate	= ccu_nkmp_recalc_rate,
++	.round_rate	= ccu_nkmp_round_rate,
++	.set_rate	= ccu_nkmp_set_rate,
 +};
-diff --git a/drivers/clk/sunxi-ng/ccu_nk.h b/drivers/clk/sunxi-ng/ccu_nk.h
+diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.h b/drivers/clk/sunxi-ng/ccu_nkmp.h
 new file mode 100644
-index 000000000000..4b52da0c29fe
+index 000000000000..5adb0c92a614
 --- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu_nk.h
++++ b/drivers/clk/sunxi-ng/ccu_nkmp.h
 @@ -0,0 +1,71 @@
 +/*
 + * Copyright (c) 2016 Maxime Ripard. All rights reserved.
@@ -220,8 +254,8 @@ index 000000000000..4b52da0c29fe
 + * GNU General Public License for more details.
 + */
 +
-+#ifndef _CCU_NK_H_
-+#define _CCU_NK_H_
++#ifndef _CCU_NKMP_H_
++#define _CCU_NKMP_H_
 +
 +#include <linux/clk-provider.h>
 +
@@ -230,53 +264,53 @@ index 000000000000..4b52da0c29fe
 +#include "ccu_mult.h"
 +
 +/*
-+ * struct ccu_nk - Definition of an N-K clock
++ * struct ccu_nkmp - Definition of an N-K-M-P clock
 + *
-+ * Clocks based on the formula parent * N * K
++ * Clocks based on the formula parent * N * K >> P / M
 + */
-+struct ccu_nk {
-+	u16			reg;
++struct ccu_nkmp {
 +	u32			enable;
 +	u32			lock;
 +
 +	struct _ccu_mult	n;
 +	struct _ccu_mult	k;
-+
-+	unsigned int		fixed_post_div;
++	struct _ccu_div		m;
++	struct _ccu_div		p;
 +
 +	struct ccu_common	common;
 +};
 +
-+#define SUNXI_CCU_NK_WITH_GATE_LOCK_POSTDIV(_struct, _name, _parent, _reg, \
-+					    _nshift, _nwidth,		\
-+					    _kshift, _kwidth,		\
-+					    _gate, _lock, _postdiv,	\
-+					    _flags)			\
-+	struct ccu_nk _struct = {					\
++#define SUNXI_CCU_NKMP_WITH_GATE_LOCK(_struct, _name, _parent, _reg,	\
++				      _nshift, _nwidth,			\
++				      _kshift, _kwidth,			\
++				      _mshift, _mwidth,			\
++				      _pshift, _pwidth,			\
++				      _gate, _lock, _flags)		\
++	struct ccu_nkmp _struct = {					\
 +		.enable		= _gate,				\
 +		.lock		= _lock,				\
-+		.k		= _SUNXI_CCU_MULT(_kshift, _kwidth),	\
 +		.n		= _SUNXI_CCU_MULT(_nshift, _nwidth),	\
-+		.fixed_post_div	= _postdiv,				\
++		.k		= _SUNXI_CCU_MULT(_kshift, _kwidth),	\
++		.m		= _SUNXI_CCU_DIV(_mshift, _mwidth),	\
++		.p		= _SUNXI_CCU_DIV(_pshift, _pwidth),	\
 +		.common		= {					\
 +			.reg		= _reg,				\
-+			.features	= CCU_FEATURE_FIXED_POSTDIV,	\
 +			.hw.init	= CLK_HW_INIT(_name,		\
 +						      _parent,		\
-+						      &ccu_nk_ops,	\
++						      &ccu_nkmp_ops,	\
 +						      _flags),		\
 +		},							\
 +	}
 +
-+static inline struct ccu_nk *hw_to_ccu_nk(struct clk_hw *hw)
++static inline struct ccu_nkmp *hw_to_ccu_nkmp(struct clk_hw *hw)
 +{
 +	struct ccu_common *common = hw_to_ccu_common(hw);
 +
-+	return container_of(common, struct ccu_nk, common);
++	return container_of(common, struct ccu_nkmp, common);
 +}
 +
-+extern const struct clk_ops ccu_nk_ops;
++extern const struct clk_ops ccu_nkmp_ops;
 +
-+#endif /* _CCU_NK_H_ */
++#endif /* _CCU_NKMP_H_ */
 -- 
 2.9.0
