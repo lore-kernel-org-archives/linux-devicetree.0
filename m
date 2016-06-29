@@ -1,18 +1,29 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: rn5t618: Add RN5T567 PMIC support" to the regulator tree
-Date: Wed, 29 Jun 2016 19:05:21 +0100
-Message-ID: <E1bIJrV-0003fg-Vm@finisterre>
-References: <20160605001749.4062-4-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160605001749.4062-4-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: Applied "mfd: rn5t618: Register restart handler" to the regulator tree
+Date: Wed, 29 Jun 2016 19:05:14 +0100
+Message-ID: <E1bIJrO-0003dA-CC@finisterre>
+References: <20160629055322.23038-6-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160629055322.23038-6-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Stefan Agner <stefan@agner.ch>
-Cc: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>lee.jones@linaro.org, lgirdwood@gmail.combroonie@kernel.org, khilman@baylibre.com, carlo@caione.org, b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pawel.moll@arm.com, max.oss.09@gmail.com, khilman@baylibre.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, robh+dt@kernel.org, linux@armlinux.org.uk, b.galvani@gmail.com, broonie@kernel.org, marcel@ziswiler.com, galak@codeaurora.org, carlo@caione.org, linux-amlogic@lists.infradead.org, lee.jones@linaro.org, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: rn5t618: Add RN5T567 PMIC support
+   mfd: rn5t618: Register restart handler
 
 has been applied to the regulator tree at
 
@@ -37,119 +48,106 @@ to this mail.
 Thanks,
 Mark
 
->From ed6d362d8dbc3494cd98cd771737ea8b1407ed61 Mon Sep 17 00:00:00 2001
+>From a370f60a58ec7bad7045803041524ccdc4d79c75 Mon Sep 17 00:00:00 2001
 From: Stefan Agner <stefan@agner.ch>
-Date: Tue, 28 Jun 2016 22:53:20 -0700
-Subject: [PATCH] regulator: rn5t618: Add RN5T567 PMIC support
+Date: Tue, 28 Jun 2016 22:53:22 -0700
+Subject: [PATCH] mfd: rn5t618: Register restart handler
 
-Extend the driver to support Ricoh RN5T567. Support the additional
-DCDC and slightly different voltage range of LDORTC1.
+Use the PMIC's repower capability for reboots. Register a restart
+handler and use a slightly elevated priority of 192 since the PMIC
+has suprior reset capability (causing a system wide reset).
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Acked-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/regulator/Kconfig             |  5 +++--
- drivers/regulator/rn5t618-regulator.c | 40 +++++++++++++++++++++++++++++++----
- include/linux/mfd/rn5t618.h           |  1 +
- 3 files changed, 40 insertions(+), 6 deletions(-)
+ drivers/mfd/rn5t618.c | 43 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 37 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 144cbf5b3e5a..547269416950 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -636,10 +636,11 @@ config REGULATOR_RK808
- 	  outputs which can be controlled by i2c communication.
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index 1831740d9016..ee94080e1cbb 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -12,11 +12,13 @@
+  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+  */
  
- config REGULATOR_RN5T618
--	tristate "Ricoh RN5T618 voltage regulators"
-+	tristate "Ricoh RN5T567/618 voltage regulators"
- 	depends on MFD_RN5T618
- 	help
--	  Say y here to support the regulators found on Ricoh RN5T618 PMIC.
-+	  Say y here to support the regulators found on Ricoh RN5T567 or
-+	  RN5T618 PMIC.
++#include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/rn5t618.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/reboot.h>
+ #include <linux/regmap.h>
  
- config REGULATOR_RT5033
- 	tristate "Richtek RT5033 Regulators"
-diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
-index b85ceb8ff911..9c930eb68cda 100644
---- a/drivers/regulator/rn5t618-regulator.c
-+++ b/drivers/regulator/rn5t618-regulator.c
-@@ -46,6 +46,23 @@ static struct regulator_ops rn5t618_reg_ops = {
- 		.vsel_mask	= (vmask),				\
+ static const struct mfd_cell rn5t618_cells[] = {
+@@ -50,17 +52,38 @@ static const struct regmap_config rn5t618_regmap_config = {
+ };
+ 
+ static struct rn5t618 *rn5t618_pm_power_off;
++static struct notifier_block rn5t618_restart_handler;
+ 
+-static void rn5t618_power_off(void)
++static void rn5t618_trigger_poweroff_sequence(bool repower)
+ {
+ 	/* disable automatic repower-on */
+ 	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_REPCNT,
+-			   RN5T618_REPCNT_REPWRON, 0);
++			   RN5T618_REPCNT_REPWRON,
++			   repower ? RN5T618_REPCNT_REPWRON : 0);
+ 	/* start power-off sequence */
+ 	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_SLPCNT,
+ 			   RN5T618_SLPCNT_SWPWROFF, RN5T618_SLPCNT_SWPWROFF);
+ }
+ 
++static void rn5t618_power_off(void)
++{
++	rn5t618_trigger_poweroff_sequence(false);
++}
++
++static int rn5t618_restart(struct notifier_block *this,
++			    unsigned long mode, void *cmd)
++{
++	rn5t618_trigger_poweroff_sequence(true);
++
++	/*
++	 * Re-power factor detection on PMIC side is not instant. 1ms
++	 * proved to be enough time until reset takes effect.
++	 */
++	mdelay(1);
++
++	return NOTIFY_DONE;
++}
++
+ static const struct of_device_id rn5t618_of_match[] = {
+ 	{ .compatible = "ricoh,rn5t567", .data = (void *)RN5T567 },
+ 	{ .compatible = "ricoh,rn5t618", .data = (void *)RN5T618 },
+@@ -102,13 +125,21 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+ 		return ret;
  	}
  
-+static struct regulator_desc rn5t567_regulators[] = {
-+	/* DCDC */
-+	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
-+	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
-+	REG(DCDC3, DC3CTL, BIT(0), DC3DAC, 0xff, 600000, 3500000, 12500),
-+	REG(DCDC4, DC4CTL, BIT(0), DC4DAC, 0xff, 600000, 3500000, 12500),
-+	/* LDO */
-+	REG(LDO1, LDOEN1, BIT(0), LDO1DAC, 0x7f, 900000, 3500000, 25000),
-+	REG(LDO2, LDOEN1, BIT(1), LDO2DAC, 0x7f, 900000, 3500000, 25000),
-+	REG(LDO3, LDOEN1, BIT(2), LDO3DAC, 0x7f, 600000, 3500000, 25000),
-+	REG(LDO4, LDOEN1, BIT(3), LDO4DAC, 0x7f, 900000, 3500000, 25000),
-+	REG(LDO5, LDOEN1, BIT(4), LDO5DAC, 0x7f, 900000, 3500000, 25000),
-+	/* LDO RTC */
-+	REG(LDORTC1, LDOEN2, BIT(4), LDORTCDAC, 0x7f, 1200000, 3500000, 25000),
-+	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
-+};
-+
- static struct regulator_desc rn5t618_regulators[] = {
- 	/* DCDC */
- 	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
-@@ -67,18 +84,33 @@ static int rn5t618_regulator_probe(struct platform_device *pdev)
- 	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
- 	struct regulator_config config = { };
- 	struct regulator_dev *rdev;
-+	struct regulator_desc *regulators;
- 	int i;
- 
-+	switch (rn5t618->variant) {
-+	case RN5T567:
-+		regulators = rn5t567_regulators;
-+		break;
-+	case RN5T618:
-+		regulators = rn5t618_regulators;
-+		break;
-+	default:
-+		return -EINVAL;
++	rn5t618_pm_power_off = priv;
+ 	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
+-		if (!pm_power_off) {
+-			rn5t618_pm_power_off = priv;
++		if (!pm_power_off)
+ 			pm_power_off = rn5t618_power_off;
+-		} else {
++		else
+ 			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
+-		}
 +	}
 +
-+	config.dev = pdev->dev.parent;
-+	config.regmap = rn5t618->regmap;
++	rn5t618_restart_handler.notifier_call = rn5t618_restart;
++	rn5t618_restart_handler.priority = 192;
 +
- 	for (i = 0; i < RN5T618_REG_NUM; i++) {
--		config.dev = pdev->dev.parent;
--		config.regmap = rn5t618->regmap;
-+		if (!regulators[i].name)
-+			continue;
- 
- 		rdev = devm_regulator_register(&pdev->dev,
--					       &rn5t618_regulators[i],
-+					       &regulators[i],
- 					       &config);
- 		if (IS_ERR(rdev)) {
- 			dev_err(&pdev->dev, "failed to register %s regulator\n",
--				rn5t618_regulators[i].name);
-+				regulators[i].name);
- 			return PTR_ERR(rdev);
- 		}
++	ret = register_restart_handler(&rn5t618_restart_handler);
++	if (ret) {
++		dev_err(&i2c->dev, "cannot register restart handler, %d\n", ret);
++		return ret;
  	}
-diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
-index 54179c2577ae..cadc6543909d 100644
---- a/include/linux/mfd/rn5t618.h
-+++ b/include/linux/mfd/rn5t618.h
-@@ -217,6 +217,7 @@ enum {
- 	RN5T618_DCDC1,
- 	RN5T618_DCDC2,
- 	RN5T618_DCDC3,
-+	RN5T618_DCDC4,
- 	RN5T618_LDO1,
- 	RN5T618_LDO2,
- 	RN5T618_LDO3,
+ 
+ 	return 0;
 -- 
 2.8.1
