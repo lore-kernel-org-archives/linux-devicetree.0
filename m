@@ -1,442 +1,82 @@
-From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/2 v4] tpm: Factor out common startup code
-Date: Wed, 29 Jun 2016 17:06:48 +0300
-Message-ID: <20160629140648.GB4589@intel.com>
-References: <1467186759-5149-1-git-send-email-andrew.zamansky@nuvoton.com>
- <1467186759-5149-2-git-send-email-andrew.zamansky@nuvoton.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 29 Jun 2016 16:07:58 +0200
+Message-ID: <4312386.60Y44nCzSI@wuerfel>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org> <5301045.3F9gkJcz60@wuerfel> <5773BC59.5010404@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467186759-5149-2-git-send-email-andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <5773BC59.5010404@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 29, 2016 at 10:52:38AM +0300, andrew zamansky wrote:
-> From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+On Wednesday, June 29, 2016 7:17:29 AM CEST Timur Tabi wrote:
+> Arnd Bergmann wrote:
+> > On Friday, June 24, 2016 6:46:48 PM CEST Timur Tabi wrote:
+> >> >+       /* The EMAC itself is capable of 64-bit DMA. If the SOC limits that
+> >> >+        * range, then we expect platform code to adjust the mask accordingly.
+> >> >+        */
+> >> >+       ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+> >> >+       if (ret) {
+> >> >+               dev_err(&pdev->dev, "could not set DMA mask\n");
+> >> >+               return ret;
+> >> >+       }
+> >> >
+> > The comment does not match the code: if the platform has no IOMMU
+> > and the bus limit is smaller than the memory, dma_set_mask_and_coherent()
+> > will fail, and the driver should instead ensure that the buffers are
+> > allocated from the 32-bit area.
+> >
+> > Alternatively, adjust the comment to explain that this is a limitation
+> > in the driver that can be lifted if necessary.
 > 
-> The TCG standard startup sequence (get timeouts, tpm startup, etc) for
-> TPM and TPM2 chips is being open coded in many drivers, move it into
-> the core code.
+> I'm not sure I understand.  The EMAC hardware is capable of 64-bit DMA. 
+>   This is true on every platform -- the hardware registers that take bus 
+> addresses are 64-bit.  The driver itself has no limitations.
 > 
-> tpm_tis and tpm_crb are used as the basis for the core code
-> implementation and the easy drivers are converted. In the process
-> several small drivers bugs relating to error handling this flow
-> are fixed.
-> 
-> For now the flag TPM_OPS_AUTO_STARTUP is optional to allow a staged
-> driver roll out, but ultimately all drivers should use this flow and
-> the flag removed. Some drivers still do not implement the startup
-> sequence at all and will need to be tested with it enabled.
-> 
-> Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> Tested-by: Andrew Zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
+> And that's what the dma_set_mask_and_coherent() does.  It tells the 
+> kernel what the device is capable of.
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+dma_set_mask_and_coherent() is a two-way interface, the driver says what
+it wants to do, and the platform reports on whether that is possible.
 
-Now this looks good to me. Just have to test this.
-
-/Jarkko
-
-> ---
->  drivers/char/tpm/st33zp24/st33zp24.c |  4 +---
->  drivers/char/tpm/tpm-chip.c          |  9 +++++++
->  drivers/char/tpm/tpm-interface.c     | 27 +++++++++++++++++++++
->  drivers/char/tpm/tpm.h               |  4 ++--
->  drivers/char/tpm/tpm2-cmd.c          | 46 ++++++++++++++++++++++++++++++++----
->  drivers/char/tpm/tpm_crb.c           | 10 +-------
->  drivers/char/tpm/tpm_i2c_atmel.c     |  6 +----
->  drivers/char/tpm/tpm_i2c_infineon.c  |  4 +---
->  drivers/char/tpm/tpm_i2c_nuvoton.c   |  7 +-----
->  drivers/char/tpm/tpm_tis_core.c      | 24 +------------------
->  drivers/char/tpm/tpm_vtpm_proxy.c    |  9 +------
->  include/linux/tpm.h                  |  5 ++++
->  12 files changed, 92 insertions(+), 63 deletions(-)
+> However, on some SOCs, only a subset of those address lines are 
+> connected to the memory bus.  So for instance, some platforms only have 
+> 32 bits connected.
 > 
-> diff --git a/drivers/char/tpm/st33zp24/st33zp24.c b/drivers/char/tpm/st33zp24/st33zp24.c
-> index a7c99a2..c2ee304 100644
-> --- a/drivers/char/tpm/st33zp24/st33zp24.c
-> +++ b/drivers/char/tpm/st33zp24/st33zp24.c
-> @@ -505,6 +505,7 @@ static bool st33zp24_req_canceled(struct tpm_chip *chip, u8 status)
->  }
->  
->  static const struct tpm_class_ops st33zp24_tpm = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
->  	.send = st33zp24_send,
->  	.recv = st33zp24_recv,
->  	.cancel = st33zp24_cancel,
-> @@ -592,9 +593,6 @@ int st33zp24_probe(void *phy_id, const struct st33zp24_phy_ops *ops,
->  		tpm_gen_interrupt(chip);
->  	}
->  
-> -	tpm_get_timeouts(chip);
-> -	tpm_do_selftest(chip);
-> -
->  	return tpm_chip_register(chip);
->  _tpm_clean_answer:
->  	dev_info(&chip->dev, "TPM initialization fail\n");
-> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-> index 5a2f043..e595013 100644
-> --- a/drivers/char/tpm/tpm-chip.c
-> +++ b/drivers/char/tpm/tpm-chip.c
-> @@ -354,6 +354,15 @@ int tpm_chip_register(struct tpm_chip *chip)
->  {
->  	int rc;
->  
-> +	if (chip->ops->flags & TPM_OPS_AUTO_STARTUP) {
-> +		if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> +			rc = tpm2_auto_startup(chip);
-> +		else
-> +			rc = tpm1_auto_startup(chip);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
->  	rc = tpm1_chip_register(chip);
->  	if (rc)
->  		return rc;
-> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-> index 5e3c1b6..1abe2d7 100644
-> --- a/drivers/char/tpm/tpm-interface.c
-> +++ b/drivers/char/tpm/tpm-interface.c
-> @@ -843,6 +843,33 @@ int tpm_do_selftest(struct tpm_chip *chip)
->  }
->  EXPORT_SYMBOL_GPL(tpm_do_selftest);
->  
-> +/**
-> + * tpm1_auto_startup - Perform the standard automatic TPM initialization
-> + *                     sequence
-> + * @chip: TPM chip to use
-> + *
-> + * Returns 0 on success, < 0 in case of fatal error.
-> + */
-> +int tpm1_auto_startup(struct tpm_chip *chip)
-> +{
-> +	int rc;
-> +
-> +	rc = tpm_get_timeouts(chip);
-> +	if (rc)
-> +		goto out;
-> +	rc = tpm_do_selftest(chip);
-> +	if (rc) {
-> +		dev_err(&chip->dev, "TPM self test failed\n");
-> +		goto out;
-> +	}
-> +
-> +	return rc;
-> +out:
-> +	if (rc > 0)
-> +		rc = -ENODEV;
-> +	return rc;
-> +}
-> +
->  int tpm_send(u32 chip_num, void *cmd, size_t buflen)
->  {
->  	struct tpm_chip *chip;
-> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-> index 8890df2..3e32d5b 100644
-> --- a/drivers/char/tpm/tpm.h
-> +++ b/drivers/char/tpm/tpm.h
-> @@ -484,6 +484,7 @@ ssize_t tpm_transmit_cmd(struct tpm_chip *chip, void *cmd, int len,
->  			 const char *desc);
->  extern int tpm_get_timeouts(struct tpm_chip *);
->  extern void tpm_gen_interrupt(struct tpm_chip *);
-> +int tpm1_auto_startup(struct tpm_chip *chip);
->  extern int tpm_do_selftest(struct tpm_chip *);
->  extern unsigned long tpm_calc_ordinal_duration(struct tpm_chip *, u32);
->  extern int tpm_pm_suspend(struct device *);
-> @@ -526,10 +527,9 @@ int tpm2_unseal_trusted(struct tpm_chip *chip,
->  ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,
->  			u32 *value, const char *desc);
->  
-> -extern int tpm2_startup(struct tpm_chip *chip, u16 startup_type);
-> +int tpm2_auto_startup(struct tpm_chip *chip);
->  extern void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
->  extern unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *, u32);
-> -extern int tpm2_do_selftest(struct tpm_chip *chip);
->  extern int tpm2_gen_interrupt(struct tpm_chip *chip);
->  extern int tpm2_probe(struct tpm_chip *chip);
->  #endif
-> diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-> index a1673dc..fe6d0d7 100644
-> --- a/drivers/char/tpm/tpm2-cmd.c
-> +++ b/drivers/char/tpm/tpm2-cmd.c
-> @@ -728,7 +728,7 @@ static const struct tpm_input_header tpm2_startup_header = {
->   * returned it remarks a POSIX error code. If a positive number is returned
->   * it remarks a TPM error.
->   */
-> -int tpm2_startup(struct tpm_chip *chip, u16 startup_type)
-> +static int tpm2_startup(struct tpm_chip *chip, u16 startup_type)
->  {
->  	struct tpm2_cmd cmd;
->  
-> @@ -738,7 +738,6 @@ int tpm2_startup(struct tpm_chip *chip, u16 startup_type)
->  	return tpm_transmit_cmd(chip, &cmd, sizeof(cmd),
->  				"attempting to start the TPM");
->  }
-> -EXPORT_SYMBOL_GPL(tpm2_startup);
->  
->  #define TPM2_SHUTDOWN_IN_SIZE \
->  	(sizeof(struct tpm_input_header) + \
-> @@ -854,7 +853,7 @@ static int tpm2_start_selftest(struct tpm_chip *chip, bool full)
->   * returned it remarks a POSIX error code. If a positive number is returned
->   * it remarks a TPM error.
->   */
-> -int tpm2_do_selftest(struct tpm_chip *chip)
-> +static int tpm2_do_selftest(struct tpm_chip *chip)
->  {
->  	int rc;
->  	unsigned int loops;
-> @@ -894,7 +893,6 @@ int tpm2_do_selftest(struct tpm_chip *chip)
->  
->  	return rc;
->  }
-> -EXPORT_SYMBOL_GPL(tpm2_do_selftest);
->  
->  /**
->   * tpm2_gen_interrupt() - generate an interrupt
-> @@ -942,3 +940,43 @@ int tpm2_probe(struct tpm_chip *chip)
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(tpm2_probe);
-> +
-> +/**
-> + * tpm2_auto_startup - Perform the standard automatic TPM initialization
-> + *                     sequence
-> + * @chip: TPM chip to use
-> + *
-> + * Returns 0 on success, < 0 in case of fatal error.
-> + */
-> +int tpm2_auto_startup(struct tpm_chip *chip)
-> +{
-> +	int rc;
-> +
-> +	rc = tpm_get_timeouts(chip);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = tpm2_do_selftest(chip);
-> +	if (rc != TPM2_RC_INITIALIZE) {
-> +		dev_err(&chip->dev, "TPM self test failed\n");
-> +		goto out;
-> +	}
-> +
-> +	if (rc == TPM2_RC_INITIALIZE) {
-> +		rc = tpm2_startup(chip, TPM2_SU_CLEAR);
-> +		if (rc)
-> +			goto out;
-> +
-> +		rc = tpm2_do_selftest(chip);
-> +		if (rc) {
-> +			dev_err(&chip->dev, "TPM self test failed\n");
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	return rc;
-> +out:
-> +	if (rc > 0)
-> +		rc = -ENODEV;
-> +	return rc;
-> +}
-> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-> index 1b8e1b5..018c3825 100644
-> --- a/drivers/char/tpm/tpm_crb.c
-> +++ b/drivers/char/tpm/tpm_crb.c
-> @@ -188,6 +188,7 @@ static bool crb_req_canceled(struct tpm_chip *chip, u8 status)
->  }
->  
->  static const struct tpm_class_ops tpm_crb = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
->  	.status = crb_status,
->  	.recv = crb_recv,
->  	.send = crb_send,
-> @@ -200,7 +201,6 @@ static const struct tpm_class_ops tpm_crb = {
->  static int crb_init(struct acpi_device *device, struct crb_priv *priv)
->  {
->  	struct tpm_chip *chip;
-> -	int rc;
->  
->  	chip = tpmm_chip_alloc(&device->dev, &tpm_crb);
->  	if (IS_ERR(chip))
-> @@ -210,14 +210,6 @@ static int crb_init(struct acpi_device *device, struct crb_priv *priv)
->  	chip->acpi_dev_handle = device->handle;
->  	chip->flags = TPM_CHIP_FLAG_TPM2;
->  
-> -	rc = tpm_get_timeouts(chip);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = tpm2_do_selftest(chip);
-> -	if (rc)
-> -		return rc;
-> -
->  	return tpm_chip_register(chip);
->  }
->  
-> diff --git a/drivers/char/tpm/tpm_i2c_atmel.c b/drivers/char/tpm/tpm_i2c_atmel.c
-> index c37aa72..95ce2e9 100644
-> --- a/drivers/char/tpm/tpm_i2c_atmel.c
-> +++ b/drivers/char/tpm/tpm_i2c_atmel.c
-> @@ -141,6 +141,7 @@ static bool i2c_atmel_req_canceled(struct tpm_chip *chip, u8 status)
->  }
->  
->  static const struct tpm_class_ops i2c_atmel = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
->  	.status = i2c_atmel_read_status,
->  	.recv = i2c_atmel_recv,
->  	.send = i2c_atmel_send,
-> @@ -179,11 +180,6 @@ static int i2c_atmel_probe(struct i2c_client *client,
->  	/* There is no known way to probe for this device, and all version
->  	 * information seems to be read via TPM commands. Thus we rely on the
->  	 * TPM startup process in the common code to detect the device. */
-> -	if (tpm_get_timeouts(chip))
-> -		return -ENODEV;
-> -
-> -	if (tpm_do_selftest(chip))
-> -		return -ENODEV;
->  
->  	return tpm_chip_register(chip);
->  }
-> diff --git a/drivers/char/tpm/tpm_i2c_infineon.c b/drivers/char/tpm/tpm_i2c_infineon.c
-> index a426b6f..62ee44e 100644
-> --- a/drivers/char/tpm/tpm_i2c_infineon.c
-> +++ b/drivers/char/tpm/tpm_i2c_infineon.c
-> @@ -567,6 +567,7 @@ static bool tpm_tis_i2c_req_canceled(struct tpm_chip *chip, u8 status)
->  }
->  
->  static const struct tpm_class_ops tpm_tis_i2c = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
->  	.status = tpm_tis_i2c_status,
->  	.recv = tpm_tis_i2c_recv,
->  	.send = tpm_tis_i2c_send,
-> @@ -619,9 +620,6 @@ static int tpm_tis_i2c_init(struct device *dev)
->  
->  	tpm_dev.chip = chip;
->  
-> -	tpm_get_timeouts(chip);
-> -	tpm_do_selftest(chip);
-> -
->  	return tpm_chip_register(chip);
->  out_release:
->  	release_locality(chip, tpm_dev.locality, 1);
-> diff --git a/drivers/char/tpm/tpm_i2c_nuvoton.c b/drivers/char/tpm/tpm_i2c_nuvoton.c
-> index 4e32094..e8ff362 100644
-> --- a/drivers/char/tpm/tpm_i2c_nuvoton.c
-> +++ b/drivers/char/tpm/tpm_i2c_nuvoton.c
-> @@ -461,6 +461,7 @@ static bool i2c_nuvoton_req_canceled(struct tpm_chip *chip, u8 status)
->  }
->  
->  static const struct tpm_class_ops tpm_i2c = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
->  	.status = i2c_nuvoton_read_status,
->  	.recv = i2c_nuvoton_recv,
->  	.send = i2c_nuvoton_send,
-> @@ -609,12 +610,6 @@ static int i2c_nuvoton_probe(struct i2c_client *client,
->  		}
->  	}
->  
-> -	if (tpm_get_timeouts(chip))
-> -		return -ENODEV;
-> -
-> -	if (tpm_do_selftest(chip))
-> -		return -ENODEV;
-> -
->  	return tpm_chip_register(chip);
->  }
->  
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-> index 03a06b3..de6d25d 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -643,6 +643,7 @@ void tpm_tis_remove(struct tpm_chip *chip)
->  EXPORT_SYMBOL_GPL(tpm_tis_remove);
->  
->  static const struct tpm_class_ops tpm_tis = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
->  	.status = tpm_tis_status,
->  	.recv = tpm_tis_recv,
->  	.send = tpm_tis_send,
-> @@ -778,29 +779,6 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
->  		}
->  	}
->  
-> -	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-> -		rc = tpm2_do_selftest(chip);
-> -		if (rc == TPM2_RC_INITIALIZE) {
-> -			dev_warn(dev, "Firmware has not started TPM\n");
-> -			rc  = tpm2_startup(chip, TPM2_SU_CLEAR);
-> -			if (!rc)
-> -				rc = tpm2_do_selftest(chip);
-> -		}
-> -
-> -		if (rc) {
-> -			dev_err(dev, "TPM self test failed\n");
-> -			if (rc > 0)
-> -				rc = -ENODEV;
-> -			goto out_err;
-> -		}
-> -	} else {
-> -		if (tpm_do_selftest(chip)) {
-> -			dev_err(dev, "TPM self test failed\n");
-> -			rc = -ENODEV;
-> -			goto out_err;
-> -		}
-> -	}
-> -
->  	return tpm_chip_register(chip);
->  out_err:
->  	tpm_tis_remove(chip);
-> diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
-> index 86e27e8..9a94033 100644
-> --- a/drivers/char/tpm/tpm_vtpm_proxy.c
-> +++ b/drivers/char/tpm/tpm_vtpm_proxy.c
-> @@ -346,6 +346,7 @@ static bool vtpm_proxy_tpm_req_canceled(struct tpm_chip  *chip, u8 status)
->  }
->  
->  static const struct tpm_class_ops vtpm_proxy_tpm_ops = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
->  	.recv = vtpm_proxy_tpm_op_recv,
->  	.send = vtpm_proxy_tpm_op_send,
->  	.cancel = vtpm_proxy_tpm_op_cancel,
-> @@ -366,14 +367,6 @@ static void vtpm_proxy_work(struct work_struct *work)
->  						   work);
->  	int rc;
->  
-> -	if (proxy_dev->flags & VTPM_PROXY_FLAG_TPM2)
-> -		rc = tpm2_startup(proxy_dev->chip, TPM2_SU_CLEAR);
-> -	else
-> -		rc = tpm_get_timeouts(proxy_dev->chip);
-> -
-> -	if (rc)
-> -		goto err;
-> -
->  	rc = tpm_chip_register(proxy_dev->chip);
->  	if (rc)
->  		goto err;
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 706e63e..da158f0 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -33,7 +33,12 @@ struct tpm_chip;
->  struct trusted_key_payload;
->  struct trusted_key_options;
->  
-> +enum TPM_OPS_FLAGS {
-> +	TPM_OPS_AUTO_STARTUP = BIT(0),
-> +};
-> +
->  struct tpm_class_ops {
-> +	unsigned int flags;
->  	const u8 req_complete_mask;
->  	const u8 req_complete_val;
->  	bool (*req_canceled)(struct tpm_chip *chip, u8 status);
-> -- 
-> 1.9.1
+> There's no way for the EMAC driver to know this, so it expects other 
+> code in the kernel to adjust.  I'm not exactly sure what this code is 
+> supposed to be, because I get conflicting information.  At one point, I 
+> thought that the dma-ranges property would handle that.  The kernel 
+> would parse that property, see that the DMA range is limited to 32 bits, 
+> and adjust the DMA mask accordingly.  However, with dma-ranges in the 
+> parent node, I don't see how that can work.
+
+dma-ranges in fact is what should handle it, but arm64 currently does
+not interpret it correctly, and just allows the mask to be set regardless,
+which I consider a bug in the architecture specific code.
+
+> So my question is, how do I handle the situation where a subset of the 
+> DMA address lines are masked off by the SOC?  I've seen code like this:
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+> if (ret)
+> 	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> 
+> But this has never made any sense to me.  If DMA_BIT_MASK(64) fails, 
+> then how can DMA_BIT_MASK(32) succeed?
+
+If the ranges property lists the bus as dma capable for only the
+lower 32 bits, then dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+should fail, otherwise dma_alloc_coherent() will return an invalid
+memory area.
+
+Another twist is how arm64 currently uses SWIOTLB unconditionally:
+As long as SWIOTLB (or iommu) is enabled, dma_set_mask_and_coherent()
+should succeed for any mask(), but not actually update the mask of the
+device to more than the bus can handle.
+
+	Arnd
