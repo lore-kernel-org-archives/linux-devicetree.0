@@ -1,110 +1,75 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v5 5/5] mfd: rn5t618: register restart handler
-Date: Tue, 28 Jun 2016 22:53:22 -0700
-Message-ID: <20160629055322.23038-6-stefan@agner.ch>
-References: <20160629055322.23038-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160629055322.23038-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org
-Cc: b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Stefan Agner <stefan@agner.ch>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: Re: [PATCH 01/10] Documentation: dt-bindings: mailbox: tegra: Add
+ binding for HSP mailbox
+Date: Wed, 29 Jun 2016 13:56:33 +0800
+Message-ID: <57736311.6020304@nvidia.com>
+References: <20160627090248.23621-1-josephl@nvidia.com>
+ <20160627090248.23621-2-josephl@nvidia.com> <57714C85.50802@wwwdotorg.org>
+ <57724039.7080007@nvidia.com> <5772CB12.5080408@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5772CB12.5080408@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jassi Brar <jassisinghbrar@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matthew Longnecker <MLongnecker@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use the PMIC's repower capability for reboots. Register a restart
-handler and use a slightly elevated priority of 192 since the PMIC
-has suprior reset capability (causing a system wide reset).
+On 06/29/2016 03:08 AM, Stephen Warren wrote:
+> On 06/28/2016 03:15 AM, Joseph Lo wrote:
+>> On 06/27/2016 11:55 PM, Stephen Warren wrote:
+>>> On 06/27/2016 03:02 AM, Joseph Lo wrote:
+snip.
+>>
+>> Currently the usage of HSP HW in the downstream kernel is something like
+>> the model below.
+>>
+>> remote_processor_A-\
+>> remote_processor_B--->hsp@1000 (doorbell func) <-> host CPU
+>> remote_processor_C-/
+>>
+>> remote_processor_D -> hsp@2000 (shared mailbox) <-> CPU
+>>
+>> remote_processor_E -> hsp@3000 (shared mailbox) <-> CPU
+>>
+>> I am thinking if we can just add the appropriate compatible strings for
+>> it to replace "nvidia,tegra186-hsp". e.g. "nvidia,tegra186-hsp-doorbell"
+>> and "nvidia,tegra186-hsp-sharedmailbox". So the driver can probe and
+>> initialize correctly depend on the compatible property. How do you think
+>> about it? Is this the same as the (b) you mentioned above?
+>
+> Yes, that would be (b) above.
+>
+> However, please do note (a): I expect that splitting things up will turn
+> out to be a mistake, as it has for other HW modules in the past. I would
+> far rather see a single hsp node in DT, since there is a single HSP
+> block in HW. Sure that block has multiple sub-functions. However, there
+> is common logic that affects all of those sub-functions and binds
+> everything into a single HW module. If you represent the HW module using
+> multiple different DT nodes, it will be hard to correctly represent that
+> common logic. Conversely, I see no real advantage to splitting up the DT
+> node. I strongly believe we should have a single "hsp" node in DT.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/rn5t618.c | 43 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 37 insertions(+), 6 deletions(-)
+We have 6 HSP block in HW. FYI.
 
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index 1831740..ee94080 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -12,11 +12,13 @@
-  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
- 
-+#include <linux/delay.h>
- #include <linux/i2c.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/rn5t618.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/reboot.h>
- #include <linux/regmap.h>
- 
- static const struct mfd_cell rn5t618_cells[] = {
-@@ -50,17 +52,38 @@ static const struct regmap_config rn5t618_regmap_config = {
- };
- 
- static struct rn5t618 *rn5t618_pm_power_off;
-+static struct notifier_block rn5t618_restart_handler;
- 
--static void rn5t618_power_off(void)
-+static void rn5t618_trigger_poweroff_sequence(bool repower)
- {
- 	/* disable automatic repower-on */
- 	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_REPCNT,
--			   RN5T618_REPCNT_REPWRON, 0);
-+			   RN5T618_REPCNT_REPWRON,
-+			   repower ? RN5T618_REPCNT_REPWRON : 0);
- 	/* start power-off sequence */
- 	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_SLPCNT,
- 			   RN5T618_SLPCNT_SWPWROFF, RN5T618_SLPCNT_SWPWROFF);
- }
- 
-+static void rn5t618_power_off(void)
-+{
-+	rn5t618_trigger_poweroff_sequence(false);
-+}
-+
-+static int rn5t618_restart(struct notifier_block *this,
-+			    unsigned long mode, void *cmd)
-+{
-+	rn5t618_trigger_poweroff_sequence(true);
-+
-+	/*
-+	 * Re-power factor detection on PMIC side is not instant. 1ms
-+	 * proved to be enough time until reset takes effect.
-+	 */
-+	mdelay(1);
-+
-+	return NOTIFY_DONE;
-+}
-+
- static const struct of_device_id rn5t618_of_match[] = {
- 	{ .compatible = "ricoh,rn5t567", .data = (void *)RN5T567 },
- 	{ .compatible = "ricoh,rn5t618", .data = (void *)RN5T618 },
-@@ -102,13 +125,21 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
-+	rn5t618_pm_power_off = priv;
- 	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
--		if (!pm_power_off) {
--			rn5t618_pm_power_off = priv;
-+		if (!pm_power_off)
- 			pm_power_off = rn5t618_power_off;
--		} else {
-+		else
- 			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
--		}
-+	}
-+
-+	rn5t618_restart_handler.notifier_call = rn5t618_restart;
-+	rn5t618_restart_handler.priority = 192;
-+
-+	ret = register_restart_handler(&rn5t618_restart_handler);
-+	if (ret) {
-+		dev_err(&i2c->dev, "cannot register restart handler, %d\n", ret);
-+		return ret;
- 	}
- 
- 	return 0;
--- 
-2.9.0
+>
+> Internally, the SW driver for that node can be structured however you
+> want; it could register with multiple subsystems (mailbox, ...) with
+> just one struct device, or the HSP driver could be an MFD device with
+> sub-drivers for each separate piece of functionality the HW implements.
+> All this can easily be done even while using a single DT node. And
+> furthermore, we can add this SW structure later if/when we actually need
+> it; in other words, there's no need to change your current patches right
+> now, except to remove the nvidia,hsp-function DT property.
+
+Thanks,
+-Joseph
