@@ -1,50 +1,153 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [RFC PATCH 3/5] thermal: Add support for the thermal sensor on
- A23/33
-Date: Wed, 29 Jun 2016 21:33:31 +0800
-Message-ID: <1209771467207211@web22j.yandex.ru>
-References: <20160628101325.2522-1-icenowy@aosc.xyz>
- <20160628101325.2522-3-icenowy@aosc.xyz>
- <20160628114640.GE5550@lukather>
- <60021467122182@web19j.yandex.ru> <20160629121021.GD6095@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160629121021.GD6095@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "emilio@elopez.com.ar" <emilio@elopez.com.ar>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "wens@csie.org" <wens@csie.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: [PATCH v4 19/22] sh: IO-DATA HDL-U (a,k.a landisk) IRQCHIP driver
+Date: Wed, 29 Jun 2016 22:41:04 +0900
+Message-ID: <1467207667-15768-20-git-send-email-ysato@users.sourceforge.jp>
+References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
-CgoyOS4wNi4yMDE2LCAyMDoxMCwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gSGksCj4KPiBPbiBUdWUsIEp1biAyOCwgMjAxNiBhdCAwOTo1Njoy
-MlBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDCoFRoZSByZWFzb24gZm9yIGEgZGVk
-aWNhdGUgZHJpdmVyIGlzOgo+PiDCoDEuIFRoaXMgSVAgaGF2ZSBvbmx5IHRoZXJtYWwgZnVuY3Rp
-b24sIHNvIGl0J3Mgbm90IHN1aXRhYmxlIHRvIHVzZSBhCj4+IMKgZHJpdmVyIGF0IGRyaXZlcnMv
-aW5wdXQvdG91Y2hzY3JlZW4vLgo+Cj4gVGhhdCdzIG5vdCBhIHByb2JsZW0sIGFuZCBpdCdzIGJl
-aW5nIHdvcmtlZCBvbiBbMV0uCj4KPj4gwqAyLiBDb250cm9sIFJlZ2lzdGVyIGFyZSBxdWl0ZSBk
-aWZmZXJlbnQuCj4KPiBUaGF0J3Mgbm90IGEgcHJvYmxlbSBlaXRoZXIsIHRoZXJlJ3MganVzdCBh
-IGJpdCB0aGF0IHlvdSBkb24ndCBuZWVkIHRvCj4gc2V0IGluIHRoZSBjb250cm9sIDEgcmVnaXN0
-ZXIsIGFuZCB0aGF0J3MgcHJldHR5IG11Y2ggaXQuIEl0IGRvZXNuJ3QKPiBqdXN0aWZ5IGEgd2hv
-bGUgbmV3IGRyaXZlci4KPgo+PiDCoDMuIFRoaXMgSVAgdXNlcyBBVURJTyBQTEwgKFBMTDIpIGFz
-IGl0cyBjbG9jayEKPgo+IEl0J3MgbGlzdGVkIGFzIHRoZSBpbnB1dCwgYnV0IGFsbCB0aGUgcmVz
-dCBvZiB0aGUgZG9jdW1lbnRhdGlvbiByZWZlcnMKPiBvbmx5IHRvIDI0TUh6LCB3aGljaCBzZWVt
-cyB0byBpbmRpY2F0ZSB0aGF0IGl0J3Mgb25seSBydW5uaW5nIG9uIHRoZQo+IG9zY2lsbGF0b3Is
-IHdoaWNoIHdvdWxkIG1ha2UgbXVjaCBtb3JlIHNlbnNlLgo+Cj4gVGhhbmtzLAo+IE1heGltZQo+
-Cj4gMTogaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LWFybS1rZXJu
-ZWwvMjAxNi1KdW5lLzQzOTQ4Ny5odG1sCj4KPiAtLQo+IE1heGltZSBSaXBhcmQsIEZyZWUgRWxl
-Y3Ryb25zCj4gRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBlbmdpbmVlcmluZwo+
-IGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KCkkgd2lsbCB0cnkgdG8gdXNlIGl0IHdpdGhvdXQg
-cGxsMiBlbmFibGVkLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtYXJtLWtlcm5lbAo=
+Changes v4
+- split patches
+- remove unneeded line
+- example update
+
+Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+---
+ .../interrupt-controller/iodata-landisk.txt        | 31 ++++++++++
+ drivers/irqchip/Makefile                           |  2 +-
+ drivers/irqchip/irq-io-landisk.c                   | 72 ++++++++++++++++++++++
+ 3 files changed, 104 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+ create mode 100644 drivers/irqchip/irq-io-landisk.c
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+new file mode 100644
+index 0000000..cf461dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+@@ -0,0 +1,31 @@
++DT bindings for the I/O DATA HDL-U interrupt controller
++
++Required properties:
++
++  - compatible: has to be "iodata,landisk-intc".
++
++  - reg: Base address and length of interrupt controller register.
++
++  - interrupt-controller: Identifies the node as an interrupt controller.
++
++  - #interrupt-cells: has to be <1>: an interrupt index.
++
++  - interrupt-map: Interrupt mapping on parent controller.
++
++Example
++-------
++
++	cpldintc: cpld@b0000000 {
++		compatible = "iodata,landisk-intc";
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		reg = <0xb0000000 8>;
++		interrupt-map=<0 &shintc evt2irq(0x2a0)>,
++		              <1 &shintc evt2irq(0x2c0)>,
++		              <2 &shintc evt2irq(0x2e0)>,
++			      <3 &shintc evt2irq(0x300)>,
++		              <4 &shintc evt2irq(0x320)>,
++			      <5 &shintc evt2irq(0x340)>,
++		              <6 &shintc evt2irq(0x360)>,
++			      <7 &shintc evt2irq(0x380)>;
++	};
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 2ab5735..5e225cf 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -69,4 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
+ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
+ obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
+ obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
+-obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o
++obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o irq-io-landisk.o
+diff --git a/drivers/irqchip/irq-io-landisk.c b/drivers/irqchip/irq-io-landisk.c
+new file mode 100644
+index 0000000..b7f3b41
+--- /dev/null
++++ b/drivers/irqchip/irq-io-landisk.c
+@@ -0,0 +1,72 @@
++/*
++ * IO-DATA LANDISK CPLD IRQ driver
++ *
++ * Copyright 2016 Yoshinori Sato <ysato@users.sourceforge.jp>
++ */
++
++#include <linux/init.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqdomain.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/io.h>
++
++static void landisk_mask_irq(struct irq_data *data)
++{
++	u8 mask = __raw_readb(data->chip_data + 5);
++
++	mask &= ~(1 << (data->irq - 5));
++	__raw_writeb(mask, data->chip_data + 5);
++}
++
++static void landisk_unmask_irq(struct irq_data *data)
++{
++	u8 mask = __raw_readb(data->chip_data + 5);
++
++	mask |= (1 << (data->irq - 5));
++	__raw_writeb(mask, data->chip_data + 5);
++}
++
++static struct irq_chip cpld_irq_chip = {
++	.name		= "LANDISK-CPLD",
++	.irq_unmask	= landisk_unmask_irq,
++	.irq_mask	= landisk_mask_irq,
++};
++
++static int cpld_map(struct irq_domain *d, unsigned int virq,
++		    irq_hw_number_t hw_irq_num)
++{
++	irq_set_chip_and_handler(virq, &cpld_irq_chip,
++				 handle_simple_irq);
++	irq_set_chip_data(virq, d->host_data);
++
++	return 0;
++}
++
++static struct irq_domain_ops irq_ops = {
++	.xlate	= irq_domain_xlate_onecell,
++	.map	= cpld_map,
++};
++
++static int __init landisk_intc_of_init(struct device_node *intc,
++				    struct device_node *parent)
++{
++	struct irq_domain *domain, *pdomain;
++	int num_irqpin;
++	void *baseaddr;
++
++	baseaddr = of_iomap(intc, 0);
++	pdomain = irq_find_host(parent);
++	of_get_property(intc, "interrupt-map", &num_irqpin);
++	num_irqpin /= sizeof(u32) * 3;
++	domain = irq_domain_create_hierarchy(pdomain, 0, num_irqpin,
++					     of_node_to_fwnode(intc),
++					     &irq_ops, baseaddr);
++	if (!domain)
++		panic("%s: unable to create IRQ domain\n", intc->full_name);
++	irq_domain_associate_many(domain, 5, 0, 8);
++	return 0;
++}
++
++IRQCHIP_DECLARE(cpld_intc, "iodata,landisk-intc", landisk_intc_of_init);
+-- 
+2.7.0
