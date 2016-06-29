@@ -1,37 +1,42 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name dt property
-Date: Wed, 29 Jun 2016 16:42:32 +0200
-Message-ID: <CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 12/22] sh: Add PCI host bridge driver for SH7751
+Date: Wed, 29 Jun 2016 16:57:50 +0200
+Message-ID: <4273068.i3RgB4Ufiy@wuerfel>
+References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp> <1467207667-15768-13-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467209074-15634-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1467207667-15768-13-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-pci-owner@vger.kernel.org
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wednesday, June 29, 2016 10:40:57 PM CEST Yoshinori Sato wrote:
+> +               interrupt-map = <0x0000 0 1 &cpldintc 0 0>,
+> +                                0x0800 0 1 &cpldintc 1 0>,
+> +                                0x1000 0 1 &cpldintc 2 0>,
+> +                                0x1800 0 1 &cpldintc 3 0>,
+> +                                0x1800 0 2 &cpldintc 0 0>;
 
-On 29 June 2016 at 16:04, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Add a brcm,nvram_file_name dt property to allow overruling the default
-> nvram filename for sdio devices. The idea is that we can specify a
-> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
-> with an ap6210 wifi sdio module and ship this in linux-firmware, so
-> that wifi will work out of the box, without requiring users to find
-> and then manually install the right nvram file for their board.
+I just noticed the typo: you have more closing '>' than opening '<'
+here, so this is not valid syntax.
 
-Directly defining a filename doesn't seem like a good OS-agnostic
-approach. Maybe an alternative would be to add a model-property to the
-nodes (this is allowed) and make brcmfmac to request
-"FWFILENAME-<model>" as firmware if set? That would leave it to the OS
-on how the filename is set.
+> +
+> +static __refdata struct platform_driver sh7751_pci_driver = {
+> +       .driver = {
+> +               .name = "sh7751-pci",
+> +               .of_match_table = sh7751_pci_of_match,
+> +       },
+> +       .probe = sh7751_pci_probe,
+> +};
+> +builtin_platform_driver(sh7751_pci_driver);
 
+I think you need to add '.suppress_bind_attrs = true' to prevent
+the device to be unbound and rebound through sysfs, otherwise
+the __init annotation on the probe function is wrong.
 
-Regards
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Everything else looks fine to me now.
+
+	Arnd
