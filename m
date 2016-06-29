@@ -1,478 +1,442 @@
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v4 12/22] sh: Add PCI host bridge driver for SH7751
-Date: Wed, 29 Jun 2016 22:40:57 +0900
-Message-ID: <1467207667-15768-13-git-send-email-ysato@users.sourceforge.jp>
-References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-sh-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 1/2 v4] tpm: Factor out common startup code
+Date: Wed, 29 Jun 2016 17:06:48 +0300
+Message-ID: <20160629140648.GB4589@intel.com>
+References: <1467186759-5149-1-git-send-email-andrew.zamansky@nuvoton.com>
+ <1467186759-5149-2-git-send-email-andrew.zamansky@nuvoton.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467186759-5149-2-git-send-email-andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
+Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an alternative SH7751 PCI driver.
-Existing driver (arch/sh/drivers/pci/pci-sh7751) uses SH specific interface.
-But this driver uses common PCI interface. It is more modern and generic.
+On Wed, Jun 29, 2016 at 10:52:38AM +0300, andrew zamansky wrote:
+> From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> 
+> The TCG standard startup sequence (get timeouts, tpm startup, etc) for
+> TPM and TPM2 chips is being open coded in many drivers, move it into
+> the core code.
+> 
+> tpm_tis and tpm_crb are used as the basis for the core code
+> implementation and the easy drivers are converted. In the process
+> several small drivers bugs relating to error handling this flow
+> are fixed.
+> 
+> For now the flag TPM_OPS_AUTO_STARTUP is optional to allow a staged
+> driver roll out, but ultimately all drivers should use this flow and
+> the flag removed. Some drivers still do not implement the startup
+> sequence at all and will need to be tested with it enabled.
+> 
+> Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> Tested-by: Andrew Zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
 
-Changes v4
-Add reg description.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
----
- .../devicetree/bindings/pci/sh7751-pci.txt         |  37 +++
- arch/sh/boards/Kconfig                             |   1 +
- arch/sh/drivers/Makefile                           |   2 +
- arch/sh/include/asm/io.h                           |   6 +
- drivers/pci/host/Kconfig                           |   7 +
- drivers/pci/host/Makefile                          |   1 +
- drivers/pci/host/pci-sh7751.c                      | 326 +++++++++++++++++++++
- 7 files changed, 380 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/sh7751-pci.txt
- create mode 100644 drivers/pci/host/pci-sh7751.c
+Now this looks good to me. Just have to test this.
 
-diff --git a/Documentation/devicetree/bindings/pci/sh7751-pci.txt b/Documentation/devicetree/bindings/pci/sh7751-pci.txt
-new file mode 100644
-index 0000000..2df9af6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/sh7751-pci.txt
-@@ -0,0 +1,37 @@
-+* Renesas SH7751 PCI host interfaces
-+
-+Required properties:
-+  - compatible: "renesas,sh7751-pci" is required.
-+    And board specific compatible if fixup required.
-+  - reg: contain two entries.
-+        first entry: PCI controller register base address and length.
-+        second entry: BUS controller register base address and length.
-+  - #address-cells: set to <2>
-+  - #size-cells: set to <1>
-+  - bus-range: PCI bus numbers covered
-+  - device_type: set to "pci"
-+  - ranges: ranges for the PCI memory and I/O regions.
-+  - interrupt-map-mask and interrupt-map: standard PCI properties
-+	to define the mapping of the PCI interface to interrupt
-+	numbers.
-+
-+Example:
-+	pci: pci-controller@fe200000 {
-+		compatible = "renesas,sh7751-pci", "iodata,landisk";
-+		device_type = "pci";
-+		bus-range = <0 0>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0x02000000 0x00000000 0xfd000000 0xfd000000 0x00000000 0x01000000>,
-+		         <0x01000000 0x00000000 0xfe240000 0x00000000 0x00000000 0x00040000>;
-+		reg = <0xfe200000 0x0400>,
-+		      <0xff800000 0x0030>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0x1800 0 7>;
-+		interrupt-map = <0x0000 0 1 &cpldintc 0 0>,
-+		                 0x0800 0 1 &cpldintc 1 0>,
-+		                 0x1000 0 1 &cpldintc 2 0>,
-+		                 0x1800 0 1 &cpldintc 3 0>,
-+		                 0x1800 0 2 &cpldintc 0 0>;
-+	};
-+};
-diff --git a/arch/sh/boards/Kconfig b/arch/sh/boards/Kconfig
-index b6ff9df..cfde921 100644
---- a/arch/sh/boards/Kconfig
-+++ b/arch/sh/boards/Kconfig
-@@ -14,6 +14,7 @@ config SH_DEVICE_TREE
- 	select GENERIC_CALIBRATE_DELAY
- 	select GENERIC_IOMAP
- 	select COMMON_CLK
-+	select SYS_SUPPORTS_PCI
- 	help
- 	  Select Board Described by Device Tree to build a kernel that
- 	  does not hard-code any board-specific knowledge but instead uses
-diff --git a/arch/sh/drivers/Makefile b/arch/sh/drivers/Makefile
-index e13f06b..382e86f 100644
---- a/arch/sh/drivers/Makefile
-+++ b/arch/sh/drivers/Makefile
-@@ -4,7 +4,9 @@
- 
- obj-y		+= dma/
- 
-+ifndef CONFIG_SH_DEVICE_TREE
- obj-$(CONFIG_PCI)		+= pci/
-+endif
- obj-$(CONFIG_SUPERHYWAY)	+= superhyway/
- obj-$(CONFIG_PUSH_SWITCH)	+= push-switch.o
- obj-$(CONFIG_HEARTBEAT)		+= heartbeat.o
-diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
-index 3280a6b..df62a9f 100644
---- a/arch/sh/include/asm/io.h
-+++ b/arch/sh/include/asm/io.h
-@@ -387,6 +387,12 @@ static inline int iounmap_fixed(void __iomem *addr) { return -EINVAL; }
- int valid_phys_addr_range(phys_addr_t addr, size_t size);
- int valid_mmap_phys_addr_range(unsigned long pfn, size_t size);
- 
-+#define PCI_IOBASE	0xfe240000UL
-+
-+#define HAVE_ARCH_PIO_SIZE
-+#define PIO_OFFSET	PCI_IOBASE
-+#define PIO_MASK	0x3ffffUL
-+#define PIO_RESERVED	0x40000UL
- #endif /* __KERNEL__ */
- 
- #endif /* __ASM_SH_IO_H */
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index 5d2374e..df60505 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -245,4 +245,11 @@ config PCIE_ARMADA_8K
- 	  Designware hardware and therefore the driver re-uses the
- 	  Designware core functions to implement the driver.
- 
-+config PCI_SH7751
-+	bool "Renesas SH7751 On-Chip PCI controller"
-+	depends on OF && SUPERH
-+	select PCI_HOST_COMMON
-+	help
-+	  Say Y here if you want PCI support on SH7751.
-+
- endmenu
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index 9c8698e..4681e49 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -29,3 +29,4 @@ obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
- obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
-+obj-$(CONFIG_PCI_SH7751) += pci-sh7751.o
-diff --git a/drivers/pci/host/pci-sh7751.c b/drivers/pci/host/pci-sh7751.c
-new file mode 100644
-index 0000000..d851fcf3
---- /dev/null
-+++ b/drivers/pci/host/pci-sh7751.c
-@@ -0,0 +1,326 @@
-+/*
-+ * SH7751 PCI driver
-+ * Copyright (C) 2016 Yoshinori Sato
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_pci.h>
-+#include <linux/of_platform.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/io.h>
-+#include "../ecam.h"
-+
-+#define SH7751_PCICONF1            0x4           /* PCI Config Reg 1 */
-+#define SH7751_PCICONF4            0x10          /* PCI Config Reg 4 */
-+#define SH7751_PCICONF5            0x14          /* PCI Config Reg 5 */
-+#define SH7751_PCICONF6            0x18          /* PCI Config Reg 6 */
-+#define SH4_PCICR		0x100		/* PCI Control Register */
-+  #define SH4_PCICR_PREFIX	  0xA5000000	/* CR prefix for write */
-+  #define SH4_PCICR_FTO		  BIT(10)	/* TRDY/IRDY Enable */
-+  #define SH4_PCICR_TRSB	  BIT(9)	/* Target Read Single */
-+  #define SH4_PCICR_BSWP	  BIT(8)	/* Target Byte Swap */
-+  #define SH4_PCICR_PLUP	  BIT(7)	/* Enable PCI Pullup */
-+  #define SH4_PCICR_ARBM	  BIT(6)	/* PCI Arbitration Mode */
-+#define SH4_PCICR_MD		  (BIT(4) | BIT(5))	/* MD9 and MD10 status */
-+  #define SH4_PCICR_SERR	  BIT(3)	/* SERR output assert */
-+  #define SH4_PCICR_INTA	  BIT(2)	/* INTA output assert */
-+  #define SH4_PCICR_PRST	  BIT(1)	/* PCI Reset Assert */
-+  #define SH4_PCICR_CFIN	  BIT(0)	/* Central Fun. Init Done */
-+#define SH4_PCILSR0		0x104		/* PCI Local Space Register0 */
-+#define SH4_PCILSR1		0x108		/* PCI Local Space Register1 */
-+#define SH4_PCILAR0		0x10C		/* PCI Local Addr Register1 */
-+#define SH4_PCILAR1		0x110		/* PCI Local Addr Register1 */
-+#define SH4_PCIINTM		0x118		/* PCI Interrupt Mask */
-+  #define SH4_PCIINTM_TTADIM	  BIT(14)	/* Target-target abort interrupt */
-+  #define SH4_PCIINTM_TMTOIM	  BIT(9)	/* Target retry timeout */
-+  #define SH4_PCIINTM_MDEIM	  BIT(8)	/* Master function disable error */
-+  #define SH4_PCIINTM_APEDIM	  BIT(7)	/* Address parity error detection */
-+  #define SH4_PCIINTM_SDIM	  BIT(6)	/* SERR detection */
-+  #define SH4_PCIINTM_DPEITWM	  BIT(5)	/* Data parity error for target write */
-+  #define SH4_PCIINTM_PEDITRM	  BIT(4)	/* PERR detection for target read */
-+  #define SH4_PCIINTM_TADIMM	  BIT(3)	/* Target abort for master */
-+  #define SH4_PCIINTM_MADIMM	  BIT(2)	/* Master abort for master */
-+  #define SH4_PCIINTM_MWPDIM	  BIT(1)	/* Master write data parity error */
-+  #define SH4_PCIINTM_MRDPEIM	  BIT(0)	/* Master read data parity error */
-+#define SH4_PCIAINTM            0x134		/* Arbiter Int. Mask Register */
-+#define SH4_PCIPAR		0x1C0		/* PIO Address Register */
-+  #define SH4_PCIPAR_CFGEN	  0x80000000	/* Configuration Enable */
-+  #define SH4_PCIPAR_BUSNO	  0x00FF0000	/* Config. Bus Number */
-+  #define SH4_PCIPAR_DEVNO	  0x0000FF00	/* Config. Device Number */
-+  #define SH4_PCIPAR_REGAD	  0x000000FC	/* Register Address Number */
-+#define SH4_PCIPINT		0x1CC		/* Power Mgmnt Int. Register */
-+  #define SH4_PCIPINT_D3	  0x00000002	/* D3 Pwr Mgmt. Interrupt */
-+  #define SH4_PCIPINT_D0	  0x00000001	/* D0 Pwr Mgmt. Interrupt */
-+#define SH4_PCICLKR		0x1D4		/* Clock Ctrl. Register */
-+/* For definitions of BCR, MCR see ... */
-+#define SH4_PCIBCR1		0x1E0		/* Memory BCR1 Register */
-+  #define SH4_PCIMBR0		SH4_PCIBCR1
-+#define SH4_PCIBCR2		0x1E4		/* Memory BCR2 Register */
-+  #define SH4_PCIMBMR0		SH4_PCIBCR2
-+#define SH4_PCIWCR1		0x1E8		/* Wait Control 1 Register */
-+#define SH4_PCIWCR2		0x1EC		/* Wait Control 2 Register */
-+#define SH4_PCIWCR3		0x1F0		/* Wait Control 3 Register */
-+  #define SH4_PCIMBR2		SH4_PCIWCR3
-+#define SH4_PCIMCR		0x1F4		/* Memory Control Register */
-+#define SH4_PCIPDR		0x220		/* Port IO Data Register */
-+
-+/* Platform Specific Values */
-+#define SH7751_VENDOR_ID             0x1054
-+#define SH7751_DEVICE_ID             0x3505
-+#define SH7751R_DEVICE_ID            0x350e
-+
-+/* Memory Control Registers */
-+#define SH7751_BCR1                0x0000    /* Memory BCR1 Register */
-+#define SH7751_BCR2                0x0004    /* Memory BCR2 Register */
-+#define SH7751_BCR3                0x0050    /* Memory BCR3 Register */
-+#define SH7751_WCR1                0x0008    /* Wait Control 1 Register */
-+#define SH7751_WCR2                0x000C    /* Wait Control 2 Register */
-+#define SH7751_WCR3                0x0010    /* Wait Control 3 Register */
-+#define SH7751_MCR                 0x0014    /* Memory Control Register */
-+
-+#define pcic_writel(val, reg) iowrite32(val, pci_reg_base + (reg))
-+#define pcic_readl(reg) ioread32(pci_reg_base + (reg))
-+
-+/*
-+ * PCIC fixups
-+ */
-+
-+#define PCIMCR_MRSET 0x40000000
-+#define PCIMCR_RFSH  0x00000004
-+
-+static void __init landisk_fixup(void __iomem *pci_reg_base, void __iomem *bcr)
-+{
-+	unsigned long bcr1, mcr;
-+
-+	bcr1 = ioread32(bcr + SH7751_BCR1);
-+	bcr1 |= 0x00080000;	/* Enable Bit 19 BREQEN, set PCIC to slave */
-+	pcic_writel(bcr1, SH4_PCIBCR1);
-+
-+	mcr = ioread32(bcr + SH7751_MCR);
-+	mcr &= (~PCIMCR_MRSET) & (~PCIMCR_RFSH);
-+	pcic_writel(mcr, SH4_PCIMCR);
-+
-+	pcic_writel(0x0c000000, PCI_BASE_ADDRESS_1);
-+	pcic_writel(0xd0000000, PCI_BASE_ADDRESS_2);
-+	pcic_writel(0x0c000000, SH4_PCILAR0);
-+	pcic_writel(0x00000000, SH4_PCILAR1);
-+}
-+
-+static void __init r2dplus_fixup(void __iomem *pci_reg_base, void __iomem *bcr)
-+{
-+	unsigned long bcr1, mcr;
-+
-+	bcr1 = ioread32(bcr + SH7751_BCR1);
-+	bcr1 |= 0x40080000;	/* Enable Bit 19 BREQEN, set PCIC to slave */
-+	pcic_writel(bcr1, SH4_PCIBCR1);
-+
-+	/* Enable all interrupts, so we known what to fix */
-+	pcic_writel(0x0000c3ff, SH4_PCIINTM);
-+	pcic_writel(0x0000380f, SH4_PCIAINTM);
-+
-+	pcic_writel(0xfb900047, SH7751_PCICONF1);
-+	pcic_writel(0xab000001, SH7751_PCICONF4);
-+
-+	mcr = ioread32(bcr + SH7751_MCR);
-+	mcr &= (~PCIMCR_MRSET) & (~PCIMCR_RFSH);
-+	pcic_writel(mcr, SH4_PCIMCR);
-+
-+	pcic_writel(0x0c000000, SH7751_PCICONF5);
-+	pcic_writel(0xd0000000, SH7751_PCICONF6);
-+	pcic_writel(0x0c000000, SH4_PCILAR0);
-+	pcic_writel(0x00000000, SH4_PCILAR1);
-+}
-+
-+/*
-+ * Direct access to PCI hardware...
-+ */
-+#define CONFIG_CMD(bus, devfn, where) \
-+	(0x80000000 | (bus->number << 16) | (devfn << 8) | (where & ~3))
-+
-+/*
-+ * Functions for accessing PCI configuration space with type 1 accesses
-+ */
-+static void __iomem *sh7751_map_bus(struct pci_bus *bus,
-+				   unsigned int devfn, int where)
-+{
-+	struct pci_config_window *cfg = bus->sysdata;
-+	void __iomem *pci_reg_base = (void __iomem *)cfg->res.start;
-+
-+	pcic_writel(CONFIG_CMD(bus, devfn, where), SH4_PCIPAR);
-+	return pci_reg_base + SH4_PCIPDR;
-+}
-+
-+static const struct of_device_id fixup_of_match[] = {
-+	{ .compatible = "iodata,landisk-pci", .data = landisk_fixup, },
-+	{ .compatible = "renesas,r2dplus-pci", .data = r2dplus_fixup, },
-+	{ },
-+};
-+
-+static const struct of_device_id sh7751_pci_of_match[] = {
-+	{ .compatible = "renesas,sh7751-pci", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, sh7751_pci_of_match);
-+
-+static resource_size_t sh7751_align_resource(struct pci_dev *dev,
-+					     const struct resource *res,
-+					     resource_size_t start,
-+					     resource_size_t size,
-+					     resource_size_t align)
-+{
-+	if (res->flags & IORESOURCE_IO) {
-+		if (start < PCIBIOS_MIN_IO + 0x1000)
-+			start = PCIBIOS_MIN_IO + 0x1000;
-+
-+		/*
-+		 * Put everything into 0x00-0xff region modulo 0x400.
-+		 */
-+		if (start & 0x300)
-+			start = (start + 0x3ff) & ~0x3ff;
-+	}
-+
-+	return start;
-+}
-+
-+static void __init set_pci_bcr(void __iomem *pci_reg_base,
-+			       void __iomem *bcr,
-+			       unsigned int area)
-+{
-+	unsigned long word;
-+
-+	word = ioread32(bcr + SH7751_BCR1);
-+	/* check BCR for SDRAM in area */
-+	if (((word >> area) & 1) == 0) {
-+		pr_info("PCI: Area %d is not configured for SDRAM. BCR1=0x%lx\n",
-+			area, word);
-+		return;
-+	}
-+	pcic_writel(word, SH4_PCIBCR1);
-+
-+	word = ioread16(bcr + SH7751_BCR2);
-+	/* check BCR2 for 32bit SDRAM interface*/
-+	if (((word >> (area << 1)) & 0x3) != 0x3) {
-+		pr_info("PCI: Area %d is not 32 bit SDRAM. BCR2=0x%lx\n",
-+			area, word);
-+		return;
-+	}
-+	pcic_writel(word, SH4_PCIBCR2);
-+}
-+
-+static __init int sh7751_cfg_init(struct device *dev,
-+				  struct pci_config_window *cfg)
-+{
-+	cfg->priv = sh7751_align_resource;
-+	return 0;
-+}
-+
-+static struct pci_ecam_ops ecm_ops __initdata = {
-+	.init	= sh7751_cfg_init,
-+	.pci_ops = {
-+		.read	= pci_generic_config_read32,
-+		.write	= pci_generic_config_write32,
-+		.map_bus	= sh7751_map_bus,
-+	}
-+};
-+
-+static __init int sh7751_pci_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	u32 id;
-+	u32 reg, word;
-+	void __iomem *pci_reg_base;
-+	void __iomem *bcr;
-+	const struct of_device_id *match;
-+	void (*fixup_fn)(void __iomem *pci_reg_base, void __iomem *bcr);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pci_reg_base = ioremap(res->start, resource_size(res));
-+	if (IS_ERR(pci_reg_base))
-+		return PTR_ERR(pci_reg_base);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	bcr = ioremap(res->start, resource_size(res));
-+	if (IS_ERR(bcr))
-+		return PTR_ERR(bcr);
-+
-+	/* check for SH7751/SH7751R hardware */
-+	id = pcic_readl(PCI_VENDOR_ID);
-+	if (id != ((SH7751_DEVICE_ID << 16) | SH7751_VENDOR_ID) &&
-+	    id != ((SH7751R_DEVICE_ID << 16) | SH7751_VENDOR_ID)) {
-+		pr_warn("PCI: This is not an SH7751(R)\n");
-+		return -ENODEV;
-+	}
-+	dev_info(&pdev->dev, "PCI core found at %pR\n",
-+		pci_reg_base);
-+
-+	/* Set the BCRs to enable PCI access */
-+	reg = ioread32(bcr);
-+	reg |= 0x80000;
-+	iowrite32(reg, bcr);
-+
-+	/* Turn the clocks back on (not done in reset)*/
-+	pcic_writel(0, SH4_PCICLKR);
-+	/* Clear Powerdown IRQs (not done in reset) */
-+	word = SH4_PCIPINT_D3 | SH4_PCIPINT_D0;
-+	pcic_writel(word, SH4_PCIPINT);
-+
-+	/* set the command/status bits to:
-+	 * Wait Cycle Control + Parity Enable + Bus Master +
-+	 * Mem space enable
-+	 */
-+	word = PCI_COMMAND_WAIT | PCI_COMMAND_PARITY |
-+	       PCI_COMMAND_MASTER | PCI_COMMAND_MEMORY;
-+	pcic_writel(word, PCI_COMMAND);
-+
-+	/* define this host as the host bridge */
-+	word = PCI_BASE_CLASS_BRIDGE << 24;
-+	pcic_writel(word, PCI_CLASS_REVISION);
-+
-+	/* Set IO and Mem windows to local address
-+	 * Make PCI and local address the same for easy 1 to 1 mapping
-+	 */
-+	word = memory_end - memory_start - 1;
-+	pcic_writel(word, SH4_PCILSR0);
-+	/* Set the values on window 0 PCI config registers */
-+	word = P2SEGADDR(__pa(memory_start));
-+	pcic_writel(word, SH4_PCILAR0);
-+	pcic_writel(word, PCI_BASE_ADDRESS_1);
-+
-+	set_pci_bcr(pci_reg_base, bcr, (__pa(memory_start) >> 27) & 0x07);
-+
-+	/* configure the wait control registers */
-+	word = ioread32(bcr + SH7751_WCR1);
-+	pcic_writel(word, SH4_PCIWCR1);
-+	word = ioread32(bcr + SH7751_WCR2);
-+	pcic_writel(word, SH4_PCIWCR2);
-+	word = ioread32(bcr + SH7751_WCR3);
-+	pcic_writel(word, SH4_PCIWCR3);
-+	word = ioread32(bcr + SH7751_MCR);
-+	pcic_writel(word, SH4_PCIMCR);
-+
-+	match = of_match_node(fixup_of_match, pdev->dev.of_node);
-+	if (match) {
-+		fixup_fn = match->data;
-+		fixup_fn(pci_reg_base, bcr);
-+	}
-+	/*
-+	 * SH7751 init done, set central function init complete
-+	 * use round robin mode to stop a device starving/overruning
-+	 */
-+	word = SH4_PCICR_PREFIX | SH4_PCICR_CFIN | SH4_PCICR_ARBM;
-+	pcic_writel(word, SH4_PCICR);
-+
-+	return pci_host_common_probe(pdev, &ecm_ops);
-+}
-+
-+static __refdata struct platform_driver sh7751_pci_driver = {
-+	.driver = {
-+		.name = "sh7751-pci",
-+		.of_match_table = sh7751_pci_of_match,
-+	},
-+	.probe = sh7751_pci_probe,
-+};
-+builtin_platform_driver(sh7751_pci_driver);
--- 
-2.7.0
+/Jarkko
 
+> ---
+>  drivers/char/tpm/st33zp24/st33zp24.c |  4 +---
+>  drivers/char/tpm/tpm-chip.c          |  9 +++++++
+>  drivers/char/tpm/tpm-interface.c     | 27 +++++++++++++++++++++
+>  drivers/char/tpm/tpm.h               |  4 ++--
+>  drivers/char/tpm/tpm2-cmd.c          | 46 ++++++++++++++++++++++++++++++++----
+>  drivers/char/tpm/tpm_crb.c           | 10 +-------
+>  drivers/char/tpm/tpm_i2c_atmel.c     |  6 +----
+>  drivers/char/tpm/tpm_i2c_infineon.c  |  4 +---
+>  drivers/char/tpm/tpm_i2c_nuvoton.c   |  7 +-----
+>  drivers/char/tpm/tpm_tis_core.c      | 24 +------------------
+>  drivers/char/tpm/tpm_vtpm_proxy.c    |  9 +------
+>  include/linux/tpm.h                  |  5 ++++
+>  12 files changed, 92 insertions(+), 63 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/st33zp24/st33zp24.c b/drivers/char/tpm/st33zp24/st33zp24.c
+> index a7c99a2..c2ee304 100644
+> --- a/drivers/char/tpm/st33zp24/st33zp24.c
+> +++ b/drivers/char/tpm/st33zp24/st33zp24.c
+> @@ -505,6 +505,7 @@ static bool st33zp24_req_canceled(struct tpm_chip *chip, u8 status)
+>  }
+>  
+>  static const struct tpm_class_ops st33zp24_tpm = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+>  	.send = st33zp24_send,
+>  	.recv = st33zp24_recv,
+>  	.cancel = st33zp24_cancel,
+> @@ -592,9 +593,6 @@ int st33zp24_probe(void *phy_id, const struct st33zp24_phy_ops *ops,
+>  		tpm_gen_interrupt(chip);
+>  	}
+>  
+> -	tpm_get_timeouts(chip);
+> -	tpm_do_selftest(chip);
+> -
+>  	return tpm_chip_register(chip);
+>  _tpm_clean_answer:
+>  	dev_info(&chip->dev, "TPM initialization fail\n");
+> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+> index 5a2f043..e595013 100644
+> --- a/drivers/char/tpm/tpm-chip.c
+> +++ b/drivers/char/tpm/tpm-chip.c
+> @@ -354,6 +354,15 @@ int tpm_chip_register(struct tpm_chip *chip)
+>  {
+>  	int rc;
+>  
+> +	if (chip->ops->flags & TPM_OPS_AUTO_STARTUP) {
+> +		if (chip->flags & TPM_CHIP_FLAG_TPM2)
+> +			rc = tpm2_auto_startup(chip);
+> +		else
+> +			rc = tpm1_auto_startup(chip);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+>  	rc = tpm1_chip_register(chip);
+>  	if (rc)
+>  		return rc;
+> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> index 5e3c1b6..1abe2d7 100644
+> --- a/drivers/char/tpm/tpm-interface.c
+> +++ b/drivers/char/tpm/tpm-interface.c
+> @@ -843,6 +843,33 @@ int tpm_do_selftest(struct tpm_chip *chip)
+>  }
+>  EXPORT_SYMBOL_GPL(tpm_do_selftest);
+>  
+> +/**
+> + * tpm1_auto_startup - Perform the standard automatic TPM initialization
+> + *                     sequence
+> + * @chip: TPM chip to use
+> + *
+> + * Returns 0 on success, < 0 in case of fatal error.
+> + */
+> +int tpm1_auto_startup(struct tpm_chip *chip)
+> +{
+> +	int rc;
+> +
+> +	rc = tpm_get_timeouts(chip);
+> +	if (rc)
+> +		goto out;
+> +	rc = tpm_do_selftest(chip);
+> +	if (rc) {
+> +		dev_err(&chip->dev, "TPM self test failed\n");
+> +		goto out;
+> +	}
+> +
+> +	return rc;
+> +out:
+> +	if (rc > 0)
+> +		rc = -ENODEV;
+> +	return rc;
+> +}
+> +
+>  int tpm_send(u32 chip_num, void *cmd, size_t buflen)
+>  {
+>  	struct tpm_chip *chip;
+> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+> index 8890df2..3e32d5b 100644
+> --- a/drivers/char/tpm/tpm.h
+> +++ b/drivers/char/tpm/tpm.h
+> @@ -484,6 +484,7 @@ ssize_t tpm_transmit_cmd(struct tpm_chip *chip, void *cmd, int len,
+>  			 const char *desc);
+>  extern int tpm_get_timeouts(struct tpm_chip *);
+>  extern void tpm_gen_interrupt(struct tpm_chip *);
+> +int tpm1_auto_startup(struct tpm_chip *chip);
+>  extern int tpm_do_selftest(struct tpm_chip *);
+>  extern unsigned long tpm_calc_ordinal_duration(struct tpm_chip *, u32);
+>  extern int tpm_pm_suspend(struct device *);
+> @@ -526,10 +527,9 @@ int tpm2_unseal_trusted(struct tpm_chip *chip,
+>  ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,
+>  			u32 *value, const char *desc);
+>  
+> -extern int tpm2_startup(struct tpm_chip *chip, u16 startup_type);
+> +int tpm2_auto_startup(struct tpm_chip *chip);
+>  extern void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
+>  extern unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *, u32);
+> -extern int tpm2_do_selftest(struct tpm_chip *chip);
+>  extern int tpm2_gen_interrupt(struct tpm_chip *chip);
+>  extern int tpm2_probe(struct tpm_chip *chip);
+>  #endif
+> diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+> index a1673dc..fe6d0d7 100644
+> --- a/drivers/char/tpm/tpm2-cmd.c
+> +++ b/drivers/char/tpm/tpm2-cmd.c
+> @@ -728,7 +728,7 @@ static const struct tpm_input_header tpm2_startup_header = {
+>   * returned it remarks a POSIX error code. If a positive number is returned
+>   * it remarks a TPM error.
+>   */
+> -int tpm2_startup(struct tpm_chip *chip, u16 startup_type)
+> +static int tpm2_startup(struct tpm_chip *chip, u16 startup_type)
+>  {
+>  	struct tpm2_cmd cmd;
+>  
+> @@ -738,7 +738,6 @@ int tpm2_startup(struct tpm_chip *chip, u16 startup_type)
+>  	return tpm_transmit_cmd(chip, &cmd, sizeof(cmd),
+>  				"attempting to start the TPM");
+>  }
+> -EXPORT_SYMBOL_GPL(tpm2_startup);
+>  
+>  #define TPM2_SHUTDOWN_IN_SIZE \
+>  	(sizeof(struct tpm_input_header) + \
+> @@ -854,7 +853,7 @@ static int tpm2_start_selftest(struct tpm_chip *chip, bool full)
+>   * returned it remarks a POSIX error code. If a positive number is returned
+>   * it remarks a TPM error.
+>   */
+> -int tpm2_do_selftest(struct tpm_chip *chip)
+> +static int tpm2_do_selftest(struct tpm_chip *chip)
+>  {
+>  	int rc;
+>  	unsigned int loops;
+> @@ -894,7 +893,6 @@ int tpm2_do_selftest(struct tpm_chip *chip)
+>  
+>  	return rc;
+>  }
+> -EXPORT_SYMBOL_GPL(tpm2_do_selftest);
+>  
+>  /**
+>   * tpm2_gen_interrupt() - generate an interrupt
+> @@ -942,3 +940,43 @@ int tpm2_probe(struct tpm_chip *chip)
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(tpm2_probe);
+> +
+> +/**
+> + * tpm2_auto_startup - Perform the standard automatic TPM initialization
+> + *                     sequence
+> + * @chip: TPM chip to use
+> + *
+> + * Returns 0 on success, < 0 in case of fatal error.
+> + */
+> +int tpm2_auto_startup(struct tpm_chip *chip)
+> +{
+> +	int rc;
+> +
+> +	rc = tpm_get_timeouts(chip);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = tpm2_do_selftest(chip);
+> +	if (rc != TPM2_RC_INITIALIZE) {
+> +		dev_err(&chip->dev, "TPM self test failed\n");
+> +		goto out;
+> +	}
+> +
+> +	if (rc == TPM2_RC_INITIALIZE) {
+> +		rc = tpm2_startup(chip, TPM2_SU_CLEAR);
+> +		if (rc)
+> +			goto out;
+> +
+> +		rc = tpm2_do_selftest(chip);
+> +		if (rc) {
+> +			dev_err(&chip->dev, "TPM self test failed\n");
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	return rc;
+> +out:
+> +	if (rc > 0)
+> +		rc = -ENODEV;
+> +	return rc;
+> +}
+> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+> index 1b8e1b5..018c3825 100644
+> --- a/drivers/char/tpm/tpm_crb.c
+> +++ b/drivers/char/tpm/tpm_crb.c
+> @@ -188,6 +188,7 @@ static bool crb_req_canceled(struct tpm_chip *chip, u8 status)
+>  }
+>  
+>  static const struct tpm_class_ops tpm_crb = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+>  	.status = crb_status,
+>  	.recv = crb_recv,
+>  	.send = crb_send,
+> @@ -200,7 +201,6 @@ static const struct tpm_class_ops tpm_crb = {
+>  static int crb_init(struct acpi_device *device, struct crb_priv *priv)
+>  {
+>  	struct tpm_chip *chip;
+> -	int rc;
+>  
+>  	chip = tpmm_chip_alloc(&device->dev, &tpm_crb);
+>  	if (IS_ERR(chip))
+> @@ -210,14 +210,6 @@ static int crb_init(struct acpi_device *device, struct crb_priv *priv)
+>  	chip->acpi_dev_handle = device->handle;
+>  	chip->flags = TPM_CHIP_FLAG_TPM2;
+>  
+> -	rc = tpm_get_timeouts(chip);
+> -	if (rc)
+> -		return rc;
+> -
+> -	rc = tpm2_do_selftest(chip);
+> -	if (rc)
+> -		return rc;
+> -
+>  	return tpm_chip_register(chip);
+>  }
+>  
+> diff --git a/drivers/char/tpm/tpm_i2c_atmel.c b/drivers/char/tpm/tpm_i2c_atmel.c
+> index c37aa72..95ce2e9 100644
+> --- a/drivers/char/tpm/tpm_i2c_atmel.c
+> +++ b/drivers/char/tpm/tpm_i2c_atmel.c
+> @@ -141,6 +141,7 @@ static bool i2c_atmel_req_canceled(struct tpm_chip *chip, u8 status)
+>  }
+>  
+>  static const struct tpm_class_ops i2c_atmel = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+>  	.status = i2c_atmel_read_status,
+>  	.recv = i2c_atmel_recv,
+>  	.send = i2c_atmel_send,
+> @@ -179,11 +180,6 @@ static int i2c_atmel_probe(struct i2c_client *client,
+>  	/* There is no known way to probe for this device, and all version
+>  	 * information seems to be read via TPM commands. Thus we rely on the
+>  	 * TPM startup process in the common code to detect the device. */
+> -	if (tpm_get_timeouts(chip))
+> -		return -ENODEV;
+> -
+> -	if (tpm_do_selftest(chip))
+> -		return -ENODEV;
+>  
+>  	return tpm_chip_register(chip);
+>  }
+> diff --git a/drivers/char/tpm/tpm_i2c_infineon.c b/drivers/char/tpm/tpm_i2c_infineon.c
+> index a426b6f..62ee44e 100644
+> --- a/drivers/char/tpm/tpm_i2c_infineon.c
+> +++ b/drivers/char/tpm/tpm_i2c_infineon.c
+> @@ -567,6 +567,7 @@ static bool tpm_tis_i2c_req_canceled(struct tpm_chip *chip, u8 status)
+>  }
+>  
+>  static const struct tpm_class_ops tpm_tis_i2c = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+>  	.status = tpm_tis_i2c_status,
+>  	.recv = tpm_tis_i2c_recv,
+>  	.send = tpm_tis_i2c_send,
+> @@ -619,9 +620,6 @@ static int tpm_tis_i2c_init(struct device *dev)
+>  
+>  	tpm_dev.chip = chip;
+>  
+> -	tpm_get_timeouts(chip);
+> -	tpm_do_selftest(chip);
+> -
+>  	return tpm_chip_register(chip);
+>  out_release:
+>  	release_locality(chip, tpm_dev.locality, 1);
+> diff --git a/drivers/char/tpm/tpm_i2c_nuvoton.c b/drivers/char/tpm/tpm_i2c_nuvoton.c
+> index 4e32094..e8ff362 100644
+> --- a/drivers/char/tpm/tpm_i2c_nuvoton.c
+> +++ b/drivers/char/tpm/tpm_i2c_nuvoton.c
+> @@ -461,6 +461,7 @@ static bool i2c_nuvoton_req_canceled(struct tpm_chip *chip, u8 status)
+>  }
+>  
+>  static const struct tpm_class_ops tpm_i2c = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+>  	.status = i2c_nuvoton_read_status,
+>  	.recv = i2c_nuvoton_recv,
+>  	.send = i2c_nuvoton_send,
+> @@ -609,12 +610,6 @@ static int i2c_nuvoton_probe(struct i2c_client *client,
+>  		}
+>  	}
+>  
+> -	if (tpm_get_timeouts(chip))
+> -		return -ENODEV;
+> -
+> -	if (tpm_do_selftest(chip))
+> -		return -ENODEV;
+> -
+>  	return tpm_chip_register(chip);
+>  }
+>  
+> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+> index 03a06b3..de6d25d 100644
+> --- a/drivers/char/tpm/tpm_tis_core.c
+> +++ b/drivers/char/tpm/tpm_tis_core.c
+> @@ -643,6 +643,7 @@ void tpm_tis_remove(struct tpm_chip *chip)
+>  EXPORT_SYMBOL_GPL(tpm_tis_remove);
+>  
+>  static const struct tpm_class_ops tpm_tis = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+>  	.status = tpm_tis_status,
+>  	.recv = tpm_tis_recv,
+>  	.send = tpm_tis_send,
+> @@ -778,29 +779,6 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
+>  		}
+>  	}
+>  
+> -	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+> -		rc = tpm2_do_selftest(chip);
+> -		if (rc == TPM2_RC_INITIALIZE) {
+> -			dev_warn(dev, "Firmware has not started TPM\n");
+> -			rc  = tpm2_startup(chip, TPM2_SU_CLEAR);
+> -			if (!rc)
+> -				rc = tpm2_do_selftest(chip);
+> -		}
+> -
+> -		if (rc) {
+> -			dev_err(dev, "TPM self test failed\n");
+> -			if (rc > 0)
+> -				rc = -ENODEV;
+> -			goto out_err;
+> -		}
+> -	} else {
+> -		if (tpm_do_selftest(chip)) {
+> -			dev_err(dev, "TPM self test failed\n");
+> -			rc = -ENODEV;
+> -			goto out_err;
+> -		}
+> -	}
+> -
+>  	return tpm_chip_register(chip);
+>  out_err:
+>  	tpm_tis_remove(chip);
+> diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
+> index 86e27e8..9a94033 100644
+> --- a/drivers/char/tpm/tpm_vtpm_proxy.c
+> +++ b/drivers/char/tpm/tpm_vtpm_proxy.c
+> @@ -346,6 +346,7 @@ static bool vtpm_proxy_tpm_req_canceled(struct tpm_chip  *chip, u8 status)
+>  }
+>  
+>  static const struct tpm_class_ops vtpm_proxy_tpm_ops = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+>  	.recv = vtpm_proxy_tpm_op_recv,
+>  	.send = vtpm_proxy_tpm_op_send,
+>  	.cancel = vtpm_proxy_tpm_op_cancel,
+> @@ -366,14 +367,6 @@ static void vtpm_proxy_work(struct work_struct *work)
+>  						   work);
+>  	int rc;
+>  
+> -	if (proxy_dev->flags & VTPM_PROXY_FLAG_TPM2)
+> -		rc = tpm2_startup(proxy_dev->chip, TPM2_SU_CLEAR);
+> -	else
+> -		rc = tpm_get_timeouts(proxy_dev->chip);
+> -
+> -	if (rc)
+> -		goto err;
+> -
+>  	rc = tpm_chip_register(proxy_dev->chip);
+>  	if (rc)
+>  		goto err;
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index 706e63e..da158f0 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -33,7 +33,12 @@ struct tpm_chip;
+>  struct trusted_key_payload;
+>  struct trusted_key_options;
+>  
+> +enum TPM_OPS_FLAGS {
+> +	TPM_OPS_AUTO_STARTUP = BIT(0),
+> +};
+> +
+>  struct tpm_class_ops {
+> +	unsigned int flags;
+>  	const u8 req_complete_mask;
+>  	const u8 req_complete_val;
+>  	bool (*req_canceled)(struct tpm_chip *chip, u8 status);
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
