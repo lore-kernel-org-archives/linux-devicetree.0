@@ -1,77 +1,106 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] arm64: dts: marvell: add XOR engine description for Armada 7K/8K CP
-Date: Thu, 30 Jun 2016 13:50:49 +0200
-Message-ID: <87d1myx5d2.fsf@free-electrons.com>
-References: <1466080116-26777-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1466080116-26777-5-git-send-email-thomas.petazzoni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466080116-26777-5-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-	(Thomas Petazzoni's message of "Thu, 16 Jun 2016 14:28:36 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: Add DT bindings documentation for max98504 amplifier" to the asoc tree
+Date: Wed, 29 Jun 2016 20:23:18 +0100
+Message-ID: <E1bIL4w-00085G-0O@finisterre>
+References: <1467199599-6892-4-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1467199599-6892-4-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh@kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, inki.dae@samsung.com, devicetree@vger.kernel.org, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
- 
- On jeu., juin 16 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+The patch
 
-> This commit adds the Device Tree description for the two XOR engines
-> found in the CP part of the Armada 7K/8K SoC.
+   ASoC: Add DT bindings documentation for max98504 amplifier
 
-Applied on mvebu/dt64
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
+Mark
 
-Gregory
+>From 51ded0fbc18c5c05782c1c7eba30264b524added Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Wed, 29 Jun 2016 13:26:36 +0200
+Subject: [PATCH] ASoC: Add DT bindings documentation for max98504 amplifier
 
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> index 367138b..da31bbb 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> @@ -107,6 +107,24 @@
->  				status = "disabled";
->  			};
->  
-> +			cpm_xor0: xor@6a0000 {
-> +				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
-> +				reg = <0x6a0000 0x1000>,
-> +				      <0x6b0000 0x1000>;
-> +				dma-coherent;
-> +				msi-parent = <&gic_v2m0>;
-> +				clocks = <&cpm_syscon0 1 8>;
-> +			};
-> +
-> +			cpm_xor1: xor@6c0000 {
-> +				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
-> +				reg = <0x6c0000 0x1000>,
-> +				      <0x6d0000 0x1000>;
-> +				dma-coherent;
-> +				msi-parent = <&gic_v2m0>;
-> +				clocks = <&cpm_syscon0 1 7>;
-> +			};
-> +
->  			cpm_spi0: spi@700600 {
->  				compatible = "marvell,armada-380-spi";
->  				reg = <0x700600 0x50>;
-> -- 
-> 2.7.4
->
+This patch adds DT bindings documentation for Maxim MAX98504
+speaker amplifier.
 
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/max98504.txt         | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/max98504.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/max98504.txt b/Documentation/devicetree/bindings/sound/max98504.txt
+new file mode 100644
+index 000000000000..583ed5fdfb28
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/max98504.txt
+@@ -0,0 +1,44 @@
++Maxim MAX98504 class D mono speaker amplifier
++
++This device supports I2C control interface and an IRQ output signal. It features
++a PCM and PDM digital audio interface (DAI) and a differential analog input.
++
++Required properties:
++
++ - compatible : "maxim,max98504"
++ - reg : should contain the I2C slave device address
++ - DVDD-supply, DIOVDD-supply, PVDD-supply: power supplies for the device,
++   as covered in ../regulator/regulator.txt
++ - interrupts : should specify the interrupt line the device is connected to,
++   as described in ../interrupt-controller/interrupts.txt
++
++Optional properties:
++
++ - maxim,brownout-threshold - the PVDD brownout threshold, the value must be
++   from 0, 1...21 range, corresponding to 2.6V, 2.65V...3.65V voltage range
++ - maxim,brownout-attenuation - the brownout attenuation to the speaker gain
++   applied during the "attack hold" and "timed hold" phase, the value must be
++   from 0...6 (dB) range
++ - maxim,brownout-attack-hold-ms - the brownout attack hold phase time in ms,
++   0...255 (VBATBROWN_ATTK_HOLD, register 0x0018)
++ - maxim,brownout-timed-hold-ms - the brownout timed hold phase time in ms,
++   0...255 (VBATBROWN_TIME_HOLD, register 0x0019)
++ - maxim,brownout-release-rate-ms - the brownout release phase step time in ms,
++   0...255 (VBATBROWN_RELEASE, register 0x001A)
++
++The default value when the above properties are not specified is 0,
++the maxim,brownout-threshold property must be specified to actually enable
++the PVDD brownout protection.
++
++Example:
++
++ max98504@31 {
++	compatible = "maxim,max98504";
++	reg = <0x31>;
++	interrupt-parent = <&gpio_bank_0>;
++	interrupts = <2 0>;
++
++	DVDD-supply = <&regulator>;
++	DIOVDD-supply = <&regulator>;
++	PVDD-supply = <&regulator>;
++};
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.8.1
