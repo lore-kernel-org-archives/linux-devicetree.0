@@ -1,51 +1,55 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v5 4/5] mfd: rn5t618: register power off callback optionally
-Date: Tue, 28 Jun 2016 22:53:21 -0700
-Message-ID: <20160629055322.23038-5-stefan@agner.ch>
-References: <20160629055322.23038-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160629055322.23038-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, max.oss.09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v5 0/5] regulator: add Ricoh RN5T567 PMIC support
+Date: Tue, 28 Jun 2016 22:53:17 -0700
+Message-ID: <20160629055322.23038-1-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org
+Cc: b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Only register power off if the PMIC is defined as system power
-controller (see Documentation/devicetree/bindings/power/
-power-controller.txt).
+This patchset adds RN5T567 PMIC support which is used on the 
+Toradex Colibri iMX7S/iMX7D modules. The existing RN5T618 is from
+the same family, hence this patchset uses the same driver and adds
+variant support.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Reviewed-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/mfd/rn5t618.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+The Colibris currently do not use the PMIC's power off capabilities,
+as do the current users of that PMIC driver. Therefore this patchset
+also makes the use of the system-power-controller property mandatory
+if the power off capabilties are required.
 
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index c86160d..1831740 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -102,9 +102,13 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
--	if (!pm_power_off) {
--		rn5t618_pm_power_off = priv;
--		pm_power_off = rn5t618_power_off;
-+	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
-+		if (!pm_power_off) {
-+			rn5t618_pm_power_off = priv;
-+			pm_power_off = rn5t618_power_off;
-+		} else {
-+			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
-+		}
- 	}
- 
- 	return 0;
+Changes since v4:
+- Spell check in patch 5 and added Acks
+
+Changes since v3:
+- Use RN5T618_REPCNT_REPWRON macro when writing RN5T618_REPCNT register
+
+Changes since v2:
+- Elevate restart priority to 192 to make sure PMIC takes presedence
+  over SoC level restart capabilities (e.g. watchdog)
+- Print a warning if poweroff callback is already assigned
+- Reorder of_id and variant assignment
+- Lower delay to 1ms and justify why it is required
+- Fix DCDC count and a typos in device tree bindings
+
+Changes since v1:
+- Removed obsolete include <asm/system_misc.h>
+
+Stefan Agner (5):
+  ARM: dts: meson: minix-neo-x8: define PMIC as power controller
+  mfd: add Ricoh RN5T567 PMIC support
+  regulator: rn5t618: add RN5T567 PMIC support
+  mfd: rn5t618: register power off callback optionally
+  mfd: rn5t618: register restart handler
+
+ Documentation/devicetree/bindings/mfd/rn5t618.txt | 19 +++---
+ arch/arm/boot/dts/meson8-minix-neo-x8.dts         |  1 +
+ drivers/mfd/Kconfig                               |  7 ++-
+ drivers/mfd/rn5t618.c                             | 70 +++++++++++++++++++----
+ drivers/regulator/Kconfig                         |  5 +-
+ drivers/regulator/rn5t618-regulator.c             | 40 +++++++++++--
+ include/linux/mfd/rn5t618.h                       | 13 +++++
+ 7 files changed, 126 insertions(+), 29 deletions(-)
+
 -- 
 2.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
