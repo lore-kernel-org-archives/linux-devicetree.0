@@ -1,18 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: sun5i: Add mmc1 / sdio-wifi
- node to mk802
-Date: Wed, 29 Jun 2016 22:36:15 +0200
-Message-ID: <20160629203615.GH6095@lukather>
+Subject: Re: [PATCH 1/4] ARM: dts: sun5i: Enable otg on the
+ auxtex t004
+Date: Wed, 29 Jun 2016 22:38:38 +0200
+Message-ID: <20160629203838.GI6095@lukather>
 References: <1467226022-10525-1-git-send-email-hdegoede@redhat.com>
- <1467226022-10525-4-git-send-email-hdegoede@redhat.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ijf6z65S790CMqo8"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQHC2C5QKGQEV5BB6TY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="d6iqOn7HZPWKXx18"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBT7D2C5QKGQE2JH5VMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1467226022-10525-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1467226022-10525-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,21 +23,29 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJ
 List-Id: devicetree@vger.kernel.org
 
 
---ijf6z65S790CMqo8
+--d6iqOn7HZPWKXx18
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Wed, Jun 29, 2016 at 08:47:02PM +0200, Hans de Goede wrote:
-> The a10s mk802 uses a rtl8189es sdio wifi chip, add a node enabling
-> the mmc1 controller, this enables using the wifi chip (together with
-> an out of tree sdio driver for it).
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Hi,
 
-Applied, thanks!
+On Wed, Jun 29, 2016 at 08:46:59PM +0200, Hans de Goede wrote:
+> The auxtek t004 has its otg usb vbus hardwired to 5v (likely in case
+> people use it to power the board instead of the dedicated power micro
+> usb connector), it does have an id pin, so it allows full otg
+> functionality.
+
+I don't really get what you're saying here. Is the VBUS hardcoded to
+5V, without any way to switch it, or it is not wired at all?
+
+In the former case, how can one of the PMIC output be related to the
+board power input?
+
+Thanks,
+Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---ijf6z65S790CMqo8--
+--d6iqOn7HZPWKXx18--
