@@ -1,64 +1,43 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun7i: Fix pll3x2 and pll7x2 not having a
- parent clock
-Date: Wed, 29 Jun 2016 09:03:33 +0200
-Message-ID: <20160629070333.GA6095@lukather>
-References: <1467144674-21322-1-git-send-email-hdegoede@redhat.com>
+From: Jongsung Kim <neidhard.kim@lge.com>
+Subject: Re: [PATCH v2] clk: fixed-factor: add optional dt-binding clock-flags
+Date: Wed, 29 Jun 2016 16:06:21 +0900
+Message-ID: <5773736D.3060405@lge.com>
+References: <20160621005910.GN1521@codeaurora.org>
+ <1466741572-58802-1-git-send-email-neidhard.kim@lge.com>
+ <20160628205518.GF3737@rob-hp-laptop>
+ <146714872010.89261.1969853552594659808@resonance>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467144674-21322-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <146714872010.89261.1969853552594659808@resonance>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chanho Min <chanho.min@lge.com>
 List-Id: devicetree@vger.kernel.org
 
+On 2016=EB=85=84 06=EC=9B=94 29=EC=9D=BC 06:18, Michael Turquette wrote=
+:
+> Quoting Rob Herring (2016-06-28 13:55:18)
+>> On Fri, Jun 24, 2016 at 01:12:52PM +0900, Jongsung Kim wrote:
+>>> There is no way to set additional flags for a DT-initialized fixed-
+>>> factor-clock, and it can be problematic i.e., when the clock rate
+>>> needs to be changed. [1][2]
+>>>
+>>> This patch introduces an optional dt-binding named "clock-flags" to
+>>> be used for passing any needed flags from dts.
+>> I don't think we want this in DT. If we did, the flags would need so=
+me=20
+>> documentation about what the flags mean.
+> Flags are specific to Linux implementation, so I agree with Rob. Bett=
+er
+> to create a compatible string for your hardware that bakes in the fla=
+gs.
 
---W/nzBZO5zC0uMSeA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 28, 2016 at 10:11:14PM +0200, Hans de Goede wrote:
-> Fix pll3x2 and pll7x2 not having a parent clock, specifically this
-> fixes the kernel turning of pll3 while simplefb is using it when
-> uboot has configured things to use pll3x2 as lcd ch clk parent.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---W/nzBZO5zC0uMSeA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXc3LFAAoJEBx+YmzsjxAg3/8QALZYcXsuNBh8VjSPBB5WI+58
-gLcKM1jikfT+BZoe88JMMZqm0dwF23NrfM7aK1/psTzXg57Ayd38jdY4eLt2Evd4
-fR3KtRXUnwnlp5TEV7brpkBMUvISLF2Thnh68q7H5gjdmdNYUq3poN8bK1Pd3faO
-/uwXjxY0imLK2hu5HmiGL6p96Id7SPpRTIeeoga+27NJlymFeBzR+ENq8LjudGDL
-tAMU8bOa8Q/qldrTa47rYcXUamhswYGVVRDCzqwbgSs5xXsBl8mu4X3kPcTeYIXb
-dvlqg6olHu063/IAzQrJNbUSthk13Fxef2Trx8aMTHe6Fr2BZznQsR0tZ360fvB+
-ltjgvf0y5HGUxG9EH1XEyvU9+Fs5GS8EwrR+QqNb74dYVtaAHEGjKfsNiDEESdWd
-ztTnVDAnIZm1Y+7Gu2FDzlm5BFYbilyDDloA8wPTz6kRTExqVTxqocJHDER+A9HY
-UwfADJ2vZvVdlXcQgM0cl6IJAC6X+n8IBGv+KuVlYYm/ikJtfEyBxSghpjRLTSA8
-W9avBthUE/uWfPpoqo3q6dFGms6GreQZJR5scV2DugO1uKR96WWM6fD+Q87E/b54
-IZrC5dz9+5809ihBTsc/JeLBnSBkb7Mk9G3GcIr3Bbkmfe0NCyJ1pxP33NL3a/Br
-dilYDjSn9uvMs20XXcoX
-=PD4W
------END PGP SIGNATURE-----
-
---W/nzBZO5zC0uMSeA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you for your comment, Mike. This conversation starts from lacking=
+ method to set CLK_SET_RATE_PARENT from DT. I understand compatible str=
+ing can be a solution. But.. if someone starts talking about lacking me=
+thod to set another flag, i.e., CLK_SET_PARENT_GATE, then we'll need an=
+other compatible string list.
+How do you think about defining possible required subset of the flags a=
+nd using some more neutral flag-names acceptable in DT?
