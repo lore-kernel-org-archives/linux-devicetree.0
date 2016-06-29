@@ -1,68 +1,51 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 29 Jun 2016 07:17:29 -0500
-Message-ID: <5773BC59.5010404@codeaurora.org>
-References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
- <5301045.3F9gkJcz60@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5301045.3F9gkJcz60@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 2/6] documentation: Add secure monitor bindings documentation
+Date: Wed, 29 Jun 2016 14:34:12 +0200
+Message-ID: <1467203656-14381-3-git-send-email-carlo@caione.org>
+References: <1467203656-14381-1-git-send-email-carlo@caione.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467203656-14381-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
-> On Friday, June 24, 2016 6:46:48 PM CEST Timur Tabi wrote:
->> >+       /* The EMAC itself is capable of 64-bit DMA. If the SOC limits that
->> >+        * range, then we expect platform code to adjust the mask accordingly.
->> >+        */
->> >+       ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
->> >+       if (ret) {
->> >+               dev_err(&pdev->dev, "could not set DMA mask\n");
->> >+               return ret;
->> >+       }
->> >
-> The comment does not match the code: if the platform has no IOMMU
-> and the bus limit is smaller than the memory, dma_set_mask_and_coherent()
-> will fail, and the driver should instead ensure that the buffers are
-> allocated from the 32-bit area.
->
-> Alternatively, adjust the comment to explain that this is a limitation
-> in the driver that can be lifted if necessary.
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-I'm not sure I understand.  The EMAC hardware is capable of 64-bit DMA. 
-  This is true on every platform -- the hardware registers that take bus 
-addresses are 64-bit.  The driver itself has no limitations.
+Add the binding documentation for the Amlogic secure monitor driver.
 
-And that's what the dma_set_mask_and_coherent() does.  It tells the 
-kernel what the device is capable of.
+Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/firmware/meson/meson_sm.txt       | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
 
-However, on some SOCs, only a subset of those address lines are 
-connected to the memory bus.  So for instance, some platforms only have 
-32 bits connected.
-
-There's no way for the EMAC driver to know this, so it expects other 
-code in the kernel to adjust.  I'm not exactly sure what this code is 
-supposed to be, because I get conflicting information.  At one point, I 
-thought that the dma-ranges property would handle that.  The kernel 
-would parse that property, see that the DMA range is limited to 32 bits, 
-and adjust the DMA mask accordingly.  However, with dma-ranges in the 
-parent node, I don't see how that can work.
-
-So my question is, how do I handle the situation where a subset of the 
-DMA address lines are masked off by the SOC?  I've seen code like this:
-
-ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-if (ret)
-	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-
-But this has never made any sense to me.  If DMA_BIT_MASK(64) fails, 
-then how can DMA_BIT_MASK(32) succeed?
-	
+diff --git a/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+new file mode 100644
+index 0000000..c248cd4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/meson/meson_sm.txt
+@@ -0,0 +1,15 @@
++* Amlogic Secure Monitor
++
++In the Amlogic SoCs the Secure Monitor code is used to provide access to the
++NVMEM, enable JTAG, set USB boot, etc...
++
++Required properties for the secure monitor node:
++- compatible: Should be "amlogic,meson-gxbb-sm"
++
++Example:
++
++	firmware {
++		sm: secure-monitor {
++			compatible = "amlogic,meson-gxbb-sm";
++		};
++	};
 -- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
