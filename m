@@ -1,11 +1,11 @@
 From: Mark Brown <broonie@kernel.org>
 Subject: Applied "regmap: Support bulk writes for devices without raw formatting" to the regmap tree
 Date: Wed, 29 Jun 2016 19:48:34 +0100
-Message-ID: <E1bIKXK-0005rN-JW__28353.1079338447$1467226196$gmane$org@finisterre>
+Message-ID: <E1bIKXK-0005rN-JW__23178.6551340067$1467226197$gmane$org@finisterre>
 References: <1465870678-30128-2-git-send-email-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1465870678-30128-2-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Chen-Yu Tsai <wens@csie.org>
 Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -119,3 +119,4 @@ index df2d2ef5d6b3..51fa7d66a393 100644
  		int chunk_stride = map->reg_stride;
 -- 
 2.8.1
+
