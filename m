@@ -1,207 +1,119 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: add the power domain node for rk3399
-Date: Thu, 30 Jun 2016 23:57:39 +0200
-Message-ID: <2709691.LCsUme3dJo@phil>
-References: <1467251760-14695-1-git-send-email-wxt@rock-chips.com>
- <CAD=FV=Wg1vuBhcjFRj53t-E0sKoBH577RB7gHZ-rkJV5T7nyZw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAD=FV=Wg1vuBhcjFRj53t-E0sKoBH577RB7gHZ-rkJV5T7nyZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <broonie@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+In-Reply-To: <1465870678-30128-2-git-send-email-wens@csie.org>
+Message-Id: <E1bIKXK-0005rN-JW@finisterre>
+Date: Wed, 29 Jun 2016 19:48:34 +0100
+Subject: Applied "regmap: Support bulk writes for devices without raw formatting" to the regmap tree
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-Am Donnerstag, 30. Juni 2016, 14:49:41 schrieb Doug Anderson:
-> Caesar,
-> 
-> On Wed, Jun 29, 2016 at 6:56 PM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> > From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > 
-> > In order to meet low power requirements, a power management unit (PMU)
-> > is
-> > designed for controlling power resources in RK3399. The RK3399 PMU is
-> > dedicated for managing the power of the whole chip.
-> > 
-> > 1. add pd node for RK3399 Soc
-> > 2. create power domain tree
-> > 3. add qos node for domain
-> > 
-> > From the DT/binds and driver can get more detail information:
-> > The driver:
-> > drivers/soc/rockchip/pm_domains.c
-> > The document:
-> > Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> > 
-> > ---
-> > 
-> > Tested on vop and gpu devices added for next kernel.
-> > PD:
-> > localhost / # cat sys/kernel/debug/pm_genpd/pm_genpd_summary
-> 
-> Nit: can you put a "/" before "sys" here and elsewhere in your patches?
-> 
-> > domain                          status          slaves
-> > /device                                             runtime status
-> > ----------------------------------------------------------------------
-> > pd_gpu                          on
-> > /devices/platform/ff9a0000.gpu                      active
-> > pd_vopl                         off
-> > /devices/platform/ff8f0000.vop                      suspended
-> > pd_vopb                         off
-> > /devices/platform/ff900000.vop                      suspended
-> > pd_vo                           off             pd_vopb, pd_vopl
-> > pd_hdcp                         off
-> > ...
-> > pd_iep                          off
-> > pd_vcodec                       off
-> > pd_vdu                          off
-> > 
-> > QOS:
-> > localhost / # cat sys/kernel/debug/pm_qos/
-> > cpu_dma_latency     network_latency
-> > memory_bandwidth    network_throughput
-> 
-> What is this supposed to be showing exactly?  You can't "cat" a
-> directory, so maybe you meant "ls"?
-> 
-> Also, each of these files contains the string "Empty!" and these files
-> seem fairly unconnected to your patch.  Those files exist both before
-> and after your patch and nothing that I can see in the Rockchip QoS
-> stuff hooks up to the generic Linux QoS infrastructure.  The power
-> domains just save and restore the QoS--they don't actually allow
-> settting it.
+The patch
 
-personally, I would just drop that debugfs-dump, as I don't see what we gain 
-from it :-).
+   regmap: Support bulk writes for devices without raw formatting
 
-> 
-> > Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > ---
+has been applied to the regmap tree at
 
-[...]
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
 
-> > +       pmu: power-management@ff310000 {
-> > +               compatible = "rockchip,rk3399-pmu", "syscon",
-> > "simple-mfd"; +               reg = <0x0 0xff310000 0x0 0x1000>;
-> > +
-> > +               power: power-controller {
-> > +                       status = "okay";
-> > +                       compatible = "rockchip,rk3399-power-controller";
-> > +                       #power-domain-cells = <1>;
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
-> > +
-> > +                       pd_vdu {
-> > +                               reg = <RK3399_PD_VDU>;
-> > +                               clocks = <&cru ACLK_VDU>,
-> > +                                        <&cru HCLK_VDU>;
-> > +                               pm_qos = <&qos_video_m1_r>,
-> > +                                        <&qos_video_m1_w>;
-> > +                       };
-> > +                       pd_vcodec {
-> > +                               reg = <RK3399_PD_VCODEC>;
-> > +                               clocks = <&cru ACLK_VCODEC>,
-> > +                                        <&cru HCLK_VCODEC>;
-> > +                               pm_qos = <&qos_video_m0>;
-> > +                       };
-> > +                       pd_iep {
-> > +                               reg = <RK3399_PD_IEP>;
-> > +                               clocks = <&cru ACLK_IEP>,
-> > +                                        <&cru HCLK_IEP>;
-> > +                               pm_qos = <&qos_iep>;
-> > +                       };
-> > +                       pd_rga {
-> > +                               reg = <RK3399_PD_RGA>;
-> > +                               clocks = <&cru ACLK_RGA>,
-> > +                                        <&cru HCLK_RGA>;
-> > +                               pm_qos = <&qos_rga_r>,
-> > +                                        <&qos_rga_w>;
-> > +                       };
-> > +                       pd_vio {
-> > +                               reg = <RK3399_PD_VIO>;
-> > +                               #address-cells = <1>;
-> > +                               #size-cells = <0>;
-> > +
-> > +                               pd_isp0 {
-> > +                                       reg = <RK3399_PD_ISP0>;
-> > +                                       clocks = <&cru ACLK_ISP0>,
-> > +                                                <&cru HCLK_ISP0>;
-> > +                                       pm_qos = <&qos_isp0_m0>,
-> > +                                                <&qos_isp0_m1>;
-> > +                               };
-> > +                               pd_isp1 {
-> > +                                       reg = <RK3399_PD_ISP1>;
-> > +                                       clocks = <&cru ACLK_ISP1>,
-> > +                                                <&cru HCLK_ISP1>;
-> > +                                       pm_qos = <&qos_isp1_m0>,
-> > +                                                <&qos_isp1_m1>;
-> > +                               };
-> > +                               pd_hdcp {
-> > +                                       reg = <RK3399_PD_HDCP>;
-> > +                                       clocks = <&cru ACLK_HDCP>,
-> > +                                                <&cru HCLK_HDCP>,
-> > +                                                <&cru PCLK_HDCP>;
-> > +                                       pm_qos = <&qos_hdcp>;
-> > +                               };
-> > +                               pd_vo {
-> > +                                       reg = <RK3399_PD_VO>;
-> > +                                       #address-cells = <1>;
-> > +                                       #size-cells = <0>;
-> > +
-> > +                                       pd_vopb {
-> > +                                               reg = <RK3399_PD_VOPB>;
-> > +                                               clocks = <&cru
-> > ACLK_VOP0>, +                                                       
-> > <&cru HCLK_VOP0>; +                                              
-> > pm_qos = <&qos_vop_big_r>, +                                           
-> >             <&qos_vop_big_w>; +                                      
-> > };
-> > +                                       pd_vopl {
-> > +                                               reg = <RK3399_PD_VOPL>;
-> > +                                               clocks = <&cru
-> > ACLK_VOP1>, +                                                       
-> > <&cru HCLK_VOP1>; +                                              
-> > pm_qos = <&qos_vop_little>; +                                       };
-> > +                               };
-> > +                       };
-> > +                       pd_gpu {
-> > +                               reg = <RK3399_PD_GPU>;
-> > +                               clocks = <&cru ACLK_GPU>;
-> > +                               pm_qos = <&qos_gpu>;
-> > +                       };
-> 
-> Again a nitty sort order question.  Is there a reason not to make
-> things alphabetical?  AKA: pd_gpu, pd_iep, pd_rga, ...
-> 
-> ...and inside pd_vio should be alphabetical too?
-> 
-> In the TRM it looks like some of the power domains are grouped
-> together (like all the domains under LOGIC or CENTERLOGIC).  If
-> keeping that grouping makes sense here then you should add a comment
-> at the start of each group and sort the groups sanely (and sort within
-> each group).
-> 
-> It looks like there are also more power domains that you haven't
-> listed here (like PD_GMAC, for instance, or PD_CORE_L).  Are you
-> planning to add those in a followon patch?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-that reminds me, nodes with a reg property should have the base address in 
-the node name as well. Using the constant works nicely, as can be seen on 
-the rk3288 where we have for example:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-	pd_vio@RK3288_PD_VIO
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Heiko
+Thanks,
+Mark
+
+>From 5bf75b44972a7edffa9f52cddb291d66bc16a4d6 Mon Sep 17 00:00:00 2001
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Mon, 20 Jun 2016 10:52:11 +0800
+Subject: [PATCH] regmap: Support bulk writes for devices without raw
+ formatting
+
+When doing a bulk writes from a device which lacks raw I/O support we
+fall back to doing register at a time reads but we still use the raw
+formatters in order to render the data into the word size used by the
+device (since bulk reads still operate on the device word size rather
+than unsigned ints).  This means that devices without raw formatting
+such as those that provide reg_read() are not supported.  Provide
+handling for them by copying the values read into native endian values
+of the appropriate size.
+
+This complements commit d5b98eb12420 ("regmap: Support bulk reads for
+devices without raw formatting").
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/base/regmap/regmap.c | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index df2d2ef5d6b3..51fa7d66a393 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1777,8 +1777,6 @@ int regmap_bulk_write(struct regmap *map, unsigned int reg, const void *val,
+ 	size_t val_bytes = map->format.val_bytes;
+ 	size_t total_size = val_bytes * val_count;
+ 
+-	if (map->bus && !map->format.parse_inplace)
+-		return -EINVAL;
+ 	if (!IS_ALIGNED(reg, map->reg_stride))
+ 		return -EINVAL;
+ 
+@@ -1789,7 +1787,8 @@ int regmap_bulk_write(struct regmap *map, unsigned int reg, const void *val,
+ 	 *
+ 	 * The first if block is used for memory mapped io. It does not allow
+ 	 * val_bytes of 3 for example.
+-	 * The second one is used for busses which do not have this limitation
++	 * The second one is for busses that do not provide raw I/O.
++	 * The third one is used for busses which do not have these limitations
+ 	 * and can write arbitrary value lengths.
+ 	 */
+ 	if (!map->bus) {
+@@ -1825,6 +1824,32 @@ int regmap_bulk_write(struct regmap *map, unsigned int reg, const void *val,
+ 		}
+ out:
+ 		map->unlock(map->lock_arg);
++	} else if (map->bus && !map->format.parse_inplace) {
++		const u8 *u8 = val;
++		const u16 *u16 = val;
++		const u32 *u32 = val;
++		unsigned int ival;
++
++		for (i = 0; i < val_count; i++) {
++			switch (map->format.val_bytes) {
++			case 4:
++				ival = u32[i];
++				break;
++			case 2:
++				ival = u16[i];
++				break;
++			case 1:
++				ival = u8[i];
++				break;
++			default:
++				return -EINVAL;
++			}
++
++			ret = regmap_write(map, reg + (i * map->reg_stride),
++					   ival);
++			if (ret)
++				return ret;
++		}
+ 	} else if (map->use_single_write ||
+ 		   (map->max_raw_write && map->max_raw_write < total_size)) {
+ 		int chunk_stride = map->reg_stride;
+-- 
+2.8.1
