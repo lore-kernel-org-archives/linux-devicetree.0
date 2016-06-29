@@ -1,61 +1,59 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 3/6] Clocksource: add nuc970 clocksource driver
-Date: Wed, 29 Jun 2016 18:10:55 +0200
-Message-ID: <5773F30F.3020201@linaro.org>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
- <1466851042-22239-4-git-send-email-vw@iommu.org> <4184925.Jh1dkPbmzX@wuerfel>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD, Regulator and ARM for v4.8
+Date: Wed, 29 Jun 2016 17:25:16 +0100
+Message-ID: <20160629162516.GB1707@dell>
+References: <20160629055322.23038-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4184925.Jh1dkPbmzX@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wan Zongshun <vw@iommu.org>
-Cc: devicetree@vger.kernel.org, Wan Zongshun <mcuos.com@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160629055322.23038-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, carlo@caione.org, b.galvani@gmail.com, max.oss.09@gmail.com, marcel@ziswiler.com, linux@armlinux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDYvMjkvMjAxNiAwNToyNSBQTSwgQXJuZCBCZXJnbWFubiB3cm90ZToKPiBPbiBTYXR1cmRh
-eSwgSnVuZSAyNSwgMjAxNiA2OjM3OjE5IFBNIENFU1QgV2FuIFpvbmdzaHVuIHdyb3RlOgo+PiBU
-aGlzIHBhdGNoIGlzIHRvIGFkZCBudWM5NzAgY2xvY2tzb3VyY2UgZHJpdmVyIHN1cHBvcnQuCj4+
-Cj4+IFNpZ25lZC1vZmYtYnk6IFdhbiBab25nc2h1biA8bWN1b3MuY29tQGdtYWlsLmNvbT4KPj4g
-LS0tCj4+ICAgLi4uL21hY2gtdzkweDkwMC9pbmNsdWRlL21hY2gvbnVjOTcwLXJlZ3MtdGltZXIu
-aCAgfCAgNDQgKysrKysKPj4gICBkcml2ZXJzL2Nsb2Nrc291cmNlL0tjb25maWcgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgOCArCj4+ICAgZHJpdmVycy9jbG9ja3NvdXJjZS9NYWtlZmlsZSAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+PiAgIGRyaXZlcnMvY2xvY2tzb3VyY2UvdGlt
-ZXItbnVjOTAwLmMgICAgICAgICAgICAgICAgIHwgMjA3ICsrKysrKysrKysrKysrKysrKysrKwo+
-PiAgIDQgZmlsZXMgY2hhbmdlZCwgMjYwIGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAx
-MDA2NDQgYXJjaC9hcm0vbWFjaC13OTB4OTAwL2luY2x1ZGUvbWFjaC9udWM5NzAtcmVncy10aW1l
-ci5oCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItbnVj
-OTAwLmMKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtdzkweDkwMC9pbmNsdWRlL21h
-Y2gvbnVjOTcwLXJlZ3MtdGltZXIuaCBiL2FyY2gvYXJtL21hY2gtdzkweDkwMC9pbmNsdWRlL21h
-Y2gvbnVjOTcwLXJlZ3MtdGltZXIuaAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAw
-MDAwMDAwLi40M2Q3ZThiCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvYXJjaC9hcm0vbWFjaC13
-OTB4OTAwL2luY2x1ZGUvbWFjaC9udWM5NzAtcmVncy10aW1lci5oCj4KPiBQbGVhc2UgbW92ZSB0
-aGUgY29udGVudHMgb2YgdGhlIGhlYWRlciBmaWxlIGludG8gdGhlIGRyaXZlci4gV2UgdHJ5IHRv
-IG5vdAo+IGhhdmUgYW55IG5ldyBtYWNoLyouaCBoZWFkZXJzLgo+Cj4+ICsKPj4gK3N0YXRpYyB1
-bnNpZ25lZCBpbnQgdGltZXIwX2xvYWQ7Cj4+ICtzdGF0aWMgdm9pZCBfX2lvbWVtICp0bXJfYmFz
-ZTsKPj4gKwo+PiArc3RhdGljIGludCBudWM5NzBfY2xvY2tldmVudF9zZXRfb25lc2hvdChzdHJ1
-Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpldnQpCj4+ICt7Cj4+ICsJdW5zaWduZWQgaW50IHZhbDsK
-Pj4gKwo+PiArCXZhbCA9IF9fcmF3X3JlYWRsKHRtcl9iYXNlICsgUkVHX1RNUl9UQ1NSMCk7Cj4+
-ICsJdmFsICY9IH4oMHgwMyA8PCAyNyk7Cj4+ICsKPj4gKwl2YWwgfD0gKE9ORVNIT1QgfCBDT1VO
-VEVOIHwgSU5URU4gfCBQUkVTQ0FMRSk7Cj4+ICsKPj4gKwlfX3Jhd193cml0ZWwodmFsLCB0bXJf
-YmFzZSArIFJFR19UTVJfVENTUjApOwo+PiArCXJldHVybiAwOwo+PiArfQo+PiArCj4KPiB3cml0
-ZWwoKSBpbnN0ZWFkIG9mIF9fcmF3X3dyaXRlbCgpCgpXYW4gWm9uZ3NodW4sCgpGWUkgOiBodHRw
-czovL2xrbWwub3JnL2xrbWwvMjAxNS8xMi8xOC80MjIKCk5vdCBzdXJlIGl0IGRvZXMgYSBub3Rp
-Y2VhYmxlIGRpZmZlcmVuY2Ugb24gYXJtOTI2LgoKVGhhbmtzIEFybmQgZm9yIHRoZSBjbGFyaWZp
-Y2F0aW9uLgoKICAgLS0gRGFuaWVsCgoKLS0gCiAgPGh0dHA6Ly93d3cubGluYXJvLm9yZy8+IExp
-bmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwoKRm9sbG93IExp
-bmFybzogIDxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS9wYWdlcy9MaW5hcm8+IEZhY2Vib29rIHwK
-PGh0dHA6Ly90d2l0dGVyLmNvbS8jIS9saW5hcm9vcmc+IFR3aXR0ZXIgfAo8aHR0cDovL3d3dy5s
-aW5hcm8ub3JnL2xpbmFyby1ibG9nLz4gQmxvZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Enjoy!
+
+The following changes since commit af8c34ce6ae32addda3788d54a7e340cad22=
+516b:
+
+  Linux 4.7-rc2 (2016-06-05 14:31:26 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd=
+-regulator-arm-v4.8
+
+for you to fetch changes up to a370f60a58ec7bad7045803041524ccdc4d79c75=
+:
+
+  mfd: rn5t618: Register restart handler (2016-06-29 10:11:35 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, Regulator and ARM, due for v4.8
+
+----------------------------------------------------------------
+Stefan Agner (5):
+      ARM: dts: meson: minix-neo-x8: define PMIC as power controller
+      mfd: rn5t618: Add Ricoh RN5T567 PMIC support
+      regulator: rn5t618: Add RN5T567 PMIC support
+      mfd: rn5t618: Register power off callback optionally
+      mfd: rn5t618: Register restart handler
+
+ Documentation/devicetree/bindings/mfd/rn5t618.txt | 19 +++---
+ arch/arm/boot/dts/meson8-minix-neo-x8.dts         |  1 +
+ drivers/mfd/Kconfig                               |  7 ++-
+ drivers/mfd/rn5t618.c                             | 70 +++++++++++++++=
+++++----
+ drivers/regulator/Kconfig                         |  5 +-
+ drivers/regulator/rn5t618-regulator.c             | 40 +++++++++++--
+ include/linux/mfd/rn5t618.h                       | 13 +++++
+ 7 files changed, 126 insertions(+), 29 deletions(-)
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
