@@ -1,55 +1,42 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: Re: [PATCH v2 3/8] Input: synaptics-rmi4: Add dribble and palm
- gesture parameters to device tree
-Date: Tue, 28 Jun 2016 17:44:14 -0700
-Message-ID: <577319DE.1070700@synaptics.com>
-References: <1466813917-15841-1-git-send-email-aduggan@synaptics.com>
- <20160628205606.GL3737@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160628205606.GL3737@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Nick Dyer <nick.dyer@itdev.co.uk>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: NSP: Specify RAM amount for BCM958625HR board
+Date: Tue, 28 Jun 2016 18:04:21 -0700
+Message-ID: <1467162261-14128-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BROADCOM IPROC ARM
+	ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Add 512MB of memory starting at physical offset 0x6000_0000.
 
-On 06/28/2016 01:56 PM, Rob Herring wrote:
-> On Fri, Jun 24, 2016 at 05:18:37PM -0700, Andrew Duggan wrote:
->> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
->> ---
->>   .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt          |  4 ++++
->>   drivers/input/rmi4/rmi_2d_sensor.c                            | 11 +++++++++++
->>   2 files changed, 15 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->> index f2c30c8..86cb8e3 100644
->> --- a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->> @@ -37,6 +37,10 @@ Optional Properties:
->>   				disable reporing absolute position data.
->>   - syna,rezero-wait-ms: Time in miliseconds to wait after issuing a rezero
->>   				command.
->> +- syna,dribble-enable: Enable reporting of dribble packets in the firmware.
->> +- syna,dribble-disable: Disable reporting of dribble packets in the firmware.
->> +- syna,palm-detect-enable: Enable reporting the palm detect gesture in the firmware.
->> +- syna,palm-detect-disable: Disable reporting the palm detect gesture in the firmware.
-> No need for enable and disable. Make the common case be no property and
-> the property is the opposite.
+Fixes: 65e9ac208c8e ("ARM: dts: NSP: Add new DT file for bcm958625hr")
+Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm958625hr.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-There are actually three states here. No property means to use the 
-default value set in the firmware. The enable parameter means that the 
-default should be overwritten and the feature should be explicitly 
-enabled. Disable means the feature should be explicitly disabled. An 
-earlier version of this patch had one parameter per feature which needed 
-to be set to 0, 1, or 2 which correspond the the values of an enum in 
-the driver. It was suggested that the current approach would be clearer 
-then setting 0, 1, or 2.
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index 585ec9de00eb..747f9ca9d03f 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -45,6 +45,10 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	memory {
++		reg = <0x60000000 0x20000000>;
++	};
+ };
+ 
+ &nand {
+-- 
+2.7.4
 
-Thanks for reviewing,
-Andrew
-
-> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
