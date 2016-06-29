@@ -1,40 +1,176 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [RFC PATCH 3/5] thermal: Add support for the thermal sensor on
- A23/33
-Date: Wed, 29 Jun 2016 21:52:39 +0800
-Message-ID: <1216731467208359@web29g.yandex.ru>
-References: <20160628101325.2522-1-icenowy@aosc.xyz>
- <20160628101325.2522-3-icenowy@aosc.xyz>
- <20160628114640.GE5550@lukather> <60021467122182@web19j.yandex.ru>
- <20160629121021.GD6095@lukather>
- <1112501467207099@web30g.yandex.ru> <20160629134209.GE6095@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160629134209.GE6095@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "emilio@elopez.com.ar" <emilio@elopez.com.ar>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "wens@csie.org" <wens@csie.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: [PATCH v4 21/22] sh: Renesas RTS7751R2Dplus (a,k.a R2Dplus) IRQCHIP Driver
+Date: Wed, 29 Jun 2016 22:41:06 +0900
+Message-ID: <1467207667-15768-22-git-send-email-ysato@users.sourceforge.jp>
+References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
-CgoyOS4wNi4yMDE2LCAyMTo0MiwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gT24gV2VkLCBKdW4gMjksIDIwMTYgYXQgMDk6MzE6MzlQTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqBIb3dldmVyLCBzdW44aXczLzUgdGhzIGlzIG5v
-dCBldmVuIGEgR1BBREMuLi4gSXQncyBhIHNwZWNpZmllZCBJUCwKPj4gwqBvbmx5IHVzZWQgYXMg
-YW4gQURDIHN1aXRhYmxlIGZvciB0ZW1wZXJhdHVyZSBzZW5zb3IuCj4KPiBJdCBkb2Vzbid0IG1h
-dHRlci4gSXQncyB0aGUgc2FtZSBJUCwgbGFiZWxsZWQgZGlmZmVyZW50bHkuCj4KPiBNYXhpbWUK
-Pgo+IC0tCj4gTWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCwg
-S2VybmVsIGFuZCBBbmRyb2lkIGVuZ2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNv
-bQoKT0ssIG5vdyBJIHdpbGwgc2VuZCBvbmx5IFBMTDIgZHJpdmVyLgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Changes v4
+- split patch.
+- remove unneeded #address
+- update example
+
+Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+---
+ .../interrupt-controller/renesas-r2dplus.txt       | 38 ++++++++++
+ drivers/irqchip/Makefile                           |  2 +-
+ drivers/irqchip/irq-renesas-r2dplus.c              | 88 ++++++++++++++++++++++
+ 3 files changed, 127 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
+ create mode 100644 drivers/irqchip/irq-renesas-r2dplus.c
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
+new file mode 100644
+index 0000000..5b74da4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
+@@ -0,0 +1,38 @@
++DT bindings for the Renesas R0P751RLC0011RL (R2Dplus) interrupt controller
++
++Required properties:
++
++  - compatible: has to be "renesas,r2dplus-intc".
++
++  - reg: Base address and length of interrupt controller register.
++
++  - interrupt-controller: Identifies the node as an interrupt controller.
++
++  - #interrupt-cells: has to be <1>: an interrupt index.
++
++  - interrupt-map: Interrupt mapping on parent controller.
++
++Example
++-------
++
++	fpgaintc: fpga@a4000000 {
++		compatible = "renesas,r2dplus-intc";
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		reg = <0xa4000000 0x40>;
++		interrupt-map=<0 &shintc evt2irq(0x200)>,
++		              <1 &shintc evt2irq(0x220)>,
++		              <2 &shintc evt2irq(0x240)>,
++			      <3 &shintc evt2irq(0x260)>,
++		              <4 &shintc evt2irq(0x280)>,
++			      <5 &shintc evt2irq(0x2a0)>,
++		              <6 &shintc evt2irq(0x2c0)>,
++			      <7 &shintc evt2irq(0x2e0)>,
++		              <8 &shintc evt2irq(0x300)>,
++		              <9 &shintc evt2irq(0x320)>,
++			      <10 &shintc evt2irq(0x340)>,
++		              <11 &shintc evt2irq(0x360)>,
++			      <12 &shintc evt2irq(0x380)>,
++		              <13 &shintc evt2irq(0x3a0)>,
++			      <14 &shintc evt2irq(0x3c0)>,
++	};
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 5e225cf..1e0f1c3 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -69,4 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
+ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
+ obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
+ obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
+-obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o irq-io-landisk.o
++obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o irq-io-landisk.o irq-renesas-r2dplus.o
+diff --git a/drivers/irqchip/irq-renesas-r2dplus.c b/drivers/irqchip/irq-renesas-r2dplus.c
+new file mode 100644
+index 0000000..3f80775
+--- /dev/null
++++ b/drivers/irqchip/irq-renesas-r2dplus.c
+@@ -0,0 +1,88 @@
++/*
++ * Renesas RTS7751R2D+ FPGA IRQ driver
++ *
++ * Copyright 2016 Yoshinori Sato <ysato@users.sourceforge.jp>
++ */
++
++#include <linux/init.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqdomain.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/io.h>
++
++static const u16 mask_bit[] = {
++	BIT(11),
++	BIT(9),
++	BIT(8),
++	BIT(12),
++	BIT(10),
++	BIT(6),
++	BIT(5),
++	BIT(4),
++	BIT(7),
++	BIT(14),
++	BIT(13),
++	BIT(0),
++	BIT(15),
++};
++
++static void r2dplus_mask_irq(struct irq_data *data)
++{
++	u16 mask = __raw_readw(data->chip_data);
++
++	mask &= ~mask_bit[data->irq];
++	__raw_writew(mask, data->chip_data);
++}
++
++static void r2dplus_unmask_irq(struct irq_data *data)
++{
++	u16 mask = __raw_readw(data->chip_data);
++
++	mask |= mask_bit[data->irq];
++	__raw_writew(mask, data->chip_data);
++}
++
++static struct irq_chip fpga_irq_chip = {
++	.name		= "R2DPLUS-FPGA",
++	.irq_unmask	= r2dplus_unmask_irq,
++	.irq_mask	= r2dplus_mask_irq,
++};
++
++static int fpga_map(struct irq_domain *d, unsigned int virq,
++		    irq_hw_number_t hw_irq_num)
++{
++	irq_set_chip_and_handler(virq, &fpga_irq_chip,
++				 handle_simple_irq);
++	irq_set_chip_data(virq, d->host_data);
++
++	return 0;
++}
++
++static struct irq_domain_ops irq_ops = {
++	.xlate	= irq_domain_xlate_onecell,
++	.map	= fpga_map,
++};
++
++static int __init r2dplus_intc_of_init(struct device_node *intc,
++				    struct device_node *parent)
++{
++	struct irq_domain *domain, *pdomain;
++	int num_irqpin;
++	void *baseaddr;
++
++	baseaddr = of_iomap(intc, 0);
++	pdomain = irq_find_host(parent);
++	of_get_property(intc, "interrupt-map", &num_irqpin);
++	num_irqpin /= sizeof(u32) * 3;
++	domain = irq_domain_create_hierarchy(pdomain, 0, num_irqpin,
++					     of_node_to_fwnode(intc),
++					     &irq_ops, baseaddr);
++	if (!domain)
++		panic("%s: unable to create IRQ domain\n", intc->full_name);
++	irq_domain_associate_many(domain, 0, 0, 16);
++	return 0;
++}
++
++IRQCHIP_DECLARE(cpld_intc, "renesas,r2dplus-intc", r2dplus_intc_of_init);
+-- 
+2.7.0
