@@ -1,83 +1,81 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Wed, 29 Jun 2016 20:01:34 +0200
-Message-ID: <ea10ff70-26e6-e151-5cea-c54bd12a054c@redhat.com>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
- <CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
- <b49a9e4b-d591-d978-8005-413f39ebf2bd@redhat.com>
- <871t3gdj6p.fsf@purkki.adurom.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "mfd: rn5t618: Register power off callback optionally" to the regulator tree
+Date: Wed, 29 Jun 2016 19:05:18 +0100
+Message-ID: <E1bIJrS-0003eP-5Y@finisterre>
+References: <20160626011515.4428-5-stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <871t3gdj6p.fsf-5ukZ45wKbUHoml4zekdYB16hYfS7NtTn@public.gmane.org>
+In-Reply-To: <20160626011515.4428-5-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, max.oss.09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The patch
 
-On 29-06-16 19:00, Kalle Valo wrote:
-> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
->
->> Hi,
->>
->> On 29-06-16 16:42, Jonas Gorski wrote:
->>> Hi,
->>>
->>> On 29 June 2016 at 16:04, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>> Add a brcm,nvram_file_name dt property to allow overruling the default
->>>> nvram filename for sdio devices. The idea is that we can specify a
->>>> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
->>>> with an ap6210 wifi sdio module and ship this in linux-firmware, so
->>>> that wifi will work out of the box, without requiring users to find
->>>> and then manually install the right nvram file for their board.
->>>
->>> Directly defining a filename doesn't seem like a good OS-agnostic
->>> approach. Maybe an alternative would be to add a model-property to the
->>> nodes (this is allowed) and make brcmfmac to request
->>> "FWFILENAME-<model>" as firmware if set? That would leave it to the OS
->>> on how the filename is set.
->>
->> It only defines the base-filename, not the entire path, how / where
->> this file is searched for / loaded-from is then left up to the os
->
-> It's still a bad idea. The filename, including the path, should be
-> created in the driver. Can't you provide chipname (or similar) via
-> device tree and then the driver can choose what image to use?
+   mfd: rn5t618: Register power off callback optionally
 
-No, the driver already does that, but this is not ...
+has been applied to the regulator tree at
 
-> Can you tell more about the naming the firmware image, how does it work
-> exactly?
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-About firmware, this is about the nvram file which is board specific,
-rather then chip specific.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Typical wifi devices will have some sort of non volatile storage
-on board to not only store the ethernet(mac) address, but also
-to contain e.g. info about the antenna gain so that the firmware
-and/or the driver can take the antenna gain into account and ensure
-that they never exceed the maximum allowed broadcast strength.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-However on some embedded devices there is no non-volatile storage
-for the wifi (for cost reasons) and instead this configuration info
-(which is board / pcb specific) is loaded in the form of a
-file which contains the contents which would normally be in the
-non-volatile storage.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Since we are dealing with a per-board config-file here, which is
-loaded from the os filesystem we really need to specify a basename
-here as the list of possible boards is endless, so we cannot
-have a lookup table in the driver.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Regards,
+Thanks,
+Mark
 
-Hans
+>From fd65ae4cb65a9e41af44e37318afb39045d86bf2 Mon Sep 17 00:00:00 2001
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Date: Tue, 28 Jun 2016 22:53:21 -0700
+Subject: [PATCH] mfd: rn5t618: Register power off callback optionally
 
+Only register power off if the PMIC is defined as system power
+controller (see Documentation/devicetree/bindings/power/
+power-controller.txt).
 
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Reviewed-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/mfd/rn5t618.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index c86160d3a773..1831740d9016 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -102,9 +102,13 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+ 		return ret;
+ 	}
+ 
+-	if (!pm_power_off) {
+-		rn5t618_pm_power_off = priv;
+-		pm_power_off = rn5t618_power_off;
++	if (of_device_is_system_power_controller(i2c->dev.of_node)) {
++		if (!pm_power_off) {
++			rn5t618_pm_power_off = priv;
++			pm_power_off = rn5t618_power_off;
++		} else {
++			dev_warn(&i2c->dev, "Poweroff callback already assigned\n");
++		}
+ 	}
+ 
+ 	return 0;
+-- 
+2.8.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
