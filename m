@@ -1,47 +1,99 @@
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 20/21] phy: Add support for Qualcomm's USB HSIC phy
-Date: Wed, 29 Jun 2016 11:54:49 -0700
-Message-ID: <146722648915.16253.2287256112087912402@sboyd-linaro>
-References: <20160626072838.28082-1-stephen.boyd@linaro.org>
- <20160626072838.28082-21-stephen.boyd@linaro.org>
- <57723A21.3060602@baylibre.com>
- <146715109651.31418.4819151138932336863@sboyd-linaro>
- <57739203.9000601@baylibre.com>
+From: Bruno Herrera <bruherrera@gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: Document the STM32 USB OTG DWC2 core
+ binding
+Date: Wed, 29 Jun 2016 15:56:23 -0300
+Message-ID: <CAF3+Tqe_83zuaxWfp2sv6pZ70XzkbfZ4V4w+n8wCFAApvRirdg@mail.gmail.com>
+References: <1466562349-5043-1-git-send-email-bruherrera@gmail.com>
+ <1466562349-5043-3-git-send-email-bruherrera@gmail.com>
+ <20160624154118.GA4598@rob-hp-laptop>
+ <CAF3+Tqe05kXExob_62w80BBbXz6p01-WwXM1+R6ecp0JtsgviA@mail.gmail.com>
+ <20160628205441.GA3737@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57739203.9000601-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160628205441.GA3737@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, alexandre.torgue@st.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, johnyoun@synopsys.com, gregkh@linuxfoundation.org, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kumar Gala <galak@codeaurora.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Neil Armstrong (2016-06-29 02:16:51)
-> On 06/28/2016 11:58 PM, Stephen Boyd wrote:
-> > Quoting Neil Armstrong (2016-06-28 01:49:37)
-> >> On 06/26/2016 09:28 AM, Stephen Boyd wrote:
-> >>> +     uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
-> >>> +     if (IS_ERR(clk))
-> >>> +             return PTR_ERR(clk);
-> >>
-> >> Hi Stephen,
-> >>
-> >> In the bindings the cal_sleep is marked optional, and I think should be since AFAIK
-> >> it's not present on MDM9615 for example.
-> > 
-> > The cal_sleep clk is just the sleep clk then (should be a board clk in
-> > DT). Sometimes there's a gate in GCC to allow us to turn it off, other
-> > times there isn't. Either way, it's always wired there so I'll update
-> > the binding to say it isn't optional.
-> 
-> Sorry I don't understand !
-> What should I do if GCC does not provide a gate here ? And looking at the driver, it could be optional.
+On Tue, Jun 28, 2016 at 5:54 PM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Jun 24, 2016 at 03:51:18PM -0300, Bruno Herrera wrote:
+>> On Fri, Jun 24, 2016 at 12:41 PM, Rob Herring <robh@kernel.org> wrote:
+>> > On Tue, Jun 21, 2016 at 11:25:49PM -0300, Bruno Herrera wrote:
+>> >> Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
+>> >> ---
+>> >>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+>> >>  1 file changed, 1 insertion(+)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+>> >> index 20a68bf..79e5370 100644
+>> >> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+>> >> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+>> >> @@ -11,6 +11,7 @@ Required properties:
+>> >>    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
+>> >>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
+>> >>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
+>> >> +  - st,stm32-fsotg: The DWC2 USB controller instance in STM32F4 SoCs in FS mode;
+>> >
+>> > This should go above snps,dwc2.
+>> >
+>> Ok, tks!
+>>
+>> > What determines FS mode vs. HS?
+>> >
+>> Its more HW design decision.
+>> STM32F429/439/469 has two OTG controllers, one that is FS (internal
+>> phy) and other that is HS (but can also work in FS mode with
+>> internal/external phy)
+>> This bind work with both cores FS and HS working with the internal PHY.
+>>
+>> I tested the following configurations:
+>> 1 - STM32F429I-DISCOv1 board (OTG HS working in FS mode internal PHY)
+>> 2 - STM32F469I-DISCO board (OTG FS)
+>>
+>> I did not tested OTG HS core working in FS mode with external PHY (I2C).
+>
+> You shouldn't be setting the compatible string based on which mode you
+> want. So for the HS block, you need a different compatible string than
+> the FS block and set the speed in another way (not sure if we have a
+> standard way). Or perhaps the phy should determine the speed.
 
-You should set the property to point to &sleep_clk which should be under
-the "clocks" node at the root of the OF tree. For example, see the
-sleep_clk node in arch/arm/boot/dts/qcom-apq8064.dtsi.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I understand but I dont see how to fix it properly unless we add a
+some specific STM32 properties in the DT or in the dwc2_core_params.
+In fact there are two cores, and they are different in terms of
+functionality (despite of the type of the PHY).
+One core is for FS and other is for HS, so they could/should have
+different compatible strings because they have different
+configurations and are different piece of IP/Hardware(The buffer size
+are different, the number of end points and so one, DMA)
+
+But the problem is that the HS core can also support the the FS mode
+and in this case is misleading to have a HS core with an FS compatible
+string.
+Something like that (real case for STM32F429I-DISCO):
+
+&usbotg_hs {
+compatible = "st,stm32-fsotg", "snps,dwc2";
+dr_mode = "host";
+pinctrl-0 = <&usbotg_fs_pins_b>;
+pinctrl-names = "default";
+status = "okay";
+};
+
+Even if the decision is phy based it would lead to a STM32 specific
+logic and we would need to figure out how to represent the internal
+PHY.
+
+Bruno
+>
+> Rob
