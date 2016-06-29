@@ -1,49 +1,51 @@
-From: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 1/2] drm/fsl-dcu: update the panel dt binding document
-Date: Wed, 29 Jun 2016 02:58:13 +0000
-Message-ID: <HE1PR04MB1051B76708D9E3F0F3DB4C56EC230@HE1PR04MB1051.eurprd04.prod.outlook.com>
-References: <1467106748-19314-1-git-send-email-meng.yi@nxp.com>
- <20160628210748.GA10847@rob-hp-laptop>
- <8e8820c0ccfa8e1348a038959da850f8@agner.ch>
+From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Subject: [PATCH V5 1/3] devicetree/bindings: Add binding for operator panel on
+ FSP machines
+Date: Wed, 29 Jun 2016 13:38:37 +1000
+Message-ID: <1467171519-19882-1-git-send-email-sjitindarsingh@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8e8820c0ccfa8e1348a038959da850f8-XLVq0VzYD2Y@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "airlied-cv59FeDIM0c@public.gmane.org" <airlied-cv59FeDIM0c@public.gmane.org>, "emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org" <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au
+Cc: robh@kernel.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, sjitindarsingh@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-
-> >>  Optional properties:
-> >>  - fsl,tcon:		The phandle to the timing controller node.
-> >> @@ -24,6 +24,11 @@ dcu: dcu@2ce0000 {
-> >>  	clocks = <&platform_clk 0>, <&platform_clk 0>;
-> >>  	clock-names = "dcu", "pix";
-> >>  	big-endian;
-> >> -	fsl,panel = <&panel>;
-> >>  	fsl,tcon = <&tcon>;
-> >> +
-> >> +	port: port@0 {
-> >
-> > Drop the unit address. With that,
-> 
-> I was going to say add a corresponding reg property and specify address-cells.
-> 
-
-For now, we only have one 'remote-endpoint', you mean maybe we should
-use 'ports' that prepare for multiple connections?
-
-> So is it ok to also create a port without address?
-> 
-
-It works fine, I think it is ok.
-
-Best Regards,
-Meng
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIGEgYmluZGluZyB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJw
+Yy9vcGFsCihvcHBhbmVsLW9wYWwudHh0KSBmb3IgdGhlIG9wZXJhdG9yIHBhbmVsIHdoaWNoIGlz
+IHByZXNlbnQgb24gSUJNClBvd2VyIFN5c3RlbXMgbWFjaGluZXMgd2l0aCBGU1BzLgoKU2lnbmVk
+LW9mZi1ieTogU3VyYWogSml0aW5kYXIgU2luZ2ggPHNqaXRpbmRhcnNpbmdoQGdtYWlsLmNvbT4K
+QWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+CkFja2VkLWJ5OiBTdGV3YXJ0
+IFNtaXRoIDxzdGV3YXJ0QGxpbnV4LnZuZXQuaWJtLmNvbT4KCi0tLQoKQ2hhbmdlIExvZzoKClYx
+IC0+IFYyOgoJLSBOb3RoaW5nClYyIC0+IFYzOgoJLSBDaGFuZ2UgIklCTSBwc2VyaWVzIG1hY2hp
+bmVzIiB0byAiSUJNIFBvd2VyIFN5c3RlbXMgbWFjaGluZXMiCglpbiB0aGUgY29tbWl0IG1lc3Nh
+Z2UgZm9yIGltcHJvdmVkIGNsYXJpdHkuClYzIC0+IFY1OgoJLSBOb3RoaW5nCi0tLQogLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9vcGFsL29wcGFuZWwtb3BhbC50eHQgICAgICB8IDE0
+ICsrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL29w
+YWwvb3BwYW5lbC1vcGFsLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9wb3dlcnBjL29wYWwvb3BwYW5lbC1vcGFsLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL29wYWwvb3BwYW5lbC1vcGFsLnR4dApuZXcgZmls
+ZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5kZmZiNzkxCi0tLSAvZGV2L251bGwKKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvb3BhbC9vcHBhbmVsLW9w
+YWwudHh0CkBAIC0wLDAgKzEsMTQgQEAKK0lCTSBPUEFMIE9wZXJhdG9yIFBhbmVsIEJpbmRpbmcK
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KKworUmVxdWlyZWQgcHJvcGVydGllczoK
+Ky0gY29tcGF0aWJsZSA6IFNob3VsZCBiZSAiaWJtLG9wYWwtb3BwYW5lbCIuCistICNsaW5lcyAg
+ICAgOiBOdW1iZXIgb2YgbGluZXMgb24gdGhlIG9wZXJhdG9yIHBhbmVsIGUuZy4gPDB4Mj4uCist
+ICNsZW5ndGggICAgOiBOdW1iZXIgb2YgY2hhcmFjdGVycyBwZXIgbGluZSBvZiB0aGUgb3BlcmF0
+b3IgcGFuZWwgZS5nLiA8MHgxMD4uCisKK0V4YW1wbGU6CisJb3BwYW5lbCB7CisJCWNvbXBhdGli
+bGUgPSAiaWJtLG9wYWwtb3BwYW5lbCI7CisJCSNsaW5lcyA9IDwweDI+OworCQkjbGVuZ3RoID0g
+PDB4MTA+OworCX07Ci0tIAoyLjUuNQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlz
+dHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMt
+ZGV2
