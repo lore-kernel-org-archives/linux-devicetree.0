@@ -1,52 +1,37 @@
-From: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 0/3] add device tree support for rtc-rv8803
-Date: Wed, 29 Jun 2016 16:39:58 +0200
-Message-ID: <1467211201-17252-1-git-send-email-dirk.behme@de.bosch.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name dt property
+Date: Wed, 29 Jun 2016 16:42:32 +0200
+Message-ID: <CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDCMXBNSKAIMLO6PXMCRUBCHKDM76-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467209074-15634-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Hi,
 
-Changes v2:
-- rename mc to microcrystal
-- rename vdetoff to vdet-disable
+On 29 June 2016 at 16:04, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Add a brcm,nvram_file_name dt property to allow overruling the default
+> nvram filename for sdio devices. The idea is that we can specify a
+> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
+> with an ap6210 wifi sdio module and ship this in linux-firmware, so
+> that wifi will work out of the box, without requiring users to find
+> and then manually install the right nvram file for their board.
 
-Changes v3:
-- remove of_device_id patch
-- use device type instead of of_device_is_compatible
+Directly defining a filename doesn't seem like a good OS-agnostic
+approach. Maybe an alternative would be to add a model-property to the
+nodes (this is allowed) and make brcmfmac to request
+"FWFILENAME-<model>" as firmware if set? That would leave it to the OS
+on how the filename is set.
 
-Oleksij Rempel (3):
-  devicetree: Add Micro Crystal AG vendor id
-  dt/bindings: Add bindings for Micro Crystal rv8803
-  rtc: rv8803: Be able to set VDETOFF and SWOFF via devcie tree
 
- .../devicetree/bindings/rtc/epson,rx8900.txt       | 22 ++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- drivers/rtc/rtc-rv8803.c                           | 50 +++++++++++++++++++++-
- 3 files changed, 71 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx8900.txt
-
--- 
-1.9.1
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Regards
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
