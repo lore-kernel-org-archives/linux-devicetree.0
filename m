@@ -1,49 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 29 Jun 2016 17:34:57 +0200
-Message-ID: <3914163.aNiIdzedWT@wuerfel>
-References: <1466812008-26686-1-git-send-email-timur@codeaurora.org> <5679359.84lXZytcOR@wuerfel> <5773E503.3070404@codeaurora.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v5 0/3]  mfd: lp873x: Add lp873x PMIC support
+Date: Wed, 29 Jun 2016 21:14:24 +0530
+Message-ID: <1467215067-6486-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5773E503.3070404@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, robh+dt@kernel.org, j-keerthy@ti.com, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 29, 2016 10:10:59 AM CEST Timur Tabi wrote:
-> Arnd Bergmann wrote:
-> > That's also not how it works: each device starts out with a 32-bit mask,
-> > because that's what historically all PCI devices can do. If a device
-> > is 64-bit DMA capable, it can extend the mask by passing DMA_BIT_MASK(64)
-> > (or whatever it can support), and the platform code checks if that's
-> > possible.
-> 
-> So if it's not possible, then dma_set_mask returns an error, and the 
-> driver should try a smaller mask?  Doesn't that mean that every driver 
-> for a 64-bit device should do this:
-> 
->         for (i = 64; i >=32; i--) {
->                 ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(i));
->                 if (!ret)
->                         break;
->         }
-> 
->         if (ret)
->                 return ret;
-> 
-> Sure, this is overkill, but it seems to me that the driver does not 
-> really know what mask is actually valid, so it has to find the largest 
-> mask that works.
-> 
+The LP873X chip is a power management IC for Portable Navigation Systems
+    and Tablet Computing devices. It contains the following components:
 
-Usually drivers try 64-bit mask and 32-bit masks, and the 32 bit
-mask is practically guaranteed to succeed.
+     - Regulators.
+     - Configurable General Purpose Output Signals(GPO).
 
-Platforms will also allow allow the driver to set a mask that
-is larger than what the bus supports, as long as all RAM is
-reachable by the bus.
+PMIC interacts with the main processor through i2c. PMIC has
+couple of LDOs(Linear Regulators), couple of BUCKs (Step-Down DC-DC
+Converter Cores) and GPOs(General Purpose Output Signals).
 
-	Arnd
+The regulator patch is already queued:
+http://marc.info/?l=linux-kernel&m=146298767110771&w=2
+
+Hence posting the remaining patches of the series with
+the comments fixed on mfd driver.
+
+Chnages in v4:
+
+Added GPO driver support.
+ 
+Keerthy (3):
+  Documentation: mfd: LP873X: Add information for the mfd driver
+  mfd: lp873x: Add lp873x PMIC support
+  gpio: lp873x: Add support for General Purpose Outputs
+
+ Documentation/devicetree/bindings/mfd/lp873x.txt |  59 +++++
+ drivers/gpio/Kconfig                             |  10 +
+ drivers/gpio/Makefile                            |   1 +
+ drivers/gpio/gpio-lp873x.c                       | 185 ++++++++++++++++
+ drivers/mfd/Kconfig                              |  14 ++
+ drivers/mfd/Makefile                             |   2 +
+ drivers/mfd/lp873x.c                             |  99 +++++++++
+ include/linux/mfd/lp873x.h                       | 264 +++++++++++++++++++++++
+ 8 files changed, 634 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/lp873x.txt
+ create mode 100644 drivers/gpio/gpio-lp873x.c
+ create mode 100644 drivers/mfd/lp873x.c
+ create mode 100644 include/linux/mfd/lp873x.h
+
+-- 
+1.9.1
+
