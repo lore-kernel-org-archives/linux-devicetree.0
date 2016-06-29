@@ -1,55 +1,25 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH v4 3/3] gpio: lp873x: Add support for General Purpose
- Outputs
-Date: Wed, 29 Jun 2016 18:10:08 +0530
-Message-ID: <5773C1A8.2070504@ti.com>
-References: <1467192604-29149-1-git-send-email-j-keerthy@ti.com>
- <1467192604-29149-4-git-send-email-j-keerthy@ti.com>
- <CAKDJKT7mO0eHZEP5PZmRe-Aez41ThA7r5S4NNMg6RZqJkQUcuA@mail.gmail.com>
- <CAKDJKT4yNAO6OdYTtWQ3W-aNvvFb46p8=g02grvz07af-jTjyw@mail.gmail.com>
+From: Colin & Chris Weir <john.ortiz-GWnBRFmoqsN4jGlriTxgRA@public.gmane.org>
+Subject: DONATION OF $ 1.5 MILLION DOLLARS!!!
+Date: Wed, 29 Jun 2016 00:17:29 -0500 (COT)
+Message-ID: <1701348503.366992.1467177449265.JavaMail.root__2202.70612412623$1467204542$gmane$org@tranzit.com.co>
+Reply-To: Colin & Chris Weir <colinschrisw-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAKDJKT4yNAO6OdYTtWQ3W-aNvvFb46p8=g02grvz07af-jTjyw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Manish Badarkhe <badarkhe.manish@gmail.com>, Keerthy <j-keerthy@ti.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, Lee Jones <lee.jones@linaro.org>, linux-omap@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, Tony Lindgren <tony@atomide.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+My wife and I have awarded you with a donation of $ 1.5 million Dollars from part of our Jackpot Lottery of 161,653,000 Million Pounds,Send your name,Address, Phone for claims Now.
 
+To verify the genuineness of this email, check this web page;
+http://www.bbc.com/news/uk-scotland-glasgow-west-18801698
 
-On Wednesday 29 June 2016 04:15 PM, Manish Badarkhe wrote:
-> Hi Keerthy,
->
-> sorry ignore my last two comments in previous mail.
->
-> On Wed, Jun 29, 2016 at 4:13 PM, Manish Badarkhe
-> <badarkhe.manish@gmail.com> wrote:
->> Hi Keerthy
->>
->> Some minor comment
->>
->>> +static int lp873x_gpio_direction_output(struct gpio_chip *chip,
->>> +                                       unsigned int offset, int value)
->>> +{
->>> +       struct lp873x_gpio *gpio = gpiochip_get_data(chip);
->>> +
->>> +       /* Set the initial value */
->>> +       regmap_update_bits(gpio->lp873->regmap, LP873X_REG_GPO_CTRL,
->>> +                          BIT(offset * 4), value ? BIT(offset * 4) : 0);
->>> +
->>> +       return 0;
->>> +}
->
->   Error needs to be return, this function always return 0.
+We await your earliest response and God Bless you.
 
-Yes! I can just do:
-
-return regmap_update_bits(gpio->lp873->regmap, LP873X_REG_GPO_CTRL,
-                           BIT(offset * 4), value ? BIT(offset * 4) : 0);
-
->
->   Regards
->   Manish Badarkhe
->
+Best of luck.
+Colin & Chris Weir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
