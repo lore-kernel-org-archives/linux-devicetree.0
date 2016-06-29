@@ -1,37 +1,61 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 29 Jun 2016 10:46:23 -0500
-Message-ID: <5773ED4F.4050401@codeaurora.org>
-References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
- <5679359.84lXZytcOR@wuerfel> <5773E503.3070404@codeaurora.org>
- <3914163.aNiIdzedWT@wuerfel>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 3/6] Clocksource: add nuc970 clocksource driver
+Date: Wed, 29 Jun 2016 18:10:55 +0200
+Message-ID: <5773F30F.3020201@linaro.org>
+References: <1466851042-22239-1-git-send-email-vw@iommu.org>
+ <1466851042-22239-4-git-send-email-vw@iommu.org> <4184925.Jh1dkPbmzX@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <3914163.aNiIdzedWT@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4184925.Jh1dkPbmzX@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wan Zongshun <vw@iommu.org>
+Cc: devicetree@vger.kernel.org, Wan Zongshun <mcuos.com@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
-> Usually drivers try 64-bit mask and 32-bit masks, and the 32 bit
-> mask is practically guaranteed to succeed.
-
-Sure, but in theory, my for-loop is correct, right?  Wouldn't there be 
-some value in setting a 36-bit or 40-bit DMA mask if it works?  We have 
-a platform where memory starts at a 40-bit address, so some devices have 
-a 44-bit address bus.  If a 64-bit mask doesn't work, then a 32-bit mask 
-certainly wont.
-
-> Platforms will also allow allow the driver to set a mask that
-> is larger than what the bus supports, as long as all RAM is
-> reachable by the bus.
-
-And that check (like all others) is made in the dma_set_mask call?
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation collaborative project.
+T24gMDYvMjkvMjAxNiAwNToyNSBQTSwgQXJuZCBCZXJnbWFubiB3cm90ZToKPiBPbiBTYXR1cmRh
+eSwgSnVuZSAyNSwgMjAxNiA2OjM3OjE5IFBNIENFU1QgV2FuIFpvbmdzaHVuIHdyb3RlOgo+PiBU
+aGlzIHBhdGNoIGlzIHRvIGFkZCBudWM5NzAgY2xvY2tzb3VyY2UgZHJpdmVyIHN1cHBvcnQuCj4+
+Cj4+IFNpZ25lZC1vZmYtYnk6IFdhbiBab25nc2h1biA8bWN1b3MuY29tQGdtYWlsLmNvbT4KPj4g
+LS0tCj4+ICAgLi4uL21hY2gtdzkweDkwMC9pbmNsdWRlL21hY2gvbnVjOTcwLXJlZ3MtdGltZXIu
+aCAgfCAgNDQgKysrKysKPj4gICBkcml2ZXJzL2Nsb2Nrc291cmNlL0tjb25maWcgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgOCArCj4+ICAgZHJpdmVycy9jbG9ja3NvdXJjZS9NYWtlZmlsZSAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+PiAgIGRyaXZlcnMvY2xvY2tzb3VyY2UvdGlt
+ZXItbnVjOTAwLmMgICAgICAgICAgICAgICAgIHwgMjA3ICsrKysrKysrKysrKysrKysrKysrKwo+
+PiAgIDQgZmlsZXMgY2hhbmdlZCwgMjYwIGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAx
+MDA2NDQgYXJjaC9hcm0vbWFjaC13OTB4OTAwL2luY2x1ZGUvbWFjaC9udWM5NzAtcmVncy10aW1l
+ci5oCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItbnVj
+OTAwLmMKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtdzkweDkwMC9pbmNsdWRlL21h
+Y2gvbnVjOTcwLXJlZ3MtdGltZXIuaCBiL2FyY2gvYXJtL21hY2gtdzkweDkwMC9pbmNsdWRlL21h
+Y2gvbnVjOTcwLXJlZ3MtdGltZXIuaAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAw
+MDAwMDAwLi40M2Q3ZThiCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvYXJjaC9hcm0vbWFjaC13
+OTB4OTAwL2luY2x1ZGUvbWFjaC9udWM5NzAtcmVncy10aW1lci5oCj4KPiBQbGVhc2UgbW92ZSB0
+aGUgY29udGVudHMgb2YgdGhlIGhlYWRlciBmaWxlIGludG8gdGhlIGRyaXZlci4gV2UgdHJ5IHRv
+IG5vdAo+IGhhdmUgYW55IG5ldyBtYWNoLyouaCBoZWFkZXJzLgo+Cj4+ICsKPj4gK3N0YXRpYyB1
+bnNpZ25lZCBpbnQgdGltZXIwX2xvYWQ7Cj4+ICtzdGF0aWMgdm9pZCBfX2lvbWVtICp0bXJfYmFz
+ZTsKPj4gKwo+PiArc3RhdGljIGludCBudWM5NzBfY2xvY2tldmVudF9zZXRfb25lc2hvdChzdHJ1
+Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpldnQpCj4+ICt7Cj4+ICsJdW5zaWduZWQgaW50IHZhbDsK
+Pj4gKwo+PiArCXZhbCA9IF9fcmF3X3JlYWRsKHRtcl9iYXNlICsgUkVHX1RNUl9UQ1NSMCk7Cj4+
+ICsJdmFsICY9IH4oMHgwMyA8PCAyNyk7Cj4+ICsKPj4gKwl2YWwgfD0gKE9ORVNIT1QgfCBDT1VO
+VEVOIHwgSU5URU4gfCBQUkVTQ0FMRSk7Cj4+ICsKPj4gKwlfX3Jhd193cml0ZWwodmFsLCB0bXJf
+YmFzZSArIFJFR19UTVJfVENTUjApOwo+PiArCXJldHVybiAwOwo+PiArfQo+PiArCj4KPiB3cml0
+ZWwoKSBpbnN0ZWFkIG9mIF9fcmF3X3dyaXRlbCgpCgpXYW4gWm9uZ3NodW4sCgpGWUkgOiBodHRw
+czovL2xrbWwub3JnL2xrbWwvMjAxNS8xMi8xOC80MjIKCk5vdCBzdXJlIGl0IGRvZXMgYSBub3Rp
+Y2VhYmxlIGRpZmZlcmVuY2Ugb24gYXJtOTI2LgoKVGhhbmtzIEFybmQgZm9yIHRoZSBjbGFyaWZp
+Y2F0aW9uLgoKICAgLS0gRGFuaWVsCgoKLS0gCiAgPGh0dHA6Ly93d3cubGluYXJvLm9yZy8+IExp
+bmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwoKRm9sbG93IExp
+bmFybzogIDxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS9wYWdlcy9MaW5hcm8+IEZhY2Vib29rIHwK
+PGh0dHA6Ly90d2l0dGVyLmNvbS8jIS9saW5hcm9vcmc+IFR3aXR0ZXIgfAo8aHR0cDovL3d3dy5s
+aW5hcm8ub3JnL2xpbmFyby1ibG9nLz4gQmxvZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
