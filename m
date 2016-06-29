@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 04/14] clk: sunxi-ng: Add gate clock support
-Date: Wed, 29 Jun 2016 21:05:25 +0200
-Message-ID: <20160629190535.11855-5-maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 03/14] clk: sunxi-ng: Add fractional lib
+Date: Wed, 29 Jun 2016 21:05:24 +0200
+Message-ID: <20160629190535.11855-4-maxime.ripard@free-electrons.com>
 References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,49 +21,55 @@ To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org
 Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, devicetree@vger.kernel.org, Jean-Francois Moine <moinejf@free.fr>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Some clocks in the Allwinner SoCs clocks unit are just simple gates. Add
-support for those clocks.
+Some clocks can be switched to a mode called fractional that have two fixed
+output rate you can choose from.
 
-Since it's a feature that can also be found in more complex clocks, provide
-a bunch of helpers that can be reused later on.
+Add a small library to deal with those clocks.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/clk/sunxi-ng/Kconfig    |  3 ++
- drivers/clk/sunxi-ng/Makefile   |  1 +
- drivers/clk/sunxi-ng/ccu_gate.c | 82 +++++++++++++++++++++++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu_gate.h | 52 ++++++++++++++++++++++++++
- 4 files changed, 138 insertions(+)
- create mode 100644 drivers/clk/sunxi-ng/ccu_gate.c
- create mode 100644 drivers/clk/sunxi-ng/ccu_gate.h
+ drivers/clk/sunxi-ng/Kconfig    |   9 ++++
+ drivers/clk/sunxi-ng/Makefile   |   3 ++
+ drivers/clk/sunxi-ng/ccu_frac.c | 110 ++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu_frac.h |  53 +++++++++++++++++++
+ 4 files changed, 175 insertions(+)
+ create mode 100644 drivers/clk/sunxi-ng/ccu_frac.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu_frac.h
 
 diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
-index 3d117d7a3621..2f135c8a61b6 100644
+index df5b2768d8b4..3d117d7a3621 100644
 --- a/drivers/clk/sunxi-ng/Kconfig
 +++ b/drivers/clk/sunxi-ng/Kconfig
-@@ -9,4 +9,7 @@ if SUNXI_CCU
- config SUNXI_CCU_FRAC
- 	bool
- 
-+config SUNXI_CCU_GATE
+@@ -1,3 +1,12 @@
+ config SUNXI_CCU
+ 	bool "Clock support for Allwinner SoCs"
+ 	default ARCH_SUNXI
++
++if SUNXI_CCU
++
++# Base clock types
++
++config SUNXI_CCU_FRAC
 +	bool
 +
- endif
++endif
 diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
-index 46f417cb682a..48b885f2d8ff 100644
+index 886d0786ca51..46f417cb682a 100644
 --- a/drivers/clk/sunxi-ng/Makefile
 +++ b/drivers/clk/sunxi-ng/Makefile
-@@ -4,3 +4,4 @@ obj-$(CONFIG_SUNXI_CCU)		+= ccu_reset.o
- 
- # Base clock types
- obj-$(CONFIG_SUNXI_CCU_FRAC)	+= ccu_frac.o
-+obj-$(CONFIG_SUNXI_CCU_GATE)	+= ccu_gate.o
-diff --git a/drivers/clk/sunxi-ng/ccu_gate.c b/drivers/clk/sunxi-ng/ccu_gate.c
+@@ -1,3 +1,6 @@
+ # Common objects
+ obj-$(CONFIG_SUNXI_CCU)		+= ccu_common.o
+ obj-$(CONFIG_SUNXI_CCU)		+= ccu_reset.o
++
++# Base clock types
++obj-$(CONFIG_SUNXI_CCU_FRAC)	+= ccu_frac.o
+diff --git a/drivers/clk/sunxi-ng/ccu_frac.c b/drivers/clk/sunxi-ng/ccu_frac.c
 new file mode 100644
-index 000000000000..8a81f9d4a89f
+index 000000000000..5c4b10cd15b5
 --- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu_gate.c
-@@ -0,0 +1,82 @@
++++ b/drivers/clk/sunxi-ng/ccu_frac.c
+@@ -0,0 +1,110 @@
 +/*
 + * Copyright (C) 2016 Maxime Ripard
 + * Maxime Ripard <maxime.ripard@free-electrons.com>
@@ -75,83 +81,111 @@ index 000000000000..8a81f9d4a89f
 + */
 +
 +#include <linux/clk-provider.h>
++#include <linux/spinlock.h>
 +
-+#include "ccu_gate.h"
++#include "ccu_frac.h"
 +
-+void ccu_gate_helper_disable(struct ccu_common *common, u32 gate)
++bool ccu_frac_helper_is_enabled(struct ccu_common *common,
++				struct _ccu_frac *cf)
++{
++	if (!(common->features & CCU_FEATURE_FRACTIONAL))
++		return false;
++
++	return !(readl(common->base + common->reg) & cf->enable);
++}
++
++void ccu_frac_helper_enable(struct ccu_common *common,
++			    struct _ccu_frac *cf)
 +{
 +	unsigned long flags;
 +	u32 reg;
 +
-+	if (!gate)
++	if (!(common->features & CCU_FEATURE_FRACTIONAL))
 +		return;
 +
 +	spin_lock_irqsave(common->lock, flags);
-+
 +	reg = readl(common->base + common->reg);
-+	writel(reg & ~gate, common->base + common->reg);
-+
++	writel(reg & ~cf->enable, common->base + common->reg);
 +	spin_unlock_irqrestore(common->lock, flags);
 +}
 +
-+static void ccu_gate_disable(struct clk_hw *hw)
-+{
-+	struct ccu_gate *cg = hw_to_ccu_gate(hw);
-+
-+	return ccu_gate_helper_disable(&cg->common, cg->enable);
-+}
-+
-+int ccu_gate_helper_enable(struct ccu_common *common, u32 gate)
++void ccu_frac_helper_disable(struct ccu_common *common,
++			     struct _ccu_frac *cf)
 +{
 +	unsigned long flags;
 +	u32 reg;
 +
-+	if (!gate)
-+		return 0;
++	if (!(common->features & CCU_FEATURE_FRACTIONAL))
++		return;
 +
 +	spin_lock_irqsave(common->lock, flags);
++	reg = readl(common->base + common->reg);
++	writel(reg | cf->enable, common->base + common->reg);
++	spin_unlock_irqrestore(common->lock, flags);
++}
++
++bool ccu_frac_helper_has_rate(struct ccu_common *common,
++			      struct _ccu_frac *cf,
++			      unsigned long rate)
++{
++	if (!(common->features & CCU_FEATURE_FRACTIONAL))
++		return false;
++
++	return (cf->rates[0] == rate) || (cf->rates[1] == rate);
++}
++
++unsigned long ccu_frac_helper_read_rate(struct ccu_common *common,
++					struct _ccu_frac *cf)
++{
++	u32 reg;
++
++	printk("%s: Read fractional\n", clk_hw_get_name(&common->hw));
++
++	if (!(common->features & CCU_FEATURE_FRACTIONAL))
++		return 0;
++
++	printk("%s: clock is fractional (rates %lu and %lu)\n",
++	       clk_hw_get_name(&common->hw), cf->rates[0], cf->rates[1]);
 +
 +	reg = readl(common->base + common->reg);
-+	writel(reg | gate, common->base + common->reg);
 +
++	printk("%s: clock reg is 0x%x (select is 0x%x)\n",
++	       clk_hw_get_name(&common->hw), reg, cf->select);
++
++	return (reg & cf->select) ? cf->rates[1] : cf->rates[0];
++}
++
++int ccu_frac_helper_set_rate(struct ccu_common *common,
++			     struct _ccu_frac *cf,
++			     unsigned long rate)
++{
++	unsigned long flags;
++	u32 reg, sel;
++
++	if (!(common->features & CCU_FEATURE_FRACTIONAL))
++		return -EINVAL;
++
++	if (cf->rates[0] == rate)
++		sel = 0;
++	else if (cf->rates[1] == rate)
++		sel = cf->select;
++	else
++		return -EINVAL;
++
++	spin_lock_irqsave(common->lock, flags);
++	reg = readl(common->base + common->reg);
++	reg &= ~cf->select;
++	writel(reg | sel, common->base + common->reg);
 +	spin_unlock_irqrestore(common->lock, flags);
 +
 +	return 0;
 +}
-+
-+static int ccu_gate_enable(struct clk_hw *hw)
-+{
-+	struct ccu_gate *cg = hw_to_ccu_gate(hw);
-+
-+	return ccu_gate_helper_enable(&cg->common, cg->enable);
-+}
-+
-+int ccu_gate_helper_is_enabled(struct ccu_common *common, u32 gate)
-+{
-+	if (!gate)
-+		return 1;
-+
-+	return readl(common->base + common->reg) & gate;
-+}
-+
-+static int ccu_gate_is_enabled(struct clk_hw *hw)
-+{
-+	struct ccu_gate *cg = hw_to_ccu_gate(hw);
-+
-+	return ccu_gate_helper_is_enabled(&cg->common, cg->enable);
-+}
-+
-+const struct clk_ops ccu_gate_ops = {
-+	.disable	= ccu_gate_disable,
-+	.enable		= ccu_gate_enable,
-+	.is_enabled	= ccu_gate_is_enabled,
-+};
-diff --git a/drivers/clk/sunxi-ng/ccu_gate.h b/drivers/clk/sunxi-ng/ccu_gate.h
+diff --git a/drivers/clk/sunxi-ng/ccu_frac.h b/drivers/clk/sunxi-ng/ccu_frac.h
 new file mode 100644
-index 000000000000..4466169bd2d7
+index 000000000000..e4c670b1cdfe
 --- /dev/null
-+++ b/drivers/clk/sunxi-ng/ccu_gate.h
-@@ -0,0 +1,52 @@
++++ b/drivers/clk/sunxi-ng/ccu_frac.h
+@@ -0,0 +1,53 @@
 +/*
 + * Copyright (c) 2016 Maxime Ripard. All rights reserved.
 + *
@@ -165,44 +199,45 @@ index 000000000000..4466169bd2d7
 + * GNU General Public License for more details.
 + */
 +
-+#ifndef _CCU_GATE_H_
-+#define _CCU_GATE_H_
++#ifndef _CCU_FRAC_H_
++#define _CCU_FRAC_H_
 +
 +#include <linux/clk-provider.h>
 +
 +#include "ccu_common.h"
 +
-+struct ccu_gate {
-+	u32			enable;
++struct _ccu_frac {
++	u32		enable;
++	u32		select;
 +
-+	struct ccu_common	common;
++	unsigned long	rates[2];
 +};
 +
-+#define SUNXI_CCU_GATE(_struct, _name, _parent, _reg, _gate, _flags)	\
-+	struct ccu_gate _struct = {					\
-+		.enable	= _gate,					\
-+		.common	= {						\
-+			.reg		= _reg,				\
-+			.hw.init	= CLK_HW_INIT(_name,		\
-+						      _parent,		\
-+						      &ccu_gate_ops,	\
-+						      _flags),		\
-+		}							\
++#define _SUNXI_CCU_FRAC(_enable, _select, _rate1, _rate2)		\
++	{								\
++		.enable	= _enable,					\
++		.select	= _select,					\
++		.rates = { _rate1, _rate2 },				\
 +	}
 +
-+static inline struct ccu_gate *hw_to_ccu_gate(struct clk_hw *hw)
-+{
-+	struct ccu_common *common = hw_to_ccu_common(hw);
++bool ccu_frac_helper_is_enabled(struct ccu_common *common,
++				struct _ccu_frac *cf);
++void ccu_frac_helper_enable(struct ccu_common *common,
++			    struct _ccu_frac *cf);
++void ccu_frac_helper_disable(struct ccu_common *common,
++			     struct _ccu_frac *cf);
 +
-+	return container_of(common, struct ccu_gate, common);
-+}
++bool ccu_frac_helper_has_rate(struct ccu_common *common,
++			      struct _ccu_frac *cf,
++			      unsigned long rate);
 +
-+void ccu_gate_helper_disable(struct ccu_common *common, u32 gate);
-+int ccu_gate_helper_enable(struct ccu_common *common, u32 gate);
-+int ccu_gate_helper_is_enabled(struct ccu_common *common, u32 gate);
++unsigned long ccu_frac_helper_read_rate(struct ccu_common *common,
++					struct _ccu_frac *cf);
 +
-+extern const struct clk_ops ccu_gate_ops;
++int ccu_frac_helper_set_rate(struct ccu_common *common,
++			     struct _ccu_frac *cf,
++			     unsigned long rate);
 +
-+#endif /* _CCU_GATE_H_ */
++#endif /* _CCU_FRAC_H_ */
 -- 
 2.9.0
