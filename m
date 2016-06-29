@@ -1,176 +1,53 @@
-From: Bruno Herrera <bruherrera@gmail.com>
-Subject: Re: [PATCH 1/3] usb: dwc2: Add support for STM32F429/439/469 USB OTG
- in FS mode with internal PHY
-Date: Wed, 29 Jun 2016 16:46:39 -0300
-Message-ID: <CAF3+Tqe=6JxiZ=iefKw=2wD5RQt3d-Mb960H4zum1tFoR08Dhg@mail.gmail.com>
-References: <1466562349-5043-1-git-send-email-bruherrera@gmail.com>
- <436eef12-6204-d621-8574-92aea2d374fd@synopsys.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 29 Jun 2016 21:45:37 +0200
+Message-ID: <11472258.9SNjZdPb6l@wuerfel>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org> <3914163.aNiIdzedWT@wuerfel> <5773ED4F.4050401@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <436eef12-6204-d621-8574-92aea2d374fd@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: John Youn <John.Youn@synopsys.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "a.seppala@gmail.com" <a.seppala@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <5773ED4F.4050401@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 27, 2016 at 7:51 PM, John Youn <John.Youn@synopsys.com> wrote:
-> On 6/21/2016 7:26 PM, Bruno Herrera wrote:
->> Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
->
-> Please add a commit message describing the purpose of your changes,
-> some information about the platform you're adding, and the special
-> handling of the GGPIO.
->
-Ok, no problem.
+On Wednesday, June 29, 2016 10:46:23 AM CEST Timur Tabi wrote:
+> Arnd Bergmann wrote:
+> > Usually drivers try 64-bit mask and 32-bit masks, and the 32 bit
+> > mask is practically guaranteed to succeed.
+> 
+> Sure, but in theory, my for-loop is correct, right?  Wouldn't there be 
+> some value in setting a 36-bit or 40-bit DMA mask if it works?  We have 
+> a platform where memory starts at a 40-bit address, so some devices have 
+> a 44-bit address bus.  If a 64-bit mask doesn't work, then a 32-bit mask 
+> certainly wont.
 
->> ---
->>  drivers/usb/dwc2/core.c     | 18 ++++++++++++++++++
->>  drivers/usb/dwc2/core.h     |  5 +++++
->>  drivers/usb/dwc2/hcd.c      | 12 +++++++++++-
->>  drivers/usb/dwc2/hw.h       |  2 ++
->>  drivers/usb/dwc2/platform.c | 37 +++++++++++++++++++++++++++++++++++++
->>  5 files changed, 73 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/dwc2/core.c b/drivers/usb/dwc2/core.c
->> index 4135a5f..83fbed6 100644
->> --- a/drivers/usb/dwc2/core.c
->> +++ b/drivers/usb/dwc2/core.c
->> @@ -1276,6 +1276,23 @@ static void dwc2_set_param_hibernation(struct dwc2_hsotg *hsotg,
->>       hsotg->core_params->hibernation = val;
->>  }
->>
->> +static void dwc2_set_param_stm32_powerdown(struct dwc2_hsotg *hsotg,
->> +             int val)
->> +{
->> +     if (DWC2_OUT_OF_BOUNDS(val, 0, 1)) {
->> +             if (val >= 0) {
->> +                     dev_err(hsotg->dev,
->> +                             "'%d' invalid for parameter power down\n",
->> +                             val);
->> +                     dev_err(hsotg->dev, "power down must be 0 or 1\n");
->> +             }
->> +             val = 0;
->> +             dev_dbg(hsotg->dev, "Setting power down to %d\n", val);
->> +     }
->> +
->> +     hsotg->core_params->stm32_powerdown = val;
->> +}
->> +
->>  /*
->>   * This function is called during module intialization to pass module parameters
->>   * for the DWC_otg core.
->> @@ -1323,6 +1340,7 @@ void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
->>       dwc2_set_param_uframe_sched(hsotg, params->uframe_sched);
->>       dwc2_set_param_external_id_pin_ctl(hsotg, params->external_id_pin_ctl);
->>       dwc2_set_param_hibernation(hsotg, params->hibernation);
->> +     dwc2_set_param_stm32_powerdown(hsotg, params->stm32_powerdown);
->>  }
->>
->>  /*
->> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
->> index 3c58d63..d3e4fcb 100644
->> --- a/drivers/usb/dwc2/core.h
->> +++ b/drivers/usb/dwc2/core.h
->> @@ -386,6 +386,10 @@ enum dwc2_ep0_state {
->>   *                   needed.
->>   *                   0 - No (default)
->>   *                   1 - Yes
->> + * @stm32_powerdown: Enable STM32 specific USB FS transceiver power down
->> + *                   control.
->> + *                   0 = USB FS transceiver disabled (default)
->> + *                   1 = USB FS transceiver enabled
->>   *
->>   * The following parameters may be specified when starting the module. These
->>   * parameters define how the DWC_otg controller should be configured. A
->> @@ -426,6 +430,7 @@ struct dwc2_core_params {
->>       int uframe_sched;
->>       int external_id_pin_ctl;
->>       int hibernation;
->> +     int stm32_powerdown;
->>  };
->>
->>  /**
->> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
->> index 2df3d04..4f9bb93 100644
->> --- a/drivers/usb/dwc2/hcd.c
->> +++ b/drivers/usb/dwc2/hcd.c
->> @@ -118,7 +118,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
->>
->>  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->>  {
->> -     u32 usbcfg, i2cctl;
->> +     u32 usbcfg, usbgpio, i2cctl;
->
-> The convention in this driver would be to just call 'usbgpio' -> 'ggpio'
+The question is whether it makes any difference to the driver: what decision
+does the driver make differently if it has set a 44-bit mask?
 
-OK.
->
->>       int retval = 0;
->>
->>       /*
->> @@ -142,6 +142,16 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->>                               return retval;
->>                       }
->>               }
->> +
->> +             if (hsotg->core_params->stm32_powerdown > 0) {
->> +                     dev_dbg(hsotg->dev, "STM32 FS PHY enabling transceiver\n");
->> +                     /* STM32 uses the GGPIO register as general core
->> +                      * configuration register.
->> +                      */
->> +                     usbgpio = dwc2_readl(hsotg->regs + GGPIO);
->> +                     usbgpio |= STM32_OTG_GCCFG_PWRDWN;
->> +                     dwc2_writel(usbgpio, hsotg->regs + GGPIO);
->> +             }
->>       }
->>
->>       /*
->> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
->> index 281b57b..d5f9294 100644
->> --- a/drivers/usb/dwc2/hw.h
->> +++ b/drivers/usb/dwc2/hw.h
->> @@ -224,6 +224,8 @@
->>
->>  #define GPVNDCTL                     HSOTG_REG(0x0034)
->>  #define GGPIO                                HSOTG_REG(0x0038)
->> +#define STM32_OTG_GCCFG_PWRDWN               (1 << 16)
->> +
->
-> Also, bitfields for GGPIO should be named: GGPIO_xxx
+We don't have ZONE_DMA44 (and it's very unlikely that we will introduce
+it), so neither the driver nor the network stack can actually act on the
+fact that a 64-bit mask failed but a 44-bit mask succeeded.
 
-Could it be -> GGPIO_STM32_OTG_GCCFG_PWRDWN
->From my understand the GGPIO are platform/vendor dependent so in the
-future some other vendor could use the same bit for other purpose.
-Should we keep it defined here or only in the scope it is used?
+> > Platforms will also allow allow the driver to set a mask that
+> > is larger than what the bus supports, as long as all RAM is
+> > reachable by the bus.
+> 
+> And that check (like all others) is made in the dma_set_mask call?
 
->
->
->>  #define GUID                         HSOTG_REG(0x003c)
->>  #define GSNPSID                              HSOTG_REG(0x0040)
->>  #define GHWCFG1                              HSOTG_REG(0x0044)
->> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
->> index fc6f525..d806b94 100644
->> --- a/drivers/usb/dwc2/platform.c
->> +++ b/drivers/usb/dwc2/platform.c
->> @@ -84,6 +84,7 @@ static const struct dwc2_core_params params_hi6220 = {
->>       .uframe_sched                   = 0,
->>       .external_id_pin_ctl            = -1,
->>       .hibernation                    = -1,
->> +     .stm32_powerdown                = 0,
->
-> You can probably just leave this out of unrelated configurations since
-> it will default to 0.
-OK.
->
-> Regards,
-> John
+Yes. Regarding the system you mentioned: I understand that it has
+no memory in ZONE_DMA32 and no IOMMU (btw, that also means 32-bit
+PCI devices are fundamentally broken), and the bus can only address
+the lower 44 bit of address space.
+
+Does this system support more than 15TB of RAM? If not, then there
+is no problem, and if it  does, I think your best way out is not
+to disable SWIOTLB. That will be a slower compared to a system
+with an IOMMU or the fictional ZONE_DMA44, but it should work
+correctly. In either case (less than 15TB without swiotlb, or
+more than 15TB with swiotlb), the driver should just ask for
+a 64-bit mask and that will succeed.
+
+	Arnd
