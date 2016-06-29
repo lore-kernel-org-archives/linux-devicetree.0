@@ -1,51 +1,90 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [RFC PATCH 3/5] thermal: Add support for the thermal sensor on
- A23/33
-Date: Wed, 29 Jun 2016 21:31:39 +0800
-Message-ID: <1112501467207099@web30g.yandex.ru>
-References: <20160628101325.2522-1-icenowy@aosc.xyz>
- <20160628101325.2522-3-icenowy@aosc.xyz>
- <20160628114640.GE5550@lukather>
- <60021467122182@web19j.yandex.ru> <20160629121021.GD6095@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160629121021.GD6095@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "emilio@elopez.com.ar" <emilio@elopez.com.ar>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "edubezval@gmail.com" <edubezval@gmail.com>, "wens@csie.org" <wens@csie.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx: ventana: add RS485 txen gpio support
+Date: Wed, 29 Jun 2016 06:38:24 -0700
+Message-ID: <1467207504-5218-1-git-send-email-tharvey@gateworks.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgoyOS4wNi4yMDE2LCAyMDoxMCwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gSGksCj4KPiBPbiBUdWUsIEp1biAyOCwgMjAxNiBhdCAwOTo1Njoy
-MlBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDCoFRoZSByZWFzb24gZm9yIGEgZGVk
-aWNhdGUgZHJpdmVyIGlzOgo+PiDCoDEuIFRoaXMgSVAgaGF2ZSBvbmx5IHRoZXJtYWwgZnVuY3Rp
-b24sIHNvIGl0J3Mgbm90IHN1aXRhYmxlIHRvIHVzZSBhCj4+IMKgZHJpdmVyIGF0IGRyaXZlcnMv
-aW5wdXQvdG91Y2hzY3JlZW4vLgo+Cj4gVGhhdCdzIG5vdCBhIHByb2JsZW0sIGFuZCBpdCdzIGJl
-aW5nIHdvcmtlZCBvbiBbMV0uCj4KPj4gwqAyLiBDb250cm9sIFJlZ2lzdGVyIGFyZSBxdWl0ZSBk
-aWZmZXJlbnQuCj4KPiBUaGF0J3Mgbm90IGEgcHJvYmxlbSBlaXRoZXIsIHRoZXJlJ3MganVzdCBh
-IGJpdCB0aGF0IHlvdSBkb24ndCBuZWVkIHRvCj4gc2V0IGluIHRoZSBjb250cm9sIDEgcmVnaXN0
-ZXIsIGFuZCB0aGF0J3MgcHJldHR5IG11Y2ggaXQuIEl0IGRvZXNuJ3QKPiBqdXN0aWZ5IGEgd2hv
-bGUgbmV3IGRyaXZlci4KPgo+PiDCoDMuIFRoaXMgSVAgdXNlcyBBVURJTyBQTEwgKFBMTDIpIGFz
-IGl0cyBjbG9jayEKPgo+IEl0J3MgbGlzdGVkIGFzIHRoZSBpbnB1dCwgYnV0IGFsbCB0aGUgcmVz
-dCBvZiB0aGUgZG9jdW1lbnRhdGlvbiByZWZlcnMKPiBvbmx5IHRvIDI0TUh6LCB3aGljaCBzZWVt
-cyB0byBpbmRpY2F0ZSB0aGF0IGl0J3Mgb25seSBydW5uaW5nIG9uIHRoZQo+IG9zY2lsbGF0b3Is
-IHdoaWNoIHdvdWxkIG1ha2UgbXVjaCBtb3JlIHNlbnNlLgo+Cj4gVGhhbmtzLAo+IE1heGltZQo+
-Cj4gMTogaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LWFybS1rZXJu
-ZWwvMjAxNi1KdW5lLzQzOTQ4Ny5odG1sCj4KPiAtLQo+IE1heGltZSBSaXBhcmQsIEZyZWUgRWxl
-Y3Ryb25zCj4gRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBlbmdpbmVlcmluZwo+
-IGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KClRoYW5rcy4KCkhvd2V2ZXIsIHN1bjhpdzMvNSB0
-aHMgaXMgbm90IGV2ZW4gYSBHUEFEQy4uLiBJdCdzIGEgc3BlY2lmaWVkIElQLCBvbmx5IHVzZWQg
-YXMgYW4gQURDIHN1aXRhYmxlIGZvciB0ZW1wZXJhdHVyZSBzZW5zb3IuCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+The GW54xx, GW53xx, and GW52xx all have an RS485 transceiver that uses an
+IMX GPIO for the TX enable of the transceiver. Declare this properly.
+
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 3 +++
+ arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 3 +++
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 3 +++
+ 3 files changed, 9 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+index 8bf1020..25ed57d 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+@@ -315,6 +315,8 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
++	fsl,uart-has-rtscts;
++	rts-gpio = <&gpio7 1 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ };
+ 
+@@ -493,6 +495,7 @@
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
+ 				MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
++				MX6QDL_PAD_SD3_DAT4__GPIO7_IO01		0x4001b0b1 /* TEN */
+ 			>;
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+index e5f4b6c..69e21b9 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+@@ -311,6 +311,8 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
++	fsl,uart-has-rtscts;
++	rts-gpio = <&gpio7 1 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ };
+ 
+@@ -481,6 +483,7 @@
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
+ 				MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
++				MX6QDL_PAD_SD3_DAT4__GPIO7_IO01		0x4001b0b1 /* TEN */
+ 			>;
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+index 5a8dbab..b602e2a 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+@@ -414,6 +414,8 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
++	fsl,uart-has-rtscts;
++	rts-gpio = <&gpio7 1 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ };
+ 
+@@ -603,6 +605,7 @@
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
+ 				MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
++				MX6QDL_PAD_SD3_DAT4__GPIO7_IO01		0x4001b0b1 /* TEN */
+ 			>;
+ 		};
+ 
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
