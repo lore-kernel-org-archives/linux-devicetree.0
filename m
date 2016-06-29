@@ -1,160 +1,63 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 7/7] phy: Add Northstar2 PCI Phy support
-Date: Thu, 30 Jun 2016 17:46:09 +0530
-Message-ID: <57750D89.7070705@ti.com>
-References: <1465216900-11755-1-git-send-email-pramod.kumar@broadcom.com>
- <1465216900-11755-8-git-send-email-pramod.kumar@broadcom.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] ASoC: samsung: Add Samsung Low Power Audio
+ Subsystem driver
+Date: Wed, 29 Jun 2016 22:57:57 +0100
+Message-ID: <20160629215757.GX6247@sirena.org.uk>
+References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
+ <1466678715-19962-3-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1465216900-11755-8-git-send-email-pramod.kumar@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pramod Kumar <pramod.kumar@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Jon Mason <jonmason@broadcom.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="D+UG5SQJKkIYNVx0"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466678715-19962-3-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Monday 06 June 2016 06:11 PM, Pramod Kumar wrote:
-> Add PCI Phy support for Broadcom Northstar2 SoCs.  This driver uses the
-> interface from the iproc mdio mux driver to enable the devices
-> respective phys.
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Jon Mason <jonmason@broadcom.com>
-> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> ---
->  drivers/phy/Kconfig            |   8 +++
->  drivers/phy/Makefile           |   2 +-
->  drivers/phy/phy-bcm-ns2-pcie.c | 115 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 124 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/phy/phy-bcm-ns2-pcie.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index b869b98..01fb93b 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -434,4 +434,12 @@ config PHY_CYGNUS_PCIE
->  
->  source "drivers/phy/tegra/Kconfig"
->  
-> +config PHY_NS2_PCIE
-> +	tristate "Broadcom Northstar2 PCIe PHY driver"
-> +	depends on OF && MDIO_BUS_MUX_BCM_IPROC
-> +	select GENERIC_PHY
-> +	default ARCH_BCM_IPROC
-> +	help
-> +	  Enable this to support the Broadcom Northstar2 PCIe PHY.
-> +	  If unsure, say N.
->  endmenu
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 9c3e73c..7aea094 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -53,5 +53,5 @@ obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
->  obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
->  obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
->  obj-$(CONFIG_PHY_CYGNUS_PCIE)		+= phy-bcm-cygnus-pcie.o
-> -
->  obj-$(CONFIG_ARCH_TEGRA) += tegra/
-> +obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
-> diff --git a/drivers/phy/phy-bcm-ns2-pcie.c b/drivers/phy/phy-bcm-ns2-pcie.c
-> new file mode 100644
-> index 0000000..9513f7a
-> --- /dev/null
-> +++ b/drivers/phy/phy-bcm-ns2-pcie.c
-> @@ -0,0 +1,115 @@
-> +/*
-> + * Copyright (C) 2016 Broadcom
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/phy/phy.h>
-> +
-> +struct ns2_pci_phy {
-> +	struct mdio_device *mdiodev;
-> +	struct phy *phy;
-> +};
-> +
-> +#define BLK_ADDR_REG_OFFSET	0x1f
-> +#define PLL_AFE1_100MHZ_BLK	0x2100
-> +#define PLL_CLK_AMP_OFFSET	0x03
-> +#define PLL_CLK_AMP_2P05V	0x2b18
-> +
-> +static int ns2_pci_phy_init(struct phy *p)
-> +{
-> +	struct ns2_pci_phy *phy = phy_get_drvdata(p);
-> +	int rc;
-> +
-> +	/* select the AFE 100MHz block page */
-> +	rc = mdiobus_write(phy->mdiodev->bus, phy->mdiodev->addr,
-> +			   BLK_ADDR_REG_OFFSET, PLL_AFE1_100MHZ_BLK);
-> +	if (rc)
-> +		goto err;
-> +
-> +	/* set the 100 MHz reference clock amplitude to 2.05 v */
-> +	rc = mdiobus_write(phy->mdiodev->bus, phy->mdiodev->addr,
-> +			   PLL_CLK_AMP_OFFSET, PLL_CLK_AMP_2P05V);
-> +	if (rc)
-> +		goto err;
-> +
-> +	return 0;
-> +
-> +err:
-> +	dev_err(&phy->mdiodev->dev, "Error %d writing to phy\n", rc);
-> +	return rc;
-> +}
-> +
-> +static struct phy_ops ns2_pci_phy_ops = {
-> +	.init = ns2_pci_phy_init,
+--D+UG5SQJKkIYNVx0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-.owner is required for phy_ops.
-> +};
-> +
-> +static int ns2_pci_phy_probe(struct mdio_device *mdiodev)
-> +{
-> +	struct device *dev = &mdiodev->dev;
-> +	struct phy_provider *provider;
-> +	struct ns2_pci_phy *p;
-> +	struct phy *phy;
-> +
-> +	phy = devm_phy_create(dev, dev->of_node, &ns2_pci_phy_ops);
-> +	if (IS_ERR(phy)) {
-> +		dev_err(dev, "failed to create Phy\n");
-> +		return PTR_ERR(phy);
-> +	}
-> +
-> +	p = devm_kmalloc(dev, sizeof(struct ns2_pci_phy),
-> +			 GFP_KERNEL);
-> +	if (!p)
-> +		return -ENOMEM;
-> +
-> +	p->mdiodev = mdiodev;
-> +	dev_set_drvdata(dev, p);
-> +
-> +	p->phy = phy;
-> +	phy_set_drvdata(phy, p);
-> +
-> +	provider = devm_of_phy_provider_register(&phy->dev,
-> +						 of_phy_simple_xlate);
+On Thu, Jun 23, 2016 at 12:45:11PM +0200, Sylwester Nawrocki wrote:
+> From: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>=20
+> This patch adds LPASS driver. The LPASS (Low Power Audio Subsystem)
+> is a special subsystem that supports audio playback with low power
+> consumption. This is a minimal driver which prepares resources for
+> IP blocks like I2S, audio DMA and UART.
+> Also system power ops are added to ensure the Audio Subsystem is
+> operational after system suspend/resume cycle.
 
-just use return PTR_ERR_OR_ZERO(provider);
+This is so trivial that I'm wondering why you even need it, it does
+essentially nothing except for manage power on and off, and that isn't
+synced up with the rest of the audio subsystem in any discernable way.
+Previous Samsung SoCs have quite happily ignored their LPASS subsystems
+in mainline.  As things stand I'm concerned that systems may get broken
+if more functionality is added without the joining up with the rest of
+the audio hardware via a card, there's not even the hooks which would
+allow that.
 
-All the error messages are un-necessary.
+--D+UG5SQJKkIYNVx0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks
-Kishon
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXdERhAAoJECTWi3JdVIfQfWsH/29+iYUNoubXsom5XgKcZ8bj
+DSNjjNBHgRtC2hiK2wRJ44vs6TVWOrStxZW8qsMvQ3w6/Rk1v2v6orGqKF5Bgu8e
+rHR64iBpaL1/UNhf0WLwyYxwJxYP6u5AYthjwDYUQWjNrBzI5jbq7Ev6cgWNhhRL
+OyfKzFQKEk7U7iER/W+f1TVczEs8K2IYIlmN0SzFRJtVFo8eCeDDE+rWwKOThLZq
+/BW9jelT++qzWolXR4q/XAxMxTmiP8YgrKwSm8Hn3NAMBxyKrvMgrZN+QL7K9JWV
+zyMrsZ1FCsnQBSrIRsSmZj8U6HeF/1emcA0g01hXljQCC5vU/kyr84V2AAMaqiY=
+=AdRV
+-----END PGP SIGNATURE-----
+
+--D+UG5SQJKkIYNVx0--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
