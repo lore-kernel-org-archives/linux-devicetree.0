@@ -1,35 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 4/6] gpio: tps65218-gpio: Add platform_device_id table
-Date: Wed, 29 Jun 2016 10:56:21 +0200
-Message-ID: <CACRpkdb=jz-=K-itevZtvPtHF05pKdhkSp1USaf5LzQWaxckJw@mail.gmail.com>
-References: <1467117054-12943-1-git-send-email-j-keerthy@ti.com> <1467117054-12943-5-git-send-email-j-keerthy@ti.com>
+From: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v2 1/2] drm/fsl-dcu: update the panel dt binding document
+Date: Wed, 29 Jun 2016 16:17:57 +0800
+Message-ID: <1467188278-10978-1-git-send-email-meng.yi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1467117054-12943-5-git-send-email-j-keerthy@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: stefan-XLVq0VzYD2Y@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 2:30 PM, Keerthy <j-keerthy@ti.com> wrote:
+dropped the old "fsl,panel" property, using the of_graph dt
+binding syntax
 
-> platform_device_id table is needed for adding the tps65218-gpio
-> module to the mfd_cell array.
->
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->
-> Changes in v4:
->
->   * Retained the compatible strings in order to interrogate the DT in the
->     normal way.
+Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+---
+Changes in V2:
+-drop the unit address of port
+---
+ Documentation/devicetree/bindings/display/fsl,dcu.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-So do I just apply this or do you need it applied through another tree?
+diff --git a/Documentation/devicetree/bindings/display/fsl,dcu.txt b/Documentation/devicetree/bindings/display/fsl,dcu.txt
+index ae55cde..c96ec1f 100644
+--- a/Documentation/devicetree/bindings/display/fsl,dcu.txt
++++ b/Documentation/devicetree/bindings/display/fsl,dcu.txt
+@@ -12,7 +12,7 @@ Required properties:
+ - clock-names:		Should be "dcu" and "pix"
+ 			See ../clocks/clock-bindings.txt for details.
+ - big-endian		Boolean property, LS1021A DCU registers are big-endian.
+-- fsl,panel:		The phandle to panel node.
++- port			Video port for the panel output
+ 
+ Optional properties:
+ - fsl,tcon:		The phandle to the timing controller node.
+@@ -24,6 +24,11 @@ dcu: dcu@2ce0000 {
+ 	clocks = <&platform_clk 0>, <&platform_clk 0>;
+ 	clock-names = "dcu", "pix";
+ 	big-endian;
+-	fsl,panel = <&panel>;
+ 	fsl,tcon = <&tcon>;
++
++	port: port {
++		dcu_out: endpoint {
++			remote-endpoint = <&panel_out>;
++		};
++	};
+ };
+-- 
+2.1.0.27.g96db324
 
-It looks standalone, should I just merge it?
-
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
