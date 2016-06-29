@@ -1,49 +1,91 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH 2/2 v16] drm/bridge: Add I2C based driver for ps8640 bridge
-Date: Wed, 29 Jun 2016 12:31:23 +0800
-Message-ID: <CAGS+omDsDS5tx=+Efq8LWNd3-asU4r2h=-AE6vdKgfG-p6vdAA@mail.gmail.com>
-References: <1464861445-11086-1-git-send-email-jitao.shi@mediatek.com>
- <1464861445-11086-2-git-send-email-jitao.shi@mediatek.com>
- <CACvgo53002XCPLufbJHQLC1uL1nNS7_0gh=napedetmvT6FoSw@mail.gmail.com>
+From: fixed-term.Oleksij.Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dt/bindings: Add bindings for Micro
+ Crystal rv8803
+Date: Wed, 29 Jun 2016 06:34:58 +0200
+Message-ID: <57734FF2.7070208@de.bosch.com>
+References: <1466577742-18824-1-git-send-email-dirk.behme@de.bosch.com>
+ <1466577742-18824-3-git-send-email-dirk.behme@de.bosch.com>
+ <20160624074849.GK5809@piout.net>
+ <CAHQ1cqF7ByYz9stnL_-siMJHGoyuLNAPwjcWA_fWRqy7WeMF=A@mail.gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACvgo53002XCPLufbJHQLC1uL1nNS7_0gh=napedetmvT6FoSw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, ML dri-devel <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Thierry Reding <treding@nvidia.com>, devicetree <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?B?RWRkaWUgSHVhbmcgKOm7g+aZuuWCkSk=?= <eddie.huang@mediatek.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream <srv_heupstream@mediatek.com>, Linux-Kernel@Vger
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBAABB447ZW5QKGQET5OFLFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAHQ1cqF7ByYz9stnL_-siMJHGoyuLNAPwjcWA_fWRqy7WeMF=A@mail.gmail.com>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRW1pbCwKCk9uZSBhbnN3ZXIgaW5saW5lIGJlbG93LiAgVGhlIHJlc3QgSSBsZWF2ZSB0byBK
-aXRhby4uLgoKW3NuaXAuLi5dCgpPbiBGcmksIEp1biAxNywgMjAxNiBhdCAzOjE0IEFNLCBFbWls
-IFZlbGlrb3YgPGVtaWwubC52ZWxpa292QGdtYWlsLmNvbT4gd3JvdGU6Cgo+PiArc3RhdGljIHNz
-aXplX3QgcHM4NjQwX3VwZGF0ZV9md19zdG9yZShzdHJ1Y3QgZGV2aWNlICpkZXYsCj4+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9hdHRyaWJ1dGUg
-KmF0dHIsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uc3QgY2hh
-ciAqYnVmLCBzaXplX3QgY291bnQpCj4+ICt7Cj4+ICsgICAgICAgc3RydWN0IGkyY19jbGllbnQg
-KmNsaWVudCA9IHRvX2kyY19jbGllbnQoZGV2KTsKPj4gKyAgICAgICBzdHJ1Y3QgcHM4NjQwICpw
-c19icmlkZ2UgPSBpMmNfZ2V0X2NsaWVudGRhdGEoY2xpZW50KTsKPj4gKyAgICAgICBjb25zdCBz
-dHJ1Y3QgZmlybXdhcmUgKmZ3Owo+PiArICAgICAgIGludCBlcnJvcjsKPj4gKwo+PiArICAgICAg
-IGVycm9yID0gcmVxdWVzdF9maXJtd2FyZSgmZncsIFBTX0ZXX05BTUUsIGRldik7Cj4gQ2FuIHRo
-ZSBkZXZpY2Ugb3BlcmF0ZSB3aXRob3V0IGEgZmlybXdhcmUgPyBJZiBub3QsIHdoeSBpcyB0aGUK
-PiBmaXJtd2FyZSBsb2FkZWQgc28gbGF0ZXIvYWZ0ZXIgdXNlciBpbnRlcmFjdGlvbiAodmlhIHN5
-c2ZzKSA/IEkgZG9uJ3QKPiByZWNhbGwgYW55IG90aGVyIGRyaXZlciBpbiBEUk0gdG8gdXNlIHN1
-Y2ggYW4gYXBwcm9hY2guCgpUaGUgUFM4NjQwIGhhcyBpbnRlcm5hbCBmbGFzaCwgc28gaXQgc2hv
-dWxkIGFsd2F5cyBhbHJlYWR5IGhhdmUgYQp3b3JraW5nIGZpcm13YXJlLgpUaGlzIHN5c2ZzIGlu
-dGVyZmFjZSBpcyB1c2VmdWwgZm9yIHVzZXIgc3BhY2UgaW5pdGlhdGVkIGZpZWxkIGZpcm13YXJl
-IHVwZGF0ZXMuCgpSZWdhcmRzLAotRGFuaWVsCgo+IFJlZ2FyZHMsCj4gRW1pbAo+IF9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxp
-bmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbApfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+On 24.06.2016 21:14, Andrey Smirnov wrote:
+> On Fri, Jun 24, 2016 at 12:48 AM, Alexandre Belloni
+> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> On 22/06/2016 at 08:42:20 +0200, Dirk Behme wrote :
+>>> From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+>>>
+>>> ... and Epson RX8900 real time clock
+>>>
+>>> Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> ---
+>>>  .../devicetree/bindings/rtc/epson,rx8900.txt       | 22 ++++++++++++++++++++++
+>>>  1 file changed, 22 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx8900.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/rtc/epson,rx8900.txt b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
+>>> new file mode 100644
+>>> index 0000000..3f61e51
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/rtc/epson,rx8900.txt
+>>> @@ -0,0 +1,22 @@
+>>> +Real Time Clock driver for:
+>>> +  - Epson RX8900
+>>> +  - Micro Crystal rv8803
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be: "microcrystal,rv8803" or "epson,rx8900"
+>>> +- reg : the I2C address of the device for I2C
+>>> +
+>>> +Optional properties:
+>>> +- epson,vdet-disable : boolean, if present will disable voltage detector.
+>>> +  Should be set if no backup battery is used.
+>>
+>> I guess we need to make that one generic. I would use
+>> voltage-detection-disable.
+>>
+>> Andrey, can you use that one instead of
+>> dallas,disable-oscillator-stop-flag ?
+>>
+> 
+> AFAIU from reading RX8900 datasheet, it has two power rails main and a
+> backup one, so setting this property disables circuitry responsible
+> for detecting main power rail failure and switching to a backup one.
+> 
+> DS1341 has only one power rail and setting
+> "dallas,disable-oscillator-stop-flag" will disable circuitry
+> responsible for detection of failure of the oscillator ticking its
+> internal clock.
+> 
+> IMHO, those functionalities don't have much in common and using the
+> same property would be confusing for users of that binding on DS1341,
+> but it's a boolean so there's not technical reason I couldn't.
+
+Should i still replace epson,vdet-disable to voltage-detection-disable?
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
