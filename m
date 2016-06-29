@@ -1,48 +1,49 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/6] ARM: NUC900: Add NUC970 SoC support
-Date: Wed, 29 Jun 2016 17:32:47 +0200
-Message-ID: <6119546.EJZ9lH2GPk@wuerfel>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 29 Jun 2016 17:34:57 +0200
+Message-ID: <3914163.aNiIdzedWT@wuerfel>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org> <5679359.84lXZytcOR@wuerfel> <5773E503.3070404@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1466851042-22239-1-git-send-email-vw@iommu.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Wan Zongshun <vw@iommu.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <5773E503.3070404@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, June 25, 2016 6:37:16 PM CEST Wan Zongshun wrote:
-> This patch series added Nuvoton new SoC NUC970 development board
-> support, this nuc970 belongs to nuc900 series, but many features are
-> not compatible with old nuc900 SoCs like nuc910, nuc920.
+On Wednesday, June 29, 2016 10:10:59 AM CEST Timur Tabi wrote:
+> Arnd Bergmann wrote:
+> > That's also not how it works: each device starts out with a 32-bit mask,
+> > because that's what historically all PCI devices can do. If a device
+> > is 64-bit DMA capable, it can extend the mask by passing DMA_BIT_MASK(64)
+> > (or whatever it can support), and the platform code checks if that's
+> > possible.
 > 
-> Those patches are basing on old w90x900 codes, and are using standard
-> linux subsystem interface, such as dts, driver/clk, driver/clocksource
-> , driver/irqchip drivers.
+> So if it's not possible, then dma_set_mask returns an error, and the 
+> driver should try a smaller mask?  Doesn't that mean that every driver 
+> for a 64-bit device should do this:
 > 
-> The old w90x900 plat such as nuc910,nuc960 codes will also be changed
-> to new style according to nuc970 codes after those patches was accepted.
+>         for (i = 64; i >=32; i--) {
+>                 ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(i));
+>                 if (!ret)
+>                         break;
+>         }
+> 
+>         if (ret)
+>                 return ret;
+> 
+> Sure, this is overkill, but it seems to me that the driver does not 
+> really know what mask is actually valid, so it has to find the largest 
+> mask that works.
+> 
 
-Looks good overall. I have a number of comments but they should
-all be easy to address, and the general approach of adding this
-first makes sense to me as well.
+Usually drivers try 64-bit mask and 32-bit masks, and the 32 bit
+mask is practically guaranteed to succeed.
 
-The three drivers should be merged through the respective subsystem
-maintainer trees. There is one dependency with the clk header, but
-we can resolve that if we merge the header along with the dts files
-(actually before the dts files) so that it's possible to build the
-.dtb without the clk driver being merged.
-That driver in turn will not be selectable in Kconfig because it
-depends on CONFIG_SOC_NUC970 (or whatever the symbol is called).
+Platforms will also allow allow the driver to set a mask that
+is larger than what the bus supports, as long as all RAM is
+reachable by the bus.
 
 	Arnd
