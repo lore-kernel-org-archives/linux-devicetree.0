@@ -1,57 +1,55 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 6/6] ARM64: dts: amlogic: gxbb: Enable NVMEM
-Date: Wed, 29 Jun 2016 14:34:16 +0200
-Message-ID: <1467203656-14381-7-git-send-email-carlo@caione.org>
-References: <1467203656-14381-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467203656-14381-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH v4 3/3] gpio: lp873x: Add support for General Purpose
+ Outputs
+Date: Wed, 29 Jun 2016 18:10:08 +0530
+Message-ID: <5773C1A8.2070504@ti.com>
+References: <1467192604-29149-1-git-send-email-j-keerthy@ti.com>
+ <1467192604-29149-4-git-send-email-j-keerthy@ti.com>
+ <CAKDJKT7mO0eHZEP5PZmRe-Aez41ThA7r5S4NNMg6RZqJkQUcuA@mail.gmail.com>
+ <CAKDJKT4yNAO6OdYTtWQ3W-aNvvFb46p8=g02grvz07af-jTjyw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAKDJKT4yNAO6OdYTtWQ3W-aNvvFb46p8=g02grvz07af-jTjyw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Manish Badarkhe <badarkhe.manish@gmail.com>, Keerthy <j-keerthy@ti.com>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, Lee Jones <lee.jones@linaro.org>, linux-omap@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Add the NVMEM device node in the DTSI.
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+On Wednesday 29 June 2016 04:15 PM, Manish Badarkhe wrote:
+> Hi Keerthy,
+>
+> sorry ignore my last two comments in previous mail.
+>
+> On Wed, Jun 29, 2016 at 4:13 PM, Manish Badarkhe
+> <badarkhe.manish@gmail.com> wrote:
+>> Hi Keerthy
+>>
+>> Some minor comment
+>>
+>>> +static int lp873x_gpio_direction_output(struct gpio_chip *chip,
+>>> +                                       unsigned int offset, int value)
+>>> +{
+>>> +       struct lp873x_gpio *gpio = gpiochip_get_data(chip);
+>>> +
+>>> +       /* Set the initial value */
+>>> +       regmap_update_bits(gpio->lp873->regmap, LP873X_REG_GPO_CTRL,
+>>> +                          BIT(offset * 4), value ? BIT(offset * 4) : 0);
+>>> +
+>>> +       return 0;
+>>> +}
+>
+>   Error needs to be return, this function always return 0.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index f2a4734..f20f990 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -103,6 +103,24 @@
- 		};
- 	};
- 
-+	efuse: efuse {
-+		compatible = "amlogic,meson-gxbb-efuse";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		sn: sn@14 {
-+			reg = <0x14 0x10>;
-+		};
-+
-+		eth_mac: eth_mac@34 {
-+			reg = <0x34 0x10>;
-+		};
-+
-+		bid: bid@46 {
-+			reg = <0x46 0x30>;
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--- 
-2.7.4
+Yes! I can just do:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+return regmap_update_bits(gpio->lp873->regmap, LP873X_REG_GPO_CTRL,
+                           BIT(offset * 4), value ? BIT(offset * 4) : 0);
+
+>
+>   Regards
+>   Manish Badarkhe
+>
