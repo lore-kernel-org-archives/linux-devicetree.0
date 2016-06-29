@@ -1,55 +1,56 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 29 Jun 2016 09:33:54 -0500
-Message-ID: <5773DC52.4010703@codeaurora.org>
-References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
- <5301045.3F9gkJcz60@wuerfel> <5773BC59.5010404@codeaurora.org>
- <4312386.60Y44nCzSI@wuerfel>
+From: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/3] devicetree: Add Micro Crystal AG vendor id
+Date: Wed, 29 Jun 2016 16:39:59 +0200
+Message-ID: <1467211201-17252-2-git-send-email-dirk.behme@de.bosch.com>
+References: <1467211201-17252-1-git-send-email-dirk.behme@de.bosch.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <4312386.60Y44nCzSI@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDCMXBNSKAIMLO6PXMCRUBCHKDM76-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1467211201-17252-1-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
-> If the ranges property lists the bus as dma capable for only the
-> lower 32 bits, then dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-> should fail, otherwise dma_alloc_coherent() will return an invalid
-> memory area.
+From: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 
-That seems wrong.  dma_alloc_coherent() should be smart enough to 
-restrict itself to the the dma-ranges property.  Isn't that why the 
-property exists?  When dma_alloc_coherent() looks for memory, it should 
-knows it has to create a 32-bit address.  That's why we have ZONE_DMA.
+Add Micro Crystal AG vendor id
 
-> Another twist is how arm64 currently uses SWIOTLB unconditionally:
-> As long as SWIOTLB (or iommu) is enabled, dma_set_mask_and_coherent()
-> should succeed for any mask(), but not actually update the mask of the
-> device to more than the bus can handle.
+Signed-off-by: Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-That just seems like a bug in ARM64 SWIOTLB.  SWIOTLB should inject 
-itself when the driver tries to map memory outside of its DMA range.
-
-In this case, SWIOTLB/IOMMU is handling the translation from low memory 
-to high memory, eliminating the need to restrict memory access to a 
-specific physical range.
-
-Without SWIOTLB/IOMMU, dma_alloc_coherent() should be aware of the 
-platform-specific limitations of each device and ensure that it only 
-allocates memory that conforms *all* limitations.  For example, if the 
-platform is capable of 64-bit DMA, but a legacy device can only handle 
-32-bit bus addresses, then the driver should do this:
-
-	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
-
-If there's no SWIOTLB or IOMMU, then dma_alloc_coherent() should 
-allocate only 32-bit addresses.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index a7440bc..1bd6c8c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -158,6 +158,7 @@ melexis	Melexis N.V.
+ merrii	Merrii Technology Co., Ltd.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
++microcrystal	Micro Crystal AG
+ micron	Micron Technology Inc.
+ minix	MINIX Technology Ltd.
+ mitsubishi	Mitsubishi Electric Corporation
+-- 
+1.9.1
 
 -- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
