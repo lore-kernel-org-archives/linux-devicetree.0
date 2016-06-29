@@ -1,109 +1,57 @@
-From: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Subject: [PATCH RESEND v2] mfd: sm501: Add device property
-Date: Thu, 30 Jun 2016 01:56:59 +0900
-Message-ID: <1467219419-22901-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name dt property
+Date: Wed, 29 Jun 2016 20:00:14 +0300
+Message-ID: <871t3gdj6p.fsf@purkki.adurom.net>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+	<CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
+	<b49a9e4b-d591-d978-8005-413f39ebf2bd@redhat.com>
+Reply-To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBAABBYH5Z65QKGQECES3UHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <b49a9e4b-d591-d978-8005-413f39ebf2bd-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> (Hans de
+	Goede's message of "Wed, 29 Jun 2016 17:16:32 +0200")
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/sm501.txt | 45 +++++++++++++++++++++++++
- drivers/mfd/sm501.c                             |  9 +++++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/sm501.txt
+Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
 
-diff --git a/Documentation/devicetree/bindings/mfd/sm501.txt b/Documentation/devicetree/bindings/mfd/sm501.txt
-new file mode 100644
-index 0000000..9290094
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/sm501.txt
-@@ -0,0 +1,45 @@
-+* SM SM501
-+
-+The SM SM501 is a LCD controller, with proper hardware, it can also
-+drive DVI monitors.
-+
-+Required properties:
-+- compatible : should be "smi,sm501".
-+- reg : contain two entries:
-+    - First entry: System Configuration register
-+    - Second entry: IO space (Display Controller register)
-+- interrupts : SMI interrupt to the cpu should be described here.
-+- interrupt-parent : the phandle for the interrupt controller that
-+  services interrupts for this device.
-+
-+Optional properties:
-+- mode : select a video mode:
-+    <xres>x<yres>[-<bpp>][@<refresh>]
-+- edid : verbatim EDID data block describing attached display.
-+  Data from the detailed timing descriptor will be used to
-+  program the display controller.
-+- little-endian: available on big endian systems, to
-+  set different foreign endian.
-+- big-endian: available on little endian systems, to
-+  set different foreign endian.
-+- smi,devices: function block enable bitmap.
-+	bit0: USB host
-+	bit1: USB slave
-+	bit2: SSP Ch0
-+	bit3: SSP Ch1
-+	bit4: UART Ch0
-+	bit5: UART Ch1
-+	bit6: Accelerator
-+	bit7: AC97
-+	bit8: I2S
-+	bit9: GPIO
-+
-+Example for MPC5200:
-+	display@1,0 {
-+		compatible = "smi,sm501";
-+		reg = <1 0x00000000 0x00800000
-+		       1 0x03e00000 0x00200000>;
-+		interrupts = <1 1 3>;
-+		mode = "640x480-32@60";
-+		edid = [edid-data];
-+	};
-diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
-index 65cd0d2..e2e3f9b 100644
---- a/drivers/mfd/sm501.c
-+++ b/drivers/mfd/sm501.c
-@@ -21,6 +21,7 @@
- #include <linux/pci.h>
- #include <linux/i2c-gpio.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- 
- #include <linux/sm501.h>
- #include <linux/sm501-regs.h>
-@@ -1377,6 +1378,8 @@ static int sm501_plat_probe(struct platform_device *dev)
- {
- 	struct sm501_devdata *sm;
- 	int ret;
-+	struct sm501_platdata private_platdata;
-+	struct sm501_initdata private_initdata;
- 
- 	sm = kzalloc(sizeof(struct sm501_devdata), GFP_KERNEL);
- 	if (sm == NULL) {
-@@ -1388,6 +1391,12 @@ static int sm501_plat_probe(struct platform_device *dev)
- 	sm->dev = &dev->dev;
- 	sm->pdev_id = dev->id;
- 	sm->platdata = dev_get_platdata(&dev->dev);
-+	if (!sm->platdata) {
-+		of_property_read_u32(dev->dev.of_node, "smi,devices",
-+				     (u32 *)&private_initdata.devices);
-+		private_platdata.init = &private_initdata;
-+		sm->platdata = &private_platdata;
-+	}
- 
- 	ret = platform_get_irq(dev, 0);
- 	if (ret < 0) {
+> Hi,
+>
+> On 29-06-16 16:42, Jonas Gorski wrote:
+>> Hi,
+>>
+>> On 29 June 2016 at 16:04, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>> Add a brcm,nvram_file_name dt property to allow overruling the default
+>>> nvram filename for sdio devices. The idea is that we can specify a
+>>> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
+>>> with an ap6210 wifi sdio module and ship this in linux-firmware, so
+>>> that wifi will work out of the box, without requiring users to find
+>>> and then manually install the right nvram file for their board.
+>>
+>> Directly defining a filename doesn't seem like a good OS-agnostic
+>> approach. Maybe an alternative would be to add a model-property to the
+>> nodes (this is allowed) and make brcmfmac to request
+>> "FWFILENAME-<model>" as firmware if set? That would leave it to the OS
+>> on how the filename is set.
+>
+> It only defines the base-filename, not the entire path, how / where
+> this file is searched for / loaded-from is then left up to the os
+
+It's still a bad idea. The filename, including the path, should be
+created in the driver. Can't you provide chipname (or similar) via
+device tree and then the driver can choose what image to use?
+
+Can you tell more about the naming the firmware image, how does it work
+exactly?
+
 -- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kalle Valo
