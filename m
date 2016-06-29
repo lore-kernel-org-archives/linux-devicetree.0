@@ -1,72 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 0/4] ASoC: sunxi: Add i2s controller
-	support
-Date: Wed, 29 Jun 2016 19:53:09 +0100
-Message-ID: <20160629185309.GR6247@sirena.org.uk>
-References: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
- <20160627183238.GW4000@lukather>
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 20/21] phy: Add support for Qualcomm's USB HSIC phy
+Date: Wed, 29 Jun 2016 11:54:49 -0700
+Message-ID: <146722648915.16253.2287256112087912402@sboyd-linaro>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+ <20160626072838.28082-21-stephen.boyd@linaro.org>
+ <57723A21.3060602@baylibre.com>
+ <146715109651.31418.4819151138932336863@sboyd-linaro>
+ <57739203.9000601@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2868022490632534866=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160627183238.GW4000@lukather>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, gianfranco@moddevices.com, Code Kipper <codekipper@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Andrea Venturi <ennesimamail.av@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57739203.9000601-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Neil Armstrong (2016-06-29 02:16:51)
+> On 06/28/2016 11:58 PM, Stephen Boyd wrote:
+> > Quoting Neil Armstrong (2016-06-28 01:49:37)
+> >> On 06/26/2016 09:28 AM, Stephen Boyd wrote:
+> >>> +     uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
+> >>> +     if (IS_ERR(clk))
+> >>> +             return PTR_ERR(clk);
+> >>
+> >> Hi Stephen,
+> >>
+> >> In the bindings the cal_sleep is marked optional, and I think should be since AFAIK
+> >> it's not present on MDM9615 for example.
+> > 
+> > The cal_sleep clk is just the sleep clk then (should be a board clk in
+> > DT). Sometimes there's a gate in GCC to allow us to turn it off, other
+> > times there isn't. Either way, it's always wired there so I'll update
+> > the binding to say it isn't optional.
+> 
+> Sorry I don't understand !
+> What should I do if GCC does not provide a gate here ? And looking at the driver, it could be optional.
 
---===============2868022490632534866==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8Bx+wEju+vH9ym24"
-Content-Disposition: inline
-
-
---8Bx+wEju+vH9ym24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 27, 2016 at 08:32:38PM +0200, Maxime Ripard wrote:
-
-> Any comments on this one?
-
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  Sending content
-free pings just adds to the mail volume (if they are seen at all) and if=20
-something has gone wrong you'll have to resend the patches anyway.
-
---8Bx+wEju+vH9ym24
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXdBkUAAoJECTWi3JdVIfQtAwH/ilmzXLHxXWv3gGxJZG6eWpV
-m+anXd026GZBhE4FeZvyFCtHhImgMVBh74oYbq94M9fND3GSybfzcL8/iZds6KDD
-v3IruWMI/gALfrI0eC0gVVZqzdKJpFLV7SuyRKYeuKv32uPWt5QnVeaRYOUKQpw6
-mLx1FgZF5LvWmZqhHRayXjRwBOAn6z+gTa6JMiahK1AhQzTqNVS0TRefwIdufDv0
-PWuef8Jud6OP9HUe2K9bLWB87LHgNQdVSebj2hd8GPeXCmkI9BAqWe3npbfwsq9c
-XGHja/8HuX2hgYHmI7jdDPg/KJc4ERFXs8lhB3+VGkk7gwBtm6SRhmMWimYbIkI=
-=VE5A
------END PGP SIGNATURE-----
-
---8Bx+wEju+vH9ym24--
-
---===============2868022490632534866==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2868022490632534866==--
+You should set the property to point to &sleep_clk which should be under
+the "clocks" node at the root of the OF tree. For example, see the
+sleep_clk node in arch/arm/boot/dts/qcom-apq8064.dtsi.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
