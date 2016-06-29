@@ -1,58 +1,176 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Wed, 29 Jun 2016 21:33:59 +0200
-Message-ID: <6402170.5s0abZDqlD@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <ea10ff70-26e6-e151-5cea-c54bd12a054c@redhat.com> <f8995599-115d-87e5-7928-c029b48584f1@broadcom.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Bruno Herrera <bruherrera@gmail.com>
+Subject: Re: [PATCH 1/3] usb: dwc2: Add support for STM32F429/439/469 USB OTG
+ in FS mode with internal PHY
+Date: Wed, 29 Jun 2016 16:46:39 -0300
+Message-ID: <CAF3+Tqe=6JxiZ=iefKw=2wD5RQt3d-Mb960H4zum1tFoR08Dhg@mail.gmail.com>
+References: <1466562349-5043-1-git-send-email-bruherrera@gmail.com>
+ <436eef12-6204-d621-8574-92aea2d374fd@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBFGE2C5QKGQE3D34A2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <f8995599-115d-87e5-7928-c029b48584f1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <436eef12-6204-d621-8574-92aea2d374fd@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: John Youn <John.Youn@synopsys.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "a.seppala@gmail.com" <a.seppala@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 29, 2016 8:51:44 PM CEST Arend Van Spriel wrote:
-> > Typical wifi devices will have some sort of non volatile storage
-> > on board to not only store the ethernet(mac) address, but also
-> > to contain e.g. info about the antenna gain so that the firmware
-> > and/or the driver can take the antenna gain into account and ensure
-> > that they never exceed the maximum allowed broadcast strength.
-> > 
-> > However on some embedded devices there is no non-volatile storage
-> > for the wifi (for cost reasons) and instead this configuration info
-> > (which is board / pcb specific) is loaded in the form of a
-> > file which contains the contents which would normally be in the
-> > non-volatile storage.
-> > 
-> > Since we are dealing with a per-board config-file here, which is
-> > loaded from the os filesystem we really need to specify a basename
-> > here as the list of possible boards is endless, so we cannot
-> > have a lookup table in the driver.
-> 
-> As Jonas mentioned the general principle of device tree is to be
-> agnostic with regards to OS and/or driver as you undoubtedly know. His
-> proposal seems like a usable solution for your problem while complying
-> to the device tree principle. So instead of overriding the default
-> brcmfmac should modify it when dt specifies the "module" property, ie:
-> 
-> no "module" in DT:      nvram filename = brcm/brcmfmac43362-sdio.txt
-> "module=ap6210" in DT:  nvram filename = brcm/brcmfmac43362-ap6210.txt
-> 
-> By the way, the example in the bindings file does not seem to specify a
-> basename, but path+basename+fileext.
+On Mon, Jun 27, 2016 at 7:51 PM, John Youn <John.Youn@synopsys.com> wrote:
+> On 6/21/2016 7:26 PM, Bruno Herrera wrote:
+>> Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
+>
+> Please add a commit message describing the purpose of your changes,
+> some information about the platform you're adding, and the special
+> handling of the GGPIO.
+>
+Ok, no problem.
 
-What is the size of this nvram file? As it's board specific, I wonder
-if we can simply include it inside of the DT verbatim. I remember
-doing that (in the pre-dtb days, on real open firmware) for the "spidernet"
-ethernet driver.
+>> ---
+>>  drivers/usb/dwc2/core.c     | 18 ++++++++++++++++++
+>>  drivers/usb/dwc2/core.h     |  5 +++++
+>>  drivers/usb/dwc2/hcd.c      | 12 +++++++++++-
+>>  drivers/usb/dwc2/hw.h       |  2 ++
+>>  drivers/usb/dwc2/platform.c | 37 +++++++++++++++++++++++++++++++++++++
+>>  5 files changed, 73 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/dwc2/core.c b/drivers/usb/dwc2/core.c
+>> index 4135a5f..83fbed6 100644
+>> --- a/drivers/usb/dwc2/core.c
+>> +++ b/drivers/usb/dwc2/core.c
+>> @@ -1276,6 +1276,23 @@ static void dwc2_set_param_hibernation(struct dwc2_hsotg *hsotg,
+>>       hsotg->core_params->hibernation = val;
+>>  }
+>>
+>> +static void dwc2_set_param_stm32_powerdown(struct dwc2_hsotg *hsotg,
+>> +             int val)
+>> +{
+>> +     if (DWC2_OUT_OF_BOUNDS(val, 0, 1)) {
+>> +             if (val >= 0) {
+>> +                     dev_err(hsotg->dev,
+>> +                             "'%d' invalid for parameter power down\n",
+>> +                             val);
+>> +                     dev_err(hsotg->dev, "power down must be 0 or 1\n");
+>> +             }
+>> +             val = 0;
+>> +             dev_dbg(hsotg->dev, "Setting power down to %d\n", val);
+>> +     }
+>> +
+>> +     hsotg->core_params->stm32_powerdown = val;
+>> +}
+>> +
+>>  /*
+>>   * This function is called during module intialization to pass module parameters
+>>   * for the DWC_otg core.
+>> @@ -1323,6 +1340,7 @@ void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
+>>       dwc2_set_param_uframe_sched(hsotg, params->uframe_sched);
+>>       dwc2_set_param_external_id_pin_ctl(hsotg, params->external_id_pin_ctl);
+>>       dwc2_set_param_hibernation(hsotg, params->hibernation);
+>> +     dwc2_set_param_stm32_powerdown(hsotg, params->stm32_powerdown);
+>>  }
+>>
+>>  /*
+>> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+>> index 3c58d63..d3e4fcb 100644
+>> --- a/drivers/usb/dwc2/core.h
+>> +++ b/drivers/usb/dwc2/core.h
+>> @@ -386,6 +386,10 @@ enum dwc2_ep0_state {
+>>   *                   needed.
+>>   *                   0 - No (default)
+>>   *                   1 - Yes
+>> + * @stm32_powerdown: Enable STM32 specific USB FS transceiver power down
+>> + *                   control.
+>> + *                   0 = USB FS transceiver disabled (default)
+>> + *                   1 = USB FS transceiver enabled
+>>   *
+>>   * The following parameters may be specified when starting the module. These
+>>   * parameters define how the DWC_otg controller should be configured. A
+>> @@ -426,6 +430,7 @@ struct dwc2_core_params {
+>>       int uframe_sched;
+>>       int external_id_pin_ctl;
+>>       int hibernation;
+>> +     int stm32_powerdown;
+>>  };
+>>
+>>  /**
+>> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
+>> index 2df3d04..4f9bb93 100644
+>> --- a/drivers/usb/dwc2/hcd.c
+>> +++ b/drivers/usb/dwc2/hcd.c
+>> @@ -118,7 +118,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
+>>
+>>  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>>  {
+>> -     u32 usbcfg, i2cctl;
+>> +     u32 usbcfg, usbgpio, i2cctl;
+>
+> The convention in this driver would be to just call 'usbgpio' -> 'ggpio'
 
-	Arnd
+OK.
+>
+>>       int retval = 0;
+>>
+>>       /*
+>> @@ -142,6 +142,16 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>>                               return retval;
+>>                       }
+>>               }
+>> +
+>> +             if (hsotg->core_params->stm32_powerdown > 0) {
+>> +                     dev_dbg(hsotg->dev, "STM32 FS PHY enabling transceiver\n");
+>> +                     /* STM32 uses the GGPIO register as general core
+>> +                      * configuration register.
+>> +                      */
+>> +                     usbgpio = dwc2_readl(hsotg->regs + GGPIO);
+>> +                     usbgpio |= STM32_OTG_GCCFG_PWRDWN;
+>> +                     dwc2_writel(usbgpio, hsotg->regs + GGPIO);
+>> +             }
+>>       }
+>>
+>>       /*
+>> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
+>> index 281b57b..d5f9294 100644
+>> --- a/drivers/usb/dwc2/hw.h
+>> +++ b/drivers/usb/dwc2/hw.h
+>> @@ -224,6 +224,8 @@
+>>
+>>  #define GPVNDCTL                     HSOTG_REG(0x0034)
+>>  #define GGPIO                                HSOTG_REG(0x0038)
+>> +#define STM32_OTG_GCCFG_PWRDWN               (1 << 16)
+>> +
+>
+> Also, bitfields for GGPIO should be named: GGPIO_xxx
+
+Could it be -> GGPIO_STM32_OTG_GCCFG_PWRDWN
+>From my understand the GGPIO are platform/vendor dependent so in the
+future some other vendor could use the same bit for other purpose.
+Should we keep it defined here or only in the scope it is used?
+
+>
+>
+>>  #define GUID                         HSOTG_REG(0x003c)
+>>  #define GSNPSID                              HSOTG_REG(0x0040)
+>>  #define GHWCFG1                              HSOTG_REG(0x0044)
+>> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+>> index fc6f525..d806b94 100644
+>> --- a/drivers/usb/dwc2/platform.c
+>> +++ b/drivers/usb/dwc2/platform.c
+>> @@ -84,6 +84,7 @@ static const struct dwc2_core_params params_hi6220 = {
+>>       .uframe_sched                   = 0,
+>>       .external_id_pin_ctl            = -1,
+>>       .hibernation                    = -1,
+>> +     .stm32_powerdown                = 0,
+>
+> You can probably just leave this out of unrelated configurations since
+> it will default to 0.
+OK.
+>
+> Regards,
+> John
