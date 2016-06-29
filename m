@@ -1,50 +1,40 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 0/2] Add mt6755 basic chip support
-Date: Wed, 29 Jun 2016 10:09:31 +0800
-Message-ID: <1467166173-9029-1-git-send-email-mars.cheng@mediatek.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v1 1/5] dt-bindings: Add support for LG LP079QX1-SP0V
+ 1536x2048 panel
+Date: Wed, 29 Jun 2016 11:31:10 +0800
+Message-ID: <577340FE.4060305@rock-chips.com>
+References: <1467089288-18355-1-git-send-email-ykk@rock-chips.com>
+ <1467089472-18584-1-git-send-email-ykk@rock-chips.com>
+ <20160628205943.GA6556@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loda Choui <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160628205943.GA6556@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic support for Mediatek's new 8-core chip, mt6755.
-Based on 4.7-rc1
-
-Changes in v3:
-1. use evb as project suffix
-2. add "disable" property for uart dts nodes
-3. only alias uart0 as serial0, since we don't enable uart1
-4. confirm all acks are added
-
-Mars Cheng (2):
-  Document: DT: Add bindings for mediatek MT6755 SoC Platform
-  arm64: dts: mediatek: add mt6755 support
-
-Mars Cheng (2):
-  Document: DT: Add bindings for mediatek MT6755 SoC Platform
-  arm64: dts: mediatek: add mt6755 support
-
- Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
- .../interrupt-controller/mediatek,sysirq.txt       |    1 +
- .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
- arch/arm64/boot/dts/mediatek/Makefile              |    1 +
- arch/arm64/boot/dts/mediatek/mt6755-evb.dts        |   38 +++++
- arch/arm64/boot/dts/mediatek/mt6755.dtsi           |  145 ++++++++++++++++++++
- 6 files changed, 190 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6755-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6755.dtsi
-
---
-1.7.9.5
+Um9iLAoKT24gMDYvMjkvMjAxNiAwNDo1OSBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVl
+LCBKdW4gMjgsIDIwMTYgYXQgMTI6NTE6MTJQTSArMDgwMCwgWWFraXIgWWFuZyB3cm90ZToKPj4g
+VGhlIExHIExQMDc5UVgxLVNQMFYgaXMgYW4gNy45IiBRWEdBIFRGVCB3aXRoIExFRCBCYWNrbGln
+aHQgdW5pdCBhbmQKPj4gMzIgcGlucyBlRFAgaW50ZXJmYWNlLiBUaGlzIG1vZHVsZSBzdXBwb3J0
+cyAxNTM2eDIwNDggbW9kZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJv
+Y2stY2hpcHMuY29tPgo+PiAtLS0KPj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL2xnLGxwMDc5cXgxLXNwMHYudHh0ICAgICAgICAgfCA3ICsrKysrKysKPj4gICAxIGZp
+bGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2xnLGxwMDc5cXgxLXNw
+MHYudHh0Cj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4KVGhhbmtz
+IGZvciB5b3VyIGZhc3QgcmVzcG9uZCA7KQo+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
