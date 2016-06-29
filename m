@@ -1,58 +1,225 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V2 06/11] dt-bindings: i2c: Add support for 'i2c-bus' subnode
-Date: Wed, 29 Jun 2016 10:17:52 +0100
-Message-ID: <1467191877-26017-7-git-send-email-jonathanh@nvidia.com>
-References: <1467191877-26017-1-git-send-email-jonathanh@nvidia.com>
+From: Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Wed, 29 Jun 2016 17:19:53 +0800
+Message-ID: <577392B9.9030206@huawei.com>
+References: <1463114260-8724-1-git-send-email-oss@buserror.net>
+ <20160513112441.200f4349@arm.com> <577382A3.7080509@huawei.com>
+ <577385C1.4030400@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1467191877-26017-1-git-send-email-jonathanh@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <577385C1.4030400-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dingtinahong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The I2C driver core for boards using device-tree assumes any subnode of
-an I2C adapter in the device-tree blob is an I2C slave device. Although
-this makes complete sense, some I2C adapters may have subnodes which
-are not I2C slaves but subnodes presenting other features. For example
-some Tegra devices have an I2C interface which may share its pins with
-other devices. In order to share these pins using the pinctrl framework,
-it is necessary to add subnodes to the I2C device node that represent
-these pins.
+On 2016/6/29 16:24, Marc Zyngier wrote:
+> On 29/06/16 09:11, Hanjun Guo wrote:
+>> On 2016/5/13 18:24, Marc Zyngier wrote:
+>>> On Thu, 12 May 2016 23:37:39 -0500
+>>> Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org> wrote:
+>>>
+>>> Hi Scott,
+>>>
+>>>> Erratum A-008585 says that the ARM generic timer counter "has the
+>>>> potential to contain an erroneous value for a small number of core
+>>>> clock cycles every time the timer value changes".  Accesses to TVAL
+>>>> (both read and write) are also affected due to the implicit counter
+>>>> read.  Accesses to CVAL are not affected.
+>>>>
+>>>> The workaround is to reread TVAL and count registers until successive reads
+>>>> return the same value, and when writing TVAL to retry until counter
+>>>> reads before and after the write return the same value.
+>>>>
+>>>> This erratum can be found on LS1043A and LS2080A.
+>>>>
+>>>> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+>>>> ---
+>>>> v2:
+>>>> Significant rework based on feedback, including using static_key,
+>>>> disabling VDSO counter access rather than adding the workaround to the
+>>>> VDSO, and uninlining the loops.
+>>>>
+>>>> Dropped the separate property for indicating that writes to TVAL are
+>>>> affected, as I believe that's just a side effect of the implicit
+>>>> counter read being corrupted, and thus a chip that is affected by one
+>>>> will always be affected by the other.
+>>>>
+>>>> Dropped the arm32 portion as it seems there was confusion about whether
+>>>> LS1021A is affected.  Currently I am being told that it is not
+>>>> affected.
+>>>>
+>>>> I considered writing to CVAL rather than looping on TVAL writes, but
+>>>> that would still have required separate set_next_event() code for the
+>>>> erratum, and adding CVAL to the enum would have required a bunch of
+>>>> extra handlers in switch statements (even where unused, due to compiler
+>>>> warnings about unhandled enum values) including in an arm32 header.  It
+>>>> seemed better to avoid the arm32 interaction and new untested
+>>>> accessors.
+>>>> ---
+>>>>  .../devicetree/bindings/arm/arch_timer.txt         |   6 ++
+>>>>  arch/arm64/include/asm/arch_timer.h                |  37 +++++--
+>>>>  drivers/clocksource/arm_arch_timer.c               | 110 +++++++++++++++++++++
+>>>>  3 files changed, 144 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+>>>> index e774128..ef5fbe9 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+>>>> @@ -25,6 +25,12 @@ to deliver its interrupts via SPIs.
+>>>>  - always-on : a boolean property. If present, the timer is powered through an
+>>>>    always-on power domain, therefore it never loses context.
+>>>>  
+>>>> +- fsl,erratum-a008585 : A boolean property. Indicates the presence of
+>>>> +  QorIQ erratum A-008585, which says that reading the counter is
+>>>> +  unreliable unless the same value is returned by back-to-back reads.
+>>>> +  This also affects writes to the tval register, due to the implicit
+>>>> +  counter read.
+>>>> +
+>>>>  ** Optional properties:
+>>>>  
+>>>>  - arm,cpu-registers-not-fw-configured : Firmware does not initialize
+>>> This should be part of a separate patch. Also, errata should be
+>>> documented in Documentation/arm64/silicon-errata.txt.
+>>>
+>>>> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
+>>>> index fbe0ca3..9715e85 100644
+>>>> --- a/arch/arm64/include/asm/arch_timer.h
+>>>> +++ b/arch/arm64/include/asm/arch_timer.h
+>>>> @@ -23,10 +23,33 @@
+>>>>  
+>>>>  #include <linux/bug.h>
+>>>>  #include <linux/init.h>
+>>>> +#include <linux/jump_label.h>
+>>>>  #include <linux/types.h>
+>>>>  
+>>>>  #include <clocksource/arm_arch_timer.h>
+>>>>  
+>>>> +extern struct static_key_false arch_timer_read_ool_enabled;
+>>>> +
+>>>> +#define ARCH_TIMER_REG_READ(reg, func) \
+>>>> +extern u64 func##_ool(void); \
+>>>> +static inline u64 __##func(void) \
+>>>> +{ \
+>>>> +	u64 val; \
+>>>> +	asm volatile("mrs %0, " reg : "=r" (val)); \
+>>>> +	return val; \
+>>>> +} \
+>>>> +static inline u64 _##func(void) \
+>>>> +{ \
+>>>> +	if (static_branch_unlikely(&arch_timer_read_ool_enabled)) \
+>>>> +		return func##_ool(); \
+>>>> +	else \
+>>>> +		return __##func(); \
+>>>> +}
+>>>> +
+>>>> +ARCH_TIMER_REG_READ("cntp_tval_el0", arch_timer_get_ptval)
+>>>> +ARCH_TIMER_REG_READ("cntv_tval_el0", arch_timer_get_vtval)
+>>>> +ARCH_TIMER_REG_READ("cntvct_el0", arch_counter_get_cntvct)
+>>>> +
+>>> Given that this will have a (small) impact on non-affected platforms,
+>>> it'd be good to have this guarded by a erratum-specific config option
+>>> (CONFIG_FSL_ERRATUM_008585?) and turn it into trivial accessors when not
+>>> defined.
+>>>
+>>>>  /*
+>>>>   * These register accessors are marked inline so the compiler can
+>>>>   * nicely work out which register we want, and chuck away the rest of
+>>>> @@ -66,19 +89,19 @@ u32 arch_timer_reg_read_cp15(int access, enum arch_timer_reg reg)
+>>>>  	if (access == ARCH_TIMER_PHYS_ACCESS) {
+>>>>  		switch (reg) {
+>>>>  		case ARCH_TIMER_REG_CTRL:
+>>>> -			asm volatile("mrs %0,  cntp_ctl_el0" : "=r" (val));
+>>>> +			asm volatile("mrs %0, cntp_ctl_el0" : "=r" (val));
+>>> Spurious change?
+>>>
+>>>>  			break;
+>>>>  		case ARCH_TIMER_REG_TVAL:
+>>>> -			asm volatile("mrs %0, cntp_tval_el0" : "=r" (val));
+>>>> +			val = _arch_timer_get_ptval();
+>>>>  			break;
+>>>>  		}
+>>>>  	} else if (access == ARCH_TIMER_VIRT_ACCESS) {
+>>>>  		switch (reg) {
+>>>>  		case ARCH_TIMER_REG_CTRL:
+>>>> -			asm volatile("mrs %0,  cntv_ctl_el0" : "=r" (val));
+>>>> +			asm volatile("mrs %0, cntv_ctl_el0" : "=r" (val));
+>>> Same here.
+>>>
+>>>>  			break;
+>>>>  		case ARCH_TIMER_REG_TVAL:
+>>>> -			asm volatile("mrs %0, cntv_tval_el0" : "=r" (val));
+>>>> +			val = _arch_timer_get_vtval();
+>>>>  			break;
+>>>>  		}
+>>>>  	}
+>>>> @@ -116,12 +139,8 @@ static inline u64 arch_counter_get_cntpct(void)
+>>>>  
+>>>>  static inline u64 arch_counter_get_cntvct(void)
+>>>>  {
+>>>> -	u64 cval;
+>>>> -
+>>>>  	isb();
+>>>> -	asm volatile("mrs %0, cntvct_el0" : "=r" (cval));
+>>>> -
+>>>> -	return cval;
+>>>> +	return _arch_counter_get_cntvct();
+>>>>  }
+>>>>  
+>>>>  static inline int arch_timer_arch_init(void)
+>>>> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+>>>> index 5152b38..6f78831 100644
+>>>> --- a/drivers/clocksource/arm_arch_timer.c
+>>>> +++ b/drivers/clocksource/arm_arch_timer.c
+>>>> @@ -79,10 +79,52 @@ static enum ppi_nr arch_timer_uses_ppi = VIRT_PPI;
+>>>>  static bool arch_timer_c3stop;
+>>>>  static bool arch_timer_mem_use_virtual;
+>>>>  
+>>>> +DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
+>>>> +EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
+>>>> +
+>>> Once you have a config option, this can move to the guarded section
+>>> below...
+>>>
+>>>>  /*
+>>>>   * Architected system timer support.
+>>>>   */
+>>>>  
+>>>> +#ifdef CONFIG_ARM64
+>>> which can become CONFIG_FSL_ERRATUM_008585
+>>>
+>>>> +/*
+>>>> + * __always_inline is used to ensure that func() is not an actual function
+>>>> + * pointer, which would result in the register accesses potentially being too
+>>>> + * far apart for the loop to work.
+>>>> + */
+>>>> +static __always_inline u64 arch_timer_reread(u64 (*func)(void))
+>>> This is quite a generic function name. I'd expect something that refers
+>>> to the erratum number.
+>> This is a generic solution to reread the timer counter, how about using a generic one
+>> here for more potential consumers in the future?
+> In that case, how about something like
+>
+> "my_arch_timer_is_so_broken_that_I_have_to_poll_it"?
+>
+> It should be generic enough, don't you think?
 
-To allow I2C adapters to have non-I2C specific subnodes in device-tree
-that are not parsed by the I2C driver core, add support for an optional
-'i2c-bus' subnode where I2C slaves can be placed. If the 'i2c-bus'
-subnode is present then all I2C slaves must be placed under this
-subnode.
+I will vote for it ;)
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/i2c/i2c.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+>
+> Joke aside, I want it to be clear that this is a workaround for an
+> erratum. This is not a general purpose function.
+>
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-index f31b2ad1552b..5fa691e6f638 100644
---- a/Documentation/devicetree/bindings/i2c/i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-@@ -32,6 +32,14 @@ wants to support one of the below features, it should adapt the bindings below.
- - clock-frequency
- 	frequency of bus clock in Hz.
- 
-+- i2c-bus
-+	For I2C adapters that have child nodes that are a mixture of both I2C
-+	devices and non-I2C devices, the 'i2c-bus' subnode can be used for
-+	populating I2C devices. If the 'i2c-bus' subnode is present, only
-+	subnodes of this will be considered as I2C slaves. The properties,
-+	'#address-cells' and '#size-cells' must be defined under this subnode
-+	if present.
-+
- - i2c-scl-falling-time-ns
- 	Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
- 	specification.
--- 
-2.1.4
+Fair enough, thanks for the clarify.
 
+Regards
+Hanjun
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
