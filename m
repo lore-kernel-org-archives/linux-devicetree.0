@@ -1,126 +1,101 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regmap: Support bulk writes for devices without raw formatting" to the regmap tree
-Date: Wed, 29 Jun 2016 19:48:34 +0100
-Message-ID: <E1bIKXK-0005rN-JW__28445.8242510029$1467226210$gmane$org@finisterre>
-References: <1465870678-30128-2-git-send-email-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1465870678-30128-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Wed, 29 Jun 2016 20:51:44 +0200
+Message-ID: <f8995599-115d-87e5-7928-c029b48584f1@broadcom.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+ <CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
+ <b49a9e4b-d591-d978-8005-413f39ebf2bd@redhat.com>
+ <871t3gdj6p.fsf@purkki.adurom.net>
+ <ea10ff70-26e6-e151-5cea-c54bd12a054c@redhat.com>
+Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRYNGWEWYDBBRVR2C5QKGQEMPNSXRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <ea10ff70-26e6-e151-5cea-c54bd12a054c-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 29-6-2016 20:01, Hans de Goede wrote:
+> Hi,
+> 
+> On 29-06-16 19:00, Kalle Valo wrote:
+>> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
+>>
+>>> Hi,
+>>>
+>>> On 29-06-16 16:42, Jonas Gorski wrote:
+>>>> Hi,
+>>>>
+>>>> On 29 June 2016 at 16:04, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>> Add a brcm,nvram_file_name dt property to allow overruling the default
+>>>>> nvram filename for sdio devices. The idea is that we can specify a
+>>>>> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
+>>>>> with an ap6210 wifi sdio module and ship this in linux-firmware, so
+>>>>> that wifi will work out of the box, without requiring users to find
+>>>>> and then manually install the right nvram file for their board.
+>>>>
+>>>> Directly defining a filename doesn't seem like a good OS-agnostic
+>>>> approach. Maybe an alternative would be to add a model-property to the
+>>>> nodes (this is allowed) and make brcmfmac to request
+>>>> "FWFILENAME-<model>" as firmware if set? That would leave it to the OS
+>>>> on how the filename is set.
+>>>
+>>> It only defines the base-filename, not the entire path, how / where
+>>> this file is searched for / loaded-from is then left up to the os
+>>
+>> It's still a bad idea. The filename, including the path, should be
+>> created in the driver. Can't you provide chipname (or similar) via
+>> device tree and then the driver can choose what image to use?
+> 
+> No, the driver already does that, but this is not ...
+> 
+>> Can you tell more about the naming the firmware image, how does it work
+>> exactly?
+> 
+> About firmware, this is about the nvram file which is board specific,
+> rather then chip specific.
 
-   regmap: Support bulk writes for devices without raw formatting
+The nvram filename is determined pretty much the same as the firmware
+filename, but indeed the nvram data is board specific. This is main
+reason why we do not submit nvram files to linux-firmware, because we
+simply do not have those files.
 
-has been applied to the regmap tree at
+> Typical wifi devices will have some sort of non volatile storage
+> on board to not only store the ethernet(mac) address, but also
+> to contain e.g. info about the antenna gain so that the firmware
+> and/or the driver can take the antenna gain into account and ensure
+> that they never exceed the maximum allowed broadcast strength.
+> 
+> However on some embedded devices there is no non-volatile storage
+> for the wifi (for cost reasons) and instead this configuration info
+> (which is board / pcb specific) is loaded in the form of a
+> file which contains the contents which would normally be in the
+> non-volatile storage.
+> 
+> Since we are dealing with a per-board config-file here, which is
+> loaded from the os filesystem we really need to specify a basename
+> here as the list of possible boards is endless, so we cannot
+> have a lookup table in the driver.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
+As Jonas mentioned the general principle of device tree is to be
+agnostic with regards to OS and/or driver as you undoubtedly know. His
+proposal seems like a usable solution for your problem while complying
+to the device tree principle. So instead of overriding the default
+brcmfmac should modify it when dt specifies the "module" property, ie:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+no "module" in DT:	nvram filename = brcm/brcmfmac43362-sdio.txt
+"module=ap6210" in DT:	nvram filename = brcm/brcmfmac43362-ap6210.txt
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+By the way, the example in the bindings file does not seem to specify a
+basename, but path+basename+fileext.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 5bf75b44972a7edffa9f52cddb291d66bc16a4d6 Mon Sep 17 00:00:00 2001
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Date: Mon, 20 Jun 2016 10:52:11 +0800
-Subject: [PATCH] regmap: Support bulk writes for devices without raw
- formatting
-
-When doing a bulk writes from a device which lacks raw I/O support we
-fall back to doing register at a time reads but we still use the raw
-formatters in order to render the data into the word size used by the
-device (since bulk reads still operate on the device word size rather
-than unsigned ints).  This means that devices without raw formatting
-such as those that provide reg_read() are not supported.  Provide
-handling for them by copying the values read into native endian values
-of the appropriate size.
-
-This complements commit d5b98eb12420 ("regmap: Support bulk reads for
-devices without raw formatting").
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- drivers/base/regmap/regmap.c | 31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index df2d2ef5d6b3..51fa7d66a393 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1777,8 +1777,6 @@ int regmap_bulk_write(struct regmap *map, unsigned int reg, const void *val,
- 	size_t val_bytes = map->format.val_bytes;
- 	size_t total_size = val_bytes * val_count;
- 
--	if (map->bus && !map->format.parse_inplace)
--		return -EINVAL;
- 	if (!IS_ALIGNED(reg, map->reg_stride))
- 		return -EINVAL;
- 
-@@ -1789,7 +1787,8 @@ int regmap_bulk_write(struct regmap *map, unsigned int reg, const void *val,
- 	 *
- 	 * The first if block is used for memory mapped io. It does not allow
- 	 * val_bytes of 3 for example.
--	 * The second one is used for busses which do not have this limitation
-+	 * The second one is for busses that do not provide raw I/O.
-+	 * The third one is used for busses which do not have these limitations
- 	 * and can write arbitrary value lengths.
- 	 */
- 	if (!map->bus) {
-@@ -1825,6 +1824,32 @@ int regmap_bulk_write(struct regmap *map, unsigned int reg, const void *val,
- 		}
- out:
- 		map->unlock(map->lock_arg);
-+	} else if (map->bus && !map->format.parse_inplace) {
-+		const u8 *u8 = val;
-+		const u16 *u16 = val;
-+		const u32 *u32 = val;
-+		unsigned int ival;
-+
-+		for (i = 0; i < val_count; i++) {
-+			switch (map->format.val_bytes) {
-+			case 4:
-+				ival = u32[i];
-+				break;
-+			case 2:
-+				ival = u16[i];
-+				break;
-+			case 1:
-+				ival = u8[i];
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+
-+			ret = regmap_write(map, reg + (i * map->reg_stride),
-+					   ival);
-+			if (ret)
-+				return ret;
-+		}
- 	} else if (map->use_single_write ||
- 		   (map->max_raw_write && map->max_raw_write < total_size)) {
- 		int chunk_stride = map->reg_stride;
--- 
-2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Arend
