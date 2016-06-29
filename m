@@ -1,154 +1,179 @@
-From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 2/2 v4] tpm: Add TPM 2.0 support to the Nuvoton i2c
- driver (NPCT6xx family)
-Date: Wed, 29 Jun 2016 17:08:45 +0300
-Message-ID: <20160629140845.GC4589@intel.com>
-References: <1467186759-5149-1-git-send-email-andrew.zamansky@nuvoton.com>
- <1467186759-5149-3-git-send-email-andrew.zamansky@nuvoton.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] phy: rockchip-inno-usb2: add a new driver for
+ Rockchip usb2phy
+Date: Wed, 29 Jun 2016 19:44:52 +0530
+Message-ID: <5773D7DC.9050902@ti.com>
+References: <1465783810-18756-1-git-send-email-frank.wang@rock-chips.com>
+ <1465783810-18756-3-git-send-email-frank.wang@rock-chips.com>
+ <5763E506.1060500@ti.com> <1653733.7f4MgdqfFf@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467186759-5149-3-git-send-email-andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrew zamansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, azamansk-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, Dan.Morav-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, stimpy1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1653733.7f4MgdqfFf@diego>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 29, 2016 at 10:52:39AM +0300, andrew zamansky wrote:
-> From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
->=20
-> The command flow is exactly the same, the core simply needs to be
-> told to enable TPM2 mode when the compatible string indicates a
-> TPM2.
->=20
-> Signed-off-by: Andrew Azmansky <andrew.zamansky-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hi,
 
-Rob, should the change to device tree stuff be a separate patch and
-would it be better if you would take that patch instead of me putting
-into my tree?
+On Friday 17 June 2016 10:16 PM, Heiko St=FCbner wrote:
+> Hi Kishon,
+> =
 
-Just want to prevent unnecessary conflicts. Thanks.
+> Am Freitag, 17. Juni 2016, 17:24:46 schrieb Kishon Vijay Abraham I:
+> =
 
-/jarkko
+>>> +	ret =3D of_clk_add_provider(node, of_clk_src_simple_get, rphy->clk480=
+m);
+>>> +	if (ret < 0)
+>>> +		goto err_clk_provider;
+>>> +
+>>> +	ret =3D devm_add_action(rphy->dev, rockchip_usb2phy_clk480m_unregiste=
+r,
+>>> +			      rphy);
+>>> +	if (ret < 0)
+>>> +		goto err_unreg_action;
+>>> +
+>>> +	return 0;
+>>> +
+>>> +err_unreg_action:
+>>> +	of_clk_del_provider(node);
+>>> +err_clk_provider:
+>>> +	clk_unregister(rphy->clk480m);
+>>> +err_register:
+>>> +	if (rphy->clk)
+>>> +		clk_put(rphy->clk);
+>>> +	return ret;
+>>> +}
+>>
+>> I'm seeing lot of similarities specifically w.r.t to clock handling part=
+ in
+>> drivers/phy/phy-rockchip-usb.c. Why not just re-use that driver?
+> =
 
-> ---
->  .../devicetree/bindings/i2c/trivial-devices.txt    |  1 +
->  drivers/char/tpm/tpm_i2c_nuvoton.c                 | 24 ++++++++++++=
-+++++-----
->  2 files changed, 20 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
-t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index 53987449..5a14ef8 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -62,6 +62,7 @@ national,lm80		Serial Interface ACPI-Compatible Mic=
-roprocessor System Hardware M
->  national,lm85		Temperature sensor with integrated fan control
->  national,lm92		=B10.33=B0C Accurate, 12-Bit + Sign Temperature Senso=
-r and Thermal Window Comparator with Two-Wire Interface
->  nuvoton,npct501		i2c trusted platform module (TPM)
-> +nuvoton,npct6xx		i2c trusted platform module (TPM2)
->  nxp,pca9556		Octal SMBus and I2C registered interface
->  nxp,pca9557		8-bit I2C-bus and SMBus I/O port with reset
->  nxp,pcf8563		Real-time clock/calendar
-> diff --git a/drivers/char/tpm/tpm_i2c_nuvoton.c b/drivers/char/tpm/tp=
-m_i2c_nuvoton.c
-> index e8ff362..5b7b459 100644
-> --- a/drivers/char/tpm/tpm_i2c_nuvoton.c
-> +++ b/drivers/char/tpm/tpm_i2c_nuvoton.c
-> @@ -1,5 +1,5 @@
->  /*******************************************************************=
-***********
-> - * Nuvoton TPM I2C Device Driver Interface for WPCT301/NPCT501,
-> + * Nuvoton TPM I2C Device Driver Interface for WPCT301/NPCT501/NPCT6=
-XX,
->   * based on the TCG TPM Interface Spec version 1.2.
->   * Specifications at www.trustedcomputinggroup.org
->   *
-> @@ -31,6 +31,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/wait.h>
->  #include <linux/i2c.h>
-> +#include <linux/of_device.h>
->  #include "tpm.h"
-> =20
->  /* I2C interface offsets */
-> @@ -52,7 +53,8 @@
->  #define TPM_I2C_RETRY_DELAY_SHORT      2       /* msec */
->  #define TPM_I2C_RETRY_DELAY_LONG       10      /* msec */
-> =20
-> -#define I2C_DRIVER_NAME "tpm_i2c_nuvoton"
-> +#define OF_IS_TPM2 ((void *)1)
-> +#define I2C_IS_TPM2 1
-> =20
->  struct priv_data {
->  	int irq;
-> @@ -165,7 +167,7 @@ static int i2c_nuvoton_get_burstcount(struct i2c_=
-client *client,
->  }
-> =20
->  /*
-> - * WPCT301/NPCT501 SINT# supports only dataAvail
-> + * WPCT301/NPCT501/NPCT6XX SINT# supports only dataAvail
->   * any call to this function which is not waiting for dataAvail will
->   * set queue to NULL to avoid waiting for interrupt
->   */
-> @@ -545,6 +547,16 @@ static int i2c_nuvoton_probe(struct i2c_client *=
-client,
->  	if (!priv)
->  		return -ENOMEM;
-> =20
-> +	if (dev->of_node) {
-> +		const struct of_device_id *of_id;
-> +
-> +		of_id =3D of_match_device(dev->driver->of_device_id, dev);
-> +		if (of_id && of_id->data =3D=3D OF_IS_TPM2)
-> +			chip->flags |=3D TPM_CHIP_FLAG_TPM2;
-> +	} else
-> +		if (id->driver_data =3D=3D I2C_IS_TPM2)
-> +			chip->flags |=3D TPM_CHIP_FLAG_TPM2;
-> +
->  	init_waitqueue_head(&priv->read_queue);
-> =20
->  	/* Default timeouts */
-> @@ -622,7 +634,8 @@ static int i2c_nuvoton_remove(struct i2c_client *=
-client)
->  }
-> =20
->  static const struct i2c_device_id i2c_nuvoton_id[] =3D {
-> -	{I2C_DRIVER_NAME, 0},
-> +	{"tpm_i2c_nuvoton"},
-> +	{"tpm2_i2c_nuvoton", .driver_data =3D I2C_IS_TPM2},
->  	{}
->  };
->  MODULE_DEVICE_TABLE(i2c, i2c_nuvoton_id);
-> @@ -631,6 +644,7 @@ MODULE_DEVICE_TABLE(i2c, i2c_nuvoton_id);
->  static const struct of_device_id i2c_nuvoton_of_match[] =3D {
->  	{.compatible =3D "nuvoton,npct501"},
->  	{.compatible =3D "winbond,wpct301"},
-> +	{.compatible =3D "nuvoton,npct6xx", .data =3D OF_IS_TPM2},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, i2c_nuvoton_of_match);
-> @@ -643,7 +657,7 @@ static struct i2c_driver i2c_nuvoton_driver =3D {
->  	.probe =3D i2c_nuvoton_probe,
->  	.remove =3D i2c_nuvoton_remove,
->  	.driver =3D {
-> -		.name =3D I2C_DRIVER_NAME,
-> +		.name =3D "tpm_i2c_nuvoton",
->  		.pm =3D &i2c_nuvoton_pm_ops,
->  		.of_match_table =3D of_match_ptr(i2c_nuvoton_of_match),
->  	},
-> --=20
-> 1.9.1
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> It's a completely different phy block (Designware vs. Innosilicon) and a =
+lot =
+
+> of stuff also is handled differently.
+> =
+
+> For one on the old block, each phy was somewhat independent and had for e=
+xamle =
+
+> its own clock-supply, while on this one there is only one for both ports =
+of =
+
+> the phy. Similarly with the clock getting fed back to the clock-controlle=
+r =
+
+> (one clock per port on the old block, now one clock for the whole phy).
+> =
+
+> Then as you can see, the handling for power-up and down is a bit differen=
+t and =
+
+> I guess one big block might be the still missing special otg handling, Fr=
+ank =
+
+> wrote about.
+
+All right then.
+> =
+
+> =
+
+> [...]
+> =
+
+>>> +		/*
+>>> +		 * we don't need to rearm the delayed work when the phy port
+>>> +		 * is suspended.
+>>> +		 */
+>>> +		mutex_unlock(&rport->mutex);
+>>> +		return;
+>>> +	default:
+>>> +		dev_dbg(&rport->phy->dev, "unknown phy state\n");
+>>> +		break;
+>>> +	}
+>>> +
+>>> +next_schedule:
+>>> +	mutex_unlock(&rport->mutex);
+>>> +	schedule_delayed_work(&rport->sm_work, SCHEDULE_DELAY);
+>>
+>> Why are you scheduling the work again? Interrupt handlers can invoke this
+>> right?
+> =
+
+> Frank said, that the phy is only able to detect the plug-in event via =
+
+> interrupts, not the removal, so once a plugged device is detected, this g=
+ets =
+
+> rescheduled until the device gets removed.
+
+okay.
+> =
+
+> [...]
+> =
+
+>>> +	/* find out a proper config which can be matched with dt. */
+>>> +	index =3D 0;
+>>> +	while (phy_cfgs[index].reg) {
+>>> +		if (phy_cfgs[index].reg =3D=3D reg) {
+>>
+>> Why not pass these config values from dt? Moreover finding the config us=
+ing
+>> register offset is bound to break.
+> =
+
+> As you have probably seen, this phy block is no stand-alone (mmio-)device=
+, but =
+
+> gets controlled through special register/bits in the so called "General =
+
+> Register Files" syscon.
+> =
+
+> The values stored and accessed here, are the location and layout of those =
+
+> control registers. Bits in those phy control registers at times move betw=
+een =
+
+> phy-versions in different socs (rk3036, rk3228, rk3366, rk3368, rk3399) a=
+nd =
+
+> some are even missing. So I don't really see a nice way to describe that =
+in dt =
+
+> without describing the register and offset of each of those 22 used bits =
+
+> individually.
+> =
+
+> =
+
+> I'm also not sure where you expect it to break? The reg-offset is the off=
+set =
+
+> of the phy inside the GRF and the Designware-phy also already does someth=
+ing =
+
+> similar to select some appropriate values.
+
+I'm concerned the phy can be placed in the different reg-offset within GRF
+(like in the next silicon revision) and this driver can't be used.
+
+Thanks
+Kishon
+> =
