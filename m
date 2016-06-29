@@ -1,75 +1,58 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH 01/10] Documentation: dt-bindings: mailbox: tegra: Add
- binding for HSP mailbox
-Date: Wed, 29 Jun 2016 13:56:33 +0800
-Message-ID: <57736311.6020304@nvidia.com>
-References: <20160627090248.23621-1-josephl@nvidia.com>
- <20160627090248.23621-2-josephl@nvidia.com> <57714C85.50802@wwwdotorg.org>
- <57724039.7080007@nvidia.com> <5772CB12.5080408@wwwdotorg.org>
+From: Alexander Stein <alexanders83@web.de>
+Subject: Re: Re: linux-next: Tree for Jun 27 (pinctrl && !CONFIG_OF)
+Date: Wed, 29 Jun 2016 07:54:29 +0200
+Message-ID: <7003426.R6hER1qrYx@ws-stein>
+References: <20160627163939.20e454d5@canb.auug.org.au> <2044946.aGLaEK2W6I@ws-stein> <3990550.tEk9cGVQPW@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5772CB12.5080408@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jassi Brar <jassisinghbrar@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matthew Longnecker <MLongnecker@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <3990550.tEk9cGVQPW@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2016 03:08 AM, Stephen Warren wrote:
-> On 06/28/2016 03:15 AM, Joseph Lo wrote:
->> On 06/27/2016 11:55 PM, Stephen Warren wrote:
->>> On 06/27/2016 03:02 AM, Joseph Lo wrote:
-snip.
->>
->> Currently the usage of HSP HW in the downstream kernel is something like
->> the model below.
->>
->> remote_processor_A-\
->> remote_processor_B--->hsp@1000 (doorbell func) <-> host CPU
->> remote_processor_C-/
->>
->> remote_processor_D -> hsp@2000 (shared mailbox) <-> CPU
->>
->> remote_processor_E -> hsp@3000 (shared mailbox) <-> CPU
->>
->> I am thinking if we can just add the appropriate compatible strings for
->> it to replace "nvidia,tegra186-hsp". e.g. "nvidia,tegra186-hsp-doorbell"
->> and "nvidia,tegra186-hsp-sharedmailbox". So the driver can probe and
->> initialize correctly depend on the compatible property. How do you think
->> about it? Is this the same as the (b) you mentioned above?
->
-> Yes, that would be (b) above.
->
-> However, please do note (a): I expect that splitting things up will turn
-> out to be a mistake, as it has for other HW modules in the past. I would
-> far rather see a single hsp node in DT, since there is a single HSP
-> block in HW. Sure that block has multiple sub-functions. However, there
-> is common logic that affects all of those sub-functions and binds
-> everything into a single HW module. If you represent the HW module using
-> multiple different DT nodes, it will be hard to correctly represent that
-> common logic. Conversely, I see no real advantage to splitting up the DT
-> node. I strongly believe we should have a single "hsp" node in DT.
+On Tuesday 28 June 2016, 10:37:52 wrote Arnd Bergmann:
+> > > I think the commit should just be reverted, it clearly breaks
+> > > stuff, and whatever needs it can be fixed in a better way.
+> > 
+> > Why not depend PINCTRL_IPROC_GPIO on CONFIG_OF as Randy stated 
+> > pinconf_generic_dt_node_to_map_pin and friends are only present if 
+CONFIG_OF 
+> > is enabled. Depending on OF_GPIO only is enough under the assumption a) 
+you 
+> > made below.
+> > Also what about providing dummy implementation for those missing function 
+in 
+> > case CONFIG_OF is disabled, my preference as more code can be compile 
+tested.
+> >
+> > > Specifically, we have three ways that the OF_GPIO symbol
+> > > is used:
+> > > 
+> > > a) it is implicitly enabled when both GPIOLIB and OF are turned on
+> > 
+> > or if COMPILE_TEST is enabled
+> > 
+> > I think a problem in this and possibly other cases is that COMPILE_TEST 
+> > loosens the Kconfig dependencies to some degree. How to proceed? Allow 
+compile 
+> > testing drivers only if some optional settings are enabled?
+> 
+> I think we can start by reverting your patch: for compile-testing we can
+> always enable CONFIG_OF these days, which will also turn on OF_GPIO.
 
-We have 6 HSP block in HW. FYI.
+My intention was to compile test (device tree) drivers also without CONFIG_OF 
+which is disabled by defconfig default on arch/x86/configs/*
 
->
-> Internally, the SW driver for that node can be structured however you
-> want; it could register with multiple subsystems (mailbox, ...) with
-> just one struct device, or the HSP driver could be an MFD device with
-> sub-drivers for each separate piece of functionality the HW implements.
-> All this can easily be done even while using a single DT node. And
-> furthermore, we can add this SW structure later if/when we actually need
-> it; in other words, there's no need to change your current patches right
-> now, except to remove the nvidia,hsp-function DT property.
+> Compile-testing drivers that need OF_GPIO while OF is disabled makes
+> no sense to me, it's not a configuration that anybody can ever use
+> and it adds no build coverage.
 
-Thanks,
--Joseph
+That seems sensible. If we can agree that anyone who wants to compile test 
+drivers has to enable CONFIG_OF even it is not needed for the current 
+configuration.
+
+Best regards,
+Alexander
