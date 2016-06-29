@@ -1,41 +1,36 @@
-From: Manish Badarkhe <badarkhe.manish@gmail.com>
-Subject: Re: [PATCH v4 3/3] gpio: lp873x: Add support for General Purpose Outputs
-Date: Wed, 29 Jun 2016 16:15:22 +0530
-Message-ID: <CAKDJKT4yNAO6OdYTtWQ3W-aNvvFb46p8=g02grvz07af-jTjyw@mail.gmail.com>
-References: <1467192604-29149-1-git-send-email-j-keerthy@ti.com>
- <1467192604-29149-4-git-send-email-j-keerthy@ti.com> <CAKDJKT7mO0eHZEP5PZmRe-Aez41ThA7r5S4NNMg6RZqJkQUcuA@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/3] Fixes for Tegra XUSB
+Date: Wed, 29 Jun 2016 12:07:30 +0100
+Message-ID: <1467198453-23406-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAKDJKT7mO0eHZEP5PZmRe-Aez41ThA7r5S4NNMg6RZqJkQUcuA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, Lee Jones <lee.jones@linaro.org>, linux-omap@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Keerthy,
+Fixes for Tegra XUSB dt-binding documentation and the XUSB mailbox
+interrupt.
 
-sorry ignore my last two comments in previous mail.
+When testing XUSB on the Tegra210 Smaug, I found that USB connect and
+disconnect events were not being seen. I have debug this and found that
+the XUSB mailbox is incorrect and I was never receiving any interrupts
+from the XUSB mailbox. Interestingly, this behaviour is not seen on the
+Tegra210 Jetson TX1 despite the fact that there were no mailbox
+interrupts. The two boards have different USB connectors and so may be
+the connection is slightly different. After fixing the mailbox interrupt
+both boards now receive interrupts from the XUSB mailbox as expected.
 
-On Wed, Jun 29, 2016 at 4:13 PM, Manish Badarkhe
-<badarkhe.manish@gmail.com> wrote:
-> Hi Keerthy
->
-> Some minor comment
->
->> +static int lp873x_gpio_direction_output(struct gpio_chip *chip,
->> +                                       unsigned int offset, int value)
->> +{
->> +       struct lp873x_gpio *gpio = gpiochip_get_data(chip);
->> +
->> +       /* Set the initial value */
->> +       regmap_update_bits(gpio->lp873->regmap, LP873X_REG_GPO_CTRL,
->> +                          BIT(offset * 4), value ? BIT(offset * 4) : 0);
->> +
->> +       return 0;
->> +}
+Jon Hunter (3):
+  dt-bindings: phy: Fix description of Tegra210 PHY nodes
+  dt-bindings: usb: Fix Tegra XUSB example
+  arm64: tegra: Correct Tegra210 XUSB mailbox interrupt
 
- Error needs to be return, this function always return 0.
+ .../devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt       | 2 +-
+ Documentation/devicetree/bindings/usb/nvidia,tegra124-xusb.txt    | 8 ++++----
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi                          | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
- Regards
- Manish Badarkhe
+-- 
+2.1.4
