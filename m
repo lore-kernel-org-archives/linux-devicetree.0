@@ -1,50 +1,50 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Thu, 30 Jun 2016 13:31:07 +0200
-Message-ID: <3960223.GqB9zXL8s8@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <CAOiHx==82LHOeQMNVD+dybFifXX690Q6AJTcMBMynjSfUOyGUw@mail.gmail.com> <8d8bd933-717b-48e4-f002-7b834abed6fd@redhat.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [Question] Memory attribute reserved by Device Tree?
+Date: Thu, 30 Jun 2016 12:39:03 +0100
+Message-ID: <577504D7.7080106@arm.com>
+References: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBZUE2S5QKGQE5JPRCOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <8d8bd933-717b-48e4-f002-7b834abed6fd-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, June 30, 2016 12:25:15 PM CEST Hans de Goede wrote:
-> > So then how about making use of a more specific compatible string?
-> >
-> > e.g.
-> >
-> > brcmf {
-> >         compatible = "foo,ap6210", "brcm,bcm4329-fmac";
-> >         ...
-> > };
-> >
-> > and if the compatible has more than one element you request
-> > FW_NAME_<compatible>.txt as the nvram file. Or try each comptible (and
-> > lastly no suffix) until you get a match. (AFAICT, this is what the
-> > "model" property was originally intended for anyway, but almost nobody
-> > did it right, and everyone put a user readable string into "model" for
-> > boards instead of the ePAPR defined compatible string).
+On 30/06/16 12:10, Masahiro Yamada wrote:
+> Hello.
 > 
-> Hmm, interesting idea. Not sure how easy / hard it will be to implement
-> this, but from a dt binding point of view it seems elegant.
+> Which memory attribute will ARM/ARM64 Linux
+> set to the memory region reserved by
+> /memreserve/ of Device Tree?
 > 
-> Kalle, Arend, what do you think of this ?
+> 
+> Normal memory non-cacheable?
+> Or, cacheable?
+> Or, not defined?
+> 
+> Perhaps actual behavior depends on whether the reserved area is
+> located in the low-memory region?
 
-I think that's reasonable. Also, we have precedent for using things like
-the boardid as part of the compatible string, which would help do what
-Kalle suggested earlier with "nvram-<boardtype>-<boardrev>.txt",
-as we get that for free by trying out all the compatible strings.
+Isn't the point of memreserve that the kernel avoids mapping it at all?
+If a reserved region is later mapped in by a driver using
+dma_declare_coherent_memory(), ioremap(), memremap() or whatever else,
+then the attributes will vary depending on the exact method used.
 
-	Arnd
+Robin.
+
+> 
+> 
+> Thanks,
+> 
+> 
