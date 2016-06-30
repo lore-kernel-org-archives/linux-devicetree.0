@@ -1,47 +1,76 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 4/4] spi: Document option to insert delay between transactions
-Date: Thu, 30 Jun 2016 09:12:35 +0200
-Message-ID: <CAMuHMdUBcDUoMok9tkxJzGekkLWA=bya0zHXWqHbGp0BGmeZUg@mail.gmail.com>
-References: <1467258867-117727-1-git-send-email-apronin@chromium.org> <1467258867-117727-4-git-send-email-apronin@chromium.org>
+From: HS Liao <hs.liao@mediatek.com>
+Subject: [PATCH v9 1/4] dt-bindings: soc: Add documentation for the MediaTek GCE unit
+Date: Thu, 30 Jun 2016 15:14:40 +0800
+Message-ID: <1467270883-1407-2-git-send-email-hs.liao@mediatek.com>
+References: <1467270883-1407-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467258867-117727-4-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467270883-1407-1-git-send-email-hs.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, HS Liao <hs.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-CC devicetree
+This adds documentation for the MediaTek Global Command Engine (GCE) unit
+found in MT8173 SoCs.
 
-On Thu, Jun 30, 2016 at 5:54 AM,  <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->
-> Some devices may need CS to be deasserted for some time
-> between transactions. Added a new capability to guarantee
-> a delay between SPI transactions for the device.
->
-> Signed-off-by: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index 1b7ffd4..87c117a 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -70,6 +70,8 @@ contain the following properties.
->                 sleep if there was no SPI activity (msec).
->  - cs-wake-duration - (optional) Time it takes the device to wake up after
->                 toggling CS if it went to sleep (msec).
-> +- xfer-delay      - (optional) Delay to insert between SPI transactions
-> +               to guarantee that CS is deasserted at least for some time.
->
->  Some SPI controllers and devices support Dual and Quad SPI transfer mode.
->  It allows data in the SPI system to be transferred in 2 wires(DUAL) or 4 wires(QUAD).
-> --
-> 2.6.6
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: HS Liao <hs.liao@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/soc/mediatek/gce.txt       | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
+
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/gce.txt b/Documentation/devicetree/bindings/soc/mediatek/gce.txt
+new file mode 100644
+index 0000000..63c5364
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/mediatek/gce.txt
+@@ -0,0 +1,44 @@
++MediaTek GCE
++===============
++
++The Global Command Engine (GCE) is used to help read/write registers with
++critical time limitation, such as updating display configuration during the
++vblank. The GCE can be used to implement the Command Queue (CMDQ) driver.
++
++CMDQ driver uses mailbox framework for communication. Please refer to
++../../mailbox/mailbox.txt for generic information about mailbox device-tree
++bindings.
++
++Required properties:
++- compatible: Must be "mediatek,mt8173-gce"
++- reg: Address range of the GCE unit
++- interrupts: The interrupt signal from the GCE block
++- clock: Clocks according to the common clock binding
++- clock-names: Must be "gce" to stand for GCE clock
++- #mbox-cells: Should be 1
++
++Required properties for a client device:
++- mediatek,gce: Should point to the respective GCE block
++- mboxes: List of phandle, mailbox channel specifiers, and merging wfe flag.
++
++Example:
++
++	gce: gce@10212000 {
++		compatible = "mediatek,mt8173-gce";
++		reg = <0 0x10212000 0 0x1000>;
++		interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infracfg CLK_INFRA_GCE>;
++		clock-names = "gce";
++
++		#mbox-cells = <1>;
++	};
++
++Example for a client device:
++
++	mmsys: clock-controller@14000000 {
++		compatible = "mediatek,mt8173-mmsys";
++		mediatek,gce = <&gce>;
++		mboxes = <&gce 0 1 /* main display with merging wfe */
++			  &gce 1 1>; /* sub display with merging wfe */
++		...
++	};
+-- 
+1.9.1
