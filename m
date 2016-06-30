@@ -1,49 +1,62 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/4] spi: Document option to wake a device by toggling CS
-Date: Thu, 30 Jun 2016 09:12:09 +0200
-Message-ID: <CAMuHMdXCeFMXPczi3b=GpUEzUJiz0+sK_299GY8o-iYgP8G9iA@mail.gmail.com>
-References: <1467258867-117727-1-git-send-email-apronin@chromium.org> <1467258867-117727-2-git-send-email-apronin@chromium.org>
+From: HS Liao <hs.liao@mediatek.com>
+Subject: [PATCH v9 0/4] Mediatek MT8173 CMDQ support
+Date: Thu, 30 Jun 2016 15:14:39 +0800
+Message-ID: <1467270883-1407-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467258867-117727-2-git-send-email-apronin@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: apronin@chromium.org
-Cc: Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-CC devicetree
 
-On Thu, Jun 30, 2016 at 5:54 AM,  <apronin@chromium.org> wrote:
-> From: Andrey Pronin <apronin@chromium.org>
->
-> Some SPI devices may go to sleep after a period of inactivity
-> on SPI. For such devices, if enough time has passed since the
-> last SPI transaction, toggle CS and wait for the device to
-> start before communicating with it.
->
-> Signed-off-by: Andrey Pronin <apronin@chromium.org>
-> ---
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index 42d5954..1b7ffd4 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -63,6 +63,13 @@ contain the following properties.
->                        used for MISO. Defaults to 1 if not present.
->  - spi-rx-delay-us  - (optional) Microsecond delay after a read transfer.
->  - spi-tx-delay-us  - (optional) Microsecond delay after a write transfer.
-> +- cs-wake-after-sleep - (optional) Device may go to sleep after a period
-> +               of SPI inactivity. If this flag is set, toggle CS and
-> +               wait for it to wake before communicating to it.
-> +- cs-sleep-delay  - (optional) Delay after which the device may go to
-> +               sleep if there was no SPI activity (msec).
-> +- cs-wake-duration - (optional) Time it takes the device to wake up after
-> +               toggling CS if it went to sleep (msec).
->
->  Some SPI controllers and devices support Dual and Quad SPI transfer mode.
->  It allows data in the SPI system to be transferred in 2 wires(DUAL) or 4 wires(QUAD).
-> --
-> 2.6.6
+Hi,
+
+This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+to help write registers with critical time limitation, such as
+updating display configuration during the vblank. It controls Global
+Command Engine (GCE) hardware to achieve this requirement.
+
+These patches have a build dependency on top of v4.7-rc1.
+
+Changes since v8:
+ - use mailbox framework, and merge options for GCE thread into
+   mailbox channel
+ - use timer to handle timeout case
+ - rename cmdq_handle_error_done to cmdq_thread_irq_handler, handle
+   error by cmdq_task_handle_error, and handle timeout by
+   cmdq_thread_handle_timeout
+ - use bitops
+ - fix bug of treating working task as done task
+ - move GCE hardware events' mapping from header to driver
+ - remove code about previous tasks since we should keep tasks' order
+   for display, and it is impossible to have previous tasks
+ - centralize code to handle executed tasks in cmdq_task_exec_done
+ - use u64* instead of u32* for GCE command pointer
+ - drop cmdq_thread_readl/writel
+ - depends on ARM64
+ - refine some code accroding to comments for v8
+
+Best regards,
+HS Liao
+
+HS Liao (4):
+  dt-bindings: soc: Add documentation for the MediaTek GCE unit
+  CMDQ: Mediatek CMDQ driver
+  arm64: dts: mt8173: Add GCE node
+  CMDQ: save more energy in idle
+
+ .../devicetree/bindings/soc/mediatek/gce.txt       |  44 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  10 +
+ drivers/soc/mediatek/Kconfig                       |  11 +
+ drivers/soc/mediatek/Makefile                      |   1 +
+ drivers/soc/mediatek/mtk-cmdq.c                    | 967 +++++++++++++++++++++
+ include/soc/mediatek/cmdq.h                        | 192 ++++
+ 6 files changed, 1225 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
+ create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
+ create mode 100644 include/soc/mediatek/cmdq.h
+
+-- 
+1.9.1
