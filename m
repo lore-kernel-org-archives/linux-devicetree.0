@@ -1,84 +1,50 @@
-From: William Wu <william.wu@rock-chips.com>
-Subject: [PATCH v5 5/5] usb: dwc3: rockchip: add devicetree bindings documentation
-Date: Thu, 30 Jun 2016 19:16:40 +0800
-Message-ID: <1467285400-25450-1-git-send-email-william.wu@rock-chips.com>
-References: <1467285176-25222-1-git-send-email-william.wu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467285176-25222-1-git-send-email-william.wu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, balbi@kernel.org, heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Thu, 30 Jun 2016 13:31:07 +0200
+Message-ID: <3960223.GqB9zXL8s8@wuerfel>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <CAOiHx==82LHOeQMNVD+dybFifXX690Q6AJTcMBMynjSfUOyGUw@mail.gmail.com> <8d8bd933-717b-48e4-f002-7b834abed6fd@redhat.com>
+Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRBZUE2S5QKGQE5JPRCOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <8d8bd933-717b-48e4-f002-7b834abed6fd-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the devicetree documentation required for Rockchip
-USB3.0 core wrapper consisting of USB3.0 IP from Synopsys.
+On Thursday, June 30, 2016 12:25:15 PM CEST Hans de Goede wrote:
+> > So then how about making use of a more specific compatible string?
+> >
+> > e.g.
+> >
+> > brcmf {
+> >         compatible = "foo,ap6210", "brcm,bcm4329-fmac";
+> >         ...
+> > };
+> >
+> > and if the compatible has more than one element you request
+> > FW_NAME_<compatible>.txt as the nvram file. Or try each comptible (and
+> > lastly no suffix) until you get a match. (AFAICT, this is what the
+> > "model" property was originally intended for anyway, but almost nobody
+> > did it right, and everyone put a user readable string into "model" for
+> > boards instead of the ePAPR defined compatible string).
+> 
+> Hmm, interesting idea. Not sure how easy / hard it will be to implement
+> this, but from a dt binding point of view it seems elegant.
+> 
+> Kalle, Arend, what do you think of this ?
 
-It supports DRD mode, and could operate in device mode (SS, HS, FS)
-and host mode (SS, HS, FS, LS).
+I think that's reasonable. Also, we have precedent for using things like
+the boardid as part of the compatible string, which would help do what
+Kalle suggested earlier with "nvram-<boardtype>-<boardrev>.txt",
+as we get that for free by trying out all the compatible strings.
 
-Signed-off-by: William Wu <william.wu@rock-chips.com>
----
-Changes in v5:
-- rename clock-names, and remove unnecessary clocks (Heiko)
-
-Changes in v4:
-- modify commit log, and add phy documentation location (Sergei)
-
-Changes in v3:
-- add dwc3 address (balbi)
-
-Changes in v2:
-- add rockchip,dwc3.txt to Documentation/devicetree/bindings/ (balbi, Brian)
-
- .../devicetree/bindings/usb/rockchip,dwc3.txt      | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
-new file mode 100644
-index 0000000..9c85e19
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
-@@ -0,0 +1,40 @@
-+Rockchip SuperSpeed DWC3 USB SoC controller
-+
-+Required properties:
-+- compatible:	should contain "rockchip,rk3399-dwc3" for rk3399 SoC
-+- clocks:	A list of phandle + clock-specifier pairs for the
-+		clocks listed in clock-names
-+- clock-names:	Should contain the following:
-+  "ref_clk"	Controller reference clk, have to be 24 MHz
-+  "suspend_clk"	Controller suspend clk, have to be 24 MHz or 32 KHz
-+  "bus_clk_otg0"Master/Core clock, have to be >= 62.5 MHz for SS
-+		operation and >= 60MHz for HS operation
-+  "grf_clk"	Controller grf clk
-+
-+Required child node:
-+A child node must exist to represent the core DWC3 IP block. The name of
-+the node is not important. The content of the node is defined in dwc3.txt.
-+
-+Phy documentation is provided in the following places:
-+Documentation/devicetree/bindings/phy/rockchip,dwc3-usb-phy.txt
-+
-+Example device nodes:
-+
-+	usbdrd3_0: usb@fe800000 {
-+		compatible = "rockchip,rk3399-dwc3";
-+		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
-+			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
-+		clock-names = "ref_clk", "suspend_clk",
-+			      "bus_clk_otg0", "grf_clk";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+		usbdrd_dwc3_0: dwc3@fe800000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xfe800000 0x0 0x100000>;
-+			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+			dr_mode = "otg";
-+			status = "disabled";
-+		};
-+	};
--- 
-1.9.1
+	Arnd
