@@ -1,66 +1,123 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] ARM64: boot: dts: Add regulators for Tegra210 Smaug
-Date: Thu, 30 Jun 2016 11:32:19 +0200
-Message-ID: <20160630093219.GC1776@ulmo.ba.sec>
-References: <1467149304-29274-1-git-send-email-rklein@nvidia.com>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Thu, 30 Jun 2016 19:33:36 +1000
+Message-ID: <CAGRGNgVCXCoUk0SYpEJanMcvyecMK3LWhe_T1NRhvEjdpRTfSA@mail.gmail.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+	<CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
+	<b49a9e4b-d591-d978-8005-413f39ebf2bd@redhat.com>
+	<871t3gdj6p.fsf@purkki.adurom.net>
+	<ea10ff70-26e6-e151-5cea-c54bd12a054c@redhat.com>
+	<f8995599-115d-87e5-7928-c029b48584f1@broadcom.com>
+	<87mvm36p4d.fsf@kamboji.qca.qualcomm.com>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467149304-29274-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/alternative; boundary=001a1144cfae86499305367b9082
+Return-path: <linux-sunxi+bncBDQIP76OUQLBB4OO2O5QKGQEY7GDFJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <87mvm36p4d.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+--001a1144cfae86499305367b9082
+Content-Type: text/plain; charset=UTF-8
 
---hOcCNbCCxyk/YU74
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Kalle,
+
+On 30 Jun 2016 6:46 p.m., "Kalle Valo" <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>
+> Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
+>
+> >> Since we are dealing with a per-board config-file here, which is
+> >> loaded from the os filesystem we really need to specify a basename
+> >> here as the list of possible boards is endless, so we cannot
+> >> have a lookup table in the driver.
+> >
+> > As Jonas mentioned the general principle of device tree is to be
+> > agnostic with regards to OS and/or driver as you undoubtedly know. His
+> > proposal seems like a usable solution for your problem while complying
+> > to the device tree principle. So instead of overriding the default
+> > brcmfmac should modify it when dt specifies the "module" property, ie:
+> >
+> > no "module" in DT:    nvram filename = brcm/brcmfmac43362-sdio.txt
+> > "module=ap6210" in DT:        nvram filename =
+brcm/brcmfmac43362-ap6210.txt
+>
+> Just out of curiosity, what does "ap6210" exactly mean? I get that 43362
+> is the chip id, but not ap6210. Is it just an arbitrary name?
+
+Ap6210 is a chip that contains a 43362 and probably some Bluetooth chip
+also.
+
+Thanks,
+
+Julian Calaby
+
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--001a1144cfae86499305367b9082
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 28, 2016 at 05:28:24PM -0400, Rhyland Klein wrote:
-> Add regulators to the Tegra210 Smaug DTS file including
-> support for the max77620 PMIC.
->=20
-> Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> v3:
->  - Fixed up ramp delays
->  - s/maxim,enable-sleep/maxim,device-state-on-disabled-event/
->  - remove GPIO 3 from pp3300
->=20
-> v2:
->  - Updated reg properties to match current binding
->=20
->  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 314 ++++++++++++++++++++=
-++++++
->  1 file changed, 314 insertions(+)
+<p dir=3D"ltr">Hi Kalle,</p>
+<p dir=3D"ltr">On 30 Jun 2016 6:46 p.m., &quot;Kalle Valo&quot; &lt;<a href=
+=3D"mailto:kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org">kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Arend Van Spriel &lt;<a href=3D"mailto:arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org">a=
+rend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org</a>&gt; writes:<br>
+&gt;<br>
+&gt; &gt;&gt; Since we are dealing with a per-board config-file here, which=
+ is<br>
+&gt; &gt;&gt; loaded from the os filesystem we really need to specify a bas=
+ename<br>
+&gt; &gt;&gt; here as the list of possible boards is endless, so we cannot<=
+br>
+&gt; &gt;&gt; have a lookup table in the driver.<br>
+&gt; &gt;<br>
+&gt; &gt; As Jonas mentioned the general principle of device tree is to be<=
+br>
+&gt; &gt; agnostic with regards to OS and/or driver as you undoubtedly know=
+. His<br>
+&gt; &gt; proposal seems like a usable solution for your problem while comp=
+lying<br>
+&gt; &gt; to the device tree principle. So instead of overriding the defaul=
+t<br>
+&gt; &gt; brcmfmac should modify it when dt specifies the &quot;module&quot=
+; property, ie:<br>
+&gt; &gt;<br>
+&gt; &gt; no &quot;module&quot; in DT:=C2=A0 =C2=A0 nvram filename =3D brcm=
+/brcmfmac43362-sdio.txt<br>
+&gt; &gt; &quot;module=3Dap6210&quot; in DT:=C2=A0 =C2=A0 =C2=A0 =C2=A0 nvr=
+am filename =3D brcm/brcmfmac43362-ap6210.txt<br>
+&gt;<br>
+&gt; Just out of curiosity, what does &quot;ap6210&quot; exactly mean? I ge=
+t that 43362<br>
+&gt; is the chip id, but not ap6210. Is it just an arbitrary name?</p>
+<p dir=3D"ltr">Ap6210 is a chip that contains a 43362 and probably some Blu=
+etooth chip also.</p>
+<p dir=3D"ltr">Thanks,</p>
+<p dir=3D"ltr">Julian Calaby<br>
+</p>
 
-Applied to for-4.8/arm64, thanks.
+<p></p>
 
-Thierry
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
 
---hOcCNbCCxyk/YU74
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXdOcjAAoJEN0jrNd/PrOhYGEP/0HpH9069zlWZSwr832zrTcV
-ravQb3pVueKw54bLpv9eqEP9JQYQ1syJnRuzBcsqIhTwOWC7aap5YS5iOkuBG8lo
-X3gwTLnJD9J1pnfek3610nqMH2FfJm0Auz7ymnWfN/yIeNOFB2QiuFE8VOldDf0+
-p1rs0w+Msv7UFNDYeumNMAEMwB4CBDV52V010AanGp+aQQLigauzRrvp+tJyVpL/
-1j40fi2UGEr7JuMW13YiyUbGWbSBcIocL3h8n+pQBdtyEIj6lXk2Knw0sfE/EhRl
-32Y1rWAtmbrfMtOlxNRWvssrRrL/lzjcWAyJPYzQNMzE9LwAQcyTG2/Yd+WfyuDS
-AQHVYb3iwx/IN1d5JWlxUPYr8TKhg9noIc42utZ4aY2hksc7TKtwofzkdlQ1u+mI
-waoRYtC9D7/V+o4/H/5v2AurgubAne9GpVyKJGjCNT52yG6bu/R7ziXWAFG3bEGZ
-A5HAr0NpQe1sjaCEKZCPV2ji6BaM/JPsE2Jr2XZwGTkAYvx9ympKJOMPFX59GXFC
-hffN/Hph5Zb9VXnyeBmdrRXp/n9QurcV0w00AbOfGV7cYBe5Fnbh4Njvi4DYVjUN
-+WgtKtshp5ClqE+U6/wZL5JlN93Tf0dktg2NLdqR4nVHPIL6y0sgB2tD+HdazWrE
-4YKVGoYyXeqX76VYocnP
-=is9t
------END PGP SIGNATURE-----
-
---hOcCNbCCxyk/YU74--
+--001a1144cfae86499305367b9082--
