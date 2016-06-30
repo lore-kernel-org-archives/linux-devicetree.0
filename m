@@ -1,35 +1,35 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [V5, 3/3] powerpc/drivers: Add driver for operator panel on FSP machines
-Date: Thu, 30 Jun 2016 22:36:40 +1000 (AEST)
-Message-ID: <3rgJvF1P6tz9syq@ozlabs.org>
-References: <1467171519-19882-3-git-send-email-sjitindarsingh@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467171519-19882-3-git-send-email-sjitindarsingh@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: robh@kernel.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, paulus@samba.org, sjitindarsingh@gmail.com
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] configfs: Remove ppos increment in configfs_write_bin_file
+Date: Thu, 30 Jun 2016 14:51:18 +0200
+Message-ID: <577515C6.5050802@denx.de>
+References: <1463581011-9910-1-git-send-email-marex@denx.de> <5772A624.6040801@denx.de> <20160630092616.GA9099@lst.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160630092616.GA9099-jcswGhMUV9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-29-06 at 03:38:39 UTC, Suraj Jitindar Singh wrote:
-> Implement new character device driver to allow access from user space
-> to the operator panel display present on IBM Power Systems machines
-> with FSPs.
-> 
-> This will allow status information to be presented on the display which
-> is visible to a user.
-> 
-> The driver implements a character buffer which a user can read/write
-> by accessing the device (/dev/op_panel). This buffer is then displayed on
-> the operator panel display. Any attempt to write past the last character
-> position will have no effect and attempts to write more characters than
-> the size of the display will be truncated. The device may only be accessed
-> by a single process at a time.
-> 
-> Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-> Reviewed-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+On 06/30/2016 11:26 AM, Christoph Hellwig wrote:
+> Hi Marek,
 
-Applied to powerpc next, thanks.
+Hi Christoph,
 
-https://git.kernel.org/powerpc/c/43a1dd9b5fc64184e578ac1570
+> sorry for the delay.  I've applied the fix and will send it out to
+> Linus for the 4.7 merge window.
 
-cheers
+No problem, glad to see it applied, thanks!
+
+btw. is this (devicetree@) the correct list for such a patch or should
+this be sent to some other list (linux-fsdevel@ maybe) ?
+
+-- 
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
