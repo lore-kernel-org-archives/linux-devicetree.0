@@ -1,52 +1,59 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 14/14] ARM: dts: sun8i: Enable DVFS on
- Orange Pi One
-Date: Thu, 30 Jun 2016 13:13:48 +0200
-Message-ID: <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New@mail.gmail.com>
-References: <20160625034511.7966-1-megous@megous.com> <20160625034511.7966-15-megous@megous.com>
+From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 1/5] usb: dwc3: of-simple: add compatible for rockchip
+ rk3399
+Date: Thu, 30 Jun 2016 19:12:52 +0800
+Message-ID: <1467285176-25222-2-git-send-email-william.wu@rock-chips.com>
+References: <1467285176-25222-1-git-send-email-william.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160625034511.7966-15-megous@megous.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: megous@megous.com
-Cc: dev <dev@linux-sunxi.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1467285176-25222-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Rockchip platform merely enable usb3 clocks and
+populate its children. So we can use this generic
+glue layer to support Rockchip dwc3.
 
-On 25 June 2016 at 05:45,  <megous@megous.com> wrote:
-> From: Ondrej Jirman <megous@megous.com>
->
-> Use Xulong Orange Pi One GPIO based regulator for
-> passive cooling and thermal management.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 39 +++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-> index b1bd6b0..a38d871 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-> @@ -109,6 +109,45 @@
->         };
->  };
->
-> +&cpu0 {
-> +       operating-points = <
-> +               /* kHz    uV */
-> +               1296000 1300000
-> +               1200000 1300000
+Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+Changes in v5:
+- change compatible from "rockchip,dwc3" to "rockchip,rk3399-dwc3" (Heiko)
 
-First problem is that the board boots at 1008000 which is not listed
-and the kernel complains.
+Changes in v4:
+- None
 
-Second problem is that the board locks up during boot with this enabled.
+Changes in v3:
+- None
 
-Do you have some suggestion for alternate configuration to test?
+Changes in v2:
+- sort the list of_dwc3_simple_match (Doug)
 
-Thanks
+ drivers/usb/dwc3/dwc3-of-simple.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Michal
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+index 9743353..05c9349 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -161,6 +161,7 @@ static const struct dev_pm_ops dwc3_of_simple_dev_pm_ops = {
+ 
+ static const struct of_device_id of_dwc3_simple_match[] = {
+ 	{ .compatible = "qcom,dwc3" },
++	{ .compatible = "rockchip,rk3399-dwc3" },
+ 	{ .compatible = "xlnx,zynqmp-dwc3" },
+ 	{ /* Sentinel */ }
+ };
+-- 
+1.9.1
