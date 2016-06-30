@@ -1,13 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 0/7] mfd: ac100: Add support for X-Powers AC100
- audio codec / RTC combo IC
-Date: Thu, 30 Jun 2016 23:58:44 +0800
-Message-ID: <1467302331-9663-1-git-send-email-wens@csie.org>
+Subject: [PATCH v4 5/7] ARM: dts: sun9i: a80-optimus: Add device
+ node for AC100
+Date: Thu, 30 Jun 2016 23:58:49 +0800
+Message-ID: <1467302331-9663-6-git-send-email-wens@csie.org>
+References: <1467302331-9663-1-git-send-email-wens@csie.org>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCMILY6JWQBBBXED2W5QKGQE5DDVACY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCMILY6JWQBBBXUD2W5QKGQEILMEFPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1467302331-9663-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
@@ -18,116 +20,53 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zu
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
-
-This series adds support for X-Powers' AC100 audio codec / RTC combo IC.
-This chip is found on Allwinner A80 SoC based boards, and is also part
-of the AXP813/AXP818 PMIC found with Allwinner A83T SoCs.
-
-The series focuses on the RTC side of the chip. The audio codec will
-be done later, once the digital audio interface of the SoC is supported.
-
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
 Changes since v3:
 
-  - bulk write support for regmaps without raw formatting patch merged
-    and thus dropped from series.
+  - Moved 4M ADDA clk to codec side
 
-  - sun9i device node re-ordering patches merged and thus dropped from
-    series.
+Changes since v2: none
+Changes since v1: none
+---
+ arch/arm/boot/dts/sun9i-a80-optimus.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-  - Fixed device node name and added labels to device tree binding example.
-
-  - Moved 4M_adda clock to codec side, and added clock bindings to codec
-    node.
-
-  - Rename RTC clock output related prefixes from clk32k to clkout.
-
-  - Rename default clock output names to cko{1,2,3}-rtc.
-
-  - Move struct tm to/from RTC conversion offsets inline with reg[]
-    assignments
-
-  - Drop separate mutex and use rtc->ops_lock in interrupt handler.
-
-  - Use platform_get_irq instead of of_get_irq.
-
-  - Add struct of_device_id and .of_match_table to RTC driver.
-
-Changes since v2:
-
-  - Fix ac100_codec interrupt line in DT binding example.
-
-  - Fix copy-paste errors in RTC set_alarm. Alarm now works.
-
-  - Drop file name from MFD driver.
-
-  - Add / update copyright notices.
-
-  - Change license of RTC driver to GPL v2, matching MFD driver.
-
-  - Fix MFD driver MODULE_LICENSE to match license declaration in header.
-
-Changes since v1:
-
-  - Complete register definitions and regmap regions.
-
-v1 was actually a working version that wasn't updated with the codec
-register definitions.
-
-Patch 1 adds device tree bindings for the AC100.
-
-Patch 2 adds the mfd driver for the AC100.
-
-Patch 3 adds the RTC driver for the AC100.
-
-Patch 4 adds RTC clk output support to the RTC driver.
-This is a separate patch as the clk code is over 300 LoC. Having a
-separate patch should make it easier for the clk maintainers to review.
-
-Patch 5 adds the AC100 device nodes to the A80 Optimus board dts.
-
-Patch 6 adds the AC100 device nodes to the Cubieboard4 board dts.
-
-Patch 7 changes the fixed osc_32k clk to a fixed factor clk,
-representing the 32k clk input pin on the SoC, and also hooks up the
-ac100 rtc clk output to this clk in the board dts files.
-
-I'm hoping we can merge the driver bits (patches 1~4) through the
-mfd tree, with acks from the rtc and clk maintainers for patches
-3 and 4.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (7):
-  mfd: ac100: Add device tree bindings for X-Powers AC100 codec/RTC
-    combo IC
-  mfd: ac100: Add driver for X-Powers AC100 audio codec / RTC combo IC
-  rtc: ac100: Add RTC driver for X-Powers AC100
-  rtc: ac100: Add clk output support
-  ARM: dts: sun9i: a80-optimus: Add device node for AC100
-  ARM: dts: sun9i: cubieboard4: Add device node for AC100
-  ARM: dts: sun9i: Switch to the AC100 RTC clock outputs for osc32k
-
- Documentation/devicetree/bindings/mfd/ac100.txt |  49 ++
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts     |  29 ++
- arch/arm/boot/dts/sun9i-a80-optimus.dts         |  29 ++
- arch/arm/boot/dts/sun9i-a80.dtsi                |   9 +-
- drivers/mfd/Kconfig                             |  10 +
- drivers/mfd/Makefile                            |   2 +
- drivers/mfd/ac100.c                             | 137 ++++++
- drivers/rtc/Kconfig                             |  10 +
- drivers/rtc/Makefile                            |   1 +
- drivers/rtc/rtc-ac100.c                         | 627 ++++++++++++++++++++++++
- include/linux/mfd/ac100.h                       | 178 +++++++
- 11 files changed, 1075 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/ac100.txt
- create mode 100644 drivers/mfd/ac100.c
- create mode 100644 drivers/rtc/rtc-ac100.c
- create mode 100644 include/linux/mfd/ac100.h
-
+diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+index 7fd22e888602..e35c06c162a7 100644
+--- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
++++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+@@ -322,6 +322,30 @@
+ 			};
+ 		};
+ 	};
++
++	ac100: codec@e89 {
++		compatible = "x-powers,ac100";
++		reg = <0xe89>;
++
++		ac100_codec: codec {
++			compatible = "x-powers,ac100-codec";
++			interrupt-parent = <&r_pio>;
++			interrupts = <0 9 IRQ_TYPE_LEVEL_LOW>; /* PL9 */
++			#clock-cells = <0>;
++			clock-output-names = "4M_adda";
++		};
++
++		ac100_rtc: rtc {
++			compatible = "x-powers,ac100-rtc";
++			interrupt-parent = <&nmi_intc>;
++			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&ac100_codec>;
++			#clock-cells = <1>;
++			clock-output-names = "cko1_rtc",
++					     "cko2_rtc",
++					     "cko3_rtc";
++		};
++	};
+ };
+ 
+ #include "axp809.dtsi"
 -- 
 2.8.1
 
