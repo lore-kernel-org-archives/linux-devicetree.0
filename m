@@ -1,50 +1,95 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [Question] Memory attribute reserved by Device Tree?
-Date: Thu, 30 Jun 2016 12:39:03 +0100
-Message-ID: <577504D7.7080106@arm.com>
-References: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] arm64: dts: marvell: adjust to the latest mv-xor-v2 DT binding
+Date: Thu, 30 Jun 2016 13:50:12 +0200
+Message-ID: <87h9cax5e3.fsf@free-electrons.com>
+References: <1466080116-26777-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1466080116-26777-4-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466080116-26777-4-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+	(Thomas Petazzoni's message of "Thu, 16 Jun 2016 14:28:35 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30/06/16 12:10, Masahiro Yamada wrote:
-> Hello.
-> 
-> Which memory attribute will ARM/ARM64 Linux
-> set to the memory region reserved by
-> /memreserve/ of Device Tree?
-> 
-> 
-> Normal memory non-cacheable?
-> Or, cacheable?
-> Or, not defined?
-> 
-> Perhaps actual behavior depends on whether the reserved area is
-> located in the low-memory region?
+Hi Thomas,
+ 
+ On jeu., juin 16 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Isn't the point of memreserve that the kernel avoids mapping it at all?
-If a reserved region is later mapped in by a driver using
-dma_declare_coherent_memory(), ioremap(), memremap() or whatever else,
-then the attributes will vary depending on the exact method used.
+> As suggested by Rob Herring, we should:
+>
+>  1/ Use a SoC-specific compatible string in addition to the more generic
+>     one.
+>
+>  2/ The generic compatible string has been changed from
+>     "marvell,mv-xor-v2" to "marvell,xor-v2".
+>
+> We simply reflect the changes made to the Device Tree bindings to the
+> relevant Marvell 7K/8K Device Tree files.
 
-Robin.
+Applied on mvebu/dt64
 
-> 
-> 
-> Thanks,
-> 
-> 
+Thanks,
+
+Gregory
+>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> index 20d256b..eab1a42 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> @@ -141,7 +141,7 @@
+>  			};
+>  
+>  			xor@400000 {
+> -				compatible = "marvell,mv-xor-v2";
+> +				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
+>  				reg = <0x400000 0x1000>,
+>  				      <0x410000 0x1000>;
+>  				msi-parent = <&gic_v2m0>;
+> @@ -149,7 +149,7 @@
+>  			};
+>  
+>  			xor@420000 {
+> -				compatible = "marvell,mv-xor-v2";
+> +				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
+>  				reg = <0x420000 0x1000>,
+>  				      <0x430000 0x1000>;
+>  				msi-parent = <&gic_v2m0>;
+> @@ -157,7 +157,7 @@
+>  			};
+>  
+>  			xor@440000 {
+> -				compatible = "marvell,mv-xor-v2";
+> +				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
+>  				reg = <0x440000 0x1000>,
+>  				      <0x450000 0x1000>;
+>  				msi-parent = <&gic_v2m0>;
+> @@ -165,7 +165,7 @@
+>  			};
+>  
+>  			xor@460000 {
+> -				compatible = "marvell,mv-xor-v2";
+> +				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
+>  				reg = <0x460000 0x1000>,
+>  				      <0x470000 0x1000>;
+>  				msi-parent = <&gic_v2m0>;
+> -- 
+> 2.7.4
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
