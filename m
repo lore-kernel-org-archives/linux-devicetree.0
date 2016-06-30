@@ -1,57 +1,39 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [Question] Memory attribute reserved by Device Tree?
-Date: Thu, 30 Jun 2016 13:26:26 +0100
-Message-ID: <20160630122554.GC20363@leverpostej>
-References: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
- <577504D7.7080106@arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r8a7792: add SMP support
+Date: Thu, 30 Jun 2016 14:27:18 +0200
+Message-ID: <20160630122718.GA24035@verge.net.au>
+References: <14666252.G84Ipxe6EL@wasted.cogentembedded.com>
+ <1627631.X1bJtVQHBF@wasted.cogentembedded.com>
+ <7c23396f-f880-40ac-654d-cffc82df021e@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <577504D7.7080106-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <7c23396f-f880-40ac-654d-cffc82df021e@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 30, 2016 at 12:39:03PM +0100, Robin Murphy wrote:
-> On 30/06/16 12:10, Masahiro Yamada wrote:
-> > Hello.
-> > 
-> > Which memory attribute will ARM/ARM64 Linux
-> > set to the memory region reserved by
-> > /memreserve/ of Device Tree?
-> > 
-> > 
-> > Normal memory non-cacheable?
-> > Or, cacheable?
-> > Or, not defined?
-> > 
-> > Perhaps actual behavior depends on whether the reserved area is
-> > located in the low-memory region?
+On Wed, Jun 29, 2016 at 07:46:33PM +0300, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Isn't the point of memreserve that the kernel avoids mapping it at all?
+> On 06/21/2016 01:31 AM, Sergei Shtylyov wrote:
+> 
+> >Add the device tree nodes for the Advanced Power Management Unit (APMU)
+> >and the second Cortex-A15 CPU core.
+> >Use the "enable-method" prop  to point out that the APMU should be used
+> >for the SMP support.
+> >
+> >Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >
+> >---
+> >This patch is against the 'renesas-devel-20160620-v4.7-rc4' tag of Simon
+> >Horman's 'renesas.git' repo.  It depends on Magnus'/Geert's SMP patchset...
+> 
+>    simon, now that this patchset has been merged (for 4.8?), could you also
+> merge this patch?
 
-Not quite. A /memreserve/ allows the kernel to map a region, so long as
-it doesn't use the region for general allocation.
-
-While not strictly defined for arm64 today, in practice the kernel may
-map a region with Normal Inner-Shareable Inner-WB Outer-WB attributes,
-following similar behaviour for PPC as defined in ePAPR.
-
-Generally I would advise against the use of a memreserve, and favour
-carving memory out of memory nodes as required, as that imposes stricter
-requirements.
-
-> If a reserved region is later mapped in by a driver using
-> dma_declare_coherent_memory(), ioremap(), memremap() or whatever else,
-> then the attributes will vary depending on the exact method used.
-
-Indeed. This applies even with the above.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure, as this is for a new board I'll make a last minute exception and take
+this. I am trusting that cpu hotplug and suspend/resume have been adequately
+tested.
