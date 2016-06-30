@@ -1,80 +1,69 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/10 v4] iio: pressure: bmp280: augment DT bindings
-Date: Thu, 30 Jun 2016 20:23:26 +0100
-Message-ID: <0bd26779-4ac3-faa2-68e3-52fab273721a@kernel.org>
-References: <1467251334-30594-1-git-send-email-linus.walleij@linaro.org>
- <1467251334-30594-2-git-send-email-linus.walleij@linaro.org>
+From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Thu, 30 Jun 2016 21:23:56 +0200
+Message-ID: <1f44df41-0111-441b-4671-718eec0c4346@broadcom.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+ <CAOiHx==82LHOeQMNVD+dybFifXX690Q6AJTcMBMynjSfUOyGUw@mail.gmail.com>
+ <8d8bd933-717b-48e4-f002-7b834abed6fd@redhat.com>
+ <3960223.GqB9zXL8s8@wuerfel>
+Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467251334-30594-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: Christoph Mair <christoph.mair-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vlad Dogaru <vlad.dogaru-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Eric Andersson <eric.andersson-TStm8jYLEPpl57MIdRCFDg@public.gmane.org>, Neil Brown <neilb-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRYNGWEWYDBBVPD2W5QKGQETSE4AVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <3960223.GqB9zXL8s8@wuerfel>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/06/16 02:48, Linus Walleij wrote:
-> This adds standard device tree bindings for a reset GPIO line, and
-> the VDDD and VDDA power regulators.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Applied to the togreg branch of iio.git - initially pushed out as
-testing.
 
-Thanks,
 
-Jonathan
-> ---
-> ChangeLog v3->v4:
-> - Just resending. If the old patch (in the tree) is good enough, just
->   drop this.
-> ChangeLog v2->v3:
-> - None, just resending in case Jonathan prefers this binding doc
-> ChangeLog v1->v2:
-> - Order compatible string on single lines
-> - Add "bosch,bme280" for the new sensor from Matt
-> ---
->  Documentation/devicetree/bindings/iio/pressure/bmp085.txt | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-> index d7a6deb6b21e..c7198a03c906 100644
-> --- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-> +++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
-> @@ -1,7 +1,11 @@
-> -BMP085/BMP18x digital pressure sensors
-> +BMP085/BMP18x/BMP28x digital pressure sensors
->  
->  Required properties:
-> -- compatible: bosch,bmp085
-> +- compatible: must be one of:
-> +  "bosch,bmp085"
-> +  "bosch,bmp180"
-> +  "bosch,bmp280"
-> +  "bosch,bme280"
->  
->  Optional properties:
->  - chip-id: configurable chip id for non-default chip revisions
-> @@ -10,6 +14,10 @@ Optional properties:
->    value range is 0-3 with rising sensitivity.
->  - interrupt-parent: should be the phandle for the interrupt controller
->  - interrupts: interrupt mapping for IRQ
-> +- reset-gpios: a GPIO line handling reset of the sensor: as the line is
-> +  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
-> +- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
-> +- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
->  
->  Example:
->  
-> @@ -21,4 +29,7 @@ pressure@77 {
->  	default-oversampling = <2>;
->  	interrupt-parent = <&gpio0>;
->  	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
-> +	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-> +	vddd-supply = <&foo>;
-> +	vdda-supply = <&bar>;
->  };
-> 
+On 30-6-2016 13:31, Arnd Bergmann wrote:
+> On Thursday, June 30, 2016 12:25:15 PM CEST Hans de Goede wrote:
+>>> So then how about making use of a more specific compatible string?
+>>>
+>>> e.g.
+>>>
+>>> brcmf {
+>>>         compatible = "foo,ap6210", "brcm,bcm4329-fmac";
+>>>         ...
+>>> };
+>>>
+>>> and if the compatible has more than one element you request
+>>> FW_NAME_<compatible>.txt as the nvram file. Or try each comptible (and
+>>> lastly no suffix) until you get a match. (AFAICT, this is what the
+>>> "model" property was originally intended for anyway, but almost nobody
+>>> did it right, and everyone put a user readable string into "model" for
+>>> boards instead of the ePAPR defined compatible string).
+>>
+>> Hmm, interesting idea. Not sure how easy / hard it will be to implement
+>> this, but from a dt binding point of view it seems elegant.
+>>
+>> Kalle, Arend, what do you think of this ?
+
+At first glance I like the suggestion, but this would mean updating the
+bindings document for each new wifi module that we want to add. Not a
+big problem, but it makes that I have a slight preference to using a
+property for it, eg. brcm,module = "ap6210";
+
+> I think that's reasonable. Also, we have precedent for using things like
+> the boardid as part of the compatible string, which would help do what
+> Kalle suggested earlier with "nvram-<boardtype>-<boardrev>.txt",
+> as we get that for free by trying out all the compatible strings.
+
+The suggestion from Kalle was to use the field in the nvram file, but
+things are a bit more complicated. The fields are only used if it is not
+stored on the device in OTP or SROM. The 43362 does not have a SROM, but
+it still has a small OTP storage if I am not mistaken. The brcmfmac
+exposes a revinfo file in debugfs containing boardtype and boardrev, but
+that is after starting the firmware. Still worth to check if those
+values match the values in the ap6210 nvram file.
+
+Regards,
+Arend
