@@ -1,80 +1,60 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 01/11] soc/tegra: pmc: Initialise resets associated
- with a power partition
-Date: Thu, 30 Jun 2016 11:49:02 +0200
-Message-ID: <20160630094902.GD1776@ulmo.ba.sec>
-References: <1467191877-26017-1-git-send-email-jonathanh@nvidia.com>
- <1467191877-26017-2-git-send-email-jonathanh@nvidia.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Thu, 30 Jun 2016 11:49:01 +0200
+Message-ID: <4f1a8cce-91e9-f386-cdde-7abcdc43b817@redhat.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+ <CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
+ <b49a9e4b-d591-d978-8005-413f39ebf2bd@redhat.com>
+ <871t3gdj6p.fsf@purkki.adurom.net>
+ <ea10ff70-26e6-e151-5cea-c54bd12a054c@redhat.com>
+ <f8995599-115d-87e5-7928-c029b48584f1@broadcom.com>
+ <87mvm36p4d.fsf@kamboji.qca.qualcomm.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BRE3mIcgqKzpedwo"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467191877-26017-2-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBF6W2O5QKGQEWGNRYQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <87mvm36p4d.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---BRE3mIcgqKzpedwo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 30-06-16 10:46, Kalle Valo wrote:
+> Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
+>
+>>> Since we are dealing with a per-board config-file here, which is
+>>> loaded from the os filesystem we really need to specify a basename
+>>> here as the list of possible boards is endless, so we cannot
+>>> have a lookup table in the driver.
+>>
+>> As Jonas mentioned the general principle of device tree is to be
+>> agnostic with regards to OS and/or driver as you undoubtedly know. His
+>> proposal seems like a usable solution for your problem while complying
+>> to the device tree principle. So instead of overriding the default
+>> brcmfmac should modify it when dt specifies the "module" property, ie:
+>>
+>> no "module" in DT:	nvram filename = brcm/brcmfmac43362-sdio.txt
+>> "module=ap6210" in DT:	nvram filename = brcm/brcmfmac43362-ap6210.txt
+>
+> Just out of curiosity, what does "ap6210" exactly mean? I get that 43362
+> is the chip id, but not ap6210. Is it just an arbitrary name?
 
-On Wed, Jun 29, 2016 at 10:17:47AM +0100, Jon Hunter wrote:
-> When registering the Tegra power partitions with the generic PM domain
-> framework, the current state of the each partition is checked and used
-> as the default state for the partition. However, the state of each reset
-> associated with the partition is not initialised and so it is possible
-> that the state of the resets are not in the expected state. For example,
-> if a partition is on, then the resets should be de-asserted and if the
-> partition is off, the resets should be asserted.
->=20
-> There have been cases where the bootloader has powered on a partition
-> and only de-asserted some of the resets to some of the devices in the
-> partition. This can cause accesses to these devices to hang the system
-> when the kernel boots and attempts to probe these devices.
->=20
-> Ideally, the driver for the device should ensure the reset has been
-> de-asserted when probing, but the resets cannot be shared between the
-> PMC driver (that needs to de-assert/assert the reset when turning the
-> partition on or off) and another driver because we cannot ensure the
-> reset is in the correct state.
->=20
-> To ensure the resets are in the correct state, when using the generic
-> PM domain framework, put each reset associated with the partition in
-> the correct state (based upon the partition's current state) when
-> obtaining the resets for a partition.
->=20
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/soc/tegra/pmc.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
+It is more or less an arbitrary name, typically these sdio wifi chips
+are used as a pre-assembled module (a tiny pcb) with some things like
+the necessary crystal / resonator and various capacitors and resistors
+on there. The brcm based sdio wifi modules typically come with a metal
+shield cap which has a module type stamped on it, e.g. ap6210,
+ap6476, toc9002.
 
-Applied to for-4.8/soc, thanks.
+Regards,
 
-Thierry
-
---BRE3mIcgqKzpedwo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXdOsMAAoJEN0jrNd/PrOh3wsP/0CPXQ6h5zGWg6i6jCJXgFmV
-Ku/woQffcMkz8kgAFQ09rPjCscoP3t+xMI2TAPQECACvI7qv4w5GPDelTyuKOhW8
-0OOl60CScXkd3mq1zUo8XpQkTjew1Ihyp3etgjYDuRFwFjwoeqlepLwlbXzmpMBM
-Ar70betKgtn2TRxsofW3+HDnwdXGxf6RZuuMi2t0bDpnZWVJIDJ8KokkFV2wdvFK
-vlk/D3SfWvzgzsvRoJ6NREi5d8ecpP+VWVODkNTOKsmLGEZBvS+fJeQTRibvMCCQ
-x13FCKkh4L1lQw5xca+qUR7E4vI84hLPlRg8kP+1z21PWdW9cqz0Y15i+U97CDBx
-D/b0uxd6775qSOqbY8W+qFHxKKY3AKEfQ3lThi/9ncIq1wlXXfWdb0h86XQ0wmDD
-viExSwFws2uychb5xoXkc/Ioi6/tqMpjR/ivsNsrKmWH47wLNxoXuNXxfPGuZweI
-uiBGX4Q+2txXCyppomGcukw1Zmwmj1HZUA1OYB94JtAbEWB7fAEhG4dOuZ9zS/xe
-PvAwCPKZdgU2qTfHrKTIzf9qiBFtv10jO3UtqGtgQyjE2iDWaVLFS7zq5UXsj2rl
-lRGtQ2EpV6Hi2CxhEI/ORBiwVT3A/seMKXU4jGKNGBdcLrqagVOBAIK3Lz7Vr/aZ
-ZZpU/EoP6+djCv/1BBaD
-=wt6P
------END PGP SIGNATURE-----
-
---BRE3mIcgqKzpedwo--
+Hans
