@@ -1,71 +1,34 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH 7/7] ARM: dts: NSP: Add bgmac entries
-Date: Thu, 30 Jun 2016 18:59:14 -0400
-Message-ID: <1467327554-22074-8-git-send-email-jon.mason@broadcom.com>
-References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zajec5@gmail.com
-Cc: davem@davemloft.net, f.fainelli@gmail.com, hauke@hauke-m.de, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/3] Add R8A7792/Blanche PFC support
+Date: Fri, 01 Jul 2016 02:05:15 +0300
+Message-ID: <2144803.0K8qXzjIFq@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux@arm.linux.org.uk, magnus.damm@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree entries for the ethernet devices present on the
-Broadcom Northstar Plus SoCs
+Hello.
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi   | 18 ++++++++++++++++++
- arch/arm/boot/dts/bcm958625k.dts |  8 ++++++++
- 2 files changed, 26 insertions(+)
+   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20160630-v4.7-rc5' tag. We're adding the R8A7792 PFC node and
+the describe the pins for the SCIFs and SMSC LAN89218 Ethernet chip found on
+the Blanche board). These patches depend on the R8A7792 PFC driver patchset
+in order to work properly.
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index def9e78..8f4343b 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -192,6 +192,24 @@
- 			status = "disabled";
- 		};
- 
-+		gmac0: ethernet@22000 {
-+			compatible = "brcm,bgmac-nsp";
-+			reg = <0x022000 0x1000>,
-+			      <0x110000 0x1000>;
-+			reg-names = "gmac_base", "idm_base";
-+			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		gmac1: ethernet@23000 {
-+			compatible = "brcm,bgmac-nsp";
-+			reg = <0x023000 0x1000>,
-+			      <0x111000 0x1000>;
-+			reg-names = "gmac_base", "idm_base";
-+			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		nand: nand@26000 {
- 			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
- 			reg = <0x026000 0x600>,
-diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-index e298450..d16ab53 100644
---- a/arch/arm/boot/dts/bcm958625k.dts
-+++ b/arch/arm/boot/dts/bcm958625k.dts
-@@ -56,6 +56,14 @@
- 	status = "okay";
- };
- 
-+&gmac0 {
-+	status = "okay";
-+};
-+
-+&gmac1 {
-+	status = "okay";
-+};
-+
- &pcie0 {
- 	status = "okay";
- };
--- 
-1.9.1
+[1/3] ARM: dts: r8a7792: add PFC support
+[2/3] ARM: dts: blanche: add SCIF pins
+[3/3] ARM: dts: blanche: add Ethernet pins
+
+WBR, Sergei
