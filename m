@@ -1,69 +1,80 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] ASoC: sunxi: Add i2s controller support
-Date: Thu, 30 Jun 2016 20:47:36 +0200
-Message-ID: <20160630184736.GB5485@lukather>
-References: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/10 v4] iio: pressure: bmp280: augment DT bindings
+Date: Thu, 30 Jun 2016 20:23:26 +0100
+Message-ID: <0bd26779-4ac3-faa2-68e3-52fab273721a@kernel.org>
+References: <1467251334-30594-1-git-send-email-linus.walleij@linaro.org>
+ <1467251334-30594-2-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eJnRUKwClWJh1Khz"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160615211123.31068-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gianfranco-25KmuZRQ+wx0ubjbjo6WXg@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467251334-30594-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: Christoph Mair <christoph.mair-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vlad Dogaru <vlad.dogaru-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Eric Andersson <eric.andersson-TStm8jYLEPpl57MIdRCFDg@public.gmane.org>, Neil Brown <neilb-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 30/06/16 02:48, Linus Walleij wrote:
+> This adds standard device tree bindings for a reset GPIO line, and
+> the VDDD and VDDA power regulators.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Applied to the togreg branch of iio.git - initially pushed out as
+testing.
 
---eJnRUKwClWJh1Khz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks,
 
-On Wed, Jun 15, 2016 at 11:11:19PM +0200, Maxime Ripard wrote:
-> Hi everyone,
->=20
-> This is the second version of the I2S support for the controller found
-> in the Allwinner A10 and later SoCs.
->=20
-> Playback has been tested with an UDA1380 on an A20-Olinuxino. Capture
-> is not implemented yet, but will come eventually.
->=20
-> Let me know what you think,
-> Maxime
-
-Applied patches 3 and 4
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---eJnRUKwClWJh1Khz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXdWlIAAoJEBx+YmzsjxAgvD8P/iBqaG8lZ4MoiC7ATOQ7VZmE
-OrYHOmEUURs5uq52azAUiN77xVSVdwZ4nRay0iQprLdXXNGVvxEtN1k3UKkwLoFv
-118kfHQUZD46Q//O4ss80HKA0nTcEn2jMY3tUnBdrGXzJ03g/UiFNB0jNfxGm8sU
-rTg5Mv4fAiZuTGbfKuVrOF1JOpE9SrmzpitSeijfzMDCWxDKoNvjdTBankc6a/Oz
-IpXprfm7i93lSCPnnbAKTQqFEDITyRG4vbRdxxWwnI31b6GWcQgleodGIpKRQg3V
-y6CaYjYSDoUpml2nrTGyC1yc4zGpC1mpNNrd3410B09BB1Zl8xS0Gp2/LbN7v/pS
-Eh2NhhiVq9ycVgLsZ3pE29rlG/wcFgtOUYYVfkT45CI0O308WZgYH630djLL5rJr
-fbd4I/XJKr1am+4mW4uRGp+2USPxxEoQp/zy1mT6L1K0VP0+Dna3Gjg1QwiO+4So
-pxaY+rrsN1h5huZ6cwkW7GHneBoLie6qecw1J2PNyzhKBUPC8Bg0fBaqJPakb3JF
-Q8KsQ3JgxCmzvxqWOIBb8FJF+Csz3Py0eKpm3au0rMEOjpH8rNFduDbmpsAwtban
-Q9yRwr0HzRfhOwIQQbXVC3HaMxK3XN4StF2U8QMn6lvS2V1Un42byu72Cut5Y8Gz
-cIVvu4IAaMTLiDYSrbe4
-=Od3W
------END PGP SIGNATURE-----
-
---eJnRUKwClWJh1Khz--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> ---
+> ChangeLog v3->v4:
+> - Just resending. If the old patch (in the tree) is good enough, just
+>   drop this.
+> ChangeLog v2->v3:
+> - None, just resending in case Jonathan prefers this binding doc
+> ChangeLog v1->v2:
+> - Order compatible string on single lines
+> - Add "bosch,bme280" for the new sensor from Matt
+> ---
+>  Documentation/devicetree/bindings/iio/pressure/bmp085.txt | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+> index d7a6deb6b21e..c7198a03c906 100644
+> --- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+> +++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+> @@ -1,7 +1,11 @@
+> -BMP085/BMP18x digital pressure sensors
+> +BMP085/BMP18x/BMP28x digital pressure sensors
+>  
+>  Required properties:
+> -- compatible: bosch,bmp085
+> +- compatible: must be one of:
+> +  "bosch,bmp085"
+> +  "bosch,bmp180"
+> +  "bosch,bmp280"
+> +  "bosch,bme280"
+>  
+>  Optional properties:
+>  - chip-id: configurable chip id for non-default chip revisions
+> @@ -10,6 +14,10 @@ Optional properties:
+>    value range is 0-3 with rising sensitivity.
+>  - interrupt-parent: should be the phandle for the interrupt controller
+>  - interrupts: interrupt mapping for IRQ
+> +- reset-gpios: a GPIO line handling reset of the sensor: as the line is
+> +  active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
+> +- vddd-supply: digital voltage regulator (see regulator/regulator.txt)
+> +- vdda-supply: analog voltage regulator (see regulator/regulator.txt)
+>  
+>  Example:
+>  
+> @@ -21,4 +29,7 @@ pressure@77 {
+>  	default-oversampling = <2>;
+>  	interrupt-parent = <&gpio0>;
+>  	interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+> +	reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+> +	vddd-supply = <&foo>;
+> +	vdda-supply = <&bar>;
+>  };
+> 
