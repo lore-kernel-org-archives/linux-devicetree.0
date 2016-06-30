@@ -1,56 +1,46 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] drivers/of: add option to load a default Device Tree
-Date: Thu, 30 Jun 2016 10:45:51 -0700
-Message-ID: <57755ACF.1090204@gmail.com>
-References: <1466607954-2821-1-git-send-email-franck.jullien@odyssee-systemes.fr>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: dts: r8a7792: add SMP support
+Date: Thu, 30 Jun 2016 20:52:53 +0300
+Message-ID: <c2c3584d-9a3b-bfd6-b795-6373e92c9dca@cogentembedded.com>
+References: <14666252.G84Ipxe6EL@wasted.cogentembedded.com>
+ <1627631.X1bJtVQHBF@wasted.cogentembedded.com>
+ <7c23396f-f880-40ac-654d-cffc82df021e@cogentembedded.com>
+ <20160630122718.GA24035@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466607954-2821-1-git-send-email-franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160630122718.GA24035@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Franck,
+On 06/30/2016 03:27 PM, Simon Horman wrote:
 
-(This could be confusing, with Franck and Frank -- feel free to
-address me as rowand in this thread if it is less confusing.)
+>>> Add the device tree nodes for the Advanced Power Management Unit (APMU)
+>>> and the second Cortex-A15 CPU core.
+>>> Use the "enable-method" prop  to point out that the APMU should be used
+>>> for the SMP support.
+>>>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>
+>>> ---
+>>> This patch is against the 'renesas-devel-20160620-v4.7-rc4' tag of Simon
+>>> Horman's 'renesas.git' repo.  It depends on Magnus'/Geert's SMP patchset...
+>>
+>>    simon, now that this patchset has been merged (for 4.8?), could you also
+>> merge this patch?
+>
+> Sure, as this is for a new board I'll make a last minute exception and take
+> this.
 
-On 06/22/16 08:05, Franck Jullien wrote:
-> Even if a platform doesn't use a device tree during its
-> boot process it can be useful to enable CONFIG_OF and get
-> an empty device tree.
-> 
-> Then, devices can use device tree overlays to populate this
-> default tree.
-> 
-> Signed-off-by: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
-> ---
->  drivers/of/Kconfig     |  9 +++++++++
->  drivers/of/Makefile    |  3 +++
->  drivers/of/base.c      | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/default.dts |  4 ++++
->  drivers/of/unittest.c  | 33 +++++----------------------------
->  include/linux/of.h     |  2 ++
->  6 files changed, 73 insertions(+), 28 deletions(-)
->  create mode 100644 drivers/of/default.dts
+    Thank you! :-)
 
-< snip >
+> I am trusting that cpu hotplug and suspend/resume have been adequately
+> tested.
 
-For context, in a later reply, you mention that this is for x86_64.
+    Don't worry, all tests suggested by you have passed on this board.
+Only the R8A7794/SILK board had trouble with hot-unplugging CPU0...
 
-My current inclination is to prefer not to solve the problem this way.
-I was going to ask why you didn't just add the compiled default.dts
-to the kernel as an appended device tree blob, until I found out
-this was for x86_64.
-
-Can you add unflatten_devicetree() to x86_64, then just use the
-appended device tree blob method?
-
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
