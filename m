@@ -1,71 +1,64 @@
-From: Kieran Bingham <kieran@ksquared.org.uk>
-Subject: [PATCH v2 3/3] dt-bindings: Add Renesas R-Car FDP1 bindings
-Date: Thu, 30 Jun 2016 17:50:30 +0100
-Message-ID: <1467305430-25660-4-git-send-email-kieran@bingham.xyz>
-References: <1467305430-25660-1-git-send-email-kieran@bingham.xyz>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1467305430-25660-1-git-send-email-kieran@bingham.xyz>
-Sender: linux-media-owner@vger.kernel.org
-To: laurent.pinchart@ideasonboard.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kieran@ksquared.org.uk
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 2/6] ASoC: samsung: Add Samsung Low
+ Power Audio Subsystem driver
+Date: Thu, 30 Jun 2016 19:16:46 +0200
+Message-ID: <577553FE.6080803@samsung.com>
+References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
+ <1466678715-19962-3-git-send-email-s.nawrocki@samsung.com>
+ <20160629215757.GX6247@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-reply-to: <20160629215757.GX6247@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, inki.dae@samsung.com, Beomho Seo <beomho.seo@samsung.com>, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-The FDP1 is a de-interlacing module which converts interlaced video to
-progressive video. It is also capable of performing pixel format conversion
-between YCbCr/YUV formats and RGB formats.
+On 06/29/2016 11:57 PM, Mark Brown wrote:
+> On Thu, Jun 23, 2016 at 12:45:11PM +0200, Sylwester Nawrocki wrote:
+...
+>> > This patch adds LPASS driver. The LPASS (Low Power Audio Subsystem)
+>> > is a special subsystem that supports audio playback with low power
+>> > consumption. This is a minimal driver which prepares resources for
+>> > IP blocks like I2S, audio DMA and UART.
+>> > Also system power ops are added to ensure the Audio Subsystem is
+>> > operational after system suspend/resume cycle.
+>
+> This is so trivial that I'm wondering why you even need it, it does
+> essentially nothing except for manage power on and off, and that isn't
+> synced up with the rest of the audio subsystem in any discernable way.
+> Previous Samsung SoCs have quite happily ignored their LPASS subsystems
+> in mainline.  As things stand I'm concerned that systems may get broken
+> if more functionality is added without the joining up with the rest of
+> the audio hardware via a card, there's not even the hooks which would
+> allow that.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
----
-Changes since v1:
- - title fixed
- - Interrupts property documented
- - version specific compatibles removed as we have a hw version register
- - label removed from device node example
-   * (fdp1 is not referenced by other nodes)
+Sorry, I didn't notice this e-mail earlier.  With previous Exynos versions
+the LPASS (or AudioSS) was mainly about the embedded audio DSP processor
+(at least WRT to SFRs), which was not required for boards supported in 
+the mainline kernel. Since e.g. Exynos5433 the LPASS SFR region contains 
+also entries related to other IP blocks, like I2S or DMAC.  Even though 
+functionality covered by these registers is still rather trivial, like 
+SW resets and unmasking interrupts, it's essential for the whole audio 
+subsystem operation. The intention was to have in future the LPASS driver 
+covering any functionality provided by the embedded audio dedicated MCU.
+I'm afraid we have to handle those power sequences in central place to
+ensure proper SoC operation. I would also rather avoid adding any exynos 
+quirks to the PL330 DMAC driver. 
 
- .../devicetree/bindings/media/renesas,fdp1.txt     | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/renesas,fdp1.txt
-
-diff --git a/Documentation/devicetree/bindings/media/renesas,fdp1.txt b/Documentation/devicetree/bindings/media/renesas,fdp1.txt
-new file mode 100644
-index 000000000000..e6abd2a17e66
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/renesas,fdp1.txt
-@@ -0,0 +1,33 @@
-+Renesas R-Car Fine Display Processor (FDP1)
-+-------------------------------------------
-+
-+The FDP1 is a de-interlacing module which converts interlaced video to
-+progressive video. It is capable of performing pixel format conversion between
-+YCbCr/YUV formats and RGB formats. Only YCbCr/YUV formats are supported as
-+an input to the module.
-+
-+ - compatible: Must be the following
-+
-+   - "renesas,fdp1" for generic compatible
-+
-+ - reg: the register base and size for the device registers
-+ - interrupts : interrupt specifier for the FDP1 instance
-+ - clocks: reference to the functional clock
-+ - renesas,fcp: reference to the FCPF connected to the FDP1
-+
-+Optional properties:
-+ - power-domains : power-domain property defined with a power domain specifier
-+                            to respective power domain.
-+
-+
-+Device node example
-+-------------------
-+
-+	fdp1@fe940000 {
-+		compatible = "renesas,fdp1";
-+		reg = <0 0xfe940000 0 0x2400>;
-+		interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 119>;
-+		power-domains = <&sysc R8A7795_PD_A3VP>;
-+		renesas,fcp = <&fcpf0>;
-+	};
--- 
-2.7.4
+I agree this driver is currently detached from the rest, while it would
+be good at the card to ensure the required resources are prepared.
+How about making LPASS registering a component and then adding it at
+the card as aux_dev? I would move some parts to the component's probe()
+callback and with component's probe_order specified a proper 
+initialization sequence could be ensured.
