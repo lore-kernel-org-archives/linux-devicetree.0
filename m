@@ -1,44 +1,49 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v3 13/14] clk: sunxi-ng: Add H3 clocks
-Date: Thu, 30 Jun 2016 10:31:08 +0200
-Message-ID: <20160630103108.66faa9f392f050de6106d194@free.fr>
-References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
-	<20160629190535.11855-14-maxime.ripard@free-electrons.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Thu, 30 Jun 2016 11:46:10 +0300
+Message-ID: <87mvm36p4d.fsf@kamboji.qca.qualcomm.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+	<CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
+	<b49a9e4b-d591-d978-8005-413f39ebf2bd@redhat.com>
+	<871t3gdj6p.fsf@purkki.adurom.net>
+	<ea10ff70-26e6-e151-5cea-c54bd12a054c@redhat.com>
+	<f8995599-115d-87e5-7928-c029b48584f1@broadcom.com>
+Reply-To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160629190535.11855-14-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQYFH77QIORBWNY2O5QKGQEDTR6FLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <f8995599-115d-87e5-7928-c029b48584f1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> (Arend Van
+	Spriel's message of "Wed, 29 Jun 2016 20:51:44 +0200")
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Jun 2016 21:05:34 +0200
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
 
-> +static void __init sun8i_h3_ccu_setup(struct device_node *node)
-> +{
-> +	void __iomem *reg;
-> +	u32 val;
-> +
-> +	reg =3D of_io_request_and_map(node, 0, of_node_full_name(node));
-> +	if (IS_ERR(reg)) {
-> +		pr_err("%s: Could not map the clock registers\n",
-> +		       of_node_full_name(node));
-> +		return;
-> +	}
-> +
-> +	/* Force the PLL-Audio-1x divider to 4 */
-> +	val =3D readl(reg + SUN8I_H3_PLL_AUDIO_REG);
-> +	val &=3D ~GENMASK(4, 0);
-> +	writel(val | 3, reg + SUN8I_H3_PLL_AUDIO_REG);
-> +
-> +	sunxi_ccu_probe(node, reg, &sun8i_h3_ccu_desc);
-> +}
+>> Since we are dealing with a per-board config-file here, which is
+>> loaded from the os filesystem we really need to specify a basename
+>> here as the list of possible boards is endless, so we cannot
+>> have a lookup table in the driver.
+>
+> As Jonas mentioned the general principle of device tree is to be
+> agnostic with regards to OS and/or driver as you undoubtedly know. His
+> proposal seems like a usable solution for your problem while complying
+> to the device tree principle. So instead of overriding the default
+> brcmfmac should modify it when dt specifies the "module" property, ie:
+>
+> no "module" in DT:	nvram filename = brcm/brcmfmac43362-sdio.txt
+> "module=ap6210" in DT:	nvram filename = brcm/brcmfmac43362-ap6210.txt
 
-=46YI, the pll-audio PLL_POST_DIV is 19:16.
+Just out of curiosity, what does "ap6210" exactly mean? I get that 43362
+is the chip id, but not ap6210. Is it just an arbitrary name?
 
---=20
-Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+-- 
+Kalle Valo
