@@ -1,82 +1,34 @@
-From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
-Subject: [PATCH v2 1/2] Documentation: Add sbs-manager device tree node documentation
-Date: Thu, 30 Jun 2016 22:05:41 +0200
-Message-ID: <1467317142-14063-2-git-send-email-karl-heinz@schneider-inet.de>
-References: <1bFnWI-0000MX-9R>
- <1467317142-14063-1-git-send-email-karl-heinz@schneider-inet.de>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1467317142-14063-1-git-send-email-karl-heinz@schneider-inet.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>, Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH/RFC v3 00/22] soc: renesas: Add R-Car RST driver for
+ obtaining mode pin state
+Date: Thu, 30 Jun 2016 13:14:08 -0700
+Message-ID: <20160630201407.GA27880@codeaurora.org>
+References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree documentation for the sbs-manager
+On 06/01, Geert Uytterhoeven wrote:
+> 	Hi all,
+> 
+> Currently the R-Car Clock Pulse Generator (CPG) drivers obtains the
+> state of the mode pins either by a call from the board code, or directly
+> by using a hardcoded register access. This is a bit messy, and creates a
+> dependency between driver and platform code.
+> 
+> This RFC patch series converts the various Renesas R-Car clock drivers
+> and support code from reading the mode pin states using a hardcoded
+> register access to using a new R-Car RST driver.
 
-Reviewed-by: Phil Reid <preid@electromag.com.au>
-Signed-off-by: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
----
- .../devicetree/bindings/power/sbs,sbs-manager.txt  | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+Dumb question, can we use the nvmem reading APIs instead of an
+SoC specific function to read the modes?
 
-diff --git a/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt b/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
-new file mode 100644
-index 0000000..1d7e5ee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
-@@ -0,0 +1,52 @@
-+Binding for sbs-manager
-+
-+Required properties:
-+- compatible: should be "lltc,ltc1760" or use "sbs,sbs-manager" as fallback.
-+- reg: integer, i2c address of the device. Should be <0xa>.
-+
-+From OS view the device is basically an i2c-mux used to communicate with up to
-+four smart battery devices at address 0xb. The driver actually implements this
-+behaviour. So standard i2c-mux nodes can be used to register up to four slave
-+batteries. Channels will be numerated as 1, 2, 4 and 8.
-+
-+Example:
-+
-+batman@0a {
-+    compatible = "lltc,ltc1760";
-+    reg = <0x0a>;
-+    #address-cells = <1>;
-+    #size-cells = <0>;
-+
-+    i2c@1 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        reg = <1>;
-+
-+        battery@0b {
-+            compatible = "ti,bq2060", "sbs,sbs-battery";
-+            reg = <0x0b>;
-+        };
-+    };
-+
-+    i2c@2 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        reg = <2>;
-+
-+        battery@0b {
-+            compatible = "ti,bq2060", "sbs,sbs-battery";
-+            reg = <0x0b>;
-+        };
-+    };
-+
-+    i2c@4 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        reg = <4>;
-+
-+        battery@0b {
-+            compatible = "ti,bq2060", "sbs,sbs-battery";
-+            reg = <0x0b>;
-+        };
-+    };
-+};
---
-1.9.1
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
