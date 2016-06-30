@@ -1,38 +1,32 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 4/6] irqchip: add irqchip driver for nuc900
-Date: Thu, 30 Jun 2016 16:30:17 +0000
-Message-ID: <20160630163017.GF9922@io.lakedaemon.net>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
- <1466851042-22239-5-git-send-email-vw@iommu.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466851042-22239-5-git-send-email-vw@iommu.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wan Zongshun <vw@iommu.org>
-Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+From: Kieran Bingham <kieran@ksquared.org.uk>
+Subject: [PATCH v2 0/3] dt-bindings: RCar FCP and FDP1 bindings
+Date: Thu, 30 Jun 2016 17:50:27 +0100
+Message-ID: <1467305430-25660-1-git-send-email-kieran@bingham.xyz>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: laurent.pinchart@ideasonboard.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kieran@ksquared.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Wan,
+This updated series, has collected the Acked and Reviewed tags for the
+FCPF binding addition, and adds documention of the optional power-domain
+property for the FCP.
 
-On Sat, Jun 25, 2016 at 06:37:20PM +0800, Wan Zongshun wrote:
-> This patch is to add irqchip driver support for nuc900 plat,
-> current this driver only supports nuc970 SoC.
-> 
-> Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
-> ---
->  arch/arm/mach-w90x900/include/mach/irqs.h          |  69 ++++++++++++++
->  .../mach-w90x900/include/mach/nuc970-regs-aic.h    |  53 +++++++++++
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-nuc900.c                       | 104 +++++++++++++++++++++
->  4 files changed, 227 insertions(+)
->  create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
->  create mode 100644 drivers/irqchip/irq-nuc900.c
+Finally the FDP1 bindings have been updated following review from Laurent.
 
-When you resend after addressing Arnd's comments, please include the
-irqchip maintainers in the cc.
+Specifically, this removes the version specific compatibles as we have a
+HW version register available to us in the hardware so we can detect at
+run-time what device version we are running on.
 
-thx,
+Kieran Bingham (3):
+  dt-bindings: Update Renesas R-Car FCP DT binding
+  dt-bindings: Document Renesas R-Car FCP power-domains usage
+  dt-bindings: Add Renesas R-Car FDP1 bindings
 
-Jason.
+ .../devicetree/bindings/media/renesas,fcp.txt      |  9 +++++-
+ .../devicetree/bindings/media/renesas,fdp1.txt     | 33 ++++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,fdp1.txt
+
+-- 
+2.7.4
