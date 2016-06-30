@@ -1,176 +1,280 @@
-From: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/4] iio: potentiometer: mcp4531: Add device tree binding documentation
-Date: Thu, 30 Jun 2016 09:34:49 +0200
-Message-ID: <1467272091-28087-3-git-send-email-florian.vaussard@heig-vd.ch>
-References: <1467272091-28087-1-git-send-email-florian.vaussard@heig-vd.ch>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Applied "mfd: rn5t618: Add Ricoh RN5T567 PMIC support" to the
+ regulator tree
+Date: Thu, 30 Jun 2016 08:43:17 +0100
+Message-ID: <20160630074317.GD1707@dell>
+References: <20160626011515.4428-3-stefan@agner.ch>
+ <E1bIJrb-0003hB-Ll@finisterre>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467272091-28087-1-git-send-email-florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1bIJrb-0003hB-Ll@finisterre>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, max.oss.09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree documentation for all the supported parts. Apart th=
-e
-compatible string and standard I2C binding, no other binding is current=
-ly
-needed.
+On Wed, 29 Jun 2016, Mark Brown wrote:
 
-Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
----
- .../devicetree/bindings/i2c/trivial-devices.txt    | 64 ++++++++++++++=
-++++++++
- 1 file changed, 64 insertions(+)
+> The patch
+>=20
+>    mfd: rn5t618: Add Ricoh RN5T567 PMIC support
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt =
-b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 53987449..acc5cd6 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -56,6 +56,70 @@ maxim,ds1050		5 Bit Programmable, Pulse-Width Modula=
-tor
- maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
- maxim,max6625		9-Bit/12-Bit Temperature Sensors with I=C2=B2C-Compatib=
-le Serial Interface
- mc,rv3029c2		Real Time Clock Module with I2C-Bus
-+microchip,mcp4531-502	Microchip 7-bit Single I2C Digital Potentiometer=
- (5k)
-+microchip,mcp4531-103	Microchip 7-bit Single I2C Digital Potentiometer=
- (10k)
-+microchip,mcp4531-503	Microchip 7-bit Single I2C Digital Potentiometer=
- (50k)
-+microchip,mcp4531-104	Microchip 7-bit Single I2C Digital Potentiometer=
- (100k)
-+microchip,mcp4532-502	Microchip 7-bit Single I2C Digital Potentiometer=
- (5k)
-+microchip,mcp4532-103	Microchip 7-bit Single I2C Digital Potentiometer=
- (10k)
-+microchip,mcp4532-503	Microchip 7-bit Single I2C Digital Potentiometer=
- (50k)
-+microchip,mcp4532-104	Microchip 7-bit Single I2C Digital Potentiometer=
- (100k)
-+microchip,mcp4541-502	Microchip 7-bit Single I2C Digital Potentiometer=
- with NV Memory (5k)
-+microchip,mcp4541-103	Microchip 7-bit Single I2C Digital Potentiometer=
- with NV Memory (10k)
-+microchip,mcp4541-503	Microchip 7-bit Single I2C Digital Potentiometer=
- with NV Memory (50k)
-+microchip,mcp4541-104	Microchip 7-bit Single I2C Digital Potentiometer=
- with NV Memory (100k)
-+microchip,mcp4542-502	Microchip 7-bit Single I2C Digital Potentiometer=
- with NV Memory (5k)
-+microchip,mcp4542-103	Microchip 7-bit Single I2C Digital Potentiometer=
- with NV Memory (10k)
-+microchip,mcp4542-503	Microchip 7-bit Single I2C Digital Potentiometer=
- with NV Memory (50k)
-+microchip,mcp4542-104	Microchip 7-bit Single I2C Digital Potentiometer=
- with NV Memory (100k)
-+microchip,mcp4551-502	Microchip 8-bit Single I2C Digital Potentiometer=
- (5k)
-+microchip,mcp4551-103	Microchip 8-bit Single I2C Digital Potentiometer=
- (10k)
-+microchip,mcp4551-503	Microchip 8-bit Single I2C Digital Potentiometer=
- (50k)
-+microchip,mcp4551-104	Microchip 8-bit Single I2C Digital Potentiometer=
- (100k)
-+microchip,mcp4552-502	Microchip 8-bit Single I2C Digital Potentiometer=
- (5k)
-+microchip,mcp4552-103	Microchip 8-bit Single I2C Digital Potentiometer=
- (10k)
-+microchip,mcp4552-503	Microchip 8-bit Single I2C Digital Potentiometer=
- (50k)
-+microchip,mcp4552-104	Microchip 8-bit Single I2C Digital Potentiometer=
- (100k)
-+microchip,mcp4561-502	Microchip 8-bit Single I2C Digital Potentiometer=
- with NV Memory (5k)
-+microchip,mcp4561-103	Microchip 8-bit Single I2C Digital Potentiometer=
- with NV Memory (10k)
-+microchip,mcp4561-503	Microchip 8-bit Single I2C Digital Potentiometer=
- with NV Memory (50k)
-+microchip,mcp4561-104	Microchip 8-bit Single I2C Digital Potentiometer=
- with NV Memory (100k)
-+microchip,mcp4562-502	Microchip 8-bit Single I2C Digital Potentiometer=
- with NV Memory (5k)
-+microchip,mcp4562-103	Microchip 8-bit Single I2C Digital Potentiometer=
- with NV Memory (10k)
-+microchip,mcp4562-503	Microchip 8-bit Single I2C Digital Potentiometer=
- with NV Memory (50k)
-+microchip,mcp4562-104	Microchip 8-bit Single I2C Digital Potentiometer=
- with NV Memory (100k)
-+microchip,mcp4631-502	Microchip 7-bit Dual I2C Digital Potentiometer (=
-5k)
-+microchip,mcp4631-103	Microchip 7-bit Dual I2C Digital Potentiometer (=
-10k)
-+microchip,mcp4631-503	Microchip 7-bit Dual I2C Digital Potentiometer (=
-50k)
-+microchip,mcp4631-104	Microchip 7-bit Dual I2C Digital Potentiometer (=
-100k)
-+microchip,mcp4632-502	Microchip 7-bit Dual I2C Digital Potentiometer (=
-5k)
-+microchip,mcp4632-103	Microchip 7-bit Dual I2C Digital Potentiometer (=
-10k)
-+microchip,mcp4632-503	Microchip 7-bit Dual I2C Digital Potentiometer (=
-50k)
-+microchip,mcp4632-104	Microchip 7-bit Dual I2C Digital Potentiometer (=
-100k)
-+microchip,mcp4641-502	Microchip 7-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (5k)
-+microchip,mcp4641-103	Microchip 7-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (10k)
-+microchip,mcp4641-503	Microchip 7-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (50k)
-+microchip,mcp4641-104	Microchip 7-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (100k)
-+microchip,mcp4642-502	Microchip 7-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (5k)
-+microchip,mcp4642-103	Microchip 7-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (10k)
-+microchip,mcp4642-503	Microchip 7-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (50k)
-+microchip,mcp4642-104	Microchip 7-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (100k)
-+microchip,mcp4651-502	Microchip 8-bit Dual I2C Digital Potentiometer (=
-5k)
-+microchip,mcp4651-103	Microchip 8-bit Dual I2C Digital Potentiometer (=
-10k)
-+microchip,mcp4651-503	Microchip 8-bit Dual I2C Digital Potentiometer (=
-50k)
-+microchip,mcp4651-104	Microchip 8-bit Dual I2C Digital Potentiometer (=
-100k)
-+microchip,mcp4652-502	Microchip 8-bit Dual I2C Digital Potentiometer (=
-5k)
-+microchip,mcp4652-103	Microchip 8-bit Dual I2C Digital Potentiometer (=
-10k)
-+microchip,mcp4652-503	Microchip 8-bit Dual I2C Digital Potentiometer (=
-50k)
-+microchip,mcp4652-104	Microchip 8-bit Dual I2C Digital Potentiometer (=
-100k)
-+microchip,mcp4661-502	Microchip 8-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (5k)
-+microchip,mcp4661-103	Microchip 8-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (10k)
-+microchip,mcp4661-503	Microchip 8-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (50k)
-+microchip,mcp4661-104	Microchip 8-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (100k)
-+microchip,mcp4662-502	Microchip 8-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (5k)
-+microchip,mcp4662-103	Microchip 8-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (10k)
-+microchip,mcp4662-503	Microchip 8-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (50k)
-+microchip,mcp4662-104	Microchip 8-bit Dual I2C Digital Potentiometer w=
-ith NV Memory (100k)
- national,lm63		Temperature sensor with integrated fan control
- national,lm75		I2C TEMP SENSOR
- national,lm80		Serial Interface ACPI-Compatible Microprocessor System =
-Hardware Monitor
+Are all of these 'applied' emails because you merged my PR?
+
+> has been applied to the regulator tree at
+>=20
+>    git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.gi=
+t=20
+>=20
+> All being well this means that it will be integrated into the linux-n=
+ext
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted. =20
+>=20
+> You may get further e-mails resulting from automated or manual testin=
+g
+> and review of the tree, please engage with people reporting problems =
+and
+> send followup patches addressing any issues that are reported if need=
+ed.
+>=20
+> If any updates are required or you are submitting further changes the=
+y
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+>=20
+> Please add any relevant lists and maintainers to the CCs when replyin=
+g
+> to this mail.
+>=20
+> Thanks,
+> Mark
+>=20
+> From a99ab50dbbb1f982d076d19e0a9959fe2efa3126 Mon Sep 17 00:00:00 200=
+1
+> From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> Date: Tue, 28 Jun 2016 22:53:19 -0700
+> Subject: [PATCH] mfd: rn5t618: Add Ricoh RN5T567 PMIC support
+>=20
+> The Ricoh RN5T567 is from the same family as the Ricoh RN5T618 is,
+> the differences are:
+>=20
+> + DCDC4
+> + Slightly different output voltage/currents
+> + 32kHz Output
+> - ADC/Charger capabilities
+>=20
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> Reviewed-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/rn5t618.txt | 19 +++++++++----=
+----
+>  drivers/mfd/Kconfig                               |  7 ++++---
+>  drivers/mfd/rn5t618.c                             | 25 +++++++++++++=
++++-------
+>  include/linux/mfd/rn5t618.h                       | 12 +++++++++++
+>  4 files changed, 45 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/rn5t618.txt b/Docu=
+mentation/devicetree/bindings/mfd/rn5t618.txt
+> index 937785a3eddc..9e6770b105c9 100644
+> --- a/Documentation/devicetree/bindings/mfd/rn5t618.txt
+> +++ b/Documentation/devicetree/bindings/mfd/rn5t618.txt
+> @@ -1,18 +1,21 @@
+> -* Ricoh RN5T618 PMIC
+> +* Ricoh RN5T567/RN5T618 PMIC
+> =20
+> -Ricoh RN5T618 is a power management IC which integrates 3 step-down
+> -DCDC converters, 7 low-dropout regulators, a Li-ion battery charger,
+> -fuel gauge, ADC, GPIOs and a watchdog timer. It can be controlled
+> -through a I2C interface.
+> +Ricoh RN5T567/RN5T618 is a power management IC family which integrat=
+es
+> +3 to 4 step-down DCDC converters, 7 low-dropout regulators, GPIOs an=
+d
+> +a watchdog timer. The RN5T618 provides additionally a Li-ion battery
+> +charger, fuel gauge and an ADC. It can be controlled through an I2C
+> +interface.
+> =20
+>  Required properties:
+> - - compatible: should be "ricoh,rn5t618"
+> + - compatible: must be one of
+> +		"ricoh,rn5t567"
+> +		"ricoh,rn5t618"
+>   - reg: the I2C slave address of the device
+> =20
+>  Sub-nodes:
+>   - regulators: the node is required if the regulator functionality i=
+s
+> -   needed. The valid regulator names are: DCDC1, DCDC2, DCDC3, LDO1,
+> -   LDO2, LDO3, LDO4, LDO5, LDORTC1 and LDORTC2.
+> +   needed. The valid regulator names are: DCDC1, DCDC2, DCDC3, DCDC4
+> +   (RN5T567), LDO1, LDO2, LDO3, LDO4, LDO5, LDORTC1 and LDORTC2.
+>     The common bindings for each individual regulator can be found in=
+:
+>     Documentation/devicetree/bindings/regulator/regulator.txt
+> =20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 1bcf601de5bc..ff031a7735a5 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -852,13 +852,14 @@ config MFD_RK808
+>  	  including interrupts, RTC, LDO & DCDC regulators, and onkey.
+> =20
+>  config MFD_RN5T618
+> -	tristate "Ricoh RN5T5618 PMIC"
+> +	tristate "Ricoh RN5T567/618 PMIC"
+>  	depends on I2C
+> +	depends on OF
+>  	select MFD_CORE
+>  	select REGMAP_I2C
+>  	help
+> -	  Say yes here to add support for the Ricoh RN5T618 PMIC. This
+> -	  driver provides common support for accessing the device,
+> +	  Say yes here to add support for the Ricoh RN5T567 or R5T618 PMIC.
+> +	  This driver provides common support for accessing the device,
+>  	  additional drivers must be enabled in order to use the
+>  	  functionality of the device.
+> =20
+> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+> index 0ad51d792feb..c86160d3a773 100644
+> --- a/drivers/mfd/rn5t618.c
+> +++ b/drivers/mfd/rn5t618.c
+> @@ -2,6 +2,7 @@
+>   * MFD core driver for Ricoh RN5T618 PMIC
+>   *
+>   * Copyright (C) 2014 Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + * Copyright (C) 2016 Toradex AG
+>   *
+>   * This program is free software; you can redistribute it and/or
+>   * modify it under the terms of the GNU General Public License
+> @@ -15,6 +16,7 @@
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/rn5t618.h>
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
+>  #include <linux/regmap.h>
+> =20
+>  static const struct mfd_cell rn5t618_cells[] =3D {
+> @@ -59,17 +61,32 @@ static void rn5t618_power_off(void)
+>  			   RN5T618_SLPCNT_SWPWROFF, RN5T618_SLPCNT_SWPWROFF);
+>  }
+> =20
+> +static const struct of_device_id rn5t618_of_match[] =3D {
+> +	{ .compatible =3D "ricoh,rn5t567", .data =3D (void *)RN5T567 },
+> +	{ .compatible =3D "ricoh,rn5t618", .data =3D (void *)RN5T618 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rn5t618_of_match);
+> +
+>  static int rn5t618_i2c_probe(struct i2c_client *i2c,
+>  			     const struct i2c_device_id *id)
+>  {
+> +	const struct of_device_id *of_id;
+>  	struct rn5t618 *priv;
+>  	int ret;
+> =20
+> +	of_id =3D of_match_device(rn5t618_of_match, &i2c->dev);
+> +	if (!of_id) {
+> +		dev_err(&i2c->dev, "Failed to find matching DT ID\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	priv =3D devm_kzalloc(&i2c->dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+>  		return -ENOMEM;
+> =20
+>  	i2c_set_clientdata(i2c, priv);
+> +	priv->variant =3D (long)of_id->data;
+> =20
+>  	priv->regmap =3D devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
+>  	if (IS_ERR(priv->regmap)) {
+> @@ -105,12 +122,6 @@ static int rn5t618_i2c_remove(struct i2c_client =
+*i2c)
+>  	return 0;
+>  }
+> =20
+> -static const struct of_device_id rn5t618_of_match[] =3D {
+> -	{ .compatible =3D "ricoh,rn5t618" },
+> -	{ }
+> -};
+> -MODULE_DEVICE_TABLE(of, rn5t618_of_match);
+> -
+>  static const struct i2c_device_id rn5t618_i2c_id[] =3D {
+>  	{ }
+>  };
+> @@ -129,5 +140,5 @@ static struct i2c_driver rn5t618_i2c_driver =3D {
+>  module_i2c_driver(rn5t618_i2c_driver);
+> =20
+>  MODULE_AUTHOR("Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> -MODULE_DESCRIPTION("Ricoh RN5T618 MFD driver");
+> +MODULE_DESCRIPTION("Ricoh RN5T567/618 MFD driver");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.=
+h
+> index c72d5344f3b3..54179c2577ae 100644
+> --- a/include/linux/mfd/rn5t618.h
+> +++ b/include/linux/mfd/rn5t618.h
+> @@ -20,6 +20,7 @@
+>  #define RN5T618_OTPVER			0x01
+>  #define RN5T618_IODAC			0x02
+>  #define RN5T618_VINDAC			0x03
+> +#define RN5T618_OUT32KEN		0x05
+>  #define RN5T618_CPUCNT			0x06
+>  #define RN5T618_PSWR			0x07
+>  #define RN5T618_PONHIS			0x09
+> @@ -38,6 +39,7 @@
+>  #define RN5T618_DC1_SLOT		0x16
+>  #define RN5T618_DC2_SLOT		0x17
+>  #define RN5T618_DC3_SLOT		0x18
+> +#define RN5T618_DC4_SLOT		0x19
+>  #define RN5T618_LDO1_SLOT		0x1b
+>  #define RN5T618_LDO2_SLOT		0x1c
+>  #define RN5T618_LDO3_SLOT		0x1d
+> @@ -54,12 +56,16 @@
+>  #define RN5T618_DC2CTL2			0x2f
+>  #define RN5T618_DC3CTL			0x30
+>  #define RN5T618_DC3CTL2			0x31
+> +#define RN5T618_DC4CTL			0x32
+> +#define RN5T618_DC4CTL2			0x33
+>  #define RN5T618_DC1DAC			0x36
+>  #define RN5T618_DC2DAC			0x37
+>  #define RN5T618_DC3DAC			0x38
+> +#define RN5T618_DC4DAC			0x39
+>  #define RN5T618_DC1DAC_SLP		0x3b
+>  #define RN5T618_DC2DAC_SLP		0x3c
+>  #define RN5T618_DC3DAC_SLP		0x3d
+> +#define RN5T618_DC4DAC_SLP		0x3e
+>  #define RN5T618_DCIREN			0x40
+>  #define RN5T618_DCIRQ			0x41
+>  #define RN5T618_DCIRMON			0x42
+> @@ -221,8 +227,14 @@ enum {
+>  	RN5T618_REG_NUM,
+>  };
+> =20
+> +enum {
+> +	RN5T567 =3D 0,
+> +	RN5T618,
+> +};
+> +
+>  struct rn5t618 {
+>  	struct regmap *regmap;
+> +	long variant;
+>  };
+> =20
+>  #endif /* __LINUX_MFD_RN5T618_H */
+
 --=20
-2.5.5
-
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
