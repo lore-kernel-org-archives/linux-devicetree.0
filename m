@@ -1,85 +1,62 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 3/3] usb: renesas_usbhs: Use devm_usb_get_phy_by_phandle()
-Date: Thu, 30 Jun 2016 08:44:17 +0000
-Message-ID: <HK2PR06MB09134C4686D8BECF2D18E874D8240@HK2PR06MB0913.apcprd06.prod.outlook.com>
-References: <1467029359-6812-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1467029359-6812-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20160628205710.GU3737@rob-hp-laptop>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Thu, 30 Jun 2016 11:50:41 +0300
+Message-ID: <87inwr6owu.fsf@kamboji.qca.qualcomm.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+	<CAOiHx=n6itfmvwYQh+jUSDNguQFkos=MzjkDWP=GsupdgvF6KQ@mail.gmail.com>
+	<b49a9e4b-d591-d978-8005-413f39ebf2bd@redhat.com>
+	<871t3gdj6p.fsf@purkki.adurom.net>
+	<ea10ff70-26e6-e151-5cea-c54bd12a054c@redhat.com>
+	<f8995599-115d-87e5-7928-c029b48584f1@broadcom.com>
+	<fa0bf74d-cba3-0853-753c-64fe049105aa@broadcom.com>
+Reply-To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160628205710.GU3737@rob-hp-laptop>
-Content-Language: ja-JP
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQYFH77QIORBZ522O5QKGQEDEGNMTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <fa0bf74d-cba3-0853-753c-64fe049105aa-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> (Arend Van
+	Spriel's message of "Wed, 29 Jun 2016 20:57:35 +0200")
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
 
-> From: Rob Herring
-> Sent: Wednesday, June 29, 2016 5:57 AM
-> 
-> On Mon, Jun 27, 2016 at 09:09:19PM +0900, Yoshihiro Shimoda wrote:
-> > This patch uses devm_usb_get_phy_by_phandle() instead of usb_get_phy()
-> > for device tree environment. This change is not compabile with the
-> > previous code, but it is no problem because nobody calls usb_bind_phy()
-> > for this driver now.
-> >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 3 ++-
-> >  drivers/usb/renesas_usbhs/mod_gadget.c                  | 7 ++++++-
-> >  2 files changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> > index b604056..a419aea 100644
-> > --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> > +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> > @@ -24,8 +24,9 @@ Optional properties:
-> >    - renesas,buswait: Integer to use BUSWAIT register
-> >    - renesas,enable-gpio: A gpio specifier to check GPIO determining if USB
-> >  			 function should be enabled
-> > -  - phys: phandle + phy specifier pair
-> > +  - phys: phandle of *Generic PHY* + phy specifier pair
-> >    - phy-names: must be "usb"
-> > +  - usb-phy: phandle of usb phy
-> 
-> No. The binding should not change based on which kernel subsystem
-> handles this. The USB-PHY code should learn to parse 'phys' if you want
-> to use that subsystem.
+>>> Typical wifi devices will have some sort of non volatile storage
+>>> on board to not only store the ethernet(mac) address, but also
+>>> to contain e.g. info about the antenna gain so that the firmware
+>>> and/or the driver can take the antenna gain into account and ensure
+>>> that they never exceed the maximum allowed broadcast strength.
+>>>
+>>> However on some embedded devices there is no non-volatile storage
+>>> for the wifi (for cost reasons) and instead this configuration info
+>>> (which is board / pcb specific) is loaded in the form of a
+>>> file which contains the contents which would normally be in the
+>>> non-volatile storage.
+>>>
+>>> Since we are dealing with a per-board config-file here, which is
+>>> loaded from the os filesystem we really need to specify a basename
+>>> here as the list of possible boards is endless, so we cannot
+>>> have a lookup table in the driver.
+>
+> As a note: For BT Marcel was playing with the idea of having a lookup
+> table on the file system which would be loaded by the driver.
 
-Thank you for the review.
+In ath10k we have a similar problem but in our case we can use the
+subsystem id to detect what board file to use, so it's not exactly same
+as yours. In our board-2.bin we have identifiers like this from which
+ath10k selects the correct board file:
 
-The "phys" is for Generic PHY even if this patch is applied.
-So, I think that I should make a patch to revise the explanation at first?
+bus=pci,vendor=168c,device=003e,subsystem-vendor=168c,subsystem-device=334e
+bus=pci,vendor=168c,device=003e,subsystem-vendor=168c,subsystem-device=3360
+bus=pci,vendor=168c,device=003e,subsystem-vendor=168c,subsystem-device=3361
 
-I would to write overview of renesas_usbhs driver and a question below:
-
-< phys >
- - This is a generic phy property.
- - The renesas_usbhs driver will use it to turn on/off the PHY 
- - Almost all platforms use this generic phy instance.
-
-< usb-phy >
- - This is a USB-PHY property.
- - The renesas_usbhs driver will use it to call an OTG related function.
-   (otg_set_peripheral)
- - The renesas_usbhs driver will NOT use it to turn the power on/off.
- - Some platforms don't use this USB-PHY instance.
-  - In other words, some platforms use both a generic phy and USB-PHY.
-   - Is it not suitable from the device tree point of view?
-
-Best regards,
-Yoshihiro Shimoda
-
-
-> >    - dmas: Must contain a list of references to DMA specifiers.
-> >    - dma-names : named "ch%d", where %d is the channel number ranging from zero
-> >                  to the number of channels (DnFIFOs) minus one.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Kalle Valo
