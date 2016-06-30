@@ -1,124 +1,44 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 1/3] leds: pm8058: add device tree bindings
-Date: Thu, 30 Jun 2016 10:24:30 +0200
-Message-ID: <5774D73E.50303@samsung.com>
-References: <1467210120-8829-1-git-send-email-linus.walleij@linaro.org>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v3 13/14] clk: sunxi-ng: Add H3 clocks
+Date: Thu, 30 Jun 2016 10:31:08 +0200
+Message-ID: <20160630103108.66faa9f392f050de6106d194@free.fr>
+References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
+	<20160629190535.11855-14-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-reply-to: <1467210120-8829-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160629190535.11855-14-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Wed, 29 Jun 2016 21:05:34 +0200
+Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
 
-Thanks for the patch.
-
-On 06/29/2016 04:21 PM, Linus Walleij wrote:
-> This adds the device tree bindings for the PM8058 LEDs.
->
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->   .../devicetree/bindings/leds/leds-pm8058.txt       | 67 ++++++++++++++++++++++
->   1 file changed, 67 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8058.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pm8058.txt b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
-> new file mode 100644
-> index 000000000000..5d4e6369b9f6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
-> @@ -0,0 +1,67 @@
-> +Qualcomm PM8058 LED driver
+> +static void __init sun8i_h3_ccu_setup(struct device_node *node)
+> +{
+> +	void __iomem *reg;
+> +	u32 val;
 > +
-> +The Qualcomm PM8058 is a multi-functional device which contain
-> +a LED driver block for up to six LEDs: three normal LEDs, two
-> +"flash" LEDs and one "keypad backlight" LED. The names are
-> +quoted because sometimes these LED drivers are used for wildly
-> +different things than flash or keypad backlight: their names
-> +are more of a suggestion than a hard-wired usecase.
+> +	reg =3D of_io_request_and_map(node, 0, of_node_full_name(node));
+> +	if (IS_ERR(reg)) {
+> +		pr_err("%s: Could not map the clock registers\n",
+> +		       of_node_full_name(node));
+> +		return;
+> +	}
 > +
-> +Hardware-wise the different LEDs support slightly different
-> +output currents. The "flash" LEDs do not need to charge nor
-> +do they support external triggers. They are just powerful LED
-> +drivers.
+> +	/* Force the PLL-Audio-1x divider to 4 */
+> +	val =3D readl(reg + SUN8I_H3_PLL_AUDIO_REG);
+> +	val &=3D ~GENMASK(4, 0);
+> +	writel(val | 3, reg + SUN8I_H3_PLL_AUDIO_REG);
 > +
-> +The LEDs appear as children to the PM8058 device, with the
-> +proper compatible string. For the PM8058 bindings see:
-> +mfd/qcom-pm8xxx.txt.
-> +
-> +Each LED is represented as a sub-node of the syscon device. Each
-> +node's name represents the name of the corresponding LED.
-> +
-> +LED sub-node properties:
-> +
-> +Required properties:
-> +- compatible: on of
-> +  "qcom,pm8058-led" (for the normal LEDs at 0x131, 0x132 and 0x133)
-> +  "qcom,pm8058-keypad-led" (for the "keypad" LED at 0x48)
-> +  "qcom,pm8058-flash-led" (for the "flash" LEDs at 0x49 and 0xFB)
-> +
-> +Optional properties:
-> +- label: descriptive name for the LED see common.txt
+> +	sunxi_ccu_probe(node, reg, &sun8i_h3_ccu_desc);
+> +}
 
-Please use just "see Documentation/devicetree/bindings/leds/common.txt"
-as a description of this property.
+=46YI, the pll-audio PLL_POST_DIV is 19:16.
 
-> +- default-state: The initial state of the LED see common.txt
-
-Please use just "Documentation/devicetree/bindings/leds/leds-gpio.txt"
-as a description of this property.
-
-> +- linux,default-trigger: Linux trigger, see common.txt
-
-Please use just "see Documentation/devicetree/bindings/leds/common.txt"
-as a description of this property.
-
-> +
-> +Example:
-> +
-> +qcom,ssbi@500000 {
-> +	pmicintc: pmic@0 {
-> +		compatible = "qcom,pm8058";
-> +		led@48 {
-> +			compatible = "qcom,pm8058-keypad-led";
-> +			reg = <0x48>;
-> +			label = "keypad";
-> +			default-state = "off";
-> +		};
-> +		led@131 {
-> +			compatible = "qcom,pm8058-led";
-> +			reg = <0x131>;
-> +			label = "pm8058:red";
-> +			default-state = "off";
-> +		};
-> +		led@132 {
-> +			compatible = "qcom,pm8058-led";
-> +			reg = <0x132>;
-> +			label = "pm8058:yellow";
-> +			default-state = "off";
-> +			linux,default-trigger = "mmc0";
-> +		};
-> +		led@133 {
-> +			compatible = "qcom,pm8058-led";
-> +			reg = <0x133>;
-> +			label = "pm8058:green";
-> +			default-state = "on";
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +};
->
-
-
--- 
-Best regards,
-Jacek Anaszewski
+--=20
+Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
