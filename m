@@ -1,11 +1,13 @@
 From: Rob Rice <rob.rice@broadcom.com>
-Subject: [PATCH v2 0/3] Add Broadcom PDC mailbox driver
-Date: Thu, 30 Jun 2016 15:59:21 -0400
-Message-ID: <1467316764-19686-1-git-send-email-rob.rice@broadcom.com>
+Subject: [PATCH v2 1/3] dt-bindings: add bindings documentation for PDC driver.
+Date: Thu, 30 Jun 2016 15:59:22 -0400
+Message-ID: <1467316764-19686-2-git-send-email-rob.rice@broadcom.com>
+References: <1467316764-19686-1-git-send-email-rob.rice@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1467316764-19686-1-git-send-email-rob.rice@broadcom.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,39 +23,47 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Rice <rrice@broadcom.com>
 
-Changes in v2:
-- Added COMPILE_TEST depend to PDC Kconfig
-- Renamed pdc.c to bcm-pdc-mailbox.c and moved it from subdirectory
-  to drivers/mailbox
-- Moved code from pdc.h, pdc_debug.h, and pdc_debug.c into
-  bcm-pdc-mailbox.c
-- Removed a few function parameters
+Add the device tree binding documentation for the PDC hardware
+in Broadcom iProc SoCs.
 
-The Broadcom PDC mailbox driver is a ring manager for the Broadcom
-Secure Processing Unit (SPU) kernel driver and other mailbox clients.
-The PDC driver registers with the Linux mailbox framework a mailbox
-controller, once for each PDC instance. Ring 0 for each PDC is registered as
-a mailbox channel. The PDC driver uses interrupts to determine when ring
-transfers to and from an offload engine are complete. The PDC driver uses
-threaded IRQs so that response messages are handled outside of interrupt
-context.
-
-Rob Rice (3):
-  dt-bindings: add bindings documentation for PDC driver.
-  mailbox: Add Broadcom PDC mailbox driver
-  arm64: dts: Add Broadcom Northstar2 device tree entries for PDC
-    driver.
-
- .../bindings/mailbox/brcm,iproc-pdc-mbox.txt       |   23 +
- arch/arm64/boot/dts/broadcom/ns2.dtsi              |   36 +
- drivers/mailbox/Kconfig                            |    9 +
- drivers/mailbox/Makefile                           |    2 +
- drivers/mailbox/bcm-pdc-mailbox.c                  | 1531 ++++++++++++++++++++
- include/linux/mailbox/brcm-message.h               |   56 +
- 6 files changed, 1657 insertions(+)
+Signed-off-by: Rob Rice <rob.rice@broadcom.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Anup Patel <anup.patel@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+---
+ .../bindings/mailbox/brcm,iproc-pdc-mbox.txt       | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
- create mode 100644 drivers/mailbox/bcm-pdc-mailbox.c
- create mode 100644 include/linux/mailbox/brcm-message.h
 
+diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
+new file mode 100644
+index 0000000..411ccf4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt
+@@ -0,0 +1,23 @@
++The PDC driver manages data transfer to and from various offload engines
++on some Broadcom SoCs. An SoC may have multiple PDC hardware blocks. There is
++one device tree entry per block.
++
++Required properties:
++- compatible : Should be "brcm,iproc-pdc-mbox".
++- reg: Should contain PDC registers location and length.
++- interrupts: Should contain the IRQ line for the PDC.
++- #mbox-cells: 1
++- brcm,rx-status-len: Length of metadata preceding received frames, in bytes.
++
++Optional properties:
++- brcm,use-bcm-hdr:  present if a BCM header precedes each frame.
++
++Example:
++	pdc0: iproc-pdc0@0x612c0000 {
++		compatible = "brcm,iproc-pdc-mbox";
++		reg = <0 0x612c0000 0 0x445>;  /* PDC FS0 regs */
++		interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
++		#mbox-cells = <1>;   /* one cell per mailbox channel */
++		brcm,rx-status-len = <32>;
++		brcm,use-bcm-hdr;
++	};
 -- 
 2.1.0
