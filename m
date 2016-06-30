@@ -1,455 +1,278 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] clk: sunxi: Add a driver for the CCU
-Date: Thu, 30 Jun 2016 23:16:35 +0200
-Message-ID: <20160630211635.GE5485@lukather>
-References: <cover.1467135898.git.moinejf@free.fr>
- <a55dc5d1a9f02dc4d71d5c21064bffebe5a7b149.1467135898.git.moinejf@free.fr>
- <20160628204502.GG5550@lukather>
- <20160629101256.93895e6ff9184efa340f69dd@free.fr>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: add the power domain node for rk3399
+Date: Thu, 30 Jun 2016 14:49:41 -0700
+Message-ID: <CAD=FV=Wg1vuBhcjFRj53t-E0sKoBH577RB7gHZ-rkJV5T7nyZw@mail.gmail.com>
+References: <1467251760-14695-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EXKGNeO8l0xGFBjy"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNMY225QKGQENDHWOBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160629101256.93895e6ff9184efa340f69dd-GANU6spQydw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467251760-14695-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Caesar,
 
---EXKGNeO8l0xGFBjy
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Wed, Jun 29, 2016 at 6:56 PM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> In order to meet low power requirements, a power management unit (PMU) is
+> designed for controlling power resources in RK3399. The RK3399 PMU is
+> dedicated for managing the power of the whole chip.
+>
+> 1. add pd node for RK3399 Soc
+> 2. create power domain tree
+> 3. add qos node for domain
+>
+> From the DT/binds and driver can get more detail information:
+> The driver:
+> drivers/soc/rockchip/pm_domains.c
+> The document:
+> Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+>
+> ---
+>
+> Tested on vop and gpu devices added for next kernel.
+> PD:
+> localhost / # cat sys/kernel/debug/pm_genpd/pm_genpd_summary
 
-On Wed, Jun 29, 2016 at 10:12:56AM +0200, Jean-Francois Moine wrote:
-> On Tue, 28 Jun 2016 22:45:02 +0200
-> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> > On Tue, Jun 28, 2016 at 05:37:35PM +0200, Jean-Francois Moine wrote:
-> > > +/* --- prepare / enable --- */
-> > > +int ccu_prepare(struct clk_hw *hw)
-> > > +{
-> > > +	struct ccu *ccu = hw2ccu(hw);
-> > > +
-> > > +	if (!ccu->reset_reg && !ccu->bus_reg)
-> > > +		return 0;
-> > > +
-> > > +#if CCU_DEBUG
-> > > +	pr_info("** ccu %s prepare\n", clk_hw_get_name(&ccu->hw));
-> > > +#endif
-> > > +	spin_lock(&ccu_lock);
-> > > +	if (ccu->reset_reg)
-> > > +		writel(readl(ccu->base + ccu->reset_reg) |
-> > > +							BIT(ccu->reset_bit),
-> > > +				ccu->base + ccu->reset_reg);
-> > > +	if (ccu->bus_reg)
-> > > +		writel(readl(ccu->base + ccu->bus_reg) | BIT(ccu->bus_bit),
-> > > +				ccu->base + ccu->bus_reg);
-> > 
-> > Like I already said, this is a no-go.
-> 
-> I don't see why: prepare/unprepare do the right job.
+Nit: can you put a "/" before "sys" here and elsewhere in your patches?
 
-This is a huge hack.
 
-These clocks and reset lines are doing something different, should and
-can be enabled at totally different times, have different behaviour
-that is already relied on by the drivers. So we *need* to expose them
-as different clocks and reset lines, because they *are* different
-clocks and reset lines.
+> domain                          status          slaves
+> /device                                             runtime status
+> ----------------------------------------------------------------------
+> pd_gpu                          on
+> /devices/platform/ff9a0000.gpu                      active
+> pd_vopl                         off
+> /devices/platform/ff8f0000.vop                      suspended
+> pd_vopb                         off
+> /devices/platform/ff900000.vop                      suspended
+> pd_vo                           off             pd_vopb, pd_vopl
+> pd_hdcp                         off
+> ...
+> pd_iep                          off
+> pd_vcodec                       off
+> pd_vdu                          off
+>
+> QOS:
+> localhost / # cat sys/kernel/debug/pm_qos/
+> cpu_dma_latency     network_latency
+> memory_bandwidth    network_throughput
 
-Plus, I'd like to see the behaviour of that clocks when you call
-clk_set_rate or clk_set_parent. It's going to be interesting.
+What is this supposed to be showing exactly?  You can't "cat" a
+directory, so maybe you meant "ls"?
 
-> 
-> > > +
-> > > +/* --- PLL --- */
-> > > +static int ccu_pll_find_best(struct ccu *ccu,
-> > > +				unsigned long rate,
-> > > +				unsigned long parent_rate,
-> > > +				struct values *p_v)
-> > > +{
-> > > +	int max_mul, max_div, mul, div, t;
-> > > +	int n = 1, d1 = 1, k = 1, m = 1, p = 0;
-> > > +	int max_n = 1 << ccu->n_width;
-> > > +	int max_d1 = 1 << ccu->d1_width;
-> > > +	int max_k = 1 << ccu->k_width;
-> > > +	int max_m = 1 << ccu->m_width;
-> > > +	int max_p = 1 << ccu->p_width;
-> > > +
-> > > +	if (ccu->features & CCU_FEATURE_N0)
-> > > +		max_n--;
-> > > +
-> > > +	/* compute n */
-> > > +	if (max_n > 1) {
-> > > +		max_mul = max_n * max_k;
-> > > +		if (rate > parent_rate * max_mul) {
-> > > +			pr_err("%s: Clock rate too high %ld > %ld * %d * %d\n",
-> > > +				clk_hw_get_name(&ccu->hw),
-> > > +				rate, parent_rate, max_n, max_k);
-> > > +			return -EINVAL;
-> > > +		}
-> > > +		max_div = max_m * max_d1 << max_p;
-> > > +		if (max_div > 1) {
-> > > +			unsigned long lmul, ldiv;
-> > > +
-> > > +			rational_best_approximation(rate, parent_rate,
-> > > +						max_mul - 1,
-> > > +						max_div - 1,
-> > > +						&lmul, &ldiv);
-> > > +			mul = lmul;
-> > > +			div = ldiv;
-> > > +			if (ccu->n_min && mul < ccu->n_min) {
-> > > +				t = (ccu->n_min + mul - 1) / mul;
-> > > +				mul *= t;
-> > > +				div *= t;
-> > > +			}
-> > > +		} else {
-> > > +			mul = (rate + parent_rate - 1) / parent_rate;
-> > > +			div = 1;
-> > > +		}
-> > > +
-> > > +		/* compute k (present only when 'n' is present) */
-> > > +		if (max_k > 1) {
-> > > +			int k_min, k_opt, delta_opt = 100, delta;
-> > > +
-> > > +			k = (mul + max_n - 1) / max_n;
-> > > +			k_opt = k_min = k;
-> > > +			for (k = max_k; k > k_min; k--) {
-> > > +				n = (mul + k - 1) / k;
-> > > +				t = n * k;
-> > > +				delta = t - mul;
-> > > +				if (delta == 0) {
-> > > +					k_opt = k;
-> > > +					break;
-> > > +				}
-> > > +				if (delta < 0)
-> > > +					delta = -delta;
-> > > +				if (delta < delta_opt) {
-> > > +					delta_opt = delta;
-> > > +					k_opt = k;
-> > > +				}
-> > > +			}
-> > > +			k = k_opt;
-> > > +			n = (mul + k - 1) / k;
-> > > +		} else {
-> > > +			n = mul;
-> > > +		}
-> > > +	} else {
-> > > +		div = (parent_rate + rate - 1) / rate;
-> > > +	}
-> > > +
-> > > +	/* compute d1 (value is only 1 or 2) */
-> > > +	if (max_d1 > 1) {
-> > > +		if (div % 2 == 0) {
-> > > +			d1 = 2;
-> > > +			div /= 2;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	/* compute p */
-> > > +/*	p = 0; */
-> > > +	while (div % 2 == 0 && p <= max_p) {
-> > > +		p++;
-> > > +		div /= 2;
-> > > +	}
-> > > +
-> > > +	/* compute m */
-> > > +	if (max_m > 1) {
-> > > +		if (div <= max_m)
-> > > +			m = div;
-> > > +		else
-> > > +			m = max_m;
-> > > +		div /= m;
-> > > +	}
-> > > +
-> > > +	/* adjust n */
-> > > +	n = DIV_ROUND_CLOSEST((rate << p) * m * d1, parent_rate);
-> > > +	n = DIV_ROUND_CLOSEST(n, k);
-> > > +
-> > > +	p_v->n = n;
-> > > +	p_v->d1 = d1;
-> > > +	p_v->k = k;
-> > > +	p_v->m = m;
-> > > +	p_v->p = p;
-> > > +
-> > > +	return 0;
-> > > +}
-> > 
-> > So. In order to move away from an unmaintainable mess, we create a new
-> > unmaintainable mess? Looks like the way to go.
-> 
-> Why is it unmaintainable? This routine should work fine for most
-> Allwinner's SoCs.
+Also, each of these files contains the string "Empty!" and these files
+seem fairly unconnected to your patch.  Those files exist both before
+and after your patch and nothing that I can see in the Rockchip QoS
+stuff hooks up to the generic Linux QoS infrastructure.  The power
+domains just save and restore the QoS--they don't actually allow
+settting it.
 
-Define the algorithm used in three sentences. Maintainability is also
-about having code that is concise, clear and easy to debug and review.
 
-This functions fails in all four.
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 153 +++++++++++++++++++++++++++++++
+>  1 file changed, 153 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index a6dd623..cc4035e 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -45,6 +45,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/pinctrl/rockchip.h>
+> +#include <dt-bindings/power/rk3399-power.h>
+>  #include <dt-bindings/thermal/thermal.h>
+>
+>  / {
+> @@ -594,6 +595,158 @@
+>                 status = "disabled";
+>         };
+>
+> +       qos_gpu: qos_gpu@ffae0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffae0000 0x0 0x20>;
+> +       };
+> +       qos_video_m0: qos_video_m0@ffab8000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffab8000 0x0 0x20>;
+> +       };
+> +       qos_video_m1_r: qos_video_m1_r@ffac0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffac0000 0x0 0x20>;
+> +       };
+> +       qos_video_m1_w: qos_video_m1_w@ffac0080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffac0080 0x0 0x20>;
+> +       };
+> +       qos_rga_r: qos_rga_r@ffab0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffab0000 0x0 0x20>;
+> +       };
+> +       qos_rga_w: qos_rga_w@ffab0080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffab0080 0x0 0x20>;
+> +       };
+> +       qos_iep: qos_iep@ffa98000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffa98000 0x0 0x20>;
+> +       };
+> +       qos_vop_big_r: qos_vop_big_r@ffac8000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffac8000 0x0 0x20>;
+> +       };
+> +       qos_vop_big_w: qos_vop_big_w@ffac8080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffac8080 0x0 0x20>;
+> +       };
+> +       qos_vop_little: qos_vop_little@ffad0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffad0000 0x0 0x20>;
+> +       };
+> +       qos_isp0_m0: qos_isp0_m0@ffaa0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffaa0000 0x0 0x20>;
+> +       };
+> +       qos_isp0_m1: qos_isp0_m1@ffaa0080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffaa0080 0x0 0x20>;
+> +       };
+> +       qos_isp1_m0: qos_isp1_m0@ffaa8000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffaa8000 0x0 0x20>;
+> +       };
+> +       qos_isp1_m1: qos_isp1_m1@ffaa8080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffaa8080 0x0 0x20>;
+> +       };
+> +       qos_hdcp: qos_hdcp@ffa90000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffa90000 0x0 0x20>;
+> +       };
 
-> If it would not for some particular SoC, an other one could be written
-> and called for this case.
+A bit of a nit that your sorting is a bit random here.  I know that
+your sorting order seems to match the TRM, but really we should just
+sort by base address.
 
-The point is to have *common* code.
+Speaking of the TRM, it seems like some entries are missing.  QOS for
+everything above the GPU (like usb host1, for instance) is missing.
+Similarly the 3 entries in the TRM listed after hdcp.  Should we put
+them all in so that we have them later if/when we need them?
 
-> Maybe are you thinking about the pre/post-divider order. Yes, this
-> routine should enhanced if some rounding problem would be found.
-> 
-> > > +const struct clk_ops ccu_pll_ops = {
-> > > +	.prepare	= ccu_prepare,
-> > > +	.unprepare	= ccu_unprepare,
-> > > +	.enable		= ccu_enable,
-> > > +	.disable	= ccu_disable,
-> > > +/*	.is_enabled	= NULL;	(don't disable the clocks at startup time) */
-> > 
-> > Why?
-> 
-> 3 reasons:
-> 
-> - as the unused clocks are disabled at system startup time, all the
->   critical clocks should be flagged as such. A problem exists when
->   trying a new SoC: we may not know which clocks are critical, and
->   we stay in front of a black screen when trying to boot.
 
-Then we find which clock it is, and we flag it as such. That's
-actually quite easy to do, since the clocks very late in the boot
-process, way after your UART has been initialised, so this is totally
-something you can trace.
+> +       pmu: power-management@ff310000 {
+> +               compatible = "rockchip,rk3399-pmu", "syscon", "simple-mfd";
+> +               reg = <0x0 0xff310000 0x0 0x1000>;
+> +
+> +               power: power-controller {
+> +                       status = "okay";
+> +                       compatible = "rockchip,rk3399-power-controller";
+> +                       #power-domain-cells = <1>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       pd_vdu {
+> +                               reg = <RK3399_PD_VDU>;
+> +                               clocks = <&cru ACLK_VDU>,
+> +                                        <&cru HCLK_VDU>;
+> +                               pm_qos = <&qos_video_m1_r>,
+> +                                        <&qos_video_m1_w>;
+> +                       };
+> +                       pd_vcodec {
+> +                               reg = <RK3399_PD_VCODEC>;
+> +                               clocks = <&cru ACLK_VCODEC>,
+> +                                        <&cru HCLK_VCODEC>;
+> +                               pm_qos = <&qos_video_m0>;
+> +                       };
+> +                       pd_iep {
+> +                               reg = <RK3399_PD_IEP>;
+> +                               clocks = <&cru ACLK_IEP>,
+> +                                        <&cru HCLK_IEP>;
+> +                               pm_qos = <&qos_iep>;
+> +                       };
+> +                       pd_rga {
+> +                               reg = <RK3399_PD_RGA>;
+> +                               clocks = <&cru ACLK_RGA>,
+> +                                        <&cru HCLK_RGA>;
+> +                               pm_qos = <&qos_rga_r>,
+> +                                        <&qos_rga_w>;
+> +                       };
+> +                       pd_vio {
+> +                               reg = <RK3399_PD_VIO>;
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               pd_isp0 {
+> +                                       reg = <RK3399_PD_ISP0>;
+> +                                       clocks = <&cru ACLK_ISP0>,
+> +                                                <&cru HCLK_ISP0>;
+> +                                       pm_qos = <&qos_isp0_m0>,
+> +                                                <&qos_isp0_m1>;
+> +                               };
+> +                               pd_isp1 {
+> +                                       reg = <RK3399_PD_ISP1>;
+> +                                       clocks = <&cru ACLK_ISP1>,
+> +                                                <&cru HCLK_ISP1>;
+> +                                       pm_qos = <&qos_isp1_m0>,
+> +                                                <&qos_isp1_m1>;
+> +                               };
+> +                               pd_hdcp {
+> +                                       reg = <RK3399_PD_HDCP>;
+> +                                       clocks = <&cru ACLK_HDCP>,
+> +                                                <&cru HCLK_HDCP>,
+> +                                                <&cru PCLK_HDCP>;
+> +                                       pm_qos = <&qos_hdcp>;
+> +                               };
+> +                               pd_vo {
+> +                                       reg = <RK3399_PD_VO>;
+> +                                       #address-cells = <1>;
+> +                                       #size-cells = <0>;
+> +
+> +                                       pd_vopb {
+> +                                               reg = <RK3399_PD_VOPB>;
+> +                                               clocks = <&cru ACLK_VOP0>,
+> +                                                        <&cru HCLK_VOP0>;
+> +                                               pm_qos = <&qos_vop_big_r>,
+> +                                                        <&qos_vop_big_w>;
+> +                                       };
+> +                                       pd_vopl {
+> +                                               reg = <RK3399_PD_VOPL>;
+> +                                               clocks = <&cru ACLK_VOP1>,
+> +                                                        <&cru HCLK_VOP1>;
+> +                                               pm_qos = <&qos_vop_little>;
+> +                                       };
+> +                               };
+> +                       };
+> +                       pd_gpu {
+> +                               reg = <RK3399_PD_GPU>;
+> +                               clocks = <&cru ACLK_GPU>;
+> +                               pm_qos = <&qos_gpu>;
+> +                       };
 
-> - the clocks may be enabled again when already enabled without any
->   problem.
+Again a nitty sort order question.  Is there a reason not to make
+things alphabetical?  AKA: pd_gpu, pd_iep, pd_rga, ...
 
-Indeed
+...and inside pd_vio should be alphabetical too?
 
-> So, it is not important to know if they are already enabled by
-> hardware: the software enable counter is enough.
+In the TRM it looks like some of the power domains are grouped
+together (like all the domains under LOGIC or CENTERLOGIC).  If
+keeping that grouping makes sense here then you should add a comment
+at the start of each group and sort the groups sanely (and sort within
+each group).
 
-It is important to know it if we have some unused clock running, so
-that we can disable it. And disabling it has a bunch of side effects,
-most notably saving polar bears, and pointing out clocks that should
-be flagged as such.
+It looks like there are also more power domains that you haven't
+listed here (like PD_GMAC, for instance, or PD_CORE_L).  Are you
+planning to add those in a followon patch?
 
-> - less code!
 
-I fail to see how that's an argument.
 
-> > > +int ccu_periph_set_rate(struct clk_hw *hw, unsigned long rate,
-> > > +			unsigned long parent_rate)
-> > > +{
-> > > +	struct ccu *ccu = hw2ccu(hw);
-> > > +	const struct ccu_extra *extra = ccu->extra;
-> > > +	struct values v;
-> > > +	u32 mask;
-> > > +	int ret;
-> > > +
-> > > +	if (!ccu->m_width && !ccu->p_width)
-> > > +		return 0;
-> > > +
-> > > +	ccu_mux_adjust_parent_for_prediv(ccu, -1, &parent_rate);
-> > > +
-> > > +	if (extra && (ccu->features & CCU_FEATURE_MODE_SELECT)) {
-> > > +		/* fixme: should use new mode */
-> > > +		if (rate == extra->mode_select.rate)
-> > > +			rate /= 2;
-> > > +	}
-> > 
-> > That needs synchronisation with the MMC driver. How are you dealing
-> > with this?
-> 
-> I have problems with the MMCs. I will propose the necessary changes in
-> both the clock and MMC drivers as soon as I have the 3 MMCs working
-> (SDcard, wifi and eMMC) in the Banana Pi M3.
-
-For the time being, that code is broken. And you are using it.
-
-> > > +
-> > > +	if (ccu->p_width) {				/* m and p */
-> > > +		ret = ccu_pll_find_best(ccu, rate, parent_rate, &v);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	} else {					/* m alone */
-> > > +		v.m = divider_get_val(rate, parent_rate,
-> > > +				ccu->div_table, ccu->m_width, ccu->div_flags);
-> > > +		v.p = 0;
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	mask = CCU_MASK(ccu->m_shift, ccu->m_width) |
-> > > +		CCU_MASK(ccu->p_shift, ccu->p_width);
-> > > +
-> > > +	if (ccu->features & CCU_FEATURE_SET_RATE_UNGATE)
-> > > +		ccu_disable(hw);
-> > 
-> > ungating means enable, and this is already dealt with by the core.
-> 
-> Right, the name is wrong.
-> But nothing is done by the core: when CLK_SET_RATE_GATE is set, and
-> when the gate is enabled, set_rate() fails.
-
-I was talking about CLK_SET_RATE_UNGATE.
-
-> > > +const struct clk_ops ccu_fixed_factor_ops = {
-> > > +	.disable	= ccu_disable,
-> > > +	.enable		= ccu_enable,
-> > > +/*	.is_enabled	= NULL, */
-> > > +
-> > > +	.recalc_rate	= ccu_fixed_factor_recalc_rate,
-> > > +	.round_rate	= ccu_fixed_factor_round_rate,
-> > > +	.set_rate	= ccu_fixed_factor_set_rate,
-> > > +};
-> > 
-> > This is redundant with the core.
-> 
-> I don't see how:
-> - the 'mul' and 'div' fields are not at the same offset
-> - some fixed_factor clocks may have a gate.
-
-Which ones?
-
-> > > +	mask = BIT(bit);
-> > > +
-> > > +	spin_lock(&ccu_lock);
-> > > +	if (enable)
-> > > +		writel(readl(ccu_reset->base + reg) | mask,
-> > > +			ccu_reset->base + reg);
-> > > +	else
-> > > +		writel(readl(ccu_reset->base + reg) & ~mask,
-> > > +			ccu_reset->base + reg);
-> > > +	spin_unlock(&ccu_lock);
-> > > +}
-> > > +
-> > > +static int ccu_reset_assert(struct reset_controller_dev *rcdev,
-> > > +			    unsigned long id)
-> > > +{
-> > > +	struct ccu_reset *ccu_reset = rcdev_to_ccu_reset(rcdev);
-> > > +	const struct ccu_reset_map *map = &ccu_reset->reset_map[id];
-> > > +
-> > > +	ccu_set_reset_clock(ccu_reset, map->reg, map->bit, 0);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int ccu_reset_deassert(struct reset_controller_dev *rcdev,
-> > > +			      unsigned long id)
-> > > +{
-> > > +	struct ccu_reset *ccu_reset = rcdev_to_ccu_reset(rcdev);
-> > > +	const struct ccu_reset_map *map = &ccu_reset->reset_map[id];
-> > > +
-> > > +	ccu_set_reset_clock(ccu_reset, map->reg, map->bit, 1);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +const struct reset_control_ops ccu_reset_ops = {
-> > > +	.assert		= ccu_reset_assert,
-> > > +	.deassert	= ccu_reset_deassert,
-> > > +};
-> > > +
-> > > +/* --- init --- */
-> > > +int __init ccu_probe(struct device_node *node,
-> > > +			struct clk_hw_onecell_data *data,
-> > > +			struct ccu_reset *resets)
-> > > +{
-> > > +	struct clk_hw *hw;
-> > > +	struct ccu *ccu;
-> > > +	void __iomem *reg;
-> > > +	int i, ret;
-> > > +
-> > > +	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-> > > +	if (IS_ERR(reg)) {
-> > > +		pr_err("%s: Clock mapping failed %d\n",
-> > > +			of_node_full_name(node), (int) PTR_ERR(reg));
-> > > +		return PTR_ERR(reg);
-> > > +	}
-> > > +
-> > > +	/* register the clocks */
-> > > +	for (i = 0; i < data->num; i++) {
-> > > +		hw = data->hws[i];
-> > > +#if CCU_DEBUG
-> > > +		if (!hw) {
-> > > +			pr_err("%s: Bad number of clocks %d != %d\n",
-> > > +				of_node_full_name(node),
-> > > +				i + 1, data->num);
-> > > +			data->num = i;
-> > > +			break;
-> > > +		}
-> > > +#endif
-> > > +		ccu = hw2ccu(hw);
-> > > +		ccu->base = reg;
-> > > +		ret = clk_hw_register(NULL, hw);
-> > > +		if (ret < 0) {
-> > > +			pr_err("%s: Register clock %s failed %d\n",
-> > > +				of_node_full_name(node),
-> > > +				clk_hw_get_name(hw), ret);
-> > > +			data->num = i;
-> > > +			break;
-> > > +		}
-> > > +	}
-> > > +	ret = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, data);
-> > > +	if (ret < 0)
-> > > +		goto err;
-> > > +
-> > > +	/* register the resets */
-> > > +	resets->rcdev.of_node = node;
-> > > +	resets->base = reg;
-> > > +
-> > > +	ret = reset_controller_register(&resets->rcdev);
-> > > +	if (ret) {
-> > > +		pr_err("%s: Reset register failed %d\n",
-> > > +			of_node_full_name(node), ret);
-> > > +		goto err;
-> > > +	}
-> > > +
-> > > +	return ret;
-> > 
-> > What's the point of this, if we're not using (or exposing for that
-> > matter) any of it?
-> 
-> Maybe I was misunderstood:
-> - the control of the reset state may be needed for some clocks or by
->   some drivers, but,
-> - most clocks / drivers don't need it, so, it is possible to hide these
->   resets inside the clock stuff. You may note that some drivers are
->   already prepared to this fact. For example, in the sunxi MMC driver,
->   the reset is optional.
-
-Because you don't have a reset line on the first SoCs. This has
-nothing to do with our discussion.
-
-> - in case a driver requests a reset, this last one should exist.
->   But, this reset may point to a void one (reg = null) when the real
->   reset has been moved to the prepare/unprepare of the associated clock.
-
-And what if this driver wants to be reset, by calling
-reset_control_reset? You realize you're going against the semantics of
-the reset and clock APIs, and what the hardware expose here right?
-
-> > I'm sorry, but the whole point of the initial serie was to rework and
-> > simplify things, precisely because dealing with the clk_factors code
-> > was just too difficult nowadays. And this doesn't solve anything on
-> > that aspect.
-> 
-> In my code, all the clock factors I know about are handled.
-> Basically, the requested and the parent rates give a multiplier and a
-> divider. These ones are dispatched into the specific clock factors
-> according to their constraints.
-
-You missed the "simplify" part. The other reason for this serie to
-exist was to be consistent with what the other architectures are
-doing, which is not the case here either.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---EXKGNeO8l0xGFBjy--
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
