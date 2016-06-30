@@ -1,231 +1,192 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH] arm64: dts: rockchip: add the power domain node for rk3399
-Date: Thu, 30 Jun 2016 09:56:00 +0800
-Message-ID: <1467251760-14695-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: dianders@chromium.org, jay.xu@rock-chips.com, briannorris@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] dtc: Document the dynamic plugin internals
+Date: Wed, 29 Jun 2016 19:59:13 -0700
+Message-ID: <57748B01.4050601@gmail.com>
+References: <8CAE1792-841B-4048-B6B1-1F0F973E2E34@konsulko.com>
+ <20160526063334.GH17226@voom.fritz.box>
+ <BE239F34-7B36-4A78-BE21-AA48CB8349E4@konsulko.com>
+ <20160526071243.GI17226@voom.fritz.box>
+ <C43C3B01-5DF5-49DF-848D-0BEA48E3DB6E@konsulko.com>
+ <CAL_JsqLTrSP577ViKRjoqyagWw4+dZuQQsTMMXdoU3n9HZSYZA@mail.gmail.com>
+ <57472A9A.1060903@gmail.com>
+ <EAD64177-3519-4CD2-AFB6-5EB765CC7459@konsulko.com>
+ <57476B27.9070008@gmail.com>
+ <26CE3FC4-2B09-45E9-94E2-9EA7836A684F@konsulko.com>
+ <20160530042210.GD17226@voom.fritz.box>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160530042210.GD17226-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Elaine Zhang <zhangqing@rock-chips.com>
+Hi Pantelis,
 
-In order to meet low power requirements, a power management unit (PMU) is
-designed for controlling power resources in RK3399. The RK3399 PMU is
-dedicated for managing the power of the whole chip.
+On 05/29/16 21:22, David Gibson wrote:
 
-1. add pd node for RK3399 Soc
-2. create power domain tree
-3. add qos node for domain
+< massive snip >
 
->From the DT/binds and driver can get more detail information:
-The driver:
-drivers/soc/rockchip/pm_domains.c
-The document:
-Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+>>> What other properties are you envisioning?  (Looking for the archit=
+ectural
+>>> vision that you have.)
+>>>
+>>
+>> Oh, there are a lot of properties that can be provided.
+>>
+>> For instance you can declare manufacturing info (like part numbers, =
+version numbers,
+>> serial numbers that can be used for quirking). You can declare thing=
+s like load order
+>> when you need precedence of overlays (i.e. on the bone the soldered =
+on hdmi output
+>> should be disabled when an add on cape with display capability is at=
+tached).
+>> You can declare resources (i.e. pins or power draw figures) to make =
+a decision
+>> whether enabling an expansion board is safe.
+>>
+>> I=E2=80=99m sure more ideas will come when we put it into wide-sprea=
+d use. =20
+>=20
+> Yeah.  I'm not entirely sure I'm convinced by the specific examples
+> given so far.  However, in general I can see the value in providing a
+> way we can extend to add more metadata.  The two level structure with
+> __overlay__ gives us that, whereas the one level approach doesn't.
 
----
+I'm not convinced about putting additional properties (beyond "target")=
+ in the
+fragment nodes.  And I still find the two extra levels of "fragment" no=
+des and
+"__overlay__" nodes extra complexity, and that the complexity is especi=
+ally
+unwelcome if the overlay dts is hand written (as the beagle cape overla=
+ys
+that I have seen appear to be).  HOWEVER, I learned something new today=
+ that
+makes me more comfortable with the two extra node levels.  Here is an e=
+xample:
 
-Tested on vop and gpu devices added for next kernel.
-PD:
-localhost / # cat sys/kernel/debug/pm_genpd/pm_genpd_summary
-domain                          status          slaves
-/device                                             runtime status
-----------------------------------------------------------------------
-pd_gpu                          on
-/devices/platform/ff9a0000.gpu                      active
-pd_vopl                         off
-/devices/platform/ff8f0000.vop                      suspended
-pd_vopb                         off
-/devices/platform/ff900000.vop                      suspended
-pd_vo                           off             pd_vopb, pd_vopl
-pd_hdcp                         off
-...
-pd_iep                          off
-pd_vcodec                       off
-pd_vdu                          off
+$ cat ex_1_overlay.dts=20
 
-QOS:
-localhost / # cat sys/kernel/debug/pm_qos/
-cpu_dma_latency     network_latency
-memory_bandwidth    network_throughput
+/dts-v1/;
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 153 +++++++++++++++++++++++++++++++
- 1 file changed, 153 insertions(+)
+/plugin/;
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index a6dd623..cc4035e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -45,6 +45,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/power/rk3399-power.h>
- #include <dt-bindings/thermal/thermal.h>
- 
- / {
-@@ -594,6 +595,158 @@
- 		status = "disabled";
- 	};
- 
-+	qos_gpu: qos_gpu@ffae0000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffae0000 0x0 0x20>;
-+	};
-+	qos_video_m0: qos_video_m0@ffab8000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffab8000 0x0 0x20>;
-+	};
-+	qos_video_m1_r: qos_video_m1_r@ffac0000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffac0000 0x0 0x20>;
-+	};
-+	qos_video_m1_w: qos_video_m1_w@ffac0080 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffac0080 0x0 0x20>;
-+	};
-+	qos_rga_r: qos_rga_r@ffab0000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffab0000 0x0 0x20>;
-+	};
-+	qos_rga_w: qos_rga_w@ffab0080 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffab0080 0x0 0x20>;
-+	};
-+	qos_iep: qos_iep@ffa98000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffa98000 0x0 0x20>;
-+	};
-+	qos_vop_big_r: qos_vop_big_r@ffac8000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffac8000 0x0 0x20>;
-+	};
-+	qos_vop_big_w: qos_vop_big_w@ffac8080 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffac8080 0x0 0x20>;
-+	};
-+	qos_vop_little: qos_vop_little@ffad0000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffad0000 0x0 0x20>;
-+	};
-+	qos_isp0_m0: qos_isp0_m0@ffaa0000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffaa0000 0x0 0x20>;
-+	};
-+	qos_isp0_m1: qos_isp0_m1@ffaa0080 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffaa0080 0x0 0x20>;
-+	};
-+	qos_isp1_m0: qos_isp1_m0@ffaa8000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffaa8000 0x0 0x20>;
-+	};
-+	qos_isp1_m1: qos_isp1_m1@ffaa8080 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffaa8080 0x0 0x20>;
-+	};
-+	qos_hdcp: qos_hdcp@ffa90000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffa90000 0x0 0x20>;
-+	};
-+
-+	pmu: power-management@ff310000 {
-+		compatible = "rockchip,rk3399-pmu", "syscon", "simple-mfd";
-+		reg = <0x0 0xff310000 0x0 0x1000>;
-+
-+		power: power-controller {
-+			status = "okay";
-+			compatible = "rockchip,rk3399-power-controller";
-+			#power-domain-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pd_vdu {
-+				reg = <RK3399_PD_VDU>;
-+				clocks = <&cru ACLK_VDU>,
-+					 <&cru HCLK_VDU>;
-+				pm_qos = <&qos_video_m1_r>,
-+					 <&qos_video_m1_w>;
-+			};
-+			pd_vcodec {
-+				reg = <RK3399_PD_VCODEC>;
-+				clocks = <&cru ACLK_VCODEC>,
-+					 <&cru HCLK_VCODEC>;
-+				pm_qos = <&qos_video_m0>;
-+			};
-+			pd_iep {
-+				reg = <RK3399_PD_IEP>;
-+				clocks = <&cru ACLK_IEP>,
-+					 <&cru HCLK_IEP>;
-+				pm_qos = <&qos_iep>;
-+			};
-+			pd_rga {
-+				reg = <RK3399_PD_RGA>;
-+				clocks = <&cru ACLK_RGA>,
-+					 <&cru HCLK_RGA>;
-+				pm_qos = <&qos_rga_r>,
-+					 <&qos_rga_w>;
-+			};
-+			pd_vio {
-+				reg = <RK3399_PD_VIO>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				pd_isp0 {
-+					reg = <RK3399_PD_ISP0>;
-+					clocks = <&cru ACLK_ISP0>,
-+						 <&cru HCLK_ISP0>;
-+					pm_qos = <&qos_isp0_m0>,
-+						 <&qos_isp0_m1>;
-+				};
-+				pd_isp1 {
-+					reg = <RK3399_PD_ISP1>;
-+					clocks = <&cru ACLK_ISP1>,
-+						 <&cru HCLK_ISP1>;
-+					pm_qos = <&qos_isp1_m0>,
-+						 <&qos_isp1_m1>;
-+				};
-+				pd_hdcp {
-+					reg = <RK3399_PD_HDCP>;
-+					clocks = <&cru ACLK_HDCP>,
-+						 <&cru HCLK_HDCP>,
-+						 <&cru PCLK_HDCP>;
-+					pm_qos = <&qos_hdcp>;
-+				};
-+				pd_vo {
-+					reg = <RK3399_PD_VO>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					pd_vopb {
-+						reg = <RK3399_PD_VOPB>;
-+						clocks = <&cru ACLK_VOP0>,
-+							 <&cru HCLK_VOP0>;
-+						pm_qos = <&qos_vop_big_r>,
-+							 <&qos_vop_big_w>;
-+					};
-+					pd_vopl {
-+						reg = <RK3399_PD_VOPL>;
-+						clocks = <&cru ACLK_VOP1>,
-+							 <&cru HCLK_VOP1>;
-+						pm_qos = <&qos_vop_little>;
-+					};
-+				};
-+			};
-+			pd_gpu {
-+				reg = <RK3399_PD_GPU>;
-+				clocks = <&cru ACLK_GPU>;
-+				pm_qos = <&qos_gpu>;
-+			};
-+		};
-+	};
-+
- 	pmugrf: syscon@ff320000 {
- 		compatible = "rockchip,rk3399-pmugrf", "syscon", "simple-mfd";
- 		reg = <0x0 0xff320000 0x0 0x1000>;
--- 
-1.9.1
+&tree_1 {
+	remote_prop =3D <0xfeedfeed &foo>;
+};
+
+$ dtc -@ -O dts ex_1_overlay.dts=20
+Warning (unit_address_vs_reg): Node /fragment@0 has a unit name, but no=
+ reg property
+/dts-v1/;
+
+/ {
+
+	fragment@0 {
+		target =3D <0xffffffff>;
+
+		__overlay__ {
+			remote_prop =3D <0xfeedfeed 0xffffffff>;
+		};
+	};
+
+	__symbols__ {
+	};
+
+	__fixups__ {
+		tree_1 =3D "/fragment@0:target:0";
+		foo =3D "/fragment@0/__overlay__:remote_prop:4";
+	};
+
+	__local_fixups__ {
+	};
+};
+
+That example is using dtc from:
+  url =3D https://github.com/pantoniou/dtc
+  branch: dt-overlays8
+  as of commit: 6f4db2fc2354
+
+I do not know if that is current or not.
+
+So the nice thing about that is that the overlay source file does not h=
+ave to
+provide the fragment and __overlay__ nodes.  They just magically appear=
+ in the
+compiled blob.  Is that behavior that I can count on continuing to exis=
+t in dtc?
+
+Note the warning about no reg property in /fragment@0.
+
+The other issue with the device tree source in my example is that I don=
+'t think
+there is a way to add extra properties to node "fragment@0" in the gene=
+ral case
+where there are multiple fragments.  It _is_ possible to add a property=
+ as I
+show in the next example, but it seems fragile to be able to count on t=
+he order
+and names of fragments auto generated by dtc.  (And again, I don't real=
+ly want
+those extra properties anyway.)
+
+Example of adding a property to fragment@0:
+
+$ cat ex_1b_overlay.dts
+
+/dts-v1/;
+
+/plugin/;
+
+&tree_1 {
+	remote_prop =3D <0xfeedfeed &foo>;
+};
+
+/ {
+	fragment@0 {
+		another_fragment_prop =3D "frag property";
+	};
+};
+
+$ dtc -@ -O dts ex_1b_overlay.dts=20
+Warning (unit_address_vs_reg): Node /fragment@0 has a unit name, but no=
+ reg property
+/dts-v1/;
+
+/ {
+
+	fragment@0 {
+		target =3D <0xffffffff>;
+		another_fragment_prop =3D "frag property";
+
+		__overlay__ {
+			remote_prop =3D <0xfeedfeed 0xffffffff>;
+		};
+	};
+
+	__symbols__ {
+	};
+
+	__fixups__ {
+		tree_1 =3D "/fragment@0:target:0";
+		foo =3D "/fragment@0/__overlay__:remote_prop:4";
+	};
+
+	__local_fixups__ {
+	};
+};
+
+
+>>> If load manager specific details are appropriate in the devicetree =
+(a whole
+>>> different discussion) then maybe a /chosen/load-manager node could =
+exist to
+>>> hold them instead of putting them in /, where the patch currently l=
+ocates
+>>> "/* various properties for loader use; i.e. part id etc. */".
+
+-Frank
