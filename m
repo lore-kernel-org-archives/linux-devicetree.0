@@ -1,97 +1,123 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sunxi: Add A10 I2S controller binding documentation" to the asoc tree
-Date: Thu, 30 Jun 2016 13:15:28 +0100
-Message-ID: <E1bIasS-00012L-EU@finisterre>
-References: <20160615211123.31068-2-maxime.ripard@free-electrons.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v5 5/5] usb: dwc3: rockchip: add devicetree bindings documentation
+Date: Thu, 30 Jun 2016 14:15:52 +0200
+Message-ID: <2510621.9FbtAACURA@phil>
+References: <1467285176-25222-1-git-send-email-william.wu@rock-chips.com> <1467285400-25450-1-git-send-email-william.wu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160615211123.31068-2-maxime.ripard@free-electrons.com>
+In-Reply-To: <1467285400-25450-1-git-send-email-william.wu@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, gianfranco@moddevices.com, linux-kernel@vger.kernel.org, Code Kipper <codekipper@gmail.com>, Andrea Venturi <ennesimamail.av@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: William Wu <william.wu@rock-chips.com>
+Cc: gregkh@linuxfoundation.org, balbi@kernel.org, linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi William,
 
-   ASoC: sunxi: Add A10 I2S controller binding documentation
+Am Donnerstag, 30. Juni 2016, 19:16:40 schrieb William Wu:
+> This patch adds the devicetree documentation required for Rockchip
+> USB3.0 core wrapper consisting of USB3.0 IP from Synopsys.
+> 
+> It supports DRD mode, and could operate in device mode (SS, HS, FS)
+> and host mode (SS, HS, FS, LS).
+> 
+> Signed-off-by: William Wu <william.wu@rock-chips.com>
+> ---
+> Changes in v5:
+> - rename clock-names, and remove unnecessary clocks (Heiko)
+> 
+> Changes in v4:
+> - modify commit log, and add phy documentation location (Sergei)
+> 
+> Changes in v3:
+> - add dwc3 address (balbi)
+> 
+> Changes in v2:
+> - add rockchip,dwc3.txt to Documentation/devicetree/bindings/ (balbi,
+> Brian)
+> 
+>  .../devicetree/bindings/usb/rockchip,dwc3.txt      | 40
+> ++++++++++++++++++++++ 1 file changed, 40 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+> b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt new file mode
+> 100644
+> index 0000000..9c85e19
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+> @@ -0,0 +1,40 @@
+> +Rockchip SuperSpeed DWC3 USB SoC controller
+> +
+> +Required properties:
+> +- compatible:	should contain "rockchip,rk3399-dwc3" for rk3399 SoC
+> +- clocks:	A list of phandle + clock-specifier pairs for the
+> +		clocks listed in clock-names
+> +- clock-names:	Should contain the following:
+> +  "ref_clk"	Controller reference clk, have to be 24 MHz
+> +  "suspend_clk"	Controller suspend clk, have to be 24 MHz or 32 KHz
+> +  "bus_clk_otg0"Master/Core clock, have to be >= 62.5 MHz for SS
+> +		operation and >= 60MHz for HS operation
 
-has been applied to the asoc tree at
+why is it called "bus_clk_otg0" not just simply "bus_clk". As far as I
+understand it (and see it in the TRM), you have two dwc3 controllers
+(otg0 and otg1) and clock-names are always meant from the perspective of
+the individual ip-block. So a devicetree would have:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+	usbdrd3_0: usb@fe800000 {
+		compatible = "rockchip,rk3399-dwc3";
+		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
+			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
+		clock-names = "ref_clk", "suspend_clk",
+			      "bus_clk", "grf_clk";
+		...
+	};
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+	usbdrd3_1: usb@fe900000 {
+		compatible = "rockchip,rk3399-dwc3";
+		clocks = <&cru SCLK_USB3OTG1_REF>, <&cru SCLK_USB3OTG1_SUSPEND>,
+			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_GRF>;
+		clock-names = "ref_clk", "suspend_clk",
+			      "bus_clk", "grf_clk";
+		...
+	};
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The rest looks really nice now.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
 
-Thanks,
-Mark
+Heiko
 
->From 38c81719b1658fdff7d3509b8a0c6294ce29c3d4 Mon Sep 17 00:00:00 2001
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Date: Wed, 15 Jun 2016 23:11:20 +0200
-Subject: [PATCH] ASoC: sunxi: Add A10 I2S controller binding documentation
-
-Introduce the device tree binding for the I2S controller found in the
-Allwinner A10 and later SoCs.
-
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/sound/sun4i-i2s.txt        | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-new file mode 100644
-index 000000000000..7b526ec64991
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-@@ -0,0 +1,34 @@
-+* Allwinner A10 I2S controller
-+
-+The I2S bus (Inter-IC sound bus) is a serial link for digital
-+audio data transfer between devices in the system.
-+
-+Required properties:
-+
-+- compatible: should be one of the followings
-+   - "allwinner,sun4i-a10-i2s"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: should contain the I2S interrupt.
-+- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
-+	Documentation/devicetree/bindings/dma/dma.txt
-+- dma-names: should include "tx" and "rx".
-+- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
-+- clock-names: should contain followings:
-+   - "apb" : clock for the I2S bus interface
-+   - "mod" : module clock for the I2S controller
-+- #sound-dai-cells : Must be equal to 0
-+
-+Example:
-+
-+i2s0: i2s@01c22400 {
-+	#sound-dai-cells = <0>;
-+	compatible = "allwinner,sun4i-a10-i2s";
-+	reg = <0x01c22400 0x400>;
-+	interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&apb0_gates 3>, <&i2s0_clk>;
-+	clock-names = "apb", "mod";
-+	dmas = <&dma SUN4I_DMA_NORMAL 3>,
-+	       <&dma SUN4I_DMA_NORMAL 3>;
-+	dma-names = "rx", "tx";
-+};
--- 
-2.8.1
+> +  "grf_clk"	Controller grf clk
+> +
+> +Required child node:
+> +A child node must exist to represent the core DWC3 IP block. The name of
+> +the node is not important. The content of the node is defined in
+> dwc3.txt. +
+> +Phy documentation is provided in the following places:
+> +Documentation/devicetree/bindings/phy/rockchip,dwc3-usb-phy.txt
+> +
+> +Example device nodes:
+> +
+> +	usbdrd3_0: usb@fe800000 {
+> +		compatible = "rockchip,rk3399-dwc3";
+> +		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
+> +			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
+> +		clock-names = "ref_clk", "suspend_clk",
+> +			      "bus_clk_otg0", "grf_clk";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +		status = "disabled";
+> +		usbdrd_dwc3_0: dwc3@fe800000 {
+> +			compatible = "snps,dwc3";
+> +			reg = <0x0 0xfe800000 0x0 0x100000>;
+> +			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+> +			dr_mode = "otg";
+> +			status = "disabled";
+> +		};
+> +	};
+> --
+> 1.9.1
