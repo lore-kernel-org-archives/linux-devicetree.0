@@ -1,143 +1,173 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: [PATCH v2] xen/arm: register clocks used by the hypervisor
-Date: Thu, 30 Jun 2016 12:32:32 +0200
-Message-ID: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] drivers/of: add option to load a default Device Tree
+Date: Thu, 30 Jun 2016 11:53:11 +0100
+Message-ID: <5774FA17.7020501@synopsys.com>
+References: <1466607954-2821-1-git-send-email-franck.jullien@odyssee-systemes.fr>
+ <576C2A22.2020103@gmail.com>
+ <86d0de95-9b74-81ca-bcf4-e6e41b95ea9a@odyssee-systemes.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Julien Grall <julien.grall@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: Stefano Stabellini <sstabellini@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <86d0de95-9b74-81ca-bcf4-e6e41b95ea9a-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some clocks might be used by the Xen hypervisor and not by the Linux
-kernel. If these are not registered by the Linux kernel, they might be
-disabled by clk_disable_unused() as the kernel doesn't know that they
-are used. The clock of the serial console handled by Xen is one
-example for this. It might be disabled by clk_disable_unused() which
-stops the whole serial output, even from Xen, then.
+Hi Franck,
 
-Up to now, the workaround for this has been to use the Linux kernel
-command line parameter 'clk_ignore_unused'. See Xen bug
+++ Carlos
 
-http://bugs.xenproject.org/xen/bug/45
+On 24-06-2016 09:15, Franck Jullien wrote:
+> Le 23/06/2016 =E0 20:27, Frank Rowand a =E9crit :
+>> On 06/22/16 08:05, Franck Jullien wrote:
+>>> Even if a platform doesn't use a device tree during its
+>>> boot process it can be useful to enable CONFIG_OF and get
+>>> an empty device tree.
+>>>
+>>> Then, devices can use device tree overlays to populate this
+>>> default tree.
+>>
+>> Hi Franck,
+>>
+>> Can you elaborate on the problem that you are trying to
+>> solve and the use cases that you are envisioning?
+>>
+>> Thanks,
+>>
+>> Frank
+>>
+> Hi,
+>
+> The idea behind this patch is to describe devices that are in a FPGA
+> which is itself connected to the platform through PCIe. The platform
+> might not use a devicetree for its own configuration. That's why we n=
+eed
+> this patch.
 
-too.
+This sure looks interesting to us because we are using the
+exactly same setup (x86_64 + FPGA through PCIe). As I said before
+in the DMA mailing list our approach was different: we use
+platform data in each driver and we register them using a PCI
+driver which passes all the required parameters. Still, we were
+wondering if your approach can save us development time in the
+future. So, I have a few questions that I was hoping you could
+answer.
 
-To fix this, we will add the "unused" clocks in Xen to the hypervisor
-node. The Linux kernel has to register the clocks from the hypervisor
-node, then.
+>
+> There is an ongoing  discussion about this subject [1].
+>
+> I have a working setup (on a x86_64) using this principle. I have
+> created a pci resources proxy module which is parent of all devices o=
+n
+> the FPGA. This is an example of binding:
+>
+> 	proxy: pci1337_0001 {
+> 		#address-cells =3D <1>;
+> 		#size-cells =3D <1>;
+> 		#interrupt-cells =3D <1>;
+> 		vendor-id =3D <0x00001337>;
+> 		device-id =3D <0x00000001>;
+> 		compatible =3D "pci1337,0001",
+> 			     "generic,pci-proxy";
+> 		interrupt-controller;
+> 		/* Ranges will be overwritten during probe */
+> 		ranges =3D <0 0 0xA0000000 0x100000     /* BAR 0 */
+> 			  1 0 0xB0000000 0x100000     /* BAR 1 */
+> 			  2 0 0xC0000000 0x100000>;   /* BAR 2 */
+> 	};
+>
+> Ranges are dynamically updated on probe with regards to FPGA bars.
+> This node is attached to the tree (an empty tree in my case) from the
+> client module.
 
-Therefore, check if there is a "clocks" entry in the hypervisor node
-and if so register the given clocks to the Linux kernel clock
-framework and with this mark them as used. This prevents the clocks
-from being disabled.
+I am not fully understanding where does this binding is added.
+You use your patches to create an empty device tree or a device
+tree where the FPGA is declared?
 
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
----
-Changes in v2:
- - Rebase against git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-4.8
- - Add changes to Documentation/devicetree/bindings/arm/xen.txt
+>
+> Then FPGA devices nodes are added using overlay. This is an example:
+>
+> /dts-v1/;
+> / {
+> 	#address-cells =3D <1>;
+> 	#size-cells =3D <1>;
+>
+> 	fragment@0 {
+> 		target-path =3D "/pci1337_0001";
+> 		__overlay__ {
+>
+> 			#address-cells =3D <2>;
+> 			#size-cells =3D <1>;
+> 			interrupt-parent =3D <&proxy>;
+>
+> 			osc: oscillator {
+> 				compatible =3D "fixed-clock";
+> 				#clock-cells =3D <1>;
+> 				clock-frequency  =3D <148500000>;
+> 				clock-output-names =3D "osc";
+> 			};
+> 			enet0: ethoc {
+> 				compatible =3D "opencores,ethoc";
+> 				reg =3D <1 0x50000 0x100>;
+> 				interrupts =3D <0>;
+> 			};
+> 			gpio0: gpio {
+> 				#gpio-cells =3D <2>;
+> 				compatible =3D "xlnx,xps-gpio-1.00.a";
+> 				reg =3D <0 0x30000 0x10000>;
+> 				gpio-controller;
+> 			};
+> 		};
+> 	};
+>
+>
+> };
+>
+> Interrupts property are dynamically modified before the overlay is
+> applied. By the way, I had to do a little hack here in the pci-proxy.
+> I did not declare a new interrupt domain. What I did is to get the PC=
+I
+> interrupt domain (IO-APIC on my platform):
+>
+> irq_data =3D irq_get_irq_data(priv->pci_dev->irq);
+> domain_parent =3D irq_data->domain;
+>
+> and then set fwnode of IO-APIC to pci-proxy fwnode so
+> irq_create_of_mapping get IO-APIC's domain:
+>
+> domain_parent->fwnode =3D &np->fwnode;
 
- Documentation/devicetree/bindings/arm/xen.txt | 11 +++++++
- arch/arm/xen/enlighten.c                      | 47 +++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+)
+In my case we have an interrupt controller driver which is
+embedded into the PCI driver so I also can't use the generic PCI
+proxy without modifying it. Can this controller be declared in
+the overlay device tree and then make the remaining drivers use
+the domain created?
 
-diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
-index c9b9321..55dfd3b 100644
---- a/Documentation/devicetree/bindings/arm/xen.txt
-+++ b/Documentation/devicetree/bindings/arm/xen.txt
-@@ -17,6 +17,17 @@ the following properties:
-   A GIC node is also required.
-   This property is unnecessary when booting Dom0 using ACPI.
- 
-+Optional properties:
-+
-+- clocks: one or more clocks to be registered.
-+  Xen hypervisor drivers might replace native drivers, resulting in
-+  clocks not registered by these native drivers. To avoid that these
-+  unregistered clocks are disabled, then, e.g. by clk_disable_unused(),
-+  register them in the hypervisor node.
-+  An example for this are the clocks of the serial driver. If the clocks
-+  used by the serial hardware interface are not registered by the serial
-+  driver the serial output might stop once clk_disable_unused() is called.
-+
- To support UEFI on Xen ARM virtual platforms, Xen populates the FDT "uefi" node
- under /hypervisor with following parameters:
- 
-diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-index 47acb36..5c546d0 100644
---- a/arch/arm/xen/enlighten.c
-+++ b/arch/arm/xen/enlighten.c
-@@ -24,6 +24,7 @@
- #include <linux/of_fdt.h>
- #include <linux/of_irq.h>
- #include <linux/of_address.h>
-+#include <linux/clk-provider.h>
- #include <linux/cpuidle.h>
- #include <linux/cpufreq.h>
- #include <linux/cpu.h>
-@@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
- }
- late_initcall(xen_pm_init);
- 
-+/*
-+ * Check if we want to register some clocks, that they
-+ * are not freed because unused by clk_disable_unused().
-+ * E.g. the serial console clock.
-+ */
-+static int __init xen_arm_register_clks(void)
-+{
-+	struct clk *clk;
-+	struct device_node *xen_node;
-+	unsigned int i, count;
-+	int ret = 0;
-+
-+	xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
-+	if (!xen_node) {
-+		pr_err("Xen support was detected before, but it has disappeared\n");
-+		return -EINVAL;
-+	}
-+
-+	count = of_clk_get_parent_count(xen_node);
-+	if (!count)
-+		goto out;
-+
-+	for (i = 0; i < count; i++) {
-+		clk = of_clk_get(xen_node, i);
-+		if (IS_ERR(clk)) {
-+			pr_err("Xen failed to register clock %i. Error: %li\n",
-+			       i, PTR_ERR(clk));
-+			ret = PTR_ERR(clk);
-+			goto out;
-+		}
-+
-+		ret = clk_prepare_enable(clk);
-+		if (ret < 0) {
-+			pr_err("Xen failed to enable clock %i. Error: %i\n",
-+			       i, ret);
-+			goto out;
-+		}
-+	}
-+
-+	ret = 0;
-+
-+out:
-+	of_node_put(xen_node);
-+	return ret;
-+}
-+late_initcall(xen_arm_register_clks);
- 
- /* empty stubs */
- void xen_arch_pre_suspend(void) { }
--- 
-2.8.0
+>
+> There might be a better way to make things work.
+>
+> Beside this patch I needed to export of_attach_node and of_detach_nod=
+e.
+> This will be another patch.
+
+There is still one more thing: By default CONFIG_OF is not
+enabled in x86_64 so you need to enable this, right? Shouldn't a
+"select OF" be added to your kconfig entry?
+
+>
+> Thank you for your interest.
+>
+> Franck.
+>
+> [1] http://www.spinics.net/lists/dmaengine/msg09869.html
+>
+
+Best regards,
+Jose Miguel Abreu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
