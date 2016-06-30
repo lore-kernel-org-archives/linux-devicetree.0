@@ -1,62 +1,115 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] ASoC: tegra: add tegra sgtl5000 machine driver
-Date: Thu, 30 Jun 2016 08:46:23 -0500
-Message-ID: <20160630134623.GA12979@rob-hp-laptop>
-References: <1466298002-12576-1-git-send-email-marcel.ziswiler@toradex.com>
- <1466298002-12576-2-git-send-email-marcel.ziswiler@toradex.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/3] dt-bindings: Document the STM32 USB OTG DWC2 core
+ binding
+Date: Thu, 30 Jun 2016 08:54:32 -0500
+Message-ID: <20160630135432.GA13875@rob-hp-laptop>
+References: <1466562349-5043-1-git-send-email-bruherrera@gmail.com>
+ <1466562349-5043-3-git-send-email-bruherrera@gmail.com>
+ <20160624154118.GA4598@rob-hp-laptop>
+ <CAF3+Tqe05kXExob_62w80BBbXz6p01-WwXM1+R6ecp0JtsgviA@mail.gmail.com>
+ <20160628205441.GA3737@rob-hp-laptop>
+ <CAF3+Tqe_83zuaxWfp2sv6pZ70XzkbfZ4V4w+n8wCFAApvRirdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1466298002-12576-2-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAF3+Tqe_83zuaxWfp2sv6pZ70XzkbfZ4V4w+n8wCFAApvRirdg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bruno Herrera <bruherrera@gmail.com>
+Cc: mark.rutland@arm.com, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, alexandre.torgue@st.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, johnyoun@synopsys.com, gregkh@linuxfoundation.org, Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala@gmail.com>, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kumar Gala <galak@codeaurora.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 19, 2016 at 03:00:00AM +0200, Marcel Ziswiler wrote:
-> This binding and driver describe/support playback to headphones, and
-> capture from line-in and microphone.
+On Wed, Jun 29, 2016 at 03:56:23PM -0300, Bruno Herrera wrote:
+> On Tue, Jun 28, 2016 at 5:54 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Fri, Jun 24, 2016 at 03:51:18PM -0300, Bruno Herrera wrote:
+> >> On Fri, Jun 24, 2016 at 12:41 PM, Rob Herring <robh@kernel.org> wrote:
+> >> > On Tue, Jun 21, 2016 at 11:25:49PM -0300, Bruno Herrera wrote:
+> >> >> Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
+> >> >> ---
+> >> >>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+> >> >>  1 file changed, 1 insertion(+)
+> >> >>
+> >> >> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> >> >> index 20a68bf..79e5370 100644
+> >> >> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> >> >> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> >> >> @@ -11,6 +11,7 @@ Required properties:
+> >> >>    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
+> >> >>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
+> >> >>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
+> >> >> +  - st,stm32-fsotg: The DWC2 USB controller instance in STM32F4 SoCs in FS mode;
+> >> >
+> >> > This should go above snps,dwc2.
+> >> >
+> >> Ok, tks!
+> >>
+> >> > What determines FS mode vs. HS?
+> >> >
+> >> Its more HW design decision.
+> >> STM32F429/439/469 has two OTG controllers, one that is FS (internal
+> >> phy) and other that is HS (but can also work in FS mode with
+> >> internal/external phy)
+> >> This bind work with both cores FS and HS working with the internal PHY.
+> >>
+> >> I tested the following configurations:
+> >> 1 - STM32F429I-DISCOv1 board (OTG HS working in FS mode internal PHY)
+> >> 2 - STM32F469I-DISCO board (OTG FS)
+> >>
+> >> I did not tested OTG HS core working in FS mode with external PHY (I2C).
+> >
+> > You shouldn't be setting the compatible string based on which mode you
+> > want. So for the HS block, you need a different compatible string than
+> > the FS block and set the speed in another way (not sure if we have a
+> > standard way). Or perhaps the phy should determine the speed.
 > 
-> This driver is useful for the Toradex Apalis T30, Apalis TK1 and
-> Colibri T30 modules.
-> 
-> Signed-off-by: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-> ---
-> 
-> Changes in v4:
-> - simple-audio-card does still not allow for more advanced use cases
->   like Tegra SoCs
-> - further platform drivers have been accepted since my last attempt
->   (e.g. rt5677 one)
-> - relevance for one further board the new Toradex Apalis TK1
-> - drop unused sound/jack.h include
-> - in tegra_sgtl5000_driver_remove() pass return value of
->   snd_soc_unregister_card() on to caller
-> - no longer set owner property in platform_driver to THIS_MODULE
-> - re-based/resend
-> 
-> Changes in v3:
-> - revert to not using simple-audio-card being incompatible with tegra
-> - rebased to for-next
-> 
-> Changes in v2:
-> - using simple-audio-card as suggested by Fabio
-> 
->  .../bindings/sound/nvidia,tegra-audio-sgtl5000.txt |  42 ++++
+> I understand but I dont see how to fix it properly unless we add a
+> some specific STM32 properties in the DT or in the dwc2_core_params.
+> In fact there are two cores, and they are different in terms of
+> functionality (despite of the type of the PHY).
+> One core is for FS and other is for HS, so they could/should have
+> different compatible strings because they have different
+> configurations and are different piece of IP/Hardware(The buffer size
+> are different, the number of end points and so one, DMA)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Then it is perfectly fine to have 2 compatible strings: one for the FS 
+block and one for the HS block.
 
->  sound/soc/tegra/Kconfig                            |  11 ++
->  sound/soc/tegra/Makefile                           |   2 +
->  sound/soc/tegra/tegra_sgtl5000.c                   | 212 +++++++++++++++++++++
->  4 files changed, 267 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra-audio-sgtl5000.txt
->  create mode 100644 sound/soc/tegra/tegra_sgtl5000.c
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> But the problem is that the HS core can also support the the FS mode
+> and in this case is misleading to have a HS core with an FS compatible
+> string.
+
+But as you said, there are other differences in the 2 blocks, so just 
+changing to the FS compatible string would not work.
+
+You could just have a high-speed-disable property or something, but look 
+thru existing bindings and see if one exists already. If not, propose a 
+common one.
+
+> Something like that (real case for STM32F429I-DISCO):
+> 
+> &usbotg_hs {
+> compatible = "st,stm32-fsotg", "snps,dwc2";
+> dr_mode = "host";
+> pinctrl-0 = <&usbotg_fs_pins_b>;
+> pinctrl-names = "default";
+> status = "okay";
+> };
+> 
+> Even if the decision is phy based it would lead to a STM32 specific
+> logic and we would need to figure out how to represent the internal
+> PHY.
+
+Most SoCs end up describing the phys at least for USB 2 and 3 as they 
+vary a lot eventhough everyone licenses one of the few IP blocks.
+
+Rob
