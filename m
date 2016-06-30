@@ -1,126 +1,39 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH RESEND v2] mfd: sm501: Add device property
-Date: Thu, 30 Jun 2016 08:48:00 +0100
-Message-ID: <20160630074800.GE1707@dell>
-References: <1467219419-22901-1-git-send-email-ysato@users.sourceforge.jp>
+From: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] iio: potentiometer: mcp4531: Add device tree
+ binding
+Date: Thu, 30 Jun 2016 10:09:29 +0200
+Message-ID: <a93171d3-d333-0e04-5288-eb15048a1efa@heig-vd.ch>
+References: <1467272091-28087-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1467272091-28087-4-git-send-email-florian.vaussard@heig-vd.ch>
+ <65595556-53E0-4105-892F-A766EDBA2198@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1467219419-22901-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <65595556-53E0-4105-892F-A766EDBA2198-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaussard Florian <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Jun 2016, Yoshinori Sato wrote:
 
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  Documentation/devicetree/bindings/mfd/sm501.txt | 45 +++++++++++++++=
-++++++++++
->  drivers/mfd/sm501.c                             |  9 +++++
->  2 files changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sm501.txt
+
+Le 30. 06. 16 =E0 09:46, Peter Rosin a =E9crit :
 >=20
-> diff --git a/Documentation/devicetree/bindings/mfd/sm501.txt b/Docume=
-ntation/devicetree/bindings/mfd/sm501.txt
-> new file mode 100644
-> index 0000000..9290094
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/sm501.txt
-> @@ -0,0 +1,45 @@
-> +* SM SM501
-> +
-> +The SM SM501 is a LCD controller, with proper hardware, it can also
-> +drive DVI monitors.
-> +
-> +Required properties:
-> +- compatible : should be "smi,sm501".
-> +- reg : contain two entries:
-> +    - First entry: System Configuration register
-> +    - Second entry: IO space (Display Controller register)
-> +- interrupts : SMI interrupt to the cpu should be described here.
-> +- interrupt-parent : the phandle for the interrupt controller that
-> +  services interrupts for this device.
-> +
-> +Optional properties:
-> +- mode : select a video mode:
-> +    <xres>x<yres>[-<bpp>][@<refresh>]
-> +- edid : verbatim EDID data block describing attached display.
-> +  Data from the detailed timing descriptor will be used to
-> +  program the display controller.
-> +- little-endian: available on big endian systems, to
-> +  set different foreign endian.
-> +- big-endian: available on little endian systems, to
-> +  set different foreign endian.
-> +- smi,devices: function block enable bitmap.
-> +	bit0: USB host
-> +	bit1: USB slave
-> +	bit2: SSP Ch0
-> +	bit3: SSP Ch1
-> +	bit4: UART Ch0
-> +	bit5: UART Ch1
-> +	bit6: Accelerator
-> +	bit7: AC97
-> +	bit8: I2S
-> +	bit9: GPIO
-> +
-> +Example for MPC5200:
-> +	display@1,0 {
-> +		compatible =3D "smi,sm501";
-> +		reg =3D <1 0x00000000 0x00800000
-> +		       1 0x03e00000 0x00200000>;
-> +		interrupts =3D <1 1 3>;
-> +		mode =3D "640x480-32@60";
-> +		edid =3D [edid-data];
-> +	};
-> diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
-> index 65cd0d2..e2e3f9b 100644
-> --- a/drivers/mfd/sm501.c
-> +++ b/drivers/mfd/sm501.c
-> @@ -21,6 +21,7 @@
->  #include <linux/pci.h>
->  #include <linux/i2c-gpio.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
-> =20
->  #include <linux/sm501.h>
->  #include <linux/sm501-regs.h>
-> @@ -1377,6 +1378,8 @@ static int sm501_plat_probe(struct platform_dev=
-ice *dev)
->  {
->  	struct sm501_devdata *sm;
->  	int ret;
-> +	struct sm501_platdata private_platdata;
-> +	struct sm501_initdata private_initdata;
-> =20
->  	sm =3D kzalloc(sizeof(struct sm501_devdata), GFP_KERNEL);
->  	if (sm =3D=3D NULL) {
-> @@ -1388,6 +1391,12 @@ static int sm501_plat_probe(struct platform_de=
-vice *dev)
->  	sm->dev =3D &dev->dev;
->  	sm->pdev_id =3D dev->id;
->  	sm->platdata =3D dev_get_platdata(&dev->dev);
-> +	if (!sm->platdata) {
-> +		of_property_read_u32(dev->dev.of_node, "smi,devices",
-> +				     (u32 *)&private_initdata.devices);
-> +		private_platdata.init =3D &private_initdata;
-> +		sm->platdata =3D &private_platdata;
-> +	}
+>=20
+> On June 30, 2016 9:34:50 AM GMT+02:00, Florian Vaussard <florian.vaus=
+sard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> This patch adds the necessary device tree binding to allow DT probin=
+g
+>> of
+>> currently supported parts.
+>>
+>> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+>=20
+> Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>=20
 
-I've asked about this 3 times now.
+Thanks for your reviews Peter,
 
-What consumes this platform data?
-
-It also looks ugly and fragile.
-
->  	ret =3D platform_get_irq(dev, 0);
->  	if (ret < 0) {
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Best,
+=46lorian
