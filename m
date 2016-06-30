@@ -1,81 +1,122 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [RESEND PATCH v6 0/6] Add Ethernet support on STM32F429
-Date: Thu, 30 Jun 2016 17:37:21 +0200
-Message-ID: <57753CB1.3010800@st.com>
-References: <1462789899-13153-1-git-send-email-alexandre.torgue@gmail.com>
- <20160517.122527.1937360418899371800.davem@davemloft.net>
- <CALszF6AE7jkRX3sSNm=PCvEmkmZM-Sv5LxFSj7J3vMbvi8M5Cg@mail.gmail.com>
- <2535270.dCFPoM2olB@wuerfel>
- <CALszF6AP52EAN68qH8Pup9uxqTnhoT8wigiKaZzgHns3m+NCgQ@mail.gmail.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 14/14] ARM: dts: sun8i: Enable DVFS on
+ Orange Pi One
+Date: Thu, 30 Jun 2016 17:50:25 +0200
+Message-ID: <CAOMqctR+SBfo9UZxXuACz858ehXpa2jGHZw_-70dbUFX3Q_0CQ@mail.gmail.com>
+References: <20160625034511.7966-1-megous@megous.com> <20160625034511.7966-15-megous@megous.com>
+ <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New@mail.gmail.com>
+ <834b8045-d99f-74a3-0353-aa84b897351d@megous.com> <CAOMqctSbJOB67a=LiCZVUb-wUMCpeJPd81OL5epYkC2p5X1T-g@mail.gmail.com>
+Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CALszF6AP52EAN68qH8Pup9uxqTnhoT8wigiKaZzgHns3m+NCgQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Miller <davem@davemloft.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, netdev@vger.kernel.org, Joachim Eastwood <manabian@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@gmail.com>, Olof Johansson <olof@lixom.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCQMLUOX54MBB2X72S5QKGQECSCBHWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAOMqctSbJOB67a=LiCZVUb-wUMCpeJPd81OL5epYkC2p5X1T-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
-
-On 05/18/2016 11:49 AM, Maxime Coquelin wrote:
-> 2016-05-18 11:31 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
->> On Wednesday 18 May 2016 09:48:53 Maxime Coquelin wrote:
->>> 2016-05-17 18:25 GMT+02:00 David Miller <davem@davemloft.net>:
->>>> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->>>> Date: Tue, 17 May 2016 11:20:16 +0200
->>>>
->>>>> Hi David,
->>>>>
->>>>> 2016-05-09 21:06 GMT+02:00 David Miller <davem@davemloft.net>:
->>>>>> From: Alexandre TORGUE <alexandre.torgue@gmail.com>
->>>>>> Date: Mon,  9 May 2016 12:31:33 +0200
->>>>>>
->>>>>>> STM32F429 Chip embeds a Synopsys 3.50a MAC IP.
->>>>>>> This series:
->>>>>>>   -enhance current stmmac driver to control it (code already
->>>>>>> available) and adds basic glue for STM32F429 chip.
->>>>>>>   -Enable basic Net config in kernel.
->>>>>>
->>>>>> I assume this will go via the ARM tree, for the networking bits:
->>>>> I would expect patches 1, 2 & 3 to got via your tree, to avoid conflicts.
->>>>
->>>> I don't think putting them all via the ARM tree is going to create much
->>>> in the way of conflicts, and right now during the merge window offloading
->>>> that work from me would really help my backlog a lot.
->>>
->>> Ok, I understand this is not the best time to pick it.
->>>
->>> Arnd, Olof & Kevin, would you accept to pick the series in your tree?
->>>
+On 30 June 2016 at 17:16, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 30 June 2016 at 16:19, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+>> Hello,
 >>
->> It's too late for v4.7 for us too, please pick up the arch/arm patches
->> in your normal stm32 tree and send them to us along with any other changes
->> you may have, and resend the driver by itself to netdev time after the
->> merge window.
+>> On 30.6.2016 13:13, Michal Suchanek wrote:
+>>> Hello,
+>>>
+>>> On 25 June 2016 at 05:45,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+>>>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> Use Xulong Orange Pi One GPIO based regulator for
+>>>> passive cooling and thermal management.
+>>>>
+>>>> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 39 ++++++++++++++++++++=
++++++++++
+>>>>  1 file changed, 39 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/bo=
+ot/dts/sun8i-h3-orangepi-one.dts
+>>>> index b1bd6b0..a38d871 100644
+>>>> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+>>>> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+>>>> @@ -109,6 +109,45 @@
+>>>>         };
+>>>>  };
+>>>>
+>>>> +&cpu0 {
+>>>> +       operating-points =3D <
+>>>> +               /* kHz    uV */
+>>>> +               1296000 1300000
+>>>> +               1200000 1300000
+>>>
+>>> First problem is that the board boots at 1008000 which is not listed
+>>> and the kernel complains.
+>>>
+>>> Second problem is that the board locks up during boot with this enabled=
+.
+>>>
+>>> Do you have some suggestion for alternate configuration to test?
 >>
->> The binding document can go either way, with the dts changes or with
->> the driver. I see no dependencies between the patches, so we just need
->> to land them all in v4.8.
+>> Just to verify, did you test with the entire series applied? (especially
+>> the PLL1 clk application changes)
 >
-> Ok, this is good for me.
-> No problem to wait for v4.8.
-> I will take the arch/arm patches, and David the drivers/net/ ones once
-> v4.7-rc1 is out.
+> Yes, I applied the whole series.
+>
+>>
+>> You may try dropping the highest operating point, it's probably overly
+>> optimistic for Orange Pi One.
+>>
+>> Is the power supply/cable you're using hard enough?
+>
+> I use a 7 port hub to power the board. It worked with some other small
+> devboards.
+>
+> The cable is some random Chinese USB to power jack adaptor with an
+> extra adaptor to fit the Pi socket. It looks ok but I did not test
+> this particular combination thoroughly.
+>
+>>
+>> Where during the boot process does it lock up?
+>
+> Usually sometime around enabling cpufreq  before getty starts.
+> Different runs and settings give slightly different results. In
+> particular adding the 1008000 point seems to make it go further.
+>
+> Removing all traces of the regulator, cpufreq and thermal I can boot
+> pretty much 100% to login prompt.
+>
+> I don't think the difference between 1GHz and 1.3GHz frequency on the
+> core would put much additional stress on the supply but I can try with
+> 35W PSU and some alternative cabling to be sure.
+>
+> I did some more tests and it seems 1008000@1.1V is fine but switching
+> to 1.3V crashes the board. Even with only the first 1.3V state. Maybe
+> there is need for some delay somewhere for the regulator to get
+> stable?
+>
 
-According to this old discussion, could you please take driver patches
-+ bindings one (patch 1/2/3) in your net-next tree ?
-Do you need I resend them separately ?
+Hm, the AW table shows 1008000@1.3V as supported state and it indeed
+works. So the voltage switching works or does nothing. Can I measure
+the regulator output somewhere? Clocking the chip higher does not
+work.
 
-Thanks in advance
+I will try with another PSU later.
 
-Alex
+Thanks
+
+Michal
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
