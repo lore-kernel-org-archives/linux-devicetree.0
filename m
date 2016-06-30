@@ -1,104 +1,81 @@
-From: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [Xen-devel] [PATCH v2] xen/arm: register clocks used by the
- hypervisor
-Date: Thu, 30 Jun 2016 16:33:19 +0100
-Message-ID: <57753BBF.5000004@arm.com>
-References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
- <20160630142136.GE20363@leverpostej> <57753328.9060300@gmail.com>
- <20160630151523.GA29700@leverpostej>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [RESEND PATCH v6 0/6] Add Ethernet support on STM32F429
+Date: Thu, 30 Jun 2016 17:37:21 +0200
+Message-ID: <57753CB1.3010800@st.com>
+References: <1462789899-13153-1-git-send-email-alexandre.torgue@gmail.com>
+ <20160517.122527.1937360418899371800.davem@davemloft.net>
+ <CALszF6AE7jkRX3sSNm=PCvEmkmZM-Sv5LxFSj7J3vMbvi8M5Cg@mail.gmail.com>
+ <2535270.dCFPoM2olB@wuerfel>
+ <CALszF6AP52EAN68qH8Pup9uxqTnhoT8wigiKaZzgHns3m+NCgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160630151523.GA29700@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CALszF6AP52EAN68qH8Pup9uxqTnhoT8wigiKaZzgHns3m+NCgQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Miller <davem@davemloft.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, netdev@vger.kernel.org, Joachim Eastwood <manabian@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@gmail.com>, Olof Johansson <olof@lixom.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi David,
 
-On 30/06/16 16:18, Mark Rutland wrote:
-> On Thu, Jun 30, 2016 at 04:56:40PM +0200, Dirk Behme wrote:
->> On 30.06.2016 16:21, Mark Rutland wrote:
->>> On Thu, Jun 30, 2016 at 12:32:32PM +0200, Dirk Behme wrote:
->>>> +- clocks: one or more clocks to be registered.
->>>> +  Xen hypervisor drivers might replace native drivers, resulting in
->>>> +  clocks not registered by these native drivers. To avoid that these
->>>> +  unregistered clocks are disabled, then, e.g. by clk_disable_unused(),
->>>> +  register them in the hypervisor node.
->>>> +  An example for this are the clocks of the serial driver. If the clocks
->>>> +  used by the serial hardware interface are not registered by the serial
->>>> +  driver the serial output might stop once clk_disable_unused() is called.
+On 05/18/2016 11:49 AM, Maxime Coquelin wrote:
+> 2016-05-18 11:31 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+>> On Wednesday 18 May 2016 09:48:53 Maxime Coquelin wrote:
+>>> 2016-05-17 18:25 GMT+02:00 David Miller <davem@davemloft.net>:
+>>>> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>>> Date: Tue, 17 May 2016 11:20:16 +0200
+>>>>
+>>>>> Hi David,
+>>>>>
+>>>>> 2016-05-09 21:06 GMT+02:00 David Miller <davem@davemloft.net>:
+>>>>>> From: Alexandre TORGUE <alexandre.torgue@gmail.com>
+>>>>>> Date: Mon,  9 May 2016 12:31:33 +0200
+>>>>>>
+>>>>>>> STM32F429 Chip embeds a Synopsys 3.50a MAC IP.
+>>>>>>> This series:
+>>>>>>>   -enhance current stmmac driver to control it (code already
+>>>>>>> available) and adds basic glue for STM32F429 chip.
+>>>>>>>   -Enable basic Net config in kernel.
+>>>>>>
+>>>>>> I assume this will go via the ARM tree, for the networking bits:
+>>>>> I would expect patches 1, 2 & 3 to got via your tree, to avoid conflicts.
+>>>>
+>>>> I don't think putting them all via the ARM tree is going to create much
+>>>> in the way of conflicts, and right now during the merge window offloading
+>>>> that work from me would really help my backlog a lot.
 >>>
->>> This shouldn't be described in terms of the Linux implementation details
->>> like clk_disable_unused. Those can change at any time, and don't define
->>> the contract as such.
->>
->> Ok. I remove that from the description. Thanks!
->
-> Great, thanks.
->
->>> What exactly is the contract here? I assume that you don't want the
->>> kernel to alter the state of these clocks in any way,
->>
->> I don't think so. I think what we want is that the kernel just don't
->> disable the (from kernel's point of view) "unused" clocks. I think
->> we get this from the fact that using 'clk_ignore_unused' is a
->> working workaround for this issue.
->
-> What if the clock (or a parent thereof) is shared with another device?
->
-> Surely you don't want that other driver to change the rate (changing the
-> rate of the UART behind Xen's back)?
->
-> I appreciate that clk_ignore_unused might work on platforms today, but
-> that relies on the behaviour of drivers, which might change. It may also
-> not work on other platforms in future, in cases like the above.
->
->>> e.g. the rate cannot be changed, they must be left always on, parent
->>> clocks cannot be altered if that would result in momentary jitter.
+>>> Ok, I understand this is not the best time to pick it.
 >>>
->>> I suspect it may be necessary to do more to ensure that, but I'm not
->>> familiar enough with the clocks subsystem to say.
+>>> Arnd, Olof & Kevin, would you accept to pick the series in your tree?
 >>>
->>> Are we likely to need to care about regulators, GPIOs, resets, etc? I
->>> worry that this may be the tip of hte iceberg
 >>
->> I don't think so. If there is a user in the kernel of the clock,
->> fine. Then hopefully the user in the kernel knows what he is doing
->> with the clock and then he should do what ever he wants.
+>> It's too late for v4.7 for us too, please pick up the arch/arm patches
+>> in your normal stm32 tree and send them to us along with any other changes
+>> you may have, and resend the driver by itself to netdev time after the
+>> merge window.
+>>
+>> The binding document can go either way, with the dts changes or with
+>> the driver. I see no dependencies between the patches, so we just need
+>> to land them all in v4.8.
 >
-> I'm not sure that's true. A user of the clock may know nothing about
-> other users. As far as I can see, nothing prevents it from changing the
-> clock rate.
->
-> While drivers in the same kernel can co-ordinate to avoid problems such
-> as that, we can't do that if we know nothing about the user hidden by
-> Xen.
->
->  From looking at the Xen bug tracker, it's not clear which
-> platforms/devices this is necessary for, so it's still not clear to me
-> if we need to care about regulators, GPIOs, resets, and so on.
->
-> Do we know which platforms in particular we need this for?
+> Ok, this is good for me.
+> No problem to wait for v4.8.
+> I will take the arch/arm patches, and David the drivers/net/ ones once
+> v4.7-rc1 is out.
 
-I believe this is necessary for all the platforms where the UART has a 
-clock described in the firmware.
+According to this old discussion, could you please take driver patches
++ bindings one (patch 1/2/3) in your net-next tree ?
+Do you need I resend them separately ?
 
-This workaround was first required on the arndale. Note that UART on 
-Juno r2 has a clock described but 'clk_ignore_unused' is not necessary. 
-I am wondering why it is working.
+Thanks in advance
 
-The number of devices used by Xen is very limited (UART, timer and 
-SMMU). However we may also want to consider device passthrough where a 
-clock would be handled by another guest.
-
-Regards,
-
--- 
-Julien Grall
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alex
