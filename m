@@ -1,39 +1,124 @@
-From: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] iio: potentiometer: mcp4531: Add device tree
- binding
-Date: Thu, 30 Jun 2016 10:09:29 +0200
-Message-ID: <a93171d3-d333-0e04-5288-eb15048a1efa@heig-vd.ch>
-References: <1467272091-28087-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1467272091-28087-4-git-send-email-florian.vaussard@heig-vd.ch>
- <65595556-53E0-4105-892F-A766EDBA2198@axentia.se>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH 1/3] leds: pm8058: add device tree bindings
+Date: Thu, 30 Jun 2016 10:24:30 +0200
+Message-ID: <5774D73E.50303@samsung.com>
+References: <1467210120-8829-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <65595556-53E0-4105-892F-A766EDBA2198-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaussard Florian <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-reply-to: <1467210120-8829-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
+
+Thanks for the patch.
+
+On 06/29/2016 04:21 PM, Linus Walleij wrote:
+> This adds the device tree bindings for the PM8058 LEDs.
+>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>   .../devicetree/bindings/leds/leds-pm8058.txt       | 67 ++++++++++++++++++++++
+>   1 file changed, 67 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8058.txt
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pm8058.txt b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
+> new file mode 100644
+> index 000000000000..5d4e6369b9f6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
+> @@ -0,0 +1,67 @@
+> +Qualcomm PM8058 LED driver
+> +
+> +The Qualcomm PM8058 is a multi-functional device which contain
+> +a LED driver block for up to six LEDs: three normal LEDs, two
+> +"flash" LEDs and one "keypad backlight" LED. The names are
+> +quoted because sometimes these LED drivers are used for wildly
+> +different things than flash or keypad backlight: their names
+> +are more of a suggestion than a hard-wired usecase.
+> +
+> +Hardware-wise the different LEDs support slightly different
+> +output currents. The "flash" LEDs do not need to charge nor
+> +do they support external triggers. They are just powerful LED
+> +drivers.
+> +
+> +The LEDs appear as children to the PM8058 device, with the
+> +proper compatible string. For the PM8058 bindings see:
+> +mfd/qcom-pm8xxx.txt.
+> +
+> +Each LED is represented as a sub-node of the syscon device. Each
+> +node's name represents the name of the corresponding LED.
+> +
+> +LED sub-node properties:
+> +
+> +Required properties:
+> +- compatible: on of
+> +  "qcom,pm8058-led" (for the normal LEDs at 0x131, 0x132 and 0x133)
+> +  "qcom,pm8058-keypad-led" (for the "keypad" LED at 0x48)
+> +  "qcom,pm8058-flash-led" (for the "flash" LEDs at 0x49 and 0xFB)
+> +
+> +Optional properties:
+> +- label: descriptive name for the LED see common.txt
+
+Please use just "see Documentation/devicetree/bindings/leds/common.txt"
+as a description of this property.
+
+> +- default-state: The initial state of the LED see common.txt
+
+Please use just "Documentation/devicetree/bindings/leds/leds-gpio.txt"
+as a description of this property.
+
+> +- linux,default-trigger: Linux trigger, see common.txt
+
+Please use just "see Documentation/devicetree/bindings/leds/common.txt"
+as a description of this property.
+
+> +
+> +Example:
+> +
+> +qcom,ssbi@500000 {
+> +	pmicintc: pmic@0 {
+> +		compatible = "qcom,pm8058";
+> +		led@48 {
+> +			compatible = "qcom,pm8058-keypad-led";
+> +			reg = <0x48>;
+> +			label = "keypad";
+> +			default-state = "off";
+> +		};
+> +		led@131 {
+> +			compatible = "qcom,pm8058-led";
+> +			reg = <0x131>;
+> +			label = "pm8058:red";
+> +			default-state = "off";
+> +		};
+> +		led@132 {
+> +			compatible = "qcom,pm8058-led";
+> +			reg = <0x132>;
+> +			label = "pm8058:yellow";
+> +			default-state = "off";
+> +			linux,default-trigger = "mmc0";
+> +		};
+> +		led@133 {
+> +			compatible = "qcom,pm8058-led";
+> +			reg = <0x133>;
+> +			label = "pm8058:green";
+> +			default-state = "on";
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +};
+>
 
 
-Le 30. 06. 16 =E0 09:46, Peter Rosin a =E9crit :
->=20
->=20
-> On June 30, 2016 9:34:50 AM GMT+02:00, Florian Vaussard <florian.vaus=
-sard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> This patch adds the necessary device tree binding to allow DT probin=
-g
->> of
->> currently supported parts.
->>
->> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
->=20
-> Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->=20
-
-Thanks for your reviews Peter,
-
-Best,
-=46lorian
+-- 
+Best regards,
+Jacek Anaszewski
