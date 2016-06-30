@@ -1,115 +1,136 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: Document the STM32 USB OTG DWC2 core
- binding
-Date: Thu, 30 Jun 2016 08:54:32 -0500
-Message-ID: <20160630135432.GA13875@rob-hp-laptop>
-References: <1466562349-5043-1-git-send-email-bruherrera@gmail.com>
- <1466562349-5043-3-git-send-email-bruherrera@gmail.com>
- <20160624154118.GA4598@rob-hp-laptop>
- <CAF3+Tqe05kXExob_62w80BBbXz6p01-WwXM1+R6ecp0JtsgviA@mail.gmail.com>
- <20160628205441.GA3737@rob-hp-laptop>
- <CAF3+Tqe_83zuaxWfp2sv6pZ70XzkbfZ4V4w+n8wCFAApvRirdg@mail.gmail.com>
+From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 14/14] ARM: dts: sun8i: Enable DVFS on
+ Orange Pi One
+Date: Thu, 30 Jun 2016 16:19:34 +0200
+Message-ID: <834b8045-d99f-74a3-0353-aa84b897351d@megous.com>
+References: <20160625034511.7966-1-megous@megous.com>
+ <20160625034511.7966-15-megous@megous.com>
+ <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New@mail.gmail.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAF3+Tqe_83zuaxWfp2sv6pZ70XzkbfZ4V4w+n8wCFAApvRirdg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bruno Herrera <bruherrera@gmail.com>
-Cc: mark.rutland@arm.com, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, alexandre.torgue@st.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, johnyoun@synopsys.com, gregkh@linuxfoundation.org, Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala@gmail.com>, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kumar Gala <galak@codeaurora.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="WCfN97K6TgtqITcaxKEelb9TlCU7FWwf2"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB7GU2S5QKGQEWGSQ34I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 29, 2016 at 03:56:23PM -0300, Bruno Herrera wrote:
-> On Tue, Jun 28, 2016 at 5:54 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Fri, Jun 24, 2016 at 03:51:18PM -0300, Bruno Herrera wrote:
-> >> On Fri, Jun 24, 2016 at 12:41 PM, Rob Herring <robh@kernel.org> wrote:
-> >> > On Tue, Jun 21, 2016 at 11:25:49PM -0300, Bruno Herrera wrote:
-> >> >> Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
-> >> >> ---
-> >> >>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
-> >> >>  1 file changed, 1 insertion(+)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> >> index 20a68bf..79e5370 100644
-> >> >> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> >> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> >> @@ -11,6 +11,7 @@ Required properties:
-> >> >>    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
-> >> >>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
-> >> >>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
-> >> >> +  - st,stm32-fsotg: The DWC2 USB controller instance in STM32F4 SoCs in FS mode;
-> >> >
-> >> > This should go above snps,dwc2.
-> >> >
-> >> Ok, tks!
-> >>
-> >> > What determines FS mode vs. HS?
-> >> >
-> >> Its more HW design decision.
-> >> STM32F429/439/469 has two OTG controllers, one that is FS (internal
-> >> phy) and other that is HS (but can also work in FS mode with
-> >> internal/external phy)
-> >> This bind work with both cores FS and HS working with the internal PHY.
-> >>
-> >> I tested the following configurations:
-> >> 1 - STM32F429I-DISCOv1 board (OTG HS working in FS mode internal PHY)
-> >> 2 - STM32F469I-DISCO board (OTG FS)
-> >>
-> >> I did not tested OTG HS core working in FS mode with external PHY (I2C).
-> >
-> > You shouldn't be setting the compatible string based on which mode you
-> > want. So for the HS block, you need a different compatible string than
-> > the FS block and set the speed in another way (not sure if we have a
-> > standard way). Or perhaps the phy should determine the speed.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--WCfN97K6TgtqITcaxKEelb9TlCU7FWwf2
+Content-Type: multipart/mixed; boundary="UIjXKnMQVJlaerLMBopDrn1XxRO84foNp"
+From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>,
+ "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org"
+ <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
+ Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>,
+ Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>,
+ Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Message-ID: <834b8045-d99f-74a3-0353-aa84b897351d-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH v2 14/14] ARM: dts: sun8i: Enable DVFS on
+ Orange Pi One
+References: <20160625034511.7966-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+ <20160625034511.7966-15-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+ <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+
+--UIjXKnMQVJlaerLMBopDrn1XxRO84foNp
+Content-Type: text/plain; charset=UTF-8
+
+Hello,
+
+On 30.6.2016 13:13, Michal Suchanek wrote:
+> Hello,
 > 
-> I understand but I dont see how to fix it properly unless we add a
-> some specific STM32 properties in the DT or in the dwc2_core_params.
-> In fact there are two cores, and they are different in terms of
-> functionality (despite of the type of the PHY).
-> One core is for FS and other is for HS, so they could/should have
-> different compatible strings because they have different
-> configurations and are different piece of IP/Hardware(The buffer size
-> are different, the number of end points and so one, DMA)
-
-Then it is perfectly fine to have 2 compatible strings: one for the FS 
-block and one for the HS block.
-
+> On 25 June 2016 at 05:45,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>
+>> Use Xulong Orange Pi One GPIO based regulator for
+>> passive cooling and thermal management.
+>>
+>> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 39 +++++++++++++++++++++++++++++
+>>  1 file changed, 39 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+>> index b1bd6b0..a38d871 100644
+>> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+>> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+>> @@ -109,6 +109,45 @@
+>>         };
+>>  };
+>>
+>> +&cpu0 {
+>> +       operating-points = <
+>> +               /* kHz    uV */
+>> +               1296000 1300000
+>> +               1200000 1300000
 > 
-> But the problem is that the HS core can also support the the FS mode
-> and in this case is misleading to have a HS core with an FS compatible
-> string.
-
-But as you said, there are other differences in the 2 blocks, so just 
-changing to the FS compatible string would not work.
-
-You could just have a high-speed-disable property or something, but look 
-thru existing bindings and see if one exists already. If not, propose a 
-common one.
-
-> Something like that (real case for STM32F429I-DISCO):
+> First problem is that the board boots at 1008000 which is not listed
+> and the kernel complains.
 > 
-> &usbotg_hs {
-> compatible = "st,stm32-fsotg", "snps,dwc2";
-> dr_mode = "host";
-> pinctrl-0 = <&usbotg_fs_pins_b>;
-> pinctrl-names = "default";
-> status = "okay";
-> };
+> Second problem is that the board locks up during boot with this enabled.
 > 
-> Even if the decision is phy based it would lead to a STM32 specific
-> logic and we would need to figure out how to represent the internal
-> PHY.
+> Do you have some suggestion for alternate configuration to test?
 
-Most SoCs end up describing the phys at least for USB 2 and 3 as they 
-vary a lot eventhough everyone licenses one of the few IP blocks.
+Just to verify, did you test with the entire series applied? (especially
+the PLL1 clk application changes)
 
-Rob
+You may try dropping the highest operating point, it's probably overly
+optimistic for Orange Pi One.
+
+Is the power supply/cable you're using hard enough?
+
+Where during the boot process does it lock up?
+
+regards,
+  Ondrej
+
+> Thanks
+> 
+> Michal
+> 
+
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--UIjXKnMQVJlaerLMBopDrn1XxRO84foNp--
+
+--WCfN97K6TgtqITcaxKEelb9TlCU7FWwf2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXdSp6AAoJEG5kJsZ3z+/xlZsQAJiZXRC8hXWVq+Ybx3KxnASM
+HfPr63/Iyl7azcxLydNccHLgh1gVQq9rG41/S3rzUrWZ9xvmCXkq3Mzv7v6pHvQJ
+q8WxBHcvTj9ubOO4rWiLtWa6q71ROt3A3gm9oA7rVBuX1Lsn6Dtj14xI573vPjAO
+TyIB5iqj6MCNG4MD19Od4iNdFFg0gGPh353CZRHMeOxmGOj9kqsC0z1EsdOpGfyw
+MkLXyttaY3+YKJDHTqwBZwOSqAKk9lXXkTkhTiiImDmBVKByt+3Ts962TwTO3IcT
+WZv69E71Mb9ugkRhIs2YjOW92LYON9NKbIFKiVVQlQUBOVqEPG1MTYA1nFcu3CMb
+aUN2hQSfSu3GzPj0vQ8wE6KX7FkdEnNyCthrZKVHNheuxzMQIUm4J6kdIUCRehj6
+VhRoKmtAzPSMOaxzEz2AB4K1DmCLYkIHOFPuFx+cGHkgkbjB7H1kVUrO4Bggfsra
+d4J7jE4gH71H7NH1hJgvFcDC7a2u/ugAELnN+EAWHOpqVNtDP0ndhptLPAfGEfzW
+rBV8VKd/dA/yD3zkVcwN2p4+XH2sgwjIGFMjOrqIPQdpFmXBIuv879mlcSJjf9aj
+/4nPk7KDpBnBRpKkd3fFED7yegrGprFz/ZXBEZaEV7KpBCkwrYkN/kbfTMRaAlkV
+iiD9eLHUB3NVq4nI/91K
+=KU7z
+-----END PGP SIGNATURE-----
+
+--WCfN97K6TgtqITcaxKEelb9TlCU7FWwf2--
