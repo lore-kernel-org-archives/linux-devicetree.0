@@ -1,91 +1,56 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 1/4] arm64: dts: rockchip: add VOP and VOP iommu node
- for rk3399
-Date: Thu, 30 Jun 2016 10:45:21 -0700
-Message-ID: <CAD=FV=URVQTvEKQbUVOXyMnO1a-kGs9inX_AZY3vo_YxXD5-5w@mail.gmail.com>
-References: <1466564038-18021-1-git-send-email-ykk@rock-chips.com> <1466564069-18220-1-git-send-email-ykk@rock-chips.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] drivers/of: add option to load a default Device Tree
+Date: Thu, 30 Jun 2016 10:45:51 -0700
+Message-ID: <57755ACF.1090204@gmail.com>
+References: <1466607954-2821-1-git-send-email-franck.jullien@odyssee-systemes.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466564069-18220-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Yao <mark.yao@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466607954-2821-1-git-send-email-franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Franck,
 
-On Tue, Jun 21, 2016 at 7:54 PM, Yakir Yang <ykk@rock-chips.com> wrote:
-> From: Mark Yao <mark.yao@rock-chips.com>
->
-> Add the core display-subsystem node and the two display controllers
-> available on the rk3399.
->
-> Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+(This could be confusing, with Franck and Frank -- feel free to
+address me as rowand in this thread if it is less confusing.)
+
+On 06/22/16 08:05, Franck Jullien wrote:
+> Even if a platform doesn't use a device tree during its
+> boot process it can be useful to enable CONFIG_OF and get
+> an empty device tree.
+> 
+> Then, devices can use device tree overlays to populate this
+> default tree.
+> 
+> Signed-off-by: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
 > ---
-> Changes in v3: None
-> Changes in v2:
-> - provide some minimal patch description (Heiko)
->
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 58 ++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 46f325a..54e5c25 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -543,6 +543,64 @@
->                 status = "disabled";
->         };
->
-> +       vopl: vop@ff8f0000 {
-> +               compatible = "rockchip,rk3399-vop-lit";
-> +               reg = <0x0 0xff8f0000 0x0 0x3efc>;
-> +               interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
-> +               clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+>  drivers/of/Kconfig     |  9 +++++++++
+>  drivers/of/Makefile    |  3 +++
+>  drivers/of/base.c      | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/of/default.dts |  4 ++++
+>  drivers/of/unittest.c  | 33 +++++----------------------------
+>  include/linux/of.h     |  2 ++
+>  6 files changed, 73 insertions(+), 28 deletions(-)
+>  create mode 100644 drivers/of/default.dts
 
-Note that if this lands after Elaine / Caesar's patch ("arm64: dts:
-rockchip: add the power domain node for rk3399")
-<https://patchwork.kernel.org/patch/9206415/> then you need to respin
-adding powerdomain references here for correctness.
+< snip >
 
-If this lands before Elaine / Caesar's patch then the other patch
-needs to be re-spun.  ;)
+For context, in a later reply, you mention that this is for x86_64.
 
+My current inclination is to prefer not to solve the problem this way.
+I was going to ask why you didn't just add the compiled default.dts
+to the kernel as an appended device tree blob, until I found out
+this was for x86_64.
 
-> +               resets = <&cru SRST_A_VOP1>, <&cru SRST_H_VOP1>, <&cru SRST_D_VOP1>;
-> +               reset-names = "axi", "ahb", "dclk";
-> +               iommus = <&vopl_mmu>;
-> +               status = "disabled";
-> +
-> +               vopl_out: port {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +               };
-> +       };
-> +
-> +       vopl_mmu: iommu@ff8f3f00 {
-> +               compatible = "rockchip,iommu";
-> +               reg = <0x0 0xff8f3f00 0x0 0x100>;
-> +               interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +               interrupt-names = "vopl_mmu";
-> +               #iommu-cells = <0>;
-> +               status = "disabled";
-> +       };
-> +
-> +       vopb: vop@ff900000 {
-> +               compatible = "rockchip,rk3399-vop-big";
-> +               reg = <0x0 0xff900000 0x0 0x3efc>;
-> +               interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
-> +               clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+Can you add unflatten_devicetree() to x86_64, then just use the
+appended device tree blob method?
 
-Here too, obviously.
-
-
-See <http://crosreview.com/356623> for reference.
-
-
--Doug
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
