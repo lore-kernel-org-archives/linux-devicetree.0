@@ -1,13 +1,14 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 3/3] ARM: dts: blanche: add Ethernet pins
-Date: Fri, 01 Jul 2016 02:08:55 +0300
-Message-ID: <3303208.PZCWAdujda@wasted.cogentembedded.com>
-References: <2144803.0K8qXzjIFq@wasted.cogentembedded.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 5/7] net: ethernet: bgmac: Add platform device support
+Date: Thu, 30 Jun 2016 16:26:00 -0700
+Message-ID: <5775AA88.60800@gmail.com>
+References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
+ <1467327554-22074-6-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2144803.0K8qXzjIFq@wasted.cogentembedded.com>
+In-Reply-To: <1467327554-22074-6-git-send-email-jon.mason@broadcom.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,50 +18,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: linux@arm.linux.org.uk, magnus.damm@gmail.com, linux-arm-kernel@lists.infradead.org
+To: Jon Mason <jon.mason@broadcom.com>, zajec5@gmail.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hauke@hauke-m.de, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, netdev@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the (previously omitted) pin data for the SMSC LAN89218 Ethernet chip
-to the Blanche board's device tree: the chip's IRQ output is connected to
-the SoC's IRQ0 pin and its nCS input is connected to the SoC's EX_CS0# pin.
+[snip]
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
++
+> +	return 0;
+> +
+> +err2:
+> +	devm_iounmap(&pdev->dev, bgmac->plat.idm_base);
+> +err1:
+> +	devm_iounmap(&pdev->dev, bgmac->plat.base);
+> +err:
+> +	devm_kfree(&pdev->dev, bgmac);
 
----
- arch/arm/boot/dts/r8a7792-blanche.dts |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
 
-Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
-+++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-@@ -50,6 +50,9 @@
- 		reg-io-width = <4>;
- 		vddvario-supply = <&d3_3v>;
- 		vdd33a-supply = <&d3_3v>;
-+
-+		pinctrl-0 = <&lan89218_pins>;
-+		pinctrl-names = "default";
- 	};
- };
- 
-@@ -67,6 +70,18 @@
- 		groups = "scif3_data";
- 		function = "scif3";
- 	};
-+
-+	lan89218_pins: lan89218 {
-+		intc {
-+			groups = "intc_irq0";
-+			function = "intc";
-+		};
-+		lbsc {
-+			groups = "lbsc_ex_cs0";
-+			function = "lbsc";
-+		};
-+	};
-+
- };
- 
- &scif0 {
+This is not needed actually, now that you use the device managed helper
+functions.
+
+> +
+> +	return rc;
+> +}
+> +
+> +static int bgmac_remove(struct platform_device *pdev)
+> +{
+> +	struct bgmac *bgmac = platform_get_drvdata(pdev);
+> +
+> +	bgmac_enet_remove(bgmac);
+> +	devm_iounmap(&pdev->dev, bgmac->plat.idm_base);
+> +	devm_iounmap(&pdev->dev, bgmac->plat.base);
+> +	devm_kfree(&pdev->dev, bgmac);
+
+Same here.
+-- 
+Florian
