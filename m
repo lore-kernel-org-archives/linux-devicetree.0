@@ -1,160 +1,83 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
-Date: Thu, 30 Jun 2016 15:21:36 +0100
-Message-ID: <20160630142136.GE20363@leverpostej>
-References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
+From: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 14/14] ARM: dts: sun8i: Enable DVFS on
+ Orange Pi One
+Date: Thu, 30 Jun 2016 17:23:30 +0300
+Message-ID: <20160630172330.0608178e@i7>
+References: <20160625034511.7966-1-megous@megous.com>
+	<20160625034511.7966-15-megous@megous.com>
+	<CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New@mail.gmail.com>
+Reply-To: siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: linux-arm-kernel@lists.infradead.org, Julien Grall <julien.grall@arm.com>, devicetree@vger.kernel.org, xen-devel@lists.xenproject.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCH4DA7NUEBBBZOW2S5QKGQEYQBI4BI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 30, 2016 at 12:32:32PM +0200, Dirk Behme wrote:
-> Some clocks might be used by the Xen hypervisor and not by the Linux
-> kernel. If these are not registered by the Linux kernel, they might be
-> disabled by clk_disable_unused() as the kernel doesn't know that they
-> are used. The clock of the serial console handled by Xen is one
-> example for this. It might be disabled by clk_disable_unused() which
-> stops the whole serial output, even from Xen, then.
-> 
-> Up to now, the workaround for this has been to use the Linux kernel
-> command line parameter 'clk_ignore_unused'. See Xen bug
-> 
-> http://bugs.xenproject.org/xen/bug/45
-> 
-> too.
-> 
-> To fix this, we will add the "unused" clocks in Xen to the hypervisor
-> node. The Linux kernel has to register the clocks from the hypervisor
-> node, then.
-> 
-> Therefore, check if there is a "clocks" entry in the hypervisor node
-> and if so register the given clocks to the Linux kernel clock
-> framework and with this mark them as used. This prevents the clocks
-> from being disabled.
-> 
-> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-> ---
-> Changes in v2:
->  - Rebase against git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-4.8
->  - Add changes to Documentation/devicetree/bindings/arm/xen.txt
-> 
->  Documentation/devicetree/bindings/arm/xen.txt | 11 +++++++
->  arch/arm/xen/enlighten.c                      | 47 +++++++++++++++++++++++++++
->  2 files changed, 58 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
-> index c9b9321..55dfd3b 100644
-> --- a/Documentation/devicetree/bindings/arm/xen.txt
-> +++ b/Documentation/devicetree/bindings/arm/xen.txt
-> @@ -17,6 +17,17 @@ the following properties:
->    A GIC node is also required.
->    This property is unnecessary when booting Dom0 using ACPI.
->  
-> +Optional properties:
-> +
-> +- clocks: one or more clocks to be registered.
-> +  Xen hypervisor drivers might replace native drivers, resulting in
-> +  clocks not registered by these native drivers. To avoid that these
-> +  unregistered clocks are disabled, then, e.g. by clk_disable_unused(),
-> +  register them in the hypervisor node.
-> +  An example for this are the clocks of the serial driver. If the clocks
-> +  used by the serial hardware interface are not registered by the serial
-> +  driver the serial output might stop once clk_disable_unused() is called.
+On Thu, 30 Jun 2016 13:13:48 +0200
+Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-This shouldn't be described in terms of the Linux implementation details
-like clk_disable_unused. Those can change at any time, and don't define
-the contract as such.
-
-What exactly is the contract here? I assume that you don't want the
-kernel to alter the state of these clocks in any way, e.g. the rate
-cannot be changed, they must be left always on, parent clocks cannot be
-altered if that would result in momentary jitter.
-
-I suspect it may be necessary to do more to ensure that, but I'm not
-familiar enough with the clocks subsystem to say.
-
-Are we likely to need to care about regulators, GPIOs, resets, etc? I
-worry that this may be the tip of hte iceberg, and we might need a
-better way of catering for the general case of resources Xen wants to
-own.
-
-Thanks,
-Mark.
-
-> +
->  To support UEFI on Xen ARM virtual platforms, Xen populates the FDT "uefi" node
->  under /hypervisor with following parameters:
->  
-> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-> index 47acb36..5c546d0 100644
-> --- a/arch/arm/xen/enlighten.c
-> +++ b/arch/arm/xen/enlighten.c
-> @@ -24,6 +24,7 @@
->  #include <linux/of_fdt.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_address.h>
-> +#include <linux/clk-provider.h>
->  #include <linux/cpuidle.h>
->  #include <linux/cpufreq.h>
->  #include <linux/cpu.h>
-> @@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
->  }
->  late_initcall(xen_pm_init);
->  
-> +/*
-> + * Check if we want to register some clocks, that they
-> + * are not freed because unused by clk_disable_unused().
-> + * E.g. the serial console clock.
-> + */
-> +static int __init xen_arm_register_clks(void)
-> +{
-> +	struct clk *clk;
-> +	struct device_node *xen_node;
-> +	unsigned int i, count;
-> +	int ret = 0;
-> +
-> +	xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
-> +	if (!xen_node) {
-> +		pr_err("Xen support was detected before, but it has disappeared\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	count = of_clk_get_parent_count(xen_node);
-> +	if (!count)
-> +		goto out;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		clk = of_clk_get(xen_node, i);
-> +		if (IS_ERR(clk)) {
-> +			pr_err("Xen failed to register clock %i. Error: %li\n",
-> +			       i, PTR_ERR(clk));
-> +			ret = PTR_ERR(clk);
-> +			goto out;
-> +		}
-> +
-> +		ret = clk_prepare_enable(clk);
-> +		if (ret < 0) {
-> +			pr_err("Xen failed to enable clock %i. Error: %i\n",
-> +			       i, ret);
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	ret = 0;
-> +
-> +out:
-> +	of_node_put(xen_node);
-> +	return ret;
-> +}
-> +late_initcall(xen_arm_register_clks);
->  
->  /* empty stubs */
->  void xen_arch_pre_suspend(void) { }
-> -- 
-> 2.8.0
+> Hello,
 > 
+> On 25 June 2016 at 05:45,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> >
+> > Use Xulong Orange Pi One GPIO based regulator for
+> > passive cooling and thermal management.
+> >
+> > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 39 +++++++++++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+> > index b1bd6b0..a38d871 100644
+> > --- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+> > +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+> > @@ -109,6 +109,45 @@
+> >         };
+> >  };
+> >
+> > +&cpu0 {
+> > +       operating-points = <
+> > +               /* kHz    uV */
+> > +               1296000 1300000
+> > +               1200000 1300000  
+> 
+> First problem is that the board boots at 1008000 which is not listed
+> and the kernel complains.
+> 
+> Second problem is that the board locks up during boot with this enabled.
+> 
+> Do you have some suggestion for alternate configuration to test?
+
+Maybe try the Allwinner's original DVFS table instead of these
+undervolted values and see if it helps?
+
+https://linux-sunxi.org/index.php?title=Xunlong_Orange_Pi_PC&oldid=17753#CPU_clock_speed_limit
+
+While undervolting is tempting because it helps to decrease the SoC
+temperature and avoid throttling, different units may have different
+tolerances and one needs to be very careful when picking defaults
+that are intended to work correctly on all boards. Some safety
+headroom exists there for a reason.
+
+If I remember correctly, some people pushed for undervolting experiments
+at least twice in the past (on the Banana Pi and C.H.I.P.). In both
+cases this did not end up well and had to be fixed later to solve
+reliability problems.
+
+In order to allow individual per-unit tuning, a concept of "speed
+grading" may be probably introduced later. So that the board is tested
+for reliability and then the speed grade rating is stored somewhere on
+the non-removable storage (EEPROM, SPI flash, eFUSE, ...). Some SoC
+manufacturers, such as Samsung, are already doing this with their chips.
