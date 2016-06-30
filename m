@@ -1,53 +1,62 @@
-From: Kieran Bingham <kieran@ksquared.org.uk>
-Subject: [PATCH 1/2] arm64: dts: r8a7795: add FCPF device nodes
-Date: Thu, 30 Jun 2016 14:32:42 +0100
-Message-ID: <1467293563-940-2-git-send-email-kieran@bingham.xyz>
-References: <1467293563-940-1-git-send-email-kieran@bingham.xyz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467293563-940-1-git-send-email-kieran@bingham.xyz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kieran@ksquared.org.uk
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] ASoC: tegra: add tegra sgtl5000 machine driver
+Date: Thu, 30 Jun 2016 08:46:23 -0500
+Message-ID: <20160630134623.GA12979@rob-hp-laptop>
+References: <1466298002-12576-1-git-send-email-marcel.ziswiler@toradex.com>
+ <1466298002-12576-2-git-send-email-marcel.ziswiler@toradex.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466298002-12576-2-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Provide nodes for the FCP devices dedicated to the FDP device channels.
+On Sun, Jun 19, 2016 at 03:00:00AM +0200, Marcel Ziswiler wrote:
+> This binding and driver describe/support playback to headphones, and
+> capture from line-in and microphone.
+> 
+> This driver is useful for the Toradex Apalis T30, Apalis TK1 and
+> Colibri T30 modules.
+> 
+> Signed-off-by: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> ---
+> 
+> Changes in v4:
+> - simple-audio-card does still not allow for more advanced use cases
+>   like Tegra SoCs
+> - further platform drivers have been accepted since my last attempt
+>   (e.g. rt5677 one)
+> - relevance for one further board the new Toradex Apalis TK1
+> - drop unused sound/jack.h include
+> - in tegra_sgtl5000_driver_remove() pass return value of
+>   snd_soc_unregister_card() on to caller
+> - no longer set owner property in platform_driver to THIS_MODULE
+> - re-based/resend
+> 
+> Changes in v3:
+> - revert to not using simple-audio-card being incompatible with tegra
+> - rebased to for-next
+> 
+> Changes in v2:
+> - using simple-audio-card as suggested by Fabio
+> 
+>  .../bindings/sound/nvidia,tegra-audio-sgtl5000.txt |  42 ++++
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index fff92acc5d2e..a451bd217f05 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -1422,5 +1422,26 @@
- 				};
- 			};
- 		};
-+
-+		fcpf0: fcp@fe950000 {
-+			compatible = "renesas,r8a7795-fcpf", "renesas,fcpf";
-+			reg = <0 0xfe950000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 615>;
-+			power-domains = <&sysc R8A7795_PD_A3VP>;
-+		};
-+
-+		fcpf1: fcp@fe951000 {
-+			compatible = "renesas,r8a7795-fcpf", "renesas,fcpf";
-+			reg = <0 0xfe951000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 614>;
-+			power-domains = <&sysc R8A7795_PD_A3VP>;
-+		};
-+
-+		fcpf2: fcp@fe952000 {
-+			compatible = "renesas,r8a7795-fcpf", "renesas,fcpf";
-+			reg = <0 0xfe952000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 613>;
-+			power-domains = <&sysc R8A7795_PD_A3VP>;
-+		};
- 	};
- };
--- 
-2.7.4
+>  sound/soc/tegra/Kconfig                            |  11 ++
+>  sound/soc/tegra/Makefile                           |   2 +
+>  sound/soc/tegra/tegra_sgtl5000.c                   | 212 +++++++++++++++++++++
+>  4 files changed, 267 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra-audio-sgtl5000.txt
+>  create mode 100644 sound/soc/tegra/tegra_sgtl5000.c
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
