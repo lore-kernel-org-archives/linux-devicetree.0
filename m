@@ -1,69 +1,115 @@
-From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Thu, 30 Jun 2016 21:23:56 +0200
-Message-ID: <1f44df41-0111-441b-4671-718eec0c4346@broadcom.com>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
- <CAOiHx==82LHOeQMNVD+dybFifXX690Q6AJTcMBMynjSfUOyGUw@mail.gmail.com>
- <8d8bd933-717b-48e4-f002-7b834abed6fd@redhat.com>
- <3960223.GqB9zXL8s8@wuerfel>
-Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 06/10] clk: mvebu: Add the xtal clock for Armada 3700 SoC
+Date: Thu, 30 Jun 2016 12:43:34 -0700
+Message-ID: <20160630194334.GZ1521@codeaurora.org>
+References: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
+ <1465565018-14172-7-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRYNGWEWYDBBVPD2W5QKGQETSE4AVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <3960223.GqB9zXL8s8@wuerfel>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1465565018-14172-7-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Romain Perier <romain.perier@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Mike Turquette <mturquette@baylibre.com>, Omri Itach <omrii@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Shadi Ammouri <shadi@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 06/10, Gregory CLEMENT wrote:
+> diff --git a/drivers/clk/mvebu/armada-37xx-xtal.c b/drivers/clk/mvebu/armada-37xx-xtal.c
+> new file mode 100644
+> index 000000000000..fb051a75b2c2
+> --- /dev/null
+> +++ b/drivers/clk/mvebu/armada-37xx-xtal.c
+> @@ -0,0 +1,93 @@
+> +/*
+> + * Marvell Armada 37xx SoC xtal clocks
+> + *
+> + * Copyright (C) 2016 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define NB_GPIO1_LATCH	0xC
+> +#define XTAL_MODE	    BIT(31)
+> +
+> +static struct clk *xtal_clk;
 
+Please allocate this at driver probe time instead, or even just
+assign it to be the platform driver's drvdata.
 
-On 30-6-2016 13:31, Arnd Bergmann wrote:
-> On Thursday, June 30, 2016 12:25:15 PM CEST Hans de Goede wrote:
->>> So then how about making use of a more specific compatible string?
->>>
->>> e.g.
->>>
->>> brcmf {
->>>         compatible = "foo,ap6210", "brcm,bcm4329-fmac";
->>>         ...
->>> };
->>>
->>> and if the compatible has more than one element you request
->>> FW_NAME_<compatible>.txt as the nvram file. Or try each comptible (and
->>> lastly no suffix) until you get a match. (AFAICT, this is what the
->>> "model" property was originally intended for anyway, but almost nobody
->>> did it right, and everyone put a user readable string into "model" for
->>> boards instead of the ePAPR defined compatible string).
->>
->> Hmm, interesting idea. Not sure how easy / hard it will be to implement
->> this, but from a dt binding point of view it seems elegant.
->>
->> Kalle, Arend, what do you think of this ?
+> +
+> +static int armada_3700_xtal_clock_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	const char *xtal_name = "xtal";
+> +	struct device_node *parent;
+> +	struct regmap *regmap;
+> +	unsigned int rate;
+> +	u32 reg;
+> +	int ret;
+> +
+> +	parent = np->parent;
+> +	if (!parent) {
+> +		dev_err(&pdev->dev, "no parrent\n");
 
-At first glance I like the suggestion, but this would mean updating the
-bindings document for each new wifi module that we want to add. Not a
-big problem, but it makes that I have a slight preference to using a
-property for it, eg. brcm,module = "ap6210";
+s/parrent/parent/
 
-> I think that's reasonable. Also, we have precedent for using things like
-> the boardid as part of the compatible string, which would help do what
-> Kalle suggested earlier with "nvram-<boardtype>-<boardrev>.txt",
-> as we get that for free by trying out all the compatible strings.
+> +		return -ENODEV;
+> +	}
+> +
+> +	regmap = syscon_node_to_regmap(parent);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&pdev->dev, "cannot get regmap\n");
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	ret = regmap_read(regmap, NB_GPIO1_LATCH, &reg);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "cannot read from regmap\n");
+> +		return ret;
+> +	}
+> +
+> +	if (reg & XTAL_MODE)
+> +		rate = 40000000;
+> +	else
+> +		rate = 25000000;
+> +
+> +	of_property_read_string_index(np, "clock-output-names", 0, &xtal_name);
+> +	xtal_clk = clk_register_fixed_rate(NULL, xtal_name, NULL, 0, rate);
 
-The suggestion from Kalle was to use the field in the nvram file, but
-things are a bit more complicated. The fields are only used if it is not
-stored on the device in OTP or SROM. The 43362 does not have a SROM, but
-it still has a small OTP storage if I am not mistaken. The brcmfmac
-exposes a revinfo file in debugfs containing boardtype and boardrev, but
-that is after starting the firmware. Still worth to check if those
-values match the values in the ap6210 nvram file.
+Please move this to use the clk_hw_register_fixed_rate() function
+instead and update of_clk_add_provider to register a clk_hw
+instead of clk pointer.
 
-Regards,
-Arend
+> +	if (IS_ERR(xtal_clk))
+> +		return PTR_ERR(xtal_clk);
+> +	of_clk_add_provider(np, of_clk_src_simple_get, xtal_clk);
+
+What if this fails?
+
+> +
+> +	return 0;
+> +}
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
