@@ -1,41 +1,46 @@
-Return-Path: <mark.brown@linaro.org>
-MIME-Version: 1.0
-In-Reply-To: <1465985877-18271-5-git-send-email-juri.lelli@arm.com>
-References: <1465985877-18271-1-git-send-email-juri.lelli@arm.com> <1465985877-18271-5-git-send-email-juri.lelli@arm.com>
-From: Mark Brown <broonie@linaro.org>
-Date: Wed, 15 Jun 2016 11:20:11 +0100
-Message-ID: <CADRr18P=EOwpZTc-aS=4cCa8B3ObpuqpbNNv+w5Q4shXD6s7HQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/8] arm64: parse cpu capacity-dmips-mhz from DT
-Content-Type: multipart/alternative; boundary=001a1140580a7bc22a05354e77be
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, peterz@infradead.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux@arm.linux.org.uk, Sudeep Holla <sudeep.holla@arm.com>, "Lorenzo Pieralisi (lorenzo.pieralisi@arm.com)" <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mark Brown <broonie@kernel.org>, sgurrappadi@nvidia.com
-List-ID: <devicetree@vger.kernel.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: add the power domain node for rk3399
+Date: Thu, 30 Jun 2016 15:32:01 -0700
+Message-ID: <CAD=FV=Uaqp5MyERwBRd1yHLYS3T2mOm-FrMtXUjzjWhCEggG+Q@mail.gmail.com>
+References: <1467251760-14695-1-git-send-email-wxt@rock-chips.com>
+ <CAD=FV=Wg1vuBhcjFRj53t-E0sKoBH577RB7gHZ-rkJV5T7nyZw@mail.gmail.com>
+ <2709691.LCsUme3dJo@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <2709691.LCsUme3dJo@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
---001a1140580a7bc22a05354e77be
-Content-Type: text/plain; charset=UTF-8
+Hi,
 
-On 15 June 2016 at 11:17, Juri Lelli <juri.lelli@arm.com> wrote:
-
-
-> Cc: Mark Brown <broonie@linaro.org>
+On Thu, Jun 30, 2016 at 2:57 PM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+>> It looks like there are also more power domains that you haven't
+>> listed here (like PD_GMAC, for instance, or PD_CORE_L).  Are you
+>> planning to add those in a followon patch?
 >
+> that reminds me, nodes with a reg property should have the base address in
+> the node name as well. Using the constant works nicely, as can be seen on
+> the rk3288 where we have for example:
+>
+>         pd_vio@RK3288_PD_VIO
 
-Please use broonie@kernel.org for any upstream work, I'm really not set up
-to handle upstream stuff on my Linaro address.
+I was wondering about that.  The device tree bindings are similarly
+missing the reg from the example.
 
---001a1140580a7bc22a05354e77be
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+I'm curious: for sorting purposes, are you supposed to know the
+underlying integer and use that for sorting, or sort by the name of
+the #define?
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On 1=
-5 June 2016 at 11:17, Juri Lelli <span dir=3D"ltr">&lt;<a href=3D"mailto:ju=
-ri.lelli@arm.com" target=3D"_blank">juri.lelli@arm.com</a>&gt;</span> wrote=
-:<br><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
- 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-Cc: Mark Brown &lt;<a href=3D"mailto:broonie@linaro.org">broonie@linaro.org=
-</a>&gt;<br></blockquote><div><br></div><div>Please use <a href=3D"mailto:b=
-roonie@kernel.org">broonie@kernel.org</a> for any upstream work, I&#39;m re=
-ally not set up to handle upstream stuff on my Linaro address.</div></div><=
-/div></div>
-
---001a1140580a7bc22a05354e77be--
+-Doug
