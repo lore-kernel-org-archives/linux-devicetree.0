@@ -1,75 +1,66 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v8 02/10] drm/hisilicon: Add hisilicon kirin drm master
- driver
-Date: Thu, 30 Jun 2016 17:31:00 +0800
-Message-ID: <CAGd==05kyhB8kb7nVKrbp5OeNDtROfmfTsczmtQE4A_RZoBdCQ@mail.gmail.com>
-References: <1460364943-76135-1-git-send-email-xinliang.liu@linaro.org>
- <1460364943-76135-3-git-send-email-xinliang.liu@linaro.org>
- <CACvgo50dggEbwzEZLUvtErzrxOr3B1gECyyehLQZkoE5oXfNmA@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] ARM64: boot: dts: Add regulators for Tegra210 Smaug
+Date: Thu, 30 Jun 2016 11:32:19 +0200
+Message-ID: <20160630093219.GC1776@ulmo.ba.sec>
+References: <1467149304-29274-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACvgo50dggEbwzEZLUvtErzrxOr3B1gECyyehLQZkoE5oXfNmA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Rongrong Zou <zourongrong@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Jonathan Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, devicetree <devicetree@vger.kernel.org>, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467149304-29274-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTMgQXByaWwgMjAxNiBhdCAyMDoxNSwgRW1pbCBWZWxpa292IDxlbWlsLmwudmVsaWtvdkBn
-bWFpbC5jb20+IHdyb3RlOgo+IEhpIFhpbmxpYW5nLAo+Cj4gT24gMTEgQXByaWwgMjAxNiBhdCAw
-OTo1NSwgWGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJvLm9yZz4gd3JvdGU6Cj4KPj4g
-K3N0YXRpYyBpbnQga2lyaW5fZHJtX2Nvbm5lY3RvcnNfcmVnaXN0ZXIoc3RydWN0IGRybV9kZXZp
-Y2UgKmRldikKPj4gK3sKPj4gKyAgICAgICBzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9y
-Owo+PiArICAgICAgIHN0cnVjdCBkcm1fY29ubmVjdG9yICpmYWlsZWRfY29ubmVjdG9yOwo+PiAr
-ICAgICAgIGludCByZXQ7Cj4+ICsKPj4gKyAgICAgICBtdXRleF9sb2NrKCZkZXYtPm1vZGVfY29u
-ZmlnLm11dGV4KTsKPj4gKyAgICAgICBkcm1fZm9yX2VhY2hfY29ubmVjdG9yKGNvbm5lY3Rvciwg
-ZGV2KSB7Cj4+ICsgICAgICAgICAgICAgICByZXQgPSBkcm1fY29ubmVjdG9yX3JlZ2lzdGVyKGNv
-bm5lY3Rvcik7Cj4+ICsgICAgICAgICAgICAgICBpZiAocmV0KSB7Cj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGZhaWxlZF9jb25uZWN0b3IgPSBjb25uZWN0b3I7Cj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGdvdG8gZXJyOwo+PiArICAgICAgICAgICAgICAgfQo+PiArICAgICAgIH0KPj4g
-KyAgICAgICBtdXRleF91bmxvY2soJmRldi0+bW9kZV9jb25maWcubXV0ZXgpOwo+PiArCj4+ICsg
-ICAgICAgcmV0dXJuIDA7Cj4+ICsKPj4gK2VycjoKPj4gKyAgICAgICBkcm1fZm9yX2VhY2hfY29u
-bmVjdG9yKGNvbm5lY3RvciwgZGV2KSB7Cj4+ICsgICAgICAgICAgICAgICBpZiAoZmFpbGVkX2Nv
-bm5lY3RvciA9PSBjb25uZWN0b3IpCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwo+
-PiArICAgICAgICAgICAgICAgZHJtX2Nvbm5lY3Rvcl91bnJlZ2lzdGVyKGNvbm5lY3Rvcik7Cj4+
-ICsgICAgICAgfQo+PiArICAgICAgIG11dGV4X3VubG9jaygmZGV2LT5tb2RlX2NvbmZpZy5tdXRl
-eCk7Cj4+ICsKPj4gKyAgICAgICByZXR1cm4gcmV0Owo+PiArfQo+PiArCj4gSWlyYyB3ZSBoYXZl
-IG5ldyBkcm1fY29ubmVjdG9yX3t1bix9cmVnaXN0ZXJfYWxsKCkgaGVscGVycy5Zb3UgbWlnaHQK
-PiB3YW50IHRvIHVzZSBpdCBvbmNlIHRoZXkgYXJlIGluIChpLmUuIG5vdCBzdXJlIHdoYXQgeW91
-ciBiYXNlIGlzIGFuZAo+IGlmIHRoZXkgaGF2ZSBsYW5kZWQgeWV0KS4KPgo+Cj4+ICtzdGF0aWMg
-c3RydWN0IGRldmljZV9ub2RlICpraXJpbl9nZXRfcmVtb3RlX25vZGUoc3RydWN0IGRldmljZV9u
-b2RlICpucCkKPj4gK3sKPj4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKmVuZHBvaW50LCAq
-cmVtb3RlOwo+PiArCj4+ICsgICAgICAgLyogZ2V0IHRoZSBmaXJzdCBlbmRwb2ludCwgaW4gb3Vy
-IGNhc2Ugb25seSBvbmUgcmVtb3RlIG5vZGUKPj4gKyAgICAgICAgKiBpcyBjb25uZWN0ZWQgdG8g
-ZGlzcGxheSBjb250cm9sbGVyLgo+PiArICAgICAgICAqLwo+PiArICAgICAgIGVuZHBvaW50ID0g
-b2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQobnAsIE5VTEwpOwo+PiArICAgICAgIGlmICghZW5k
-cG9pbnQpIHsKPj4gKyAgICAgICAgICAgICAgIERSTV9FUlJPUigibm8gdmFsaWQgZW5kcG9pbnQg
-bm9kZVxuIik7Cj4+ICsgICAgICAgICAgICAgICByZXR1cm4gRVJSX1BUUigtRU5PREVWKTsKPj4g
-KyAgICAgICB9Cj4+ICsgICAgICAgb2Zfbm9kZV9wdXQoZW5kcG9pbnQpOwo+PiArCj4+ICsgICAg
-ICAgcmVtb3RlID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudChlbmRwb2ludCk7Cj4+
-ICsgICAgICAgaWYgKCFyZW1vdGUpIHsKPj4gKyAgICAgICAgICAgICAgIERSTV9FUlJPUigibm8g
-dmFsaWQgcmVtb3RlIG5vZGVcbiIpOwo+PiArICAgICAgICAgICAgICAgcmV0dXJuIEVSUl9QVFIo
-LUVOT0RFVik7Cj4+ICsgICAgICAgfQo+PiArICAgICAgIG9mX25vZGVfcHV0KHJlbW90ZSk7Cj4+
-ICsKPj4gKyAgICAgICBpZiAoIW9mX2RldmljZV9pc19hdmFpbGFibGUocmVtb3RlKSkgewo+PiAr
-ICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJub3QgYXZhaWxhYmxlIGZvciByZW1vdGUgbm9kZVxu
-Iik7Cj4+ICsgICAgICAgICAgICAgICByZXR1cm4gRVJSX1BUUigtRU5PREVWKTsKPj4gKyAgICAg
-ICB9Cj4+ICsKPiBUaGlzIHNlZW1zIGxpa2UgYSBjb21tb24gcGF0dGVybiBpbiBtYW55IHBsYXRm
-b3JtIERSTSBkcml2ZXJzLiBZZXQKPiBzb21lIHRlbmQgdG8gZGlmZmVyIGluIHN1YnRsZSB3YXlz
-IC0gSSdtIGxlYW5pbmcgdGhhdCB0aGV5IG1pZ2h0IGJlCj4gYnVncywgYnV0IG9uZSBjYW5ub3Qg
-YmUgdG9vIHN1cmUuCj4KPiBBIGZyaWVuZGx5IHJlcXVlc3Q6Cj4gQ2FuIHlvdSBwbGVhc2UgZm9s
-bG93IHVwIGJ5IGFkZGluZyBhIGhlbHBlciBhbmQgcmVtb3ZpbmcgdGhlCj4gZHVwbGljYXRpb24g
-dGhvdWdob3V0ID8KCkhpIGVtaWwsIHJlY2VudGx5IEkgZm91bmQgdGhhdCB0aGVyZSBpcyBhbHJl
-YWR5IGEgaGVscGVyIHRvIGRvIHN1Y2ggd29yay4KSXQgaXMgZHJtX29mX2NvbXBvbmVudF9wcm9i
-ZS4KCi14aW5saWFuZwoKCj4KPiBUaGFua3MKPiBFbWlsCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--hOcCNbCCxyk/YU74
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 28, 2016 at 05:28:24PM -0400, Rhyland Klein wrote:
+> Add regulators to the Tegra210 Smaug DTS file including
+> support for the max77620 PMIC.
+>=20
+> Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> v3:
+>  - Fixed up ramp delays
+>  - s/maxim,enable-sleep/maxim,device-state-on-disabled-event/
+>  - remove GPIO 3 from pp3300
+>=20
+> v2:
+>  - Updated reg properties to match current binding
+>=20
+>  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 314 ++++++++++++++++++++=
+++++++
+>  1 file changed, 314 insertions(+)
+
+Applied to for-4.8/arm64, thanks.
+
+Thierry
+
+--hOcCNbCCxyk/YU74
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXdOcjAAoJEN0jrNd/PrOhYGEP/0HpH9069zlWZSwr832zrTcV
+ravQb3pVueKw54bLpv9eqEP9JQYQ1syJnRuzBcsqIhTwOWC7aap5YS5iOkuBG8lo
+X3gwTLnJD9J1pnfek3610nqMH2FfJm0Auz7ymnWfN/yIeNOFB2QiuFE8VOldDf0+
+p1rs0w+Msv7UFNDYeumNMAEMwB4CBDV52V010AanGp+aQQLigauzRrvp+tJyVpL/
+1j40fi2UGEr7JuMW13YiyUbGWbSBcIocL3h8n+pQBdtyEIj6lXk2Knw0sfE/EhRl
+32Y1rWAtmbrfMtOlxNRWvssrRrL/lzjcWAyJPYzQNMzE9LwAQcyTG2/Yd+WfyuDS
+AQHVYb3iwx/IN1d5JWlxUPYr8TKhg9noIc42utZ4aY2hksc7TKtwofzkdlQ1u+mI
+waoRYtC9D7/V+o4/H/5v2AurgubAne9GpVyKJGjCNT52yG6bu/R7ziXWAFG3bEGZ
+A5HAr0NpQe1sjaCEKZCPV2ji6BaM/JPsE2Jr2XZwGTkAYvx9ympKJOMPFX59GXFC
+hffN/Hph5Zb9VXnyeBmdrRXp/n9QurcV0w00AbOfGV7cYBe5Fnbh4Njvi4DYVjUN
++WgtKtshp5ClqE+U6/wZL5JlN93Tf0dktg2NLdqR4nVHPIL6y0sgB2tD+HdazWrE
+4YKVGoYyXeqX76VYocnP
+=is9t
+-----END PGP SIGNATURE-----
+
+--hOcCNbCCxyk/YU74--
