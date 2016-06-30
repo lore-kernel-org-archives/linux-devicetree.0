@@ -1,109 +1,68 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] arm64: dts: rockchip: add VOP and VOP iommu node for rk3399
-Date: Thu, 30 Jun 2016 19:52:55 +0200
-Message-ID: <2805834.mM1g2PPkiI@phil>
-References: <1466564038-18021-1-git-send-email-ykk@rock-chips.com> <1466564069-18220-1-git-send-email-ykk@rock-chips.com> <CAD=FV=URVQTvEKQbUVOXyMnO1a-kGs9inX_AZY3vo_YxXD5-5w@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] ASoC: sunxi: Add i2s controller support
+Date: Thu, 30 Jun 2016 20:47:36 +0200
+Message-ID: <20160630184736.GB5485@lukather>
+References: <20160615211123.31068-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eJnRUKwClWJh1Khz"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=URVQTvEKQbUVOXyMnO1a-kGs9inX_AZY3vo_YxXD5-5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160615211123.31068-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gianfranco-25KmuZRQ+wx0ubjbjo6WXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 30. Juni 2016, 10:45:21 schrieb Doug Anderson:
-> Hi
-> 
-> On Tue, Jun 21, 2016 at 7:54 PM, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> > From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > 
-> > Add the core display-subsystem node and the two display controllers
-> > available on the rk3399.
-> > 
-> > Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > ---
-> > Changes in v3: None
-> > Changes in v2:
-> > - provide some minimal patch description (Heiko)
-> > 
-> >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 58
-> >  ++++++++++++++++++++++++++++++++ 1 file changed, 58 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 46f325a..54e5c25
-> > 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > @@ -543,6 +543,64 @@
-> > 
-> >                 status = "disabled";
-> >         
-> >         };
-> > 
-> > +       vopl: vop@ff8f0000 {
-> > +               compatible = "rockchip,rk3399-vop-lit";
-> > +               reg = <0x0 0xff8f0000 0x0 0x3efc>;
-> > +               interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> > +               clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru
-> > HCLK_VOP1>; +               clock-names = "aclk_vop", "dclk_vop",
-> > "hclk_vop";
-> Note that if this lands after Elaine / Caesar's patch ("arm64: dts:
-> rockchip: add the power domain node for rk3399")
-> <https://patchwork.kernel.org/patch/9206415/> then you need to respin
-> adding powerdomain references here for correctness.
-> 
-> If this lands before Elaine / Caesar's patch then the other patch
-> needs to be re-spun.  ;)
 
-so far I haven't seen any activity on the drm-driver patches.
-Mark (Yao), what happened to your rk3399 vop patches back from April?
+--eJnRUKwClWJh1Khz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Timing-wise I guess we'll do power-domains first, then display. Especially 
-as neither vop nor edp patches have so far appeared in linux-next.
+On Wed, Jun 15, 2016 at 11:11:19PM +0200, Maxime Ripard wrote:
+> Hi everyone,
+>=20
+> This is the second version of the I2S support for the controller found
+> in the Allwinner A10 and later SoCs.
+>=20
+> Playback has been tested with an UDA1380 on an A20-Olinuxino. Capture
+> is not implemented yet, but will come eventually.
+>=20
+> Let me know what you think,
+> Maxime
 
+Applied patches 3 and 4
 
-Heiko
+Maxime
 
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-> 
-> > +               resets = <&cru SRST_A_VOP1>, <&cru SRST_H_VOP1>, <&cru
-> > SRST_D_VOP1>; +               reset-names = "axi", "ahb", "dclk";
-> > +               iommus = <&vopl_mmu>;
-> > +               status = "disabled";
-> > +
-> > +               vopl_out: port {
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
-> > +               };
-> > +       };
-> > +
-> > +       vopl_mmu: iommu@ff8f3f00 {
-> > +               compatible = "rockchip,iommu";
-> > +               reg = <0x0 0xff8f3f00 0x0 0x100>;
-> > +               interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> > +               interrupt-names = "vopl_mmu";
-> > +               #iommu-cells = <0>;
-> > +               status = "disabled";
-> > +       };
-> > +
-> > +       vopb: vop@ff900000 {
-> > +               compatible = "rockchip,rk3399-vop-big";
-> > +               reg = <0x0 0xff900000 0x0 0x3efc>;
-> > +               interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> > +               clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru
-> > HCLK_VOP0>; +               clock-names = "aclk_vop", "dclk_vop",
-> > "hclk_vop";
-> Here too, obviously.
-> 
-> 
-> See <http://crosreview.com/356623> for reference.
-> 
-> 
-> -Doug
+--eJnRUKwClWJh1Khz
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXdWlIAAoJEBx+YmzsjxAgvD8P/iBqaG8lZ4MoiC7ATOQ7VZmE
+OrYHOmEUURs5uq52azAUiN77xVSVdwZ4nRay0iQprLdXXNGVvxEtN1k3UKkwLoFv
+118kfHQUZD46Q//O4ss80HKA0nTcEn2jMY3tUnBdrGXzJ03g/UiFNB0jNfxGm8sU
+rTg5Mv4fAiZuTGbfKuVrOF1JOpE9SrmzpitSeijfzMDCWxDKoNvjdTBankc6a/Oz
+IpXprfm7i93lSCPnnbAKTQqFEDITyRG4vbRdxxWwnI31b6GWcQgleodGIpKRQg3V
+y6CaYjYSDoUpml2nrTGyC1yc4zGpC1mpNNrd3410B09BB1Zl8xS0Gp2/LbN7v/pS
+Eh2NhhiVq9ycVgLsZ3pE29rlG/wcFgtOUYYVfkT45CI0O308WZgYH630djLL5rJr
+fbd4I/XJKr1am+4mW4uRGp+2USPxxEoQp/zy1mT6L1K0VP0+Dna3Gjg1QwiO+4So
+pxaY+rrsN1h5huZ6cwkW7GHneBoLie6qecw1J2PNyzhKBUPC8Bg0fBaqJPakb3JF
+Q8KsQ3JgxCmzvxqWOIBb8FJF+Csz3Py0eKpm3au0rMEOjpH8rNFduDbmpsAwtban
+Q9yRwr0HzRfhOwIQQbXVC3HaMxK3XN4StF2U8QMn6lvS2V1Un42byu72Cut5Y8Gz
+cIVvu4IAaMTLiDYSrbe4
+=Od3W
+-----END PGP SIGNATURE-----
+
+--eJnRUKwClWJh1Khz--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
