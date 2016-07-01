@@ -1,57 +1,55 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH] [media] rc: ir-spi: add support for IR LEDs connected
- with SPI
-Date: Fri, 1 Jul 2016 10:44:58 +0100
-Message-ID: <20160701094458.GA8933@gofer.mess.org>
-References: <1467362022-12704-1-git-send-email-andi.shyti@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 0/7] net: ethernet: bgmac: Add platform device support
+Date: Fri, 01 Jul 2016 11:49:52 +0200
+Message-ID: <7754885.zcSf8DnDt9@wuerfel>
+References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1467362022-12704-1-git-send-email-andi.shyti@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Mason <jon.mason@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, f.fainelli@gmail.com, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hauke@hauke-m.de, zajec5@gmail.com, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, netdev@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 05:33:42PM +0900, Andi Shyti wrote:
-> The ir-spi is a simple device driver which supports the
-> connection between an IR LED and the MOSI line of an SPI device.
+On Thursday, June 30, 2016 6:59:07 PM CEST Jon Mason wrote:
+> Well, no compilained too loudly at the RFC version of this patch series
+> (see https://lkml.org/lkml/2016/6/28/863).  So, I'm officially sending
+> this out for inclusion.  All comments from the RFC were addressed in
+> this version.
 > 
-> The driver, indeed, uses the SPI framework to stream the raw data
-> provided by userspace through a character device. The chardev is
-> handled by the LIRC framework and its functionality basically
-> provides:
+> This patch series adds support for other, non-bcma iProc SoC's to the
+> bgmac driver.  This series only adds NSP support, but we are interested
+> in adding support for the Cygnus and NS2 families (with more possible
+> down the road).
 > 
->  - raw write: data to be sent to the SPI and then streamed to the
->    MOSI line;
->  - set frequency: sets the frequency whith which the data should
->    be sent;
->  - set length: sets the data length. This information is
->    optional, if the length is set, then userspace should send raw
->    data only with that length; while if the length is set to '0',
->    then the driver will figure out himself the length of the data
->    based on the length of the data written on the character
->    device.
->    The latter is not recommended, though, as the driver, at
->    any write, allocates and deallocates a buffer where the data
->    from userspace are stored.
-> 
-> The driver provides three feedback commands:
-> 
->  - get length: reads the length set and (as mentioned), if the
->    length is '0' it will be calculated at any write
->  - get frequency: the driver reports the frequency. If userpace
->    doesn't set the frequency, the driver will use a default value
->    of 38000Hz.
+> To support non-bcma enabled SoCs, we need to add the standard device
+> tree "platform device" support.  Unfortunately, this driver is very
+> tighly coupled with the bcma bus and much unwinding is needed.  I tried
+> to break this up into a number of patches to make it more obvious what
+> was being done to add platform device support.  I was able to verify
+> that the bcma code still works using a 53012K board (NS SoC), and that
+> the platform code works using a 58625K board (NSP SoC).
 
-This interface is not compatible with other lirc devices; there is no
-way of determining whether this is a regular lirc device or this new
-flavour you've invented.
+Looks reasonable overall. I have one comment for the binding, but
+we can handle them separately. I think the first five patches
+can just get merged through net-next if there are no other concerns,
+and feel free to add my
 
-Also I don't see what justifies this new interface. This can be 
-implemented in rc-core in less lines of code and it will be entirely 
-compatible with existing user-space.
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
 
-Sean
+For the last two patches, once we have worked out the right
+compatible strings, please send them to Florian for merging through
+the arm-soc next/dt branch.
+
+	Arnd
