@@ -1,102 +1,109 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: support the pmu node for rk3399
-Date: Fri, 1 Jul 2016 11:26:12 +0100
-Message-ID: <20160701102612.GB22953@leverpostej>
-References: <1467358570-24417-1-git-send-email-wxt@rock-chips.com>
- <1467358570-24417-3-git-send-email-wxt@rock-chips.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 5/9] iommu/of: Handle iommu-map property for PCI
+Date: Fri, 1 Jul 2016 11:31:06 +0100
+Message-ID: <20160701103105.GE12735@arm.com>
+References: <cover.1467123945.git.robin.murphy@arm.com>
+	<17617dff6e7998b91d53ed8a1d6283b1c7bc3470.1467123945.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1467358570-24417-3-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>, marc.zyngier@arm.com
-Cc: Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org, Will Deacon <will.deacon@arm.com>, briannorris@google.com, linux-rockchip@lists.infradead.org, cf@rock-chips.com, huangtao@rock-chips.com, jay.xu@rock-chips.com, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, David Wu <david.wu@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <17617dff6e7998b91d53ed8a1d6283b1c7bc3470.1467123945.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 03:36:10PM +0800, Caesar Wang wrote:
-> As the Marc posted the patches [0] to support Partitioning per-cpu
-> interrupts. Let's add this patch to match it on rk3399 SoCs.
+On Tue, Jun 28, 2016 at 04:48:24PM +0100, Robin Murphy wrote:
+> Now that we have a way to pick up the RID translation and target IOMMU,
+> hook up of_iommu_configure() to bring PCI devices into the of_xlate
+> mechanism and allow them IOMMU-backed DMA ops without the need for
+> driver-specific handling.
 > 
-> [0]:
-> https://lkml.org/lkml/2016/4/11/182
-
-The core IRQ support is merged, but it's worth noting that the perf code
-doesn't use it yet. So we still need a patch adding support to the perf
-code before we can change the dts.
-
-I think Marc had a prototype of that somewhere.
-
-Marc?
-
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> CC: linux-arm-kernel@lists.infradead.org
-> 
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 > ---
 > 
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+> v3: Use explicit "iommu-map-mask", drop of_device_is_available() check.
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 8f0a069..b260f62 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -165,6 +165,22 @@
->  			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
->  	};
->  
-> +	pmu_a53 {
-> +		compatible = "arm,cortex-a53-pmu";
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part0>;
-> +		interrupt-affinity = <&cpu_l0>,
-> +				     <&cpu_l1>,
-> +				     <&cpu_l2>,
-> +				     <&cpu_l3>;
-> +	};
-
-I'm not keen on having to redundantly describe the affinity in
-interrupt-affinity and the partition's affinity property. Those will
-almost certainly be out-of-sync in some DTs, and it'll be very painful
-to deal with.
-
-I think that for partitioned PPIs the PMU driver should use the affinity
-from the PPI, and not have an interrupt-affinity property. Hopefully
-that's relatively simple to handle.
-
-Thanks,
-Mark.
-
-> +
-> +	pmu_a72 {
-> +		compatible = "arm,cortex-a72-pmu";
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part1>;
-> +		interrupt-affinity = <&cpu_b0>,
-> +				     <&cpu_b1>;
-> +	};
-> +
->  	xin24m: xin24m {
->  		compatible = "fixed-clock";
->  		clock-frequency = <24000000>;
-> @@ -296,6 +312,16 @@
->  			msi-controller;
->  			reg = <0x0 0xfee20000 0x0 0x20000>;
->  		};
-> +
-> +		ppi-partitions {
-> +			part0: interrupt-partition-0 {
-> +				affinity = <&cpu_l0 &cpu_l1 &cpu_l2 &cpu_l3>;
-> +			};
-> +
-> +			part1: interrupt-partition-1 {
-> +				affinity = <&cpu_b0 &cpu_b1>;
-> +			};
-> +		};
->  	};
->  
->  	i2c1: i2c@ff110000 {
-> -- 
-> 1.9.1
+>  drivers/iommu/of_iommu.c | 43 ++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 36 insertions(+), 7 deletions(-)
 > 
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 7e6369cffc95..25406a8b9d4e 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/limits.h>
+>  #include <linux/of.h>
+>  #include <linux/of_iommu.h>
+> +#include <linux/of_pci.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/slab.h>
+>  
+> @@ -138,20 +139,48 @@ const struct iommu_ops *of_iommu_get_ops(struct device_node *np)
+>  	return ops;
+>  }
+>  
+> +static int __get_pci_rid(struct pci_dev *pdev, u16 alias, void *data)
+> +{
+> +	struct of_phandle_args *iommu_spec = data;
+> +
+> +	iommu_spec->args[0] = alias;
+> +	return iommu_spec->np == pdev->bus->dev.of_node;
+> +}
+> +
+>  const struct iommu_ops *of_iommu_configure(struct device *dev,
+>  					   struct device_node *master_np)
+>  {
+>  	struct of_phandle_args iommu_spec;
+> -	struct device_node *np;
+> +	struct device_node *np = NULL;
+
+This sets off some alarm bells...
+
+>  	const struct iommu_ops *ops = NULL;
+>  	int idx = 0;
+>  
+> -	/*
+> -	 * We can't do much for PCI devices without knowing how
+> -	 * device IDs are wired up from the PCI bus to the IOMMU.
+> -	 */
+> -	if (dev_is_pci(dev))
+> -		return NULL;
+> +	if (dev_is_pci(dev)) {
+> +		/*
+> +		 * Start by tracing the RID alias down the PCI topology as
+> +		 * far as the host bridge whose OF node we have...
+> +		 */
+> +		iommu_spec.np = master_np;
+> +		pci_for_each_dma_alias(to_pci_dev(dev), __get_pci_rid,
+> +				       &iommu_spec);
+> +		/*
+> +		 * ...then find out what that becomes once it escapes the PCI
+> +		 * bus into the system beyond, and which IOMMU it ends up at.
+> +		 */
+> +		if (of_pci_map_rid(master_np, iommu_spec.args[0], "iommu-map",
+> +				    "iommu-map-mask", &np, iommu_spec.args))
+> +			return NULL;
+
+... because you're assumedly initialising np to NULL in case of_pci_map_rid
+returns 0, but doesn't set np...
+
+> +
+> +		/* We're not attempting to handle multi-alias devices yet */
+> +		iommu_spec.np = np;
+> +		iommu_spec.args_count = 1;
+> +		ops = of_iommu_get_ops(np);
+
+... and then we call of_iommu_get_ops(NULL). Does that make any sense?
+
+Will
