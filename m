@@ -1,141 +1,83 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] mfd: ac100: Add device tree bindings
- for X-Powers AC100 codec/RTC combo IC
-Date: Fri, 1 Jul 2016 09:40:50 +0100
-Message-ID: <20160701084050.GI1707@dell>
-References: <1467302331-9663-1-git-send-email-wens@csie.org>
- <1467302331-9663-2-git-send-email-wens@csie.org>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Po Liu <po.liu@nxp.com>
+Subject: RE: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
+Date: Fri, 1 Jul 2016 08:40:19 +0000
+Message-ID: <VI1PR0401MB1709EC20F6CA6D636228C63F92250@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+ <576B770A.6060508@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <rtc-linux+bncBDA7X7F2WUEBBXWY3C5QKGQENQ2WUWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1467302331-9663-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <576B770A.6060508@huawei.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dongdong Liu <liudongdong3@huawei.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Jun 2016, Chen-Yu Tsai wrote:
-
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
-> Changes since v3:
->=20
->   - Fixed device node names and added labels.
->   - Added clock output from codec and input to rtc.
->=20
-> Changes since v2:
->=20
->   - Fix interrupt line for ac100_codec in provided example.
->=20
-> ---
->  Documentation/devicetree/bindings/mfd/ac100.txt | 49 +++++++++++++++++++=
-++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ac100.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/ac100.txt b/Documentat=
-ion/devicetree/bindings/mfd/ac100.txt
-> new file mode 100644
-> index 000000000000..31e6f9cc41bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ac100.txt
-> @@ -0,0 +1,49 @@
-> +X-Powers AC100 Codec/RTC IC device tree bindings
-
-Nit: Device Tree
-
-> +AC100 is a audio codec and RTC subsystem combo IC. The 2 parts are
-> +separated, including power supplies and interrupt lines, but share
-> +a common register address space and host interface.
-> +
-> +Required properties:
-> +- compatible: "x-powers,ac100"
-> +- reg: The I2C slave address or RSB hardware address for the chip
-> +- sub-nodes:
-> +  - codec
-> +    - compatible: "x-powers,ac100-codec"
-> +    - interrupt-parent: The parent interrupt controller
-> +    - interrupts: SoC NMI / GPIO interrupt connected to the IRQ_AUDIO pi=
-n
-> +    - #clock-cells: shall be 0
-
-Nit: Shall
-
-> +    - clock-output-names: "4M_adda"
-> +    - see clock/clock-bindings.txt for common clock bindings
-
-    - compatible:           "x-powers,ac100-codec"
-    - interrupt-parent:	    The parent interrupt controller
-    - interrupts: 	    SoC NMI / GPIO interrupt connected to the IRQ_AUDIO =
-pin
-    - #clock-cells:   	    shall be 0
-    - clock-output-names:   "4M_adda"
-
-    - see clock/clock-bindings.txt for common clock bindings
-
-Don't you think these are easier to read when they're separated?
-
-> +  - rtc
-> +    - compatible: "x-powers,ac100-rtc"
-> +    - interrupt-parent: The parent interrupt controller
-> +    - interrupts: SoC NMI / GPIO interrupt connected to the IRQ_RTC pin
-> +    - clocks: A phandle to the codec's "4M_adda" clock
-> +    - #clock-cells: shall be 1
-
-Nit: Shall
-
-> +    - clock-output-names: "cko1_rtc", "cko2_rtc", "cko3_rtc"
-> +    - see clock/clock-bindings.txt for common clock bindings
-
-Same here.
-
-> +Example:
-> +
-> +ac100: codec@e89 {
-> +	compatible =3D "x-powers,ac100";
-> +	reg =3D <0xe89>;
-> +
-> +	ac100_codec: codec {
-> +		compatible =3D "x-powers,ac100-codec";
-> +		interrupt-parent =3D <&r_pio>;
-> +		interrupts =3D <0 9 IRQ_TYPE_LEVEL_LOW>; /* PL9 */
-> +		#clock-cells =3D <0>;
-> +		clock-output-names =3D "4M_adda";
-> +	};
-> +
-> +	ac100_rtc: rtc {
-> +		compatible =3D "x-powers,ac100-rtc";
-> +		interrupt-parent =3D <&nmi_intc>;
-> +		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks =3D <&ac100_codec>;
-> +		#clock-cells =3D <1>;
-> +		clock-output-names =3D "cko1_rtc", "cko2_rtc", "cko3_rtc";
-> +	};
-> +};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
----=20
-You received this message because you are subscribed to the Google Groups "=
-rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+SGkgRG9uZ2RvbmcsDQoNCj4gIC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ICBGcm9tOiBE
+b25nZG9uZyBMaXUgW21haWx0bzpsaXVkb25nZG9uZzNAaHVhd2VpLmNvbV0NCj4gIFNlbnQ6IFRo
+dXJzZGF5LCBKdW5lIDIzLCAyMDE2IDE6NDQgUE0NCj4gIFRvOiBQbyBMaXU7IGxpbnV4LXBjaUB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gIGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiAgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmcNCj4gIENjOiBCam9ybiBIZWxnYWFzOyBTaGF3biBHdW87IE1hcmMgWnluZ2llcjsgUm9i
+IEhlcnJpbmc7IFJveSBaYW5nOw0KPiAgTWluZ2thaSBIdTsgU3R1YXJ0IFlvZGVyOyBZYW5nLUxl
+byBMaTsgQXJuZCBCZXJnbWFubjsgTWluZ2h1YW4gTGlhbjsNCj4gIE11cmFsaSBLYXJpY2hlcmkN
+Cj4gIFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMi8yXSBwY2kvYWVyOiBpbnRlcnJ1cHQgZml4dXAg
+aW4gdGhlIHF1aXJrDQo+ICANCj4gIA0KPiAgDQo+ICDlnKggMjAxNi82LzE0IDE2OjI0LCBQbyBM
+aXUg5YaZ6YGTOg0KPiAgPiBPbiBzb21lIHBsYXRmb3Jtcywgcm9vdCBwb3J0IGRvZXNuJ3Qgc3Vw
+cG9ydCBNU0kvTVNJLVgvSU5UeCBpbiBSQyBtb2RlLg0KPiAgPiBXaGVuIGNoaXAgc3VwcG9ydCB0
+aGUgYWVyIGludGVycnVwdCB3aXRoIG5vbmUgTVNJL01TSS1YL0lOVHggbW9kZSwNCj4gID4gbWF5
+YmUgdGhlcmUgaXMgaW50ZXJydXB0IGxpbmUgZm9yIGFlciBwbWUgZXRjLiBTZWFyY2ggdGhlIGlu
+dGVycnVwdA0KPiAgPiBudW1iZXIgaW4gdGhlIGZkdCBmaWxlLiBUaGVuIGZpeHVwIHRoZSBkZXYt
+PmlycSB3aXRoIGl0Lg0KPiAgPg0KPiAgPiBTaWduZWQtb2ZmLWJ5OiBQbyBMaXUgPHBvLmxpdUBu
+eHAuY29tPg0KPiAgPiAtLS0NCj4gID4gY2hhbmdlcyBmb3IgVjM6DQo+ICA+IAktIE1vdmUgdG8g
+cXVpcms7DQo+ICA+IAktIE9ubHkgY29ycmVjdCB0aGUgaXJxIGluIFJDIG1vZGU7DQo+ICA+DQo+
+ICA+ICAgZHJpdmVycy9wY2kvcXVpcmtzLmMgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKw0KPiAgPiAgIDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspDQo+ICA+DQo+ICA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9xdWlya3MuYyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5j
+IGluZGV4DQo+ICA+IGVlNzJlYmUuLjhiMzljY2UgMTAwNjQ0DQo+ICA+IC0tLSBhL2RyaXZlcnMv
+cGNpL3F1aXJrcy5jDQo+ICA+ICsrKyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQo+ICA+IEBAIC0y
+NSw2ICsyNSw3IEBADQo+ICA+ICAgI2luY2x1ZGUgPGxpbnV4L3NjaGVkLmg+DQo+ICA+ICAgI2lu
+Y2x1ZGUgPGxpbnV4L2t0aW1lLmg+DQo+ICA+ICAgI2luY2x1ZGUgPGxpbnV4L21tLmg+DQo+ICA+
+ICsjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+DQo+ICA+ICAgI2luY2x1ZGUgPGFzbS9kbWEuaD4J
+LyogaXNhX2RtYV9icmlkZ2VfYnVnZ3kgKi8NCj4gID4gICAjaW5jbHVkZSAicGNpLmgiDQo+ICA+
+DQo+ICA+IEBAIC00NDE5LDMgKzQ0MjAsMzEgQEAgc3RhdGljIHZvaWQgcXVpcmtfaW50ZWxfcWF0
+X3ZmX2NhcChzdHJ1Y3QNCj4gIHBjaV9kZXYgKnBkZXYpDQo+ICA+ICAgCX0NCj4gID4gICB9DQo+
+ICA+ICAgREVDTEFSRV9QQ0lfRklYVVBfRUFSTFkoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0NDMs
+DQo+ICA+IHF1aXJrX2ludGVsX3FhdF92Zl9jYXApOw0KPiAgPiArDQo+ICA+ICsvKiBJZiByb290
+IHBvcnQgZG9lc24ndCBzdXBwb3J0IE1TSS9NU0ktWC9JTlR4IGluIFJDIG1vZGUsDQo+ICA+ICsg
+KiBidXQgdXNlIHN0YW5kYWxvbmUgaXJxLiBSZWFkIHRoZSBkZXZpY2UgdHJlZSBmb3IgdGhlIGFl
+cg0KPiAgPiArICogaW50ZXJydXB0IG51bWJlci4NCj4gID4gKyAqLw0KPiAgPiArc3RhdGljIHZv
+aWQgcXVpcmtfYWVyX2ludGVycnVwdChzdHJ1Y3QgcGNpX2RldiAqZGV2KSB7DQo+ICA+ICsJaW50
+IHJldDsNCj4gID4gKwl1OCBoZWFkZXJfdHlwZTsNCj4gID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUg
+Km5wID0gTlVMTDsNCj4gID4gKw0KPiAgPiArCS8qIE9ubHkgZm9yIHRoZSBSQyBtb2RlIGRldmlj
+ZSAqLw0KPiAgPiArCXBjaV9yZWFkX2NvbmZpZ19ieXRlKGRldiwgUENJX0hFQURFUl9UWVBFLCAm
+aGVhZGVyX3R5cGUpOw0KPiAgPiArCWlmICgoaGVhZGVyX3R5cGUgJiAweDdGKSAhPSBQQ0lfSEVB
+REVSX1RZUEVfQlJJREdFKQ0KPiAgPiArCQlyZXR1cm47DQo+ICANCj4gIEhvdyBhYm91dCB0aGF0
+IGl0IGlzIGNoYW5nZWQgYXMgYmVsb3cuDQo+ICANCj4gIC8qIE9ubHkgZm9yIHRoZSBSQyBtb2Rl
+IGRldmljZSAqLw0KPiAgaWYgKHBjaV9wY2llX3R5cGUoZGV2KSAhPSBQQ0lfRVhQX1RZUEVfUk9P
+VF9QT1JUKQ0KPiAgCXJldHVybjsNCj4gIA0KPiAgRG9uZ2RvbmcNCj4gIFRoYW5rcw0KWWVzLCBp
+dCBpcyBhbHNvIG9rIHRvIHJlYWQgdGhlIGNhcGFiaWxpdHkgcmVnaXN0ZXIuIA0KV2Ugc2VlIGl0
+IGlzIGNvbW1vbiB1c2VkIHRvIHJlYWQgdGhlIGhlYWRlciB0eXBlIHJlZ2lzdGVyIHRoYXQgaXMg
+d2h5IHdlIHVzZSBpbiB0aGlzIHdheS4NCg0KPiAgPiArDQo+ICA+ICsJaWYgKGRldi0+YnVzLT5k
+ZXYub2Zfbm9kZSkNCj4gID4gKwkJbnAgPSBkZXYtPmJ1cy0+ZGV2Lm9mX25vZGU7DQo+ICA+ICsN
+Cj4gID4gKwlpZiAoSVNfRU5BQkxFRChDT05GSUdfT0ZfSVJRKSAmJiBucCkgew0KPiAgPiArCQly
+ZXQgPSBvZl9pcnFfZ2V0X2J5bmFtZShucCwgImFlciIpOw0KPiAgPiArCQlpZiAocmV0ID4gMCkg
+ew0KPiAgPiArCQkJZGV2LT5ub19tc2kgPSAxOw0KPiAgPiArCQkJZGV2LT5pcnEgPSByZXQ7DQo+
+ICA+ICsJCX0NCj4gID4gKwl9DQo+ICA+ICt9DQo+ICA+ICtERUNMQVJFX1BDSV9GSVhVUF9GSU5B
+TChQQ0lfVkVORE9SX0lEX0ZSRUVTQ0FMRSwgUENJX0FOWV9JRCwNCj4gID4gK3F1aXJrX2Flcl9p
+bnRlcnJ1cHQpOw0KPiAgPg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
