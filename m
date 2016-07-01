@@ -1,20 +1,31 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/3] ARM: dts: r8a7792: add PFC support
-Date: Fri, 1 Jul 2016 10:07:17 +0200
-Message-ID: <CAMuHMdUeQCX5m2gGj3fj2kybaeVAUq+M8YQfQgrX+NgL8G5vCw@mail.gmail.com>
-References: <2144803.0K8qXzjIFq@wasted.cogentembedded.com> <7894702.b5qeLxoHdo@wasted.cogentembedded.com>
+Subject: Re: [PATCH 2/3] ARM: dts: blanche: add SCIF0/3 pins
+Date: Fri, 1 Jul 2016 10:10:46 +0200
+Message-ID: <CAMuHMdXS==TCktBP9ApLi6rQkDfFLyQQkKyTt7dFQsx_6nEfxw@mail.gmail.com>
+References: <2144803.0K8qXzjIFq@wasted.cogentembedded.com>
+ <1489490.F0Oqgkmovy@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <7894702.b5qeLxoHdo@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1489490.F0Oqgkmovy@wasted.cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 1, 2016 at 1:06 AM, Sergei Shtylyov
+On Fri, Jul 1, 2016 at 1:08 AM, Sergei Shtylyov
 <sergei.shtylyov@cogentembedded.com> wrote:
-> Define the generic R8A7792 part of the PFC device node.
+> Add the (previously omitted) SCIF0/3 pin data to the Blanche board's
+> device tree.
 >
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
