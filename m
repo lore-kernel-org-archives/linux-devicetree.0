@@ -1,160 +1,101 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Fri, 1 Jul 2016 14:01:09 +0100
-Message-ID: <57766995.9070302@arm.com>
-References: <1467336290-11282-1-git-send-email-shawn.lin@rock-chips.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 8/9] iommu/arm-smmu: Support non-PCI devices with SMMUv3
+Date: Fri, 1 Jul 2016 14:05:58 +0100
+Message-ID: <57766AB6.6030706@arm.com>
+References: <cover.1467123945.git.robin.murphy@arm.com>
+	<19b0d973e170bebfa57157047bf76499de2a6d33.1467123945.git.robin.murphy@arm.com>
+	<20160701124036.GK12735@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1467336290-11282-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20160701124036.GK12735-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/07/16 02:24, Shawn Lin wrote:
-> This patch adds a binding that describes the Rockchip PCIe controller
-> found on Rockchip SoCs PCIe interface.
+On 01/07/16 13:40, Will Deacon wrote:
+> On Tue, Jun 28, 2016 at 04:48:27PM +0100, Robin Murphy wrote:
+>> With the device <-> stream ID relationship suitably abstracted and
+>> of_xlate() hooked up, the PCI dependency now looks, and is, entirely
+>> arbitrary. Any bus using the of_dma_configure() mechanism will work,
+>> so extend support to the platform and AMBA buses which do just that.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>
+>> v3: Now actually tested; improve comment about duplicate IDs.
+>>
+>>  drivers/iommu/Kconfig       |  2 +-
+>>  drivers/iommu/arm-smmu-v3.c | 42 ++++++++++++++++++++++++++++++++++--------
+>>  2 files changed, 35 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+>> index ad0860383cb3..d1c66afefeed 100644
+>> --- a/drivers/iommu/Kconfig
+>> +++ b/drivers/iommu/Kconfig
+>> @@ -308,7 +308,7 @@ config ARM_SMMU
+>>  
+>>  config ARM_SMMU_V3
+>>  	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
+>> -	depends on ARM64 && PCI
+>> +	depends on ARM64
+>>  	select IOMMU_API
+>>  	select IOMMU_IO_PGTABLE_LPAE
+>>  	select GENERIC_MSI_IRQ_DOMAIN
+>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+>> index 8ce2a4f9342b..735690e03818 100644
+>> --- a/drivers/iommu/arm-smmu-v3.c
+>> +++ b/drivers/iommu/arm-smmu-v3.c
+>> @@ -35,6 +35,8 @@
+>>  #include <linux/pci.h>
+>>  #include <linux/platform_device.h>
+>>  
+>> +#include <linux/amba/bus.h>
+>> +
+>>  #include "io-pgtable.h"
+>>  
+>>  /* MMIO registers */
+>> @@ -1822,6 +1824,25 @@ static void arm_smmu_remove_device(struct device *dev)
+>>  	iommu_fwspec_free(dev);
+>>  }
+>>  
+>> +static struct iommu_group *arm_smmu_device_group(struct device *dev)
+>> +{
+>> +	struct iommu_group *group;
+>> +
+>> +	/*
+>> +	 * The difficulty of efficient stream-ID-to-device lookup prevents us
+>> +	 * from reasonably detecting aliasing outside of PCI buses, but for the
+>> +	 * the same underlying reason (a sparse 32-bit ID space) there's also
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> ---
-> 
-> Changes in v4:
-> - fix example of adding intermediate interrupt controller for pcie
->   legacy interrrupt
-> 
-> Changes in v3:
-> - fix example dts code suggested by Rob and Marc
-> - remove driver's behaviour of regulator
-> 
-> Changes in v2:
-> - fix lots clk/reset stuff suggested by Heiko
-> - remove msi-parent and add msi-map suggested by Marc
-> - drop phy related stuff
-> - some others minor fixes
-> 
->  .../devicetree/bindings/pci/rockchip-pcie.txt      | 91 ++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> new file mode 100644
-> index 0000000..8092fc5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> @@ -0,0 +1,91 @@
-> +* Rockchip AXI PCIe Root Port Bridge DT description
-> +
-> +Required properties:
-> +- #address-cells: Address representation for root ports, set to <3>
-> +- #size-cells: Size representation for root ports, set to <2>
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +		interrupt source. The value must be 1.
-> +- compatible: Should contain "rockchip,rk3399-pcie"
-> +- reg: Two register ranges as listed in the reg-names property
-> +- reg-names: Must include the following names
-> +	- "axi-base"
-> +	- "apb-base"
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +		See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +	- "aclk"
-> +	- "aclk-perf"
-> +	- "hclk"
-> +	- "pm"
-> +- msi-map: Maps a Requester ID to an MSI controller and associated.
-> +		See ./pci-msi.txt
-> +- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
-> +- phy-names:  MUST be "pcie-phy".
-> +- interrupts: Three interrupt entries must be specified.
-> +- interrupt-names: Must include the following names
-> +	- "sys"
-> +	- "legacy"
-> +	- "client"
-> +- resets: Must contain five entries for each entry in reset-names.
-> +	   See ../reset/reset.txt for details.
-> +- reset-names: Must include the following names
-> +	- "core"
-> +	- "mgmt"
-> +	- "mgmt-sticky"
-> +	- "pipe"
-> +- pinctrl-names : The pin control state names
-> +- pinctrl-0: The "default" pinctrl state
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +
-> +Optional Property:
-> +- ep-gpios: contain the entry for pre-reset gpio
-> +- num-lanes: number of lanes to use
-> +- vpcie3v3-supply: The phandle to the 3.3v regulator to use for pcie.
-> +- vpcie1v8-supply: The phandle to the 1.8v regulator to use for pcie.
-> +- vpcie0v9-supply: The phandle to the 0.9v regulator to use for pcie.
-> +
-> +Example:
-> +
-> +pcie0: pcie@f8000000 {
-> +	compatible = "rockchip,rk3399-pcie";
-> +	#address-cells = <3>;
-> +	#size-cells = <2>;
-> +	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
-> +		 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
-> +	clock-names = "aclk", "aclk-perf",
-> +		      "hclk", "pm";
-> +	bus-range = <0x0 0x1>;
-> +	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "sys", "legacy", "client";
-> +	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
-> +	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
-> +	assigned-clock-rates = <100000000>;
-> +	ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-> +	ranges = <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x600000
-> +		  0x81000000 0x0 0xfa600000 0x0 0xfa600000 0x0 0x100000>;
-> +	num-lanes = <4>;
-> +	msi-map = <0x0 &its 0x0 0x1000>;
-> +	reg = < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0x0 0x1000000 >;
-> +	reg-names = "axi-base", "apb-base";
-> +	resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-> +		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
-> +	reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
-> +	phys = <&pcie_phy>;
-> +	phy-names = "pcie-phy";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_clkreq>;
-> +	#interrupt-cells = <1>;
-> +	interrupt-controller;
+> extra 'the'
 
-So the pcie node itself is an interrupt controller...
+Oops, thanks.
 
-> +	interrupt-map-mask = <0 0 0 7>;
-> +	interrupt-map = <0 0 0 1 &pcie0_intc 1>,
-> +			<0 0 0 2 &pcie0_intc 2>,
-> +			<0 0 0 3 &pcie0_intc 3>,
-> +			<0 0 0 4 &pcie0_intc 4>;
-> +	pcie0_intc: interrupt-controller {
-> +		interrupt-controller;
-> +		#address-cells = <0>;
-> +		#interrupt-cells = <1>;
-> +	};
-
-But there's also another here. I just don't understand how it works.
-
-> +};
+>> +	 * little excuse for systems to be wired up with non-unique IDs in the
+>> +	 * first place; consider them unsupported.
+>> +	 */
 > 
+> This is a long-winded way of saying "we don't support aliasing SIDs outside
+> of PCI".
 
-Thanks,
+It is. Someone said of the original terse 2-line comment "Worse: what if
+a SID in the DT aliases with a PCI master? It might be nice to have some
+basic sanity checking, at least.", so I expanded it to better clarify
+why there isn't. I'll try making it a little less florid.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Robin.
+
+> 
+> Will
+> 
