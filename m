@@ -1,55 +1,177 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/7] net: ethernet: bgmac: Add platform device support
-Date: Fri, 01 Jul 2016 11:49:52 +0200
-Message-ID: <7754885.zcSf8DnDt9@wuerfel>
-References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] nvmem: amlogic: Add Amlogic Meson EFUSE driver
+Date: Fri, 1 Jul 2016 11:00:34 +0100
+Message-ID: <57763F42.3070106@linaro.org>
+References: <1467203656-14381-1-git-send-email-carlo@caione.org>
+ <1467203656-14381-5-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Mason <jon.mason@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, f.fainelli@gmail.com, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hauke@hauke-m.de, zajec5@gmail.com, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, netdev@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467203656-14381-5-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, June 30, 2016 6:59:07 PM CEST Jon Mason wrote:
-> Well, no compilained too loudly at the RFC version of this patch series
-> (see https://lkml.org/lkml/2016/6/28/863).  So, I'm officially sending
-> this out for inclusion.  All comments from the RFC were addressed in
-> this version.
-> 
-> This patch series adds support for other, non-bcma iProc SoC's to the
-> bgmac driver.  This series only adds NSP support, but we are interested
-> in adding support for the Cygnus and NS2 families (with more possible
-> down the road).
-> 
-> To support non-bcma enabled SoCs, we need to add the standard device
-> tree "platform device" support.  Unfortunately, this driver is very
-> tighly coupled with the bcma bus and much unwinding is needed.  I tried
-> to break this up into a number of patches to make it more obvious what
-> was being done to add platform device support.  I was able to verify
-> that the bcma code still works using a 53012K board (NS SoC), and that
-> the platform code works using a 58625K board (NSP SoC).
-
-Looks reasonable overall. I have one comment for the binding, but
-we can handle them separately. I think the first five patches
-can just get merged through net-next if there are no other concerns,
-and feel free to add my
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
 
 
-For the last two patches, once we have worked out the right
-compatible strings, please send them to Florian for merging through
-the arm-soc next/dt branch.
+On 29/06/16 13:34, Carlo Caione wrote:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>
+> Add Amlogic EFUSE driver to access hardware data like ethernet address,
+> serial number or IDs.
+>
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-	Arnd
+Patch looks good to me,
+
+Looks like there are some dependencies to this patch w.r.t sm_calls, it 
+would be easy to take this series from single tree.
+
+Just incase you want to take this patch via some other tree, here is Ack.
+
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+
+
+> ---
+>   drivers/nvmem/Kconfig       | 10 +++++
+>   drivers/nvmem/Makefile      |  2 +
+>   drivers/nvmem/meson-efuse.c | 93 +++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 105 insertions(+)
+>   create mode 100644 drivers/nvmem/meson-efuse.c
+>
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 3041d48..87900d3 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -101,4 +101,14 @@ config NVMEM_VF610_OCOTP
+>   	  This driver can also be build as a module. If so, the module will
+>   	  be called nvmem-vf610-ocotp.
+>
+> +config MESON_EFUSE
+> +	tristate "Amlogic eFuse Support"
+> +	depends on (ARCH_MESON || COMPILE_TEST) && MESON_SM
+> +	help
+> +	  This is a driver to retrieve specific values from the eFuse found on
+> +	  the Amlogic Meson SoCs.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nvmem_meson_efuse.
+> +
+>   endif
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index 45ab1ae..8f942a0 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -22,3 +22,5 @@ obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
+>   nvmem_sunxi_sid-y		:= sunxi_sid.o
+>   obj-$(CONFIG_NVMEM_VF610_OCOTP)	+= nvmem-vf610-ocotp.o
+>   nvmem-vf610-ocotp-y		:= vf610-ocotp.o
+> +obj-$(CONFIG_MESON_EFUSE)	+= nvmem_meson_efuse.o
+> +nvmem_meson_efuse-y		:= meson-efuse.o
+> diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
+> new file mode 100644
+> index 0000000..f207c3b
+> --- /dev/null
+> +++ b/drivers/nvmem/meson-efuse.c
+> @@ -0,0 +1,93 @@
+> +/*
+> + * Amlogic eFuse Driver
+> + *
+> + * Copyright (c) 2016 Endless Computers, Inc.
+> + * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of version 2 of the GNU General Public License as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> + * more details.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <linux/firmware/meson/meson_sm.h>
+> +
+> +static int meson_efuse_read(void *context, unsigned int offset,
+> +			    void *val, size_t bytes)
+> +{
+> +	u8 *buf = val;
+> +	int ret;
+> +
+> +	ret = meson_sm_call_read(buf, SM_EFUSE_READ, offset,
+> +				 bytes, 0, 0, 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct nvmem_config econfig = {
+> +	.name = "meson-efuse",
+> +	.owner = THIS_MODULE,
+> +	.stride = 1,
+> +	.word_size = 1,
+> +	.read_only = true,
+> +};
+> +
+> +static const struct of_device_id meson_efuse_match[] = {
+> +	{ .compatible = "amlogic,meson-gxbb-efuse", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, meson_efuse_match);
+> +
+> +static int meson_efuse_probe(struct platform_device *pdev)
+> +{
+> +	struct nvmem_device *nvmem;
+> +	unsigned int size;
+> +
+> +	if (meson_sm_call(SM_EFUSE_USER_MAX, &size, 0, 0, 0, 0, 0) < 0)
+> +		return -EINVAL;
+> +
+> +	econfig.dev = &pdev->dev;
+> +	econfig.reg_read = meson_efuse_read;
+> +	econfig.size = size;
+> +
+> +	nvmem = nvmem_register(&econfig);
+> +	if (IS_ERR(nvmem))
+> +		return PTR_ERR(nvmem);
+> +
+> +	platform_set_drvdata(pdev, nvmem);
+> +
+> +	return 0;
+> +}
+> +
+> +static int meson_efuse_remove(struct platform_device *pdev)
+> +{
+> +	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
+> +
+> +	return nvmem_unregister(nvmem);
+> +}
+> +
+> +static struct platform_driver meson_efuse_driver = {
+> +	.probe = meson_efuse_probe,
+> +	.remove = meson_efuse_remove,
+> +	.driver = {
+> +		.name = "meson-efuse",
+> +		.of_match_table = meson_efuse_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(meson_efuse_driver);
+> +
+> +MODULE_AUTHOR("Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Amlogic Meson NVMEM driver");
+> +MODULE_LICENSE("GPL v2");
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
