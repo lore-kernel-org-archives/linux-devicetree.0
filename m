@@ -1,52 +1,40 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 4/4] spi: Document option to insert delay between transactions
-Date: Thu, 30 Jun 2016 21:45:59 -0700
-Message-ID: <CAD=FV=VdzacSwaLfAHSkBdQAhDpxGa41w2kk2vim7shLv1W_wg@mail.gmail.com>
-References: <1467258867-117727-1-git-send-email-apronin@chromium.org>
- <1467258867-117727-4-git-send-email-apronin@chromium.org> <CAMuHMdUBcDUoMok9tkxJzGekkLWA=bya0zHXWqHbGp0BGmeZUg@mail.gmail.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v2 06/14] ARM: sun8i: clk: Add clk-factor rate
+ application method
+Date: Fri, 1 Jul 2016 07:37:10 +0200
+Message-ID: <20160701073710.1a1fc684ae448577bad5b0db@free.fr>
+References: <20160625034511.7966-1-megous@megous.com>
+	<20160625034511.7966-7-megous@megous.com>
+	<20160630204001.GC5485@lukather>
+	<0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUBcDUoMok9tkxJzGekkLWA=bya0zHXWqHbGp0BGmeZUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dev@linux-sunxi.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Emilio =?UTF-8?B?TMOzcGV6?= <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 1 Jul 2016 02:50:57 +0200
+Ond=C5=99ej Jirman <megous@megous.com> wrote:
 
-On Thu, Jun 30, 2016 at 12:12 AM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> CC devicetree
->
-> On Thu, Jun 30, 2016 at 5:54 AM,  <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>
->> Some devices may need CS to be deasserted for some time
->> between transactions. Added a new capability to guarantee
->> a delay between SPI transactions for the device.
->>
->> Signed-off-by: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/spi/spi-bus.txt | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
->> index 1b7ffd4..87c117a 100644
->> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
->> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
->> @@ -70,6 +70,8 @@ contain the following properties.
->>                 sleep if there was no SPI activity (msec).
->>  - cs-wake-duration - (optional) Time it takes the device to wake up after
->>                 toggling CS if it went to sleep (msec).
->> +- xfer-delay      - (optional) Delay to insert between SPI transactions
->> +               to guarantee that CS is deasserted at least for some time.
+> > Since this is really specific, I guess you could simply make the
+> > clk_ops for the nkmp clocks public, and just re-implement set_rate
+> > using that logic.
+>=20
+> I would argue that this may be necessary for other PLL clocks too, if
+> you can get out of bounds output frequency, by changing the dividers =
+too
+> early or too late. So perhaps this code should be generalized for oth=
+er
+> PLL clocks too, instead.
 
-msec?  usec?  nsec?
+The documentation says that only the CPU and DDR PLLs can be dynamicall=
+y
+changed after boot.
 
-Also, as with the other patch, this should be _before_ the code
-change, so this should really be patch 3 not patch 4.
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
