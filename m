@@ -1,141 +1,140 @@
-From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v5 5/5] usb: dwc3: rockchip: add devicetree bindings
- documentation
-Date: Fri, 01 Jul 2016 09:20:30 +0800
-Message-ID: <5775C55E.8090508@rock-chips.com>
-References: <1467285176-25222-1-git-send-email-william.wu@rock-chips.com>
- <1467285400-25450-1-git-send-email-william.wu@rock-chips.com>
- <2510621.9FbtAACURA@phil>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <2510621.9FbtAACURA@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 1/2] Documentation: bindings: add dt doc for Rockchip PCIe controller
+Date: Fri,  1 Jul 2016 09:24:49 +0800
+Message-ID: <1467336290-11282-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Heiko,
+This patch adds a binding that describes the Rockchip PCIe controller
+found on Rockchip SoCs PCIe interface.
 
-On 06/30/2016 08:15 PM, Heiko Stuebner wrote:
-> Hi William,
->
-> Am Donnerstag, 30. Juni 2016, 19:16:40 schrieb William Wu:
->> This patch adds the devicetree documentation required for Rockchip
->> USB3.0 core wrapper consisting of USB3.0 IP from Synopsys.
->>
->> It supports DRD mode, and could operate in device mode (SS, HS, FS)
->> and host mode (SS, HS, FS, LS).
->>
->> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->> Changes in v5:
->> - rename clock-names, and remove unnecessary clocks (Heiko)
->>
->> Changes in v4:
->> - modify commit log, and add phy documentation location (Sergei)
->>
->> Changes in v3:
->> - add dwc3 address (balbi)
->>
->> Changes in v2:
->> - add rockchip,dwc3.txt to Documentation/devicetree/bindings/ (balbi,
->> Brian)
->>
->>   .../devicetree/bindings/usb/rockchip,dwc3.txt      | 40
->> ++++++++++++++++++++++ 1 file changed, 40 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
->> b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt new file mode
->> 100644
->> index 0000000..9c85e19
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
->> @@ -0,0 +1,40 @@
->> +Rockchip SuperSpeed DWC3 USB SoC controller
->> +
->> +Required properties:
->> +- compatible:	should contain "rockchip,rk3399-dwc3" for rk3399 SoC
->> +- clocks:	A list of phandle + clock-specifier pairs for the
->> +		clocks listed in clock-names
->> +- clock-names:	Should contain the following:
->> +  "ref_clk"	Controller reference clk, have to be 24 MHz
->> +  "suspend_clk"	Controller suspend clk, have to be 24 MHz or 32 KHz
->> +  "bus_clk_otg0"Master/Core clock, have to be >= 62.5 MHz for SS
->> +		operation and >= 60MHz for HS operation
-> why is it called "bus_clk_otg0" not just simply "bus_clk". As far as I
-> understand it (and see it in the TRM), you have two dwc3 controllers
-> (otg0 and otg1) and clock-names are always meant from the perspective of
-> the individual ip-block. So a devicetree would have:
->
-> 	usbdrd3_0: usb@fe800000 {
-> 		compatible = "rockchip,rk3399-dwc3";
-> 		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
-> 			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
-> 		clock-names = "ref_clk", "suspend_clk",
-> 			      "bus_clk", "grf_clk";
-> 		...
-> 	};
->
-> 	usbdrd3_1: usb@fe900000 {
-> 		compatible = "rockchip,rk3399-dwc3";
-> 		clocks = <&cru SCLK_USB3OTG1_REF>, <&cru SCLK_USB3OTG1_SUSPEND>,
-> 			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_GRF>;
-> 		clock-names = "ref_clk", "suspend_clk",
-> 			      "bus_clk", "grf_clk";
-> 		...
-> 	};
->
->
-> The rest looks really nice now.
-Ah, it looks very goog to me. I'll fix it immediately.
-Thank you very much!
->
->
-> Heiko
->
->> +  "grf_clk"	Controller grf clk
->> +
->> +Required child node:
->> +A child node must exist to represent the core DWC3 IP block. The name of
->> +the node is not important. The content of the node is defined in
->> dwc3.txt. +
->> +Phy documentation is provided in the following places:
->> +Documentation/devicetree/bindings/phy/rockchip,dwc3-usb-phy.txt
->> +
->> +Example device nodes:
->> +
->> +	usbdrd3_0: usb@fe800000 {
->> +		compatible = "rockchip,rk3399-dwc3";
->> +		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
->> +			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
->> +		clock-names = "ref_clk", "suspend_clk",
->> +			      "bus_clk_otg0", "grf_clk";
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
->> +		status = "disabled";
->> +		usbdrd_dwc3_0: dwc3@fe800000 {
->> +			compatible = "snps,dwc3";
->> +			reg = <0x0 0xfe800000 0x0 0x100000>;
->> +			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
->> +			dr_mode = "otg";
->> +			status = "disabled";
->> +		};
->> +	};
->> --
->> 1.9.1
->
->
->
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+---
+
+Changes in v4:
+- fix example of adding intermediate interrupt controller for pcie
+  legacy interrrupt
+
+Changes in v3:
+- fix example dts code suggested by Rob and Marc
+- remove driver's behaviour of regulator
+
+Changes in v2:
+- fix lots clk/reset stuff suggested by Heiko
+- remove msi-parent and add msi-map suggested by Marc
+- drop phy related stuff
+- some others minor fixes
+
+ .../devicetree/bindings/pci/rockchip-pcie.txt      | 91 ++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+new file mode 100644
+index 0000000..8092fc5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+@@ -0,0 +1,91 @@
++* Rockchip AXI PCIe Root Port Bridge DT description
++
++Required properties:
++- #address-cells: Address representation for root ports, set to <3>
++- #size-cells: Size representation for root ports, set to <2>
++- #interrupt-cells: specifies the number of cells needed to encode an
++		interrupt source. The value must be 1.
++- compatible: Should contain "rockchip,rk3399-pcie"
++- reg: Two register ranges as listed in the reg-names property
++- reg-names: Must include the following names
++	- "axi-base"
++	- "apb-base"
++- clocks: Must contain an entry for each entry in clock-names.
++		See ../clocks/clock-bindings.txt for details.
++- clock-names: Must include the following entries:
++	- "aclk"
++	- "aclk-perf"
++	- "hclk"
++	- "pm"
++- msi-map: Maps a Requester ID to an MSI controller and associated.
++		See ./pci-msi.txt
++- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
++- phy-names:  MUST be "pcie-phy".
++- interrupts: Three interrupt entries must be specified.
++- interrupt-names: Must include the following names
++	- "sys"
++	- "legacy"
++	- "client"
++- resets: Must contain five entries for each entry in reset-names.
++	   See ../reset/reset.txt for details.
++- reset-names: Must include the following names
++	- "core"
++	- "mgmt"
++	- "mgmt-sticky"
++	- "pipe"
++- pinctrl-names : The pin control state names
++- pinctrl-0: The "default" pinctrl state
++- interrupt-map-mask and interrupt-map: standard PCI properties
++- interrupt-controller: identifies the node as an interrupt controller
++
++Optional Property:
++- ep-gpios: contain the entry for pre-reset gpio
++- num-lanes: number of lanes to use
++- vpcie3v3-supply: The phandle to the 3.3v regulator to use for pcie.
++- vpcie1v8-supply: The phandle to the 1.8v regulator to use for pcie.
++- vpcie0v9-supply: The phandle to the 0.9v regulator to use for pcie.
++
++Example:
++
++pcie0: pcie@f8000000 {
++	compatible = "rockchip,rk3399-pcie";
++	#address-cells = <3>;
++	#size-cells = <2>;
++	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
++		 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
++	clock-names = "aclk", "aclk-perf",
++		      "hclk", "pm";
++	bus-range = <0x0 0x1>;
++	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "sys", "legacy", "client";
++	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
++	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
++	assigned-clock-rates = <100000000>;
++	ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
++	ranges = <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x600000
++		  0x81000000 0x0 0xfa600000 0x0 0xfa600000 0x0 0x100000>;
++	num-lanes = <4>;
++	msi-map = <0x0 &its 0x0 0x1000>;
++	reg = < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0x0 0x1000000 >;
++	reg-names = "axi-base", "apb-base";
++	resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
++		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
++	reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
++	phys = <&pcie_phy>;
++	phy-names = "pcie-phy";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_clkreq>;
++	#interrupt-cells = <1>;
++	interrupt-controller;
++	interrupt-map-mask = <0 0 0 7>;
++	interrupt-map = <0 0 0 1 &pcie0_intc 1>,
++			<0 0 0 2 &pcie0_intc 2>,
++			<0 0 0 3 &pcie0_intc 3>,
++			<0 0 0 4 &pcie0_intc 4>;
++	pcie0_intc: interrupt-controller {
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++	};
++};
+-- 
+2.3.7
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
