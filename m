@@ -1,80 +1,63 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: [PATCH] gpio: document how to order GPIO controllers
-Date: Fri,  1 Jul 2016 08:42:13 +0200
-Message-ID: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH v2 1/2] ARM64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Fri, 01 Jul 2016 01:51:45 -0500
+Message-ID: <1467355905.32358.31.camel@buserror.net>
+References: <1463114260-8724-1-git-send-email-oss@buserror.net>
+ <20160513112441.200f4349@arm.com> <1466559926.22191.203.camel@buserror.net>
+ <5771267D.7030102@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: kernel@pengutronix.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5771267D.7030102@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This uses the same approach that is already used for spi, i2c and
-several other controllers to ensure a consistent numbering independent
-of probe order. This is in use for several gpio drivers that already no=
-w
-use of_alias_get_id(np, "gpio").
-
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
----
-Hello,
-
-Linus requested such a patch as part of a change that introduces
-this mechanism to the gpio-omap driver[1]. IMHO this is better done in =
-a
-separate patch, so here it comes.
-
-Best regards
-Uwe
-
-[1] http://thread.gmane.org/gmane.linux.kernel.gpio/17399/focus=3D17629
-
- Documentation/devicetree/bindings/gpio/gpio.txt | 18 +++++++++++++++++=
-+
- 1 file changed, 18 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Document=
-ation/devicetree/bindings/gpio/gpio.txt
-index 68d28f62a6f4..5dbacc8f094a 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -227,6 +227,24 @@ Example of two SOC GPIO banks defined as gpio-cont=
-roller nodes:
- 		#gpio-cells =3D <2>;
- 	};
-=20
-+Usually the GPIO banks in SoCs are ordered, that is there is a dedicat=
-ed "first
-+gpio bank". To fix this ordering in the device tree use aliases starti=
-ng at 0
-+(even if the first bank is called "GPIO1" in the hardware reference).
-+This is necessary/handy to ensure deterministical numbering of GPIOs a=
-nd GPIO
-+controllers.
-+
-+Example of a machine having 4 GPIO banks.
-+
-+	/ {
-+		aliases {
-+			...
-+			gpio0 =3D &gpio1;
-+			gpio1 =3D &gpio2;
-+			gpio2 =3D &gpio3;
-+			gpio3 =3D &gpio4;
-+		};
-+	};
-+
- 2.1) gpio- and pin-controller interaction
- -----------------------------------------
-=20
---=20
-2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCAyMDE2LTA2LTI3IGF0IDE0OjEzICswMTAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6Cj4g
+T24gMjIvMDYvMTYgMDI6NDUsIFNjb3R0IFdvb2Qgd3JvdGU6Cj4gPiAKPiA+IE9uIEZyaSwgMjAx
+Ni0wNS0xMyBhdCAxMToyNCArMDEwMCwgTWFyYyBaeW5naWVyIHdyb3RlOgo+ID4gPiAKPiA+ID4g
+T24gVGh1LCAxMiBNYXkgMjAxNiAyMzozNzozOSAtMDUwMAo+ID4gPiBTY290dCBXb29kIDxvc3NA
+YnVzZXJyb3IubmV0PiB3cm90ZToKPiA+ID4gCj4gPiA+ID4gKyNpZmRlZiBDT05GSUdfQVJNNjQK
+PiA+ID4gPiArc3RhdGljIF9fYWx3YXlzX2lubGluZSB2b2lkIHJld3JpdGVfdHZhbChjb25zdCBp
+bnQgYWNjZXNzLAo+ID4gPiA+ICsJCXVuc2lnbmVkIGxvbmcgZXZ0LCBzdHJ1Y3QgY2xvY2tfZXZl
+bnRfZGV2aWNlICpjbGspCj4gPiA+ID4gK3sKPiA+ID4gPiArCXU2NCBjdmFsX29sZCwgY3ZhbF9u
+ZXc7Cj4gPiA+ID4gKwlpbnQgdGltZW91dCA9IDIwMDsKPiA+ID4gPiArCj4gPiA+ID4gKwlkbyB7
+Cj4gPiA+ID4gKwkJY3ZhbF9vbGQgPSBfX2FyY2hfY291bnRlcl9nZXRfY250dmN0KCk7Cj4gPiA+
+ID4gKwkJYXJjaF90aW1lcl9yZWdfd3JpdGUoYWNjZXNzLCBBUkNIX1RJTUVSX1JFR19UVkFMLAo+
+ID4gPiA+IGV2dCwKPiA+ID4gPiBjbGspOwo+ID4gPiA+ICsJCWN2YWxfbmV3ID0gX19hcmNoX2Nv
+dW50ZXJfZ2V0X2NudHZjdCgpOwo+ID4gPiBEb24ndCB5b3UgbmVlZCB0byBndWFyYW50ZWUgdGhl
+IG9yZGVyIG9mIGFjY2Vzc2VzIGhlcmU/Cj4gPiBJJ20gbm90IDEwMCUgc3VyZS7CoMKgVGhlIGVy
+cmF0dW0gd29ya2Fyb3VuZCBzYW1wbGUgY29kZSBkb2Vzbid0IHNob3cgYW55Cj4gPiBiYXJyaWVy
+cywgYW5kIGFkZGluZyBtb3JlIGJhcnJpZXJzIGNvdWxkIG1ha2UgaXQgaGFyZGVyIGZvciB0aGUg
+bG9vcCB0bwo+ID4gc3VjY2Vzc2Z1bGx5IGNvbXBsZXRlLsKgwqBUaGVyZSdzIGFscmVhZHkgYSBi
+YXJyaWVyIGFmdGVyIHRoZSB3cml0ZSwgc28gdGhlCj4gPiBvbmx5Cj4gPiBjb25jZXJuIHNob3Vs
+ZCBiZSB3aGV0aGVyIHRoZSB0aW1lciByZWFkIGNvdWxkIGJlIHJlb3JkZXJlZCBhZnRlciB0aGUK
+PiA+IHRpbWVyCj4gPiB3cml0ZSwgd2hpY2ggY291bGQgY2F1c2UgdGhlIGxvb3AgdG8gZXhpdCBl
+dmVuIGlmIHRoZSB3cml0ZSB3YXMgYmFkLsKgwqBEbwo+ID4geW91Cj4gPiBrbm93IGlmIEE1MyBv
+ciBBNTcgd2lsbCByZW9yZGVyIGEgY291bnRlciByZWFkIHJlbGF0aXZlIHRvIGEgdHZhbCB3cml0
+ZT8KPiBJIGNhbid0IHNlZSBhbnkgYWJzb2x1dGUgZ3VhcmFudGVlIHRoYXQgdGhleSB3b3VsZG4n
+dCBiZSByZW9yZGVyZWQgKGJ1dAo+IEkgaGF2ZSBubyBpbnNpZ2h0IG9uIHRoZSBtaWNyby1hcmNo
+aXRlY3R1cmUgZWl0aGVyKS4gSSdkIHJhdGhlciBlcnIgb24KPiB0aGUgc2lkZSBvZiBjYXV0aW9u
+IGhlcmUuCgpBZGRpbmcgYW5vdGhlciBpc2IoKSBiZWZvcmUgYXJjaF90aW1lcl9yZWdfd3JpdGUo
+KSBjYXVzZXMgdGhlIGxvb3AgdG8gbm90CmNvbXBsZXRlIHdpdGggYW55IHJlYXNvbmFibGUgdGlt
+ZW91dC4gwqBBIHRlc3RpbmcgbG9vcCAodGhhdCByZXBlYXRlZGx5IHdyaXRlcwp0byBUVkFMICh1
+c2luZyB0aGUgd29ya2Fyb3VuZCBjb2RlKSwgcmVhZHMgaXQgYmFjaywgYW5kIGNoZWNrcyB0aGF0
+IHRoZSB2YWx1ZQpyZWFkIGJhY2sgaXMgbm90IGdyZWF0ZXIgdGhhbiB0aGUgdmFsdWUgdGhhdCB3
+YXMgd3JpdHRlbikgc2hvd3MgdGhhdCB0aGUKd29ya2Fyb3VuZCB3aXRob3V0IHRoZSBleHRyYSBp
+c2IoKSBpcyBlZmZlY3RpdmUgLS0gbG90cyBvZiBhc3NlcnRpb25zIHdpdGhvdXQKdGhlIHdvcmth
+cm91bmQsIGFuZCBub25lIHdpdGggaXQgLS0gYnV0IEknbGwgZ28gd2l0aCB0aGUgY3ZhbCB3b3Jr
+YXJvdW5kCmluc3RlYWQuCgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
