@@ -1,83 +1,83 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] documentation: Add nvmem bindings documentation
-Date: Fri, 1 Jul 2016 11:00:28 +0100
-Message-ID: <57763F3C.7090108@linaro.org>
-References: <1467203656-14381-1-git-send-email-carlo@caione.org>
- <1467203656-14381-6-git-send-email-carlo@caione.org>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
+Date: Fri, 1 Jul 2016 12:11:51 +0200
+Message-ID: <8a46c1e7-1f27-1e67-8c05-b133598b6a66@xs4all.nl>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+ <20160607112235.475c2e4c@recife.lan> <575746EE.3030706@cisco.com>
+ <1465902488.27938.7.camel@mtksdaap41> <20160616075428.0fde4aaa@recife.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467203656-14381-6-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160616075428.0fde4aaa-+RedX5hVuTR+urZeOPWqwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/16/2016 12:54 PM, Mauro Carvalho Chehab wrote:
+> Em Tue, 14 Jun 2016 19:08:08 +0800
+> tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
+> 
+>> Hi Mauro,
+>>
+>>
+>> On Wed, 2016-06-08 at 07:13 +0900, Hans Verkuil wrote:
+>>>
+>>> On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:  
+>>>> Em Mon, 30 May 2016 20:29:14 +0800
+>>>> Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
+>>>>  
+>>>>> ==============
+>>>>>   Introduction
+>>>>> ==============
+>>>>>
+>>>>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+>>>>> Mediatek Video Codec is able to handle video decoding of in a range of formats.
+>>>>>
+>>>>> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
+>>>>> V4L2_PIX_FMT_MT21 format.
+>>>>>
+>>>>> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
+>>>>> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
+>>>>> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
+>>>>>
+>>>>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
+>>>>>
+>>>>> [1]https://patchwork.linuxtv.org/patch/33734/
+>>>>> [2]https://chromium-review.googlesource.com/#/c/245241/  
+>>>>
+>>>> Hmm... I'm not seeing the firmware for this driver at the
+>>>> linux-firmware tree:
+>>>> 	https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
+>>>>
+>>>> Nor I'm seeing any pull request for them. Did you send it?
+>>>> I'll only merge the driver upstream after seeing such pull request.  
+>>>   
+>> Sorry, I am not familiar with how to upstream firmware.
+>> Do you mean we need to upstream vpu firmware first before merge encoder
+>> driver upstream?
+> 
+> Please look at this page:
+> 	https://linuxtv.org/wiki/index.php/Development:_How_to_submit_patches#Firmware_submission
+> 
+> The information here can also be useful:
+> 	https://www.kernel.org/doc/readme/firmware-README.AddingFirmware
+> 
+> In summary, you need to provide redistribution rights for the
+> firmware blob. You can either submit it to me or directly to
+> linux-firmware. In the latter, please c/c me on such patch.
 
+Tiffany, what is the status of the firmware submission?
 
-On 29/06/16 13:34, Carlo Caione wrote:
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->
-> This patch add the bindings document of Amlogic eFuse driver.
->
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Regards,
 
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> ---
->   .../devicetree/bindings/nvmem/amlogic-efuse.txt    | 39 ++++++++++++++++++++++
->   1 file changed, 39 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
->
-> diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> new file mode 100644
-> index 0000000..fafd85b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> @@ -0,0 +1,39 @@
-> += Amlogic eFuse device tree bindings =
-> +
-> +Required properties:
-> +- compatible: should be "amlogic,meson-gxbb-efuse"
-> +
-> += Data cells =
-> +Are child nodes of eFuse, bindings of which as described in
-> +bindings/nvmem/nvmem.txt
-> +
-> +Example:
-> +
-> +	efuse: efuse {
-> +		compatible = "amlogic,meson-gxbb-efuse";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		sn: sn@14 {
-> +			reg = <0x14 0x10>;
-> +		};
-> +
-> +		eth_mac: eth_mac@34 {
-> +			reg = <0x34 0x10>;
-> +		};
-> +
-> +		bid: bid@46 {
-> +			reg = <0x46 0x30>;
-> +		};
-> +	};
-> +
-> += Data consumers =
-> +Are device nodes which consume nvmem data cells.
-> +
-> +For example:
-> +
-> +	eth_mac {
-> +		...
-> +		nvmem-cells = <&eth_mac>;
-> +		nvmem-cell-names = "eth_mac";
-> +	};
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hans
