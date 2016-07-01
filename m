@@ -1,26 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 21/22] sh: Renesas RTS7751R2Dplus (a,k.a R2Dplus)
- IRQCHIP Driver
-Date: Thu, 30 Jun 2016 20:53:13 -0500
-Message-ID: <20160701015313.GA31508@rob-hp-laptop>
+Subject: Re: [PATCH v4 19/22] sh: IO-DATA HDL-U (a,k.a landisk) IRQCHIP driver
+Date: Thu, 30 Jun 2016 20:48:53 -0500
+Message-ID: <20160701014853.GA29009@rob-hp-laptop>
 References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
- <1467207667-15768-22-git-send-email-ysato@users.sourceforge.jp>
+ <1467207667-15768-20-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467207667-15768-22-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1467207667-15768-20-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-sh-owner@vger.kernel.org
 To: Yoshinori Sato <ysato@users.sourceforge.jp>
 Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 29, 2016 at 10:41:06PM +0900, Yoshinori Sato wrote:
+On Wed, Jun 29, 2016 at 10:41:04PM +0900, Yoshinori Sato wrote:
 > Changes v4
-> - split patch.
-> - remove unneeded #address
+> - split patches
+> - remove unneeded line
+> - example update
+> 
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> ---
+>  .../interrupt-controller/iodata-landisk.txt        | 31 ++++++++++
+>  drivers/irqchip/Makefile                           |  2 +-
+>  drivers/irqchip/irq-io-landisk.c                   | 72 ++++++++++++++++++++++
+>  3 files changed, 104 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+>  create mode 100644 drivers/irqchip/irq-io-landisk.c
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+> new file mode 100644
+> index 0000000..cf461dc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+> @@ -0,0 +1,31 @@
+> +DT bindings for the I/O DATA HDL-U interrupt controller
+> +
+> +Required properties:
+> +
+> +  - compatible: has to be "iodata,landisk-intc".
+> +
+> +  - reg: Base address and length of interrupt controller register.
+> +
+> +  - interrupt-controller: Identifies the node as an interrupt controller.
+> +
+> +  - #interrupt-cells: has to be <1>: an interrupt index.
+> +
+> +  - interrupt-map: Interrupt mapping on parent controller.
 
-Actually, I think #address-cells is supposed to be set for 
-interrupt-map. It defines the size of the first field.
+interrupt-controller and interrupt-map are supposed to be mutually 
+exclusive, so you should probably drop interrupt-controller.
 
 Rob
