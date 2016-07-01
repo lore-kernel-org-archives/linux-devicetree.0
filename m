@@ -1,81 +1,124 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH] [media] rc: ir-spi: add support for IR LEDs connected with
- SPI
-Date: Fri, 01 Jul 2016 21:30:35 +0900
-Message-ID: <20160701123035.GA12029@samsunx.samsung>
-References: <1467362022-12704-1-git-send-email-andi.shyti@samsung.com>
- <CGME20160701094505epcas1p469fb8084bd5195cdab5555a9f3368682@epcas1p4.samsung.com>
- <20160701094458.GA8933@gofer.mess.org>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 7/9] iommu/arm-smmu: Implement of_xlate() for SMMUv3
+Date: Fri, 1 Jul 2016 13:35:08 +0100
+Message-ID: <20160701123507.GJ12735@arm.com>
+References: <cover.1467123945.git.robin.murphy@arm.com>
+ <6de0ca7795e1b74627ceb55dcefcfd5537f245ce.1467123945.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-disposition: inline
-In-reply-to: <20160701094458.GA8933@gofer.mess.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6de0ca7795e1b74627ceb55dcefcfd5537f245ce.1467123945.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
-
-> > The ir-spi is a simple device driver which supports the
-> > connection between an IR LED and the MOSI line of an SPI device.
-> > 
-> > The driver, indeed, uses the SPI framework to stream the raw data
-> > provided by userspace through a character device. The chardev is
-> > handled by the LIRC framework and its functionality basically
-> > provides:
-> > 
-> >  - raw write: data to be sent to the SPI and then streamed to the
-> >    MOSI line;
-> >  - set frequency: sets the frequency whith which the data should
-> >    be sent;
-> >  - set length: sets the data length. This information is
-> >    optional, if the length is set, then userspace should send raw
-> >    data only with that length; while if the length is set to '0',
-> >    then the driver will figure out himself the length of the data
-> >    based on the length of the data written on the character
-> >    device.
-> >    The latter is not recommended, though, as the driver, at
-> >    any write, allocates and deallocates a buffer where the data
-> >    from userspace are stored.
-> > 
-> > The driver provides three feedback commands:
-> > 
-> >  - get length: reads the length set and (as mentioned), if the
-> >    length is '0' it will be calculated at any write
-> >  - get frequency: the driver reports the frequency. If userpace
-> >    doesn't set the frequency, the driver will use a default value
-> >    of 38000Hz.
+On Tue, Jun 28, 2016 at 04:48:26PM +0100, Robin Murphy wrote:
+> Now that we can properly describe the mapping between PCI RIDs and
+> stream IDs via "iommu-map", and have it fed it to the driver
+> automatically via of_xlate(), rework the SMMUv3 driver to benefit from
+> that, and get rid of the current misuse of the "iommus" binding.
 > 
-> This interface is not compatible with other lirc devices; there is no
-> way of determining whether this is a regular lirc device or this new
-> flavour you've invented.
+> Since having of_xlate wired up means that masters will now be given the
+> appropriate DMA ops, we also need to make sure that default domains work
+> properly. This necessitates dispensing with the "whole group at a time"
+> notion for attaching to a domain, as devices which share a group get
+> attached to the group's default domain one by one as they are initially
+> probed.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
 
-except of the set length and get length which I'm using a bit
-freely because I am dealing with devices that exchange always the
-same amount of data, so that I don't need (in my case) to
-pre-allocate or overallocate or runtime allocate. I don't
-understand what else I invented :)
+[...]
 
-This is a simple driver which is driving an LED connected through
-SPI and userspace writes raw data in it (LIRC_CAN_SEND_RAW).
+>  static int arm_smmu_add_device(struct device *dev)
+>  {
+>  	int i, ret;
+> -	u32 sid, *sids;
+> -	struct pci_dev *pdev;
+> -	struct iommu_group *group;
+> -	struct arm_smmu_group *smmu_group;
+>  	struct arm_smmu_device *smmu;
+> +	struct arm_smmu_master_data *master;
+> +	struct iommu_fwspec *fwspec = dev_iommu_fwspec(dev);
+> +	struct iommu_group *group;
+>  
+> -	/* We only support PCI, for now */
+> -	if (!dev_is_pci(dev))
+> +	if (!fwspec || fwspec->iommu_ops != &arm_smmu_ops)
+>  		return -ENODEV;
+> -
+> -	pdev = to_pci_dev(dev);
+> -	group = iommu_group_get_for_dev(dev);
+> -	if (IS_ERR(group))
+> -		return PTR_ERR(group);
+> -
+> -	smmu_group = iommu_group_get_iommudata(group);
+> -	if (!smmu_group) {
+> -		smmu = arm_smmu_get_for_pci_dev(pdev);
+> -		if (!smmu) {
+> -			ret = -ENOENT;
+> -			goto out_remove_dev;
+> -		}
+> -
+> -		smmu_group = kzalloc(sizeof(*smmu_group), GFP_KERNEL);
+> -		if (!smmu_group) {
+> -			ret = -ENOMEM;
+> -			goto out_remove_dev;
+> -		}
+> -
+> -		smmu_group->ste.valid	= true;
+> -		smmu_group->smmu	= smmu;
+> -		iommu_group_set_iommudata(group, smmu_group,
+> -					  __arm_smmu_release_pci_iommudata);
+> +	/*
+> +	 * We _can_ actually withstand dodgy bus code re-calling add_device()
+> +	 * without an intervening remove_device()/of_xlate() sequence, but
+> +	 * we're not going to do so quietly...
+> +	 */
+> +	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
+> +		master = fwspec->iommu_priv;
+> +		smmu = master->smmu;
+>  	} else {
+> -		smmu = smmu_group->smmu;
+> +		smmu = arm_smmu_get_by_node(fwspec->iommu_np);
+> +		if (!smmu)
+> +			return -ENODEV;
+> +		master = kzalloc(sizeof(*master), GFP_KERNEL);
+> +		if (!master)
+> +			return -ENOMEM;
+> +
+> +		master->smmu = smmu;
+> +		fwspec->iommu_priv = master;
+>  	}
+>  
+> -	/* Assume SID == RID until firmware tells us otherwise */
+> -	pci_for_each_dma_alias(pdev, __arm_smmu_get_pci_sid, &sid);
+> -	for (i = 0; i < smmu_group->num_sids; ++i) {
+> -		/* If we already know about this SID, then we're done */
+> -		if (smmu_group->sids[i] == sid)
+> -			goto out_put_group;
+> +	/* Check the SIDs are in range of the SMMU and our stream table */
+> +	for (i = 0; i < fwspec->num_ids; i++) {
+> +		u32 sid = fwspec->ids[i];
+> +
+> +		if (!arm_smmu_sid_in_range(smmu, sid))
+> +			return -ERANGE;
+> +
+> +		/* Ensure l2 strtab is initialised */
+> +		if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
+> +			ret = arm_smmu_init_l2_strtab(smmu, sid);
+> +			if (ret)
+> +				return ret;
+> +		}
+>  	}
 
-> Also I don't see what justifies this new interface. This can be 
-> implemented in rc-core in less lines of code and it will be entirely 
-> compatible with existing user-space.
+Do you not need to do some cleanup here, rather than just returning (same
+for the -ERANGE above)? For example, freeing the master?
 
-Also here I'm getting a bit confused. When I started writing
-this, I didn't even know of the existence of a remote controlling
-framework, but then I run across this:
-
-"LIRC is a package that allows you to decode and send infra-red
-signals of many (but not all) commonly used remote controls. "
-
-taken from lirc.org: my case is exactly falling into this
-description.
-
-Am I missing anything?
-
-Thanks,
-Andi
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
