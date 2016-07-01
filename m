@@ -1,28 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/7] dt-bindings: spi: Update dspi bindings for LS2088A
-Date: Thu, 30 Jun 2016 20:31:00 -0500
-Message-ID: <20160701013100.GA21760@rob-hp-laptop>
-References: <1467125341-2380-1-git-send-email-abhimanyu.saini@nxp.com>
- <1467125341-2380-5-git-send-email-abhimanyu.saini@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: media: meson-ir: Add Meson8b and
+ GXBB compatible strings
+Date: Thu, 30 Jun 2016 20:34:10 -0500
+Message-ID: <20160701013410.GA23375@rob-hp-laptop>
+References: <20160626210622.5257-1-martin.blumenstingl@googlemail.com>
+ <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+ <20160628191802.21227-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467125341-2380-5-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <20160628191802.21227-2-martin.blumenstingl@googlemail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, mchehab@kernel.org, devicetree@vger.kernel.org, narmstrong@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 08:18:58PM +0530, Abhimanyu Saini wrote:
-> Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+On Tue, Jun 28, 2016 at 09:17:59PM +0200, Martin Blumenstingl wrote:
+> From: Neil Armstrong <narmstrong@baylibre.com>
+> 
+> New bindings are needed as the register layout on the newer platforms
+> is slightly different compared to Meson6b.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/media/meson-ir.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
