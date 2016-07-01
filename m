@@ -1,58 +1,81 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/9] iommu/of: Consolidate device creation workarounds
-Date: Fri, 1 Jul 2016 13:29:55 +0100
-Message-ID: <20160701122955.GI12735@arm.com>
-References: <cover.1467123945.git.robin.murphy@arm.com>
- <dc8ac0f397ea5c90937fb5c9974e4ab02e264bd8.1467123945.git.robin.murphy@arm.com>
- <611b2a77-e7e8-e1e2-85b5-4f469f3ebdf4@samsung.com>
- <577651D7.4030309@arm.com>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH] [media] rc: ir-spi: add support for IR LEDs connected with
+ SPI
+Date: Fri, 01 Jul 2016 21:30:35 +0900
+Message-ID: <20160701123035.GA12029@samsunx.samsung>
+References: <1467362022-12704-1-git-send-email-andi.shyti@samsung.com>
+ <CGME20160701094505epcas1p469fb8084bd5195cdab5555a9f3368682@epcas1p4.samsung.com>
+ <20160701094458.GA8933@gofer.mess.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <577651D7.4030309-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-disposition: inline
+In-reply-to: <20160701094458.GA8933@gofer.mess.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Sean Young <sean@mess.org>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 12:19:51PM +0100, Robin Murphy wrote:
-> On 01/07/16 11:32, Marek Szyprowski wrote:
-> > Frankly, I would avoid moving this workaround to the iommu core. IMHO the
-> > best solution would be to let IOMMU controllers to be instantiated as
-> > normal
-> > devices and implement proper support in the device core for waiting for the
-> > iommu controller. Then the workaround can be removed from exynos and mtk
-> > iommu drivers. What's the status of IOMMU deferred probe patches?
-> 
-> I think revisiting probe ordering is now second-from-top on my to-do
-> list after this lot. This patch was kind of thinking ahead to get the
-> "touch all the drivers" aspect out of the way before it grows any
-> bigger, and all the development can then happen in the core code alone,
-> but I admit it's not a particularly strong argument.
-> 
-> > I've encountered a serious problems with current code (the one which
-> > instantiates iommu controller devices from iommu driver) and its
-> > integration
-> > with power domains, clocks and runtime pm, which were not possible to
-> > resolve
-> > without iommu deferred probe.
-> 
-> OK. Do you have any plans to try tweaking the current workaround, or is
-> it really not worth it? FWIW I do have an Exynos 5410 (Odroid-XU) on my
-> desk which I could theoretically test things on, but I suspect it would
-> take a fair amount of work to get the SYSMMUs and relevant media bits up
-> and running on top of Krzysztof's basic support.
-> 
-> Will: for the time being, the alternative to this patch would be to
-> squash the following change into patch 7/9 (without either, patch 8/9
-> doesn't really work).
+Hi Sean,
 
-It's ugly, but I'm fine with it for the moment. No need to wait for the
-probe deferral stuff before getting this in.
+> > The ir-spi is a simple device driver which supports the
+> > connection between an IR LED and the MOSI line of an SPI device.
+> > 
+> > The driver, indeed, uses the SPI framework to stream the raw data
+> > provided by userspace through a character device. The chardev is
+> > handled by the LIRC framework and its functionality basically
+> > provides:
+> > 
+> >  - raw write: data to be sent to the SPI and then streamed to the
+> >    MOSI line;
+> >  - set frequency: sets the frequency whith which the data should
+> >    be sent;
+> >  - set length: sets the data length. This information is
+> >    optional, if the length is set, then userspace should send raw
+> >    data only with that length; while if the length is set to '0',
+> >    then the driver will figure out himself the length of the data
+> >    based on the length of the data written on the character
+> >    device.
+> >    The latter is not recommended, though, as the driver, at
+> >    any write, allocates and deallocates a buffer where the data
+> >    from userspace are stored.
+> > 
+> > The driver provides three feedback commands:
+> > 
+> >  - get length: reads the length set and (as mentioned), if the
+> >    length is '0' it will be calculated at any write
+> >  - get frequency: the driver reports the frequency. If userpace
+> >    doesn't set the frequency, the driver will use a default value
+> >    of 38000Hz.
+> 
+> This interface is not compatible with other lirc devices; there is no
+> way of determining whether this is a regular lirc device or this new
+> flavour you've invented.
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+except of the set length and get length which I'm using a bit
+freely because I am dealing with devices that exchange always the
+same amount of data, so that I don't need (in my case) to
+pre-allocate or overallocate or runtime allocate. I don't
+understand what else I invented :)
+
+This is a simple driver which is driving an LED connected through
+SPI and userspace writes raw data in it (LIRC_CAN_SEND_RAW).
+
+> Also I don't see what justifies this new interface. This can be 
+> implemented in rc-core in less lines of code and it will be entirely 
+> compatible with existing user-space.
+
+Also here I'm getting a bit confused. When I started writing
+this, I didn't even know of the existence of a remote controlling
+framework, but then I run across this:
+
+"LIRC is a package that allows you to decode and send infra-red
+signals of many (but not all) commonly used remote controls. "
+
+taken from lirc.org: my case is exactly falling into this
+description.
+
+Am I missing anything?
+
+Thanks,
+Andi
