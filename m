@@ -1,69 +1,173 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name dt property
-Date: Thu, 30 Jun 2016 21:08:36 -0500
-Message-ID: <20160701020836.GA1722@rob-hp-laptop>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: add the power domain node for rk3399
+Date: Fri, 01 Jul 2016 10:11:24 +0800
+Message-ID: <5775D14C.5040808@rock-chips.com>
+References: <1467251760-14695-1-git-send-email-wxt@rock-chips.com>
+ <CAD=FV=Wg1vuBhcjFRj53t-E0sKoBH577RB7gHZ-rkJV5T7nyZw@mail.gmail.com>
+ <2709691.LCsUme3dJo@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBJ5B265QKGQES2EZ4PY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1467209074-15634-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <2709691.LCsUme3dJo@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: huangtao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 29, 2016 at 04:04:31PM +0200, Hans de Goede wrote:
-> Add a brcm,nvram_file_name dt property to allow overruling the default
-> nvram filename for sdio devices. The idea is that we can specify a
-> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
-> with an ap6210 wifi sdio module and ship this in linux-firmware, so
-> that wifi will work out of the box, without requiring users to find
-> and then manually install the right nvram file for their board.
-
-What about putting its contents directly into DT? It's just text 
-key/value pairs so it would match up well.
-
-Also, I have to wonder how all the non-SDIO based cards don't need this 
-file.
-  
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt          | 2 ++
->  drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c               | 2 ++
->  drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c             | 6 ++++++
->  include/linux/platform_data/brcmfmac.h                              | 2 ++
->  4 files changed, 12 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> index 5dbf169..2ba13a6 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> @@ -11,6 +11,7 @@ Required properties:
->  Optional properties:
->   - brcm,drive-strength : drive strength used for SDIO pins on device in mA
->  	(default = 6).
-> + - brcm,nvram_file_name : name of the nvram file to load
-
-The need for firmware file names has come up several times though 
-nothing merged to yet. There has been at least some level of agreement 
-to use "firmware-name" here. 
-
->   - interrupt-parent : the phandle for the interrupt controller to which the
->  	device interrupts are connected.
->   - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
-> @@ -34,6 +35,7 @@ mmc3: mmc@01c12000 {
->  	brcmf: bcrmf@1 {
->  		reg = <1>;
->  		compatible = "brcm,bcm4329-fmac";
-> +		brcm,nvram_file_name = "brcm/brcmfmac43362-ap6210.txt";
->  		interrupt-parent = <&pio>;
->  		interrupts = <10 8>; /* PH10 / EINT10 */
->  		interrupt-names = "host-wake";
+VGhhbmtzIHlvdXIgcmV2aWV3aW5nIQoKT24gMjAxNuW5tDA35pyIMDHml6UgMDU6NTcsIEhlaWtv
+IFN0dWVibmVyIHdyb3RlOgo+IEFtIERvbm5lcnN0YWcsIDMwLiBKdW5pIDIwMTYsIDE0OjQ5OjQx
+IHNjaHJpZWIgRG91ZyBBbmRlcnNvbjoKPj4gQ2Flc2FyLAo+Pgo+PiBPbiBXZWQsIEp1biAyOSwg
+MjAxNiBhdCA2OjU2IFBNLCBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPiB3cm90ZToK
+Pj4+IEZyb206IEVsYWluZSBaaGFuZyA8emhhbmdxaW5nQHJvY2stY2hpcHMuY29tPgo+Pj4KPj4+
+IEluIG9yZGVyIHRvIG1lZXQgbG93IHBvd2VyIHJlcXVpcmVtZW50cywgYSBwb3dlciBtYW5hZ2Vt
+ZW50IHVuaXQgKFBNVSkKPj4+IGlzCj4+PiBkZXNpZ25lZCBmb3IgY29udHJvbGxpbmcgcG93ZXIg
+cmVzb3VyY2VzIGluIFJLMzM5OS4gVGhlIFJLMzM5OSBQTVUgaXMKPj4+IGRlZGljYXRlZCBmb3Ig
+bWFuYWdpbmcgdGhlIHBvd2VyIG9mIHRoZSB3aG9sZSBjaGlwLgo+Pj4KPj4+IDEuIGFkZCBwZCBu
+b2RlIGZvciBSSzMzOTkgU29jCj4+PiAyLiBjcmVhdGUgcG93ZXIgZG9tYWluIHRyZWUKPj4+IDMu
+IGFkZCBxb3Mgbm9kZSBmb3IgZG9tYWluCj4+Pgo+Pj4gIEZyb20gdGhlIERUL2JpbmRzIGFuZCBk
+cml2ZXIgY2FuIGdldCBtb3JlIGRldGFpbCBpbmZvcm1hdGlvbjoKPj4+IFRoZSBkcml2ZXI6Cj4+
+PiBkcml2ZXJzL3NvYy9yb2NrY2hpcC9wbV9kb21haW5zLmMKPj4+IFRoZSBkb2N1bWVudDoKPj4+
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2Mvcm9ja2NoaXAvcG93ZXJfZG9t
+YWluLnR4dAo+Pj4KPj4+IC0tLQo+Pj4KPj4+IFRlc3RlZCBvbiB2b3AgYW5kIGdwdSBkZXZpY2Vz
+IGFkZGVkIGZvciBuZXh0IGtlcm5lbC4KPj4+IFBEOgo+Pj4gbG9jYWxob3N0IC8gIyBjYXQgc3lz
+L2tlcm5lbC9kZWJ1Zy9wbV9nZW5wZC9wbV9nZW5wZF9zdW1tYXJ5Cj4+IE5pdDogY2FuIHlvdSBw
+dXQgYSAiLyIgYmVmb3JlICJzeXMiIGhlcmUgYW5kIGVsc2V3aGVyZSBpbiB5b3VyIHBhdGNoZXM/
+Cj4+Cj4+PiBkb21haW4gICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyAgICAgICAgICBz
+bGF2ZXMKPj4+IC9kZXZpY2UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBydW50aW1lIHN0YXR1cwo+Pj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+Pj4gcGRfZ3B1ICAgICAgICAg
+ICAgICAgICAgICAgICAgICBvbgo+Pj4gL2RldmljZXMvcGxhdGZvcm0vZmY5YTAwMDAuZ3B1ICAg
+ICAgICAgICAgICAgICAgICAgIGFjdGl2ZQo+Pj4gcGRfdm9wbCAgICAgICAgICAgICAgICAgICAg
+ICAgICBvZmYKPj4+IC9kZXZpY2VzL3BsYXRmb3JtL2ZmOGYwMDAwLnZvcCAgICAgICAgICAgICAg
+ICAgICAgICBzdXNwZW5kZWQKPj4+IHBkX3ZvcGIgICAgICAgICAgICAgICAgICAgICAgICAgb2Zm
+Cj4+PiAvZGV2aWNlcy9wbGF0Zm9ybS9mZjkwMDAwMC52b3AgICAgICAgICAgICAgICAgICAgICAg
+c3VzcGVuZGVkCj4+PiBwZF92byAgICAgICAgICAgICAgICAgICAgICAgICAgIG9mZiAgICAgICAg
+ICAgICBwZF92b3BiLCBwZF92b3BsCj4+PiBwZF9oZGNwICAgICAgICAgICAgICAgICAgICAgICAg
+IG9mZgo+Pj4gLi4uCj4+PiBwZF9pZXAgICAgICAgICAgICAgICAgICAgICAgICAgIG9mZgo+Pj4g
+cGRfdmNvZGVjICAgICAgICAgICAgICAgICAgICAgICBvZmYKPj4+IHBkX3ZkdSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgb2ZmCj4+Pgo+Pj4gUU9TOgo+Pj4gbG9jYWxob3N0IC8gIyBjYXQgc3lz
+L2tlcm5lbC9kZWJ1Zy9wbV9xb3MvCj4+PiBjcHVfZG1hX2xhdGVuY3kgICAgIG5ldHdvcmtfbGF0
+ZW5jeQo+Pj4gbWVtb3J5X2JhbmR3aWR0aCAgICBuZXR3b3JrX3Rocm91Z2hwdXQKPj4gV2hhdCBp
+cyB0aGlzIHN1cHBvc2VkIHRvIGJlIHNob3dpbmcgZXhhY3RseT8gIFlvdSBjYW4ndCAiY2F0IiBh
+Cj4+IGRpcmVjdG9yeSwgc28gbWF5YmUgeW91IG1lYW50ICJscyI/Cj4+Cj4+IEFsc28sIGVhY2gg
+b2YgdGhlc2UgZmlsZXMgY29udGFpbnMgdGhlIHN0cmluZyAiRW1wdHkhIiBhbmQgdGhlc2UgZmls
+ZXMKPj4gc2VlbSBmYWlybHkgdW5jb25uZWN0ZWQgdG8geW91ciBwYXRjaC4gIFRob3NlIGZpbGVz
+IGV4aXN0IGJvdGggYmVmb3JlCj4+IGFuZCBhZnRlciB5b3VyIHBhdGNoIGFuZCBub3RoaW5nIHRo
+YXQgSSBjYW4gc2VlIGluIHRoZSBSb2NrY2hpcCBRb1MKPj4gc3R1ZmYgaG9va3MgdXAgdG8gdGhl
+IGdlbmVyaWMgTGludXggUW9TIGluZnJhc3RydWN0dXJlLiAgVGhlIHBvd2VyCj4+IGRvbWFpbnMg
+anVzdCBzYXZlIGFuZCByZXN0b3JlIHRoZSBRb1MtLXRoZXkgZG9uJ3QgYWN0dWFsbHkgYWxsb3cK
+Pj4gc2V0dHRpbmcgaXQuCj4gcGVyc29uYWxseSwgSSB3b3VsZCBqdXN0IGRyb3AgdGhhdCBkZWJ1
+Z2ZzLWR1bXAsIGFzIEkgZG9uJ3Qgc2VlIHdoYXQgd2UgZ2Fpbgo+IGZyb20gaXQgOi0pLgoKQWdy
+ZWVkLCBkcm9wIGl0LgoKPj4+IFNpZ25lZC1vZmYtYnk6IEVsYWluZSBaaGFuZyA8emhhbmdxaW5n
+QHJvY2stY2hpcHMuY29tPgo+Pj4gU2lnbmVkLW9mZi1ieTogQ2Flc2FyIFdhbmcgPHd4dEByb2Nr
+LWNoaXBzLmNvbT4KPj4+IC0tLQo+IFsuLi5dCj4KPj4+ICsgICAgICAgcG11OiBwb3dlci1tYW5h
+Z2VtZW50QGZmMzEwMDAwIHsKPj4+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJvY2tj
+aGlwLHJrMzM5OS1wbXUiLCAic3lzY29uIiwKPj4+ICJzaW1wbGUtbWZkIjsgKyAgICAgICAgICAg
+ICAgIHJlZyA9IDwweDAgMHhmZjMxMDAwMCAweDAgMHgxMDAwPjsKPj4+ICsKPj4+ICsgICAgICAg
+ICAgICAgICBwb3dlcjogcG93ZXItY29udHJvbGxlciB7Cj4+PiArICAgICAgICAgICAgICAgICAg
+ICAgICBzdGF0dXMgPSAib2theSI7Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gInJvY2tjaGlwLHJrMzM5OS1wb3dlci1jb250cm9sbGVyIjsKPj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MT47Cj4+PiArICAgICAgICAgICAg
+ICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICNzaXplLWNlbGxzID0gPDA+Owo+Pj4gKwo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+cGRfdmR1IHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPFJLMzM5
+OV9QRF9WRFU+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8
+JmNydSBBQ0xLX1ZEVT4sCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDwmY3J1IEhDTEtfVkRVPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cG1fcW9zID0gPCZxb3NfdmlkZW9fbTFfcj4sCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDwmcW9zX3ZpZGVvX20xX3c+Owo+Pj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgfTsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBkX3Zjb2RlYyB7Cj4+PiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxSSzMzOTlfUERfVkNPREVDPjsKPj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcnUgQUNMS19WQ09E
+RUM+LAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNydSBI
+Q0xLX1ZDT0RFQz47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBtX3FvcyA9
+IDwmcW9zX3ZpZGVvX20wPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+PiArICAg
+ICAgICAgICAgICAgICAgICAgICBwZF9pZXAgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICByZWcgPSA8UkszMzk5X1BEX0lFUD47Cj4+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGNsb2NrcyA9IDwmY3J1IEFDTEtfSUVQPiwKPj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgPCZjcnUgSENMS19JRVA+Owo+Pj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBwbV9xb3MgPSA8JnFvc19pZXA+Owo+Pj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgfTsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBkX3JnYSB7Cj4+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxSSzMzOTlfUERfUkdBPjsKPj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcnUgQUNMS19SR0E+
+LAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNydSBIQ0xL
+X1JHQT47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBtX3FvcyA9IDwmcW9z
+X3JnYV9yPiwKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZx
+b3NfcmdhX3c+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIHBkX3ZpbyB7Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHJlZyA9IDxSSzMzOTlfUERfVklPPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICNzaXplLWNlbGxzID0gPDA+Owo+Pj4gKwo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBwZF9pc3AwIHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICByZWcgPSA8UkszMzk5X1BEX0lTUDA+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY3J1IEFDTEtfSVNQMD4sCj4+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZjcnUgSENMS19JU1AwPjsK
+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwbV9xb3MgPSA8JnFv
+c19pc3AwX20wPiwKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICA8JnFvc19pc3AwX20xPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfTsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGRfaXNwMSB7Cj4+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPFJLMzM5OV9QRF9J
+U1AxPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3Mg
+PSA8JmNydSBBQ0xLX0lTUDE+LAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDwmY3J1IEhDTEtfSVNQMT47Cj4+PiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgcG1fcW9zID0gPCZxb3NfaXNwMV9tMD4sCj4+PiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZxb3NfaXNwMV9tMT47
+Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+PiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHBkX2hkY3Agewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJlZyA9IDxSSzMzOTlfUERfSERDUD47Cj4+PiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcnUgQUNMS19IRENQPiwKPj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNydSBI
+Q0xLX0hEQ1A+LAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIDwmY3J1IFBDTEtfSERDUD47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcG1fcW9zID0gPCZxb3NfaGRjcD47Cj4+PiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIH07Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBkX3Zv
+IHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8Uksz
+Mzk5X1BEX1ZPPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAj
+YWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKPj4+ICsKPj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBwZF92b3BiIHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxSSzMzOTlfUERfVk9QQj47Cj4+PiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNy
+dQo+Pj4gQUNMS19WT1AwPiwgKwo+Pj4gPCZjcnUgSENMS19WT1AwPjsgKwo+Pj4gcG1fcW9zID0g
+PCZxb3Nfdm9wX2JpZ19yPiwgKwo+Pj4gICAgICAgICAgICAgIDwmcW9zX3ZvcF9iaWdfdz47ICsK
+Pj4+IH07Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGRfdm9w
+bCB7Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
+ZWcgPSA8UkszMzk5X1BEX1ZPUEw+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcnUKPj4+IEFDTEtfVk9QMT4sICsKPj4+IDwm
+Y3J1IEhDTEtfVk9QMT47ICsKPj4+IHBtX3FvcyA9IDwmcW9zX3ZvcF9saXR0bGU+OyArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfTsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+PiArICAg
+ICAgICAgICAgICAgICAgICAgICBwZF9ncHUgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICByZWcgPSA8UkszMzk5X1BEX0dQVT47Cj4+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGNsb2NrcyA9IDwmY3J1IEFDTEtfR1BVPjsKPj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcG1fcW9zID0gPCZxb3NfZ3B1PjsKPj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIH07Cj4+IEFnYWluIGEgbml0dHkgc29ydCBvcmRlciBxdWVzdGlvbi4gIElzIHRoZXJl
+IGEgcmVhc29uIG5vdCB0byBtYWtlCj4+IHRoaW5ncyBhbHBoYWJldGljYWw/ICBBS0E6IHBkX2dw
+dSwgcGRfaWVwLCBwZF9yZ2EsIC4uLgo+Pgo+PiAuLi5hbmQgaW5zaWRlIHBkX3ZpbyBzaG91bGQg
+YmUgYWxwaGFiZXRpY2FsIHRvbz8KPj4KPj4gSW4gdGhlIFRSTSBpdCBsb29rcyBsaWtlIHNvbWUg
+b2YgdGhlIHBvd2VyIGRvbWFpbnMgYXJlIGdyb3VwZWQKPj4gdG9nZXRoZXIgKGxpa2UgYWxsIHRo
+ZSBkb21haW5zIHVuZGVyIExPR0lDIG9yIENFTlRFUkxPR0lDKS4gIElmCj4+IGtlZXBpbmcgdGhh
+dCBncm91cGluZyBtYWtlcyBzZW5zZSBoZXJlIHRoZW4geW91IHNob3VsZCBhZGQgYSBjb21tZW50
+Cj4+IGF0IHRoZSBzdGFydCBvZiBlYWNoIGdyb3VwIGFuZCBzb3J0IHRoZSBncm91cHMgc2FuZWx5
+IChhbmQgc29ydCB3aXRoaW4KPj4gZWFjaCBncm91cCkuCgpPa2F5LCBsZXQgbWUgc2VlIGl0LgoK
+VGhhbmtzIQoKPj4KPj4gSXQgbG9va3MgbGlrZSB0aGVyZSBhcmUgYWxzbyBtb3JlIHBvd2VyIGRv
+bWFpbnMgdGhhdCB5b3UgaGF2ZW4ndAo+PiBsaXN0ZWQgaGVyZSAobGlrZSBQRF9HTUFDLCBmb3Ig
+aW5zdGFuY2UsIG9yIFBEX0NPUkVfTCkuICBBcmUgeW91Cj4+IHBsYW5uaW5nIHRvIGFkZCB0aG9z
+ZSBpbiBhIGZvbGxvd29uIHBhdGNoPwo+IHRoYXQgcmVtaW5kcyBtZSwgbm9kZXMgd2l0aCBhIHJl
+ZyBwcm9wZXJ0eSBzaG91bGQgaGF2ZSB0aGUgYmFzZSBhZGRyZXNzIGluCj4gdGhlIG5vZGUgbmFt
+ZSBhcyB3ZWxsLiBVc2luZyB0aGUgY29uc3RhbnQgd29ya3MgbmljZWx5LCBhcyBjYW4gYmUgc2Vl
+biBvbgo+IHRoZSByazMyODggd2hlcmUgd2UgaGF2ZSBmb3IgZXhhbXBsZToKPgo+IAlwZF92aW9A
+UkszMjg4X1BEX1ZJTwoKQWdyZWVkLgoKCj4KPgo+IEhlaWtvCj4KPgo+CgotLSAKY2Flc2FyIHdh
+bmcgfCBzb2Z0d2FyZSBlbmdpbmVlciB8IHd4dEByb2NrLWNoaXAuY29tCgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxp
+bmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
