@@ -1,126 +1,61 @@
-From: Po Liu <po.liu@nxp.com>
-Subject: RE: [PATCH v2 2/2] pci/aer: interrupt fixup in the quirk
-Date: Fri, 1 Jul 2016 08:46:31 +0000
-Message-ID: <VI1PR0401MB1709A82B3C59528D0953259892250@VI1PR0401MB1709.eurprd04.prod.outlook.com>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465884747-1517-1-git-send-email-po.liu@nxp.com>
- <1465884747-1517-2-git-send-email-po.liu@nxp.com>
- <20160616135420.GA31343@localhost>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm, nvram_file_name
+ dt property
+Date: Fri, 01 Jul 2016 10:51:10 +0200
+Message-ID: <5046715.4MWnq2SdoR@wuerfel>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <3960223.GqB9zXL8s8@wuerfel> <1f44df41-0111-441b-4671-718eec0c4346@broadcom.com>
+Reply-To: arnd-r2nGTMty4D4@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Po Liu <po.liu@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Yang-Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRBZG43C5QKGQE34YIDTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1f44df41-0111-441b-4671-718eec0c4346-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Thursday, June 30, 2016 9:23:56 PM CEST Arend Van Spriel wrote:
+> 
+> On 30-6-2016 13:31, Arnd Bergmann wrote:
+> > On Thursday, June 30, 2016 12:25:15 PM CEST Hans de Goede wrote:
+> >>> So then how about making use of a more specific compatible string?
+> >>>
+> >>> e.g.
+> >>>
+> >>> brcmf {
+> >>>         compatible = "foo,ap6210", "brcm,bcm4329-fmac";
+> >>>         ...
+> >>> };
+> >>>
+> >>> and if the compatible has more than one element you request
+> >>> FW_NAME_<compatible>.txt as the nvram file. Or try each comptible (and
+> >>> lastly no suffix) until you get a match. (AFAICT, this is what the
+> >>> "model" property was originally intended for anyway, but almost nobody
+> >>> did it right, and everyone put a user readable string into "model" for
+> >>> boards instead of the ePAPR defined compatible string).
+> >>
+> >> Hmm, interesting idea. Not sure how easy / hard it will be to implement
+> >> this, but from a dt binding point of view it seems elegant.
+> >>
+> >> Kalle, Arend, what do you think of this ?
+> 
+> At first glance I like the suggestion, but this would mean updating the
+> bindings document for each new wifi module that we want to add. Not a
+> big problem, but it makes that I have a slight preference to using a
+> property for it, eg. brcm,module = "ap6210";
 
-So could we keep it in the pci/quirk.c ? 
-If yes, I would only move the binding description in the documentation into this driver the next version.
+I think we can be a little relaxed with the requirement for updating the
+binding document here, as long as the binding lists all the strings that
+are understood by the driver itself and documents that there can be
+additional strings in it.
 
->  -----Original Message-----
->  From: Po Liu
->  Sent: Friday, June 17, 2016 11:31 AM
->  To: 'Bjorn Helgaas'
->  Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Bjorn Helgaas;
->  Shawn Guo; Marc Zyngier; Rob Herring; Roy Zang; Mingkai Hu; Stuart Yoder;
->  Yang-Leo Li; Arnd Bergmann; Minghuan Lian; Murali Karicheri
->  Subject: RE: [PATCH v2 2/2] pci/aer: interrupt fixup in the quirk
->  
->  
->  
->  >  -----Original Message-----
->  >  From: Bjorn Helgaas [mailto:helgaas@kernel.org]
->  >  Sent: Thursday, June 16, 2016 9:54 PM
->  >  To: Po Liu
->  >  Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->  >  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Bjorn
->  > Helgaas;  Shawn Guo; Marc Zyngier; Rob Herring; Roy Zang; Mingkai Hu;
->  > Stuart Yoder;  Yang-Leo Li; Arnd Bergmann; Minghuan Lian; Murali
->  > Karicheri
->  >  Subject: Re: [PATCH v2 2/2] pci/aer: interrupt fixup in the quirk
->  >
->  >  On Tue, Jun 14, 2016 at 02:12:27PM +0800, Po Liu wrote:
->  >  > On some platforms, root port doesn't support MSI/MSI-X/INTx in RC
->  mode.
->  >  > When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
->  > > maybe there is interrupt line for aer pme etc. Search the interrupt
->  > > number in the fdt file. Then fixup the dev->irq with it.
->  >  >
->  >  > Signed-off-by: Po Liu <po.liu@nxp.com>  > ---  > changes for V2:
->  >  > 	- Move to the quirk file
->  >  >
->  >  >  drivers/pci/quirks.c | 23 +++++++++++++++++++++++  >  1 file
->  > changed, 23 insertions(+)  >  > diff --git a/drivers/pci/quirks.c
->  > b/drivers/pci/quirks.c index  > ee72ebe..909d479 100644  > ---
->  > a/drivers/pci/quirks.c  > +++ b/drivers/pci/quirks.c
->  >
->  >  Is there any possibility of this part being used on different arches,
->  > or  will it only ever be on arm64 (or whatever it is)?  If the latter,
->  > it  could go somewhere like arch/arm64/kernel/quirks.c (which doesn't
->  > exist  yet).
->  
->  NXP Layerscape1 is base on the arm 32bit design. Also need the fixup.
->  
->  >
->  >  > @@ -25,6 +25,7 @@
->  >  >  #include <linux/sched.h>
->  >  >  #include <linux/ktime.h>
->  >  >  #include <linux/mm.h>
->  >  > +#include <linux/of_irq.h>
->  >  >  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
->  >  >  #include "pci.h"
->  >  >
->  >  > @@ -4419,3 +4420,25 @@ static void quirk_intel_qat_vf_cap(struct
->  > pci_dev *pdev)
->  >  >  	}
->  >  >  }
->  >  >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443,  >
->  > quirk_intel_qat_vf_cap);  > +  > +/* If root port doesn't support
->  > MSI/MSI-X/INTx in RC mode,  > + * but use standalone irq. Read the
->  > device tree for the aer  > + * interrupt number.
->  >  > + */
->  >  > +static void quirk_aer_interrupt(struct pci_dev *dev) {
->  >  > +	int ret;
->  >  > +	struct device_node *np = NULL;
->  >  > +
->  >  > +	if (dev->bus->dev.of_node)
->  >  > +		np = dev->bus->dev.of_node;
->  >  > +
->  >  > +	if (IS_ENABLED(CONFIG_OF_IRQ) && np) {
->  >  > +		ret = of_irq_get_byname(np, "aer");
->  >  > +		if (ret > 0) {
->  >  > +			dev->no_msi = 1;
->  >  > +			dev->irq = ret;
->  >  > +		}
->  >  > +	}
->  >
->  >  What does this mean for the other PCIe services, e.g., PME?  I guess
->  > this makes the existing AER code work unchanged.  But I thought PME
->  > had  a similar situation and was connected up to a different interrupt
->  > than  AER was.
->  
->  Yes, PME is similar, HP is not support. I think better to disable the
->  PME service irq in the quirk.
->  But seems it is no use because quirk fixup is only running in init phase
->  time(except suspend, resume).
->  
->  >
->  >  > +}
->  >  > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID,  >
->  > +quirk_aer_interrupt);  > --  > 2.1.0.27.g96db324  >  > --  > To
->  > unsubscribe from this list: send the line "unsubscribe linux-pci"
->  >  > in the body of a message to majordomo@vger.kernel.org More
->  > majordomo  > info at  http://vger.kernel.org/majordomo-info.html
+In particular, documenting how a compatible string that is made up from
+the board id and revision should be unproblematic.
+
+	Arnd
