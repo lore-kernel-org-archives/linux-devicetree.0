@@ -1,61 +1,68 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm, nvram_file_name
- dt property
-Date: Fri, 01 Jul 2016 10:51:10 +0200
-Message-ID: <5046715.4MWnq2SdoR@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <3960223.GqB9zXL8s8@wuerfel> <1f44df41-0111-441b-4671-718eec0c4346@broadcom.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 14/22] sh: SH7751 core dtsi
+Date: Fri, 1 Jul 2016 10:57:00 +0200
+Message-ID: <CAMuHMdUOZnQ9GLwx9=scrVBFXUh2LOKyCYRuEVUgKWWhpBotbg@mail.gmail.com>
+References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp> <1467207667-15768-15-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBZG43C5QKGQE34YIDTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1f44df41-0111-441b-4671-718eec0c4346-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467207667-15768-15-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, June 30, 2016 9:23:56 PM CEST Arend Van Spriel wrote:
-> 
-> On 30-6-2016 13:31, Arnd Bergmann wrote:
-> > On Thursday, June 30, 2016 12:25:15 PM CEST Hans de Goede wrote:
-> >>> So then how about making use of a more specific compatible string?
-> >>>
-> >>> e.g.
-> >>>
-> >>> brcmf {
-> >>>         compatible = "foo,ap6210", "brcm,bcm4329-fmac";
-> >>>         ...
-> >>> };
-> >>>
-> >>> and if the compatible has more than one element you request
-> >>> FW_NAME_<compatible>.txt as the nvram file. Or try each comptible (and
-> >>> lastly no suffix) until you get a match. (AFAICT, this is what the
-> >>> "model" property was originally intended for anyway, but almost nobody
-> >>> did it right, and everyone put a user readable string into "model" for
-> >>> boards instead of the ePAPR defined compatible string).
-> >>
-> >> Hmm, interesting idea. Not sure how easy / hard it will be to implement
-> >> this, but from a dt binding point of view it seems elegant.
-> >>
-> >> Kalle, Arend, what do you think of this ?
-> 
-> At first glance I like the suggestion, but this would mean updating the
-> bindings document for each new wifi module that we want to add. Not a
-> big problem, but it makes that I have a slight preference to using a
-> property for it, eg. brcm,module = "ap6210";
+Hi Sato-san,
 
-I think we can be a little relaxed with the requirement for updating the
-binding document here, as long as the binding lists all the strings that
-are understood by the driver itself and documents that there can be
-additional strings in it.
+On Wed, Jun 29, 2016 at 3:40 PM, Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> SH7751 core and internal peripheral define.
 
-In particular, documenting how a compatible string that is made up from
-the board id and revision should be unproblematic.
+Thanks for your patch!
 
-	Arnd
+> Changes v4
+> - remove unneeded #address-cells and #size-cells
+> - add missing dt-binding link
+
+Please move changelog information below the three dashes...
+
+>
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> ---
+
+... i.e. here.
+
+> --- /dev/null
+> +++ b/arch/sh/boot/dts/include/dt-bindings
+> @@ -0,0 +1 @@
+> +../../../../../include/dt-bindings
+> \ No newline at end of file
+
+Missing newline.
+
+> --- /dev/null
+> +++ b/arch/sh/boot/dts/sh7751.dtsi
+
+> +       oclk: oscillator {
+> +                #clock-cells = <0>;
+> +                compatible = "fixed-clock";
+> +                clock-frequency = <0>;
+> +        };
+> +       cpg: cpg@ffc00000 {
+
+clock-controller@ffc00000
+
+> \ No newline at end of file
+
+Missing newline.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
