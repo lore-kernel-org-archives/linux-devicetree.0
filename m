@@ -1,88 +1,478 @@
-From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name dt property
-Date: Fri, 1 Jul 2016 10:17:37 +0200
-Message-ID: <b18cd232-711a-b617-2f09-09c4bdf2c3c4@broadcom.com>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
- <20160701020836.GA1722@rob-hp-laptop>
-Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRYNGWEWYDBBLGO3C5QKGQEQOXABYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160701020836.GA1722@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: [PATCH] [media] rc: ir-spi: add support for IR LEDs connected with SPI
+Date: Fri, 01 Jul 2016 17:33:42 +0900
+Message-ID: <1467362022-12704-1-git-send-email-andi.shyti@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
+The ir-spi is a simple device driver which supports the
+connection between an IR LED and the MOSI line of an SPI device.
 
+The driver, indeed, uses the SPI framework to stream the raw data
+provided by userspace through a character device. The chardev is
+handled by the LIRC framework and its functionality basically
+provides:
 
-On 1-7-2016 4:08, Rob Herring wrote:
-> On Wed, Jun 29, 2016 at 04:04:31PM +0200, Hans de Goede wrote:
->> Add a brcm,nvram_file_name dt property to allow overruling the default
->> nvram filename for sdio devices. The idea is that we can specify a
->> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
->> with an ap6210 wifi sdio module and ship this in linux-firmware, so
->> that wifi will work out of the box, without requiring users to find
->> and then manually install the right nvram file for their board.
-> 
-> What about putting its contents directly into DT? It's just text 
-> key/value pairs so it would match up well.
+ - raw write: data to be sent to the SPI and then streamed to the
+   MOSI line;
+ - set frequency: sets the frequency whith which the data should
+   be sent;
+ - set length: sets the data length. This information is
+   optional, if the length is set, then userspace should send raw
+   data only with that length; while if the length is set to '0',
+   then the driver will figure out himself the length of the data
+   based on the length of the data written on the character
+   device.
+   The latter is not recommended, though, as the driver, at
+   any write, allocates and deallocates a buffer where the data
+   from userspace are stored.
 
-It would be an option, but I have no clue how to dig up documentation of
-these key,value pairs. The file is typically obtained from a wifi module
-vendor which would need to be converted to DT format, ie. prefix with
-"brcm," etc. From driver perspective this would mean it need to know
-keys. Currently, it just takes the file contents and sends it to the device.
+The driver provides three feedback commands:
 
-> Also, I have to wonder how all the non-SDIO based cards don't need this 
-> file.
+ - get length: reads the length set and (as mentioned), if the
+   length is '0' it will be calculated at any write
+ - get frequency: the driver reports the frequency. If userpace
+   doesn't set the frequency, the driver will use a default value
+   of 38000Hz.
 
-PCIe devices have more on-board storage. Also on some router platforms
-it gets nvram data from flash memory.
+The character device is created under /dev/lircX name, where X is
+and ID assigned by the LIRC framework.
 
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt          | 2 ++
->>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c               | 2 ++
->>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c             | 6 ++++++
->>  include/linux/platform_data/brcmfmac.h                              | 2 ++
->>  4 files changed, 12 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->> index 5dbf169..2ba13a6 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->> @@ -11,6 +11,7 @@ Required properties:
->>  Optional properties:
->>   - brcm,drive-strength : drive strength used for SDIO pins on device in mA
->>  	(default = 6).
->> + - brcm,nvram_file_name : name of the nvram file to load
-> 
-> The need for firmware file names has come up several times though 
-> nothing merged to yet. There has been at least some level of agreement 
-> to use "firmware-name" here. 
+Example of usage:
 
-Do you mean with or without vendor prefix? Actually the device needs two
-files to initialize. The firmware that is needed to have anything
-running on the device and the nvram data that characterizes the device
-for that firmware.
+        int fd, ret;
+        ssize_t n;
+        uint32_t val = 0;
 
-Regards,
-Arend
+        fd = open("/dev/lirc0", O_RDWR);
+        if (fd < 0) {
+                fprintf(stderr, "unable to open the device\n");
+                return -1;
+        }
 
->>   - interrupt-parent : the phandle for the interrupt controller to which the
->>  	device interrupts are connected.
->>   - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
->> @@ -34,6 +35,7 @@ mmc3: mmc@01c12000 {
->>  	brcmf: bcrmf@1 {
->>  		reg = <1>;
->>  		compatible = "brcm,bcm4329-fmac";
->> +		brcm,nvram_file_name = "brcm/brcmfmac43362-ap6210.txt";
->>  		interrupt-parent = <&pio>;
->>  		interrupts = <10 8>; /* PH10 / EINT10 */
->>  		interrupt-names = "host-wake";
+        /* ioctl set frequency and length parameters */
+        val = 6430;
+        ret = ioctl(fd, LIRC_SET_LENGTH, &val);
+        if (ret < 0)
+                fprintf(stderr, "LIRC_SET_LENGTH failed\n");
+        val = 608000;
+        ret = ioctl(fd, LIRC_SET_FREQUENCY, &val);
+        if (ret < 0)
+                fprintf(stderr, "LIRC_SET_FREQUENCY failed\n");
+
+        /* read back length and frequency parameters */
+        ret = ioctl(fd, LIRC_GET_LENGTH, &val);
+        if (ret < 0)
+                fprintf(stderr, "LIRC_GET_LENGTH failed\n");
+        else
+                fprintf(stdout, "legnth = %u\n", val);
+
+        ret = ioctl(fd, LIRC_GET_FREQUENCY, &val);
+        if (ret < 0)
+                fprintf(stderr, "LIRC_GET_FREQUENCY failed\n");
+        else
+                fprintf(stdout, "frequency = %u\n", val);
+
+        /* write data to device */
+        n = write(fd, b, 6430);
+        if (n < 0) {
+                fprintf(stderr, "unable to write to the device\n");
+                ret = -1;
+        } else if (n != 6430) {
+                fprintf(stderr, "failed to write everything, wrote %ld instead\n", n);
+                ret = -1;
+        } else {
+                fprintf(stdout, "written all the %ld data\n", n);
+        }
+
+        close(fd);
+
+The driver supports multi task access, but all the processes
+which hold the driver should use the same length and frequency
+parameters.
+
+Change-Id: I323d7dd4a56d6dcf48f2c695293822eb04bdb85f
+Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+---
+ Documentation/devicetree/bindings/media/spi-ir.txt |  24 ++
+ drivers/media/rc/Kconfig                           |   9 +
+ drivers/media/rc/Makefile                          |   1 +
+ drivers/media/rc/ir-spi.c                          | 301 +++++++++++++++++++++
+ 4 files changed, 335 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/spi-ir.txt
+ create mode 100644 drivers/media/rc/ir-spi.c
+
+diff --git a/Documentation/devicetree/bindings/media/spi-ir.txt b/Documentation/devicetree/bindings/media/spi-ir.txt
+new file mode 100644
+index 0000000..2232d92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/spi-ir.txt
+@@ -0,0 +1,24 @@
++Device tree bindings for IR LED connected through SPI bus which is used as
++remote controller.
++
++The IR LED switch is connected to the MOSI line of the SPI device and the data
++are delivered thourgh that.
++
++Required properties:
++	- compatible: should be "ir-spi"
++
++Optional properties:
++	- irled,switch: specifies the gpio switch which enables the irled
++
++Example:
++
++        irled@0 {
++                compatible = "ir-spi";
++                reg = <0x0>;
++                spi-max-frequency = <5000000>;
++                irled,switch = <&gpr3 3 0>;
++
++                controller-data {
++                        samsung,spi-feedback-delay = <0>;
++                };
++        };
+diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
+index bd4d685..dacaa29 100644
+--- a/drivers/media/rc/Kconfig
++++ b/drivers/media/rc/Kconfig
+@@ -261,6 +261,15 @@ config IR_REDRAT3
+ 	   To compile this driver as a module, choose M here: the
+ 	   module will be called redrat3.
+ 
++config IR_SPI
++	tristate "SPI connected IR LED"
++	depends on SPI && LIRC
++	---help---
++	  Say Y if you want to use an IR LED connected through SPI bus.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called ir-spi.
++
+ config IR_STREAMZAP
+ 	tristate "Streamzap PC Remote IR Receiver"
+ 	depends on USB_ARCH_HAS_HCD
+diff --git a/drivers/media/rc/Makefile b/drivers/media/rc/Makefile
+index 379a5c0..1417c8d 100644
+--- a/drivers/media/rc/Makefile
++++ b/drivers/media/rc/Makefile
+@@ -27,6 +27,7 @@ obj-$(CONFIG_IR_NUVOTON) += nuvoton-cir.o
+ obj-$(CONFIG_IR_ENE) += ene_ir.o
+ obj-$(CONFIG_IR_REDRAT3) += redrat3.o
+ obj-$(CONFIG_IR_RX51) += ir-rx51.o
++obj-$(CONFIG_IR_SPI) += ir-spi.o
+ obj-$(CONFIG_IR_STREAMZAP) += streamzap.o
+ obj-$(CONFIG_IR_WINBOND_CIR) += winbond-cir.o
+ obj-$(CONFIG_RC_LOOPBACK) += rc-loopback.o
+diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
+new file mode 100644
+index 0000000..6eb14e9
+--- /dev/null
++++ b/drivers/media/rc/ir-spi.c
+@@ -0,0 +1,301 @@
++/*
++ * Copyright (c) 2016 Samsung Electronics Co., Ltd.
++ * Author: Andi Shyti <andi.shyti@samsung.it>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * SPI driven IR LED device driver
++ */
++
++#include <linux/fs.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of_gpio.h>
++#include <linux/regulator/consumer.h>
++#include <linux/spi/spi.h>
++#include <media/lirc_dev.h>
++
++#define IR_SPI_DRIVER_NAME		"ir-spi"
++
++#define IR_SPI_DEFAULT_FREQUENCY	38000
++#define IR_SPI_BIT_PER_WORD		    8
++
++struct ir_spi_data {
++	u16 nusers;
++	int power_gpio;
++
++	u8 *buffer;
++
++	struct lirc_driver lirc_driver;
++	struct spi_device *spi;
++	struct spi_transfer xfer;
++	struct mutex mutex;
++	struct regulator *regulator;
++};
++
++static ssize_t ir_spi_chardev_write(struct file *file,
++					const char __user *buffer,
++					size_t length, loff_t *offset)
++{
++	struct ir_spi_data *idata = file->private_data;
++	bool please_free = false;
++	int ret = 0;
++
++	if (idata->xfer.len && (idata->xfer.len != length))
++		return -EINVAL;
++
++	mutex_lock(&idata->mutex);
++
++	if (!idata->xfer.len) {
++		idata->buffer = kmalloc(length, GFP_KERNEL);
++
++		if (!idata->buffer) {
++			ret = -ENOMEM;
++			goto out_unlock;
++		}
++
++		idata->xfer.len = length;
++		please_free = true;
++	}
++
++	if (copy_from_user(idata->buffer, buffer, length)) {
++		ret = -EFAULT;
++		goto out_free;
++	}
++
++	ret = regulator_enable(idata->regulator);
++	if (ret) {
++		dev_err(&idata->spi->dev, "failed to power on the LED\n");
++		goto out_free;
++	}
++
++	idata->xfer.tx_buf = idata->buffer;
++
++	ret = spi_sync_transfer(idata->spi, &idata->xfer, 1);
++	if (ret)
++		dev_err(&idata->spi->dev, "unable to deliver the signal\n");
++
++	regulator_disable(idata->regulator);
++
++out_free:
++	if (please_free) {
++		kfree(idata->buffer);
++		idata->xfer.len = 0;
++		idata->buffer = NULL;
++	}
++
++out_unlock:
++	mutex_unlock(&idata->mutex);
++
++	return ret ? ret : length;
++}
++
++static int ir_spi_chardev_open(struct inode *inode, struct file *file)
++{
++	struct ir_spi_data *idata = lirc_get_pdata(file);
++
++	if (unlikely(idata->nusers >= SHRT_MAX)) {
++		dev_err(&idata->spi->dev, "device busy\n");
++		return -EBUSY;
++	}
++
++	file->private_data = idata;
++
++	mutex_lock(&idata->mutex);
++	idata->nusers++;
++	mutex_unlock(&idata->mutex);
++
++	return 0;
++}
++
++static int ir_spi_chardev_close(struct inode *inode, struct file *file)
++{
++	struct ir_spi_data *idata = lirc_get_pdata(file);
++
++	mutex_lock(&idata->mutex);
++	idata->nusers--;
++
++	/*
++	 * check if someone else is using the driver,
++	 * if not, then:
++	 *
++	 *  - reset length and frequency values to default
++	 *  - shut down the LED
++	 *  - free the buffer (NULL or ZERO_SIZE_PTR are noop)
++	 */
++	if (!idata->nusers) {
++		idata->xfer.len = 0;
++		idata->xfer.speed_hz = IR_SPI_DEFAULT_FREQUENCY;
++
++		kfree(idata->buffer);
++		idata->buffer = NULL;
++	}
++
++	mutex_unlock(&idata->mutex);
++
++	return 0;
++}
++
++static long ir_spi_chardev_ioctl(struct file *file, unsigned int cmd,
++						unsigned long arg)
++{
++	__u32 p;
++	s32 ret;
++	struct ir_spi_data *idata = file->private_data;
++
++	switch (cmd) {
++	case LIRC_GET_FEATURES:
++		return put_user(idata->lirc_driver.features,
++					(__u32 __user *) arg);
++
++	case LIRC_GET_LENGTH:
++		return put_user(idata->xfer.len, (__u32 __user *) arg);
++
++	case LIRC_SET_LENGTH: {
++		void *new;
++
++		ret = get_user(p, (__u32 __user *) arg);
++		if (ret)
++			return ret;
++
++		/*
++		 * the user is trying to set the same
++		 * length of the current value
++		 */
++		if (idata->xfer.len == p)
++			return 0;
++
++		/*
++		 * multiple users should use the driver with the
++		 * length, otherwise return EPERM same data
++		 */
++		if (idata->nusers > 1)
++			return -EPERM;
++
++		/*
++		 * if the buffer is already allocated, reallocate it with the
++		 * desired value. If the desired value is 0, then the buffer is
++		 * freed from krealloc()
++		 */
++		if (idata->xfer.len)
++			new = krealloc(idata->buffer, p, GFP_KERNEL);
++		else
++			new = kmalloc(p, GFP_KERNEL);
++
++		if (!new)
++			return -ENOMEM;
++
++		mutex_lock(&idata->mutex);
++		idata->buffer = new;
++		idata->xfer.len = p;
++		mutex_unlock(&idata->mutex);
++
++		return 0;
++	}
++
++	case LIRC_GET_SEND_CARRIER:
++		return put_user(idata->xfer.speed_hz, (__u32 __user *) arg);
++
++	case LIRC_SET_SEND_CARRIER:
++		ret = get_user(p, (__u32 __user *) arg);
++		if (ret)
++			return ret;
++
++		/*
++		 * The frequency cannot be obviously set to '0',
++		 * while, as in the case of the data length,
++		 * multiple users should use the driver with the same
++		 * frequency value, otherwise return EPERM
++		 */
++		if (!p || ((idata->nusers > 1) && p != idata->xfer.speed_hz))
++			return -EPERM;
++
++		mutex_lock(&idata->mutex);
++		idata->xfer.speed_hz = p;
++		mutex_unlock(&idata->mutex);
++		return 0;
++	}
++
++	return -EINVAL;
++}
++
++static const struct file_operations ir_spi_fops = {
++	.owner   = THIS_MODULE,
++	.read    = lirc_dev_fop_read,
++	.write   = ir_spi_chardev_write,
++	.poll    = lirc_dev_fop_poll,
++	.open    = ir_spi_chardev_open,
++	.release = ir_spi_chardev_close,
++	.llseek  = noop_llseek,
++	.unlocked_ioctl = ir_spi_chardev_ioctl,
++	.compat_ioctl   = ir_spi_chardev_ioctl,
++};
++
++static int ir_spi_probe(struct spi_device *spi)
++{
++	struct ir_spi_data *idata;
++
++	idata = devm_kzalloc(&spi->dev, sizeof(*idata), GFP_KERNEL);
++	if (!idata)
++		return -ENOMEM;
++
++	idata->regulator = devm_regulator_get(&spi->dev, "irda_regulator");
++	if (IS_ERR(idata->regulator))
++		return PTR_ERR(idata->regulator);
++
++	snprintf(idata->lirc_driver.name, sizeof(idata->lirc_driver.name),
++							IR_SPI_DRIVER_NAME);
++	idata->lirc_driver.features    = LIRC_CAN_SEND_RAW;
++	idata->lirc_driver.code_length = 1;
++	idata->lirc_driver.fops        = &ir_spi_fops;
++	idata->lirc_driver.dev         = &spi->dev;
++	idata->lirc_driver.data        = idata;
++	idata->lirc_driver.owner       = THIS_MODULE;
++	idata->lirc_driver.minor       = -1;
++
++	idata->lirc_driver.minor = lirc_register_driver(&idata->lirc_driver);
++	if (idata->lirc_driver.minor < 0) {
++		dev_err(&spi->dev, "unable to generate character device\n");
++		return idata->lirc_driver.minor;
++	}
++
++	mutex_init(&idata->mutex);
++
++	idata->spi = spi;
++
++	idata->xfer.bits_per_word = IR_SPI_BIT_PER_WORD;
++	idata->xfer.speed_hz = IR_SPI_DEFAULT_FREQUENCY;
++
++	return 0;
++}
++
++static int ir_spi_remove(struct spi_device *spi)
++{
++	struct ir_spi_data *idata = spi_get_drvdata(spi);
++
++	lirc_unregister_driver(idata->lirc_driver.minor);
++
++	return 0;
++}
++
++static const struct of_device_id ir_spi_of_match[] = {
++	{ .compatible = "ir-spi" },
++	{},
++};
++
++static struct spi_driver ir_spi_driver = {
++	.probe = ir_spi_probe,
++	.remove = ir_spi_remove,
++	.driver = {
++		.name = IR_SPI_DRIVER_NAME,
++		.of_match_table = ir_spi_of_match,
++	},
++};
++
++module_spi_driver(ir_spi_driver);
++
++MODULE_AUTHOR("Andi Shyti <andi.shyti@samsung.com>");
++MODULE_DESCRIPTION("SPI IR LED");
++MODULE_LICENSE("GPL v2");
+-- 
+2.8.1
