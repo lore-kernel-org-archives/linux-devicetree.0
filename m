@@ -1,177 +1,99 @@
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 06/14] ARM: sun8i: clk: Add clk-factor
- rate application method
-Date: Fri, 1 Jul 2016 02:53:52 +0200
-Message-ID: <64d0c1e2-d818-0806-7c92-c10603b4f6f5@megous.com>
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-7-megous@megous.com> <20160630204001.GC5485@lukather>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] drivers/of: add option to load a default Device Tree
+Date: Thu, 30 Jun 2016 17:57:36 -0700
+Message-ID: <5775C000.8040100@gmail.com>
+References: <1466607954-2821-1-git-send-email-franck.jullien@odyssee-systemes.fr>
+ <57755ACF.1090204@gmail.com>
+ <CAJfOKByav-r9=4YEJrzuCfeAyTEtr4+=a_0d08gSLBSRrPPiEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="fdvBJL65LA0PmWpTBxnc5qkVEVM2DxNHg"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBIP6225QKGQEG4APRJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160630204001.GC5485@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJfOKByav-r9=4YEJrzuCfeAyTEtr4+=a_0d08gSLBSRrPPiEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franck Jullien <franck.jullien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, jose.abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---fdvBJL65LA0PmWpTBxnc5qkVEVM2DxNHg
-Content-Type: multipart/mixed; boundary="afwhiQc7HFslU4v78w6XQoFn1U3eTk8K4"
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
- Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>,
- Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
- Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>,
- =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>,
- "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Message-ID: <64d0c1e2-d818-0806-7c92-c10603b4f6f5-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 06/14] ARM: sun8i: clk: Add clk-factor rate application
- method
-References: <20160625034511.7966-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
- <20160625034511.7966-7-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> <20160630204001.GC5485@lukather>
-In-Reply-To: <20160630204001.GC5485@lukather>
-
---afwhiQc7HFslU4v78w6XQoFn1U3eTk8K4
-Content-Type: text/plain; charset=UTF-8
-
-On 30.6.2016 22:40, Maxime Ripard wrote:
-> Hi,
-> 
-> On Sat, Jun 25, 2016 at 05:45:03AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
->> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+On 06/30/16 13:44, Franck Jullien wrote:
+> 2016-06-30 19:45 GMT+02:00 Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>> Hi Franck,
 >>
->> PLL1 on H3 requires special factors application algorithm,
->> when the rate is changed. This algorithm was extracted
->> from the arisc code that handles frequency scaling
->> in the BSP kernel.
+>> (This could be confusing, with Franck and Frank -- feel free to
+>> address me as rowand in this thread if it is less confusing.)
 >>
->> This commit adds optional apply function to
->> struct factors_data, that can implement non-trivial
->> factors application method, when necessary.
+>> On 06/22/16 08:05, Franck Jullien wrote:
+>>> Even if a platform doesn't use a device tree during its
+>>> boot process it can be useful to enable CONFIG_OF and get
+>>> an empty device tree.
+>>>
+>>> Then, devices can use device tree overlays to populate this
+>>> default tree.
+>>>
+>>> Signed-off-by: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
+>>> ---
+>>>  drivers/of/Kconfig     |  9 +++++++++
+>>>  drivers/of/Makefile    |  3 +++
+>>>  drivers/of/base.c      | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>>>  drivers/of/default.dts |  4 ++++
+>>>  drivers/of/unittest.c  | 33 +++++----------------------------
+>>>  include/linux/of.h     |  2 ++
+>>>  6 files changed, 73 insertions(+), 28 deletions(-)
+>>>  create mode 100644 drivers/of/default.dts
 >>
->> Also struct clk_factors_config is extended with position
->> of the PLL lock flag.
+>> < snip >
+>>
+>> For context, in a later reply, you mention that this is for x86_64.
+>>
+>> My current inclination is to prefer not to solve the problem this way.
+>> I was going to ask why you didn't just add the compiled default.dts
+>> to the kernel as an appended device tree blob, until I found out
+>> this was for x86_64.
+>>
+>> Can you add unflatten_devicetree() to x86_64, then just use the
+>> appended device tree blob method?
+>>
 > 
-> Have you tested the current implementation, and found that it was not
-> working, or did you duplicate the arisc code directly?
+> You're saying I should implement the ability for x86_64 to detect and
+> load a devicetree that is appended to the binary image like ARM does [1] ?
 
-Also of note is that similar code probably doesn't crash in u-boot,
-because there, before changing the PLL1 clock, the cpu is switched to
-24MHz osc, so it is not overclocked, even if factors align in such a way
-that you'd get the behavior I described in the other email.
+Yes, that is what I was referring to.
 
->>  /**
->> + * sun8i_h3_apply_pll1_factors() - applies n, k, m, p factors to the
->> + * register using an algorithm that tries to reserve the PLL lock
->> + */
->> +
->> +static void sun8i_h3_apply_pll1_factors(struct clk_factors *factors, struct factors_request *req)
->> +{
->> +	const struct clk_factors_config *config = factors->config;
->> +	u32 reg;
->> +
->> +	/* Fetch the register value */
->> +	reg = readl(factors->reg);
->> +
->> +	if (FACTOR_GET(config->pshift, config->pwidth, reg) < req->p) {
->> +		reg = FACTOR_SET(config->pshift, config->pwidth, reg, req->p);
->> +
->> +		writel(reg, factors->reg);
->> +		__delay(2000);
->> +	}
+
+> Would you keep CONFIG_DEFAULT_DTB at all ? Or appending an
+> empty (or not) devicetree would be after the binary image is built ?
 > 
-> So there was some doubts about the fact that P was being used, or at
-> least that it was useful.
+> I like the idea. I think I could remove CONFIG_DEFAULT_DTB and
+> let the user append a blob to the image.
+
+There should be a config option to add the Makefile entry for the
+default.dts so that default.dtb is created.
+
+And yes, the .dtb would be appended to the kernel image after the
+kernel image was built.
+
+One description of this is at:
+
+http://community.cadence.com/cadence_blogs_8/b/sd/archive/2013/10/09/combining-the-linux-device-tree-and-kernel-image-for-arm
+
+
 > 
->> +	if (FACTOR_GET(config->mshift, config->mwidth, reg) < req->m) {
->> +		reg = FACTOR_SET(config->mshift, config->mwidth, reg, req->m);
->> +
->> +		writel(reg, factors->reg);
->> +		__delay(2000);
->> +	}
->> +
->> +	reg = FACTOR_SET(config->nshift, config->nwidth, reg, req->n);
->> +	reg = FACTOR_SET(config->kshift, config->kwidth, reg, req->k);
->> +
->> +	writel(reg, factors->reg);
->> +	__delay(20);
->> +
->> +	while (!(readl(factors->reg) & (1 << config->lock)));
+> By the way, why having an empty devicetree built-in is not your
+> preferred choice ?
+
+The issue is not whether the .dtb is build into the kernel image or
+appended to the kernel image.  The issue is whether the normal
+unflatten_devicetree()  path is used to load the .dtb or whether
+an additional method of creating the root device tree was added.
+
+
+> Franck.
 > 
-> So, they are applying the dividers first, and then applying the
-> multipliers, and then wait for the PLL to stabilize.
-> 
->> +
->> +	if (FACTOR_GET(config->mshift, config->mwidth, reg) > req->m) {
->> +		reg = FACTOR_SET(config->mshift, config->mwidth, reg, req->m);
->> +
->> +		writel(reg, factors->reg);
->> +		__delay(2000);
->> +	}
->> +
->> +	if (FACTOR_GET(config->pshift, config->pwidth, reg) > req->p) {
->> +		reg = FACTOR_SET(config->pshift, config->pwidth, reg, req->p);
->> +
->> +		writel(reg, factors->reg);
->> +		__delay(2000);
->> +	}
-> 
-> However, this is kind of weird, why would you need to re-apply the
-> dividers? Nothing really changes. Have you tried without that part?
-> 
-> Since this is really specific, I guess you could simply make the
-> clk_ops for the nkmp clocks public, and just re-implement set_rate
-> using that logic.
-> 
-> You might also need to set an upper limit on P, since the last value
-> (4) is not a valid one.
-> 
-> I guess you could do that by adding a max field in the __ccu_div
-> structure.
-> 
-> Maxime
+> [1] http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=e2a6a3aafa9862c4a4b59f2a59b8f923d64a680e
+> .
 > 
 
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---afwhiQc7HFslU4v78w6XQoFn1U3eTk8K4--
-
---fdvBJL65LA0PmWpTBxnc5qkVEVM2DxNHg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXdb8gAAoJEG5kJsZ3z+/xDw0P/iavGyh00l1RKa65H54guJvH
-rqk5BhV6XOH/1GoN0DJ2h07YlP//Ksz+T1ygmdzJme9d3L1YHKWaiUaoQAFUYtnv
-ylnrUsfvJbMlTB2AbJGPrsczF3kVzj7FBGuMOLqs/3qjwwmEWBLjpyuunzLY8ZZL
-HJ0U/svBCNCZdcjhhLBxsVWuGUJcxwHXZlqJ1il4b+lTLHGCVt6+znbyReK81kIc
-yfrXHLnU0rxDIjyQTfJqyrzpxWp2FoIWwOOtDX2mDCXEb3mRUMqwlTWsQ1UHwNtn
-oAAY6kZwNCi52vjNFi1+udbUKHlOUVOUHFD2aeX2X6pFIUP5shm0q+Otq3WTgoCi
-B2cEoHzN4pcmMtroyvZROY2GunlW1lcxohvKON5Lr1vbGtZWJdG/V61B4BMsuF+N
-LBsB1zEUtsRX71TjhMMiQGXjCrRUByuQ0cN+xMm9E6Fgrmmi/6iiwh2IApLH+q4j
-88XkpjSXXWOgpXaeJnlMDfqDKU2U64TrN3Cg0WMb2T7i9JGgTYzb64Mhl/3KfBjl
-hh4u3VhdadBYo6mZTAq9qHl8c0Tg4BlpuGepgGdtbqDAjSJ+HVTvd5rDq8co2sQ4
-jGUMtJo+6QHryvdGFXQTr2doWYuLseMxCPulmWGzr2O9rCu0f2p/MmRKfTULsqri
-yAp1V1qgzNFCuePX+eMX
-=JWKh
------END PGP SIGNATURE-----
-
---fdvBJL65LA0PmWpTBxnc5qkVEVM2DxNHg--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
