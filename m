@@ -1,40 +1,47 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 00/21] Support qcom's HSIC USB and rewrite USB2 HS phy support
-Date: Fri, 1 Jul 2016 23:03:38 -0700
-Message-ID: <CALAqxLW--yFb2YwX3+x7PB-g_5D0gb6j8CiJwnCC+meb7xqbig@mail.gmail.com>
-References: <20160626072838.28082-1-stephen.boyd@linaro.org>
- <CALAqxLUHfsJBTQS=p5oThnOdiAZwu48puRhREx+2G9+KajDA9g@mail.gmail.com> <146710289677.3879.15364764209076318827@sboyd-linaro>
+From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 7/7] arm64: Add DTS support for FSL's LS2088A SoC
+Date: Fri, 1 Jul 2016 19:59:24 +0000
+Message-ID: <HE1PR04MB1641D534EF486188A8E5E5F98D250@HE1PR04MB1641.eurprd04.prod.outlook.com>
+References: <1467125341-2380-1-git-send-email-abhimanyu.saini@nxp.com>
+ <1467125341-2380-8-git-send-email-abhimanyu.saini@nxp.com>
+ <CALRxmdA38Hdh5aqBNU_GahhJnM1AVNexbnynUXzV5FOqPhFerA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <146710289677.3879.15364764209076318827@sboyd-linaro>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, "Ivan T. Ivanov" <iivanov.xz@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALRxmdA38Hdh5aqBNU_GahhJnM1AVNexbnynUXzV5FOqPhFerA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 1:34 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> Quoting John Stultz (2016-06-27 20:09:30)
->>
->> I haven't yet been able to test with this, as I need some other fixes
->> it seems too to deal with some of the iommu changes in my flo-WIP tree
->> (it can't find of_dma_configure), but will let you know how things
->> work once I have all that sorted.
->
-> Cool, thanks for testing.
-
-So after working out some merge issues w/ my flo-WIP branch for the
-nexus7, I was still having trouble, so I backed out to just your
-(updated) branch.
-
-But even there, I'm not able to get the usb gadget up. I see:
-
-[    1.869717] msm_hsusb 12500000.usb: failed to get phandle in
-/soc/usb@12500000 node
-[    1.882347] 12500000.usb supply vbus not found, using dummy regulator
-
-So I'm not sure if the dts changes were quite right. I've got all the
-ULPI configs enabled. Any ideas?
-
-thanks
--john
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWJoaW1hbnl1IFNhaW5p
+IDxhYmhpbWFueXUuc2FpbmlAbnhwLmNvbT4NCj4gRGF0ZTogVHVlLCBKdW4gMjgsIDIwMTYgYXQg
+OTo0OSBBTQ0KPiBTdWJqZWN0OiBbUEFUQ0ggNy83XSBhcm02NDogQWRkIERUUyBzdXBwb3J0IGZv
+ciBGU0wncyBMUzIwODhBIFNvQw0KPiBUbzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4g
+Q2M6IHNoYXduZ3VvQGtlcm5lbC5vcmcsIEFiaGltYW55dSBTYWluaSA8YWJoaW1hbnl1LnNhaW5p
+QG54cC5jb20+DQo+IA0KPiANCj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBkZXZpY2UgdHJlZSBzdXBw
+b3J0IGZvciBGU0wgTFMyMDg4QSBTb0MgYmFzZWQgb24NCj4gQVJNdjggYXJjaGl0ZWN0dXJlLg0K
+PiANCj4gRm9sbG93aW5nIGxldmVscyBvZiBEVFNJL0RUUyBmaWxlcyBoYXZlIGJlZW4gY3JlYXRl
+ZCBmb3IgdGhlIExTMjA4OEENCj4gU29DIGZhbWlseToNCj4gDQo+ICAgICAgLSBmc2wtbHMyMDg4
+YS5kdHNpOg0KPiAgICAgICAgICAgICBEVFMtSW5jbHVkZSBmaWxlIGZvciBGU0wgTFMyMDg4QSBT
+b0MuDQo+IA0KPiAgICAgIC0gZnNsLWxzMjA4OGEtcWRzLmR0czoNCj4gICAgICAgICAgICAgRFRT
+IGZpbGUgZm9yIEZTTCBMUzIwODhBIFFEUyBib2FyZC4NCj4gDQo+ICAgICAgLSBmc2wtbHMyMDg4
+YS1yZGIuZHRzOg0KPiAgICAgICAgICAgICBEVFMgZmlsZSBmb3IgRlNMIExTMjA4OEEgUkRCIGJv
+YXJkLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQWJoaW1hbnl1IFNhaW5pIDxhYmhpbWFueXUuc2Fp
+bmlAbnhwLmNvbT4NCj4gLS0tDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9NYWtl
+ZmlsZSAgICAgICAgICAgIHwgICAyICsNCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
+L2ZzbC1sczIwODhhLXFkcy5kdHMgfCAyMTEgKysrKysrKw0KPiAgYXJjaC9hcm02NC9ib290L2R0
+cy9mcmVlc2NhbGUvZnNsLWxzMjA4OGEtcmRiLmR0cyB8IDE2NiArKysrKw0KPiAgYXJjaC9hcm02
+NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4OGEuZHRzaSAgICB8IDcwMyArKysrKysrKysr
+KysrKysrKysrKysrDQo+ICA0IGZpbGVzIGNoYW5nZWQsIDEwODIgaW5zZXJ0aW9ucygrKQ0KPiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIw
+ODhhLXFkcy5kdHMNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9mc2wtbHMyMDg4YS1yZGIuZHRzDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9h
+cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4OGEuZHRzaQ0KDQpBY2tlZC1ieTogU3R1
+YXJ0IFlvZGVyIDxzdHVhcnQueW9kZXJAbnhwLmNvbT4NCg0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
