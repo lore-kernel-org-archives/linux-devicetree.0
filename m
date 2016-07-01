@@ -1,57 +1,32 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 1/3] mmc: core: Allow hosts to specify non-support for MMC commands
-Date: Fri,  1 Jul 2016 15:45:28 +0800
-Message-ID: <1467359130-11409-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1467359130-11409-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467359130-11409-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/3] ARM: dts: r8a7792: add PFC support
+Date: Fri, 1 Jul 2016 10:07:17 +0200
+Message-ID: <CAMuHMdUeQCX5m2gGj3fj2kybaeVAUq+M8YQfQgrX+NgL8G5vCw@mail.gmail.com>
+References: <2144803.0K8qXzjIFq@wasted.cogentembedded.com> <7894702.b5qeLxoHdo@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <7894702.b5qeLxoHdo@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Host drivers which needs to valdiate for non-supported MMC
-commands and returnn error code for such requests.
+On Fri, Jul 1, 2016 at 1:06 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the generic R8A7792 part of the PFC device node.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-To improve and simplify the behaviour, let's invent MMC_CAP2_NO_MMC
-which these host drivers can set to tell the mmc core to skip sending MMC
-commands during card initialization.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Gr{oetje,eeting}s,
 
----
+                        Geert
 
- drivers/mmc/core/core.c  | 5 +++--
- include/linux/mmc/host.h | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 4c823df..94cbf4e 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -2510,8 +2510,9 @@ static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
- 		if (!mmc_attach_sd(host))
- 			return 0;
- 
--	if (!mmc_attach_mmc(host))
--		return 0;
-+	if (!(host->caps2 & MMC_CAP2_NO_MMC))
-+		if (!mmc_attach_mmc(host))
-+			return 0;
- 
- 	mmc_power_off(host);
- 	return -EIO;
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index c22476d..aa4bfbf 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -310,6 +310,7 @@ struct mmc_host {
- #define MMC_CAP2_NO_SDIO	(1 << 19)	/* Do not send SDIO commands during initialization */
- #define MMC_CAP2_HS400_ES	(1 << 20)	/* Host supports enhanced strobe */
- #define MMC_CAP2_NO_SD		(1 << 21)	/* Do not send SD commands during initialization */
-+#define MMC_CAP2_NO_MMC		(1 << 22)	/* Do not send (e)MMC commands during initialization */
- 
- 	mmc_pm_flag_t		pm_caps;	/* supported pm features */
- 
--- 
-2.3.7
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
