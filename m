@@ -1,162 +1,141 @@
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 14/14] ARM: dts: sun8i: Enable DVFS on
- Orange Pi One
-Date: Fri, 1 Jul 2016 03:17:35 +0200
-Message-ID: <247afcd4-4b5c-3776-5392-1125b03b65b1@megous.com>
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-15-megous@megous.com>
- <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New@mail.gmail.com>
- <20160630172330.0608178e@i7>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v5 5/5] usb: dwc3: rockchip: add devicetree bindings
+ documentation
+Date: Fri, 01 Jul 2016 09:20:30 +0800
+Message-ID: <5775C55E.8090508@rock-chips.com>
+References: <1467285176-25222-1-git-send-email-william.wu@rock-chips.com>
+ <1467285400-25450-1-git-send-email-william.wu@rock-chips.com>
+ <2510621.9FbtAACURA@phil>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="MpkCpL7uXi6lOdJS8kR0oVscwbHXGRfBL"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBNMJ265QKGQESSYMR5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160630172330.0608178e@i7>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <2510621.9FbtAACURA@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---MpkCpL7uXi6lOdJS8kR0oVscwbHXGRfBL
-Content-Type: multipart/mixed; boundary="UFl34ci4G30u8hNQ8PTllb1sROwTxFqIu"
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-To: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>,
- Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>,
- "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org"
- <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
- Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>,
- Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>,
- Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Message-ID: <247afcd4-4b5c-3776-5392-1125b03b65b1-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH v2 14/14] ARM: dts: sun8i: Enable DVFS on
- Orange Pi One
-References: <20160625034511.7966-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
- <20160625034511.7966-15-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
- <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
- <20160630172330.0608178e@i7>
-In-Reply-To: <20160630172330.0608178e@i7>
+Dear Heiko,
 
---UFl34ci4G30u8hNQ8PTllb1sROwTxFqIu
-Content-Type: text/plain; charset=UTF-8
-
-
-On 30.6.2016 16:23, Siarhei Siamashka wrote:
-> On Thu, 30 Jun 2016 13:13:48 +0200
-> Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
->> Hello,
+On 06/30/2016 08:15 PM, Heiko Stuebner wrote:
+> Hi William,
+>
+> Am Donnerstag, 30. Juni 2016, 19:16:40 schrieb William Wu:
+>> This patch adds the devicetree documentation required for Rockchip
+>> USB3.0 core wrapper consisting of USB3.0 IP from Synopsys.
 >>
->> On 25 June 2016 at 05:45,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
->>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->>>
->>> Use Xulong Orange Pi One GPIO based regulator for
->>> passive cooling and thermal management.
->>>
->>> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 39 +++++++++++++++++++++++++++++
->>>  1 file changed, 39 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
->>> index b1bd6b0..a38d871 100644
->>> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
->>> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
->>> @@ -109,6 +109,45 @@
->>>         };
->>>  };
->>>
->>> +&cpu0 {
->>> +       operating-points = <
->>> +               /* kHz    uV */
->>> +               1296000 1300000
->>> +               1200000 1300000  
+>> It supports DRD mode, and could operate in device mode (SS, HS, FS)
+>> and host mode (SS, HS, FS, LS).
 >>
->> First problem is that the board boots at 1008000 which is not listed
->> and the kernel complains.
+>> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>> Changes in v5:
+>> - rename clock-names, and remove unnecessary clocks (Heiko)
 >>
->> Second problem is that the board locks up during boot with this enabled.
+>> Changes in v4:
+>> - modify commit log, and add phy documentation location (Sergei)
 >>
->> Do you have some suggestion for alternate configuration to test?
-> 
-> Maybe try the Allwinner's original DVFS table instead of these
-> undervolted values and see if it helps?
-> 
-> https://linux-sunxi.org/index.php?title=Xunlong_Orange_Pi_PC&oldid=17753#CPU_clock_speed_limit
-
-Thanks, I'll use these. I'm not sure what will happen if regulator is
-not capable of providing the exact voltages specified in the operating
-points, though. Will it do the sane thing? :)
-
-Also LV6+ in the table is bellow specified minimum voltage in the
-datasheet. But then Orange Pi works at much lower voltages for me.
-
-Conversly LV1 is the absolute maximum. Recommended maximum is 1.4V So I
-would not use that.
-
-It might be nice to have something like that dram clock test, but for
-cpux freq/voltage, and collect some statistics.
-
-regards,
-  Ondrej
-
-> While undervolting is tempting because it helps to decrease the SoC
-> temperature and avoid throttling, different units may have different
-> tolerances and one needs to be very careful when picking defaults
-> that are intended to work correctly on all boards. Some safety
-> headroom exists there for a reason.
-> 
-> If I remember correctly, some people pushed for undervolting experiments
-> at least twice in the past (on the Banana Pi and C.H.I.P.). In both
-> cases this did not end up well and had to be fixed later to solve
-> reliability problems.
-> 
-> In order to allow individual per-unit tuning, a concept of "speed
-> grading" may be probably introduced later. So that the board is tested
-> for reliability and then the speed grade rating is stored somewhere on
-> the non-removable storage (EEPROM, SPI flash, eFUSE, ...). Some SoC
-> manufacturers, such as Samsung, are already doing this with their chips.
-> 
-
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---UFl34ci4G30u8hNQ8PTllb1sROwTxFqIu--
-
---MpkCpL7uXi6lOdJS8kR0oVscwbHXGRfBL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXdcSvAAoJEG5kJsZ3z+/xEzYP/iIzux4uVK7MTb9d28y68cB+
-LC9JLsnSzRJ3nabKHZSzXR2HRLWF+WBxUiiZxW1vExQT2WgPtgJoTBc15wPQBvPf
-9EiOEAQY5raZTqPwr13kToCBy7gHVhAgsX+EX0noJyo9qy5oqbID+D7iD6gjrz1D
-isn+1wNbQmwAj5ALs/Mp0wHv/UL2nyssoXmcv40WWZZwJ5Q7xUiJDAzpWnB1Tk9M
-F1sN4HgZpmjk//b9JbMx965F2Yy1hRwUfBlwKkj6a4MJc5IMPwUmXah3+orN5nde
-HJFlfFEYiYGs0Sfi2nzXC8BIWAXkCraB5K9IA2HhkaxKUhT4O8DHI7ugKet5YJ9k
-Lp2n/kK6TwHS8cQmXOVR8PG5+wYQ3C807oEhuVSBDdfBNwMMhFS55nfgpEjuexGt
-E5GOpt/A7iufptqK3WZ2OR2aUuI/G2UDP10gocCc6exx/5xyO5gIbKiIZMV7yf3W
-wpuvBs3Jvz6qVR3KqwPeeYF/uTyetp2uoG35O7ObCGu4Y6C6Zda05HI9+4Ier8V7
-priZbmPt5bIe4JlZVMiV2FTYvHoFvHsBbfFelGX7iIDLYKei1lC/avKyI1UoOnjD
-/2pKAG/MDGp7D72OyNnfY2Qid+POw45baLskPBfMNC4Gbc2rRNfX7+6NgggImH9A
-MixRStwhEAELKUlWP/zl
-=coV/
------END PGP SIGNATURE-----
-
---MpkCpL7uXi6lOdJS8kR0oVscwbHXGRfBL--
+>> Changes in v3:
+>> - add dwc3 address (balbi)
+>>
+>> Changes in v2:
+>> - add rockchip,dwc3.txt to Documentation/devicetree/bindings/ (balbi,
+>> Brian)
+>>
+>>   .../devicetree/bindings/usb/rockchip,dwc3.txt      | 40
+>> ++++++++++++++++++++++ 1 file changed, 40 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+>> b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt new file mode
+>> 100644
+>> index 0000000..9c85e19
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+>> @@ -0,0 +1,40 @@
+>> +Rockchip SuperSpeed DWC3 USB SoC controller
+>> +
+>> +Required properties:
+>> +- compatible:	should contain "rockchip,rk3399-dwc3" for rk3399 SoC
+>> +- clocks:	A list of phandle + clock-specifier pairs for the
+>> +		clocks listed in clock-names
+>> +- clock-names:	Should contain the following:
+>> +  "ref_clk"	Controller reference clk, have to be 24 MHz
+>> +  "suspend_clk"	Controller suspend clk, have to be 24 MHz or 32 KHz
+>> +  "bus_clk_otg0"Master/Core clock, have to be >= 62.5 MHz for SS
+>> +		operation and >= 60MHz for HS operation
+> why is it called "bus_clk_otg0" not just simply "bus_clk". As far as I
+> understand it (and see it in the TRM), you have two dwc3 controllers
+> (otg0 and otg1) and clock-names are always meant from the perspective of
+> the individual ip-block. So a devicetree would have:
+>
+> 	usbdrd3_0: usb@fe800000 {
+> 		compatible = "rockchip,rk3399-dwc3";
+> 		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
+> 			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
+> 		clock-names = "ref_clk", "suspend_clk",
+> 			      "bus_clk", "grf_clk";
+> 		...
+> 	};
+>
+> 	usbdrd3_1: usb@fe900000 {
+> 		compatible = "rockchip,rk3399-dwc3";
+> 		clocks = <&cru SCLK_USB3OTG1_REF>, <&cru SCLK_USB3OTG1_SUSPEND>,
+> 			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_GRF>;
+> 		clock-names = "ref_clk", "suspend_clk",
+> 			      "bus_clk", "grf_clk";
+> 		...
+> 	};
+>
+>
+> The rest looks really nice now.
+Ah, it looks very goog to me. I'll fix it immediately.
+Thank you very much!
+>
+>
+> Heiko
+>
+>> +  "grf_clk"	Controller grf clk
+>> +
+>> +Required child node:
+>> +A child node must exist to represent the core DWC3 IP block. The name of
+>> +the node is not important. The content of the node is defined in
+>> dwc3.txt. +
+>> +Phy documentation is provided in the following places:
+>> +Documentation/devicetree/bindings/phy/rockchip,dwc3-usb-phy.txt
+>> +
+>> +Example device nodes:
+>> +
+>> +	usbdrd3_0: usb@fe800000 {
+>> +		compatible = "rockchip,rk3399-dwc3";
+>> +		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
+>> +			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
+>> +		clock-names = "ref_clk", "suspend_clk",
+>> +			      "bus_clk_otg0", "grf_clk";
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +		status = "disabled";
+>> +		usbdrd_dwc3_0: dwc3@fe800000 {
+>> +			compatible = "snps,dwc3";
+>> +			reg = <0x0 0xfe800000 0x0 0x100000>;
+>> +			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+>> +			dr_mode = "otg";
+>> +			status = "disabled";
+>> +		};
+>> +	};
+>> --
+>> 1.9.1
+>
+>
+>
