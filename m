@@ -1,14 +1,14 @@
 From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] nvmem: amlogic: Add Amlogic Meson EFUSE driver
-Date: Fri, 1 Jul 2016 11:00:34 +0100
-Message-ID: <57763F42.3070106@linaro.org>
+Subject: Re: [PATCH v2 5/6] documentation: Add nvmem bindings documentation
+Date: Fri, 1 Jul 2016 11:00:28 +0100
+Message-ID: <57763F3C.7090108@linaro.org>
 References: <1467203656-14381-1-git-send-email-carlo@caione.org>
- <1467203656-14381-5-git-send-email-carlo@caione.org>
+ <1467203656-14381-6-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467203656-14381-5-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1467203656-14381-6-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
@@ -19,157 +19,63 @@ List-Id: devicetree@vger.kernel.org
 On 29/06/16 13:34, Carlo Caione wrote:
 > From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 >
-> Add Amlogic EFUSE driver to access hardware data like ethernet address,
-> serial number or IDs.
+> This patch add the bindings document of Amlogic eFuse driver.
 >
 > Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-
-Patch looks good to me,
-
-Looks like there are some dependencies to this patch w.r.t sm_calls, it 
-would be easy to take this series from single tree.
-
-Just incase you want to take this patch via some other tree, here is Ack.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 Acked-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-
-
 > ---
->   drivers/nvmem/Kconfig       | 10 +++++
->   drivers/nvmem/Makefile      |  2 +
->   drivers/nvmem/meson-efuse.c | 93 +++++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 105 insertions(+)
->   create mode 100644 drivers/nvmem/meson-efuse.c
+>   .../devicetree/bindings/nvmem/amlogic-efuse.txt    | 39 ++++++++++++++++++++++
+>   1 file changed, 39 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
 >
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index 3041d48..87900d3 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -101,4 +101,14 @@ config NVMEM_VF610_OCOTP
->   	  This driver can also be build as a module. If so, the module will
->   	  be called nvmem-vf610-ocotp.
->
-> +config MESON_EFUSE
-> +	tristate "Amlogic eFuse Support"
-> +	depends on (ARCH_MESON || COMPILE_TEST) && MESON_SM
-> +	help
-> +	  This is a driver to retrieve specific values from the eFuse found on
-> +	  the Amlogic Meson SoCs.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nvmem_meson_efuse.
-> +
->   endif
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index 45ab1ae..8f942a0 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -22,3 +22,5 @@ obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
->   nvmem_sunxi_sid-y		:= sunxi_sid.o
->   obj-$(CONFIG_NVMEM_VF610_OCOTP)	+= nvmem-vf610-ocotp.o
->   nvmem-vf610-ocotp-y		:= vf610-ocotp.o
-> +obj-$(CONFIG_MESON_EFUSE)	+= nvmem_meson_efuse.o
-> +nvmem_meson_efuse-y		:= meson-efuse.o
-> diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
+> diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
 > new file mode 100644
-> index 0000000..f207c3b
+> index 0000000..fafd85b
 > --- /dev/null
-> +++ b/drivers/nvmem/meson-efuse.c
-> @@ -0,0 +1,93 @@
-> +/*
-> + * Amlogic eFuse Driver
-> + *
-> + * Copyright (c) 2016 Endless Computers, Inc.
-> + * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of version 2 of the GNU General Public License as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-> + * more details.
-> + */
+> +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+> @@ -0,0 +1,39 @@
+> += Amlogic eFuse device tree bindings =
 > +
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
+> +Required properties:
+> +- compatible: should be "amlogic,meson-gxbb-efuse"
 > +
-> +#include <linux/firmware/meson/meson_sm.h>
+> += Data cells =
+> +Are child nodes of eFuse, bindings of which as described in
+> +bindings/nvmem/nvmem.txt
 > +
-> +static int meson_efuse_read(void *context, unsigned int offset,
-> +			    void *val, size_t bytes)
-> +{
-> +	u8 *buf = val;
-> +	int ret;
+> +Example:
 > +
-> +	ret = meson_sm_call_read(buf, SM_EFUSE_READ, offset,
-> +				 bytes, 0, 0, 0);
-> +	if (ret < 0)
-> +		return ret;
+> +	efuse: efuse {
+> +		compatible = "amlogic,meson-gxbb-efuse";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
 > +
-> +	return 0;
-> +}
+> +		sn: sn@14 {
+> +			reg = <0x14 0x10>;
+> +		};
 > +
-> +static struct nvmem_config econfig = {
-> +	.name = "meson-efuse",
-> +	.owner = THIS_MODULE,
-> +	.stride = 1,
-> +	.word_size = 1,
-> +	.read_only = true,
-> +};
+> +		eth_mac: eth_mac@34 {
+> +			reg = <0x34 0x10>;
+> +		};
 > +
-> +static const struct of_device_id meson_efuse_match[] = {
-> +	{ .compatible = "amlogic,meson-gxbb-efuse", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, meson_efuse_match);
+> +		bid: bid@46 {
+> +			reg = <0x46 0x30>;
+> +		};
+> +	};
 > +
-> +static int meson_efuse_probe(struct platform_device *pdev)
-> +{
-> +	struct nvmem_device *nvmem;
-> +	unsigned int size;
+> += Data consumers =
+> +Are device nodes which consume nvmem data cells.
 > +
-> +	if (meson_sm_call(SM_EFUSE_USER_MAX, &size, 0, 0, 0, 0, 0) < 0)
-> +		return -EINVAL;
+> +For example:
 > +
-> +	econfig.dev = &pdev->dev;
-> +	econfig.reg_read = meson_efuse_read;
-> +	econfig.size = size;
-> +
-> +	nvmem = nvmem_register(&econfig);
-> +	if (IS_ERR(nvmem))
-> +		return PTR_ERR(nvmem);
-> +
-> +	platform_set_drvdata(pdev, nvmem);
-> +
-> +	return 0;
-> +}
-> +
-> +static int meson_efuse_remove(struct platform_device *pdev)
-> +{
-> +	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
-> +
-> +	return nvmem_unregister(nvmem);
-> +}
-> +
-> +static struct platform_driver meson_efuse_driver = {
-> +	.probe = meson_efuse_probe,
-> +	.remove = meson_efuse_remove,
-> +	.driver = {
-> +		.name = "meson-efuse",
-> +		.of_match_table = meson_efuse_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(meson_efuse_driver);
-> +
-> +MODULE_AUTHOR("Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>");
-> +MODULE_DESCRIPTION("Amlogic Meson NVMEM driver");
-> +MODULE_LICENSE("GPL v2");
+> +	eth_mac {
+> +		...
+> +		nvmem-cells = <&eth_mac>;
+> +		nvmem-cell-names = "eth_mac";
+> +	};
 >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
