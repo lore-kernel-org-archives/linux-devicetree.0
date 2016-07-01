@@ -1,143 +1,162 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH] mmc: pwrseq-simple: Add an optional post-power-on-delay
-Date: Fri, 1 Jul 2016 11:03:19 +1000
-Message-ID: <CAGRGNgW8zdi_vbqtjfG=pTaEmpVw9UEaitVkQjPxWwwe_izsQA@mail.gmail.com>
-References: <1466618348-32304-1-git-send-email-hdegoede@redhat.com>
- <CAL_JsqJ0XVJb=Q9FT8g_OUTbgZWr-E58xQS0iCR4hv-9EHCcPA@mail.gmail.com>
- <b056f5c8-e77f-ff90-afa5-cd77e446e2dd@redhat.com> <20160701004732.GA20831@rob-hp-laptop>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 14/14] ARM: dts: sun8i: Enable DVFS on
+ Orange Pi One
+Date: Fri, 1 Jul 2016 03:17:35 +0200
+Message-ID: <247afcd4-4b5c-3776-5392-1125b03b65b1@megous.com>
+References: <20160625034511.7966-1-megous@megous.com>
+ <20160625034511.7966-15-megous@megous.com>
+ <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New@mail.gmail.com>
+ <20160630172330.0608178e@i7>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBB24C265QKGQEACQOK7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="MpkCpL7uXi6lOdJS8kR0oVscwbHXGRfBL"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBNMJ265QKGQESSYMR5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160701004732.GA20831@rob-hp-laptop>
+In-Reply-To: <20160630172330.0608178e@i7>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--MpkCpL7uXi6lOdJS8kR0oVscwbHXGRfBL
+Content-Type: multipart/mixed; boundary="UFl34ci4G30u8hNQ8PTllb1sROwTxFqIu"
+From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+To: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>,
+ Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>,
+ "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org"
+ <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
+ Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>,
+ Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>,
+ Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Message-ID: <247afcd4-4b5c-3776-5392-1125b03b65b1-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH v2 14/14] ARM: dts: sun8i: Enable DVFS on
+ Orange Pi One
+References: <20160625034511.7966-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+ <20160625034511.7966-15-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+ <CAOMqctTe==M1SXxbdR8y33yh51fiFGn+oSaKJXhbnpLVTn-New-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+ <20160630172330.0608178e@i7>
+In-Reply-To: <20160630172330.0608178e@i7>
 
-On Fri, Jul 1, 2016 at 10:47 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Jun 23, 2016 at 11:33:27AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 23-06-16 00:25, Rob Herring wrote:
->> >On Wed, Jun 22, 2016 at 12:59 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> >>Some devices need a while to boot their firmware after providing clks /
->> >>de-asserting resets before they are ready to receive sdio commands.
->> >>
->> >>This commits adds a post-power-on-delay-ms devicetree property to
->> >>mmc-pwrseq-simple for use with such devices.
->> >>
->> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> >>---
->> >> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
->> >> drivers/mmc/core/pwrseq_simple.c                            | 9 +++++++++
->> >> 2 files changed, 11 insertions(+)
->> >>
->> >>diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->> >>index ce0e767..e254368 100644
->> >>--- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->> >>+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->> >>@@ -16,6 +16,8 @@ Optional properties:
->> >>   See ../clocks/clock-bindings.txt for details.
->> >> - clock-names : Must include the following entry:
->> >>   "ext_clock" (External clock provided to the card).
->> >>+- post-power-on-delay-ms : Delay in ms after powering the card and
->> >>+       de-asserting the reset-gpios (if any)
->> >
->> >Presumably you need this delay post any reset, not just after power on
->>
->> mmc-pwrseq is only about doing power-on / off, not about providing
->> reset functionality.
->
-> Yes, but the property (e.g. the delay) is relevant for both and reset is
-> part of the power seq.
->
->> >if you are waiting for firmware to boot. So the name is not all that
->> >clear. How about a "reset-timing-ms" property that takes 3 values for
->> >pre-assert time (normally 0), assertion time, post assert time. Of
->> >course, I can still think of ways that breaks like when in this
->> >sequence do clocks need to be turned on.
->>
->> If you look at bindings/mmc/mmc-pwrseq-simple.txt out side of
->> the diff context it contains:
->>
->> - reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
->>         at initialization and prior we start the power up procedure of the card.
->>         They will be de-asserted right after the power has been provided to the
->>         card.
->> - clocks : Must contain an entry for the entry in clock-names.
->>   See ../clocks/clock-bindings.txt for details.
->> - clock-names : Must include the following entry:
->>   "ext_clock" (External clock provided to the card).
->>
->> Notice how the existing docs talk about a power-up procedure (which matches
->> the pwrseq name and purpose of these bindings).
->>
->> I actually started with calling the property "post-reset-delay-ms", but then
->> I realized that what we really want is the ability to specify a time to
->> wait (for e.g. firmware to boot) after completing the power-up procedure
->> (and before starting the probe). The power-up procedure currently can
->> also includes enabling external clocks to the sdio device (if any) and
->> enabling regulators, so having a "reset-timing-ms" property does not
->> seem right, as that would suggest it is ok to do the wait after deasserting
->> reset, but before e.g. enabling external clocks. Where what we really
->> want is to enable all necessary resources (or iow complete the powerup
->> procedure) and then wait.
->>
->> You're right that in some cases more complicated timings may be necessary,
->> but that can get really complicated like e.g.: enable regulator1, wait 10 ms,
->> enable regulator2, wait 15ms, enable external clock1, ...
->>
->> And such complex timings fall outside of the scope of the mmc-pwrseq-simple
->> binding, the idea being that for complex cases we do a device specific
->> pwrseq binding, and then the smarts are in implementation of that specific
->> pwrseq driver. As you've said yourself before we do not want to turn
->> devicetree into a scripting language.
->
-> Exactly. The challenge is any single property is hard to push back on
-> that we've crossed that line. I don't want to see this expanded one
-> property at a time without any foresight on additional needs. If we can
-> add a property that is more flexible, but doesn't add to the complexity
-> then that would be better. So this one alone is fine, but the next one
-> I'll be less receptive.
+--UFl34ci4G30u8hNQ8PTllb1sROwTxFqIu
+Content-Type: text/plain; charset=UTF-8
 
-Stupid question:
 
-In the interests of making this more flexible without adding any real
-"scripting", what about adding three optional delays to this binding:
-1. clock delay - time from "boot" to clocks being enabled
-2. reset delay - time from "boot" to resets being de-asserted
-3. boot delay - time from "boot" until the mmc-pwrseq-simple driver
-assumes the card is ready to be probed
+On 30.6.2016 16:23, Siarhei Siamashka wrote:
+> On Thu, 30 Jun 2016 13:13:48 +0200
+> Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> Hello,
+>>
+>> On 25 June 2016 at 05:45,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
+>>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Use Xulong Orange Pi One GPIO based regulator for
+>>> passive cooling and thermal management.
+>>>
+>>> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 39 +++++++++++++++++++++++++++++
+>>>  1 file changed, 39 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+>>> index b1bd6b0..a38d871 100644
+>>> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+>>> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+>>> @@ -109,6 +109,45 @@
+>>>         };
+>>>  };
+>>>
+>>> +&cpu0 {
+>>> +       operating-points = <
+>>> +               /* kHz    uV */
+>>> +               1296000 1300000
+>>> +               1200000 1300000  
+>>
+>> First problem is that the board boots at 1008000 which is not listed
+>> and the kernel complains.
+>>
+>> Second problem is that the board locks up during boot with this enabled.
+>>
+>> Do you have some suggestion for alternate configuration to test?
+> 
+> Maybe try the Allwinner's original DVFS table instead of these
+> undervolted values and see if it helps?
+> 
+> https://linux-sunxi.org/index.php?title=Xunlong_Orange_Pi_PC&oldid=17753#CPU_clock_speed_limit
 
-Where the "boot" time is when the mmc-pwrseq-simple driver starts
-enabling this card. All three delays default to 0, the boot delay is
-never less than either of the other delays and the time taken to
-enable clocks or de-assert resets is not counted.
+Thanks, I'll use these. I'm not sure what will happen if regulator is
+not capable of providing the exact voltages specified in the operating
+points, though. Will it do the sane thing? :)
 
-IMHO this allows the maximum amount of flexibility (resets and clocks
-can be in either order) without turning this into a scripting
-language. I also feel that it has a nice finality about it. (Of course
-if you wanted to go mad and turn this into a scripting language,
-allowing multiple pwrseq items per card would be the simplest way to
-do that.)
+Also LV6+ in the table is bellow specified minimum voltage in the
+datasheet. But then Orange Pi works at much lower voltages for me.
 
-Of course this also makes everything more complicated and I'm
-expecting this proposal to be nak'd for obvious reasons, but I had to
-ask.
+Conversly LV1 is the absolute maximum. Recommended maximum is 1.4V So I
+would not use that.
 
-Thanks,
+It might be nice to have something like that dram clock test, but for
+cpux freq/voltage, and collect some statistics.
+
+regards,
+  Ondrej
+
+> While undervolting is tempting because it helps to decrease the SoC
+> temperature and avoid throttling, different units may have different
+> tolerances and one needs to be very careful when picking defaults
+> that are intended to work correctly on all boards. Some safety
+> headroom exists there for a reason.
+> 
+> If I remember correctly, some people pushed for undervolting experiments
+> at least twice in the past (on the Banana Pi and C.H.I.P.). In both
+> cases this did not end up well and had to be fixed later to solve
+> reliability problems.
+> 
+> In order to allow individual per-unit tuning, a concept of "speed
+> grading" may be probably introduced later. So that the board is tested
+> for reliability and then the speed grade rating is stored somewhere on
+> the non-removable storage (EEPROM, SPI flash, eFUSE, ...). Some SoC
+> manufacturers, such as Samsung, are already doing this with their chips.
+> 
 
 -- 
-Julian Calaby
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+--UFl34ci4G30u8hNQ8PTllb1sROwTxFqIu--
+
+--MpkCpL7uXi6lOdJS8kR0oVscwbHXGRfBL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXdcSvAAoJEG5kJsZ3z+/xEzYP/iIzux4uVK7MTb9d28y68cB+
+LC9JLsnSzRJ3nabKHZSzXR2HRLWF+WBxUiiZxW1vExQT2WgPtgJoTBc15wPQBvPf
+9EiOEAQY5raZTqPwr13kToCBy7gHVhAgsX+EX0noJyo9qy5oqbID+D7iD6gjrz1D
+isn+1wNbQmwAj5ALs/Mp0wHv/UL2nyssoXmcv40WWZZwJ5Q7xUiJDAzpWnB1Tk9M
+F1sN4HgZpmjk//b9JbMx965F2Yy1hRwUfBlwKkj6a4MJc5IMPwUmXah3+orN5nde
+HJFlfFEYiYGs0Sfi2nzXC8BIWAXkCraB5K9IA2HhkaxKUhT4O8DHI7ugKet5YJ9k
+Lp2n/kK6TwHS8cQmXOVR8PG5+wYQ3C807oEhuVSBDdfBNwMMhFS55nfgpEjuexGt
+E5GOpt/A7iufptqK3WZ2OR2aUuI/G2UDP10gocCc6exx/5xyO5gIbKiIZMV7yf3W
+wpuvBs3Jvz6qVR3KqwPeeYF/uTyetp2uoG35O7ObCGu4Y6C6Zda05HI9+4Ier8V7
+priZbmPt5bIe4JlZVMiV2FTYvHoFvHsBbfFelGX7iIDLYKei1lC/avKyI1UoOnjD
+/2pKAG/MDGp7D72OyNnfY2Qid+POw45baLskPBfMNC4Gbc2rRNfX7+6NgggImH9A
+MixRStwhEAELKUlWP/zl
+=coV/
+-----END PGP SIGNATURE-----
+
+--MpkCpL7uXi6lOdJS8kR0oVscwbHXGRfBL--
