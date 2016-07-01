@@ -1,16 +1,15 @@
 From: Po Liu <po.liu@nxp.com>
-Subject: RE: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
-Date: Fri, 1 Jul 2016 08:40:19 +0000
-Message-ID: <VI1PR0401MB1709EC20F6CA6D636228C63F92250@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH v2 2/2] pci/aer: interrupt fixup in the quirk
+Date: Fri, 1 Jul 2016 08:46:31 +0000
+Message-ID: <VI1PR0401MB1709A82B3C59528D0953259892250@VI1PR0401MB1709.eurprd04.prod.outlook.com>
 References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-2-git-send-email-po.liu@nxp.com>
- <576B770A.6060508@huawei.com>
+ <1465884747-1517-1-git-send-email-po.liu@nxp.com>
+ <1465884747-1517-2-git-send-email-po.liu@nxp.com>
+ <20160616135420.GA31343@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <576B770A.6060508@huawei.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -21,63 +20,107 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dongdong Liu <liudongdong3@huawei.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+To: Po Liu <po.liu@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Yang-Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRG9uZ2RvbmcsDQoNCj4gIC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ICBGcm9tOiBE
-b25nZG9uZyBMaXUgW21haWx0bzpsaXVkb25nZG9uZzNAaHVhd2VpLmNvbV0NCj4gIFNlbnQ6IFRo
-dXJzZGF5LCBKdW5lIDIzLCAyMDE2IDE6NDQgUE0NCj4gIFRvOiBQbyBMaXU7IGxpbnV4LXBjaUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gIGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiAgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmcNCj4gIENjOiBCam9ybiBIZWxnYWFzOyBTaGF3biBHdW87IE1hcmMgWnluZ2llcjsgUm9i
-IEhlcnJpbmc7IFJveSBaYW5nOw0KPiAgTWluZ2thaSBIdTsgU3R1YXJ0IFlvZGVyOyBZYW5nLUxl
-byBMaTsgQXJuZCBCZXJnbWFubjsgTWluZ2h1YW4gTGlhbjsNCj4gIE11cmFsaSBLYXJpY2hlcmkN
-Cj4gIFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMi8yXSBwY2kvYWVyOiBpbnRlcnJ1cHQgZml4dXAg
-aW4gdGhlIHF1aXJrDQo+ICANCj4gIA0KPiAgDQo+ICDlnKggMjAxNi82LzE0IDE2OjI0LCBQbyBM
-aXUg5YaZ6YGTOg0KPiAgPiBPbiBzb21lIHBsYXRmb3Jtcywgcm9vdCBwb3J0IGRvZXNuJ3Qgc3Vw
-cG9ydCBNU0kvTVNJLVgvSU5UeCBpbiBSQyBtb2RlLg0KPiAgPiBXaGVuIGNoaXAgc3VwcG9ydCB0
-aGUgYWVyIGludGVycnVwdCB3aXRoIG5vbmUgTVNJL01TSS1YL0lOVHggbW9kZSwNCj4gID4gbWF5
-YmUgdGhlcmUgaXMgaW50ZXJydXB0IGxpbmUgZm9yIGFlciBwbWUgZXRjLiBTZWFyY2ggdGhlIGlu
-dGVycnVwdA0KPiAgPiBudW1iZXIgaW4gdGhlIGZkdCBmaWxlLiBUaGVuIGZpeHVwIHRoZSBkZXYt
-PmlycSB3aXRoIGl0Lg0KPiAgPg0KPiAgPiBTaWduZWQtb2ZmLWJ5OiBQbyBMaXUgPHBvLmxpdUBu
-eHAuY29tPg0KPiAgPiAtLS0NCj4gID4gY2hhbmdlcyBmb3IgVjM6DQo+ICA+IAktIE1vdmUgdG8g
-cXVpcms7DQo+ICA+IAktIE9ubHkgY29ycmVjdCB0aGUgaXJxIGluIFJDIG1vZGU7DQo+ICA+DQo+
-ICA+ICAgZHJpdmVycy9wY2kvcXVpcmtzLmMgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKw0KPiAgPiAgIDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspDQo+ICA+DQo+ICA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9xdWlya3MuYyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5j
-IGluZGV4DQo+ICA+IGVlNzJlYmUuLjhiMzljY2UgMTAwNjQ0DQo+ICA+IC0tLSBhL2RyaXZlcnMv
-cGNpL3F1aXJrcy5jDQo+ICA+ICsrKyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQo+ICA+IEBAIC0y
-NSw2ICsyNSw3IEBADQo+ICA+ICAgI2luY2x1ZGUgPGxpbnV4L3NjaGVkLmg+DQo+ICA+ICAgI2lu
-Y2x1ZGUgPGxpbnV4L2t0aW1lLmg+DQo+ICA+ICAgI2luY2x1ZGUgPGxpbnV4L21tLmg+DQo+ICA+
-ICsjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+DQo+ICA+ICAgI2luY2x1ZGUgPGFzbS9kbWEuaD4J
-LyogaXNhX2RtYV9icmlkZ2VfYnVnZ3kgKi8NCj4gID4gICAjaW5jbHVkZSAicGNpLmgiDQo+ICA+
-DQo+ICA+IEBAIC00NDE5LDMgKzQ0MjAsMzEgQEAgc3RhdGljIHZvaWQgcXVpcmtfaW50ZWxfcWF0
-X3ZmX2NhcChzdHJ1Y3QNCj4gIHBjaV9kZXYgKnBkZXYpDQo+ICA+ICAgCX0NCj4gID4gICB9DQo+
-ICA+ICAgREVDTEFSRV9QQ0lfRklYVVBfRUFSTFkoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0NDMs
-DQo+ICA+IHF1aXJrX2ludGVsX3FhdF92Zl9jYXApOw0KPiAgPiArDQo+ICA+ICsvKiBJZiByb290
-IHBvcnQgZG9lc24ndCBzdXBwb3J0IE1TSS9NU0ktWC9JTlR4IGluIFJDIG1vZGUsDQo+ICA+ICsg
-KiBidXQgdXNlIHN0YW5kYWxvbmUgaXJxLiBSZWFkIHRoZSBkZXZpY2UgdHJlZSBmb3IgdGhlIGFl
-cg0KPiAgPiArICogaW50ZXJydXB0IG51bWJlci4NCj4gID4gKyAqLw0KPiAgPiArc3RhdGljIHZv
-aWQgcXVpcmtfYWVyX2ludGVycnVwdChzdHJ1Y3QgcGNpX2RldiAqZGV2KSB7DQo+ICA+ICsJaW50
-IHJldDsNCj4gID4gKwl1OCBoZWFkZXJfdHlwZTsNCj4gID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUg
-Km5wID0gTlVMTDsNCj4gID4gKw0KPiAgPiArCS8qIE9ubHkgZm9yIHRoZSBSQyBtb2RlIGRldmlj
-ZSAqLw0KPiAgPiArCXBjaV9yZWFkX2NvbmZpZ19ieXRlKGRldiwgUENJX0hFQURFUl9UWVBFLCAm
-aGVhZGVyX3R5cGUpOw0KPiAgPiArCWlmICgoaGVhZGVyX3R5cGUgJiAweDdGKSAhPSBQQ0lfSEVB
-REVSX1RZUEVfQlJJREdFKQ0KPiAgPiArCQlyZXR1cm47DQo+ICANCj4gIEhvdyBhYm91dCB0aGF0
-IGl0IGlzIGNoYW5nZWQgYXMgYmVsb3cuDQo+ICANCj4gIC8qIE9ubHkgZm9yIHRoZSBSQyBtb2Rl
-IGRldmljZSAqLw0KPiAgaWYgKHBjaV9wY2llX3R5cGUoZGV2KSAhPSBQQ0lfRVhQX1RZUEVfUk9P
-VF9QT1JUKQ0KPiAgCXJldHVybjsNCj4gIA0KPiAgRG9uZ2RvbmcNCj4gIFRoYW5rcw0KWWVzLCBp
-dCBpcyBhbHNvIG9rIHRvIHJlYWQgdGhlIGNhcGFiaWxpdHkgcmVnaXN0ZXIuIA0KV2Ugc2VlIGl0
-IGlzIGNvbW1vbiB1c2VkIHRvIHJlYWQgdGhlIGhlYWRlciB0eXBlIHJlZ2lzdGVyIHRoYXQgaXMg
-d2h5IHdlIHVzZSBpbiB0aGlzIHdheS4NCg0KPiAgPiArDQo+ICA+ICsJaWYgKGRldi0+YnVzLT5k
-ZXYub2Zfbm9kZSkNCj4gID4gKwkJbnAgPSBkZXYtPmJ1cy0+ZGV2Lm9mX25vZGU7DQo+ICA+ICsN
-Cj4gID4gKwlpZiAoSVNfRU5BQkxFRChDT05GSUdfT0ZfSVJRKSAmJiBucCkgew0KPiAgPiArCQly
-ZXQgPSBvZl9pcnFfZ2V0X2J5bmFtZShucCwgImFlciIpOw0KPiAgPiArCQlpZiAocmV0ID4gMCkg
-ew0KPiAgPiArCQkJZGV2LT5ub19tc2kgPSAxOw0KPiAgPiArCQkJZGV2LT5pcnEgPSByZXQ7DQo+
-ICA+ICsJCX0NCj4gID4gKwl9DQo+ICA+ICt9DQo+ICA+ICtERUNMQVJFX1BDSV9GSVhVUF9GSU5B
-TChQQ0lfVkVORE9SX0lEX0ZSRUVTQ0FMRSwgUENJX0FOWV9JRCwNCj4gID4gK3F1aXJrX2Flcl9p
-bnRlcnJ1cHQpOw0KPiAgPg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Bjorn,
+
+So could we keep it in the pci/quirk.c ? 
+If yes, I would only move the binding description in the documentation into this driver the next version.
+
+>  -----Original Message-----
+>  From: Po Liu
+>  Sent: Friday, June 17, 2016 11:31 AM
+>  To: 'Bjorn Helgaas'
+>  Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Bjorn Helgaas;
+>  Shawn Guo; Marc Zyngier; Rob Herring; Roy Zang; Mingkai Hu; Stuart Yoder;
+>  Yang-Leo Li; Arnd Bergmann; Minghuan Lian; Murali Karicheri
+>  Subject: RE: [PATCH v2 2/2] pci/aer: interrupt fixup in the quirk
+>  
+>  
+>  
+>  >  -----Original Message-----
+>  >  From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+>  >  Sent: Thursday, June 16, 2016 9:54 PM
+>  >  To: Po Liu
+>  >  Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>  >  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Bjorn
+>  > Helgaas;  Shawn Guo; Marc Zyngier; Rob Herring; Roy Zang; Mingkai Hu;
+>  > Stuart Yoder;  Yang-Leo Li; Arnd Bergmann; Minghuan Lian; Murali
+>  > Karicheri
+>  >  Subject: Re: [PATCH v2 2/2] pci/aer: interrupt fixup in the quirk
+>  >
+>  >  On Tue, Jun 14, 2016 at 02:12:27PM +0800, Po Liu wrote:
+>  >  > On some platforms, root port doesn't support MSI/MSI-X/INTx in RC
+>  mode.
+>  >  > When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
+>  > > maybe there is interrupt line for aer pme etc. Search the interrupt
+>  > > number in the fdt file. Then fixup the dev->irq with it.
+>  >  >
+>  >  > Signed-off-by: Po Liu <po.liu@nxp.com>  > ---  > changes for V2:
+>  >  > 	- Move to the quirk file
+>  >  >
+>  >  >  drivers/pci/quirks.c | 23 +++++++++++++++++++++++  >  1 file
+>  > changed, 23 insertions(+)  >  > diff --git a/drivers/pci/quirks.c
+>  > b/drivers/pci/quirks.c index  > ee72ebe..909d479 100644  > ---
+>  > a/drivers/pci/quirks.c  > +++ b/drivers/pci/quirks.c
+>  >
+>  >  Is there any possibility of this part being used on different arches,
+>  > or  will it only ever be on arm64 (or whatever it is)?  If the latter,
+>  > it  could go somewhere like arch/arm64/kernel/quirks.c (which doesn't
+>  > exist  yet).
+>  
+>  NXP Layerscape1 is base on the arm 32bit design. Also need the fixup.
+>  
+>  >
+>  >  > @@ -25,6 +25,7 @@
+>  >  >  #include <linux/sched.h>
+>  >  >  #include <linux/ktime.h>
+>  >  >  #include <linux/mm.h>
+>  >  > +#include <linux/of_irq.h>
+>  >  >  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
+>  >  >  #include "pci.h"
+>  >  >
+>  >  > @@ -4419,3 +4420,25 @@ static void quirk_intel_qat_vf_cap(struct
+>  > pci_dev *pdev)
+>  >  >  	}
+>  >  >  }
+>  >  >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443,  >
+>  > quirk_intel_qat_vf_cap);  > +  > +/* If root port doesn't support
+>  > MSI/MSI-X/INTx in RC mode,  > + * but use standalone irq. Read the
+>  > device tree for the aer  > + * interrupt number.
+>  >  > + */
+>  >  > +static void quirk_aer_interrupt(struct pci_dev *dev) {
+>  >  > +	int ret;
+>  >  > +	struct device_node *np = NULL;
+>  >  > +
+>  >  > +	if (dev->bus->dev.of_node)
+>  >  > +		np = dev->bus->dev.of_node;
+>  >  > +
+>  >  > +	if (IS_ENABLED(CONFIG_OF_IRQ) && np) {
+>  >  > +		ret = of_irq_get_byname(np, "aer");
+>  >  > +		if (ret > 0) {
+>  >  > +			dev->no_msi = 1;
+>  >  > +			dev->irq = ret;
+>  >  > +		}
+>  >  > +	}
+>  >
+>  >  What does this mean for the other PCIe services, e.g., PME?  I guess
+>  > this makes the existing AER code work unchanged.  But I thought PME
+>  > had  a similar situation and was connected up to a different interrupt
+>  > than  AER was.
+>  
+>  Yes, PME is similar, HP is not support. I think better to disable the
+>  PME service irq in the quirk.
+>  But seems it is no use because quirk fixup is only running in init phase
+>  time(except suspend, resume).
+>  
+>  >
+>  >  > +}
+>  >  > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID,  >
+>  > +quirk_aer_interrupt);  > --  > 2.1.0.27.g96db324  >  > --  > To
+>  > unsubscribe from this list: send the line "unsubscribe linux-pci"
+>  >  > in the body of a message to majordomo@vger.kernel.org More
+>  > majordomo  > info at  http://vger.kernel.org/majordomo-info.html
