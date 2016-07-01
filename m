@@ -1,85 +1,143 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
-Date: Thu, 30 Jun 2016 19:59:15 -0500
-Message-ID: <20160701005817.GA31363@rob-hp-laptop>
-References: <20160626072838.28082-1-stephen.boyd@linaro.org>
- <20160626072838.28082-3-stephen.boyd@linaro.org>
- <20160628205642.GP3737@rob-hp-laptop>
- <146715176149.31418.10938517376423447782@sboyd-linaro>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH] mmc: pwrseq-simple: Add an optional post-power-on-delay
+Date: Fri, 1 Jul 2016 11:03:19 +1000
+Message-ID: <CAGRGNgW8zdi_vbqtjfG=pTaEmpVw9UEaitVkQjPxWwwe_izsQA@mail.gmail.com>
+References: <1466618348-32304-1-git-send-email-hdegoede@redhat.com>
+ <CAL_JsqJ0XVJb=Q9FT8g_OUTbgZWr-E58xQS0iCR4hv-9EHCcPA@mail.gmail.com>
+ <b056f5c8-e77f-ff90-afa5-cd77e446e2dd@redhat.com> <20160701004732.GA20831@rob-hp-laptop>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <146715176149.31418.10938517376423447782@sboyd-linaro>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQIP76OUQLBB24C265QKGQEACQOK7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160701004732.GA20831@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 03:09:21PM -0700, Stephen Boyd wrote:
-> Quoting Rob Herring (2016-06-28 13:56:42)
-> > On Sun, Jun 26, 2016 at 12:28:19AM -0700, Stephen Boyd wrote:
-> > > The qcom HSIC ulpi phy doesn't have any bits set in the vendor or
-> > > product id ulpi registers. This makes it impossible to make a
-> > > ulpi driver match against the id registers. Add support to
-> > > discover the ulpi phys via DT to help alleviate this problem.
-> > > We'll look for a ulpi bus node underneath the device registering
-> > > the ulpi viewport (or the parent of that device to support
-> > > chipidea's device layout) and then match up the phy node
-> > > underneath that with the ulpi device that's created.
-> > > 
-> > > The side benefit of this is that we can use standard DT
-> > > properties in the phy node like clks, regulators, gpios, etc.
-> > > because we don't have firmware like ACPI to turn these things on
-> > > for us. And we can use the DT phy binding to point our phy
-> > > consumer to the phy provider.
-> > > 
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > > Cc: <devicetree@vger.kernel.org>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/usb/ulpi.txt | 20 +++++++++
-> > >  drivers/usb/common/ulpi.c                      | 56 +++++++++++++++++++++++++-
-> > >  2 files changed, 74 insertions(+), 2 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/usb/ulpi.txt b/Documentation/devicetree/bindings/usb/ulpi.txt
-> > > new file mode 100644
-> > > index 000000000000..ca179dc4bd50
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/usb/ulpi.txt
-> > > @@ -0,0 +1,20 @@
-> > > +ULPI bus binding
-> > > +----------------
-> > > +
-> > > +Phys that are behind a ULPI connection can be described with the following
-> > > +binding. The host controller shall have a "ulpi" named node as a child, and
-> > > +that node shall have one enabled node underneath it representing the ulpi
-> > > +device on the bus.
-> > 
-> > This needs to co-exist with the USB bus binding which has the controller 
-> > ports for the child nodes. Maybe use the phy binding?
-> 
-> Which binding is that? bindings/usb/usb-device.txt? 
+Hi All,
 
-Yes.
+On Fri, Jul 1, 2016 at 10:47 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Jun 23, 2016 at 11:33:27AM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 23-06-16 00:25, Rob Herring wrote:
+>> >On Wed, Jun 22, 2016 at 12:59 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> >>Some devices need a while to boot their firmware after providing clks /
+>> >>de-asserting resets before they are ready to receive sdio commands.
+>> >>
+>> >>This commits adds a post-power-on-delay-ms devicetree property to
+>> >>mmc-pwrseq-simple for use with such devices.
+>> >>
+>> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> >>---
+>> >> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
+>> >> drivers/mmc/core/pwrseq_simple.c                            | 9 +++++++++
+>> >> 2 files changed, 11 insertions(+)
+>> >>
+>> >>diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>> >>index ce0e767..e254368 100644
+>> >>--- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>> >>+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>> >>@@ -16,6 +16,8 @@ Optional properties:
+>> >>   See ../clocks/clock-bindings.txt for details.
+>> >> - clock-names : Must include the following entry:
+>> >>   "ext_clock" (External clock provided to the card).
+>> >>+- post-power-on-delay-ms : Delay in ms after powering the card and
+>> >>+       de-asserting the reset-gpios (if any)
+>> >
+>> >Presumably you need this delay post any reset, not just after power on
+>>
+>> mmc-pwrseq is only about doing power-on / off, not about providing
+>> reset functionality.
+>
+> Yes, but the property (e.g. the delay) is relevant for both and reset is
+> part of the power seq.
+>
+>> >if you are waiting for firmware to boot. So the name is not all that
+>> >clear. How about a "reset-timing-ms" property that takes 3 values for
+>> >pre-assert time (normally 0), assertion time, post assert time. Of
+>> >course, I can still think of ways that breaks like when in this
+>> >sequence do clocks need to be turned on.
+>>
+>> If you look at bindings/mmc/mmc-pwrseq-simple.txt out side of
+>> the diff context it contains:
+>>
+>> - reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
+>>         at initialization and prior we start the power up procedure of the card.
+>>         They will be de-asserted right after the power has been provided to the
+>>         card.
+>> - clocks : Must contain an entry for the entry in clock-names.
+>>   See ../clocks/clock-bindings.txt for details.
+>> - clock-names : Must include the following entry:
+>>   "ext_clock" (External clock provided to the card).
+>>
+>> Notice how the existing docs talk about a power-up procedure (which matches
+>> the pwrseq name and purpose of these bindings).
+>>
+>> I actually started with calling the property "post-reset-delay-ms", but then
+>> I realized that what we really want is the ability to specify a time to
+>> wait (for e.g. firmware to boot) after completing the power-up procedure
+>> (and before starting the probe). The power-up procedure currently can
+>> also includes enabling external clocks to the sdio device (if any) and
+>> enabling regulators, so having a "reset-timing-ms" property does not
+>> seem right, as that would suggest it is ok to do the wait after deasserting
+>> reset, but before e.g. enabling external clocks. Where what we really
+>> want is to enable all necessary resources (or iow complete the powerup
+>> procedure) and then wait.
+>>
+>> You're right that in some cases more complicated timings may be necessary,
+>> but that can get really complicated like e.g.: enable regulator1, wait 10 ms,
+>> enable regulator2, wait 15ms, enable external clock1, ...
+>>
+>> And such complex timings fall outside of the scope of the mmc-pwrseq-simple
+>> binding, the idea being that for complex cases we do a device specific
+>> pwrseq binding, and then the smarts are in implementation of that specific
+>> pwrseq driver. As you've said yourself before we do not want to turn
+>> devicetree into a scripting language.
+>
+> Exactly. The challenge is any single property is hard to push back on
+> that we've crossed that line. I don't want to see this expanded one
+> property at a time without any foresight on additional needs. If we can
+> add a property that is more flexible, but doesn't add to the complexity
+> then that would be better. So this one alone is fine, but the next one
+> I'll be less receptive.
 
-> This ulpi binding is
-> to describe phys that are accessed through the ulpi "viewport" in the
-> usb controller. So controller ports don't come into the picture here.
+Stupid question:
 
-You just need to confirm that there's no collision with child nodes like 
-it assumes all children are ports.
+In the interests of making this more flexible without adding any real
+"scripting", what about adding three optional delays to this binding:
+1. clock delay - time from "boot" to clocks being enabled
+2. reset delay - time from "boot" to resets being de-asserted
+3. boot delay - time from "boot" until the mmc-pwrseq-simple driver
+assumes the card is ready to be probed
 
-Rob
+Where the "boot" time is when the mmc-pwrseq-simple driver starts
+enabling this card. All three delays default to 0, the boot delay is
+never less than either of the other delays and the time taken to
+enable clocks or de-assert resets is not counted.
+
+IMHO this allows the maximum amount of flexibility (resets and clocks
+can be in either order) without turning this into a scripting
+language. I also feel that it has a nice finality about it. (Of course
+if you wanted to go mad and turn this into a scripting language,
+allowing multiple pwrseq items per card would be the simplest way to
+do that.)
+
+Of course this also makes everything more complicated and I'm
+expecting this proposal to be nak'd for obvious reasons, but I had to
+ask.
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
