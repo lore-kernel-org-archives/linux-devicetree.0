@@ -1,101 +1,90 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 8/9] iommu/arm-smmu: Support non-PCI devices with SMMUv3
-Date: Fri, 1 Jul 2016 14:05:58 +0100
-Message-ID: <57766AB6.6030706@arm.com>
-References: <cover.1467123945.git.robin.murphy@arm.com>
-	<19b0d973e170bebfa57157047bf76499de2a6d33.1467123945.git.robin.murphy@arm.com>
-	<20160701124036.GK12735@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20160701124036.GK12735-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH] drivers/perf: arm-pmu: Handle per-interrupt affinity mask
+Date: Fri,  1 Jul 2016 14:21:31 +0100
+Message-ID: <1467379291-18413-1-git-send-email-marc.zyngier@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc: Heiko Stuebner <heiko@sntech.de>, Will Deacon <will.deacon@arm.com>, cf@rock-chips.com, huangtao@rock-chips.com, jay.xu@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/07/16 13:40, Will Deacon wrote:
-> On Tue, Jun 28, 2016 at 04:48:27PM +0100, Robin Murphy wrote:
->> With the device <-> stream ID relationship suitably abstracted and
->> of_xlate() hooked up, the PCI dependency now looks, and is, entirely
->> arbitrary. Any bus using the of_dma_configure() mechanism will work,
->> so extend support to the platform and AMBA buses which do just that.
->>
->> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->> ---
->>
->> v3: Now actually tested; improve comment about duplicate IDs.
->>
->>  drivers/iommu/Kconfig       |  2 +-
->>  drivers/iommu/arm-smmu-v3.c | 42 ++++++++++++++++++++++++++++++++++--------
->>  2 files changed, 35 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
->> index ad0860383cb3..d1c66afefeed 100644
->> --- a/drivers/iommu/Kconfig
->> +++ b/drivers/iommu/Kconfig
->> @@ -308,7 +308,7 @@ config ARM_SMMU
->>  
->>  config ARM_SMMU_V3
->>  	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
->> -	depends on ARM64 && PCI
->> +	depends on ARM64
->>  	select IOMMU_API
->>  	select IOMMU_IO_PGTABLE_LPAE
->>  	select GENERIC_MSI_IRQ_DOMAIN
->> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->> index 8ce2a4f9342b..735690e03818 100644
->> --- a/drivers/iommu/arm-smmu-v3.c
->> +++ b/drivers/iommu/arm-smmu-v3.c
->> @@ -35,6 +35,8 @@
->>  #include <linux/pci.h>
->>  #include <linux/platform_device.h>
->>  
->> +#include <linux/amba/bus.h>
->> +
->>  #include "io-pgtable.h"
->>  
->>  /* MMIO registers */
->> @@ -1822,6 +1824,25 @@ static void arm_smmu_remove_device(struct device *dev)
->>  	iommu_fwspec_free(dev);
->>  }
->>  
->> +static struct iommu_group *arm_smmu_device_group(struct device *dev)
->> +{
->> +	struct iommu_group *group;
->> +
->> +	/*
->> +	 * The difficulty of efficient stream-ID-to-device lookup prevents us
->> +	 * from reasonably detecting aliasing outside of PCI buses, but for the
->> +	 * the same underlying reason (a sparse 32-bit ID space) there's also
-> 
-> extra 'the'
+On a big-little system, PMUs can be wired to CPUs using per CPU
+interrups (PPI). In this case, it is important to make sure that
+the enable/disable do happen on the right set of CPUs.
 
-Oops, thanks.
+So instead of relying on the interrupt-affinity property, we can
+use the actual percpu affinity that DT exposes as part of the
+interrupt specifier. The DT binding is also updated to reflect
+the fact that the interrupt-affinity property shouldn't be used
+in that case.
 
->> +	 * little excuse for systems to be wired up with non-unique IDs in the
->> +	 * first place; consider them unsupported.
->> +	 */
-> 
-> This is a long-winded way of saying "we don't support aliasing SIDs outside
-> of PCI".
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+---
+ Documentation/devicetree/bindings/arm/pmu.txt |  4 +++-
+ drivers/perf/arm_pmu.c                        | 22 +++++++++++++++++-----
+ 2 files changed, 20 insertions(+), 6 deletions(-)
 
-It is. Someone said of the original terse 2-line comment "Worse: what if
-a SID in the DT aliases with a PCI master? It might be nice to have some
-basic sanity checking, at least.", so I expanded it to better clarify
-why there isn't. I'll try making it a little less florid.
-
-Robin.
-
-> 
-> Will
-> 
+diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+index 74d5417..61c8b46 100644
+--- a/Documentation/devicetree/bindings/arm/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/pmu.txt
+@@ -39,7 +39,9 @@ Optional properties:
+                        When using a PPI, specifies a list of phandles to CPU
+ 		       nodes corresponding to the set of CPUs which have
+ 		       a PMU of this type signalling the PPI listed in the
+-		       interrupts property.
++		       interrupts property, unless this is already specified
++		       by the PPI interrupt specifier itself (in which case
++		       the interrupt-affinity property shouldn't be present).
+ 
+                        This property should be present when there is more than
+ 		       a single SPI.
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index 140436a..065ccec 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -603,7 +603,8 @@ static void cpu_pmu_free_irq(struct arm_pmu *cpu_pmu)
+ 
+ 	irq = platform_get_irq(pmu_device, 0);
+ 	if (irq >= 0 && irq_is_percpu(irq)) {
+-		on_each_cpu(cpu_pmu_disable_percpu_irq, &irq, 1);
++		on_each_cpu_mask(&cpu_pmu->supported_cpus,
++				 cpu_pmu_disable_percpu_irq, &irq, 1);
+ 		free_percpu_irq(irq, &hw_events->percpu_pmu);
+ 	} else {
+ 		for (i = 0; i < irqs; ++i) {
+@@ -645,7 +646,9 @@ static int cpu_pmu_request_irq(struct arm_pmu *cpu_pmu, irq_handler_t handler)
+ 				irq);
+ 			return err;
+ 		}
+-		on_each_cpu(cpu_pmu_enable_percpu_irq, &irq, 1);
++
++		on_each_cpu_mask(&cpu_pmu->supported_cpus,
++				 cpu_pmu_enable_percpu_irq, &irq, 1);
+ 	} else {
+ 		for (i = 0; i < irqs; ++i) {
+ 			int cpu = i;
+@@ -961,9 +964,18 @@ static int of_pmu_irq_cfg(struct arm_pmu *pmu)
+ 		i++;
+ 	} while (1);
+ 
+-	/* If we didn't manage to parse anything, claim to support all CPUs */
+-	if (cpumask_weight(&pmu->supported_cpus) == 0)
+-		cpumask_setall(&pmu->supported_cpus);
++	/* If we didn't manage to parse anything, try the interrupt affinity */
++	if (cpumask_weight(&pmu->supported_cpus) == 0) {
++		if (!using_spi) {
++			/* If using PPIs, check the affinity of the partition */
++			int irq = platform_get_irq(pdev, 0);
++			irq_get_percpu_devid_partition(irq,
++						       &pmu->supported_cpus);
++		} else {
++			/* Otherwise default to all CPUs */
++			cpumask_setall(&pmu->supported_cpus);
++		}
++	}
+ 
+ 	/* If we matched up the IRQ affinities, use them to route the SPIs */
+ 	if (using_spi && i == pdev->num_resources)
+-- 
+2.1.4
