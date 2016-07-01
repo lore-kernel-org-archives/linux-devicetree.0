@@ -1,271 +1,112 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Portable Device Tree Connector -- conceptual
-Date: Thu, 30 Jun 2016 17:02:05 -0700
-Message-ID: <5775B2FD.2000103@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Re: [PATCH] mmc: pwrseq-simple: Add an optional post-power-on-delay
+Date: Thu, 30 Jun 2016 19:47:32 -0500
+Message-ID: <20160701004732.GA20831@rob-hp-laptop>
+References: <1466618348-32304-1-git-send-email-hdegoede@redhat.com>
+ <CAL_JsqJ0XVJb=Q9FT8g_OUTbgZWr-E58xQS0iCR4hv-9EHCcPA@mail.gmail.com>
+ <b056f5c8-e77f-ff90-afa5-cd77e446e2dd@redhat.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, David Gibson <david@gibson.dropbear.id.au>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Stephen Boyd <stephen.boyd@linaro.org>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>
-Cc: Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, linux@roeck-us.net, Marek Vasut <marex@denx.de>, wsa@the-dreams.de, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBJ73225QKGQEOASX52Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <b056f5c8-e77f-ff90-afa5-cd77e446e2dd-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+On Thu, Jun 23, 2016 at 11:33:27AM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 23-06-16 00:25, Rob Herring wrote:
+> >On Wed, Jun 22, 2016 at 12:59 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> >>Some devices need a while to boot their firmware after providing clks /
+> >>de-asserting resets before they are ready to receive sdio commands.
+> >>
+> >>This commits adds a post-power-on-delay-ms devicetree property to
+> >>mmc-pwrseq-simple for use with such devices.
+> >>
+> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>---
+> >> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
+> >> drivers/mmc/core/pwrseq_simple.c                            | 9 +++++++++
+> >> 2 files changed, 11 insertions(+)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> >>index ce0e767..e254368 100644
+> >>--- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> >>+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> >>@@ -16,6 +16,8 @@ Optional properties:
+> >>   See ../clocks/clock-bindings.txt for details.
+> >> - clock-names : Must include the following entry:
+> >>   "ext_clock" (External clock provided to the card).
+> >>+- post-power-on-delay-ms : Delay in ms after powering the card and
+> >>+       de-asserting the reset-gpios (if any)
+> >
+> >Presumably you need this delay post any reset, not just after power on
+> 
+> mmc-pwrseq is only about doing power-on / off, not about providing
+> reset functionality.
 
-I've been trying to wrap my head around what Pantelis and Rob have written
-on the subject of a device tree representation of a connector for a
-daughter board to connect to (eg a cape or a shield) and the representation
-of the daughter board.  (Or any other physically pluggable object.)
+Yes, but the property (e.g. the delay) is relevant for both and reset is 
+part of the power seq.
 
-After trying to make sense of what had been written (or presented via slides
-at a conference - thanks Pantelis!), I decided to go back to first principals
-of what we are trying to accomplish.  I came up with some really simple bogus
-examples to try to explain what my thought process is.
+> >if you are waiting for firmware to boot. So the name is not all that
+> >clear. How about a "reset-timing-ms" property that takes 3 values for
+> >pre-assert time (normally 0), assertion time, post assert time. Of
+> >course, I can still think of ways that breaks like when in this
+> >sequence do clocks need to be turned on.
+> 
+> If you look at bindings/mmc/mmc-pwrseq-simple.txt out side of
+> the diff context it contains:
+> 
+> - reset-gpios : contains a list of GPIO specifiers. The reset GPIOs are asserted
+>         at initialization and prior we start the power up procedure of the card.
+>         They will be de-asserted right after the power has been provided to the
+>         card.
+> - clocks : Must contain an entry for the entry in clock-names.
+>   See ../clocks/clock-bindings.txt for details.
+> - clock-names : Must include the following entry:
+>   "ext_clock" (External clock provided to the card).
+> 
+> Notice how the existing docs talk about a power-up procedure (which matches
+> the pwrseq name and purpose of these bindings).
+> 
+> I actually started with calling the property "post-reset-delay-ms", but then
+> I realized that what we really want is the ability to specify a time to
+> wait (for e.g. firmware to boot) after completing the power-up procedure
+> (and before starting the probe). The power-up procedure currently can
+> also includes enabling external clocks to the sdio device (if any) and
+> enabling regulators, so having a "reset-timing-ms" property does not
+> seem right, as that would suggest it is ok to do the wait after deasserting
+> reset, but before e.g. enabling external clocks. Where what we really
+> want is to enable all necessary resources (or iow complete the powerup
+> procedure) and then wait.
+> 
+> You're right that in some cases more complicated timings may be necessary,
+> but that can get really complicated like e.g.: enable regulator1, wait 10 ms,
+> enable regulator2, wait 15ms, enable external clock1, ...
+> 
+> And such complex timings fall outside of the scope of the mmc-pwrseq-simple
+> binding, the idea being that for complex cases we do a device specific
+> pwrseq binding, and then the smarts are in implementation of that specific
+> pwrseq driver. As you've said yourself before we do not want to turn
+> devicetree into a scripting language.
 
-To start with, assume that the device that will eventually be on a daughter
-board is first soldered onto the main board.  Then the device tree will
-look like:
+Exactly. The challenge is any single property is hard to push back on 
+that we've crossed that line. I don't want to see this expanded one 
+property at a time without any foresight on additional needs. If we can 
+add a property that is more flexible, but doesn't add to the complexity 
+then that would be better. So this one alone is fine, but the next one 
+I'll be less receptive.
 
-$ cat board.dts
-/dts-v1/;
+Rob
 
-/ {
-        #address-cells = < 1 >;
-        #size-cells = < 1 >;
-
-        tree_1: soc@0 {
-                reg = <0x0 0x0>;
-
-                spi_1: spi1 {
-                };
-        };
-
-};
-
-&spi_1 {
-        ethernet-switch@0 {
-                compatible = "micrel,ks8995m";
-        };
-};
-
-#include "spi_codec.dtsi"
-
-$ cat spi_codec.dtsi
-&spi_1 {
-	codec@1 {
-		compatible = "ti,tlv320aic26";
-	};
-};
-
-
-#----- codec chip on cape
-
-Then suppose I move the codec chip to a cape.  Then I will have the same
-exact .dts and .dtsi and everything still works.
-
-
-@----- codec chip on cape, overlay
-
-If I want to use overlays, I only have to add the version and "/plugin/",
-then use the '-@' flag for dtc (both for the previous board.dts and
-this spi_codec_overlay.dts):
-
-$ cat spi_codec_overlay.dts
-/dts-v1/;
-
-/plugin/;
-
-&spi_1 {
-	codec@1 {
-		compatible = "ti,tlv320aic26";
-	};
-};
-
-
-#----- codec chip on cape, overlay, connector
-
-Now we move into the realm of connectors.  My mental model of what the
-hardware and driver look like has not changed.  The only thing that has
-changed is that I want to be able to specify that the connector that
-the cape is plugged into has some pins that are the spi bus /soc/spi1.
-
-The following _almost_ but not quite gets me what I want.  Note that
-the only thing the connector node does is provide some kind of
-pointer or reference to what node(s) are physically routed through
-the connector.  (This node will turn out to not actually work in
-this example.)
-
-$ cat board_with_connector.dts
-/dts-v1/;
-
-/ {
-	#address-cells = < 1 >;
-	#size-cells = < 1 >;
-
-	tree_1: soc@0 {
-		reg = <0x0 0x0>;
-
-		spi_1: spi1 {
-		};
-	};
-
-	connector_1: connector_1 {
-		spi1 {
-			target_phandle = <&spi_1>;
-			target_path = "/soc/spi1";
-		};
-	};
-
-};
-
-&spi_1 {
-	ethernet-switch@0 {
-		compatible = "micrel,ks8995m";
-	};
-};
-
-$ cat spi_codec_overlay_with_connector.dts
-/dts-v1/;
-
-/plugin/;
-
-&connector_1 {
-	spi1 {
-		codec@1 {
-			compatible = "ti,tlv320aic26";
-		};
-	};
-};
-
-The result is that the overlay fixup for spi1 on the cape will
-relocate the spi1 node to /connector_1 in the host tree, so
-this does not solve the connector linkage yet:
-
--- chunk from the decompiled board_with_connector.dtb:
-
-	__symbols__ {
-		connector_1 = "/connector_1";
-	};
-
--- chunk from the decompiled spi_codec_overlay_with_connector.dtb:
-
-	fragment@0 {
-		target = <0xffffffff>;
-		__overlay__ {
-			spi1 {
-				codec@1 {
-					compatible = "ti,tlv320aic26";
-				};
-			};
-		};
-	};
-	__fixups__ {
-		connector_1 = "/fragment@0:target:0";
-	};
-
-
-#----- magic new dtc syntax
-
-What I really want is some way to tell dtc that I want to do one
-level of dereferencing when resolving the path of device nodes
-contained by the connector node in the overlay dts.
-
-The exact syntax does not matter here, I am just trying to get the
-concept.  I will add the not yet implemented dtc feature of
-"/connector/" to the connector node in both the tree dts and the
-overlay dts, and show how the output of dtc would change.  The
-"/connector/" directive tells dtc that for a base dts (hand
-waving how it knows base vs overlay dts file) to look into
-each node at that level and determine what other node it
-maps to (again, hand waving, in this example just to
-show the linkage, I have hard coded both the path and the
-phandle of the target node that the connector child node
-maps to).  The "/connector/" directive tells dtc that for
-an overlay dts (again hand waving) to provide a fixup for
-each child node.
-
-$ cat board_with_connector_v2.dts
-/dts-v1/;
-
-/ {
-	#address-cells = < 1 >;
-	#size-cells = < 1 >;
-
-	tree_1: soc@0 {
-		reg = <0x0 0x0>;
-
-		spi_1: spi1 {
-		};
-	};
-
-	connector_1: connector_1 {
-		/connector/;
-		spi1 {
-			target_phandle = <&spi_1>;
-			target_path = "/soc/spi1";
-		};
-	};
-
-};
-
-&spi_1 {
-	ethernet-switch@0 {
-		compatible = "micrel,ks8995m";
-	};
-};
-
-$ cat spi_codec_overlay_with_connector_v2.dts
-
-/dts-v1/;
-
-/plugin/;
-
-&connector_1 {
-	/connector/;
-	spi1 {
-		codec@1 {
-			compatible = "ti,tlv320aic26";
-		};
-	};
-};
-
--- chunk from the decompiled board_with_connector_v2.dtb:
-
-	__symbols__ {
-                connector_1 {
-                        spi1 = "/soc@0/spi1";
-                };
-        };
-
--- chunk from the decompiled spi_codec_overlay_with_connector_v2.dtb:
-
-/ {
-
-	fragment@0 {
-		target = <0xffffffff>;
-		__overlay__ {
-			spi1 {
-				codec@1 {
-					compatible = "ti,tlv320aic26";
-				};
-			};
-		};
-	};
-	__fixups__ {
-                connector_1 {
-		        spi1 = "/fragment@0/__overlay__:spi1:0";
-                };
-	};
-
-Of course the overlay loader will also have to be modified to understand
-the new information.
-
-Exact format of the __symbols__ and __fixups__ are implementation
-details, I am just trying to present the model.
-
-Ignoring device tree source syntax and dtc implementation issues, does
-this conceptual model look more straight forward and a better direction
-for how to represent connectors?
-
--Frank
+P.S. I'm on vacation ATM, so I'll be slow responding.
