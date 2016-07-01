@@ -1,63 +1,60 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH v2 1/2] ARM64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Fri, 01 Jul 2016 01:51:45 -0500
-Message-ID: <1467355905.32358.31.camel@buserror.net>
-References: <1463114260-8724-1-git-send-email-oss@buserror.net>
- <20160513112441.200f4349@arm.com> <1466559926.22191.203.camel@buserror.net>
- <5771267D.7030102@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5771267D.7030102@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/2] arm64: dts: rockchip: Support PMU for rk3399 SoCs
+Date: Fri,  1 Jul 2016 15:36:08 +0800
+Message-ID: <1467358570-24417-1-git-send-email-wxt@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE2LTA2LTI3IGF0IDE0OjEzICswMTAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6Cj4g
-T24gMjIvMDYvMTYgMDI6NDUsIFNjb3R0IFdvb2Qgd3JvdGU6Cj4gPiAKPiA+IE9uIEZyaSwgMjAx
-Ni0wNS0xMyBhdCAxMToyNCArMDEwMCwgTWFyYyBaeW5naWVyIHdyb3RlOgo+ID4gPiAKPiA+ID4g
-T24gVGh1LCAxMiBNYXkgMjAxNiAyMzozNzozOSAtMDUwMAo+ID4gPiBTY290dCBXb29kIDxvc3NA
-YnVzZXJyb3IubmV0PiB3cm90ZToKPiA+ID4gCj4gPiA+ID4gKyNpZmRlZiBDT05GSUdfQVJNNjQK
-PiA+ID4gPiArc3RhdGljIF9fYWx3YXlzX2lubGluZSB2b2lkIHJld3JpdGVfdHZhbChjb25zdCBp
-bnQgYWNjZXNzLAo+ID4gPiA+ICsJCXVuc2lnbmVkIGxvbmcgZXZ0LCBzdHJ1Y3QgY2xvY2tfZXZl
-bnRfZGV2aWNlICpjbGspCj4gPiA+ID4gK3sKPiA+ID4gPiArCXU2NCBjdmFsX29sZCwgY3ZhbF9u
-ZXc7Cj4gPiA+ID4gKwlpbnQgdGltZW91dCA9IDIwMDsKPiA+ID4gPiArCj4gPiA+ID4gKwlkbyB7
-Cj4gPiA+ID4gKwkJY3ZhbF9vbGQgPSBfX2FyY2hfY291bnRlcl9nZXRfY250dmN0KCk7Cj4gPiA+
-ID4gKwkJYXJjaF90aW1lcl9yZWdfd3JpdGUoYWNjZXNzLCBBUkNIX1RJTUVSX1JFR19UVkFMLAo+
-ID4gPiA+IGV2dCwKPiA+ID4gPiBjbGspOwo+ID4gPiA+ICsJCWN2YWxfbmV3ID0gX19hcmNoX2Nv
-dW50ZXJfZ2V0X2NudHZjdCgpOwo+ID4gPiBEb24ndCB5b3UgbmVlZCB0byBndWFyYW50ZWUgdGhl
-IG9yZGVyIG9mIGFjY2Vzc2VzIGhlcmU/Cj4gPiBJJ20gbm90IDEwMCUgc3VyZS7CoMKgVGhlIGVy
-cmF0dW0gd29ya2Fyb3VuZCBzYW1wbGUgY29kZSBkb2Vzbid0IHNob3cgYW55Cj4gPiBiYXJyaWVy
-cywgYW5kIGFkZGluZyBtb3JlIGJhcnJpZXJzIGNvdWxkIG1ha2UgaXQgaGFyZGVyIGZvciB0aGUg
-bG9vcCB0bwo+ID4gc3VjY2Vzc2Z1bGx5IGNvbXBsZXRlLsKgwqBUaGVyZSdzIGFscmVhZHkgYSBi
-YXJyaWVyIGFmdGVyIHRoZSB3cml0ZSwgc28gdGhlCj4gPiBvbmx5Cj4gPiBjb25jZXJuIHNob3Vs
-ZCBiZSB3aGV0aGVyIHRoZSB0aW1lciByZWFkIGNvdWxkIGJlIHJlb3JkZXJlZCBhZnRlciB0aGUK
-PiA+IHRpbWVyCj4gPiB3cml0ZSwgd2hpY2ggY291bGQgY2F1c2UgdGhlIGxvb3AgdG8gZXhpdCBl
-dmVuIGlmIHRoZSB3cml0ZSB3YXMgYmFkLsKgwqBEbwo+ID4geW91Cj4gPiBrbm93IGlmIEE1MyBv
-ciBBNTcgd2lsbCByZW9yZGVyIGEgY291bnRlciByZWFkIHJlbGF0aXZlIHRvIGEgdHZhbCB3cml0
-ZT8KPiBJIGNhbid0IHNlZSBhbnkgYWJzb2x1dGUgZ3VhcmFudGVlIHRoYXQgdGhleSB3b3VsZG4n
-dCBiZSByZW9yZGVyZWQgKGJ1dAo+IEkgaGF2ZSBubyBpbnNpZ2h0IG9uIHRoZSBtaWNyby1hcmNo
-aXRlY3R1cmUgZWl0aGVyKS4gSSdkIHJhdGhlciBlcnIgb24KPiB0aGUgc2lkZSBvZiBjYXV0aW9u
-IGhlcmUuCgpBZGRpbmcgYW5vdGhlciBpc2IoKSBiZWZvcmUgYXJjaF90aW1lcl9yZWdfd3JpdGUo
-KSBjYXVzZXMgdGhlIGxvb3AgdG8gbm90CmNvbXBsZXRlIHdpdGggYW55IHJlYXNvbmFibGUgdGlt
-ZW91dC4gwqBBIHRlc3RpbmcgbG9vcCAodGhhdCByZXBlYXRlZGx5IHdyaXRlcwp0byBUVkFMICh1
-c2luZyB0aGUgd29ya2Fyb3VuZCBjb2RlKSwgcmVhZHMgaXQgYmFjaywgYW5kIGNoZWNrcyB0aGF0
-IHRoZSB2YWx1ZQpyZWFkIGJhY2sgaXMgbm90IGdyZWF0ZXIgdGhhbiB0aGUgdmFsdWUgdGhhdCB3
-YXMgd3JpdHRlbikgc2hvd3MgdGhhdCB0aGUKd29ya2Fyb3VuZCB3aXRob3V0IHRoZSBleHRyYSBp
-c2IoKSBpcyBlZmZlY3RpdmUgLS0gbG90cyBvZiBhc3NlcnRpb25zIHdpdGhvdXQKdGhlIHdvcmth
-cm91bmQsIGFuZCBub25lIHdpdGggaXQgLS0gYnV0IEknbGwgZ28gd2l0aCB0aGUgY3ZhbCB3b3Jr
-YXJvdW5kCmluc3RlYWQuCgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hello Heiko, Marc & ARM guys
+
+When Jay first submitted the rk3399.dtsi upstream
+<https://patchwork.kernel.org/patch/8885821/> he had the PMU node in there,
+but then took it out because the upstream binding wasn't done yet.
+It looks as if the upstream stuff has landed, since in linux/master I see:
+287e9357abcc DT/arm,gic-v3: Documment PPI partition support
+e3825ba1af3a irqchip/gic-v3: Add support for partitioned PPIs
+9e2c986cb460 irqchip: Add per-cpu interrupt partitioning library
+222df54fd8b7 genirq: Allow the affinity of a percpu interrupt to be set/retrieved
+651e8b54abde irqdomain: Allow domain matching on irq_fwspec
+
+This series patches add to support the rk3399 SoCs PMU.
+As my do some tests with ChromeOs for my rk3399 board.
+
+TEST=$perf list |grep Hardware
+cpu-cycles OR cycles                               [Hardware event]
+instructions                                       [Hardware event]
+cache-references                                   [Hardware event]
+branch-instructions OR branches                    [Hardware event]
+branch-misses                                      [Hardware event]
+..
+Also,
+localhost / # perf stat sleep 1
+watch the Hardware event.
+e.g.:
+2375647      instructions              #    0.79  insns per cycle
+18482      branch-misses             #    0.00% of all branches
+--
+
+And perf top/stat to watch the hardware event. That work for me on now.
+
+-Caesar
+
+
+
+Caesar Wang (2):
+  arm64: dts: rockchip: change all interrupts cells for 4 on rk3399 SoCs
+  arm64: dts: rockchip: support the pmu node for rk3399
+
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 124 +++++++++++++++++++------------
+ 1 file changed, 75 insertions(+), 49 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
