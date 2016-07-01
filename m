@@ -1,173 +1,122 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: add the power domain node for rk3399
-Date: Fri, 01 Jul 2016 10:11:24 +0800
-Message-ID: <5775D14C.5040808@rock-chips.com>
-References: <1467251760-14695-1-git-send-email-wxt@rock-chips.com>
- <CAD=FV=Wg1vuBhcjFRj53t-E0sKoBH577RB7gHZ-rkJV5T7nyZw@mail.gmail.com>
- <2709691.LCsUme3dJo@phil>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND v2] mfd: sm501: Add device property
+Date: Thu, 30 Jun 2016 21:16:29 -0500
+Message-ID: <20160701021629.GA11570@rob-hp-laptop>
+References: <1467219419-22901-1-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <2709691.LCsUme3dJo@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: huangtao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467219419-22901-1-git-send-email-ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIHlvdXIgcmV2aWV3aW5nIQoKT24gMjAxNuW5tDA35pyIMDHml6UgMDU6NTcsIEhlaWtv
-IFN0dWVibmVyIHdyb3RlOgo+IEFtIERvbm5lcnN0YWcsIDMwLiBKdW5pIDIwMTYsIDE0OjQ5OjQx
-IHNjaHJpZWIgRG91ZyBBbmRlcnNvbjoKPj4gQ2Flc2FyLAo+Pgo+PiBPbiBXZWQsIEp1biAyOSwg
-MjAxNiBhdCA2OjU2IFBNLCBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPiB3cm90ZToK
-Pj4+IEZyb206IEVsYWluZSBaaGFuZyA8emhhbmdxaW5nQHJvY2stY2hpcHMuY29tPgo+Pj4KPj4+
-IEluIG9yZGVyIHRvIG1lZXQgbG93IHBvd2VyIHJlcXVpcmVtZW50cywgYSBwb3dlciBtYW5hZ2Vt
-ZW50IHVuaXQgKFBNVSkKPj4+IGlzCj4+PiBkZXNpZ25lZCBmb3IgY29udHJvbGxpbmcgcG93ZXIg
-cmVzb3VyY2VzIGluIFJLMzM5OS4gVGhlIFJLMzM5OSBQTVUgaXMKPj4+IGRlZGljYXRlZCBmb3Ig
-bWFuYWdpbmcgdGhlIHBvd2VyIG9mIHRoZSB3aG9sZSBjaGlwLgo+Pj4KPj4+IDEuIGFkZCBwZCBu
-b2RlIGZvciBSSzMzOTkgU29jCj4+PiAyLiBjcmVhdGUgcG93ZXIgZG9tYWluIHRyZWUKPj4+IDMu
-IGFkZCBxb3Mgbm9kZSBmb3IgZG9tYWluCj4+Pgo+Pj4gIEZyb20gdGhlIERUL2JpbmRzIGFuZCBk
-cml2ZXIgY2FuIGdldCBtb3JlIGRldGFpbCBpbmZvcm1hdGlvbjoKPj4+IFRoZSBkcml2ZXI6Cj4+
-PiBkcml2ZXJzL3NvYy9yb2NrY2hpcC9wbV9kb21haW5zLmMKPj4+IFRoZSBkb2N1bWVudDoKPj4+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2Mvcm9ja2NoaXAvcG93ZXJfZG9t
-YWluLnR4dAo+Pj4KPj4+IC0tLQo+Pj4KPj4+IFRlc3RlZCBvbiB2b3AgYW5kIGdwdSBkZXZpY2Vz
-IGFkZGVkIGZvciBuZXh0IGtlcm5lbC4KPj4+IFBEOgo+Pj4gbG9jYWxob3N0IC8gIyBjYXQgc3lz
-L2tlcm5lbC9kZWJ1Zy9wbV9nZW5wZC9wbV9nZW5wZF9zdW1tYXJ5Cj4+IE5pdDogY2FuIHlvdSBw
-dXQgYSAiLyIgYmVmb3JlICJzeXMiIGhlcmUgYW5kIGVsc2V3aGVyZSBpbiB5b3VyIHBhdGNoZXM/
-Cj4+Cj4+PiBkb21haW4gICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyAgICAgICAgICBz
-bGF2ZXMKPj4+IC9kZXZpY2UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBydW50aW1lIHN0YXR1cwo+Pj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+Pj4gcGRfZ3B1ICAgICAgICAg
-ICAgICAgICAgICAgICAgICBvbgo+Pj4gL2RldmljZXMvcGxhdGZvcm0vZmY5YTAwMDAuZ3B1ICAg
-ICAgICAgICAgICAgICAgICAgIGFjdGl2ZQo+Pj4gcGRfdm9wbCAgICAgICAgICAgICAgICAgICAg
-ICAgICBvZmYKPj4+IC9kZXZpY2VzL3BsYXRmb3JtL2ZmOGYwMDAwLnZvcCAgICAgICAgICAgICAg
-ICAgICAgICBzdXNwZW5kZWQKPj4+IHBkX3ZvcGIgICAgICAgICAgICAgICAgICAgICAgICAgb2Zm
-Cj4+PiAvZGV2aWNlcy9wbGF0Zm9ybS9mZjkwMDAwMC52b3AgICAgICAgICAgICAgICAgICAgICAg
-c3VzcGVuZGVkCj4+PiBwZF92byAgICAgICAgICAgICAgICAgICAgICAgICAgIG9mZiAgICAgICAg
-ICAgICBwZF92b3BiLCBwZF92b3BsCj4+PiBwZF9oZGNwICAgICAgICAgICAgICAgICAgICAgICAg
-IG9mZgo+Pj4gLi4uCj4+PiBwZF9pZXAgICAgICAgICAgICAgICAgICAgICAgICAgIG9mZgo+Pj4g
-cGRfdmNvZGVjICAgICAgICAgICAgICAgICAgICAgICBvZmYKPj4+IHBkX3ZkdSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgb2ZmCj4+Pgo+Pj4gUU9TOgo+Pj4gbG9jYWxob3N0IC8gIyBjYXQgc3lz
-L2tlcm5lbC9kZWJ1Zy9wbV9xb3MvCj4+PiBjcHVfZG1hX2xhdGVuY3kgICAgIG5ldHdvcmtfbGF0
-ZW5jeQo+Pj4gbWVtb3J5X2JhbmR3aWR0aCAgICBuZXR3b3JrX3Rocm91Z2hwdXQKPj4gV2hhdCBp
-cyB0aGlzIHN1cHBvc2VkIHRvIGJlIHNob3dpbmcgZXhhY3RseT8gIFlvdSBjYW4ndCAiY2F0IiBh
-Cj4+IGRpcmVjdG9yeSwgc28gbWF5YmUgeW91IG1lYW50ICJscyI/Cj4+Cj4+IEFsc28sIGVhY2gg
-b2YgdGhlc2UgZmlsZXMgY29udGFpbnMgdGhlIHN0cmluZyAiRW1wdHkhIiBhbmQgdGhlc2UgZmls
-ZXMKPj4gc2VlbSBmYWlybHkgdW5jb25uZWN0ZWQgdG8geW91ciBwYXRjaC4gIFRob3NlIGZpbGVz
-IGV4aXN0IGJvdGggYmVmb3JlCj4+IGFuZCBhZnRlciB5b3VyIHBhdGNoIGFuZCBub3RoaW5nIHRo
-YXQgSSBjYW4gc2VlIGluIHRoZSBSb2NrY2hpcCBRb1MKPj4gc3R1ZmYgaG9va3MgdXAgdG8gdGhl
-IGdlbmVyaWMgTGludXggUW9TIGluZnJhc3RydWN0dXJlLiAgVGhlIHBvd2VyCj4+IGRvbWFpbnMg
-anVzdCBzYXZlIGFuZCByZXN0b3JlIHRoZSBRb1MtLXRoZXkgZG9uJ3QgYWN0dWFsbHkgYWxsb3cK
-Pj4gc2V0dHRpbmcgaXQuCj4gcGVyc29uYWxseSwgSSB3b3VsZCBqdXN0IGRyb3AgdGhhdCBkZWJ1
-Z2ZzLWR1bXAsIGFzIEkgZG9uJ3Qgc2VlIHdoYXQgd2UgZ2Fpbgo+IGZyb20gaXQgOi0pLgoKQWdy
-ZWVkLCBkcm9wIGl0LgoKPj4+IFNpZ25lZC1vZmYtYnk6IEVsYWluZSBaaGFuZyA8emhhbmdxaW5n
-QHJvY2stY2hpcHMuY29tPgo+Pj4gU2lnbmVkLW9mZi1ieTogQ2Flc2FyIFdhbmcgPHd4dEByb2Nr
-LWNoaXBzLmNvbT4KPj4+IC0tLQo+IFsuLi5dCj4KPj4+ICsgICAgICAgcG11OiBwb3dlci1tYW5h
-Z2VtZW50QGZmMzEwMDAwIHsKPj4+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJvY2tj
-aGlwLHJrMzM5OS1wbXUiLCAic3lzY29uIiwKPj4+ICJzaW1wbGUtbWZkIjsgKyAgICAgICAgICAg
-ICAgIHJlZyA9IDwweDAgMHhmZjMxMDAwMCAweDAgMHgxMDAwPjsKPj4+ICsKPj4+ICsgICAgICAg
-ICAgICAgICBwb3dlcjogcG93ZXItY29udHJvbGxlciB7Cj4+PiArICAgICAgICAgICAgICAgICAg
-ICAgICBzdGF0dXMgPSAib2theSI7Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
-YmxlID0gInJvY2tjaGlwLHJrMzM5OS1wb3dlci1jb250cm9sbGVyIjsKPj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICNwb3dlci1kb21haW4tY2VsbHMgPSA8MT47Cj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICNzaXplLWNlbGxzID0gPDA+Owo+Pj4gKwo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-cGRfdmR1IHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPFJLMzM5
-OV9QRF9WRFU+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8
-JmNydSBBQ0xLX1ZEVT4sCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIDwmY3J1IEhDTEtfVkRVPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cG1fcW9zID0gPCZxb3NfdmlkZW9fbTFfcj4sCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDwmcW9zX3ZpZGVvX20xX3c+Owo+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgfTsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBkX3Zjb2RlYyB7Cj4+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxSSzMzOTlfUERfVkNPREVDPjsKPj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcnUgQUNMS19WQ09E
-RUM+LAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNydSBI
-Q0xLX1ZDT0RFQz47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBtX3FvcyA9
-IDwmcW9zX3ZpZGVvX20wPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+PiArICAg
-ICAgICAgICAgICAgICAgICAgICBwZF9pZXAgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICByZWcgPSA8UkszMzk5X1BEX0lFUD47Cj4+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGNsb2NrcyA9IDwmY3J1IEFDTEtfSUVQPiwKPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgPCZjcnUgSENMS19JRVA+Owo+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBwbV9xb3MgPSA8JnFvc19pZXA+Owo+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgfTsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBkX3JnYSB7Cj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxSSzMzOTlfUERfUkdBPjsKPj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcnUgQUNMS19SR0E+
-LAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNydSBIQ0xL
-X1JHQT47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBtX3FvcyA9IDwmcW9z
-X3JnYV9yPiwKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZx
-b3NfcmdhX3c+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIHBkX3ZpbyB7Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHJlZyA9IDxSSzMzOTlfUERfVklPPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICNzaXplLWNlbGxzID0gPDA+Owo+Pj4gKwo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBwZF9pc3AwIHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICByZWcgPSA8UkszMzk5X1BEX0lTUDA+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY3J1IEFDTEtfSVNQMD4sCj4+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZjcnUgSENMS19JU1AwPjsK
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwbV9xb3MgPSA8JnFv
-c19pc3AwX20wPiwKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICA8JnFvc19pc3AwX20xPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfTsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGRfaXNwMSB7Cj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPFJLMzM5OV9QRF9J
-U1AxPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3Mg
-PSA8JmNydSBBQ0xLX0lTUDE+LAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDwmY3J1IEhDTEtfSVNQMT47Cj4+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgcG1fcW9zID0gPCZxb3NfaXNwMV9tMD4sCj4+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZxb3NfaXNwMV9tMT47
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHBkX2hkY3Agewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHJlZyA9IDxSSzMzOTlfUERfSERDUD47Cj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcnUgQUNMS19IRENQPiwKPj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNydSBI
-Q0xLX0hEQ1A+LAo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDwmY3J1IFBDTEtfSERDUD47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgcG1fcW9zID0gPCZxb3NfaGRjcD47Cj4+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIH07Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBkX3Zv
-IHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8Uksz
-Mzk5X1BEX1ZPPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAj
-YWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKPj4+ICsKPj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBwZF92b3BiIHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxSSzMzOTlfUERfVk9QQj47Cj4+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNy
-dQo+Pj4gQUNMS19WT1AwPiwgKwo+Pj4gPCZjcnUgSENMS19WT1AwPjsgKwo+Pj4gcG1fcW9zID0g
-PCZxb3Nfdm9wX2JpZ19yPiwgKwo+Pj4gICAgICAgICAgICAgIDwmcW9zX3ZvcF9iaWdfdz47ICsK
-Pj4+IH07Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGRfdm9w
-bCB7Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
-ZWcgPSA8UkszMzk5X1BEX1ZPUEw+Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcnUKPj4+IEFDTEtfVk9QMT4sICsKPj4+IDwm
-Y3J1IEhDTEtfVk9QMT47ICsKPj4+IHBtX3FvcyA9IDwmcW9zX3ZvcF9saXR0bGU+OyArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfTsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+PiArICAg
-ICAgICAgICAgICAgICAgICAgICBwZF9ncHUgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICByZWcgPSA8UkszMzk5X1BEX0dQVT47Cj4+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGNsb2NrcyA9IDwmY3J1IEFDTEtfR1BVPjsKPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgcG1fcW9zID0gPCZxb3NfZ3B1PjsKPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIH07Cj4+IEFnYWluIGEgbml0dHkgc29ydCBvcmRlciBxdWVzdGlvbi4gIElzIHRoZXJl
-IGEgcmVhc29uIG5vdCB0byBtYWtlCj4+IHRoaW5ncyBhbHBoYWJldGljYWw/ICBBS0E6IHBkX2dw
-dSwgcGRfaWVwLCBwZF9yZ2EsIC4uLgo+Pgo+PiAuLi5hbmQgaW5zaWRlIHBkX3ZpbyBzaG91bGQg
-YmUgYWxwaGFiZXRpY2FsIHRvbz8KPj4KPj4gSW4gdGhlIFRSTSBpdCBsb29rcyBsaWtlIHNvbWUg
-b2YgdGhlIHBvd2VyIGRvbWFpbnMgYXJlIGdyb3VwZWQKPj4gdG9nZXRoZXIgKGxpa2UgYWxsIHRo
-ZSBkb21haW5zIHVuZGVyIExPR0lDIG9yIENFTlRFUkxPR0lDKS4gIElmCj4+IGtlZXBpbmcgdGhh
-dCBncm91cGluZyBtYWtlcyBzZW5zZSBoZXJlIHRoZW4geW91IHNob3VsZCBhZGQgYSBjb21tZW50
-Cj4+IGF0IHRoZSBzdGFydCBvZiBlYWNoIGdyb3VwIGFuZCBzb3J0IHRoZSBncm91cHMgc2FuZWx5
-IChhbmQgc29ydCB3aXRoaW4KPj4gZWFjaCBncm91cCkuCgpPa2F5LCBsZXQgbWUgc2VlIGl0LgoK
-VGhhbmtzIQoKPj4KPj4gSXQgbG9va3MgbGlrZSB0aGVyZSBhcmUgYWxzbyBtb3JlIHBvd2VyIGRv
-bWFpbnMgdGhhdCB5b3UgaGF2ZW4ndAo+PiBsaXN0ZWQgaGVyZSAobGlrZSBQRF9HTUFDLCBmb3Ig
-aW5zdGFuY2UsIG9yIFBEX0NPUkVfTCkuICBBcmUgeW91Cj4+IHBsYW5uaW5nIHRvIGFkZCB0aG9z
-ZSBpbiBhIGZvbGxvd29uIHBhdGNoPwo+IHRoYXQgcmVtaW5kcyBtZSwgbm9kZXMgd2l0aCBhIHJl
-ZyBwcm9wZXJ0eSBzaG91bGQgaGF2ZSB0aGUgYmFzZSBhZGRyZXNzIGluCj4gdGhlIG5vZGUgbmFt
-ZSBhcyB3ZWxsLiBVc2luZyB0aGUgY29uc3RhbnQgd29ya3MgbmljZWx5LCBhcyBjYW4gYmUgc2Vl
-biBvbgo+IHRoZSByazMyODggd2hlcmUgd2UgaGF2ZSBmb3IgZXhhbXBsZToKPgo+IAlwZF92aW9A
-UkszMjg4X1BEX1ZJTwoKQWdyZWVkLgoKCj4KPgo+IEhlaWtvCj4KPgo+CgotLSAKY2Flc2FyIHdh
-bmcgfCBzb2Z0d2FyZSBlbmdpbmVlciB8IHd4dEByb2NrLWNoaXAuY29tCgoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxp
-bmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+On Thu, Jun 30, 2016 at 01:56:59AM +0900, Yoshinori Sato wrote:
+> Signed-off-by: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/sm501.txt | 45 +++++++++++++++++++++++++
+>  drivers/mfd/sm501.c                             |  9 +++++
+>  2 files changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/sm501.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/sm501.txt b/Documentation/devicetree/bindings/mfd/sm501.txt
+> new file mode 100644
+> index 0000000..9290094
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/sm501.txt
+> @@ -0,0 +1,45 @@
+> +* SM SM501
+> +
+> +The SM SM501 is a LCD controller, with proper hardware, it can also
+> +drive DVI monitors.
+
+There is already a binding doc in bindings/display/
+
+> +
+> +Required properties:
+> +- compatible : should be "smi,sm501".
+> +- reg : contain two entries:
+> +    - First entry: System Configuration register
+> +    - Second entry: IO space (Display Controller register)
+> +- interrupts : SMI interrupt to the cpu should be described here.
+> +- interrupt-parent : the phandle for the interrupt controller that
+> +  services interrupts for this device.
+> +
+> +Optional properties:
+> +- mode : select a video mode:
+> +    <xres>x<yres>[-<bpp>][@<refresh>]
+> +- edid : verbatim EDID data block describing attached display.
+> +  Data from the detailed timing descriptor will be used to
+> +  program the display controller.
+> +- little-endian: available on big endian systems, to
+> +  set different foreign endian.
+> +- big-endian: available on little endian systems, to
+> +  set different foreign endian.
+> +- smi,devices: function block enable bitmap.
+> +	bit0: USB host
+> +	bit1: USB slave
+> +	bit2: SSP Ch0
+> +	bit3: SSP Ch1
+> +	bit4: UART Ch0
+> +	bit5: UART Ch1
+> +	bit6: Accelerator
+> +	bit7: AC97
+> +	bit8: I2S
+> +	bit9: GPIO
+> +
+> +Example for MPC5200:
+> +	display@1,0 {
+> +		compatible = "smi,sm501";
+> +		reg = <1 0x00000000 0x00800000
+> +		       1 0x03e00000 0x00200000>;
+> +		interrupts = <1 1 3>;
+> +		mode = "640x480-32@60";
+> +		edid = [edid-data];
+> +	};
+> diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
+> index 65cd0d2..e2e3f9b 100644
+> --- a/drivers/mfd/sm501.c
+> +++ b/drivers/mfd/sm501.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/i2c-gpio.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+>  
+>  #include <linux/sm501.h>
+>  #include <linux/sm501-regs.h>
+> @@ -1377,6 +1378,8 @@ static int sm501_plat_probe(struct platform_device *dev)
+>  {
+>  	struct sm501_devdata *sm;
+>  	int ret;
+> +	struct sm501_platdata private_platdata;
+> +	struct sm501_initdata private_initdata;
+>  
+>  	sm = kzalloc(sizeof(struct sm501_devdata), GFP_KERNEL);
+>  	if (sm == NULL) {
+> @@ -1388,6 +1391,12 @@ static int sm501_plat_probe(struct platform_device *dev)
+>  	sm->dev = &dev->dev;
+>  	sm->pdev_id = dev->id;
+>  	sm->platdata = dev_get_platdata(&dev->dev);
+> +	if (!sm->platdata) {
+> +		of_property_read_u32(dev->dev.of_node, "smi,devices",
+> +				     (u32 *)&private_initdata.devices);
+> +		private_platdata.init = &private_initdata;
+> +		sm->platdata = &private_platdata;
+> +	}
+>  
+>  	ret = platform_get_irq(dev, 0);
+>  	if (ret < 0) {
+> -- 
+> 2.7.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
