@@ -1,43 +1,88 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/3] ARM: dts: blanche: add SCIF0/3 pins
-Date: Fri, 1 Jul 2016 10:10:46 +0200
-Message-ID: <CAMuHMdXS==TCktBP9ApLi6rQkDfFLyQQkKyTt7dFQsx_6nEfxw@mail.gmail.com>
-References: <2144803.0K8qXzjIFq@wasted.cogentembedded.com>
- <1489490.F0Oqgkmovy@wasted.cogentembedded.com>
+From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name dt property
+Date: Fri, 1 Jul 2016 10:17:37 +0200
+Message-ID: <b18cd232-711a-b617-2f09-09c4bdf2c3c4@broadcom.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+ <20160701020836.GA1722@rob-hp-laptop>
+Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489490.F0Oqgkmovy@wasted.cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRYNGWEWYDBBLGO3C5QKGQEQOXABYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160701020836.GA1722@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 1, 2016 at 1:08 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add the (previously omitted) SCIF0/3 pin data to the Blanche board's
-> device tree.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Gr{oetje,eeting}s,
+On 1-7-2016 4:08, Rob Herring wrote:
+> On Wed, Jun 29, 2016 at 04:04:31PM +0200, Hans de Goede wrote:
+>> Add a brcm,nvram_file_name dt property to allow overruling the default
+>> nvram filename for sdio devices. The idea is that we can specify a
+>> board specific nvram file, e.g. brcmfmac43362-ap6210.txt for boards
+>> with an ap6210 wifi sdio module and ship this in linux-firmware, so
+>> that wifi will work out of the box, without requiring users to find
+>> and then manually install the right nvram file for their board.
+> 
+> What about putting its contents directly into DT? It's just text 
+> key/value pairs so it would match up well.
 
-                        Geert
+It would be an option, but I have no clue how to dig up documentation of
+these key,value pairs. The file is typically obtained from a wifi module
+vendor which would need to be converted to DT format, ie. prefix with
+"brcm," etc. From driver perspective this would mean it need to know
+keys. Currently, it just takes the file contents and sends it to the device.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> Also, I have to wonder how all the non-SDIO based cards don't need this 
+> file.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+PCIe devices have more on-board storage. Also on some router platforms
+it gets nvram data from flash memory.
+
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt          | 2 ++
+>>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c               | 2 ++
+>>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c             | 6 ++++++
+>>  include/linux/platform_data/brcmfmac.h                              | 2 ++
+>>  4 files changed, 12 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>> index 5dbf169..2ba13a6 100644
+>> --- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>> @@ -11,6 +11,7 @@ Required properties:
+>>  Optional properties:
+>>   - brcm,drive-strength : drive strength used for SDIO pins on device in mA
+>>  	(default = 6).
+>> + - brcm,nvram_file_name : name of the nvram file to load
+> 
+> The need for firmware file names has come up several times though 
+> nothing merged to yet. There has been at least some level of agreement 
+> to use "firmware-name" here. 
+
+Do you mean with or without vendor prefix? Actually the device needs two
+files to initialize. The firmware that is needed to have anything
+running on the device and the nvram data that characterizes the device
+for that firmware.
+
+Regards,
+Arend
+
+>>   - interrupt-parent : the phandle for the interrupt controller to which the
+>>  	device interrupts are connected.
+>>   - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
+>> @@ -34,6 +35,7 @@ mmc3: mmc@01c12000 {
+>>  	brcmf: bcrmf@1 {
+>>  		reg = <1>;
+>>  		compatible = "brcm,bcm4329-fmac";
+>> +		brcm,nvram_file_name = "brcm/brcmfmac43362-ap6210.txt";
+>>  		interrupt-parent = <&pio>;
+>>  		interrupts = <10 8>; /* PH10 / EINT10 */
+>>  		interrupt-names = "host-wake";
