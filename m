@@ -1,449 +1,458 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v4 6/8] iommu/arm-smmu: Implement of_xlate() for SMMUv3
-Date: Fri,  1 Jul 2016 17:50:15 +0100
-Message-ID: <925b054b1e96dc83c0b1dc9607785d0346187366.1467388950.git.robin.murphy@arm.com>
-References: <cover.1467388950.git.robin.murphy@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <cover.1467388950.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: Portable Device Tree Connector -- conceptual
+Date: Fri, 1 Jul 2016 19:56:56 +0300
+Message-ID: <BA83424E-093C-4D73-89E9-392BF1A1ADCB@konsulko.com>
+References: <5775B2FD.2000103@gmail.com> <199EAB87-47DA-4213-BE60-43C2E062AAD5@konsulko.com> <57769AF3.2040301@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57769AF3.2040301-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we can properly describe the mapping between PCI RIDs and
-stream IDs via "iommu-map", and have it fed it to the driver
-automatically via of_xlate(), rework the SMMUv3 driver to benefit from
-that, and get rid of the current misuse of the "iommus" binding.
+Hi Frank,
 
-Since having of_xlate wired up means that masters will now be given the
-appropriate DMA ops, we also need to make sure that default domains work
-properly. This necessitates dispensing with the "whole group at a time"
-notion for attaching to a domain, as devices which share a group get
-attached to the group's default domain one by one as they are initially
-probed.
+> On Jul 1, 2016, at 19:31 , Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
+>=20
+> On 07/01/16 03:59, Pantelis Antoniou wrote:
+>> Hi Frank,
+>>=20
+>> Comments inline.
+>>=20
+>>> On Jul 1, 2016, at 03:02 , Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+>>>=20
+>>> Hi All,
+>>>=20
+>>> I've been trying to wrap my head around what Pantelis and Rob have =
+written
+>>> on the subject of a device tree representation of a connector for a
+>>> daughter board to connect to (eg a cape or a shield) and the repres=
+entation
+>>> of the daughter board.  (Or any other physically pluggable object.)
+>>>=20
+>>> After trying to make sense of what had been written (or presented v=
+ia slides
+>>> at a conference - thanks Pantelis!), I decided to go back to first =
+principals
+>>> of what we are trying to accomplish.  I came up with some really si=
+mple bogus
+>>> examples to try to explain what my thought process is.
+>>>=20
+>>> To start with, assume that the device that will eventually be on a =
+daughter
+>>> board is first soldered onto the main board.  Then the device tree =
+will
+>>> look like:
+>>>=20
+>>> $ cat board.dts
+>>> /dts-v1/;
+>>>=20
+>>> / {
+>>>       #address-cells =3D < 1 >;
+>>>       #size-cells =3D < 1 >;
+>>>=20
+>>>       tree_1: soc@0 {
+>>>               reg =3D <0x0 0x0>;
+>>>=20
+>>>               spi_1: spi1 {
+>>>               };
+>>>       };
+>>>=20
+>>> };
+>>>=20
+>>> &spi_1 {
+>>>       ethernet-switch@0 {
+>>>               compatible =3D "micrel,ks8995m";
+>>>       };
+>>> };
+>>>=20
+>>> #include "spi_codec.dtsi"
+>>>=20
+>>> $ cat spi_codec.dtsi
+>>> &spi_1 {
+>>> 	codec@1 {
+>>> 		compatible =3D "ti,tlv320aic26";
+>>> 	};
+>>> };
+>>>=20
+>>>=20
+>>> #----- codec chip on cape
+>>>=20
+>>> Then suppose I move the codec chip to a cape.  Then I will have the=
+ same
+>>> exact .dts and .dtsi and everything still works.
+>>>=20
+>>>=20
+>>> @----- codec chip on cape, overlay
+>>>=20
+>>> If I want to use overlays, I only have to add the version and "/plu=
+gin/",
+>>> then use the '-@' flag for dtc (both for the previous board.dts and
+>>> this spi_codec_overlay.dts):
+>>>=20
+>>> $ cat spi_codec_overlay.dts
+>>> /dts-v1/;
+>>>=20
+>>> /plugin/;
+>>>=20
+>>> &spi_1 {
+>>> 	codec@1 {
+>>> 		compatible =3D "ti,tlv320aic26";
+>>> 	};
+>>> };
+>>>=20
+>>=20
+>> The correct form now for the /plugin/ declaration should be like
+>>=20
+>> /dts-v1/ /plugin/;
+>>=20
+>> The old method still works for backward compatibility.
+>>=20
+>> In fact with the new patches you don=E2=80=99t even /plugin/ since w=
+hen
+>> compiling an overlay we can turn on the plugin flag by looking
+>> at the output type (dtbo).
+>>=20
+>>>=20
+>>> #----- codec chip on cape, overlay, connector
+>>>=20
+>>> Now we move into the realm of connectors.  My mental model of what =
+the
+>>> hardware and driver look like has not changed.  The only thing that=
+ has
+>>> changed is that I want to be able to specify that the connector tha=
+t
+>>> the cape is plugged into has some pins that are the spi bus /soc/sp=
+i1.
+>>>=20
+>>=20
+>> That=E2=80=99s not nearly enough. You might have extra=20
+>> gpio/interrupt/dma/gpmc(memory-controller) pins.
+>=20
+> Yes.
+>=20
+> I was keeping the example _very_ simple.  I was trying to illustrate
+> the _concept_, not provide a full implementation.
+>=20
+> In a real use, the connector node would provide a node for each of th=
+e
+> things routed to the connector.
+>=20
 
-Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
----
+We need the example of how to handle pinmux cause it=E2=80=99s the tric=
+kiest
+thing of all.
 
-v4: Add explicit device probe in of_init callback.
+>=20
+>> We can disregard dma and gpmc like interfaces for now but gpio and
+>> interrupt pins are required.
+>>=20
+>> For instance the spi device might have an extra gpio that it=E2=80=99=
+s using
+>> to signal some kind of condition (for example low-battery) which an
+>> application (not just the kernel) can use to make a platform specifi=
+c
+>> decision.
+>>=20
+>>> The following _almost_ but not quite gets me what I want.  Note tha=
+t
+>>> the only thing the connector node does is provide some kind of
+>>> pointer or reference to what node(s) are physically routed through
+>>> the connector.  (This node will turn out to not actually work in
+>>> this example.)
+>>>=20
+>>> $ cat board_with_connector.dts
+>>> /dts-v1/;
+>>>=20
+>>> / {
+>>> 	#address-cells =3D < 1 >;
+>>> 	#size-cells =3D < 1 >;
+>>>=20
+>>> 	tree_1: soc@0 {
+>>> 		reg =3D <0x0 0x0>;
+>>>=20
+>>> 		spi_1: spi1 {
+>>> 		};
+>>> 	};
+>>>=20
+>>> 	connector_1: connector_1 {
+>>> 		spi1 {
+>>> 			target_phandle =3D <&spi_1>;
+>>> 			target_path =3D "/soc/spi1";
+>>> 		};
+>>> 	};
+>>>=20
+>>> };
+>>>=20
+>>> &spi_1 {
+>>> 	ethernet-switch@0 {
+>>> 		compatible =3D "micrel,ks8995m";
+>>> 	};
+>>> };
+>>>=20
+>>> $ cat spi_codec_overlay_with_connector.dts
+>>> /dts-v1/;
+>>>=20
+>>> /plugin/;
+>>>=20
+>>> &connector_1 {
+>>> 	spi1 {
+>>> 		codec@1 {
+>>> 			compatible =3D "ti,tlv320aic26";
+>>> 		};
+>>> 	};
+>>> };
+>>=20
+>> This is a subset of what=E2=80=99s supported by the patch I=E2=80=99=
+ve sent out.
+>=20
+> Yes.  Same comment as above.
+>=20
+>=20
+>> Your example works as long as you assume that there=E2=80=99s no pin=
+muxing
+>> related to the configuration of the spi controller when routed out
+>> to the connector pins.
+>=20
+> No.  Pinmuxing is part of the host board dts.
+>=20
 
- drivers/iommu/arm-smmu-v3.c | 278 +++++++++++++++++++-------------------------
- 1 file changed, 121 insertions(+), 157 deletions(-)
+It is part of the host board DTS yes, but the connector must have
+a way to set the pinmux configuration according what the detected
+expansion board expects.
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 94b68213c50d..fb438664b9f0 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -30,6 +30,7 @@
- #include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_iommu.h>
- #include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-@@ -606,12 +607,9 @@ struct arm_smmu_device {
- 	struct arm_smmu_strtab_cfg	strtab_cfg;
- };
- 
--/* SMMU private data for an IOMMU group */
--struct arm_smmu_group {
-+/* SMMU private data for each master */
-+struct arm_smmu_master_data {
- 	struct arm_smmu_device		*smmu;
--	struct arm_smmu_domain		*domain;
--	int				num_sids;
--	u32				*sids;
- 	struct arm_smmu_strtab_ent	ste;
- };
- 
-@@ -1575,20 +1573,6 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain)
- 	return ret;
- }
- 
--static struct arm_smmu_group *arm_smmu_group_get(struct device *dev)
--{
--	struct iommu_group *group;
--	struct arm_smmu_group *smmu_group;
--
--	group = iommu_group_get(dev);
--	if (!group)
--		return NULL;
--
--	smmu_group = iommu_group_get_iommudata(group);
--	iommu_group_put(group);
--	return smmu_group;
--}
--
- static __le64 *arm_smmu_get_step_for_sid(struct arm_smmu_device *smmu, u32 sid)
- {
- 	__le64 *step;
-@@ -1611,27 +1595,17 @@ static __le64 *arm_smmu_get_step_for_sid(struct arm_smmu_device *smmu, u32 sid)
- 	return step;
- }
- 
--static int arm_smmu_install_ste_for_group(struct arm_smmu_group *smmu_group)
-+static int arm_smmu_install_ste_for_dev(struct iommu_fwspec *fwspec)
- {
- 	int i;
--	struct arm_smmu_domain *smmu_domain = smmu_group->domain;
--	struct arm_smmu_strtab_ent *ste = &smmu_group->ste;
--	struct arm_smmu_device *smmu = smmu_group->smmu;
-+	struct arm_smmu_master_data *master = fwspec->iommu_priv;
-+	struct arm_smmu_device *smmu = master->smmu;
- 
--	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
--		ste->s1_cfg = &smmu_domain->s1_cfg;
--		ste->s2_cfg = NULL;
--		arm_smmu_write_ctx_desc(smmu, ste->s1_cfg);
--	} else {
--		ste->s1_cfg = NULL;
--		ste->s2_cfg = &smmu_domain->s2_cfg;
--	}
--
--	for (i = 0; i < smmu_group->num_sids; ++i) {
--		u32 sid = smmu_group->sids[i];
-+	for (i = 0; i < fwspec->num_ids; ++i) {
-+		u32 sid = fwspec->ids[i];
- 		__le64 *step = arm_smmu_get_step_for_sid(smmu, sid);
- 
--		arm_smmu_write_strtab_ent(smmu, sid, step, ste);
-+		arm_smmu_write_strtab_ent(smmu, sid, step, &master->ste);
- 	}
- 
- 	return 0;
-@@ -1639,13 +1613,12 @@ static int arm_smmu_install_ste_for_group(struct arm_smmu_group *smmu_group)
- 
- static void arm_smmu_detach_dev(struct device *dev)
- {
--	struct arm_smmu_group *smmu_group = arm_smmu_group_get(dev);
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec(dev);
-+	struct arm_smmu_master_data *master = fwspec->iommu_priv;
- 
--	smmu_group->ste.bypass = true;
--	if (arm_smmu_install_ste_for_group(smmu_group) < 0)
-+	master->ste.bypass = true;
-+	if (arm_smmu_install_ste_for_dev(fwspec) < 0)
- 		dev_warn(dev, "failed to install bypass STE\n");
--
--	smmu_group->domain = NULL;
- }
- 
- static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
-@@ -1653,16 +1626,21 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 	int ret = 0;
- 	struct arm_smmu_device *smmu;
- 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
--	struct arm_smmu_group *smmu_group = arm_smmu_group_get(dev);
-+	struct arm_smmu_master_data *master;
-+	struct arm_smmu_strtab_ent *ste;
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec(dev);
- 
--	if (!smmu_group)
-+	if (!fwspec)
- 		return -ENOENT;
- 
-+	master = fwspec->iommu_priv;
-+	smmu = master->smmu;
-+	ste = &master->ste;
-+
- 	/* Already attached to a different domain? */
--	if (smmu_group->domain && smmu_group->domain != smmu_domain)
-+	if (!ste->bypass)
- 		arm_smmu_detach_dev(dev);
- 
--	smmu = smmu_group->smmu;
- 	mutex_lock(&smmu_domain->init_mutex);
- 
- 	if (!smmu_domain->smmu) {
-@@ -1681,21 +1659,21 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		goto out_unlock;
- 	}
- 
--	/* Group already attached to this domain? */
--	if (smmu_group->domain)
--		goto out_unlock;
-+	ste->bypass = false;
-+	ste->valid = true;
- 
--	smmu_group->domain	= smmu_domain;
-+	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
-+		ste->s1_cfg = &smmu_domain->s1_cfg;
-+		ste->s2_cfg = NULL;
-+		arm_smmu_write_ctx_desc(smmu, ste->s1_cfg);
-+	} else {
-+		ste->s1_cfg = NULL;
-+		ste->s2_cfg = &smmu_domain->s2_cfg;
-+	}
- 
--	/*
--	 * FIXME: This should always be "false" once we have IOMMU-backed
--	 * DMA ops for all devices behind the SMMU.
--	 */
--	smmu_group->ste.bypass	= domain->type == IOMMU_DOMAIN_DMA;
--
--	ret = arm_smmu_install_ste_for_group(smmu_group);
-+	ret = arm_smmu_install_ste_for_dev(fwspec);
- 	if (ret < 0)
--		smmu_group->domain = NULL;
-+		ste->valid = false;
- 
- out_unlock:
- 	mutex_unlock(&smmu_domain->init_mutex);
-@@ -1754,40 +1732,14 @@ arm_smmu_iova_to_phys(struct iommu_domain *domain, dma_addr_t iova)
- 	return ret;
- }
- 
--static int __arm_smmu_get_pci_sid(struct pci_dev *pdev, u16 alias, void *sidp)
-+static struct arm_smmu_device *arm_smmu_get_by_node(struct device_node *np)
- {
--	*(u32 *)sidp = alias;
--	return 0; /* Continue walking */
--}
-+	struct platform_device *smmu_pdev = of_find_device_by_node(np);
- 
--static void __arm_smmu_release_pci_iommudata(void *data)
--{
--	kfree(data);
--}
--
--static struct arm_smmu_device *arm_smmu_get_for_pci_dev(struct pci_dev *pdev)
--{
--	struct device_node *of_node;
--	struct platform_device *smmu_pdev;
--	struct arm_smmu_device *smmu = NULL;
--	struct pci_bus *bus = pdev->bus;
--
--	/* Walk up to the root bus */
--	while (!pci_is_root_bus(bus))
--		bus = bus->parent;
--
--	/* Follow the "iommus" phandle from the host controller */
--	of_node = of_parse_phandle(bus->bridge->parent->of_node, "iommus", 0);
--	if (!of_node)
-+	if (!smmu_pdev)
- 		return NULL;
- 
--	/* See if we can find an SMMU corresponding to the phandle */
--	smmu_pdev = of_find_device_by_node(of_node);
--	if (smmu_pdev)
--		smmu = platform_get_drvdata(smmu_pdev);
--
--	of_node_put(of_node);
--	return smmu;
-+	return platform_get_drvdata(smmu_pdev);
- }
- 
- static bool arm_smmu_sid_in_range(struct arm_smmu_device *smmu, u32 sid)
-@@ -1800,94 +1752,74 @@ static bool arm_smmu_sid_in_range(struct arm_smmu_device *smmu, u32 sid)
- 	return sid < limit;
- }
- 
-+static struct iommu_ops arm_smmu_ops;
-+
- static int arm_smmu_add_device(struct device *dev)
- {
- 	int i, ret;
--	u32 sid, *sids;
--	struct pci_dev *pdev;
--	struct iommu_group *group;
--	struct arm_smmu_group *smmu_group;
- 	struct arm_smmu_device *smmu;
-+	struct arm_smmu_master_data *master;
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec(dev);
-+	struct iommu_group *group;
- 
--	/* We only support PCI, for now */
--	if (!dev_is_pci(dev))
-+	if (!fwspec || fwspec->iommu_ops != &arm_smmu_ops)
- 		return -ENODEV;
--
--	pdev = to_pci_dev(dev);
--	group = iommu_group_get_for_dev(dev);
--	if (IS_ERR(group))
--		return PTR_ERR(group);
--
--	smmu_group = iommu_group_get_iommudata(group);
--	if (!smmu_group) {
--		smmu = arm_smmu_get_for_pci_dev(pdev);
--		if (!smmu) {
--			ret = -ENOENT;
--			goto out_remove_dev;
--		}
--
--		smmu_group = kzalloc(sizeof(*smmu_group), GFP_KERNEL);
--		if (!smmu_group) {
--			ret = -ENOMEM;
--			goto out_remove_dev;
--		}
--
--		smmu_group->ste.valid	= true;
--		smmu_group->smmu	= smmu;
--		iommu_group_set_iommudata(group, smmu_group,
--					  __arm_smmu_release_pci_iommudata);
-+	/*
-+	 * We _can_ actually withstand dodgy bus code re-calling add_device()
-+	 * without an intervening remove_device()/of_xlate() sequence, but
-+	 * we're not going to do so quietly...
-+	 */
-+	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
-+		master = fwspec->iommu_priv;
-+		smmu = master->smmu;
- 	} else {
--		smmu = smmu_group->smmu;
-+		smmu = arm_smmu_get_by_node(fwspec->iommu_np);
-+		if (!smmu)
-+			return -ENODEV;
-+		master = kzalloc(sizeof(*master), GFP_KERNEL);
-+		if (!master)
-+			return -ENOMEM;
-+
-+		master->smmu = smmu;
-+		fwspec->iommu_priv = master;
- 	}
- 
--	/* Assume SID == RID until firmware tells us otherwise */
--	pci_for_each_dma_alias(pdev, __arm_smmu_get_pci_sid, &sid);
--	for (i = 0; i < smmu_group->num_sids; ++i) {
--		/* If we already know about this SID, then we're done */
--		if (smmu_group->sids[i] == sid)
--			goto out_put_group;
-+	/* Check the SIDs are in range of the SMMU and our stream table */
-+	for (i = 0; i < fwspec->num_ids; i++) {
-+		u32 sid = fwspec->ids[i];
-+
-+		if (!arm_smmu_sid_in_range(smmu, sid))
-+			return -ERANGE;
-+
-+		/* Ensure l2 strtab is initialised */
-+		if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
-+			ret = arm_smmu_init_l2_strtab(smmu, sid);
-+			if (ret)
-+				return ret;
-+		}
- 	}
- 
--	/* Check the SID is in range of the SMMU and our stream table */
--	if (!arm_smmu_sid_in_range(smmu, sid)) {
--		ret = -ERANGE;
--		goto out_remove_dev;
--	}
-+	group = iommu_group_get_for_dev(dev);
-+	if (!IS_ERR(group))
-+		iommu_group_put(group);
- 
--	/* Ensure l2 strtab is initialised */
--	if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
--		ret = arm_smmu_init_l2_strtab(smmu, sid);
--		if (ret)
--			goto out_remove_dev;
--	}
--
--	/* Resize the SID array for the group */
--	smmu_group->num_sids++;
--	sids = krealloc(smmu_group->sids, smmu_group->num_sids * sizeof(*sids),
--			GFP_KERNEL);
--	if (!sids) {
--		smmu_group->num_sids--;
--		ret = -ENOMEM;
--		goto out_remove_dev;
--	}
--
--	/* Add the new SID */
--	sids[smmu_group->num_sids - 1] = sid;
--	smmu_group->sids = sids;
--
--out_put_group:
--	iommu_group_put(group);
--	return 0;
--
--out_remove_dev:
--	iommu_group_remove_device(dev);
--	iommu_group_put(group);
--	return ret;
-+	return PTR_ERR_OR_ZERO(group);
- }
- 
- static void arm_smmu_remove_device(struct device *dev)
- {
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec(dev);
-+	struct arm_smmu_master_data *master;
-+
-+	if (!fwspec || fwspec->iommu_ops != &arm_smmu_ops)
-+		return;
-+
-+	master = fwspec->iommu_priv;
-+	if (master && master->ste.valid)
-+		arm_smmu_detach_dev(dev);
- 	iommu_group_remove_device(dev);
-+	kfree(master);
-+	iommu_fwspec_free(dev);
- }
- 
- static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-@@ -1934,6 +1866,21 @@ out_unlock:
- 	return ret;
- }
- 
-+static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
-+{
-+	int ret;
-+
-+	/* We only support PCI, for now */
-+	if (!dev_is_pci(dev))
-+		return -ENODEV;
-+
-+	ret = iommu_fwspec_init(dev, args->np);
-+	if (!ret)
-+		ret = iommu_fwspec_add_ids(dev, &args->args[0], 1);
-+
-+	return ret;
-+}
-+
- static struct iommu_ops arm_smmu_ops = {
- 	.capable		= arm_smmu_capable,
- 	.domain_alloc		= arm_smmu_domain_alloc,
-@@ -1947,6 +1894,7 @@ static struct iommu_ops arm_smmu_ops = {
- 	.device_group		= pci_device_group,
- 	.domain_get_attr	= arm_smmu_domain_get_attr,
- 	.domain_set_attr	= arm_smmu_domain_set_attr,
-+	.of_xlate		= arm_smmu_of_xlate,
- 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
- };
- 
-@@ -2697,6 +2645,22 @@ static void __exit arm_smmu_exit(void)
- subsys_initcall(arm_smmu_init);
- module_exit(arm_smmu_exit);
- 
-+static int __init arm_smmu_of_init(struct device_node *np)
-+{
-+	static bool registered;
-+
-+	if (!registered)
-+		registered = !arm_smmu_init();
-+
-+	if (!of_platform_device_create(np, NULL, platform_bus_type.dev_root))
-+		return -ENODEV;
-+
-+	of_iommu_set_ops(np, &arm_smmu_ops);
-+
-+	return 0;
-+}
-+IOMMU_OF_DECLARE(arm_smmuv3, "arm,smmu-v3", arm_smmu_of_init);
-+
- MODULE_DESCRIPTION("IOMMU API for ARM architected SMMUv3 implementations");
- MODULE_AUTHOR("Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>");
- MODULE_LICENSE("GPL v2");
--- 
-2.8.1.dirty
+> The physical connector does not change the way that pinmuxing
+> works.  It is just the same as if there were wires physically
+> connected (soldered) between the daughter board and the main
+> board.
+>=20
+
+The physical properties of the pin of the connector do not change.
+
+However the routing of functions in the SoC do change.
+
+By default most of the pins on the connector are HiZ or set to input wh=
+en
+no expansion board is connected. The only fixed function pins that are
+known and configured by the host board dts are those that are used by
+the host board=E2=80=99s identification scheme (i.e. I2C EEPROM, set of=
+ GPIO inputs
+etc).=20
+
+When an expansion board is connected upon boot and probing of the the e=
+xpansion
+board manager device it will use a method that is using the configured =
+detection
+pins to identify it.
+
+After getting the ID it is going to find a corresponding overlay to app=
+ly.
+
+This overlay will have to configure each pin accordingly.
+
+It is perfectly for a pin on a connector to be a GPIO output for expans=
+ion
+board A, I2C bus SDA for board B, etc...
+
+So there has to be a way to get the pinmux configuration according to t=
+he
+required connection function on each pin in use.
+
+>=20
+>> In reality there are may be many possible option of the same
+>> hardware block (spi/i2c) to be routed to different pins on the
+>> connector.
+>>=20
+>> You might get by if you have a number of selectable pre-canned
+>> spi configuration that are selected.
+>=20
+> Again, just the same as if the connector did not exist and
+> everything is hardwired.
+>=20
+> The connector node for the host board would contain a node for
+> each of the alternative uses of the pins.
+>=20
+
+Right.
+
+>=20
+>> For instance if there are two spi controllers each of which have
+>> two different pinout options on the connector you would address
+>> each as a different spi controller on the connector, but then
+>> you=E2=80=99d end up with
+>>=20
+>> spi_connector_0 -> spi_0_mux_0
+>> spi_connector_1 -> spi_0_mux_1
+>> spi_connector_2 -> spi_1_mux_0
+>> spi_connector_3 -> spi_1_mux_1
+>=20
+> Yes.  But again, exactly the same as if the daughter board was
+> hard wired with no intervening physical connector.
+>=20
+
+Yes.
+
+>=20
+>> It gets hairy though pretty fast with modern SoCs with extensive=20
+>> muxing options.
+>>=20
+>>>=20
+>>> The result is that the overlay fixup for spi1 on the cape will
+>>> relocate the spi1 node to /connector_1 in the host tree, so
+>>> this does not solve the connector linkage yet:
+>>>=20
+>>> -- chunk from the decompiled board_with_connector.dtb:
+>>>=20
+>>> 	__symbols__ {
+>>> 		connector_1 =3D "/connector_1";
+>>> 	};
+>>>=20
+>>> -- chunk from the decompiled spi_codec_overlay_with_connector.dtb:
+>>>=20
+>>> 	fragment@0 {
+>>> 		target =3D <0xffffffff>;
+>>> 		__overlay__ {
+>>> 			spi1 {
+>>> 				codec@1 {
+>>> 					compatible =3D "ti,tlv320aic26";
+>>> 				};
+>>> 			};
+>>> 		};
+>>> 	};
+>>> 	__fixups__ {
+>>> 		connector_1 =3D "/fragment@0:target:0";
+>>> 	};
+>>>=20
+>>>=20
+>>> #----- magic new dtc syntax
+>>>=20
+>>> What I really want is some way to tell dtc that I want to do one
+>>> level of dereferencing when resolving the path of device nodes
+>>> contained by the connector node in the overlay dts.
+>>>=20
+>>> The exact syntax does not matter here, I am just trying to get the
+>>> concept.  I will add the not yet implemented dtc feature of
+>>> "/connector/" to the connector node in both the tree dts and the
+>>> overlay dts, and show how the output of dtc would change.  The
+>>> "/connector/" directive tells dtc that for a base dts (hand
+>>> waving how it knows base vs overlay dts file) to look into
+>>> each node at that level and determine what other node it
+>>> maps to (again, hand waving, in this example just to
+>>> show the linkage, I have hard coded both the path and the
+>>> phandle of the target node that the connector child node
+>>> maps to).  The "/connector/" directive tells dtc that for
+>>> an overlay dts (again hand waving) to provide a fixup for
+>>> each child node.
+>>>=20
+>>> $ cat board_with_connector_v2.dts
+>>> /dts-v1/;
+>>>=20
+>>> / {
+>>> 	#address-cells =3D < 1 >;
+>>> 	#size-cells =3D < 1 >;
+>>>=20
+>>> 	tree_1: soc@0 {
+>>> 		reg =3D <0x0 0x0>;
+>>>=20
+>>> 		spi_1: spi1 {
+>>> 		};
+>>> 	};
+>>>=20
+>>> 	connector_1: connector_1 {
+>>> 		/connector/;
+>>> 		spi1 {
+>>> 			target_phandle =3D <&spi_1>;
+>>> 			target_path =3D "/soc/spi1";
+>>> 		};
+>>> 	};
+>>>=20
+>>> };
+>>>=20
+>>> &spi_1 {
+>>> 	ethernet-switch@0 {
+>>> 		compatible =3D "micrel,ks8995m";
+>>> 	};
+>>> };
+>>>=20
+>>> $ cat spi_codec_overlay_with_connector_v2.dts
+>>>=20
+>>> /dts-v1/;
+>>>=20
+>>> /plugin/;
+>>>=20
+>>> &connector_1 {
+>>> 	/connector/;
+>>> 	spi1 {
+>>> 		codec@1 {
+>>> 			compatible =3D "ti,tlv320aic26";
+>>> 		};
+>>> 	};
+>>> };
+>>>=20
+>>> -- chunk from the decompiled board_with_connector_v2.dtb:
+>>>=20
+>>> 	__symbols__ {
+>>>               connector_1 {
+>>>                       spi1 =3D "/soc@0/spi1";
+>>>               };
+>>>       };
+>>>=20
+>>> -- chunk from the decompiled spi_codec_overlay_with_connector_v2.dt=
+b:
+>>>=20
+>>> / {
+>>>=20
+>>> 	fragment@0 {
+>>> 		target =3D <0xffffffff>;
+>>> 		__overlay__ {
+>>> 			spi1 {
+>>> 				codec@1 {
+>>> 					compatible =3D "ti,tlv320aic26";
+>>> 				};
+>>> 			};
+>>> 		};
+>>> 	};
+>>> 	__fixups__ {
+>>>               connector_1 {
+>>> 		        spi1 =3D "/fragment@0/__overlay__:spi1:0";
+>>>               };
+>>> 	};
+>>>=20
+>>> Of course the overlay loader will also have to be modified to under=
+stand
+>>> the new information.
+>>>=20
+>>> Exact format of the __symbols__ and __fixups__ are implementation
+>>> details, I am just trying to present the model.
+>>>=20
+>>> Ignoring device tree source syntax and dtc implementation issues, d=
+oes
+>>> this conceptual model look more straight forward and a better direc=
+tion
+>>> for how to represent connectors?
+>>>=20
+>>=20
+>> We could use dtc sugar to get to something more elegant, I need some=
+ time
+>> to think about this a bit longer.
+>>=20
+>>> -Frank
+>>=20
+>> Regards
+>>=20
+>> =E2=80=94 Pantelis
+
+Regards
+
+=E2=80=94 Pantelis
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
