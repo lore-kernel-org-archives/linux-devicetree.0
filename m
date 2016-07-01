@@ -1,86 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/6] ASoC: samsung: Add Samsung Low
- Power Audio Subsystem driver
-Date: Fri, 1 Jul 2016 17:07:09 +0200
-Message-ID: <20160701150709.GT6247@sirena.org.uk>
-References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
- <1466678715-19962-3-git-send-email-s.nawrocki@samsung.com>
- <20160629215757.GX6247@sirena.org.uk>
- <577553FE.6080803@samsung.com>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 6/7] dt-bindings: net: bgmac: add bindings documentation
+ for bgmac
+Date: Fri, 1 Jul 2016 11:17:25 -0400
+Message-ID: <CAC3K-4qfb3JQ3i8nEo2AOobb1ExB=d=dSZUrdype+z9eHi1FwQ@mail.gmail.com>
+References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
+ <1467327554-22074-7-git-send-email-jon.mason@broadcom.com> <29091648.CIZSyGWL7u@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7153767638174936463=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <577553FE.6080803@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, inki.dae@samsung.com, Beomho Seo <beomho.seo@samsung.com>, ideal.song@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <29091648.CIZSyGWL7u@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 1, 2016 at 5:46 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday, June 30, 2016 6:59:13 PM CEST Jon Mason wrote:
+>> +
+>> +Required properties:
+>> + - compatible: "brcm,bgmac-nsp"
+>> + - reg:                Address and length of the GMAC registers,
+>> +               Address and length of the GMAC IDM registers
+>> + - reg-names:  Names of the registers.  Must have both "gmac_base" and
+>> +               "idm_base"
+>> + - interrupts: Interrupt number
+>> +
+>
+>
+> "brcm,bgmac-nsp" sounds a bit too general. As I understand, this is a family
+> of SoCs that might not all have the exact same implementation of this
+> ethernet device, as we can see from the long lookup table in bgmac_probe().
 
---===============7153767638174936463==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8c7vHYlrYOebzgj6"
-Content-Disposition: inline
+The Broadcom iProc family of SoCs contains:
+Northstar
+Northstar Plus
+Cygnus
+Northstar 2
+a few SoCs that are under development
+and a number of ethernet switches (which might never be officially supported)
 
+Each one of these SoCs could have a different revision of the gmac IP
+block, but they should be uniform within each SoC (though there might
+be a A0/B0 change necessary).  The Northstar Plus product family has a
+number of different implementations, but the SoC is unchanged.  So, I
+think this might be too specific, when we really need a general compat
+string.
 
---8c7vHYlrYOebzgj6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Broadcom has a history of sharing IP blocks amongst the different
+divisions.  So, this driver might be used on other SoC families (as it
+apparently has been done in the past, based on the code you
+reference).  I do not know of any way to know what legacy, non-iProc
+chips have used this IP block.  I can make this "brcm,iproc-bgmac",
+and add "brcm,iproc-nsp-bgmac" as an alternative compatible string in
+this file (which I believe you are suggesting), but there might be
+non-iProc SoCs that use this driver.  Is this acceptable?
 
-On Thu, Jun 30, 2016 at 07:16:46PM +0200, Sylwester Nawrocki wrote:
+Thanks,
+Jon
 
-> Sorry, I didn't notice this e-mail earlier.  With previous Exynos versions
-> the LPASS (or AudioSS) was mainly about the embedded audio DSP processor
-> (at least WRT to SFRs), which was not required for boards supported in=20
-> the mainline kernel. Since e.g. Exynos5433 the LPASS SFR region contains=
-=20
-> also entries related to other IP blocks, like I2S or DMAC.  Even though=
-=20
-> functionality covered by these registers is still rather trivial, like=20
-> SW resets and unmasking interrupts, it's essential for the whole audio=20
-> subsystem operation. The intention was to have in future the LPASS driver=
-=20
-> covering any functionality provided by the embedded audio dedicated MCU.
-> I'm afraid we have to handle those power sequences in central place to
-> ensure proper SoC operation. I would also rather avoid adding any exynos=
-=20
-> quirks to the PL330 DMAC driver.=20
-
-Hrm.  This is sounding a bit like a combination of a power domain and
-an interrupt controller, would something like that fit in perhaps?
-Depends on how many of these trivial bits there are I think...
-
---8c7vHYlrYOebzgj6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXdoccAAoJECTWi3JdVIfQh+kH/i9aFuoU8o+j/zXrUtjiGEJZ
-8z+D4pLohJPf48YHDeqZ0TZYxjHjJh9Z2Qu+uc5cfGF95MTKOzwMhFExub6b9fz/
-b7bWjibkMaj1sKQCGkOSb9+sR3dvqJYhwmsHDbL8nmCq7+hHYCz7+D7Mp8SOe7K4
-6k46pf71cj/Ugo1U0BFcFqSgao3DxwALqjD5YDxpBQCTMkZ0aCBAA77CV42UHsmk
-h4wR2busVxyFY+2VEGHQIN7BmSWngzowRCys6Rc2UAZSSKWxeBBYsd1qjZTyTe+e
-9Zrs7QIcCNS6CJBY81We/d2+xFxAR75yQwT5ByAMdVQwTVYd3S+z79xDXiAjKzQ=
-=2Zer
------END PGP SIGNATURE-----
-
---8c7vHYlrYOebzgj6--
-
---===============7153767638174936463==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7153767638174936463==--
+> Please document the specific product numbers here that are publically
+> known already. Having the driver match just on "brcm,bgmac-nsp" as a fallback
+> is fine, so you can document that one as required for all users.
+>
+>         Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
