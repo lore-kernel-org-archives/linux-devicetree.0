@@ -1,28 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: Document Renesas R-Car FCP
- power-domains usage
-Date: Thu, 30 Jun 2016 21:49:47 -0500
-Message-ID: <20160701024947.GA3219@rob-hp-laptop>
+Subject: Re: [PATCH v2 3/3] dt-bindings: Add Renesas R-Car FDP1 bindings
+Date: Thu, 30 Jun 2016 21:51:01 -0500
+Message-ID: <20160701025101.GA3652@rob-hp-laptop>
 References: <1467305430-25660-1-git-send-email-kieran@bingham.xyz>
- <1467305430-25660-3-git-send-email-kieran@bingham.xyz>
+ <1467305430-25660-4-git-send-email-kieran@bingham.xyz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467305430-25660-3-git-send-email-kieran@bingham.xyz>
+In-Reply-To: <1467305430-25660-4-git-send-email-kieran@bingham.xyz>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Kieran Bingham <kieran@ksquared.org.uk>
 Cc: laurent.pinchart@ideasonboard.com, mark.rutland@arm.com, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 30, 2016 at 05:50:29PM +0100, Kieran Bingham wrote:
-> The power domain must be specified to bring the device out of module
-> standby. Document this in the bindings provided, so that new additions
-> are not missed.
+On Thu, Jun 30, 2016 at 05:50:30PM +0100, Kieran Bingham wrote:
+> The FDP1 is a de-interlacing module which converts interlaced video to
+> progressive video. It is also capable of performing pixel format conversion
+> between YCbCr/YUV formats and RGB formats.
 > 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
 > ---
->  Documentation/devicetree/bindings/media/renesas,fcp.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> Changes since v1:
+>  - title fixed
+>  - Interrupts property documented
+>  - version specific compatibles removed as we have a hw version register
+>  - label removed from device node example
+>    * (fdp1 is not referenced by other nodes)
+> 
+>  .../devicetree/bindings/media/renesas,fdp1.txt     | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,fdp1.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
