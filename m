@@ -1,63 +1,82 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH 6/7] dt-bindings: net: bgmac: add bindings documentation
- for bgmac
-Date: Fri, 1 Jul 2016 10:29:36 -0400
-Message-ID: <CAC3K-4pu2k8HZ3g-LxbVAFOxPayDT=hK1qgix1Pc81aTEmGQzA@mail.gmail.com>
-References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
- <1467327554-22074-7-git-send-email-jon.mason@broadcom.com> <20160701025619.GA4906@rob-hp-laptop>
+From: Kieran Bingham <kieran@bingham.xyz>
+Subject: Re: [PATCH 2/2] arm64: dts: r8a7795: add FDP1 device nodes
+Date: Fri, 1 Jul 2016 15:37:23 +0100
+Message-ID: <57768023.8010507@bingham.xyz>
+References: <1467293563-940-1-git-send-email-kieran@bingham.xyz>
+ <1467293563-940-3-git-send-email-kieran@bingham.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160701025619.GA4906@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, davem@davemloft.net, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1467293563-940-3-git-send-email-kieran@bingham.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 30, 2016 at 10:56 PM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Jun 30, 2016 at 06:59:13PM -0400, Jon Mason wrote:
->> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
->> ---
->>  .../devicetree/bindings/net/brcm,bgmac-nsp.txt     | 24 ++++++++++++++++++++++
->>  1 file changed, 24 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt b/Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
->> new file mode 100644
->> index 0000000..022946c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
->> @@ -0,0 +1,24 @@
->> +Broadcom GMAC Ethernet Controller Device Tree Bindings
->> +-------------------------------------------------------------
->> +
->> +Required properties:
->> + - compatible:       "brcm,bgmac-nsp"
->
-> Usually we do <soc>-<block> order.
+Hi Simon,
 
-Thanks, I'll make the necessary changes and push out a v2.
+The bindings for this have now been acked by RobH.
 
->
->> + - reg:              Address and length of the GMAC registers,
->> +             Address and length of the GMAC IDM registers
->> + - reg-names:        Names of the registers.  Must have both "gmac_base" and
->> +             "idm_base"
->> + - interrupts:       Interrupt number
->> +
->> +Optional properties:
->> +- mac-address:       See ethernet.txt file in the same directory
->> +
->> +Examples:
->> +
->> +gmac0: ethernet@18022000 {
->> +     compatible = "brcm,bgmac-nsp";
->> +     reg = <0x18022000 0x1000>,
->> +           <0x18110000 0x1000>;
->> +     reg-names = "gmac_base", "idm_base";
->> +     interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
->> +     status = "disabled";
->> +};
->> --
->> 1.9.1
->>
+--
+Cheers
+
+Kieran
+
+On 30/06/16 14:32, Kieran Bingham wrote:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
+> --
+> changes for v2
+>  - channel labels dropped
+> 
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> index a451bd217f05..8bc87e09efd7 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -1443,5 +1443,32 @@
+>  			clocks = <&cpg CPG_MOD 613>;
+>  			power-domains = <&sysc R8A7795_PD_A3VP>;
+>  		};
+> +
+> +		fdp1@fe940000 {
+> +			compatible = "renesas,fdp1";
+> +			reg = <0 0xfe940000 0 0x2400>;
+> +			interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 119>;
+> +			power-domains = <&sysc R8A7795_PD_A3VP>;
+> +			renesas,fcp = <&fcpf0>;
+> +		};
+> +
+> +		fdp1@fe944000 {
+> +			compatible = "renesas,fdp1";
+> +			reg = <0 0xfe944000 0 0x2400>;
+> +			interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 118>;
+> +			power-domains = <&sysc R8A7795_PD_A3VP>;
+> +			renesas,fcp = <&fcpf1>;
+> +		};
+> +
+> +		fdp1@fe948000 {
+> +			compatible = "renesas,fdp1";
+> +			reg = <0 0xfe948000 0 0x2400>;
+> +			interrupts = <GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 117>;
+> +			power-domains = <&sysc R8A7795_PD_A3VP>;
+> +			renesas,fcp = <&fcpf2>;
+> +		};
+>  	};
+>  };
+> 
