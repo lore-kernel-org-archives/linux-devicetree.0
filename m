@@ -1,6 +1,6 @@
 Return-Path: <wulf@rock-chips.com>
-Message-ID: <5775E944.4020602@rock-chips.com>
-Date: Fri, 01 Jul 2016 11:53:40 +0800
+Message-ID: <5775E74D.9070909@rock-chips.com>
+Date: Fri, 01 Jul 2016 11:45:17 +0800
 From: William Wu <william.wu@rock-chips.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH v5 3/5] usb: dwc3: add phyif_utmi_quirk[Involving remittance
@@ -8,13 +8,13 @@ Subject: Re: [PATCH v5 3/5] usb: dwc3: add phyif_utmi_quirk[Involving remittance
 References: <1467285176-25222-1-git-send-email-william.wu@rock-chips.com> <1467285176-25222-4-git-send-email-william.wu@rock-chips.com> <20160701023552.GA26314@rob-hp-laptop>
 In-Reply-To: <20160701023552.GA26314@rob-hp-laptop>
 Content-Type: multipart/alternative;
- boundary="------------020208070801050500040804"
+ boundary="------------050703010204090701040700"
 To: Rob Herring <robh@kernel.org>
 Cc: gregkh@linuxfoundation.org, balbi@kernel.org, heiko@sntech.de, linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 This is a multi-part message in MIME format.
---------------020208070801050500040804
+--------------050703010204090701040700
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -73,23 +73,17 @@ As we know, UTMI+ PHY interface is hardware property, and
 it can be configured correctly during coreconsulttant according
 to dwc3 TRM, section 8.1.1 Table 8-1 where itstates:
 
-|-------------+-------------------------------------------------------------------------------------|
+|-------------+------------------------------------------------------------|
 | GUSB2PHYCFG | Program the following PHY configuration fields: USBTrdTim, |
-|             | FSIntf, PHYIf, TOUTCal, or leave the default values if  
-                        |
-|             | the correct power-on values were selected 
-during                             |
-|             | coreConsultant configuration.  Note: The PHY must 
-not                     |
-|             | be enabled for auto-resume in device mode. Hence 
-the                    |
-|             | field GUSB2PHYCFG[15] (ULPIAutoRes) must be 
-written                    |
-|             | with '0' during the power-on initialization in case     
-                          |
-|             | the reset value is '1'. |
-| | |
-|-------------+------------------------------------------------------------------------------------|
+|             | FSIntf, PHYIf, TOUTCal, or leave the default values if     |
+|             | the correct power-on values were selected during           |
+|             | coreConsultant configuration.  Note: The PHY must not      |
+|             | be enabled for auto-resume in device mode. Hence the       |
+|             | field GUSB2PHYCFG[15] (ULPIAutoRes) must be written        |
+|             | with '0' during the power-on initialization in case        |
+|             | the reset value is '1'.                                    |
+|             |                                                            |
+|-------------+------------------------------------------------------------|
 
 But for some specific usb cores(e.g. rk3399 soc dwc3),  the default
 PHYIf configuration value is fault after core init, ad we need to
@@ -112,14 +106,13 @@ what I defined here.
 
 Best Regards
       William Wu
->
 > Rob
 >
 >
 >
 
 
---------------020208070801050500040804
+--------------050703010204090701040700
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 
@@ -192,31 +185,21 @@ This isn't really what I'd call a quirk.</pre>
     As we know, UTMI+ PHY interface is hardware property, and<br>
     it can be configured correctly during coreconsulttant according<br>
     to dwc3 TRM, section 8.1.1 Table 8-1 where itstates:<br>
-    <br>
-    <small>|-------------+-------------------------------------------------------------------------------------|<br>
-      | GUSB2PHYCFG | Program the following PHY configuration fields:
-      USBTrdTim, |<br>
-      |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | FSIntf, PHYIf, TOUTCal, or leave the default
-      values if&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; |<br>
-      |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | the correct power-on values were selected
-      during&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br>
-      |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | coreConsultant configuration.&nbsp; Note: The PHY must
-      not&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br>
-      |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | be enabled for auto-resume in device mode. Hence
-      the&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br>
-      |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | field GUSB2PHYCFG[15] (ULPIAutoRes) must be
-      written&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br>
-      |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | with '0' during the power-on initialization in
-      case&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; |<br>
-      |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | the reset value is
-      '1'.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      |<br>
-      |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      |<br>
-|-------------+------------------------------------------------------------------------------------|</small><br>
-    <br>
-    But for some specific usb cores(e.g. rk3399 soc dwc3),&nbsp; the default<br>
+    <pre wrap="">|-------------+------------------------------------------------------------|
+| GUSB2PHYCFG | Program the following PHY configuration fields: USBTrdTim, |
+|             | FSIntf, PHYIf, TOUTCal, or leave the default values if     |
+|             | the correct power-on values were selected during           |
+|             | coreConsultant configuration.  Note: The PHY must not      |
+|             | be enabled for auto-resume in device mode. Hence the       |
+|             | field GUSB2PHYCFG[15] (ULPIAutoRes) must be written        |
+|             | with '0' during the power-on initialization in case        |
+|             | the reset value is '1'.                                    |
+|             |                                                            |
+|-------------+------------------------------------------------------------|
+
+</pre>
+    <font face="sans-serif">But </font>for some specific usb cores(e.g.
+    rk3399 soc dwc3),&nbsp; the default<br>
     PHYIf configuration value is fault after core init, ad we need to<br>
     reconfigure it by software. so I think maybe a quirk is more proper.<br>
     <br>
@@ -233,7 +216,8 @@ This isn't really what I'd call a quirk.</pre>
       </blockquote>
       <pre wrap="">
 These seem like they should be standard properties for setting the phy 
-type/mode. I think we already have something defined in fact.</pre>
+type/mode. I think we already have something defined in fact.
+</pre>
     </blockquote>
     Yes, it's standard properties for setting the phy interface.<br>
     But as I describe above, for most of dwc3 cores designed<br>
@@ -245,11 +229,10 @@ type/mode. I think we already have something defined in fact.</pre>
     what I defined here.<br>
     <br>
     Best Regards<br>
-    &nbsp; &nbsp;&nbsp; William Wu
+    &nbsp; &nbsp;&nbsp; William Wu <br>
     <blockquote cite="mid:20160701023552.GA26314@rob-hp-laptop"
       type="cite">
       <pre wrap="">
-
 Rob
 
 
@@ -260,4 +243,4 @@ Rob
   </body>
 </html>
 
---------------020208070801050500040804--
+--------------050703010204090701040700--
