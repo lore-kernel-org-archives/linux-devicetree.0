@@ -1,34 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: phy: Fix description of Tegra210 PHY
- nodes
-Date: Thu, 30 Jun 2016 20:41:34 -0500
-Message-ID: <20160701014134.GA26253@rob-hp-laptop>
-References: <1467198453-23406-1-git-send-email-jonathanh@nvidia.com>
- <1467198453-23406-2-git-send-email-jonathanh@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 12/22] sh: Add PCI host bridge driver for SH7751
+Date: Thu, 30 Jun 2016 20:43:30 -0500
+Message-ID: <20160701014330.GA27839@rob-hp-laptop>
+References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp>
+ <1467207667-15768-13-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467198453-23406-2-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1467207667-15768-13-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-pci-owner@vger.kernel.org
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 29, 2016 at 12:07:31PM +0100, Jon Hunter wrote:
-> The dt-binding document for the Tegra XUSB pad controller states that
-> 'utmi' is one of the valid choices for the Tegra210 PHY node names and
-> has child lanes named, 'utmi-0', 'utmi-1', 'utmi-2' and 'utmi-3'.
-> However, neither the XUSB pad controller PHY driver or the actual
-> Tegra210 binding for the XUSB pad controller use these names. Instead
-> both the driver and binding use the node name 'usb2' and for the child
-> lanes use the names 'usb2-0', 'usb2-1', 'usb2-2' and 'usb2-3'. Given
-> that the driver and binding are consistent with the naming, up date the
-> dt-binding documentation to match.
+On Wed, Jun 29, 2016 at 10:40:57PM +0900, Yoshinori Sato wrote:
+> This is an alternative SH7751 PCI driver.
+> Existing driver (arch/sh/drivers/pci/pci-sh7751) uses SH specific interface.
+> But this driver uses common PCI interface. It is more modern and generic.
 > 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Changes v4
+> Add reg description.
+> 
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 > ---
->  Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/pci/sh7751-pci.txt         |  37 +++
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  arch/sh/boards/Kconfig                             |   1 +
+>  arch/sh/drivers/Makefile                           |   2 +
+>  arch/sh/include/asm/io.h                           |   6 +
+>  drivers/pci/host/Kconfig                           |   7 +
+>  drivers/pci/host/Makefile                          |   1 +
+>  drivers/pci/host/pci-sh7751.c                      | 326 +++++++++++++++++++++
+>  7 files changed, 380 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/sh7751-pci.txt
+>  create mode 100644 drivers/pci/host/pci-sh7751.c
