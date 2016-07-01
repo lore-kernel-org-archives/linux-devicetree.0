@@ -1,29 +1,34 @@
 From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 1/2] ARM: dts: at91: Add pinctrl information to ethernet
- node.
-Date: Fri, 1 Jul 2016 20:47:06 +0200
-Message-ID: <20160701184706.GD2874@piout.net>
-References: <1466775069-606-1-git-send-email-raashidmuhammed@zilogic.com>
+Subject: Re: [PATCH] ARM: at91/dt: sama5d2_xplained: Update the pmic node
+Date: Fri, 1 Jul 2016 20:50:19 +0200
+Message-ID: <20160701185019.GF2874@piout.net>
+References: <1466753525-4742-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1466775069-606-1-git-send-email-raashidmuhammed@zilogic.com>
+In-Reply-To: <1466753525-4742-1-git-send-email-wenyou.yang@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Raashid Muhammed <raashidmuhammed@zilogic.com>
-Cc: nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/06/2016 at 19:01:08 +0530, Raashid Muhammed wrote :
-> Add missing pinctrl information to ethernet node.
+On 24/06/2016 at 15:32:05 +0800, Wenyou Yang wrote :
+> Due to introducing the new driver - ACT8945A MFD drive,
+> change the pmic device node to align with the ACT8945A
+> regulator and charger drivers.
 > 
-> Signed-off-by: Raashid Muhammed <raashidmuhammed@zilogic.com>
-> Reviewed-by: Vijay Kumar B. <vijaykumar@bravegnu.org>
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
 > ---
->  arch/arm/boot/dts/at91-sam9_l9260.dts | 1 +
->  1 file changed, 1 insertion(+)
 > 
-Both applied, thanks.
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 41 ++++++++++++++++++++++-------
+>  1 file changed, 32 insertions(+), 9 deletions(-)
+> 
+Applied, thanks.
+
+However, the subject line should have been:
+ARM: dts: at91: sama5d2_xplained: Update the pmic node
+
 
 -- 
 Alexandre Belloni, Free Electrons
