@@ -1,30 +1,92 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 2/6] ASoC: samsung: Add Samsung Low Power
- Audio Subsystem driver
-Date: Fri, 01 Jul 2016 12:35:52 +0200
-Message-ID: <57764788.5060005@samsung.com>
-References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
- <1466678715-19962-3-git-send-email-s.nawrocki@samsung.com>
- <20160629215757.GX6247@sirena.org.uk> <577553FE.6080803@samsung.com>
+From: =?UTF-8?B?V3UtQ2hlbmcgTGkgKOadjuWLmeiqoCk=?= <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
+Date: Fri, 1 Jul 2016 18:47:40 +0800
+Message-ID: <CAOMLVLgsB8mGdTZdn7dNQATFodqFPqmPH_yCn2+PKMYD2B+kYw@mail.gmail.com>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+ <20160607112235.475c2e4c@recife.lan> <575746EE.3030706@cisco.com>
+ <1465902488.27938.7.camel@mtksdaap41> <20160616075428.0fde4aaa@recife.lan>
+ <8a46c1e7-1f27-1e67-8c05-b133598b6a66@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <577553FE.6080803-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <8a46c1e7-1f27-1e67-8c05-b133598b6a66-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Andrew-CT Chen <Andrew-CT.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lin PoChun <PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/30/2016 07:16 PM, Sylwester Nawrocki wrote:
-> How about making LPASS registering a component and then adding it at
-> the card as aux_dev? I would move some parts to the component's probe()
-> callback and with component's probe_order specified a proper 
-> initialization sequence could be ensured.
++Andrew. Last I heard the license was ready and Andrew was preparing
+the VPU firmware. Andrew. Is the firmware ready to submit?
 
-I see now it's not a good idea since aux_devs is meant for something
-different.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Jul 1, 2016 at 6:11 PM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
+> On 06/16/2016 12:54 PM, Mauro Carvalho Chehab wrote:
+>> Em Tue, 14 Jun 2016 19:08:08 +0800
+>> tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
+>>
+>>> Hi Mauro,
+>>>
+>>>
+>>> On Wed, 2016-06-08 at 07:13 +0900, Hans Verkuil wrote:
+>>>>
+>>>> On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:
+>>>>> Em Mon, 30 May 2016 20:29:14 +0800
+>>>>> Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
+>>>>>
+>>>>>> ==============
+>>>>>>   Introduction
+>>>>>> ==============
+>>>>>>
+>>>>>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+>>>>>> Mediatek Video Codec is able to handle video decoding of in a range of formats.
+>>>>>>
+>>>>>> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
+>>>>>> V4L2_PIX_FMT_MT21 format.
+>>>>>>
+>>>>>> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
+>>>>>> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
+>>>>>> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
+>>>>>>
+>>>>>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
+>>>>>>
+>>>>>> [1]https://patchwork.linuxtv.org/patch/33734/
+>>>>>> [2]https://chromium-review.googlesource.com/#/c/245241/
+>>>>>
+>>>>> Hmm... I'm not seeing the firmware for this driver at the
+>>>>> linux-firmware tree:
+>>>>>    https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
+>>>>>
+>>>>> Nor I'm seeing any pull request for them. Did you send it?
+>>>>> I'll only merge the driver upstream after seeing such pull request.
+>>>>
+>>> Sorry, I am not familiar with how to upstream firmware.
+>>> Do you mean we need to upstream vpu firmware first before merge encoder
+>>> driver upstream?
+>>
+>> Please look at this page:
+>>       https://linuxtv.org/wiki/index.php/Development:_How_to_submit_patches#Firmware_submission
+>>
+>> The information here can also be useful:
+>>       https://www.kernel.org/doc/readme/firmware-README.AddingFirmware
+>>
+>> In summary, you need to provide redistribution rights for the
+>> firmware blob. You can either submit it to me or directly to
+>> linux-firmware. In the latter, please c/c me on such patch.
+>
+> Tiffany, what is the status of the firmware submission?
+>
+> Regards,
+>
+>         Hans
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
