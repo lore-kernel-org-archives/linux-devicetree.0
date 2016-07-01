@@ -1,146 +1,136 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 7/9] iommu/arm-smmu: Implement of_xlate() for SMMUv3
-Date: Fri, 1 Jul 2016 14:26:08 +0100
-Message-ID: <57766F70.6070704@arm.com>
-References: <cover.1467123945.git.robin.murphy@arm.com>
- <6de0ca7795e1b74627ceb55dcefcfd5537f245ce.1467123945.git.robin.murphy@arm.com>
- <20160701123507.GJ12735@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Fri, 01 Jul 2016 15:54:15 +0200
+Message-ID: <79189959.nJygzEHqi7@wuerfel>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org> <11472258.9SNjZdPb6l@wuerfel> <57742C84.6000903@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160701123507.GJ12735-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <57742C84.6000903@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/07/16 13:35, Will Deacon wrote:
-> On Tue, Jun 28, 2016 at 04:48:26PM +0100, Robin Murphy wrote:
->> Now that we can properly describe the mapping between PCI RIDs and
->> stream IDs via "iommu-map", and have it fed it to the driver
->> automatically via of_xlate(), rework the SMMUv3 driver to benefit from
->> that, and get rid of the current misuse of the "iommus" binding.
->>
->> Since having of_xlate wired up means that masters will now be given the
->> appropriate DMA ops, we also need to make sure that default domains work
->> properly. This necessitates dispensing with the "whole group at a time"
->> notion for attaching to a domain, as devices which share a group get
->> attached to the group's default domain one by one as they are initially
->> probed.
->>
->> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->> ---
+On Wednesday, June 29, 2016 3:16:04 PM CEST Timur Tabi wrote:
+> Arnd Bergmann wrote:
 > 
-> [...]
+> >> Sure, but in theory, my for-loop is correct, right?  Wouldn't there be
+> >> some value in setting a 36-bit or 40-bit DMA mask if it works?  We have
+> >> a platform where memory starts at a 40-bit address, so some devices have
+> >> a 44-bit address bus.  If a 64-bit mask doesn't work, then a 32-bit mask
+> >> certainly wont.
+> >
+> > The question is whether it makes any difference to the driver: what decision
+> > does the driver make differently if it has set a 44-bit mask?
 > 
->>  static int arm_smmu_add_device(struct device *dev)
->>  {
->>  	int i, ret;
->> -	u32 sid, *sids;
->> -	struct pci_dev *pdev;
->> -	struct iommu_group *group;
->> -	struct arm_smmu_group *smmu_group;
->>  	struct arm_smmu_device *smmu;
->> +	struct arm_smmu_master_data *master;
->> +	struct iommu_fwspec *fwspec = dev_iommu_fwspec(dev);
->> +	struct iommu_group *group;
->>  
->> -	/* We only support PCI, for now */
->> -	if (!dev_is_pci(dev))
->> +	if (!fwspec || fwspec->iommu_ops != &arm_smmu_ops)
->>  		return -ENODEV;
->> -
->> -	pdev = to_pci_dev(dev);
->> -	group = iommu_group_get_for_dev(dev);
->> -	if (IS_ERR(group))
->> -		return PTR_ERR(group);
->> -
->> -	smmu_group = iommu_group_get_iommudata(group);
->> -	if (!smmu_group) {
->> -		smmu = arm_smmu_get_for_pci_dev(pdev);
->> -		if (!smmu) {
->> -			ret = -ENOENT;
->> -			goto out_remove_dev;
->> -		}
->> -
->> -		smmu_group = kzalloc(sizeof(*smmu_group), GFP_KERNEL);
->> -		if (!smmu_group) {
->> -			ret = -ENOMEM;
->> -			goto out_remove_dev;
->> -		}
->> -
->> -		smmu_group->ste.valid	= true;
->> -		smmu_group->smmu	= smmu;
->> -		iommu_group_set_iommudata(group, smmu_group,
->> -					  __arm_smmu_release_pci_iommudata);
->> +	/*
->> +	 * We _can_ actually withstand dodgy bus code re-calling add_device()
->> +	 * without an intervening remove_device()/of_xlate() sequence, but
->> +	 * we're not going to do so quietly...
->> +	 */
->> +	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
->> +		master = fwspec->iommu_priv;
->> +		smmu = master->smmu;
->>  	} else {
->> -		smmu = smmu_group->smmu;
->> +		smmu = arm_smmu_get_by_node(fwspec->iommu_np);
->> +		if (!smmu)
->> +			return -ENODEV;
->> +		master = kzalloc(sizeof(*master), GFP_KERNEL);
->> +		if (!master)
->> +			return -ENOMEM;
->> +
->> +		master->smmu = smmu;
->> +		fwspec->iommu_priv = master;
->>  	}
->>  
->> -	/* Assume SID == RID until firmware tells us otherwise */
->> -	pci_for_each_dma_alias(pdev, __arm_smmu_get_pci_sid, &sid);
->> -	for (i = 0; i < smmu_group->num_sids; ++i) {
->> -		/* If we already know about this SID, then we're done */
->> -		if (smmu_group->sids[i] == sid)
->> -			goto out_put_group;
->> +	/* Check the SIDs are in range of the SMMU and our stream table */
->> +	for (i = 0; i < fwspec->num_ids; i++) {
->> +		u32 sid = fwspec->ids[i];
->> +
->> +		if (!arm_smmu_sid_in_range(smmu, sid))
->> +			return -ERANGE;
->> +
->> +		/* Ensure l2 strtab is initialised */
->> +		if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
->> +			ret = arm_smmu_init_l2_strtab(smmu, sid);
->> +			if (ret)
->> +				return ret;
->> +		}
->>  	}
+> > We don't have ZONE_DMA44 (and it's very unlikely that we will introduce
+> > it), so neither the driver nor the network stack can actually act on the
+> > fact that a 64-bit mask failed but a 44-bit mask succeeded.
 > 
-> Do you not need to do some cleanup here, rather than just returning (same
-> for the -ERANGE above)? For example, freeing the master?
-
-The master will be freed in arm_smmu_remove_device() if and when the
-device is removed from the bus. By the time we get this add_device call,
-we're already past the point of it being added to the bus and there's
-nothing we can do (all the return value here actually does is terminate
-the notifier chain). By bailing out before assigning the group, though,
-we prevent the device from being valid for any VFIO/IOMMU API usage.
-
-That does make me think, however, that it would be worth trying to
-detect in arch_setup_dma_ops() if a device has been rejected by an IOMMU
-it was supposed to be associated with, and in such cases prevent it from
-doing DMA *at all* rather than just leaving it with the default SWIOTLB
-ops. I'll have a think about how feasible that is (with any luck it
-should slot fairly neatly into the probe ordering work touching those
-areas).
-
-Robin.
-
+> A 44-bit mask would have access to much larger regions of memory than a 
+> 32-bit mask.  Maybe one day we will have a version of dma_alloc_coherent 
+> that uses the DMA mask to specify an actual range of physical addresses 
+> to allocate from.  In this situation, a mask of 44 would be much better 
+> than a mask of 32.
 > 
-> Will
-> 
+> It just seems wrong for driver to hard-code 64-bit and 32-bit masks and 
+> pretend like those are the only two sizes.  Very few 64-bit SOCs have a 
+> full 64-bit address bus.  Most have actually around 36-48 bits.  If 
+> dma_set_mask(64) fails on these systems, then every driver will fall 
+> back to 32 bits, even though they can technically access all of DDR.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To repeat myself: if you have swiotlb enabled, or you have an iommu
+or all of your RAM is reachable by the DMA master, then dma_set_mask()
+should succeed and do the right thing with setting the correct mask
+even if that is different from the one that the driver asked for.
+
+The only case in which it fails is when the device is essentially
+unusable and needs to fall back to allocating from ZONE_DMA32
+(in case of a mask larger than 32) or cannot allocate from
+any zone (in case of mask smaller or equal to 32).
+
+> Maybe we need a function like this:
+> 
+> int dma_find_best_mask(struct device *dev, unsigned int max)
+> {
+> 	struct dma_map_ops *ops = get_dma_ops(dev);
+> 	unsigned int mask;
+> 	int ret;
+> 
+> 	if (!ops || !ops->dma_supported)
+> 		return max;
+> 
+> 	for (mask = max; mask >= 32; mask--) {
+> 		ret = ops->dma_supported(dev, mask);
+> 		if (ret < 0)
+> 			return ret;
+> 
+> 		if (ret > 0)
+> 			return mask;
+> 	}
+> 
+> 	return -ENOMEM;
+> }
+> 
+> You pass a mask size that you know is the maximum that the device could 
+> support (in my case, 64).  It then returns a number that should be 
+> passed to dma_set_mask().
+
+You still haven't been able to explain what the driver would do
+with that number other than to pass it into dma_set_mask().
+
+> >>> Platforms will also allow allow the driver to set a mask that
+> >>> is larger than what the bus supports, as long as all RAM is
+> >>> reachable by the bus.
+> >>
+> >> And that check (like all others) is made in the dma_set_mask call?
+> >
+> > Yes. Regarding the system you mentioned: I understand that it has
+> > no memory in ZONE_DMA32 and no IOMMU (btw, that also means 32-bit
+> > PCI devices are fundamentally broken), and the bus can only address
+> > the lower 44 bit of address space.
+> 
+> Actually, we have an IOMMU, and the size of the address space depends on 
+> the SOC.  Some SOCs have 32 bits, some have over 40.  The EMAC is the 
+> same on all of these SOCs.
+
+If there is an IOMMU, just use it.
+
+> > Does this system support more than 15TB of RAM? If not, then there
+> > is no problem, and if it  does, I think your best way out is not
+> > to disable SWIOTLB. That will be a slower compared to a system
+> > with an IOMMU or the fictional ZONE_DMA44, but it should work
+> > correctly. In either case (less than 15TB without swiotlb, or
+> > more than 15TB with swiotlb), the driver should just ask for
+> > a 64-bit mask and that will succeed.
+> 
+> Some SOCs can support over 15TB.  They all have IOMMUs.
+> 
+> Apparently, dma_set_mask(64) won't always succeed.  If the SOC has fewer 
+> DMA address lines than total memory, then a mask of 64 will fail.
+
+Correct, unless you have SWIOTLB or IOMMU enabled.
+
+> I don't want to implement a solution that just happens to work on the 
+> EMAC.  I'm trying to come up with a generic solution that can work in 
+> any driver on any SOC, whether you use device tree or ACPI.
+
+As I said, this is inherently driver specific. If setting the 64-bit
+mask fails, the driver itself needs to fall back to the 32-bit mask
+so it can allocate buffers from ZONE_DMA instead of ZONE_NORMAL.
+
+I have not been able to find out how network drivers normally
+handle this on 64-bit architectures. On 32-bit architectures,
+this is handled by calling __skb_linearize on TX SKB with
+high data, which will move the data into lowmem when the mask
+doesn't match and on the receive path the drivers just don't
+pass GFP_HIGHMEM.
+
+My interpretation is that on 64-bit architectures, the network
+code simply assumes that either an SWIOTLB or IOMMU is always
+there, and lets that handle the copying instead of copying
+data to lowmem itself.
+
+	Arnd
