@@ -1,90 +1,126 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH] drivers/perf: arm-pmu: Handle per-interrupt affinity mask
-Date: Fri,  1 Jul 2016 14:21:31 +0100
-Message-ID: <1467379291-18413-1-git-send-email-marc.zyngier@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc: Heiko Stuebner <heiko@sntech.de>, Will Deacon <will.deacon@arm.com>, cf@rock-chips.com, huangtao@rock-chips.com, jay.xu@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH] [media] rc: ir-spi: add support for IR LEDs connected
+ with SPI
+Date: Fri, 1 Jul 2016 14:22:19 +0100
+Message-ID: <20160701132219.GA3752@gofer.mess.org>
+References: <1467362022-12704-1-git-send-email-andi.shyti@samsung.com>
+ <CGME20160701094505epcas1p469fb8084bd5195cdab5555a9f3368682@epcas1p4.samsung.com>
+ <20160701094458.GA8933@gofer.mess.org>
+ <20160701123035.GA12029@samsunx.samsung>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160701123035.GA12029@samsunx.samsung>
+Sender: linux-media-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On a big-little system, PMUs can be wired to CPUs using per CPU
-interrups (PPI). In this case, it is important to make sure that
-the enable/disable do happen on the right set of CPUs.
+On Fri, Jul 01, 2016 at 09:30:35PM +0900, Andi Shyti wrote:
+> Hi Sean,
+> 
+> > > The ir-spi is a simple device driver which supports the
+> > > connection between an IR LED and the MOSI line of an SPI device.
+> > > 
+> > > The driver, indeed, uses the SPI framework to stream the raw data
+> > > provided by userspace through a character device. The chardev is
+> > > handled by the LIRC framework and its functionality basically
+> > > provides:
+> > > 
+> > >  - raw write: data to be sent to the SPI and then streamed to the
+> > >    MOSI line;
+> > >  - set frequency: sets the frequency whith which the data should
+> > >    be sent;
+> > >  - set length: sets the data length. This information is
+> > >    optional, if the length is set, then userspace should send raw
+> > >    data only with that length; while if the length is set to '0',
+> > >    then the driver will figure out himself the length of the data
+> > >    based on the length of the data written on the character
+> > >    device.
+> > >    The latter is not recommended, though, as the driver, at
+> > >    any write, allocates and deallocates a buffer where the data
+> > >    from userspace are stored.
+> > > 
+> > > The driver provides three feedback commands:
+> > > 
+> > >  - get length: reads the length set and (as mentioned), if the
+> > >    length is '0' it will be calculated at any write
+> > >  - get frequency: the driver reports the frequency. If userpace
+> > >    doesn't set the frequency, the driver will use a default value
+> > >    of 38000Hz.
+> > 
+> > This interface is not compatible with other lirc devices; there is no
+> > way of determining whether this is a regular lirc device or this new
+> > flavour you've invented.
+> 
+> except of the set length and get length which I'm using a bit
+> freely because I am dealing with devices that exchange always the
+> same amount of data, so that I don't need (in my case) to
+> pre-allocate or overallocate or runtime allocate. I don't
+> understand what else I invented :)
 
-So instead of relying on the interrupt-affinity property, we can
-use the actual percpu affinity that DT exposes as part of the
-interrupt specifier. The DT binding is also updated to reflect
-the fact that the interrupt-affinity property shouldn't be used
-in that case.
+Other than the LIRC_{GET,SET}_LENGTH it might very well be compatible;
+you're reusing LIRC_GET_LENGTH for a different purpose.
 
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
----
- Documentation/devicetree/bindings/arm/pmu.txt |  4 +++-
- drivers/perf/arm_pmu.c                        | 22 +++++++++++++++++-----
- 2 files changed, 20 insertions(+), 6 deletions(-)
+Is the kmalloc() really that costly that it needs to be avoided for
+each transmit?
 
-diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
-index 74d5417..61c8b46 100644
---- a/Documentation/devicetree/bindings/arm/pmu.txt
-+++ b/Documentation/devicetree/bindings/arm/pmu.txt
-@@ -39,7 +39,9 @@ Optional properties:
-                        When using a PPI, specifies a list of phandles to CPU
- 		       nodes corresponding to the set of CPUs which have
- 		       a PMU of this type signalling the PPI listed in the
--		       interrupts property.
-+		       interrupts property, unless this is already specified
-+		       by the PPI interrupt specifier itself (in which case
-+		       the interrupt-affinity property shouldn't be present).
- 
-                        This property should be present when there is more than
- 		       a single SPI.
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 140436a..065ccec 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -603,7 +603,8 @@ static void cpu_pmu_free_irq(struct arm_pmu *cpu_pmu)
- 
- 	irq = platform_get_irq(pmu_device, 0);
- 	if (irq >= 0 && irq_is_percpu(irq)) {
--		on_each_cpu(cpu_pmu_disable_percpu_irq, &irq, 1);
-+		on_each_cpu_mask(&cpu_pmu->supported_cpus,
-+				 cpu_pmu_disable_percpu_irq, &irq, 1);
- 		free_percpu_irq(irq, &hw_events->percpu_pmu);
- 	} else {
- 		for (i = 0; i < irqs; ++i) {
-@@ -645,7 +646,9 @@ static int cpu_pmu_request_irq(struct arm_pmu *cpu_pmu, irq_handler_t handler)
- 				irq);
- 			return err;
- 		}
--		on_each_cpu(cpu_pmu_enable_percpu_irq, &irq, 1);
-+
-+		on_each_cpu_mask(&cpu_pmu->supported_cpus,
-+				 cpu_pmu_enable_percpu_irq, &irq, 1);
- 	} else {
- 		for (i = 0; i < irqs; ++i) {
- 			int cpu = i;
-@@ -961,9 +964,18 @@ static int of_pmu_irq_cfg(struct arm_pmu *pmu)
- 		i++;
- 	} while (1);
- 
--	/* If we didn't manage to parse anything, claim to support all CPUs */
--	if (cpumask_weight(&pmu->supported_cpus) == 0)
--		cpumask_setall(&pmu->supported_cpus);
-+	/* If we didn't manage to parse anything, try the interrupt affinity */
-+	if (cpumask_weight(&pmu->supported_cpus) == 0) {
-+		if (!using_spi) {
-+			/* If using PPIs, check the affinity of the partition */
-+			int irq = platform_get_irq(pdev, 0);
-+			irq_get_percpu_devid_partition(irq,
-+						       &pmu->supported_cpus);
-+		} else {
-+			/* Otherwise default to all CPUs */
-+			cpumask_setall(&pmu->supported_cpus);
-+		}
-+	}
- 
- 	/* If we matched up the IRQ affinities, use them to route the SPIs */
- 	if (using_spi && i == pdev->num_resources)
--- 
-2.1.4
+> This is a simple driver which is driving an LED connected through
+> SPI and userspace writes raw data in it (LIRC_CAN_SEND_RAW).
+
+And some odd ioctl.
+
+> > Also I don't see what justifies this new interface. This can be 
+> > implemented in rc-core in less lines of code and it will be entirely 
+> > compatible with existing user-space.
+> 
+> Also here I'm getting a bit confused. When I started writing
+> this, I didn't even know of the existence of a remote controlling
+> framework, but then I run across this:
+> 
+> "LIRC is a package that allows you to decode and send infra-red
+> signals of many (but not all) commonly used remote controls. "
+> 
+> taken from lirc.org: my case is exactly falling into this
+> description.
+> 
+> Am I missing anything?
+
+See drivers/staging/media/lirc/TODO: "All drivers should either be 
+ported to ir-core, or dropped entirely".  ir-core has since been renamed 
+to rc-core; it is uses for non-IR purposes like cec.
+
+lirc exists as the user-space ABI but not it is not the preferred 
+framework for kernel space.
+
+There is one problem here. rc-core does not provide very well for
+transmit-only hardware, so rc-core needs some modifications. This is
+what I suggest to make it work:
+
+1. in include/media/rc-core.h add a new entry to the enum rc_driver_type
+   called "RC_DRIVER_IR_RAW_TX_ONLY" (or something like that).
+2. rc_allocate_device() needs an argument "enum rc_driver_type"; in the
+   case it would not allocate an input device. All drivers needs to
+   pass in this argument.
+3. rc_register_device() and rc_unregister_device() should not execute
+   anything with to do with input devices or key maps for tx only
+   devices.
+4. ir_lirc_register() should not set the LIRC_CAN_REC_MODE2 feature
+   or allocate an input buffer in the case of TX only device.
+
+With these changes all you need to do in ir-spi is:
+
+	struct rc_dev *rc = rc_allocate_device(RC_DRIVER_IR_RAW_TX_ONLY);
+	strcpy(rc->name, "IR SPI");
+        rc->s_tx_carrier = ir_spi_set_tx_carrier; // write function
+        rc->tx_ir = ir_spi_tx; // write function
+        rc->driver_name = "ir-spi";
+
+	rc_register_driver(rc);
+
+
+I'm happy to help. 
+
+
+Sean
