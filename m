@@ -1,52 +1,63 @@
-From: Andi Shyti <andi@etezian.org>
-Subject: Re: [PATCH] [media] rc: ir-spi: add support for IR LEDs connected
- with SPI
-Date: Fri, 1 Jul 2016 23:00:42 +0900
-Message-ID: <20160701140042.GB1257@jack.zhora.eu>
-References: <1467362022-12704-1-git-send-email-andi.shyti@samsung.com>
- <CGME20160701094505epcas1p469fb8084bd5195cdab5555a9f3368682@epcas1p4.samsung.com>
- <20160701094458.GA8933@gofer.mess.org>
- <20160701123035.GA12029@samsunx.samsung>
- <20160701132219.GA3752@gofer.mess.org>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: Re: [PATCH 6/7] dt-bindings: net: bgmac: add bindings documentation
+ for bgmac
+Date: Fri, 1 Jul 2016 10:29:36 -0400
+Message-ID: <CAC3K-4pu2k8HZ3g-LxbVAFOxPayDT=hK1qgix1Pc81aTEmGQzA@mail.gmail.com>
+References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
+ <1467327554-22074-7-git-send-email-jon.mason@broadcom.com> <20160701025619.GA4906@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160701132219.GA3752@gofer.mess.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>
-Cc: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160701025619.GA4906@rob-hp-laptop>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, davem@davemloft.net, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+On Thu, Jun 30, 2016 at 10:56 PM, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Jun 30, 2016 at 06:59:13PM -0400, Jon Mason wrote:
+>> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+>> ---
+>>  .../devicetree/bindings/net/brcm,bgmac-nsp.txt     | 24 ++++++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt b/Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
+>> new file mode 100644
+>> index 0000000..022946c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
+>> @@ -0,0 +1,24 @@
+>> +Broadcom GMAC Ethernet Controller Device Tree Bindings
+>> +-------------------------------------------------------------
+>> +
+>> +Required properties:
+>> + - compatible:       "brcm,bgmac-nsp"
+>
+> Usually we do <soc>-<block> order.
 
-> > > Also I don't see what justifies this new interface. This can be 
-> > > implemented in rc-core in less lines of code and it will be entirely 
-> > > compatible with existing user-space.
-> > 
-> > Also here I'm getting a bit confused. When I started writing
-> > this, I didn't even know of the existence of a remote controlling
-> > framework, but then I run across this:
-> > 
-> > "LIRC is a package that allows you to decode and send infra-red
-> > signals of many (but not all) commonly used remote controls. "
-> > 
-> > taken from lirc.org: my case is exactly falling into this
-> > description.
-> > 
-> > Am I missing anything?
-> 
-> See drivers/staging/media/lirc/TODO: "All drivers should either be 
-> ported to ir-core, or dropped entirely".  ir-core has since been renamed 
-> to rc-core; it is uses for non-IR purposes like cec.
-> 
-> lirc exists as the user-space ABI but not it is not the preferred 
-> framework for kernel space.
+Thanks, I'll make the necessary changes and push out a v2.
 
-I missed this part and now what you say makes sense.
-
-> I'm happy to help. 
-
-I will do as you recommend and thanks a lot, appreciated :)
-
-Andi
+>
+>> + - reg:              Address and length of the GMAC registers,
+>> +             Address and length of the GMAC IDM registers
+>> + - reg-names:        Names of the registers.  Must have both "gmac_base" and
+>> +             "idm_base"
+>> + - interrupts:       Interrupt number
+>> +
+>> +Optional properties:
+>> +- mac-address:       See ethernet.txt file in the same directory
+>> +
+>> +Examples:
+>> +
+>> +gmac0: ethernet@18022000 {
+>> +     compatible = "brcm,bgmac-nsp";
+>> +     reg = <0x18022000 0x1000>,
+>> +           <0x18110000 0x1000>;
+>> +     reg-names = "gmac_base", "idm_base";
+>> +     interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+>> +     status = "disabled";
+>> +};
+>> --
+>> 1.9.1
+>>
