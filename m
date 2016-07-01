@@ -1,92 +1,104 @@
-From: =?UTF-8?B?V3UtQ2hlbmcgTGkgKOadjuWLmeiqoCk=?= <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
-Date: Fri, 1 Jul 2016 18:47:40 +0800
-Message-ID: <CAOMLVLgsB8mGdTZdn7dNQATFodqFPqmPH_yCn2+PKMYD2B+kYw@mail.gmail.com>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
- <20160607112235.475c2e4c@recife.lan> <575746EE.3030706@cisco.com>
- <1465902488.27938.7.camel@mtksdaap41> <20160616075428.0fde4aaa@recife.lan>
- <8a46c1e7-1f27-1e67-8c05-b133598b6a66@xs4all.nl>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 6/9] iommu/of: Introduce iommu_fwspec
+Date: Fri, 1 Jul 2016 11:55:06 +0100
+Message-ID: <20160701105505.GH12735@arm.com>
+References: <cover.1467123945.git.robin.murphy@arm.com>
+	<227abd6fb43e4163d94673066b4b736d7efaa635.1467123945.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <8a46c1e7-1f27-1e67-8c05-b133598b6a66-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Andrew-CT Chen <Andrew-CT.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lin PoChun <PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <227abd6fb43e4163d94673066b4b736d7efaa635.1467123945.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+Andrew. Last I heard the license was ready and Andrew was preparing
-the VPU firmware. Andrew. Is the firmware ready to submit?
+On Tue, Jun 28, 2016 at 04:48:25PM +0100, Robin Murphy wrote:
+> Introduce a common structure to hold the per-device firmware data that
+> non-architectural IOMMU drivers generally need to keep track of.
+> Initially this is DT-specific to complement the existing of_iommu
+> support code, but will generalise further once other firmware methods
+> (e.g. ACPI IORT) come along.
+> 
+> Ultimately the aim is to promote the fwspec to a first-class member of
+> struct device, and handle the init/free automatically in the firmware
+> code. That way we can have API calls look for dev->fwspec->iommu_ops
+> before falling back to dev->bus->iommu_ops, and thus gracefully handle
+> those troublesome multi-IOMMU systems which we currently cannot. To
+> start with, though, make use of the existing archdata field and delegate
+> the init/free to drivers to allow an incremental conversion rather than
+> the impractical pain of trying to attempt everything in one go.
+> 
+> Suggested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+> 
+> v3: New.
+> 
+>  drivers/iommu/of_iommu.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_iommu.h | 18 ++++++++++++++++++
+>  2 files changed, 65 insertions(+)
+> 
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 25406a8b9d4e..2b90c1f56ff2 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -220,3 +220,50 @@ void __init of_iommu_init(void)
+>  				of_node_full_name(np));
+>  	}
+>  }
+> +
+> +int iommu_fwspec_init(struct device *dev, struct device_node *iommu_np)
 
-On Fri, Jul 1, 2016 at 6:11 PM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
-> On 06/16/2016 12:54 PM, Mauro Carvalho Chehab wrote:
->> Em Tue, 14 Jun 2016 19:08:08 +0800
->> tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
->>
->>> Hi Mauro,
->>>
->>>
->>> On Wed, 2016-06-08 at 07:13 +0900, Hans Verkuil wrote:
->>>>
->>>> On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:
->>>>> Em Mon, 30 May 2016 20:29:14 +0800
->>>>> Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
->>>>>
->>>>>> ==============
->>>>>>   Introduction
->>>>>> ==============
->>>>>>
->>>>>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
->>>>>> Mediatek Video Codec is able to handle video decoding of in a range of formats.
->>>>>>
->>>>>> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
->>>>>> V4L2_PIX_FMT_MT21 format.
->>>>>>
->>>>>> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
->>>>>> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
->>>>>> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
->>>>>>
->>>>>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
->>>>>>
->>>>>> [1]https://patchwork.linuxtv.org/patch/33734/
->>>>>> [2]https://chromium-review.googlesource.com/#/c/245241/
->>>>>
->>>>> Hmm... I'm not seeing the firmware for this driver at the
->>>>> linux-firmware tree:
->>>>>    https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
->>>>>
->>>>> Nor I'm seeing any pull request for them. Did you send it?
->>>>> I'll only merge the driver upstream after seeing such pull request.
->>>>
->>> Sorry, I am not familiar with how to upstream firmware.
->>> Do you mean we need to upstream vpu firmware first before merge encoder
->>> driver upstream?
->>
->> Please look at this page:
->>       https://linuxtv.org/wiki/index.php/Development:_How_to_submit_patches#Firmware_submission
->>
->> The information here can also be useful:
->>       https://www.kernel.org/doc/readme/firmware-README.AddingFirmware
->>
->> In summary, you need to provide redistribution rights for the
->> firmware blob. You can either submit it to me or directly to
->> linux-firmware. In the latter, please c/c me on such patch.
->
-> Tiffany, what is the status of the firmware submission?
->
-> Regards,
->
->         Hans
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These functions might want an of_* prefix to match the rest of the file,
+or do you plan to re-use these later for ACPI?
+
+> diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+> index bd02b44902d0..5a4f516cfcfe 100644
+> --- a/include/linux/of_iommu.h
+> +++ b/include/linux/of_iommu.h
+> @@ -15,6 +15,14 @@ extern void of_iommu_init(void);
+>  extern const struct iommu_ops *of_iommu_configure(struct device *dev,
+>  					struct device_node *master_np);
+>  
+> +struct iommu_fwspec {
+> +	const struct iommu_ops	*iommu_ops;
+> +	struct device_node	*iommu_np;
+> +	void			*iommu_priv;
+> +	unsigned int		num_ids;
+> +	u32			ids[];
+> +};
+> +
+>  #else
+>  
+>  static inline int of_get_dma_window(struct device_node *dn, const char *prefix,
+> @@ -31,8 +39,18 @@ static inline const struct iommu_ops *of_iommu_configure(struct device *dev,
+>  	return NULL;
+>  }
+>  
+> +struct iommu_fwspec;
+> +
+>  #endif	/* CONFIG_OF_IOMMU */
+>  
+> +int iommu_fwspec_init(struct device *dev, struct device_node *iommu_np);
+> +void iommu_fwspec_free(struct device *dev);
+> +int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids);
+> +static inline struct iommu_fwspec *dev_iommu_fwspec(struct device *dev)
+> +{
+> +	return dev->archdata.iommu;
+> +}
+
+I'm a bit nervous about putting this inline in a header file, since not
+all architectures unconditionally provide the iommu field in dev_archdata.
+
+Will
