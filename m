@@ -1,100 +1,62 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH] arm64: tegra: Enable XUSB controller on Tegra210 Smaug
-Date: Fri, 1 Jul 2016 17:04:03 +0100
-Message-ID: <1467389043-959-1-git-send-email-jonathanh@nvidia.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 2/6] ASoC: samsung: Add Samsung Low
+ Power Audio Subsystem driver
+Date: Fri, 01 Jul 2016 18:31:33 +0200
+Message-ID: <57769AE5.4050407@samsung.com>
+References: <1466678715-19962-1-git-send-email-s.nawrocki@samsung.com>
+ <1466678715-19962-3-git-send-email-s.nawrocki@samsung.com>
+ <20160629215757.GX6247@sirena.org.uk> <577553FE.6080803@samsung.com>
+ <20160701150709.GT6247@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jon Hunter <jonathanh@nvidia.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-reply-to: <20160701150709.GT6247@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, inki.dae@samsung.com, Beomho Seo <beomho.seo@samsung.com>, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Enable the XUSB controller on Tegra210 Smaug. The Smaug has a USB Type-C
-connector with one of the USB2.0 lanes and one of the USB3.0 lanes
-populated.
+On 07/01/2016 05:07 PM, Mark Brown wrote:
+> On Thu, Jun 30, 2016 at 07:16:46PM +0200, Sylwester Nawrocki wrote:
+> 
+>> > Sorry, I didn't notice this e-mail earlier.  With previous Exynos versions
+>> > the LPASS (or AudioSS) was mainly about the embedded audio DSP processor
+>> > (at least WRT to SFRs), which was not required for boards supported in 
+>> > the mainline kernel. Since e.g. Exynos5433 the LPASS SFR region contains 
+>> > also entries related to other IP blocks, like I2S or DMAC.  Even though 
+>> > functionality covered by these registers is still rather trivial, like 
+>> > SW resets and unmasking interrupts, it's essential for the whole audio 
+>> > subsystem operation. The intention was to have in future the LPASS driver 
+>> > covering any functionality provided by the embedded audio dedicated MCU.
+>> > I'm afraid we have to handle those power sequences in central place to
+>> > ensure proper SoC operation. I would also rather avoid adding any exynos 
+>> > quirks to the PL330 DMAC driver.
+>
+> Hrm.  This is sounding a bit like a combination of a power domain and
+> an interrupt controller, would something like that fit in perhaps?
+> Depends on how many of these trivial bits there are I think...
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 57 +++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+To me LPASS is somehow similar to the camera subsystem, it's a container/
+manager for all the audio related sub-IP blocks.  The LPASS (top) SFR 
+region contains bits for resetting sub-blocks like: DMAC, SRAM, TIMER, WDT,
+I2S, UART.  It also contains mask and status bits of interrupts from those
+IP blocks to the CPU or the embedded MCU (CA5). An (incomplete) list of 
+registers can be seen at [1]. There are also entries for software triggered
+interrupts to the CPU/MCU, for the MCU reset vector control and general 
+purpose register for CPU/MCU communication.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-index 431266a48e9c..db9763fd945f 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-@@ -1568,6 +1568,63 @@
- 		status = "okay";
- 	};
- 
-+	usb@70090000 {
-+		phys = <&{/padctl@7009f000/pads/usb2/lanes/usb2-0}>,
-+		       <&{/padctl@7009f000/pads/pcie/lanes/pcie-6}>;
-+		phy-names = "usb2-0", "usb3-0";
-+
-+		dvddio-pex-supply = <&avddio_1v05>;
-+		hvddio-pex-supply = <&pp1800>;
-+		avdd-usb-supply = <&pp3300>;
-+		avdd-pll-utmip-supply = <&pp1800>;
-+		avdd-pll-uerefe-supply = <&pp1050_avdd>;
-+		dvdd-pex-pll-supply = <&avddio_1v05>;
-+		hvdd-pex-pll-e-supply = <&pp1800>;
-+
-+		status = "okay";
-+	};
-+
-+	padctl@7009f000 {
-+		status = "okay";
-+
-+		pads {
-+			usb2 {
-+				status = "okay";
-+
-+				lanes {
-+					usb2-0 {
-+						nvidia,function = "xusb";
-+						status = "okay";
-+					};
-+				};
-+			};
-+
-+			pcie {
-+				status = "okay";
-+
-+				lanes {
-+					pcie-6 {
-+						nvidia,function = "usb3-ss";
-+						status = "okay";
-+					};
-+				};
-+			};
-+		};
-+
-+		ports {
-+			usb2-0 {
-+				status = "okay";
-+				vbus-supply = <&usbc_vbus>;
-+				mode = "otg";
-+			};
-+
-+			usb3-0 {
-+				nvidia,usb2-companion = <0>;
-+				status = "okay";
-+			};
-+		};
-+	};
-+
- 	sdhci@700b0600 {
- 		bus-width = <8>;
- 		non-removable;
--- 
-2.1.4
+In the SoC there is a dedicated power domain for the whole audio subsystem 
+and LPASS also contains a VIC itself. We could try to decompose the LPASS 
+top block into various subsystems but I seriously doubt it's a good way
+forward. I think LPASS should rather be some top level SoC platform entity.
+
+[1] https://goo.gl/JiYbaZ
