@@ -1,162 +1,49 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH v3] ARM: at91: Document new TCB bindings
-Date: Fri,  1 Jul 2016 23:52:05 +0200
-Message-ID: <1467409925-17761-1-git-send-email-alexandre.belloni@free-electrons.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Subject: [PATCH v3 2/3] arm64: dts: Add timer erratum property for LS2080A and LS1043A
+Date: Fri,  1 Jul 2016 17:41:36 -0500
+Message-ID: <1467412897-15220-2-git-send-email-oss@buserror.net>
+References: <1467412897-15220-1-git-send-email-oss@buserror.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467412897-15220-1-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current binding for the TCB is not flexible enough for some use cases
-and prevents proper utilization of all the channels.
-
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
 ---
- .../devicetree/bindings/arm/atmel-at91.txt         | 32 ------------
- .../devicetree/bindings/mfd/atmel-tcb.txt          | 58 ++++++++++++++++++++++
- .../devicetree/bindings/pwm/atmel-tcb-pwm.txt      | 12 +++--
- 3 files changed, 65 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-index e1f5ad855f14..3dc758403d03 100644
---- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-@@ -60,38 +60,6 @@ System Timer (ST) required properties:
- Its subnodes can be:
- - watchdog: compatible should be "atmel,at91rm9200-wdt"
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index be72bf5..596420c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -115,6 +115,7 @@
+ 			     <1 14 0x1>, /* Physical Non-Secure PPI */
+ 			     <1 11 0x1>, /* Virtual PPI */
+ 			     <1 10 0x1>; /* Hypervisor PPI */
++		fsl,erratum-a008585;
+ 	};
  
--TC/TCLIB Timer required properties:
--- compatible: Should be "atmel,<chip>-tcb".
--  <chip> can be "at91rm9200" or "at91sam9x5"
--- reg: Should contain registers location and length
--- interrupts: Should contain all interrupts for the TC block
--  Note that you can specify several interrupt cells if the TC
--  block has one interrupt per channel.
--- clock-names: tuple listing input clock names.
--	Required elements: "t0_clk", "slow_clk"
--	Optional elements: "t1_clk", "t2_clk"
--- clocks: phandles to input clocks.
--
--Examples:
--
--One interrupt per TC block:
--	tcb0: timer@fff7c000 {
--		compatible = "atmel,at91rm9200-tcb";
--		reg = <0xfff7c000 0x100>;
--		interrupts = <18 4>;
--		clocks = <&tcb0_clk>;
--		clock-names = "t0_clk";
--	};
--
--One interrupt per TC channel in a TC block:
--	tcb1: timer@fffdc000 {
--		compatible = "atmel,at91rm9200-tcb";
--		reg = <0xfffdc000 0x100>;
--		interrupts = <26 4 27 4 28 4>;
--		clocks = <&tcb1_clk>;
--		clock-names = "t0_clk";
--	};
--
- RSTC Reset Controller required properties:
- - compatible: Should be "atmel,<chip>-rstc".
-   <chip> can be "at91sam9260" or "at91sam9g45" or "sama5d3"
-diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-new file mode 100644
-index 000000000000..693c7361e1ba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-@@ -0,0 +1,58 @@
-+* Device tree bindings for Atmel Timer Counter Blocks
-+- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
-+  <chip> can be "at91rm9200" or "at91sam9x5"
-+- reg: Should contain registers location and length
-+- #address-cells: has to be 1
-+- #size-cells: has to be 0
-+- interrupts: Should contain all interrupts for the TC block
-+  Note that you can specify several interrupt cells if the TC
-+  block has one interrupt per channel.
-+- clock-names: tuple listing input clock names.
-+	Required elements: "t0_clk", "slow_clk"
-+	Optional elements: "t1_clk", "t2_clk"
-+- clocks: phandles to input clocks.
-+
-+The TCB can expose multiple subdevices:
-+ * a timer
-+   - compatible: Should be "atmel,tcb-timer"
-+   - reg: Should contain the TCB channels to be used. If the
-+     counter width is 16 bits (at91rm9200-tcb), two consecutive
-+     channels are needed. Else, only one channel will be used.
-+
-+ * a PWM chip: see ../pwm/atmel-tcb-pwm.txt
-+
-+Examples:
-+
-+One interrupt per TC block:
-+	tcb0: timer@fff7c000 {
-+		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0xfff7c000 0x100>;
-+		interrupts = <18 4>;
-+		clocks = <&tcb0_clk>, <&clk32k>;
-+		clock-names = "t0_clk", "slow_clk";
-+
-+		timer@0 {
-+			compatible = "atmel,tcb-timer";
-+			reg = <0>, <1>;
-+		};
-+
-+		timer@2 {
-+			compatible = "atmel,tcb-timer";
-+			reg = <2>;
-+		};
-+	};
-+
-+One interrupt per TC channel in a TC block:
-+	tcb1: timer@fffdc000 {
-+		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0xfffdc000 0x100>;
-+		interrupts = <26 4>, <27 4>, <28 4>;
-+		clocks = <&tcb1_clk>, <&clk32k>;
-+		clock-names = "t0_clk", "slow_clk";
-+	};
-+
-+
-diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-index 8031148bcf85..ab8fbd5ba184 100644
---- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-@@ -2,15 +2,17 @@ Atmel TCB PWM controller
+ 	pmu {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+index 9d746c6..0270ccf 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+@@ -171,6 +171,7 @@
+ 			     <1 14 0x8>, /* Physical Non-Secure PPI, active-low */
+ 			     <1 11 0x8>, /* Virtual PPI, active-low */
+ 			     <1 10 0x8>; /* Hypervisor PPI, active-low */
++		fsl,erratum-a008585;
+ 	};
  
- Required properties:
- - compatible: should be "atmel,tcb-pwm"
-+- reg: tcb channel to use. Each channel can export 2 PWMs
- - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
-   the cells format. The only third cell flag supported by this binding is
-   PWM_POLARITY_INVERTED.
--- tc-block: The Timer Counter block to use as a PWM chip.
- 
- Example:
- 
--pwm {
--	compatible = "atmel,tcb-pwm";
--	#pwm-cells = <3>;
--	tc-block = <1>;
-+tcb0: timer@f800c000 {
-+	pwm@0 {
-+		compatible = "atmel,tcb-pwm";
-+		reg = <0>;
-+		#pwm-cells = <3>;
-+	};
- };
+ 	pmu {
 -- 
-2.8.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
