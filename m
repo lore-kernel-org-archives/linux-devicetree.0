@@ -1,26 +1,24 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] dt-bindings: arm: Update bindings for LS2088A targets
-Date: Thu, 30 Jun 2016 20:28:50 -0500
-Message-ID: <20160701012850.GA20343@rob-hp-laptop>
+Subject: Re: [PATCH 2/7] dt-bindings: pci: Update bindings for LS2088A
+Date: Thu, 30 Jun 2016 20:29:49 -0500
+Message-ID: <20160701012949.GA20948@rob-hp-laptop>
 References: <1467125341-2380-1-git-send-email-abhimanyu.saini@nxp.com>
- <1467125341-2380-2-git-send-email-abhimanyu.saini@nxp.com>
+ <1467125341-2380-3-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1467125341-2380-2-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1467125341-2380-3-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 08:18:55PM +0530, Abhimanyu Saini wrote:
-> Add compatible strings for LS2088A RDB and QDS board.
-> 
+On Tue, Jun 28, 2016 at 08:18:56PM +0530, Abhimanyu Saini wrote:
 > Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
