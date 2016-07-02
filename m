@@ -1,56 +1,67 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] clk: fixed-factor: add optional dt-binding clock-flags
-Date: Fri, 1 Jul 2016 17:20:30 -0700
-Message-ID: <20160702002030.GF27880@codeaurora.org>
-References: <20160621005910.GN1521@codeaurora.org>
- <1466741572-58802-1-git-send-email-neidhard.kim@lge.com>
- <20160628205518.GF3737@rob-hp-laptop>
- <146714872010.89261.1969853552594659808@resonance>
- <5773736D.3060405@lge.com>
+Subject: Re: [PATCH v9 01/10] clk: fix initial state of critical clock's
+ parents
+Date: Fri, 1 Jul 2016 18:21:40 -0700
+Message-ID: <20160702012140.GB17071@codeaurora.org>
+References: <1466581229-2342-1-git-send-email-erin.lo@mediatek.com>
+ <1466581229-2342-2-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5773736D.3060405@lge.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jongsung Kim <neidhard.kim@lge.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chanho Min <chanho.min@lge.com>
+In-Reply-To: <1466581229-2342-2-git-send-email-erin.lo@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Erin Lo <erin.lo@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/29, Jongsung Kim wrote:
-> On 2016=EB=85=84 06=EC=9B=94 29=EC=9D=BC 06:18, Michael Turquette wro=
-te:
-> > Quoting Rob Herring (2016-06-28 13:55:18)
-> >> On Fri, Jun 24, 2016 at 01:12:52PM +0900, Jongsung Kim wrote:
-> >>> There is no way to set additional flags for a DT-initialized fixe=
-d-
-> >>> factor-clock, and it can be problematic i.e., when the clock rate
-> >>> needs to be changed. [1][2]
-> >>>
-> >>> This patch introduces an optional dt-binding named "clock-flags" =
-to
-> >>> be used for passing any needed flags from dts.
-> >> I don't think we want this in DT. If we did, the flags would need =
-some=20
-> >> documentation about what the flags mean.
-> > Flags are specific to Linux implementation, so I agree with Rob. Be=
-tter
-> > to create a compatible string for your hardware that bakes in the f=
-lags.
->=20
-> Thank you for your comment, Mike. This conversation starts from lacki=
-ng method to set CLK_SET_RATE_PARENT from DT. I understand compatible s=
-tring can be a solution. But.. if someone starts talking about lacking =
-method to set another flag, i.e., CLK_SET_PARENT_GATE, then we'll need =
-another compatible string list.
-> How do you think about defining possible required subset of the flags=
- and using some more neutral flag-names acceptable in DT?
+(Resending to everyone)
 
-Do you actually have an IC on the board that is doing some fixed
-factor calculation? Or is this a clk driver design where we are
-listing out each piece of an SoC's clk controller in DT?
+On 06/22, Erin Lo wrote:
+> From: James Liao <jamesjj.liao@mediatek.com>
+> 
+> This patch fixed wrong state of parent clocks if they are registered
+> after critical clocks.
+> 
+> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 
---=20
+It would be nice if you included the information about the
+problem from James' previous mail. This says what it does, but
+doesn't explain what the problem is and how it is fixing it.
+
+> ---
+>  drivers/clk/clk.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index d584004..e9f5f89 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -2388,8 +2388,15 @@ static int __clk_core_init(struct clk_core *core)
+>  	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
+>  		struct clk_core *parent = __clk_init_parent(orphan);
+>  
+> -		if (parent)
+> +		if (parent) {
+>  			clk_core_reparent(orphan, parent);
+> +
+> +			if (orphan->prepare_count)
+> +				clk_core_prepare(parent);
+> +
+> +			if (orphan->enable_count)
+> +				clk_core_enable(parent);
+> +		}
+>  	}
+
+I'm pretty sure I pointed this problem out to Mike when the
+critical clk patches were being pushed. I can't recall what the
+plan was though to fix the problem. I'm pretty sure he said that
+clk_core_reparent() would take care of it, but obviously it is
+not doing that. Or perhaps it was that clk handoff should figure
+out that the parents of a critical clk are also on and thus keep
+them on.
+
+-- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
