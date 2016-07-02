@@ -1,52 +1,105 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/3] ARM: dts: r8a7792: add PFC support
-Date: Sat, 2 Jul 2016 20:07:00 +0300
-Message-ID: <c0aad99a-ca5d-4f4a-408b-2d305fa6bab5@cogentembedded.com>
-References: <2144803.0K8qXzjIFq@wasted.cogentembedded.com>
- <7894702.b5qeLxoHdo@wasted.cogentembedded.com>
+From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Sat, 2 Jul 2016 20:20:35 +0200
+Message-ID: <ced2a770-2724-bdc9-7e2a-3dc9f76abf29@broadcom.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+ <CAOiHx==82LHOeQMNVD+dybFifXX690Q6AJTcMBMynjSfUOyGUw@mail.gmail.com>
+ <8d8bd933-717b-48e4-f002-7b834abed6fd@redhat.com>
+ <3960223.GqB9zXL8s8@wuerfel>
+ <1f44df41-0111-441b-4671-718eec0c4346@broadcom.com>
+ <CAOiHx=m8Zf0T4=BTG6BMRjj3kOHzt4YaQa3yzutmrhFSOyZMmA@mail.gmail.com>
+Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <7894702.b5qeLxoHdo@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDRYNGWEWYDBB6UL4C5QKGQEZNDASII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAOiHx=m8Zf0T4=BTG6BMRjj3kOHzt4YaQa3yzutmrhFSOyZMmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 1-7-2016 10:58, Jonas Gorski wrote:
+> Hi,
+>=20
+> On 30 June 2016 at 21:23, Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>=
+ wrote:
+>>
+>>
+>> On 30-6-2016 13:31, Arnd Bergmann wrote:
+>>> On Thursday, June 30, 2016 12:25:15 PM CEST Hans de Goede wrote:
+>>>>> So then how about making use of a more specific compatible string?
+>>>>>
+>>>>> e.g.
+>>>>>
+>>>>> brcmf {
+>>>>>         compatible =3D "foo,ap6210", "brcm,bcm4329-fmac";
+>>>>>         ...
+>>>>> };
+>>>>>
+>>>>> and if the compatible has more than one element you request
+>>>>> FW_NAME_<compatible>.txt as the nvram file. Or try each comptible (an=
+d
+>>>>> lastly no suffix) until you get a match. (AFAICT, this is what the
+>>>>> "model" property was originally intended for anyway, but almost nobod=
+y
+>>>>> did it right, and everyone put a user readable string into "model" fo=
+r
+>>>>> boards instead of the ePAPR defined compatible string).
+>>>>
+>>>> Hmm, interesting idea. Not sure how easy / hard it will be to implemen=
+t
+>>>> this, but from a dt binding point of view it seems elegant.
+>>>>
+>>>> Kalle, Arend, what do you think of this ?
+>>
+>> At first glance I like the suggestion, but this would mean updating the
+>> bindings document for each new wifi module that we want to add. Not a
+>> big problem, but it makes that I have a slight preference to using a
+>> property for it, eg. brcm,module =3D "ap6210";
+>=20
+> If you want a separate property, then I repeat my very first
+> suggestion, the well defined model property.
+> e.g.
+>=20
+> brcmf@0 {
+>         model =3D "ampak,ap6210";
+>         compatible =3D "brcm,bcm4329-fmac";
+>         ...
+> };
+>=20
+> All device nodes may have a model property, not just the top "machine" on=
+e.
 
-On 07/01/2016 02:06 AM, Sergei Shtylyov wrote:
+I heard you the first time :-p I just was not sure what the implications
+would be to use it. Hence I suggested a vendor specific property.
+However, looking up and reading the definition in ePAPRv1.1 I suppose it
+is fine to use the model property:
 
-> Define the generic R8A7792 part of the PFC device node.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
->  arch/arm/boot/dts/r8a7792.dtsi |    6 ++++++
->  1 file changed, 6 insertions(+)
->
-> Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-> @@ -108,6 +108,12 @@
->  			#power-domain-cells = <1>;
->  		};
->
-> +
+Property: model
+Value type: <string>
+Description:
+The model property value is a <string> that specifies the manufacturer=E2=
+=80=99s
+model number of the device.
 
-    Just noticed this extra empty line... :-/
+The recommended format is: =E2=80=9Cmanufacturer,model=E2=80=9D, where manu=
+facturer is a
+string describing the name of the manufacturer (such as a stock ticker
+symbol), and model specifies the model number.
 
-> +		pfc: pin-controller@e6060000 {
-> +			compatible = "renesas,pfc-r8a7792";
-> +			reg = <0 0xe6060000 0 0x144>;
-> +		};
-> +
->  		dmac0: dma-controller@e6700000 {
->  			compatible = "renesas,dmac-r8a7792",
->  				     "renesas,rcar-dmac";
+Regards,
+Arend
 
-    Will repost.
-
-MBR, Sergei
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
