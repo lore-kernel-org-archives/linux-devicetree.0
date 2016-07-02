@@ -1,75 +1,306 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Sat, 02 Jul 2016 23:30:21 +0200
-Message-ID: <7975990.MvNRQ06u39@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <CAOiHx=m8Zf0T4=BTG6BMRjj3kOHzt4YaQa3yzutmrhFSOyZMmA@mail.gmail.com> <ced2a770-2724-bdc9-7e2a-3dc9f76abf29@broadcom.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBSXD4C5QKGQEZI2XMCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <ced2a770-2724-bdc9-7e2a-3dc9f76abf29-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: frowand.list@gmail.com
+Subject: [RFC PATCH 0/1] Portable Device Tree Connector -- conceptual
+Date: Sat,  2 Jul 2016 16:55:49 -0700
+Message-ID: <1467503750-31703-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: robh+dt@kernel.org, david@gibson.dropbear.id.au, pantelis.antoniou@konsulko.com, stephen.boyd@linaro.org, broonie@kernel.org, grant.likely@secretlab.ca, mark.rutland@arm.com
+Cc: mporter@konsulko.com, koen@dominion.thruhere.net, linux@roeck-us.net, marex@denx.de, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, July 2, 2016 8:20:35 PM CEST Arend Van Spriel wrote:
-> > If you want a separate property, then I repeat my very first
-> > suggestion, the well defined model property.
-> > e.g.
-> >=20
-> > brcmf@0 {
-> >         model =3D "ampak,ap6210";
-> >         compatible =3D "brcm,bcm4329-fmac";
-> >         ...
-> > };
-> >=20
-> > All device nodes may have a model property, not just the top "machine" =
-one.
->=20
-> I heard you the first time  I just was not sure what the implications
-> would be to use it. Hence I suggested a vendor specific property.
-> However, looking up and reading the definition in ePAPRv1.1 I suppose it
-> is fine to use the model property:
->=20
-> Property: model
-> Value type: <string>
-> Description:
-> The model property value is a <string> that specifies the manufacturer=E2=
-=80=99s
-> model number of the device.
->=20
-> The recommended format is: =E2=80=9Cmanufacturer,model=E2=80=9D, where ma=
-nufacturer is a
-> string describing the name of the manufacturer (such as a stock ticker
-> symbol), and model specifies the model number.
+From: Frank Rowand <frank.rowand@am.sony.com>
 
-The model property is very similar to compatible, except that there is
-only one entry rather than a list of entries from most specific to
-most generic.
+Hi All,
 
-I think by writing the above example as
+This is version 2 of this email.
 
-	compatible =3D "ampak,ap6210", "brcm,bcm4329-fmac";
+Changes from version 1:
 
-we can provide the same functionality in a slightly simpler way, the driver
-then just goes on to look for the nvram file for each entry in sequence unt=
-il
-it finds one.
+  - some rewording of the text
+  - removed new (theoretical) dtc directive "/connector/"
+  - added compatibility between mother board and daughter board
+  - added info on applying a single .dtbo to different connectors
+  - attached an RFC patch showing the required kernel changes
+  - changes to mother board .dts connector node:
+     - removed target_path property
+     - added connector-socket property
+  - changes to daughter board .dts connector node:
+     - added connector-plug property
 
-	Arnd
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+I've been trying to wrap my head around what Pantelis and Rob have written
+on the subject of a device tree representation of a connector for a
+daughter board to connect to (eg a cape or a shield) and the representation
+of the daughter board.  (Or any other physically pluggable object.)
+
+After trying to make sense of what had been written (or presented via slides
+at a conference - thanks Pantelis!), I decided to go back to first principals
+of what we are trying to accomplish.  I came up with some really simple bogus
+examples to try to explain what my thought process is.
+
+This is an extremely simple example to illustrate the concepts.  It is not
+meant to represent the complexity of a real board.
+
+To start with, assume that the device that will eventually be on a daughter
+board is first soldered onto the mother board.  The mother board contains
+two devices connected via bus spi_1.  One device is described in the .dts
+file, the other is described in an included .dtsi file.
+Then the device tree files will look like:
+
+$ cat board.dts
+/dts-v1/;
+
+/ {
+        #address-cells = < 1 >;
+        #size-cells = < 1 >;
+
+        tree_1: soc@0 {
+                reg = <0x0 0x0>;
+
+                spi_1: spi1 {
+                };
+        };
+
+};
+
+&spi_1 {
+        ethernet-switch@0 {
+                compatible = "micrel,ks8995m";
+        };
+};
+
+#include "spi_codec.dtsi"
+
+
+$ cat spi_codec.dtsi
+&spi_1 {
+	codec@1 {
+		compatible = "ti,tlv320aic26";
+	};
+};
+
+
+#----- codec chip on cape
+
+Then suppose I move the codec chip to a cape.  Then I will have the same
+exact .dts and .dtsi and everything still works.
+
+
+@----- codec chip on cape, overlay
+
+If I want to use overlays, I only have to add the version and "/plugin/",
+then use the '-@' flag for dtc (both for the previous board.dts and
+this spi_codec_overlay.dts):
+
+$ cat spi_codec_overlay.dts
+/dts-v1/;
+
+/plugin/;
+
+&spi_1 {
+	codec@1 {
+		compatible = "ti,tlv320aic26";
+	};
+};
+
+
+Pantelis pointed out that the syntax has changed to be:
+   /dts-v1/ /plugin/;
+
+
+#----- codec chip on cape, overlay, connector
+
+Now we move into the realm of connectors.  My mental model of what the
+hardware and driver look like has not changed.  The only thing that has
+changed is that I want to be able to specify that the connector that
+the cape is plugged into has some pins that are the spi bus /soc/spi1.
+
+The following _almost_ but not quite gets me what I want.  Note that
+the only thing the connector node does is provide some kind of
+pointer or reference to what node(s) are physically routed through
+the connector.  The connector node does not need to describe the pins;
+it only has to point to the node that describes the pins.
+
+This example will turn out to be not sufficient.  It is a stepping
+stone in building my mental model.
+
+$ cat board_with_connector.dts
+/dts-v1/;
+
+/ {
+	#address-cells = < 1 >;
+	#size-cells = < 1 >;
+
+	tree_1: soc@0 {
+		reg = <0x0 0x0>;
+
+		spi_1: spi1 {
+		};
+	};
+
+	connector_1: connector_1 {
+		spi1 {
+			target_phandle = <&spi_1>;
+		};
+	};
+
+};
+
+&spi_1 {
+	ethernet-switch@0 {
+		compatible = "micrel,ks8995m";
+	};
+};
+
+
+$ cat spi_codec_overlay_with_connector.dts
+/dts-v1/;
+
+/plugin/;
+
+&connector_1 {
+	spi1 {
+		codec@1 {
+			compatible = "ti,tlv320aic26";
+		};
+	};
+};
+
+
+The result is that the overlay fixup for spi1 on the cape will
+relocate the spi1 node to /connector_1 in the host tree, so
+this does not solve the connector linkage yet:
+
+-- chunk from the decompiled board_with_connector.dtb:
+
+	__symbols__ {
+		connector_1 = "/connector_1";
+	};
+
+-- chunk from the decompiled spi_codec_overlay_with_connector.dtb:
+
+	fragment@0 {
+		target = <0xffffffff>;
+		__overlay__ {
+			spi1 {
+				codec@1 {
+					compatible = "ti,tlv320aic26";
+				};
+			};
+		};
+	};
+	__fixups__ {
+		connector_1 = "/fragment@0:target:0";
+	};
+
+
+After applying the overlay, the codec@1 node will be at
+/connector_1/spi1/codec@1.  What I want is for that node
+to be at /spi1/codec@1.
+
+
+
+#----- magic new syntax
+
+What I really want is some way to tell dtc that I want to do one
+level of dereferencing when resolving the path of device nodes
+contained by the connector node in the overlay dts.
+
+Version 1 of this email suggested using dtc magic to do this extra
+level of dereferencing.  This version of the email has changed to
+have the kernel code that applies the overlay do the extra level
+of dereferencing.
+
+The property "connector-socket" tells the kernel overlay code
+that this is a socket.  The overlay code does not actually
+do anything special as a result of this property; it is simply
+used as a sanity check that this node really is a socket.  The
+person writing the mother board .dts must provide the
+target_phandle property, which points to a node responsible for
+some of the pins on the connector.
+
+The property "connector-plug" tells the kernel overlay code
+that each child node in the overlay corresponds to a node in the
+socket, and the socket will contain one property that is
+a phandle pointing to the node that is the target of that child
+node in the overlay node.
+
+
+$ cat board_with_connector_v2.dts
+
+/dts-v1/;
+
+/ {
+	#address-cells = < 1 >;
+	#size-cells = < 1 >;
+
+	tree_1: soc@0 {
+		reg = <0x0 0x0>;
+
+		spi_1: spi1 {
+		};
+	};
+
+	connector_1: connector_1 {
+		compatible = "11-pin-accessory";
+		connector-socket;
+		spi1 {
+			target_phandle = <&spi_1>;
+		};
+	};
+
+};
+
+&spi_1 {
+	ethernet-switch@0 {
+		compatible = "micrel,ks8995m";
+	};
+};
+
+
+$ cat spi_codec_overlay_with_connector_v2.dts
+
+/dts-v1/;
+
+/plugin/;
+
+&connector_1 {
+	connector-plug;
+	compatible = "11-pin-accessory";
+
+	spi1 {
+		codec@1 {
+			compatible = "ti,tlv320aic26";
+		};
+	};
+};
+
+
+The spi_codec_overlay_with_connector_v2.dtb __fixups__ information
+is unchanged from the previous example, but the kernel overlay
+code will do the correct extra level of dereferencing when it
+detects the connector-plug property in the overlay.
+
+The one remaining piece that this patch does not provide is how
+the overlay manager (which does not yet exist in the mainline
+tree) can apply an overlay to two different targets.  That
+final step should be a trivial change to of_overlay_create(),
+adding a parameter that is a mapping of the target (or maybe
+even targets) in the overlay to different targets in the
+active device tree.
+
+This seems like a more straight forward way to handle connectors.
+
+First, ignoring pinctrl and pinmux, what does everyone think?
+
+Then, the next step is whether pinctrl and pinmux work with this method.
+Pantelis, can you point me to a good example for
+
+  1) an in-tree board dts file
+  2) an overlay file (I am assuming out of tree) that applies to the board
+  3) an in-tree .dtsi file that would provide the same features as
+     the overlay file if it was included by the board dts file
+
+It should be easier to discuss pinctrl and pinmux with an example.
+
+-Frank
