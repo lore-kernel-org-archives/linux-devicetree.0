@@ -1,65 +1,75 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: sun4i-lradc: Add binding documentation
-Date: Sat, 2 Jul 2016 22:43:03 +0200
-Message-ID: <20160702204303.GD20045@piout.net>
-References: <1467406855-9677-1-git-send-email-alexandre.belloni@free-electrons.com>
- <CAGb2v66PzgVqVGxs4FSQkkX=2hX42UmftahOgJmepv4wA-mwnw@mail.gmail.com>
- <20160702133528.GC20045@piout.net>
- <b23bd147-0d68-a6a6-14c0-5047af35e6b7@redhat.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Sat, 02 Jul 2016 23:30:21 +0200
+Message-ID: <7975990.MvNRQ06u39@wuerfel>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <CAOiHx=m8Zf0T4=BTG6BMRjj3kOHzt4YaQa3yzutmrhFSOyZMmA@mail.gmail.com> <ced2a770-2724-bdc9-7e2a-3dc9f76abf29@broadcom.com>
+Reply-To: arnd-r2nGTMty4D4@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b23bd147-0d68-a6a6-14c0-5047af35e6b7-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRBSXD4C5QKGQEZI2XMCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <ced2a770-2724-bdc9-7e2a-3dc9f76abf29-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/2016 at 21:46:43 +0200, Hans de Goede wrote :
-> Hi,
-> 
-> On 02-07-16 15:35, Alexandre Belloni wrote:
-> > On 02/07/2016 at 17:12:55 +0800, Chen-Yu Tsai wrote :
-> > > Hi,
-> > > 
-> > > On Sat, Jul 2, 2016 at 5:00 AM, Alexandre Belloni
-> > > <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > > > Document the bindings for the Allwinner LRADC.
-> > > 
-> > > We already have Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> > > and I'm pretty sure Hans (CC-ed) argued that this is not a generic ADC
-> > > block.
-> > > 
-> > > Any plans to reconcile the different bindings?
-> > > 
-> > 
-> > Yes, I already submitted an adc-keys driver that can work with any ADC:
-> > https://lkml.org/lkml/2016/7/1/670
-> > 
-> > I agree that because it is not yet handling interrupts and is polling
-> > the ADC, it is not as good as sun4i-lradc-keys yet. My plan is to solve
-> > that but it require significant work in iio.
-> 
-> And it also seems to break dt compatibility. Note I'm not against
-> making an exception for this and breaking the dt compat, but until
-> the polling is fixed we should not replace sun4i-lradc-keys.
-> 
-> If I understand you correctly then you want to use a new generic
-> "sun4i-lradc" compatible. If you do that then we can just build both
-> drivers for now and use the right compatible depending on how the
-> board uses the lradc for now.
-> 
+On Saturday, July 2, 2016 8:20:35 PM CEST Arend Van Spriel wrote:
+> > If you want a separate property, then I repeat my very first
+> > suggestion, the well defined model property.
+> > e.g.
+> >=20
+> > brcmf@0 {
+> >         model =3D "ampak,ap6210";
+> >         compatible =3D "brcm,bcm4329-fmac";
+> >         ...
+> > };
+> >=20
+> > All device nodes may have a model property, not just the top "machine" =
+one.
+>=20
+> I heard you the first time  I just was not sure what the implications
+> would be to use it. Hence I suggested a vendor specific property.
+> However, looking up and reading the definition in ePAPRv1.1 I suppose it
+> is fine to use the model property:
+>=20
+> Property: model
+> Value type: <string>
+> Description:
+> The model property value is a <string> that specifies the manufacturer=E2=
+=80=99s
+> model number of the device.
+>=20
+> The recommended format is: =E2=80=9Cmanufacturer,model=E2=80=9D, where ma=
+nufacturer is a
+> string describing the name of the manufacturer (such as a stock ticker
+> symbol), and model specifies the model number.
 
-Well, I never said we have to remove the previous compatible, just that
-it was probably not the best one. I also didn't send a patch to remove
-the previous driver and they can indeed coexist nicely for now.
+The model property is very similar to compatible, except that there is
+only one entry rather than a list of entries from most specific to
+most generic.
 
-Anyway, if we want to remove the sun4i-lradc-keys driver and keep DT
-compatibility, we'll have to write a small stub driver. It isn't the
-easiest task but it is doable.
+I think by writing the above example as
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+	compatible =3D "ampak,ap6210", "brcm,bcm4329-fmac";
+
+we can provide the same functionality in a slightly simpler way, the driver
+then just goes on to look for the nvram file for each entry in sequence unt=
+il
+it finds one.
+
+	Arnd
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
