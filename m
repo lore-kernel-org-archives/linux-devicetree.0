@@ -1,83 +1,55 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/2] input: adc-keys: add DT binding documentation
-Date: Sun, 3 Jul 2016 14:43:56 +0100
-Message-ID: <5d71d3a2-4d51-8dd5-0e4a-638ec1b5035a@kernel.org>
-References: <1467408602-16546-1-git-send-email-alexandre.belloni@free-electrons.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: amlogic: Add basic support for Amlogic S905X
+Date: Sun, 3 Jul 2016 17:57:00 +0200
+Message-ID: <577935CC.80001@suse.de>
+References: <1467399478-7183-1-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467408602-16546-1-git-send-email-alexandre.belloni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467399478-7183-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/07/16 22:30, Alexandre Belloni wrote:
-> Add documentation for ADC keys
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Clean looking binding to me - one comment inline.
-
-Jonathan
+Am 01.07.2016 um 20:57 schrieb Carlo Caione:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>=20
+> This patch introduces the basic support for the Amlogic S905X (Meson
+> GXL) and for the Amlogic evaluation board P212.
+> No documentation has been released yet for this SoC, so for now only =
+the
+> bare minimum has been added in the DT.
+>=20
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 > ---
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> 
->  .../devicetree/bindings/input/adc-keys.txt         | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-keys.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/adc-keys.txt b/Documentation/devicetree/bindings/input/adc-keys.txt
-> new file mode 100644
-> index 000000000000..873476bb4eab
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/adc-keys.txt
-> @@ -0,0 +1,45 @@
-> +Allwinner sun4i low res adc attached tablet keys
-What is allwinner specific in here?  Looks pretty general purpose to me!
-> +------------------------------------------------
-> +
-> +Required properties:
-> + - compatible: "adc-keys"
-> + - io-channels: Phandle to an ADC channel
-> + - io-channel-names = "buttons";
-> + - voltage-keyup-mvolt: Voltage at which all the keys are considered up.
-> +
-> +Each key is represented as a sub-node of "adc-keys":
-> +
-> +Required subnode-properties:
-> +	- label: Descriptive name of the key.
-> +	- linux,code: Keycode to emit.
-> +	- voltage-mvolt: Voltage adc input when this key is pressed.
-> +
-> +Example:
-> +
-> +#include <dt-bindings/input/input.h>
-> +
-> +	adc-keys {
-> +		compatible = "adc-keys";
-> +		io-channels = <&lradc 0>;
-> +		io-channel-names = "buttons";
-> +		voltage-keyup-mvolt = <2000>;
-> +
-> +		button@1500 {
-> +			label = "Volume Up";
-> +			linux,code = <KEY_VOLUMEUP>;
-> +			voltage-mvolt = <1500>;
-> +		};
-> +
-> +		button@1000 {
-> +			label = "Volume Down";
-> +			linux,code = <KEY_VOLUMEDOWN>;
-> +			voltage-mvolt = <1000>;
-> +		};
-> +
-> +		button@500 {
-> +			label = "Enter";
-> +			linux,code = <KEY_ENTER>;
-> +			voltage-mvolt = <500>;
-> +		};
-> +	};
-> +
-> 
+>  Documentation/devicetree/bindings/arm/amlogic.txt |   5 +
+>  arch/arm64/boot/dts/amlogic/Makefile              |   1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxl-p212.dts    |  70 +++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi        | 179 ++++++++++++=
+++++++++++
+>  4 files changed, 255 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-p212.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+
+I don't have documentation either, but looks sane to me.
+
+Reviewed-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+
+With the recent driver progress have you checked whether /memory@0
+actually works or whether U-Boot gives us a /memory node that Linux is
+using instead?
+
+Regards,
+Andreas
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
+HRB 21284 (AG N=FCrnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
