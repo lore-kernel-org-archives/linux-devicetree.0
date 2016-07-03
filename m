@@ -1,7 +1,7 @@
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v5 21/22] sh: Renesas RTS7751R2Dplus (a.k.a R2Dplus) IRQCHIP Driver
-Date: Mon,  4 Jul 2016 01:46:41 +0900
-Message-ID: <1467564402-2649-22-git-send-email-ysato@users.sourceforge.jp>
+Subject: [PATCH v5 22/22] sh: Renesas RTS7751R2Dplus (a,k.a R2Dplus) DeviceTree
+Date: Mon,  4 Jul 2016 01:46:42 +0900
+Message-ID: <1467564402-2649-23-git-send-email-ysato@users.sourceforge.jp>
 References: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
@@ -12,35 +12,50 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- .../interrupt-controller/renesas-r2dplus.txt       | 38 ++++++++++
- drivers/irqchip/Makefile                           |  2 +-
- drivers/irqchip/irq-renesas-r2dplus.c              | 88 ++++++++++++++++++++++
- 3 files changed, 127 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
- create mode 100644 drivers/irqchip/irq-renesas-r2dplus.c
+ arch/sh/boot/dts/Makefile    |  1 +
+ arch/sh/boot/dts/r2dplus.dts | 85 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 86 insertions(+)
+ create mode 100644 arch/sh/boot/dts/r2dplus.dts
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
+diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
+index cf5aec4..e059ce2b 100644
+--- a/arch/sh/boot/dts/Makefile
++++ b/arch/sh/boot/dts/Makefile
+@@ -1,6 +1,7 @@
+ obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
+ 
+ dtb-y += landisk.dtb
++otb-y += r2dplus.dtb
+ 
+ dtstree		:= $(srctree)/$(src)
+ clean-files := *.dtb.S
+diff --git a/arch/sh/boot/dts/r2dplus.dts b/arch/sh/boot/dts/r2dplus.dts
 new file mode 100644
-index 0000000..5b74da4
+index 0000000..f9c01f9
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
-@@ -0,0 +1,38 @@
-+DT bindings for the Renesas R0P751RLC0011RL (R2Dplus) interrupt controller
++++ b/arch/sh/boot/dts/r2dplus.dts
+@@ -0,0 +1,85 @@
++/dts-v1/;
 +
-+Required properties:
++#include "sh7751.dtsi"
 +
-+  - compatible: has to be "renesas,r2dplus-intc".
++/ {
++	model = "renesas,RTS7751R2D+";
++	compatible = "renesas,r2dplus";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	interrupt-parent = <&shintc>;
++	chosen {
++		stdout-path = "serial1:115200n8";
++	};
++	aliases {
++		serial1 = &sci1;
++	};
 +
-+  - reg: Base address and length of interrupt controller register.
-+
-+  - #interrupt-cells: has to be <1>: an interrupt index.
-+
-+  - #address-cells: has to be <0>
-+
-+  - interrupt-map: Interrupt mapping on parent controller.
-+
-+Example
-+-------
++	memory@0c000000 {
++		device_type = "memory";
++		reg = <0x0c000000 0x4000000>;
++	};
 +
 +	fpgaintc: fpga@a4000000 {
 +		compatible = "renesas,r2dplus-intc";
@@ -56,117 +71,55 @@ index 0000000..5b74da4
 +		              <6 &shintc evt2irq(0x2c0)>,
 +			      <7 &shintc evt2irq(0x2e0)>,
 +		              <8 &shintc evt2irq(0x300)>,
-+		              <9 &shintc evt2irq(0x320)>,
-+			      <10 &shintc evt2irq(0x340)>,
-+		              <11 &shintc evt2irq(0x360)>,
-+			      <12 &shintc evt2irq(0x380)>,
-+		              <13 &shintc evt2irq(0x3a0)>,
-+			      <14 &shintc evt2irq(0x3c0)>,
++			      <9 &shintc evt2irq(0x320)>,
++		              <10 &shintc evt2irq(0x340)>,
++			      <11 &shintc evt2irq(0x360)>,
++		              <12 &shintc evt2irq(0x380)>,
++			      <13 &shintc evt2irq(0x3a0)>,
++		              <14 &shintc evt2irq(0x3c0)>;
 +	};
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 5e225cf..1e0f1c3 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -69,4 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
--obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o irq-io-landisk.o
-+obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o irq-io-landisk.o irq-renesas-r2dplus.o
-diff --git a/drivers/irqchip/irq-renesas-r2dplus.c b/drivers/irqchip/irq-renesas-r2dplus.c
-new file mode 100644
-index 0000000..3f80775
---- /dev/null
-+++ b/drivers/irqchip/irq-renesas-r2dplus.c
-@@ -0,0 +1,88 @@
-+/*
-+ * Renesas RTS7751R2D+ FPGA IRQ driver
-+ *
-+ * Copyright 2016 Yoshinori Sato <ysato@users.sourceforge.jp>
-+ */
 +
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
++	ide: ide@b4001000 {
++		compatible = "ata-generic";
++		reg = <0xb4001000 0x10>, <0xb400080c 0x02>;
++		interrupt-parent = <&fpgaintc>;
++		interrupts = <1 0>;
++		reg-shift = <1>;
++		pio-mode = <0>;
++	};
 +
-+static const u16 mask_bit[] = {
-+	BIT(11),
-+	BIT(9),
-+	BIT(8),
-+	BIT(12),
-+	BIT(10),
-+	BIT(6),
-+	BIT(5),
-+	BIT(4),
-+	BIT(7),
-+	BIT(14),
-+	BIT(13),
-+	BIT(0),
-+	BIT(15),
++	sm501: display@13e00000 {
++		compatible = "smi,sm501";
++		reg = <0x10000000 0x13dfffff>, <0x13e00000 0x13ffffff>;
++		interrupt-parent = <&fpgaintc>;
++		interrupts = <4 0>;
++		mode = "640x480-16@60";
++		edid = [00 ff ff ff ff ff ff 00 04 21 00 00 00 00 00 00
++		        01 00 01 04 00 00 00 00 08 00 00 00 00 00 00 00
++			00 00 00 20 00 00 01 40 01 00 01 00 01 00 01 00
++			01 00 01 00 01 00 d6 09 80 a0 20 e0 2d 10 10 60
++			a2 00 00 00 00 00 00 00 00 00 00 10 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 10 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 fd];
++		smi,devices = <1>;
++	};
 +};
 +
-+static void r2dplus_mask_irq(struct irq_data *data)
-+{
-+	u16 mask = __raw_readw(data->chip_data);
-+
-+	mask &= ~mask_bit[data->irq];
-+	__raw_writew(mask, data->chip_data);
-+}
-+
-+static void r2dplus_unmask_irq(struct irq_data *data)
-+{
-+	u16 mask = __raw_readw(data->chip_data);
-+
-+	mask |= mask_bit[data->irq];
-+	__raw_writew(mask, data->chip_data);
-+}
-+
-+static struct irq_chip fpga_irq_chip = {
-+	.name		= "R2DPLUS-FPGA",
-+	.irq_unmask	= r2dplus_unmask_irq,
-+	.irq_mask	= r2dplus_mask_irq,
++&oclk {
++	clock-frequency = <60000000>;
 +};
 +
-+static int fpga_map(struct irq_domain *d, unsigned int virq,
-+		    irq_hw_number_t hw_irq_num)
-+{
-+	irq_set_chip_and_handler(virq, &fpga_irq_chip,
-+				 handle_simple_irq);
-+	irq_set_chip_data(virq, d->host_data);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops irq_ops = {
-+	.xlate	= irq_domain_xlate_onecell,
-+	.map	= fpga_map,
++&sci1 {
++	status = "ok";
 +};
 +
-+static int __init r2dplus_intc_of_init(struct device_node *intc,
-+				    struct device_node *parent)
-+{
-+	struct irq_domain *domain, *pdomain;
-+	int num_irqpin;
-+	void *baseaddr;
-+
-+	baseaddr = of_iomap(intc, 0);
-+	pdomain = irq_find_host(parent);
-+	of_get_property(intc, "interrupt-map", &num_irqpin);
-+	num_irqpin /= sizeof(u32) * 3;
-+	domain = irq_domain_create_hierarchy(pdomain, 0, num_irqpin,
-+					     of_node_to_fwnode(intc),
-+					     &irq_ops, baseaddr);
-+	if (!domain)
-+		panic("%s: unable to create IRQ domain\n", intc->full_name);
-+	irq_domain_associate_many(domain, 0, 0, 16);
-+	return 0;
-+}
-+
-+IRQCHIP_DECLARE(cpld_intc, "renesas,r2dplus-intc", r2dplus_intc_of_init);
++&pci {
++	compatible = "renesas,sh7751-pci", "renesas.r2dplus-pci";
++	interrupt-map-mask = <0x1800 0 7>;
++	interrupt-map = <0x1000 0 1 &fpgaintc 3 0>;
++	status = "ok";
++};
 -- 
 2.7.0
 
