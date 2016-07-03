@@ -1,35 +1,35 @@
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v5 19/22] sh: IO-DATA HDL-U (a.k.a landisk) IRQCHIP driver
-Date: Mon,  4 Jul 2016 01:46:39 +0900
-Message-ID: <1467564402-2649-20-git-send-email-ysato@users.sourceforge.jp>
+Subject: [PATCH v5 21/22] sh: Renesas RTS7751R2Dplus (a.k.a R2Dplus) IRQCHIP Driver
+Date: Mon,  4 Jul 2016 01:46:41 +0900
+Message-ID: <1467564402-2649-22-git-send-email-ysato@users.sourceforge.jp>
 References: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-sh-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- .../interrupt-controller/iodata-landisk.txt        | 31 ++++++++++
+ .../interrupt-controller/renesas-r2dplus.txt       | 38 ++++++++++
  drivers/irqchip/Makefile                           |  2 +-
- drivers/irqchip/irq-io-landisk.c                   | 72 ++++++++++++++++++++++
- 3 files changed, 104 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
- create mode 100644 drivers/irqchip/irq-io-landisk.c
+ drivers/irqchip/irq-renesas-r2dplus.c              | 88 ++++++++++++++++++++++
+ 3 files changed, 127 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
+ create mode 100644 drivers/irqchip/irq-renesas-r2dplus.c
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
 new file mode 100644
-index 0000000..cf461dc
+index 0000000..5b74da4
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
-@@ -0,0 +1,31 @@
-+DT bindings for the I/O DATA HDL-U interrupt controller
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas-r2dplus.txt
+@@ -0,0 +1,38 @@
++DT bindings for the Renesas R0P751RLC0011RL (R2Dplus) interrupt controller
 +
 +Required properties:
 +
-+  - compatible: has to be "iodata,landisk-intc".
++  - compatible: has to be "renesas,r2dplus-intc".
 +
 +  - reg: Base address and length of interrupt controller register.
 +
@@ -42,38 +42,45 @@ index 0000000..cf461dc
 +Example
 +-------
 +
-+	cpldintc: cpld@b0000000 {
-+		compatible = "iodata,landisk-intc";
++	fpgaintc: fpga@a4000000 {
++		compatible = "renesas,r2dplus-intc";
 +		#interrupt-cells = <1>;
 +		#address-cells = <0>;
-+		reg = <0xb0000000 8>;
-+		interrupt-map=<0 &shintc evt2irq(0x2a0)>,
-+		              <1 &shintc evt2irq(0x2c0)>,
-+		              <2 &shintc evt2irq(0x2e0)>,
-+			      <3 &shintc evt2irq(0x300)>,
-+		              <4 &shintc evt2irq(0x320)>,
-+			      <5 &shintc evt2irq(0x340)>,
-+		              <6 &shintc evt2irq(0x360)>,
-+			      <7 &shintc evt2irq(0x380)>;
++		reg = <0xa4000000 0x40>;
++		interrupt-map=<0 &shintc evt2irq(0x200)>,
++		              <1 &shintc evt2irq(0x220)>,
++		              <2 &shintc evt2irq(0x240)>,
++			      <3 &shintc evt2irq(0x260)>,
++		              <4 &shintc evt2irq(0x280)>,
++			      <5 &shintc evt2irq(0x2a0)>,
++		              <6 &shintc evt2irq(0x2c0)>,
++			      <7 &shintc evt2irq(0x2e0)>,
++		              <8 &shintc evt2irq(0x300)>,
++		              <9 &shintc evt2irq(0x320)>,
++			      <10 &shintc evt2irq(0x340)>,
++		              <11 &shintc evt2irq(0x360)>,
++			      <12 &shintc evt2irq(0x380)>,
++		              <13 &shintc evt2irq(0x3a0)>,
++			      <14 &shintc evt2irq(0x3c0)>,
 +	};
 diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 2ab5735..5e225cf 100644
+index 5e225cf..1e0f1c3 100644
 --- a/drivers/irqchip/Makefile
 +++ b/drivers/irqchip/Makefile
 @@ -69,4 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
  obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
  obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
--obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o
-+obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o irq-io-landisk.o
-diff --git a/drivers/irqchip/irq-io-landisk.c b/drivers/irqchip/irq-io-landisk.c
+-obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o irq-io-landisk.o
++obj-$(CONFIG_RENESAS_SH_INTC)		+= irq-renesas-sh7751.o irq-io-landisk.o irq-renesas-r2dplus.o
+diff --git a/drivers/irqchip/irq-renesas-r2dplus.c b/drivers/irqchip/irq-renesas-r2dplus.c
 new file mode 100644
-index 0000000..b7f3b41
+index 0000000..3f80775
 --- /dev/null
-+++ b/drivers/irqchip/irq-io-landisk.c
-@@ -0,0 +1,72 @@
++++ b/drivers/irqchip/irq-renesas-r2dplus.c
+@@ -0,0 +1,88 @@
 +/*
-+ * IO-DATA LANDISK CPLD IRQ driver
++ * Renesas RTS7751R2D+ FPGA IRQ driver
 + *
 + * Copyright 2016 Yoshinori Sato <ysato@users.sourceforge.jp>
 + */
@@ -86,32 +93,48 @@ index 0000000..b7f3b41
 +#include <linux/of_irq.h>
 +#include <linux/io.h>
 +
-+static void landisk_mask_irq(struct irq_data *data)
-+{
-+	u8 mask = __raw_readb(data->chip_data + 5);
-+
-+	mask &= ~(1 << (data->irq - 5));
-+	__raw_writeb(mask, data->chip_data + 5);
-+}
-+
-+static void landisk_unmask_irq(struct irq_data *data)
-+{
-+	u8 mask = __raw_readb(data->chip_data + 5);
-+
-+	mask |= (1 << (data->irq - 5));
-+	__raw_writeb(mask, data->chip_data + 5);
-+}
-+
-+static struct irq_chip cpld_irq_chip = {
-+	.name		= "LANDISK-CPLD",
-+	.irq_unmask	= landisk_unmask_irq,
-+	.irq_mask	= landisk_mask_irq,
++static const u16 mask_bit[] = {
++	BIT(11),
++	BIT(9),
++	BIT(8),
++	BIT(12),
++	BIT(10),
++	BIT(6),
++	BIT(5),
++	BIT(4),
++	BIT(7),
++	BIT(14),
++	BIT(13),
++	BIT(0),
++	BIT(15),
 +};
 +
-+static int cpld_map(struct irq_domain *d, unsigned int virq,
++static void r2dplus_mask_irq(struct irq_data *data)
++{
++	u16 mask = __raw_readw(data->chip_data);
++
++	mask &= ~mask_bit[data->irq];
++	__raw_writew(mask, data->chip_data);
++}
++
++static void r2dplus_unmask_irq(struct irq_data *data)
++{
++	u16 mask = __raw_readw(data->chip_data);
++
++	mask |= mask_bit[data->irq];
++	__raw_writew(mask, data->chip_data);
++}
++
++static struct irq_chip fpga_irq_chip = {
++	.name		= "R2DPLUS-FPGA",
++	.irq_unmask	= r2dplus_unmask_irq,
++	.irq_mask	= r2dplus_mask_irq,
++};
++
++static int fpga_map(struct irq_domain *d, unsigned int virq,
 +		    irq_hw_number_t hw_irq_num)
 +{
-+	irq_set_chip_and_handler(virq, &cpld_irq_chip,
++	irq_set_chip_and_handler(virq, &fpga_irq_chip,
 +				 handle_simple_irq);
 +	irq_set_chip_data(virq, d->host_data);
 +
@@ -120,10 +143,10 @@ index 0000000..b7f3b41
 +
 +static struct irq_domain_ops irq_ops = {
 +	.xlate	= irq_domain_xlate_onecell,
-+	.map	= cpld_map,
++	.map	= fpga_map,
 +};
 +
-+static int __init landisk_intc_of_init(struct device_node *intc,
++static int __init r2dplus_intc_of_init(struct device_node *intc,
 +				    struct device_node *parent)
 +{
 +	struct irq_domain *domain, *pdomain;
@@ -139,10 +162,11 @@ index 0000000..b7f3b41
 +					     &irq_ops, baseaddr);
 +	if (!domain)
 +		panic("%s: unable to create IRQ domain\n", intc->full_name);
-+	irq_domain_associate_many(domain, 5, 0, 8);
++	irq_domain_associate_many(domain, 0, 0, 16);
 +	return 0;
 +}
 +
-+IRQCHIP_DECLARE(cpld_intc, "iodata,landisk-intc", landisk_intc_of_init);
++IRQCHIP_DECLARE(cpld_intc, "renesas,r2dplus-intc", r2dplus_intc_of_init);
 -- 
 2.7.0
+
