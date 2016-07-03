@@ -1,129 +1,209 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 2/2] iio: adc: max1363: Add device tree binding
-Date: Sun, 3 Jul 2016 11:41:47 +0100
-Message-ID: <aceae589-9b7c-b818-63c1-4e9f25dec913@kernel.org>
-References: <1467272586-28761-1-git-send-email-florian.vaussard@heig-vd.ch>
- <1467272586-28761-3-git-send-email-florian.vaussard@heig-vd.ch>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] iio: potentiometer: mcp4531: Add support for
+ MCP454x, MCP456x, MCP464x and MCP466x
+Date: Sun, 3 Jul 2016 11:53:02 +0100
+Message-ID: <74244eb3-92a8-5240-079e-4e5efb6990a4@kernel.org>
+References: <1467272091-28087-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1467272091-28087-2-git-send-email-florian.vaussard@heig-vd.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467272586-28761-3-git-send-email-florian.vaussard@heig-vd.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@gmail.com>, devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Martin Kepplinger <martink@posteo.de>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467272091-28087-2-git-send-email-florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30/06/16 08:43, Florian Vaussard wrote:
-> This patch adds the necessary device tree binding to allow DT probing of
-> currently supported parts.
+On 30/06/16 08:34, Florian Vaussard wrote:
+> This patch adds support for MCP454x, MCP456x, MCP464x and MCP466x parts.
+> The main difference with currently supported parts (MCP453x and alike) is
+> the addition of a non-volatile memory in order to recall the wiper setting
+> at power-on. This feature is currently not supported and only the
+> volatile memory is used to set the wiper.
 > 
-> Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
-Applied.  Thanks.
+> Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Applied to the togreg branch of iio.git - initially pushed out as
+testing for all the usual boring reasons (like reviewers aren't
+perfect ;)
 
 Jonathan
 > ---
->  drivers/iio/adc/max1363.c | 61 ++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 60 insertions(+), 1 deletion(-)
+>  drivers/iio/potentiometer/Kconfig   |  6 ++--
+>  drivers/iio/potentiometer/mcp4531.c | 72 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 76 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> index b5d28c0..c3e4c3c 100644
-> --- a/drivers/iio/adc/max1363.c
-> +++ b/drivers/iio/adc/max1363.c
-> @@ -25,6 +25,8 @@
->  #include <linux/slab.h>
->  #include <linux/err.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
+> diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
+> index 0941c8d4..55c2414 100644
+> --- a/drivers/iio/potentiometer/Kconfig
+> +++ b/drivers/iio/potentiometer/Kconfig
+> @@ -49,8 +49,10 @@ config MCP4531
+>  	depends on I2C
+>  	help
+>  	  Say yes here to build support for the Microchip
+> -	  MCP4531, MCP4532, MCP4551, MCP4552,
+> -	  MCP4631, MCP4632, MCP4651, MCP4652
+> +	  MCP4531, MCP4532, MCP4541, MCP4542,
+> +	  MCP4551, MCP4552, MCP4561, MCP4562,
+> +	  MCP4631, MCP4632, MCP4641, MCP4642,
+> +	  MCP4651, MCP4652, MCP4661, MCP4662
+>  	  digital potentiomenter chips.
 >  
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
-> @@ -1516,6 +1518,56 @@ done:
->  	return IRQ_HANDLED;
->  }
+>  	  To compile this driver as a module, choose M here: the
+> diff --git a/drivers/iio/potentiometer/mcp4531.c b/drivers/iio/potentiometer/mcp4531.c
+> index 3b72e1a..2251173 100644
+> --- a/drivers/iio/potentiometer/mcp4531.c
+> +++ b/drivers/iio/potentiometer/mcp4531.c
+> @@ -8,12 +8,20 @@
+>   * DEVID	#Wipers	#Positions	Resistor Opts (kOhm)	i2c address
+>   * mcp4531	1	129		5, 10, 50, 100          010111x
+>   * mcp4532	1	129		5, 10, 50, 100          01011xx
+> + * mcp4541	1	129		5, 10, 50, 100          010111x
+> + * mcp4542	1	129		5, 10, 50, 100          01011xx
+>   * mcp4551	1	257		5, 10, 50, 100          010111x
+>   * mcp4552	1	257		5, 10, 50, 100          01011xx
+> + * mcp4561	1	257		5, 10, 50, 100          010111x
+> + * mcp4562	1	257		5, 10, 50, 100          01011xx
+>   * mcp4631	2	129		5, 10, 50, 100          0101xxx
+>   * mcp4632	2	129		5, 10, 50, 100          01011xx
+> + * mcp4641	2	129		5, 10, 50, 100          0101xxx
+> + * mcp4642	2	129		5, 10, 50, 100          01011xx
+>   * mcp4651	2	257		5, 10, 50, 100          0101xxx
+>   * mcp4652	2	257		5, 10, 50, 100          01011xx
+> + * mcp4661	2	257		5, 10, 50, 100          0101xxx
+> + * mcp4662	2	257		5, 10, 50, 100          01011xx
+>   *
+>   * This program is free software; you can redistribute it and/or modify it
+>   * under the terms of the GNU General Public License version 2 as published by
+> @@ -37,18 +45,34 @@ enum mcp4531_type {
+>  	MCP453x_103,
+>  	MCP453x_503,
+>  	MCP453x_104,
+> +	MCP454x_502,
+> +	MCP454x_103,
+> +	MCP454x_503,
+> +	MCP454x_104,
+>  	MCP455x_502,
+>  	MCP455x_103,
+>  	MCP455x_503,
+>  	MCP455x_104,
+> +	MCP456x_502,
+> +	MCP456x_103,
+> +	MCP456x_503,
+> +	MCP456x_104,
+>  	MCP463x_502,
+>  	MCP463x_103,
+>  	MCP463x_503,
+>  	MCP463x_104,
+> +	MCP464x_502,
+> +	MCP464x_103,
+> +	MCP464x_503,
+> +	MCP464x_104,
+>  	MCP465x_502,
+>  	MCP465x_103,
+>  	MCP465x_503,
+>  	MCP465x_104,
+> +	MCP466x_502,
+> +	MCP466x_103,
+> +	MCP466x_503,
+> +	MCP466x_104,
+>  };
 >  
-> +#ifdef CONFIG_OF
-> +
-> +#define MAX1363_COMPATIBLE(of_compatible, cfg) {		\
-> +			.compatible = of_compatible,		\
-> +			.data = &max1363_chip_info_tbl[cfg],	\
-> +}
-> +
-> +static const struct of_device_id max1363_of_match[] = {
-> +	MAX1363_COMPATIBLE("maxim,max1361", max1361),
-> +	MAX1363_COMPATIBLE("maxim,max1362", max1362),
-> +	MAX1363_COMPATIBLE("maxim,max1363", max1363),
-> +	MAX1363_COMPATIBLE("maxim,max1364", max1364),
-> +	MAX1363_COMPATIBLE("maxim,max1036", max1036),
-> +	MAX1363_COMPATIBLE("maxim,max1037", max1037),
-> +	MAX1363_COMPATIBLE("maxim,max1038", max1038),
-> +	MAX1363_COMPATIBLE("maxim,max1039", max1039),
-> +	MAX1363_COMPATIBLE("maxim,max1136", max1136),
-> +	MAX1363_COMPATIBLE("maxim,max1137", max1137),
-> +	MAX1363_COMPATIBLE("maxim,max1138", max1138),
-> +	MAX1363_COMPATIBLE("maxim,max1139", max1139),
-> +	MAX1363_COMPATIBLE("maxim,max1236", max1236),
-> +	MAX1363_COMPATIBLE("maxim,max1237", max1237),
-> +	MAX1363_COMPATIBLE("maxim,max1238", max1238),
-> +	MAX1363_COMPATIBLE("maxim,max1239", max1239),
-> +	MAX1363_COMPATIBLE("maxim,max11600", max11600),
-> +	MAX1363_COMPATIBLE("maxim,max11601", max11601),
-> +	MAX1363_COMPATIBLE("maxim,max11602", max11602),
-> +	MAX1363_COMPATIBLE("maxim,max11603", max11603),
-> +	MAX1363_COMPATIBLE("maxim,max11604", max11604),
-> +	MAX1363_COMPATIBLE("maxim,max11605", max11605),
-> +	MAX1363_COMPATIBLE("maxim,max11606", max11606),
-> +	MAX1363_COMPATIBLE("maxim,max11607", max11607),
-> +	MAX1363_COMPATIBLE("maxim,max11608", max11608),
-> +	MAX1363_COMPATIBLE("maxim,max11609", max11609),
-> +	MAX1363_COMPATIBLE("maxim,max11610", max11610),
-> +	MAX1363_COMPATIBLE("maxim,max11611", max11611),
-> +	MAX1363_COMPATIBLE("maxim,max11612", max11612),
-> +	MAX1363_COMPATIBLE("maxim,max11613", max11613),
-> +	MAX1363_COMPATIBLE("maxim,max11614", max11614),
-> +	MAX1363_COMPATIBLE("maxim,max11615", max11615),
-> +	MAX1363_COMPATIBLE("maxim,max11616", max11616),
-> +	MAX1363_COMPATIBLE("maxim,max11617", max11617),
-> +	MAX1363_COMPATIBLE("maxim,max11644", max11644),
-> +	MAX1363_COMPATIBLE("maxim,max11645", max11645),
-> +	MAX1363_COMPATIBLE("maxim,max11646", max11646),
-> +	MAX1363_COMPATIBLE("maxim,max11647", max11647),
-> +	{ /* sentinel */ }
-> +};
-> +#endif
-> +
->  static int max1363_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> @@ -1523,6 +1575,7 @@ static int max1363_probe(struct i2c_client *client,
->  	struct max1363_state *st;
->  	struct iio_dev *indio_dev;
->  	struct regulator *vref;
-> +	const struct of_device_id *match;
+>  static const struct mcp4531_cfg mcp4531_cfg[] = {
+> @@ -56,18 +80,34 @@ static const struct mcp4531_cfg mcp4531_cfg[] = {
+>  	[MCP453x_103] = { .wipers = 1, .max_pos = 128, .kohms =  10, },
+>  	[MCP453x_503] = { .wipers = 1, .max_pos = 128, .kohms =  50, },
+>  	[MCP453x_104] = { .wipers = 1, .max_pos = 128, .kohms = 100, },
+> +	[MCP454x_502] = { .wipers = 1, .max_pos = 128, .kohms =   5, },
+> +	[MCP454x_103] = { .wipers = 1, .max_pos = 128, .kohms =  10, },
+> +	[MCP454x_503] = { .wipers = 1, .max_pos = 128, .kohms =  50, },
+> +	[MCP454x_104] = { .wipers = 1, .max_pos = 128, .kohms = 100, },
+>  	[MCP455x_502] = { .wipers = 1, .max_pos = 256, .kohms =   5, },
+>  	[MCP455x_103] = { .wipers = 1, .max_pos = 256, .kohms =  10, },
+>  	[MCP455x_503] = { .wipers = 1, .max_pos = 256, .kohms =  50, },
+>  	[MCP455x_104] = { .wipers = 1, .max_pos = 256, .kohms = 100, },
+> +	[MCP456x_502] = { .wipers = 1, .max_pos = 256, .kohms =   5, },
+> +	[MCP456x_103] = { .wipers = 1, .max_pos = 256, .kohms =  10, },
+> +	[MCP456x_503] = { .wipers = 1, .max_pos = 256, .kohms =  50, },
+> +	[MCP456x_104] = { .wipers = 1, .max_pos = 256, .kohms = 100, },
+>  	[MCP463x_502] = { .wipers = 2, .max_pos = 128, .kohms =   5, },
+>  	[MCP463x_103] = { .wipers = 2, .max_pos = 128, .kohms =  10, },
+>  	[MCP463x_503] = { .wipers = 2, .max_pos = 128, .kohms =  50, },
+>  	[MCP463x_104] = { .wipers = 2, .max_pos = 128, .kohms = 100, },
+> +	[MCP464x_502] = { .wipers = 2, .max_pos = 128, .kohms =   5, },
+> +	[MCP464x_103] = { .wipers = 2, .max_pos = 128, .kohms =  10, },
+> +	[MCP464x_503] = { .wipers = 2, .max_pos = 128, .kohms =  50, },
+> +	[MCP464x_104] = { .wipers = 2, .max_pos = 128, .kohms = 100, },
+>  	[MCP465x_502] = { .wipers = 2, .max_pos = 256, .kohms =   5, },
+>  	[MCP465x_103] = { .wipers = 2, .max_pos = 256, .kohms =  10, },
+>  	[MCP465x_503] = { .wipers = 2, .max_pos = 256, .kohms =  50, },
+>  	[MCP465x_104] = { .wipers = 2, .max_pos = 256, .kohms = 100, },
+> +	[MCP466x_502] = { .wipers = 2, .max_pos = 256, .kohms =   5, },
+> +	[MCP466x_103] = { .wipers = 2, .max_pos = 256, .kohms =  10, },
+> +	[MCP466x_503] = { .wipers = 2, .max_pos = 256, .kohms =  50, },
+> +	[MCP466x_104] = { .wipers = 2, .max_pos = 256, .kohms = 100, },
+>  };
 >  
->  	indio_dev = devm_iio_device_alloc(&client->dev,
->  					  sizeof(struct max1363_state));
-> @@ -1549,7 +1602,12 @@ static int max1363_probe(struct i2c_client *client,
->  	/* this is only used for device removal purposes */
->  	i2c_set_clientdata(client, indio_dev);
->  
-> -	st->chip_info = &max1363_chip_info_tbl[id->driver_data];
-> +	match = of_match_device(of_match_ptr(max1363_of_match),
-> +				&client->dev);
-> +	if (match)
-> +		st->chip_info = of_device_get_match_data(&client->dev);
-> +	else
-> +		st->chip_info = &max1363_chip_info_tbl[id->driver_data];
->  	st->client = client;
->  
->  	st->vref_uv = st->chip_info->int_vref_mv * 1000;
-> @@ -1692,6 +1750,7 @@ MODULE_DEVICE_TABLE(i2c, max1363_id);
->  static struct i2c_driver max1363_driver = {
->  	.driver = {
->  		.name = "max1363",
-> +		.of_match_table = of_match_ptr(max1363_of_match),
->  	},
->  	.probe = max1363_probe,
->  	.remove = max1363_remove,
+>  #define MCP4531_WRITE (0 << 2)
+> @@ -187,6 +227,14 @@ static const struct i2c_device_id mcp4531_id[] = {
+>  	{ "mcp4532-103", MCP453x_103 },
+>  	{ "mcp4532-503", MCP453x_503 },
+>  	{ "mcp4532-104", MCP453x_104 },
+> +	{ "mcp4541-502", MCP454x_502 },
+> +	{ "mcp4541-103", MCP454x_103 },
+> +	{ "mcp4541-503", MCP454x_503 },
+> +	{ "mcp4541-104", MCP454x_104 },
+> +	{ "mcp4542-502", MCP454x_502 },
+> +	{ "mcp4542-103", MCP454x_103 },
+> +	{ "mcp4542-503", MCP454x_503 },
+> +	{ "mcp4542-104", MCP454x_104 },
+>  	{ "mcp4551-502", MCP455x_502 },
+>  	{ "mcp4551-103", MCP455x_103 },
+>  	{ "mcp4551-503", MCP455x_503 },
+> @@ -195,6 +243,14 @@ static const struct i2c_device_id mcp4531_id[] = {
+>  	{ "mcp4552-103", MCP455x_103 },
+>  	{ "mcp4552-503", MCP455x_503 },
+>  	{ "mcp4552-104", MCP455x_104 },
+> +	{ "mcp4561-502", MCP456x_502 },
+> +	{ "mcp4561-103", MCP456x_103 },
+> +	{ "mcp4561-503", MCP456x_503 },
+> +	{ "mcp4561-104", MCP456x_104 },
+> +	{ "mcp4562-502", MCP456x_502 },
+> +	{ "mcp4562-103", MCP456x_103 },
+> +	{ "mcp4562-503", MCP456x_503 },
+> +	{ "mcp4562-104", MCP456x_104 },
+>  	{ "mcp4631-502", MCP463x_502 },
+>  	{ "mcp4631-103", MCP463x_103 },
+>  	{ "mcp4631-503", MCP463x_503 },
+> @@ -203,6 +259,14 @@ static const struct i2c_device_id mcp4531_id[] = {
+>  	{ "mcp4632-103", MCP463x_103 },
+>  	{ "mcp4632-503", MCP463x_503 },
+>  	{ "mcp4632-104", MCP463x_104 },
+> +	{ "mcp4641-502", MCP464x_502 },
+> +	{ "mcp4641-103", MCP464x_103 },
+> +	{ "mcp4641-503", MCP464x_503 },
+> +	{ "mcp4641-104", MCP464x_104 },
+> +	{ "mcp4642-502", MCP464x_502 },
+> +	{ "mcp4642-103", MCP464x_103 },
+> +	{ "mcp4642-503", MCP464x_503 },
+> +	{ "mcp4642-104", MCP464x_104 },
+>  	{ "mcp4651-502", MCP465x_502 },
+>  	{ "mcp4651-103", MCP465x_103 },
+>  	{ "mcp4651-503", MCP465x_503 },
+> @@ -211,6 +275,14 @@ static const struct i2c_device_id mcp4531_id[] = {
+>  	{ "mcp4652-103", MCP465x_103 },
+>  	{ "mcp4652-503", MCP465x_503 },
+>  	{ "mcp4652-104", MCP465x_104 },
+> +	{ "mcp4661-502", MCP466x_502 },
+> +	{ "mcp4661-103", MCP466x_103 },
+> +	{ "mcp4661-503", MCP466x_503 },
+> +	{ "mcp4661-104", MCP466x_104 },
+> +	{ "mcp4662-502", MCP466x_502 },
+> +	{ "mcp4662-103", MCP466x_103 },
+> +	{ "mcp4662-503", MCP466x_503 },
+> +	{ "mcp4662-104", MCP466x_104 },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(i2c, mcp4531_id);
 > 
