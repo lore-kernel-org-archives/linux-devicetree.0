@@ -1,74 +1,83 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/2] iio: sun4i-lradc: Add binding documentation
-Date: Sun, 3 Jul 2016 13:01:23 +0100
-Message-ID: <06b093dc-94ca-df0b-a441-4932ece18af2@kernel.org>
-References: <1467406855-9677-1-git-send-email-alexandre.belloni@free-electrons.com>
- <CAGb2v66PzgVqVGxs4FSQkkX=2hX42UmftahOgJmepv4wA-mwnw@mail.gmail.com>
- <20160702133528.GC20045@piout.net>
+Subject: Re: [PATCH 1/2] input: adc-keys: add DT binding documentation
+Date: Sun, 3 Jul 2016 14:43:56 +0100
+Message-ID: <5d71d3a2-4d51-8dd5-0e4a-638ec1b5035a@kernel.org>
+References: <1467408602-16546-1-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160702133528.GC20045@piout.net>
+In-Reply-To: <1467408602-16546-1-git-send-email-alexandre.belloni@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-iio@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Hans De Goede <hdegoede@redhat.com>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/16 14:35, Alexandre Belloni wrote:
-> On 02/07/2016 at 17:12:55 +0800, Chen-Yu Tsai wrote :
->> Hi,
->>
->> On Sat, Jul 2, 2016 at 5:00 AM, Alexandre Belloni
->> <alexandre.belloni@free-electrons.com> wrote:
->>> Document the bindings for the Allwinner LRADC.
->>
->> We already have Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
->> and I'm pretty sure Hans (CC-ed) argued that this is not a generic ADC
->> block.
->>
->> Any plans to reconcile the different bindings?
->>
+On 01/07/16 22:30, Alexandre Belloni wrote:
+> Add documentation for ADC keys
 > 
-> Yes, I already submitted an adc-keys driver that can work with any ADC:
-> https://lkml.org/lkml/2016/7/1/670
-> 
-> I agree that because it is not yet handling interrupts and is polling
-> the ADC, it is not as good as sun4i-lradc-keys yet. My plan is to solve
-> that but it require significant work in iio.
-> 
-As I'm having fun confusing the two drivers submitted for different
-ADCs on the A10 this morning - here is the relevant bit of text I stuck
-in my review for the other driver...
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Clean looking binding to me - one comment inline.
 
- For the key detection you have already observed that IIO needs some
- additions to be able to have consumers of what we term 'events' e.g. threshold
- interrupts.
- 
- Looking at the lradc-keys driver in tree, it looks like we only really have
- really simple threshold interrups - configured to detect a very low voltage?
- + only one per channel.
- 
- So not too nasty a case, but you are right some work is needed in IIO as
- we simply don't have a means of passing these on as yet or configuring them
- from in kernel consumers.
- If we take the easy route and don't demux incoming events then it shouldn't
- be too hard to add (demux can follow later).  Hence any client device can try
- to enable events it wants, but may get events that other client devices wanted
- as well.
- 
- Config interface should be much the same as the write support for channels.
- Data flow marginally harder, but pretty much a list of callbacks within
- iio_push_event.
- 
- Not trivial, but not too tricky either.
- 
- The events subsystem has a few 'limitations' we need to address long term
- but as this is in kernel interface only, we can do this now and fix stuff
- up in future without any ABI breakage. (limitations are things like only
- one event of a given type and direction per channel - main challenge on
- that is finding a way of doing it without abi breakage).
- 
- Anyhow, sounds fun - wish I had the time to do it myself!
 Jonathan
- 
+> ---
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> 
+>  .../devicetree/bindings/input/adc-keys.txt         | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-keys.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/adc-keys.txt b/Documentation/devicetree/bindings/input/adc-keys.txt
+> new file mode 100644
+> index 000000000000..873476bb4eab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/adc-keys.txt
+> @@ -0,0 +1,45 @@
+> +Allwinner sun4i low res adc attached tablet keys
+What is allwinner specific in here?  Looks pretty general purpose to me!
+> +------------------------------------------------
+> +
+> +Required properties:
+> + - compatible: "adc-keys"
+> + - io-channels: Phandle to an ADC channel
+> + - io-channel-names = "buttons";
+> + - voltage-keyup-mvolt: Voltage at which all the keys are considered up.
+> +
+> +Each key is represented as a sub-node of "adc-keys":
+> +
+> +Required subnode-properties:
+> +	- label: Descriptive name of the key.
+> +	- linux,code: Keycode to emit.
+> +	- voltage-mvolt: Voltage adc input when this key is pressed.
+> +
+> +Example:
+> +
+> +#include <dt-bindings/input/input.h>
+> +
+> +	adc-keys {
+> +		compatible = "adc-keys";
+> +		io-channels = <&lradc 0>;
+> +		io-channel-names = "buttons";
+> +		voltage-keyup-mvolt = <2000>;
+> +
+> +		button@1500 {
+> +			label = "Volume Up";
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			voltage-mvolt = <1500>;
+> +		};
+> +
+> +		button@1000 {
+> +			label = "Volume Down";
+> +			linux,code = <KEY_VOLUMEDOWN>;
+> +			voltage-mvolt = <1000>;
+> +		};
+> +
+> +		button@500 {
+> +			label = "Enter";
+> +			linux,code = <KEY_ENTER>;
+> +			voltage-mvolt = <500>;
+> +		};
+> +	};
+> +
+> 
