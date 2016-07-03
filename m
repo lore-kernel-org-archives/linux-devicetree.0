@@ -1,47 +1,47 @@
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v5 22/22] sh: Renesas RTS7751R2Dplus (a,k.a R2Dplus) DeviceTree
-Date: Mon,  4 Jul 2016 01:46:42 +0900
-Message-ID: <1467564402-2649-23-git-send-email-ysato@users.sourceforge.jp>
+Subject: [PATCH v5 20/22] sh: IO-DATA HDL-U (a.k.a landisk) DeviceTree
+Date: Mon,  4 Jul 2016 01:46:40 +0900
+Message-ID: <1467564402-2649-21-git-send-email-ysato@users.sourceforge.jp>
 References: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-sh-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- arch/sh/boot/dts/Makefile    |  1 +
- arch/sh/boot/dts/r2dplus.dts | 85 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 86 insertions(+)
- create mode 100644 arch/sh/boot/dts/r2dplus.dts
+ arch/sh/boot/dts/Makefile    |  2 ++
+ arch/sh/boot/dts/landisk.dts | 61 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
+ create mode 100644 arch/sh/boot/dts/landisk.dts
 
 diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
-index cf5aec4..e059ce2b 100644
+index 38fdc38..cf5aec4 100644
 --- a/arch/sh/boot/dts/Makefile
 +++ b/arch/sh/boot/dts/Makefile
-@@ -1,6 +1,7 @@
+@@ -1,5 +1,7 @@
  obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
  
- dtb-y += landisk.dtb
-+otb-y += r2dplus.dtb
- 
++dtb-y += landisk.dtb
++
  dtstree		:= $(srctree)/$(src)
  clean-files := *.dtb.S
-diff --git a/arch/sh/boot/dts/r2dplus.dts b/arch/sh/boot/dts/r2dplus.dts
+ always	    := $(dtb-y)
+diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
 new file mode 100644
-index 0000000..f9c01f9
+index 0000000..3745ae0
 --- /dev/null
-+++ b/arch/sh/boot/dts/r2dplus.dts
-@@ -0,0 +1,85 @@
++++ b/arch/sh/boot/dts/landisk.dts
+@@ -0,0 +1,61 @@
 +/dts-v1/;
 +
 +#include "sh7751.dtsi"
 +
 +/ {
-+	model = "renesas,RTS7751R2D+";
-+	compatible = "renesas,r2dplus";
++	model = "iodata,HDL-U";
++	compatible = "iodata,hdl-u";
 +	#address-cells = <1>;
 +	#size-cells = <1>;
 +	interrupt-parent = <&shintc>;
@@ -49,6 +49,7 @@ index 0000000..f9c01f9
 +		stdout-path = "serial1:115200n8";
 +	};
 +	aliases {
++		serial0 = &sci0;
 +		serial1 = &sci1;
 +	};
 +
@@ -57,57 +58,28 @@ index 0000000..f9c01f9
 +		reg = <0x0c000000 0x4000000>;
 +	};
 +
-+	fpgaintc: fpga@a4000000 {
-+		compatible = "renesas,r2dplus-intc";
++	cpldintc: cpld@b0000000 {
++		compatible = "iodata,landisk-intc";
 +		#interrupt-cells = <1>;
 +		#address-cells = <0>;
-+		reg = <0xa4000000 0x40>;
-+		interrupt-map=<0 &shintc evt2irq(0x200)>,
-+		              <1 &shintc evt2irq(0x220)>,
-+		              <2 &shintc evt2irq(0x240)>,
-+			      <3 &shintc evt2irq(0x260)>,
-+		              <4 &shintc evt2irq(0x280)>,
-+			      <5 &shintc evt2irq(0x2a0)>,
-+		              <6 &shintc evt2irq(0x2c0)>,
-+			      <7 &shintc evt2irq(0x2e0)>,
-+		              <8 &shintc evt2irq(0x300)>,
-+			      <9 &shintc evt2irq(0x320)>,
-+		              <10 &shintc evt2irq(0x340)>,
-+			      <11 &shintc evt2irq(0x360)>,
-+		              <12 &shintc evt2irq(0x380)>,
-+			      <13 &shintc evt2irq(0x3a0)>,
-+		              <14 &shintc evt2irq(0x3c0)>;
-+	};
-+
-+	ide: ide@b4001000 {
-+		compatible = "ata-generic";
-+		reg = <0xb4001000 0x10>, <0xb400080c 0x02>;
-+		interrupt-parent = <&fpgaintc>;
-+		interrupts = <1 0>;
-+		reg-shift = <1>;
-+		pio-mode = <0>;
-+	};
-+
-+	sm501: display@13e00000 {
-+		compatible = "smi,sm501";
-+		reg = <0x10000000 0x13dfffff>, <0x13e00000 0x13ffffff>;
-+		interrupt-parent = <&fpgaintc>;
-+		interrupts = <4 0>;
-+		mode = "640x480-16@60";
-+		edid = [00 ff ff ff ff ff ff 00 04 21 00 00 00 00 00 00
-+		        01 00 01 04 00 00 00 00 08 00 00 00 00 00 00 00
-+			00 00 00 20 00 00 01 40 01 00 01 00 01 00 01 00
-+			01 00 01 00 01 00 d6 09 80 a0 20 e0 2d 10 10 60
-+			a2 00 00 00 00 00 00 00 00 00 00 10 00 00 00 00
-+			00 00 00 00 00 00 00 00 00 00 00 00 00 10 00 00
-+			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 fd];
-+		smi,devices = <1>;
++		reg = <0xb0000000 8>;
++		interrupt-map=<0 &shintc evt2irq(0x2a0)>,
++		              <1 &shintc evt2irq(0x2c0)>,
++		              <2 &shintc evt2irq(0x2e0)>,
++			      <3 &shintc evt2irq(0x300)>,
++		              <4 &shintc evt2irq(0x320)>,
++			      <5 &shintc evt2irq(0x340)>,
++		              <6 &shintc evt2irq(0x360)>,
++			      <7 &shintc evt2irq(0x380)>;
 +	};
 +};
 +
 +&oclk {
-+	clock-frequency = <60000000>;
++	clock-frequency = <22222222>;
++};
++
++&sci0 {
++	status = "ok";
 +};
 +
 +&sci1 {
@@ -115,11 +87,14 @@ index 0000000..f9c01f9
 +};
 +
 +&pci {
-+	compatible = "renesas,sh7751-pci", "renesas.r2dplus-pci";
++	compatible = "renesas,sh7751-pci", "iodata,landisk-pci";
 +	interrupt-map-mask = <0x1800 0 7>;
-+	interrupt-map = <0x1000 0 1 &fpgaintc 3 0>;
++	interrupt-map = <0x0000 0 1 &cpldintc 0>,
++	                <0x0800 0 1 &cpldintc 1>,
++	                <0x1000 0 1 &cpldintc 2>,
++	                <0x1000 0 2 &cpldintc 3>,
++	                <0x1000 0 3 &cpldintc 0>;
 +	status = "ok";
 +};
 -- 
 2.7.0
-
