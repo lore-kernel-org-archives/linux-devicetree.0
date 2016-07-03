@@ -1,152 +1,302 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] ARM: dts: mt2701: add iommu/smi dtsi node for
-	mt2701
-Date: Sun, 3 Jul 2016 21:12:11 +0200
-Message-ID: <51441f39-e5b5-2cce-63ab-47bd3cf298b3@gmail.com>
-References: <1465379461-14757-1-git-send-email-honghui.zhang@mediatek.com>
-	<1465379461-14757-6-git-send-email-honghui.zhang@mediatek.com>
-	<09eaf7a5-2b18-1ea6-5699-2e968c6b79a4@gmail.com>
+From: Lino Sanfilippo <LinoSanfilippo@gmx.de>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Mon, 4 Jul 2016 01:04:12 +0200
+Message-ID: <577999EC.1010104@gmx.de>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <09eaf7a5-2b18-1ea6-5699-2e968c6b79a4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
+some remarks below.
+
+> +/* Fill up receive queue's RFD with preallocated receive buffers */
+> +static void emac_mac_rx_descs_refill(struct emac_adapter *adpt,
+> +				    struct emac_rx_queue *rx_q)
+> +{
+> +	struct emac_buffer *curr_rxbuf;
+> +	struct emac_buffer *next_rxbuf;
+> +	unsigned int count = 0;
+> +	u32 next_produce_idx;
+> +
+> +	next_produce_idx = rx_q->rfd.produce_idx + 1;
+> +	if (next_produce_idx == rx_q->rfd.count)
+> +		next_produce_idx = 0;
+> +
+> +	curr_rxbuf = GET_RFD_BUFFER(rx_q, rx_q->rfd.produce_idx);
+> +	next_rxbuf = GET_RFD_BUFFER(rx_q, next_produce_idx);
+> +
+> +	/* this always has a blank rx_buffer*/
+> +	while (!next_rxbuf->dma_addr) {
+> +		struct sk_buff *skb;
+> +		void *skb_data;
+> +
+> +		skb = dev_alloc_skb(adpt->rxbuf_size + NET_IP_ALIGN);
+> +		if (!skb)
+> +			break;
+> +
+> +		/* Make buffer alignment 2 beyond a 16 byte boundary
+> +		 * this will result in a 16 byte aligned IP header after
+> +		 * the 14 byte MAC header is removed
+> +		 */
+> +		skb_reserve(skb, NET_IP_ALIGN);
+
+__netdev_alloc_skb_ip_align will do this for you.
 
 
-On 07/03/2016 08:24 AM, Matthias Brugger wrote:
->
->
-> On 06/08/2016 11:51 AM, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
->> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>
->> Add the dtsi node of iommu and smi for mt2701.
->>
->> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/mt2701.dtsi | 51
->> +++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 51 insertions(+)
->>
->
-> Applied,
+> +		skb_data = skb->data;
+> +		curr_rxbuf->skb = skb;
+> +		curr_rxbuf->length = adpt->rxbuf_size;
+> +		curr_rxbuf->dma_addr = dma_map_single(adpt->netdev->dev.parent,
+> +						      skb_data,
+> +						      curr_rxbuf->length,
+> +						      DMA_FROM_DEVICE);
 
-Please resend the patch including the infracfg and mmsys node.
+
+Mapping can fail. You should check the result via dma_mapping_error(). 
+There are several other places in which dma_map_single() is called and the return value 
+is not checked.
+
+> +/* Bringup the interface/HW */
+> +int emac_mac_up(struct emac_adapter *adpt)
+> +{
+> +	struct net_device *netdev = adpt->netdev;
+> +	struct emac_irq	*irq = &adpt->irq;
+> +	int ret;
+> +
+> +	emac_mac_rx_tx_ring_reset_all(adpt);
+> +	emac_mac_config(adpt);
+> +
+> +	ret = request_irq(irq->irq, emac_isr, 0, EMAC_MAC_IRQ_RES, irq);
+> +	if (ret) {
+> +		netdev_err(adpt->netdev,
+> +			   "error:%d on request_irq(%d:%s flags:0)\n", ret,
+> +			   irq->irq, EMAC_MAC_IRQ_RES);
+> +		return ret;
+> +	}
+> +
+> +	emac_mac_rx_descs_refill(adpt, &adpt->rx_q);
+> +
+> +	ret = phy_connect_direct(netdev, adpt->phydev, emac_adjust_link,
+> +				 PHY_INTERFACE_MODE_SGMII);
+> +	if (ret) {
+> +		netdev_err(adpt->netdev,
+> +			   "error:%d on request_irq(%d:%s flags:0)\n", ret,
+> +			   irq->irq, EMAC_MAC_IRQ_RES);
+
+freeing the irq is missing
+
+
+> +
+> +/* Bring down the interface/HW */
+> +void emac_mac_down(struct emac_adapter *adpt, bool reset)
+> +{
+> +	struct net_device *netdev = adpt->netdev;
+> +	unsigned long flags;
+> +
+> +	netif_stop_queue(netdev);
+> +	napi_disable(&adpt->rx_q.napi);
+> +
+> +	phy_disconnect(adpt->phydev);
+> +
+> +	/* disable mac irq */
+> +	writel(DIS_INT, adpt->base + EMAC_INT_STATUS);
+> +	writel(0, adpt->base + EMAC_INT_MASK);
+> +	synchronize_irq(adpt->irq.irq);
+> +	free_irq(adpt->irq.irq, &adpt->irq);
+> +	clear_bit(EMAC_STATUS_TASK_REINIT_REQ, &adpt->status);
+> +
+> +	cancel_work_sync(&adpt->tx_ts_task);
+> +	spin_lock_irqsave(&adpt->tx_ts_lock, flags);
+
+Maybe I am missing something but AFAICS tx_ts_lock is never called from irq context, so 
+there is no reason to disable irqs. 
+
+> +
+> +/* Push the received skb to upper layers */
+> +static void emac_receive_skb(struct emac_rx_queue *rx_q,
+> +			     struct sk_buff *skb,
+> +			     u16 vlan_tag, bool vlan_flag)
+> +{
+> +	if (vlan_flag) {
+> +		u16 vlan;
+> +
+> +		EMAC_TAG_TO_VLAN(vlan_tag, vlan);
+> +		__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan);
+> +	}
+> +
+> +	napi_gro_receive(&rx_q->napi, skb);
+
+napi_gro_receive requires rx checksum offload. However emac_receive_skb() is also called if
+hardware checksumming is disabled. 
+
+> +
+> +/* Transmit the packet using specified transmit queue */
+> +int emac_mac_tx_buf_send(struct emac_adapter *adpt, struct emac_tx_queue *tx_q,
+> +			 struct sk_buff *skb)
+> +{
+> +	struct emac_tpd tpd;
+> +	u32 prod_idx;
+> +
+> +	if (!emac_tx_has_enough_descs(tx_q, skb)) {
+
+Drivers should avoid this situation right from the start by checking after each transmission if the max number
+ of possible descriptors is still available for a further transmission and stop the queue if there are not.
+Furthermore there does not seem to be any function that wakes the queue up again once it has been stopped.
+
+> +
+> +/* reinitialize */
+> +void emac_reinit_locked(struct emac_adapter *adpt)
+> +{
+> +	while (test_and_set_bit(EMAC_STATUS_RESETTING, &adpt->status))
+> +		msleep(20); /* Reset might take few 10s of ms */
+> +
+> +	emac_mac_down(adpt, true);
+> +
+> +	emac_sgmii_reset(adpt);
+> +	emac_mac_up(adpt);
+
+emac_mac_up() may fail, so this case should be handled properly.
+
+> +/* Change the Maximum Transfer Unit (MTU) */
+> +static int emac_change_mtu(struct net_device *netdev, int new_mtu)
+> +{
+> +	unsigned int max_frame = new_mtu + ETH_HLEN + ETH_FCS_LEN + VLAN_HLEN;
+> +	struct emac_adapter *adpt = netdev_priv(netdev);
+> +	unsigned int old_mtu = netdev->mtu;
+> +
+> +	if ((max_frame < EMAC_MIN_ETH_FRAME_SIZE) ||
+> +	    (max_frame > EMAC_MAX_ETH_FRAME_SIZE)) {
+> +		netdev_err(adpt->netdev, "error: invalid MTU setting\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if ((old_mtu != new_mtu) && netif_running(netdev)) {
+
+Setting the new mtu in case that the interface is down is missing.
+Also the first check is not needed, since this function is only called if
+there is a change of the mtu. 
+
+
+> +/* Provide network statistics info for the interface */
+> +static struct rtnl_link_stats64 *emac_get_stats64(struct net_device *netdev,
+> +						  struct rtnl_link_stats64 *net_stats)
+> +{
+> +	struct emac_adapter *adpt = netdev_priv(netdev);
+> +	unsigned int addr = REG_MAC_RX_STATUS_BIN;
+> +	struct emac_stats *stats = &adpt->stats;
+> +	u64 *stats_itr = &adpt->stats.rx_ok;
+> +	u32 val;
+> +
+> +	mutex_lock(&stats->lock);
+
+It is not allowed to sleep in this function, so you have to use something else for locking,
+e.g. a spinlock.
+
+> +static int emac_probe(struct platform_device *pdev)
+> +{
+> +	struct net_device *netdev;
+> +	struct emac_adapter *adpt;
+> +	struct emac_phy *phy;
+> +	u16 devid, revid;
+> +	u32 reg;
+> +	int ret;
+> +
+> +	/* The EMAC itself is capable of 64-bit DMA. If the SOC limits that
+> +	 * range, then we expect platform code to adjust the mask accordingly.
+> +	 */
+> +	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "could not set DMA mask\n");
+> +		return ret;
+> +	}
+> +
+> +	netdev = alloc_etherdev(sizeof(struct emac_adapter));
+> +	if (!netdev)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&pdev->dev, netdev);
+> +	SET_NETDEV_DEV(netdev, &pdev->dev);
+> +
+> +	adpt = netdev_priv(netdev);
+> +	adpt->netdev = netdev;
+> +	phy = &adpt->phy;
+> +	adpt->msg_enable = EMAC_MSG_DEFAULT;
+> +
+> +	mutex_init(&adpt->stats.lock);
+> +
+> +	adpt->irq.mask = RX_PKT_INT0 | IMR_NORMAL_MASK;
+> +
+> +	ret = emac_probe_resources(pdev, adpt);
+> +	if (ret)
+> +		goto err_undo_netdev;
+> +
+> +	/* initialize clocks */
+> +	ret = emac_clks_phase1_init(pdev, adpt);
+> +	if (ret)
+> +		goto err_undo_resources;
+> +
+> +	netdev->watchdog_timeo = EMAC_WATCHDOG_TIME;
+> +	netdev->irq = adpt->irq.irq;
+> +
+> +	if (adpt->timestamp_en)
+> +		adpt->rrd_size = EMAC_TS_RRD_SIZE;
+> +	else
+> +		adpt->rrd_size = EMAC_RRD_SIZE;
+> +
+> +	adpt->tpd_size = EMAC_TPD_SIZE;
+> +	adpt->rfd_size = EMAC_RFD_SIZE;
+> +
+> +	/* init netdev */
+> +	netdev->netdev_ops = &emac_netdev_ops;
+> +
+> +	/* init adapter */
+> +	emac_init_adapter(adpt);
+> +
+> +	/* init phy */
+> +	ret = emac_phy_config(pdev, adpt);
+> +	if (ret)
+> +		goto err_undo_clk_phase1;
+> +
+> +	/* enable clocks */
+> +	ret = emac_clks_phase2_init(pdev, adpt);
+> +	if (ret)
+> +		goto err_undo_clk_phase2;
+> +
+> +	/* reset mac */
+> +	emac_mac_reset(adpt);
+> +
+> +	/* set hw features */
+> +	netdev->features = NETIF_F_SG | NETIF_F_HW_CSUM | NETIF_F_RXCSUM |
+> +			NETIF_F_TSO | NETIF_F_TSO6 | NETIF_F_HW_VLAN_CTAG_RX |
+> +			NETIF_F_HW_VLAN_CTAG_TX;
+> +	netdev->hw_features = netdev->features;
+> +
+> +	netdev->vlan_features |= NETIF_F_SG | NETIF_F_HW_CSUM |
+> +				 NETIF_F_TSO | NETIF_F_TSO6;
+> +
+> +	INIT_WORK(&adpt->work_thread, emac_work_thread);
+> +
+> +	/* Initialize queues */
+> +	emac_mac_rx_tx_ring_init_all(pdev, adpt);
+> +
+> +	netif_napi_add(netdev, &adpt->rx_q.napi, emac_napi_rtx, 64);
+> +
+> +	spin_lock_init(&adpt->tx_ts_lock);
+> +	skb_queue_head_init(&adpt->tx_ts_pending_queue);
+> +	skb_queue_head_init(&adpt->tx_ts_ready_queue);
+> +	INIT_WORK(&adpt->tx_ts_task, emac_mac_tx_ts_periodic_routine);
+> +
+> +	strlcpy(netdev->name, "eth%d", sizeof(netdev->name));
+
+This is already done by alloc_etherdev.
+
 
 Regards,
-Matthias
-
->
-> Thanks.
->
->> diff --git a/arch/arm/boot/dts/mt2701.dtsi
->> b/arch/arm/boot/dts/mt2701.dtsi
->> index 42d5a37..363de0d 100644
->> --- a/arch/arm/boot/dts/mt2701.dtsi
->> +++ b/arch/arm/boot/dts/mt2701.dtsi
->> @@ -16,6 +16,7 @@
->>  #include <dt-bindings/power/mt2701-power.h>
->>  #include <dt-bindings/interrupt-controller/irq.h>
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/memory/mt2701-larb-port.h>
->>  #include "skeleton64.dtsi"
->>  #include "mt2701-pinfunc.h"
->>
->> @@ -160,6 +161,16 @@
->>          clock-names = "system-clk", "rtc-clk";
->>      };
->>
->> +    smi_common: smi@1000c000 {
->> +        compatible = "mediatek,mt2701-smi-common";
->> +        reg = <0 0x1000c000 0 0x1000>;
->> +        clocks = <&infracfg CLK_INFRA_SMI>,
->> +             <&mmsys CLK_MM_SMI_COMMON>,
->> +             <&infracfg CLK_INFRA_SMI>;
->> +        clock-names = "apb", "smi", "async";
->> +        power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
->> +    };
->> +
->>      sysirq: interrupt-controller@10200100 {
->>          compatible = "mediatek,mt2701-sysirq",
->>                   "mediatek,mt6577-sysirq";
->> @@ -169,6 +180,16 @@
->>          reg = <0 0x10200100 0 0x1c>;
->>      };
->>
->> +    iommu: mmsys_iommu@10205000 {
->> +        compatible = "mediatek,mt2701-m4u";
->> +        reg = <0 0x10205000 0 0x1000>;
->> +        interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
->> +        clocks = <&infracfg CLK_INFRA_M4U>;
->> +        clock-names = "bclk";
->> +        mediatek,larbs = <&larb0 &larb1 &larb2>;
->> +        #iommu-cells = <1>;
->> +    };
->> +
->>      apmixedsys: syscon@10209000 {
->>          compatible = "mediatek,mt2701-apmixedsys", "syscon";
->>          reg = <0 0x10209000 0 0x1000>;
->> @@ -234,6 +255,16 @@
->>          status = "disabled";
->>      };
->>
->> +    larb0: larb@14010000 {
->> +        compatible = "mediatek,mt2701-smi-larb";
->> +        reg = <0 0x14010000 0 0x1000>;
->> +        mediatek,smi = <&smi_common>;
->> +        clocks = <&mmsys CLK_MM_SMI_LARB0>,
->> +             <&mmsys CLK_MM_SMI_LARB0>;
->> +        clock-names = "apb", "smi";
->> +        power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
->> +    };
->> +
->>      imgsys: syscon@15000000 {
->>          compatible = "mediatek,mt2701-imgsys", "syscon";
->>          reg = <0 0x15000000 0 0x1000>;
->> @@ -241,6 +272,16 @@
->>          status = "disabled";
->>      };
->>
->> +    larb2: larb@15001000 {
->> +        compatible = "mediatek,mt2701-smi-larb";
->> +        reg = <0 0x15001000 0 0x1000>;
->> +        mediatek,smi = <&smi_common>;
->> +        clocks = <&imgsys CLK_IMG_SMI_COMM>,
->> +             <&imgsys CLK_IMG_SMI_COMM>;
->> +        clock-names = "apb", "smi";
->> +        power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
->> +    };
->> +
->>      vdecsys: syscon@16000000 {
->>          compatible = "mediatek,mt2701-vdecsys", "syscon";
->>          reg = <0 0x16000000 0 0x1000>;
->> @@ -248,6 +289,16 @@
->>          status = "disabled";
->>      };
->>
->> +    larb1: larb@16010000 {
->> +        compatible = "mediatek,mt2701-smi-larb";
->> +        reg = <0 0x16010000 0 0x1000>;
->> +        mediatek,smi = <&smi_common>;
->> +        clocks = <&vdecsys CLK_VDEC_CKGEN>,
->> +             <&vdecsys CLK_VDEC_LARB>;
->> +        clock-names = "apb", "smi";
->> +        power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
->> +    };
->> +
->>      hifsys: syscon@1a000000 {
->>          compatible = "mediatek,mt2701-hifsys", "syscon";
->>          reg = <0 0x1a000000 0 0x1000>;
->>
+Lino
