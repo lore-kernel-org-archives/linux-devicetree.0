@@ -1,100 +1,166 @@
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: [PATCH v5 20/22] sh: IO-DATA HDL-U (a.k.a landisk) DeviceTree
-Date: Mon,  4 Jul 2016 01:46:40 +0900
-Message-ID: <1467564402-2649-21-git-send-email-ysato@users.sourceforge.jp>
+Subject: [PATCH v5 14/22] sh: SH7751 core dtsi
+Date: Mon,  4 Jul 2016 01:46:34 +0900
+Message-ID: <1467564402-2649-15-git-send-email-ysato@users.sourceforge.jp>
 References: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-sh-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
+SH7751 core and internal peripheral define.
+
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- arch/sh/boot/dts/Makefile    |  2 ++
- arch/sh/boot/dts/landisk.dts | 61 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 63 insertions(+)
- create mode 100644 arch/sh/boot/dts/landisk.dts
+ arch/sh/boot/dts/include/dt-bindings               |  1 +
+ arch/sh/boot/dts/sh7751.dtsi                       | 83 ++++++++++++++++++++++
+ include/dt-bindings/clock/renesas-sh7750.h         | 26 +++++++
+ include/dt-bindings/interrupt-controller/sh_intc.h |  2 +
+ 4 files changed, 112 insertions(+)
+ create mode 120000 arch/sh/boot/dts/include/dt-bindings
+ create mode 100644 arch/sh/boot/dts/sh7751.dtsi
+ create mode 100644 include/dt-bindings/clock/renesas-sh7750.h
+ create mode 100644 include/dt-bindings/interrupt-controller/sh_intc.h
 
-diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
-index 38fdc38..cf5aec4 100644
---- a/arch/sh/boot/dts/Makefile
-+++ b/arch/sh/boot/dts/Makefile
-@@ -1,5 +1,7 @@
- obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
- 
-+dtb-y += landisk.dtb
-+
- dtstree		:= $(srctree)/$(src)
- clean-files := *.dtb.S
- always	    := $(dtb-y)
-diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
-new file mode 100644
-index 0000000..3745ae0
+diff --git a/arch/sh/boot/dts/include/dt-bindings b/arch/sh/boot/dts/include/dt-bindings
+new file mode 120000
+index 0000000..08c00e4
 --- /dev/null
-+++ b/arch/sh/boot/dts/landisk.dts
-@@ -0,0 +1,61 @@
-+/dts-v1/;
++++ b/arch/sh/boot/dts/include/dt-bindings
+@@ -0,0 +1 @@
++../../../../../include/dt-bindings
+\ No newline at end of file
+diff --git a/arch/sh/boot/dts/sh7751.dtsi b/arch/sh/boot/dts/sh7751.dtsi
+new file mode 100644
+index 0000000..713e72e
+--- /dev/null
++++ b/arch/sh/boot/dts/sh7751.dtsi
+@@ -0,0 +1,83 @@
++/*
++ * Device Tree Source for the SH7751
++ *
++ * Copyright (C) 2016 Yoshinori Sato
++ */
 +
-+#include "sh7751.dtsi"
++#include <dt-bindings/interrupt-controller/sh_intc.h>
++#include <dt-bindings/clock/renesas-sh7750.h>
 +
 +/ {
-+	model = "iodata,HDL-U";
-+	compatible = "iodata,hdl-u";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&shintc>;
-+	chosen {
-+		stdout-path = "serial1:115200n8";
++	oclk: oscillator {
++                #clock-cells = <0>;
++                compatible = "fixed-clock";
++                clock-frequency = <0>;
++        };
++	cpg: clock-controller@ffc00000 {
++                compatible = "renesas,sh7750-cpg";
++                clocks = <&oclk>;
++                #clock-cells = <1>;
++		renesas,mult = <12>;
++                reg = <0xffc00000 32>, <0xfe0a0000 16>;
++        };
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++		      compatible = "renesas,sh4", "renesas,sh";
++		      clock-frequency = <266666666>;
++		};
 +	};
-+	aliases {
-+		serial0 = &sci0;
-+		serial1 = &sci1;
-+	};
++	shintc: interrupt-controller@ffd00000 {
++		compatible = "renesas,sh7751-intc";
++		#interrupt-cells = <2>;
++		interrupt-controller;
++		reg = <0xffd00000 14>, <0xfe080000 128>;
 +
-+	memory@0c000000 {
-+		device_type = "memory";
-+		reg = <0x0c000000 0x4000000>;
 +	};
-+
-+	cpldintc: cpld@b0000000 {
-+		compatible = "iodata,landisk-intc";
++	sci0: serial@ffe00000 {
++		compatible = "renesas,sci";
++		reg = <0xffe00000 0x20>;
++		interrupts = <evt2irq(0x4e0) 0>,
++		             <evt2irq(0x500) 0>,
++		             <evt2irq(0x540) 0>,
++		             <evt2irq(0x520) 0>;
++		clocks = <&cpg SH7750_CLK_SCI>;
++		clock-names = "fck";
++		status = "disabled";
++	};
++	sci1: serial@ffe80000 {
++		compatible = "renesas,scif";
++		reg = <0xffe80000 0x100>;
++		interrupts = <evt2irq(0x700) 0>,
++			     <evt2irq(0x720) 0>,
++			     <evt2irq(0x760) 0>,
++			     <evt2irq(0x740) 0>;
++		clocks = <&cpg SH7750_CLK_SCIF>;
++		clock-names = "fck";
++		status = "disabled";
++	};
++	tmu: timer@ffd80000 {
++		compatible = "renesas,tmu";
++		reg = <0xffd80000 12>;
++		interrupts = <evt2irq(0x400) 0>,
++			     <evt2irq(0x420) 0>,
++			     <evt2irq(0x440) 0>;
++		clocks = <&cpg SH7750_CLK_TMU0>;
++		clock-names = "fck";
++		renesas,channels-mask = <0x03>;
++	};
++	pci: pci-controller@fe200000 {
++		compatible = "renesas,sh7751-pci";
++		device_type = "pci";
++		bus-range = <0 0>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0x02000000 0x00000000 0xfd000000 0xfd000000 0x00000000 0x01000000>,
++		         <0x01000000 0x00000000 0xfe240000 0x00000000 0x00000000 0x00040000>;
++		reg = <0xfe200000 0x0400>, <0xff800000 0x0030>;
 +		#interrupt-cells = <1>;
-+		#address-cells = <0>;
-+		reg = <0xb0000000 8>;
-+		interrupt-map=<0 &shintc evt2irq(0x2a0)>,
-+		              <1 &shintc evt2irq(0x2c0)>,
-+		              <2 &shintc evt2irq(0x2e0)>,
-+			      <3 &shintc evt2irq(0x300)>,
-+		              <4 &shintc evt2irq(0x320)>,
-+			      <5 &shintc evt2irq(0x340)>,
-+		              <6 &shintc evt2irq(0x360)>,
-+			      <7 &shintc evt2irq(0x380)>;
++		interrupt-map-mask = <0x1800 0 7>;
++		status = "disabled";
 +	};
 +};
+diff --git a/include/dt-bindings/clock/renesas-sh7750.h b/include/dt-bindings/clock/renesas-sh7750.h
+new file mode 100644
+index 0000000..546c0b1
+--- /dev/null
++++ b/include/dt-bindings/clock/renesas-sh7750.h
+@@ -0,0 +1,26 @@
++/*
++ * Copyright (C) 2016 Yoshinori Sato
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef __DT_BINDINGS_CLOCK_RENESAS_SH7750_H__
++#define __DT_BINDINGS_CLOCK_RENESAS_SH7750_H__
 +
-+&oclk {
-+	clock-frequency = <22222222>;
-+};
++#define SH7750_CLK_SCI	0
++#define SH7750_CLK_RTC	1
++#define SH7750_CLK_TMU0	2
++#define SH7750_CLK_TMU1	3
++#define SH7750_CLK_TMU2	4
++#define SH7750_CLK_SCIF	5
++#define SH7750_CLK_DMAC	6
++#define SH7750_CLK_UBC	7
++#define SH7750_CLK_SQ	8
++#define SH7750_CLK_INTC 9
++#define SH7750_CLK_TMU3	10
++#define SH7750_CLK_TMU4	11
++#define SH7750_CLK_PCIC	12
 +
-+&sci0 {
-+	status = "ok";
-+};
-+
-+&sci1 {
-+	status = "ok";
-+};
-+
-+&pci {
-+	compatible = "renesas,sh7751-pci", "iodata,landisk-pci";
-+	interrupt-map-mask = <0x1800 0 7>;
-+	interrupt-map = <0x0000 0 1 &cpldintc 0>,
-+	                <0x0800 0 1 &cpldintc 1>,
-+	                <0x1000 0 1 &cpldintc 2>,
-+	                <0x1000 0 2 &cpldintc 3>,
-+	                <0x1000 0 3 &cpldintc 0>;
-+	status = "ok";
-+};
++#endif /* __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__ */
+diff --git a/include/dt-bindings/interrupt-controller/sh_intc.h b/include/dt-bindings/interrupt-controller/sh_intc.h
+new file mode 100644
+index 0000000..8c9dcdc
+--- /dev/null
++++ b/include/dt-bindings/interrupt-controller/sh_intc.h
+@@ -0,0 +1,2 @@
++#define evt2irq(evt)		(((evt) >> 5) - 16)
++#define irq2evt(irq)		(((irq) + 16) << 5)
 -- 
 2.7.0
+
