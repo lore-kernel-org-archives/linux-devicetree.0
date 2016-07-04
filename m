@@ -1,193 +1,60 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [RFC PATCH v2 2/4] net: ethernet: xilinx: Add gmii2rgmii converter
- support
-Date: Mon, 4 Jul 2016 14:34:42 +0530
-Message-ID: <1467623084-15471-3-git-send-email-appanad@xilinx.com>
-References: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, punnaia@xilinx.com, nicolas.ferre@atmel.com, f.fainelli@gmail.com, andrew@lunn.ch, anirudh@xilinx.com, harinik@xilinx.com
-Cc: netdev@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2 v2] iio: magn: DT bindings for AK8974
+Date: Mon,  4 Jul 2016 11:08:06 +0200
+Message-ID: <1467623287-9877-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for gmii2rgmii converter.
+This adds device tree bindings for the AK8974 magnetometer, similar
+to those for the AK8975.
 
-The GMII to RGMII IP core provides the Reduced Gigabit Media
-Independent Interface (RGMII) between Ethernet physical media
-Devices and the Gigabit Ethernet controller. This core can
-Switch dynamically between the three different speed modes of
-Operation by configuring the converter register through mdio write.
-
-MDIO interface is used to set operating speed of Ethernet MAC.
-
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-Changes for v2:
---> Passed struct xphy pointer directly to the fix_mac_speed
-API as suggested by the Florian.
---> Added checks for the phy-node fail case as suggested
-by the Florian.
+ChangeLog v1->v2:
+- No changes, just reposting to keep together with the series
+---
+ .../bindings/iio/magnetometer/ak8974.txt           | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
 
- drivers/net/ethernet/xilinx/Kconfig             |  8 +++
- drivers/net/ethernet/xilinx/Makefile            |  1 +
- drivers/net/ethernet/xilinx/xilinx_gmii2rgmii.c | 79 +++++++++++++++++++++++++
- include/linux/xilinx_gmii2rgmii.h               | 24 ++++++++
- 4 files changed, 112 insertions(+)
- create mode 100644 drivers/net/ethernet/xilinx/xilinx_gmii2rgmii.c
- create mode 100644 include/linux/xilinx_gmii2rgmii.h
-
-diff --git a/drivers/net/ethernet/xilinx/Kconfig b/drivers/net/ethernet/xilinx/Kconfig
-index 4f5c024..4b65174 100644
---- a/drivers/net/ethernet/xilinx/Kconfig
-+++ b/drivers/net/ethernet/xilinx/Kconfig
-@@ -39,4 +39,12 @@ config XILINX_LL_TEMAC
- 	  This driver supports the Xilinx 10/100/1000 LocalLink TEMAC
- 	  core used in Xilinx Spartan and Virtex FPGAs
- 
-+config XILINX_GMII2RGMII
-+	tristate "Xilinx GMII2RGMII converter driver"
-+	default y
-+	---help---
-+	  This driver support xilinx GMII to RGMII IP core it provides
-+	  the Reduced Gigabit Media Independent Interface(RGMII) between
-+	  Ethernet physical media devices and the Gigabit Ethernet controller.
-+
- endif # NET_VENDOR_XILINX
-diff --git a/drivers/net/ethernet/xilinx/Makefile b/drivers/net/ethernet/xilinx/Makefile
-index 214205e..bca0da0 100644
---- a/drivers/net/ethernet/xilinx/Makefile
-+++ b/drivers/net/ethernet/xilinx/Makefile
-@@ -7,3 +7,4 @@ obj-$(CONFIG_XILINX_LL_TEMAC) += ll_temac.o
- obj-$(CONFIG_XILINX_EMACLITE) += xilinx_emaclite.o
- xilinx_emac-objs := xilinx_axienet_main.o xilinx_axienet_mdio.o
- obj-$(CONFIG_XILINX_AXI_EMAC) += xilinx_emac.o
-+obj-$(CONFIG_XILINX_GMII2RGMII) += xilinx_gmii2rgmii.o
-diff --git a/drivers/net/ethernet/xilinx/xilinx_gmii2rgmii.c b/drivers/net/ethernet/xilinx/xilinx_gmii2rgmii.c
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
 new file mode 100644
-index 0000000..de3bd89
+index 000000000000..967f8e9b9319
 --- /dev/null
-+++ b/drivers/net/ethernet/xilinx/xilinx_gmii2rgmii.c
-@@ -0,0 +1,79 @@
-+/* Xilinx GMII2RGMII Converter driver
-+ *
-+ * Copyright (C) 2016 Xilinx, Inc.
-+ *
-+ * Author: Kedareswara rao Appana <appanad@xilinx.com>
-+ *
-+ * Description:
-+ * This driver is developed for Xilinx GMII2RGMII Converter
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation, either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/types.h>
-+#include <linux/netdevice.h>
-+#include <linux/mii.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/of_mdio.h>
-+#include <linux/xilinx_gmii2rgmii.h>
++++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
+@@ -0,0 +1,28 @@
++* Asahi Kasei AK8974 magnetometer sensor
 +
-+static void xgmii2rgmii_fix_mac_speed(struct gmii2rgmii *xphy,
-+				      unsigned int speed)
-+{
-+	struct phy_device *gmii2rgmii_phydev = xphy->gmii2rgmii_phy_dev;
-+	u16 gmii2rgmii_reg = 0;
++Required properties:
 +
-+	switch (speed) {
-+	case 1000:
-+		gmii2rgmii_reg |= XILINX_GMII2RGMII_SPEED1000;
-+		break;
-+	case 100:
-+		gmii2rgmii_reg |= XILINX_GMII2RGMII_SPEED100;
-+		break;
-+	default:
-+		return;
-+	}
++- compatible : should be "asahi-kasei,ak8974"
++- reg : the I2C address of the magnetometer
 +
-+	xphy->mdio_write(xphy->mii_bus, gmii2rgmii_phydev->mdio.addr,
-+			 XILINX_GMII2RGMII_REG_NUM,
-+			 gmii2rgmii_reg);
-+}
++Optional properties:
 +
-+int gmii2rgmii_phyprobe(struct gmii2rgmii *xphy)
-+{
-+	struct device_node *phy_node;
-+	struct phy_device *phydev;
-+	struct device_node *np = (struct device_node *)xphy->platform_data;
++- avdd-supply: regulator supply for the analog voltage
++  (see regulator/regulator.txt)
++- dvdd-supply: regulator supply for the digital voltage
++  (see regulator/regulator.txt)
++- interrupts: data ready (DRDY) and interrupt (INT1) lines
++  from the chip, the DRDY interrupt must be placed first.
++  The interrupts can be triggered on rising or falling
++  edges alike.
 +
-+	phy_node = of_parse_phandle(np, "gmii2rgmii-phy-handle", 0);
-+	if (phy_node) {
-+		phydev = of_phy_attach(xphy->dev, phy_node, 0, 0);
-+		if (!phydev) {
-+			netdev_err(xphy->dev,
-+				   "%s: no gmii to rgmii converter found\n",
-+				   xphy->dev->name);
-+			return -1;
-+		}
-+		xphy->gmii2rgmii_phy_dev = phydev;
-+		xphy->fix_mac_speed = xgmii2rgmii_fix_mac_speed;
-+	} else {
-+		xphy->gmii2rgmii_phy_dev = 0;
-+		xphy->fix_mac_speed = 0;
-+	}
++Example:
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL(gmii2rgmii_phyprobe);
-+
-+MODULE_DESCRIPTION("Xilinx GMII2RGMII converter driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/xilinx_gmii2rgmii.h b/include/linux/xilinx_gmii2rgmii.h
-new file mode 100644
-index 0000000..b328ee7
---- /dev/null
-+++ b/include/linux/xilinx_gmii2rgmii.h
-@@ -0,0 +1,24 @@
-+#ifndef _GMII2RGMII_H
-+#define _GMII2RGMII_H
-+
-+#include <linux/of.h>
-+#include <linux/phy.h>
-+#include <linux/mii.h>
-+
-+#define XILINX_GMII2RGMII_FULLDPLX		BMCR_FULLDPLX
-+#define XILINX_GMII2RGMII_SPEED1000		BMCR_SPEED1000
-+#define XILINX_GMII2RGMII_SPEED100		BMCR_SPEED100
-+#define XILINX_GMII2RGMII_REG_NUM			0x10
-+
-+struct gmii2rgmii {
-+	struct net_device	*dev;
-+	struct mii_bus		*mii_bus;
-+	struct phy_device	*gmii2rgmii_phy_dev;
-+	void			*platform_data;
-+	int (*mdio_write)(struct mii_bus *bus, int mii_id, int reg,
-+			  u16 val);
-+	void (*fix_mac_speed)(struct gmii2rgmii *xphy, unsigned int speed);
++ak8974@0f {
++	compatible = "asahi-kasei,ak8974";
++	reg = <0x0f>;
++	avdd-supply = <&foo_reg>;
++	dvdd-supply = <&bar_reg>;
++	interrupts = <0 IRQ_TYPE_EDGE_RISING>,
++		     <1 IRQ_TYPE_EDGE_RISING>;
 +};
-+
-+extern int gmii2rgmii_phyprobe(struct gmii2rgmii *xphy);
-+#endif
 -- 
-2.1.2
+2.4.11
