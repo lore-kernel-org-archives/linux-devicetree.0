@@ -1,341 +1,171 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] arm64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Mon, 4 Jul 2016 10:58:51 +0100
-Message-ID: <20160704095850.GB1639@arm.com>
-References: <1467412897-15220-1-git-send-email-oss@buserror.net>
- <1467412897-15220-3-git-send-email-oss@buserror.net>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3] ARM: at91: Document new TCB bindings
+Date: Mon, 4 Jul 2016 12:24:52 +0200
+Message-ID: <20160704122452.69dcddf0@bbrezillon>
+References: <1467409925-17761-1-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467412897-15220-3-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1467409925-17761-1-git-send-email-alexandre.belloni@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 05:41:37PM -0500, Scott Wood wrote:
-> Erratum A-008585 says that the ARM generic timer counter "has the
-> potential to contain an erroneous value for a small number of core
-> clock cycles every time the timer value changes".  Accesses to TVAL
-> (both read and write) are also affected due to the implicit counter
-> read.  Accesses to CVAL are not affected.
+On Fri,  1 Jul 2016 23:52:05 +0200
+Alexandre Belloni <alexandre.belloni@free-electrons.com> wrote:
+
+> The current binding for the TCB is not flexible enough for some use cases
+> and prevents proper utilization of all the channels.
 > 
-> The workaround is to reread TVAL and count registers until successive reads
-> return the same value, and when writing TVAL to retry until counter
-> reads before and after the write return the same value.
-> 
-> This erratum can be found on LS1043A and LS2080A.
-> 
-> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: linux-pwm@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 > ---
-> v3:
-> - Used cval rather than a loop for the write side of the erratum
-> - Added a Kconfig control
-> - Moved the device tree binding into its own patch
-> - Added erratum to silicon-errata.txt
-> - Changed function names to contain the erratum name
-> - Factored out the setting of erratum versions of set_next_event
->   to improve readability
-> - Added a comment clarifying that the timeout is arbitrary
+>  .../devicetree/bindings/arm/atmel-at91.txt         | 32 ------------
+>  .../devicetree/bindings/mfd/atmel-tcb.txt          | 58 ++++++++++++++++++++++
+>  .../devicetree/bindings/pwm/atmel-tcb-pwm.txt      | 12 +++--
+>  3 files changed, 65 insertions(+), 37 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-tcb.txt
 > 
-> v2:
-> Significant rework based on feedback, including using static_key,
-> disabling VDSO counter access rather than adding the workaround to the
-> VDSO, and uninlining the loops.
-> 
-> Dropped the separate property for indicating that writes to TVAL are
-> affected, as I believe that's just a side effect of the implicit
-> counter read being corrupted, and thus a chip that is affected by one
-> will always be affected by the other.
-> 
-> Dropped the arm32 portion as it seems there was confusion about whether
-> LS1021A is affected.  Currently I am being told that it is not
-> affected.
-> 
-> I considered writing to CVAL rather than looping on TVAL writes, but
-> that would still have required separate set_next_event() code for the
-> erratum, and adding CVAL to the enum would have required a bunch of
-> extra handlers in switch statements (even where unused, due to compiler
-> warnings about unhandled enum values) including in an arm32 header.  It
-> seemed better to avoid the arm32 interaction and new untested
-> accessors.
-> ---
->  Documentation/arm64/silicon-errata.txt |   2 +
->  arch/arm64/include/asm/arch_timer.h    |  48 ++++++++++++---
->  drivers/clocksource/Kconfig            |  10 ++++
->  drivers/clocksource/arm_arch_timer.c   | 103 +++++++++++++++++++++++++++++++++
->  4 files changed, 154 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
-> index ba4b6ac..5778f62 100644
-> --- a/Documentation/arm64/silicon-errata.txt
-> +++ b/Documentation/arm64/silicon-errata.txt
-> @@ -57,3 +57,5 @@ stable kernels.
->  | Cavium         | ThunderX ITS    | #22375, #24313  | CAVIUM_ERRATUM_22375    |
->  | Cavium         | ThunderX GICv3  | #23154          | CAVIUM_ERRATUM_23154    |
->  | Cavium         | ThunderX Core   | #27456          | CAVIUM_ERRATUM_27456    |
-> +|                |                 |                 |                         |
-> +| Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585     |
-> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-> index fbe0ca3..70fbad9 100644
-> --- a/arch/arm64/include/asm/arch_timer.h
-> +++ b/arch/arm64/include/asm/arch_timer.h
-> @@ -23,10 +23,34 @@
+> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> index e1f5ad855f14..3dc758403d03 100644
+> --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> @@ -60,38 +60,6 @@ System Timer (ST) required properties:
+>  Its subnodes can be:
+>  - watchdog: compatible should be "atmel,at91rm9200-wdt"
 >  
->  #include <linux/bug.h>
->  #include <linux/init.h>
-> +#include <linux/jump_label.h>
->  #include <linux/types.h>
->  
->  #include <clocksource/arm_arch_timer.h>
->  
-> +extern struct static_key_false arch_timer_read_ool_enabled;
-> +
-> +#define ARCH_TIMER_REG_READ(reg, func) \
-> +extern u64 func##_ool(void); \
-> +static inline u64 __##func(void) \
-> +{ \
-> +	u64 val; \
-> +	asm volatile("mrs %0, " reg : "=r" (val)); \
-> +	return val; \
-> +} \
-> +static inline u64 _##func(void) \
-> +{ \
-> +	if (IS_ENABLED(CONFIG_FSL_ERRATUM_A008585) && \
-> +	    static_branch_unlikely(&arch_timer_read_ool_enabled)) \
-> +		return func##_ool(); \
-> +	else \
-> +		return __##func(); \
-> +}
-> +
-> +ARCH_TIMER_REG_READ("cntp_tval_el0", arch_timer_get_ptval)
-> +ARCH_TIMER_REG_READ("cntv_tval_el0", arch_timer_get_vtval)
-> +ARCH_TIMER_REG_READ("cntvct_el0", arch_counter_get_cntvct)
-
-It's probably worth #undefing the macro here, since it really shouldn't
-grow any users outside of this header file.
-
-> +
->  /*
->   * These register accessors are marked inline so the compiler can
->   * nicely work out which register we want, and chuck away the rest of
-> @@ -58,6 +82,16 @@ void arch_timer_reg_write_cp15(int access, enum arch_timer_reg reg, u32 val)
->  	isb();
->  }
->  
-> +static __always_inline void arch_timer_cval_write_cp15(int access, u64 val)
-> +{
-> +	if (access == ARCH_TIMER_PHYS_ACCESS)
-> +		asm volatile("msr cntp_cval_el0, %0" : : "r" (val));
-> +	else if (access == ARCH_TIMER_VIRT_ACCESS)
-> +		asm volatile("msr cntv_cval_el0, %0" : : "r" (val));
-> +
-> +	isb();
-> +}
-> +
->  static __always_inline
->  u32 arch_timer_reg_read_cp15(int access, enum arch_timer_reg reg)
->  {
-> @@ -66,19 +100,19 @@ u32 arch_timer_reg_read_cp15(int access, enum arch_timer_reg reg)
->  	if (access == ARCH_TIMER_PHYS_ACCESS) {
->  		switch (reg) {
->  		case ARCH_TIMER_REG_CTRL:
-> -			asm volatile("mrs %0,  cntp_ctl_el0" : "=r" (val));
-> +			asm volatile("mrs %0, cntp_ctl_el0" : "=r" (val));
->  			break;
->  		case ARCH_TIMER_REG_TVAL:
-> -			asm volatile("mrs %0, cntp_tval_el0" : "=r" (val));
-> +			val = _arch_timer_get_ptval();
->  			break;
->  		}
->  	} else if (access == ARCH_TIMER_VIRT_ACCESS) {
->  		switch (reg) {
->  		case ARCH_TIMER_REG_CTRL:
-> -			asm volatile("mrs %0,  cntv_ctl_el0" : "=r" (val));
-> +			asm volatile("mrs %0, cntv_ctl_el0" : "=r" (val));
->  			break;
->  		case ARCH_TIMER_REG_TVAL:
-> -			asm volatile("mrs %0, cntv_tval_el0" : "=r" (val));
-> +			val = _arch_timer_get_vtval();
->  			break;
->  		}
->  	}
-> @@ -116,12 +150,8 @@ static inline u64 arch_counter_get_cntpct(void)
->  
->  static inline u64 arch_counter_get_cntvct(void)
->  {
-> -	u64 cval;
+> -TC/TCLIB Timer required properties:
+> -- compatible: Should be "atmel,<chip>-tcb".
+> -  <chip> can be "at91rm9200" or "at91sam9x5"
+> -- reg: Should contain registers location and length
+> -- interrupts: Should contain all interrupts for the TC block
+> -  Note that you can specify several interrupt cells if the TC
+> -  block has one interrupt per channel.
+> -- clock-names: tuple listing input clock names.
+> -	Required elements: "t0_clk", "slow_clk"
+> -	Optional elements: "t1_clk", "t2_clk"
+> -- clocks: phandles to input clocks.
 > -
->  	isb();
-> -	asm volatile("mrs %0, cntvct_el0" : "=r" (cval));
+> -Examples:
 > -
-> -	return cval;
-> +	return _arch_counter_get_cntvct();
->  }
->  
->  static inline int arch_timer_arch_init(void)
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index c346be6..672ddc3 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -207,6 +207,16 @@ config ARM_ARCH_TIMER_EVTSTREAM
->  	  This must be disabled for hardware validation purposes to detect any
->  	  hardware anomalies of missing events.
->  
-> +config FSL_ERRATUM_A008585
-> +	bool "Workaround for Freescale/NXP Erratum A-008585"
-> +	default y
-> +	depends on ARM_ARCH_TIMER && ARM64
-> +	help
-> +	  This option enables a workaround for Freescale/NXP Erratum
-> +	  A-008585 ("ARM generic timer may contain an erroneous
-> +	  value").  The workaround will only be active if the
-> +	  fsl,erratum-a008585 property is found in the timer node.
+> -One interrupt per TC block:
+> -	tcb0: timer@fff7c000 {
+> -		compatible = "atmel,at91rm9200-tcb";
+> -		reg = <0xfff7c000 0x100>;
+> -		interrupts = <18 4>;
+> -		clocks = <&tcb0_clk>;
+> -		clock-names = "t0_clk";
+> -	};
+> -
+> -One interrupt per TC channel in a TC block:
+> -	tcb1: timer@fffdc000 {
+> -		compatible = "atmel,at91rm9200-tcb";
+> -		reg = <0xfffdc000 0x100>;
+> -		interrupts = <26 4 27 4 28 4>;
+> -		clocks = <&tcb1_clk>;
+> -		clock-names = "t0_clk";
+> -	};
+> -
+>  RSTC Reset Controller required properties:
+>  - compatible: Should be "atmel,<chip>-rstc".
+>    <chip> can be "at91sam9260" or "at91sam9g45" or "sama5d3"
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> new file mode 100644
+> index 000000000000..693c7361e1ba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
+> @@ -0,0 +1,58 @@
+> +* Device tree bindings for Atmel Timer Counter Blocks
+> +- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
+> +  <chip> can be "at91rm9200" or "at91sam9x5"
+> +- reg: Should contain registers location and length
+> +- #address-cells: has to be 1
+> +- #size-cells: has to be 0
+> +- interrupts: Should contain all interrupts for the TC block
+> +  Note that you can specify several interrupt cells if the TC
+> +  block has one interrupt per channel.
+> +- clock-names: tuple listing input clock names.
+> +	Required elements: "t0_clk", "slow_clk"
+> +	Optional elements: "t1_clk", "t2_clk"
+> +- clocks: phandles to input clocks.
 > +
->  config ARM_GLOBAL_TIMER
->  	bool
->  	select CLKSRC_OF if OF
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index 5152b38..7ead4eb 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -83,6 +83,51 @@ static bool arch_timer_mem_use_virtual;
->   * Architected system timer support.
->   */
->  
-> +#ifdef CONFIG_FSL_ERRATUM_A008585
-> +DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
-> +EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
+> +The TCB can expose multiple subdevices:
+> + * a timer
+> +   - compatible: Should be "atmel,tcb-timer"
+> +   - reg: Should contain the TCB channels to be used. If the
+> +     counter width is 16 bits (at91rm9200-tcb), two consecutive
+> +     channels are needed. Else, only one channel will be used.
 > +
-> +/*
-> + * __always_inline is used to ensure that func() is not an actual function
-> + * pointer, which would result in the register accesses potentially being too
-> + * far apart for the loop to work.
-> + *
-> + * The timeout is an arbitrary value well beyond the highest number
-> + * of iterations the loop has been observed to take.
-> + */
-> +static __always_inline u64 fsl_a008585_reread_counter(u64 (*func)(void))
-> +{
-> +	u64 cval_old, cval_new;
-> +	int timeout = 200;
+> + * a PWM chip: see ../pwm/atmel-tcb-pwm.txt
 > +
-> +	do {
-> +		isb();
-> +		cval_old = func();
-> +		cval_new = func();
-> +		timeout--;
-> +	} while (unlikely(cval_old != cval_new) && timeout);
+> +Examples:
 > +
-> +	WARN_ON_ONCE(!timeout);
-> +	return cval_new;
-> +}
+> +One interrupt per TC block:
+> +	tcb0: timer@fff7c000 {
+> +		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0xfff7c000 0x100>;
+> +		interrupts = <18 4>;
+> +		clocks = <&tcb0_clk>, <&clk32k>;
+> +		clock-names = "t0_clk", "slow_clk";
 > +
-> +u64 arch_counter_get_cntvct_ool(void)
-> +{
-> +	return fsl_a008585_reread_counter(__arch_counter_get_cntvct);
-> +}
+> +		timer@0 {
+> +			compatible = "atmel,tcb-timer";
+> +			reg = <0>, <1>;
+> +		};
 > +
-> +u64 arch_timer_get_vtval_ool(void)
-> +{
-> +	return fsl_a008585_reread_counter(__arch_timer_get_vtval);
-> +}
-> +
-> +u64 arch_timer_get_ptval_ool(void)
-> +{
-> +	return fsl_a008585_reread_counter(__arch_timer_get_ptval);
-> +}
-> +
-> +#endif /* CONFIG_FSL_ERRATUM_A008585 */
-> +
->  static __always_inline
->  void arch_timer_reg_write(int access, enum arch_timer_reg reg, u32 val,
->  			  struct clock_event_device *clk)
-> @@ -232,6 +277,35 @@ static __always_inline void set_next_event(const int access, unsigned long evt,
->  	arch_timer_reg_write(access, ARCH_TIMER_REG_CTRL, ctrl, clk);
->  }
->  
-> +#ifdef CONFIG_FSL_ERRATUM_A008585
-> +static __always_inline void fsl_a008585_set_next_event(const int access,
-> +		unsigned long evt, struct clock_event_device *clk)
-> +{
-> +	unsigned long ctrl;
-> +	u64 cval = evt + arch_counter_get_cntvct();
-> +
-> +	ctrl = arch_timer_reg_read(access, ARCH_TIMER_REG_CTRL, clk);
-> +	ctrl |= ARCH_TIMER_CTRL_ENABLE;
-> +	ctrl &= ~ARCH_TIMER_CTRL_IT_MASK;
-> +	arch_timer_cval_write_cp15(access, cval);
-> +	arch_timer_reg_write(access, ARCH_TIMER_REG_CTRL, ctrl, clk);
-> +}
-> +
-> +static int fsl_a008585_set_next_event_virt(unsigned long evt,
-> +					   struct clock_event_device *clk)
-> +{
-> +	fsl_a008585_set_next_event(ARCH_TIMER_VIRT_ACCESS, evt, clk);
-> +	return 0;
-> +}
-> +
-> +static int fsl_a008585_set_next_event_phys(unsigned long evt,
-> +					   struct clock_event_device *clk)
-> +{
-> +	fsl_a008585_set_next_event(ARCH_TIMER_PHYS_ACCESS, evt, clk);
-> +	return 0;
-> +}
-> +#endif /* CONFIG_FSL_ERRATUM_A008585 */
-> +
->  static int arch_timer_set_next_event_virt(unsigned long evt,
->  					  struct clock_event_device *clk)
->  {
-> @@ -260,6 +334,19 @@ static int arch_timer_set_next_event_phys_mem(unsigned long evt,
->  	return 0;
->  }
->  
-> +static void fsl_a008585_set_sne(struct clock_event_device *clk)
-> +{
-> +#ifdef CONFIG_FSL_ERRATUM_A008585
-> +	if (!static_branch_unlikely(&arch_timer_read_ool_enabled))
-> +		return;
-> +
-> +	if (arch_timer_uses_ppi == VIRT_PPI)
-> +		clk->set_next_event = fsl_a008585_set_next_event_virt;
-> +	else
-> +		clk->set_next_event = fsl_a008585_set_next_event_phys;
-> +#endif
-> +}
-> +
->  static void __arch_timer_setup(unsigned type,
->  			       struct clock_event_device *clk)
->  {
-> @@ -288,6 +375,8 @@ static void __arch_timer_setup(unsigned type,
->  		default:
->  			BUG();
->  		}
-> +
-> +		fsl_a008585_set_sne(clk);
->  	} else {
->  		clk->features |= CLOCK_EVT_FEAT_DYNIRQ;
->  		clk->name = "arch_mem_timer";
-> @@ -485,6 +574,15 @@ static void __init arch_counter_register(unsigned type)
->  			arch_timer_read_counter = arch_counter_get_cntvct;
->  		else
->  			arch_timer_read_counter = arch_counter_get_cntpct;
-> +
-> +#ifdef CONFIG_FSL_ERRATUM_A008585
-> +		/*
-> +		 * Don't use the vdso fastpath if errata require using
-> +		 * the out-of-line counter accessor.
-> +		 */
-> +		if (static_branch_unlikely(&arch_timer_read_ool_enabled))
-> +			clocksource_counter.name = "arch_sys_counter_ool";
+> +		timer@2 {
+> +			compatible = "atmel,tcb-timer";
+> +			reg = <2>;
+> +		};
 
-We could avoid this entirely by providing an arch_clocksource_data structure
-like x86 does, and get rid of the ugly strcmp magic from update_vsyscall.
+And how can you differentiate the clocksource from the clkevent?
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	};
+> +
+> +One interrupt per TC channel in a TC block:
+> +	tcb1: timer@fffdc000 {
+> +		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0xfffdc000 0x100>;
+> +		interrupts = <26 4>, <27 4>, <28 4>;
+> +		clocks = <&tcb1_clk>, <&clk32k>;
+> +		clock-names = "t0_clk", "slow_clk";
+> +	};
+> +
+> +
+> diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> index 8031148bcf85..ab8fbd5ba184 100644
+> --- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> @@ -2,15 +2,17 @@ Atmel TCB PWM controller
+>  
+>  Required properties:
+>  - compatible: should be "atmel,tcb-pwm"
+> +- reg: tcb channel to use. Each channel can export 2 PWMs
+>  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+>    the cells format. The only third cell flag supported by this binding is
+>    PWM_POLARITY_INVERTED.
+> -- tc-block: The Timer Counter block to use as a PWM chip.
+>  
+>  Example:
+>  
+> -pwm {
+> -	compatible = "atmel,tcb-pwm";
+> -	#pwm-cells = <3>;
+> -	tc-block = <1>;
+> +tcb0: timer@f800c000 {
+> +	pwm@0 {
+> +		compatible = "atmel,tcb-pwm";
+> +		reg = <0>;
+> +		#pwm-cells = <3>;
+> +	};
+>  };
