@@ -1,37 +1,64 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RESEND PATCH v2 0/5] ir-rx51 driver fixes
-Date: Mon, 4 Jul 2016 00:07:09 -0700
-Message-ID: <20160704070709.GT28140@atomide.com>
-References: <1466623341-30130-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
- <20160623044436.GK22406@atomide.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 14/22] sh: SH7751 core dtsi
+Date: Mon, 4 Jul 2016 09:15:31 +0200
+Message-ID: <CAMuHMdXPfP+A4PFy81bRoq4Va=5JpgCz2M3D6icWf0zCGTw8pA@mail.gmail.com>
+References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp> <1467207667-15768-15-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160623044436.GK22406@atomide.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thierry.reding@gmail.com, bcousson@baylibre.com, linux@arm.linux.org.uk, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, sre@kernel.org, pali.rohar@gmail.com, pavel@ucw.cz
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1467207667-15768-15-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [160622 21:47]:
-> * Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com> [160622 12:25]:
-> > ir-rx51 is a driver for Nokia N900 IR transmitter. The current series
-> > fixes the remaining problems in the driver:
-> 
-> Thanks for updating these.
-> 
-> Trierry, care to ack the PWM patch?
-> 
-> Mauro, do you want me to set up an immutable branch with all
-> these against v4.7-rc1 that we can all merge as needed?
-> 
-> If you want to set up the branch instead, please feel free
-> to add my ack.
+Hi Sato-san,
 
-OK so no comments from Mauro, so I've applied these with
-Thierry's ack and pushed out into omap-for-v4.8/legacy branch.
+On Wed, Jun 29, 2016 at 3:40 PM, Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/renesas-sh7750.h
+> @@ -0,0 +1,26 @@
+> +/*
+> + * Copyright (C) 2016 Yoshinori Sato
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +#ifndef __DT_BINDINGS_CLOCK_RENESAS_SH7750_H__
+> +#define __DT_BINDINGS_CLOCK_RENESAS_SH7750_H__
+> +
+> +#define SH7750_CLK_SCI 0
+> +#define SH7750_CLK_RTC 1
+> +#define SH7750_CLK_TMU0        2
+> +#define SH7750_CLK_TMU1        3
+> +#define SH7750_CLK_TMU2        4
+> +#define SH7750_CLK_SCIF        5
+> +#define SH7750_CLK_DMAC        6
+> +#define SH7750_CLK_UBC 7
+> +#define SH7750_CLK_SQ  8
+> +#define SH7750_CLK_INTC 9
+> +#define SH7750_CLK_TMU3        10
+> +#define SH7750_CLK_TMU4        11
+> +#define SH7750_CLK_PCIC        12
 
-Regards,
+Looking at the table in drivers/clk/sh/clk-sh7750cpg.c, SH7750_CLK_CORE seems
+to be missing?
 
-Tony
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__ */
+
+Relic from the Renesas CPG/MSSR driver.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
