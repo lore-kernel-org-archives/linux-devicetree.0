@@ -1,64 +1,42 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 14/22] sh: SH7751 core dtsi
-Date: Mon, 4 Jul 2016 09:15:31 +0200
-Message-ID: <CAMuHMdXPfP+A4PFy81bRoq4Va=5JpgCz2M3D6icWf0zCGTw8pA@mail.gmail.com>
-References: <1467207667-15768-1-git-send-email-ysato@users.sourceforge.jp> <1467207667-15768-15-git-send-email-ysato@users.sourceforge.jp>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] clkdev: add devm_of_clk_get()
+Date: Mon, 04 Jul 2016 09:54:05 +0200
+Message-ID: <7596144.XSxKMDxLKp@wuerfel>
+References: <87y45iz0cs.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1467207667-15768-15-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <87y45iz0cs.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-DT <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Linux-Kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sato-san,
+On Monday, July 4, 2016 1:04:30 AM CEST Kuninori Morimoto wrote:
+> @@ -501,6 +503,11 @@ static inline struct clk *of_clk_get(struct device_node *np, int index)
+>  {
+>         return ERR_PTR(-ENOENT);
+>  }
+> +struct clk *devm_of_clk_get(struct device *dev,
+> +                           struct device_node *np, int index)
+> +{
+> +       return ERR_PTR(-ENOENT);
+> +}
+>  static inline struct clk *of_clk_get_by_name(struct device_node *np,
+>                                              const char *name)
+>  {
+> -- 
+> 
 
-On Wed, Jun 29, 2016 at 3:40 PM, Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/renesas-sh7750.h
-> @@ -0,0 +1,26 @@
-> +/*
-> + * Copyright (C) 2016 Yoshinori Sato
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +#ifndef __DT_BINDINGS_CLOCK_RENESAS_SH7750_H__
-> +#define __DT_BINDINGS_CLOCK_RENESAS_SH7750_H__
-> +
-> +#define SH7750_CLK_SCI 0
-> +#define SH7750_CLK_RTC 1
-> +#define SH7750_CLK_TMU0        2
-> +#define SH7750_CLK_TMU1        3
-> +#define SH7750_CLK_TMU2        4
-> +#define SH7750_CLK_SCIF        5
-> +#define SH7750_CLK_DMAC        6
-> +#define SH7750_CLK_UBC 7
-> +#define SH7750_CLK_SQ  8
-> +#define SH7750_CLK_INTC 9
-> +#define SH7750_CLK_TMU3        10
-> +#define SH7750_CLK_TMU4        11
-> +#define SH7750_CLK_PCIC        12
+This is missing "static inline" as found by the bot.
 
-Looking at the table in drivers/clk/sh/clk-sh7750cpg.c, SH7750_CLK_CORE seems
-to be missing?
-
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_RENESAS_CPG_MSSR_H__ */
-
-Relic from the Renesas CPG/MSSR driver.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	Arnd
