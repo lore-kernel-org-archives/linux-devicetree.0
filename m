@@ -1,72 +1,130 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: linux-next: Tree for Jun 27 (pinctrl && !CONFIG_OF)
-Date: Mon, 4 Jul 2016 09:12:25 -0700
-Message-ID: <577A8AE9.3010807@infradead.org>
-References: <20160627163939.20e454d5@canb.auug.org.au>
- <57716D3D.4070302@infradead.org>
- <CACRpkdb2a=7QhW5A7yucC-DPo4NmNNcd3NcOznVtk0+8XMtbHA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb2a=7QhW5A7yucC-DPo4NmNNcd3NcOznVtk0+8XMtbHA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Torvalds <torvalds@linux-foundation.org>
+From: Pratyush Anand <panand@redhat.com>
+Subject: [PATCH 1/2] pcie/designware: Keep viewport fixed for IO transaction if num_viewport > 2
+Date: Mon,  4 Jul 2016 21:44:42 +0530
+Message-ID: <687a0706f69f6ebea047441aba5231113fd0c898.1467647958.git.panand@redhat.com>
+References: <cover.1467647958.git.panand@redhat.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1467647958.git.panand@redhat.com>
+In-Reply-To: <cover.1467647958.git.panand@redhat.com>
+References: <cover.1467647958.git.panand@redhat.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: dongbo4@huawei.com, bhelgaas@google.com, jingoohan1@gmail.com
+Cc: linux-pci@vger.kernel.org, Pratyush Anand <pratyush.anand@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Joao Pinto <jpinto@synopsys.com>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/16 02:46, Linus Walleij wrote:
-> On Mon, Jun 27, 2016 at 8:15 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
->> On 06/26/16 23:39, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20160624:
->>>
->>
->> on i386, when CONFIG_OF is not enabled ...
->> but OF_GPIO is enabled due to this in drivers/gpio/Kconfig:
->>
->> config OF_GPIO
->>         def_bool y
->>         depends on OF || COMPILE_TEST
->>
->> (above from commit 1e4a80640338924b9f9fd7a121ac31d08134410a
->> from Alexander Stein <alexanders83@web.de>)
->>
->>
->> ../drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:381:20: error: 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
->> ../drivers/pinctrl/bcm/pinctrl-cygnus-mux.c:739:20: error: 'pinconf_generic_dt_node_to_map_group' undeclared here (not in a function)
->> ../drivers/pinctrl/bcm/pinctrl-nsp-gpio.c:365:20: error: 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
->>
->> because that function is only present when CONFIG_OF is enabled.
->>
->>
->> Also, why does that commit (1e4a80640338924b9f9fd7a121ac31d08134410a)
->> not have any other S-O-B lines in it?  like whoever merged it?
-> 
-> I merged it I think, Alex made a long series enabling compile
-> testing and I started to cherry-pick the first commits to let
-> them trickle in.
+From: Pratyush Anand <pratyush.anand@gmail.com>
 
-I guess that when you do a git pull of a series of patches, you
-sign the pull commit but not each patch in the series?
-That could explain it.
+Most of the platform have 3 or more viewports. We do not need to share
+viewport for such platform between IO and CFG. Assign viewport 2 to IO
+transactions in such cases.
 
-> I was worried about it because some of the patches caused
-> severe build problems on some archs.
-> 
-> It's a  bit tricky to know what to do here: we want compile
-> coverage to get proper testing, when we turn it on we get regressions,
-> so trying to improve things make things break and it becomes a
-> vicious circle of trouble. I don't know what the biggest pain is ...
-> 
-> I don't really see the conclusion of this discussion thread, whether
-> I should revert the patch or not? For fixes or next?
+Signed-off-by: Pratyush Anand <pratyush.anand@gmail.com>
+Tested-by: Dong Bo <dongbo4@huawei.com>
+---
+ .../devicetree/bindings/pci/designware-pcie.txt    |  3 +++
+ drivers/pci/host/pcie-designware.c                 | 26 ++++++++++++++++------
+ drivers/pci/host/pcie-designware.h                 |  1 +
+ 3 files changed, 23 insertions(+), 7 deletions(-)
 
-I agree with Arnd that this particular commit should be reverted
-(1e4a80640338924b9f9fd7a121ac31d08134410a).
-
-
+diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+index 6c5322c55411..a72b7ecb80ee 100644
+--- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+@@ -17,6 +17,8 @@ Required properties:
+ - num-lanes: number of lanes to use
+ 
+ Optional properties:
++- num-viewport: number of view port configured in hardware. If a platform
++  does not specify it then driver will consider num-viewport as 2.
+ - num-lanes: number of lanes to use (this property should be specified unless
+   the link is brought already up in BIOS)
+ - reset-gpio: gpio pin number of power good signal
+@@ -44,4 +46,5 @@ Example configuration:
+ 		interrupts = <25>, <24>;
+ 		#interrupt-cells = <1>;
+ 		num-lanes = <1>;
++		num-viewport = <3>;
+ 	};
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index aafd766546f3..4c17c02ad72b 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -51,6 +51,7 @@
+ #define PCIE_ATU_VIEWPORT		0x900
+ #define PCIE_ATU_REGION_INBOUND		(0x1 << 31)
+ #define PCIE_ATU_REGION_OUTBOUND	(0x0 << 31)
++#define PCIE_ATU_REGION_INDEX2		(0x2 << 0)
+ #define PCIE_ATU_REGION_INDEX1		(0x1 << 0)
+ #define PCIE_ATU_REGION_INDEX0		(0x0 << 0)
+ #define PCIE_ATU_CR1			0x904
+@@ -521,6 +522,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (ret)
+ 		pp->lanes = 0;
+ 
++	ret = of_property_read_u32(np, "num-viewport", &pp->num_viewport);
++	if (ret)
++		pp->num_viewport = 2;
++
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+ 		if (!pp->ops->msi_host_init) {
+ 			pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
+@@ -603,9 +608,10 @@ static int dw_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				  type, cpu_addr,
+ 				  busdev, cfg_size);
+ 	ret = dw_pcie_cfg_read(va_cfg_base + where, size, val);
+-	dw_pcie_prog_outbound_atu(pp, PCIE_ATU_REGION_INDEX0,
+-				  PCIE_ATU_TYPE_IO, pp->io_base,
+-				  pp->io_bus_addr, pp->io_size);
++	if (pp->num_viewport <= 2)
++		dw_pcie_prog_outbound_atu(pp, PCIE_ATU_REGION_INDEX0,
++					  PCIE_ATU_TYPE_IO, pp->io_base,
++					  pp->io_bus_addr, pp->io_size);
+ 
+ 	return ret;
+ }
+@@ -640,9 +646,10 @@ static int dw_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				  type, cpu_addr,
+ 				  busdev, cfg_size);
+ 	ret = dw_pcie_cfg_write(va_cfg_base + where, size, val);
+-	dw_pcie_prog_outbound_atu(pp, PCIE_ATU_REGION_INDEX0,
+-				  PCIE_ATU_TYPE_IO, pp->io_base,
+-				  pp->io_bus_addr, pp->io_size);
++	if (pp->num_viewport <= 2)
++		dw_pcie_prog_outbound_atu(pp, PCIE_ATU_REGION_INDEX0,
++					  PCIE_ATU_TYPE_IO, pp->io_base,
++					  pp->io_bus_addr, pp->io_size);
+ 
+ 	return ret;
+ }
+@@ -778,10 +785,15 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	 * uses its own address translation component rather than ATU, so
+ 	 * we should not program the ATU here.
+ 	 */
+-	if (!pp->ops->rd_other_conf)
++	if (!pp->ops->rd_other_conf) {
+ 		dw_pcie_prog_outbound_atu(pp, PCIE_ATU_REGION_INDEX1,
+ 					  PCIE_ATU_TYPE_MEM, pp->mem_base,
+ 					  pp->mem_bus_addr, pp->mem_size);
++		if (pp->num_viewport > 2)
++			dw_pcie_prog_outbound_atu(pp, PCIE_ATU_REGION_INDEX2,
++						  PCIE_ATU_TYPE_IO, pp->io_base,
++						  pp->io_bus_addr, pp->io_size);
++	}
+ 
+ 	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+ 
+diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+index f437f9b5be04..61f479dd181d 100644
+--- a/drivers/pci/host/pcie-designware.h
++++ b/drivers/pci/host/pcie-designware.h
+@@ -49,6 +49,7 @@ struct pcie_port {
+ 	struct resource		*busn;
+ 	int			irq;
+ 	u32			lanes;
++	u32			num_viewport;
+ 	struct pcie_host_ops	*ops;
+ 	int			msi_irq;
+ 	struct irq_domain	*irq_domain;
 -- 
-~Randy
+2.5.5
