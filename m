@@ -1,110 +1,31 @@
-From: andrew-ct chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
-Date: Mon, 4 Jul 2016 19:09:15 +0800
-Message-ID: <1467630555.18007.8.camel@mtksdaap41>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
-	 <20160607112235.475c2e4c@recife.lan> <575746EE.3030706@cisco.com>
-	 <1465902488.27938.7.camel@mtksdaap41> <20160616075428.0fde4aaa@recife.lan>
-	 <8a46c1e7-1f27-1e67-8c05-b133598b6a66@xs4all.nl>
-	 <1467373995.17297.2.camel@mtksdaap41>
-	 <7ee128a2-f026-5404-bbac-6b5c1bee51e7@xs4all.nl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 3/3] gpio: lp873x: Add support for General Purpose Outputs
+Date: Mon, 4 Jul 2016 13:22:38 +0200
+Message-ID: <CACRpkdZ-gcedMc53V8LZm3vhhd+n0PPudF_fSd_5kSmKX3obkg@mail.gmail.com>
+References: <1467215067-6486-1-git-send-email-j-keerthy@ti.com> <1467215067-6486-4-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7ee128a2-f026-5404-bbac-6b5c1bee51e7-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467215067-6486-4-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-07-01 at 14:00 +0200, Hans Verkuil wrote:
-> On 07/01/2016 01:53 PM, andrew-ct chen wrote:
-> > On Fri, 2016-07-01 at 12:11 +0200, Hans Verkuil wrote:
-> >> On 06/16/2016 12:54 PM, Mauro Carvalho Chehab wrote:
-> >>> Em Tue, 14 Jun 2016 19:08:08 +0800
-> >>> tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
-> >>>
-> >>>> Hi Mauro,
-> >>>>
-> >>>>
-> >>>> On Wed, 2016-06-08 at 07:13 +0900, Hans Verkuil wrote:
-> >>>>>
-> >>>>> On 06/07/2016 11:22 PM, Mauro Carvalho Chehab wrote:  
-> >>>>>> Em Mon, 30 May 2016 20:29:14 +0800
-> >>>>>> Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
-> >>>>>>  
-> >>>>>>> ==============
-> >>>>>>>   Introduction
-> >>>>>>> ==============
-> >>>>>>>
-> >>>>>>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
-> >>>>>>> Mediatek Video Codec is able to handle video decoding of in a range of formats.
-> >>>>>>>
-> >>>>>>> This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
-> >>>>>>> V4L2_PIX_FMT_MT21 format.
-> >>>>>>>
-> >>>>>>> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
-> >>>>>>> and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
-> >>>>>>> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
-> >>>>>>>
-> >>>>>>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
-> >>>>>>>
-> >>>>>>> [1]https://patchwork.linuxtv.org/patch/33734/
-> >>>>>>> [2]https://chromium-review.googlesource.com/#/c/245241/  
-> >>>>>>
-> >>>>>> Hmm... I'm not seeing the firmware for this driver at the
-> >>>>>> linux-firmware tree:
-> >>>>>> 	https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/log/
-> >>>>>>
-> >>>>>> Nor I'm seeing any pull request for them. Did you send it?
-> >>>>>> I'll only merge the driver upstream after seeing such pull request.  
-> >>>>>   
-> >>>> Sorry, I am not familiar with how to upstream firmware.
-> >>>> Do you mean we need to upstream vpu firmware first before merge encoder
-> >>>> driver upstream?
-> >>>
-> >>> Please look at this page:
-> >>> 	https://linuxtv.org/wiki/index.php/Development:_How_to_submit_patches#Firmware_submission
-> >>>
-> >>> The information here can also be useful:
-> >>> 	https://www.kernel.org/doc/readme/firmware-README.AddingFirmware
-> >>>
-> >>> In summary, you need to provide redistribution rights for the
-> >>> firmware blob. You can either submit it to me or directly to
-> >>> linux-firmware. In the latter, please c/c me on such patch.
-> >>
-> >> Tiffany, what is the status of the firmware submission?
-> >>
-> >> Regards,
+On Wed, Jun 29, 2016 at 5:44 PM, Keerthy <j-keerthy@ti.com> wrote:
 
+> Add driver for lp873x PMIC family GPOs. Two GPOs are supported
+> and can be configured in Open-drain output or Push-pull output.
+>
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
 
-> >>
-> >> 	Hans
-> > 
-> > Hi Hans,
-> > We are working on firmware test to make sure that both decoder and
-> > encoder work well. Hopes it can be ready (firmware submission) on July 4
-> > or July 5.
-> 
-> OK, great! Just wanted to make sure that this work was progressing and not stalled.
-> 
-> Thanks!
-> 
-> 	Hans
+Looks all right to me.
 
-Hi Hans,
+> +#include <linux/mfd/lp873x.h>
 
-We have submitted VPU firmware for encoder as the following link.
-http://lists.infradead.org/pipermail/linux-mediatek/2016-July/006082.html
-If the series of decoder patches apply, we will update the VPU firmware
-for decoder support.
+I guess this means Lee must merge this.
 
-Thanks!.
-	
-	Andrew
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
