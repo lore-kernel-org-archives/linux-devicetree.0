@@ -1,69 +1,98 @@
-From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ARM:dts-Add dt node for Broadcom iproc-static-adc
-Date: Mon, 4 Jul 2016 09:59:48 -0700
-Message-ID: <577A9604.90702@broadcom.com>
-References: <1467099636-31855-1-git-send-email-raveendra.padasalagi@broadcom.com>
- <1467099636-31855-4-git-send-email-raveendra.padasalagi@broadcom.com>
- <184c47dc-6cdb-c314-9f29-7b03d5784de6@kernel.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] dt-bindings: Document the STM32 reset bindings
+Date: Mon, 04 Jul 2016 19:36:06 +0200
+Message-ID: <1467653766.2224.76.camel@pengutronix.de>
+References: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
+	 <1467640052-6770-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <184c47dc-6cdb-c314-9f29-7b03d5784de6-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467640052-6770-2-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gabriel.fernandez-qxv4g6HH51o@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Florian,
+Am Montag, den 04.07.2016, 15:47 +0200 schrieb gabriel.fernandez-qxv4g6HH51o@public.gmane.org:
+> From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> This adds documentation of device tree bindings for the
+> STM32 reset controller.
+> 
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Patch to apply
+The way I understand Documentation/SubmittingPatches, this should also
+have your Signed-off-by.
 
-On 16-07-03 03:34 AM, Jonathan Cameron wrote:
-> On 28/06/16 08:40, Raveendra Padasalagi wrote:
->> This patch adds DT node for Broadcom's iproc-static-adc
->> controller driver.
->>
->> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Driver is working its way towards just making the next merge window...
->
-> Guessing this will go through the relevant path to the arm-soc tree
-> as normal.
-Florian, can you add to next pull request?
+> ---
+>  .../devicetree/bindings/reset/st,stm32-rcc.txt     | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+> new file mode 100644
+> index 0000000..333080c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+> @@ -0,0 +1,50 @@
+> +STMicroelectronics STM32 Peripheral Reset Controller
+> +====================================================
+> +
+> +The RCC IP is both a reset and a clock controller. This documentation only
+> +documents the reset part.
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible: Should be "st,stm32-rcc"
+> +- reg: should be register base and length as documented in the
+> +  datasheet
+> +- #reset-cells: 1, see below
+> +
+> +example:
+> +
+> +rcc: reset@40023800 {
+> +	#reset-cells = <1>;
+> +	compatible = "st,stm32-rcc";
+> +	reg = <0x40023800 0x400>;
+> +};
+> +
+> +Specifying softreset control of devices
+> +=======================================
+> +
+> +Device nodes should specify the reset channel required in their "resets"
+> +property, containing a phandle to the reset device node and an index specifying
+> +which channel to use.
+> +The index is the bit number within the RCC registers bank, starting from RCC
+> +base address.
+> +It is calculated as: index = register_offset / 4 * 32 + bit_offset.
+> +Where bit_offset is the bit offset within the register.
+> +For example, for CRC reset:
+> +  crc = AHB1RSTR_offset / 4 * 32 + CRCRST_bit_offset = 0x10 / 4 * 32 + 12 = 140
 
->
-> Thanks,
->
-> Jonathan
->> ---
->>   arch/arm/boot/dts/bcm-cygnus.dtsi | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
->> index b42fe55..fabc9f3 100644
->> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
->> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
->> @@ -366,5 +366,16 @@
->>   			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
->>   			status = "disabled";
->>   		};
->> +
->> +		adc: adc@180a6000 {
->> +			compatible = "brcm,iproc-static-adc";
->> +			#io-channel-cells = <1>;
->> +			io-channel-ranges;
->> +			adc-syscon = <&ts_adc_syscon>;
->> +			clocks = <&asiu_clks BCM_CYGNUS_ASIU_ADC_CLK>;
->> +			clock-names = "tsc_clk";
->> +			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
->> +			status = "disabled";
->> +		};
+I see you decided to keep the register offset encoded in the reset
+index.
 
-Thanks,
-  Scott
->>   	};
->>   };
->>
->
+> +
+> +To simplify the usagen and to share bit definition with the clock driver of
+
+s/usagen/usage/
+
+> +the RCC IP, macros are available to generate the index in human-readble
+> +format.
+> +
+> +For STM32F4 series, the macro are available here:
+> + - include/dt-bindings/mfd/stm32f4-rcc.h
+
+If DT and ARM/STI and maintainers agree with the binding and header
+macros, I'm inclined to take patches 1-3.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
