@@ -1,58 +1,98 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 3/3] ARM: dts: blanche: add Ethernet pins
-Date: Mon, 04 Jul 2016 23:55:13 +0300
-Message-ID: <3279336.lifIduxqUW@wasted.cogentembedded.com>
-References: <2793535.9X0Tq7I1Mq@wasted.cogentembedded.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: portable device tree connector -- problem statement
+Date: Mon, 4 Jul 2016 13:58:53 -0700
+Message-ID: <577ACE0D.9050700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2793535.9X0Tq7I1Mq@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robh+dt@kernel.org>, david@gibson.dropbear.id.au, stephen.boyd@linaro.org, broonie@kernel.org, grant.likely@secretlab.ca, Mark Rutland <mark.rutland@arm.com>, mporter@konsulko.com, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, marex@denx.de, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-Add the (previously omitted) pin data for the SMSC LAN89218 Ethernet chip
-to the Blanche board's device tree: the chip's IRQ output is connected to
-the SoC's IRQ0 pin and its nCS input is connected to the SoC's EX_CS0# pin.
+Hi Pantelis,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+As I have been trying to understand the proposal for a portable device
+tree connector, I am starting to appreciate the possible complexity of
+the problem you are trying to solve.  I suspect that the details of the
+problem space are something you know a lot about and take for granted.
+On the other hand, I have no previous detailed knowledge of the beagle
+family.
 
----
- arch/arm/boot/dts/r8a7792-blanche.dts |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+This means that I do not have a functional requirements model to
+evaluate proposals against.
 
-Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
-+++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-@@ -50,6 +50,9 @@
- 		reg-io-width = <4>;
- 		vddvario-supply = <&d3_3v>;
- 		vdd33a-supply = <&d3_3v>;
-+
-+		pinctrl-0 = <&lan89218_pins>;
-+		pinctrl-names = "default";
- 	};
- };
- 
-@@ -67,6 +70,18 @@
- 		groups = "scif3_data";
- 		function = "scif3";
- 	};
-+
-+	lan89218_pins: lan89218 {
-+		intc {
-+			groups = "intc_irq0";
-+			function = "intc";
-+		};
-+		lbsc {
-+			groups = "lbsc_ex_cs0";
-+			function = "lbsc";
-+		};
-+	};
-+
- };
- 
- &scif0 {
+The following might or might not be correct, but it is the type
+of information that would help create a functional requirements
+model:
+
+1) There are several different beaglebone boards
+    - beaglebone, several versions  (does not have P8, P9,
+      so not relevant?)
+    - beaglebone (at least 6 revisions)
+    - beaglebone black (at least 10 revisions)
+    - beaglebone green (adds Grove connectors)
+    - could be others, I don't know
+
+2) The different beaglebones all have two expansion
+   connectors?
+    - all connectors have the same physical specification?
+    - the pinout of the same connectors (P8 and P9)
+      - is the same on all beaglebones?
+      - is different on different beaglebones?
+      - there is a small number of different pinouts?
+      - there is a large number of different pinouts?
+    - for bones with the same pinout:
+      - the pins are routed to different function blocks on the
+        SOC because different bones may have different SOCs?
+        - the different functional blocks are compatible or not?
+      - the pins are routed to different function blocks on the
+        SOC, even though different bones have the same SOC,
+        because that is a design decision by the bone designer?
+    - for bones with a different pinout:
+      - is there an overlap with the pinout of other bones, with
+        just some of the pins having a different definition?
+
+There are a lot of potential functional requirements based on
+the above questions.  This is not meant to be anywhere near
+exhaustive, just illustrative.
+
+1) Provide an interface definition that allows a single cape
+P8 definition to work on different versions of host board,
+where the pinout is consistent across the bones, and the
+routing of signals between the SOC (and other chips) to
+the P8 connector is consistent.
+
+2) Provide an interface definition that allows a single cape
+   P8 definition to work on different versions of host board,
+   where the pinout is consistent across the bones, but the
+   routing of signals between the SOC (and other chips) to
+   the P8 connector differs.
+
+   1a) Same as "1)", but for P9.
+   1b) Same as "1)", but for both P8 and P9.
+
+3) Provide an interface definition that allows a single cape
+   P8 definition that only uses a specified subset of the P8
+   pins to work on different versions of the host board, where
+   the pinout of the specified subset is consistent across the
+   bones.
+
+   2a) Same as "2)", but for P9.
+   2b) Same as "2)", but for both P8 and P9.
+
+4) Provide an interface definition that requires a different
+   cape definition for different versions of host board.
+
+Again, there are more possible variations on what functional
+requirements might be useful to support in a portable device
+tree connector.  I was just trying to provide a flavor of
+what I am looking for.
+
+Is the problem statement and an explanation of the underlying
+constraints that lead to the problem statement available?
+
+Thanks,
+
+Frank
