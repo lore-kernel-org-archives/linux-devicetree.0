@@ -1,44 +1,54 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 3/3] ARM: dts: am437x-sk-evm: disable DDR regulator in rtc-only/poweroff mode
-Date: Mon, 4 Jul 2016 12:04:02 +0530
-Message-ID: <1467614042-6838-4-git-send-email-j-keerthy@ti.com>
-References: <1467614042-6838-1-git-send-email-j-keerthy@ti.com>
+From: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] iio: adc: max1363: Add device tree binding
+ documentation
+Date: Mon, 4 Jul 2016 08:56:05 +0200
+Message-ID: <577A0885.10209@heig-vd.ch>
+References: <1467272586-28761-1-git-send-email-florian.vaussard@heig-vd.ch>
+ <1467272586-28761-2-git-send-email-florian.vaussard@heig-vd.ch>
+ <57424d5d-2b28-2ea1-153c-6282899492a9@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467614042-6838-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org, broonie@kernel.org, robh+dt@kernel.org, j-keerthy@ti.com, Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57424d5d-2b28-2ea1-153c-6282899492a9-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vaussard Florian <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+Hi Jonathan,
 
-Without this, the memory will remain active during poweroff consuming
-extra power. Please note revision 2.1 PMIC seems to fail when DCDC3
-disable is attempted, so this is not done on that PMIC revision. The
-PMIC revision checks in the regulator patches make sure of this.
+On 07/03/2016 12:41 PM, Jonathan Cameron wrote:
+> On 30/06/16 08:43, Florian Vaussard wrote:
+>> Add the device tree documentation for all the supported parts. Mandatory
+>> binding is the compatible string and the slave I2C address.
+>>
+>> Optional properties can be used to specify the Vcc / Vref regulators, as
+>> well as the IRQ line if available.
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+> Really small point, but typically author sign off goes first then acks etc
+> that are gained at any intermediate states, then the sign off of whoever takes
+> the patch and applies it (here, that's me).  So it kind of communicates some
+> idea of when in the process various tags were obtained.  It's not a rule
+> set in stone though so I'll be lazy and leave this as it is.
+> 
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- arch/arm/boot/dts/am437x-sk-evm.dts | 3 +++
- 1 file changed, 3 insertions(+)
+Agree, I will try to stick to this in the future. Looking at some previous
+patches, I see that I used both styles without noticing.
 
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index b5e84e6..3af92b6 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -457,6 +457,9 @@
- 			regulator-state-mem {
- 				regulator-on-in-suspend;
- 			};
-+			regulator-state-disk {
-+				regulator-off-in-suspend;
-+			};
- 		};
- 
- 		dcdc4: regulator-dcdc4 {
--- 
-1.9.1
+> Anyhow, great and applied to the togreg branch of iio.git initially pushed
+> out as testing for the autobuilders to poke it (or not in the case of this
+> docume
+> 
+
+Great. Do you plan to send them for the next merge window, or will you wait for
+the 4.9 cycle?
+
+Best,
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
