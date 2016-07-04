@@ -1,144 +1,51 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 3/7] phy: Add set_mode callback
-Date: Mon, 4 Jul 2016 18:22:10 +0530
-Message-ID: <577A5BFA.5010308@ti.com>
-References: <1462837203-12125-1-git-send-email-david@lechnology.com>
- <1462837203-12125-4-git-send-email-david@lechnology.com>
- <57712075.1090202@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: mtd: nand: omap2: check for elm_id removed
+Date: Mon, 4 Jul 2016 15:01:59 +0200
+Message-ID: <20160704150159.0af47ad5@bbrezillon>
+References: <1467636717.4618.19.camel@lws-tremmet.phytec.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57712075.1090202@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, nsekhar@ti.com, Bin Liu <b-liu@ti.com>
-Cc: khilman@kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alan Stern <stern@rowland.harvard.edu>, Lee Jones <lee.jones@linaro.org>, petr@barix.com, sergei.shtylyov@cogentembedded.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467636717.4618.19.camel-wipSkzokR0f8DgGbXC/JcDlJRLeN4+xs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bin,
+On Mon, 04 Jul 2016 14:51:57 +0200
+Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org> wrote:
 
-On Monday 27 June 2016 06:17 PM, Kishon Vijay Abraham I wrote:
-> Hi,
+> Hello,
 > 
-> On Tuesday 10 May 2016 05:09 AM, David Lechner wrote:
->> The initial use for this is for PHYs that have a mode related to USB OTG.
->> There are several SoCs (e.g. TI OMAP and DA8xx) that have a mode setting
->> in the USB PHY to override OTG VBUS and ID signals.
->>
->> Of course, the enum can be expaned in the future to include modes for
->> other types of PHYs as well.
->>
->> Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
->> Signed-off-by: David Lechner <david@lechnology.com>
+> with commit c9711ec5250b22fd94e9b34c17c095e001a90e66
+> ("mtd: nand: omap: Clean up device tree support")
+> the old "elm_id" property check has been removed. So only "ti,elm-id" is
+> valid now.
+> I noticed that the old property is still used by 3 boards:
 > 
-> I've created a immutable branch for this patch and it can be found here.
-> git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
-> tags/phy-set-mode
-
-There was a build error in the above tag with allyesconfig. So I have created a
-new tag which includes the fix patch in addition to this patch.
-
-new tag:
-tags/phy-set-mode-v2
-
-In the patches you sent to Greg [1], I didn't see this series included. However
-if you are planning to send another pull request for the next merge window,
-request you to use the new tag.
-
-Thanks
-Kishon
-
-[1] -> http://www.spinics.net/lists/linux-usb/msg142788.html
+> git grep elm_id arch/arm/boot/dts/*
+> arch/arm/boot/dts/am335x-baltos.dtsi:           elm_id = <&elm>;
+> arch/arm/boot/dts/am335x-igep0033.dtsi:         elm_id = <&elm>;
+> arch/arm/boot/dts/am335x-phycore-som.dtsi:              elm_id = <&elm>;
 > 
-> I've merged this tag to my -next.
+> I wonder if the right way would be to patch the device trees, or to add
+> the check again and to keep backward compatibility?
+
+We should probably do both, though backward compat is usually dependent
+on the platform maintainer (some accept to break DT backward compat).
+
+Anyway, all DTs should be patched to use the new binding, so you can at
+least send a patch doing that.
+
 > 
-> Thanks
-> Kishon
+> I may provide a patch then.
 > 
->> ---
->>  drivers/phy/phy-core.c  | 15 +++++++++++++++
->>  include/linux/phy/phy.h | 17 +++++++++++++++++
->>  2 files changed, 32 insertions(+)
->>
->> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
->> index e7e574d..fe0344c 100644
->> --- a/drivers/phy/phy-core.c
->> +++ b/drivers/phy/phy-core.c
->> @@ -342,6 +342,21 @@ int phy_power_off(struct phy *phy)
->>  }
->>  EXPORT_SYMBOL_GPL(phy_power_off);
->>  
->> +int phy_set_mode(struct phy *phy, enum phy_mode mode)
->> +{
->> +	int ret;
->> +
->> +	if (!phy || !phy->ops->set_mode)
->> +		return 0;
->> +
->> +	mutex_lock(&phy->mutex);
->> +	ret = phy->ops->set_mode(phy, mode);
->> +	mutex_unlock(&phy->mutex);
->> +
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(phy_set_mode);
->> +
->>  /**
->>   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
->>   * @np: device_node for which to get the phy
->> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
->> index 8cf05e3..4248ade 100644
->> --- a/include/linux/phy/phy.h
->> +++ b/include/linux/phy/phy.h
->> @@ -22,12 +22,20 @@
->>  
->>  struct phy;
->>  
->> +enum phy_mode {
->> +	PHY_MODE_INVALID,
->> +	PHY_MODE_USB_HOST,
->> +	PHY_MODE_USB_DEVICE,
->> +	PHY_MODE_USB_OTG,
->> +};
->> +
->>  /**
->>   * struct phy_ops - set of function pointers for performing phy operations
->>   * @init: operation to be performed for initializing phy
->>   * @exit: operation to be performed while exiting
->>   * @power_on: powering on the phy
->>   * @power_off: powering off the phy
->> + * @set_mode: set the mode of the phy
->>   * @owner: the module owner containing the ops
->>   */
->>  struct phy_ops {
->> @@ -35,6 +43,7 @@ struct phy_ops {
->>  	int	(*exit)(struct phy *phy);
->>  	int	(*power_on)(struct phy *phy);
->>  	int	(*power_off)(struct phy *phy);
->> +	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
->>  	struct module *owner;
->>  };
->>  
->> @@ -119,6 +128,7 @@ int phy_init(struct phy *phy);
->>  int phy_exit(struct phy *phy);
->>  int phy_power_on(struct phy *phy);
->>  int phy_power_off(struct phy *phy);
->> +int phy_set_mode(struct phy *phy, enum phy_mode mode);
->>  static inline int phy_get_bus_width(struct phy *phy)
->>  {
->>  	return phy->attrs.bus_width;
->> @@ -224,6 +234,13 @@ static inline int phy_power_off(struct phy *phy)
->>  	return -ENOSYS;
->>  }
->>  
->> +static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
->> +{
->> +	if (!phy)
->> +		return 0;
->> +	return -ENOSYS;
->> +}
->> +
->>  static inline int phy_get_bus_width(struct phy *phy)
->>  {
->>  	return -ENOSYS;
->>
+> Regards,
+> Teresa
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
