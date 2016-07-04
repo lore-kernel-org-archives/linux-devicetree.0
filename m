@@ -1,46 +1,77 @@
-From: "Wu, Songjun" <songjun.wu@atmel.com>
-Subject: Re: [PATCH v5 0/2] [media] atmel-isc: add driver for Atmel ISC
-Date: Mon, 4 Jul 2016 11:04:16 +0800
-Message-ID: <8aaf895f-d600-7df6-fcb4-3c3e366c0b90@atmel.com>
-References: <1466153854-30272-1-git-send-email-songjun.wu@atmel.com>
- <e96fe150-2e5c-5ffa-3c1b-99e55fa4bff0@xs4all.nl>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v9 01/10] clk: fix initial state of critical clock's
+ parents
+Date: Mon, 4 Jul 2016 11:51:48 +0800
+Message-ID: <1467604308.26485.4.camel@mtksdaap41>
+References: <1466581229-2342-1-git-send-email-erin.lo@mediatek.com>
+	 <1466581229-2342-2-git-send-email-erin.lo@mediatek.com>
+	 <20160702012140.GB17071@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <e96fe150-2e5c-5ffa-3c1b-99e55fa4bff0@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, laurent.pinchart@ideasonboard.com, nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, robh@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, =?UTF-8?Q?Niklas_S=c3=83=c2=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, =?UTF-8?Q?Richard_R=c3=b6jfors?= <richard@puffinpack.se>, Benoit Parrot <bparrot@ti.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Peter Griffin <peter.griffin@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160702012140.GB17071@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>
+Cc: Erin Lo <erin.lo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 2016-07-01 at 18:21 -0700, Stephen Boyd wrote:
+> (Resending to everyone)
+> 
+> On 06/22, Erin Lo wrote:
+> > From: James Liao <jamesjj.liao@mediatek.com>
+> > 
+> > This patch fixed wrong state of parent clocks if they are registered
+> > after critical clocks.
+> > 
+> > Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> 
+> It would be nice if you included the information about the
+> problem from James' previous mail. This says what it does, but
+> doesn't explain what the problem is and how it is fixing it.
+> 
+> > ---
+> >  drivers/clk/clk.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index d584004..e9f5f89 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -2388,8 +2388,15 @@ static int __clk_core_init(struct clk_core *core)
+> >  	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
+> >  		struct clk_core *parent = __clk_init_parent(orphan);
+> >  
+> > -		if (parent)
+> > +		if (parent) {
+> >  			clk_core_reparent(orphan, parent);
+> > +
+> > +			if (orphan->prepare_count)
+> > +				clk_core_prepare(parent);
+> > +
+> > +			if (orphan->enable_count)
+> > +				clk_core_enable(parent);
+> > +		}
+> >  	}
+> 
+> I'm pretty sure I pointed this problem out to Mike when the
+> critical clk patches were being pushed. I can't recall what the
+> plan was though to fix the problem. I'm pretty sure he said that
+> clk_core_reparent() would take care of it, but obviously it is
+> not doing that. Or perhaps it was that clk handoff should figure
+> out that the parents of a critical clk are also on and thus keep
+> them on.
+
+Hi Mike
+
+Is there any other patch to fix this issue? Or did I misuse critical
+clock flag?
 
 
-On 7/1/2016 20:20, Hans Verkuil wrote:
-> Hi Songjun,
->
-> First of all, please CC patch 2/2 to linux-media as well the next time you post this.
-> I only see 1/2 on the mailinglist, and we need both.
->
-> Secondly, before I can accept it you need to run the v4l2-compliance test first and
-> I need to see the output of that test.
->
-> The compliance test is here: https://git.linuxtv.org/v4l-utils.git. Always compile it from
-> the repository so you know you are using the latest most up to date version.
->
-> Since this driver supports multiple pixelformats you need to test with the -f option,
-> which tests streaming for all pixelformats.
->
-> Obviously, there shouldn't be any FAILs :-)
->
-> I greatly simplifies the code review if I know it passes the compliance test.
->
-Hi Hans,
+Best regards,
 
-You suggestion is very helpful to me.
-I will give the output of the compliance test in next version.
+James
 
-> Regards,
->
-> 	Hans
->
+
