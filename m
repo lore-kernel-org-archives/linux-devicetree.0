@@ -1,100 +1,53 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [RFC PATCH v2 2/4] net: ethernet: xilinx: Add gmii2rgmii
- converter support
-Date: Mon, 4 Jul 2016 11:47:50 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5BB227@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
- <1467623084-15471-3-git-send-email-appanad@xilinx.com>
- <577A323A.4080207@atmel.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3] ARM: at91: Document new TCB bindings
+Date: Mon, 4 Jul 2016 14:03:58 +0200
+Message-ID: <20160704140358.53ea7ad7@bbrezillon>
+References: <1467409925-17761-1-git-send-email-alexandre.belloni@free-electrons.com>
+	<20160704122452.69dcddf0@bbrezillon>
+	<20160704103631.GE20045@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <577A323A.4080207@atmel.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>, Anirudha Sarangi <anirudh@xilinx.com>, Harini Katakam <harinik@xilinx.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160704103631.GE20045@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+On Mon, 4 Jul 2016 12:36:31 +0200
+Alexandre Belloni <alexandre.belloni@free-electrons.com> wrote:
 
-	Thanks for the review...
-
-> > diff --git a/include/linux/xilinx_gmii2rgmii.h
-> > b/include/linux/xilinx_gmii2rgmii.h
-> > new file mode 100644
-> > index 0000000..b328ee7
-> > --- /dev/null
-> > +++ b/include/linux/xilinx_gmii2rgmii.h
-> > @@ -0,0 +1,24 @@
+> On 04/07/2016 at 12:24:52 +0200, Boris Brezillon wrote :
+> > On Fri,  1 Jul 2016 23:52:05 +0200
+> > Alexandre Belloni <alexandre.belloni@free-electrons.com> wrote:  
+> > > +One interrupt per TC block:
+> > > +	tcb0: timer@fff7c000 {
+> > > +		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> > > +		#address-cells = <1>;
+> > > +		#size-cells = <0>;
+> > > +		reg = <0xfff7c000 0x100>;
+> > > +		interrupts = <18 4>;
+> > > +		clocks = <&tcb0_clk>, <&clk32k>;
+> > > +		clock-names = "t0_clk", "slow_clk";
+> > > +
+> > > +		timer@0 {
+> > > +			compatible = "atmel,tcb-timer";
+> > > +			reg = <0>, <1>;
+> > > +		};
+> > > +
+> > > +		timer@2 {
+> > > +			compatible = "atmel,tcb-timer";
+> > > +			reg = <2>;
+> > > +		};  
+> > 
+> > And how can you differentiate the clocksource from the clkevent?
+> >   
 > 
+> It doesn't really matter actually, I'll do the selection in the driver,
+> as suggested by Rob.
 > 
-> Here, header of the file seems needed.
 
-Sure will fix in the next version...
-
-> 
-> > +#ifndef _GMII2RGMII_H
-> > +#define _GMII2RGMII_H
-> > +
-> > +#include <linux/of.h>
-> > +#include <linux/phy.h>
-> > +#include <linux/mii.h>
-> > +
-> > +#define XILINX_GMII2RGMII_FULLDPLX		BMCR_FULLDPLX
-> > +#define XILINX_GMII2RGMII_SPEED1000		BMCR_SPEED1000
-> > +#define XILINX_GMII2RGMII_SPEED100		BMCR_SPEED100
-> > +#define XILINX_GMII2RGMII_REG_NUM			0x10
-> > +
-> > +struct gmii2rgmii {
-> > +	struct net_device	*dev;
-> > +	struct mii_bus		*mii_bus;
-> > +	struct phy_device	*gmii2rgmii_phy_dev;
-> > +	void			*platform_data;
-> > +	int (*mdio_write)(struct mii_bus *bus, int mii_id, int reg,
-> > +			  u16 val);
-> > +	void (*fix_mac_speed)(struct gmii2rgmii *xphy, unsigned int speed);
-> > +};
-> > +
-> > +extern int gmii2rgmii_phyprobe(struct gmii2rgmii *xphy); #endif
-> 
-> I see a compilation issue here:
-> 
-> You should provide a way to have this function even if the NET_VENDOR_XILINX
-> config option is not selected (test to compile with the sama5_defconfig and
-> you'll see).
-
-Ok will fix in the next version...
-
-> 
-> What about making this function void in case of !XILINX?
-
-This is one way to get rid of compilation error. Changes will be look like below
-
-#ifdef CONFIG_NET_VENDOR_XILINX
- extern int gmii2rgmii_phyprobe(struct gmii2rgmii *xphy);
-#else
-extern void gmii2rgmii_phyprobe(struct gmii2rgmii *xphy);
-void gmii2rgmii_phyprobe(struct gmii2rgmii *xphy)
-{
-}
-#endif
-For me the changes are looking odd...
-
-Other possible ways 
-	1)  Put a config check around phyprobe api in the macb driver.
-#ifdef CONFIG_XILINX_GMII2RGMII
-                       gmii2rgmii_phyprobe(&bp->converter_phy);
-#endif
-	2) Select NET_VENDOR_XILINX in the macb Kconfig 
-@ -22,6 +22,7 @@ config MACB
-        tristate "Cadence MACB/GEM support"
-        depends on HAS_DMA
-        select PHYLIB
-+       select NET_VENDOR_XILINX
-
-Please let me know which one you prefer will fix that and will post v3...
-
-Regards,
-Kedar.
+Yes, I've read Rob's review, but then what's the point of defining 2
+timer nodes, just do the detection based on the number of channels
+you've reserved for the timer and define a single node.
