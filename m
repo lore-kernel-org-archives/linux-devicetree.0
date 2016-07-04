@@ -1,77 +1,35 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH v9 01/10] clk: fix initial state of critical clock's
- parents
-Date: Mon, 4 Jul 2016 11:51:48 +0800
-Message-ID: <1467604308.26485.4.camel@mtksdaap41>
-References: <1466581229-2342-1-git-send-email-erin.lo@mediatek.com>
-	 <1466581229-2342-2-git-send-email-erin.lo@mediatek.com>
-	 <20160702012140.GB17071@codeaurora.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 0/3] ARM: dts: Enable suspend configuration
+Date: Mon, 4 Jul 2016 12:03:59 +0530
+Message-ID: <1467614042-6838-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160702012140.GB17071@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>
-Cc: Erin Lo <erin.lo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org, broonie@kernel.org, robh+dt@kernel.org, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-07-01 at 18:21 -0700, Stephen Boyd wrote:
-> (Resending to everyone)
-> 
-> On 06/22, Erin Lo wrote:
-> > From: James Liao <jamesjj.liao@mediatek.com>
-> > 
-> > This patch fixed wrong state of parent clocks if they are registered
-> > after critical clocks.
-> > 
-> > Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> 
-> It would be nice if you included the information about the
-> problem from James' previous mail. This says what it does, but
-> doesn't explain what the problem is and how it is fixing it.
-> 
-> > ---
-> >  drivers/clk/clk.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > index d584004..e9f5f89 100644
-> > --- a/drivers/clk/clk.c
-> > +++ b/drivers/clk/clk.c
-> > @@ -2388,8 +2388,15 @@ static int __clk_core_init(struct clk_core *core)
-> >  	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
-> >  		struct clk_core *parent = __clk_init_parent(orphan);
-> >  
-> > -		if (parent)
-> > +		if (parent) {
-> >  			clk_core_reparent(orphan, parent);
-> > +
-> > +			if (orphan->prepare_count)
-> > +				clk_core_prepare(parent);
-> > +
-> > +			if (orphan->enable_count)
-> > +				clk_core_enable(parent);
-> > +		}
-> >  	}
-> 
-> I'm pretty sure I pointed this problem out to Mike when the
-> critical clk patches were being pushed. I can't recall what the
-> plan was though to fix the problem. I'm pretty sure he said that
-> clk_core_reparent() would take care of it, but obviously it is
-> not doing that. Or perhaps it was that clk handoff should figure
-> out that the parents of a critical clk are also on and thus keep
-> them on.
+Now that all the driver patches are Acked-by the respective driver
+Maintainers. Here is the set of Device Tree patches which were
+dependent on the driver patches.
 
-Hi Mike
+These are boot tested on am437x-sk-evm, am437x-gp-evm, am335x-bone,
+am335x-boneblack.
 
-Is there any other patch to fix this issue? Or did I misuse critical
-clock flag?
+Keerthy (1):
+  ARM: dts: AM437X-GP-EVM: AM437X-SK-EVM: Make dcdc3 dcdc5 and dcdc6
+    enable during suspend
 
+Tero Kristo (2):
+  ARM: dts: am437x-gp-evm: disable DDR regulator in rtc-only/poweroff
+    mode
+  ARM: dts: am437x-sk-evm: disable DDR regulator in rtc-only/poweroff
+    mode
 
-Best regards,
+ arch/arm/boot/dts/am437x-gp-evm.dts | 13 +++++++++++++
+ arch/arm/boot/dts/am437x-sk-evm.dts | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-James
-
-
+-- 
+1.9.1
