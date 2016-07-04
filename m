@@ -1,171 +1,166 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH 3/4] drivers: reset: Add STM32 reset driver
-Date: Mon, 4 Jul 2016 15:47:31 +0200
-Message-ID: <1467640052-6770-3-git-send-email-gabriel.fernandez@st.com>
-References: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] mtd: nand: gpmi: correct bitflip for erased NAND
+ page
+Date: Mon, 4 Jul 2016 15:58:46 +0200
+Message-ID: <20160704155846.0b0b4c8f@bbrezillon>
+References: <1466804411-19874-1-git-send-email-han.xu@nxp.com>
+	<1466804411-19874-5-git-send-email-han.xu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, patrice.chotard@st.com, alexandre.torgue@st.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gabriel Fernandez <gabriel.fernandez@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466804411-19874-5-git-send-email-han.xu-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+Cc: richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On Fri, 24 Jun 2016 16:40:09 -0500
+Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org> wrote:
 
-The STM32 MCUs family IPs can be reset by accessing some registers
-from the RCC block.
+> i.MX6QP and i.MX7D BCH module integrated a new feature to detect the
+> bitflip number for erased NAND page. So for these two platform, set the
+> erase threshold to ecc_strength and if bitflip detected, GPMI driver
+> will correct the data to all 0xFF.
+> 
+> Signed-off-by: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  drivers/mtd/nand/gpmi-nand/bch-regs.h  | 10 +++++++++
+>  drivers/mtd/nand/gpmi-nand/gpmi-lib.c  |  5 +++++
+>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c | 37 +++++++++++++++++++++++++++++++---
+>  3 files changed, 49 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/gpmi-nand/bch-regs.h b/drivers/mtd/nand/gpmi-nand/bch-regs.h
+> index 228142c..2c44b88 100644
+> --- a/drivers/mtd/nand/gpmi-nand/bch-regs.h
+> +++ b/drivers/mtd/nand/gpmi-nand/bch-regs.h
+> @@ -30,7 +30,13 @@
+>  #define BM_BCH_CTRL_COMPLETE_IRQ		(1 << 0)
+>  
+>  #define HW_BCH_STATUS0				0x00000010
+> +
+>  #define HW_BCH_MODE				0x00000020
+> +#define BP_BCH_MODE_ERASE_THRESHOLD		0
+> +#define BM_BCH_MODE_ERASE_THRESHOLD	(0xff << BP_BCH_MODE_ERASE_THRESHOLD)
+> +#define BF_BCH_MODE_ERASE_THRESHOLD(v)		\
+> +	(((v) << BP_BCH_MODE_ERASE_THRESHOLD) & BM_BCH_MODE_ERASE_THRESHOLD)
+> +
+>  #define HW_BCH_ENCODEPTR			0x00000030
+>  #define HW_BCH_DATAPTR				0x00000040
+>  #define HW_BCH_METAPTR				0x00000050
+> @@ -125,4 +131,8 @@
+>  	)
+>  
+>  #define HW_BCH_VERSION				0x00000160
+> +#define HW_BCH_DEBUG1				0x00000170
+> +#define BP_BCH_DEBUG1_ERASED_ZERO_COUNT	0
+> +#define BM_BCH_DEBUG1_ERASED_ZERO_COUNT		\
+> +		(0x1ff << BP_BCH_DEBUG1_ERASED_ZERO_COUNT)
+>  #endif
+> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+> index 358ff5d..0b5666a 100644
+> --- a/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-lib.c
+> @@ -298,6 +298,11 @@ int bch_set_geometry(struct gpmi_nand_data *this)
+>  			| BF_BCH_FLASH0LAYOUT1_DATAN_SIZE(block_size, this),
+>  			r->bch_regs + HW_BCH_FLASH0LAYOUT1);
+>  
+> +	/* Set erase threshold to ecc_strength for mx6qp and mx7 */
+> +	if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))
+> +		writel(BF_BCH_MODE_ERASE_THRESHOLD(ecc_strength),
+> +			r->bch_regs + HW_BCH_MODE);
+> +
+>  	/* Set *all* chip selects to use layout 0. */
+>  	writel(0, r->bch_regs + HW_BCH_LAYOUTSELECT);
+>  
+> diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> index aedaff3..db8e546 100644
+> --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
+> @@ -1043,11 +1043,12 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>  {
+>  	struct gpmi_nand_data *this = nand_get_controller_data(chip);
+>  	struct bch_geometry *nfc_geo = &this->bch_geometry;
+> +	void __iomem *bch_regs = this->resources.bch_regs;
+>  	void          *payload_virt;
+>  	dma_addr_t    payload_phys;
+>  	void          *auxiliary_virt;
+>  	dma_addr_t    auxiliary_phys;
+> -	unsigned int  i;
+> +	unsigned int  i, j;
+>  	unsigned char *status;
+>  	unsigned int  max_bitflips = 0;
+>  	int           ret;
+> @@ -1087,9 +1088,14 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>  			   nfc_geo->payload_size,
+>  			   payload_virt, payload_phys);
+>  
+> -	for (i = 0; i < nfc_geo->ecc_chunk_count; i++, status++) {
+> -		if ((*status == STATUS_GOOD) || (*status == STATUS_ERASED))
+> +	for (i = 0, j = 0; i < nfc_geo->ecc_chunk_count; i++, status++) {
+> +		if (*status == STATUS_GOOD)
+> +			continue;
+> +		if (*status == STATUS_ERASED) {
+> +			/* count the number of erased chunks */
+> +			j++;
+>  			continue;
+> +		}
+>  
+>  		if (*status == STATUS_UNCORRECTABLE) {
+>  			int eccbits = nfc_geo->ecc_strength * nfc_geo->gf_len;
+> @@ -1098,6 +1104,12 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>  			int eccbytes;
+>  			int flips;
+>  
+> +			/* shortcut for i.MX7 and i.MX6QP */
+> +			if (GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this)) {
+> +				mtd->ecc_stats.failed++;
+> +				continue;
+> +			}
+> +
+>  			/* Read ECC bytes into our internal raw_buffer */
+>  			offset = nfc_geo->metadata_size * 8;
+>  			offset += ((8 * nfc_geo->ecc_chunk_size) + eccbits) * (i + 1);
+> @@ -1167,6 +1179,25 @@ static int gpmi_ecc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+>  		max_bitflips = max_t(unsigned int, max_bitflips, *status);
+>  	}
+>  
+> +	/*
+> +	 * i.MX6QP and i.MX7 have dedicate register to check bitflips in the
+> +	 * page, while it cannot tell in which chunk bitflips locate, memset
+> +	 * all the data if bitflips exist and all chunks are erased.
 
-The list of available reset lines is documented in the DT bindings.
+Hm, that's a big problem: how can we decide if the number of bitflips
+per ECC chunk exceed the bitflips threshold?
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- drivers/reset/Makefile      |   1 +
- drivers/reset/reset-stm32.c | 113 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 114 insertions(+)
- create mode 100644 drivers/reset/reset-stm32.c
+> +	 */
+> +	if (j == nfc_geo->ecc_chunk_count &&
+> +		(GPMI_IS_MX6QP(this) || GPMI_IS_MX7(this))) {
+> +		int flips;
+> +
+> +		flips = readl(bch_regs + HW_BCH_DEBUG1);
+> +		if (flips) {
+> +			max_bitflips = max_t(unsigned int, max_bitflips,
+> +					flips);
 
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 03dc1bb..3776b7b 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
- obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
- obj-$(CONFIG_MACH_PISTACHIO) += reset-pistachio.o
- obj-$(CONFIG_ARCH_MESON) += reset-meson.o
-+obj-$(CONFIG_ARCH_STM32) += reset-stm32.o
- obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
- obj-$(CONFIG_ARCH_STI) += sti/
- obj-$(CONFIG_ARCH_HISI) += hisilicon/
-diff --git a/drivers/reset/reset-stm32.c b/drivers/reset/reset-stm32.c
-new file mode 100644
-index 0000000..be42bff
---- /dev/null
-+++ b/drivers/reset/reset-stm32.c
-@@ -0,0 +1,113 @@
-+/*
-+ * Copyright (C) Maxime Coquelin 2015
-+ * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-+ * License terms:  GNU General Public License (GPL), version 2
-+ *
-+ * Heavily based on sunxi driver from Maxime Ripard.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+
-+struct stm32_reset_data {
-+	spinlock_t			lock;
-+	void __iomem			*membase;
-+	struct reset_controller_dev	rcdev;
-+};
-+
-+static int stm32_reset_assert(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct stm32_reset_data *data = container_of(rcdev,
-+						     struct stm32_reset_data,
-+						     rcdev);
-+	int bank = id / BITS_PER_LONG;
-+	int offset = id % BITS_PER_LONG;
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(&data->lock, flags);
-+
-+	reg = readl_relaxed(data->membase + (bank * 4));
-+	writel_relaxed(reg | BIT(offset), data->membase + (bank * 4));
-+
-+	spin_unlock_irqrestore(&data->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int stm32_reset_deassert(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	struct stm32_reset_data *data = container_of(rcdev,
-+						     struct stm32_reset_data,
-+						     rcdev);
-+	int bank = id / BITS_PER_LONG;
-+	int offset = id % BITS_PER_LONG;
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(&data->lock, flags);
-+
-+	reg = readl_relaxed(data->membase + (bank * 4));
-+	writel_relaxed(reg & ~BIT(offset), data->membase + (bank * 4));
-+
-+	spin_unlock_irqrestore(&data->lock, flags);
-+
-+	return 0;
-+}
-+
-+static const struct reset_control_ops stm32_reset_ops = {
-+	.assert		= stm32_reset_assert,
-+	.deassert	= stm32_reset_deassert,
-+};
-+
-+static const struct of_device_id stm32_reset_dt_ids[] = {
-+	 { .compatible = "st,stm32-rcc", },
-+	 { /* sentinel */ },
-+};
-+
-+static int stm32_reset_probe(struct platform_device *pdev)
-+{
-+	struct stm32_reset_data *data;
-+	struct resource *res;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->membase = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(data->membase))
-+		return PTR_ERR(data->membase);
-+
-+	spin_lock_init(&data->lock);
-+
-+	data->rcdev.owner = THIS_MODULE;
-+	data->rcdev.nr_resets = resource_size(res) * 8;
-+	data->rcdev.ops = &stm32_reset_ops;
-+	data->rcdev.of_node = pdev->dev.of_node;
-+
-+	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
-+}
-+
-+static struct platform_driver stm32_reset_driver = {
-+	.probe	= stm32_reset_probe,
-+	.driver = {
-+		.name		= "stm32-rcc-reset",
-+		.of_match_table	= stm32_reset_dt_ids,
-+	},
-+};
-+module_platform_driver(stm32_reset_driver);
-+
-+MODULE_AUTHOR("Maxime Coquelin <maxime.coquelin@gmail.com>");
-+MODULE_DESCRIPTION("STM32 MCUs Reset Controller Driver");
-+MODULE_LICENSE("GPL");
--- 
-1.9.1
+max_bitflips is supposed to contain the maximum number of bitflips per
+ECC chunk not per page, so nand_base might return -EUCLEAN while it
+should have returned zero in some cases.
+
+Given this new information I'm not sure the HW solution to count
+bitflips in erased pages is appropriate.
+
+> +			memset(buf, ~0, nfc_geo->payload_size);
+> +			memset(chip->oob_poi, ~0, mtd->oobsize);
+> +			mtd->ecc_stats.corrected += flips;
+> +		}
+> +	}
+> +
+>  	if (oob_required) {
+>  		/*
+>  		 * It's time to deliver the OOB bytes. See gpmi_ecc_read_oob()
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
