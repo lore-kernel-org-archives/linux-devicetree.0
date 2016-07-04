@@ -1,65 +1,62 @@
-From: Nick Dyer <nick.dyer@itdev.co.uk>
-Subject: Re: [PATCH v2 3/8] Input: synaptics-rmi4: Add dribble and palm
- gesture parameters to device tree
-Date: Mon, 4 Jul 2016 16:00:39 +0100
-Message-ID: <9f3d6e2a-cba9-0551-f00f-35efcc880667@itdev.co.uk>
-References: <1466813917-15841-1-git-send-email-aduggan@synaptics.com>
- <20160628205606.GL3737@rob-hp-laptop> <577319DE.1070700@synaptics.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 0/1] Portable Device Tree Connector -- conceptual
+Date: Mon, 4 Jul 2016 17:22:26 +0200
+Message-ID: <20160704152226.GJ6247@sirena.org.uk>
+References: <1467503750-31703-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <577319DE.1070700@synaptics.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Andrew Duggan <aduggan@synaptics.com>, Rob Herring <robh@kernel.org>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5N2+S1LJ+nNsdJJZ"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1467503750-31703-1-git-send-email-frowand.list@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: robh+dt@kernel.org, david@gibson.dropbear.id.au, pantelis.antoniou@konsulko.com, stephen.boyd@linaro.org, grant.likely@secretlab.ca, mark.rutland@arm.com, mporter@konsulko.com, koen@dominion.thruhere.net, linux@roeck-us.net, marex@denx.de, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew
 
-On 29/06/2016 01:44, Andrew Duggan wrote:
-> On 06/28/2016 01:56 PM, Rob Herring wrote:
->> On Fri, Jun 24, 2016 at 05:18:37PM -0700, Andrew Duggan wrote:
->>> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
->>> ---
->>>   .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt          |  4 ++++
->>>   drivers/input/rmi4/rmi_2d_sensor.c                            | 11
->>> +++++++++++
->>>   2 files changed, 15 insertions(+)
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->>> b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->>> index f2c30c8..86cb8e3 100644
->>> --- a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->>> +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
->>> @@ -37,6 +37,10 @@ Optional Properties:
->>>                   disable reporing absolute position data.
->>>   - syna,rezero-wait-ms: Time in miliseconds to wait after issuing a rezero
->>>                   command.
->>> +- syna,dribble-enable: Enable reporting of dribble packets in the
->>> firmware.
->>> +- syna,dribble-disable: Disable reporting of dribble packets in the
->>> firmware.
->>> +- syna,palm-detect-enable: Enable reporting the palm detect gesture in
->>> the firmware.
->>> +- syna,palm-detect-disable: Disable reporting the palm detect gesture
->>> in the firmware.
->> No need for enable and disable. Make the common case be no property and
->> the property is the opposite.
-> 
-> There are actually three states here. No property means to use the default
-> value set in the firmware. The enable parameter means that the default
-> should be overwritten and the feature should be explicitly enabled. Disable
-> means the feature should be explicitly disabled. An earlier version of this
-> patch had one parameter per feature which needed to be set to 0, 1, or 2
-> which correspond the the values of an enum in the driver. It was suggested
-> that the current approach would be clearer then setting 0, 1, or 2.
+--5N2+S1LJ+nNsdJJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I wonder if it might be worth mentioning explicitly in the devicetree
-documentation that the firmware is being overridden - perhaps
-"syna,dribble-force-disable"?
+On Sat, Jul 02, 2016 at 04:55:49PM -0700, frowand.list@gmail.com wrote:
 
-cheers
+> This is an extremely simple example to illustrate the concepts.  It is not
+> meant to represent the complexity of a real board.
+>=20
+> To start with, assume that the device that will eventually be on a daught=
+er
+> board is first soldered onto the mother board.  The mother board contains
+> two devices connected via bus spi_1.  One device is described in the .dts
+> file, the other is described in an included .dtsi file.
+> Then the device tree files will look like:
 
-Nick
+Can I suggest not using SPI as an example here?  It's particularly
+messy since addresses are essentially just a random signal that can be
+totally separate to the controller hardware which might be adding more
+complexity early on in building up your model than is really desirable.
+It will need to be dealt with but perhaps not right now.  I2C might be
+easier.
+
+The initial issue with SPI is that you really need to do something like
+bring out individual slots on the bus rather than the bus as a whole
+since you're going to need a remapping layer to map chip selects on the
+module to chip selects on the host board.
+
+--5N2+S1LJ+nNsdJJZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXen8xAAoJECTWi3JdVIfQaucH/0A83ZrZkJ1ue7mFQAJnOjnP
+6EZo3skp4dDpCyM562aF5ktNsR7NmneqCuJYvd9dcjuTuMtc0gOU8CpzPZyIPTwa
+YMibm+UpnzBoGzz9lL6qKvICD1EuboLPJGbumR99B65avEaMHNUep36BIyztXIQI
+IhFrjZ/KT7WcmwZgFRsGz3plqFEFecrEFQG0mdM9uuB3uVgyShzB83HFyWcfIWKW
+xvqBFTNrpxtyRrOrVS05MdHVHmBP80kJLC+xNn3ea48LnwVLI1VhpWZRY/43esbF
+FeGwLL48XPnIeZw8TDJIdkR4E9l0iclgEINDmFP+XSHNLACz/oPb5Rx/JEb3Y+4=
+=1Jid
+-----END PGP SIGNATURE-----
+
+--5N2+S1LJ+nNsdJJZ--
