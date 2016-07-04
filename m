@@ -1,27 +1,39 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] arm64: dts: r8a7795: add FDP1 device nodes
-Date: Mon, 4 Jul 2016 14:45:47 +0200
-Message-ID: <20160704124547.GH26270@verge.net.au>
-References: <1467293563-940-1-git-send-email-kieran@bingham.xyz>
- <1467293563-940-3-git-send-email-kieran@bingham.xyz>
- <57768023.8010507@bingham.xyz>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850: Add new ECAP and EPWM bindings
+Date: Mon, 4 Jul 2016 18:17:12 +0530
+Message-ID: <577A5AD0.7070906@ti.com>
+References: <1467036842-20913-1-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57768023.8010507@bingham.xyz>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kieran Bingham <kieran@ksquared.org.uk>
-Cc: linux-renesas-soc@vger.kernel.org, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467036842-20913-1-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 03:37:23PM +0100, Kieran Bingham wrote:
-> Hi Simon,
+On Monday 27 June 2016 07:44 PM, Franklin S Cooper Jr wrote:
+> From: "Cooper Jr., Franklin" <fcooper-l0cyMroinI0@public.gmane.org>
 > 
-> The bindings for this have now been acked by RobH.
+> Switch to a new ECAP and EPWM bindings that doesn't depend on hwmod to
+> provide the various required clocks.
 
-Thanks, I have queued these up for v4.9.
+there is nothing called hwmod on da850, so this need rewording to make
+sense for that platform.
 
-There was a small amount of fuzz when applying the first patch,
-please check to make sure it has been applied correctly once
-it hits the devel branch of the renesas tree.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Also, documentation needs update as well since it says:
+
+"
+for da850  - compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm"
+"
+
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
