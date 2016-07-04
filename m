@@ -1,136 +1,87 @@
-From: "'Arend van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Mon, 4 Jul 2016 20:36:05 +0200
-Message-ID: <577AAC95.7040800@broadcom.com>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
- <5756670.9hMGo8oEyl@wuerfel>
- <6cc6dabf-e6da-d70d-3cce-a7f1804f233e@broadcom.com>
- <8717879.O1RMZcQt4V@wuerfel>
-Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 00/10] Add clock support for Armada 37xx SoCs
+Date: Mon, 04 Jul 2016 22:29:35 +0200
+Message-ID: <874m85w3io.fsf@free-electrons.com>
+References: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDRYNGWEWYDBBF6Z5K5QKGQESD7DZIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <8717879.O1RMZcQt4V@wuerfel>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
+	(Gregory CLEMENT's message of "Fri, 10 Jun 2016 15:23:28 +0200")
+Sender: linux-clk-owner@vger.kernel.org
+To: Mike Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04-07-16 16:54, Arnd Bergmann wrote:
-> On Monday, July 4, 2016 11:08:38 AM CEST Arend Van Spriel wrote:
->> On 4-7-2016 10:55, Arnd Bergmann wrote:
->>> On Monday, July 4, 2016 10:41:20 AM CEST Arend Van Spriel wrote:
->>>> On 2-7-2016 23:30, Arnd Bergmann wrote:
->>>>> On Saturday, July 2, 2016 8:20:35 PM CEST Arend Van Spriel wrote:
->>>>>>> If you want a separate property, then I repeat my very first
->>>>>>> suggestion, the well defined model property.
->>>>>>> e.g.
->>>>>>>
->>>>>>> brcmf@0 {
->>>>>>>         model =3D "ampak,ap6210";
->>>>>>>         compatible =3D "brcm,bcm4329-fmac";
->>>>>>>         ...
->>>>>>> };
->>>>>>>
->>>>>>> All device nodes may have a model property, not just the top "machi=
-ne" one.
->>>>>>
->>>>>> I heard you the first time  I just was not sure what the implication=
-s
->>>>>> would be to use it. Hence I suggested a vendor specific property.
->>>>>> However, looking up and reading the definition in ePAPRv1.1 I suppos=
-e it
->>>>>> is fine to use the model property:
->>>>>>
->>>>>> Property: model
->>>>>> Value type: <string>
->>>>>> Description:
->>>>>> The model property value is a <string> that specifies the manufactur=
-er=E2=80=99s
->>>>>> model number of the device.
->>>>>>
->>>>>> The recommended format is: =E2=80=9Cmanufacturer,model=E2=80=9D, whe=
-re manufacturer is a
->>>>>> string describing the name of the manufacturer (such as a stock tick=
-er
->>>>>> symbol), and model specifies the model number.
->>>>>
->>>>> The model property is very similar to compatible, except that there i=
-s
->>>>> only one entry rather than a list of entries from most specific to
->>>>> most generic.
->>>>
->>>> They seem very similar, but I think there is a conceptual difference.
->>>> The compatible property is mainly used to select the appropriate drive=
-r
->>>> and as such the property is typically ignored by device drivers.
->>>> Probably there are exceptions to be found.
->>>>
->>>>> I think by writing the above example as
->>>>>
->>>>>       compatible =3D "ampak,ap6210", "brcm,bcm4329-fmac";
->>>>>
->>>>> we can provide the same functionality in a slightly simpler way, the =
-driver
->>>>> then just goes on to look for the nvram file for each entry in sequen=
-ce until
->>>>> it finds one.
->>>>
->>>> Not sure why this would be simpler. Why would traversing the compatibl=
-e
->>>> string be simpler than handling the model property if present and
->>>> otherwise fallback to the default nvram naming.
->>>
->>> Because you have to walk the list anyway to find the other firmware fil=
-es:
->>> when you have a specialization of a device that requires listing both v=
-alues
->>> as compatible, the driver has no idea which of the entries to use, unle=
-ss
->>> you add a lookup table that adds more complexity.
->>
->> Currently, the brcmfmac bindings describe a single compatible string,
->> ie. "brcm,bcm4329-fmac", which selects the driver/programming model. If
->> that programming model supports "use model property if present,
->> otherwise use default" there is nothing to traverse. The default way in
->> the driver to determine firmware and nvram filename already has a lookup
->> table which uses the chip id and chip revision as key, which are read
->> from the device.
->=20
-> In drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c I already see
-> over a dozen different chips being supported, bcm4329 is only one of
-> them. In particular, there seem to be some that have various modules:
->=20
->         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
->         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x00000020, 43241B4),
->         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0xFFFFFFC0, 43241B5),
->=20
-> So if you have a bcm43241, that compatible string probably should
-> include both brcm,bcm43241-b4-fmac and brcm,bcm43241-fmac, possibly also
-> brcm,bcm4329-fmac, to show that it is a superset of the programming
-> interface of that one.
+Hi,
+ 
+ On ven., juin 10 2016, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
 
-Hi Arnd,
+> Hi,
+>
+> this series add clock support for the Armada 37xx SoCs.
+>
+> The design of the drivers is as close as possible as the hardware is,
+> with some clocks made of several layers: muxing, divider and gating.
+>
+> The device tree binding was written in a way that even if we discover
+> some change inside the clocks, the binding should not be
+> affected. Especially, there are some holes in the clocks, but we
+> should be able to add them seamless.
+>
+> I tried to follow the last update made in the clock framework, I hope
+> theses drivers will comply the new guidelines.
 
-I have to disagree here. The compatible string "brcm,bcm4329-fmac" is
-chosen as the bcm4329 chip was the first supported and we never added
-others as there is no other programming required. For all supported
-devices the same device tree properties apply and are handled the same.
-As such there is no need to come up with a new compatible string.
+I applied the first 4 patches on the mvebu branches, the first one on
+mvebu/arm64 and the 3 other on mvebu/dt64. I did this in order to not
+miss the arm-soc merge window.
 
-Regards,
-Arend
+The binding was acked by the dt maintainer and the review of the clk
+maintainer was abut the internal of the driver. The only change I did
+was fixing a typo in the address part of the name of the sb-periph-clk
+node as pointed by Victor Gu. I will submit a second version soon
+addressing these concerns.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Gregory
+
+>
+> Gregory CLEMENT (10):
+>   arm64: marvell: enable Armada 3700 clock drivers
+>   arm64: dts: marvell: Add xtal clock support for Armada 3700
+>   arm64: dts: marvell: add tbg clocks for Armada 37xx
+>   arm64: dts: marvell: add peripherals clocks for Armada 37xx
+>   dt-bindings: clock: add DT binding for the Xtal clock on Armada 3700
+>   clk: mvebu: Add the xtal clock for Armada 3700 SoC
+>   dt-bindings: clock: add DT binding for the TBG clocks on Armada 3700
+>   clk: mvebu Add the time base generator clocks for Armada 3700
+>   dt-bindings: clock: add DT binding for the peripheral clocks on Armada
+>     3700
+>   clk: mvebu: Add the peripheral clock driver for Armada 3700
+>
+>  .../bindings/clock/armada3700-periph-clock.txt     |  70 ++++
+>  .../bindings/clock/armada3700-tbg-clock.txt        |  27 ++
+>  .../bindings/clock/armada3700-xtal-clock.txt       |  28 ++
+>  arch/arm64/Kconfig.platforms                       |   1 +
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi       |  35 ++
+>  drivers/clk/mvebu/Kconfig                          |   3 +
+>  drivers/clk/mvebu/Makefile                         |   3 +
+>  drivers/clk/mvebu/armada-37xx-periph.c             | 462 +++++++++++++++++++++
+>  drivers/clk/mvebu/armada-37xx-tbg.c                | 172 ++++++++
+>  drivers/clk/mvebu/armada-37xx-xtal.c               |  93 +++++
+>  10 files changed, 894 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/armada3700-tbg-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
+>  create mode 100644 drivers/clk/mvebu/armada-37xx-periph.c
+>  create mode 100644 drivers/clk/mvebu/armada-37xx-tbg.c
+>  create mode 100644 drivers/clk/mvebu/armada-37xx-xtal.c
+>
+> -- 
+> 2.5.0
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
