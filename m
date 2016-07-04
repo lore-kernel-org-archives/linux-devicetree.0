@@ -1,60 +1,29 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: linux-next: Tree for Jun 27 (pinctrl && !CONFIG_OF)
-Date: Mon, 4 Jul 2016 11:46:55 +0200
-Message-ID: <CACRpkdb2a=7QhW5A7yucC-DPo4NmNNcd3NcOznVtk0+8XMtbHA@mail.gmail.com>
-References: <20160627163939.20e454d5@canb.auug.org.au> <57716D3D.4070302@infradead.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 4/6] gpio: tps65218-gpio: Add platform_device_id table
+Date: Mon, 4 Jul 2016 11:50:51 +0200
+Message-ID: <CACRpkdaUebMzS4F1LM4D9536+JHBHBbcXBESEbKKPF5TCi0LmQ@mail.gmail.com>
+References: <1467117054-12943-1-git-send-email-j-keerthy@ti.com> <1467117054-12943-5-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <57716D3D.4070302@infradead.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Torvalds <torvalds@linux-foundation.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467117054-12943-5-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 27, 2016 at 8:15 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
+On Tue, Jun 28, 2016 at 2:30 PM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
 
-> On 06/26/16 23:39, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20160624:
->>
+> platform_device_id table is needed for adding the tps65218-gpio
+> module to the mfd_cell array.
 >
-> on i386, when CONFIG_OF is not enabled ...
-> but OF_GPIO is enabled due to this in drivers/gpio/Kconfig:
->
-> config OF_GPIO
->         def_bool y
->         depends on OF || COMPILE_TEST
->
-> (above from commit 1e4a80640338924b9f9fd7a121ac31d08134410a
-> from Alexander Stein <alexanders83@web.de>)
->
->
-> ../drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:381:20: error: 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
-> ../drivers/pinctrl/bcm/pinctrl-cygnus-mux.c:739:20: error: 'pinconf_generic_dt_node_to_map_group' undeclared here (not in a function)
-> ../drivers/pinctrl/bcm/pinctrl-nsp-gpio.c:365:20: error: 'pinconf_generic_dt_node_to_map_pin' undeclared here (not in a function)
->
-> because that function is only present when CONFIG_OF is enabled.
->
->
-> Also, why does that commit (1e4a80640338924b9f9fd7a121ac31d08134410a)
-> not have any other S-O-B lines in it?  like whoever merged it?
+> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 
-I merged it I think, Alex made a long series enabling compile
-testing and I started to cherry-pick the first commits to let
-them trickle in.
-
-I was worried about it because some of the patches caused
-severe build problems on some archs.
-
-It's a  bit tricky to know what to do here: we want compile
-coverage to get proper testing, when we turn it on we get regressions,
-so trying to improve things make things break and it becomes a
-vicious circle of trouble. I don't know what the biggest pain is ...
-
-I don't really see the conclusion of this discussion thread, whether
-I should revert the patch or not? For fixes or next?
+Patch applied.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
