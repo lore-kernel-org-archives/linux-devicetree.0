@@ -1,101 +1,72 @@
-From: Dongdong Liu <liudongdong3@huawei.com>
-Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
-Date: Mon, 4 Jul 2016 16:44:20 +0800
-Message-ID: <577A21E4.1030301@huawei.com>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [linux-sunxi] Re: [PATCH 1/4] brcmfmac: Add brcm,
+ nvram_file_name dt property
+Date: Mon, 04 Jul 2016 10:55:19 +0200
+Message-ID: <5756670.9hMGo8oEyl@wuerfel>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+ <7975990.MvNRQ06u39@wuerfel>
+ <ac480a61-5bfd-5d0c-26fe-b85220ee5076@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1465892645-32381-2-git-send-email-po.liu@nxp.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Po Liu <po.liu@nxp.com>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh@kernel.org>, Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Linuxarm <linuxarm@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <ac480a61-5bfd-5d0c-26fe-b85220ee5076@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arend Van Spriel <arend.vanspriel@broadcom.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Priit Laes <plaes@plaes.org>, linux-sunxi@googlegroups.com, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "John W . Linville" <linville@tuxdriver.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jonas Gorski <jonas.gorski@gmail.com>, Arend van Spriel <arend@broadcom.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Kalle Valo <kvalo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Po
-
-I found a problem with the similar patch. as the below log.
-
-[    4.287060] pci 0000:80:00.0: quirk_aer_interrupt dev->irq 416
-[    4.293778] pcieport 0000:80:00.0: pci_device_probe in
-[    4.299605] pcieport 0000:80:00.0: of_irq_parse_pci() failed with rc=
-=3D-22
-[    4.307209] pcieport 0000:80:00.0: init_service_irqs  dev->irq 0
-
-The fucntions are called as below sequence.
-1. quirk_aer_interrupt, get the aer dev->irq 416.
-2. pci_device_probe->of_irq_parse_pci, of_irq_parse_pci() failed, then =
-dev->irq changed to 0.
-
-So this patch could not work with aer.
-
-Thanks
-Dongdong
-=D4=DA 2016/6/14 16:24, Po Liu =D0=B4=B5=C0:
-> On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mod=
-e.
-> When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
-> maybe there is interrupt line for aer pme etc. Search the interrupt
-> number in the fdt file. Then fixup the dev->irq with it.
->
-> Signed-off-by: Po Liu <po.liu@nxp.com>
-> ---
-> changes for V3:
-> 	- Move to quirk;
-> 	- Only correct the irq in RC mode;
->
->   drivers/pci/quirks.c | 29 +++++++++++++++++++++++++++++
->   1 file changed, 29 insertions(+)
->
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index ee72ebe..8b39cce 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -25,6 +25,7 @@
->   #include <linux/sched.h>
->   #include <linux/ktime.h>
->   #include <linux/mm.h>
-> +#include <linux/of_irq.h>
->   #include <asm/dma.h>	/* isa_dma_bridge_buggy */
->   #include "pci.h"
->
-> @@ -4419,3 +4420,31 @@ static void quirk_intel_qat_vf_cap(struct pci_=
-dev *pdev)
->   	}
->   }
->   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat=
-_vf_cap);
-> +
-> +/* If root port doesn't support MSI/MSI-X/INTx in RC mode,
-> + * but use standalone irq. Read the device tree for the aer
-> + * interrupt number.
-> + */
-> +static void quirk_aer_interrupt(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +	u8 header_type;
-> +	struct device_node *np =3D NULL;
-> +
-> +	/* Only for the RC mode device */
-> +	pci_read_config_byte(dev, PCI_HEADER_TYPE, &header_type);
-> +	if ((header_type & 0x7F) !=3D PCI_HEADER_TYPE_BRIDGE)
-> +		return;
-> +
-> +	if (dev->bus->dev.of_node)
-> +		np =3D dev->bus->dev.of_node;
-> +
-> +	if (IS_ENABLED(CONFIG_OF_IRQ) && np) {
-> +		ret =3D of_irq_get_byname(np, "aer");
-> +		if (ret > 0) {
-> +			dev->no_msi =3D 1;
-> +			dev->irq =3D ret;
-> +		}
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_a=
-er_interrupt);
->
+T24gTW9uZGF5LCBKdWx5IDQsIDIwMTYgMTA6NDE6MjAgQU0gQ0VTVCBBcmVuZCBWYW4gU3ByaWVs
+IHdyb3RlOgo+IE9uIDItNy0yMDE2IDIzOjMwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOgo+ID4gT24g
+U2F0dXJkYXksIEp1bHkgMiwgMjAxNiA4OjIwOjM1IFBNIENFU1QgQXJlbmQgVmFuIFNwcmllbCB3
+cm90ZToKPiA+Pj4gSWYgeW91IHdhbnQgYSBzZXBhcmF0ZSBwcm9wZXJ0eSwgdGhlbiBJIHJlcGVh
+dCBteSB2ZXJ5IGZpcnN0Cj4gPj4+IHN1Z2dlc3Rpb24sIHRoZSB3ZWxsIGRlZmluZWQgbW9kZWwg
+cHJvcGVydHkuCj4gPj4+IGUuZy4KPiA+Pj4KPiA+Pj4gYnJjbWZAMCB7Cj4gPj4+ICAgICAgICAg
+bW9kZWwgPSAiYW1wYWssYXA2MjEwIjsKPiA+Pj4gICAgICAgICBjb21wYXRpYmxlID0gImJyY20s
+YmNtNDMyOS1mbWFjIjsKPiA+Pj4gICAgICAgICAuLi4KPiA+Pj4gfTsKPiA+Pj4KPiA+Pj4gQWxs
+IGRldmljZSBub2RlcyBtYXkgaGF2ZSBhIG1vZGVsIHByb3BlcnR5LCBub3QganVzdCB0aGUgdG9w
+ICJtYWNoaW5lIiBvbmUuCj4gPj4KPiA+PiBJIGhlYXJkIHlvdSB0aGUgZmlyc3QgdGltZSAgSSBq
+dXN0IHdhcyBub3Qgc3VyZSB3aGF0IHRoZSBpbXBsaWNhdGlvbnMKPiA+PiB3b3VsZCBiZSB0byB1
+c2UgaXQuIEhlbmNlIEkgc3VnZ2VzdGVkIGEgdmVuZG9yIHNwZWNpZmljIHByb3BlcnR5Lgo+ID4+
+IEhvd2V2ZXIsIGxvb2tpbmcgdXAgYW5kIHJlYWRpbmcgdGhlIGRlZmluaXRpb24gaW4gZVBBUFJ2
+MS4xIEkgc3VwcG9zZSBpdAo+ID4+IGlzIGZpbmUgdG8gdXNlIHRoZSBtb2RlbCBwcm9wZXJ0eToK
+PiA+Pgo+ID4+IFByb3BlcnR5OiBtb2RlbAo+ID4+IFZhbHVlIHR5cGU6IDxzdHJpbmc+Cj4gPj4g
+RGVzY3JpcHRpb246Cj4gPj4gVGhlIG1vZGVsIHByb3BlcnR5IHZhbHVlIGlzIGEgPHN0cmluZz4g
+dGhhdCBzcGVjaWZpZXMgdGhlIG1hbnVmYWN0dXJlcuKAmXMKPiA+PiBtb2RlbCBudW1iZXIgb2Yg
+dGhlIGRldmljZS4KPiA+Pgo+ID4+IFRoZSByZWNvbW1lbmRlZCBmb3JtYXQgaXM6IOKAnG1hbnVm
+YWN0dXJlcixtb2RlbOKAnSwgd2hlcmUgbWFudWZhY3R1cmVyIGlzIGEKPiA+PiBzdHJpbmcgZGVz
+Y3JpYmluZyB0aGUgbmFtZSBvZiB0aGUgbWFudWZhY3R1cmVyIChzdWNoIGFzIGEgc3RvY2sgdGlj
+a2VyCj4gPj4gc3ltYm9sKSwgYW5kIG1vZGVsIHNwZWNpZmllcyB0aGUgbW9kZWwgbnVtYmVyLgo+
+ID4gCj4gPiBUaGUgbW9kZWwgcHJvcGVydHkgaXMgdmVyeSBzaW1pbGFyIHRvIGNvbXBhdGlibGUs
+IGV4Y2VwdCB0aGF0IHRoZXJlIGlzCj4gPiBvbmx5IG9uZSBlbnRyeSByYXRoZXIgdGhhbiBhIGxp
+c3Qgb2YgZW50cmllcyBmcm9tIG1vc3Qgc3BlY2lmaWMgdG8KPiA+IG1vc3QgZ2VuZXJpYy4KPiAK
+PiBUaGV5IHNlZW0gdmVyeSBzaW1pbGFyLCBidXQgSSB0aGluayB0aGVyZSBpcyBhIGNvbmNlcHR1
+YWwgZGlmZmVyZW5jZS4KPiBUaGUgY29tcGF0aWJsZSBwcm9wZXJ0eSBpcyBtYWlubHkgdXNlZCB0
+byBzZWxlY3QgdGhlIGFwcHJvcHJpYXRlIGRyaXZlcgo+IGFuZCBhcyBzdWNoIHRoZSBwcm9wZXJ0
+eSBpcyB0eXBpY2FsbHkgaWdub3JlZCBieSBkZXZpY2UgZHJpdmVycy4KPiBQcm9iYWJseSB0aGVy
+ZSBhcmUgZXhjZXB0aW9ucyB0byBiZSBmb3VuZC4KPiAKPiA+IEkgdGhpbmsgYnkgd3JpdGluZyB0
+aGUgYWJvdmUgZXhhbXBsZSBhcwo+ID4gCj4gPiAgICAgICBjb21wYXRpYmxlID0gImFtcGFrLGFw
+NjIxMCIsICJicmNtLGJjbTQzMjktZm1hYyI7Cj4gPiAKPiA+IHdlIGNhbiBwcm92aWRlIHRoZSBz
+YW1lIGZ1bmN0aW9uYWxpdHkgaW4gYSBzbGlnaHRseSBzaW1wbGVyIHdheSwgdGhlIGRyaXZlcgo+
+ID4gdGhlbiBqdXN0IGdvZXMgb24gdG8gbG9vayBmb3IgdGhlIG52cmFtIGZpbGUgZm9yIGVhY2gg
+ZW50cnkgaW4gc2VxdWVuY2UgdW50aWwKPiA+IGl0IGZpbmRzIG9uZS4KPiAKPiBOb3Qgc3VyZSB3
+aHkgdGhpcyB3b3VsZCBiZSBzaW1wbGVyLiBXaHkgd291bGQgdHJhdmVyc2luZyB0aGUgY29tcGF0
+aWJsZQo+IHN0cmluZyBiZSBzaW1wbGVyIHRoYW4gaGFuZGxpbmcgdGhlIG1vZGVsIHByb3BlcnR5
+IGlmIHByZXNlbnQgYW5kCj4gb3RoZXJ3aXNlIGZhbGxiYWNrIHRvIHRoZSBkZWZhdWx0IG52cmFt
+IG5hbWluZy4KCkJlY2F1c2UgeW91IGhhdmUgdG8gd2FsayB0aGUgbGlzdCBhbnl3YXkgdG8gZmlu
+ZCB0aGUgb3RoZXIgZmlybXdhcmUgZmlsZXM6CndoZW4geW91IGhhdmUgYSBzcGVjaWFsaXphdGlv
+biBvZiBhIGRldmljZSB0aGF0IHJlcXVpcmVzIGxpc3RpbmcgYm90aCB2YWx1ZXMKYXMgY29tcGF0
+aWJsZSwgdGhlIGRyaXZlciBoYXMgbm8gaWRlYSB3aGljaCBvZiB0aGUgZW50cmllcyB0byB1c2Us
+IHVubGVzcwp5b3UgYWRkIGEgbG9va3VwIHRhYmxlIHRoYXQgYWRkcyBtb3JlIGNvbXBsZXhpdHku
+CgoJQXJuZAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
