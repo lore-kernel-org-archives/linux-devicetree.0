@@ -1,72 +1,110 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [linux-sunxi] Re: [PATCH 1/4] brcmfmac: Add brcm,
- nvram_file_name dt property
-Date: Mon, 04 Jul 2016 10:55:19 +0200
-Message-ID: <5756670.9hMGo8oEyl@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
- <7975990.MvNRQ06u39@wuerfel>
- <ac480a61-5bfd-5d0c-26fe-b85220ee5076@broadcom.com>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [RFC PATCH v2 4/4] net: macb: Add gmii2rgmii phy converter support
+Date: Mon, 4 Jul 2016 14:34:44 +0530
+Message-ID: <1467623084-15471-5-git-send-email-appanad@xilinx.com>
+References: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ac480a61-5bfd-5d0c-26fe-b85220ee5076@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arend Van Spriel <arend.vanspriel@broadcom.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Priit Laes <plaes@plaes.org>, linux-sunxi@googlegroups.com, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "John W . Linville" <linville@tuxdriver.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jonas Gorski <jonas.gorski@gmail.com>, Arend van Spriel <arend@broadcom.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Kalle Valo <kvalo@codeaurora.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, punnaia@xilinx.com, nicolas.ferre@atmel.com, f.fainelli@gmail.com, andrew@lunn.ch, anirudh@xilinx.com, harinik@xilinx.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uZGF5LCBKdWx5IDQsIDIwMTYgMTA6NDE6MjAgQU0gQ0VTVCBBcmVuZCBWYW4gU3ByaWVs
-IHdyb3RlOgo+IE9uIDItNy0yMDE2IDIzOjMwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOgo+ID4gT24g
-U2F0dXJkYXksIEp1bHkgMiwgMjAxNiA4OjIwOjM1IFBNIENFU1QgQXJlbmQgVmFuIFNwcmllbCB3
-cm90ZToKPiA+Pj4gSWYgeW91IHdhbnQgYSBzZXBhcmF0ZSBwcm9wZXJ0eSwgdGhlbiBJIHJlcGVh
-dCBteSB2ZXJ5IGZpcnN0Cj4gPj4+IHN1Z2dlc3Rpb24sIHRoZSB3ZWxsIGRlZmluZWQgbW9kZWwg
-cHJvcGVydHkuCj4gPj4+IGUuZy4KPiA+Pj4KPiA+Pj4gYnJjbWZAMCB7Cj4gPj4+ICAgICAgICAg
-bW9kZWwgPSAiYW1wYWssYXA2MjEwIjsKPiA+Pj4gICAgICAgICBjb21wYXRpYmxlID0gImJyY20s
-YmNtNDMyOS1mbWFjIjsKPiA+Pj4gICAgICAgICAuLi4KPiA+Pj4gfTsKPiA+Pj4KPiA+Pj4gQWxs
-IGRldmljZSBub2RlcyBtYXkgaGF2ZSBhIG1vZGVsIHByb3BlcnR5LCBub3QganVzdCB0aGUgdG9w
-ICJtYWNoaW5lIiBvbmUuCj4gPj4KPiA+PiBJIGhlYXJkIHlvdSB0aGUgZmlyc3QgdGltZSAgSSBq
-dXN0IHdhcyBub3Qgc3VyZSB3aGF0IHRoZSBpbXBsaWNhdGlvbnMKPiA+PiB3b3VsZCBiZSB0byB1
-c2UgaXQuIEhlbmNlIEkgc3VnZ2VzdGVkIGEgdmVuZG9yIHNwZWNpZmljIHByb3BlcnR5Lgo+ID4+
-IEhvd2V2ZXIsIGxvb2tpbmcgdXAgYW5kIHJlYWRpbmcgdGhlIGRlZmluaXRpb24gaW4gZVBBUFJ2
-MS4xIEkgc3VwcG9zZSBpdAo+ID4+IGlzIGZpbmUgdG8gdXNlIHRoZSBtb2RlbCBwcm9wZXJ0eToK
-PiA+Pgo+ID4+IFByb3BlcnR5OiBtb2RlbAo+ID4+IFZhbHVlIHR5cGU6IDxzdHJpbmc+Cj4gPj4g
-RGVzY3JpcHRpb246Cj4gPj4gVGhlIG1vZGVsIHByb3BlcnR5IHZhbHVlIGlzIGEgPHN0cmluZz4g
-dGhhdCBzcGVjaWZpZXMgdGhlIG1hbnVmYWN0dXJlcuKAmXMKPiA+PiBtb2RlbCBudW1iZXIgb2Yg
-dGhlIGRldmljZS4KPiA+Pgo+ID4+IFRoZSByZWNvbW1lbmRlZCBmb3JtYXQgaXM6IOKAnG1hbnVm
-YWN0dXJlcixtb2RlbOKAnSwgd2hlcmUgbWFudWZhY3R1cmVyIGlzIGEKPiA+PiBzdHJpbmcgZGVz
-Y3JpYmluZyB0aGUgbmFtZSBvZiB0aGUgbWFudWZhY3R1cmVyIChzdWNoIGFzIGEgc3RvY2sgdGlj
-a2VyCj4gPj4gc3ltYm9sKSwgYW5kIG1vZGVsIHNwZWNpZmllcyB0aGUgbW9kZWwgbnVtYmVyLgo+
-ID4gCj4gPiBUaGUgbW9kZWwgcHJvcGVydHkgaXMgdmVyeSBzaW1pbGFyIHRvIGNvbXBhdGlibGUs
-IGV4Y2VwdCB0aGF0IHRoZXJlIGlzCj4gPiBvbmx5IG9uZSBlbnRyeSByYXRoZXIgdGhhbiBhIGxp
-c3Qgb2YgZW50cmllcyBmcm9tIG1vc3Qgc3BlY2lmaWMgdG8KPiA+IG1vc3QgZ2VuZXJpYy4KPiAK
-PiBUaGV5IHNlZW0gdmVyeSBzaW1pbGFyLCBidXQgSSB0aGluayB0aGVyZSBpcyBhIGNvbmNlcHR1
-YWwgZGlmZmVyZW5jZS4KPiBUaGUgY29tcGF0aWJsZSBwcm9wZXJ0eSBpcyBtYWlubHkgdXNlZCB0
-byBzZWxlY3QgdGhlIGFwcHJvcHJpYXRlIGRyaXZlcgo+IGFuZCBhcyBzdWNoIHRoZSBwcm9wZXJ0
-eSBpcyB0eXBpY2FsbHkgaWdub3JlZCBieSBkZXZpY2UgZHJpdmVycy4KPiBQcm9iYWJseSB0aGVy
-ZSBhcmUgZXhjZXB0aW9ucyB0byBiZSBmb3VuZC4KPiAKPiA+IEkgdGhpbmsgYnkgd3JpdGluZyB0
-aGUgYWJvdmUgZXhhbXBsZSBhcwo+ID4gCj4gPiAgICAgICBjb21wYXRpYmxlID0gImFtcGFrLGFw
-NjIxMCIsICJicmNtLGJjbTQzMjktZm1hYyI7Cj4gPiAKPiA+IHdlIGNhbiBwcm92aWRlIHRoZSBz
-YW1lIGZ1bmN0aW9uYWxpdHkgaW4gYSBzbGlnaHRseSBzaW1wbGVyIHdheSwgdGhlIGRyaXZlcgo+
-ID4gdGhlbiBqdXN0IGdvZXMgb24gdG8gbG9vayBmb3IgdGhlIG52cmFtIGZpbGUgZm9yIGVhY2gg
-ZW50cnkgaW4gc2VxdWVuY2UgdW50aWwKPiA+IGl0IGZpbmRzIG9uZS4KPiAKPiBOb3Qgc3VyZSB3
-aHkgdGhpcyB3b3VsZCBiZSBzaW1wbGVyLiBXaHkgd291bGQgdHJhdmVyc2luZyB0aGUgY29tcGF0
-aWJsZQo+IHN0cmluZyBiZSBzaW1wbGVyIHRoYW4gaGFuZGxpbmcgdGhlIG1vZGVsIHByb3BlcnR5
-IGlmIHByZXNlbnQgYW5kCj4gb3RoZXJ3aXNlIGZhbGxiYWNrIHRvIHRoZSBkZWZhdWx0IG52cmFt
-IG5hbWluZy4KCkJlY2F1c2UgeW91IGhhdmUgdG8gd2FsayB0aGUgbGlzdCBhbnl3YXkgdG8gZmlu
-ZCB0aGUgb3RoZXIgZmlybXdhcmUgZmlsZXM6CndoZW4geW91IGhhdmUgYSBzcGVjaWFsaXphdGlv
-biBvZiBhIGRldmljZSB0aGF0IHJlcXVpcmVzIGxpc3RpbmcgYm90aCB2YWx1ZXMKYXMgY29tcGF0
-aWJsZSwgdGhlIGRyaXZlciBoYXMgbm8gaWRlYSB3aGljaCBvZiB0aGUgZW50cmllcyB0byB1c2Us
-IHVubGVzcwp5b3UgYWRkIGEgbG9va3VwIHRhYmxlIHRoYXQgYWRkcyBtb3JlIGNvbXBsZXhpdHku
-CgoJQXJuZAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+This patch adds support for gmii2rgmii phy converter in the macb driver.
+
+The GMII to RGMII IP core provides the Reduced Gigabit Media
+Independent Interface (RGMII) between Ethernet physical media
+Devices and the Gigabit Ethernet controller. This core can
+Switch dynamically between the three different speed modes of
+Operation by configuring the converter register through mdio write.
+
+MDIO interface is used to set operating speed of Ethernet MAC.
+
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+Changes for v2:
+---> Moved header file define xilinx_gmii2rgmii.h to macb.c file
+as suggested by the Nicolas.
+---> Updated the commit meassage as suggested by the Nicolas.
+---> Fixed minor coding comments as suggested by the Nicolas.
+
+ drivers/net/ethernet/cadence/macb.c | 21 +++++++++++++++++++++
+ drivers/net/ethernet/cadence/macb.h |  1 +
+ 2 files changed, 22 insertions(+)
+
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index cb07d95..b900eb4 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -32,6 +32,7 @@
+ #include <linux/of_gpio.h>
+ #include <linux/of_mdio.h>
+ #include <linux/of_net.h>
++#include <linux/xilinx_gmii2rgmii.h>
+ 
+ #include "macb.h"
+ 
+@@ -257,6 +258,14 @@ static int macb_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+ 	return 0;
+ }
+ 
++static inline void macb_hw_fix_mac_speed(struct macb *bp,
++					 struct phy_device *phydev)
++{
++	if (bp->converter_phy.fix_mac_speed)
++		bp->converter_phy.fix_mac_speed(&bp->converter_phy,
++						phydev->speed);
++}
++
+ /**
+  * macb_set_tx_clk() - Set a clock to a new frequency
+  * @clk		Pointer to the clock to change
+@@ -329,6 +338,7 @@ static void macb_handle_link_change(struct net_device *dev)
+ 				reg |= GEM_BIT(GBE);
+ 
+ 			macb_or_gem_writel(bp, NCFGR, reg);
++			macb_hw_fix_mac_speed(bp, phydev);
+ 
+ 			bp->speed = phydev->speed;
+ 			bp->duplex = phydev->duplex;
+@@ -2886,6 +2896,7 @@ static int macb_probe(struct platform_device *pdev)
+ 	int (*init)(struct platform_device *) = macb_init;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct device_node *phy_node;
++	struct device_node *child_node, *np1;
+ 	const struct macb_config *macb_config = NULL;
+ 	struct clk *pclk, *hclk = NULL, *tx_clk = NULL;
+ 	unsigned int queue_mask, num_queues;
+@@ -3011,6 +3022,16 @@ static int macb_probe(struct platform_device *pdev)
+ 		goto err_out_free_netdev;
+ 
+ 	phydev = bp->phy_dev;
++	child_node = of_get_next_child(np, NULL);
++	for_each_child_of_node(child_node, np1) {
++		if (of_device_is_compatible(np1, "xlnx,gmiitorgmii")) {
++			bp->converter_phy.dev = dev;
++			bp->converter_phy.mii_bus = bp->mii_bus;
++			bp->converter_phy.mdio_write = macb_mdio_write;
++			bp->converter_phy.platform_data = bp->pdev->dev.of_node;
++			gmii2rgmii_phyprobe(&bp->converter_phy);
++		}
++	}
+ 
+ 	netif_carrier_off(dev);
+ 
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index 8a13824..414005c 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -846,6 +846,7 @@ struct macb {
+ 	unsigned int		jumbo_max_len;
+ 
+ 	u32			wol;
++	struct	gmii2rgmii	converter_phy;
+ };
+ 
+ static inline bool macb_is_gem(struct macb *bp)
+-- 
+2.1.2
