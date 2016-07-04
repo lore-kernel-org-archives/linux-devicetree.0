@@ -1,87 +1,26 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 00/10] Add clock support for Armada 37xx SoCs
-Date: Mon, 04 Jul 2016 22:29:35 +0200
-Message-ID: <874m85w3io.fsf@free-electrons.com>
-References: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/3] Add R8A7792/Blanche PFC support
+Date: Mon, 04 Jul 2016 23:51:11 +0300
+Message-ID: <2793535.9X0Tq7I1Mq@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
-	(Gregory CLEMENT's message of "Fri, 10 Jun 2016 15:23:28 +0200")
-Sender: linux-clk-owner@vger.kernel.org
-To: Mike Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
- 
- On ven., juin 10 2016, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+Hello.
 
-> Hi,
->
-> this series add clock support for the Armada 37xx SoCs.
->
-> The design of the drivers is as close as possible as the hardware is,
-> with some clocks made of several layers: muxing, divider and gating.
->
-> The device tree binding was written in a way that even if we discover
-> some change inside the clocks, the binding should not be
-> affected. Especially, there are some holes in the clocks, but we
-> should be able to add them seamless.
->
-> I tried to follow the last update made in the clock framework, I hope
-> theses drivers will comply the new guidelines.
+   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20160704-v4.7-rc6' tag. We're adding the R8A7792 PFC node and
+then describe the pins for the SCIFs and SMSC LAN89218 Ethernet chip found on
+the Blanche board. These patches depend on the R8A7792 PFC driver patchset
+in order to work properly.
 
-I applied the first 4 patches on the mvebu branches, the first one on
-mvebu/arm64 and the 3 other on mvebu/dt64. I did this in order to not
-miss the arm-soc merge window.
+[1/3] ARM: dts: r8a7792: add PFC support
+[2/3] ARM: dts: blanche: add SCIF pins
+[3/3] ARM: dts: blanche: add Ethernet pins
 
-The binding was acked by the dt maintainer and the review of the clk
-maintainer was abut the internal of the driver. The only change I did
-was fixing a typo in the address part of the name of the sb-periph-clk
-node as pointed by Victor Gu. I will submit a second version soon
-addressing these concerns.
-
-Gregory
-
->
-> Gregory CLEMENT (10):
->   arm64: marvell: enable Armada 3700 clock drivers
->   arm64: dts: marvell: Add xtal clock support for Armada 3700
->   arm64: dts: marvell: add tbg clocks for Armada 37xx
->   arm64: dts: marvell: add peripherals clocks for Armada 37xx
->   dt-bindings: clock: add DT binding for the Xtal clock on Armada 3700
->   clk: mvebu: Add the xtal clock for Armada 3700 SoC
->   dt-bindings: clock: add DT binding for the TBG clocks on Armada 3700
->   clk: mvebu Add the time base generator clocks for Armada 3700
->   dt-bindings: clock: add DT binding for the peripheral clocks on Armada
->     3700
->   clk: mvebu: Add the peripheral clock driver for Armada 3700
->
->  .../bindings/clock/armada3700-periph-clock.txt     |  70 ++++
->  .../bindings/clock/armada3700-tbg-clock.txt        |  27 ++
->  .../bindings/clock/armada3700-xtal-clock.txt       |  28 ++
->  arch/arm64/Kconfig.platforms                       |   1 +
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi       |  35 ++
->  drivers/clk/mvebu/Kconfig                          |   3 +
->  drivers/clk/mvebu/Makefile                         |   3 +
->  drivers/clk/mvebu/armada-37xx-periph.c             | 462 +++++++++++++++++++++
->  drivers/clk/mvebu/armada-37xx-tbg.c                | 172 ++++++++
->  drivers/clk/mvebu/armada-37xx-xtal.c               |  93 +++++
->  10 files changed, 894 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/armada3700-tbg-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
->  create mode 100644 drivers/clk/mvebu/armada-37xx-periph.c
->  create mode 100644 drivers/clk/mvebu/armada-37xx-tbg.c
->  create mode 100644 drivers/clk/mvebu/armada-37xx-xtal.c
->
-> -- 
-> 2.5.0
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+WBR, Sergei
