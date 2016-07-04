@@ -1,155 +1,124 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3] sm501: Add device property
-Date: Mon, 4 Jul 2016 15:40:43 +0100
-Message-ID: <20160704144043.GC9048@leverpostej>
-References: <1467642364-10316-1-git-send-email-ysato@users.sourceforge.jp>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Mon, 04 Jul 2016 16:54:25 +0200
+Message-ID: <8717879.O1RMZcQt4V@wuerfel>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <5756670.9hMGo8oEyl@wuerfel> <6cc6dabf-e6da-d70d-3cce-a7f1804f233e@broadcom.com>
+Reply-To: arnd-r2nGTMty4D4@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467642364-10316-1-git-send-email-ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRB5PP5G5QKGQEBR43GSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <6cc6dabf-e6da-d70d-3cce-a7f1804f233e-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 04, 2016 at 11:26:04PM +0900, Yoshinori Sato wrote:
-> Add device proptery on enable integrated peripheral.
-> It have platform_data. But don't have devicetree.
-> 
-> Signed-off-by: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-> ---
->  .../devicetree/bindings/display/sm501fb.txt        | 11 +++++++++
->  drivers/mfd/sm501.c                                | 28 +++++++++++++---------
->  2 files changed, 28 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sm501fb.txt b/Documentation/devicetree/bindings/display/sm501fb.txt
-> index 9d9f009..9290094 100644
-> --- a/Documentation/devicetree/bindings/display/sm501fb.txt
-> +++ b/Documentation/devicetree/bindings/display/sm501fb.txt
-> @@ -22,6 +22,17 @@ Optional properties:
->    set different foreign endian.
->  - big-endian: available on little endian systems, to
->    set different foreign endian.
-> +- smi,devices: function block enable bitmap.
-> +	bit0: USB host
-> +	bit1: USB slave
-> +	bit2: SSP Ch0
-> +	bit3: SSP Ch1
-> +	bit4: UART Ch0
-> +	bit5: UART Ch1
-> +	bit6: Accelerator
-> +	bit7: AC97
-> +	bit8: I2S
-> +	bit9: GPIO
+On Monday, July 4, 2016 11:08:38 AM CEST Arend Van Spriel wrote:
+> On 4-7-2016 10:55, Arnd Bergmann wrote:
+> > On Monday, July 4, 2016 10:41:20 AM CEST Arend Van Spriel wrote:
+> >> On 2-7-2016 23:30, Arnd Bergmann wrote:
+> >>> On Saturday, July 2, 2016 8:20:35 PM CEST Arend Van Spriel wrote:
+> >>>>> If you want a separate property, then I repeat my very first
+> >>>>> suggestion, the well defined model property.
+> >>>>> e.g.
+> >>>>>
+> >>>>> brcmf@0 {
+> >>>>>         model =3D "ampak,ap6210";
+> >>>>>         compatible =3D "brcm,bcm4329-fmac";
+> >>>>>         ...
+> >>>>> };
+> >>>>>
+> >>>>> All device nodes may have a model property, not just the top "machi=
+ne" one.
+> >>>>
+> >>>> I heard you the first time  I just was not sure what the implication=
+s
+> >>>> would be to use it. Hence I suggested a vendor specific property.
+> >>>> However, looking up and reading the definition in ePAPRv1.1 I suppos=
+e it
+> >>>> is fine to use the model property:
+> >>>>
+> >>>> Property: model
+> >>>> Value type: <string>
+> >>>> Description:
+> >>>> The model property value is a <string> that specifies the manufactur=
+er=E2=80=99s
+> >>>> model number of the device.
+> >>>>
+> >>>> The recommended format is: =E2=80=9Cmanufacturer,model=E2=80=9D, whe=
+re manufacturer is a
+> >>>> string describing the name of the manufacturer (such as a stock tick=
+er
+> >>>> symbol), and model specifies the model number.
+> >>>
+> >>> The model property is very similar to compatible, except that there i=
+s
+> >>> only one entry rather than a list of entries from most specific to
+> >>> most generic.
+> >>
+> >> They seem very similar, but I think there is a conceptual difference.
+> >> The compatible property is mainly used to select the appropriate drive=
+r
+> >> and as such the property is typically ignored by device drivers.
+> >> Probably there are exceptions to be found.
+> >>
+> >>> I think by writing the above example as
+> >>>
+> >>>       compatible =3D "ampak,ap6210", "brcm,bcm4329-fmac";
+> >>>
+> >>> we can provide the same functionality in a slightly simpler way, the =
+driver
+> >>> then just goes on to look for the nvram file for each entry in sequen=
+ce until
+> >>> it finds one.
+> >>
+> >> Not sure why this would be simpler. Why would traversing the compatibl=
+e
+> >> string be simpler than handling the model property if present and
+> >> otherwise fallback to the default nvram naming.
+> >=20
+> > Because you have to walk the list anyway to find the other firmware fil=
+es:
+> > when you have a specialization of a device that requires listing both v=
+alues
+> > as compatible, the driver has no idea which of the entries to use, unle=
+ss
+> > you add a lookup table that adds more complexity.
+>=20
+> Currently, the brcmfmac bindings describe a single compatible string,
+> ie. "brcm,bcm4329-fmac", which selects the driver/programming model. If
+> that programming model supports "use model property if present,
+> otherwise use default" there is nothing to traverse. The default way in
+> the driver to determine firmware and nvram filename already has a lookup
+> table which uses the chip id and chip revision as key, which are read
+> from the device.
 
-Generally we don't place bitmaps like this in DT.
+In drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c I already see
+over a dozen different chips being supported, bcm4329 is only one of
+them. In particular, there seem to be some that have various modules:
 
-What exactly does this property represent? Whether certain sub-blocks
-are present?
+        BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
+        BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x00000020, 43241B4),
+        BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0xFFFFFFC0, 43241B5),
 
-These should probably be separate has-${FOO} proeprties. It may be
-better to have separate nodes, if we'e going to need to refer to sub
-blocks by phandle, or are liekly to have peropties specific to a sub
-block.
+So if you have a bcm43241, that compatible string probably should
+include both brcm,bcm43241-b4-fmac and brcm,bcm43241-fmac, possibly also
+brcm,bcm4329-fmac, to show that it is a superset of the programming
+interface of that one.
 
-Thanks,
-Mark.
+	Arnd
 
->  Example for MPC5200:
->  	display@1,0 {
-> diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
-> index 65cd0d2..e8c6a5e 100644
-> --- a/drivers/mfd/sm501.c
-> +++ b/drivers/mfd/sm501.c
-> @@ -21,6 +21,7 @@
->  #include <linux/pci.h>
->  #include <linux/i2c-gpio.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  
->  #include <linux/sm501.h>
->  #include <linux/sm501-regs.h>
-> @@ -1297,7 +1298,7 @@ static unsigned int sm501_mem_local[] = {
->   * Common init code for an SM501
->  */
->  
-> -static int sm501_init_dev(struct sm501_devdata *sm)
-> +static int sm501_init_dev(struct sm501_devdata *sm, unsigned int devices)
->  {
->  	struct sm501_initdata *idata;
->  	struct sm501_platdata *pdata;
-> @@ -1342,16 +1343,15 @@ static int sm501_init_dev(struct sm501_devdata *sm)
->  	pdata = sm->platdata;
->  	idata = pdata ? pdata->init : NULL;
->  
-> -	if (idata) {
-> +	if (idata)
->  		sm501_init_regs(sm, idata);
->  
-> -		if (idata->devices & SM501_USE_USB_HOST)
-> -			sm501_register_usbhost(sm, &mem_avail);
-> -		if (idata->devices & (SM501_USE_UART0 | SM501_USE_UART1))
-> -			sm501_register_uart(sm, idata->devices);
-> -		if (idata->devices & SM501_USE_GPIO)
-> -			sm501_register_gpio(sm);
-> -	}
-> +	if (devices & SM501_USE_USB_HOST)
-> +		sm501_register_usbhost(sm, &mem_avail);
-> +	if (devices & (SM501_USE_UART0 | SM501_USE_UART1))
-> +		sm501_register_uart(sm, devices);
-> +	if (devices & SM501_USE_GPIO)
-> +		sm501_register_gpio(sm);
->  
->  	if (pdata && pdata->gpio_i2c != NULL && pdata->gpio_i2c_nr > 0) {
->  		if (!sm501_gpio_isregistered(sm))
-> @@ -1377,6 +1377,7 @@ static int sm501_plat_probe(struct platform_device *dev)
->  {
->  	struct sm501_devdata *sm;
->  	int ret;
-> +	unsigned int devices = 0;
->  
->  	sm = kzalloc(sizeof(struct sm501_devdata), GFP_KERNEL);
->  	if (sm == NULL) {
-> @@ -1415,6 +1416,11 @@ static int sm501_plat_probe(struct platform_device *dev)
->  	}
->  
->  	platform_set_drvdata(dev, sm);
-> +	if (sm->platdata)
-> +		devices = sm->platdata->init->devices;
-> +	if (dev->dev.of_node)
-> +		of_property_read_u32(dev->dev.of_node, "smi,devices",
-> +				     &devices);
->  
->  	sm->regs = ioremap(sm->io_res->start, resource_size(sm->io_res));
->  
-> @@ -1424,7 +1430,7 @@ static int sm501_plat_probe(struct platform_device *dev)
->  		goto err_claim;
->  	}
->  
-> -	return sm501_init_dev(sm);
-> +	return sm501_init_dev(sm, devices);
->  
->   err_claim:
->  	release_resource(sm->regs_claim);
-> @@ -1635,7 +1641,7 @@ static int sm501_pci_probe(struct pci_dev *dev,
->  		goto err4;
->  	}
->  
-> -	sm501_init_dev(sm);
-> +	sm501_init_dev(sm, sm->platdata->init->devices);
->  	return 0;
->  
->   err4:
-> -- 
-> 2.7.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
