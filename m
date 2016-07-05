@@ -1,127 +1,104 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/3] ARM: dts: imx6sx: Add UDOO Neo support
-Date: Tue, 5 Jul 2016 20:33:53 +0200
-Message-ID: <20160705183353.GQ16643@pengutronix.de>
-References: <1467691450-22975-1-git-send-email-afaerber@suse.de>
- <1467691450-22975-3-git-send-email-afaerber@suse.de>
- <CAOMZO5CQWz++TVKBKEMSQuyks3C+7Tx5=Frh6R+Qubcab=EbjA@mail.gmail.com>
- <577BBC4B.5040903@suse.de>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH 00/21] Support qcom's HSIC USB and rewrite USB2 HS phy
+ support
+Date: Tue, 05 Jul 2016 12:22:19 -0700
+Message-ID: <146774653916.32648.3323628902201136171@sboyd-linaro>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+ <CALAqxLUHfsJBTQS=p5oThnOdiAZwu48puRhREx+2G9+KajDA9g@mail.gmail.com>
+ <146710289677.3879.15364764209076318827@sboyd-linaro>
+ <CALAqxLW--yFb2YwX3+x7PB-g_5D0gb6j8CiJwnCC+meb7xqbig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <577BBC4B.5040903@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Fabio Estevam <festevam@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Ettore Chimenti <ettore.chimenti@udoo.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CALAqxLW--yFb2YwX3+x7PB-g_5D0gb6j8CiJwnCC+meb7xqbig@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, "Ivan T. Ivanov" <iivanov.xz@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2016 at 03:55:23PM +0200, Andreas F=E4rber wrote:
-> Hi Fabio,
->=20
-> Am 05.07.2016 um 14:04 schrieb Fabio Estevam:
-> > On Tue, Jul 5, 2016 at 1:04 AM, Andreas F=E4rber <afaerber@suse.de>=
- wrote:
-> >=20
-> >> +/dts-v1/;
-> >> +
-> >> +#include "imx6sx-udoo-neo.dtsi"
-> >> +
-> >> +/ {
-> >> +       model =3D "UDOO Neo Basic";
-> >=20
-> > This should be something like:
-> >=20
-> > model =3D "Udoo i.MX6 SoloX UDOO Neo Basic";
->=20
-> Why should anyone use such a weird concatenation of names? If you wan=
-ted
-> "UDOO Neo Basic (based on i.MX 6SoloX)" that would be more
-> understandable, but there is no UDOO Neo Basic board with another SoC=
-:
->=20
-> http://www.udoo.org/udoo-neo/
->=20
-> imx6dl-udoo.dts uses "Udoo i.MX6 Dual-lite Board" and
-> imx6q-udoo.dts  uses "Udoo i.MX6 Quad Board".
+Quoting John Stultz (2016-07-01 23:03:38)
+> On Tue, Jun 28, 2016 at 1:34 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
+> > Quoting John Stultz (2016-06-27 20:09:30)
+> >>
+> >> I haven't yet been able to test with this, as I need some other fixes
+> >> it seems too to deal with some of the iommu changes in my flo-WIP tree
+> >> (it can't find of_dma_configure), but will let you know how things
+> >> work once I have all that sorted.
+> >
+> > Cool, thanks for testing.
+> 
+> So after working out some merge issues w/ my flo-WIP branch for the
+> nexus7, I was still having trouble, so I backed out to just your
+> (updated) branch.
+> 
+> But even there, I'm not able to get the usb gadget up. I see:
 
-Ack, I'm OK with "UDOO Neo Basic" et al, too.
+I can get the gadget working on the ifc6410 device I have. I'm using
+this script to test things:
 
-> > [ discussion about what to use for compatible ]
-> However, "udoo,neo-basic", "udoo,neo", "fsl,imx6sx" should be suffici=
-ent
-> since unlike the Quad/Dual situation there is no SoC variation here. =
-Or
-> "seco,udoo-neo"? "udoo,udoo-neo" looks duplicate.
+modprobe libcomposite
+mkdir config
+mount none config -t configfs
+mkdir config/usb_gadget/g1
+mkdir config/usb_gadget/g1/strings/0x409
+echo 012345678 > config/usb_gadget/g1/strings/0x409/serialnumber
+echo "manufacturer" > config/usb_gadget/g1/strings/0x409/manufacturer
+echo "db8074" > config/usb_gadget/g1/strings/0x409/product
+echo 0x1d6b > config/usb_gadget/g1/idVendor
+echo 0x0104 > config/usb_gadget/g1/idProduct
+mkdir config/usb_gadget/g1/functions/acm.GS0
+mkdir config/usb_gadget/g1/functions/acm.GS1
+mkdir config/usb_gadget/g1/functions/ecm.usb0
+mkdir config/usb_gadget/g1/configs/c.1
+mkdir config/usb_gadget/g1/configs/c.1/strings/0x409/
+echo "CDC 2xACM+ECM" >
+config/usb_gadget/g1/configs/c.1/strings/0x409/configuration
+ln -s config/usb_gadget/g1/functions/acm.GS0
+config/usb_gadget/g1/configs/c.1
+ln -s config/usb_gadget/g1/functions/acm.GS1
+config/usb_gadget/g1/configs/c.1
+ln -s config/usb_gadget/g1/functions/ecm.usb0
+config/usb_gadget/g1/configs/c.1
+echo $(ls /sys/class/udc/) > config/usb_gadget/g1/UDC
 
-I'd use
+> 
+> [    1.869717] msm_hsusb 12500000.usb: failed to get phandle in
+> /soc/usb@12500000 node
 
-	"udoo,neo-basic", "fsl,imx6sx";
+This is sort of ok (I've seen it before with the HSIC controller on
+8074). The extcon is optional and so the error message should be
+silenced. I sent a patch to move it to debug level.
 
-> >> +&fec1 {
-> >> +       pinctrl-names =3D "default";
-> >> +       pinctrl-0 =3D <&pinctrl_enet1>;
-> >> +       phy-mode =3D "rmii";
-> >> +       phy-reset-gpios =3D <&gpio5 4 GPIO_ACTIVE_HIGH>;
-> >=20
-> > Shouldn't this be GPIO_ACTIVE_LOW instead?
->=20
-> Hm, network worked okay for me like this, how do we verify?
->=20
-> Schematics are here: http://www.udoo.org/other-resources/
+I don't see an extcon in mainline for apq8064, but I think it may be
+needed. At the least, I see that we're using a PMIC interrupt in the
+msm-3.4 kernel for the ID pin and the charger is notifying of vbus
+events similar to how smbb is doing it for apq8074.
 
-The phy's RST# pin is connected to a signal that routes to ENET1_CRS /
-C7. That corresponds to GPIO2_IO01.
+> [    1.882347] 12500000.usb supply vbus not found, using dummy regulator
 
-Also that's what is used in "my" device tree that was created by a
-colleague who probably took udoo's dts as reference.
+This is not great. We don't have a regulator specified on apq8064 so we
+can't turn on vbus and really support host mode. This seems to already
+be the case on mainline though, so it's not like we're any worse here.
+To properly support this we need a regulator driver. I suppose if the
+RPM supports it we can just use that, but if it doesn't support this
+regulator then we need to port over the SSBI regulator driver to do
+native regulator control. So far I haven't been able to test host mode
+on apq8064 because of this.
 
-Regarding the question how to verify that:
+> 
+> So I'm not sure if the dts changes were quite right. I've got all the
+> ULPI configs enabled. Any ideas?
+> 
 
-	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ ifup eth0
-	eth0: 100Mbps full duplex link detected
-	T DHCP client bound to address 192.168.24.110
-
-	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ ping 192.168.23.4
-	host 192.168.23.4 is alive
-
-	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ gpio_direction_output 3=
-3 0
-
-	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ ping 192.168.23.4
-	eth0: transmission timeout
-	T eth0: transmission timeout
-	T eth0: transmission timeout
-	T eth0: transmission timeout
-	T eth0: transmission timeout
-	T eth0: transmission timeout
-	ping failed: Connection timed out
-
-	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ gpio_direction_output 3=
-3 1
-
-	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ ping 192.168.23.4
-	host 192.168.23.4 is alive
-
-So I'd say the right thing to do is:
-
-	phy-reset-gpios =3D <&gpio2 1 GPIO_ACTIVE_LOW>;
-
-And as the fec driver ignores the flag (for historic reasons), the only
-other correct possibility is:
-
-	phy-reset-gpios =3D <&gpio2 1 GPIO_ACTIVE_HIGH>;
-	phy-reset-active-high;
-
-which is wrong here though.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+The phy and controller are both probing? If they're not failing to probe
+then it's probably the phy that isn't working properly. Does gadget work
+without my patches on nexus7?
