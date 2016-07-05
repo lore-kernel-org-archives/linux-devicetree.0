@@ -1,43 +1,39 @@
-From: =?UTF-8?B?T3R0byBLZWvDpGzDpGluZW4=?= <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>
-Subject: Re: [PATCH] Fix spelling errors in Documentation/devicetree
-Date: Tue, 5 Jul 2016 22:21:54 +0100
-Message-ID: <CAHj_TLCzme5cvmpWub=XOghVxn6TiEqh2iq-cr1OAardJPvKEA@mail.gmail.com>
-References: <1467708506-18010-1-git-send-email-otto@seravo.fi> <20160705204702.GA28168@rob-hp-laptop>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] gpio: rcar: document R8A7792 support
+Date: Wed, 06 Jul 2016 00:53:53 +0300
+Message-ID: <1977343.FhZjzuj3ub@wasted.cogentembedded.com>
+References: <1501145.5ro9yfox2Z@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160705204702.GA28168@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1501145.5ro9yfox2Z@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, gnurou@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2016-07-05 23:47 GMT+03:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Tue, Jul 05, 2016 at 11:48:26AM +0300, Otto Kek=C3=A4l=C3=A4inen w=
-rote:
->> Signed-off-by: Otto Kek=C3=A4l=C3=A4inen <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>
->> ---
->>
->> I sent this originally to trivial@, but they adviced to submit this =
-directly to you.
->> Please apply. Thank you!
->
-> I would, but...
->
->>
->>  Documentation/device-mapper/dm-crypt.txt           |    2 +-
->>  Documentation/device-mapper/verity.txt             |    2 +-
->
-> These 2 are not part of DT. Otherwise, looks fine.
+Renesas R8A7792 SoC is a member of the R-Car gen2 family that is supported
+by  the Renesas R-Car GPIO driver.
 
-The corrected, slimmed down patch available now. Instead of
-resubmitting, I provide the url:
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-curl -O https://github.com/torvalds/linux/compare/master...ottok:fix-sp=
-elling-devicetree.patch
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+The patch is against the 'devel' branch of Linus Walleij's 'linux-gpio.git'
+repo.
+
+ Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt |    1 +
+ 1 file changed, 1 insertion(+)
+
+Index: linux-gpio/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+===================================================================
+--- linux-gpio.orig/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++++ linux-gpio/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+@@ -7,6 +7,7 @@ Required Properties:
+     - "renesas,gpio-r8a7779": for R8A7779 (R-Car H1) compatible GPIO controller.
+     - "renesas,gpio-r8a7790": for R8A7790 (R-Car H2) compatible GPIO controller.
+     - "renesas,gpio-r8a7791": for R8A7791 (R-Car M2-W) compatible GPIO controller.
++    - "renesas,gpio-r8a7792": for R8A7792 (R-Car V2H) compatible GPIO controller.
+     - "renesas,gpio-r8a7793": for R8A7793 (R-Car M2-N) compatible GPIO controller.
+     - "renesas,gpio-r8a7794": for R8A7794 (R-Car E2) compatible GPIO controller.
+     - "renesas,gpio-r8a7795": for R8A7795 (R-Car H3) compatible GPIO controller.
