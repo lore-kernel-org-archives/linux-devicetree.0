@@ -1,467 +1,391 @@
-From: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH 3/6] Clocksource: add nuc970 clocksource driver
-Date: Tue, 5 Jul 2016 16:21:19 +0800
-Message-ID: <577B6DFF.9000703@iommu.org>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
- <1466851042-22239-4-git-send-email-vw@iommu.org>
- <5771827E.1090609@linaro.org>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH 2/4] power: add axp20x-battery driver
+Date: Tue, 05 Jul 2016 16:33:31 +0800
+Message-ID: <4101467707611@web7h.yandex.ru>
+References: <20160701092926.32005-1-icenowy@aosc.xyz>
+	 <20160701092926.32005-2-icenowy@aosc.xyz> <577B44FD.6040404@mailbox.org>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5771827E.1090609-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBYXB5W5QKGQEZQAK2UQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <577B44FD.6040404-cl+VPiYnx/1AfugRpC6u6w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michael Haas <michael.haas-cl+VPiYnx/1AfugRpC6u6w@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 2016=E5=B9=B406=E6=9C=8828=E6=97=A5 03:46, Daniel Lezcano wrote:
-> On 06/25/2016 12:37 PM, Wan Zongshun wrote:
->> This patch is to add nuc970 clocksource driver support.
+05.07.2016, 13:26, "Michael Haas" <michael.haas-cl+VPiYnx/1AfugRpC6u6w@public.gmane.org>:
+> Hi,
 >
-> Hi Wan,
+> nice work! Is this in any way related to Bruno Pr=C3=A9monts driver for t=
+he
+> axp20x?
 >
-> add a detailed description of how works this timer and its general
-> design. If there is a pointer or a reference to a manual that would b=
-e
-> awesome.
-
-Daniel,
-
-I add a document link to you, and I will update this link in my patch l=
-ater.
-
-https://github.com/zswan/nuc900-document/blob/master/NUC970_TechnicalRe=
-ferenceManual_EN_Rev1.30.pdf
-
+> I've got a reworked version of that lying around, but it's not quite
+> ready for submission. Do you know what pieces are missing in your driver
+> for axp20x support - as opposed to axp22x, which is already working?
 >
+> Michael
 >
->> Signed-off-by: Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   .../mach-w90x900/include/mach/nuc970-regs-timer.h  |  44 +++++
->>   drivers/clocksource/Kconfig                        |   8 +
->>   drivers/clocksource/Makefile                       |   1 +
->>   drivers/clocksource/timer-nuc900.c                 | 207
->> +++++++++++++++++++++
->>   4 files changed, 260 insertions(+)
->>   create mode 100644
->> arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
->>   create mode 100644 drivers/clocksource/timer-nuc900.c
+> On 01.07.2016 11:29, Icenowy Zheng wrote:
+>> =C2=A0This driver is the battery power supply driver of axp20x PMIC. Cur=
+rently
+>> =C2=A0it supports only AXP22x variants.
 >>
->> diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
->> b/arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
->> new file mode 100644
->> index 0000000..43d7e8b
->> --- /dev/null
->> +++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-timer.h
->> @@ -0,0 +1,44 @@
->> +/*
->> + * Copyright 2016 Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> + *
->> + * The code contained herein is licensed under the GNU General Publ=
-ic
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
->> +
->> +#ifndef __ASM_ARCH_REGS_TIMER_H
->> +#define __ASM_ARCH_REGS_TIMER_H
->> +
->> +/* Timer Registers */
->> +
->> +#define TMR_BA            0x0
->> +
->> +#define REG_TMR_TCSR0        (TMR_BA+0x00)
->> +#define REG_TMR_TICR0        (TMR_BA+0x04)
->> +#define REG_TMR_TDR0        (TMR_BA+0x08)
->> +
->> +
->> +#define REG_TMR_TCSR1        (TMR_BA+0x10)
->> +#define REG_TMR_TICR1        (TMR_BA+0x14)
->> +#define REG_TMR_TDR1        (TMR_BA+0x18)
->> +
->> +
->> +#define REG_TMR_TCSR2        (TMR_BA+0x20)
->> +#define REG_TMR_TICR2        (TMR_BA+0x24)
->> +#define REG_TMR_TDR2        (TMR_BA+0x28)
->> +
->> +#define REG_TMR_TCSR3        (TMR_BA+0x30)
->> +#define REG_TMR_TICR3        (TMR_BA+0x34)
->> +#define REG_TMR_TDR3        (TMR_BA+0x38)
->> +
->> +#define REG_TMR_TCSR4        (TMR_BA+0x40)
->> +#define REG_TMR_TICR4        (TMR_BA+0x44)
->> +#define REG_TMR_TDR4        (TMR_BA+0x48)
->> +
->> +#define REG_TMR_TISR        (TMR_BA+0x60)
->
-> Are these macros used only in the timer driver or somewhere else ?
-
-They are using by the timer driver, and I will try to move=20
-mach-w90x900/include/mach/nuc970-regs-timer.h out of mach/ folder.
-
-Do you think I should move those macros into this driver file?
-
->
->> +#endif /*  __ASM_ARCH_REGS_TIMER_H */
->> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconf=
-ig
->> index 47352d2..441c5ee 100644
->> --- a/drivers/clocksource/Kconfig
->> +++ b/drivers/clocksource/Kconfig
->> @@ -427,4 +427,12 @@ config CLKSRC_ST_LPC
->>         Enable this option to use the Low Power controller timer
->>         as clocksource.
+>> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> =C2=A0---
+>> =C2=A0=C2=A0=C2=A0drivers/mfd/axp20x.c | 14 +++
+>> =C2=A0=C2=A0=C2=A0drivers/power/Makefile | 1 +
+>> =C2=A0=C2=A0=C2=A0drivers/power/axp20x_battery.c | 254 +++++++++++++++++=
+++++++++++++++++++++++++
+>> =C2=A0=C2=A0=C2=A03 files changed, 269 insertions(+)
+>> =C2=A0=C2=A0=C2=A0create mode 100644 drivers/power/axp20x_battery.c
 >>
->> +config NUC900_TIMER
->> +        bool "Clocksource timer for nuc900 platform" if COMPILE_TES=
-T
->> +        depends on ARM
->> +        select CLKSRC_OF if OF
->> +        select CLKSRC_MMIO
->> +        help
->> +          Enables the clocksource for the NUC900 platform.
->> +
->>   endmenu
->> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Make=
-file
->> index 473974f..fcc2cc7 100644
->> --- a/drivers/clocksource/Makefile
->> +++ b/drivers/clocksource/Makefile
->> @@ -67,3 +67,4 @@ obj-$(CONFIG_H8300_TMR16)        +=3D h8300_timer1=
-6.o
->>   obj-$(CONFIG_H8300_TPU)            +=3D h8300_tpu.o
->>   obj-$(CONFIG_CLKSRC_ST_LPC)        +=3D clksrc_st_lpc.o
->>   obj-$(CONFIG_X86_NUMACHIP)        +=3D numachip.o
->> +obj-$(CONFIG_ARCH_W90X900)        +=3D timer-nuc900.o
->
-> obj-$(CONFIG_NUC900_TIMER)
-
-Sure, changed.
->
->> diff --git a/drivers/clocksource/timer-nuc900.c
->> b/drivers/clocksource/timer-nuc900.c
->> new file mode 100644
->> index 0000000..6ba025c
->> --- /dev/null
->> +++ b/drivers/clocksource/timer-nuc900.c
->> @@ -0,0 +1,207 @@
->> +/*
->> + * Copyright 2016 Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> + *
->> + * The code contained herein is licensed under the GNU General Publ=
-ic
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
->> +
->> +#include <linux/init.h>
->> +#include <linux/irq.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/jiffies.h>
->> +#include <linux/clockchips.h>
->> +#include <linux/types.h>
->> +#include <linux/clk.h>
->> +
->> +#include <linux/io.h>
->> +#include <asm/mach/time.h>
->> +
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +
->> +#include <mach/mfp.h>
->> +#include <mach/map.h>
->> +#include <mach/nuc970-regs-timer.h>
->> +#include <mach/hardware.h>
->> +#include <mach/regs-clock.h>
->
-> Please do a cleanup with these headers.
-
-Ok.
-
->
->> +#define RESETINT    0x1f
->> +#define PERIOD        (0x01 << 27)
->
-> PERIODIC
-
-Ok.
->
->> +#define ONESHOT        (0x00 << 27)
->> +#define COUNTEN        (0x01 << 30)
->> +#define INTEN        (0x01 << 29)
->> +
->> +#define TICKS_PER_SEC    100
->> +/* Divider =3D prescale + 1 */
->> +#define PRESCALE    0x63
->> +
->> +#define    TDR_SHIFT    24
->> +#define    TDR_MASK    ((1 << TDR_SHIFT) - 1)
->> +
->> +static unsigned int timer0_load;
->> +static void __iomem *tmr_base;
->> +
->
-> Structure and container_of:
->
-> struct nuc970_clockevents {
->      struct clock_event_device clkevt;
->      unsigned int timer0_load;
->      void __iomem *tmr_base;
-> };
->
-> struct nuc970_clockevents *clkevt_to_nuc970(
->      struct clock_event_device *ced)
-> {
->      return container_of(ced, struct nuc970_clockevents, clkevt);
-> }
-
-Looks better, thanks.
-
->
->> +static int nuc970_clockevent_set_oneshot(struct clock_event_device =
-*evt)
->> +{
->> +    unsigned int val;
->
->      struct nuc970_clockevents *nuc =3D clkevt_to_nuc970(evt);
->
->      val =3D __raw_readl(nuc->tmr_base + REG_TMR_TCSR0);
->> +
->> +
->> +    val &=3D ~(0x03 << 27);
->
-> (0x03 << 27)  =3D=3D> #define BLABLA_MASK (0x03 << 27)
-Ok.
->
->> +
->> +    val |=3D (ONESHOT | COUNTEN | INTEN | PRESCALE);
->> +
->> +    __raw_writel(val, tmr_base + REG_TMR_TCSR0);
->> +    return 0;
->> +}
->> +
->> +static int nuc970_clockevent_set_periodic(struct clock_event_device
->> *evt)
->> +{
->> +    unsigned int val;
->> +
->> +    val =3D __raw_readl(tmr_base + REG_TMR_TCSR0);
->> +    val &=3D ~(0x03 << 27);
->> +
->> +    __raw_writel(timer0_load, tmr_base + REG_TMR_TICR0);
->> +    val |=3D (PERIOD | COUNTEN | INTEN | PRESCALE);
->> +
->> +    __raw_writel(val, tmr_base + REG_TMR_TCSR0);
->> +
->> +    return 0;
->> +}
->
-> May be you can factour out:
->
-> static int nuc970_clockevent_set(bool periodic, void __iomem *addr)
-> {
->      unsigned int val;
->
->      val =3D __raw_readl(addr + REG_TMR_TCSR0);
->      val &=3D ULTRA_MASK;
->
->      val |=3D (COUNTEN | INTEN | PRESCALE);
->      val |=3D periodic ? PERIODIC : ONESHOT;
->
->      return __raw_writel(timer0_load, tmr_base + REG_TMR_TICR0);
-> }
-
-Ok, will change.
-
->
->> +
->> +static int nuc970_clockevent_setnextevent(unsigned long evt,
->> +        struct clock_event_device *clk)
->> +{
->> +    unsigned int tcsr, tdelta;
->> +
->> +    tcsr =3D __raw_readl(tmr_base + REG_TMR_TCSR0);
->> +    tdelta =3D __raw_readl(tmr_base + REG_TMR_TICR0) -
->> +                 __raw_readl(tmr_base + REG_TMR_TDR0);
->> +
->> +    __raw_writel(evt, tmr_base + REG_TMR_TICR0);
->> +
->> +    if (!(tcsr & COUNTEN) && ((tdelta > 2) || (tdelta =3D=3D 0)))
->> +        __raw_writel(__raw_readl(tmr_base + REG_TMR_TCSR0) | COUNTE=
-N,
->> +                 tmr_base + REG_TMR_TCSR0);
->> +
->> +    return 0;
->> +}
->> +
->> +static int nuc970_clockevent_shutdown(struct clock_event_device *ev=
-t)
->> +{
->> +    unsigned int val =3D __raw_readl(tmr_base + REG_TMR_TCSR0) &
->> +                       ~(0x03 << 27);
->> +
->> +    __raw_writel(val, tmr_base + REG_TMR_TCSR0);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct clock_event_device nuc970_clockevent_device =3D {
->> +    .name            =3D "nuc970-timer0",
->> +    .shift            =3D 32,
->> +    .features        =3D CLOCK_EVT_FEAT_PERIODIC |
->> +                  CLOCK_EVT_FEAT_ONESHOT,
->> +    .set_state_shutdown    =3D nuc970_clockevent_shutdown,
->> +    .set_state_periodic    =3D nuc970_clockevent_set_periodic,
->> +    .set_state_oneshot    =3D nuc970_clockevent_set_oneshot,
->> +    .set_next_event        =3D nuc970_clockevent_setnextevent,
->> +    .tick_resume        =3D nuc970_clockevent_shutdown,
->> +    .rating            =3D 300,
->> +};
->> +
->> +/*IRQ handler for the timer*/
->> +static irqreturn_t nuc970_timer0_interrupt(int irq, void *dev_id)
->> +{
->> +    struct clock_event_device *evt =3D &nuc970_clockevent_device;
->> +
->> +    __raw_writel(0x01, tmr_base + REG_TMR_TISR);
->> +
->> +    evt->event_handler(evt);
->> +
->> +    return IRQ_HANDLED;
->> +}
->> +
->> +static struct irqaction nuc970_timer0_irq =3D {
->> +    .name        =3D "nuc970-timer0",
->> +    .flags        =3D IRQF_TIMER | IRQF_IRQPOLL,
->> +    .handler    =3D nuc970_timer0_interrupt,
->> +};
->> +
->> +static void __init nuc970_clock_source_event_init(void __iomem *bas=
-e,
->> int irq,
->> +                          struct clk *clk_timer0,
->> +                          struct clk *clk_timer1)
->> +{
->> +    unsigned int val;
->> +    unsigned int rate =3D 0;
->> +
->> +    /* Get the timer base address */
->> +    tmr_base =3D base;
->> +
->> +    /*Clocksource init*/
->> +    WARN_ON(clk_prepare_enable(clk_timer1));
->
-> Error check, pr_err, return error
-
-Ok, changed.
-
->
->> +
->> +    __raw_writel(0x00, tmr_base + REG_TMR_TCSR1);
->> +
->> +    rate =3D clk_get_rate(clk_timer1) / (PRESCALE + 1);
->
->      rate check ?
->
->> +
->> +    __raw_writel(0xffffffff, tmr_base + REG_TMR_TICR1);
->> +
->> +    val =3D __raw_readl(tmr_base + REG_TMR_TCSR1);
->> +    val |=3D (COUNTEN | PERIOD | PRESCALE);
->> +    __raw_writel(val, tmr_base + REG_TMR_TCSR1);
->> +
->> +    clocksource_mmio_init(tmr_base + REG_TMR_TDR1, "nuc970-timer1",
->> +                  rate, 200, TDR_SHIFT,
->> +                  clocksource_mmio_readl_down);
->
-> Error check, rollback previous actions and return error
->
->> +
->> +    /*Clockevents init*/
->> +    WARN_ON(clk_prepare_enable(clk_timer0));
->> +
->> +    __raw_writel(0x00, tmr_base + REG_TMR_TCSR0);
->> +
->> +    rate =3D clk_get_rate(clk_timer0) / (PRESCALE + 1);
->> +
->> +    timer0_load =3D (rate / TICKS_PER_SEC);
->> +
->> +    __raw_writel(RESETINT, tmr_base + REG_TMR_TISR);
->> +
->> +    setup_irq(irq, &nuc970_timer0_irq);
->
-> s/setup_irq/request_irq/
-
-Do you think I should use request_irq instead of setup_irq?
-
->
->> +    nuc970_clockevent_device.cpumask =3D cpumask_of(0);
->> +
->> +    clockevents_config_and_register(&nuc970_clockevent_device, rate=
-,
->> +                    0xf, 0xffffffff);
->
->      return 0;
->
->> +}
->> +
->> +static void __init nuc970_timer_of_init(struct device_node *node)
->> +{
->> +    struct clk *clk_timer0, *clk_timer1;
->> +    void __iomem *base;
->> +    int irq;
->> +
->> +    base =3D of_iomap(node, 0);
->> +    if (!base)
->> +        panic("%s: Unable to map timer base\n", node->full_name);
->
-> No panic. Error checking, pr_err and then rollback.
->
-> I changed the init functions to return an error and will take care of
-> changing this driver but meanwhile please handle the errors and rollb=
-ack.
-
-Ok.
->
->> +
->> +    clk_timer0 =3D of_clk_get_by_name(node, "timer0");
->> +    if (IS_ERR(clk_timer0))
->> +        panic("%s: Unable to get clk_timer0\n", node->full_name);
->> +
->> +    clk_timer1 =3D of_clk_get_by_name(node, "timer1");
->> +    if (IS_ERR(clk_timer1))
->> +        panic("%s: Unable to get clk_timer1\n", node->full_name);
->> +
->> +    irq =3D irq_of_parse_and_map(node, 0);
->> +    if (irq <=3D 0)
->> +        panic("%s: Unable to get irq\n", node->full_name);
->> +
->> +    nuc970_clock_source_event_init(base, irq, clk_timer0, clk_timer=
-1);
->> +}
->> +
->> +CLOCKSOURCE_OF_DECLARE(nuc970, "nuvoton,tmr", nuc970_timer_of_init)=
+>> =C2=A0diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>> =C2=A0index cee5288..064e5015 100644
+>> =C2=A0--- a/drivers/mfd/axp20x.c
+>> =C2=A0+++ b/drivers/mfd/axp20x.c
+>> =C2=A0@@ -166,6 +166,15 @@ static struct resource axp22x_usb_power_suppl=
+y_resources[] =3D {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0DEFINE=
+_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+>> =C2=A0=C2=A0=C2=A0};
+>>
+>> =C2=A0+static struct resource axp22x_battery_resources[] =3D {
+>> =C2=A0+ DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_BATT_PLUGIN, "BATT_PLUGIN"),
+>> =C2=A0+ DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_BATT_REMOVAL, "BATT_REMOVAL"),
+>> =C2=A0+ DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_BATT_ENT_ACT_MODE, "BATT_ENT_ACT=
+_MODE"),
+>> =C2=A0+ DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_BATT_EXIT_ACT_MODE, "BATT_EXIT_A=
+CT_MODE"),
+>> =C2=A0+ DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_CHARG, "CHARG"),
+>> =C2=A0+ DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_CHARG_DONE, "CHARG_DONE"),
+>> =C2=A0+};
+>> =C2=A0+
+>> =C2=A0=C2=A0=C2=A0static struct resource axp22x_pek_resources[] =3D {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.name =3D "PEK_DBR",
+>> =C2=A0@@ -538,6 +547,11 @@ static struct mfd_cell axp22x_cells[] =3D {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.of_compatible =3D "x-powers,axp2=
+02-usb-power-supply",
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.num_resources =3D ARRAY_SIZE(axp=
+22x_usb_power_supply_resources),
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.resources =3D axp22x_usb_power_s=
+upply_resources,
+>> =C2=A0+ }, {
+>> =C2=A0+ .name =3D "axp20x-battery",
+>> =C2=A0+ .of_compatible =3D "x-powers,axp202-battery",
+>> =C2=A0+ .num_resources =3D ARRAY_SIZE(axp22x_battery_resources),
+>> =C2=A0+ .resources =3D axp22x_battery_resources,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0},
+>> =C2=A0=C2=A0=C2=A0};
+>>
+>> =C2=A0diff --git a/drivers/power/Makefile b/drivers/power/Makefile
+>> =C2=A0index e46b75d..1452d23 100644
+>> =C2=A0--- a/drivers/power/Makefile
+>> =C2=A0+++ b/drivers/power/Makefile
+>> =C2=A0@@ -10,6 +10,7 @@ obj-$(CONFIG_GENERIC_ADC_BATTERY) +=3D generic-a=
+dc-battery.o
+>> =C2=A0=C2=A0=C2=A0obj-$(CONFIG_PDA_POWER) +=3D pda_power.o
+>> =C2=A0=C2=A0=C2=A0obj-$(CONFIG_APM_POWER) +=3D apm_power.o
+>> =C2=A0=C2=A0=C2=A0obj-$(CONFIG_AXP20X_POWER) +=3D axp20x_usb_power.o
+>> =C2=A0+obj-$(CONFIG_AXP20X_POWER) +=3D axp20x_battery.o
+>> =C2=A0=C2=A0=C2=A0obj-$(CONFIG_MAX8925_POWER) +=3D max8925_power.o
+>> =C2=A0=C2=A0=C2=A0obj-$(CONFIG_WM831X_BACKUP) +=3D wm831x_backup.o
+>> =C2=A0=C2=A0=C2=A0obj-$(CONFIG_WM831X_POWER) +=3D wm831x_power.o
+>> =C2=A0diff --git a/drivers/power/axp20x_battery.c b/drivers/power/axp20x=
+_battery.c
+>> =C2=A0new file mode 100644
+>> =C2=A0index 0000000..8fac2cd
+>> =C2=A0--- /dev/null
+>> =C2=A0+++ b/drivers/power/axp20x_battery.c
+>> =C2=A0@@ -0,0 +1,254 @@
+>> =C2=A0+/*
+>> =C2=A0+ * AXP20x PMIC battery status driver
+>> =C2=A0+ *
+>> =C2=A0+ * Copyright (C) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> =C2=A0+ * Copyright (C) 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> =C2=A0+ * Copyright (C) 2014 Bruno Pr=C3=A9mont <bonbons@linux-vserver.o=
+rg>
+>> =C2=A0+ *
+>> =C2=A0+ * This program is free software; you can redistribute it and/or =
+modify it
+>> =C2=A0+ * under the terms of the GNU General Public License as published=
+ by the
+>> =C2=A0+ * Free Software Foundation; either version 2 of the License, or =
+(at your
+>> =C2=A0+ * option) any later version.
+>> =C2=A0+ */
+>> =C2=A0+
+>> =C2=A0+#include <linux/device.h>
+>> =C2=A0+#include <linux/init.h>
+>> =C2=A0+#include <linux/interrupt.h>
+>> =C2=A0+#include <linux/kernel.h>
+>> =C2=A0+#include <linux/mfd/axp20x.h>
+>> =C2=A0+#include <linux/module.h>
+>> =C2=A0+#include <linux/of.h>
+>> =C2=A0+#include <linux/platform_device.h>
+>> =C2=A0+#include <linux/power_supply.h>
+>> =C2=A0+#include <linux/regmap.h>
+>> =C2=A0+#include <linux/slab.h>
+>> =C2=A0+
+>> =C2=A0+#define DRVNAME "axp20x-battery"
+>> =C2=A0+
+>> =C2=A0+#define AXP20X_PWR_STATUS_ACIN_USED BIT(6)
+>> =C2=A0+#define AXP20X_PWR_STATUS_VBUS_USED BIT(4)
+>> =C2=A0+#define AXP20X_PWR_STATUS_BAT_DIRECTION BIT(2)
+>> =C2=A0+
+>> =C2=A0+#define AXP20X_OP_MODE_CHARGING BIT(6)
+>> =C2=A0+#define AXP20X_OP_MODE_BATTERY_PRESENT BIT(5)
+>> =C2=A0+#define AXP20X_OP_MODE_BATTERY_ACTIVE BIT(3)
+>> =C2=A0+
+>> =C2=A0+#define AXP20X_CAPACITY_CORRECT BIT(7)
+>> =C2=A0+
+>> =C2=A0+struct axp20x_battery {
+>> =C2=A0+ struct axp20x_dev *axp20x;
+>> =C2=A0+ struct regmap *regmap;
+>> =C2=A0+ struct power_supply *supply;
+>> =C2=A0+};
+>> =C2=A0+
+>> =C2=A0+static irqreturn_t axp20x_battery_irq(int irq, void *devid)
+>> =C2=A0+{
+>> =C2=A0+ struct axp20x_battery *power =3D devid;
+>> =C2=A0+
+>> =C2=A0+ power_supply_changed(power->supply);
+>> =C2=A0+
+>> =C2=A0+ return IRQ_HANDLED;
+>> =C2=A0+}
+>> =C2=A0+
+>> =C2=A0+static int axp20x_battery_get_property(struct power_supply *psy,
+>> =C2=A0+ enum power_supply_property psp, union power_supply_propval *val)
+>> =C2=A0+{
+>> =C2=A0+ struct axp20x_battery *power =3D power_supply_get_drvdata(psy);
+>> =C2=A0+ unsigned int input, op_mode, capacity, dh, dl;
+>> =C2=A0+ int ret, ext;
+>> =C2=A0+
+>> =C2=A0+ /* All the properties below need the input-status reg value */
+>> =C2=A0+ ret =3D regmap_read(power->regmap, AXP20X_PWR_INPUT_STATUS, &inp=
+ut);
+>> =C2=A0+ if (ret)
+>> =C2=A0+ return ret;
+>> =C2=A0+
+>> =C2=A0+ ret =3D regmap_read(power->regmap, AXP20X_PWR_OP_MODE, &op_mode)=
 ;
->>
->
-> Thanks !
->
->    -- Daniel
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> =C2=A0+ if (ret)
+>> =C2=A0+ return ret;
+>> =C2=A0+
+>> =C2=A0+ switch (psp) {
+>> =C2=A0+ case POWER_SUPPLY_PROP_HEALTH:
+>> =C2=A0+ if (!(op_mode & AXP20X_OP_MODE_BATTERY_PRESENT)) {
+>> =C2=A0+ val->intval =3D POWER_SUPPLY_HEALTH_UNKNOWN;
+>> =C2=A0+ break;
+>> =C2=A0+ }
+>> =C2=A0+
+>> =C2=A0+ val->intval =3D POWER_SUPPLY_HEALTH_GOOD;
+>> =C2=A0+
+>> =C2=A0+ if (op_mode & AXP20X_OP_MODE_BATTERY_ACTIVE) {
+>> =C2=A0+ /* AXP20X is now trying to re-activate the battery */
+>> =C2=A0+ val->intval =3D POWER_SUPPLY_HEALTH_DEAD;
+>> =C2=A0+ break;
+>> =C2=A0+ }
+>> =C2=A0+ break;
+>> =C2=A0+ case POWER_SUPPLY_PROP_PRESENT:
+>> =C2=A0+ val->intval =3D !!(op_mode & AXP20X_OP_MODE_BATTERY_PRESENT);
+>> =C2=A0+ break;
+>> =C2=A0+ case POWER_SUPPLY_PROP_CAPACITY:
+>> =C2=A0+ ret =3D regmap_read(power->regmap, AXP20X_FG_RES, &capacity);
+>> =C2=A0+ if (ret)
+>> =C2=A0+ return ret;
+>> =C2=A0+ if (capacity & AXP20X_CAPACITY_CORRECT)
+>> =C2=A0+ val->intval =3D capacity & (~AXP20X_CAPACITY_CORRECT);
+>> =C2=A0+ else
+>> =C2=A0+ return -EIO;
+>> =C2=A0+ /* from axp_capchange function of Allwinner 3.4 driver */
+>> =C2=A0+ if (val->intval =3D=3D 127)
+>> =C2=A0+ val->intval =3D 100;
+>> =C2=A0+ break;
+>> =C2=A0+ case POWER_SUPPLY_PROP_STATUS:
+>> =C2=A0+ if (!(op_mode & AXP20X_OP_MODE_BATTERY_PRESENT)) {
+>> =C2=A0+ val->intval =3D POWER_SUPPLY_STATUS_UNKNOWN;
+>> =C2=A0+ break;
+>> =C2=A0+ }
+>> =C2=A0+
+>> =C2=A0+ ret =3D regmap_read(power->regmap, AXP20X_FG_RES, &capacity);
+>> =C2=A0+ if (ret)
+>> =C2=A0+ return ret;
+>> =C2=A0+
+>> =C2=A0+ ext =3D (input & AXP20X_PWR_STATUS_ACIN_USED) ||
+>> =C2=A0+ (input & AXP20X_PWR_STATUS_VBUS_USED);
+>> =C2=A0+
+>> =C2=A0+ if (op_mode & AXP20X_OP_MODE_CHARGING)
+>> =C2=A0+ val->intval =3D POWER_SUPPLY_STATUS_CHARGING;
+>> =C2=A0+ else if (!(input & AXP20X_PWR_STATUS_BAT_DIRECTION) && !ext)
+>> =C2=A0+ val->intval =3D POWER_SUPPLY_STATUS_DISCHARGING;
+>> =C2=A0+ else if (capacity =3D=3D (100 | AXP20X_CAPACITY_CORRECT) ||
+>> =C2=A0+ capacity =3D=3D (127 | AXP20X_CAPACITY_CORRECT))
+>> =C2=A0+ val->intval =3D POWER_SUPPLY_STATUS_FULL;
+>> =C2=A0+ else
+>> =C2=A0+ val->intval =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
+>> =C2=A0+ break;
+>> =C2=A0+ case POWER_SUPPLY_PROP_CURRENT_NOW:
+>> =C2=A0+ ret =3D regmap_read(power->regmap, AXP20X_BATT_DISCHRG_I_H, &dh)=
+;
+>> =C2=A0+ if (ret)
+>> =C2=A0+ return ret;
+>> =C2=A0+ ret =3D regmap_read(power->regmap, AXP20X_BATT_DISCHRG_I_L, &dl)=
+;
+>> =C2=A0+ if (ret)
+>> =C2=A0+ return ret;
+>> =C2=A0+ /* it's a 12 bit integer, high 8-bit is stored in dh */
+>> =C2=A0+ val->intval =3D dh << 4 | dl >> 4;
+>> =C2=A0+ break;
+>> =C2=A0+ case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+>> =C2=A0+ ret =3D regmap_read(power->regmap, AXP20X_BATT_V_H, &dh);
+>> =C2=A0+ if (ret)
+>> =C2=A0+ return ret;
+>> =C2=A0+ ret =3D regmap_read(power->regmap, AXP20X_BATT_V_L, &dl);
+>> =C2=A0+ if (ret)
+>> =C2=A0+ return ret;
+>> =C2=A0+ /* it's a 12 bit integer, high 8-bit is stored in dh */
+>> =C2=A0+ val->intval =3D dh << 4 | dl >> 4;
+>> =C2=A0+ /* The formula below is from axp22_vbat_to_mV function
+>> =C2=A0+ * of Allwinner 3.4 kernel.
+>> =C2=A0+ */
+>> =C2=A0+ val->intval =3D val->intval * 1100 / 1000;
+>> =C2=A0+ break;
+>> =C2=A0+ default:
+>> =C2=A0+ return -EINVAL;
+>> =C2=A0+ }
+>> =C2=A0+
+>> =C2=A0+ return 0;
+>> =C2=A0+}
+>> =C2=A0+
+>> =C2=A0+static enum power_supply_property axp22x_battery_properties[] =3D=
+ {
+>> =C2=A0+ POWER_SUPPLY_PROP_CAPACITY,
+>> =C2=A0+ POWER_SUPPLY_PROP_HEALTH,
+>> =C2=A0+ POWER_SUPPLY_PROP_PRESENT,
+>> =C2=A0+ POWER_SUPPLY_PROP_STATUS,
+>> =C2=A0+ POWER_SUPPLY_PROP_CURRENT_NOW,
+>> =C2=A0+ POWER_SUPPLY_PROP_VOLTAGE_NOW,
+>> =C2=A0+};
+>> =C2=A0+
+>> =C2=A0+static const struct power_supply_desc axp22x_battery_desc =3D {
+>> =C2=A0+ .name =3D "axp20x-battery",
+>> =C2=A0+ .type =3D POWER_SUPPLY_TYPE_BATTERY,
+>> =C2=A0+ .properties =3D axp22x_battery_properties,
+>> =C2=A0+ .num_properties =3D ARRAY_SIZE(axp22x_battery_properties),
+>> =C2=A0+ .get_property =3D axp20x_battery_get_property,
+>> =C2=A0+};
+>> =C2=A0+
+>> =C2=A0+static int axp20x_battery_probe(struct platform_device *pdev)
+>> =C2=A0+{
+>> =C2=A0+ struct axp20x_dev *axp20x =3D dev_get_drvdata(pdev->dev.parent);
+>> =C2=A0+ struct power_supply_config psy_cfg =3D {};
+>> =C2=A0+ struct axp20x_battery *power;
+>> =C2=A0+ static const char * const axp22x_irq_names[] =3D {
+>> =C2=A0+ "BATT_PLUGIN", "BATT_REMOVAL", "BATT_ENT_ACT_MODE",
+>> =C2=A0+ "BATT_EXIT_ACT_MODE", "CHARG", "CHARG_DONE", NULL };
+>> =C2=A0+ static const char * const *irq_names;
+>> =C2=A0+ const struct power_supply_desc *battery_desc;
+>> =C2=A0+ int i, irq, ret;
+>> =C2=A0+
+>> =C2=A0+ if (!of_device_is_available(pdev->dev.of_node))
+>> =C2=A0+ return -ENODEV;
+>> =C2=A0+
+>> =C2=A0+ if (!axp20x) {
+>> =C2=A0+ dev_err(&pdev->dev, "Parent drvdata not set\n");
+>> =C2=A0+ return -EINVAL;
+>> =C2=A0+ }
+>> =C2=A0+
+>> =C2=A0+ power =3D devm_kzalloc(&pdev->dev, sizeof(*power), GFP_KERNEL);
+>> =C2=A0+ if (!power)
+>> =C2=A0+ return -ENOMEM;
+>> =C2=A0+
+>> =C2=A0+ power->axp20x =3D axp20x;
+>> =C2=A0+ power->regmap =3D axp20x->regmap;
+>> =C2=A0+
+>> =C2=A0+ switch (power->axp20x->variant) {
+>> =C2=A0+ case AXP221_ID:
+>> =C2=A0+ case AXP223_ID:
+>> =C2=A0+ battery_desc =3D &axp22x_battery_desc;
+>> =C2=A0+ irq_names =3D axp22x_irq_names;
+>> =C2=A0+ break;
+>> =C2=A0+ default:
+>> =C2=A0+ dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
+>> =C2=A0+ axp20x->variant);
+>> =C2=A0+ return -EINVAL;
+>> =C2=A0+ }
+>> =C2=A0+
+>> =C2=A0+ psy_cfg.of_node =3D pdev->dev.of_node;
+>> =C2=A0+ psy_cfg.drv_data =3D power;
+>> =C2=A0+
+>> =C2=A0+ power->supply =3D devm_power_supply_register(&pdev->dev, battery=
+_desc,
+>> =C2=A0+ &psy_cfg);
+>> =C2=A0+ if (IS_ERR(power->supply))
+>> =C2=A0+ return PTR_ERR(power->supply);
+>> =C2=A0+
+>> =C2=A0+ /* Request irqs after registering, as irqs may trigger immediate=
+ly */
+>> =C2=A0+ for (i =3D 0; irq_names[i]; i++) {
+>> =C2=A0+ irq =3D platform_get_irq_byname(pdev, irq_names[i]);
+>> =C2=A0+ if (irq < 0) {
+>> =C2=A0+ dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
+>> =C2=A0+ irq_names[i], irq);
+>> =C2=A0+ continue;
+>> =C2=A0+ }
+>> =C2=A0+ irq =3D regmap_irq_get_virq(axp20x->regmap_irqc, irq);
+>> =C2=A0+ ret =3D devm_request_any_context_irq(&pdev->dev, irq,
+>> =C2=A0+ axp20x_battery_irq, 0, DRVNAME, power);
+>> =C2=A0+ if (ret < 0)
+>> =C2=A0+ dev_warn(&pdev->dev, "Error requesting %s IRQ: %d\n",
+>> =C2=A0+ irq_names[i], ret);
+>> =C2=A0+ }
+>> =C2=A0+
+>> =C2=A0+ return 0;
+>> =C2=A0+}
+>> =C2=A0+
+>> =C2=A0+static const struct of_device_id axp20x_battery_match[] =3D {
+>> =C2=A0+ { .compatible =3D "x-powers,axp202-battery" },
+>> =C2=A0+ { }
+>> =C2=A0+};
+>> =C2=A0+MODULE_DEVICE_TABLE(of, axp20x_battery_match);
+>> =C2=A0+
+>> =C2=A0+static struct platform_driver axp20x_battery_driver =3D {
+>> =C2=A0+ .probe =3D axp20x_battery_probe,
+>> =C2=A0+ .driver =3D {
+>> =C2=A0+ .name =3D DRVNAME,
+>> =C2=A0+ .of_match_table =3D axp20x_battery_match,
+>> =C2=A0+ },
+>> =C2=A0+};
+>> =C2=A0+
+>> =C2=A0+module_platform_driver(axp20x_battery_driver);
+>> =C2=A0+
+>> =C2=A0+MODULE_AUTHOR("Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>");
+>> =C2=A0+MODULE_DESCRIPTION("AXP20x PMIC battery status driver");
+>> =C2=A0+MODULE_LICENSE("GPL");
+
+Therotically, it can run on axp20x. However, I have currently no test devic=
+e. (Still waiting for my C.H.I.P.)
+So I can only promise it to run on axp22x.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
