@@ -1,201 +1,32 @@
-From: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: NUC900: Add nuc970 machine support
-Date: Tue, 5 Jul 2016 15:38:23 +0800
-Message-ID: <577B63EF.6030906@iommu.org>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
- <1466851042-22239-2-git-send-email-vw@iommu.org> <4806020.41AJ9s5VGu@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7792: add GPIO support
+Date: Tue, 5 Jul 2016 09:40:05 +0200
+Message-ID: <CAMuHMdUYYhGmFqSXziRd9QQfFFAD-29MnZT_HGP8Y5ySk5Jq7A@mail.gmail.com>
+References: <2706182.6XMBucurvj@wasted.cogentembedded.com> <3522881.tHt9KiJA1l@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4806020.41AJ9s5VGu@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <3522881.tHt9KiJA1l@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 4, 2016 at 11:12 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Describe all 12 GPIO controllers in the R8A7792 device tree.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On 2016=E5=B9=B406=E6=9C=8829=E6=97=A5 23:19, Arnd Bergmann wrote:
-> On Saturday, June 25, 2016 6:37:17 PM CEST Wan Zongshun wrote:
->> NUC970 is a new SoC of Nuvoton nuc900 series, this patch is
->> to add machine file support for it.
->>
->> Signed-off-by: Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Nice to see some activity on the port!
->
->> ---
->>   arch/arm/mach-w90x900/Kconfig                      |  25 ++++
->>   arch/arm/mach-w90x900/Makefile                     |   3 +
->>   .../mach-w90x900/include/mach/nuc970-regs-gcr.h    |  56 ++++++++
->>   arch/arm/mach-w90x900/mach-nuc970.c                | 144 +++++++++=
-++++++++++++
->>   4 files changed, 228 insertions(+)
->>   create mode 100644 arch/arm/mach-w90x900/include/mach/nuc970-regs-=
-gcr.h
->>   create mode 100644 arch/arm/mach-w90x900/mach-nuc970.c
->>
->> diff --git a/arch/arm/mach-w90x900/Kconfig b/arch/arm/mach-w90x900/K=
-config
->> index 69bab32..050833e 100644
->> --- a/arch/arm/mach-w90x900/Kconfig
->> +++ b/arch/arm/mach-w90x900/Kconfig
->> @@ -15,6 +15,21 @@ config CPU_NUC960
->>   	help
->>   	  Support for NUCP960 of Nuvoton NUC900 CPUs.
->>
->> +config SOC_NUC970
->> +	bool
->> +        select GENERIC_IRQ_CHIP
->> +        select SOC_BUS
->> +        select IRQ_DOMAIN
->> +        select MULTI_IRQ_HANDLER
->> +        select USE_OF
->> +        select HAVE_CLK_PREPARE
->> +        select HAVE_MACH_CLKDEV
->> +	select COMMON_CLK
->> +        select NUC900_TIMER
->> +	help
->> +	  Support for NUCP970 of Nuvoton NUC900 CPUs.
->> +
->
-> [style] This looks whitespace damaged, and please sort the line alpha=
-betically.
+Gr{oetje,eeting}s,
 
-Sure, changed.
+                        Geert
 
->
-> I see you have done this in a way that is basically compatible with
-> CONFIG_ARCH_MULTIPLATFORM, good.
->
-> What is HAVE_MACH_CLKDEV for?
->
->> @@ -46,4 +61,14 @@ config MACH_W90N960EVB
->>
->>   endmenu
->>
->> +menu "NUC970 Machines"
->> +
->> +config MACH_NUC970EVB
->> +	bool "Nuvoton NUC970 Evaluation Board"
->> +	select SOC_NUC970
->> +	help
->> +	   Say Y here if you are using the Nuvoton NUC970EVB
->> +
->> +endmenu
->
-> I'd leave out this entry, with the way have have structured the code =
-(correctly),
-> there is no need to separate SoC-specific code from board specific co=
-de, since
-> they are the same.
->
-
-Sure, removed it.
-
->> diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-gcr.h b/=
-arch/arm/mach-w90x900/include/mach/nuc970-regs-gcr.h
->> new file mode 100644
->> index 0000000..e7eb653
->> --- /dev/null
->> +++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-gcr.h
->
-> Can you move the new headers to arch/arm/mach-w90x900/ directly?
->
->> +static int __init nuc900_restart_init(void)
->> +{
->> +	struct device_node *np;
->> +
->> +	np =3D of_find_compatible_node(NULL, NULL, "nuvoton,gcr");
->> +	wtcr_addr =3D of_iomap(np, 0);
->> +	if (!wtcr_addr)
->> +		return -ENODEV;
->> +
->> +	of_node_put(np);
->> +
->> +	return 0;
->> +}
->
-> Is this a watchdog node? If it is, the restart logic should just
-> move into the watchdog driver.
-
-It is not watchdog node, just be global System control register node.
-
->
->
->> +	if (of_machine_is_compatible("nuvoton,nuc970evb"))
->> +		nuc970_init();
->
-> What is this for?
-
-Currently, no used, remove it.
-
->
->> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, paren=
-t);
->
-> We have actually moved away from using the soc_device as using the pa=
-rent
-> for the other devices, just probe them separately. In fact the soc_de=
-vice
-> could be handled by a driver in drivers/soc/nuvoton/
-
-Do you think I should add nuc900 soc driver in this folder?
-If I want to add nuc900 soc driver in drivers/soc/nuvoton/, can I keep=20
-my current dts structure no change, or Must I add a new node name soc {=
-}?
-
-I went through the code:soc-realview.c for reference, but I have no ide=
-a
-about how to re-structure my dts file to match this type soc driver.
-
->
->> +static const char *nuc970_dt_compat[] __initconst =3D {
->> +	"nuvoton,nuc970evb",
->> +	NULL,
->> +};
->> +
->> +void nuc970_restart(enum reboot_mode mode, const char *cmd)
->> +{
->> +	if (wtcr_addr) {
->> +		while (__raw_readl(wtcr_addr + REG_WRPRTR) !=3D 1) {
->> +			__raw_writel(0x59, wtcr_addr + REG_WRPRTR);
->> +			__raw_writel(0x16, wtcr_addr + REG_WRPRTR);
->> +			__raw_writel(0x88, wtcr_addr + REG_WRPRTR);
->> +		}
->> +
->> +		__raw_writel(1, wtcr_addr + REG_AHBIPRST);
->> +	}
->
-> Please use writel() instead of __raw_writel().
-
-Does this change apply to all others drivers? or just machine file to=20
-use writel()?
-
->
->> +	soft_restart(0);
->> +}
->> +
->> +DT_MACHINE_START(nuc970_dt, "Nuvoton nuc970 evb")
->> +	.atag_offset	=3D 0x100,
-
-Removed it, thanks!
-
->
-> The .atag_offset can be removed here.
->
-> 	Arnd
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
