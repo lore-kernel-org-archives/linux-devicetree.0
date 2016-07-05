@@ -1,34 +1,91 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] ARM: dts: r8a7792: add EtherAVB support
-Date: Tue, 5 Jul 2016 09:46:15 +0200
-Message-ID: <CAMuHMdWSw1M9m2egGgRNw6X0R+krzRHgX04fwQf+OuCzyXCdXA@mail.gmail.com>
-References: <3308853.O8HBuWdbK9@wasted.cogentembedded.com> <3067320.66EgKDGBA3@wasted.cogentembedded.com>
+From: Wan Zongshun <vw@iommu.org>
+Subject: Re: [PATCH 4/6] irqchip: add irqchip driver for nuc900
+Date: Tue, 5 Jul 2016 15:47:25 +0800
+Message-ID: <577B660D.50908@iommu.org>
+References: <1466851042-22239-1-git-send-email-vw@iommu.org>
+ <1466851042-22239-5-git-send-email-vw@iommu.org> <8706947.5rzUDVsB2F@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <3067320.66EgKDGBA3@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8706947.5rzUDVsB2F@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 4, 2016 at 11:23 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Define the generic R8A7792 part of the EtherAVB device node.
+
+
+On 2016=E5=B9=B406=E6=9C=8829=E6=97=A5 23:27, Arnd Bergmann wrote:
+> On Saturday, June 25, 2016 6:37:20 PM CEST Wan Zongshun wrote:
+>> +#define IRQ_WDT		W90X900_IRQ(1)
+>> +#define IRQ_WWDT	W90X900_IRQ(2)
+>> +#define IRQ_LVD		W90X900_IRQ(3)
+>> +#define IRQ_EXT0	W90X900_IRQ(4)
+>> +#define IRQ_EXT1	W90X900_IRQ(5)
+>> +#define IRQ_EXT2	W90X900_IRQ(6)
+>> +#define IRQ_EXT3	W90X900_IRQ(7)
+>> +#define IRQ_EXT4	W90X900_IRQ(8)
+>> +#define IRQ_EXT5	W90X900_IRQ(9)
+>> +#define IRQ_EXT6	W90X900_IRQ(10)
 >
-> Based on the commit 89aac8af1a60 ("ARM: dts: r8a7794: add EtherAVB support").
+> I'd suggest dropping the list, the contents are now in the dts.
+
+Do you think I should put one irqmap header file into this
+/arch/arm/boot/dts/include/dt-bindings folder, or I should removed thos=
+e=20
+irqnumber map anywhere, just hardcode the irqnumber in dts file?
+
 >
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h b/=
+arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
+>> new file mode 100644
+>> index 0000000..7a77016
+>> --- /dev/null
+>> +++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
+>> @@ -0,0 +1,53 @@
+>> +#ifndef __ASM_ARCH_REGS_AIC_H
+>> +#define __ASM_ARCH_REGS_AIC_H
+>> +
+>> +/*NUC970 AIC regs*/
+>> +
+>> +#define	REG_AIC_SCR1	0x00
+>> +#define	REG_AIC_SCR2	0x04
+>> +#define	REG_AIC_SCR3	0x08
+>> +#define	REG_AIC_SCR4	0x0C
+>> +#define	REG_AIC_SCR5	0x10
+>
+> And like the clk driver, these should all be in the irqchip driver in=
+stead
+> of a separate header.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Ok, changed.
+>
+>> +
+>> +static void __iomem *aic_base;
+>> +static struct irq_domain *aic_domain;
+>> +#define MAKE_HWIRQ(irqnum)	(irqnum)
+>
+> The macro appears to be unused.
+removed it.
+>
+>> +static void nuc970_irq_mask(struct irq_data *d)
+>> +{
+>> +	if (d->irq < 32)
+>> +		__raw_writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
+>> +	else
+>> +		__raw_writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
+>> +}
+>
+> writel()
+>
+> 	Arnd
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
