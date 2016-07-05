@@ -1,86 +1,67 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 6/7] dt-bindings: net: bgmac: add bindings documentation for bgmac
-Date: Tue, 05 Jul 2016 15:37:20 +0200
-Message-ID: <3327458.KVBg7y9SeP@wuerfel>
-References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com> <6488341.IDGze89kcW@wuerfel> <e8ba3130-38ff-3d67-da64-f7c15ec27ded@broadcom.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Tue, 05 Jul 2016 15:43:59 +0200
+Message-ID: <26659199.PqqRaoPEho@wuerfel>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <8717879.O1RMZcQt4V@wuerfel> <577AAC95.7040800@broadcom.com>
+Reply-To: arnd-r2nGTMty4D4@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e8ba3130-38ff-3d67-da64-f7c15ec27ded@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Ray Jui <ray.jui@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, netdev@vger.kernel.org, davem@davemloft.net
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRB37R525QKGQEIXJVBFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <577AAC95.7040800-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 4, 2016 9:34:35 AM CEST Ray Jui wrote:
-> On 7/1/2016 8:42 AM, Arnd Bergmann wrote:
-> > On Friday, July 1, 2016 11:17:25 AM CEST Jon Mason wrote:
-> >> On Fri, Jul 1, 2016 at 5:46 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >>> On Thursday, June 30, 2016 6:59:13 PM CEST Jon Mason wrote:
-> >>>> +
-> >>>> +Required properties:
-> >>>> + - compatible: "brcm,bgmac-nsp"
-> >>>> + - reg:                Address and length of the GMAC registers,
-> >>>> +               Address and length of the GMAC IDM registers
-> >>>> + - reg-names:  Names of the registers.  Must have both "gmac_base" and
-> >>>> +               "idm_base"
-> >>>> + - interrupts: Interrupt number
-> >>>> +
-> >>>
-> >>>
-> >>> "brcm,bgmac-nsp" sounds a bit too general. As I understand, this is a family
-> >>> of SoCs that might not all have the exact same implementation of this
-> >>> ethernet device, as we can see from the long lookup table in bgmac_probe().
-> >>
-> >> The Broadcom iProc family of SoCs contains:
-> >> Northstar
-> >> Northstar Plus
-> >> Cygnus
-> >> Northstar 2
-> >> a few SoCs that are under development
-> >> and a number of ethernet switches (which might never be officially supported)
-> >>
-> >> Each one of these SoCs could have a different revision of the gmac IP
-> >> block, but they should be uniform within each SoC (though there might
-> >> be a A0/B0 change necessary).  The Northstar Plus product family has a
-> >> number of different implementations, but the SoC is unchanged.  So, I
-> >> think this might be too specific, when we really need a general compat
-> >> string.
-> >
-> > Ok, thanks for the clarification, that sounds good enough.
-> >
-> >> Broadcom has a history of sharing IP blocks amongst the different
-> >> divisions.  So, this driver might be used on other SoC families (as it
-> >> apparently has been done in the past, based on the code you
-> >> reference).  I do not know of any way to know what legacy, non-iProc
-> >> chips have used this IP block.  I can make this "brcm,iproc-bgmac",
-> >> and add "brcm,iproc-nsp-bgmac" as an alternative compatible string in
-> >> this file (which I believe you are suggesting), but there might be
-> >> non-iProc SoCs that use this driver.  Is this acceptable?
-> >
-> > If it is also used outside of iProc, then I see no need for the
-> > extra compatible string, although it would not do any harm either.
-> >
-> > Ideally we should name it whatever the name for this IP block is
-> > inside of the company, with "nsp" as the designation for the variant
-> > in Northstar Plus. A lot of Broadcom IP blocks themselves seem to have
-> > some four-digit or five-digit number, maybe this one does too?
-> >
-> >       Arnd
-> >
+On Monday, July 4, 2016 8:36:05 PM CEST Arend van Spriel wrote:
+> On 04-07-16 16:54, Arnd Bergmann wrote:
+> > On Monday, July 4, 2016 11:08:38 AM CEST Arend Van Spriel wrote:
+> > 
+> > In drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c I already see
+> > over a dozen different chips being supported, bcm4329 is only one of
+> > them. In particular, there seem to be some that have various modules:
+> > 
+> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
+> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x00000020, 43241B4),
+> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0xFFFFFFC0, 43241B5),
+> > 
+> > So if you have a bcm43241, that compatible string probably should
+> > include both brcm,bcm43241-b4-fmac and brcm,bcm43241-fmac, possibly also
+> > brcm,bcm4329-fmac, to show that it is a superset of the programming
+> > interface of that one.
 > 
-> Note this IP block has an official IP controller name of "amac" from the 
-> ASIC team.
+> Hi Arnd,
+> 
+> I have to disagree here. The compatible string "brcm,bcm4329-fmac" is
+> chosen as the bcm4329 chip was the first supported and we never added
+> others as there is no other programming required. For all supported
+> devices the same device tree properties apply and are handled the same.
+> As such there is no need to come up with a new compatible string.
 
-Ok, then I'd suggest making the compatible string here
+Generally speaking, the way that the compatible strings work is that you
+add a new one whenever you get a new piece of hardware, and you can leave
+the first one as a fallback so you don't have to change the driver.
 
-	compatible = "brcm,nsp-amac", "brcm,amac";
+Adding the new string for the actual device is important though,
+since you might only discover later that they are not 100% compatible
+and that you in fact need to know the difference.
 
-or even better if you have a version number associated with it, make that
+For discoverable buses like sdio or usb, it may actually be better
+to not identify the device through the compatible property at all,
+and instead use a string that is generated from the actual identifier
+as the primary key, as e.g. documented in
+Documentation/devicetree/bindings/usb/usb-device.txt
 
-	compatible = "brcm,nsp-amac", "brcm,amac-1.234", "brcm,amac";
-
-replacing 1.234 with the actual version of course.
+The mmc binding is less clear about that, and we may want to correct
+that. In fact, the example in
+Documentation/devicetree/bindings/mmc/mmc.txt even lists an invalid
+compatible string, so that is even worse.
 
 	Arnd
