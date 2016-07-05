@@ -1,206 +1,96 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 1/2] ARM: dts: r8a7792: add GPIO support
-Date: Wed, 06 Jul 2016 01:02:20 +0300
-Message-ID: <11674399.J5QsPL1iTr@wasted.cogentembedded.com>
-References: <19087307.ZHtRY0pPL5@wasted.cogentembedded.com>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: Re: [PATCH 6/7] dt-bindings: net: bgmac: add bindings documentation
+ for bgmac
+Date: Tue, 5 Jul 2016 19:18:45 -0400
+Message-ID: <CAC3K-4qZ9tpEAuDBjL-bkjn5F2Xfr4CAmVGc=DpgVh8MrqEDtQ@mail.gmail.com>
+References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
+ <6488341.IDGze89kcW@wuerfel> <e8ba3130-38ff-3d67-da64-f7c15ec27ded@broadcom.com>
+ <3327458.KVBg7y9SeP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <19087307.ZHtRY0pPL5@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3327458.KVBg7y9SeP@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ray Jui <ray.jui@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, netdev@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Describe all 12 GPIO controllers in the R8A7792 device tree.
+On Tue, Jul 5, 2016 at 9:37 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Monday, July 4, 2016 9:34:35 AM CEST Ray Jui wrote:
+>> On 7/1/2016 8:42 AM, Arnd Bergmann wrote:
+>> > On Friday, July 1, 2016 11:17:25 AM CEST Jon Mason wrote:
+>> >> On Fri, Jul 1, 2016 at 5:46 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> >>> On Thursday, June 30, 2016 6:59:13 PM CEST Jon Mason wrote:
+>> >>>> +
+>> >>>> +Required properties:
+>> >>>> + - compatible: "brcm,bgmac-nsp"
+>> >>>> + - reg:                Address and length of the GMAC registers,
+>> >>>> +               Address and length of the GMAC IDM registers
+>> >>>> + - reg-names:  Names of the registers.  Must have both "gmac_base" and
+>> >>>> +               "idm_base"
+>> >>>> + - interrupts: Interrupt number
+>> >>>> +
+>> >>>
+>> >>>
+>> >>> "brcm,bgmac-nsp" sounds a bit too general. As I understand, this is a family
+>> >>> of SoCs that might not all have the exact same implementation of this
+>> >>> ethernet device, as we can see from the long lookup table in bgmac_probe().
+>> >>
+>> >> The Broadcom iProc family of SoCs contains:
+>> >> Northstar
+>> >> Northstar Plus
+>> >> Cygnus
+>> >> Northstar 2
+>> >> a few SoCs that are under development
+>> >> and a number of ethernet switches (which might never be officially supported)
+>> >>
+>> >> Each one of these SoCs could have a different revision of the gmac IP
+>> >> block, but they should be uniform within each SoC (though there might
+>> >> be a A0/B0 change necessary).  The Northstar Plus product family has a
+>> >> number of different implementations, but the SoC is unchanged.  So, I
+>> >> think this might be too specific, when we really need a general compat
+>> >> string.
+>> >
+>> > Ok, thanks for the clarification, that sounds good enough.
+>> >
+>> >> Broadcom has a history of sharing IP blocks amongst the different
+>> >> divisions.  So, this driver might be used on other SoC families (as it
+>> >> apparently has been done in the past, based on the code you
+>> >> reference).  I do not know of any way to know what legacy, non-iProc
+>> >> chips have used this IP block.  I can make this "brcm,iproc-bgmac",
+>> >> and add "brcm,iproc-nsp-bgmac" as an alternative compatible string in
+>> >> this file (which I believe you are suggesting), but there might be
+>> >> non-iProc SoCs that use this driver.  Is this acceptable?
+>> >
+>> > If it is also used outside of iProc, then I see no need for the
+>> > extra compatible string, although it would not do any harm either.
+>> >
+>> > Ideally we should name it whatever the name for this IP block is
+>> > inside of the company, with "nsp" as the designation for the variant
+>> > in Northstar Plus. A lot of Broadcom IP blocks themselves seem to have
+>> > some four-digit or five-digit number, maybe this one does too?
+>> >
+>> >       Arnd
+>> >
+>>
+>> Note this IP block has an official IP controller name of "amac" from the
+>> ASIC team.
+>
+> Ok, then I'd suggest making the compatible string here
+>
+>         compatible = "brcm,nsp-amac", "brcm,amac";
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+It is called GMAC in the NS and NSP documentation, but AMAC is fine
+with me (as it is called this in the NS2 documentation).  I'll make
+the necessary change and repush.
 
----
-Changes in version 2:
-- added Geert's tag.
+Thanks for all of the input.
 
- arch/arm/boot/dts/r8a7792.dtsi |  168 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 168 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-@@ -113,6 +113,174 @@
- 			reg = <0 0xe6060000 0 0x144>;
- 		};
- 
-+		gpio0: gpio@e6050000 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6050000 0 0x50>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 0 29>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO0>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio1: gpio@e6051000 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6051000 0 0x50>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 32 23>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO1>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio2: gpio@e6052000 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6052000 0 0x50>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 64 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO2>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio3: gpio@e6053000 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6053000 0 0x50>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 96 28>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO3>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio4: gpio@e6054000 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6054000 0 0x50>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 128 17>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO4>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio5: gpio@e6055000 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6055000 0 0x50>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 160 17>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO5>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio6: gpio@e6055100 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6055100 0 0x50>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 192 17>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO6>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio7: gpio@e6055200 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6055200 0 0x50>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 224 17>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO7>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio8: gpio@e6055300 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6055300 0 0x50>;
-+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 256 17>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO8>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio9: gpio@e6055400 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6055400 0 0x50>;
-+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 288 17>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO9>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio10: gpio@e6055500 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6055500 0 0x50>;
-+			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 320 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO10>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		gpio11: gpio@e6055600 {
-+			compatible = "renesas,gpio-r8a7792",
-+				     "renesas,gpio-rcar";
-+			reg = <0 0xe6055600 0 0x50>;
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 352 30>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&mstp9_clks R8A7792_CLK_GPIO11>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
- 		dmac0: dma-controller@e6700000 {
- 			compatible = "renesas,dmac-r8a7792",
- 				     "renesas,rcar-dmac";
+> or even better if you have a version number associated with it, make that
+>
+>         compatible = "brcm,nsp-amac", "brcm,amac-1.234", "brcm,amac";
+>
+> replacing 1.234 with the actual version of course.
+>
+>         Arnd
+>
