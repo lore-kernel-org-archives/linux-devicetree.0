@@ -1,75 +1,74 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: portable device tree connector -- problem statement
-Date: Tue, 5 Jul 2016 21:07:34 +0300
-Message-ID: <FAEEC972-73C1-49DF-8F2E-BC89EFF64E5D@konsulko.com>
-References: <577ACE0D.9050700@gmail.com> <20160705083152.GM6247@sirena.org.uk> <577BC30C.10105@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v2] ARM: at91: Document new TCB bindings
+Date: Tue, 5 Jul 2016 20:33:17 +0200
+Message-ID: <20160705183317.GB3623@piout.net>
+References: <1467039901-11297-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <20160701012743.GA16698@rob-hp-laptop>
+ <20160704151058.44b679bf@bbrezillon>
+ <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <577BC30C.10105@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, David Gibson <david@gibson.dropbear.id.au>, stephen.boyd@linaro.org, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, marex@denx.de, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+On 05/07/2016 at 10:40:22 -0500, Rob Herring wrote :
+> >> > +   - compatible: Should be "atmel,tcb-free-running-timer"
+> >> > +   - reg: Should contain the TCB channels to be used. If the
+> >> > +     counter width is 16 bits (at91rm9200-tcb), two consecutive
+> >> > +     channels are needed. Else, only one channel will be used.
+> >> > +
+> >> > + * a clockevent device
+> >> > +   - compatible: Should be "atmel,tcb-programmable-timer"
+> >>
+> >> This still looks like assigning usage in DT. As I'm willing to accept
+> >> that for PWM, either timer channels should be whatever channels are not
+> >> assigned to PWM (i.e. not in DT) or they should just be "timer" and let
+> >> the kernel decide their usage.
+> >
+> > I just reviewed Alexandre's new binding, and it makes the whole thing
+> > a lot more obscure: on older SoCs, we have to chain 2 channels to
+> > create an acceptable wraparound time (16 bits at 5MHz is generating too
+> > much interrupts to be acceptable).
+> >
+> > If we don't assign the mode from the DT, how should we know which
+> > channels should be chained to create the free-running timer? Note that
+> > not all channels can be chained together: they have to be part of the
+> > same timer counter block and have to be consecutive (0+1, 1+2 or 3+0).
+> 
+> The driver can have this knowledge if it is just picking 2 consecutive
+> timers. It should already know it has 16-bit timers based on the
+> compatible string. If it gets more complicated then the features or
+> limitations of the channels should be listed so the driver can make a
+> choice. OMAP is a good example of lots of timers with differing
+> features.
+> 
+> > Honestly, I don't see the difference between assigning the channel to a
+> > PWM mode and assigning it to a free-running or oneshot timer mode. Why
+> > is it more acceptable?
+> 
+> The difference is that pwm's have clients (e.g. a backlight) in DT and
+> timers do not. We could just make the pwm clients reference the parent
+> node, but then it is hard to figure out which channels are in use for
+> pwm. That could also be solved with a simple "pwm-channels" property
+> listing the channels in use.
+> 
 
-> On Jul 5, 2016, at 17:24 , Frank Rowand <frowand.list@gmail.com> wrot=
-e:
->=20
-> On 07/05/16 01:31, Mark Brown wrote:
->> On Mon, Jul 04, 2016 at 01:58:53PM -0700, Frank Rowand wrote:
->>=20
->>> On the other hand, I have no previous detailed knowledge of the bea=
-gle
->>> family.
->>=20
->> This is in no way specific to the BeagleBones, there's plenty of oth=
-er
->> boards out there with similar setups like the Raspberry Pi and its
->> derivatives.
->=20
-> Yes, absolutely.  I'm just picking on the beaglebones because that is
-> what Pantelis has recently used for examples.  (He has mentioned othe=
-r
-> connector types and expansion boards in his presentations.)
->=20
-> And we need to think beyond beaglebone, pi, arduino, and grove=20
-> type of connectors.
->=20
-> Some other connectors that are obvious are pci and possibly usb.
->=20
+Well, at some point, we will probably have the ADC referring to channels
+used as timers as they can be used to trigger it periodically.
 
-Yes, in fact a growing number of platforms come with discoverable
-PCI/USB boards which provide the busses and interfaces that
-non-discoverable boards are plugged in.
+We'll also get frequency measurement that will go in iio, quadrature
+decoders, gray counters and event counters that will probably used by
+different subsystems and will certainly have to be referred to in DT.
 
-Think an i2c-bus on pci-e boards on which a number of I2C peripherals
-are located. The Vendor/Product IDs are the same for all these
-expansions boards since the h/w designers do not want to spend money
-on even a dip-switch or EEPROM for the IDs.
+It will definitively feel a bit weird to have all the channels have
+their own nodes but not the timers...
 
->=20
->>>    - for bones with the same pinout:
->>>      - the pins are routed to different function blocks on the
->>>        SOC because different bones may have different SOCs?
->>>        - the different functional blocks are compatible or not?
->>=20
->> This is the general case, there will be a substantial level of
->> compatibility between different base boards by virtue of the pinouts
->> being the same but obviously there will be some variation in the
->> specifics (and even where that exists it may not be enough to be vis=
-ible
->> at the DT level for the most part).  That said there will doubtless =
-be
->> some plug in modules that want to rely on the specifics of a given b=
-ase
->> board rather than remain compatible with general users of the interf=
-ace.
->>=20
->=20
-
-Regards
-
-=97 Pantelis
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
