@@ -1,67 +1,46 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Tue, 05 Jul 2016 15:43:59 +0200
-Message-ID: <26659199.PqqRaoPEho@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <8717879.O1RMZcQt4V@wuerfel> <577AAC95.7040800@broadcom.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH 0/3] Add STM32F746 MCU pinctrl support
+Date: Tue, 5 Jul 2016 15:40:14 +0200
+Message-ID: <1467726017-20041-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRB37R525QKGQEIXJVBFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <577AAC95.7040800-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 4, 2016 8:36:05 PM CEST Arend van Spriel wrote:
-> On 04-07-16 16:54, Arnd Bergmann wrote:
-> > On Monday, July 4, 2016 11:08:38 AM CEST Arend Van Spriel wrote:
-> > 
-> > In drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c I already see
-> > over a dozen different chips being supported, bcm4329 is only one of
-> > them. In particular, there seem to be some that have various modules:
-> > 
-> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
-> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x00000020, 43241B4),
-> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0xFFFFFFC0, 43241B5),
-> > 
-> > So if you have a bcm43241, that compatible string probably should
-> > include both brcm,bcm43241-b4-fmac and brcm,bcm43241-fmac, possibly also
-> > brcm,bcm4329-fmac, to show that it is a superset of the programming
-> > interface of that one.
-> 
-> Hi Arnd,
-> 
-> I have to disagree here. The compatible string "brcm,bcm4329-fmac" is
-> chosen as the bcm4329 chip was the first supported and we never added
-> others as there is no other programming required. For all supported
-> devices the same device tree properties apply and are handled the same.
-> As such there is no need to come up with a new compatible string.
+This series adds STM32F746 pinctrl and GPIO support, relies on the
+generic STM32 pinctrl driver.
 
-Generally speaking, the way that the compatible strings work is that you
-add a new one whenever you get a new piece of hardware, and you can leave
-the first one as a fallback so you don't have to change the driver.
+Regards
 
-Adding the new string for the actual device is important though,
-since you might only discover later that they are not 100% compatible
-and that you in fact need to know the difference.
+Alex
 
-For discoverable buses like sdio or usb, it may actually be better
-to not identify the device through the compatible property at all,
-and instead use a string that is generated from the actual identifier
-as the primary key, as e.g. documented in
-Documentation/devicetree/bindings/usb/usb-device.txt
+Alexandre TORGUE (2):
+  includes: dt-bindings: Add STM32F746 pinctrl DT bindings
+  Documentation: dt: Add new compatible to STM32 pinctrl driver bindings
 
-The mmc binding is less clear about that, and we may want to correct
-that. In fact, the example in
-Documentation/devicetree/bindings/mmc/mmc.txt even lists an invalid
-compatible string, so that is even worse.
+Maxime Coquelin (1):
+  pinctrl: Add STM32F746 MCU support
 
-	Arnd
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |    1 +
+ drivers/pinctrl/stm32/Kconfig                      |    6 +
+ drivers/pinctrl/stm32/Makefile                     |    2 +
+ drivers/pinctrl/stm32/pinctrl-stm32f746.c          | 1693 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/stm32f746-pinfunc.h    | 1335 +++++++++++++++
+ 5 files changed, 3037 insertions(+)
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f746.c
+ create mode 100644 include/dt-bindings/pinctrl/stm32f746-pinfunc.h
+
+-- 
+1.9.1
