@@ -1,36 +1,86 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] drivers: reset: Add STM32 reset driver
-Date: Tue, 05 Jul 2016 15:29:30 +0200
-Message-ID: <1467725370.2978.64.camel@pengutronix.de>
-References: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
-	 <1467640052-6770-3-git-send-email-gabriel.fernandez@st.com>
-	 <1467653810.2224.77.camel@pengutronix.de> <577B61EA.5080703@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 6/7] dt-bindings: net: bgmac: add bindings documentation for bgmac
+Date: Tue, 05 Jul 2016 15:37:20 +0200
+Message-ID: <3327458.KVBg7y9SeP@wuerfel>
+References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com> <6488341.IDGze89kcW@wuerfel> <e8ba3130-38ff-3d67-da64-f7c15ec27ded@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <577B61EA.5080703-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e8ba3130-38ff-3d67-da64-f7c15ec27ded@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Ray Jui <ray.jui@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, netdev@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 05.07.2016, 09:29 +0200 schrieb Gabriel Fernandez:
-[...]
-> >> +static const struct reset_control_ops stm32_reset_ops = {
-> >> +	.assert		= stm32_reset_assert,
-> >> +	.deassert	= stm32_reset_deassert,
-> > Are the registers not readable, or did you choose not to
-> > implement .status on purpose?
-> We choose to not implement.
+On Monday, July 4, 2016 9:34:35 AM CEST Ray Jui wrote:
+> On 7/1/2016 8:42 AM, Arnd Bergmann wrote:
+> > On Friday, July 1, 2016 11:17:25 AM CEST Jon Mason wrote:
+> >> On Fri, Jul 1, 2016 at 5:46 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >>> On Thursday, June 30, 2016 6:59:13 PM CEST Jon Mason wrote:
+> >>>> +
+> >>>> +Required properties:
+> >>>> + - compatible: "brcm,bgmac-nsp"
+> >>>> + - reg:                Address and length of the GMAC registers,
+> >>>> +               Address and length of the GMAC IDM registers
+> >>>> + - reg-names:  Names of the registers.  Must have both "gmac_base" and
+> >>>> +               "idm_base"
+> >>>> + - interrupts: Interrupt number
+> >>>> +
+> >>>
+> >>>
+> >>> "brcm,bgmac-nsp" sounds a bit too general. As I understand, this is a family
+> >>> of SoCs that might not all have the exact same implementation of this
+> >>> ethernet device, as we can see from the long lookup table in bgmac_probe().
+> >>
+> >> The Broadcom iProc family of SoCs contains:
+> >> Northstar
+> >> Northstar Plus
+> >> Cygnus
+> >> Northstar 2
+> >> a few SoCs that are under development
+> >> and a number of ethernet switches (which might never be officially supported)
+> >>
+> >> Each one of these SoCs could have a different revision of the gmac IP
+> >> block, but they should be uniform within each SoC (though there might
+> >> be a A0/B0 change necessary).  The Northstar Plus product family has a
+> >> number of different implementations, but the SoC is unchanged.  So, I
+> >> think this might be too specific, when we really need a general compat
+> >> string.
+> >
+> > Ok, thanks for the clarification, that sounds good enough.
+> >
+> >> Broadcom has a history of sharing IP blocks amongst the different
+> >> divisions.  So, this driver might be used on other SoC families (as it
+> >> apparently has been done in the past, based on the code you
+> >> reference).  I do not know of any way to know what legacy, non-iProc
+> >> chips have used this IP block.  I can make this "brcm,iproc-bgmac",
+> >> and add "brcm,iproc-nsp-bgmac" as an alternative compatible string in
+> >> this file (which I believe you are suggesting), but there might be
+> >> non-iProc SoCs that use this driver.  Is this acceptable?
+> >
+> > If it is also used outside of iProc, then I see no need for the
+> > extra compatible string, although it would not do any harm either.
+> >
+> > Ideally we should name it whatever the name for this IP block is
+> > inside of the company, with "nsp" as the designation for the variant
+> > in Northstar Plus. A lot of Broadcom IP blocks themselves seem to have
+> > some four-digit or five-digit number, maybe this one does too?
+> >
+> >       Arnd
+> >
+> 
+> Note this IP block has an official IP controller name of "amac" from the 
+> ASIC team.
 
-Ok. Because of size issues or just because you don't need them in any of
-your drivers?
+Ok, then I'd suggest making the compatible string here
 
-regards
-Philipp
+	compatible = "brcm,nsp-amac", "brcm,amac";
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+or even better if you have a version number associated with it, make that
+
+	compatible = "brcm,nsp-amac", "brcm,amac-1.234", "brcm,amac";
+
+replacing 1.234 with the actual version of course.
+
+	Arnd
