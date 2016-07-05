@@ -1,17 +1,13 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 3/5] drivers: net: phy: Add MDIO driver
-Date: Tue, 5 Jul 2016 15:49:50 +0200
-Message-ID: <20160705134950.GC5230@lunn.ch>
-References: <1464739840-21971-1-git-send-email-isubramanian@apm.com>
- <1464739840-21971-4-git-send-email-isubramanian@apm.com>
- <20160601011148.GD31982@lunn.ch>
- <CAKh23FmaQy8J=f-eyfBeNndz0oT5R0icvwJ3vrw1DMJnj9uv_g@mail.gmail.com>
+From: Stefano Stabellini <sstabellini@kernel.org>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Tue, 5 Jul 2016 14:53:01 +0100 (BST)
+Message-ID: <alpine.DEB.2.10.1607051449370.2575@sstabellini-ThinkPad-X260>
+References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAKh23FmaQy8J=f-eyfBeNndz0oT5R0icvwJ3vrw1DMJnj9uv_g@mail.gmail.com>
+In-Reply-To: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,41 +17,135 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Iyappan Subramanian <isubramanian@apm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, patches <patches@apm.com>, Matthias Brugger <matthias.bgg@gmail.com>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Julien Grall <julien.grall@arm.com>, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 06, 2016 at 10:12:35AM -0700, Iyappan Subramanian wrote:
-> Hi Andrew,
+On Thu, 30 Jun 2016, Dirk Behme wrote:
+> Some clocks might be used by the Xen hypervisor and not by the Linux
+> kernel. If these are not registered by the Linux kernel, they might be
+> disabled by clk_disable_unused() as the kernel doesn't know that they
+> are used. The clock of the serial console handled by Xen is one
+> example for this. It might be disabled by clk_disable_unused() which
+> stops the whole serial output, even from Xen, then.
 > 
-> Thanks for the review.
+> Up to now, the workaround for this has been to use the Linux kernel
+> command line parameter 'clk_ignore_unused'. See Xen bug
 > 
-> On Tue, May 31, 2016 at 6:11 PM, Andrew Lunn <andrew@lunn.ch> wrote:
-> > On Tue, May 31, 2016 at 05:10:38PM -0700, Iyappan Subramanian wrote:
-> >> +static int xgene_mdio_reset(struct xgene_mdio_pdata *pdata)
-> >> +{
-> >> +     int ret;
-> >> +
-> >> +     if (pdata->mdio_id == XGENE_MDIO_RGMII) {
-> >> +             if (pdata->dev->of_node) {
-> >> +                     clk_prepare_enable(pdata->clk);
-> >> +                     clk_disable_unprepare(pdata->clk);
-> >> +                     clk_prepare_enable(pdata->clk);
-> >
-> > Hi Iyappan
-> >
-> > Is that a workaround for a hardware problem? If so, i would suggest
-> > adding a comment, to stop people submitting a patch simplifying it.
+> http://bugs.xenproject.org/xen/bug/45
 > 
-> Hardware expects this clock sequence.  I'll add comment as you suggested.
+> too.
+> 
+> To fix this, we will add the "unused" clocks in Xen to the hypervisor
+> node. The Linux kernel has to register the clocks from the hypervisor
+> node, then.
+> 
+> Therefore, check if there is a "clocks" entry in the hypervisor node
+> and if so register the given clocks to the Linux kernel clock
+> framework and with this mark them as used. This prevents the clocks
+> from being disabled.
+> 
+> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+> ---
+> Changes in v2:
+>  - Rebase against git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-4.8
+>  - Add changes to Documentation/devicetree/bindings/arm/xen.txt
+> 
+>  Documentation/devicetree/bindings/arm/xen.txt | 11 +++++++
+>  arch/arm/xen/enlighten.c                      | 47 +++++++++++++++++++++++++++
+>  2 files changed, 58 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
+> index c9b9321..55dfd3b 100644
+> --- a/Documentation/devicetree/bindings/arm/xen.txt
+> +++ b/Documentation/devicetree/bindings/arm/xen.txt
+> @@ -17,6 +17,17 @@ the following properties:
+>    A GIC node is also required.
+>    This property is unnecessary when booting Dom0 using ACPI.
+>  
+> +Optional properties:
+> +
+> +- clocks: one or more clocks to be registered.
+> +  Xen hypervisor drivers might replace native drivers, resulting in
+> +  clocks not registered by these native drivers. To avoid that these
+> +  unregistered clocks are disabled, then, e.g. by clk_disable_unused(),
+> +  register them in the hypervisor node.
+> +  An example for this are the clocks of the serial driver. If the clocks
+> +  used by the serial hardware interface are not registered by the serial
+> +  driver the serial output might stop once clk_disable_unused() is called.
 
-What exactly does the hardware require? Is this a workaround for a bug
-in the clock generator? Or a workaround for a bug in the MDIO device?
+What if we use the "status" property of the clocks? Could we set it to
+"disabled" in Xen? Would that be enough for Linux to leave them alone?
 
-If it is a clock generator bug, i think the fix should be in the clock
-driver. If this is bug in the MDIO device, do you need a sleep in
-there, so you actually have the clock ticking/not ticking for a time?
-Since these calls can all sleep, you have no idea how long/sort the
-clock will be enabled/disabled.
 
-      Andrew
+>  To support UEFI on Xen ARM virtual platforms, Xen populates the FDT "uefi" node
+>  under /hypervisor with following parameters:
+>  
+> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> index 47acb36..5c546d0 100644
+> --- a/arch/arm/xen/enlighten.c
+> +++ b/arch/arm/xen/enlighten.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/of_fdt.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_address.h>
+> +#include <linux/clk-provider.h>
+>  #include <linux/cpuidle.h>
+>  #include <linux/cpufreq.h>
+>  #include <linux/cpu.h>
+> @@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
+>  }
+>  late_initcall(xen_pm_init);
+>  
+> +/*
+> + * Check if we want to register some clocks, that they
+> + * are not freed because unused by clk_disable_unused().
+> + * E.g. the serial console clock.
+> + */
+> +static int __init xen_arm_register_clks(void)
+> +{
+> +	struct clk *clk;
+> +	struct device_node *xen_node;
+> +	unsigned int i, count;
+> +	int ret = 0;
+> +
+> +	xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
+> +	if (!xen_node) {
+> +		pr_err("Xen support was detected before, but it has disappeared\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	count = of_clk_get_parent_count(xen_node);
+> +	if (!count)
+> +		goto out;
+> +
+> +	for (i = 0; i < count; i++) {
+> +		clk = of_clk_get(xen_node, i);
+> +		if (IS_ERR(clk)) {
+> +			pr_err("Xen failed to register clock %i. Error: %li\n",
+> +			       i, PTR_ERR(clk));
+> +			ret = PTR_ERR(clk);
+> +			goto out;
+> +		}
+> +
+> +		ret = clk_prepare_enable(clk);
+> +		if (ret < 0) {
+> +			pr_err("Xen failed to enable clock %i. Error: %i\n",
+> +			       i, ret);
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	ret = 0;
+> +
+> +out:
+> +	of_node_put(xen_node);
+> +	return ret;
+> +}
+> +late_initcall(xen_arm_register_clks);
+>  
+>  /* empty stubs */
+>  void xen_arch_pre_suspend(void) { }
+> -- 
+> 2.8.0
+> 
