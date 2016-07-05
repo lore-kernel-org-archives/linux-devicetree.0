@@ -1,54 +1,43 @@
-From: Andi Shyti <andi@etezian.org>
-Subject: Re: [PATCH] [media] rc: ir-spi: add support for IR LEDs connected
- with SPI
-Date: Wed, 6 Jul 2016 00:08:26 +0900
-Message-ID: <20160705150826.GG1257@jack.zhora.eu>
-References: <1467362022-12704-1-git-send-email-andi.shyti@samsung.com>
- <20160705142211.GA19930@rob-hp-laptop>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 1/3] includes: dt-bindings: Add STM32F746 pinctrl DT
+ bindings
+Date: Tue, 5 Jul 2016 17:21:51 +0200
+Message-ID: <577BD08F.7010803@st.com>
+References: <1467726017-20041-1-git-send-email-alexandre.torgue@st.com>
+ <1467726017-20041-2-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdbexKR6Z3HQxbrx1C8xcXc_A_1x0oTZ=if_gkRCckoC8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160705142211.GA19930@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdbexKR6Z3HQxbrx1C8xcXc_A_1x0oTZ=if_gkRCckoC8g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Patrice Chotard <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Linus,
 
-> > The ir-spi is a simple device driver which supports the
-> > connection between an IR LED and the MOSI line of an SPI device.
-> 
-> Please split the binding from the driver.
+On 07/05/2016 04:59 PM, Linus Walleij wrote:
+> On Tue, Jul 5, 2016 at 3:40 PM, Alexandre TORGUE
+> <alexandre.torgue@st.com> wrote:
+>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+>
+> The patch was a bit liberal with newlines so I cut some whitespace
+> while applying.
 
-OK!
+Sorry for that and thanks for modifications.
 
-> > +Device tree bindings for IR LED connected through SPI bus which is used as
-> > +remote controller.
-> 
-> Do said devices have part numbers? Seems kind of generic and I've never 
-> seen such device.
+Regards,
 
-No, it doesn't, this is a simple irled driven by the SPI MOSI
-line that works as a remote controller.
-
-It looked strange to me as well when I heard of it the first
-time, but it will be present in the upcoming tm2/tm2e patchset 
-(i.e. Samsung Note 4 and Note 4 edge).
-
-> > +Optional properties:
-> > +	- irled,switch: specifies the gpio switch which enables the irled
-> 
-> Just "switch-gpios"
-
-OK!
-
-> > +                controller-data {
-> 
-> This is part of the controller binding? Omit that from the example.
-
-OK!
-
-Thanks,
-Andi
+Alex
