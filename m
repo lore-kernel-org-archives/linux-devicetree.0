@@ -1,87 +1,87 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 2/4] power: add axp20x-battery driver
-Date: Tue, 05 Jul 2016 18:09:17 +0800
-Message-ID: <2030991467713357@web30j.yandex.ru>
-References: <20160701092926.32005-1-icenowy@aosc.xyz>
-	 <20160701092926.32005-2-icenowy@aosc.xyz>
-	 <577B44FD.6040404@mailbox.org>
-	 <4101467707611@web7h.yandex.ru> <20160705092510.GL7643@lukather>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Tue, 5 Jul 2016 11:39:17 +0100
+Message-ID: <20160705103917.GC20478@leverpostej>
+References: <1467701423-31138-1-git-send-email-dirk.behme@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBUUO525QKGQECQGEHHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160705092510.GL7643@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Michael Haas <michael.haas-cl+VPiYnx/1AfugRpC6u6w@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1467701423-31138-1-git-send-email-dirk.behme@de.bosch.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: linux-arm-kernel@lists.infradead.org, Julien Grall <julien.grall@arm.com>, devicetree@vger.kernel.org, xen-devel@lists.xenproject.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On Tue, Jul 05, 2016 at 08:50:23AM +0200, Dirk Behme wrote:
+> Some clocks might be used by the Xen hypervisor and not by the Linux
+> kernel. If these are not registered by the Linux kernel, they might be
+> disabled by clk_disable_unused() as the kernel doesn't know that they
+> are used. The clock of the serial console handled by Xen is one
+> example for this. It might be disabled by clk_disable_unused() which
+> stops the whole serial output, even from Xen, then.
+> 
+> Up to now, the workaround for this has been to use the Linux kernel
+> command line parameter 'clk_ignore_unused'. See Xen bug
+> 
+> http://bugs.xenproject.org/xen/bug/45
+> 
+> too.
+> 
+> To fix this, we will add the "unused" clocks in Xen to the hypervisor
+> node. The Linux kernel has to register the clocks from the hypervisor
+> node, then.
+> 
+> Therefore, check if there is a "clocks" entry in the hypervisor node
+> and if so register the given clocks to the Linux kernel clock
+> framework and with this mark them as used. This prevents the clocks
+> from being disabled.
+> 
+> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+> ---
+> Changes in v2: Drop the Linux implementation details like clk_disable_unused
+> 	       in xen.txt.
 
-05.07.2016, 17:25, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard@free-e=
-lectrons.com>:
-> On Tue, Jul 05, 2016 at 04:33:31PM +0800, Icenowy Zheng wrote:
->> =C2=A005.07.2016, 13:26, "Michael Haas" <michael.haas-cl+VPiYnx/1AfugRpC6u6w@public.gmane.org>:
->> =C2=A0> Hi,
->> =C2=A0>
->> =C2=A0> nice work! Is this in any way related to Bruno Pr=C3=A9monts dri=
-ver for the
->> =C2=A0> axp20x?
->> =C2=A0>
->> =C2=A0> I've got a reworked version of that lying around, but it's not q=
-uite
->> =C2=A0> ready for submission. Do you know what pieces are missing in you=
-r driver
->> =C2=A0> for axp20x support - as opposed to axp22x, which is already work=
-ing?
->>
->> =C2=A0Therotically, it can run on axp20x. However, I have currently no
->> =C2=A0test device. (Still waiting for my C.H.I.P.) So I can only promise
->> =C2=A0it to run on axp22x.
->
-> Still, it looks like you just took Bruno's driver, stripped out the
-> axp20x parts and added the one to deal with axp22x.
->
-> This makes the driver look weird, by being called axp20x, without
-> actually supporting those PMICs, but having some axp22x variables
-> right in the middle. And that's awfully inconsistent.
->
-> I'd rather have you add the AXP20x driver directly, and then add the
-> needed stuff for the AXP22x.
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+Thanks for doing this.
 
-I modified axp20x_usb_power.c to suite the battery.
+>  Documentation/devicetree/bindings/arm/xen.txt | 13 ++++++++
+>  arch/arm/xen/enlighten.c                      | 47 +++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
+> index c9b9321..21fd469 100644
+> --- a/Documentation/devicetree/bindings/arm/xen.txt
+> +++ b/Documentation/devicetree/bindings/arm/xen.txt
+> @@ -17,6 +17,19 @@ the following properties:
+>    A GIC node is also required.
+>    This property is unnecessary when booting Dom0 using ACPI.
+>  
+> +Optional properties:
+> +
+> +- clocks: one or more clocks to be registered.
+> +  Xen hypervisor drivers might replace native drivers, resulting in
+> +  clocks not registered by these native drivers. To avoid that these
+> +  unregistered clocks are disabled by the Linux kernel initialization
+> +  register them in the hypervisor node.
+> +  An example for this are the clocks of a serial driver already enabled
+> +  by the firmware. If the clocks used by the serial hardware interface
+> +  are not registered by the serial driver itself the serial output
+> +  might stop once the Linux kernel initialization disables the 'unused'
+> +  clocks.
 
-No axp22x-specified register is used in this driver.
-I think this driver may now also work properly on axp20x, however
-I have currently no device with axp20x.
-(I didn't enter linux-sunxi when A10/13/20 is popular... So I'm waiting for
-my CHIP)
+The above describes the set of problems, but doesn't set out the actual
+contract. It also covers a number of Linux implementation details in
+abstract.
 
-This driver didn't implement OCV value tweak.
+As I commented previously [1], the binding should describe the set of
+guarantees that you rewquire (e.g. that the clocks must be left as-is,
+not gated, and their rates left unchanged).
 
-In fact, OCV value tweaking is even not documented in the datasheet
-of both axp20x and axp22x.
+Please describe the specific set of guarantees that you require.
 
-Can you test it with axp20x? (It seems that the shipment of CHIP is so slow=
-)
+Thanks,
+Mark.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/440434.html
