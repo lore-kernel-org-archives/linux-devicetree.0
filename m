@@ -1,33 +1,38 @@
 From: Abhilash Kesavan <a.kesavan@samsung.com>
-Subject: [PATCH] arm64: dts: exynos: Modify the voltage range for BUCK2 for exynos7
-Date: Wed,  6 Jul 2016 01:58:57 +0530
-Message-ID: <1467750537-13911-1-git-send-email-a.kesavan@samsung.com>
+Subject: [PATCH] arm64: dts: exynos: add atlas clock controller node
+Date: Wed,  6 Jul 2016 01:59:59 +0530
+Message-ID: <1467750599-14008-1-git-send-email-a.kesavan@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, k.kozlowski@samsung.com
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Change the BUCK2 (vdd_atlas) voltage range to '500 - 1200mv' since
-CPU DVFS requires it.
+The atlas CMU generates all the necessary clocks for the Cortex-A57.
 
 Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/exynos/exynos7.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index d8767b0..299f3ce 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -249,7 +249,7 @@
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+index 8d7ce97..fd008e9 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -158,6 +158,14 @@
+ 				      "dout_sclk_mfc_pll";
+ 		};
  
- 			buck2_reg: BUCK2 {
- 				regulator-name = "vdd_atlas";
--				regulator-min-microvolt = <1200000>;
-+				regulator-min-microvolt = <500000>;
- 				regulator-max-microvolt = <1200000>;
- 				regulator-always-on;
- 				regulator-boot-on;
++		clock_atlas: clock-controller@11800000 {
++			compatible = "samsung,exynos7-clock-atlas";
++			reg = <0x11800000 0x1100>;
++			#clock-cells = <1>;
++			clocks = <&fin_pll>, <&clock_topc SCLK_BUS0_PLL_ATLAS>;
++			clock-names = "fin_pll", "sclk_bus0_pll_atlas";
++		};
++
+ 		clock_ccore: clock-controller@105b0000 {
+ 			compatible = "samsung,exynos7-clock-ccore";
+ 			reg = <0x105b0000 0xd00>;
 -- 
 1.9.1
