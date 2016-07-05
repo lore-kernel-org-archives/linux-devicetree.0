@@ -1,109 +1,46 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: auxadc: Add binding document for
- Mediatek auxadc.
-Date: Tue, 5 Jul 2016 15:43:20 -0500
-Message-ID: <20160705204320.GA5064@rob-hp-laptop>
-References: <1467690610-20550-1-git-send-email-zhiyong.tao@mediatek.com>
- <1467690610-20550-2-git-send-email-zhiyong.tao@mediatek.com>
+Subject: Re: [PATCH] Fix spelling errors in Documentation/devicetree
+Date: Tue, 5 Jul 2016 15:47:02 -0500
+Message-ID: <20160705204702.GA28168@rob-hp-laptop>
+References: <1467708506-18010-1-git-send-email-otto@seravo.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1467690610-20550-2-git-send-email-zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1467708506-18010-1-git-send-email-otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Otto =?iso-8859-1?Q?Kek=E4l=E4inen?= <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2016 at 11:50:08AM +0800, Zhiyong Tao wrote:
-> The commit adds the device tree binding documentation for the mediatek
-> auxadc found on Mediatek MT2701.
-> Thermal gets auxadc sample data by iio device.
-> So the commit changes auxadc device tree binding documentation from
-> /soc/mediatek/auxadc.txt to /iio/adc/mt65xx_auxadc.txt.
-> 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Tue, Jul 05, 2016 at 11:48:26AM +0300, Otto Kek=E4l=E4inen wrote:
+> Signed-off-by: Otto Kek=E4l=E4inen <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>
 > ---
->  .../devicetree/bindings/iio/adc/mt65xx_auxadc.txt  |   27 ++++++++++++++++++++
->  .../devicetree/bindings/soc/mediatek/auxadc.txt    |   21 ---------------
->  2 files changed, 27 insertions(+), 21 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/mt65xx_auxadc.txt
->  delete mode 100644 Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
+>=20
+> I sent this originally to trivial@, but they adviced to submit this d=
+irectly to you.
+> Please apply. Thank you!
 
-Next time, use the git-format-patch -M option to send so only the 
-changes have to be reviewed.
+I would, but...
 
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/mt65xx_auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt65xx_auxadc.txt
-> new file mode 100644
-> index 0000000..47fcd1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/mt65xx_auxadc.txt
-> @@ -0,0 +1,27 @@
-> +* Mediatek AUXADC - Analog to Digital Converter on Mediatek mobile soc (mt65xx/mt81xx/mt27xx)
-> +===============
-> +
-> +The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
-> +in some Mediatek SoCs which among other things measures the temperatures
-> +in the SoC. It can be used directly with register accesses, but it is also
-> +used by thermal controller which reads the temperatures from the AUXADC
-> +directly via its own bus interface. See
-> +Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> +for the Thermal Controller which holds a phandle to the AUXADC.
-> +
-> +Required properties:
-> +  - compatible: "mediatek,mt2701-auxadc" or "mediatek,mt8173-auxadc"
-> +  - reg: Address range of the AUXADC unit.
-> +  - clocks: Should contain a clock specifier for each entry in clock-names
-> +  - clock-names: Should contain "main".
-> +  - io-channel-cells: Should be 1, see ../iio-bindings.txt
+>=20
+>  Documentation/device-mapper/dm-crypt.txt           |    2 +-
+>  Documentation/device-mapper/verity.txt             |    2 +-
 
-Should be #io-channel-cells
+These 2 are not part of DT. Otherwise, looks fine.
 
-> +
-> +Example:
-> +
-> +auxadc: auxadc@11001000 {
-
-Should be adc@...
-
-> +	compatible = "mediatek,mt2701-auxadc";
-> +	reg = <0 0x11001000 0 0x1000>;
-> +	clocks = <&pericfg CLK_PERI_AUXADC>;
-> +	clock-names = "main";
-> +	#io-channel-cells = <1>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt b/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
-> deleted file mode 100644
-> index bdb7829..0000000
-> --- a/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
-> +++ /dev/null
-> @@ -1,21 +0,0 @@
-> -MediaTek AUXADC
-> -===============
-> -
-> -The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
-> -in some Mediatek SoCs which among other things measures the temperatures
-> -in the SoC. It can be used directly with register accesses, but it is also
-> -used by thermal controller which reads the temperatures from the AUXADC
-> -directly via its own bus interface. See
-> -Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> -for the Thermal Controller which holds a phandle to the AUXADC.
-> -
-> -Required properties:
-> -- compatible: Must be "mediatek,mt8173-auxadc"
-> -- reg: Address range of the AUXADC unit
-> -
-> -Example:
-> -
-> -auxadc: auxadc@11001000 {
-> -	compatible = "mediatek,mt8173-auxadc";
-> -	reg = <0 0x11001000 0 0x1000>;
-> -};
-> -- 
-> 1.7.9.5
-> 
+>  Documentation/devicetree/bindings/arm/l2c2x0.txt   |    4 ++--
+>  Documentation/devicetree/bindings/net/dsa/dsa.txt  |    2 +-
+>  .../devicetree/bindings/powerpc/fsl/fman.txt       |    4 ++--
+>  .../devicetree/bindings/regmap/regmap.txt          |    2 +-
+>  .../devicetree/bindings/serial/qcom,msm-uartdm.txt |    4 ++--
+>  .../devicetree/bindings/sound/simple-card.txt      |    2 +-
+>  Documentation/devicetree/bindings/spi/ti_qspi.txt  |    2 +-
+>  .../bindings/timer/allwinner,sun5i-a13-hstimer.txt |    2 +-
+>  10 files changed, 13 insertions(+), 13 deletions(-)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
