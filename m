@@ -1,39 +1,43 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 3/3] ARM: dts: lpc4350-hitex-eval: Fix binding for SE97
-Date: Tue,  5 Jul 2016 09:44:33 -0700
-Message-ID: <1467737073-7949-3-git-send-email-linux@roeck-us.net>
-References: <1467737073-7949-1-git-send-email-linux@roeck-us.net>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1467737073-7949-1-git-send-email-linux@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Joachim Eastwood <manabian@gmail.com>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v4 0/4] ASoC: samsung: Sound support for Exynos5433 TM2(E)
+ boards
+Date: Tue, 05 Jul 2016 19:12:14 +0200
+Message-ID: <1467738734-31362-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: broonie@kernel.org, lee.jones@linaro.org
+Cc: robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, ideal.song@samsung.com, inki.dae@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The 'compatible = "nxp,jc42"' binding only happened to work because
-the Linux driver is named jc42. The driver now supports generic
-bindings for JC-42 compatible chips, so use the generic binding instead.
+This patch series adds a MFD driver for Samsung Exynos5433 SoC Low Power
+Audio Subsystem and an ASoC machine driver for Exynos5433 based TM2/TM2E
+boards.
 
-Cc: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
-Cc: Joachim Eastwood <manabian@gmail.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- arch/arm/boot/dts/lpc4350-hitex-eval.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The changes since v3 are listed in individual patches, the main change
+was rewriting LPASS driver as a MFD driver. It seems much better now
+as the dependencies between LPASS Top block and its IP sub-blocks are
+properly taken care of.
 
-diff --git a/arch/arm/boot/dts/lpc4350-hitex-eval.dts b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-index 6c9048d4d03c..c97cba1d26a8 100644
---- a/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-+++ b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-@@ -424,7 +424,7 @@
- 
- 	/* NXP SE97BTP with temperature sensor + eeprom */
- 	sensor@18 {
--		compatible = "nxp,jc42";
-+		compatible = "nxp,se97", "jedec,jc-42.4-temp";
- 		reg = <0x18>;
- 	};
- 
--- 
-2.5.0
+Sylwester Nawrocki (4):
+  mfd: Add DT bindings documentation for Samsung Exynos LPASS
+  mfd: Add Samsung Exynos Low Power Audio Subsystem driver
+  ASoC: samsung: Add DT bindings documentation for TM2 sound subsystem
+  ASoC: samsung: Add machine driver for Exynos5433 based TM2 board
 
+ .../bindings/mfd/samsung,exynos5433-lpass.txt      |  21 +
+ .../bindings/sound/samsung,tm2-audio.txt           |  36 ++
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/exynos-lpass.c                         | 185 +++++++
+ include/linux/mfd/syscon/exynos5-pmu.h             |   4 +-
+ sound/soc/samsung/Kconfig                          |   9 +
+ sound/soc/samsung/Makefile                         |   2 +
+ sound/soc/samsung/tm2_wm5110.c                     | 579 +++++++++++++++++++++
+ 9 files changed, 844 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+ create mode 100644 drivers/mfd/exynos-lpass.c
+ create mode 100644 sound/soc/samsung/tm2_wm5110.c
+
+--
+1.9.1
