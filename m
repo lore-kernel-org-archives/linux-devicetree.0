@@ -1,75 +1,42 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: tc358767: add DT documentation
-Date: Tue, 5 Jul 2016 08:53:00 +0530
-Message-ID: <577B2814.80201@codeaurora.org>
-References: <1467384610-29908-1-git-send-email-p.zabel@pengutronix.de>
- <1467384610-29908-2-git-send-email-p.zabel@pengutronix.de>
+From: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/3] AUXADC: Mediatek auxadc driver
+Date: Tue, 5 Jul 2016 11:50:07 +0800
+Message-ID: <1467690610-20550-1-git-send-email-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1467384610-29908-2-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAwNy8wMS8yMDE2IDA4OjIwIFBNLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+IEFkZCBE
-VCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHRoZSBUb3NoaWJhIFRDMzU4NzY3IGVEUCBicmlk
-Z2UuCj4KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4
-LmRlPgo+IC0tLQo+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3
-NjcudHh0ICAgfCA0OCArKysrKysrKysrKysrKysrKysrKysrCj4gICAxIGZpbGUgY2hhbmdlZCwg
-NDggaW5zZXJ0aW9ucygrKQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJhLHRjMzU4NzY3LnR4dAo+Cj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS90b3NoaWJhLHRjMzU4NzY3LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJhLHRjMzU4NzY3LnR4dAo+IG5ldyBmaWxlIG1vZGUg
-MTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uYzU4YTU5Zgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdG9zaGliYSx0
-YzM1ODc2Ny50eHQKPiBAQCAtMCwwICsxLDQ4IEBACj4gK1Rvc2hpYmEgVEMzNTg3NjcgZURQIGJy
-aWRnZSBiaW5kaW5ncwo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArIC0gY29tcGF0aWJs
-ZTogInRvc2hpYmEsdGMzNTg3NjciCj4gKyAtIHJlZzogaTJjIGFkZHJlc3Mgb2YgdGhlIGJyaWRn
-ZSwgMHg2OCBvciAweDBmLCBkZXBlbmRpbmcgb24gYm9vdHN0cmFwIHBpbnMKPiArIC0gY2xvY2st
-bmFtZXM6IHNob3VsZCBiZSAicmVmIgo+ICsgLSBjbG9ja3M6IE9GIGRldmljZS10cmVlIGNsb2Nr
-IHNwZWNpZmljYXRpb24gZm9yIHJlZmNsayBpbnB1dC4gVGhlIHJlZmVyZW5jZQoKU2hvdWxkIHdl
-IGhhdmUgdGhpcyBhcyBhbiBvcHRpb25hbCBwcm9wZXJ0eT8gVGhlcmUgY291bGQgYmUgcGxhdGZv
-cm1zCndoZXJlIGFuIG9zY2lsbGF0b3Igb3V0cHV0IG9uIHRoZSBib2FyZCBjb25uZWN0cyBkaXJl
-Y3RseSB0byB0aGUgcmVmY2xrCnBpbiwgd2l0aG91dCBhbnkgb3B0aW9uIHRvIGdhdGUgaXQuCgo+
-ICsgICBjbG9jayByYXRlIG11c3QgYmUgMTMgTUh6LCAxOS4yIE1IeiwgMjYgTUh6LCBvciAzOC40
-IE1Iei4KPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKyAtIHNodXRkb3duLWdwaW9zOiBP
-RiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIFNEIHBpbgo+ICsgICAgICAgICAg
-ICAgICAgICAgKGFjdGl2ZSBoaWdoIHNodXRkb3duIGlucHV0KQo+ICsgLSByZXNldC1ncGlvczog
-T0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBSU1RYIHBpbgo+ICsgICAgICAg
-ICAgICAgICAgKGFjdGl2ZSBsb3cgc3lzdGVtIHJlc2V0KQo+ICsgLSBwb3J0czogdGhlIHBvcnRz
-IG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJmYWNlIHBvcnQgbm9kZXMgdG8gY29ubmVjdAo+
-ICsgICB0byBhIERQSS9EU0kgc291cmNlIGFuZCB0byBhbiBlRFAvRFAgc2luayBhY2NvcmRpbmcg
-dG8gWzFdWzJdLgoKSnVzdCB3b25kZXJpbmcgYWJvdXQgdGhlIGZ1dHVyZSB3aGVuIERTSSBpcyBp
-bXBsZW1lbnRlZC4gV291bGQgd2UgaGF2ZQpkaWZmZXJlbnQgcG9ydCBudW1iZXJzIGZvciBEU0kg
-YW5kIERQST8gQW5kIGZpZ3VyZSB3aGV0aGVyIHRoZSBpbnB1dAppcyBEU0kgb3IgRFBJIGJhc2Vk
-IG9uIGlucHV0IHRoZSBwb3J0IG51bWJlcj8gSWYgd2UgZ28gd2l0aCB0aGF0CmFwcHJvYWNoLCBp
-dCBtaWdodCBtYWtlIHNlbnNlIHRvIGhhdmUgdGhlIGJyaWRnZSBvdXRwdXQgcG9ydCBudW1iZXIK
-YXMgMi4KClRoYW5rcywKQXJjaGl0Cgo+ICsKPiArWzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZ3JhcGgudHh0Cj4gK1syXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4gKwo+ICtFeGFtcGxlOgo+ICsJZWRw
-LWJyaWRnZUA2OCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJ0b3NoaWJhLHRjMzU4NzY3IjsKPiArCQly
-ZWcgPSA8MHg2OD47Cj4gKwkJc2h1dGRvd24tZ3Bpb3MgPSA8JmdwaW8zIDIzIEdQSU9fQUNUSVZF
-X0hJR0g+Owo+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvMyAyNCBHUElPX0FDVElWRV9MT1c+Owo+
-ICsJCWNsb2NrLW5hbWVzID0gInJlZiI7Cj4gKwkJY2xvY2tzID0gPCZlZHBfcmVmY2xrPjsKPiAr
-Cj4gKwkJcG9ydHMgewo+ICsJCQlwb3J0QDAgewo+ICsJCQkJcmVnID0gPDA+Owo+ICsKPiArCQkJ
-CWJyaWRnZV9pbjogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHBpX291
-dD47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsKPiArCQkJcG9ydEAxIHsKPiArCQkJCXJlZyA9IDwx
-PjsKPiArCj4gKwkJCQlicmlkZ2Vfb3V0OiBlbmRwb2ludCB7Cj4gKwkJCQkJcmVtb3RlLWVuZHBv
-aW50ID0gPCZwYW5lbF9pbj47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICsK
-PgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENv
-ZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This series includes three patches:
+1.Change the device tree binding documentation.
+2.Add auxadc driver based on linux iio.
+3.Add auxadc nodes in the mediatek MT2701 dtsi file.
+
+changes in patch 2:
+1).Change the file name mt65xx_auxadc.c to mt6577_auxadc.c.
+2).Add 'depends on ARCH_MEDIATEK || COMPILE_TEST and HAS_IOMEM' for MEDIATEK_MT65XX_AUXADC config.
+3).Add check case for return value of 'readl_poll_timeout'.
+4).Remove returning 1 and 0 for SCALE and OFFSET. use channel type 'IIO_CHAN_INFO_PROCESSED' instead of 'IIO_CHAN_INFO_RAW'.
+5).Remove 'IIO_CHAN_INFO_OFFSET' and 'IIO_CHAN_INFO_SCALE' in 'MT65XX_AUXADC_CHANNEL' channel type.
+6).Add check case when auxadc power on failure. if auxadc power on failure, clk_disable_unprepare should be executed.
+7).Put 'platform_set_drvdata' before 'iio_device_register'.
+8).Fix coding style and spelling error.
+
+Zhiyong Tao (3):
+  dt-bindings: auxadc: Add binding document for Mediatek auxadc.
+  auxadc: Add Mediatek auxadc driver for mt2701.
+  arm: dts: auxadc: Add auxadc node.
+
+ .../devicetree/bindings/iio/adc/mt65xx_auxadc.txt  |   27 ++
+ .../devicetree/bindings/soc/mediatek/auxadc.txt    |   21 --
+ arch/arm/boot/dts/mt2701.dtsi                      |    9 +
+ drivers/iio/adc/Kconfig                            |   13 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/mt6577_auxadc.c                    |  301 ++++++++++++++++++++
+ 6 files changed, 351 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/mt65xx_auxadc.txt
+ delete mode 100644 Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
+ create mode 100644 drivers/iio/adc/mt6577_auxadc.c
