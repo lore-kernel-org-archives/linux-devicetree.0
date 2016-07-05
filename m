@@ -1,62 +1,38 @@
-From: Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
-Date: Tue, 5 Jul 2016 15:37:48 +0100 (BST)
-Message-ID: <alpine.DEB.2.10.1607051534411.2575@sstabellini-ThinkPad-X260>
-References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com> <alpine.DEB.2.10.1607051449370.2575@sstabellini-ThinkPad-X260> <577BBC1A.8020209@arm.com> <alpine.DEB.2.10.1607051456410.2575@sstabellini-ThinkPad-X260> <577BBF69.8010809@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: amlogic: Add basic support for Amlogic S905X
+Date: Tue, 5 Jul 2016 09:41:26 -0500
+Message-ID: <20160705144121.GA26195@rob-hp-laptop>
+References: <1467399478-7183-1-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <577BBF69.8010809@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Julien Grall <julien.grall@arm.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467399478-7183-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 5 Jul 2016, Julien Grall wrote:
-> On 05/07/16 15:04, Stefano Stabellini wrote:
-> > On Tue, 5 Jul 2016, Julien Grall wrote:
-> > > On 05/07/16 14:53, Stefano Stabellini wrote:
-> > > > On Thu, 30 Jun 2016, Dirk Behme wrote:
-> > > > > +- clocks: one or more clocks to be registered.
-> > > > > +  Xen hypervisor drivers might replace native drivers, resulting in
-> > > > > +  clocks not registered by these native drivers. To avoid that these
-> > > > > +  unregistered clocks are disabled, then, e.g. by
-> > > > > clk_disable_unused(),
-> > > > > +  register them in the hypervisor node.
-> > > > > +  An example for this are the clocks of the serial driver. If the
-> > > > > clocks
-> > > > > +  used by the serial hardware interface are not registered by the
-> > > > > serial
-> > > > > +  driver the serial output might stop once clk_disable_unused() is
-> > > > > called.
-> > > > 
-> > > > What if we use the "status" property of the clocks? Could we set it to
-> > > > "disabled" in Xen? Would that be enough for Linux to leave them alone?
-> > > 
-> > > clocks could be shared between multiple devices. So it is not possible to
-> > > disable the clock.
-> > 
-> > To clarify my suggestion: I am not saying we should disable the clock, I
-> > am saying we should set the "status" property to "disabled" in Xen for
-> > the clock used by the serial or passthrough devices (for which the
-> > "status" property is already set to "disabled"). That should work for
-> > cases where the clock is not shared among multiple devices.
+On Fri, Jul 01, 2016 at 08:57:58PM +0200, Carlo Caione wrote:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 > 
-> How would you be able to differentiate in Xen between a clock shared and a
-> non-shared one? The only way I can think it going through all the device tree
-> which sounds really expensive.
-
-Yes, but it is only done once and we only need to do the search for
-clocks of "disabled" devices.
-
-
-> > If the clock is shared, then I don't think we would run into the issue
-> > described by Dirk because I wouldn't imagine clk_disable_unused would
-> > try to disable the clock anymore, because it would actually be in use
-> > from Linux POV.
+> This patch introduces the basic support for the Amlogic S905X (Meson
+> GXL) and for the Amlogic evaluation board P212.
+> No documentation has been released yet for this SoC, so for now only the
+> bare minimum has been added in the DT.
 > 
-> We also want to prevent Linux changing the rate of the clock (see Mark's mail
-> [1]).
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.txt |   5 +
+>  arch/arm64/boot/dts/amlogic/Makefile              |   1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxl-p212.dts    |  70 +++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi        | 179 ++++++++++++++++++++++
+>  4 files changed, 255 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-p212.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
 
-I am not sure what's the best way to achieve that for clocks shared
-across multiple devices. Let's see what the clock maintainers suggest.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
