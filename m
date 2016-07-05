@@ -1,71 +1,69 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] ARM: dts: sun5i: Enable otg on the
- auxtex t004
-Date: Tue, 5 Jul 2016 09:24:23 +0200
-Message-ID: <8533f59e-00db-84b6-f3f6-e7169a7d1488@redhat.com>
-References: <1467226022-10525-1-git-send-email-hdegoede@redhat.com>
- <20160629203838.GI6095@lukather>
- <dbce3f4a-dbd6-2ee6-292a-6dec71b99d63@redhat.com>
- <20160705065431.GE7643@lukather>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: blanche: add Ethernet pins
+Date: Tue, 5 Jul 2016 09:29:39 +0200
+Message-ID: <CAMuHMdU3yDe7fFtVArMGqMc6oyHXtFxeR8t6cqPranSg7R+12g@mail.gmail.com>
+References: <2793535.9X0Tq7I1Mq@wasted.cogentembedded.com> <3279336.lifIduxqUW@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBLGB5W5QKGQEA6L2XUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160705065431.GE7643@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <3279336.lifIduxqUW@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Sergei,
 
-On 05-07-16 08:54, Maxime Ripard wrote:
-> On Thu, Jun 30, 2016 at 11:45:00AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 29-06-16 22:38, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Wed, Jun 29, 2016 at 08:46:59PM +0200, Hans de Goede wrote:
->>>> The auxtek t004 has its otg usb vbus hardwired to 5v (likely in case
->>>> people use it to power the board instead of the dedicated power micro
->>>> usb connector), it does have an id pin, so it allows full otg
->>>> functionality.
->>>
->>> I don't really get what you're saying here. Is the VBUS hardcoded to
->>> 5V, without any way to switch it, or it is not wired at all?
->>
->> It is hardwired to 5v, quoting from my commit msg
->> "has its otg usb vbus hardwired to 5v"
->>
->>> In the former case, how can one of the PMIC output be related to the
->>> board power input?
->>
->> I believe it is not wired to the pmic output, but to the pmic 5v input.
+On Mon, Jul 4, 2016 at 10:55 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add the (previously omitted) pin data for the SMSC LAN89218 Ethernet chip
+> to the Blanche board's device tree: the chip's IRQ output is connected to
+> the SoC's IRQ0 pin and its nCS input is connected to the SoC's EX_CS0# pin.
 >
-> Weird.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+>  arch/arm/boot/dts/r8a7792-blanche.dts |   15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
+> +++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
+> @@ -50,6 +50,9 @@
+>                 reg-io-width = <4>;
+>                 vddvario-supply = <&d3_3v>;
+>                 vdd33a-supply = <&d3_3v>;
+> +
+> +               pinctrl-0 = <&lan89218_pins>;
+> +               pinctrl-names = "default";
+>         };
+>  };
+>
+> @@ -67,6 +70,18 @@
+>                 groups = "scif3_data";
+>                 function = "scif3";
+>         };
+> +
+> +       lan89218_pins: lan89218 {
+> +               intc {
+> +                       groups = "intc_irq0";
+> +                       function = "intc";
+> +               };
+> +               lbsc {
+> +                       groups = "lbsc_ex_cs0";
+> +                       function = "lbsc";
 
-This is an a10s based hdmi stick, with a axp152 pmic, which does
-not have separate ac-in / vbus-in and the matching ips out and
-selection logic. So I guess that when using this pmic boards just
-wire all the dcdc vin-s to 5v. As said this hdmi dongle has 2 micro-usb
-connectors one for power only and one for otg. I believe that also
-want to be able to power the dongle from just the otg (e.g. when
-connected to a pc), at which point wiring its 5v to the 5v of
-the micro-usb power connector aka THE 5v line is pretty much the
-only thing they can do. Note this is all based on observation,
-no schematics available.
+Don't you need pinctrl for the other LBSC pins, like the address and data lines
+(Ax and Dy)?
 
-> Ok, I just applied it.
+Gr{oetje,eeting}s,
 
-Thanks.
+                        Geert
 
-Regards,
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Hans
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
