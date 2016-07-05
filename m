@@ -1,69 +1,73 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: blanche: add Ethernet pins
-Date: Tue, 5 Jul 2016 09:29:39 +0200
-Message-ID: <CAMuHMdU3yDe7fFtVArMGqMc6oyHXtFxeR8t6cqPranSg7R+12g@mail.gmail.com>
-References: <2793535.9X0Tq7I1Mq@wasted.cogentembedded.com> <3279336.lifIduxqUW@wasted.cogentembedded.com>
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 3/4] drivers: reset: Add STM32 reset driver
+Date: Tue, 5 Jul 2016 09:29:46 +0200
+Message-ID: <577B61EA.5080703@st.com>
+References: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
+ <1467640052-6770-3-git-send-email-gabriel.fernandez@st.com>
+ <1467653810.2224.77.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <3279336.lifIduxqUW@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467653810.2224.77.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi Philipp,
 
-On Mon, Jul 4, 2016 at 10:55 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add the (previously omitted) pin data for the SMSC LAN89218 Ethernet chip
-> to the Blanche board's device tree: the chip's IRQ output is connected to
-> the SoC's IRQ0 pin and its nCS input is connected to the SoC's EX_CS0# pin.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
->  arch/arm/boot/dts/r8a7792-blanche.dts |   15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
-> +++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
-> @@ -50,6 +50,9 @@
->                 reg-io-width = <4>;
->                 vddvario-supply = <&d3_3v>;
->                 vdd33a-supply = <&d3_3v>;
-> +
-> +               pinctrl-0 = <&lan89218_pins>;
-> +               pinctrl-names = "default";
->         };
->  };
->
-> @@ -67,6 +70,18 @@
->                 groups = "scif3_data";
->                 function = "scif3";
->         };
-> +
-> +       lan89218_pins: lan89218 {
-> +               intc {
-> +                       groups = "intc_irq0";
-> +                       function = "intc";
-> +               };
-> +               lbsc {
-> +                       groups = "lbsc_ex_cs0";
-> +                       function = "lbsc";
+Thanks for reviewing.
 
-Don't you need pinctrl for the other LBSC pins, like the address and data lines
-(Ax and Dy)?
+On 07/04/2016 07:36 PM, Philipp Zabel wrote:
+> Hi Gabriel,
+>
+> Am Montag, den 04.07.2016, 15:47 +0200 schrieb gabriel.fernandez-qxv4g6HH51o@public.gmane.org:
+>> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+> Isn't Maxime the author of this driver?
+Yes i upstream with his agreement.
+I only made small modifications (use of devm_reset_controller_register(),
+make reset_control_ops const...) that's why the author in the git 
+history has
+been changed... I will use g |it commit  --amend --author="Maxime.." for 
+the v2.
+|
+>> The STM32 MCUs family IPs can be reset by accessing some registers
+>> from the RCC block.
+>>
+>> The list of available reset lines is documented in the DT bindings.
+>>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>   drivers/reset/Makefile      |   1 +
+>>   drivers/reset/reset-stm32.c | 113 ++++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 114 insertions(+)
+>>   create mode 100644 drivers/reset/reset-stm32.c
+>>
+>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>> index 03dc1bb..3776b7b 100644
+>> --- a/drivers/reset/Makefile
+>> +++ b/drivers/reset/Makefile
+> [...]
+>> +static const struct reset_control_ops stm32_reset_ops = {
+>> +	.assert		= stm32_reset_assert,
+>> +	.deassert	= stm32_reset_deassert,
+> Are the registers not readable, or did you choose not to
+> implement .status on purpose?
+We choose to not implement.
 
-Gr{oetje,eeting}s,
+Thanks!
 
-                        Geert
+Best Regards
+
+Gabriel
+
+> regards
+> Philipp
+>
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
