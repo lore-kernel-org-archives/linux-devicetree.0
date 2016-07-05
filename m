@@ -1,34 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drivers/perf: arm-pmu: Handle per-interrupt affinity mask
-Date: Tue, 5 Jul 2016 09:23:50 -0500
-Message-ID: <20160705142350.GA24441@rob-hp-laptop>
-References: <1467379291-18413-1-git-send-email-marc.zyngier@arm.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: portable device tree connector -- problem statement
+Date: Tue, 5 Jul 2016 07:24:12 -0700
+Message-ID: <577BC30C.10105@gmail.com>
+References: <577ACE0D.9050700@gmail.com> <20160705083152.GM6247@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1467379291-18413-1-git-send-email-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Will Deacon <will.deacon@arm.com>, cf@rock-chips.com, huangtao@rock-chips.com, jay.xu@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160705083152.GM6247@sirena.org.uk>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, david@gibson.dropbear.id.au, stephen.boyd@linaro.org, grant.likely@secretlab.ca, Mark Rutland <mark.rutland@arm.com>, mporter@konsulko.com, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, marex@denx.de, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 02:21:31PM +0100, Marc Zyngier wrote:
-> On a big-little system, PMUs can be wired to CPUs using per CPU
-> interrups (PPI). In this case, it is important to make sure that
-> the enable/disable do happen on the right set of CPUs.
+On 07/05/16 01:31, Mark Brown wrote:
+> On Mon, Jul 04, 2016 at 01:58:53PM -0700, Frank Rowand wrote:
 > 
-> So instead of relying on the interrupt-affinity property, we can
-> use the actual percpu affinity that DT exposes as part of the
-> interrupt specifier. The DT binding is also updated to reflect
-> the fact that the interrupt-affinity property shouldn't be used
-> in that case.
+>> On the other hand, I have no previous detailed knowledge of the beagle
+>> family.
 > 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/pmu.txt |  4 +++-
+> This is in no way specific to the BeagleBones, there's plenty of other
+> boards out there with similar setups like the Raspberry Pi and its
+> derivatives.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Yes, absolutely.  I'm just picking on the beaglebones because that is
+what Pantelis has recently used for examples.  (He has mentioned other
+connector types and expansion boards in his presentations.)
 
->  drivers/perf/arm_pmu.c                        | 22 +++++++++++++++++-----
->  2 files changed, 20 insertions(+), 6 deletions(-)
+And we need to think beyond beaglebone, pi, arduino, and grove 
+type of connectors.
+
+Some other connectors that are obvious are pci and possibly usb.
+
+
+>>     - for bones with the same pinout:
+>>       - the pins are routed to different function blocks on the
+>>         SOC because different bones may have different SOCs?
+>>         - the different functional blocks are compatible or not?
+> 
+> This is the general case, there will be a substantial level of
+> compatibility between different base boards by virtue of the pinouts
+> being the same but obviously there will be some variation in the
+> specifics (and even where that exists it may not be enough to be visible
+> at the DT level for the most part).  That said there will doubtless be
+> some plug in modules that want to rely on the specifics of a given base
+> board rather than remain compatible with general users of the interface.
+> 
