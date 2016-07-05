@@ -1,136 +1,64 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: [PATCH v2] xen/arm: register clocks used by the hypervisor
-Date: Tue, 5 Jul 2016 08:50:23 +0200
-Message-ID: <1467701423-31138-1-git-send-email-dirk.behme@de.bosch.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] ARM: dts: sun5i: Enable otg on the
+ auxtex t004
+Date: Tue, 5 Jul 2016 08:54:31 +0200
+Message-ID: <20160705065431.GE7643@lukather>
+References: <1467226022-10525-1-git-send-email-hdegoede@redhat.com>
+ <20160629203838.GI6095@lukather>
+ <dbce3f4a-dbd6-2ee6-292a-6dec71b99d63@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Julien Grall <julien.grall@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: xen-devel@lists.xenproject.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cHMo6Wbp1wrKhbfi"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKFT5W5QKGQEQSXAVGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <dbce3f4a-dbd6-2ee6-292a-6dec71b99d63-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some clocks might be used by the Xen hypervisor and not by the Linux
-kernel. If these are not registered by the Linux kernel, they might be
-disabled by clk_disable_unused() as the kernel doesn't know that they
-are used. The clock of the serial console handled by Xen is one
-example for this. It might be disabled by clk_disable_unused() which
-stops the whole serial output, even from Xen, then.
 
-Up to now, the workaround for this has been to use the Linux kernel
-command line parameter 'clk_ignore_unused'. See Xen bug
+--cHMo6Wbp1wrKhbfi
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-http://bugs.xenproject.org/xen/bug/45
+On Thu, Jun 30, 2016 at 11:45:00AM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 29-06-16 22:38, Maxime Ripard wrote:
+> >Hi,
+> >
+> >On Wed, Jun 29, 2016 at 08:46:59PM +0200, Hans de Goede wrote:
+> >>The auxtek t004 has its otg usb vbus hardwired to 5v (likely in case
+> >>people use it to power the board instead of the dedicated power micro
+> >>usb connector), it does have an id pin, so it allows full otg
+> >>functionality.
+> >
+> >I don't really get what you're saying here. Is the VBUS hardcoded to
+> >5V, without any way to switch it, or it is not wired at all?
+> 
+> It is hardwired to 5v, quoting from my commit msg
+> "has its otg usb vbus hardwired to 5v"
+> 
+> >In the former case, how can one of the PMIC output be related to the
+> >board power input?
+> 
+> I believe it is not wired to the pmic output, but to the pmic 5v input.
 
-too.
+Weird. Ok, I just applied it.
 
-To fix this, we will add the "unused" clocks in Xen to the hypervisor
-node. The Linux kernel has to register the clocks from the hypervisor
-node, then.
+Thanks
+Maxime
 
-Therefore, check if there is a "clocks" entry in the hypervisor node
-and if so register the given clocks to the Linux kernel clock
-framework and with this mark them as used. This prevents the clocks
-from being disabled.
-
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
----
-Changes in v2: Drop the Linux implementation details like clk_disable_unused
-	       in xen.txt.
-
- Documentation/devicetree/bindings/arm/xen.txt | 13 ++++++++
- arch/arm/xen/enlighten.c                      | 47 +++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
-index c9b9321..21fd469 100644
---- a/Documentation/devicetree/bindings/arm/xen.txt
-+++ b/Documentation/devicetree/bindings/arm/xen.txt
-@@ -17,6 +17,19 @@ the following properties:
-   A GIC node is also required.
-   This property is unnecessary when booting Dom0 using ACPI.
- 
-+Optional properties:
-+
-+- clocks: one or more clocks to be registered.
-+  Xen hypervisor drivers might replace native drivers, resulting in
-+  clocks not registered by these native drivers. To avoid that these
-+  unregistered clocks are disabled by the Linux kernel initialization
-+  register them in the hypervisor node.
-+  An example for this are the clocks of a serial driver already enabled
-+  by the firmware. If the clocks used by the serial hardware interface
-+  are not registered by the serial driver itself the serial output
-+  might stop once the Linux kernel initialization disables the 'unused'
-+  clocks.
-+
- To support UEFI on Xen ARM virtual platforms, Xen populates the FDT "uefi" node
- under /hypervisor with following parameters:
- 
-diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-index 47acb36..5c546d0 100644
---- a/arch/arm/xen/enlighten.c
-+++ b/arch/arm/xen/enlighten.c
-@@ -24,6 +24,7 @@
- #include <linux/of_fdt.h>
- #include <linux/of_irq.h>
- #include <linux/of_address.h>
-+#include <linux/clk-provider.h>
- #include <linux/cpuidle.h>
- #include <linux/cpufreq.h>
- #include <linux/cpu.h>
-@@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
- }
- late_initcall(xen_pm_init);
- 
-+/*
-+ * Check if we want to register some clocks, that they
-+ * are not freed because unused by clk_disable_unused().
-+ * E.g. the serial console clock.
-+ */
-+static int __init xen_arm_register_clks(void)
-+{
-+	struct clk *clk;
-+	struct device_node *xen_node;
-+	unsigned int i, count;
-+	int ret = 0;
-+
-+	xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
-+	if (!xen_node) {
-+		pr_err("Xen support was detected before, but it has disappeared\n");
-+		return -EINVAL;
-+	}
-+
-+	count = of_clk_get_parent_count(xen_node);
-+	if (!count)
-+		goto out;
-+
-+	for (i = 0; i < count; i++) {
-+		clk = of_clk_get(xen_node, i);
-+		if (IS_ERR(clk)) {
-+			pr_err("Xen failed to register clock %i. Error: %li\n",
-+			       i, PTR_ERR(clk));
-+			ret = PTR_ERR(clk);
-+			goto out;
-+		}
-+
-+		ret = clk_prepare_enable(clk);
-+		if (ret < 0) {
-+			pr_err("Xen failed to enable clock %i. Error: %i\n",
-+			       i, ret);
-+			goto out;
-+		}
-+	}
-+
-+	ret = 0;
-+
-+out:
-+	of_node_put(xen_node);
-+	return ret;
-+}
-+late_initcall(xen_arm_register_clks);
- 
- /* empty stubs */
- void xen_arch_pre_suspend(void) { }
 -- 
-2.8.0
-
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--cHMo6Wbp1wrKhbfi--
