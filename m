@@ -1,83 +1,50 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
-Date: Tue, 5 Jul 2016 12:07:37 +0100
-Message-ID: <20160705110736.GD20478@leverpostej>
-References: <1467701423-31138-1-git-send-email-dirk.behme@de.bosch.com>
- <20160705103917.GC20478@leverpostej>
- <b2431af6-f415-41db-5651-8cb8d3b08822@de.bosch.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: imx6sx: Add UDOO Neo support
+Date: Tue, 5 Jul 2016 09:04:46 -0300
+Message-ID: <CAOMZO5CQWz++TVKBKEMSQuyks3C+7Tx5=Frh6R+Qubcab=EbjA@mail.gmail.com>
+References: <1467691450-22975-1-git-send-email-afaerber@suse.de> <1467691450-22975-3-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b2431af6-f415-41db-5651-8cb8d3b08822-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1467691450-22975-3-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ettore Chimenti <ettore.chimenti-GcR40IO4/Fc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jul 5, 2016 at 1:04 AM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> =
+wrote:
 
-On Tue, Jul 05, 2016 at 12:45:34PM +0200, Dirk Behme wrote:
-> On 05.07.2016 12:39, Mark Rutland wrote:
-> >On Tue, Jul 05, 2016 at 08:50:23AM +0200, Dirk Behme wrote:
-> >>+- clocks: one or more clocks to be registered.
-> >>+  Xen hypervisor drivers might replace native drivers, resulting in
-> >>+  clocks not registered by these native drivers. To avoid that these
-> >>+  unregistered clocks are disabled by the Linux kernel initialization
-> >>+  register them in the hypervisor node.
-> >>+  An example for this are the clocks of a serial driver already enabled
-> >>+  by the firmware. If the clocks used by the serial hardware interface
-> >>+  are not registered by the serial driver itself the serial output
-> >>+  might stop once the Linux kernel initialization disables the 'unused'
-> >>+  clocks.
-> >
-> >The above describes the set of problems, but doesn't set out the actual
-> >contract. It also covers a number of Linux implementation details in
-> >abstract.
-> 
-> Could you kindly be a little more specific which 'implementation
-> details' you don't like?
+> +/dts-v1/;
+> +
+> +#include "imx6sx-udoo-neo.dtsi"
+> +
+> +/ {
+> +       model =3D "UDOO Neo Basic";
 
-The fact that we disable some clocks at init time is a driver model
-thing that depends on various factors (e.g. cmdline options), and it's
-something that could be moved around. We only mention disabling, and not
-rate change (which could happen, even if it doesn't today).
+This should be something like:
 
-I don't think that we need to describe the Linux behaviour at all.
+model =3D "Udoo i.MX6 SoloX UDOO Neo Basic";
 
-> E.g. to my understanding, the 'implementation detail' that Linux
-> disables unregistered clocks is needed for the description.
-> 
-> If you have a different wording in mind, could you kindly share that?
+> +       compatible =3D "fsl,imx6sx";
 
-Something like:
+compatible =3D "udoo,imx6sx-udoo-neo", "fsl,imx6sx";
 
-- clocks: a list of phandle + clock-specifier pairs 
-  Clocks described by this property are reserved for use by Xen, and the
-  OS must not alter their state any way, such as disabling or gating a
-  clock, or modifying its rate. Ensuring this may impose constraints on
-  parent clocks or other resources used by the clock tree.
+Then you can also send a separate patch to add udoo to
+Documentation/devicetree/bindings/vendor-prefixes.txt.
 
-  Note: this property is used to proxy clocks for devices Xen has taken
-  ownership of, such as UARTs, for which the associated clock
-  controller(s) remain under the control of Dom0.
+Same applies to other places in this patch.
 
-> >As I commented previously [1], the binding should describe the set of
-> >guarantees that you rewquire (e.g. that the clocks must be left as-is,
-> >not gated, and their rates left unchanged).
-> >
-> >Please describe the specific set of guarantees that you require.
-> 
-> To my understanding this is done, already: "avoid that these ...
-> clocks are disabled"
+> +&fec1 {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_enet1>;
+> +       phy-mode =3D "rmii";
+> +       phy-reset-gpios =3D <&gpio5 4 GPIO_ACTIVE_HIGH>;
 
-My point of contention here is that while this might tell a dts author
-what to place in this property, it doesn't specify what the OS should
-do.
-
-Thanks,
-Mark.
+Shouldn't this be GPIO_ACTIVE_LOW instead?
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
