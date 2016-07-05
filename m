@@ -1,45 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the STM32 reset bindings
-Date: Tue, 5 Jul 2016 11:18:13 -0500
-Message-ID: <20160705161813.GA20477@rob-hp-laptop>
-References: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
- <1467640052-6770-2-git-send-email-gabriel.fernandez@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1467640052-6770-2-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gabriel.fernandez@st.com
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, patrice.chotard@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH] arm64: dts: exynos: Modify the voltage range for BUCK2 for exynos7
+Date: Wed,  6 Jul 2016 01:58:57 +0530
+Message-ID: <1467750537-13911-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, k.kozlowski@samsung.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 04, 2016 at 03:47:30PM +0200, gabriel.fernandez@st.com wrote:
-> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> 
-> This adds documentation of device tree bindings for the
-> STM32 reset controller.
-> 
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> ---
->  .../devicetree/bindings/reset/st,stm32-rcc.txt     | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
-> new file mode 100644
-> index 0000000..333080c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
-> @@ -0,0 +1,50 @@
-> +STMicroelectronics STM32 Peripheral Reset Controller
-> +====================================================
-> +
-> +The RCC IP is both a reset and a clock controller. This documentation only
-> +documents the reset part.
+Change the BUCK2 (vdd_atlas) voltage range to '500 - 1200mv' since
+CPU DVFS requires it.
 
-The clock part is already documented or will do later? Either way, you 
-are describing an IP block, so please describe all of it now and in one 
-place.
+Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+---
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rob
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index d8767b0..299f3ce 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -249,7 +249,7 @@
+ 
+ 			buck2_reg: BUCK2 {
+ 				regulator-name = "vdd_atlas";
+-				regulator-min-microvolt = <1200000>;
++				regulator-min-microvolt = <500000>;
+ 				regulator-max-microvolt = <1200000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+-- 
+1.9.1
