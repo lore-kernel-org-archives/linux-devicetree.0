@@ -1,91 +1,59 @@
-From: Wan Zongshun <vw@iommu.org>
-Subject: Re: [PATCH 4/6] irqchip: add irqchip driver for nuc900
-Date: Tue, 5 Jul 2016 15:47:25 +0800
-Message-ID: <577B660D.50908@iommu.org>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
- <1466851042-22239-5-git-send-email-vw@iommu.org> <8706947.5rzUDVsB2F@wuerfel>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/2] dt-bindings: tc358767: add DT documentation
+Date: Tue, 05 Jul 2016 09:59:58 +0200
+Message-ID: <1467705598.2978.21.camel@pengutronix.de>
+References: <1467384610-29908-1-git-send-email-p.zabel@pengutronix.de>
+ <1467384610-29908-2-git-send-email-p.zabel@pengutronix.de>
+ <577B2814.80201@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8706947.5rzUDVsB2F@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <577B2814.80201@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016=E5=B9=B406=E6=9C=8829=E6=97=A5 23:27, Arnd Bergmann wrote:
-> On Saturday, June 25, 2016 6:37:20 PM CEST Wan Zongshun wrote:
->> +#define IRQ_WDT		W90X900_IRQ(1)
->> +#define IRQ_WWDT	W90X900_IRQ(2)
->> +#define IRQ_LVD		W90X900_IRQ(3)
->> +#define IRQ_EXT0	W90X900_IRQ(4)
->> +#define IRQ_EXT1	W90X900_IRQ(5)
->> +#define IRQ_EXT2	W90X900_IRQ(6)
->> +#define IRQ_EXT3	W90X900_IRQ(7)
->> +#define IRQ_EXT4	W90X900_IRQ(8)
->> +#define IRQ_EXT5	W90X900_IRQ(9)
->> +#define IRQ_EXT6	W90X900_IRQ(10)
->
-> I'd suggest dropping the list, the contents are now in the dts.
-
-Do you think I should put one irqmap header file into this
-/arch/arm/boot/dts/include/dt-bindings folder, or I should removed thos=
-e=20
-irqnumber map anywhere, just hardcode the irqnumber in dts file?
-
->
->> diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h b/=
-arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
->> new file mode 100644
->> index 0000000..7a77016
->> --- /dev/null
->> +++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
->> @@ -0,0 +1,53 @@
->> +#ifndef __ASM_ARCH_REGS_AIC_H
->> +#define __ASM_ARCH_REGS_AIC_H
->> +
->> +/*NUC970 AIC regs*/
->> +
->> +#define	REG_AIC_SCR1	0x00
->> +#define	REG_AIC_SCR2	0x04
->> +#define	REG_AIC_SCR3	0x08
->> +#define	REG_AIC_SCR4	0x0C
->> +#define	REG_AIC_SCR5	0x10
->
-> And like the clk driver, these should all be in the irqchip driver in=
-stead
-> of a separate header.
-
-Ok, changed.
->
->> +
->> +static void __iomem *aic_base;
->> +static struct irq_domain *aic_domain;
->> +#define MAKE_HWIRQ(irqnum)	(irqnum)
->
-> The macro appears to be unused.
-removed it.
->
->> +static void nuc970_irq_mask(struct irq_data *d)
->> +{
->> +	if (d->irq < 32)
->> +		__raw_writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
->> +	else
->> +		__raw_writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
->> +}
->
-> writel()
->
-> 	Arnd
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
+SGkgQXJjaGl0LAoKdGhhbmsgeW91IGZvciB0aGUgY29tbWVudHMuCgpBbSBEaWVuc3RhZywgZGVu
+IDA1LjA3LjIwMTYsIDA4OjUzICswNTMwIHNjaHJpZWIgQXJjaGl0IFRhbmVqYToKWy4uLl0KPiA+
+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gKyAtIGNvbXBhdGlibGU6ICJ0b3NoaWJhLHRjMzU4
+NzY3Igo+ID4gKyAtIHJlZzogaTJjIGFkZHJlc3Mgb2YgdGhlIGJyaWRnZSwgMHg2OCBvciAweDBm
+LCBkZXBlbmRpbmcgb24gYm9vdHN0cmFwIHBpbnMKPiA+ICsgLSBjbG9jay1uYW1lczogc2hvdWxk
+IGJlICJyZWYiCj4gPiArIC0gY2xvY2tzOiBPRiBkZXZpY2UtdHJlZSBjbG9jayBzcGVjaWZpY2F0
+aW9uIGZvciByZWZjbGsgaW5wdXQuIFRoZSByZWZlcmVuY2UKPiAKPiBTaG91bGQgd2UgaGF2ZSB0
+aGlzIGFzIGFuIG9wdGlvbmFsIHByb3BlcnR5PyBUaGVyZSBjb3VsZCBiZSBwbGF0Zm9ybXMKPiB3
+aGVyZSBhbiBvc2NpbGxhdG9yIG91dHB1dCBvbiB0aGUgYm9hcmQgY29ubmVjdHMgZGlyZWN0bHkg
+dG8gdGhlIHJlZmNsawo+IHBpbiwgd2l0aG91dCBhbnkgb3B0aW9uIHRvIGdhdGUgaXQuCgpBcyB5
+b3Ugc2FpZCBpbiB0aGUgb3RoZXIgbWFpbCwgd2UgbmVlZCB0byBrbm93IHRoZSByZWZjbGsgZnJl
+cXVlbmN5LiBBCmZpeGVkLWNsb2NrIHNob3VsZCBiZSB1c2VkIHRvIGRlc2NyaWJlIHRoZSBvc2Np
+bGxhdG9yIGluIHRoaXMgY2FzZS4KCj4gPiArICAgY2xvY2sgcmF0ZSBtdXN0IGJlIDEzIE1Ieiwg
+MTkuMiBNSHosIDI2IE1Ieiwgb3IgMzguNCBNSHouCj4gPiArCj4gPiArT3B0aW9uYWwgcHJvcGVy
+dGllczoKPiA+ICsgLSBzaHV0ZG93bi1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZp
+Y2F0aW9uIGZvciBTRCBwaW4KPiA+ICsgICAgICAgICAgICAgICAgICAgKGFjdGl2ZSBoaWdoIHNo
+dXRkb3duIGlucHV0KQo+ID4gKyAtIHJlc2V0LWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNw
+ZWNpZmljYXRpb24gZm9yIFJTVFggcGluCj4gPiArICAgICAgICAgICAgICAgIChhY3RpdmUgbG93
+IHN5c3RlbSByZXNldCkKPiA+ICsgLSBwb3J0czogdGhlIHBvcnRzIG5vZGUgY2FuIGNvbnRhaW4g
+dmlkZW8gaW50ZXJmYWNlIHBvcnQgbm9kZXMgdG8gY29ubmVjdAo+ID4gKyAgIHRvIGEgRFBJL0RT
+SSBzb3VyY2UgYW5kIHRvIGFuIGVEUC9EUCBzaW5rIGFjY29yZGluZyB0byBbMV1bMl0uCj4gCj4g
+SnVzdCB3b25kZXJpbmcgYWJvdXQgdGhlIGZ1dHVyZSB3aGVuIERTSSBpcyBpbXBsZW1lbnRlZC4g
+V291bGQgd2UgaGF2ZQo+IGRpZmZlcmVudCBwb3J0IG51bWJlcnMgZm9yIERTSSBhbmQgRFBJPyBB
+bmQgZmlndXJlIHdoZXRoZXIgdGhlIGlucHV0Cj4gaXMgRFNJIG9yIERQSSBiYXNlZCBvbiBpbnB1
+dCB0aGUgcG9ydCBudW1iZXI/IElmIHdlIGdvIHdpdGggdGhhdAo+IGFwcHJvYWNoLCBpdCBtaWdo
+dCBtYWtlIHNlbnNlIHRvIGhhdmUgdGhlIGJyaWRnZSBvdXRwdXQgcG9ydCBudW1iZXIKPiBhcyAy
+LgoKR29vZCBwb2ludCwgdGhlc2UgYXJlIHBoeXNpY2FsbHkgdHdvIHNlcGFyYXRlIHBvcnRzIGFu
+ZCBpdCBzaG91bGQgYmUKcG9zc2libGUgdG8gc3dpdGNoIGJldHdlZW4gdGhlbSBhdCBydW50aW1l
+IGluIHRoZW9yeS4gU2luY2UgdGhlIERTSSBpcwpsaXN0ZWQgZmlyc3QgaW4gdGhlIGRvY3VtZW50
+YXRpb24sIEknbGwgY2hhbmdlIGl0IHRvCiAtIHBvcnRAMDogTUlQSSBEU0kgUngKIC0gcG9ydEAx
+OiBEUEkgUngKIC0gcG9ydEAyOiAoZSlEUCBUeAoKcmVnYXJkcwpQaGlsaXBwCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
