@@ -1,123 +1,109 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 2/2] drm/bridge: tc358767: Add DPI to eDP bridge driver
-Date: Tue, 05 Jul 2016 10:00:03 +0200
-Message-ID: <1467705603.2978.22.camel@pengutronix.de>
-References: <1467384610-29908-1-git-send-email-p.zabel@pengutronix.de>
- <1467384610-29908-3-git-send-email-p.zabel@pengutronix.de>
- <577B39D9.705@codeaurora.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: NUC900: Add nuc970 machine support
+Date: Tue, 05 Jul 2016 10:09:09 +0200
+Message-ID: <5195754.U9Bku6gEdi@wuerfel>
+References: <1466851042-22239-1-git-send-email-vw@iommu.org> <4806020.41AJ9s5VGu@wuerfel> <577B63EF.6030906@iommu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <577B39D9.705@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <577B63EF.6030906-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LAoKdGhhbmtzIGZvciB0aGUgcmV2aWV3IQoKQW0gRGllbnN0YWcsIGRlbiAwNS4w
-Ny4yMDE2LCAxMDowOCArMDUzMCBzY2hyaWViIEFyY2hpdCBUYW5lamE6ClsuLi5dCj4gPiArI2lu
-Y2x1ZGUgPGRybS9kcm1QLmg+Cj4gCj4gVGhpcyBtYXkgbm90IGJlIG5lZWRlZC4KCkknbGwgY2hl
-Y2sgYW5kIHJlbW92ZSBpdC4KCj4gPiArI2lmbmRlZiByZWdtYXBfcmVhZF9wb2xsX3RpbWVvdXQK
-PiA+ICsjZGVmaW5lIHJlZ21hcF9yZWFkX3BvbGxfdGltZW91dChtYXAsIGFkZHIsIHZhbCwgY29u
-ZCwgc2xlZXBfdXMsIHRpbWVvdXRfdXMpIFwKPiA+ICsoeyBcCj4gPiArCWt0aW1lX3QgdGltZW91
-dCA9IGt0aW1lX2FkZF91cyhrdGltZV9nZXQoKSwgdGltZW91dF91cyk7IFwKPiA+ICsJaW50IHJl
-dDsgXAo+ID4gKwltaWdodF9zbGVlcF9pZihzbGVlcF91cyk7IFwKPiA+ICsJZm9yICg7OykgeyBc
-Cj4gPiArCQlyZXQgPSByZWdtYXBfcmVhZCgobWFwKSwgKGFkZHIpLCAmKHZhbCkpOyBcCj4gPiAr
-CQlpZiAocmV0KSBcCj4gPiArCQkJYnJlYWs7IFwKPiA+ICsJCWlmIChjb25kKSBcCj4gPiArCQkJ
-YnJlYWs7IFwKPiA+ICsJCWlmICh0aW1lb3V0X3VzICYmIGt0aW1lX2NvbXBhcmUoa3RpbWVfZ2V0
-KCksIHRpbWVvdXQpID4gMCkgeyBcCj4gPiArCQkJcmV0ID0gcmVnbWFwX3JlYWQoKG1hcCksIChh
-ZGRyKSwgJih2YWwpKTsgXAo+ID4gKwkJCWJyZWFrOyBcCj4gPiArCQl9IFwKPiA+ICsJCWlmIChz
-bGVlcF91cykgXAo+ID4gKwkJCXVzbGVlcF9yYW5nZSgoc2xlZXBfdXMgPj4gMikgKyAxLCBzbGVl
-cF91cyk7IFwKPiA+ICsJfSBcCj4gPiArCXJldCA/OiAoKGNvbmQpID8gMCA6IC1FVElNRURPVVQp
-OyBcCj4gPiArfSkKPiA+ICsjZW5kaWYKPiAKPiBJcyB0aGVyZSBhIHJlYXNvbiB3aHkgdGhpcyBp
-cyB3cmFwcGVkIGFyb3VuZCBhICNpZm5kZWY/IEkgZG9uJ3Qgc2VlIGl0Cj4gaW4gdGhlIGN1cnJl
-bnQgcmVnbWFwLmggaGVhZGVycy4gSXQgd291bGQgYWxzbyBiZSBuaWNlIGlmIGl0IHdlcmUgbWFk
-ZQo+IGludG8gYSBmdW5jdGlvbi4KClRoaXMgaXMgYSBtYWNybyBzaW1pbGFyIHRvIHRob3NlIGRl
-ZmluZWQgaW4gaW9wb2xsLmguIEl0IGNhbid0IGJlIGEKZnVuY3Rpb24gYmVjYXVzZSB0aGUgImNv
-bmQiaXRpb24gaXMgc3BlY2lmaWVkIGJ5IHRoZSBjYWxsZXIgYW5kIGhhcyB0bwpiZSBldmFsdWF0
-ZWQgaW4gdGhlIGxvb3AuCkknbGwgc3VibWl0IHRoaXMgZm9yIHJlZ21hcC4gSWYgaXQgZG9lc24n
-dCBnZXQgYWNjZXB0ZWQgSSdsbCBjaGFuZ2UgdGhpcwppbnRvIHR3byBwcm9wZXJseSBuYW1lZCBm
-dW5jdGlvbnMuCgpbLi4uXQo+ID4gK3N0YXRpYyBpbnQgdGNfcHhsX3BsbF9lbihzdHJ1Y3QgdGNf
-ZGF0YSAqdGMsIHUzMiByZWZjbGspCj4gPiArewo+ID4gKwlpbnQgcmV0Owo+ID4gKwlpbnQgaV9w
-cmUsIGJlc3RfcHJlID0gMTsKPiA+ICsJaW50IGlfcG9zdCwgYmVzdF9wb3N0ID0gMTsKPiA+ICsJ
-aW50IGRpdiwgYmVzdF9kaXYgPSAxOwo+ID4gKwlpbnQgbXVsLCBiZXN0X211bCA9IDE7Cj4gPiAr
-CWludCBkZWx0YSwgYmVzdF9kZWx0YTsKPiA+ICsJaW50IGV4dF9kaXZbXSA9IHsxLCAyLCAzLCA1
-LCA3fTsKPiA+ICsJaW50IGJlc3RfcGl4ZWxjbG9jayA9IDA7Cj4gPiArCWludCB2Y29faGkgPSAw
-Owo+ID4gKwlpbnQgcGl4ZWxjbG9jazsKPiA+ICsKPiA+ICsJcGl4ZWxjbG9jayA9IHRjLT5wbGxf
-Y2xrOwo+ID4gKwo+ID4gKwlkZXZfZGJnKHRjLT5kZXYsICJQTEw6IHJlcXVlc3RlZCAlZCBwaXhl
-bGNsb2NrLCByZWYgJWRcbiIsIHBpeGVsY2xvY2ssCj4gPiArCQlyZWZjbGspOwo+ID4gKwliZXN0
-X2RlbHRhID0gcGl4ZWxjbG9jazsKPiA+ICsJLyogYmlnIGxvb3BzICovCj4gCj4gVGhlIGFib3Zl
-IGNvbW1lbnQgY291bGQgYmUgaW1wcm92ZWQuCgpXaWxsIGRvLgoKPiA+ICsJZm9yIChpX3ByZSA9
-IDA7IGlfcHJlIDwgQVJSQVlfU0laRShleHRfZGl2KTsgaV9wcmUrKykgewo+ID4gKwkJLyogcmVm
-Y2xrIC8gZXh0X3ByZV9kaXYgc2hvdWxkIGJlIGluIHRoZSAxIHRvIDIwMCBNSHogcmFuZ2UgKi8K
-PiA+ICsJCWlmICgocmVmY2xrIC8gZXh0X2RpdltpX3ByZV0gPiAyMDAwMDAwMDApIHx8Cj4gCj4g
-VGhlID4gMjAwIE1oeiBjaGVjayBzZWVtcyByZWR1bmRhbnQsIHNpbmNlIG5vIHJlZmNsayBiZXlv
-bmQgMzguNCBNaHogaXMKPiBzdXBwb3J0ZWQuCgpJbmRlZWQuIEknbGwgZHJvcCB0aGUgY2hlY2sg
-YW5kIHVwZGF0ZSB0aGUgY29tbWVudC4KCj4gPiArCQkgICAgKHJlZmNsayAvIGV4dF9kaXZbaV9w
-cmVdIDwgMTAwMDAwMCkpCj4gPiArCQkJY29udGludWU7Cj4gPiArCQlmb3IgKGlfcG9zdCA9IDA7
-IGlfcG9zdCA8IEFSUkFZX1NJWkUoZXh0X2Rpdik7IGlfcG9zdCsrKSB7Cj4gPiArCQkJZm9yIChk
-aXYgPSAxOyBkaXYgPD0gMTY7IGRpdisrKSB7Cj4gPiArCQkJCXUzMiBjbGs7Cj4gPiArCQkJCXU2
-NCB0bXA7Cj4gPiArCj4gPiArCQkJCXRtcCA9IHBpeGVsY2xvY2sgKiBleHRfZGl2W2lfcHJlXSAq
-Cj4gPiArCQkJCSAgICAgIGV4dF9kaXZbaV9wb3N0XSAqIGRpdjsKPiA+ICsJCQkJZG9fZGl2KHRt
-cCwgcmVmY2xrKTsKPiA+ICsJCQkJbXVsID0gdG1wOwo+ID4gKwo+ID4gKwkJCQljbGsgPSByZWZj
-bGsgLyBleHRfZGl2W2lfcHJlXSAvIGRpdiAqIG11bCAvCj4gPiArCQkJCSAgICAgIGV4dF9kaXZb
-aV9wb3N0XTsKPiAKPiBTb21lIGJyYWNlcyBmb3IgdGhlIGFib3ZlIGV4cHJlc3Npb24gbWlnaHQg
-aGVscCA6KQoKT2suCgo+ID4gKwkJCQlkZWx0YSA9IGNsayAtIHBpeGVsY2xvY2s7Cj4gPiArCj4g
-PiArCQkJCS8qIGNoZWNrIGxpbWl0cyAqLwo+ID4gKwkJCQlpZiAoKG11bCA8IDEpIHx8Cj4gPiAr
-CQkJCSAgICAobXVsID4gMTI4KSkKPiAKPiBtaW5vciBjb21tZW50OiB0aGUgYWJvdmUgY2hlY2sg
-Y291bGQgYmUgaW4gYSBzaW5nbGUgbGluZS4KCk92ZXJzaWdodCwgd2lsbCBmaXguCgpbLi4uXQo+
-ID4gK3N0YXRpYyBpbnQgdGNfYXV4X2xpbmtfc2V0dXAoc3RydWN0IHRjX2RhdGEgKnRjKQo+ID4g
-K3sKPiA+ICsJdW5zaWduZWQgbG9uZyByYXRlOwo+ID4gKwl1MzIgdmFsdWU7Cj4gPiArCWludCBy
-ZXQ7Cj4gPiArCj4gPiArCXJhdGUgPSBjbGtfZ2V0X3JhdGUodGMtPnJlZmNsayk7Cj4gCj4gQWgs
-IHlvdSBjYW4gZGlzY2FyZCBteSBjb21tZW50IG9uIHRoZSBjbG9jayBiaW5kaW5nIGluIHRoZSBE
-VCBwYXRjaC4KPiBJIGd1ZXNzIHlvdSBuZWVkZWQgaXQgdG8gZmlndXJlIG91dCB0aGUgcmF0ZS4K
-CkFscmlnaHQsIGdvaW5nIGJhY2sgdG8gdGhlIG90aGVyIG1haWwgYW5kIHVwZGF0aW5nIG15IGFu
-c3dlci4KCj4gPiArCXN3aXRjaCAocmF0ZSkgewo+ID4gKwljYXNlIDM4NDAwMDAwOgo+ID4gKwkJ
-dmFsdWUgPSBSRUZfRlJFUV8zOE00Owo+ID4gKwkJYnJlYWs7Cj4gPiArCWNhc2UgMjYwMDAwMDA6
-Cj4gPiArCQl2YWx1ZSA9IFJFRl9GUkVRXzI2TTsKPiA+ICsJCWJyZWFrOwo+ID4gKwljYXNlIDE5
-MjAwMDAwOgo+ID4gKwkJdmFsdWUgPSBSRUZfRlJFUV8xOU0yOwo+ID4gKwkJYnJlYWs7Cj4gPiAr
-CWNhc2UgMTMwMDAwMDA6Cj4gPiArCQl2YWx1ZSA9IFJFRl9GUkVRXzEzTTsKPiA+ICsJCWJyZWFr
-Owo+ID4gKwlkZWZhdWx0Ogo+ID4gKwkJZGV2X2Vycih0Yy0+ZGV2LCAiSW52YWxpZCByZWZjbGsg
-cmF0ZTogJWx1IEh6XG4iLCByYXRlKTsKPiA+ICsJCXJldHVybiAtRUlOVkFMOwo+ID4gKwl9Cj4g
-PiArCj4gPiArCS8qIFNldHVwIERQLVBIWSAvIFBMTCAqLwo+ID4gKwl2YWx1ZSB8PSBTWVNDTEtf
-U0VMX0xTQ0xLIHwgTFNDTEtfRElWXzI7Cj4gPiArCXRjX3dyaXRlKFNZU19QTExQQVJBTSwgdmFs
-dWUpOwo+ID4gKwo+ID4gKwl0Y193cml0ZShEUF9QSFlfQ1RSTCwgQkdSRU4gfCBQV1JfU1dfRU4g
-fCBCSVQoMikgfCBQSFlfQTBfRU4pOwo+IAo+IEl0IHNlZW1zIGEgYml0IHN0cmFuZ2UgdG8gaGF2
-ZSBCSVQoMikgYmVzaWRlcyB0aGUgb3RoZXIgcHJlZGVmaW5lZAo+IG1hY3Jvcy4KCkkgYWNjaWRl
-bnRhbGx5IGxvc3QgdGhlIGNvbW1lbnQgd2hlbiBzaG9ydGVuaW5nIHRoaXMsIEJJVCgyKSBpcyBy
-ZXNlcnZlZApidXQgc2V0LgoKWy4uLl0KPiA+ICsJLyogUFhMIFBMTCBzZXR1cCAqLwo+ID4gKwlp
-ZiAodGMtPnRlc3RfcGF0dGVybikgewo+IAo+IEkgY291bGRuJ3QgZmluZCBvdXQgd2hvIGlzIHNl
-dHRpbmcgdGMtPnRlc3RfcGF0dGVybi4gSXMgaXQgYWx3YXlzCj4gMD8KCkhtLCB5b3UgYXJlIHJp
-Z2h0LiBJIHdvbmRlciB3aGF0IGEgZ29vZCBtZWNoYW5pc20gd291bGQgYmUgdG8gZW5hYmxlIGEK
-dGVzdCBwYXR0ZXJuIGZvciBhIGJyaWRnZSBkcml2ZXIuIE1vZHVsZSBwYXJhbWV0ZXJzPyBXZSBk
-b24ndCBoYXZlCmFueWh0aW5nIGxpa2UgVjRMMl9DSURfVEVTVF9QQVRURVJOIGluIGRybS4gSSBj
-b3VsZCBhbHNvIGRyb3AgdGVzdApwYXR0ZXJuIHN1cHBvcnQgZnJvbSB0aGUgaW5pdGlhbCBwYXRj
-aCBhbmQgc3VibWl0IGl0IHNlcGFyYXRlbHkuCgpbLi4uXQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1
-Y3QgZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgdGNfY29ubmVjdG9yX2hlbHBlcl9mdW5jcyA9
-IHsKPiA+ICsJLmdldF9tb2RlcyA9IHRjX2Nvbm5lY3Rvcl9nZXRfbW9kZXMsCj4gPiArCS5tb2Rl
-X3ZhbGlkID0gdGNfY29ubmVjdG9yX21vZGVfdmFsaWQsCj4gPiArCS5iZXN0X2VuY29kZXIgPSB0
-Y19jb25uZWN0b3JfYmVzdF9lbmNvZGVyLAo+ID4gK307Cj4gPiArCj4gPiArc3RhdGljIHZvaWQg
-dGNfY29ubmVjdG9yX2Rlc3Ryb3koc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiA+
-ICt7Cj4gPiArCWRybV9jb25uZWN0b3JfdW5yZWdpc3Rlcihjb25uZWN0b3IpOwo+ID4gKwlkcm1f
-Y29ubmVjdG9yX2NsZWFudXAoY29ubmVjdG9yKTsKPiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX2Z1bmNzIHRjX2Nvbm5lY3Rvcl9mdW5jcyA9IHsKPiA+
-ICsJLmRwbXMgPSBkcm1faGVscGVyX2Nvbm5lY3Rvcl9kcG1zLAo+ID4gKwkuZmlsbF9tb2RlcyA9
-IGRybV9oZWxwZXJfcHJvYmVfc2luZ2xlX2Nvbm5lY3Rvcl9tb2RlcywKPiA+ICsJLmRldGVjdCA9
-IHRjX2Nvbm5lY3Rvcl9kZXRlY3QsCj4gPiArCS5kZXN0cm95ID0gdGNfY29ubmVjdG9yX2Rlc3Ry
-b3ksCj4gCj4gQ2FuIHdlIHVzZSBhdG9taWMgaGVscGVycyB3aGVyZSBhcHBsaWNhYmxlPwoKSSBo
-YXZlIHdvcmtlZCBvbiB0aGlzIG9uIGkuTVg2LCB3aGljaCBkb2Vzbid0IGhhdmUgYXRvbWljIHN1
-cHBvcnQgbWVyZ2VkCnlldC4gSSdsbCB0ZXN0IHdpdGggTGl1IFlpbmcncyBpLk1YNiBhdG9taWMg
-bW9kZXNldCBwYXRjaGVzIGFuZCB1cGRhdGUKdG8gYXRvbWljIGhlbHBlcnMgaGVyZS4KCnJlZ2Fy
-ZHMKUGhpbGlwcAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On Tuesday, July 5, 2016 3:38:23 PM CEST Wan Zongshun wrote:
+> On 2016=E5=B9=B406=E6=9C=8829=E6=97=A5 23:19, Arnd Bergmann wrote:
+> >> diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-gcr.h =
+b/arch/arm/mach-w90x900/include/mach/nuc970-regs-gcr.h
+> >> new file mode 100644
+> >> index 0000000..e7eb653
+> >> --- /dev/null
+> >> +++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-gcr.h
+> >
+> > Can you move the new headers to arch/arm/mach-w90x900/ directly?
+> >
+> >> +static int __init nuc900_restart_init(void)
+> >> +{
+> >> +	struct device_node *np;
+> >> +
+> >> +	np =3D of_find_compatible_node(NULL, NULL, "nuvoton,gcr");
+> >> +	wtcr_addr =3D of_iomap(np, 0);
+> >> +	if (!wtcr_addr)
+> >> +		return -ENODEV;
+> >> +
+> >> +	of_node_put(np);
+> >> +
+> >> +	return 0;
+> >> +}
+> >
+> > Is this a watchdog node? If it is, the restart logic should just
+> > move into the watchdog driver.
+>=20
+> It is not watchdog node, just be global System control register node.
+
+Ok. Then I'd say it should go into drivers/power/reset/
+
+If you make the the gcr a syscon node, you can probably use the
+syscon-reboot driver directly, or as a reference.
+
+> >> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, par=
+ent);
+> >
+> > We have actually moved away from using the soc_device as using the =
+parent
+> > for the other devices, just probe them separately. In fact the soc_=
+device
+> > could be handled by a driver in drivers/soc/nuvoton/
+>=20
+> Do you think I should add nuc900 soc driver in this folder?
+
+Yes.
+
+> If I want to add nuc900 soc driver in drivers/soc/nuvoton/, can I kee=
+p=20
+> my current dts structure no change, or Must I add a new node name soc=
+ {}?
+>
+> I went through the code:soc-realview.c for reference, but I have no i=
+dea
+> about how to re-structure my dts file to match this type soc driver.
+
+You don't need to change the DT for this, all the driver needs to
+do now is to find out the information about the soc and register it
+as a soc_device so it shows up in sysfs.
+
+> >> +static const char *nuc970_dt_compat[] __initconst =3D {
+> >> +	"nuvoton,nuc970evb",
+> >> +	NULL,
+> >> +};
+> >> +
+> >> +void nuc970_restart(enum reboot_mode mode, const char *cmd)
+> >> +{
+> >> +	if (wtcr_addr) {
+> >> +		while (__raw_readl(wtcr_addr + REG_WRPRTR) !=3D 1) {
+> >> +			__raw_writel(0x59, wtcr_addr + REG_WRPRTR);
+> >> +			__raw_writel(0x16, wtcr_addr + REG_WRPRTR);
+> >> +			__raw_writel(0x88, wtcr_addr + REG_WRPRTR);
+> >> +		}
+> >> +
+> >> +		__raw_writel(1, wtcr_addr + REG_AHBIPRST);
+> >> +	}
+> >
+> > Please use writel() instead of __raw_writel().
+>=20
+> Does this change apply to all others drivers? or just machine file to=
+=20
+> use writel()?
+
+All drivers. You don't need to immediately change existing drivers, we
+can clean them up some other day, but please use readl/writel for new c=
+ode.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
