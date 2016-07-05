@@ -1,73 +1,61 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: imx6sx: Add UDOO Neo support
-Date: Tue, 5 Jul 2016 16:46:02 +0200
-Message-ID: <577BC82A.3000406@suse.de>
-References: <1467691450-22975-1-git-send-email-afaerber@suse.de>
- <1467691450-22975-3-git-send-email-afaerber@suse.de>
- <20160705062736.GL16643@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] input: adc-keys: add DT binding documentation
+Date: Tue, 5 Jul 2016 09:53:03 -0500
+Message-ID: <20160705145303.GA4302@rob-hp-laptop>
+References: <1467408602-16546-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <5d71d3a2-4d51-8dd5-0e4a-638ec1b5035a@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160705062736.GL16643-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ettore Chimenti <ettore.chimenti-GcR40IO4/Fc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5d71d3a2-4d51-8dd5-0e4a-638ec1b5035a@kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+On Sun, Jul 03, 2016 at 02:43:56PM +0100, Jonathan Cameron wrote:
+> On 01/07/16 22:30, Alexandre Belloni wrote:
+> > Add documentation for ADC keys
+> > 
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> Clean looking binding to me - one comment inline.
+> 
+> Jonathan
+> > ---
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > 
+> >  .../devicetree/bindings/input/adc-keys.txt         | 45 ++++++++++++++++++++++
+> >  1 file changed, 45 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/adc-keys.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/adc-keys.txt b/Documentation/devicetree/bindings/input/adc-keys.txt
+> > new file mode 100644
+> > index 000000000000..873476bb4eab
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/adc-keys.txt
+> > @@ -0,0 +1,45 @@
+> > +Allwinner sun4i low res adc attached tablet keys
+> What is allwinner specific in here?  Looks pretty general purpose to me!
+> > +------------------------------------------------
+> > +
+> > +Required properties:
+> > + - compatible: "adc-keys"
+> > + - io-channels: Phandle to an ADC channel
+> > + - io-channel-names = "buttons";
+> > + - voltage-keyup-mvolt: Voltage at which all the keys are considered up.
+> > +
+> > +Each key is represented as a sub-node of "adc-keys":
+> > +
+> > +Required subnode-properties:
+> > +	- label: Descriptive name of the key.
+> > +	- linux,code: Keycode to emit.
+> > +	- voltage-mvolt: Voltage adc input when this key is pressed.
 
-Am 05.07.2016 um 08:27 schrieb Uwe Kleine-K=F6nig:
-> On Tue, Jul 05, 2016 at 06:04:09AM +0200, Andreas F=E4rber wrote:
->> +&iomuxc {
->> +	imx6sx-udoo-neo {
->=20
-> There is no need for this machine group. Please just put the pinctrl
-> groups directly into &iomuxc { }.
+voltage-mcvoltface?
 
-OK, will do. Adopted from imx6sx-sdb.dtsi and imx6sx-sabreauto.dts -
-please update the existing files to be like you expect new ones to be.
+"voltage" is redundant and use standard units. How about 
+{press,up}-threshold-microvolt?
 
->> +		pinctrl_enet1: enet1grp {
->> +			fsl,pins =3D
->> +				<MX6SX_PAD_ENET1_CRS__GPIO2_IO_1	0xa0b1>,
->> +				<MX6SX_PAD_ENET1_MDC__ENET1_MDC		0xa0b1>,
->=20
-> It's unusual to write pinmuxes this way. The usual form is to write i=
-t
-> in a single array. (Not sure I'm using the right term here.) Having s=
-aid
-> that I like it your way, but still it should (IMHO) get a more offici=
-al
-> blessing.
-
-In previous reviews I've been told that this is the new expected way to
-write tuples, so I assumed that would apply here too, in that you can
-have a varying count of tuples (mux lines), which in this case happen t=
-o
-always have the same cell count (6).
-
-=46or example I've rewritten pinctrl-0 lines in exynos5250 device trees
-because maintainers considered it lazy to spare the inner ">, <",
-despite still used in many places including bindings documentation.
-
-The binary .dtb representation should be the same either way.
-
-booting-without-of.txt doesn't comment and has no such example apart
-from compatible string lists, so not sure whether that's just different
-maintainer tastes or formalized somewhere?
-
-That said, I seem to have a talent for finding such inconsistencies. ;)
-
-Cheers,
-Andreas
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
-HRB 21284 (AG N=FCrnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
