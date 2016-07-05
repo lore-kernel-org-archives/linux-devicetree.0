@@ -1,43 +1,43 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] Clocksource: add nuc970 clocksource driver
-Date: Tue, 5 Jul 2016 12:03:29 +0200
-Message-ID: <577B85F1.9010004@linaro.org>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
- <1466851042-22239-4-git-send-email-vw@iommu.org>
- <5771827E.1090609@linaro.org> <577B6DFF.9000703@iommu.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <577B6DFF.9000703-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH] arm64: dts: Fix rtc by providing rtc_src clock
+Date: Tue, 05 Jul 2016 15:35:07 +0530
+Message-ID: <1467713107-15932-1-git-send-email-alim.akhtar@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, k.kozlowski@samsung.com, javier@osg.samsung.com, pankaj.dubey@samsung.com, alim.akhtar@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2016 10:21 AM, Wan Zongshun wrote:
+Add rtc source clock as exynos7 needs source (32.768KHz) clock
+for rtc block. Without this currently rtc driver probe is broken
+on this SoC, thats because rtc-s3c driver expect rtc_src clock to
+be provided for _s3c6410-rtc_ type rtc controllers.
 
-[ ... ]
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+---
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts |    3 +++
+ 1 file changed, 3 insertions(+)
 
->>> +    setup_irq(irq, &nuc970_timer0_irq);
->>
->> s/setup_irq/request_irq/
->=20
-> Do you think I should use request_irq instead of setup_irq?
-
-Yes.
-
-
---=20
- <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for=
- ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index 03f9cf6..7f48cf0 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -12,6 +12,7 @@
+ /dts-v1/;
+ #include "exynos7.dtsi"
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/clock/samsung,s2mps11.h>
+ 
+ / {
+ 	model = "Samsung Exynos7 Espresso board based on EXYNOS7";
+@@ -44,6 +45,8 @@
+ 
+ &rtc {
+ 	status = "okay";
++	clocks = <&clock_ccore PCLK_RTC>, <&s2mps15_osc S2MPS11_CLK_AP>;
++	clock-names = "rtc", "rtc_src";
+ };
+ 
+ &watchdog {
+-- 
+1.7.10.4
