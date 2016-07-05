@@ -1,107 +1,61 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 00/21] Support qcom's HSIC USB and rewrite USB2 HS phy support
-Date: Tue, 5 Jul 2016 12:33:50 -0700
-Message-ID: <CALAqxLUi9_OnqU06Vsa_VxmtYof9+me3p5eTn_fK3O=J1Zhtzg@mail.gmail.com>
-References: <20160626072838.28082-1-stephen.boyd@linaro.org>
- <CALAqxLUHfsJBTQS=p5oThnOdiAZwu48puRhREx+2G9+KajDA9g@mail.gmail.com>
- <146710289677.3879.15364764209076318827@sboyd-linaro> <CALAqxLW--yFb2YwX3+x7PB-g_5D0gb6j8CiJwnCC+meb7xqbig@mail.gmail.com>
- <146774653916.32648.3323628902201136171@sboyd-linaro>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: [PATCH v3 0/2] AMLogic Meson SoC RTC driver
+Date: Tue,  5 Jul 2016 20:48:06 +0100
+Message-ID: <1467748089-14718-1-git-send-email-ben.dooks@codethink.co.uk>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <146774653916.32648.3323628902201136171@sboyd-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, "Ivan T. Ivanov" <iivanov.xz@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <rtc-linux+bncBCEPJZEDQIBBBCM66C5QKGQE3422VEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kh-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 5, 2016 at 12:22 PM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> Quoting John Stultz (2016-07-01 23:03:38)
->> On Tue, Jun 28, 2016 at 1:34 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
->> > Quoting John Stultz (2016-06-27 20:09:30)
->> >>
->> >> I haven't yet been able to test with this, as I need some other fixes
->> >> it seems too to deal with some of the iommu changes in my flo-WIP tree
->> >> (it can't find of_dma_configure), but will let you know how things
->> >> work once I have all that sorted.
->> >
->> > Cool, thanks for testing.
->>
->> So after working out some merge issues w/ my flo-WIP branch for the
->> nexus7, I was still having trouble, so I backed out to just your
->> (updated) branch.
->>
->> But even there, I'm not able to get the usb gadget up. I see:
->
-> I can get the gadget working on the ifc6410 device I have. I'm using
-> this script to test things:
->
-> modprobe libcomposite
-> mkdir config
-> mount none config -t configfs
-> mkdir config/usb_gadget/g1
-> mkdir config/usb_gadget/g1/strings/0x409
-> echo 012345678 > config/usb_gadget/g1/strings/0x409/serialnumber
-> echo "manufacturer" > config/usb_gadget/g1/strings/0x409/manufacturer
-> echo "db8074" > config/usb_gadget/g1/strings/0x409/product
-> echo 0x1d6b > config/usb_gadget/g1/idVendor
-> echo 0x0104 > config/usb_gadget/g1/idProduct
-> mkdir config/usb_gadget/g1/functions/acm.GS0
-> mkdir config/usb_gadget/g1/functions/acm.GS1
-> mkdir config/usb_gadget/g1/functions/ecm.usb0
-> mkdir config/usb_gadget/g1/configs/c.1
-> mkdir config/usb_gadget/g1/configs/c.1/strings/0x409/
-> echo "CDC 2xACM+ECM" >
-> config/usb_gadget/g1/configs/c.1/strings/0x409/configuration
-> ln -s config/usb_gadget/g1/functions/acm.GS0
-> config/usb_gadget/g1/configs/c.1
-> ln -s config/usb_gadget/g1/functions/acm.GS1
-> config/usb_gadget/g1/configs/c.1
-> ln -s config/usb_gadget/g1/functions/ecm.usb0
-> config/usb_gadget/g1/configs/c.1
-> echo $(ls /sys/class/udc/) > config/usb_gadget/g1/UDC
->
->>
->> [    1.869717] msm_hsusb 12500000.usb: failed to get phandle in
->> /soc/usb@12500000 node
->
-> This is sort of ok (I've seen it before with the HSIC controller on
-> 8074). The extcon is optional and so the error message should be
-> silenced. I sent a patch to move it to debug level.
->
-> I don't see an extcon in mainline for apq8064, but I think it may be
-> needed. At the least, I see that we're using a PMIC interrupt in the
-> msm-3.4 kernel for the ID pin and the charger is notifying of vbus
-> events similar to how smbb is doing it for apq8074.
->
->> [    1.882347] 12500000.usb supply vbus not found, using dummy regulator
->
-> This is not great. We don't have a regulator specified on apq8064 so we
-> can't turn on vbus and really support host mode. This seems to already
-> be the case on mainline though, so it's not like we're any worse here.
-> To properly support this we need a regulator driver. I suppose if the
-> RPM supports it we can just use that, but if it doesn't support this
-> regulator then we need to port over the SSBI regulator driver to do
-> native regulator control. So far I haven't been able to test host mode
-> on apq8064 because of this.
->
->>
->> So I'm not sure if the dts changes were quite right. I've got all the
->> ULPI configs enabled. Any ideas?
->>
->
-> The phy and controller are both probing? If they're not failing to probe
-> then it's probably the phy that isn't working properly. Does gadget work
-> without my patches on nexus7?
+This series adds support for the on SoC RTC driver on the
+AMLogic Meson devices. The device-tree updates are not included
+as they depend on the reset-controller support in -next.
 
-Without your patch, I need one dts tweak on nexus7 (which I sent out
-on friday[1]) to get the default direction set to OTG or gadget. But
-yea, it works with that against mainline.
+The series does not have any build dependencies, but does require
+the reset controller and device-tree entries for the relevant boards
+and has been tested on the ODroid-C1 board.
 
-I'll dig in some more on your suggestions above and let you know if I
-figure it out.
+Changes since V1:
+  <1467039135-26588-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 
-thanks
--john
+ - Fixed checkpatch and sparse errors
+ - Fixed minor locking bug when writing static-control register
+ - Updated the code ordering in the rtc-meson.c driver
+ - Fixed alphanumeric ordering in on-cpu rtc block
+ - Added Rob Hering's ack for the DT binding documentation
+ - Added better description to the RTC driver header.
 
-[1]: http://www.spinics.net/lists/devicetree/msg134274.html
+Ben Dooks (2):
+  rtc: support for amlogic meson rtc
+  meson-rtc: add device-tree binding
+
+ .../devicetree/bindings/rtc/rtc-amlogic.txt        |  21 ++
+ drivers/rtc/Kconfig                                |   9 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-meson.c                            | 349 +++++++++++++++++++++
+ 6 files changed, 392 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
+ create mode 100644 drivers/rtc/rtc-meson.c
+
+-- 
+2.8.1
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
