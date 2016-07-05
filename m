@@ -1,78 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio: document how to order GPIO controllers
-Date: Tue, 5 Jul 2016 09:05:46 -0500
-Message-ID: <20160705140546.GA10601@rob-hp-laptop>
-References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Julien Grall <julien.grall@arm.com>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Tue, 5 Jul 2016 15:08:41 +0100
+Message-ID: <577BBF69.8010809@arm.com>
+References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
+ <alpine.DEB.2.10.1607051449370.2575@sstabellini-ThinkPad-X260>
+ <577BBC1A.8020209@arm.com>
+ <alpine.DEB.2.10.1607051456410.2575@sstabellini-ThinkPad-X260>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, kernel@pengutronix.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.10.1607051456410.2575@sstabellini-ThinkPad-X260>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 08:42:13AM +0200, Uwe Kleine-K=F6nig wrote:
-> This uses the same approach that is already used for spi, i2c and
-> several other controllers to ensure a consistent numbering independen=
-t
-> of probe order. This is in use for several gpio drivers that already =
-now
-> use of_alias_get_id(np, "gpio").
 
-Like SPI and I2C, I'm against further abuse of aliases for this purpose=
-=20
-[1].
 
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> Hello,
->=20
-> Linus requested such a patch as part of a change that introduces
-> this mechanism to the gpio-omap driver[1]. IMHO this is better done i=
-n a
-> separate patch, so here it comes.
->=20
-> Best regards
-> Uwe
->=20
-> [1] http://thread.gmane.org/gmane.linux.kernel.gpio/17399/focus=3D176=
-29
->=20
->  Documentation/devicetree/bindings/gpio/gpio.txt | 18 +++++++++++++++=
-+++
->  1 file changed, 18 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Docume=
-ntation/devicetree/bindings/gpio/gpio.txt
-> index 68d28f62a6f4..5dbacc8f094a 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -227,6 +227,24 @@ Example of two SOC GPIO banks defined as gpio-co=
-ntroller nodes:
->  		#gpio-cells =3D <2>;
->  	};
-> =20
-> +Usually the GPIO banks in SoCs are ordered, that is there is a dedic=
-ated "first
-> +gpio bank". To fix this ordering in the device tree use aliases star=
-ting at 0
-> +(even if the first bank is called "GPIO1" in the hardware reference)=
-=2E
-> +This is necessary/handy to ensure deterministical numbering of GPIOs=
- and GPIO
-> +controllers.
+On 05/07/16 15:04, Stefano Stabellini wrote:
+> On Tue, 5 Jul 2016, Julien Grall wrote:
+>> On 05/07/16 14:53, Stefano Stabellini wrote:
+>>> On Thu, 30 Jun 2016, Dirk Behme wrote:
+>>>> +- clocks: one or more clocks to be registered.
+>>>> +  Xen hypervisor drivers might replace native drivers, resulting in
+>>>> +  clocks not registered by these native drivers. To avoid that these
+>>>> +  unregistered clocks are disabled, then, e.g. by clk_disable_unused(),
+>>>> +  register them in the hypervisor node.
+>>>> +  An example for this are the clocks of the serial driver. If the clocks
+>>>> +  used by the serial hardware interface are not registered by the serial
+>>>> +  driver the serial output might stop once clk_disable_unused() is
+>>>> called.
+>>>
+>>> What if we use the "status" property of the clocks? Could we set it to
+>>> "disabled" in Xen? Would that be enough for Linux to leave them alone?
+>>
+>> clocks could be shared between multiple devices. So it is not possible to
+>> disable the clock.
+>
+> To clarify my suggestion: I am not saying we should disable the clock, I
+> am saying we should set the "status" property to "disabled" in Xen for
+> the clock used by the serial or passthrough devices (for which the
+> "status" property is already set to "disabled"). That should work for
+> cases where the clock is not shared among multiple devices.
 
-Why is deterministic numbering needed?
+How would you be able to differentiate in Xen between a clock shared and 
+a non-shared one? The only way I can think it going through all the 
+device tree which sounds really expensive.
 
-Rob
+> If the clock is shared, then I don't think we would run into the issue
+> described by Dirk because I wouldn't imagine clk_disable_unused would
+> try to disable the clock anymore, because it would actually be in use
+> from Linux POV.
 
-[1] https://lkml.org/lkml/2016/5/24/470
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We also want to prevent Linux changing the rate of the clock (see Mark's 
+mail [1]).
+
+Regards,
+
+[1] 
+https://lists.xenproject.org/archives/html/xen-devel/2016-07/msg00335.html
+
+-- 
+Julien Grall
