@@ -1,74 +1,127 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v2] ARM: at91: Document new TCB bindings
-Date: Tue, 5 Jul 2016 20:33:17 +0200
-Message-ID: <20160705183317.GB3623@piout.net>
-References: <1467039901-11297-1-git-send-email-alexandre.belloni@free-electrons.com>
- <20160701012743.GA16698@rob-hp-laptop>
- <20160704151058.44b679bf@bbrezillon>
- <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 2/3] ARM: dts: imx6sx: Add UDOO Neo support
+Date: Tue, 5 Jul 2016 20:33:53 +0200
+Message-ID: <20160705183353.GQ16643@pengutronix.de>
+References: <1467691450-22975-1-git-send-email-afaerber@suse.de>
+ <1467691450-22975-3-git-send-email-afaerber@suse.de>
+ <CAOMZO5CQWz++TVKBKEMSQuyks3C+7Tx5=Frh6R+Qubcab=EbjA@mail.gmail.com>
+ <577BBC4B.5040903@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
+In-Reply-To: <577BBC4B.5040903@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Fabio Estevam <festevam@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Ettore Chimenti <ettore.chimenti@udoo.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2016 at 10:40:22 -0500, Rob Herring wrote :
-> >> > +   - compatible: Should be "atmel,tcb-free-running-timer"
-> >> > +   - reg: Should contain the TCB channels to be used. If the
-> >> > +     counter width is 16 bits (at91rm9200-tcb), two consecutive
-> >> > +     channels are needed. Else, only one channel will be used.
-> >> > +
-> >> > + * a clockevent device
-> >> > +   - compatible: Should be "atmel,tcb-programmable-timer"
-> >>
-> >> This still looks like assigning usage in DT. As I'm willing to accept
-> >> that for PWM, either timer channels should be whatever channels are not
-> >> assigned to PWM (i.e. not in DT) or they should just be "timer" and let
-> >> the kernel decide their usage.
-> >
-> > I just reviewed Alexandre's new binding, and it makes the whole thing
-> > a lot more obscure: on older SoCs, we have to chain 2 channels to
-> > create an acceptable wraparound time (16 bits at 5MHz is generating too
-> > much interrupts to be acceptable).
-> >
-> > If we don't assign the mode from the DT, how should we know which
-> > channels should be chained to create the free-running timer? Note that
-> > not all channels can be chained together: they have to be part of the
-> > same timer counter block and have to be consecutive (0+1, 1+2 or 3+0).
-> 
-> The driver can have this knowledge if it is just picking 2 consecutive
-> timers. It should already know it has 16-bit timers based on the
-> compatible string. If it gets more complicated then the features or
-> limitations of the channels should be listed so the driver can make a
-> choice. OMAP is a good example of lots of timers with differing
-> features.
-> 
-> > Honestly, I don't see the difference between assigning the channel to a
-> > PWM mode and assigning it to a free-running or oneshot timer mode. Why
-> > is it more acceptable?
-> 
-> The difference is that pwm's have clients (e.g. a backlight) in DT and
-> timers do not. We could just make the pwm clients reference the parent
-> node, but then it is hard to figure out which channels are in use for
-> pwm. That could also be solved with a simple "pwm-channels" property
-> listing the channels in use.
-> 
+On Tue, Jul 05, 2016 at 03:55:23PM +0200, Andreas F=E4rber wrote:
+> Hi Fabio,
+>=20
+> Am 05.07.2016 um 14:04 schrieb Fabio Estevam:
+> > On Tue, Jul 5, 2016 at 1:04 AM, Andreas F=E4rber <afaerber@suse.de>=
+ wrote:
+> >=20
+> >> +/dts-v1/;
+> >> +
+> >> +#include "imx6sx-udoo-neo.dtsi"
+> >> +
+> >> +/ {
+> >> +       model =3D "UDOO Neo Basic";
+> >=20
+> > This should be something like:
+> >=20
+> > model =3D "Udoo i.MX6 SoloX UDOO Neo Basic";
+>=20
+> Why should anyone use such a weird concatenation of names? If you wan=
+ted
+> "UDOO Neo Basic (based on i.MX 6SoloX)" that would be more
+> understandable, but there is no UDOO Neo Basic board with another SoC=
+:
+>=20
+> http://www.udoo.org/udoo-neo/
+>=20
+> imx6dl-udoo.dts uses "Udoo i.MX6 Dual-lite Board" and
+> imx6q-udoo.dts  uses "Udoo i.MX6 Quad Board".
 
-Well, at some point, we will probably have the ADC referring to channels
-used as timers as they can be used to trigger it periodically.
+Ack, I'm OK with "UDOO Neo Basic" et al, too.
 
-We'll also get frequency measurement that will go in iio, quadrature
-decoders, gray counters and event counters that will probably used by
-different subsystems and will certainly have to be referred to in DT.
+> > [ discussion about what to use for compatible ]
+> However, "udoo,neo-basic", "udoo,neo", "fsl,imx6sx" should be suffici=
+ent
+> since unlike the Quad/Dual situation there is no SoC variation here. =
+Or
+> "seco,udoo-neo"? "udoo,udoo-neo" looks duplicate.
 
-It will definitively feel a bit weird to have all the channels have
-their own nodes but not the timers...
+I'd use
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+	"udoo,neo-basic", "fsl,imx6sx";
+
+> >> +&fec1 {
+> >> +       pinctrl-names =3D "default";
+> >> +       pinctrl-0 =3D <&pinctrl_enet1>;
+> >> +       phy-mode =3D "rmii";
+> >> +       phy-reset-gpios =3D <&gpio5 4 GPIO_ACTIVE_HIGH>;
+> >=20
+> > Shouldn't this be GPIO_ACTIVE_LOW instead?
+>=20
+> Hm, network worked okay for me like this, how do we verify?
+>=20
+> Schematics are here: http://www.udoo.org/other-resources/
+
+The phy's RST# pin is connected to a signal that routes to ENET1_CRS /
+C7. That corresponds to GPIO2_IO01.
+
+Also that's what is used in "my" device tree that was created by a
+colleague who probably took udoo's dts as reference.
+
+Regarding the question how to verify that:
+
+	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ ifup eth0
+	eth0: 100Mbps full duplex link detected
+	T DHCP client bound to address 192.168.24.110
+
+	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ ping 192.168.23.4
+	host 192.168.23.4 is alive
+
+	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ gpio_direction_output 3=
+3 0
+
+	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ ping 192.168.23.4
+	eth0: transmission timeout
+	T eth0: transmission timeout
+	T eth0: transmission timeout
+	T eth0: transmission timeout
+	T eth0: transmission timeout
+	T eth0: transmission timeout
+	ping failed: Connection timed out
+
+	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ gpio_direction_output 3=
+3 1
+
+	barebox@Freescale i.MX6 SoloX UDOO NEO Board:/ ping 192.168.23.4
+	host 192.168.23.4 is alive
+
+So I'd say the right thing to do is:
+
+	phy-reset-gpios =3D <&gpio2 1 GPIO_ACTIVE_LOW>;
+
+And as the fec driver ignores the flag (for historic reasons), the only
+other correct possibility is:
+
+	phy-reset-gpios =3D <&gpio2 1 GPIO_ACTIVE_HIGH>;
+	phy-reset-active-high;
+
+which is wrong here though.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
