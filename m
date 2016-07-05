@@ -1,78 +1,63 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 2/3] ARM: dts: imx6sx: Add UDOO Neo support
-Date: Tue, 5 Jul 2016 15:55:23 +0200
-Message-ID: <577BBC4B.5040903@suse.de>
-References: <1467691450-22975-1-git-send-email-afaerber@suse.de>
- <1467691450-22975-3-git-send-email-afaerber@suse.de>
- <CAOMZO5CQWz++TVKBKEMSQuyks3C+7Tx5=Frh6R+Qubcab=EbjA@mail.gmail.com>
+From: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Tue, 5 Jul 2016 15:02:19 +0100
+Message-ID: <577BBDEB.7000305@arm.com>
+References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
+ <alpine.DEB.2.10.1607051449370.2575@sstabellini-ThinkPad-X260>
+ <577BBC1A.8020209@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5CQWz++TVKBKEMSQuyks3C+7Tx5=Frh6R+Qubcab=EbjA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Ettore Chimenti <ettore.chimenti@udoo.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <577BBC1A.8020209-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFiaW8sCgpBbSAwNS4wNy4yMDE2IHVtIDE0OjA0IHNjaHJpZWIgRmFiaW8gRXN0ZXZhbToK
-PiBPbiBUdWUsIEp1bCA1LCAyMDE2IGF0IDE6MDQgQU0sIEFuZHJlYXMgRsOkcmJlciA8YWZhZXJi
-ZXJAc3VzZS5kZT4gd3JvdGU6Cj4gCj4+ICsvZHRzLXYxLzsKPj4gKwo+PiArI2luY2x1ZGUgImlt
-eDZzeC11ZG9vLW5lby5kdHNpIgo+PiArCj4+ICsvIHsKPj4gKyAgICAgICBtb2RlbCA9ICJVRE9P
-IE5lbyBCYXNpYyI7Cj4gCj4gVGhpcyBzaG91bGQgYmUgc29tZXRoaW5nIGxpa2U6Cj4gCj4gbW9k
-ZWwgPSAiVWRvbyBpLk1YNiBTb2xvWCBVRE9PIE5lbyBCYXNpYyI7CgpXaHkgc2hvdWxkIGFueW9u
-ZSB1c2Ugc3VjaCBhIHdlaXJkIGNvbmNhdGVuYXRpb24gb2YgbmFtZXM/IElmIHlvdSB3YW50ZWQK
-IlVET08gTmVvIEJhc2ljIChiYXNlZCBvbiBpLk1YIDZTb2xvWCkiIHRoYXQgd291bGQgYmUgbW9y
-ZQp1bmRlcnN0YW5kYWJsZSwgYnV0IHRoZXJlIGlzIG5vIFVET08gTmVvIEJhc2ljIGJvYXJkIHdp
-dGggYW5vdGhlciBTb0M6CgpodHRwOi8vd3d3LnVkb28ub3JnL3Vkb28tbmVvLwoKaW14NmRsLXVk
-b28uZHRzIHVzZXMgIlVkb28gaS5NWDYgRHVhbC1saXRlIEJvYXJkIiBhbmQKaW14NnEtdWRvby5k
-dHMgIHVzZXMgIlVkb28gaS5NWDYgUXVhZCBCb2FyZCIuCgpTbyBJJ20gb3BlbiB0byBkaXNjdXNz
-aW5nIFVET08gdnMuIFVkb28gc3BlbGxpbmcsIGJ1dCBJIGRvbid0IHNlZSBhCnJlcXVpcmVtZW50
-IGZvciBtaXhpbmcgYm9hcmQgdmVuZG9yLCBTb0MgbmFtZSBhbmQgYm9hcmQgbmFtZS4KCi9wcm9j
-L2NwdWluZm8gZGlzcGxheXMgIkZyZWVzY2FsZSBpLk1YNiBTb2xvWCAoRGV2aWNlIFRyZWUpIiBi
-YXNlZCBvbgpTb0MgY29tcGF0aWJsZSBzdHJpbmcgYW5kIG1hY2gtaW14L21hY2gtaW14NnN4LmMu
-CgpOb3RlIHRoYXQgTlhQIGNhbGxzIGl0ICJpLk1YNlNYIiBvciAiaS5NWCA2U29sb1giIChzcGFj
-aW5nKToKCmh0dHA6Ly93d3cubnhwLmNvbS9wcm9kdWN0cy9taWNyb2NvbnRyb2xsZXJzLWFuZC1w
-cm9jZXNzb3JzL2FybS1wcm9jZXNzb3JzL2kubXgtYXBwbGljYXRpb25zLXByb2Nlc3NvcnMvaS5t
-eC02LXByb2Nlc3NvcnMvaS5teDZxcC9pLm14LTZzb2xveC1wcm9jZXNzb3JzLWhldGVyb2dlbmVv
-dXMtcHJvY2Vzc2luZy13aXRoLWFybS1jb3J0ZXgtYTktYW5kLWNvcnRleC1tNC1jb3JlczppLk1Y
-NlNYCgo+PiArICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDZzeCI7Cj4gCj4gY29tcGF0aWJs
-ZSA9ICJ1ZG9vLGlteDZzeC11ZG9vLW5lbyIsICJmc2wsaW14NnN4IjsKPiAKPiBUaGVuIHlvdSBj
-YW4gYWxzbyBzZW5kIGEgc2VwYXJhdGUgcGF0Y2ggdG8gYWRkIHVkb28gdG8KPiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dC4KPiAKPiBTYW1lIGFw
-cGxpZXMgdG8gb3RoZXIgcGxhY2VzIGluIHRoaXMgcGF0Y2guCgpJIGtub3cgd2UgY291bGQgYWRk
-IGNvbXBhdGlibGVzLiBCdXQgeW91IHNheSBpdCBiYWNrd2FyZHM6IElmIEkgYWRkIGEKY29tcGF0
-aWJsZSBzdHJpbmcgdGhlIHZlbmRvciBfbXVzdF8gYmUgZGVmaW5lZCBpbiB2ZW5kb3ItcHJlZml4
-ZXMudHh0CmFuZCB0aGUgYm9hcmQgY29tcGF0aWJsZSBfbXVzdF8gYmUgZG9jdW1lbnRlZCwgdG9v
-LiBTaW5jZSBJIHNhdyB0aGF0CnRoZXJlIGlzIG5vIHByZWZpeCBmb3IgVURPTyBpbiB2ZW5kb3It
-cHJlZml4ZXMudHh0IG5vciBhbiBhcm0vdWRvby50eHQKZmlsZSB0byBkb2N1bWVudCBpdHMgYm9h
-cmQgY29tcGF0aWJsZXMgX2Rlc3BpdGVfICJ1ZG9vLGlteDZxLXVkb28iIGFuZAoidWRvbyxpbXg2
-ZGwtdWRvbyIgYmVpbmcgaW4gdXNlLCBhcyBhbiBhbm5veWVkIFVET08gTmVvIG93bmVyIEknZCBy
-YXRoZXIKbGVhdmUgaXQgdG8gVURPTyB0byBhZGQgdGhvc2Ugb24gdGhlaXIgb3duIGFzIGZvbGxv
-dy11cCBpZiB0aGV5IGNhcmUuClRoZWlyIGRvd25zdHJlYW0ga2VybmVsIGRvZXMgbm90IGhhdmUg
-c3VjaCBhIGNvbXBhdGlibGUgc3RyaW5nLCB0aGV5IHVzZQoiZnNsLGlteDZzeC1zZGIiLCB3aGlj
-aCBsb29rcyBsaWtlIGEgYmFkIGNhc2Ugb2YgY29weSZwYXN0ZSB0byBtZS4KCkhvd2V2ZXIsICJ1
-ZG9vLG5lby1iYXNpYyIsICJ1ZG9vLG5lbyIsICJmc2wsaW14NnN4IiBzaG91bGQgYmUgc3VmZmlj
-aWVudApzaW5jZSB1bmxpa2UgdGhlIFF1YWQvRHVhbCBzaXR1YXRpb24gdGhlcmUgaXMgbm8gU29D
-IHZhcmlhdGlvbiBoZXJlLiBPcgoic2Vjbyx1ZG9vLW5lbyI/ICJ1ZG9vLHVkb28tbmVvIiBsb29r
-cyBkdXBsaWNhdGUuCgo+PiArJmZlYzEgewo+PiArICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVm
-YXVsdCI7Cj4+ICsgICAgICAgcGluY3RybC0wID0gPCZwaW5jdHJsX2VuZXQxPjsKPj4gKyAgICAg
-ICBwaHktbW9kZSA9ICJybWlpIjsKPj4gKyAgICAgICBwaHktcmVzZXQtZ3Bpb3MgPSA8JmdwaW81
-IDQgR1BJT19BQ1RJVkVfSElHSD47Cj4gCj4gU2hvdWxkbid0IHRoaXMgYmUgR1BJT19BQ1RJVkVf
-TE9XIGluc3RlYWQ/CgpIbSwgbmV0d29yayB3b3JrZWQgb2theSBmb3IgbWUgbGlrZSB0aGlzLCBo
-b3cgZG8gd2UgdmVyaWZ5PwoKU2NoZW1hdGljcyBhcmUgaGVyZTogaHR0cDovL3d3dy51ZG9vLm9y
-Zy9vdGhlci1yZXNvdXJjZXMvCgpUaGFua3MsCkFuZHJlYXMKCi0tIApTVVNFIExpbnV4IEdtYkgs
-IE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2VybWFueQpHRjogRmVsaXggSW1lbmTD
-tnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9uCkhSQiAyMTI4NCAoQUcgTsO8cm5i
-ZXJnKQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+
+
+On 05/07/16 14:54, Julien Grall wrote:
+>
+>
+> On 05/07/16 14:53, Stefano Stabellini wrote:
+>> On Thu, 30 Jun 2016, Dirk Behme wrote:
+>>> +- clocks: one or more clocks to be registered.
+>>> +  Xen hypervisor drivers might replace native drivers, resulting in
+>>> +  clocks not registered by these native drivers. To avoid that these
+>>> +  unregistered clocks are disabled, then, e.g. by clk_disable_unused(),
+>>> +  register them in the hypervisor node.
+>>> +  An example for this are the clocks of the serial driver. If the
+>>> clocks
+>>> +  used by the serial hardware interface are not registered by the
+>>> serial
+>>> +  driver the serial output might stop once clk_disable_unused() is
+>>> called.
+>>
+>> What if we use the "status" property of the clocks? Could we set it to
+>> "disabled" in Xen? Would that be enough for Linux to leave them alone?
+>
+> clocks could be shared between multiple devices. So it is not possible
+> to disable the clock.
+
+To give an example, below the UART node for juno 
+(arch/arm64/boot/dts/arm/juno-base.dtsi):
+
+         soc_uart0: uart@7ff80000 {
+                 compatible = "arm,pl011", "arm,primecell";
+                 reg = <0x0 0x7ff80000 0x0 0x1000>;
+                 interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+                 clocks = <&soc_uartclk>, <&soc_refclk100mhz>;
+                 clock-names = "uartclk", "apb_pclk";
+         };
+
+The clock soc_refclk100mhz is shared with the mailbox.
+
+Regards,
+
+-- 
+Julien Grall
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
