@@ -1,38 +1,45 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] arm64: dts: Fix rtc by providing rtc_src clock
-Date: Wed, 06 Jul 2016 08:21:40 +0200
-Message-ID: <577CA374.4000900@samsung.com>
-References: <1467713107-15932-1-git-send-email-alim.akhtar@samsung.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH 1/3] arm: dts: berlin2: enable all wdt nodes unconditionally
+Date: Wed, 6 Jul 2016 14:41:39 +0800
+Message-ID: <1467787301-3728-2-git-send-email-jszhang@marvell.com>
+References: <1467787301-3728-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1467713107-15932-1-git-send-email-alim.akhtar@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alim Akhtar <alim.akhtar@samsung.com>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pankaj.dubey@samsung.com, linux-kernel@vger.kernel.org, javier@osg.samsung.com, catalin.marinas@arm.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467787301-3728-1-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2016 12:05 PM, Alim Akhtar wrote:
-> Add rtc source clock as exynos7 needs source (32.768KHz) clock
-> for rtc block. Without this currently rtc driver probe is broken
-> on this SoC, thats because rtc-s3c driver expect rtc_src clock to
-> be provided for _s3c6410-rtc_ type rtc controllers.
-> 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos7-espresso.dts |    3 +++
->  1 file changed, 3 insertions(+)
+After commit f29a72c24ad4 ("watchdog: dw_wdt: Convert to use watchdog
+infrastructure"), the dw_wdt driver can support multiple variants, so
+unconditionally enable all dw_wdt nodes now.
 
-Thanks, applied with adjusted message. I'll send it as a fix for v4.7.
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm/boot/dts/berlin2.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
+index ae81009..15c857a 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -447,7 +447,6 @@
+ 				reg = <0x2000 0x100>;
+ 				clocks = <&refclk>;
+ 				interrupts = <1>;
+-				status = "disabled";
+ 			};
+ 
+ 			wdt2: watchdog@3000 {
+@@ -455,7 +454,6 @@
+ 				reg = <0x3000 0x100>;
+ 				clocks = <&refclk>;
+ 				interrupts = <2>;
+-				status = "disabled";
+ 			};
+ 
+ 			sm_gpio1: gpio@5000 {
+-- 
+2.8.1
