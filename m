@@ -1,46 +1,37 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] drivers/perf: arm-pmu: Handle per-interrupt affinity mask
-Date: Wed, 6 Jul 2016 11:39:52 +0100
-Message-ID: <20160706103951.GC17925@arm.com>
-References: <1467379291-18413-1-git-send-email-marc.zyngier@arm.com>
+From: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/3] *** support GMAC for RK3399 & RK3366 ***
+Date: Wed,  6 Jul 2016 18:51:28 +0800
+Message-ID: <1467802291-6487-1-git-send-email-roger.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467379291-18413-1-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 02:21:31PM +0100, Marc Zyngier wrote:
-> On a big-little system, PMUs can be wired to CPUs using per CPU
-> interrups (PPI). In this case, it is important to make sure that
-> the enable/disable do happen on the right set of CPUs.
-> 
-> So instead of relying on the interrupt-affinity property, we can
-> use the actual percpu affinity that DT exposes as part of the
-> interrupt specifier. The DT binding is also updated to reflect
-> the fact that the interrupt-affinity property shouldn't be used
-> in that case.
+This series adds registers description for RK3366 & RK3399 GMAC.
+And also DT nodes for RK3399 SoC and EVB.
 
-[...]
+Roger Chen (3):
+  net: stmmac: dwmac-rk: add rk3366 & rk3399-specific data
+  arm64: dts: rockchip: add GMAC dt nodes for rk3399 SoC
+  arm64: dts: rockchip: add GMAC dt nodes for RK3399 evb
 
-> -	/* If we didn't manage to parse anything, claim to support all CPUs */
-> -	if (cpumask_weight(&pmu->supported_cpus) == 0)
-> -		cpumask_setall(&pmu->supported_cpus);
-> +	/* If we didn't manage to parse anything, try the interrupt affinity */
-> +	if (cpumask_weight(&pmu->supported_cpus) == 0) {
-> +		if (!using_spi) {
-> +			/* If using PPIs, check the affinity of the partition */
-> +			int irq = platform_get_irq(pdev, 0);
-> +			irq_get_percpu_devid_partition(irq,
-> +						       &pmu->supported_cpus);
+ .../devicetree/bindings/net/rockchip-dwmac.txt     |   3 +-
+ arch/arm64/boot/dts/rockchip/rk3399-evb.dts        |  23 +++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  79 +++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     | 226 +++++++++++++++++++++
+ 4 files changed, 330 insertions(+), 1 deletion(-)
 
-Should we not at least propagate the failure if this returns -EINVAL?
-
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
