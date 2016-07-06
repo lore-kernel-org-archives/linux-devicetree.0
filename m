@@ -1,50 +1,54 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] drivers/perf: arm-pmu: Handle per-interrupt affinity mask
-Date: Wed, 6 Jul 2016 15:11:17 +0100
-Message-ID: <577D1185.4090801@arm.com>
-References: <1467379291-18413-1-git-send-email-marc.zyngier@arm.com>
- <20160706103951.GC17925@arm.com>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+Subject: Permissions for GPIOs [Was: [PATCH] gpio: document how to order
+ GPIO controllers]
+Date: Wed, 06 Jul 2016 16:12:14 +0200
+Message-ID: <1467814334.2472.154.camel@pengutronix.de>
+References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
+	 <20160705140546.GA10601@rob-hp-laptop>
+	 <20160705180447.GP16643@pengutronix.de>
+	 <CACRpkdbH+KRXbxFdfyAE44fBNctK4cWV+KRLwQBTzSGLvLMEDg@mail.gmail.com>
+	 <20160706102750.GH23470@localhost>
+	 <CACRpkdZhx3yTbtuj-ZTP+mtUSr4uxL4bHtu8jVZOoxrUy6=iYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160706103951.GC17925@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, cf@rock-chips.com, huangtao@rock-chips.com, jay.xu@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZhx3yTbtuj-ZTP+mtUSr4uxL4bHtu8jVZOoxrUy6=iYw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/16 11:39, Will Deacon wrote:
-> On Fri, Jul 01, 2016 at 02:21:31PM +0100, Marc Zyngier wrote:
->> On a big-little system, PMUs can be wired to CPUs using per CPU
->> interrups (PPI). In this case, it is important to make sure that
->> the enable/disable do happen on the right set of CPUs.
->>
->> So instead of relying on the interrupt-affinity property, we can
->> use the actual percpu affinity that DT exposes as part of the
->> interrupt specifier. The DT binding is also updated to reflect
->> the fact that the interrupt-affinity property shouldn't be used
->> in that case.
+On Mi, 2016-07-06 at 14:34 +0200, Linus Walleij wrote:
+> On Wed, Jul 6, 2016 at 12:27 PM, Johan Hovold <johan@kernel.org> wrote:
+> > What's wrong with naming the pins in DT and use that for lookups?
 > 
-> [...]
+> That works. It relies on the developers using sane naming conventions
+> though. (This problem is prevalent everywhere I guess, a human problem,
+> not a technical one.) I made this patch:
+> http://marc.info/?l=linux-arm-kernel&m=146672328215354&w=2
 > 
->> -	/* If we didn't manage to parse anything, claim to support all CPUs */
->> -	if (cpumask_weight(&pmu->supported_cpus) == 0)
->> -		cpumask_setall(&pmu->supported_cpus);
->> +	/* If we didn't manage to parse anything, try the interrupt affinity */
->> +	if (cpumask_weight(&pmu->supported_cpus) == 0) {
->> +		if (!using_spi) {
->> +			/* If using PPIs, check the affinity of the partition */
->> +			int irq = platform_get_irq(pdev, 0);
->> +			irq_get_percpu_devid_partition(irq,
->> +						       &pmu->supported_cpus);
+> There is a standard document for these boards (96board) specifying
+> the names of the GPIO lines to be "GPIO-A" thru "GPIO-L".
 > 
-> Should we not at least propagate the failure if this returns -EINVAL?
+> So a user can iterate across the gpiochips (as is done in lsgpio)
+> and pick the lines with the right names.
 
-Good point. I'll fix that and resend it.
+This discussion caused me remember a concern regarding the chardev
+interface: Is it still be possible to give specific users/groups access
+to individual GPIOs? This is currently possible in the sysfs interface
+with chown/chmod. I don't see how per-GPIO permissions would translate
+to a per-gpiochip device.
 
-Thanks,
+Am I overlooking some better way to give non-root users granular access
+to GPIOs? Or is that intentionally out of scope for the chardev
+interface?
 
-	M.
+Yours,
+Jan
 -- 
-Jazz is not dead. It just smells funny...
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
