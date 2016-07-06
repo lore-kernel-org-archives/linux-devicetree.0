@@ -1,52 +1,270 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v6 00/18] Add support for FDMA DMA controller and slim
- core rproc found on STi chipsets
-Date: Wed, 6 Jul 2016 20:49:21 +0100
-Message-ID: <20160706194921.GA7213@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
- <1467823249.8360.28.camel@perches.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3] arm64: dts: rockchip: add the power domain node for rk3399
+Date: Wed, 6 Jul 2016 13:20:32 -0700
+Message-ID: <CAD=FV=VOzqkxH=XxnHadtYM_g7h1qS140uOwC=KXDwSeSET3gQ@mail.gmail.com>
+References: <1467635644-16798-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1467823249.8360.28.camel@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, bjorn.andersson@linaro.org, ohad@wizery.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467635644-16798-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+Hi,
 
-On Wed, 06 Jul 2016, Joe Perches wrote:
+On Mon, Jul 4, 2016 at 5:34 AM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> In order to meet low power requirements, a power management unit (PMU) is
+> designed for controlling power resources in RK3399. The RK3399 PMU is
+> dedicated for managing the power of the whole chip.
+>
+> 1. add pd node for RK3399 Soc
+> 2. create power domain tree
+> 3. add qos node for domain
+>
+> From the DT/binds and driver can get more detail information:
+> The driver:
+>         drivers/soc/rockchip/pm_domains.c
+> The document:
+>         Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+>
+> Note:
+> As the TRM lists many voltage domains and power domains, then this patch
+> adds some domains for driver. Due to some domains
+> (e.g. emmc, usb, core)...We can't turned off it on
+> bootup, or says some device driver can't handle the power domain enough.
+> Maybe We will add more other domains in the future or later.
+>
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>
+> ---
+>
+> Changes in v3:
+> - As some commnets on https://patchwork.kernel.org/patch/9209205/
+> - according to the alphabetically sort
+> - %s/RK3399_PD_VOP/RK3399_PD_VOPL, %s/RK3399_PD_IE/RK3399_PD_IEP
+>
+> Changes in v2:
+> - As Doug/Heiko commnets on https://patchwork.kernel.org/patch/9206415/.
+>   drop the debugfs-dump and Add the comments for alphabetical order.
+>
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 179 +++++++++++++++++++++++++++++++
+>  1 file changed, 179 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index a6dd623..4559c04 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -45,6 +45,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/pinctrl/rockchip.h>
+> +#include <dt-bindings/power/rk3399-power.h>
+>  #include <dt-bindings/thermal/thermal.h>
+>
+>  / {
+> @@ -594,6 +595,184 @@
+>                 status = "disabled";
+>         };
+>
+> +       qos_hdcp: qos_hdcp@ffa90000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffa90000 0x0 0x20>;
+> +       };
+> +
+> +       qos_iep: qos_iep@ffa98000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffa98000 0x0 0x20>;
+> +       };
+> +
+> +       qos_isp0_m0: qos_isp0_m0@ffaa0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffaa0000 0x0 0x20>;
+> +       };
+> +
+> +       qos_isp0_m1: qos_isp0_m1@ffaa0080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffaa0080 0x0 0x20>;
+> +       };
+> +
+> +       qos_isp1_m0: qos_isp1_m0@ffaa8000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffaa8000 0x0 0x20>;
+> +       };
+> +
+> +       qos_isp1_m1: qos_isp1_m1@ffaa8080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffaa8080 0x0 0x20>;
+> +       };
+> +
+> +       qos_rga_r: qos_rga_r@ffab0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffab0000 0x0 0x20>;
+> +       };
+> +
+> +       qos_rga_w: qos_rga_w@ffab0080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffab0080 0x0 0x20>;
+> +       };
+> +
+> +       qos_video_m0: qos_video_m0@ffab8000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffab8000 0x0 0x20>;
+> +       };
+> +
+> +       qos_video_m1_r: qos_video_m1_r@ffac0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffac0000 0x0 0x20>;
+> +       };
+> +
+> +       qos_video_m1_w: qos_video_m1_w@ffac0080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffac0080 0x0 0x20>;
+> +       };
+> +
+> +       qos_vop_big_r: qos_vop_big_r@ffac8000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffac8000 0x0 0x20>;
+> +       };
+> +
+> +       qos_vop_big_w: qos_vop_big_w@ffac8080 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffac8080 0x0 0x20>;
+> +       };
+> +
+> +       qos_vop_little: qos_vop_little@ffad0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffad0000 0x0 0x20>;
+> +       };
+> +
+> +       qos_gpu: qos_gpu@ffae0000 {
+> +               compatible = "syscon";
+> +               reg = <0x0 0xffae0000 0x0 0x20>;
+> +       };
+> +
+> +       pmu: power-management@ff310000 {
+> +               compatible = "rockchip,rk3399-pmu", "syscon", "simple-mfd";
+> +               reg = <0x0 0xff310000 0x0 0x1000>;
+> +
+> +               /*
+> +                * Note: RK3399 supports 6 voltage domains including VD_CORE_L,
+> +                * VD_CORE_B, VD_CENTER, VD_GPU, VD_LOGIC and VD_PMU.
+> +                * Some of the power domains are grouped together for every
+> +                * voltage domain.
+> +                * The detail contents as below.
+> +                */
+> +               power: power-controller {
+> +                       status = "okay";
 
-> On Wed, 2016-07-06 at 09:54 +0100, Peter Griffin wrote:
-> > This patchset adds support for the Flexible Direct Memory Access (F=
-DMA) core
-> > found on STi chipsets from STMicroelectronics. The FDMA is a slim c=
-ore CPU
-> > with a dedicated firmware. It is a general purpose DMA controller s=
-upporting
-> > 16 independent channels and data can be moved from memory to memory=
- or between
-> > memory and paced latency critical real time targets.
-> []
-> > =A0include/linux/remoteproc/st_slim_rproc.h=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0|=A0=A053 ++
->=20
-> Is this directory really necessary?
+In an offline conversation, Heiko pointed out to me that this 'status
+= "okay";' is not needed...
 
-Yes, I believe so.
+> +                       compatible = "rockchip,rk3399-power-controller";
+> +                       #power-domain-cells = <1>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       /* These power domains are grouped by VD_CENTER */
+> +                       pd_iep@RK3399_PD_IEP {
+> +                               reg = <RK3399_PD_IEP>;
+> +                               clocks = <&cru ACLK_IEP>,
+> +                                        <&cru HCLK_IEP>;
+> +                               pm_qos = <&qos_iep>;
+> +                       };
+> +                       pd_vcodec@RK3399_PD_VCODEC {
+> +                               reg = <RK3399_PD_VCODEC>;
+> +                               clocks = <&cru ACLK_VCODEC>,
+> +                                        <&cru HCLK_VCODEC>;
+> +                               pm_qos = <&qos_video_m0>;
+> +                       };
+> +                       pd_vdu@RK3399_PD_VDU {
+> +                               reg = <RK3399_PD_VDU>;
+> +                               clocks = <&cru ACLK_VDU>,
+> +                                        <&cru HCLK_VDU>;
+> +                               pm_qos = <&qos_video_m1_r>,
+> +                                        <&qos_video_m1_w>;
+> +                       };
+> +                       pd_rga@RK3399_PD_RGA {
+> +                               reg = <RK3399_PD_RGA>;
+> +                               clocks = <&cru ACLK_RGA>,
+> +                                        <&cru HCLK_RGA>;
+> +                               pm_qos = <&qos_rga_r>,
+> +                                        <&qos_rga_w>;
+> +                       };
 
->=20
-> Why shouldn't this file be local to drivers/remoteproc/?
+rga is still sorted incorrectly.
 
-Because it has to be included by the various client drivers which are b=
-ased
-around the slim core IP. Currently drivers/dma/st_fdma.c but also in th=
-e future
-LDVB demux driver.
+> +
+> +                       /* These power domains are grouped by VD_GPU */
+> +                       pd_gpu@RK3399_PD_GPU {
+> +                               reg = <RK3399_PD_GPU>;
+> +                               clocks = <&cru ACLK_GPU>;
+> +                               pm_qos = <&qos_gpu>;
+> +                       };
+> +
+> +                       /* These power domains are grouped by VD_LOGIC */
+> +                       pd_vio@RK3399_PD_VIO {
+> +                               reg = <RK3399_PD_VIO>;
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               pd_hdcp@RK3399_PD_HDCP {
+> +                                       reg = <RK3399_PD_HDCP>;
+> +                                       clocks = <&cru ACLK_HDCP>,
+> +                                                <&cru HCLK_HDCP>,
+> +                                                <&cru PCLK_HDCP>;
+> +                                       pm_qos = <&qos_hdcp>;
+> +                               };
+> +                               pd_isp0@RK3399_PD_ISP0 {
+> +                                       reg = <RK3399_PD_ISP0>;
+> +                                       clocks = <&cru ACLK_ISP0>,
+> +                                                <&cru HCLK_ISP0>;
+> +                                       pm_qos = <&qos_isp0_m0>,
+> +                                                <&qos_isp0_m1>;
+> +                               };
+> +                               pd_isp1@RK3399_PD_ISP1 {
+> +                                       reg = <RK3399_PD_ISP1>;
+> +                                       clocks = <&cru ACLK_ISP1>,
+> +                                                <&cru HCLK_ISP1>;
+> +                                       pm_qos = <&qos_isp1_m0>,
+> +                                                <&qos_isp1_m1>;
+> +                               };
+> +                               pd_vo@RK3399_PD_VO {
+> +                                       reg = <RK3399_PD_VO>;
+> +                                       #address-cells = <1>;
+> +                                       #size-cells = <0>;
+> +
+> +                                       pd_vopb@RK3399_PD_VOPB {
+> +                                               reg = <RK3399_PD_VOPB>;
+> +                                               clocks = <&cru ACLK_VOP0>,
+> +                                                        <&cru HCLK_VOP0>;
+> +                                               pm_qos = <&qos_vop_big_r>,
+> +                                                        <&qos_vop_big_w>;
+> +                                       };
+> +                                       pd_vopl@RK3399_PD_VOPL {
+> +                                               reg = <RK3399_PD_VOPL>;
+> +                                               clocks = <&cru ACLK_VOP1>,
+> +                                                        <&cru HCLK_VOP1>;
+> +                                               pm_qos = <&qos_vop_little>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
 
-regards,
+I think Heiko said he'll handle the nits when applying.  ...so given that:
 
-Peter.
+Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
