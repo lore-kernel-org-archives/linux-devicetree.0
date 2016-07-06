@@ -1,89 +1,82 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 2/4] soc: mediatek: Init MT8173 scpsys driver earlier
-Date: Wed, 6 Jul 2016 13:22:20 +0800
-Message-ID: <1467782540.26485.11.camel@mtksdaap41>
-References: <1463390894-32062-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1463390894-32062-3-git-send-email-jamesjj.liao@mediatek.com>
-	 <34025ec4-19d3-8b25-d669-50c6f19159cd@gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Question] Memory attribute reserved by Device Tree?
+Date: Wed, 6 Jul 2016 07:34:58 +0200
+Message-ID: <CAKv+Gu_iF31mBbg1pMawq+7fPDo4iXdGWJT_nWV4Oy+AqDpFOg@mail.gmail.com>
+References: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
+ <577504D7.7080106@arm.com> <20160630122554.GC20363@leverpostej> <CAK7LNAQJNYVFjZyMH=kU+VJLfUCr2EwKc51HB4knZ=XM7s+MQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <34025ec4-19d3-8b25-d669-50c6f19159cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAK7LNAQJNYVFjZyMH=kU+VJLfUCr2EwKc51HB4knZ=XM7s+MQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2016-07-02 at 18:35 +0200, Matthias Brugger wrote:
-> 
-> On 05/16/2016 11:28 AM, James Liao wrote:
-> > Some power domain comsumers may init before module_init.
-> > So the power domain provider (scpsys) need to be initialized
-> > earlier too.
-> >
-> > Take an example for our IOMMU (M4U) and SMI. SMI is a bridge
-> > between IOMMU and multimedia HW. SMI is responsible to
-> > enable/disable iommu and help transfer data for each multimedia
-> > HW. Both of them have to wait until the power and clocks are
-> > enabled.
-> >
-> > So scpsys driver should be initialized before SMI, and SMI should
-> > be initialized before IOMMU, and then init IOMMU consumers
-> > (display/vdec/venc/camera etc.).
-> >
-> > IOMMU is subsys_init by default. So we need to init scpsys driver
-> > before subsys_init.
-> >
-> > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/soc/mediatek/mtk-scpsys.c | 19 ++++++++++++++++++-
-> >  1 file changed, 18 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> > index 5870a24..00c0adb 100644
-> > --- a/drivers/soc/mediatek/mtk-scpsys.c
-> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> > @@ -617,4 +617,21 @@ static struct platform_driver scpsys_drv = {
-> >  		.of_match_table = of_match_ptr(of_scpsys_match_tbl),
-> >  	},
-> >  };
-> > -builtin_platform_driver(scpsys_drv);
-> > +
-> > +static int __init scpsys_drv_init(void)
-> > +{
-> > +	return platform_driver_register(&scpsys_drv);
-> > +}
-> > +
-> > +/*
-> > + * There are some Mediatek drivers which depend on the power domain driver need
-> > + * to probe in earlier initcall levels. So scpsys driver also need to probe
-> > + * earlier.
-> > + *
-> > + * IOMMU(M4U) and SMI drivers for example. SMI is a bridge between IOMMU and
-> > + * multimedia HW. IOMMU depends on SMI, and SMI is a power domain consumer,
-> > + * so the proper probe sequence should be scpsys -> SMI -> IOMMU driver.
-> > + * IOMMU drivers are initialized during subsys_init by default, so we need to
-> > + * move SMI and scpsys drivers to subsys_init or earlier init levels.
-> > + */
-> > +subsys_initcall(scpsys_drv_init);
-> >
-> 
-> Can't we achieve this with probe deferring? I'm not really keen on 
-> coding the order of the different drivers like this.
+On 6 July 2016 at 06:10, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> 2016-06-30 21:26 GMT+09:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
+>> On Thu, Jun 30, 2016 at 12:39:03PM +0100, Robin Murphy wrote:
+>>> On 30/06/16 12:10, Masahiro Yamada wrote:
+>>> > Hello.
+>>> >
+>>> > Which memory attribute will ARM/ARM64 Linux
+>>> > set to the memory region reserved by
+>>> > /memreserve/ of Device Tree?
+>>> >
+>>> >
+>>> > Normal memory non-cacheable?
+>>> > Or, cacheable?
+>>> > Or, not defined?
+>>> >
+>>> > Perhaps actual behavior depends on whether the reserved area is
+>>> > located in the low-memory region?
+>>>
+>>> Isn't the point of memreserve that the kernel avoids mapping it at all?
+>>
+>> Not quite. A /memreserve/ allows the kernel to map a region, so long as
+>> it doesn't use the region for general allocation.
+>>
+>> While not strictly defined for arm64 today, in practice the kernel may
+>> map a region with Normal Inner-Shareable Inner-WB Outer-WB attributes,
+>> following similar behaviour for PPC as defined in ePAPR.
+>>
+>> Generally I would advise against the use of a memreserve, and favour
+>> carving memory out of memory nodes as required, as that imposes stricter
+>> requirements.
+>>
+>>> If a reserved region is later mapped in by a driver using
+>>> dma_declare_coherent_memory(), ioremap(), memremap() or whatever else,
+>>> then the attributes will vary depending on the exact method used.
+>>
+>> Indeed. This applies even with the above.
+>
+>
+> Hi Robin, Mark,
+>
+>
+> Thanks for clarification!
+>
+>
+> My motivation is to try my own implementation of PSCI for my ARMv7 SoC.
+>
+> I put my PSCI firmware somewhere in the DRAM region and
+> protected it with /memreserve/, but I was not sure what kind of memory attribute
+> is used for the area.
+>
 
-Hi Matthias,
+As Mark implies, /memreserve/ entries are not suitable for this, and
+you should create an entry under /reserved-memory instead (please
+check the bindings under Documentation/ for details). This not only
+allows you to add a no-map attribute to prevent the kernel from
+mapping it (which allows you to map it any way you like), it also
+guarantees that the reservation is honoured even when booting via
+UEFI, as /memreserve/s are ignored in this case.
 
-Some drivers such as IOMMU don't support probe deferring. So scpsys need
-to init before them by changing init level.
+Note that the difference between the handling of /memreserve/ and
+/reserved-memory under UEFI is arbitrary, and should be fixed imo.
 
-
-Best regards,
-
-James
-
-
+Original issue is here, as yet unresolved:
+http://thread.gmane.org/gmane.linux.kernel.efi/6464
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
