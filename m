@@ -1,76 +1,99 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: spi: add binding for clps711x SPI
-Date: Wed,  6 Jul 2016 16:53:13 +0200
-Message-ID: <20160706145326.2658600-2-arnd@arndb.de>
-References: <20160706145326.2658600-1-arnd@arndb.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160706145326.2658600-1-arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: RE: [RFC PATCH v2 1/4] Documentation: DT: net: Add Xilinx
+ gmiitorgmii converter device tree binding documentation
+Date: Wed, 6 Jul 2016 14:51:28 +0000
+Message-ID: <03CA77BA8AF6F1469AEDFBDA1322A7B74A19393B@XAP-PVEXMBX02.xlnx.xilinx.com>
+References: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
+ <1467623084-15471-2-git-send-email-appanad@xilinx.com>
+ <20160704140458.GC3282@lunn.ch>
+ <03CA77BA8AF6F1469AEDFBDA1322A7B74A193913@XAP-PVEXMBX02.xlnx.xilinx.com>
+ <20160706142121.GI19800@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160706142121.GI19800@lunn.ch>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Harini Katakam <harinik@xilinx.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This documents the binding used by Alexander Shiyan's DT support for
-the clps711x SPI controller.
 
-I've left the file name to match the ARM platform port name "clps711x"
-for consistency with the other bindings, even though the compatible
-string refers to the later ep7309 chip.
 
-Linux no longer supports the old clps711x and ep72xx product lines,
-but we still use the name. The entire family is now discontinued
-by the manufacturer.
+> -----Original Message-----
+> From: Andrew Lunn [mailto:andrew@lunn.ch]
+> Sent: Wednesday, July 06, 2016 7:51 PM
+> To: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+> Cc: Appana Durga Kedareswara Rao <appanad@xilinx.com>;
+> robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
+> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+> nicolas.ferre@atmel.com; f.fainelli@gmail.com; Anirudha Sarangi
+> <anirudh@xilinx.com>; Harini Katakam <harinik@xilinx.com>;
+> netdev@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: Re: [RFC PATCH v2 1/4] Documentation: DT: net: Add Xilinx
+> gmiitorgmii converter device tree binding documentation
+> 
+> > > Hi Kedareswara
+> > >
+> > > So looking at the device tree, you have the gmiitorgmii as an mdio
+> > > device. It will get probed as an mdio device, and from that you know
+> > > the address on the bus. However, your driver does not actually do
+> > > this. xilinx_gmii2rgmii.c is just a library of two functions, and does
+> > > not use any of this device tree information. You device tree binding
+> > > is completely bogus.
+> > >
+> > > What i think is a much more logical structure, and fits the hardware,
+> > > which is what DT is all about, is to make your driver an mdio driver.
+> > > Also, have a phy-handle pointing to the PHY in the gmii_to_rgmii node.
+> > > You then no longer need the exported gmii2rgmii_phyprobe() function.
+> > >
+> > > Next, you want gmiitorgmii driver to register a phy. The MAC driver
+> > > can then look this up using phy-handle:
+> > >
+> > >        mdio {
+> > >                 #address-cells = <1>;
+> > >                 #size-cells = <0>;
+> > >
+> > >                 phy: ethernet-phy@0 {
+> > >                         reg = <0>;
+> > >                 };
+> > >
+> > >                 gmii_to_rgmii: gmii-to-rgmii@8 {
+> > >                         compatible = "xlnx,gmiitorgmii";
+> > >                         reg = <8>;
+> > > 			phy-handle = <&phy>;
+> > >                 };
+> > >        };
+> >
+> >
+> > Thanks for your inputs initially we too thought the similar implementation
+> > But the GMII2RGMII converter contains only one register and it is
+> >  not compatible to the standard ethernet MII interface. Also it doesn't have
+> > a standard VID and PID registers So, during the mdio bus scan, this device
+> will
+> > not appear.
+> 
+> Hi Punnaiah
+> 
+> Use missed some subtlety in my description. I did not call the
+> GMII2RGMII a PHY device, i called it an MDIO device. These are
+> different things. Go look at the MDIO subsystem to figure out the
+> difference.
+> 
+Hi Andrew
 
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../devicetree/bindings/spi/spi-clps711x.txt       | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-clps711x.txt
+Got it. Thanks.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-clps711x.txt b/Documentation/devicetree/bindings/spi/spi-clps711x.txt
-new file mode 100644
-index 000000000000..4c3ec13f423f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-clps711x.txt
-@@ -0,0 +1,33 @@
-+Serial Peripheral Interface on Cirrus Logic CL-PS71xx, EP72xx, EP73xx
-+
-+Required properties
-+- #address-cells: must be <1>
-+- #size-cells: must be <0>
-+- compatible: should include "cirrus,ep7209-spi"
-+- reg: Address and length of one register range
-+- interrupts: one interrupt line
-+- clocks: One entry, refers to the SPI bus clock
-+- cs-gpios: Specifies the gpio pins to be used for chipselects.
-+	    See: Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+An additional register is present in the system controller,
-+which is assumed to be in the same device tree, with and marked
-+as compatible with "cirrus,ep7209-syscon3".
-+
-+Example:
-+
-+spi@80000500 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "cirrus,ep7209-spi";
-+	reg = <0x80000500 0x4>;
-+	interrupts = <15>;
-+	clocks = <&clks CLPS711X_CLK_SPI>;
-+	status = "disabled";
-+};
-+
-+syscon3: syscon@80002200 {
-+	compatible = "cirrus,ep7209-syscon3", "syscon";
-+	reg = <0x80002200 0x40>;
-+};
-+
--- 
-2.9.0
+Punnaiah
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 	Andrew
