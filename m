@@ -1,39 +1,29 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v10 0/4] add reboot mode driver
-Date: Wed,  6 Jul 2016 21:18:01 +0800
-Message-ID: <1467811081-20700-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org
-Cc: k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v10 1/4] dt-bindings: power: reset: add document for reboot-mode driver
+Date: Wed,  6 Jul 2016 21:22:45 +0800
+Message-ID: <1467811365-20762-1-git-send-email-andy.yan@rock-chips.com>
+References: <1467811081-20700-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467811081-20700-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add device tree bindings document for reboot-mode driver.
 
-This driver parses the reboot commands like "reboot bootloader"
-and "reboot recovery" to get a boot mode described in the
-device tree , then call the corresponding  write interfae
-to store the boot mode in some place like special register
-or ram , which can be read by the bootloader after system
-reboot.
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-This is commonly done on Android based devices, in order to
-reboot the device into fastboot or recovery mode.
+---
 
-
-Changes in v10:
-- make this driver tristate
-
-Changes in v9:
-- select MFD_SYSCON when syscon-reboot-mode driver enabled
-- refactoring error handling in reboot_mode_register
-
-Changes in v8:
-- do some cleanup when driver ubind
-
+Changes in v10: None
+Changes in v9: None
+Changes in v8: None
 Changes in v7:
 - fix some spelling mistakes
 - declare that the mode magic should be none-zero value
-- address some suggestions from Krzysztof, make syscon-reboot-mode driver data self-contained.
 
 Changes in v6:
 - fix a typo with "property"
@@ -43,61 +33,100 @@ Changes in v5:
 - delete a unnecessary blank line in syscon-reboot-mode.txt
 - rename mode-fastoboot to mode-bootloader in syscon-reboot-mode.txt
 - rename macro BOOT_LOADER to BOOT_BL_DOWNLOAD, which gives a more clear mean
-- use two blank space under help in Kconfig
-- use unsigned int instead of int for member magic in struct mode_info
 
 Changes in v4:
 - remove mode-maskrom
 - rename mode-fastboot to mode-bootloader to keep compatible with the exiting Android device
-- make this driver depends on OF to avoid kbuild test error
 
 Changes in v3:
 - descirbe all reboot mode as properity instead of subnode
-- scan multi properities
-- add mask value for some platform which only use some bits of the register
-  to store boot mode magic value
-- descirbe all reboot mode as property instead of subnode
-- add rk3036 support
-- descirbe all reboot mode as property instead of subnode
 
-Changes in v2:
-- move to dir drivers/power/reset/
-- make syscon-reboot-mode a generic driver
-- make this node as a subnode of PMU
-- make this node as a subnode of pmugrf
+Changes in v2: None
+Changes in v1: None
 
-Changes in v1:
-- fix the embarrassed compile warning
-- correct the maskrom magic number
-- check for the normal reboot
-- correct the maskrom magic number
-- use macro defined in rockchip_boot-mode.h for reboot-mode DT node
-
-Andy Yan (4):
-  dt-bindings: power: reset: add document for reboot-mode driver
-  power: reset: add reboot mode driver
-  ARM: dts: rockchip: add syscon-reboot-mode DT node
-  ARM64: dts: rockchip: add syscon-reboot-mode DT node
-
- .../bindings/power/reset/reboot-mode.txt           |  25 ++++
- .../bindings/power/reset/syscon-reboot-mode.txt    |  35 ++++++
- arch/arm/boot/dts/rk3036.dtsi                      |  11 +-
- arch/arm/boot/dts/rk3288.dtsi                      |  10 ++
- arch/arm/boot/dts/rk3xxx.dtsi                      |  12 +-
- arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  12 +-
- drivers/power/reset/Kconfig                        |  14 +++
- drivers/power/reset/Makefile                       |   2 +
- drivers/power/reset/reboot-mode.c                  | 140 +++++++++++++++++++++
- drivers/power/reset/reboot-mode.h                  |  14 +++
- drivers/power/reset/syscon-reboot-mode.c           | 100 +++++++++++++++
- include/dt-bindings/soc/rockchip_boot-mode.h       |  15 +++
- 12 files changed, 387 insertions(+), 3 deletions(-)
+ .../bindings/power/reset/reboot-mode.txt           | 25 ++++++++++++++++
+ .../bindings/power/reset/syscon-reboot-mode.txt    | 35 ++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
- create mode 100644 drivers/power/reset/reboot-mode.c
- create mode 100644 drivers/power/reset/reboot-mode.h
- create mode 100644 drivers/power/reset/syscon-reboot-mode.c
- create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
 
+diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+new file mode 100644
+index 0000000..de34f27
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+@@ -0,0 +1,25 @@
++Generic reboot mode core map driver
++
++This driver get reboot mode arguments and call the write
++interface to store the magic value in special register
++or ram. Then the bootloader can read it and take different
++action according to the argument stored.
++
++All mode properties are vendor specific, it is a indication to tell
++the bootloader what to do when the system reboots, and should be named
++as mode-xxx = <magic> (xxx is mode name, magic should be a none-zero value).
++
++For example modes common on Android platform:
++- mode-normal: Normal reboot mode, system reboot with command "reboot".
++- mode-recovery: Android Recovery mode, it is a mode to format the device or update a new image.
++- mode-bootloader: Android fastboot mode, it's a mode to re-flash partitions on the Android based device.
++- mode-loader: A bootloader mode, it's a mode used to download image on Rockchip platform,
++	       usually used in development.
++
++Example:
++	reboot-mode {
++		mode-normal = <BOOT_NORMAL>;
++		mode-recovery = <BOOT_RECOVERY>;
++		mode-bootloader = <BOOT_FASTBOOT>;
++		mode-loader = <BOOT_BL_DOWNLOAD>;
++	}
+diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+new file mode 100644
+index 0000000..f7ce1d8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+@@ -0,0 +1,35 @@
++SYSCON reboot mode driver
++
++This driver gets reboot mode magic value form reboot-mode driver
++and stores it in a SYSCON mapped register. Then the bootloader
++can read it and take different action according to the magic
++value stored.
++
++This DT node should be represented as a sub-node of a "syscon", "simple-mfd"
++node.
++
++Required properties:
++- compatible: should be "syscon-reboot-mode"
++- offset: offset in the register map for the storage register (in bytes)
++
++Optional property:
++- mask: bits mask of the bits in the register to store the reboot mode magic value,
++  default set to 0xffffffff if missing.
++
++The rest of the properties should follow the generic reboot-mode description
++found in reboot-mode.txt
++
++Example:
++	pmu: pmu@20004000 {
++		compatible = "rockchip,rk3066-pmu", "syscon", "simple-mfd";
++		reg = <0x20004000 0x100>;
++
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x40>;
++			mode-normal = <BOOT_NORMAL>;
++			mode-recovery = <BOOT_RECOVERY>;
++			mode-bootloader = <BOOT_FASTBOOT>;
++			mode-loader = <BOOT_BL_DOWNLOAD>;
++		};
++	};
 -- 
 2.7.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
