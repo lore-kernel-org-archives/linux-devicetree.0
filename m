@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 5/9] ARM: dts: sun7i: bananapi-m1-plus: Reindent
- whole file using tabs
-Date: Wed,  6 Jul 2016 17:10:46 +0800
-Message-ID: <1467796250-22010-6-git-send-email-wens@csie.org>
+Subject: [PATCH 8/9] ARM: dts: sun7i: bananapi-m1-plus: Add PMIC
+ regulators and OPPs for cpufreq
+Date: Wed,  6 Jul 2016 17:10:49 +0800
+Message-ID: <1467796250-22010-9-git-send-email-wens@csie.org>
 References: <1467796250-22010-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,338 +20,92 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The bananapi-m1-plus dts file was indented using 4 spaces, without
-tabs. This does not match the code style.
+The Bananapi M1+, like other Allwinner A20 based boards, uses the AXP209
+PMIC to supply its power. The vendor FEX file's DVFS table suggests the
+board's CPU power rail has a voltage drop of 25 ~ 50 mV.
 
-Reindent the whole file before we do anything else.
+Add the PMIC regulator nodes and copy the DVFS table from the FEX file.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 272 +++++++++++------------
- 1 file changed, 136 insertions(+), 136 deletions(-)
+ arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 48 ++++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-index 89e38e9e0be6..edfb5b37939e 100644
+index ba5bca0fe997..7bb418bd1b6e 100644
 --- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
 +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-@@ -49,182 +49,182 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- / {
--    model = "Banana Pi BPI-M1-Plus";
--    compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
--
--    aliases {
--        serial0 = &uart0;
--    };
--
--    chosen {
--        stdout-path = "serial0:115200n8";
--    };
--
--    leds {
--        compatible = "gpio-leds";
--        pinctrl-names = "default";
--        pinctrl-0 = <&led_pins_bananapi>;
--
--        green {
--            label = "bananapi-m1-plus:green:usr";
--            gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
--        };
--
--        red {
--            label = "bananapi-m1-plus:red:usr";
--            gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
--            linux,default-trigger = "default-on";
--        };
--
--    };
--
--    mmc3_pwrseq: mmc3_pwrseq {
--        compatible = "mmc-pwrseq-simple";
--        pinctrl-names = "default";
--        pinctrl-0 = <&mmc3_pwrseq_pin_bananapim1plus>;
--        reset-gpios = <&pio 7 22 GPIO_ACTIVE_LOW>; /* PH22 WL-PMU-EN */
--    };
--
--    reg_gmac_3v3: gmac-3v3 {
--        compatible = "regulator-fixed";
--        pinctrl-names = "default";
--        pinctrl-0 = <&gmac_power_pin_bananapi>;
--        regulator-name = "gmac-3v3";
--        regulator-min-microvolt = <3300000>;
--        regulator-max-microvolt = <3300000>;
--        startup-delay-us = <100000>;
--        enable-active-high;
--        gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
--    };
-+	model = "Banana Pi BPI-M1-Plus";
-+	compatible = "sinovoip,bpi-m1-plus", "allwinner,sun7i-a20";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_bananapi>;
-+
-+		green {
-+			label = "bananapi-m1-plus:green:usr";
-+			gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		red {
-+			label = "bananapi-m1-plus:red:usr";
-+			gpios = <&pio 7 25 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+	};
-+
-+	mmc3_pwrseq: mmc3_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&mmc3_pwrseq_pin_bananapim1plus>;
-+		reset-gpios = <&pio 7 22 GPIO_ACTIVE_LOW>; /* PH22 WL-PMU-EN */
-+	};
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gmac_power_pin_bananapi>;
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
-+	};
+@@ -105,6 +105,22 @@
+ 	status = "okay";
  };
  
- &ahci {
--    status = "okay";
-+	status = "okay";
- };
- 
- &codec {
--    status = "okay";
-+	status = "okay";
- };
- 
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
++
++	/* The custom DVFS table suggests a voltage drop of 25 ~ 50 mV */
++	operating-points = <
++		/* kHz    uV */
++		1080000	1450000
++		912000	1425000
++		864000	1350000
++		720000	1250000
++		528000	1150000
++		312000	1100000
++		144000	1050000
++		>;
++};
++
  &ehci0 {
--    status = "okay";
-+	status = "okay";
+ 	status = "okay";
  };
+@@ -132,13 +148,9 @@
+ 	status = "okay";
  
- &ehci1 {
--    status = "okay";
-+	status = "okay";
- };
- 
- &gmac {
--    pinctrl-names = "default";
--    pinctrl-0 = <&gmac_pins_rgmii_a>;
--    phy = <&phy1>;
--    phy-mode = "rgmii";
--    phy-supply = <&reg_gmac_3v3>;
--    status = "okay";
+ 	axp209: pmic@34 {
+-		compatible = "x-powers,axp209";
+ 		reg = <0x34>;
+ 		interrupt-parent = <&nmi_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
 -
--    phy1: ethernet-phy@1 {
--        reg = <1>;
--    };
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_pins_rgmii_a>;
-+	phy = <&phy1>;
-+	phy-mode = "rgmii";
-+	phy-supply = <&reg_gmac_3v3>;
-+	status = "okay";
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+ 	};
+ };
+ 
+@@ -222,6 +234,34 @@
+ 	};
+ };
+ 
++#include "axp209.dtsi"
 +
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
- };
- 
- &i2c0 {
--    pinctrl-names = "default";
--    pinctrl-0 = <&i2c0_pins_a>;
--    status = "okay";
--
--    axp209: pmic@34 {
--        compatible = "x-powers,axp209";
--        reg = <0x34>;
--        interrupt-parent = <&nmi_intc>;
--        interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--
--        interrupt-controller;
--        #interrupt-cells = <1>;
--    };
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
++&reg_dcdc2 {
++	/* The custom DVFS table suggests a voltage drop of 25 ~ 50 mV */
++	regulator-always-on;
++	regulator-min-microvolt = <1050000>;
++	regulator-max-microvolt = <1450000>;
++	regulator-name = "vdd-cpu";
++};
 +
-+	axp209: pmic@34 {
-+		compatible = "x-powers,axp209";
-+		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
 +
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
- };
- 
- &ir0 {
--    pinctrl-names = "default";
--    pinctrl-0 = <&ir0_rx_pins_a>;
--    status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ir0_rx_pins_a>;
-+	status = "okay";
- };
- 
- &mmc0 {
--    pinctrl-names = "default";
--    pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
--    vmmc-supply = <&reg_vcc3v3>;
--    bus-width = <4>;
--    cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
--    cd-inverted;
--    status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-+	cd-inverted;
-+	status = "okay";
- };
- 
- &mmc3 {
--    #address-cells = <1>;
--    #size-cells = <0>;
--    pinctrl-names = "default";
--    pinctrl-0 = <&mmc3_pins_a>;
--    vmmc-supply = <&reg_vcc3v3>;
--    mmc-pwrseq = <&mmc3_pwrseq>;
--    bus-width = <4>;
--    non-removable;
--    enable-sdio-wakeup;
--    status = "okay";
--
--    brcmf: bcrmf@1 {
--        reg = <1>;
--        compatible = "brcm,bcm4329-fmac";
--        interrupt-parent = <&pio>;
--        interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
--        interrupt-names = "host-wake";
--    };
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins_a>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&mmc3_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	enable-sdio-wakeup;
-+	status = "okay";
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
 +
-+	brcmf: bcrmf@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "host-wake";
-+	};
- };
- 
- &mmc3_pins_a {
--    /* AP6210 requires pull-up */
--    allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	/* AP6210 requires pull-up */
-+	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- };
- 
- &ohci0 {
--    status = "okay";
-+	status = "okay";
- };
- 
- &ohci1 {
--    status = "okay";
-+	status = "okay";
- };
- 
- &pio {
--    gmac_power_pin_bananapi: gmac_power_pin@0 {
--        allwinner,pins = "PH23";
--        allwinner,function = "gpio_out";
--        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--    };
--
--    led_pins_bananapi: led_pins@0 {
--        allwinner,pins = "PH24", "PG2";
--        allwinner,function = "gpio_out";
--        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--    };
--
--    mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
--        allwinner,pins = "PH10";
--        allwinner,function = "gpio_in";
--        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--        allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
--    };
--
--    mmc3_pwrseq_pin_bananapim1plus: mmc3_pwrseq_pin@0 {
--        allwinner,pins = "PH22";
--        allwinner,function = "gpio_out";
--        allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--        allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--    };
-+	gmac_power_pin_bananapi: gmac_power_pin@0 {
-+		allwinner,pins = "PH23";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
 +
-+	led_pins_bananapi: led_pins@0 {
-+		allwinner,pins = "PH24", "PG2";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
-+		allwinner,pins = "PH10";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
-+	mmc3_pwrseq_pin_bananapim1plus: mmc3_pwrseq_pin@0 {
-+		allwinner,pins = "PH22";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
- };
- 
  &uart0 {
--    pinctrl-names = "default";
--    pinctrl-0 = <&uart0_pins_a>;
--    status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
- };
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
 -- 
 2.8.1
