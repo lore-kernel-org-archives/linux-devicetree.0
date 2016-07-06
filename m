@@ -1,73 +1,43 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 2/4] power: reset: add reboot mode driver
-Date: Wed, 6 Jul 2016 17:24:19 +0200
-Message-ID: <20160706152419.GB19659@earth>
-References: <1467811081-20700-1-git-send-email-andy.yan@rock-chips.com>
- <1467811646-20823-1-git-send-email-andy.yan@rock-chips.com>
+From: ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: [PATCH 0/3] ARM: dts: the dts support for rk3288 firefly reload
+Date: Wed,  6 Jul 2016 23:25:21 +0800
+Message-ID: <1467818724-21500-1-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yEPQxsgoJgBvi8ip"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467811646-20823-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The rk3288 firefly reload  is a Rockchip RK3288 based board be found by
+core board and main board. The regulators are connected in a different
+way to the previous version of firefly boards, it is necessary to
+move some common code to uncommon place.
 
---yEPQxsgoJgBvi8ip
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I only tested the ethernet and confirmed that works.
 
-Hi,
+ayaka (3):
+  ARM: dts: add label leds for rk3288-firefly.dtsi
+  ARM: dts: move regulator settings from common to specifics
+  ARM: dts: add rk3288-firefly-reload
 
-On Wed, Jul 06, 2016 at 09:27:26PM +0800, Andy Yan wrote:
-> This driver parses the reboot commands like "reboot bootloader"
-> and "reboot recovery" to get a boot mode described in the
-> device tree , then call the write interfae to store the boot
-> mode in some place like special register or sram, which can
-> be read by the bootloader after system reboot, then the bootloader
-> can take different action according to the mode stored.
->=20
-> This is commonly used on Android based devices, in order to
-> reboot the device into fastboot or recovery mode.
->=20
-> Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-> Tested-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/rk3288-firefly-beta.dts   |  30 ++++++++
+ arch/arm/boot/dts/rk3288-firefly-reload.dts | 109 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/rk3288-firefly.dts        |  30 ++++++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi       |  16 ++--
+ 5 files changed, 178 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3288-firefly-reload.dts
 
-Thanks, queued into powersupply's next tree with the
-whitespace issue fixed.
-
--- Sebastian
-
---yEPQxsgoJgBvi8ip
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXfSKjAAoJENju1/PIO/qalqgP/iIfoVBhshzu+fWWVCTcnBwT
-waK+UTJ9pOJRTBdQdTNWSSOP+1g+HGT6ZTbBJmFTZVVX5bWZ4edStteJ+ZWnR6s5
-XA5Iu0OS7qv0/fAGA8xgZQWxFmnhrieIEJ+1NH8s2DOgP+DewUEx0DiR1Zi1YCML
-FBTzlOkDMUAfZqCcYsyjvMppJgSG/LGSWNt1sJ1pigB7/2gR0j2DZE2ySrxvHPGy
-vuUekQl0HN3vgC77+lUQFnXz72VRKk5S1F8sK0Tmex8Xtt6Cl5k/d0Tuy6CgQGAj
-s+hoIIPm022JKuX9YcEftLhlcwxJGQSrJyI6G3SVzOg74xER/6GqcKaOBOpWEJvG
-7pjrnrthbW+AcTFFHONvl1J0eMqgF0NWPwIoLjs/BjaTAnkhewjXnY9VDipLWSI5
-no3ziFuIfqsoM8ojbSdnY7pRHJV0ond7r9csWAzfGKajzdA4TL/PP0F0Y5CNjQHT
-xjq7OlRjA1ZxqoGhQuva50USDndHgRm+f+QKKdwOgtfj4gWZUJmVXfUZPs8Y/u7l
-9kQBMoS5IHGb3FmutS/B0mCsSTdQpwKzQhBUbFT/nBJkHdmRxkGi/yfKq49gaBj0
-RNFWwRe9vKsVFl9OmW5qPFXAcyXVdTmkrU1dfN7awLjb4lEQV8vRGfQOaplJzLoQ
-X+VRMXI9fdOiwhPJTieX
-=T0m2
------END PGP SIGNATURE-----
-
---yEPQxsgoJgBvi8ip--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
