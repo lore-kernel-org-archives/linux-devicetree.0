@@ -1,20 +1,20 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v9 2/4] power: reset: add reboot mode driver
-Date: Wed, 06 Jul 2016 15:39:43 +0200
-Message-ID: <577D0A1F.9070007@samsung.com>
-References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
- <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v10 2/4] power: reset: add reboot mode driver
+Date: Wed, 06 Jul 2016 15:40:47 +0200
+Message-ID: <577D0A5F.8060907@samsung.com>
+References: <1467811081-20700-1-git-send-email-andy.yan@rock-chips.com>
+ <1467811646-20823-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>, robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1467811646-20823-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2016 08:38 AM, Andy Yan wrote:
+On 07/06/2016 03:27 PM, Andy Yan wrote:
 > This driver parses the reboot commands like "reboot bootloader"
 > and "reboot recovery" to get a boot mode described in the
 > device tree , then call the write interfae to store the boot
@@ -25,59 +25,18 @@ On 06/20/2016 08:38 AM, Andy Yan wrote:
 > This is commonly used on Android based devices, in order to
 > reboot the device into fastboot or recovery mode.
 > 
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> Acked-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v9:
-> - select MFD_SYSCON when syscon-reboot-mode driver enabled
-> - refactoring error handling in reboot_mode_register
-> 
-> Changes in v8:
-> - do some cleanup when driver ubind
-> 
-> Changes in v7:
-> - address some suggestions from Krzysztof, make syscon-reboot-mode driver data self-contained.
-> 
-> Changes in v6: None
-> Changes in v5:
-> - use two blank space under help in Kconfig
-> - use unsigned int instead of int for member magic in struct mode_info
-> 
-> Changes in v4:
-> - make this driver depends on OF to avoid kbuild test error
-> 
-> Changes in v3:
-> - scan multi properities
-> - add mask value for some platform which only use some bits of the register
->   to store boot mode magic value
-> 
-> Changes in v2:
-> - move to dir drivers/power/reset/
-> - make syscon-reboot-mode a generic driver
-> 
-> Changes in v1:
-> - fix the embarrassed compile warning
-> - correct the maskrom magic number
-> - check for the normal reboot
-> 
->  drivers/power/reset/Kconfig              |  14 ++++
->  drivers/power/reset/Makefile             |   2 +
->  drivers/power/reset/reboot-mode.c        | 128 +++++++++++++++++++++++++++++++
->  drivers/power/reset/reboot-mode.h        |  14 ++++
->  drivers/power/reset/syscon-reboot-mode.c | 100 ++++++++++++++++++++++++
->  5 files changed, 258 insertions(+)
->  create mode 100644 drivers/power/reset/reboot-mode.c
->  create mode 100644 drivers/power/reset/reboot-mode.h
->  create mode 100644 drivers/power/reset/syscon-reboot-mode.c
+> Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+> Tested-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+
+Argh, I responded to old email so again here:
 
 One minor whitespace issue at the end but beside that:
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
 (...)
 
@@ -160,38 +119,7 @@ Just one new line.
 
 Best regards,
 Krzysztof
-
-> +	ret = reboot_mode_register(&syscon_rbm->reboot);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "can't register reboot mode\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int syscon_reboot_mode_remove(struct platform_device *pdev)
-> +{
-> +	struct syscon_reboot_mode *syscon_rbm = dev_get_drvdata(&pdev->dev);
-> +
-> +	return reboot_mode_unregister(&syscon_rbm->reboot);
-> +}
-> +
-> +static const struct of_device_id syscon_reboot_mode_of_match[] = {
-> +	{ .compatible = "syscon-reboot-mode" },
-> +	{}
-> +};
-> +
-> +static struct platform_driver syscon_reboot_mode_driver = {
-> +	.probe = syscon_reboot_mode_probe,
-> +	.remove = syscon_reboot_mode_remove,
-> +	.driver = {
-> +		.name = "syscon-reboot-mode",
-> +		.of_match_table = syscon_reboot_mode_of_match,
-> +	},
-> +};
-> +module_platform_driver(syscon_reboot_mode_driver);
-> +
-> +MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com");
-> +MODULE_DESCRIPTION("SYSCON reboot mode driver");
-> +MODULE_LICENSE("GPL v2");
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
