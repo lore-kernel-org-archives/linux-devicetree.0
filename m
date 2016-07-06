@@ -1,65 +1,32 @@
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Document the STM32 reset bindings
-Date: Wed, 6 Jul 2016 09:39:10 +0200
-Message-ID: <577CB59E.1080508@st.com>
-References: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
- <1467640052-6770-2-git-send-email-gabriel.fernandez@st.com>
- <20160705161813.GA20477@rob-hp-laptop>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: exynos: Modify the voltage range for BUCK2
+ for exynos7
+Date: Wed, 6 Jul 2016 09:44:11 +0200
+Message-ID: <CAJKOXPfWanrkNvSRz384UNga1QUWuVS8rHvYbda9_io06RkeQA@mail.gmail.com>
+References: <1467750537-13911-1-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160705161813.GA20477@rob-hp-laptop>
+In-Reply-To: <1467750537-13911-1-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for reviewing
-
-On 07/05/2016 06:18 PM, Rob Herring wrote:
-> On Mon, Jul 04, 2016 at 03:47:30PM +0200, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
->> From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> This adds documentation of device tree bindings for the
->> STM32 reset controller.
->>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   .../devicetree/bindings/reset/st,stm32-rcc.txt     | 50 ++++++++++++++++++++++
->>   1 file changed, 50 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
->> new file mode 100644
->> index 0000000..333080c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
->> @@ -0,0 +1,50 @@
->> +STMicroelectronics STM32 Peripheral Reset Controller
->> +====================================================
->> +
->> +The RCC IP is both a reset and a clock controller. This documentation only
->> +documents the reset part.
-> The clock part is already documented or will do later? Either way, you
-> are describing an IP block, so please describe all of it now and in one
-> place.
+On Tue, Jul 5, 2016 at 10:28 PM, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Change the BUCK2 (vdd_atlas) voltage range to '500 - 1200mv' since
+> CPU DVFS requires it.
 >
-> Rob
-The clock part is already documented.
+> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
 
-Okay to put this in one place, but in which directory ?
-what do you prefer ?
-- create a rcc directory
-- put the file on top, in Documentation/devicetree/bindings
+Thanks, applied.
 
-Best regards
-
-Gabriel
-
-
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
