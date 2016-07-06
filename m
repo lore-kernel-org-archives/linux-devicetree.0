@@ -1,151 +1,43 @@
-From: Randy Li <ayaka@soulik.info>
-Subject: [PATCH 3/3] ARM: dts: add rk3288-firefly-reload
-Date: Thu,  7 Jul 2016 01:52:44 +0800
-Message-ID: <1467827564-28007-4-git-send-email-ayaka@soulik.info>
-References: <3015470.z4L7UQJKa9@phil>
- <1467827564-28007-1-git-send-email-ayaka@soulik.info>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467827564-28007-1-git-send-email-ayaka@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, heiko@sntech.de, Randy Li <ayaka@soulik.info>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] arm: dts: berlin: enable all dw_wdt nodes
+ unconditionally
+Date: Wed, 6 Jul 2016 19:58:56 +0200
+Message-ID: <577D46E0.7040404@gmail.com>
+References: <1467787301-3728-1-git-send-email-jszhang@marvell.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467787301-3728-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The firefly rk3288 reload is a Rockchip rk3288 based develop board.
+On 06.07.2016 08:41, Jisheng Zhang wrote:
+> When we add watchdog dt nodes into berlin dtsi, the dw_wdt driver can't
+> support multiple variants, so we have to keep one enabled and others
+> disabled. After commit f29a72c24ad4 ("watchdog: dw_wdt: Convert to use
+> watchdog infrastructure"), the dw_wdt driver can support multiple
+> variants, so we can unconditionally enable all dw_wdt nodes now.
+> 
+> Jisheng Zhang (3):
+>   arm: dts: berlin2: enable all wdt nodes unconditionally
+>   arm: dts: berlin2q: enable all wdt nodes unconditionally
+>   arm64: dts: berlin4ct: enable all wdt nodes unconditionally
 
-Signed-off-by: Randy Li <ayaka@soulik.info>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/rk3288-firefly-reload.dts | 109 ++++++++++++++++++++++++++++
- 2 files changed, 110 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-firefly-reload.dts
+Applied all three to berlin/dt and berlin64/dt respectively.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 06b6c2d..19a6049 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -606,6 +606,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3288-evb-rk808.dtb \
- 	rk3288-firefly-beta.dtb \
- 	rk3288-firefly.dtb \
-+	rk3288-firefly-reload.dtb \
- 	rk3288-miqi.dtb \
- 	rk3288-popmetal.dtb \
- 	rk3288-r89.dtb \
-diff --git a/arch/arm/boot/dts/rk3288-firefly-reload.dts b/arch/arm/boot/dts/rk3288-firefly-reload.dts
-new file mode 100644
-index 0000000..9805cf2
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3288-firefly-reload.dts
-@@ -0,0 +1,109 @@
-+/*
-+ * Copyright (c) 2016 Randy Li <ayaka@soulik.info>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "rk3288-firefly.dtsi"
-+
-+/ {
-+	model = "Firefly-RK3288-reload";
-+	compatible = "firefly,firefly-rk3288-reload", "rockchip,rk3288";
-+
-+};
-+
-+&leds {
-+	power {
-+		gpios = <&gpio8 2 GPIO_ACTIVE_LOW>;
-+		label = "firefly:blue:power";
-+		linux,default-trigger = "default-on";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&power_led>;
-+	};
-+};
-+
-+&gmac {
-+	phy-supply = <&vcc_lan>;
-+};
-+
-+&pinctrl {
-+	act8846 {
-+		pmic_vsel: pmic-vsel {
-+			rockchip,pins = <7 14 RK_FUNC_GPIO &pcfg_output_low>;
-+		};
-+	};
-+
-+	ir {
-+		ir_int: ir-int {
-+			rockchip,pins = <7 0 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+};
-+
-+&pwm1 {
-+	status = "disabled";
-+};
-+
-+&io_domains {
-+		audio-supply = <&vcca_33>;
-+		flash1-supply = <&vcc_lan>;
-+};
-+
-+&regulators {
-+	vcca_33: REG7 {
-+		regulator-name = "vcca_33";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vcc_lan: REG8 {
-+		regulator-name = "vcc_lan";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vccio_pmu: REG9 {
-+		regulator-name = "vccio_pmu";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+};
--- 
-2.7.4
+Thanks!
+
+Sebastian
+
+>  arch/arm/boot/dts/berlin2.dtsi             | 2 --
+>  arch/arm/boot/dts/berlin2q.dtsi            | 2 --
+>  arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 2 --
+>  3 files changed, 6 deletions(-)
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
