@@ -1,26 +1,37 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 03/10] Documentation: dt-bindings: firmware: tegra: add
- bindings of the BPMP
-Date: Wed, 6 Jul 2016 11:03:27 -0600
-Message-ID: <577D39DF.600@wwwdotorg.org>
-References: <20160705090431.5852-1-josephl@nvidia.com>
- <20160705090431.5852-4-josephl@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160705090431.5852-4-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: [PATCH 0/3] Re: [PATCH 2/3] ARM: dts: move regulator settings from common to specifics
+Date: Thu,  7 Jul 2016 01:34:04 +0800
+Message-ID: <1467826447-24159-1-git-send-email-ayaka@soulik.info>
+References: <3015470.z4L7UQJKa9@phil>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3015470.z4L7UQJKa9@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2016 03:04 AM, Joseph Lo wrote:
-> The BPMP is a specific processor in Tegra chip, which is designed for
-> booting process handling and offloading the power management, clock
-> management, and reset control tasks from the CPU. The binding document
-> defines the resources that would be used by the BPMP firmware driver,
-> which can create the interprocessor communication (IPC) between the CPU
-> and BPMP.
+I am sorry to make this mistake. I have re-sent my patches.
+Thank you for reminding me that.
 
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+I hope that I make it correct this time.
+
+ayaka (3):
+  ARM: dts: add label leds for rk3288-firefly.dtsi
+  ARM: dts: move regulator settings from common to specifics
+  ARM: dts: add rk3288-firefly-reload
+
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/rk3288-firefly-beta.dts   |  30 ++++++++
+ arch/arm/boot/dts/rk3288-firefly-reload.dts | 109 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/rk3288-firefly.dts        |  30 ++++++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi       |  16 ++--
+ 5 files changed, 178 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3288-firefly-reload.dts
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
