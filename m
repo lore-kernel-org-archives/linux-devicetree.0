@@ -1,112 +1,71 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH -next] ARM: dts: sun8i: Add NFC node to Allwinner A23/A33
- SoC
-Date: Wed, 6 Jul 2016 22:29:32 +0200
-Message-ID: <20160706202932.GD4247@lukather>
-References: <20160706003352.28194-1-icenowy@aosc.xyz>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Wed, 06 Jul 2016 13:42:28 -0700
+Message-ID: <146783774807.35356.6362595927321996311@resonance>
+References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
+ <146776885213.35356.11565744417822933094@resonance>
+ <577D035C.7090504@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7082659391531342867=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160706003352.28194-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <577D035C.7090504@arm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Julien Grall <julien.grall@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: xen-devel@lists.xenproject.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Julien,
 
---===============7082659391531342867==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eqp4TxRxnD4KrmFZ"
-Content-Disposition: inline
+Quoting Julien Grall (2016-07-06 06:10:52)
+> On 06/07/16 02:34, Michael Turquette wrote:
+> > Hi!
+> 
+> Hello Michael,
+> 
+> > Quoting Dirk Behme (2016-06-30 03:32:32)
+> >> Some clocks might be used by the Xen hypervisor and not by the Linux
+> >> kernel. If these are not registered by the Linux kernel, they might be
+> >> disabled by clk_disable_unused() as the kernel doesn't know that they
+> >> are used. The clock of the serial console handled by Xen is one
+> >> example for this. It might be disabled by clk_disable_unused() which
+> >> stops the whole serial output, even from Xen, then.
+> >
+> > This whole thread had me confused until I realized that it all boiled
+> > down to some nomenclature issues (for me).
+> >
+> > This code does not _register_ any clocks. It simply gets them and
+> > enables them, which is what every other clk consumer in the Linux kernel
+> > does. More details below.
+> >
+> >>
+> >> Up to now, the workaround for this has been to use the Linux kernel
+> >> command line parameter 'clk_ignore_unused'. See Xen bug
+> >>
+> >> http://bugs.xenproject.org/xen/bug/45
+> >
+> > clk_ignore_unused is a band-aid, not a proper medical solution. Setting
+> > that flag will not turn clocks on for you, nor will it guarantee that
+> > those clocks are never turned off in the future. It looks like you
+> > figured this out correctly in the patch below but it is worth repeating.
+> >
+> > Also the new CLK_IS_CRITICAL flag might be of interest to you, but that
+> > flag only exists as a way to enable clocks that must be enabled for the
+> > system to function (hence, "critical") AND when those same clocks do not
+> > have an accompanying Linux driver to consume them and enable them.
+> 
+> I don't think we want the kernel to enable the clock for the hypervisor. 
+> We want to tell the kernel "don't touch at all to this clock, it does 
+> not belong to you".
 
+But the patch *does* touch the clock from the kernel. It enables the
+clock via a call clk_prepare_enable. I'm utterly confused.
 
---eqp4TxRxnD4KrmFZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regards,
+Mike
 
-Hi,
-
-On Wed, Jul 06, 2016 at 08:33:52AM +0800, Icenowy Zheng wrote:
-> Add NAND Flash controller node definition to the A23/A33 SoC.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-
-Has this ever been tested? On what board, with what NAND chip?
-
-> ---
->  arch/arm/boot/dts/sun8i-a23-a33.dtsi | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun=
-8i-a23-a33.dtsi
-> index 7e05e09..270c38a 100644
-> --- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-> @@ -209,6 +209,14 @@
->  					"apb2_uart3", "apb2_uart4";
->  		};
-> =20
-> +		nand_clk: clk@01c20080 {
-> +			#clock-cells =3D <0>;
-> +			compatible =3D "allwinner,sun4i-a10-mod0-clk";
-> +			reg =3D <0x01c20080 0x4>;
-> +			clocks =3D <&osc24M>, <&pll6 1>;
-> +			clock-output-names =3D "nand";
-> +		};
-> +
-
-This should be in a separate patch.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---eqp4TxRxnD4KrmFZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXfWosAAoJEBx+YmzsjxAgi2wQAKiRhb0ss9/iFXy6WX6K8ltY
-juqxL8TjQges1boAMBZNNc03QTd9kfR00y5gnqhMUWp4DaR5uvPwpJTRZNTpLNcc
-HfqWkKsBEP/zxbwkDepLDgdYF2+Q41yiHu+MQ3Uv7Nmk7xF5QjYdMkSEc0Uu87Xp
-jB8h2j21ZP3IImcJeJVVViIaZ19JTQiDZ3xoRANy3MpDEUrtoci1Kt8ZVPCoGyEG
-MBq3tb724l7QbJPv3jIghSHujyj722og48k7bQ0iOrN20Hqf6YA8hLzLGUOaIr/E
-Fl4aY2QlJP1rIVyhnKTVxPZPq5RJZwAcGJq373lvhk6/mRC2iOMFf7YA8pBHIJ1J
-o5cF7bfUfAqyoXqY/sgJCnRuid8C/GKIdtBLGbq1y+dl/68CqWAGJAZsAtGEKWuZ
-HA0I6jhPoLf2aBD1kvH4HcGUQFZwSP9HBYSJboXMVHyeyRbXAOqVb70zAo5TK0mJ
-vTarPG+rwmVmaIoIDJyIMB3Vwa/4WAcDDrwCuYrCOBGji9nsz1RfUMK2/QLenRJZ
-afjA5S5MFzD2oWbECV48Xb7dSSvSfL3oNluvKvyyCDdhJSGRE/kmruh817ukbFBy
-A0UjsLChvzO6pAMGFCz3tYe5hoGsKAsJELeYGuxRmskw5kVxl0hbfXGLS7/cAj9a
-wdNGEPlSjqytYETu+Lxp
-=XQ3v
------END PGP SIGNATURE-----
-
---eqp4TxRxnD4KrmFZ--
-
-
---===============7082659391531342867==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7082659391531342867==--
+> 
+> Regards,
+> 
+> -- 
+> Julien Grall
