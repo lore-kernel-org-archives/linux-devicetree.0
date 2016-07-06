@@ -1,132 +1,84 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v10 1/4] dt-bindings: power: reset: add document for reboot-mode driver
-Date: Wed,  6 Jul 2016 21:22:45 +0800
-Message-ID: <1467811365-20762-1-git-send-email-andy.yan@rock-chips.com>
-References: <1467811081-20700-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467811081-20700-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Julien Grall <julien.grall@arm.com>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Wed, 6 Jul 2016 14:26:32 +0100
+Message-ID: <577D0708.9000207@arm.com>
+References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
+ <146776885213.35356.11565744417822933094@resonance>
+ <577D035C.7090504@arm.com>
+ <alpine.DEB.2.10.1607061412370.26575@sstabellini-ThinkPad-X260>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.10.1607061412370.26575@sstabellini-ThinkPad-X260>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings document for reboot-mode driver.
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
----
+On 06/07/16 14:16, Stefano Stabellini wrote:
+> On Wed, 6 Jul 2016, Julien Grall wrote:
+>> On 06/07/16 02:34, Michael Turquette wrote:
+>>> Hi!
+>>
+>> Hello Michael,
+>>
+>>> Quoting Dirk Behme (2016-06-30 03:32:32)
+>>>> Some clocks might be used by the Xen hypervisor and not by the Linux
+>>>> kernel. If these are not registered by the Linux kernel, they might be
+>>>> disabled by clk_disable_unused() as the kernel doesn't know that they
+>>>> are used. The clock of the serial console handled by Xen is one
+>>>> example for this. It might be disabled by clk_disable_unused() which
+>>>> stops the whole serial output, even from Xen, then.
+>>>
+>>> This whole thread had me confused until I realized that it all boiled
+>>> down to some nomenclature issues (for me).
+>>>
+>>> This code does not _register_ any clocks. It simply gets them and
+>>> enables them, which is what every other clk consumer in the Linux kernel
+>>> does. More details below.
+>>>
+>>>>
+>>>> Up to now, the workaround for this has been to use the Linux kernel
+>>>> command line parameter 'clk_ignore_unused'. See Xen bug
+>>>>
+>>>> http://bugs.xenproject.org/xen/bug/45
+>>>
+>>> clk_ignore_unused is a band-aid, not a proper medical solution. Setting
+>>> that flag will not turn clocks on for you, nor will it guarantee that
+>>> those clocks are never turned off in the future. It looks like you
+>>> figured this out correctly in the patch below but it is worth repeating.
+>>>
+>>> Also the new CLK_IS_CRITICAL flag might be of interest to you, but that
+>>> flag only exists as a way to enable clocks that must be enabled for the
+>>> system to function (hence, "critical") AND when those same clocks do not
+>>> have an accompanying Linux driver to consume them and enable them.
+>>
+>> I don't think we want the kernel to enable the clock for the hypervisor. We
+>> want to tell the kernel "don't touch at all to this clock, it does not belong
+>> to you".
+>
+> Right, and that's why I was suggesting that another way to do this would
+> be to set the "status" to "disabled" in Xen: so that Linux would leave
+> the clock alone. But in that case Linux would not be happy to see
+> disabled clocks which are actually supposed to be used by some devices.
+> Is that correct?
 
-Changes in v10: None
-Changes in v9: None
-Changes in v8: None
-Changes in v7:
-- fix some spelling mistakes
-- declare that the mode magic should be none-zero value
+The problem is not "whether Linux would be happy or not", but the 
+meaning of this property.
 
-Changes in v6:
-- fix a typo with "property"
-- describe property "mask" more clear
+Based on the ePAPR, "status = disabled" indicates that the device is not 
+presently operational, but it might become operational later (for 
+example, something is not plugged in, or switched off).
 
-Changes in v5:
-- delete a unnecessary blank line in syscon-reboot-mode.txt
-- rename mode-fastoboot to mode-bootloader in syscon-reboot-mode.txt
-- rename macro BOOT_LOADER to BOOT_BL_DOWNLOAD, which gives a more clear mean
+An operating system which read this property should interpret as "the 
+clock should not be used". However, with your suggestion the OS would 
+need to differentiate between "the clock may be used by the hypervisor" 
+and "the clock is not wired up/present/...".
 
-Changes in v4:
-- remove mode-maskrom
-- rename mode-fastboot to mode-bootloader to keep compatible with the exiting Android device
+Regards,
 
-Changes in v3:
-- descirbe all reboot mode as properity instead of subnode
-
-Changes in v2: None
-Changes in v1: None
-
- .../bindings/power/reset/reboot-mode.txt           | 25 ++++++++++++++++
- .../bindings/power/reset/syscon-reboot-mode.txt    | 35 ++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
-
-diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-new file mode 100644
-index 0000000..de34f27
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-@@ -0,0 +1,25 @@
-+Generic reboot mode core map driver
-+
-+This driver get reboot mode arguments and call the write
-+interface to store the magic value in special register
-+or ram. Then the bootloader can read it and take different
-+action according to the argument stored.
-+
-+All mode properties are vendor specific, it is a indication to tell
-+the bootloader what to do when the system reboots, and should be named
-+as mode-xxx = <magic> (xxx is mode name, magic should be a none-zero value).
-+
-+For example modes common on Android platform:
-+- mode-normal: Normal reboot mode, system reboot with command "reboot".
-+- mode-recovery: Android Recovery mode, it is a mode to format the device or update a new image.
-+- mode-bootloader: Android fastboot mode, it's a mode to re-flash partitions on the Android based device.
-+- mode-loader: A bootloader mode, it's a mode used to download image on Rockchip platform,
-+	       usually used in development.
-+
-+Example:
-+	reboot-mode {
-+		mode-normal = <BOOT_NORMAL>;
-+		mode-recovery = <BOOT_RECOVERY>;
-+		mode-bootloader = <BOOT_FASTBOOT>;
-+		mode-loader = <BOOT_BL_DOWNLOAD>;
-+	}
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
-new file mode 100644
-index 0000000..f7ce1d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
-@@ -0,0 +1,35 @@
-+SYSCON reboot mode driver
-+
-+This driver gets reboot mode magic value form reboot-mode driver
-+and stores it in a SYSCON mapped register. Then the bootloader
-+can read it and take different action according to the magic
-+value stored.
-+
-+This DT node should be represented as a sub-node of a "syscon", "simple-mfd"
-+node.
-+
-+Required properties:
-+- compatible: should be "syscon-reboot-mode"
-+- offset: offset in the register map for the storage register (in bytes)
-+
-+Optional property:
-+- mask: bits mask of the bits in the register to store the reboot mode magic value,
-+  default set to 0xffffffff if missing.
-+
-+The rest of the properties should follow the generic reboot-mode description
-+found in reboot-mode.txt
-+
-+Example:
-+	pmu: pmu@20004000 {
-+		compatible = "rockchip,rk3066-pmu", "syscon", "simple-mfd";
-+		reg = <0x20004000 0x100>;
-+
-+		reboot-mode {
-+			compatible = "syscon-reboot-mode";
-+			offset = <0x40>;
-+			mode-normal = <BOOT_NORMAL>;
-+			mode-recovery = <BOOT_RECOVERY>;
-+			mode-bootloader = <BOOT_FASTBOOT>;
-+			mode-loader = <BOOT_BL_DOWNLOAD>;
-+		};
-+	};
 -- 
-2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Julien Grall
