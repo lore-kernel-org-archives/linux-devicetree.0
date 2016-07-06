@@ -1,114 +1,133 @@
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 3/4] drivers: reset: Add STM32 reset driver
-Date: Wed, 6 Jul 2016 09:44:29 +0200
-Message-ID: <577CB6DD.5040502@st.com>
-References: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
- <1467640052-6770-3-git-send-email-gabriel.fernandez@st.com>
- <1467725309.2978.63.camel@pengutronix.de>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH 2/4] power: add axp20x-battery driver
+Date: Wed, 06 Jul 2016 15:48:27 +0800
+Message-ID: <1108451467791307@web8g.yandex.ru>
+References: <20160701092926.32005-1-icenowy@aosc.xyz>
+	 <20160701092926.32005-2-icenowy@aosc.xyz> <577B44FD.6040404@mailbox.org>
+	 <4101467707611@web7h.yandex.ru> <577C8A6D.8000409@computerlinguist.org>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467725309.2978.63.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBUHP6K5QKGQEYZYWLTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <577C8A6D.8000409-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
 
-On 07/05/2016 03:28 PM, Philipp Zabel wrote:
-> Am Montag, den 04.07.2016, 15:47 +0200 schrieb gabriel.fernandez-qxv4g6HH51o@public.gmane.org:
->> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
->>
->> The STM32 MCUs family IPs can be reset by accessing some registers
->> from the RCC block.
->>
->> The list of available reset lines is documented in the DT bindings.
->>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
->> ---
->>   drivers/reset/Makefile      |   1 +
->>   drivers/reset/reset-stm32.c | 113 ++++++++++++++++++++++++++++++++++++++++++++
->>   2 files changed, 114 insertions(+)
->>   create mode 100644 drivers/reset/reset-stm32.c
->>
->> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
->> index 03dc1bb..3776b7b 100644
->> --- a/drivers/reset/Makefile
->> +++ b/drivers/reset/Makefile
->> @@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
->>   obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
->>   obj-$(CONFIG_MACH_PISTACHIO) += reset-pistachio.o
->>   obj-$(CONFIG_ARCH_MESON) += reset-meson.o
->> +obj-$(CONFIG_ARCH_STM32) += reset-stm32.o
->>   obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
->>   obj-$(CONFIG_ARCH_STI) += sti/
->>   obj-$(CONFIG_ARCH_HISI) += hisilicon/
->> diff --git a/drivers/reset/reset-stm32.c b/drivers/reset/reset-stm32.c
->> new file mode 100644
->> index 0000000..be42bff
->> --- /dev/null
->> +++ b/drivers/reset/reset-stm32.c
->> @@ -0,0 +1,113 @@
->> +/*
->> + * Copyright (C) Maxime Coquelin 2015
->> + * Author:  Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> + * License terms:  GNU General Public License (GPL), version 2
->> + *
->> + * Heavily based on sunxi driver from Maxime Ripard.
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/reset-controller.h>
->> +#include <linux/slab.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/types.h>
->> +
->> +struct stm32_reset_data {
->> +	spinlock_t			lock;
->> +	void __iomem			*membase;
->> +	struct reset_controller_dev	rcdev;
->> +};
->> +
->> +static int stm32_reset_assert(struct reset_controller_dev *rcdev,
->> +			      unsigned long id)
->> +{
->> +	struct stm32_reset_data *data = container_of(rcdev,
->> +						     struct stm32_reset_data,
->> +						     rcdev);
->> +	int bank = id / BITS_PER_LONG;
->> +	int offset = id % BITS_PER_LONG;
->> +	unsigned long flags;
->> +	u32 reg;
->> +
->> +	spin_lock_irqsave(&data->lock, flags);
->> +
->> +	reg = readl_relaxed(data->membase + (bank * 4));
->> +	writel_relaxed(reg | BIT(offset), data->membase + (bank * 4));
-> Please also switch to the non-relaxed variants. It shouldn't make a
-> difference here, and as Arnd points out, reduces the risk of new
-> developers using readl/writel_relaxed without thinking about the
-> consequences.
-> Further, this will make the stm32, sunxi, and socfpga accessors look the
-> same. I'd like to try and combine them after this is merged.
+
+06.07.2016, 12:35, "Michael Haas" <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>:
+> Hi There,
 >
-> regards
-> Philipp
+> On 05.07.2016 10:33, Icenowy Zheng wrote:
+>> =C2=A0On 01.07.2016 11:29, Icenowy Zheng wrote:
 >
-ok no problem, i will fix it.
+>>>> =C2=A0=C2=A0=C2=A0+
+>>>> =C2=A0=C2=A0=C2=A0+static enum power_supply_property axp22x_battery_pr=
+operties[] =3D {
+>>>> =C2=A0=C2=A0=C2=A0+ POWER_SUPPLY_PROP_CAPACITY,
+>>>> =C2=A0=C2=A0=C2=A0+ POWER_SUPPLY_PROP_HEALTH,
+>>>> =C2=A0=C2=A0=C2=A0+ POWER_SUPPLY_PROP_PRESENT,
+>>>> =C2=A0=C2=A0=C2=A0+ POWER_SUPPLY_PROP_STATUS,
+>>>> =C2=A0=C2=A0=C2=A0+ POWER_SUPPLY_PROP_CURRENT_NOW,
+>>>> =C2=A0=C2=A0=C2=A0+ POWER_SUPPLY_PROP_VOLTAGE_NOW,
+>>>> =C2=A0=C2=A0=C2=A0+};
+>
+> Here's what Bruno's driver supports:
+>
+> static enum power_supply_property axp20x_battery_power_properties[] =3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_PRESENT,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_ONLINE,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_STATUS,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_VOLTAGE_NOW,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_CURRENT_NOW,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_CURRENT_MAX,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_HEALTH,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_TECHNOLOGY,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* POWER_SUPPLY_PROP_POWER_NOW, */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* POWER_SUPPLY_PROP_CHARGE_NOW, */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_CAPACITY,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_TEMP,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_TEMP_ALERT_MIN,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0POWER_SUPPLY_PROP_TEMP_ALERT_MAX,
+> };
+>
+>>>> =C2=A0=C2=A0=C2=A0+
+>>>> =C2=A0=C2=A0=C2=A0+static int axp20x_battery_probe(struct platform_dev=
+ice *pdev)
+>>>> =C2=A0=C2=A0=C2=A0+{
+>>>> =C2=A0=C2=A0=C2=A0+ struct axp20x_dev *axp20x =3D dev_get_drvdata(pdev=
+->dev.parent);
+>>>> =C2=A0=C2=A0=C2=A0+ struct power_supply_config psy_cfg =3D {};
+>>>> =C2=A0=C2=A0=C2=A0+ struct axp20x_battery *power;
+>>>> =C2=A0=C2=A0=C2=A0+ static const char * const axp22x_irq_names[] =3D {
+>>>> =C2=A0=C2=A0=C2=A0+ "BATT_PLUGIN", "BATT_REMOVAL", "BATT_ENT_ACT_MODE"=
+,
+>>>> =C2=A0=C2=A0=C2=A0+ "BATT_EXIT_ACT_MODE", "CHARG", "CHARG_DONE", NULL =
+};
+>
+> And here are the interrupts handled:
+>
+> static const char * const irq_names[] =3D { "BATT_HOT", "BATT_COLD",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"BATT_PLUGIN", "BAT=
+T_REMOVAL", "BATT_ACTIVATE",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"BATT_ACTIVATED", "=
+BATT_CHARGING", "BATT_CHARGED",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"BATT_CHG_CURR_LOW"=
+, "BATT_POWER_LOW_WARN",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"BATT_POWER_LOW_CRI=
+T" };
+>
+> There are a couple of issues with the version of Bruno's driver that I ha=
+ve:
+>
+> * power management is disabled (in the driver, not in the charger) -
+> think suspend/resume
+> * the temperature sensor data is not turned into a temperature value
+> correctly
+> * the IRQ handlers need to be cleaned up (remove logging)
+> * device tree binding documentation is missing
+>
+> Other than that, it's basically working and I have been using it at
+> least for some testing.
+>
+> The device tree bindings support:
+> * OCV curve support
+> * battery resistance
+> * battery capacity
+> * temp sensor settings
+>
+> You can find my copy of Bruno's driver here:
+> https://github.com/mhaas/linux-sunxi/blob/axp209-charger/drivers/power/ax=
+p20x_fuel_gauge.c
+>
+> Thanks,
+>
+> Michael
 
-Thanks
+Michael Haas:
+I'm grateful for you providing your axp20x_fuel_gauge.c copy.
 
-Gabriel
+I will try to tidy it up and add support for axp22x.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+Icenowy
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
