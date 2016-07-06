@@ -1,105 +1,249 @@
-From: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH 2/4] power: add axp20x-battery driver
-Date: Wed, 6 Jul 2016 06:34:53 +0200
-Message-ID: <577C8A6D.8000409@computerlinguist.org>
-References: <20160701092926.32005-1-icenowy@aosc.xyz>
- <20160701092926.32005-2-icenowy@aosc.xyz> <577B44FD.6040404@mailbox.org>
- <4101467707611@web7h.yandex.ru>
-Reply-To: haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v7 4/4] soc: mediatek: Add MT2701 scpsys driver
+Date: Wed, 6 Jul 2016 13:17:02 +0800
+Message-ID: <1467782222.26485.7.camel@mtksdaap41>
+References: <1463390894-32062-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1463390894-32062-5-git-send-email-jamesjj.liao@mediatek.com>
+	 <0ed4df8f-334a-e32d-e378-2ebdd80038e7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBCD4V7EG6QFRBBUV6K5QKGQECTQAIAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <4101467707611-tvSLaYVQeptuio3avFS2gg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-ymACFijhrKM@public.gmane.org, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0ed4df8f-334a-e32d-e378-2ebdd80038e7@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Shunli Wang <shunli.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi There,
+On Sat, 2016-07-02 at 18:41 +0200, Matthias Brugger wrote:
+> 
+> On 05/16/2016 11:28 AM, James Liao wrote:
+> > From: Shunli Wang <shunli.wang@mediatek.com>
+> >
+> > Add scpsys driver for MT2701.
+> >
+> > mtk-scpsys now supports MT8173 (arm64) and MT2701 (arm). So it should
+> > be enabled on both arm64 and arm platforms.
+> >
+> > Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
+> > Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> > Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+> > ---
+> >  drivers/soc/mediatek/Kconfig      |   2 +-
+> >  drivers/soc/mediatek/mtk-scpsys.c | 117 +++++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 116 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> > index 0a4ea80..609bb34 100644
+> > --- a/drivers/soc/mediatek/Kconfig
+> > +++ b/drivers/soc/mediatek/Kconfig
+> > @@ -23,7 +23,7 @@ config MTK_PMIC_WRAP
+> >  config MTK_SCPSYS
+> >  	bool "MediaTek SCPSYS Support"
+> >  	depends on ARCH_MEDIATEK || COMPILE_TEST
+> > -	default ARM64 && ARCH_MEDIATEK
+> > +	default ARCH_MEDIATEK
+> >  	select REGMAP
+> >  	select MTK_INFRACFG
+> >  	select PM_GENERIC_DOMAINS if PM
+> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> > index 00c0adb..f4d1230 100644
+> > --- a/drivers/soc/mediatek/mtk-scpsys.c
+> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> > @@ -20,6 +20,7 @@
+> >  #include <linux/regulator/consumer.h>
+> >  #include <linux/soc/mediatek/infracfg.h>
+> >
+> > +#include <dt-bindings/power/mt2701-power.h>
+> >  #include <dt-bindings/power/mt8173-power.h>
+> >
+> >  #define SPM_VDE_PWR_CON			0x0210
+> > @@ -27,8 +28,13 @@
+> >  #define SPM_VEN_PWR_CON			0x0230
+> >  #define SPM_ISP_PWR_CON			0x0238
+> >  #define SPM_DIS_PWR_CON			0x023c
+> > +#define SPM_CONN_PWR_CON		0x0280
+> >  #define SPM_VEN2_PWR_CON		0x0298
+> > -#define SPM_AUDIO_PWR_CON		0x029c
+> > +#define SPM_AUDIO_PWR_CON		0x029c	/* MT8173 */
+> > +#define SPM_BDP_PWR_CON			0x029c	/* MT2701 */
+> > +#define SPM_ETH_PWR_CON			0x02a0
+> > +#define SPM_HIF_PWR_CON			0x02a4
+> > +#define SPM_IFR_MSC_PWR_CON		0x02a8
+> >  #define SPM_MFG_2D_PWR_CON		0x02c0
+> >  #define SPM_MFG_ASYNC_PWR_CON		0x02c4
+> >  #define SPM_USB_PWR_CON			0x02cc
+> > @@ -42,10 +48,15 @@
+> >  #define PWR_ON_2ND_BIT			BIT(3)
+> >  #define PWR_CLK_DIS_BIT			BIT(4)
+> >
+> > +#define PWR_STATUS_CONN			BIT(1)
+> >  #define PWR_STATUS_DISP			BIT(3)
+> >  #define PWR_STATUS_MFG			BIT(4)
+> >  #define PWR_STATUS_ISP			BIT(5)
+> >  #define PWR_STATUS_VDEC			BIT(7)
+> > +#define PWR_STATUS_BDP			BIT(14)
+> > +#define PWR_STATUS_ETH			BIT(15)
+> > +#define PWR_STATUS_HIF			BIT(16)
+> > +#define PWR_STATUS_IFR_MSC		BIT(17)
+> >  #define PWR_STATUS_VENC_LT		BIT(20)
+> >  #define PWR_STATUS_VENC			BIT(21)
+> >  #define PWR_STATUS_MFG_2D		BIT(22)
+> > @@ -59,6 +70,7 @@ enum clk_id {
+> >  	CLK_MFG,
+> >  	CLK_VENC,
+> >  	CLK_VENC_LT,
+> > +	CLK_ETHIF,
+> >  	CLK_MAX,
+> >  };
+> >
+> > @@ -321,7 +333,8 @@ static void init_clks(struct platform_device *pdev, struct clk *clk[CLK_MAX])
+> >  		CLK_MM,
+> >  		CLK_MFG,
+> >  		CLK_VENC,
+> > -		CLK_VENC_LT
+> > +		CLK_VENC_LT,
+> > +		CLK_ETHIF
+> >  	};
+> >
+> >  	static const char * const clk_names[] = {
+> > @@ -329,6 +342,7 @@ static void init_clks(struct platform_device *pdev, struct clk *clk[CLK_MAX])
+> >  		"mfg",
+> >  		"venc",
+> >  		"venc_lt",
+> > +		"ethif",
+> >  	};
+> >
+> >  	int i;
+> > @@ -459,6 +473,102 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+> >  }
+> >
+> >  /*
+> > + * MT2701 power domain support
+> > + */
+> > +
+> > +static const struct scp_domain_data scp_domain_data_mt2701[] = {
+> > +	[MT2701_POWER_DOMAIN_CONN] = {
+> > +		.name = "conn",
+> > +		.sta_mask = PWR_STATUS_CONN,
+> > +		.ctl_offs = SPM_CONN_PWR_CON,
+> > +		.bus_prot_mask = 0x0104,
+> > +		.active_wakeup = true,
+> 
+> .clk_id = {CLK_NONE},
+> 
+> > +	},
+> > +	[MT2701_POWER_DOMAIN_DISP] = {
+> > +		.name = "disp",
+> > +		.sta_mask = PWR_STATUS_DISP,
+> > +		.ctl_offs = SPM_DIS_PWR_CON,
+> > +		.sram_pdn_bits = GENMASK(11, 8),
+> > +		.clk_id = {CLK_MM},
+> > +		.bus_prot_mask = 0x0002,
+> > +		.active_wakeup = true,
+> > +	},
+> > +	[MT2701_POWER_DOMAIN_MFG] = {
+> > +		.name = "mfg",
+> > +		.sta_mask = PWR_STATUS_MFG,
+> > +		.ctl_offs = SPM_MFG_PWR_CON,
+> > +		.sram_pdn_bits = GENMASK(11, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> > +		.clk_id = {CLK_MFG},
+> > +		.active_wakeup = true,
+> > +	},
+> > +	[MT2701_POWER_DOMAIN_VDEC] = {
+> > +		.name = "vdec",
+> > +		.sta_mask = PWR_STATUS_VDEC,
+> > +		.ctl_offs = SPM_VDE_PWR_CON,
+> > +		.sram_pdn_bits = GENMASK(11, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(12, 12),
+> > +		.clk_id = {CLK_MM},
+> > +		.active_wakeup = true,
+> > +	},
+> > +	[MT2701_POWER_DOMAIN_ISP] = {
+> > +		.name = "isp",
+> > +		.sta_mask = PWR_STATUS_ISP,
+> > +		.ctl_offs = SPM_ISP_PWR_CON,
+> > +		.sram_pdn_bits = GENMASK(11, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(13, 12),
+> > +		.clk_id = {CLK_MM},
+> > +		.active_wakeup = true,
+> > +	},
+> > +	[MT2701_POWER_DOMAIN_BDP] = {
+> > +		.name = "bdp",
+> > +		.sta_mask = PWR_STATUS_BDP,
+> > +		.ctl_offs = SPM_BDP_PWR_CON,
+> > +		.sram_pdn_bits = GENMASK(11, 8),
+> > +		.active_wakeup = true,
+> 
+> same here.
+> 
+> > +	},
+> > +	[MT2701_POWER_DOMAIN_ETH] = {
+> > +		.name = "eth",
+> > +		.sta_mask = PWR_STATUS_ETH,
+> > +		.ctl_offs = SPM_ETH_PWR_CON,
+> > +		.sram_pdn_bits = GENMASK(11, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(15, 12),
+> > +		.clk_id = {CLK_ETHIF},
+> > +		.active_wakeup = true,
+> > +	},
+> > +	[MT2701_POWER_DOMAIN_HIF] = {
+> > +		.name = "hif",
+> > +		.sta_mask = PWR_STATUS_HIF,
+> > +		.ctl_offs = SPM_HIF_PWR_CON,
+> > +		.sram_pdn_bits = GENMASK(11, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(15, 12),
+> > +		.clk_id = {CLK_ETHIF},
+> > +		.active_wakeup = true,
+> > +	},
+> > +	[MT2701_POWER_DOMAIN_IFR_MSC] = {
+> > +		.name = "ifr_msc",
+> > +		.sta_mask = PWR_STATUS_IFR_MSC,
+> > +		.ctl_offs = SPM_IFR_MSC_PWR_CON,
+> > +		.active_wakeup = true,
+> 
+> same here.
 
-On 05.07.2016 10:33, Icenowy Zheng wrote:
-> On 01.07.2016 11:29, Icenowy Zheng wrote:
+Hi Matthias,
 
->>>   +
->>>   +static enum power_supply_property axp22x_battery_properties[] = {
->>>   + POWER_SUPPLY_PROP_CAPACITY,
->>>   + POWER_SUPPLY_PROP_HEALTH,
->>>   + POWER_SUPPLY_PROP_PRESENT,
->>>   + POWER_SUPPLY_PROP_STATUS,
->>>   + POWER_SUPPLY_PROP_CURRENT_NOW,
->>>   + POWER_SUPPLY_PROP_VOLTAGE_NOW,
->>>   +};
-
-Here's what Bruno's driver supports:
-
-static enum power_supply_property axp20x_battery_power_properties[] = {
-     POWER_SUPPLY_PROP_PRESENT,
-     POWER_SUPPLY_PROP_ONLINE,
-     POWER_SUPPLY_PROP_STATUS,
-     POWER_SUPPLY_PROP_VOLTAGE_NOW,
-     POWER_SUPPLY_PROP_CURRENT_NOW,
-     POWER_SUPPLY_PROP_CURRENT_MAX,
-     POWER_SUPPLY_PROP_HEALTH,
-     POWER_SUPPLY_PROP_TECHNOLOGY,
-     POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
-     POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
-     /* POWER_SUPPLY_PROP_POWER_NOW, */
-     POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-     /* POWER_SUPPLY_PROP_CHARGE_NOW, */
-     POWER_SUPPLY_PROP_CAPACITY,
-     POWER_SUPPLY_PROP_TEMP,
-     POWER_SUPPLY_PROP_TEMP_ALERT_MIN,
-     POWER_SUPPLY_PROP_TEMP_ALERT_MAX,
-};
-
->>>   +
->>>   +static int axp20x_battery_probe(struct platform_device *pdev)
->>>   +{
->>>   + struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
->>>   + struct power_supply_config psy_cfg = {};
->>>   + struct axp20x_battery *power;
->>>   + static const char * const axp22x_irq_names[] = {
->>>   + "BATT_PLUGIN", "BATT_REMOVAL", "BATT_ENT_ACT_MODE",
->>>   + "BATT_EXIT_ACT_MODE", "CHARG", "CHARG_DONE", NULL };
+I'll add them in next patch.
 
 
-And here are the interrupts handled:
+Best regards,
 
-static const char * const irq_names[] = { "BATT_HOT", "BATT_COLD",
-         "BATT_PLUGIN", "BATT_REMOVAL", "BATT_ACTIVATE",
-         "BATT_ACTIVATED", "BATT_CHARGING", "BATT_CHARGED",
-         "BATT_CHG_CURR_LOW", "BATT_POWER_LOW_WARN",
-         "BATT_POWER_LOW_CRIT" };
+James
 
-
-
-There are a couple of issues with the version of Bruno's driver that I have:
-
-* power management is disabled (in the driver, not in the charger) - 
-think suspend/resume
-* the temperature sensor data is not turned into a temperature value 
-correctly
-* the IRQ handlers need to be cleaned up (remove logging)
-* device tree binding documentation is missing
-
-Other than that, it's basically working and I have been using it at 
-least for some testing.
-
-The device tree bindings support:
-* OCV curve support
-* battery resistance
-* battery capacity
-* temp sensor settings
-
-You can find my copy of Bruno's driver here:
-https://github.com/mhaas/linux-sunxi/blob/axp209-charger/drivers/power/axp20x_fuel_gauge.c
-
-Thanks,
-
-Michael
+> > +	},
+> > +};
+> > +
+> > +#define NUM_DOMAINS_MT2701	ARRAY_SIZE(scp_domain_data_mt2701)
+> > +
+> > +static int __init scpsys_probe_mt2701(struct platform_device *pdev)
+> > +{
+> > +	struct scp *scp;
+> > +
+> > +	scp = init_scp(pdev, scp_domain_data_mt2701, NUM_DOMAINS_MT2701);
+> > +	if (IS_ERR(scp))
+> > +		return PTR_ERR(scp);
+> > +
+> > +	mtk_register_power_domains(pdev, scp, NUM_DOMAINS_MT2701);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/*
+> >   * MT8173 power domain support
+> >   */
+> >
+> > @@ -587,6 +697,9 @@ static int __init scpsys_probe_mt8173(struct platform_device *pdev)
+> >
+> >  static const struct of_device_id of_scpsys_match_tbl[] = {
+> >  	{
+> > +		.compatible = "mediatek,mt2701-scpsys",
+> > +		.data = scpsys_probe_mt2701,
+> > +	}, {
+> >  		.compatible = "mediatek,mt8173-scpsys",
+> >  		.data = scpsys_probe_mt8173,
+> >  	}, {
+> >
