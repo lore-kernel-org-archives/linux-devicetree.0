@@ -1,116 +1,127 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] arm64: dts: rockchip: Add idle-states to device tree for rk3399
-Date: Wed,  6 Jul 2016 16:20:54 +0800
-Message-ID: <1467793254-10808-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Dongdong Liu <liudongdong3@huawei.com>
+Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
+Date: Wed, 6 Jul 2016 16:38:19 +0800
+Message-ID: <577CC37B.9070806@huawei.com>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+ <577A21E4.1030301@huawei.com>
+ <VI1PR0401MB1709D556D0A7F7BB9188221E92390@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR0401MB1709D556D0A7F7BB9188221E92390@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Po Liu <po.liu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Linuxarm <linuxarm@huawei.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-As the rk3399 ATF had been supported on ARM github [0], so we can add
-idle-states for rk3399.
-This patch adds idle-states bindings data collected through tests
-experiments (latency and energy consumption) on rk3399 evb2 board.
-
-You can see detail idle-states definitions on document [1].
-
-* arm,psci-suspend-param: power_state parameter to pass to the PSCI
-  suspend call.
-* entry-latency: Worst case latency required to enter the idle state. The
-  exit-latency may be guaranteed only after entry-latency has passed.
-* min-residency: Minimum period, including preparation and entry, for a
-  given idle state to be worthwhile energywise
-* min-residency: Minimum period, including preparation and entry, for a
-  given idle state to be worthwhile energywise.
-
-[0]:
-https://github.com/ARM-software/arm-trusted-firmware
-[1]:
-Documentation/devicetree/bindings/arm/psci.txt
-Documentation/devicetree/bindings/arm/idle-states.txt
-
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index a6dd623..12ce265 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -101,6 +101,18 @@
- 			};
- 		};
- 
-+		idle-states {
-+			entry-method = "psci";
-+			cpu_sleep: cpu-sleep-0 {
-+				compatible = "arm,idle-state";
-+				local-timer-stop;
-+				arm,psci-suspend-param = <0x0010000>;
-+				entry-latency-us = <350>;
-+				exit-latency-us = <600>;
-+				min-residency-us = <1150>;
-+			};
-+		};
-+
- 		cpu_l0: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53", "arm,armv8";
-@@ -108,6 +120,7 @@
- 			enable-method = "psci";
- 			#cooling-cells = <2>; /* min followed by max */
- 			clocks = <&cru ARMCLKL>;
-+			cpu-idle-states = <&cpu_sleep>;
- 		};
- 
- 		cpu_l1: cpu@1 {
-@@ -116,6 +129,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
- 			clocks = <&cru ARMCLKL>;
-+			cpu-idle-states = <&cpu_sleep>;
- 		};
- 
- 		cpu_l2: cpu@2 {
-@@ -124,6 +138,7 @@
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
- 			clocks = <&cru ARMCLKL>;
-+			cpu-idle-states = <&cpu_sleep>;
- 		};
- 
- 		cpu_l3: cpu@3 {
-@@ -132,6 +147,7 @@
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
- 			clocks = <&cru ARMCLKL>;
-+			cpu-idle-states = <&cpu_sleep>;
- 		};
- 
- 		cpu_b0: cpu@100 {
-@@ -141,6 +157,7 @@
- 			enable-method = "psci";
- 			#cooling-cells = <2>; /* min followed by max */
- 			clocks = <&cru ARMCLKB>;
-+			cpu-idle-states = <&cpu_sleep>;
- 		};
- 
- 		cpu_b1: cpu@101 {
-@@ -149,6 +166,7 @@
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
- 			clocks = <&cru ARMCLKB>;
-+			cpu-idle-states = <&cpu_sleep>;
- 		};
- 	};
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUG8KCuWcqCAyMDE2LzcvNSAxMTowMywgUG8gTGl1IOWGmemBkzoKPiBIaSBEb25nZG9uZywK
+Pgo+IFRoZSBwYXRjaCB3ZXJlIGludGVuZCB0byBmaXh1cCB0aGUgTlhQIGxheWVyc2NhcGUgc2Vy
+aWFsIFNPQyBhbmQgd2VyZSB0ZXN0ZWQgb2suCj4gSSBhbSBub3QgY2xlYXIgd2hhdCBwbGF0Zm9y
+bSBhcmUgeW91IHRyeWluZyB0byBmaXguCgpNeSBwbGF0Zm9ybSBpcyBhbiBBUk02NCBwbGF0Zm9y
+bSwgUENJZSBob3N0IGNvbnRyb2xsZXIgYWxzbyB1c2UgU3lub3BzeXMgRGVzaWdud2FyZS4KCj4g
+VGhlIHByb2JsZW0gb24geW91ciBib2FyZCBtYXkgYmUgYXMgYmVsb3cgY29tbWVudHM6Cj4KPgo+
+PiAgIC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+ICAgRnJvbTogRG9uZ2RvbmcgTGl1IFtt
+YWlsdG86bGl1ZG9uZ2RvbmczQGh1YXdlaS5jb21dCj4+ICAgU2VudDogTW9uZGF5LCBKdWx5IDA0
+LCAyMDE2IDQ6NDQgUE0KPj4gICBUbzogUG8gTGl1OyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1hcm0tCj4+ICAga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc7Cj4+ICAgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4gICBD
+YzogQmpvcm4gSGVsZ2FhczsgU2hhd24gR3VvOyBNYXJjIFp5bmdpZXI7IFJvYiBIZXJyaW5nOyBS
+b3kgWmFuZzsKPj4gICBNaW5na2FpIEh1OyBTdHVhcnQgWW9kZXI7IFlhbmctTGVvIExpOyBBcm5k
+IEJlcmdtYW5uOyBNaW5naHVhbiBMaWFuOwo+PiAgIE11cmFsaSBLYXJpY2hlcmk7IExpbnV4YXJt
+Cj4+ICAgU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzJdIHBjaS9hZXI6IGludGVycnVwdCBmaXh1
+cCBpbiB0aGUgcXVpcmsKPj4KPj4gICBIaSBQbwo+Pgo+PiAgIEkgZm91bmQgYSBwcm9ibGVtIHdp
+dGggdGhlIHNpbWlsYXIgcGF0Y2guIGFzIHRoZSBiZWxvdyBsb2cuCj4+Cj4+ICAgWyAgICA0LjI4
+NzA2MF0gcGNpIDAwMDA6ODA6MDAuMDogcXVpcmtfYWVyX2ludGVycnVwdCBkZXYtPmlycSA0MTYK
+Pj4gICBbICAgIDQuMjkzNzc4XSBwY2llcG9ydCAwMDAwOjgwOjAwLjA6IHBjaV9kZXZpY2VfcHJv
+YmUgaW4KPj4gICBbICAgIDQuMjk5NjA1XSBwY2llcG9ydCAwMDAwOjgwOjAwLjA6IG9mX2lycV9w
+YXJzZV9wY2koKSBmYWlsZWQgd2l0aAo+PiAgIHJjPS0yMgo+PiAgIFsgICAgNC4zMDcyMDldIHBj
+aWVwb3J0IDAwMDA6ODA6MDAuMDogaW5pdF9zZXJ2aWNlX2lycXMgIGRldi0+aXJxIDAKPj4KPj4g
+ICBUaGUgZnVjbnRpb25zIGFyZSBjYWxsZWQgYXMgYmVsb3cgc2VxdWVuY2UuCj4+ICAgMS4gcXVp
+cmtfYWVyX2ludGVycnVwdCwgZ2V0IHRoZSBhZXIgZGV2LT5pcnEgNDE2Lgo+Cj4gVGhpcyBjb2Rl
+IHF1aXJrX2Flcl9pbnRlcnJ1cHQoKSBzaG91bGQgYmUgcnVuIGF0IHBjaV9maXh1cF9kZXZpY2Uo
+cGNpX2ZpeHVwX2ZpbmFsKSB3aGljaCBpcyBpbiB0aGUgcGNpX2J1c19hZGRfZGV2aWNlcygpCgpZ
+ZXMsIHlvdSBhcmUgcmlnaHQuCgo+Cj4+ICAgMi4gcGNpX2RldmljZV9wcm9iZS0+b2ZfaXJxX3Bh
+cnNlX3BjaSwgb2ZfaXJxX3BhcnNlX3BjaSgpIGZhaWxlZCwgdGhlbgo+PiAgIGRldi0+aXJxIGNo
+YW5nZWQgdG8gMC4KPgo+IHBjaV9kZXZpY2VfcHJvYmUtPm9mX2lycV9wYXJzZV9wY2kgd2hpY2gg
+aW4gdGhlIHBjaV9zY2FuX2NoaWxkX2J1cygpIHJ1biBiZWZvcmUgIHBjaV9idXNfYWRkX2Rldmlj
+ZXMoKS4gU2VlIGR3X3BjaWVfaG9zdF9pbml0KCkuCj4gQXBwYXJlbnRseSAsIHlvdXIgcXVpcmtf
+YWVyX2ludGVycnVwdCgpIGlzIHJ1bm5pbmcgYmVmb3JlIHRoZSBkZXYtPmlycSBhc3NpZ25tZW50
+IGluIHRoZSBvZl9pcnFfcGFyc2VfcGNpKCkuCj4KPiBTbyBtYWtlIHN1cmUgeW91ciBjb25maWd1
+cmUgdGhlIHF1aXJrX2Flcl9pbnRlcnJ1cHQoKSBydW4gaW4gdGhlIEZJTkFMIHN0YWdlIGluIHRo
+ZSBxdWlyay5jIE9SIGNoZWNrIHlvdXIgaG9zdCBkcml2ZXIgd2hpY2ggeW91IGFyZSB1c2luZy4K
+ClllcyAsIEl0IGlzIEZJTkFMIHN0YWdlIGluIHRoZSBxdWlyay4gSSB1c2UgREVDTEFSRV9QQ0lf
+RklYVVBfRklOQUwuCkkgZmluZCBpdCBpcyB0aGUgYmVsb3cgcGF0Y2ggYWZmZWN0IHRoaXMuICho
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzkxNzAzMzMvKSwKYnV0IHRoZSBwYXRj
+aCB3aWxsIGJlIGFwcGxpZWQgdG8gbGludXggNC44LiBTbyB0aGUgcHJvYmxlbSB3aWxsIGFsc28g
+YmUgZXhpc3RlZC4KCkFSTTY0OiBQQ0k6IEFDUEkgc3VwcG9ydCBmb3IgbGVnYWN5IElSUXMgcGFy
+c2luZyBhbmQgY29uc29saWRhdGlvbiB3aXRoIERUIGNvZGUKZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+NjQva2VybmVsL3BjaS5jIGIvYXJjaC9hcm02NC9rZXJuZWwvcGNpLmMKaW5kZXggZDVkM2QyNi4u
+YjNiOGEyYyAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9rZXJuZWwvcGNpLmMKKysrIGIvYXJjaC9h
+cm02NC9rZXJuZWwvcGNpLmMKQEAgLTUxLDExICs1MSwxNiBAQCBpbnQgcGNpYmlvc19lbmFibGVf
+ZGV2aWNlKHN0cnVjdCBwY2lfZGV2ICpkZXYsIGludCBtYXNrKQogIH0KCiAgLyoKLSAqIFRyeSB0
+byBhc3NpZ24gdGhlIElSUSBudW1iZXIgZnJvbSBEVCB3aGVuIGFkZGluZyBhIG5ldyBkZXZpY2UK
+KyAqIFRyeSB0byBhc3NpZ24gdGhlIElSUSBudW1iZXIgd2hlbiBwcm9iaW5nIGEgbmV3IGRldmlj
+ZQogICAqLwotaW50IHBjaWJpb3NfYWRkX2RldmljZShzdHJ1Y3QgcGNpX2RldiAqZGV2KQoraW50
+IHBjaWJpb3NfYWxsb2NfaXJxKHN0cnVjdCBwY2lfZGV2ICpkZXYpCiAgewotICAgZGV2LT5pcnEg
+PSBvZl9pcnFfcGFyc2VfYW5kX21hcF9wY2koZGV2LCAwLCAwKTsKKyBpZiAoYWNwaV9kaXNhYmxl
+ZCkKKyAgICAgICAgIGRldi0+aXJxID0gb2ZfaXJxX3BhcnNlX2FuZF9tYXBfcGNpKGRldiwgMCwg
+MCk7CisjaWZkZWYgQ09ORklHX0FDUEkKKyBlbHNlCisgICAgICAgICByZXR1cm4gYWNwaV9wY2lf
+aXJxX2VuYWJsZShkZXYpOworI2VuZGlmCgogICAgICAgICByZXR1cm4gMDsKICB9CgpUaGFua3MK
+RG9uZ2RvbmcKPgo+Cj4+Cj4+ICAgU28gdGhpcyBwYXRjaCBjb3VsZCBub3Qgd29yayB3aXRoIGFl
+ci4KPj4KPj4gICBUaGFua3MKPj4gICBEb25nZG9uZwo+PiAgIOWcqCAyMDE2LzYvMTQgMTY6MjQs
+IFBvIExpdSDlhpnpgZM6Cj4+ICAgPiBPbiBzb21lIHBsYXRmb3Jtcywgcm9vdCBwb3J0IGRvZXNu
+J3Qgc3VwcG9ydCBNU0kvTVNJLVgvSU5UeCBpbiBSQyBtb2RlLgo+PiAgID4gV2hlbiBjaGlwIHN1
+cHBvcnQgdGhlIGFlciBpbnRlcnJ1cHQgd2l0aCBub25lIE1TSS9NU0ktWC9JTlR4IG1vZGUsCj4+
+ICAgPiBtYXliZSB0aGVyZSBpcyBpbnRlcnJ1cHQgbGluZSBmb3IgYWVyIHBtZSBldGMuIFNlYXJj
+aCB0aGUgaW50ZXJydXB0Cj4+ICAgPiBudW1iZXIgaW4gdGhlIGZkdCBmaWxlLiBUaGVuIGZpeHVw
+IHRoZSBkZXYtPmlycSB3aXRoIGl0Lgo+PiAgID4KPj4gICA+IFNpZ25lZC1vZmYtYnk6IFBvIExp
+dSA8cG8ubGl1QG54cC5jb20+Cj4+ICAgPiAtLS0KPj4gICA+IGNoYW5nZXMgZm9yIFYzOgo+PiAg
+ID4gCS0gTW92ZSB0byBxdWlyazsKPj4gICA+IAktIE9ubHkgY29ycmVjdCB0aGUgaXJxIGluIFJD
+IG1vZGU7Cj4+ICAgPgo+PiAgID4gICBkcml2ZXJzL3BjaS9xdWlya3MuYyB8IDI5ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrCj4+ICAgPiAgIDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNlcnRp
+b25zKCspCj4+ICAgPgo+PiAgID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3F1aXJrcy5jIGIv
+ZHJpdmVycy9wY2kvcXVpcmtzLmMgaW5kZXgKPj4gICA+IGVlNzJlYmUuLjhiMzljY2UgMTAwNjQ0
+Cj4+ICAgPiAtLS0gYS9kcml2ZXJzL3BjaS9xdWlya3MuYwo+PiAgID4gKysrIGIvZHJpdmVycy9w
+Y2kvcXVpcmtzLmMKPj4gICA+IEBAIC0yNSw2ICsyNSw3IEBACj4+ICAgPiAgICNpbmNsdWRlIDxs
+aW51eC9zY2hlZC5oPgo+PiAgID4gICAjaW5jbHVkZSA8bGludXgva3RpbWUuaD4KPj4gICA+ICAg
+I2luY2x1ZGUgPGxpbnV4L21tLmg+Cj4+ICAgPiArI2luY2x1ZGUgPGxpbnV4L29mX2lycS5oPgo+
+PiAgID4gICAjaW5jbHVkZSA8YXNtL2RtYS5oPgkvKiBpc2FfZG1hX2JyaWRnZV9idWdneSAqLwo+
+PiAgID4gICAjaW5jbHVkZSAicGNpLmgiCj4+ICAgPgo+PiAgID4gQEAgLTQ0MTksMyArNDQyMCwz
+MSBAQCBzdGF0aWMgdm9pZCBxdWlya19pbnRlbF9xYXRfdmZfY2FwKHN0cnVjdAo+PiAgIHBjaV9k
+ZXYgKnBkZXYpCj4+ICAgPiAgIAl9Cj4+ICAgPiAgIH0KPj4gICA+ICAgREVDTEFSRV9QQ0lfRklY
+VVBfRUFSTFkoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0NDMsCj4+ICAgPiBxdWlya19pbnRlbF9x
+YXRfdmZfY2FwKTsKPj4gICA+ICsKPj4gICA+ICsvKiBJZiByb290IHBvcnQgZG9lc24ndCBzdXBw
+b3J0IE1TSS9NU0ktWC9JTlR4IGluIFJDIG1vZGUsCj4+ICAgPiArICogYnV0IHVzZSBzdGFuZGFs
+b25lIGlycS4gUmVhZCB0aGUgZGV2aWNlIHRyZWUgZm9yIHRoZSBhZXIKPj4gICA+ICsgKiBpbnRl
+cnJ1cHQgbnVtYmVyLgo+PiAgID4gKyAqLwo+PiAgID4gK3N0YXRpYyB2b2lkIHF1aXJrX2Flcl9p
+bnRlcnJ1cHQoc3RydWN0IHBjaV9kZXYgKmRldikgewo+PiAgID4gKwlpbnQgcmV0Owo+PiAgID4g
+Kwl1OCBoZWFkZXJfdHlwZTsKPj4gICA+ICsJc3RydWN0IGRldmljZV9ub2RlICpucCA9IE5VTEw7
+Cj4+ICAgPiArCj4+ICAgPiArCS8qIE9ubHkgZm9yIHRoZSBSQyBtb2RlIGRldmljZSAqLwo+PiAg
+ID4gKwlwY2lfcmVhZF9jb25maWdfYnl0ZShkZXYsIFBDSV9IRUFERVJfVFlQRSwgJmhlYWRlcl90
+eXBlKTsKPj4gICA+ICsJaWYgKChoZWFkZXJfdHlwZSAmIDB4N0YpICE9IFBDSV9IRUFERVJfVFlQ
+RV9CUklER0UpCj4+ICAgPiArCQlyZXR1cm47Cj4+ICAgPiArCj4+ICAgPiArCWlmIChkZXYtPmJ1
+cy0+ZGV2Lm9mX25vZGUpCj4+ICAgPiArCQlucCA9IGRldi0+YnVzLT5kZXYub2Zfbm9kZTsKPj4g
+ICA+ICsKPj4gICA+ICsJaWYgKElTX0VOQUJMRUQoQ09ORklHX09GX0lSUSkgJiYgbnApIHsKPj4g
+ICA+ICsJCXJldCA9IG9mX2lycV9nZXRfYnluYW1lKG5wLCAiYWVyIik7Cj4+ICAgPiArCQlpZiAo
+cmV0ID4gMCkgewo+PiAgID4gKwkJCWRldi0+bm9fbXNpID0gMTsKPj4gICA+ICsJCQlkZXYtPmly
+cSA9IHJldDsKPj4gICA+ICsJCX0KPj4gICA+ICsJfQo+PiAgID4gK30KPj4gICA+ICtERUNMQVJF
+X1BDSV9GSVhVUF9GSU5BTChQQ0lfVkVORE9SX0lEX0ZSRUVTQ0FMRSwgUENJX0FOWV9JRCwKPj4g
+ICA+ICtxdWlya19hZXJfaW50ZXJydXB0KTsKPj4gICA+Cj4+Cj4KPiAE77+9ey5u77+9K++/ve+/
+ve+/ve+/ve+/ve+/ve+/vSsl77+977+9bHp3be+/ve+/vWLvv73rp7Lvv73vv71y77+977+9eljv
+v73vv70aXO+/vSnvv73vv73vv713Kh9qZ++/ve+/ve+/vR7vv73vv73vv73vv73vv73domov77+9
+77+977+9eu+/vd6W77+977+9Mu+/vd6Z77+977+977+9Ju+/vSnfoe+/vWHvv73vv71/77+977+9
+Hu+/vUfvv73vv73vv71o77+9D++/vWo6K3bvv73vv73vv71377+92aUKPgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
