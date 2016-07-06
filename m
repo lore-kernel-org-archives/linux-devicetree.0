@@ -1,70 +1,100 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH v5 4/5] clk: Kconfig: Name RK818 in
- Kconfig for COMMON_CLK_RK808
-Date: Wed, 06 Jul 2016 15:22:46 -0700
-Message-ID: <146784376682.73491.439491426208764255@resonance>
-References: <1464850228-17244-1-git-send-email-w.egorov@phytec.de>
- <1464850228-17244-4-git-send-email-w.egorov@phytec.de>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Wed, 06 Jul 2016 16:38:16 -0700
+Message-ID: <146784829627.73491.14666334054563702543@resonance>
+References: <1467701423-31138-1-git-send-email-dirk.behme@de.bosch.com>
+ <20160705103917.GC20478@leverpostej>
+ <b2431af6-f415-41db-5651-8cb8d3b08822@de.bosch.com>
+ <20160705110736.GD20478@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCYKZMUQ7QBBBOMJ625QKGQE2UEEJGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1464850228-17244-4-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160705110736.GD20478@leverpostej>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>
+Cc: linux-arm-kernel@lists.infradead.org, Julien Grall <julien.grall@arm.com>, devicetree@vger.kernel.org, xen-devel@lists.xenproject.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Wadim Egorov (2016-06-01 23:50:27)
-> The RK808 and RK818 PMICs are using a similar register map.
-> We can reuse the clk driver for the RK818 PMIC. So let's add
-> the RK818 in the Kconfig description.
+Quoting Mark Rutland (2016-07-05 04:07:37)
+> Hi,
 > 
-> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-> Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> On Tue, Jul 05, 2016 at 12:45:34PM +0200, Dirk Behme wrote:
+> > On 05.07.2016 12:39, Mark Rutland wrote:
+> > >On Tue, Jul 05, 2016 at 08:50:23AM +0200, Dirk Behme wrote:
+> > >>+- clocks: one or more clocks to be registered.
+> > >>+  Xen hypervisor drivers might replace native drivers, resulting in
+> > >>+  clocks not registered by these native drivers. To avoid that these
+> > >>+  unregistered clocks are disabled by the Linux kernel initialization
+> > >>+  register them in the hypervisor node.
+> > >>+  An example for this are the clocks of a serial driver already enabled
+> > >>+  by the firmware. If the clocks used by the serial hardware interface
+> > >>+  are not registered by the serial driver itself the serial output
+> > >>+  might stop once the Linux kernel initialization disables the 'unused'
+> > >>+  clocks.
+> > >
+> > >The above describes the set of problems, but doesn't set out the actual
+> > >contract. It also covers a number of Linux implementation details in
+> > >abstract.
+> > 
+> > Could you kindly be a little more specific which 'implementation
+> > details' you don't like?
+> 
+> The fact that we disable some clocks at init time is a driver model
+> thing that depends on various factors (e.g. cmdline options), and it's
+> something that could be moved around. We only mention disabling, and not
+> rate change (which could happen, even if it doesn't today).
+> 
+> I don't think that we need to describe the Linux behaviour at all.
+> 
+> > E.g. to my understanding, the 'implementation detail' that Linux
+> > disables unregistered clocks is needed for the description.
+> > 
+> > If you have a different wording in mind, could you kindly share that?
+> 
+> Something like:
+> 
+> - clocks: a list of phandle + clock-specifier pairs 
+>   Clocks described by this property are reserved for use by Xen, and the
+>   OS must not alter their state any way, such as disabling or gating a
+>   clock, or modifying its rate. Ensuring this may impose constraints on
+>   parent clocks or other resources used by the clock tree.
+> 
+>   Note: this property is used to proxy clocks for devices Xen has taken
+>   ownership of, such as UARTs, for which the associated clock
+>   controller(s) remain under the control of Dom0.
 
-Applied.
+Fully agree that we should forget the clk_disable_unused stuff entirely.
+Mark's copy above is good, and just for the fun of it I have provided an
+alternative version. Feel free to pick and choose what you want:
+
+- clocks: one or more clocks to be enabled.
+  Xen hypervisor drivers might replace native OS drivers. The result is
+  that some important clocks that are enabled by the OS in the non-Xen
+  case are not properly enabled in the presence of Xen. The clocks
+  property enumerates the clocks that must be enabled by the Xen clock
+  consumer.
+  An example is a serial driver enabled by the hypervisor. Xen must
+  consume and enable these clocks in the OS to ensure behavior continues
+  after firmware configures the UART hardware and corresponding clock
+  harder.
 
 Regards,
 Mike
 
-> ---
->  drivers/clk/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 53ddba2..87b9fd2 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -49,10 +49,10 @@ config COMMON_CLK_MAX77802
->           This driver supports Maxim 77802 crystal oscillator clock.
->  
->  config COMMON_CLK_RK808
-> -       tristate "Clock driver for RK808"
-> +       tristate "Clock driver for RK808/RK818"
->         depends on MFD_RK808
->         ---help---
-> -         This driver supports RK808 crystal oscillator clock. These
-> +         This driver supports RK808 and RK818 crystal oscillator clock. These
->           multi-function devices have two fixed-rate oscillators,
->           clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
->           by control register.
-> -- 
-> 1.9.1
+> > >As I commented previously [1], the binding should describe the set of
+> > >guarantees that you rewquire (e.g. that the clocks must be left as-is,
+> > >not gated, and their rates left unchanged).
+> > >
+> > >Please describe the specific set of guarantees that you require.
+> > 
+> > To my understanding this is done, already: "avoid that these ...
+> > clocks are disabled"
 > 
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> My point of contention here is that while this might tell a dts author
+> what to place in this property, it doesn't specify what the OS should
+> do.
+> 
+> Thanks,
+> Mark.
