@@ -1,103 +1,173 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2] drivers/perf: arm-pmu: Handle per-interrupt affinity mask
-Date: Wed,  6 Jul 2016 15:33:47 +0100
-Message-ID: <1467815627-4061-1-git-send-email-marc.zyngier@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 1/2] spi: clps711x: Driver refactor
+Date: Wed,  6 Jul 2016 16:53:12 +0200
+Message-ID: <20160706145326.2658600-1-arnd@arndb.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Alexander Shiyan <shc_work@mail.ru>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On a big-little system, PMUs can be wired to CPUs using per CPU
-interrups (PPI). In this case, it is important to make sure that
-the enable/disable do happen on the right set of CPUs.
+From: Alexander Shiyan <shc_work@mail.ru>
 
-So instead of relying on the interrupt-affinity property, we can
-use the actual percpu affinity that DT exposes as part of the
-interrupt specifier. The DT binding is also updated to reflect
-the fact that the interrupt-affinity property shouldn't be used
-in that case.
+This is a complex patch for refactoring CLPS711X SPI driver.
+This change adds devicetree support and removes board support.
 
-Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-* From v1:
-  - propagate the error if irq_get_percpu_devid_partition fails
+ drivers/spi/spi-clps711x.c | 69 +++++++++++++++++-----------------------------
+ 1 file changed, 26 insertions(+), 43 deletions(-)
 
- Documentation/devicetree/bindings/arm/pmu.txt |  4 +++-
- drivers/perf/arm_pmu.c                        | 27 ++++++++++++++++++++++-----
- 2 files changed, 25 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
-index 74d5417..61c8b46 100644
---- a/Documentation/devicetree/bindings/arm/pmu.txt
-+++ b/Documentation/devicetree/bindings/arm/pmu.txt
-@@ -39,7 +39,9 @@ Optional properties:
-                        When using a PPI, specifies a list of phandles to CPU
- 		       nodes corresponding to the set of CPUs which have
- 		       a PMU of this type signalling the PPI listed in the
--		       interrupts property.
-+		       interrupts property, unless this is already specified
-+		       by the PPI interrupt specifier itself (in which case
-+		       the interrupt-affinity property shouldn't be present).
+diff --git a/drivers/spi/spi-clps711x.c b/drivers/spi/spi-clps711x.c
+index 8c30de0315e7..18193df2eba8 100644
+--- a/drivers/spi/spi-clps711x.c
++++ b/drivers/spi/spi-clps711x.c
+@@ -1,7 +1,7 @@
+ /*
+  *  CLPS711X SPI bus driver
+  *
+- *  Copyright (C) 2012-2014 Alexander Shiyan <shc_work@mail.ru>
++ *  Copyright (C) 2012-2016 Alexander Shiyan <shc_work@mail.ru>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -12,7 +12,6 @@
+ #include <linux/io.h>
+ #include <linux/clk.h>
+ #include <linux/gpio.h>
+-#include <linux/delay.h>
+ #include <linux/module.h>
+ #include <linux/interrupt.h>
+ #include <linux/platform_device.h>
+@@ -20,9 +19,8 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/mfd/syscon/clps711x.h>
+ #include <linux/spi/spi.h>
+-#include <linux/platform_data/spi-clps711x.h>
  
-                        This property should be present when there is more than
- 		       a single SPI.
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 140436a..8e4d7f5 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -603,7 +603,8 @@ static void cpu_pmu_free_irq(struct arm_pmu *cpu_pmu)
+-#define DRIVER_NAME	"spi-clps711x"
++#define DRIVER_NAME		"clps711x-spi"
  
- 	irq = platform_get_irq(pmu_device, 0);
- 	if (irq >= 0 && irq_is_percpu(irq)) {
--		on_each_cpu(cpu_pmu_disable_percpu_irq, &irq, 1);
-+		on_each_cpu_mask(&cpu_pmu->supported_cpus,
-+				 cpu_pmu_disable_percpu_irq, &irq, 1);
- 		free_percpu_irq(irq, &hw_events->percpu_pmu);
- 	} else {
- 		for (i = 0; i < irqs; ++i) {
-@@ -645,7 +646,9 @@ static int cpu_pmu_request_irq(struct arm_pmu *cpu_pmu, irq_handler_t handler)
- 				irq);
- 			return err;
- 		}
--		on_each_cpu(cpu_pmu_enable_percpu_irq, &irq, 1);
+ #define SYNCIO_FRMLEN(x)	((x) << 8)
+ #define SYNCIO_TXFRMEN		(1 << 14)
+@@ -40,6 +38,17 @@ struct spi_clps711x_data {
+ 
+ static int spi_clps711x_setup(struct spi_device *spi)
+ {
++	if (!spi->controller_state) {
++		int ret;
 +
-+		on_each_cpu_mask(&cpu_pmu->supported_cpus,
-+				 cpu_pmu_enable_percpu_irq, &irq, 1);
- 	} else {
- 		for (i = 0; i < irqs; ++i) {
- 			int cpu = i;
-@@ -961,9 +964,23 @@ static int of_pmu_irq_cfg(struct arm_pmu *pmu)
- 		i++;
- 	} while (1);
- 
--	/* If we didn't manage to parse anything, claim to support all CPUs */
--	if (cpumask_weight(&pmu->supported_cpus) == 0)
--		cpumask_setall(&pmu->supported_cpus);
-+	/* If we didn't manage to parse anything, try the interrupt affinity */
-+	if (cpumask_weight(&pmu->supported_cpus) == 0) {
-+		if (!using_spi) {
-+			/* If using PPIs, check the affinity of the partition */
-+			int ret, irq;
++		ret = devm_gpio_request(&spi->master->dev, spi->cs_gpio,
++					dev_name(&spi->master->dev));
++		if (ret)
++			return ret;
 +
-+			irq = platform_get_irq(pdev, 0);
-+			ret = irq_get_percpu_devid_partition(irq, &pmu->supported_cpus);
-+			if (ret) {
-+				kfree(irqs);
-+				return ret;
-+			}
-+		} else {
-+			/* Otherwise default to all CPUs */
-+			cpumask_setall(&pmu->supported_cpus);
-+		}
++		spi->controller_state = spi;
 +	}
++
+ 	/* We are expect that SPI-device is not selected */
+ 	gpio_direction_output(spi->cs_gpio, !(spi->mode & SPI_CS_HIGH));
  
- 	/* If we matched up the IRQ affinities, use them to route the SPIs */
- 	if (using_spi && i == pdev->num_resources)
+@@ -104,20 +113,9 @@ static irqreturn_t spi_clps711x_isr(int irq, void *dev_id)
+ static int spi_clps711x_probe(struct platform_device *pdev)
+ {
+ 	struct spi_clps711x_data *hw;
+-	struct spi_clps711x_pdata *pdata = dev_get_platdata(&pdev->dev);
+ 	struct spi_master *master;
+ 	struct resource *res;
+-	int i, irq, ret;
+-
+-	if (!pdata) {
+-		dev_err(&pdev->dev, "No platform data supplied\n");
+-		return -EINVAL;
+-	}
+-
+-	if (pdata->num_chipselect < 1) {
+-		dev_err(&pdev->dev, "At least one CS must be defined\n");
+-		return -EINVAL;
+-	}
++	int irq, ret;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0)
+@@ -127,40 +125,24 @@ static int spi_clps711x_probe(struct platform_device *pdev)
+ 	if (!master)
+ 		return -ENOMEM;
+ 
+-	master->cs_gpios = devm_kzalloc(&pdev->dev, sizeof(int) *
+-					pdata->num_chipselect, GFP_KERNEL);
+-	if (!master->cs_gpios) {
+-		ret = -ENOMEM;
+-		goto err_out;
+-	}
+-
+-	master->bus_num = pdev->id;
++	master->bus_num = -1;
+ 	master->mode_bits = SPI_CPHA | SPI_CS_HIGH;
+ 	master->bits_per_word_mask =  SPI_BPW_RANGE_MASK(1, 8);
+-	master->num_chipselect = pdata->num_chipselect;
++	master->dev.of_node = pdev->dev.of_node;
+ 	master->setup = spi_clps711x_setup;
+ 	master->prepare_message = spi_clps711x_prepare_message;
+ 	master->transfer_one = spi_clps711x_transfer_one;
+ 
+ 	hw = spi_master_get_devdata(master);
+ 
+-	for (i = 0; i < master->num_chipselect; i++) {
+-		master->cs_gpios[i] = pdata->chipselect[i];
+-		ret = devm_gpio_request(&pdev->dev, master->cs_gpios[i],
+-					DRIVER_NAME);
+-		if (ret) {
+-			dev_err(&pdev->dev, "Can't get CS GPIO %i\n", i);
+-			goto err_out;
+-		}
+-	}
+-
+ 	hw->spi_clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(hw->spi_clk)) {
+ 		ret = PTR_ERR(hw->spi_clk);
+ 		goto err_out;
+ 	}
+ 
+-	hw->syscon = syscon_regmap_lookup_by_pdevname("syscon.3");
++	hw->syscon =
++		syscon_regmap_lookup_by_compatible("cirrus,ep7209-syscon3");
+ 	if (IS_ERR(hw->syscon)) {
+ 		ret = PTR_ERR(hw->syscon);
+ 		goto err_out;
+@@ -185,14 +167,8 @@ static int spi_clps711x_probe(struct platform_device *pdev)
+ 		goto err_out;
+ 
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+-	if (!ret) {
+-		dev_info(&pdev->dev,
+-			 "SPI bus driver initialized. Master clock %u Hz\n",
+-			 master->max_speed_hz);
++	if (!ret)
+ 		return 0;
+-	}
+-
+-	dev_err(&pdev->dev, "Failed to register master\n");
+ 
+ err_out:
+ 	spi_master_put(master);
+@@ -200,9 +176,16 @@ err_out:
+ 	return ret;
+ }
+ 
++static const struct of_device_id clps711x_spi_dt_ids[] = {
++	{ .compatible = "cirrus,ep7209-spi", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, clps711x_spi_dt_ids);
++
+ static struct platform_driver clps711x_spi_driver = {
+ 	.driver	= {
+ 		.name	= DRIVER_NAME,
++		.of_match_table = clps711x_spi_dt_ids,
+ 	},
+ 	.probe	= spi_clps711x_probe,
+ };
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.0
