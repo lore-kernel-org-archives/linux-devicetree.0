@@ -1,46 +1,60 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] pinctrl: Add STM32F746 MCU support
-Date: Wed, 6 Jul 2016 14:43:12 +0200
-Message-ID: <CACRpkdaQ+SY5x_wjZUK4d4UHmrfnTrKghTJ96WEWqkzhphq-ng@mail.gmail.com>
-References: <1467798418-12124-1-git-send-email-alexandre.torgue@st.com> <1467798418-12124-2-git-send-email-alexandre.torgue@st.com>
+From: Julien Grall <julien.grall@arm.com>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Wed, 6 Jul 2016 14:10:52 +0100
+Message-ID: <577D035C.7090504@arm.com>
+References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
+ <146776885213.35356.11565744417822933094@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467798418-12124-2-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <146776885213.35356.11565744417822933094@resonance>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: xen-devel@lists.xenproject.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 6, 2016 at 11:46 AM, Alexandre TORGUE
-<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+On 06/07/16 02:34, Michael Turquette wrote:
+> Hi!
 
-> This patch which adds STM32F746 pinctrl and GPIO support, relies on the
-> generic STM32 pinctrl driver.
+Hello Michael,
+
+> Quoting Dirk Behme (2016-06-30 03:32:32)
+>> Some clocks might be used by the Xen hypervisor and not by the Linux
+>> kernel. If these are not registered by the Linux kernel, they might be
+>> disabled by clk_disable_unused() as the kernel doesn't know that they
+>> are used. The clock of the serial console handled by Xen is one
+>> example for this. It might be disabled by clk_disable_unused() which
+>> stops the whole serial output, even from Xen, then.
 >
-> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+> This whole thread had me confused until I realized that it all boiled
+> down to some nomenclature issues (for me).
+>
+> This code does not _register_ any clocks. It simply gets them and
+> enables them, which is what every other clk consumer in the Linux kernel
+> does. More details below.
+>
+>>
+>> Up to now, the workaround for this has been to use the Linux kernel
+>> command line parameter 'clk_ignore_unused'. See Xen bug
+>>
+>> http://bugs.xenproject.org/xen/bug/45
+>
+> clk_ignore_unused is a band-aid, not a proper medical solution. Setting
+> that flag will not turn clocks on for you, nor will it guarantee that
+> those clocks are never turned off in the future. It looks like you
+> figured this out correctly in the patch below but it is worth repeating.
+>
+> Also the new CLK_IS_CRITICAL flag might be of interest to you, but that
+> flag only exists as a way to enable clocks that must be enabled for the
+> system to function (hence, "critical") AND when those same clocks do not
+> have an accompanying Linux driver to consume them and enable them.
 
-(...)
-> +static struct platform_driver stm32f746_pinctrl_driver = {
-> +       .probe = stm32_pctl_probe,
-> +       .driver = {
-> +               .name = "stm32f746-pinctrl",
-> +               .of_match_table = stm32f746_pctrl_match,
-> +       },
-> +};
-> +
-> +static int __init stm32f746_pinctrl_init(void)
-> +{
-> +       return platform_driver_register(&stm32f746_pinctrl_driver);
-> +}
-> +device_initcall(stm32f746_pinctrl_init);
+I don't think we want the kernel to enable the clock for the hypervisor. 
+We want to tell the kernel "don't touch at all to this clock, it does 
+not belong to you".
 
-Please use builtin_platform_driver() for this.
+Regards,
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Julien Grall
