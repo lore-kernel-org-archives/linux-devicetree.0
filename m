@@ -1,120 +1,78 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH] dt-bindings: i2c: add bindings for nxp,pca9541
-Date: Wed, 6 Jul 2016 12:12:42 +0200
-Message-ID: <38896151-6ba8-75a8-56c2-19bddbf5b75a@axentia.se>
-References: <1467022282-21062-1-git-send-email-peda@axentia.se>
- <57712770.3040204@roeck-us.net>
- <d7476000-e50c-b840-00a5-7eab1a0823fb@axentia.se>
- <20160701012044.GA5619@rob-hp-laptop>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Wed, 6 Jul 2016 14:48:58 +0100
+Message-ID: <20160706134858.GA475@leverpostej>
+References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
+ <146776885213.35356.11565744417822933094@resonance>
+ <577D035C.7090504@arm.com>
+ <alpine.DEB.2.10.1607061412370.26575@sstabellini-ThinkPad-X260>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160701012044.GA5619@rob-hp-laptop>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kalle Valo <kvalo@codeaurora.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Jiri Slaby <jslaby@suse.cz>, linux-i2c@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.10.1607061412370.26575@sstabellini-ThinkPad-X260>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Julien Grall <julien.grall@arm.com>, Michael Turquette <mturquette@baylibre.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-07-01 03:20, Rob Herring wrote:
-> On Mon, Jun 27, 2016 at 06:27:21PM +0200, Peter Rosin wrote:
->> On 2016-06-27 15:17, Guenter Roeck wrote:
->>> On 06/27/2016 03:11 AM, Peter Rosin wrote:
->>>> Fill the gap for this pre-existing driver.
->>>>
->>>> Signed-off-by: Peter Rosin <peda@axentia.se>
->>>> ---
->>>>   .../devicetree/bindings/i2c/i2c-arb-pca9541.txt    | 33 ++++++++++++++++++++++
->>>>   MAINTAINERS                                        |  1 +
->>>>   2 files changed, 34 insertions(+)
->>>>   create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arb-pca9541.txt
->>>>
->>>> Hi!
->>>>
->>>> I'm wondering about this driver. It is not a trivial device, and yet it
->>>> has historically relied on the i2c core matching the chip w/o vendor
->>>> prefix. This is not ideal. But what to do about the driver implementing
->>>> this in terms of an i2c-mux, somthing which the chip is not; It is an
->>>> i2c arbitrator. It just happens to rely on the i2c mux core also handling
->>>> i2c gates and i2c arbitrators. But that seems like a Linux detail. So I
->>>> don't know what to do here?
->>>>
->>>
->>> The concept of arbitrators didn't exist when I wrote the driver. I would not
->>> have a problem with renaming the file if that is what you are asking for.
->>
->> No, that was not my issue, I just wanted to document bindings for pca9541,
->> and I didn't like how it turned out.
->>
->> I don't really care if the bindings doc is named i2c-mux-pca9541.txt (that
->> would match the name of the driver, but it still wouldn't make the chip a mux).
+On Wed, Jul 06, 2016 at 02:16:18PM +0100, Stefano Stabellini wrote:
+> On Wed, 6 Jul 2016, Julien Grall wrote:
+> > On 06/07/16 02:34, Michael Turquette wrote:
+> > > Hi!
+> > 
+> > Hello Michael,
+> > 
+> > > Quoting Dirk Behme (2016-06-30 03:32:32)
+> > > > Some clocks might be used by the Xen hypervisor and not by the Linux
+> > > > kernel. If these are not registered by the Linux kernel, they might be
+> > > > disabled by clk_disable_unused() as the kernel doesn't know that they
+> > > > are used. The clock of the serial console handled by Xen is one
+> > > > example for this. It might be disabled by clk_disable_unused() which
+> > > > stops the whole serial output, even from Xen, then.
+> > > 
+> > > This whole thread had me confused until I realized that it all boiled
+> > > down to some nomenclature issues (for me).
+> > > 
+> > > This code does not _register_ any clocks. It simply gets them and
+> > > enables them, which is what every other clk consumer in the Linux kernel
+> > > does. More details below.
+> > > 
+> > > > 
+> > > > Up to now, the workaround for this has been to use the Linux kernel
+> > > > command line parameter 'clk_ignore_unused'. See Xen bug
+> > > > 
+> > > > http://bugs.xenproject.org/xen/bug/45
+> > > 
+> > > clk_ignore_unused is a band-aid, not a proper medical solution. Setting
+> > > that flag will not turn clocks on for you, nor will it guarantee that
+> > > those clocks are never turned off in the future. It looks like you
+> > > figured this out correctly in the patch below but it is worth repeating.
+> > > 
+> > > Also the new CLK_IS_CRITICAL flag might be of interest to you, but that
+> > > flag only exists as a way to enable clocks that must be enabled for the
+> > > system to function (hence, "critical") AND when those same clocks do not
+> > > have an accompanying Linux driver to consume them and enable them.
+> > 
+> > I don't think we want the kernel to enable the clock for the hypervisor. We
+> > want to tell the kernel "don't touch at all to this clock, it does not belong
+> > to you".
 > 
-> So name it i2c-pca9541.txt or the somewhat standard nxp,pca9541.txt 
-> following the compatible.
-> 
->>
->>>> That is, the patch - as is - describes something that would be trivial to
->>>> support today, but at the same time it seems to be too tied to Linux.
->>>>
->>>> The problem is that the i2c@0 intermediate node is not really needed, but
->>>> at the same time removing it would cause a disruption for the driver since
->>>> it can't really use the i2c mux core if that node isn't there. I don't
->>>> see a simple way to fix that in the i2c mux core either (but admittedly
->>>> haven't given it too much thought).
->>>>
->>>
->>> The gpio arbitrator uses the same principle as well. Why not just leave it
->>> alone ? Besides, I think it is a good idea to have it, since it groups
->>> the i2c devices behind the chip together. I would not consider that to be
->>> a Linuxism, but a design choice.
->>
->> The grouping argument would make sense if there was anything outside the
->> group. Also, the required reg property and the extra #address-cells and
->> #size-cells doesn't add anything and just gets in the way, and is indeed
->> the result of Linuxisms leaking back into device trees.
->>
->> If there were no muxes and this was a new driver, the example bindings
->> would almost certainly have been something like:
->>
->> 	i2c-arbitrator@74 {
->> 		compatible = "nxp,pca9541";
->> 		reg = <0x74>;
->>
->> 		#address-cells = <1>;
->> 		#size-cells = <0>;
->>
->> 		eeprom@54 {
->> 			compatible = "at,24c08";
->> 			reg = <0x54>;
->> 		};
->> 	};
->>
->> which I find much nicer.
-> 
-> Yes.
-> 
->> But, I can't find a way to implement that and keep backwards compatibility
->> with old existing device trees.
-> 
-> I don't see any in the kernel tree nor is it documented, so there is not 
-> compatibility to worry about.
+> Right, and that's why I was suggesting that another way to do this would
+> be to set the "status" to "disabled" in Xen: so that Linux would leave
+> the clock alone. But in that case Linux would not be happy to see
+> disabled clocks which are actually supposed to be used by some devices.
 
-Why do you not care about pre-existing device trees not submitted
-to mainline? Is there some statement that DTs are not covered by the
-no-regressions-rule?
+If you were to do that, that would cover the entire clock-controller,
+not necessarily for the individual clock line (as this does not
+necessarily have a node of its own). So you'd prevent the use of other
+clocks owned by that controller.
 
-So, if I instead had submitted the device tree for my boring
-one-off-ish hardware that few people will ever use, which uses the
-currently working (i.e. as written in my patch) syntax of configuring
-the pca9541 in a device tree, then there would be a "user", things
-would be set in stone and the DT patch as proposed would be
-acceptable?
+That's also not sufficient, as you'd have to do the same for resources
+required to keep that clock active (parent clocks from different
+controllers, regulators, GPIOs, etc).
 
-That is just silly, as I assume you do not want the churn of the
-device trees for all kinds of strange one-off devices? Or do you?
+I don't think that will work other than in very basic cases.
 
-We also have to consider the fact that Guenter (who authored the
-driver) thinks it's a design choice to have the extra DT level...
-
-Cheers,
-Peter
+Thanks,
+Mark.
