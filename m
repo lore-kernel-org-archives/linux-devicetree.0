@@ -1,71 +1,53 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
-Date: Wed, 06 Jul 2016 13:42:28 -0700
-Message-ID: <146783774807.35356.6362595927321996311@resonance>
-References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
- <146776885213.35356.11565744417822933094@resonance>
- <577D035C.7090504@arm.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3] arm64: dts: rockchip: add the power domain node for rk3399
+Date: Wed, 06 Jul 2016 22:56:34 +0200
+Message-ID: <4362000.pLfftZqEvu@phil>
+References: <1467635644-16798-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <577D035C.7090504@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Julien Grall <julien.grall@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: xen-devel@lists.xenproject.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467635644-16798-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Julien,
+Am Montag, 4. Juli 2016, 20:34:04 schrieb Caesar Wang:
+> From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> In order to meet low power requirements, a power management unit (PMU) is
+> designed for controlling power resources in RK3399. The RK3399 PMU is
+> dedicated for managing the power of the whole chip.
+> 
+> 1. add pd node for RK3399 Soc
+> 2. create power domain tree
+> 3. add qos node for domain
+> 
+> From the DT/binds and driver can get more detail information:
+> The driver:
+>         drivers/soc/rockchip/pm_domains.c
+> The document:
+>         Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+> 
+> Note:
+> As the TRM lists many voltage domains and power domains, then this patch
+> adds some domains for driver. Due to some domains
+> (e.g. emmc, usb, core)...We can't turned off it on
+> bootup, or says some device driver can't handle the power domain enough.
+> Maybe We will add more other domains in the future or later.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-Quoting Julien Grall (2016-07-06 06:10:52)
-> On 06/07/16 02:34, Michael Turquette wrote:
-> > Hi!
-> 
-> Hello Michael,
-> 
-> > Quoting Dirk Behme (2016-06-30 03:32:32)
-> >> Some clocks might be used by the Xen hypervisor and not by the Linux
-> >> kernel. If these are not registered by the Linux kernel, they might be
-> >> disabled by clk_disable_unused() as the kernel doesn't know that they
-> >> are used. The clock of the serial console handled by Xen is one
-> >> example for this. It might be disabled by clk_disable_unused() which
-> >> stops the whole serial output, even from Xen, then.
-> >
-> > This whole thread had me confused until I realized that it all boiled
-> > down to some nomenclature issues (for me).
-> >
-> > This code does not _register_ any clocks. It simply gets them and
-> > enables them, which is what every other clk consumer in the Linux kernel
-> > does. More details below.
-> >
-> >>
-> >> Up to now, the workaround for this has been to use the Linux kernel
-> >> command line parameter 'clk_ignore_unused'. See Xen bug
-> >>
-> >> http://bugs.xenproject.org/xen/bug/45
-> >
-> > clk_ignore_unused is a band-aid, not a proper medical solution. Setting
-> > that flag will not turn clocks on for you, nor will it guarantee that
-> > those clocks are never turned off in the future. It looks like you
-> > figured this out correctly in the patch below but it is worth repeating.
-> >
-> > Also the new CLK_IS_CRITICAL flag might be of interest to you, but that
-> > flag only exists as a way to enable clocks that must be enabled for the
-> > system to function (hence, "critical") AND when those same clocks do not
-> > have an accompanying Linux driver to consume them and enable them.
-> 
-> I don't think we want the kernel to enable the clock for the hypervisor. 
-> We want to tell the kernel "don't touch at all to this clock, it does 
-> not belong to you".
+applied to my dts64 branch after renaming the qos nodes, removing the status
+property and moving the rga domain up a bit. Please double check:
+https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=6d3cdbf1c219f9817290903e9d1e8de7462a7b54
 
-But the patch *does* touch the clock from the kernel. It enables the
-clock via a call clk_prepare_enable. I'm utterly confused.
-
-Regards,
-Mike
-
-> 
-> Regards,
-> 
-> -- 
-> Julien Grall
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
