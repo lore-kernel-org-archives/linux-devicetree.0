@@ -1,111 +1,109 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 8/9] ARM: dts: sun7i: bananapi-m1-plus: Add PMIC
- regulators and OPPs for cpufreq
-Date: Wed,  6 Jul 2016 17:10:49 +0800
-Message-ID: <1467796250-22010-9-git-send-email-wens@csie.org>
-References: <1467796250-22010-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: document how to order GPIO controllers
+Date: Wed, 6 Jul 2016 11:34:37 +0200
+Message-ID: <CACRpkdbH+KRXbxFdfyAE44fBNctK4cWV+KRLwQBTzSGLvLMEDg@mail.gmail.com>
+References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20160705140546.GA10601@rob-hp-laptop> <20160705180447.GP16643@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJEW6O5QKGQEOGXOK7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1467796250-22010-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160705180447.GP16643@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Bananapi M1+, like other Allwinner A20 based boards, uses the AXP209
-PMIC to supply its power. The vendor FEX file's DVFS table suggests the
-board's CPU power rail has a voltage drop of 25 ~ 50 mV.
+On Tue, Jul 5, 2016 at 8:04 PM, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> [Rob]:
 
-Add the PMIC regulator nodes and copy the DVFS table from the FEX file.
+>> Like SPI and I2C, I'm against further abuse of aliases for this purp=
+ose
+>> [1].
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 48 ++++++++++++++++++++++--
- 1 file changed, 44 insertions(+), 4 deletions(-)
+So what about the usecase for serial ports, where we use this
+to make sure the console come out where we want it? Is that
+also considered abuse or legitimate use? Note: I'm not trying to be
+snarky, I'm trying to understand what is the right and wrong use
+of alias. I'm confused about it right now :(
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-index ba5bca0fe997..7bb418bd1b6e 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-@@ -105,6 +105,22 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+
-+	/* The custom DVFS table suggests a voltage drop of 25 ~ 50 mV */
-+	operating-points = <
-+		/* kHz    uV */
-+		1080000	1450000
-+		912000	1425000
-+		864000	1350000
-+		720000	1250000
-+		528000	1150000
-+		312000	1100000
-+		144000	1050000
-+		>;
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -132,13 +148,9 @@
- 	status = "okay";
- 
- 	axp209: pmic@34 {
--		compatible = "x-powers,axp209";
- 		reg = <0x34>;
- 		interrupt-parent = <&nmi_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--
--		interrupt-controller;
--		#interrupt-cells = <1>;
- 	};
- };
- 
-@@ -222,6 +234,34 @@
- 	};
- };
- 
-+#include "axp209.dtsi"
-+
-+&reg_dcdc2 {
-+	/* The custom DVFS table suggests a voltage drop of 25 ~ 50 mV */
-+	regulator-always-on;
-+	regulator-min-microvolt = <1050000>;
-+	regulator-max-microvolt = <1450000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.8.1
+>> Why is deterministic numbering needed?
+
+This is the big question, we all agree on that.
+
+> in my case (with a pre 4.8 kernel) it's to control GPIO48 with
+> /sys/class/gpio/gpio48.
+
+That is understandable. However as many people have pointed
+out, if this is inherently broken since the introduction of
+off-chip devices and even more by deferred probing. For some
+odd silicon state making one GPIO's clock or something randomly
+defer the probe, this would happen to become unpredictable
+also on SoC-embedded GPIO chips. It's just that we don't see
+it very much because it is deterministic in practice.
+
+We need to face it: relying on fixed GPIO numbering is just a
+big fragile mess that we're trying to duct-tape.
+
+> But also when using the gpio chardev device
+> (that will hit 4.8-rc1 AFAIK) there is one device file per gpio chip.
+
+Yeah and the argument is that the numbering also of the chip
+instance should be made more deterministic, so gpiochip0,
+gpiochip1 ... gpiochipN are intuitive to a human user.
+
+> root@hostname:/sys/bus/gpio/devices ls -l
+> lrwxrwxrwx    1 root     root             0 Jul  5 20:52 gpiochip0 ->=
+ ../../../devices/platform/soc/53f00000.aips/53f9c000.gpio/gpiochip0
+> lrwxrwxrwx    1 root     root             0 Jul  5 20:52 gpiochip1 ->=
+ ../../../devices/platform/soc/53f00000.aips/53fa4000.gpio/gpiochip1
+> lrwxrwxrwx    1 root     root             0 Jul  5 20:52 gpiochip2 ->=
+ ../../../devices/platform/soc/53f00000.aips/53fcc000.gpio/gpiochip2
+> lrwxrwxrwx    1 root     root             0 Jul  5 20:52 gpiochip3 ->=
+ ../../../devices/platform/soc/53f00000.aips/53fd0000.gpio/gpiochip3
+>
+> That is we have:
+>
+>         Hardware name | software gpiochip
+>             GPIO4     |      gpiochip0
+>             GPIO3     |      gpiochip1
+>             GPIO1     |      gpiochip2
+>             GPIO2     |      gpiochip3
+>
+> I bet that's the probe order because when sorted by address (and so
+> by order in the device tree) we have exactly this ordering. (Compare
+> with $(grep gpio@ arch/arm/boot/dts/imx25.dtsi).)
+
+That is super-unintuitive for a human user, I agree 100%.
+
+> For a new interface this is OK, still I predict users will complain i=
+f
+> the numbers used don't match naturally the hardware names. And IMHO t=
+hey
+> are right.
+
+I agree, and I think that if aliases can alleviate the situation we sho=
+uld
+allow them and encourage them. They are the best duct-tape we can
+find for the DT systems.
+
+Unfortunately it is not my call, because DT bindings and alias use
+is not under my jurisdiction.
+
+I *THINK* the view of the device core maintainers is that udev
+and sysfs hierarchies should be used to uniquely identify a certain
+device, and that relying on device numbering is too fragile.
+
+The network and disks people faced this problem before us, and
+their solution was things like using sysfs/udev to make sure
+the device get presented the right way to userspace and
+handled the way it should.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
