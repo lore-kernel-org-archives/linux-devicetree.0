@@ -1,45 +1,402 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v6 08/18] ARM: multi_v7_defconfig: Enable STi FDMA driver
-Date: Wed,  6 Jul 2016 09:54:26 +0100
-Message-ID: <1467795276-21725-9-git-send-email-peter.griffin@linaro.org>
-References: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [RESEND PATCH v5 1/5] mfd: RK808: Add RK818 support
+Date: Wed, 6 Jul 2016 16:56:48 +0800
+Message-ID: <577CC7D0.2040402@rock-chips.com>
+References: <1464850228-17244-1-git-send-email-w.egorov@phytec.de>
+ <20160608141735.GE14888@dell> <5759277D.7090101@phytec.de>
+ <577C77DF.9060706@rock-chips.com> <577CBB62.8080806@phytec.de>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, bjorn.andersson@linaro.org, ohad@wizery.com
-Cc: peter.griffin@linaro.org, dmaengine@vger.kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <rtc-linux+bncBDL7D5HRQMJRB3MP6O5QKGQEG4RNDTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <577CBB62.8080806-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This DMA controller is found on all STi chipsets.
+Hi Wadim:
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On 2016=E5=B9=B407=E6=9C=8806=E6=97=A5 16:03, Wadim Egorov wrote:
+> Hi Andy,
+>
+> On 06.07.2016 05:15, Andy Yan wrote:
+>> Hi Wadim:
+>>
+>> On 2016=E5=B9=B406=E6=9C=8809=E6=97=A5 16:23, Wadim Egorov wrote:
+>>> Hi,
+>>>
+>>> On 08.06.2016 16:17, Lee Jones wrote:
+>>>> On Thu, 02 Jun 2016, Wadim Egorov wrote:
+>>>>
+>>>>> The RK818 chip is a power management IC for multimedia and handheld
+>>>> "Power Management IC (PMIC)"
+>>>>
+>>>>> devices. It contains the following components:
+>>>>>
+>>>>> - Regulators
+>>>>> - RTC
+>>>>> - Clkout
+>>>> Clocking
+>>>>
+>>>>> - battery support
+>>>> Battery support
+>>>>
+>>>>> Both chips RK808 and RK818 are using a similar register map.
+>>>> "Both RK808 ad RK818 chips"
+>>>>
+>>>>> So we can reuse the RTC and Clkout functionality.
+>>>> Swap '.' for ','.
+>>>>
+>>>>> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+>>>>> ---
+>>>>>    drivers/mfd/Kconfig       |   4 +-
+>>>>>    drivers/mfd/rk808.c       | 231
+>>>>> ++++++++++++++++++++++++++++++++++++++--------
+>>>>>    include/linux/mfd/rk808.h | 162 ++++++++++++++++++++++++++++++--
+>>>>>    3 files changed, 350 insertions(+), 47 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>>>>> index 1bcf601..7ba464b 100644
+>>>>> --- a/drivers/mfd/Kconfig
+>>>>> +++ b/drivers/mfd/Kconfig
+>>>>> @@ -839,13 +839,13 @@ config MFD_RC5T583
+>>>>>          different functionality of the device.
+>>>>>      config MFD_RK808
+>>>>> -    tristate "Rockchip RK808 Power Management chip"
+>>>>> +    tristate "Rockchip RK808/RK818 Power Management chip"
+>>>> "Chip"
+>>>>
+>>>>>        depends on I2C && OF
+>>>>>        select MFD_CORE
+>>>>>        select REGMAP_I2C
+>>>>>        select REGMAP_IRQ
+>>>>>        help
+>>>>> -      If you say yes here you get support for the RK808
+>>>>> +      If you say yes here you get support for the RK808 and RK818
+>>>>>          Power Management chips.
+>>>>>          This driver provides common support for accessing the device
+>>>>>          through I2C interface. The device supports multiple
+>>>>> sub-devices
+>>>>> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+>>>>> index 49d7f62..3cf9724 100644
+>>>>> --- a/drivers/mfd/rk808.c
+>>>>> +++ b/drivers/mfd/rk808.c
+>>>>> @@ -1,11 +1,15 @@
+>>>>>    /*
+>>>>> - * MFD core driver for Rockchip RK808
+>>>>> + * MFD core driver for Rockchip RK808/RK818
+>>>>>     *
+>>>>>     * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+>>>>>     *
+>>>>>     * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>>>     * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>>>     *
+>>>>> + * Copyright (C) 2016 PHYTEC Messtechnik GmbH
+>>>>> + *
+>>>>> + * Author: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+>>>>> + *
+>>>>>     * This program is free software; you can redistribute it and/or
+>>>>> modify it
+>>>>>     * under the terms and conditions of the GNU General Public Licens=
+e,
+>>>>>     * version 2, as published by the Free Software Foundation.
+>>>>> @@ -22,12 +26,7 @@
+>>>>>    #include <linux/mfd/core.h>
+>>>>>    #include <linux/module.h>
+>>>>>    #include <linux/regmap.h>
+>>>>> -
+>>>>> -struct rk808_reg_data {
+>>>>> -    int addr;
+>>>>> -    int mask;
+>>>>> -    int value;
+>>>>> -};
+>>>> Why are you moving this to the header?
+>>> It is now part of the rk808 struct.
+>>>
+>>>>> +#include <linux/of_device.h>
+>>>>>      static bool rk808_is_volatile_reg(struct device *dev, unsigned
+>>>>> int reg)
+>>>>>    {
+>>>>> @@ -57,6 +56,14 @@ static bool rk808_is_volatile_reg(struct device
+>>>>> *dev, unsigned int reg)
+>>>>>        return false;
+>>>>>    }
+>>>>>    +static const struct regmap_config rk818_regmap_config =3D {
+>>>>> +    .reg_bits =3D 8,
+>>>>> +    .val_bits =3D 8,
+>>>>> +    .max_register =3D RK818_USB_CTRL_REG,
+>>>>> +    .cache_type =3D REGCACHE_RBTREE,
+>>>>> +    .volatile_reg =3D rk808_is_volatile_reg,
+>>>>> +};
+>>>>> +
+>>>>>    static const struct regmap_config rk808_regmap_config =3D {
+>>>>>        .reg_bits =3D 8,
+>>>>>        .val_bits =3D 8,
+>>>>> @@ -83,7 +90,17 @@ static const struct mfd_cell rk808s[] =3D {
+>>>>>        },
+>>>>>    };
+>>>>>    -static const struct rk808_reg_data pre_init_reg[] =3D {
+>>>>> +static const struct mfd_cell rk818s[] =3D {
+>>>>> +    { .name =3D "rk808-clkout", },
+>>>> How does this differ to a normal -clock driver?
+>>> I don't know. It is a normal clock driver.
+>>>
+>>>>> +    { .name =3D "rk808-regulator", },
+>>>>> +    {
+>>>>> +        .name =3D "rk808-rtc",
+>>>>> +        .num_resources =3D ARRAY_SIZE(rtc_resources),
+>>>>> +        .resources =3D &rtc_resources[0],
+>>>> .resources =3D rtc_resources,  ?
+>>>>
+>>>>> +    },
+>>>>> +};
+>>>>> +
+>>>>> +static const struct rk8xx_reg_data rk808_pre_init_reg[] =3D {
+>>>>>        { RK808_BUCK3_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_150MA }=
+,
+>>>>>        { RK808_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_200MA }=
+,
+>>>>>        { RK808_BOOST_CONFIG_REG, BOOST_ILMIN_MASK, BOOST_ILMIN_100MA =
+},
+>>>>> @@ -94,6 +111,22 @@ static const struct rk808_reg_data
+>>>>> pre_init_reg[] =3D {
+>>>>>                                VB_LO_SEL_3500MV },
+>>>>>    };
+>>>>>    +static const struct rk8xx_reg_data rk818_pre_init_reg[] =3D {
+>>>>> +    { RK818_USB_CTRL_REG,    RK818_USB_ILIM_SEL_MASK,
+>>>>> +                        RK818_USB_ILMIN_2000MA },
+>>>>> +    /* close charger when usb lower then 3.4V */
+>>>>> +    { RK818_USB_CTRL_REG,    RK818_USB_CHG_SD_VSEL_MASK, (0x7 <<
+>>>>> 4) },
+>>>>> +    /* no action when vref */
+>>>>> +    { RK818_H5V_EN_REG,    BIT(1),        RK818_REF_RDY_CTRL },
+>>>>> +    /* enable HDMI 5V */
+>>>>> +    { RK818_H5V_EN_REG,    BIT(0),        RK818_H5V_EN },
+>>>>> +    /* improve efficiency */
+>>>>> +    { RK818_BUCK2_CONFIG_REG, BUCK2_RATE_MASK,    BUCK_ILMIN_250MA }=
+,
+>>>>> +    { RK818_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK,    BUCK_ILMIN_250MA }=
+,
+>>>>> +    { RK818_BOOST_CONFIG_REG, BOOST_ILMIN_MASK,
+>>>>> BOOST_ILMIN_100MA },
+>>>>> +    { RK808_VB_MON_REG,    MASK_ALL,    VB_LO_ACT |
+>>>>> VB_LO_SEL_3500MV },
+>>>>> +};
+>>>> The alignment here looks odd.
+>>> I will fix it in the next version.
+>>>
+>>>>>    static const struct regmap_irq rk808_irqs[] =3D {
+>>>>>        /* INT_STS */
+>>>>>        [RK808_IRQ_VOUT_LO] =3D {
+>>>>> @@ -136,6 +169,76 @@ static const struct regmap_irq rk808_irqs[] =3D =
+{
+>>>>>        },
+>>>>>    };
+>>>>>    +static const struct regmap_irq rk818_irqs[] =3D {
+>>>>> +    /* INT_STS */
+>>>>> +    [RK818_IRQ_VOUT_LO] =3D {
+>>>>> +        .mask =3D RK818_IRQ_VOUT_LO_MSK,
+>>>>> +        .reg_offset =3D 0,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_VB_LO] =3D {
+>>>>> +        .mask =3D RK818_IRQ_VB_LO_MSK,
+>>>>> +        .reg_offset =3D 0,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_PWRON] =3D {
+>>>>> +        .mask =3D RK818_IRQ_PWRON_MSK,
+>>>>> +        .reg_offset =3D 0,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_PWRON_LP] =3D {
+>>>>> +        .mask =3D RK818_IRQ_PWRON_LP_MSK,
+>>>>> +        .reg_offset =3D 0,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_HOTDIE] =3D {
+>>>>> +        .mask =3D RK818_IRQ_HOTDIE_MSK,
+>>>>> +        .reg_offset =3D 0,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_RTC_ALARM] =3D {
+>>>>> +        .mask =3D RK818_IRQ_RTC_ALARM_MSK,
+>>>>> +        .reg_offset =3D 0,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_RTC_PERIOD] =3D {
+>>>>> +        .mask =3D RK818_IRQ_RTC_PERIOD_MSK,
+>>>>> +        .reg_offset =3D 0,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_USB_OV] =3D {
+>>>>> +        .mask =3D RK818_IRQ_USB_OV_MSK,
+>>>>> +        .reg_offset =3D 0,
+>>>>> +    },
+>>>>> +
+>>>>> +    /* INT_STS2 */
+>>>>> +    [RK818_IRQ_PLUG_IN] =3D {
+>>>>> +        .mask =3D RK818_IRQ_PLUG_IN_MSK,
+>>>>> +        .reg_offset =3D 1,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_PLUG_OUT] =3D {
+>>>>> +        .mask =3D RK818_IRQ_PLUG_OUT_MSK,
+>>>>> +        .reg_offset =3D 1,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_CHG_OK] =3D {
+>>>>> +        .mask =3D RK818_IRQ_CHG_OK_MSK,
+>>>>> +        .reg_offset =3D 1,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_CHG_TE] =3D {
+>>>>> +        .mask =3D RK818_IRQ_CHG_TE_MSK,
+>>>>> +        .reg_offset =3D 1,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_CHG_TS1] =3D {
+>>>>> +        .mask =3D RK818_IRQ_CHG_TS1_MSK,
+>>>>> +        .reg_offset =3D 1,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_TS2] =3D {
+>>>>> +        .mask =3D RK818_IRQ_TS2_MSK,
+>>>>> +        .reg_offset =3D 1,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_CHG_CVTLIM] =3D {
+>>>>> +        .mask =3D RK818_IRQ_CHG_CVTLIM_MSK,
+>>>>> +        .reg_offset =3D 1,
+>>>>> +    },
+>>>>> +    [RK818_IRQ_DISCHG_ILIM] =3D {
+>>>>> +        .mask =3D RK818_IRQ_DISCHG_ILIM_MSK,
+>>>>> +        .reg_offset =3D 1,
+>>>>> +    },
+>>>>> +};
+>>>>> +
+>>>>>    static struct regmap_irq_chip rk808_irq_chip =3D {
+>>>>>        .name =3D "rk808",
+>>>>>        .irqs =3D rk808_irqs,
+>>>>> @@ -148,6 +251,18 @@ static struct regmap_irq_chip rk808_irq_chip =3D=
+ {
+>>>>>        .init_ack_masked =3D true,
+>>>>>    };
+>>>>>    +static struct regmap_irq_chip rk818_irq_chip =3D {
+>>>>> +    .name =3D "rk818",
+>>>>> +    .irqs =3D rk818_irqs,
+>>>>> +    .num_irqs =3D ARRAY_SIZE(rk818_irqs),
+>>>>> +    .num_regs =3D 2,
+>>>>> +    .irq_reg_stride =3D 2,
+>>>>> +    .status_base =3D RK818_INT_STS_REG1,
+>>>>> +    .mask_base =3D RK818_INT_STS_MSK_REG1,
+>>>>> +    .ack_base =3D RK818_INT_STS_REG1,
+>>>>> +    .init_ack_masked =3D true,
+>>>>> +};
+>>>>> +
+>>>>>    static struct i2c_client *rk808_i2c_client;
+>>>>>    static void rk808_device_shutdown(void)
+>>>>>    {
+>>>>> @@ -167,6 +282,48 @@ static void rk808_device_shutdown(void)
+>>>>>            dev_err(&rk808_i2c_client->dev, "power off error!\n");
+>>>>>    }
+>>>>>    +static const struct of_device_id rk808_of_match[] =3D {
+>>>>> +    { .compatible =3D "rockchip,rk808", .data =3D (void *) RK808_ID =
+},
+>>>>> +    { .compatible =3D "rockchip,rk818", .data =3D (void *) RK818_ID =
+},
+>>>>> +    { },
+>>>>> +};
+>>>>> +MODULE_DEVICE_TABLE(of, rk808_of_match);
+>>>>> +
+>>>>> +static int rk8xx_match_device(struct rk808 *rk808, struct device
+>>>>> *dev)
+>>>> If you're going to do it this way, please switch these parameters.
+>>>>
+>>>> It's more common to return the pointer however.
+>>> If it's more common I will return a pointer to rk808.
+>>>
+>>>>> +{
+>>>>> +    const struct of_device_id *of_id;
+>>>>> +
+>>>>> +    of_id =3D of_match_device(rk808_of_match, dev);
+>>>>> +    if (!of_id) {
+>>>>> +        dev_err(dev, "Unable to match OF ID\n");
+>>>>> +        return -ENODEV;
+>>>>> +    }
+>>>>> +    rk808->variant =3D (long) of_id->data;
+>>>>> +
+>>>>> +    switch (rk808->variant) {
+>>>>> +    case RK808_ID:
+>>>>> +        rk808->nr_cells =3D ARRAY_SIZE(rk808s);
+>>>>> +        rk808->cells =3D rk808s;
+>>>>> +        rk808->regmap_cfg =3D &rk808_regmap_config;
+>>>>> +        rk808->regmap_irq_chip =3D &rk808_irq_chip;
+>>>>> +        rk808->pre_init_reg =3D rk808_pre_init_reg;
+>>>>> +        rk808->nr_pre_init_regs =3D ARRAY_SIZE(rk808_pre_init_reg);
+>>>>> +        break;
+>>>>> +    case RK818_ID:
+>>>>> +        rk808->nr_cells =3D ARRAY_SIZE(rk818s);
+>>>>> +        rk808->cells =3D rk818s;
+>>>>> +        rk808->regmap_cfg =3D &rk818_regmap_config;
+>>>>> +        rk808->regmap_irq_chip =3D &rk818_irq_chip;
+>>>>> +        rk808->pre_init_reg =3D rk818_pre_init_reg;
+>>>>> +        rk808->nr_pre_init_regs =3D ARRAY_SIZE(rk818_pre_init_reg);
+>>>>> +        break;
+>>>>> +    default:
+>>>>> +        dev_err(dev, "unsupported RK8XX ID %lu\n", rk808->variant);
+>>>>> +        return -EINVAL;
+>>>>> +    }
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>>    static int rk808_probe(struct i2c_client *client,
+>>>>>                   const struct i2c_device_id *id)
+>>>>>    {
+>>>>> @@ -176,46 +333,52 @@ static int rk808_probe(struct i2c_client
+>>>>> *client,
+>>>>>        int ret;
+>>>>>        int i;
+>>>>>    -    if (!client->irq) {
+>>>>> -        dev_err(&client->dev, "No interrupt support, no core IRQ\n")=
+;
+>>>>> -        return -EINVAL;
+>>>>> -    }
+>>>>> -
+>>>>>        rk808 =3D devm_kzalloc(&client->dev, sizeof(*rk808), GFP_KERNE=
+L);
+>>>>>        if (!rk808)
+>>>>>            return -ENOMEM;
+>>>>>    -    rk808->regmap =3D devm_regmap_init_i2c(client,
+>>>>> &rk808_regmap_config);
+>>>>> +    ret =3D rk8xx_match_device(rk808, &client->dev);
+>>>> Is there a way to dynamically probe the device?  No device ID you can
+>>>> read directly from the silicon?
+>>> AFAIK there is no device ID register. At least it is not documented in
+>>> the manual.
+>> register 0x17 and 0x18 is the ID register, 0x17 is the MSB, 0x18 is LSB
+>>
+>> for RK818, register 0x17 is 0x81, 0x18 is 0x81
+> thank you for sharing this information. I have no RK808 PMIC device
+> here, so I would also need the IDs for RK808.
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 3ac30f0..541c914 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -747,6 +747,7 @@ CONFIG_DMA_OMAP=y
- CONFIG_QCOM_BAM_DMA=y
- CONFIG_XILINX_VDMA=y
- CONFIG_DMA_SUN6I=y
-+CONFIG_ST_FDMA=m
- CONFIG_STAGING=y
- CONFIG_SENSORS_ISL29018=y
- CONFIG_SENSORS_ISL29028=y
--- 
-1.9.1
+    I have checked with the RK808 IC designer, the values of register=20
+0x17 and 0x18 are both 0x00.
+>
+> Lee, you have already applied this series. But I can't find the patches
+> in your kernel tree.
+> I would like to read the device ID from the register in the probe functio=
+n.
+> Do you want me to base my changes on top of this series or send a new
+> version?
+>
+>
+>
+
+
+--=20
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+---=20
+You received this message because you are subscribed to the Google Groups "=
+rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
