@@ -1,38 +1,34 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] drivers: reset: Add STM32 reset driver
-Date: Wed, 06 Jul 2016 17:43:58 +0200
-Message-ID: <1467819838.2914.6.camel@pengutronix.de>
-References: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
-	 <1467640052-6770-3-git-send-email-gabriel.fernandez@st.com>
-	 <1467653810.2224.77.camel@pengutronix.de> <577B61EA.5080703@st.com>
-	 <1467725370.2978.64.camel@pengutronix.de> <577D264A.4050709@st.com>
+Subject: Re: [PATCH v2] of: fix reference counting in
+ of_graph_get_endpoint_by_regs
+Date: Wed, 06 Jul 2016 17:59:21 +0200
+Message-ID: <1467820761.2914.7.camel@pengutronix.de>
+References: <1467799896-18573-1-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <577D264A.4050709-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1467799896-18573-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 06.07.2016, 17:39 +0200 schrieb Gabriel Fernandez:
-> Hi Philipp
+Am Mittwoch, den 06.07.2016, 12:11 +0200 schrieb Lucas Stach:
+> The called of_graph_get_next_endpoint() already decrements the refcount
+> of the prev node, so it is wrong to do it again in the calling function.
 > 
-> On 07/05/2016 03:29 PM, Philipp Zabel wrote:
-> > Am Dienstag, den 05.07.2016, 09:29 +0200 schrieb Gabriel Fernandez:
-> > [...]
-> >>>> +static const struct reset_control_ops stm32_reset_ops = {
-> >>>> +	.assert		= stm32_reset_assert,
-> >>>> +	.deassert	= stm32_reset_deassert,
-> >>> Are the registers not readable, or did you choose not to
-> >>> implement .status on purpose?
-> >> We choose to not implement.
-> > Ok. Because of size issues or just because you don't need them in any of
-> > your drivers?
-> Because i don't need them.
+> Use the for_each_endpoint_of_node() helper to interate through the
+> endpoint OF nodes, which already does the right thing and simplifies
+> the code a bit.
+> 
+> Fixes: 8ccd0d0ca041
+> (of: add helper for getting endpoint node of specific identifiers)
+> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Reported-by: David Jander <david-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Ok, thanks for clarifying.
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
 regards
 Philipp
