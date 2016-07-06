@@ -1,364 +1,120 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 1/4] soc: mediatek: Refine scpsys to support multiple
- platform
-Date: Wed, 6 Jul 2016 13:39:24 +0800
-Message-ID: <1467783564.26485.22.camel@mtksdaap41>
-References: <1463390894-32062-1-git-send-email-jamesjj.liao@mediatek.com>
- <1463390894-32062-2-git-send-email-jamesjj.liao@mediatek.com>
- <6762e420-0d68-0376-b584-bfc878b5e95f@gmail.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH 02/21] usb: ulpi: Support device discovery via DT
+Date: Tue, 05 Jul 2016 23:16:33 -0700
+Message-ID: <146778579383.12931.7862254251015294434@sboyd-linaro>
+References: <20160626072838.28082-1-stephen.boyd@linaro.org>
+ <20160626072838.28082-3-stephen.boyd@linaro.org>
+ <20160628205642.GP3737@rob-hp-laptop>
+ <146715176149.31418.10938517376423447782@sboyd-linaro>
+ <20160701005817.GA31363@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <6762e420-0d68-0376-b584-bfc878b5e95f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160701005817.GA31363@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On Sat, 2016-07-02 at 18:33 +0200, Matthias Brugger wrote:
+Quoting Rob Herring (2016-06-30 17:59:15)
+> On Tue, Jun 28, 2016 at 03:09:21PM -0700, Stephen Boyd wrote:
+> > Quoting Rob Herring (2016-06-28 13:56:42)
+> > > On Sun, Jun 26, 2016 at 12:28:19AM -0700, Stephen Boyd wrote:
+> > > > The qcom HSIC ulpi phy doesn't have any bits set in the vendor or
+> > > > product id ulpi registers. This makes it impossible to make a
+> > > > ulpi driver match against the id registers. Add support to
+> > > > discover the ulpi phys via DT to help alleviate this problem.
+> > > > We'll look for a ulpi bus node underneath the device registering
+> > > > the ulpi viewport (or the parent of that device to support
+> > > > chipidea's device layout) and then match up the phy node
+> > > > underneath that with the ulpi device that's created.
+> > > > 
+> > > > The side benefit of this is that we can use standard DT
+> > > > properties in the phy node like clks, regulators, gpios, etc.
+> > > > because we don't have firmware like ACPI to turn these things on
+> > > > for us. And we can use the DT phy binding to point our phy
+> > > > consumer to the phy provider.
+> > > > 
+> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > > Cc: <devicetree@vger.kernel.org>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/usb/ulpi.txt | 20 +++++++++
+> > > >  drivers/usb/common/ulpi.c                      | 56 +++++++++++++++++++++++++-
+> > > >  2 files changed, 74 insertions(+), 2 deletions(-)
+> > > >  create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/usb/ulpi.txt b/Documentation/devicetree/bindings/usb/ulpi.txt
+> > > > new file mode 100644
+> > > > index 000000000000..ca179dc4bd50
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/usb/ulpi.txt
+> > > > @@ -0,0 +1,20 @@
+> > > > +ULPI bus binding
+> > > > +----------------
+> > > > +
+> > > > +Phys that are behind a ULPI connection can be described with the following
+> > > > +binding. The host controller shall have a "ulpi" named node as a child, and
+> > > > +that node shall have one enabled node underneath it representing the ulpi
+> > > > +device on the bus.
+> > > 
+> > > This needs to co-exist with the USB bus binding which has the controller 
+> > > ports for the child nodes. Maybe use the phy binding?
+> > 
+> > Which binding is that? bindings/usb/usb-device.txt? 
 > 
-> On 05/16/2016 11:28 AM, James Liao wrote:
-> > Refine scpsys driver common code to support multiple SoC / platform.
-> >
-> > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/soc/mediatek/mtk-scpsys.c | 363 +++++++++++++++++++++++---------------
-> >  1 file changed, 220 insertions(+), 143 deletions(-)
-> >
-> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> > index 57e781c..5870a24 100644
-> > --- a/drivers/soc/mediatek/mtk-scpsys.c
-> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> > @@ -11,17 +11,15 @@
-> >   * GNU General Public License for more details.
-> >   */
-> >  #include <linux/clk.h>
-> > -#include <linux/delay.h>
-> > +#include <linux/init.h>
-> >  #include <linux/io.h>
-> > -#include <linux/kernel.h>
-> >  #include <linux/mfd/syscon.h>
-> > -#include <linux/init.h>
-> >  #include <linux/of_device.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_domain.h>
-> > -#include <linux/regmap.h>
-> > -#include <linux/soc/mediatek/infracfg.h>
-> >  #include <linux/regulator/consumer.h>
-> > +#include <linux/soc/mediatek/infracfg.h>
-> > +
-> >  #include <dt-bindings/power/mt8173-power.h>
-> >
-> >  #define SPM_VDE_PWR_CON			0x0210
-> > @@ -34,6 +32,7 @@
-> >  #define SPM_MFG_2D_PWR_CON		0x02c0
-> >  #define SPM_MFG_ASYNC_PWR_CON		0x02c4
-> >  #define SPM_USB_PWR_CON			0x02cc
-> > +
-> >  #define SPM_PWR_STATUS			0x060c
-> >  #define SPM_PWR_STATUS_2ND		0x0610
-> >
-> > @@ -55,12 +54,12 @@
-> >  #define PWR_STATUS_USB			BIT(25)
-> >
-> >  enum clk_id {
-> > -	MT8173_CLK_NONE,
-> > -	MT8173_CLK_MM,
-> > -	MT8173_CLK_MFG,
-> > -	MT8173_CLK_VENC,
-> > -	MT8173_CLK_VENC_LT,
-> > -	MT8173_CLK_MAX,
-> > +	CLK_NONE,
-> > +	CLK_MM,
-> > +	CLK_MFG,
-> > +	CLK_VENC,
-> > +	CLK_VENC_LT,
-> > +	CLK_MAX,
-> >  };
-> >
-> >  #define MAX_CLKS	2
-> > @@ -76,98 +75,6 @@ struct scp_domain_data {
-> >  	bool active_wakeup;
-> >  };
-> >
-> > -static const struct scp_domain_data scp_domain_data[] = {
-> > -	[MT8173_POWER_DOMAIN_VDEC] = {
-> > -		.name = "vdec",
-> > -		.sta_mask = PWR_STATUS_VDEC,
-> > -		.ctl_offs = SPM_VDE_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(11, 8),
-> > -		.sram_pdn_ack_bits = GENMASK(12, 12),
-> > -		.clk_id = {MT8173_CLK_MM},
-> > -	},
-> > -	[MT8173_POWER_DOMAIN_VENC] = {
-> > -		.name = "venc",
-> > -		.sta_mask = PWR_STATUS_VENC,
-> > -		.ctl_offs = SPM_VEN_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(11, 8),
-> > -		.sram_pdn_ack_bits = GENMASK(15, 12),
-> > -		.clk_id = {MT8173_CLK_MM, MT8173_CLK_VENC},
-> > -	},
-> > -	[MT8173_POWER_DOMAIN_ISP] = {
-> > -		.name = "isp",
-> > -		.sta_mask = PWR_STATUS_ISP,
-> > -		.ctl_offs = SPM_ISP_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(11, 8),
-> > -		.sram_pdn_ack_bits = GENMASK(13, 12),
-> > -		.clk_id = {MT8173_CLK_MM},
-> > -	},
-> > -	[MT8173_POWER_DOMAIN_MM] = {
-> > -		.name = "mm",
-> > -		.sta_mask = PWR_STATUS_DISP,
-> > -		.ctl_offs = SPM_DIS_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(11, 8),
-> > -		.sram_pdn_ack_bits = GENMASK(12, 12),
-> > -		.clk_id = {MT8173_CLK_MM},
-> > -		.bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MM_M0 |
-> > -			MT8173_TOP_AXI_PROT_EN_MM_M1,
-> > -	},
-> > -	[MT8173_POWER_DOMAIN_VENC_LT] = {
-> > -		.name = "venc_lt",
-> > -		.sta_mask = PWR_STATUS_VENC_LT,
-> > -		.ctl_offs = SPM_VEN2_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(11, 8),
-> > -		.sram_pdn_ack_bits = GENMASK(15, 12),
-> > -		.clk_id = {MT8173_CLK_MM, MT8173_CLK_VENC_LT},
-> > -	},
-> > -	[MT8173_POWER_DOMAIN_AUDIO] = {
-> > -		.name = "audio",
-> > -		.sta_mask = PWR_STATUS_AUDIO,
-> > -		.ctl_offs = SPM_AUDIO_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(11, 8),
-> > -		.sram_pdn_ack_bits = GENMASK(15, 12),
-> > -		.clk_id = {MT8173_CLK_NONE},
-> > -	},
-> > -	[MT8173_POWER_DOMAIN_USB] = {
-> > -		.name = "usb",
-> > -		.sta_mask = PWR_STATUS_USB,
-> > -		.ctl_offs = SPM_USB_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(11, 8),
-> > -		.sram_pdn_ack_bits = GENMASK(15, 12),
-> > -		.clk_id = {MT8173_CLK_NONE},
-> > -		.active_wakeup = true,
-> > -	},
-> > -	[MT8173_POWER_DOMAIN_MFG_ASYNC] = {
-> > -		.name = "mfg_async",
-> > -		.sta_mask = PWR_STATUS_MFG_ASYNC,
-> > -		.ctl_offs = SPM_MFG_ASYNC_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(11, 8),
-> > -		.sram_pdn_ack_bits = 0,
-> > -		.clk_id = {MT8173_CLK_MFG},
-> > -	},
-> > -	[MT8173_POWER_DOMAIN_MFG_2D] = {
-> > -		.name = "mfg_2d",
-> > -		.sta_mask = PWR_STATUS_MFG_2D,
-> > -		.ctl_offs = SPM_MFG_2D_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(11, 8),
-> > -		.sram_pdn_ack_bits = GENMASK(13, 12),
-> > -		.clk_id = {MT8173_CLK_NONE},
-> > -	},
-> > -	[MT8173_POWER_DOMAIN_MFG] = {
-> > -		.name = "mfg",
-> > -		.sta_mask = PWR_STATUS_MFG,
-> > -		.ctl_offs = SPM_MFG_PWR_CON,
-> > -		.sram_pdn_bits = GENMASK(13, 8),
-> > -		.sram_pdn_ack_bits = GENMASK(21, 16),
-> > -		.clk_id = {MT8173_CLK_NONE},
-> > -		.bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MFG_S |
-> > -			MT8173_TOP_AXI_PROT_EN_MFG_M0 |
-> > -			MT8173_TOP_AXI_PROT_EN_MFG_M1 |
-> > -			MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT,
-> > -	},
-> > -};
-> > -
-> > -#define NUM_DOMAINS	ARRAY_SIZE(scp_domain_data)
-> > -
-> >  struct scp;
-> >
-> >  struct scp_domain {
-> > @@ -179,7 +86,7 @@ struct scp_domain {
-> >  };
-> >
-> >  struct scp {
-> > -	struct scp_domain domains[NUM_DOMAINS];
-> > +	struct scp_domain *domains;
-> >  	struct genpd_onecell_data pd_data;
-> >  	struct device *dev;
-> >  	void __iomem *base;
-> > @@ -408,57 +315,69 @@ static bool scpsys_active_wakeup(struct device *dev)
-> >  	return scpd->data->active_wakeup;
-> >  }
-> >
-> > -static int scpsys_probe(struct platform_device *pdev)
-> > +static void init_clks(struct platform_device *pdev, struct clk *clk[CLK_MAX])
-> > +{
-> > +	enum clk_id clk_ids[] = {
-> > +		CLK_MM,
-> > +		CLK_MFG,
-> > +		CLK_VENC,
-> > +		CLK_VENC_LT
-> > +	};
-> > +
-> > +	static const char * const clk_names[] = {
-> > +		"mm",
-> > +		"mfg",
-> > +		"venc",
-> > +		"venc_lt",
-> > +	};
-> > +
-> > +	int i;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(clk_ids); i++)
-> > +		clk[clk_ids[i]] = devm_clk_get(&pdev->dev, clk_names[i]);
+> Yes.
 > 
-> We can use the global enum clk_id and stat with i = 1, right?
-
-You are right. I'll change the start value with i = CLK_NONE + 1 in next
-patch.
-
-> > +}
-> > +
-> > +static struct scp *init_scp(struct platform_device *pdev,
-> > +			const struct scp_domain_data *scp_domain_data, int num)
-> >  {
-> >  	struct genpd_onecell_data *pd_data;
-> >  	struct resource *res;
-> > -	int i, j, ret;
-> > +	int i, j;
-> >  	struct scp *scp;
-> > -	struct clk *clk[MT8173_CLK_MAX];
-> > +	struct clk *clk[CLK_MAX];
-> >
-> >  	scp = devm_kzalloc(&pdev->dev, sizeof(*scp), GFP_KERNEL);
-> >  	if (!scp)
-> > -		return -ENOMEM;
-> > +		return ERR_PTR(-ENOMEM);
-> >
-> >  	scp->dev = &pdev->dev;
-> >
-> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	scp->base = devm_ioremap_resource(&pdev->dev, res);
-> >  	if (IS_ERR(scp->base))
-> > -		return PTR_ERR(scp->base);
-> > -
-> > -	pd_data = &scp->pd_data;
-> > -
-> > -	pd_data->domains = devm_kzalloc(&pdev->dev,
-> > -			sizeof(*pd_data->domains) * NUM_DOMAINS, GFP_KERNEL);
-> > -	if (!pd_data->domains)
-> > -		return -ENOMEM;
-> > -
-> > -	clk[MT8173_CLK_MM] = devm_clk_get(&pdev->dev, "mm");
-> > -	if (IS_ERR(clk[MT8173_CLK_MM]))
-> > -		return PTR_ERR(clk[MT8173_CLK_MM]);
-> > -
-> > -	clk[MT8173_CLK_MFG] = devm_clk_get(&pdev->dev, "mfg");
-> > -	if (IS_ERR(clk[MT8173_CLK_MFG]))
-> > -		return PTR_ERR(clk[MT8173_CLK_MFG]);
-> > -
-> > -	clk[MT8173_CLK_VENC] = devm_clk_get(&pdev->dev, "venc");
-> > -	if (IS_ERR(clk[MT8173_CLK_VENC]))
-> > -		return PTR_ERR(clk[MT8173_CLK_VENC]);
-> > -
-> > -	clk[MT8173_CLK_VENC_LT] = devm_clk_get(&pdev->dev, "venc_lt");
-> > -	if (IS_ERR(clk[MT8173_CLK_VENC_LT]))
-> > -		return PTR_ERR(clk[MT8173_CLK_VENC_LT]);
-> > +		return ERR_CAST(scp->base);
-> >
-> >  	scp->infracfg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> >  			"infracfg");
-> >  	if (IS_ERR(scp->infracfg)) {
-> >  		dev_err(&pdev->dev, "Cannot find infracfg controller: %ld\n",
-> >  				PTR_ERR(scp->infracfg));
-> > -		return PTR_ERR(scp->infracfg);
-> > +		return ERR_CAST(scp->infracfg);
-> >  	}
-> >
-> > -	for (i = 0; i < NUM_DOMAINS; i++) {
-> > +	scp->domains = devm_kzalloc(&pdev->dev,
-> > +				sizeof(*scp->domains) * num, GFP_KERNEL);
-> > +	if (!scp->domains)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	pd_data = &scp->pd_data;
-> > +
-> > +	pd_data->domains = devm_kzalloc(&pdev->dev,
-> > +			sizeof(*pd_data->domains) * num, GFP_KERNEL);
-> > +	if (!pd_data->domains)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	for (i = 0; i < num; i++) {
-> >  		struct scp_domain *scpd = &scp->domains[i];
-> >  		const struct scp_domain_data *data = &scp_domain_data[i];
-> >
-> > @@ -467,28 +386,54 @@ static int scpsys_probe(struct platform_device *pdev)
-> >  			if (PTR_ERR(scpd->supply) == -ENODEV)
-> >  				scpd->supply = NULL;
-> >  			else
-> > -				return PTR_ERR(scpd->supply);
-> > +				return ERR_CAST(scpd->supply);
-> >  		}
-> >  	}
-> >
-> > -	pd_data->num_domains = NUM_DOMAINS;
-> > +	pd_data->num_domains = num;
-> >
-> > -	for (i = 0; i < NUM_DOMAINS; i++) {
-> > +	init_clks(pdev, clk);
-> > +
-> > +	for (i = 0; i < num; i++) {
-> >  		struct scp_domain *scpd = &scp->domains[i];
-> >  		struct generic_pm_domain *genpd = &scpd->genpd;
-> >  		const struct scp_domain_data *data = &scp_domain_data[i];
-> >
-> > +		for (j = 0; j < MAX_CLKS && data->clk_id[j]; j++) {
-> > +			struct clk *c = clk[data->clk_id[j]];
-> > +
-> > +			if (IS_ERR(c)) {
-> > +				dev_err(&pdev->dev, "%s: clk unavailable\n",
-> > +					data->name);
-> > +				return ERR_CAST(c);
-> > +			}
-> > +
-> > +			scpd->clk[j] = c;
+> > This ulpi binding is
+> > to describe phys that are accessed through the ulpi "viewport" in the
+> > usb controller. So controller ports don't come into the picture here.
 > 
-> Put this in the else branch. Apart from that is there any reason you 
+> You just need to confirm that there's no collision with child nodes like 
+> it assumes all children are ports.
+> 
 
-Do you mean to change like this?
+Ok. It will work with the way usb_of_get_child_node() is written but it
+doesn't seem like great DT design if we want to support usb-device
+binding and ulpi bus at the same time, because we treat the controller
+node as the usb bus.
 
-	if (IS_ERR(c)) {
-		...
-		return ERR_CAST(c);
-	} else {
-		scpd->clk[j] = c;
-	}
+&usb1 { 
+        status = "okay";
 
-checkpatch.pl will warn for above code due to it returns in 'if' branch.
+        #address-cells = <1>;
+        #size-cells = <0>;
+	phys = <&uphy>;
+	phy-names = "usb-phy";
 
-> moved the for up in the function? If not, I would prefer not to move it, 
-> to make it easier to read the diff.
+        hub: genesys@1 {
+                compatible = "usb5e3,608";
+                reg = <1>;
+        };
 
-The new 'for' block are far different from original one. And I think
-it's easy to read if we keep simple assign statements in the same block.
+	ulpi {
+		uphy: phy {
+			compatible = "phy";
+		};
+	};
+}
 
-> Apart from that, the patch looks good to me.
-> Sorry for the delay in responding.
+In this example, the ulpi bus doesn't have a reg property because it
+isn't a port.
 
-Thanks for your comments.
-
-
-Best regards,
-
-James
+Perhaps we can move the usb ports to a subnode like 'usb' so that we can
+have two logical busses underneath the controller, one for usb and one
+for ulpi? We would need backwards compatibility code that looks for a
+ports directly underneath the usb controller node when #address-cells
+and #size-cells are present, otherwise it should fall down into a
+'usb' subnode.
