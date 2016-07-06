@@ -1,51 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: dts: rockchip: add GMAC dt nodes for rk3399 SoC
-Date: Wed, 6 Jul 2016 15:23:53 +0300
-Message-ID: <f1e3270b-4908-2d81-9784-21c1cb77e2d9@cogentembedded.com>
-References: <1467802291-6487-1-git-send-email-roger.chen@rock-chips.com>
- <1467802291-6487-3-git-send-email-roger.chen@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: document how to order GPIO controllers
+Date: Wed, 6 Jul 2016 14:34:39 +0200
+Message-ID: <CACRpkdZhx3yTbtuj-ZTP+mtUSr4uxL4bHtu8jVZOoxrUy6=iYw@mail.gmail.com>
+References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20160705140546.GA10601@rob-hp-laptop> <20160705180447.GP16643@pengutronix.de>
+ <CACRpkdbH+KRXbxFdfyAE44fBNctK4cWV+KRLwQBTzSGLvLMEDg@mail.gmail.com> <20160706102750.GH23470@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1467802291-6487-3-git-send-email-roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160706102750.GH23470@localhost>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Wed, Jul 6, 2016 at 12:27 PM, Johan Hovold <johan@kernel.org> wrote:
+> On Wed, Jul 06, 2016 at 11:34:37AM +0200, Linus Walleij wrote:
 
-On 7/6/2016 1:51 PM, Roger Chen wrote:
-
-> This patch adds ethernet GMAC dt notes for Rockchip RK3399 SoC.
+>> I *THINK* the view of the device core maintainers is that udev
+>> and sysfs hierarchies should be used to uniquely identify a certain
+>> device, and that relying on device numbering is too fragile.
 >
-> Signed-off-by: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 79 ++++++++++++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index d7f8e06..cb0b17d 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -189,6 +189,25 @@
->  		};
->  	};
->
-> +	gmac: eth@fe300000 {
+> I thought the whole idea (or at least a large part of) the new
+> user-space interface was to allow lookups by line names precisely in
+> order not to have to rely on gpio numbers, which may not only change
+> between boots, but also between hardware revisions, etc.
 
-    The node should be named "ethernet@fe300000" to comply with the ePAPR 
-standard.
+That is true for the individual pins, but not the device names.
+Devices are just names gpiochipN where N is the instance
+number. Topological info on the device can be found in sysfs.
 
-[...]
+The discussion here pertaining to the new chardev is just about
+the intuitiveness of the number N, whether it should be
+"whatever" or something predictable.
 
-MBR, Sergei
+For the purpose of picking a certain named GPIO line (see below)
+knowing this number is unnecessary. To that mechanism all gpio
+chips are equal and the instance number does not matter.
+
+> What's wrong with naming the pins in DT and use that for lookups?
+
+That works. It relies on the developers using sane naming conventions
+though. (This problem is prevalent everywhere I guess, a human problem,
+not a technical one.) I made this patch:
+http://marc.info/?l=linux-arm-kernel&m=146672328215354&w=2
+
+There is a standard document for these boards (96board) specifying
+the names of the GPIO lines to be "GPIO-A" thru "GPIO-L".
+
+So a user can iterate across the gpiochips (as is done in lsgpio)
+and pick the lines with the right names.
+
+This works fine, given you have such conventions or equal.
+
+I.e. the person writing the DTS file naming the lines must not
+be a complete lunatic.
+
+I can think of scenarios where bad use can make things problematic:
+i.e. name two lines the same thing, albeit on different GPIO chips.
+That is currently allowed, and if that happens, the user must
+use topological information about the gpiochip (from sysfs) to
+uniquely identify the GPIO line.
+
+I wouldn't recommend that since it is essentially inventing a
+problem for oneself to solve, but I don't know what reasons
+people may have to do something like that. There is no technical
+problem with it.
+
+> I've been too busy with other stuff this spring to follow the new
+> user-space interface development, but I assume that this had been taken
+> into account in the design?
+
+I think so...
+
+Yours,
+Linus Walleij
