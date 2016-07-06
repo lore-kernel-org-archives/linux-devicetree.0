@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v6 18/18] remoteproc: core: Retry rproc_fw_config_virtio() if !rproc->table_ptr
-Date: Wed,  6 Jul 2016 09:54:36 +0100
-Message-ID: <1467795276-21725-19-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v6 17/18] dmaengine: st_fdma: Change to late_initcall_sync
+Date: Wed,  6 Jul 2016 09:54:35 +0100
+Message-ID: <1467795276-21725-18-git-send-email-peter.griffin@linaro.org>
 References: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
@@ -10,94 +10,44 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@s
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When rproc drivers are built-in the async firmware load done by rproc_add()
-can fail due to the firmware not being present. Subsqeuent calls to
-rproc_fw_boot() then fail, even though by this point firmware has been
-successfully obtained.
-
-This patch changes the behaviour to re-execute rproc_fw_config_virtio()
-in rproc_fw_boot() if it has previously failed, and we are sure it is
-now available.
+This avoids unnecessary rounds of -EPROBE_DEFER, which
+in turn avoids lots of console noise from remoteproc when
+all drivers are built-in.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- drivers/remoteproc/remoteproc_core.c     | 25 +++++++++++++++++++------
- drivers/remoteproc/remoteproc_internal.h |  3 +++
- 2 files changed, 22 insertions(+), 6 deletions(-)
+ drivers/dma/st_fdma.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index db3958b..749f261 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -801,8 +801,12 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
- 	struct resource_table *table, *loaded_table;
- 	int ret, tablesz;
- 
-+	/*
-+	 * This can happen when built-in if initial async fw load fails.
-+	 * However we now have firmware available so retry.
-+	 */
- 	if (!rproc->table_ptr)
--		return -ENOMEM;
-+		rproc_fw_config_virtio(fw, rproc);
- 
- 	ret = rproc_fw_sanity_check(rproc, fw);
- 	if (ret)
-@@ -895,9 +899,20 @@ clean_up:
-  * to unregister the device. one other option is just to use kref here,
-  * that might be cleaner).
-  */
--static void rproc_fw_config_virtio(const struct firmware *fw, void *context)
+diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
+index f28026e..df7af95 100644
+--- a/drivers/dma/st_fdma.c
++++ b/drivers/dma/st_fdma.c
+@@ -869,10 +869,22 @@ static struct platform_driver st_fdma_platform_driver = {
+ 		.name = "st-fdma",
+ 		.of_match_table = st_fdma_match,
+ 	},
+-	.probe = st_fdma_probe,
+-	.remove = st_fdma_remove,
+ };
+-module_platform_driver(st_fdma_platform_driver);
 +
-+static void rproc_fw_config_virtio_cb(const struct firmware *fw, void *context)
- {
- 	struct rproc *rproc = context;
-+
-+	rproc_fw_config_virtio(fw, rproc);
-+
-+	release_firmware(fw);
-+	/* allow rproc_del() contexts, if any, to proceed */
-+	complete_all(&rproc->firmware_loading_complete);
++static int __init fdma_init(void)
++{
++	return platform_driver_probe(&st_fdma_platform_driver, st_fdma_probe);
 +}
 +
-+static void rproc_fw_config_virtio(const struct firmware *fw, struct rproc *rproc)
++static void __exit fdma_exit(void)
 +{
- 	struct resource_table *table;
- 	int ret, tablesz;
- 
-@@ -934,9 +949,7 @@ static void rproc_fw_config_virtio(const struct firmware *fw, void *context)
- 	ret = rproc_handle_resources(rproc, tablesz, rproc_vdev_handler);
- 
- out:
--	release_firmware(fw);
--	/* allow rproc_del() contexts, if any, to proceed */
--	complete_all(&rproc->firmware_loading_complete);
-+	return;
- }
- 
- static int rproc_add_virtio_devices(struct rproc *rproc)
-@@ -956,7 +969,7 @@ static int rproc_add_virtio_devices(struct rproc *rproc)
- 	 */
- 	ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_HOTPLUG,
- 				      rproc->firmware, &rproc->dev, GFP_KERNEL,
--				      rproc, rproc_fw_config_virtio);
-+				      rproc, rproc_fw_config_virtio_cb);
- 	if (ret < 0) {
- 		dev_err(&rproc->dev, "request_firmware_nowait err: %d\n", ret);
- 		complete_all(&rproc->firmware_loading_complete);
-diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-index 57e1de5..39916c1 100644
---- a/drivers/remoteproc/remoteproc_internal.h
-+++ b/drivers/remoteproc/remoteproc_internal.h
-@@ -49,6 +49,9 @@ struct rproc_fw_ops {
- void rproc_release(struct kref *kref);
- irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int vq_id);
- int rproc_boot_nowait(struct rproc *rproc);
-+static void rproc_fw_config_virtio_cb(const struct firmware *fw, void *context);
-+static void rproc_fw_config_virtio(const struct firmware *fw, struct rproc *rproc);
++	platform_driver_unregister(&st_fdma_platform_driver);
++}
 +
++/* attempt to load late, helps when built-in */
++
++late_initcall_sync(fdma_init);
++module_exit(fdma_exit);
  
- /* from remoteproc_virtio.c */
- int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id);
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("STMicroelectronics FDMA engine driver");
 -- 
 1.9.1
