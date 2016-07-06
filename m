@@ -1,69 +1,103 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
-Date: Wed, 6 Jul 2016 15:19:50 +0200
-Message-ID: <577D0576.2050706@xs4all.nl>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v10 0/4] add reboot mode driver
+Date: Wed,  6 Jul 2016 21:18:01 +0800
+Message-ID: <1467811081-20700-1-git-send-email-andy.yan@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
+To: robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org
+Cc: k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tiffany,
 
-I plan to review this patch series on Friday, but one obvious question is
-what the reason for these failures is:
+This driver parses the reboot commands like "reboot bootloader"
+and "reboot recovery" to get a boot mode described in the
+device tree , then call the corresponding  write interfae
+to store the boot mode in some place like special register
+or ram , which can be read by the bootloader after system
+reboot.
 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
->         Control ioctls:
->                 test VIDIOC_QUERYCTRL/MENU: OK
->                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(357): g_ctrl returned an error (11)
->                 test VIDIOC_G/S_CTRL: FAIL
->                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(579): g_ext_ctrls returned an error (11)
->                 test VIDIOC_G/S/TRY_EXT_CTRLS: FAIL
->                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(721): subscribe event for control 'User Controls' failed
->                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
->                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->                 Standard Controls: 2 Private Controls: 0
-> 
->         Format ioctls:
->                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->                 test VIDIOC_G/S_PARM: OK (Not Supported)
->                 test VIDIOC_G_FBUF: OK (Not Supported)
->                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-formats.cpp(405): expected EINVAL, but got 11 when getting format for buftype 9
->                 test VIDIOC_G_FMT: FAIL
->                 test VIDIOC_TRY_FMT: OK (Not Supported)
->                 test VIDIOC_S_FMT: OK (Not Supported)
->                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 
->         Codec ioctls:
->                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
->         Buffer ioctls:
->                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(500): q.has_expbuf(node)
->                 test VIDIOC_EXPBUF: FAIL
-> 
-> 
-> Total: 38, Succeeded: 33, Failed: 5, Warnings: 0
+This is commonly done on Android based devices, in order to
+reboot the device into fastboot or recovery mode.
 
-If it is due to a bug in v4l2-compliance, then let me know and I'll fix it. If not,
-then it should be fixed in the driver.
 
-Frankly, it was the presence of these failures that made me think this patch series
-wasn't final. Before a v4l2 driver can be accepted in the kernel, v4l2-compliance must pass.
+Changes in v10:
+- make this driver tristate
 
-Regards,
+Changes in v9:
+- select MFD_SYSCON when syscon-reboot-mode driver enabled
+- refactoring error handling in reboot_mode_register
 
-	Hans
+Changes in v8:
+- do some cleanup when driver ubind
+
+Changes in v7:
+- fix some spelling mistakes
+- declare that the mode magic should be none-zero value
+- address some suggestions from Krzysztof, make syscon-reboot-mode driver data self-contained.
+
+Changes in v6:
+- fix a typo with "property"
+- describe property "mask" more clear
+
+Changes in v5:
+- delete a unnecessary blank line in syscon-reboot-mode.txt
+- rename mode-fastoboot to mode-bootloader in syscon-reboot-mode.txt
+- rename macro BOOT_LOADER to BOOT_BL_DOWNLOAD, which gives a more clear mean
+- use two blank space under help in Kconfig
+- use unsigned int instead of int for member magic in struct mode_info
+
+Changes in v4:
+- remove mode-maskrom
+- rename mode-fastboot to mode-bootloader to keep compatible with the exiting Android device
+- make this driver depends on OF to avoid kbuild test error
+
+Changes in v3:
+- descirbe all reboot mode as properity instead of subnode
+- scan multi properities
+- add mask value for some platform which only use some bits of the register
+  to store boot mode magic value
+- descirbe all reboot mode as property instead of subnode
+- add rk3036 support
+- descirbe all reboot mode as property instead of subnode
+
+Changes in v2:
+- move to dir drivers/power/reset/
+- make syscon-reboot-mode a generic driver
+- make this node as a subnode of PMU
+- make this node as a subnode of pmugrf
+
+Changes in v1:
+- fix the embarrassed compile warning
+- correct the maskrom magic number
+- check for the normal reboot
+- correct the maskrom magic number
+- use macro defined in rockchip_boot-mode.h for reboot-mode DT node
+
+Andy Yan (4):
+  dt-bindings: power: reset: add document for reboot-mode driver
+  power: reset: add reboot mode driver
+  ARM: dts: rockchip: add syscon-reboot-mode DT node
+  ARM64: dts: rockchip: add syscon-reboot-mode DT node
+
+ .../bindings/power/reset/reboot-mode.txt           |  25 ++++
+ .../bindings/power/reset/syscon-reboot-mode.txt    |  35 ++++++
+ arch/arm/boot/dts/rk3036.dtsi                      |  11 +-
+ arch/arm/boot/dts/rk3288.dtsi                      |  10 ++
+ arch/arm/boot/dts/rk3xxx.dtsi                      |  12 +-
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  12 +-
+ drivers/power/reset/Kconfig                        |  14 +++
+ drivers/power/reset/Makefile                       |   2 +
+ drivers/power/reset/reboot-mode.c                  | 140 +++++++++++++++++++++
+ drivers/power/reset/reboot-mode.h                  |  14 +++
+ drivers/power/reset/syscon-reboot-mode.c           | 100 +++++++++++++++
+ include/dt-bindings/soc/rockchip_boot-mode.h       |  15 +++
+ 12 files changed, 387 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+ create mode 100644 drivers/power/reset/reboot-mode.c
+ create mode 100644 drivers/power/reset/reboot-mode.h
+ create mode 100644 drivers/power/reset/syscon-reboot-mode.c
+ create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
+
+-- 
+2.7.4
