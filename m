@@ -1,54 +1,47 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [Question] Memory attribute reserved by Device Tree?
-Date: Wed, 6 Jul 2016 10:34:58 +0100
-Message-ID: <20160706093457.GA14657@leverpostej>
-References: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
- <577504D7.7080106@arm.com>
- <20160630122554.GC20363@leverpostej>
- <CAK7LNAQJNYVFjZyMH=kU+VJLfUCr2EwKc51HB4knZ=XM7s+MQg@mail.gmail.com>
- <CAKv+Gu_iF31mBbg1pMawq+7fPDo4iXdGWJT_nWV4Oy+AqDpFOg@mail.gmail.com>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH v2] Add STM32F746 MCU pinctrl support
+Date: Wed, 6 Jul 2016 11:46:57 +0200
+Message-ID: <1467798418-12124-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_iF31mBbg1pMawq+7fPDo4iXdGWJT_nWV4Oy+AqDpFOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 06, 2016 at 07:34:58AM +0200, Ard Biesheuvel wrote:
-> On 6 July 2016 at 06:10, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> > My motivation is to try my own implementation of PSCI for my ARMv7 SoC.
-> >
-> > I put my PSCI firmware somewhere in the DRAM region and
-> > protected it with /memreserve/, but I was not sure what kind of memory attribute
-> > is used for the area.
-> 
-> As Mark implies, /memreserve/ entries are not suitable for this, and
-> you should create an entry under /reserved-memory instead (please
-> check the bindings under Documentation/ for details).
+This series adds STM32F746 pinctrl and GPIO support, relies on the
+generic STM32 pinctrl driver.
 
-I'd strongly recommend that the memory in question was carved out of the
-memory node, rather than using a reserved-memory node. The OS has
-absolutely no reason to know about this memory in the first place.
+I only send a V2 for this patch as others have already been taken by Linus in
+V1.
 
-This is more robust as other agents will similarly not poke the memory.
+Changes since v1:
 
-> This not only allows you to add a no-map attribute to prevent the
-> kernel from mapping it (which allows you to map it any way you like),
-> it also guarantees that the reservation is honoured even when booting
-> via UEFI, as /memreserve/s are ignored in this case.
+Thanks to Paul Gortmaker remarks, remove all modular API as this driver is only
+built-in one.
 
-You'll still need to teach your UEFI implementation to reserve the
-region (and to not give it cacheable attributes), to enable this, so
-similarly I'd recommend that it is completely removed from the memory
-map -- no agent other than the PSCI implementation has any reason to map
-this memory.
+Regards
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alex
+
+Alexandre TORGUE (1):
+  pinctrl: Add STM32F746 MCU support
+
+ drivers/pinctrl/stm32/Kconfig             |    6 +
+ drivers/pinctrl/stm32/Makefile            |    2 +
+ drivers/pinctrl/stm32/pinctrl-stm32f746.c | 1686 +++++++++++++++++++++++++++++
+ 3 files changed, 1694 insertions(+)
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f746.c
+
+-- 
+1.9.1
