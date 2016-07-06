@@ -1,66 +1,48 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Question] Memory attribute reserved by Device Tree?
-Date: Wed, 6 Jul 2016 11:48:06 +0200
-Message-ID: <CAKv+Gu-OyRMOcNzkW2fU0dO1phtwZV1tnu8S=yYF+=7NXQ0Dog@mail.gmail.com>
-References: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
- <577504D7.7080106@arm.com> <20160630122554.GC20363@leverpostej>
- <CAK7LNAQJNYVFjZyMH=kU+VJLfUCr2EwKc51HB4knZ=XM7s+MQg@mail.gmail.com>
- <CAKv+Gu_iF31mBbg1pMawq+7fPDo4iXdGWJT_nWV4Oy+AqDpFOg@mail.gmail.com> <20160706093457.GA14657@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160706093457.GA14657@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2 0/2] driver: leds: is31fl319x dimmable LED driver
+Date: Wed,  6 Jul 2016 12:02:42 +0200
+Message-ID: <cover.1467799364.git.hns@goldelico.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On 6 July 2016 at 11:34, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Jul 06, 2016 at 07:34:58AM +0200, Ard Biesheuvel wrote:
->> On 6 July 2016 at 06:10, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->> > My motivation is to try my own implementation of PSCI for my ARMv7 SoC.
->> >
->> > I put my PSCI firmware somewhere in the DRAM region and
->> > protected it with /memreserve/, but I was not sure what kind of memory attribute
->> > is used for the area.
->>
->> As Mark implies, /memreserve/ entries are not suitable for this, and
->> you should create an entry under /reserved-memory instead (please
->> check the bindings under Documentation/ for details).
->
-> I'd strongly recommend that the memory in question was carved out of the
-> memory node, rather than using a reserved-memory node. The OS has
-> absolutely no reason to know about this memory in the first place.
->
-> This is more robust as other agents will similarly not poke the memory.
->
+Changes V2:
+* suggested by David Rifshin
+	* add more "compatible" strings for other chip variants/brands
+	* renumber output <reg> values to expect a range of 1..9
+	* fixes for typos and DT example, Kconfig message
+	* fix location in Makefile and Kconfig
+	* remove some dead/not implemented code
+	* use of_property_read_string for better error handling
+	* coding style improvements
+	* use devm_led_classdev_register and simplify error path
+* suggested by Jacek Anaszewski
+	* fix more typos & writing style
+	* separate bindings document into a second patch
+	* max current property renamed and define uA instead of mA
+	* debugging message improvements
+	* remove platform data and header file completely and therefore require DT
+	* use regmap to handle caching and locking + i2c serialization
+* suggested by Rob Herring
+	* bindings documentation style improvements
 
-Right, so I misunderstood your suggestion. You'd prefer the memory in
-question not to be covered at all by any memory nodes. I agree this
-makes the most sense.
+V1: 2016-04-18 20:43:18:
+This patch adds a driver for the is31fl3196/99 dimmable dual/triple rgb
+controller chips from ISSI.
 
->> This not only allows you to add a no-map attribute to prevent the
->> kernel from mapping it (which allows you to map it any way you like),
->> it also guarantees that the reservation is honoured even when booting
->> via UEFI, as /memreserve/s are ignored in this case.
->
-> You'll still need to teach your UEFI implementation to reserve the
-> region (and to not give it cacheable attributes), to enable this,
+H. Nikolaus Schaller (2):
+  drivers: led: is31fl319x: 1/3/6/9-channel light effect led driver
+  Bindings documentation for ISSI is31fl319x driver
 
-You'd need this in any case if you are using UEFI, unless you're
-seeding its view of the memory map from the DT. So I think this is a
-separate issue.
+ .../devicetree/bindings/leds/is31fl319x.txt        |  52 +++
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-is31fl319x.c                     | 354 +++++++++++++++++++++
+ 4 files changed, 415 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/is31fl319x.txt
+ create mode 100644 drivers/leds/leds-is31fl319x.c
 
-> so similarly I'd recommend that it is completely removed from the memory
-> map -- no agent other than the PSCI implementation has any reason to map
-> this memory.
->
-
-Indeed. Since you are invoking PSCI via hvc or smc calls, neither the
-OS nor anything else that executes at the same exception level (or
-whatever we call it for ARMv7) has any business accessing it directly,
-and so it does not need to know of its existence.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.3
