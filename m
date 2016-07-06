@@ -1,100 +1,197 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Wed, 06 Jul 2016 15:42:38 +0200
-Message-ID: <3354017.XSBSmHHtrQ@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <26659199.PqqRaoPEho@wuerfel> <CAF7Mx6qcwtwYQhrkNk8o+D6UQBLEQkL-ti7aMQyLVuRo+JMUfw@mail.gmail.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v9 2/4] power: reset: add reboot mode driver
+Date: Wed, 06 Jul 2016 15:39:43 +0200
+Message-ID: <577D0A1F.9070007@samsung.com>
+References: <1466404490-3315-1-git-send-email-andy.yan@rock-chips.com>
+ <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBG4U6S5QKGQEZ6XUAUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAF7Mx6qcwtwYQhrkNk8o+D6UQBLEQkL-ti7aMQyLVuRo+JMUfw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1466404696-3464-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>, robh+dt@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, matthias.bgg@gmail.com, linux-pm@vger.kernel.org, mbrugger@suse.com, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 6, 2016 10:08:55 AM CEST Arend Van Spriel wrote:
-> On Tue, Jul 5, 2016 at 3:43 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Monday, July 4, 2016 8:36:05 PM CEST Arend van Spriel wrote:
-> >> On 04-07-16 16:54, Arnd Bergmann wrote:
-> >> > On Monday, July 4, 2016 11:08:38 AM CEST Arend Van Spriel wrote:
-> >> >
-> >> > In drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c I already see
-> >> > over a dozen different chips being supported, bcm4329 is only one of
-> >> > them. In particular, there seem to be some that have various modules:
-> >> >
-> >> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
-> >> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x00000020, 43241B4),
-> >> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0xFFFFFFC0, 43241B5),
-> >> >
-> >> > So if you have a bcm43241, that compatible string probably should
-> >> > include both brcm,bcm43241-b4-fmac and brcm,bcm43241-fmac, possibly also
-> >> > brcm,bcm4329-fmac, to show that it is a superset of the programming
-> >> > interface of that one.
-> >>
-> >> Hi Arnd,
-> >>
-> >> I have to disagree here. The compatible string "brcm,bcm4329-fmac" is
-> >> chosen as the bcm4329 chip was the first supported and we never added
-> >> others as there is no other programming required. For all supported
-> >> devices the same device tree properties apply and are handled the same.
-> >> As such there is no need to come up with a new compatible string.
-> >
-> > Generally speaking, the way that the compatible strings work is that you
-> > add a new one whenever you get a new piece of hardware, and you can leave
-> > the first one as a fallback so you don't have to change the driver.
-> >
-> > Adding the new string for the actual device is important though,
-> > since you might only discover later that they are not 100% compatible
-> > and that you in fact need to know the difference.
-> >
-> > For discoverable buses like sdio or usb, it may actually be better
-> > to not identify the device through the compatible property at all,
-> > and instead use a string that is generated from the actual identifier
-> > as the primary key, as e.g. documented in
-> > Documentation/devicetree/bindings/usb/usb-device.txt
+On 06/20/2016 08:38 AM, Andy Yan wrote:
+> This driver parses the reboot commands like "reboot bootloader"
+> and "reboot recovery" to get a boot mode described in the
+> device tree , then call the write interfae to store the boot
+> mode in some place like special register or sram, which can
+> be read by the bootloader after system reboot, then the bootloader
+> can take different action according to the mode stored.
 > 
-> Well, that is my point. We do not need to identify the device here. We
-> can obtain that info, ie. chip id and revision, from the device itself
-> as our wifi chips have a discoverable AXI backplane. What is missing
-> is that we have no way to tell what board/module this device is
-> integrated on, which makes it impossible to select the correct nvram
-> file. The model property can fill that gap just nicely.
+> This is commonly used on Android based devices, in order to
+> reboot the device into fastboot or recovery mode.
+> 
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
+> Tested-by: John Stultz <john.stultz@linaro.org>
+> Acked-by: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v9:
+> - select MFD_SYSCON when syscon-reboot-mode driver enabled
+> - refactoring error handling in reboot_mode_register
+> 
+> Changes in v8:
+> - do some cleanup when driver ubind
+> 
+> Changes in v7:
+> - address some suggestions from Krzysztof, make syscon-reboot-mode driver data self-contained.
+> 
+> Changes in v6: None
+> Changes in v5:
+> - use two blank space under help in Kconfig
+> - use unsigned int instead of int for member magic in struct mode_info
+> 
+> Changes in v4:
+> - make this driver depends on OF to avoid kbuild test error
+> 
+> Changes in v3:
+> - scan multi properities
+> - add mask value for some platform which only use some bits of the register
+>   to store boot mode magic value
+> 
+> Changes in v2:
+> - move to dir drivers/power/reset/
+> - make syscon-reboot-mode a generic driver
+> 
+> Changes in v1:
+> - fix the embarrassed compile warning
+> - correct the maskrom magic number
+> - check for the normal reboot
+> 
+>  drivers/power/reset/Kconfig              |  14 ++++
+>  drivers/power/reset/Makefile             |   2 +
+>  drivers/power/reset/reboot-mode.c        | 128 +++++++++++++++++++++++++++++++
+>  drivers/power/reset/reboot-mode.h        |  14 ++++
+>  drivers/power/reset/syscon-reboot-mode.c | 100 ++++++++++++++++++++++++
+>  5 files changed, 258 insertions(+)
+>  create mode 100644 drivers/power/reset/reboot-mode.c
+>  create mode 100644 drivers/power/reset/reboot-mode.h
+>  create mode 100644 drivers/power/reset/syscon-reboot-mode.c
 
-We have multiple inconsistencies here, and it's not this driver that is
-particularly messed up, but I think using the model property here
-would make it worse:
+One minor whitespace issue at the end but beside that:
 
-All existing uses of the model property in arch/arm/boot/dts and most of
-the ones in arch/powerpc/boot/dts are against the intended usage in
-one way or another, but adding different kind of incorrect usage won't
-improve that.
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-The only way I can see the model property being used correctly would
-be to have it match the first entry in the compatible property, but
-that is completely redundant, so we tend to omit it, except for the
-root node in which it is required. For the root node however, the
-historic practice that has crept in on ARM is to put something completely
-different in there, which is a human-readable description of the
-machine rather than something we can use as a unique indentifier.
+(...)
 
-I'd just consider the "model" property burned, and not use it for anything
-that doesn't already use it, just like we handle "device_type": a few
-things require it, nothing else should use it.
+> diff --git a/drivers/power/reset/syscon-reboot-mode.c b/drivers/power/reset/syscon-reboot-mode.c
+> new file mode 100644
+> index 0000000..22e0685
+> --- /dev/null
+> +++ b/drivers/power/reset/syscon-reboot-mode.c
+> @@ -0,0 +1,100 @@
+> +/*
+> + * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +#include "reboot-mode.h"
+> +
+> +struct syscon_reboot_mode {
+> +	struct regmap *map;
+> +	struct reboot_mode_driver reboot;
+> +	u32 offset;
+> +	u32 mask;
+> +};
+> +
+> +static int syscon_reboot_mode_write(struct reboot_mode_driver *reboot,
+> +				    unsigned int magic)
+> +{
+> +	struct syscon_reboot_mode *syscon_rbm;
+> +	int ret;
+> +
+> +	syscon_rbm = container_of(reboot, struct syscon_reboot_mode, reboot);
+> +
+> +	ret = regmap_update_bits(syscon_rbm->map, syscon_rbm->offset,
+> +				 syscon_rbm->mask, magic);
+> +	if (ret < 0)
+> +		dev_err(reboot->dev, "update reboot mode bits failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int syscon_reboot_mode_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct syscon_reboot_mode *syscon_rbm;
+> +
+> +	syscon_rbm = devm_kzalloc(&pdev->dev, sizeof(*syscon_rbm), GFP_KERNEL);
+> +	if (!syscon_rbm)
+> +		return -ENOMEM;
+> +
+> +	syscon_rbm->reboot.dev = &pdev->dev;
+> +	syscon_rbm->reboot.write = syscon_reboot_mode_write;
+> +	syscon_rbm->mask = 0xffffffff;
+> +
+> +	dev_set_drvdata(&pdev->dev, syscon_rbm);
+> +
+> +	syscon_rbm->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> +	if (IS_ERR(syscon_rbm->map))
+> +		return PTR_ERR(syscon_rbm->map);
+> +
+> +	if (of_property_read_u32(pdev->dev.of_node, "offset",
+> +	    &syscon_rbm->offset))
+> +		return -EINVAL;
+> +
+> +	of_property_read_u32(pdev->dev.of_node, "mask", &syscon_rbm->mask);
+> +
+> +
 
-I agree with your point that the "compatible" property in case of brcmfmac
-is really odd because it is not required to identify the hardware when
-the SDIO device identification is sufficient, and we just need it to guard
-the definition of the other properties. However it seems that now we
-actually do need to identify the hardware because we cannot read the
-board ID and revision that is supposed to come from nvram but also needed
-to read the nvram contents from a file.
+Just one new line.
 
-	Arnd
+Best regards,
+Krzysztof
+
+> +	ret = reboot_mode_register(&syscon_rbm->reboot);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "can't register reboot mode\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int syscon_reboot_mode_remove(struct platform_device *pdev)
+> +{
+> +	struct syscon_reboot_mode *syscon_rbm = dev_get_drvdata(&pdev->dev);
+> +
+> +	return reboot_mode_unregister(&syscon_rbm->reboot);
+> +}
+> +
+> +static const struct of_device_id syscon_reboot_mode_of_match[] = {
+> +	{ .compatible = "syscon-reboot-mode" },
+> +	{}
+> +};
+> +
+> +static struct platform_driver syscon_reboot_mode_driver = {
+> +	.probe = syscon_reboot_mode_probe,
+> +	.remove = syscon_reboot_mode_remove,
+> +	.driver = {
+> +		.name = "syscon-reboot-mode",
+> +		.of_match_table = syscon_reboot_mode_of_match,
+> +	},
+> +};
+> +module_platform_driver(syscon_reboot_mode_driver);
+> +
+> +MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com");
+> +MODULE_DESCRIPTION("SYSCON reboot mode driver");
+> +MODULE_LICENSE("GPL v2");
+> 
+
