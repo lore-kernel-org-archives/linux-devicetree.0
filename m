@@ -6,7 +6,7 @@ From: H. Nikolaus Schaller <hns@goldelico.com>
 In-Reply-To: <5717EECB.8010401@gmail.com>
 Date: Wed, 6 Jul 2016 12:02:01 +0200
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <AD66BB31-C0EA-4F4D-AD17-F052EC7802CD@goldelico.com>
+Message-Id: <C2146598-B9A2-434D-9011-167A1E6A531F@goldelico.com>
 References: <cover.1461004995.git.hns@goldelico.com> <75127f4bf2bb11343bdff5bfb1129a092e668c61.1461004995.git.hns@goldelico.com> <20160418212504.29d67592.drivshin.allworx@gmail.com> <80A3B3D8-2309-4A41-91F9-4A2EE6DDF975@goldelico.com> <5717EECB.8010401@gmail.com>
 To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Cc: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org
