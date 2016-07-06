@@ -1,52 +1,52 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3] arm64: dts: rockchip: add the power domain node for rk3399
-Date: Wed, 6 Jul 2016 12:47:44 -0700
-Message-ID: <CAD=FV=W8-48ODWJN=4M54nYBAzH_Bproc13kKakStL_-aLUHcA@mail.gmail.com>
-References: <1467635644-16798-1-git-send-email-wxt@rock-chips.com> <1904131.irFlfKsH8m@phil>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v6 00/18] Add support for FDMA DMA controller and slim
+ core rproc found on STi chipsets
+Date: Wed, 6 Jul 2016 20:49:21 +0100
+Message-ID: <20160706194921.GA7213@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
+ <1467823249.8360.28.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1904131.irFlfKsH8m@phil>
+Content-Disposition: inline
+In-Reply-To: <1467823249.8360.28.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Caesar Wang <wxt@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <eddie.cai@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>
+To: Joe Perches <joe@perches.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, bjorn.andersson@linaro.org, ohad@wizery.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Joe,
 
-On Mon, Jul 4, 2016 at 5:24 PM, Heiko Stuebner <heiko@sntech.de> wrote:
-> Am Montag, 4. Juli 2016, 20:34:04 schrieb Caesar Wang:
->> From: Elaine Zhang <zhangqing@rock-chips.com>
->>
->> In order to meet low power requirements, a power management unit (PMU) is
->> designed for controlling power resources in RK3399. The RK3399 PMU is
->> dedicated for managing the power of the whole chip.
->>
->> 1. add pd node for RK3399 Soc
->> 2. create power domain tree
->> 3. add qos node for domain
->>
->> From the DT/binds and driver can get more detail information:
->> The driver:
->>         drivers/soc/rockchip/pm_domains.c
->> The document:
->>         Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
->>
->> Note:
->> As the TRM lists many voltage domains and power domains, then this patch
->> adds some domains for driver. Due to some domains
->> (e.g. emmc, usb, core)...We can't turned off it on
->> bootup, or says some device driver can't handle the power domain enough.
->> Maybe We will add more other domains in the future or later.
->
-> I talked with Caesar about that today and for example the gmac domain seems
-> to cause problems right now when only using the generic power-domain
-> handling the kernel provides on probe and remove.
->
-> So while this gets investigated, I'm probably ok with only using the stable
-> power-domains, but will give the us-people a chance to also respond on
-> wednesday :-) .
+On Wed, 06 Jul 2016, Joe Perches wrote:
 
-Sure, that's fine with me.  Walk before we run.  ;)
+> On Wed, 2016-07-06 at 09:54 +0100, Peter Griffin wrote:
+> > This patchset adds support for the Flexible Direct Memory Access (F=
+DMA) core
+> > found on STi chipsets from STMicroelectronics. The FDMA is a slim c=
+ore CPU
+> > with a dedicated firmware. It is a general purpose DMA controller s=
+upporting
+> > 16 independent channels and data can be moved from memory to memory=
+ or between
+> > memory and paced latency critical real time targets.
+> []
+> > =A0include/linux/remoteproc/st_slim_rproc.h=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0|=A0=A053 ++
+>=20
+> Is this directory really necessary?
 
--Doug
+Yes, I believe so.
+
+>=20
+> Why shouldn't this file be local to drivers/remoteproc/?
+
+Because it has to be included by the various client drivers which are b=
+ased
+around the slim core IP. Currently drivers/dma/st_fdma.c but also in th=
+e future
+LDVB demux driver.
+
+regards,
+
+Peter.
