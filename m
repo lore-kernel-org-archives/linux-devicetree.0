@@ -1,83 +1,364 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Question] Memory attribute reserved by Device Tree?
-Date: Wed, 6 Jul 2016 07:34:58 +0200
-Message-ID: <CAKv+Gu_iF31mBbg1pMawq+7fPDo4iXdGWJT_nWV4Oy+AqDpFOg@mail.gmail.com>
-References: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
- <577504D7.7080106@arm.com> <20160630122554.GC20363@leverpostej> <CAK7LNAQJNYVFjZyMH=kU+VJLfUCr2EwKc51HB4knZ=XM7s+MQg@mail.gmail.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] soc: mediatek: Refine scpsys to support multiple
+ platform
+Date: Wed, 6 Jul 2016 13:39:24 +0800
+Message-ID: <1467783564.26485.22.camel@mtksdaap41>
+References: <1463390894-32062-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1463390894-32062-2-git-send-email-jamesjj.liao@mediatek.com>
+ <6762e420-0d68-0376-b584-bfc878b5e95f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNAQJNYVFjZyMH=kU+VJLfUCr2EwKc51HB4knZ=XM7s+MQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <6762e420-0d68-0376-b584-bfc878b5e95f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 6 July 2016 at 06:10, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> 2016-06-30 21:26 GMT+09:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
->> On Thu, Jun 30, 2016 at 12:39:03PM +0100, Robin Murphy wrote:
->>> On 30/06/16 12:10, Masahiro Yamada wrote:
->>> > Hello.
->>> >
->>> > Which memory attribute will ARM/ARM64 Linux
->>> > set to the memory region reserved by
->>> > /memreserve/ of Device Tree?
->>> >
->>> >
->>> > Normal memory non-cacheable?
->>> > Or, cacheable?
->>> > Or, not defined?
->>> >
->>> > Perhaps actual behavior depends on whether the reserved area is
->>> > located in the low-memory region?
->>>
->>> Isn't the point of memreserve that the kernel avoids mapping it at all?
->>
->> Not quite. A /memreserve/ allows the kernel to map a region, so long as
->> it doesn't use the region for general allocation.
->>
->> While not strictly defined for arm64 today, in practice the kernel may
->> map a region with Normal Inner-Shareable Inner-WB Outer-WB attributes,
->> following similar behaviour for PPC as defined in ePAPR.
->>
->> Generally I would advise against the use of a memreserve, and favour
->> carving memory out of memory nodes as required, as that imposes stricter
->> requirements.
->>
->>> If a reserved region is later mapped in by a driver using
->>> dma_declare_coherent_memory(), ioremap(), memremap() or whatever else,
->>> then the attributes will vary depending on the exact method used.
->>
->> Indeed. This applies even with the above.
->
->
-> Hi Robin, Mark,
->
->
-> Thanks for clarification!
->
->
-> My motivation is to try my own implementation of PSCI for my ARMv7 SoC.
->
-> I put my PSCI firmware somewhere in the DRAM region and
-> protected it with /memreserve/, but I was not sure what kind of memory attribute
-> is used for the area.
->
+Hi Matthias,
 
-As Mark implies, /memreserve/ entries are not suitable for this, and
-you should create an entry under /reserved-memory instead (please
-check the bindings under Documentation/ for details). This not only
-allows you to add a no-map attribute to prevent the kernel from
-mapping it (which allows you to map it any way you like), it also
-guarantees that the reservation is honoured even when booting via
-UEFI, as /memreserve/s are ignored in this case.
+On Sat, 2016-07-02 at 18:33 +0200, Matthias Brugger wrote:
+> 
+> On 05/16/2016 11:28 AM, James Liao wrote:
+> > Refine scpsys driver common code to support multiple SoC / platform.
+> >
+> > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/soc/mediatek/mtk-scpsys.c | 363 +++++++++++++++++++++++---------------
+> >  1 file changed, 220 insertions(+), 143 deletions(-)
+> >
+> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> > index 57e781c..5870a24 100644
+> > --- a/drivers/soc/mediatek/mtk-scpsys.c
+> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> > @@ -11,17 +11,15 @@
+> >   * GNU General Public License for more details.
+> >   */
+> >  #include <linux/clk.h>
+> > -#include <linux/delay.h>
+> > +#include <linux/init.h>
+> >  #include <linux/io.h>
+> > -#include <linux/kernel.h>
+> >  #include <linux/mfd/syscon.h>
+> > -#include <linux/init.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_domain.h>
+> > -#include <linux/regmap.h>
+> > -#include <linux/soc/mediatek/infracfg.h>
+> >  #include <linux/regulator/consumer.h>
+> > +#include <linux/soc/mediatek/infracfg.h>
+> > +
+> >  #include <dt-bindings/power/mt8173-power.h>
+> >
+> >  #define SPM_VDE_PWR_CON			0x0210
+> > @@ -34,6 +32,7 @@
+> >  #define SPM_MFG_2D_PWR_CON		0x02c0
+> >  #define SPM_MFG_ASYNC_PWR_CON		0x02c4
+> >  #define SPM_USB_PWR_CON			0x02cc
+> > +
+> >  #define SPM_PWR_STATUS			0x060c
+> >  #define SPM_PWR_STATUS_2ND		0x0610
+> >
+> > @@ -55,12 +54,12 @@
+> >  #define PWR_STATUS_USB			BIT(25)
+> >
+> >  enum clk_id {
+> > -	MT8173_CLK_NONE,
+> > -	MT8173_CLK_MM,
+> > -	MT8173_CLK_MFG,
+> > -	MT8173_CLK_VENC,
+> > -	MT8173_CLK_VENC_LT,
+> > -	MT8173_CLK_MAX,
+> > +	CLK_NONE,
+> > +	CLK_MM,
+> > +	CLK_MFG,
+> > +	CLK_VENC,
+> > +	CLK_VENC_LT,
+> > +	CLK_MAX,
+> >  };
+> >
+> >  #define MAX_CLKS	2
+> > @@ -76,98 +75,6 @@ struct scp_domain_data {
+> >  	bool active_wakeup;
+> >  };
+> >
+> > -static const struct scp_domain_data scp_domain_data[] = {
+> > -	[MT8173_POWER_DOMAIN_VDEC] = {
+> > -		.name = "vdec",
+> > -		.sta_mask = PWR_STATUS_VDEC,
+> > -		.ctl_offs = SPM_VDE_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(11, 8),
+> > -		.sram_pdn_ack_bits = GENMASK(12, 12),
+> > -		.clk_id = {MT8173_CLK_MM},
+> > -	},
+> > -	[MT8173_POWER_DOMAIN_VENC] = {
+> > -		.name = "venc",
+> > -		.sta_mask = PWR_STATUS_VENC,
+> > -		.ctl_offs = SPM_VEN_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(11, 8),
+> > -		.sram_pdn_ack_bits = GENMASK(15, 12),
+> > -		.clk_id = {MT8173_CLK_MM, MT8173_CLK_VENC},
+> > -	},
+> > -	[MT8173_POWER_DOMAIN_ISP] = {
+> > -		.name = "isp",
+> > -		.sta_mask = PWR_STATUS_ISP,
+> > -		.ctl_offs = SPM_ISP_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(11, 8),
+> > -		.sram_pdn_ack_bits = GENMASK(13, 12),
+> > -		.clk_id = {MT8173_CLK_MM},
+> > -	},
+> > -	[MT8173_POWER_DOMAIN_MM] = {
+> > -		.name = "mm",
+> > -		.sta_mask = PWR_STATUS_DISP,
+> > -		.ctl_offs = SPM_DIS_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(11, 8),
+> > -		.sram_pdn_ack_bits = GENMASK(12, 12),
+> > -		.clk_id = {MT8173_CLK_MM},
+> > -		.bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MM_M0 |
+> > -			MT8173_TOP_AXI_PROT_EN_MM_M1,
+> > -	},
+> > -	[MT8173_POWER_DOMAIN_VENC_LT] = {
+> > -		.name = "venc_lt",
+> > -		.sta_mask = PWR_STATUS_VENC_LT,
+> > -		.ctl_offs = SPM_VEN2_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(11, 8),
+> > -		.sram_pdn_ack_bits = GENMASK(15, 12),
+> > -		.clk_id = {MT8173_CLK_MM, MT8173_CLK_VENC_LT},
+> > -	},
+> > -	[MT8173_POWER_DOMAIN_AUDIO] = {
+> > -		.name = "audio",
+> > -		.sta_mask = PWR_STATUS_AUDIO,
+> > -		.ctl_offs = SPM_AUDIO_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(11, 8),
+> > -		.sram_pdn_ack_bits = GENMASK(15, 12),
+> > -		.clk_id = {MT8173_CLK_NONE},
+> > -	},
+> > -	[MT8173_POWER_DOMAIN_USB] = {
+> > -		.name = "usb",
+> > -		.sta_mask = PWR_STATUS_USB,
+> > -		.ctl_offs = SPM_USB_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(11, 8),
+> > -		.sram_pdn_ack_bits = GENMASK(15, 12),
+> > -		.clk_id = {MT8173_CLK_NONE},
+> > -		.active_wakeup = true,
+> > -	},
+> > -	[MT8173_POWER_DOMAIN_MFG_ASYNC] = {
+> > -		.name = "mfg_async",
+> > -		.sta_mask = PWR_STATUS_MFG_ASYNC,
+> > -		.ctl_offs = SPM_MFG_ASYNC_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(11, 8),
+> > -		.sram_pdn_ack_bits = 0,
+> > -		.clk_id = {MT8173_CLK_MFG},
+> > -	},
+> > -	[MT8173_POWER_DOMAIN_MFG_2D] = {
+> > -		.name = "mfg_2d",
+> > -		.sta_mask = PWR_STATUS_MFG_2D,
+> > -		.ctl_offs = SPM_MFG_2D_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(11, 8),
+> > -		.sram_pdn_ack_bits = GENMASK(13, 12),
+> > -		.clk_id = {MT8173_CLK_NONE},
+> > -	},
+> > -	[MT8173_POWER_DOMAIN_MFG] = {
+> > -		.name = "mfg",
+> > -		.sta_mask = PWR_STATUS_MFG,
+> > -		.ctl_offs = SPM_MFG_PWR_CON,
+> > -		.sram_pdn_bits = GENMASK(13, 8),
+> > -		.sram_pdn_ack_bits = GENMASK(21, 16),
+> > -		.clk_id = {MT8173_CLK_NONE},
+> > -		.bus_prot_mask = MT8173_TOP_AXI_PROT_EN_MFG_S |
+> > -			MT8173_TOP_AXI_PROT_EN_MFG_M0 |
+> > -			MT8173_TOP_AXI_PROT_EN_MFG_M1 |
+> > -			MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT,
+> > -	},
+> > -};
+> > -
+> > -#define NUM_DOMAINS	ARRAY_SIZE(scp_domain_data)
+> > -
+> >  struct scp;
+> >
+> >  struct scp_domain {
+> > @@ -179,7 +86,7 @@ struct scp_domain {
+> >  };
+> >
+> >  struct scp {
+> > -	struct scp_domain domains[NUM_DOMAINS];
+> > +	struct scp_domain *domains;
+> >  	struct genpd_onecell_data pd_data;
+> >  	struct device *dev;
+> >  	void __iomem *base;
+> > @@ -408,57 +315,69 @@ static bool scpsys_active_wakeup(struct device *dev)
+> >  	return scpd->data->active_wakeup;
+> >  }
+> >
+> > -static int scpsys_probe(struct platform_device *pdev)
+> > +static void init_clks(struct platform_device *pdev, struct clk *clk[CLK_MAX])
+> > +{
+> > +	enum clk_id clk_ids[] = {
+> > +		CLK_MM,
+> > +		CLK_MFG,
+> > +		CLK_VENC,
+> > +		CLK_VENC_LT
+> > +	};
+> > +
+> > +	static const char * const clk_names[] = {
+> > +		"mm",
+> > +		"mfg",
+> > +		"venc",
+> > +		"venc_lt",
+> > +	};
+> > +
+> > +	int i;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(clk_ids); i++)
+> > +		clk[clk_ids[i]] = devm_clk_get(&pdev->dev, clk_names[i]);
+> 
+> We can use the global enum clk_id and stat with i = 1, right?
 
-Note that the difference between the handling of /memreserve/ and
-/reserved-memory under UEFI is arbitrary, and should be fixed imo.
+You are right. I'll change the start value with i = CLK_NONE + 1 in next
+patch.
 
-Original issue is here, as yet unresolved:
-http://thread.gmane.org/gmane.linux.kernel.efi/6464
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +}
+> > +
+> > +static struct scp *init_scp(struct platform_device *pdev,
+> > +			const struct scp_domain_data *scp_domain_data, int num)
+> >  {
+> >  	struct genpd_onecell_data *pd_data;
+> >  	struct resource *res;
+> > -	int i, j, ret;
+> > +	int i, j;
+> >  	struct scp *scp;
+> > -	struct clk *clk[MT8173_CLK_MAX];
+> > +	struct clk *clk[CLK_MAX];
+> >
+> >  	scp = devm_kzalloc(&pdev->dev, sizeof(*scp), GFP_KERNEL);
+> >  	if (!scp)
+> > -		return -ENOMEM;
+> > +		return ERR_PTR(-ENOMEM);
+> >
+> >  	scp->dev = &pdev->dev;
+> >
+> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >  	scp->base = devm_ioremap_resource(&pdev->dev, res);
+> >  	if (IS_ERR(scp->base))
+> > -		return PTR_ERR(scp->base);
+> > -
+> > -	pd_data = &scp->pd_data;
+> > -
+> > -	pd_data->domains = devm_kzalloc(&pdev->dev,
+> > -			sizeof(*pd_data->domains) * NUM_DOMAINS, GFP_KERNEL);
+> > -	if (!pd_data->domains)
+> > -		return -ENOMEM;
+> > -
+> > -	clk[MT8173_CLK_MM] = devm_clk_get(&pdev->dev, "mm");
+> > -	if (IS_ERR(clk[MT8173_CLK_MM]))
+> > -		return PTR_ERR(clk[MT8173_CLK_MM]);
+> > -
+> > -	clk[MT8173_CLK_MFG] = devm_clk_get(&pdev->dev, "mfg");
+> > -	if (IS_ERR(clk[MT8173_CLK_MFG]))
+> > -		return PTR_ERR(clk[MT8173_CLK_MFG]);
+> > -
+> > -	clk[MT8173_CLK_VENC] = devm_clk_get(&pdev->dev, "venc");
+> > -	if (IS_ERR(clk[MT8173_CLK_VENC]))
+> > -		return PTR_ERR(clk[MT8173_CLK_VENC]);
+> > -
+> > -	clk[MT8173_CLK_VENC_LT] = devm_clk_get(&pdev->dev, "venc_lt");
+> > -	if (IS_ERR(clk[MT8173_CLK_VENC_LT]))
+> > -		return PTR_ERR(clk[MT8173_CLK_VENC_LT]);
+> > +		return ERR_CAST(scp->base);
+> >
+> >  	scp->infracfg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> >  			"infracfg");
+> >  	if (IS_ERR(scp->infracfg)) {
+> >  		dev_err(&pdev->dev, "Cannot find infracfg controller: %ld\n",
+> >  				PTR_ERR(scp->infracfg));
+> > -		return PTR_ERR(scp->infracfg);
+> > +		return ERR_CAST(scp->infracfg);
+> >  	}
+> >
+> > -	for (i = 0; i < NUM_DOMAINS; i++) {
+> > +	scp->domains = devm_kzalloc(&pdev->dev,
+> > +				sizeof(*scp->domains) * num, GFP_KERNEL);
+> > +	if (!scp->domains)
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> > +	pd_data = &scp->pd_data;
+> > +
+> > +	pd_data->domains = devm_kzalloc(&pdev->dev,
+> > +			sizeof(*pd_data->domains) * num, GFP_KERNEL);
+> > +	if (!pd_data->domains)
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> > +	for (i = 0; i < num; i++) {
+> >  		struct scp_domain *scpd = &scp->domains[i];
+> >  		const struct scp_domain_data *data = &scp_domain_data[i];
+> >
+> > @@ -467,28 +386,54 @@ static int scpsys_probe(struct platform_device *pdev)
+> >  			if (PTR_ERR(scpd->supply) == -ENODEV)
+> >  				scpd->supply = NULL;
+> >  			else
+> > -				return PTR_ERR(scpd->supply);
+> > +				return ERR_CAST(scpd->supply);
+> >  		}
+> >  	}
+> >
+> > -	pd_data->num_domains = NUM_DOMAINS;
+> > +	pd_data->num_domains = num;
+> >
+> > -	for (i = 0; i < NUM_DOMAINS; i++) {
+> > +	init_clks(pdev, clk);
+> > +
+> > +	for (i = 0; i < num; i++) {
+> >  		struct scp_domain *scpd = &scp->domains[i];
+> >  		struct generic_pm_domain *genpd = &scpd->genpd;
+> >  		const struct scp_domain_data *data = &scp_domain_data[i];
+> >
+> > +		for (j = 0; j < MAX_CLKS && data->clk_id[j]; j++) {
+> > +			struct clk *c = clk[data->clk_id[j]];
+> > +
+> > +			if (IS_ERR(c)) {
+> > +				dev_err(&pdev->dev, "%s: clk unavailable\n",
+> > +					data->name);
+> > +				return ERR_CAST(c);
+> > +			}
+> > +
+> > +			scpd->clk[j] = c;
+> 
+> Put this in the else branch. Apart from that is there any reason you 
+
+Do you mean to change like this?
+
+	if (IS_ERR(c)) {
+		...
+		return ERR_CAST(c);
+	} else {
+		scpd->clk[j] = c;
+	}
+
+checkpatch.pl will warn for above code due to it returns in 'if' branch.
+
+> moved the for up in the function? If not, I would prefer not to move it, 
+> to make it easier to read the diff.
+
+The new 'for' block are far different from original one. And I think
+it's easy to read if we keep simple assign statements in the same block.
+
+> Apart from that, the patch looks good to me.
+> Sorry for the delay in responding.
+
+Thanks for your comments.
+
+
+Best regards,
+
+James
