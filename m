@@ -1,32 +1,113 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: exynos: Modify the voltage range for BUCK2
- for exynos7
-Date: Wed, 6 Jul 2016 09:44:11 +0200
-Message-ID: <CAJKOXPfWanrkNvSRz384UNga1QUWuVS8rHvYbda9_io06RkeQA@mail.gmail.com>
-References: <1467750537-13911-1-git-send-email-a.kesavan@samsung.com>
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 3/4] drivers: reset: Add STM32 reset driver
+Date: Wed, 6 Jul 2016 09:44:29 +0200
+Message-ID: <577CB6DD.5040502@st.com>
+References: <1467640052-6770-1-git-send-email-gabriel.fernandez@st.com>
+ <1467640052-6770-3-git-send-email-gabriel.fernandez@st.com>
+ <1467725309.2978.63.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467750537-13911-1-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1467725309.2978.63.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 5, 2016 at 10:28 PM, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Change the BUCK2 (vdd_atlas) voltage range to '500 - 1200mv' since
-> CPU DVFS requires it.
->
-> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
+Hi Philipp,
 
-Thanks, applied.
+On 07/05/2016 03:28 PM, Philipp Zabel wrote:
+> Am Montag, den 04.07.2016, 15:47 +0200 schrieb gabriel.fernandez-qxv4g6HH51o@public.gmane.org:
+>> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+>>
+>> The STM32 MCUs family IPs can be reset by accessing some registers
+>> from the RCC block.
+>>
+>> The list of available reset lines is documented in the DT bindings.
+>>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>   drivers/reset/Makefile      |   1 +
+>>   drivers/reset/reset-stm32.c | 113 ++++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 114 insertions(+)
+>>   create mode 100644 drivers/reset/reset-stm32.c
+>>
+>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>> index 03dc1bb..3776b7b 100644
+>> --- a/drivers/reset/Makefile
+>> +++ b/drivers/reset/Makefile
+>> @@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
+>>   obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
+>>   obj-$(CONFIG_MACH_PISTACHIO) += reset-pistachio.o
+>>   obj-$(CONFIG_ARCH_MESON) += reset-meson.o
+>> +obj-$(CONFIG_ARCH_STM32) += reset-stm32.o
+>>   obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+>>   obj-$(CONFIG_ARCH_STI) += sti/
+>>   obj-$(CONFIG_ARCH_HISI) += hisilicon/
+>> diff --git a/drivers/reset/reset-stm32.c b/drivers/reset/reset-stm32.c
+>> new file mode 100644
+>> index 0000000..be42bff
+>> --- /dev/null
+>> +++ b/drivers/reset/reset-stm32.c
+>> @@ -0,0 +1,113 @@
+>> +/*
+>> + * Copyright (C) Maxime Coquelin 2015
+>> + * Author:  Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + * License terms:  GNU General Public License (GPL), version 2
+>> + *
+>> + * Heavily based on sunxi driver from Maxime Ripard.
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset-controller.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/types.h>
+>> +
+>> +struct stm32_reset_data {
+>> +	spinlock_t			lock;
+>> +	void __iomem			*membase;
+>> +	struct reset_controller_dev	rcdev;
+>> +};
+>> +
+>> +static int stm32_reset_assert(struct reset_controller_dev *rcdev,
+>> +			      unsigned long id)
+>> +{
+>> +	struct stm32_reset_data *data = container_of(rcdev,
+>> +						     struct stm32_reset_data,
+>> +						     rcdev);
+>> +	int bank = id / BITS_PER_LONG;
+>> +	int offset = id % BITS_PER_LONG;
+>> +	unsigned long flags;
+>> +	u32 reg;
+>> +
+>> +	spin_lock_irqsave(&data->lock, flags);
+>> +
+>> +	reg = readl_relaxed(data->membase + (bank * 4));
+>> +	writel_relaxed(reg | BIT(offset), data->membase + (bank * 4));
+> Please also switch to the non-relaxed variants. It shouldn't make a
+> difference here, and as Arnd points out, reduces the risk of new
+> developers using readl/writel_relaxed without thinking about the
+> consequences.
+> Further, this will make the stm32, sunxi, and socfpga accessors look the
+> same. I'd like to try and combine them after this is merged.
+>
+> regards
+> Philipp
+>
+ok no problem, i will fix it.
 
-Best regards,
-Krzysztof
+Thanks
+
+Gabriel
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
