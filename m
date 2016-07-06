@@ -1,17 +1,14 @@
-From: Dongdong Liu <liudongdong3@huawei.com>
-Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
-Date: Wed, 6 Jul 2016 16:38:19 +0800
-Message-ID: <577CC37B.9070806@huawei.com>
-References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-1-git-send-email-po.liu@nxp.com>
- <1465892645-32381-2-git-send-email-po.liu@nxp.com>
- <577A21E4.1030301@huawei.com>
- <VI1PR0401MB1709D556D0A7F7BB9188221E92390@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v6 01/18] remoteproc: st_slim_rproc: add a slimcore rproc
+ driver
+Date: Wed,  6 Jul 2016 09:54:19 +0100
+Message-ID: <1467795276-21725-2-git-send-email-peter.griffin@linaro.org>
+References: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR0401MB1709D556D0A7F7BB9188221E92390@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+In-Reply-To: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,107 +18,510 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Po Liu <po.liu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Linuxarm <linuxarm@huawei.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, bjorn.andersson@linaro.org, ohad@wizery.com
+Cc: peter.griffin@linaro.org, dmaengine@vger.kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUG8KCuWcqCAyMDE2LzcvNSAxMTowMywgUG8gTGl1IOWGmemBkzoKPiBIaSBEb25nZG9uZywK
-Pgo+IFRoZSBwYXRjaCB3ZXJlIGludGVuZCB0byBmaXh1cCB0aGUgTlhQIGxheWVyc2NhcGUgc2Vy
-aWFsIFNPQyBhbmQgd2VyZSB0ZXN0ZWQgb2suCj4gSSBhbSBub3QgY2xlYXIgd2hhdCBwbGF0Zm9y
-bSBhcmUgeW91IHRyeWluZyB0byBmaXguCgpNeSBwbGF0Zm9ybSBpcyBhbiBBUk02NCBwbGF0Zm9y
-bSwgUENJZSBob3N0IGNvbnRyb2xsZXIgYWxzbyB1c2UgU3lub3BzeXMgRGVzaWdud2FyZS4KCj4g
-VGhlIHByb2JsZW0gb24geW91ciBib2FyZCBtYXkgYmUgYXMgYmVsb3cgY29tbWVudHM6Cj4KPgo+
-PiAgIC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+ICAgRnJvbTogRG9uZ2RvbmcgTGl1IFtt
-YWlsdG86bGl1ZG9uZ2RvbmczQGh1YXdlaS5jb21dCj4+ICAgU2VudDogTW9uZGF5LCBKdWx5IDA0
-LCAyMDE2IDQ6NDQgUE0KPj4gICBUbzogUG8gTGl1OyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1hcm0tCj4+ICAga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7Cj4+ICAgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4gICBD
-YzogQmpvcm4gSGVsZ2FhczsgU2hhd24gR3VvOyBNYXJjIFp5bmdpZXI7IFJvYiBIZXJyaW5nOyBS
-b3kgWmFuZzsKPj4gICBNaW5na2FpIEh1OyBTdHVhcnQgWW9kZXI7IFlhbmctTGVvIExpOyBBcm5k
-IEJlcmdtYW5uOyBNaW5naHVhbiBMaWFuOwo+PiAgIE11cmFsaSBLYXJpY2hlcmk7IExpbnV4YXJt
-Cj4+ICAgU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzJdIHBjaS9hZXI6IGludGVycnVwdCBmaXh1
-cCBpbiB0aGUgcXVpcmsKPj4KPj4gICBIaSBQbwo+Pgo+PiAgIEkgZm91bmQgYSBwcm9ibGVtIHdp
-dGggdGhlIHNpbWlsYXIgcGF0Y2guIGFzIHRoZSBiZWxvdyBsb2cuCj4+Cj4+ICAgWyAgICA0LjI4
-NzA2MF0gcGNpIDAwMDA6ODA6MDAuMDogcXVpcmtfYWVyX2ludGVycnVwdCBkZXYtPmlycSA0MTYK
-Pj4gICBbICAgIDQuMjkzNzc4XSBwY2llcG9ydCAwMDAwOjgwOjAwLjA6IHBjaV9kZXZpY2VfcHJv
-YmUgaW4KPj4gICBbICAgIDQuMjk5NjA1XSBwY2llcG9ydCAwMDAwOjgwOjAwLjA6IG9mX2lycV9w
-YXJzZV9wY2koKSBmYWlsZWQgd2l0aAo+PiAgIHJjPS0yMgo+PiAgIFsgICAgNC4zMDcyMDldIHBj
-aWVwb3J0IDAwMDA6ODA6MDAuMDogaW5pdF9zZXJ2aWNlX2lycXMgIGRldi0+aXJxIDAKPj4KPj4g
-ICBUaGUgZnVjbnRpb25zIGFyZSBjYWxsZWQgYXMgYmVsb3cgc2VxdWVuY2UuCj4+ICAgMS4gcXVp
-cmtfYWVyX2ludGVycnVwdCwgZ2V0IHRoZSBhZXIgZGV2LT5pcnEgNDE2Lgo+Cj4gVGhpcyBjb2Rl
-IHF1aXJrX2Flcl9pbnRlcnJ1cHQoKSBzaG91bGQgYmUgcnVuIGF0IHBjaV9maXh1cF9kZXZpY2Uo
-cGNpX2ZpeHVwX2ZpbmFsKSB3aGljaCBpcyBpbiB0aGUgcGNpX2J1c19hZGRfZGV2aWNlcygpCgpZ
-ZXMsIHlvdSBhcmUgcmlnaHQuCgo+Cj4+ICAgMi4gcGNpX2RldmljZV9wcm9iZS0+b2ZfaXJxX3Bh
-cnNlX3BjaSwgb2ZfaXJxX3BhcnNlX3BjaSgpIGZhaWxlZCwgdGhlbgo+PiAgIGRldi0+aXJxIGNo
-YW5nZWQgdG8gMC4KPgo+IHBjaV9kZXZpY2VfcHJvYmUtPm9mX2lycV9wYXJzZV9wY2kgd2hpY2gg
-aW4gdGhlIHBjaV9zY2FuX2NoaWxkX2J1cygpIHJ1biBiZWZvcmUgIHBjaV9idXNfYWRkX2Rldmlj
-ZXMoKS4gU2VlIGR3X3BjaWVfaG9zdF9pbml0KCkuCj4gQXBwYXJlbnRseSAsIHlvdXIgcXVpcmtf
-YWVyX2ludGVycnVwdCgpIGlzIHJ1bm5pbmcgYmVmb3JlIHRoZSBkZXYtPmlycSBhc3NpZ25tZW50
-IGluIHRoZSBvZl9pcnFfcGFyc2VfcGNpKCkuCj4KPiBTbyBtYWtlIHN1cmUgeW91ciBjb25maWd1
-cmUgdGhlIHF1aXJrX2Flcl9pbnRlcnJ1cHQoKSBydW4gaW4gdGhlIEZJTkFMIHN0YWdlIGluIHRo
-ZSBxdWlyay5jIE9SIGNoZWNrIHlvdXIgaG9zdCBkcml2ZXIgd2hpY2ggeW91IGFyZSB1c2luZy4K
-ClllcyAsIEl0IGlzIEZJTkFMIHN0YWdlIGluIHRoZSBxdWlyay4gSSB1c2UgREVDTEFSRV9QQ0lf
-RklYVVBfRklOQUwuCkkgZmluZCBpdCBpcyB0aGUgYmVsb3cgcGF0Y2ggYWZmZWN0IHRoaXMuICho
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzkxNzAzMzMvKSwKYnV0IHRoZSBwYXRj
-aCB3aWxsIGJlIGFwcGxpZWQgdG8gbGludXggNC44LiBTbyB0aGUgcHJvYmxlbSB3aWxsIGFsc28g
-YmUgZXhpc3RlZC4KCkFSTTY0OiBQQ0k6IEFDUEkgc3VwcG9ydCBmb3IgbGVnYWN5IElSUXMgcGFy
-c2luZyBhbmQgY29uc29saWRhdGlvbiB3aXRoIERUIGNvZGUKZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-NjQva2VybmVsL3BjaS5jIGIvYXJjaC9hcm02NC9rZXJuZWwvcGNpLmMKaW5kZXggZDVkM2QyNi4u
-YjNiOGEyYyAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9rZXJuZWwvcGNpLmMKKysrIGIvYXJjaC9h
-cm02NC9rZXJuZWwvcGNpLmMKQEAgLTUxLDExICs1MSwxNiBAQCBpbnQgcGNpYmlvc19lbmFibGVf
-ZGV2aWNlKHN0cnVjdCBwY2lfZGV2ICpkZXYsIGludCBtYXNrKQogIH0KCiAgLyoKLSAqIFRyeSB0
-byBhc3NpZ24gdGhlIElSUSBudW1iZXIgZnJvbSBEVCB3aGVuIGFkZGluZyBhIG5ldyBkZXZpY2UK
-KyAqIFRyeSB0byBhc3NpZ24gdGhlIElSUSBudW1iZXIgd2hlbiBwcm9iaW5nIGEgbmV3IGRldmlj
-ZQogICAqLwotaW50IHBjaWJpb3NfYWRkX2RldmljZShzdHJ1Y3QgcGNpX2RldiAqZGV2KQoraW50
-IHBjaWJpb3NfYWxsb2NfaXJxKHN0cnVjdCBwY2lfZGV2ICpkZXYpCiAgewotICAgZGV2LT5pcnEg
-PSBvZl9pcnFfcGFyc2VfYW5kX21hcF9wY2koZGV2LCAwLCAwKTsKKyBpZiAoYWNwaV9kaXNhYmxl
-ZCkKKyAgICAgICAgIGRldi0+aXJxID0gb2ZfaXJxX3BhcnNlX2FuZF9tYXBfcGNpKGRldiwgMCwg
-MCk7CisjaWZkZWYgQ09ORklHX0FDUEkKKyBlbHNlCisgICAgICAgICByZXR1cm4gYWNwaV9wY2lf
-aXJxX2VuYWJsZShkZXYpOworI2VuZGlmCgogICAgICAgICByZXR1cm4gMDsKICB9CgpUaGFua3MK
-RG9uZ2RvbmcKPgo+Cj4+Cj4+ICAgU28gdGhpcyBwYXRjaCBjb3VsZCBub3Qgd29yayB3aXRoIGFl
-ci4KPj4KPj4gICBUaGFua3MKPj4gICBEb25nZG9uZwo+PiAgIOWcqCAyMDE2LzYvMTQgMTY6MjQs
-IFBvIExpdSDlhpnpgZM6Cj4+ICAgPiBPbiBzb21lIHBsYXRmb3Jtcywgcm9vdCBwb3J0IGRvZXNu
-J3Qgc3VwcG9ydCBNU0kvTVNJLVgvSU5UeCBpbiBSQyBtb2RlLgo+PiAgID4gV2hlbiBjaGlwIHN1
-cHBvcnQgdGhlIGFlciBpbnRlcnJ1cHQgd2l0aCBub25lIE1TSS9NU0ktWC9JTlR4IG1vZGUsCj4+
-ICAgPiBtYXliZSB0aGVyZSBpcyBpbnRlcnJ1cHQgbGluZSBmb3IgYWVyIHBtZSBldGMuIFNlYXJj
-aCB0aGUgaW50ZXJydXB0Cj4+ICAgPiBudW1iZXIgaW4gdGhlIGZkdCBmaWxlLiBUaGVuIGZpeHVw
-IHRoZSBkZXYtPmlycSB3aXRoIGl0Lgo+PiAgID4KPj4gICA+IFNpZ25lZC1vZmYtYnk6IFBvIExp
-dSA8cG8ubGl1QG54cC5jb20+Cj4+ICAgPiAtLS0KPj4gICA+IGNoYW5nZXMgZm9yIFYzOgo+PiAg
-ID4gCS0gTW92ZSB0byBxdWlyazsKPj4gICA+IAktIE9ubHkgY29ycmVjdCB0aGUgaXJxIGluIFJD
-IG1vZGU7Cj4+ICAgPgo+PiAgID4gICBkcml2ZXJzL3BjaS9xdWlya3MuYyB8IDI5ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrCj4+ICAgPiAgIDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNlcnRp
-b25zKCspCj4+ICAgPgo+PiAgID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3F1aXJrcy5jIGIv
-ZHJpdmVycy9wY2kvcXVpcmtzLmMgaW5kZXgKPj4gICA+IGVlNzJlYmUuLjhiMzljY2UgMTAwNjQ0
-Cj4+ICAgPiAtLS0gYS9kcml2ZXJzL3BjaS9xdWlya3MuYwo+PiAgID4gKysrIGIvZHJpdmVycy9w
-Y2kvcXVpcmtzLmMKPj4gICA+IEBAIC0yNSw2ICsyNSw3IEBACj4+ICAgPiAgICNpbmNsdWRlIDxs
-aW51eC9zY2hlZC5oPgo+PiAgID4gICAjaW5jbHVkZSA8bGludXgva3RpbWUuaD4KPj4gICA+ICAg
-I2luY2x1ZGUgPGxpbnV4L21tLmg+Cj4+ICAgPiArI2luY2x1ZGUgPGxpbnV4L29mX2lycS5oPgo+
-PiAgID4gICAjaW5jbHVkZSA8YXNtL2RtYS5oPgkvKiBpc2FfZG1hX2JyaWRnZV9idWdneSAqLwo+
-PiAgID4gICAjaW5jbHVkZSAicGNpLmgiCj4+ICAgPgo+PiAgID4gQEAgLTQ0MTksMyArNDQyMCwz
-MSBAQCBzdGF0aWMgdm9pZCBxdWlya19pbnRlbF9xYXRfdmZfY2FwKHN0cnVjdAo+PiAgIHBjaV9k
-ZXYgKnBkZXYpCj4+ICAgPiAgIAl9Cj4+ICAgPiAgIH0KPj4gICA+ICAgREVDTEFSRV9QQ0lfRklY
-VVBfRUFSTFkoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0NDMsCj4+ICAgPiBxdWlya19pbnRlbF9x
-YXRfdmZfY2FwKTsKPj4gICA+ICsKPj4gICA+ICsvKiBJZiByb290IHBvcnQgZG9lc24ndCBzdXBw
-b3J0IE1TSS9NU0ktWC9JTlR4IGluIFJDIG1vZGUsCj4+ICAgPiArICogYnV0IHVzZSBzdGFuZGFs
-b25lIGlycS4gUmVhZCB0aGUgZGV2aWNlIHRyZWUgZm9yIHRoZSBhZXIKPj4gICA+ICsgKiBpbnRl
-cnJ1cHQgbnVtYmVyLgo+PiAgID4gKyAqLwo+PiAgID4gK3N0YXRpYyB2b2lkIHF1aXJrX2Flcl9p
-bnRlcnJ1cHQoc3RydWN0IHBjaV9kZXYgKmRldikgewo+PiAgID4gKwlpbnQgcmV0Owo+PiAgID4g
-Kwl1OCBoZWFkZXJfdHlwZTsKPj4gICA+ICsJc3RydWN0IGRldmljZV9ub2RlICpucCA9IE5VTEw7
-Cj4+ICAgPiArCj4+ICAgPiArCS8qIE9ubHkgZm9yIHRoZSBSQyBtb2RlIGRldmljZSAqLwo+PiAg
-ID4gKwlwY2lfcmVhZF9jb25maWdfYnl0ZShkZXYsIFBDSV9IRUFERVJfVFlQRSwgJmhlYWRlcl90
-eXBlKTsKPj4gICA+ICsJaWYgKChoZWFkZXJfdHlwZSAmIDB4N0YpICE9IFBDSV9IRUFERVJfVFlQ
-RV9CUklER0UpCj4+ICAgPiArCQlyZXR1cm47Cj4+ICAgPiArCj4+ICAgPiArCWlmIChkZXYtPmJ1
-cy0+ZGV2Lm9mX25vZGUpCj4+ICAgPiArCQlucCA9IGRldi0+YnVzLT5kZXYub2Zfbm9kZTsKPj4g
-ICA+ICsKPj4gICA+ICsJaWYgKElTX0VOQUJMRUQoQ09ORklHX09GX0lSUSkgJiYgbnApIHsKPj4g
-ICA+ICsJCXJldCA9IG9mX2lycV9nZXRfYnluYW1lKG5wLCAiYWVyIik7Cj4+ICAgPiArCQlpZiAo
-cmV0ID4gMCkgewo+PiAgID4gKwkJCWRldi0+bm9fbXNpID0gMTsKPj4gICA+ICsJCQlkZXYtPmly
-cSA9IHJldDsKPj4gICA+ICsJCX0KPj4gICA+ICsJfQo+PiAgID4gK30KPj4gICA+ICtERUNMQVJF
-X1BDSV9GSVhVUF9GSU5BTChQQ0lfVkVORE9SX0lEX0ZSRUVTQ0FMRSwgUENJX0FOWV9JRCwKPj4g
-ICA+ICtxdWlya19hZXJfaW50ZXJydXB0KTsKPj4gICA+Cj4+Cj4KPiAE77+9ey5u77+9K++/ve+/
-ve+/ve+/ve+/ve+/ve+/vSsl77+977+9bHp3be+/ve+/vWLvv73rp7Lvv73vv71y77+977+9eljv
-v73vv70aXO+/vSnvv73vv73vv713Kh9qZ++/ve+/ve+/vR7vv73vv73vv73vv73vv73domov77+9
-77+977+9eu+/vd6W77+977+9Mu+/vd6Z77+977+977+9Ju+/vSnfoe+/vWHvv73vv71/77+977+9
-Hu+/vUfvv73vv73vv71o77+9D++/vWo6K3bvv73vv73vv71377+92aUKPgoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+slim core is used as a basis for many IPs in the STi
+chipsets such as fdma and demux. To avoid duplicating
+the elf loading code in each device driver a slim
+rproc driver has been created.
+
+This driver is designed to be used by other device drivers
+such as fdma, or demux whose IP is based around a slim core.
+The device driver can call slim_rproc_alloc() to allocate
+a slim rproc and slim_rproc_put() when finished.
+
+This driver takes care of ioremapping the slim
+registers (dmem, imem, slimcore, peripherals), whose offsets
+and sizes can change between IP's. It also obtains and enables
+any clocks used by the device. This approach avoids having
+a double mapping of the registers as slim_rproc does not register
+its own platform device. It also maps well to device tree
+abstraction as it allows us to have one dt node for the whole
+device.
+
+All of the generic rproc elf loading code can be reused, and
+we provide start() stop() hooks to start and stop the slim
+core once the firmware has been loaded. This has been tested
+successfully with fdma driver.
+
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ drivers/remoteproc/Kconfig               |   8 +
+ drivers/remoteproc/Makefile              |   1 +
+ drivers/remoteproc/st_slim_rproc.c       | 376 +++++++++++++++++++++++++++++++
+ include/linux/remoteproc/st_slim_rproc.h |  53 +++++
+ 4 files changed, 438 insertions(+)
+ create mode 100644 drivers/remoteproc/st_slim_rproc.c
+ create mode 100644 include/linux/remoteproc/st_slim_rproc.h
+
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index 72e97d7..9bb13b6 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -86,4 +86,12 @@ config ST_REMOTEPROC
+ 	  processor framework.
+ 	  This can be either built-in or a loadable module.
+ 
++config ST_SLIM_REMOTEPROC
++	tristate "ST Slim remoteproc support"
++	select REMOTEPROC
++	help
++	  Say y here to support firmware loading on IP based around
++	  the Slim core.
++	  If unsure say N.
++
+ endmenu
+diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+index 279cb2e..37bb39a 100644
+--- a/drivers/remoteproc/Makefile
++++ b/drivers/remoteproc/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_STE_MODEM_RPROC)	 	+= ste_modem_rproc.o
+ obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+ obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+ obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
++obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
+diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
+new file mode 100644
+index 0000000..157bdb3
+--- /dev/null
++++ b/drivers/remoteproc/st_slim_rproc.c
+@@ -0,0 +1,376 @@
++/*
++ * st_slim_rproc.c
++ *
++ * Copyright (C) 2016 STMicroelectronics
++ * Author: Peter Griffin <peter.griffin@linaro.org>
++ * License terms:  GNU General Public License (GPL), version 2
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/remoteproc.h>
++#include <linux/remoteproc/st_slim_rproc.h>
++#include "remoteproc_internal.h"
++
++/* slimcore registers */
++#define SLIM_ID_OFST		0x0
++#define SLIM_VER_OFST		0x4
++
++#define SLIM_EN_OFST		0x8
++#define SLIM_EN_RUN			BIT(0)
++
++#define SLIM_CLK_GATE_OFST	0xC
++#define SLIM_CLK_GATE_DIS		BIT(0)
++#define SLIM_CLK_GATE_RESET		BIT(2)
++
++#define SLIM_SLIM_PC_OFST	0x20
++
++/* dmem registers */
++#define SLIM_REV_ID_OFST	0x0
++#define SLIM_REV_ID_MIN_MASK		GENMASK(15, 8)
++#define SLIM_REV_ID_MIN(id)		((id & SLIM_REV_ID_MIN_MASK) >> 8)
++#define SLIM_REV_ID_MAJ_MASK		GENMASK(23, 16)
++#define SLIM_REV_ID_MAJ(id)		((id & SLIM_REV_ID_MAJ_MASK) >> 16)
++
++
++/* peripherals registers */
++#define SLIM_STBUS_SYNC_OFST	0xF88
++#define SLIM_STBUS_SYNC_DIS		BIT(0)
++
++#define SLIM_INT_SET_OFST	0xFD4
++#define SLIM_INT_CLR_OFST	0xFD8
++#define SLIM_INT_MASK_OFST	0xFDC
++
++#define SLIM_CMD_CLR_OFST	0xFC8
++#define SLIM_CMD_MASK_OFST	0xFCC
++
++const char *mem_names[SLIM_MEM_MAX] = {
++	[SLIM_DMEM]	= "dmem",
++	[SLIM_IMEM]	= "imem",
++};
++
++static int slim_clk_get(struct st_slim_rproc *slim_rproc, struct device *dev)
++{
++	int clk, err;
++
++	for (clk = 0; clk < SLIM_MAX_CLK; clk++) {
++		slim_rproc->clks[clk] = of_clk_get(dev->of_node, clk);
++		if (IS_ERR(slim_rproc->clks[clk])) {
++			err = PTR_ERR(slim_rproc->clks[clk]);
++			if (err == -EPROBE_DEFER)
++				goto err_put_clks;
++			slim_rproc->clks[clk] = NULL;
++			break;
++		}
++	}
++
++	return 0;
++
++err_put_clks:
++	while (--clk >= 0)
++		clk_put(slim_rproc->clks[clk]);
++
++	return err;
++}
++
++static void slim_clk_disable(struct st_slim_rproc *slim_rproc)
++{
++	int clk;
++
++	for (clk = 0; clk < SLIM_MAX_CLK && slim_rproc->clks[clk]; clk++)
++		clk_disable_unprepare(slim_rproc->clks[clk]);
++}
++
++static int slim_clk_enable(struct st_slim_rproc *slim_rproc)
++{
++	int clk, ret;
++
++	for (clk = 0; clk < SLIM_MAX_CLK && slim_rproc->clks[clk]; clk++) {
++		ret = clk_prepare_enable(slim_rproc->clks[clk]);
++		if (ret)
++			goto err_disable_clks;
++	}
++
++	return 0;
++
++err_disable_clks:
++	while (--clk >= 0)
++		clk_disable_unprepare(slim_rproc->clks[clk]);
++
++	return ret;
++}
++
++/**
++ * Remoteproc slim specific device handlers
++ */
++static int slim_rproc_start(struct rproc *rproc)
++{
++	struct device *dev = &rproc->dev;
++	struct st_slim_rproc *slim_rproc = rproc->priv;
++	unsigned long hw_id, hw_ver, fw_rev;
++	u32 val;
++	int ret;
++
++	ret = slim_clk_enable(slim_rproc);
++	if (ret) {
++		dev_err(dev, "Failed to enable clocks\n");
++		goto err_clk;
++	}
++
++	/* disable CPU pipeline clock & reset cpu pipeline */
++	val = SLIM_CLK_GATE_DIS | SLIM_CLK_GATE_RESET;
++	writel(val, slim_rproc->slimcore + SLIM_CLK_GATE_OFST);
++
++	/* disable SLIM core STBus sync */
++	writel(SLIM_STBUS_SYNC_DIS, slim_rproc->peri + SLIM_STBUS_SYNC_OFST);
++
++	/* enable cpu pipeline clock */
++	writel(!SLIM_CLK_GATE_DIS,
++		slim_rproc->slimcore + SLIM_CLK_GATE_OFST);
++
++	/* clear int & cmd mailbox */
++	writel(~0U, slim_rproc->peri + SLIM_INT_CLR_OFST);
++	writel(~0U, slim_rproc->peri + SLIM_CMD_CLR_OFST);
++
++	/* enable all channels cmd & int */
++	writel(~0U, slim_rproc->peri + SLIM_INT_MASK_OFST);
++	writel(~0U, slim_rproc->peri + SLIM_CMD_MASK_OFST);
++
++	/* enable cpu */
++	writel(SLIM_EN_RUN, slim_rproc->slimcore + SLIM_EN_OFST);
++
++	hw_id = readl_relaxed(slim_rproc->slimcore + SLIM_ID_OFST);
++	hw_ver = readl_relaxed(slim_rproc->slimcore + SLIM_VER_OFST);
++
++	fw_rev = readl(slim_rproc->mem[SLIM_DMEM].cpu_addr +
++			SLIM_REV_ID_OFST);
++
++	dev_info(dev, "fw rev:%ld.%ld on SLIM %ld.%ld\n",
++		 SLIM_REV_ID_MAJ(fw_rev), SLIM_REV_ID_MIN(fw_rev),
++		 hw_id, hw_ver);
++
++err_clk:
++	return ret;
++}
++
++static int slim_rproc_stop(struct rproc *rproc)
++{
++	struct st_slim_rproc *slim_rproc = rproc->priv;
++	u32 val;
++
++	/* mask all (cmd & int) channels */
++	writel(0UL, slim_rproc->peri + SLIM_INT_MASK_OFST);
++	writel(0UL, slim_rproc->peri + SLIM_CMD_MASK_OFST);
++
++	/* disable cpu pipeline clock */
++	writel(SLIM_CLK_GATE_DIS
++		, slim_rproc->slimcore + SLIM_CLK_GATE_OFST);
++
++	writel(!SLIM_EN_RUN, slim_rproc->slimcore + SLIM_EN_OFST);
++
++	val = readl(slim_rproc->slimcore + SLIM_EN_OFST);
++	if (val & SLIM_EN_RUN)
++		dev_warn(&rproc->dev, "Failed to disable SLIM");
++
++	slim_clk_disable(slim_rproc);
++
++	dev_dbg(&rproc->dev, "slim stopped\n");
++
++	return 0;
++}
++
++static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
++{
++	struct st_slim_rproc *slim_rproc = rproc->priv;
++	void *va = NULL;
++	int i;
++
++	for (i = 0; i < SLIM_MEM_MAX; i++) {
++		if (da != slim_rproc->mem[i].bus_addr)
++			continue;
++
++		va = slim_rproc->mem[i].cpu_addr;
++		break;
++	}
++
++	dev_dbg(&rproc->dev, "%s: da = 0x%llx len = 0x%x va = 0x%p\n",
++		__func__, da, len, va);
++
++	return va;
++}
++
++static struct rproc_ops slim_rproc_ops = {
++	.start		= slim_rproc_start,
++	.stop		= slim_rproc_stop,
++	.da_to_va       = slim_rproc_da_to_va,
++};
++
++/**
++ * Firmware handler operations: sanity, boot address, load ...
++ */
++
++static struct resource_table empty_rsc_tbl = {
++	.ver = 1,
++	.num = 0,
++};
++
++static struct resource_table *slim_rproc_find_rsc_table(struct rproc *rproc,
++					       const struct firmware *fw,
++					       int *tablesz)
++{
++	if (!fw)
++		return NULL;
++
++	*tablesz = sizeof(empty_rsc_tbl);
++	return &empty_rsc_tbl;
++}
++
++static struct resource_table *slim_rproc_find_loaded_rsc_table(struct rproc *rproc,
++						      const struct firmware *fw)
++{
++	if (!fw)
++		return NULL;
++
++	return &empty_rsc_tbl;
++}
++
++static struct rproc_fw_ops slim_rproc_fw_ops = {
++	.find_rsc_table = slim_rproc_find_rsc_table,
++	.find_loaded_rsc_table = slim_rproc_find_loaded_rsc_table,
++};
++
++
++/**
++ * slim_rproc_alloc() - allocate and initialise slim rproc
++ * @pdev: Pointer to the platform_device struct
++ * @fw_name: Name of firmware for rproc to use
++ *
++ * Function for allocating and initialising a slim rproc for use by
++ * device drivers whose IP is based around the slim slim core. It
++ * obtains and enables any clocks required by the slim core and also
++ * ioremaps the various IO.
++ *
++ * Returns st_slim_rproc pointer or PTR_ERR() on error.
++ */
++
++struct st_slim_rproc *slim_rproc_alloc(struct platform_device *pdev,
++				char *fw_name)
++{
++	struct device *dev = &pdev->dev;
++	struct st_slim_rproc *slim_rproc;
++	struct device_node *np = dev->of_node;
++	struct rproc *rproc;
++	struct resource *res;
++	int err, i;
++	struct rproc_fw_ops *elf_ops;
++
++	if (WARN_ON(!np || !fw_name))
++		return ERR_PTR(-EINVAL);
++
++	if (!of_device_is_compatible(np, "st,slim-rproc"))
++		return ERR_PTR(-EINVAL);
++
++	rproc = rproc_alloc(dev, np->name, &slim_rproc_ops,
++			fw_name, sizeof(*slim_rproc));
++	if (!rproc)
++		return ERR_PTR(-ENOMEM);
++
++	rproc->has_iommu = false;
++
++	slim_rproc = rproc->priv;
++	slim_rproc->rproc = rproc;
++
++	elf_ops = rproc->fw_ops;
++	/* Use some generic elf ops */
++	slim_rproc_fw_ops.load = elf_ops->load;
++	slim_rproc_fw_ops.sanity_check = elf_ops->sanity_check;
++
++	rproc->fw_ops = &slim_rproc_fw_ops;
++
++	/* get imem and dmem */
++	for (i = 0; i < ARRAY_SIZE(mem_names); i++) {
++
++		res = platform_get_resource_byname
++			(pdev, IORESOURCE_MEM, mem_names[i]);
++
++		slim_rproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
++		if (IS_ERR(slim_rproc->mem[i].cpu_addr)) {
++			dev_err(&pdev->dev, "devm_ioremap_resource failed\n");
++			err = PTR_ERR(slim_rproc->mem[i].cpu_addr);
++			goto err;
++		}
++		slim_rproc->mem[i].bus_addr = res->start;
++		slim_rproc->mem[i].size = resource_size(res);
++	}
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "slimcore");
++
++	slim_rproc->slimcore = devm_ioremap_resource(dev, res);
++	if (IS_ERR(slim_rproc->slimcore)) {
++		dev_err(&pdev->dev,
++			"devm_ioremap_resource failed for slimcore\n");
++		err = PTR_ERR(slim_rproc->slimcore);
++		goto err;
++	}
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "peripherals");
++
++	slim_rproc->peri = devm_ioremap_resource(dev, res);
++	if (IS_ERR(slim_rproc->peri)) {
++		dev_err(&pdev->dev, "devm_ioremap_resource failed for peri\n");
++		err = PTR_ERR(slim_rproc->peri);
++		goto err;
++	}
++
++	err = slim_clk_get(slim_rproc, dev);
++	if (err)
++		goto err;
++
++	/* Register as a remoteproc device */
++	err = rproc_add(rproc);
++	if (err) {
++		dev_err(dev, "registration of slim remoteproc failed\n");
++		goto err_clk;
++	}
++
++	return slim_rproc;
++
++err_clk:
++	for (i = 0; i < SLIM_MAX_CLK && slim_rproc->clks[i]; i++)
++		clk_put(slim_rproc->clks[i]);
++err:
++	rproc_put(rproc);
++	return ERR_PTR(err);
++}
++EXPORT_SYMBOL(slim_rproc_alloc);
++
++/**
++  * slim_rproc_put() - put slim rproc resources
++  * @slim_rproc: Pointer to the st_slim_rproc struct
++  *
++  * Function for calling respective _put() functions on
++  * slim_rproc resources.
++  *
++  */
++void slim_rproc_put(struct st_slim_rproc *slim_rproc)
++{
++	int clk;
++
++	if (!slim_rproc)
++		return;
++
++	for (clk = 0; clk < SLIM_MAX_CLK && slim_rproc->clks[clk]; clk++)
++		clk_put(slim_rproc->clks[clk]);
++
++	rproc_put(slim_rproc->rproc);
++}
++EXPORT_SYMBOL(slim_rproc_put);
++
++MODULE_AUTHOR("Peter Griffin");
++MODULE_DESCRIPTION("STMicroelectronics SLIM rproc driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/remoteproc/st_slim_rproc.h b/include/linux/remoteproc/st_slim_rproc.h
+new file mode 100644
+index 0000000..c300b3e
+--- /dev/null
++++ b/include/linux/remoteproc/st_slim_rproc.h
+@@ -0,0 +1,53 @@
++/*
++ * st_slim_rproc.h
++ *
++ * Copyright (C) 2016 STMicroelectronics
++ * Author: Peter Griffin <peter.griffin@linaro.org>
++ * License terms:  GNU General Public License (GPL), version 2
++ */
++#ifndef _ST_SLIM_H
++#define _ST_SLIM_H
++
++#define SLIM_MEM_MAX 2
++#define SLIM_MAX_CLK 4
++
++enum {
++	SLIM_DMEM,
++	SLIM_IMEM,
++};
++
++/**
++ * struct slim_mem - slim internal memory structure
++ * @cpu_addr: MPU virtual address of the memory region
++ * @bus_addr: Bus address used to access the memory region
++ * @size: Size of the memory region
++ */
++struct slim_mem {
++	void __iomem *cpu_addr;
++	phys_addr_t bus_addr;
++	size_t size;
++};
++
++/**
++ * struct st_slim_rproc - SLIM slim core
++ * @rproc: rproc handle
++ * @mem: slim memory information
++ * @slimcore: slim slimcore regs
++ * @peri: slim peripheral regs
++ * @clks: slim clocks
++ */
++struct st_slim_rproc {
++	struct rproc *rproc;
++	struct slim_mem mem[SLIM_MEM_MAX];
++	void __iomem *slimcore;
++	void __iomem *peri;
++
++	/* st_slim_rproc private */
++	struct clk *clks[SLIM_MAX_CLK];
++};
++
++struct st_slim_rproc *slim_rproc_alloc(struct platform_device *pdev,
++					char *fw_name);
++void slim_rproc_put(struct st_slim_rproc *slim_rproc);
++
++#endif
+-- 
+1.9.1
