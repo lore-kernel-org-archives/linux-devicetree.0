@@ -1,105 +1,33 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 05/10] firmware: tegra: add BPMP support
-Date: Wed, 6 Jul 2016 10:39:53 -0600
-Message-ID: <577D3459.8080107@wwwdotorg.org>
-References: <20160705090431.5852-1-josephl@nvidia.com>
- <20160705090431.5852-6-josephl@nvidia.com>
- <CAAVeFuKvp4d=RoPZGGLmhqXs1oHZPrEOxTJd_b6b7-rHq_mqqg@mail.gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v6 00/18] Add support for FDMA DMA controller and slim
+ core rproc found on STi chipsets
+Date: Wed, 06 Jul 2016 09:40:49 -0700
+Message-ID: <1467823249.8360.28.camel@perches.com>
+References: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAVeFuKvp4d=RoPZGGLmhqXs1oHZPrEOxTJd_b6b7-rHq_mqqg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467795276-21725-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, bjorn.andersson@linaro.org, ohad@wizery.com
+Cc: lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/2016 05:39 AM, Alexandre Courbot wrote:
-> Sorry, I will probably need to do several passes on this one to
-> understand everything, but here is what I can say after a first look:
->
-> On Tue, Jul 5, 2016 at 6:04 PM, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> The Tegra BPMP (Boot and Power Management Processor) is designed for the
->> booting process handling, offloading the power management tasks and
->> some system control services from the CPU. It can be clock, DVFS,
->> thermal/EDP, power gating operation and system suspend/resume handling.
->> So the CPU and the drivers of these modules can base on the service that
->> the BPMP firmware driver provided to signal the event for the specific PM
->> action to BPMP and receive the status update from BPMP.
->>
->> Comparing to the ARM SCPI, the service provided by BPMP is message-based
->> communication but not method-based. The BPMP firmware driver provides the
->> send/receive service for the users, when the user concerns the response
->> time. If the user needs to get the event or update from the firmware, it
->> can request the MRQ service as well. The user needs to take care of the
->> message format, which we call BPMP ABI.
->>
->> The BPMP ABI defines the message format for different modules or usages.
->> For example, the clock operation needs an MRQ service code called
->> MRQ_CLK with specific message format which includes different sub
->> commands for various clock operations. This is the message format that
->> BPMP can recognize.
->>
->> So the user needs two things to initiate IPC between BPMP. Get the
->> service from the bpmp_ops structure and maintain the message format as
->> the BPMP ABI defined.
+On Wed, 2016-07-06 at 09:54 +0100, Peter Griffin wrote:
+> This patchset adds support for the Flexible Direct Memory Access (FDM=
+A) core
+> found on STi chipsets from STMicroelectronics. The FDMA is a slim cor=
+e CPU
+> with a dedicated firmware. It is a general purpose DMA controller sup=
+porting
+> 16 independent channels and data can be moved from memory to memory o=
+r between
+> memory and paced latency critical real time targets.
+[]
+> =A0include/linux/remoteproc/st_slim_rproc.h=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0|=A0=A053 ++
 
->> diff --git a/include/soc/tegra/bpmp_abi.h b/include/soc/tegra/bpmp_abi.h
+Is this directory really necessary?
 
->> +#ifndef _ABI_BPMP_ABI_H_
->> +#define _ABI_BPMP_ABI_H_
->> +
->> +#ifdef LK
->> +#include <stdint.h>
->> +#endif
->> +
->> +#ifndef __ABI_PACKED
->> +#define __ABI_PACKED __attribute__((packed))
->> +#endif
->> +
->> +#ifdef NO_GCC_EXTENSIONS
->> +#define EMPTY char empty;
->> +#define EMPTY_ARRAY 1
->> +#else
->> +#define EMPTY
->> +#define EMPTY_ARRAY 0
->> +#endif
->> +
->> +#ifndef __UNION_ANON
->> +#define __UNION_ANON
->> +#endif
->> +/**
->> + * @file
->> + */
->> +
->> +
->> +/**
->> + * @defgroup MRQ MRQ Messages
->> + * @brief Messages sent to/from BPMP via IPC
->> + * @{
->> + *   @defgroup MRQ_Format Message Format
->> + *   @defgroup MRQ_Codes Message Request (MRQ) Codes
->> + *   @defgroup MRQ_Payloads Message Payloads
->> + *   @defgroup Error_Codes Error Codes
->> + * @}
->> + */
->
-> ...
->
-> There is a lot of stuff in this file, most of which we are not using
-> now - this is ok, but unless this is a file synced from an outside
-> resource maybe we should trim the structures we don't need and add
-> them as we make use of them? It helps dividing the work in bite-size
-> chunks.
->
-> Regarding the documentation format of this file, is this valid kernel
-> documentation since the adoption of Sphynx? Or is it whatever the
-> origin is using?
-
-This file is an ABI document published by the BPMP FW team. I believe it 
-would be best to use it unmodified.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Why shouldn't this file be local to drivers/remoteproc/?
