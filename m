@@ -1,304 +1,97 @@
-Return-Path: <wxt@rock-chips.com>
-Message-ID: <577C7337.7060803@rock-chips.com>
-Date: Wed, 06 Jul 2016 10:55:51 +0800
-From: Caesar Wang <wxt@rock-chips.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: support the pmu node for rk3399
-References: <1467358570-24417-1-git-send-email-wxt@rock-chips.com> <1467358570-24417-3-git-send-email-wxt@rock-chips.com> <20160701102612.GB22953@leverpostej>
-In-Reply-To: <20160701102612.GB22953@leverpostej>
-Content-Type: multipart/alternative;
- boundary="------------010406060203030404010602"
-To: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com
-Cc: Caesar Wang <wxt@rock-chips.com>, huangtao@rock-chips.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, cf@rock-chips.com, briannorris@google.com, jay.xu@rock-chips.com, linux-arm-kernel@lists.infradead.org
+Return-Path: <hns@goldelico.com>
+Content-Type: text/plain; charset=windows-1252
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH] drivers: led: is31fl319x: 6/9-channel light effect led driver
+From: H. Nikolaus Schaller <hns@goldelico.com>
+In-Reply-To: <5717EECB.8010401@gmail.com>
+Date: Wed, 6 Jul 2016 12:02:01 +0200
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AD66BB31-C0EA-4F4D-AD17-F052EC7802CD@goldelico.com>
+References: <cover.1461004995.git.hns@goldelico.com> <75127f4bf2bb11343bdff5bfb1129a092e668c61.1461004995.git.hns@goldelico.com> <20160418212504.29d67592.drivshin.allworx@gmail.com> <80A3B3D8-2309-4A41-91F9-4A2EE6DDF975@goldelico.com> <5717EECB.8010401@gmail.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------010406060203030404010602
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi,
+finally, I found the time to update the driver according to the many =
+comments
+received a while ago.
 
-Hi Mark,
+Most of them have been worked in, including the regmap idea and
+brightness_set_blocking().
 
-On 2016?07?01? 18:26, Mark Rutland wrote:
-> On Fri, Jul 01, 2016 at 03:36:10PM +0800, Caesar Wang wrote:
->> As the Marc posted the patches [0] to support Partitioning per-cpu
->> interrupts. Let's add this patch to match it on rk3399 SoCs.
->>
->> [0]:
->> https://lkml.org/lkml/2016/4/11/182
-> The core IRQ support is merged, but it's worth noting that the perf code
-> doesn't use it yet. So we still need a patch adding support to the perf
-> code before we can change the dts.
->
-> I think Marc had a prototype of that somewhere.
->
-> Marc?
->
->> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
->> Cc: Heiko Stuebner <heiko@sntech.de>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> CC: linux-arm-kernel@lists.infradead.org
->>
->> ---
->>
->>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 26 ++++++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> index 8f0a069..b260f62 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -165,6 +165,22 @@
->>   			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
->>   	};
->>   
->> +	pmu_a53 {
->> +		compatible = "arm,cortex-a53-pmu";
->> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part0>;
->> +		interrupt-affinity = <&cpu_l0>,
->> +				     <&cpu_l1>,
->> +				     <&cpu_l2>,
->> +				     <&cpu_l3>;
->> +	};
-> I'm not keen on having to redundantly describe the affinity in
-> interrupt-affinity and the partition's affinity property. Those will
-> almost certainly be out-of-sync in some DTs, and it'll be very painful
-> to deal with.
->
-> I think that for partitioned PPIs the PMU driver should use the affinity
-> from the PPI, and not have an interrupt-affinity property. Hopefully
-> that's relatively simple to handle.
+The driver works on our system, so that I will mail [PATCH v2] as a =
+followup.
 
-So you are keen have the simple to handle the pmu.
-
-e.g.:
-+       pmu_a53 {
-+               compatible = "arm,cortex-a53-pmu";
-+               interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part0>;
-+       };
-+
-+       pmu_a72 {
-+               compatible = "arm,cortex-a72-pmu";
-+               interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part1>;
-+       };
-
-Right?
-
----
-
-BTW:
-Do I need continue to send it for upstream or you guys will change it 
-for all platform?
-
-Thanks
-
--
-Caesar
->
-> Thanks,
-> Mark.
->
->> +
->> +	pmu_a72 {
->> +		compatible = "arm,cortex-a72-pmu";
->> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part1>;
->> +		interrupt-affinity = <&cpu_b0>,
->> +				     <&cpu_b1>;
->> +	};
->> +
->>   	xin24m: xin24m {
->>   		compatible = "fixed-clock";
->>   		clock-frequency = <24000000>;
->> @@ -296,6 +312,16 @@
->>   			msi-controller;
->>   			reg = <0x0 0xfee20000 0x0 0x20000>;
->>   		};
->> +
->> +		ppi-partitions {
->> +			part0: interrupt-partition-0 {
->> +				affinity = <&cpu_l0 &cpu_l1 &cpu_l2 &cpu_l3>;
->> +			};
->> +
->> +			part1: interrupt-partition-1 {
->> +				affinity = <&cpu_b0 &cpu_b1>;
->> +			};
->> +		};
->>   	};
->>   
->>   	i2c1: i2c@ff110000 {
->> -- 
->> 1.9.1
->>
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+There is only one aspect of the new solution I am not sure if it is
+really better than our old proposal (see below).
 
 
--- 
-caesar wang | software engineer | wxt@rock-chip.com
+> Am 20.04.2016 um 23:04 schrieb Jacek Anaszewski =
+<jacek.anaszewski@gmail.com>:
+>=20
+> On 04/19/2016 07:21 PM, H. Nikolaus Schaller wrote:
+>>> I believe the LEDS core now handles the workqueues generically for
+>>> blocking operations, so it's no longer needed in the individual =
+drivers.
+>>=20
+>> We had a lot of trouble with locking and blocking especially if we
+>> want to indicate CPU or (root) disk activity.
+>=20
+> What kind of troubles you had? Could you share more details?
+> Does it mean that current LED core design doesn't fit for your
+> use cases?
 
+The system started to flicker the LEDs irregularily and sometimes
+the whole kernel stalled.
 
---------------010406060203030404010602
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+>=20
+>> So it is implemented in a way that changes can be requested faster
+>> than the I2C bus can write new values to the chip.
+>>=20
+>> Only after one sequence of I2C writes is done, another work function
+>> can be scheduled. And each group of writes updates as many LEDs
+>> in parallel if necessary.
+>=20
+> You can serialize the operations in brightness_set_blocking with
+> a mutex.
 
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    Hi Mark,<br>
-    <br>
-    <div class="moz-cite-prefix">On 2016&#24180;07&#26376;01&#26085; 18:26, Mark Rutland
-      wrote:<br>
-    </div>
-    <blockquote cite="mid:20160701102612.GB22953@leverpostej"
-      type="cite">
-      <pre wrap="">On Fri, Jul 01, 2016 at 03:36:10PM +0800, Caesar Wang wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">As the Marc posted the patches [0] to support Partitioning per-cpu
-interrupts. Let's add this patch to match it on rk3399 SoCs.
+Yes, that works fine in our (incomplete) test setup.
 
-[0]:
-<a class="moz-txt-link-freetext" href="https://lkml.org/lkml/2016/4/11/182">https://lkml.org/lkml/2016/4/11/182</a>
-</pre>
-      </blockquote>
-      <pre wrap="">
-The core IRQ support is merged, but it's worth noting that the perf code
-doesn't use it yet. So we still need a patch adding support to the perf
-code before we can change the dts.
+But I think it assumes that the i2c bus is never congested by other i2c =
+traffic.
 
-I think Marc had a prototype of that somewhere.
+I have not found code that obviously takes care of the situation if led
+trigger events (e.g. mmc or cpu triggers) are coming in faster than the
+i2c (even using regmap) can write out over i2c.
 
-Marc?
+If I understand the led core code correctly, it will just do another =
+schedule_work
+for every single change of led brightness.
 
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">Signed-off-by: Caesar Wang <a class="moz-txt-link-rfc2396E" href="mailto:wxt@rock-chips.com">&lt;wxt@rock-chips.com&gt;</a>
-Cc: Heiko Stuebner <a class="moz-txt-link-rfc2396E" href="mailto:heiko@sntech.de">&lt;heiko@sntech.de&gt;</a>
-Cc: Will Deacon <a class="moz-txt-link-rfc2396E" href="mailto:will.deacon@arm.com">&lt;will.deacon@arm.com&gt;</a>
-Cc: Marc Zyngier <a class="moz-txt-link-rfc2396E" href="mailto:marc.zyngier@arm.com">&lt;marc.zyngier@arm.com&gt;</a>
-CC: <a class="moz-txt-link-abbreviated" href="mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kernel@lists.infradead.org</a>
+So I wonder if Is there some guarantee that this work queue will not =
+fill
+up memory and is really processed faster than being filled? I.e. can the
+queue overflow?
 
----
+To reduce this risk, my original implementation strategy was different. =
+The
+update speed was limited by i2c writing. A new register update batch job
+was only scheduled if the previous one is finished. If i2c was =
+blocked/congested,
+the writing worker thread would come to a halt.
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+All incoming led brightness changes were simply accumulated until a new
+batch job is started, because LEDs would anyways flicker invisibly fast.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 8f0a069..b260f62 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -165,6 +165,22 @@
- 			     &lt;GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0&gt;;
- 	};
- 
-+	pmu_a53 {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = &lt;GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &amp;part0&gt;;
-+		interrupt-affinity = &lt;&amp;cpu_l0&gt;,
-+				     &lt;&amp;cpu_l1&gt;,
-+				     &lt;&amp;cpu_l2&gt;,
-+				     &lt;&amp;cpu_l3&gt;;
-+	};
-</pre>
-      </blockquote>
-      <pre wrap="">
-I'm not keen on having to redundantly describe the affinity in
-interrupt-affinity and the partition's affinity property. Those will
-almost certainly be out-of-sync in some DTs, and it'll be very painful
-to deal with.
+Tests with the new driver have shown that it seems not to run into this =
+situation
+on our system but it might depend on factors we have not yet tested =
+(slow i2c,
+other i2c traffic on the same bus, CPU speed, event types choosen).
 
-I think that for partitioned PPIs the PMU driver should use the affinity
-from the PPI, and not have an interrupt-affinity property. Hopefully
-that's relatively simple to handle.</pre>
-    </blockquote>
-    <br>
-    <small>So you are keen have the simple to handle the pmu.<br>
-      <br>
-      e.g.:<br>
-      +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pmu_a53 {<br>
-      +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; compatible = "arm,cortex-a53-pmu";<br>
-      +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; interrupts = &lt;GIC_PPI 7 IRQ_TYPE_LEVEL_LOW
-      &amp;part0&gt;;<br>
-      +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; };<br>
-      +<br>
-      +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pmu_a72 {<br>
-      +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; compatible = "arm,cortex-a72-pmu";<br>
-      +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; interrupts = &lt;GIC_PPI 7 IRQ_TYPE_LEVEL_LOW
-      &amp;part1&gt;;<br>
-      +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; };<br>
-      <br>
-      Right?<br>
-      &nbsp;<br>
-      ---<br>
-      <br>
-      BTW: <br>
-      Do I need continue to send it for upstream or you guys will change
-      it for all platform?</small><br>
-    <br>
-    Thanks<br>
-    <br>
-    -<br>
-    Caesar<br>
-    <blockquote cite="mid:20160701102612.GB22953@leverpostej"
-      type="cite">
-      <pre wrap="">
+So I am a little in doubt about this risk. But I may have simply missed
+the reason why the standard approach works and can never overflow.
 
-Thanks,
-Mark.
-
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+
-+	pmu_a72 {
-+		compatible = "arm,cortex-a72-pmu";
-+		interrupts = &lt;GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &amp;part1&gt;;
-+		interrupt-affinity = &lt;&amp;cpu_b0&gt;,
-+				     &lt;&amp;cpu_b1&gt;;
-+	};
-+
- 	xin24m: xin24m {
- 		compatible = "fixed-clock";
- 		clock-frequency = &lt;24000000&gt;;
-@@ -296,6 +312,16 @@
- 			msi-controller;
- 			reg = &lt;0x0 0xfee20000 0x0 0x20000&gt;;
- 		};
-+
-+		ppi-partitions {
-+			part0: interrupt-partition-0 {
-+				affinity = &lt;&amp;cpu_l0 &amp;cpu_l1 &amp;cpu_l2 &amp;cpu_l3&gt;;
-+			};
-+
-+			part1: interrupt-partition-1 {
-+				affinity = &lt;&amp;cpu_b0 &amp;cpu_b1&gt;;
-+			};
-+		};
- 	};
- 
- 	i2c1: i2c@ff110000 {
--- 
-1.9.1
-
-</pre>
-      </blockquote>
-      <pre wrap="">
-_______________________________________________
-Linux-rockchip mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:Linux-rockchip@lists.infradead.org">Linux-rockchip@lists.infradead.org</a>
-<a class="moz-txt-link-freetext" href="http://lists.infradead.org/mailman/listinfo/linux-rockchip">http://lists.infradead.org/mailman/listinfo/linux-rockchip</a>
-</pre>
-    </blockquote>
-    <br>
-    <br>
-    <pre class="moz-signature" cols="72">-- 
-caesar wang | software engineer | <a class="moz-txt-link-abbreviated" href="mailto:wxt@rock-chip.com">wxt@rock-chip.com</a> </pre>
-  </body>
-</html>
-
---------------010406060203030404010602--
+BR,
+Nikolaus
