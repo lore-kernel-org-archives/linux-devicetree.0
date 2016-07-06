@@ -1,109 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: document how to order GPIO controllers
-Date: Wed, 6 Jul 2016 11:34:37 +0200
-Message-ID: <CACRpkdbH+KRXbxFdfyAE44fBNctK4cWV+KRLwQBTzSGLvLMEDg@mail.gmail.com>
-References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20160705140546.GA10601@rob-hp-laptop> <20160705180447.GP16643@pengutronix.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [Question] Memory attribute reserved by Device Tree?
+Date: Wed, 6 Jul 2016 10:34:58 +0100
+Message-ID: <20160706093457.GA14657@leverpostej>
+References: <CAK7LNATGoP-Wn-wiK_CgD_v=rQXyt937qRvr8LkUQ06jHB7FAA@mail.gmail.com>
+ <577504D7.7080106@arm.com>
+ <20160630122554.GC20363@leverpostej>
+ <CAK7LNAQJNYVFjZyMH=kU+VJLfUCr2EwKc51HB4knZ=XM7s+MQg@mail.gmail.com>
+ <CAKv+Gu_iF31mBbg1pMawq+7fPDo4iXdGWJT_nWV4Oy+AqDpFOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160705180447.GP16643@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_iF31mBbg1pMawq+7fPDo4iXdGWJT_nWV4Oy+AqDpFOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 5, 2016 at 8:04 PM, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> [Rob]:
+On Wed, Jul 06, 2016 at 07:34:58AM +0200, Ard Biesheuvel wrote:
+> On 6 July 2016 at 06:10, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> > My motivation is to try my own implementation of PSCI for my ARMv7 SoC.
+> >
+> > I put my PSCI firmware somewhere in the DRAM region and
+> > protected it with /memreserve/, but I was not sure what kind of memory attribute
+> > is used for the area.
+> 
+> As Mark implies, /memreserve/ entries are not suitable for this, and
+> you should create an entry under /reserved-memory instead (please
+> check the bindings under Documentation/ for details).
 
->> Like SPI and I2C, I'm against further abuse of aliases for this purp=
-ose
->> [1].
+I'd strongly recommend that the memory in question was carved out of the
+memory node, rather than using a reserved-memory node. The OS has
+absolutely no reason to know about this memory in the first place.
 
-So what about the usecase for serial ports, where we use this
-to make sure the console come out where we want it? Is that
-also considered abuse or legitimate use? Note: I'm not trying to be
-snarky, I'm trying to understand what is the right and wrong use
-of alias. I'm confused about it right now :(
+This is more robust as other agents will similarly not poke the memory.
 
->> Why is deterministic numbering needed?
+> This not only allows you to add a no-map attribute to prevent the
+> kernel from mapping it (which allows you to map it any way you like),
+> it also guarantees that the reservation is honoured even when booting
+> via UEFI, as /memreserve/s are ignored in this case.
 
-This is the big question, we all agree on that.
+You'll still need to teach your UEFI implementation to reserve the
+region (and to not give it cacheable attributes), to enable this, so
+similarly I'd recommend that it is completely removed from the memory
+map -- no agent other than the PSCI implementation has any reason to map
+this memory.
 
-> in my case (with a pre 4.8 kernel) it's to control GPIO48 with
-> /sys/class/gpio/gpio48.
-
-That is understandable. However as many people have pointed
-out, if this is inherently broken since the introduction of
-off-chip devices and even more by deferred probing. For some
-odd silicon state making one GPIO's clock or something randomly
-defer the probe, this would happen to become unpredictable
-also on SoC-embedded GPIO chips. It's just that we don't see
-it very much because it is deterministic in practice.
-
-We need to face it: relying on fixed GPIO numbering is just a
-big fragile mess that we're trying to duct-tape.
-
-> But also when using the gpio chardev device
-> (that will hit 4.8-rc1 AFAIK) there is one device file per gpio chip.
-
-Yeah and the argument is that the numbering also of the chip
-instance should be made more deterministic, so gpiochip0,
-gpiochip1 ... gpiochipN are intuitive to a human user.
-
-> root@hostname:/sys/bus/gpio/devices ls -l
-> lrwxrwxrwx    1 root     root             0 Jul  5 20:52 gpiochip0 ->=
- ../../../devices/platform/soc/53f00000.aips/53f9c000.gpio/gpiochip0
-> lrwxrwxrwx    1 root     root             0 Jul  5 20:52 gpiochip1 ->=
- ../../../devices/platform/soc/53f00000.aips/53fa4000.gpio/gpiochip1
-> lrwxrwxrwx    1 root     root             0 Jul  5 20:52 gpiochip2 ->=
- ../../../devices/platform/soc/53f00000.aips/53fcc000.gpio/gpiochip2
-> lrwxrwxrwx    1 root     root             0 Jul  5 20:52 gpiochip3 ->=
- ../../../devices/platform/soc/53f00000.aips/53fd0000.gpio/gpiochip3
->
-> That is we have:
->
->         Hardware name | software gpiochip
->             GPIO4     |      gpiochip0
->             GPIO3     |      gpiochip1
->             GPIO1     |      gpiochip2
->             GPIO2     |      gpiochip3
->
-> I bet that's the probe order because when sorted by address (and so
-> by order in the device tree) we have exactly this ordering. (Compare
-> with $(grep gpio@ arch/arm/boot/dts/imx25.dtsi).)
-
-That is super-unintuitive for a human user, I agree 100%.
-
-> For a new interface this is OK, still I predict users will complain i=
-f
-> the numbers used don't match naturally the hardware names. And IMHO t=
-hey
-> are right.
-
-I agree, and I think that if aliases can alleviate the situation we sho=
-uld
-allow them and encourage them. They are the best duct-tape we can
-find for the DT systems.
-
-Unfortunately it is not my call, because DT bindings and alias use
-is not under my jurisdiction.
-
-I *THINK* the view of the device core maintainers is that udev
-and sysfs hierarchies should be used to uniquely identify a certain
-device, and that relying on device numbering is too fragile.
-
-The network and disks people faced this problem before us, and
-their solution was things like using sysfs/udev to make sure
-the device get presented the right way to userspace and
-handled the way it should.
-
-Yours,
-Linus Walleij
+Thanks,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
