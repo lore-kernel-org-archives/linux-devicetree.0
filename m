@@ -1,103 +1,71 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 2/3] pinctrl: Add STM32F746 MCU support
-Date: Wed, 6 Jul 2016 09:49:53 +0200
-Message-ID: <577CB821.7000206@st.com>
-References: <1467726017-20041-1-git-send-email-alexandre.torgue@st.com>
- <1467726017-20041-3-git-send-email-alexandre.torgue@st.com>
- <20160705140218.GD26134@windriver.com>
+From: Alexander Stein <alexander.stein@systec-electronic.com>
+Subject: Re: [PATCH] gpio: document how to order GPIO controllers
+Date: Wed, 06 Jul 2016 09:54:03 +0200
+Message-ID: <7356797.MVQep4sf2D@ws-stein>
+References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de> <20160705140546.GA10601@rob-hp-laptop> <20160705180447.GP16643@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160705140218.GD26134@windriver.com>
+In-Reply-To: <20160705180447.GP16643@pengutronix.de>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, kernel@pengutronix.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+On Tuesday 05 July 2016 20:04:47, Uwe Kleine-K=F6nig wrote:
+> That is we have:
+>=20
+> 	Hardware name | software gpiochip
+> 	    GPIO4     |      gpiochip0
+> 	    GPIO3     |      gpiochip1
+> 	    GPIO1     |      gpiochip2
+> 	    GPIO2     |	     gpiochip3
+>=20
+> I bet that's the probe order because when sorted by address (and so
+> by order in the device tree) we have exactly this ordering. (Compare
+> with $(grep gpio@ arch/arm/boot/dts/imx25.dtsi).)
 
-On 07/05/2016 04:02 PM, Paul Gortmaker wrote:
-> [[PATCH 2/3] pinctrl: Add STM32F746 MCU support] On 05/07/2016 (Tue 15:40) Alexandre TORGUE wrote:
->
->> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->>
->> This patch which adds STM32F746 pinctrl and GPIO support, relies on the
->> generic STM32 pinctrl driver.
->>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
->>
->> diff --git a/drivers/pinctrl/stm32/Kconfig b/drivers/pinctrl/stm32/Kconfig
->> index 0f28841..4c40dae 100644
->> --- a/drivers/pinctrl/stm32/Kconfig
->> +++ b/drivers/pinctrl/stm32/Kconfig
->> @@ -13,4 +13,10 @@ config PINCTRL_STM32F429
->>   	default MACH_STM32F429
->>   	select PINCTRL_STM32
->>
->> +config PINCTRL_STM32F746
->> +	bool "STMicroelectronics STM32F746 pin control" if COMPILE_TEST && !MACH_STM32F746
->          ^^^^
->
->> +	depends on OF
->> +	default MACH_STM32F746
->> +	select PINCTRL_STM32
->> +
->> +	),
->> +};
->> +
->
-> [...]
->
->> +static const struct of_device_id stm32f746_pctrl_match[] = {
->> +	{
->> +		.compatible = "st,stm32f746-pinctrl",
->> +		.data = &stm32f746_match_data,
->> +	},
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, stm32f746_pctrl_match);
->    ^^^^^^^^^^^^^^^^^^^^
->
->> +
->> +static struct platform_driver stm32f746_pinctrl_driver = {
->> +	.probe = stm32_pctl_probe,
->> +	.driver = {
->> +		.name = "stm32f746-pinctrl",
->> +		.of_match_table = stm32f746_pctrl_match,
->> +	},
->> +};
->> +
->> +static int __init stm32f746_pinctrl_init(void)
->> +{
->> +	return platform_driver_register(&stm32f746_pinctrl_driver);
->> +}
->> +
->> +module_init(stm32f746_pinctrl_init);
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_DESCRIPTION("STM32F746 Pinctrl Driver");
->> +MODULE_AUTHOR("Maxime Coquelin <mcoquelin.stm32@gmail.com>");
->
-> ...and here as well.  Please don't use modular support functions and
-> infrastructure for code that is only built-in.  Either make sure it can
-> be modular and use a tristate Kconfig, or delete all the MODULE_<tags>
-> and use device_initcall() to register the driver.
+This is rather straight forward and rather simple for controller intern=
+al GPIO=20
+controllers but when using GPIO expanders both on SPI and I2C thing wil=
+l get=20
+much more volatile especially on SMP systems. What would be the correct=
+=20
+"order" here? Unless they are cascaded they are independent and there i=
+s no=20
+such thing as an order. Probe order _is_ unpredictable so they will var=
+y on=20
+different boots. Having 4 internal GPIO controllers which creates 4 gpi=
+ochips=20
+with more or less fixed names is rather a special case. Dunno if they m=
+ight=20
+change on a SMP system. Can a driver probe be called multiple times=20
+simultaneously? Well, when drivers are used as modules I think things a=
+re even=20
+more unpredictable.
 
-Thanks for remark. I will send a v2 removing modular stuff.
+> For a new interface this is OK, still I predict users will complain i=
+f
+> the numbers used don't match naturally the hardware names. And IMHO t=
+hey
+> are right.
 
-Regards
+Given the fact that hardware names and gpiochip number relation is not =
+fixed=20
+IMHO the simplest way to identify them is using the DT label. You need =
+them=20
+anyway to identify them in DT itself at other places why not using this=
+ on=20
+Linux userspace too? So gpiochip[0-9]* should still be created but usin=
+g udev=20
+you can create appropriate symlinks with more recognizable names.
 
-Alex
+Best regards,
+Alexander
 
->
-> Thanks,
-> Paul.
-> --
->
->> --
->> 1.9.1
->>
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
