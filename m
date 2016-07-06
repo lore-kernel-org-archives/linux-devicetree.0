@@ -1,38 +1,37 @@
-From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: [PATCH 0/3] Re:[PATCH 2/3] ARM: dts: move regulator settings from common to specifics
-Date: Thu,  7 Jul 2016 01:52:41 +0800
-Message-ID: <1467827564-28007-1-git-send-email-ayaka@soulik.info>
+From: Randy Li <ayaka@soulik.info>
+Subject: [PATCH 1/3] ARM: dts: add label leds for rk3288-firefly.dtsi
+Date: Thu,  7 Jul 2016 01:52:42 +0800
+Message-ID: <1467827564-28007-2-git-send-email-ayaka@soulik.info>
 References: <3015470.z4L7UQJKa9@phil>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3015470.z4L7UQJKa9@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+ <1467827564-28007-1-git-send-email-ayaka@soulik.info>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467827564-28007-1-git-send-email-ayaka@soulik.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, heiko@sntech.de, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-I am very sorry very sorry, the last time I sent are still wrong.
-I forget to reset the author. Please drop the below ones,
-and have a review on this time.
+The connected leds are different in firefly release version
+and firefly reload.
+Adding this label making it is possible to add more leds.
 
-I am sorry to waste your time.
+Signed-off-by: Randy Li <ayaka@soulik.info>
+---
+ arch/arm/boot/dts/rk3288-firefly.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Randy Li (3):
-  ARM: dts: add label leds for rk3288-firefly.dtsi
-  ARM: dts: move regulator settings from common to specifics
-  ARM: dts: add rk3288-firefly-reload
-
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/rk3288-firefly-beta.dts   |  30 ++++++++
- arch/arm/boot/dts/rk3288-firefly-reload.dts | 109 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/rk3288-firefly.dts        |  30 ++++++++
- arch/arm/boot/dts/rk3288-firefly.dtsi       |  16 ++--
- 5 files changed, 178 insertions(+), 8 deletions(-)
- create mode 100644 arch/arm/boot/dts/rk3288-firefly-reload.dts
-
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+index d6cf9ad..1d7f03c 100644
+--- a/arch/arm/boot/dts/rk3288-firefly.dtsi
++++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+@@ -99,7 +99,7 @@
+ 		};
+ 	};
+ 
+-	leds {
++	leds: leds {
+ 		compatible = "gpio-leds";
+ 
+ 		work {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
