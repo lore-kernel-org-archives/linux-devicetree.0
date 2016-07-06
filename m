@@ -1,83 +1,78 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 2/2] arm64: dts: rockchip: support the pmu node for rk3399
-Date: Wed,  6 Jul 2016 16:05:57 +0800
-Message-ID: <1467792357-9749-3-git-send-email-wxt@rock-chips.com>
-References: <1467792357-9749-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467792357-9749-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Wed, 6 Jul 2016 10:08:55 +0200
+Message-ID: <CAF7Mx6qcwtwYQhrkNk8o+D6UQBLEQkL-ti7aMQyLVuRo+JMUfw@mail.gmail.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+ <8717879.O1RMZcQt4V@wuerfel> <577AAC95.7040800@broadcom.com> <26659199.PqqRaoPEho@wuerfel>
+Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRYNGWEWYDBBGPZ6K5QKGQELCWVFEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <26659199.PqqRaoPEho@wuerfel>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add to enable the ARM Performance Monitor Units for rk3399.
-ARM cores often have a PMU for counting cpu and cache events like cache
-misses and hits.
+On Tue, Jul 5, 2016 at 3:43 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday, July 4, 2016 8:36:05 PM CEST Arend van Spriel wrote:
+>> On 04-07-16 16:54, Arnd Bergmann wrote:
+>> > On Monday, July 4, 2016 11:08:38 AM CEST Arend Van Spriel wrote:
+>> >
+>> > In drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c I already see
+>> > over a dozen different chips being supported, bcm4329 is only one of
+>> > them. In particular, there seem to be some that have various modules:
+>> >
+>> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x0000001F, 43241B0),
+>> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0x00000020, 43241B4),
+>> >         BRCMF_FW_NVRAM_ENTRY(BRCM_CC_43241_CHIP_ID, 0xFFFFFFC0, 43241B5),
+>> >
+>> > So if you have a bcm43241, that compatible string probably should
+>> > include both brcm,bcm43241-b4-fmac and brcm,bcm43241-fmac, possibly also
+>> > brcm,bcm4329-fmac, to show that it is a superset of the programming
+>> > interface of that one.
+>>
+>> Hi Arnd,
+>>
+>> I have to disagree here. The compatible string "brcm,bcm4329-fmac" is
+>> chosen as the bcm4329 chip was the first supported and we never added
+>> others as there is no other programming required. For all supported
+>> devices the same device tree properties apply and are handled the same.
+>> As such there is no need to come up with a new compatible string.
+>
+> Generally speaking, the way that the compatible strings work is that you
+> add a new one whenever you get a new piece of hardware, and you can leave
+> the first one as a fallback so you don't have to change the driver.
+>
+> Adding the new string for the actual device is important though,
+> since you might only discover later that they are not 100% compatible
+> and that you in fact need to know the difference.
+>
+> For discoverable buses like sdio or usb, it may actually be better
+> to not identify the device through the compatible property at all,
+> and instead use a string that is generated from the actual identifier
+> as the primary key, as e.g. documented in
+> Documentation/devicetree/bindings/usb/usb-device.txt
 
-Also, as the Marc posted the patches [0] to support Partitioning per-cpu
-interrupts. Let's add this patch to match it on rk3399 SoCs.
+Well, that is my point. We do not need to identify the device here. We
+can obtain that info, ie. chip id and revision, from the device itself
+as our wifi chips have a discoverable AXI backplane. What is missing
+is that we have no way to tell what board/module this device is
+integrated on, which makes it impossible to select the correct nvram
+file. The model property can fill that gap just nicely.
 
-[0]:
-https://lkml.org/lkml/2016/4/11/182
-https://patchwork.kernel.org/patch/9209369/
+Regards,
+Arend
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-
----
-
-Changes in v2:
-- AS Mark comments on https://patchwork.kernel.org/patch/9209369/
-  remove the interrupt-affinity property, we need depend on Marc' perf
-  code on https://patchwork.kernel.org/patch/9209369/.
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 8f0a069..4bcd02b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -165,6 +165,16 @@
- 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
- 	};
- 
-+	pmu_a53 {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part0>;
-+	};
-+
-+	pmu_a72 {
-+		compatible = "arm,cortex-a72-pmu";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &part1>;
-+	};
-+
- 	xin24m: xin24m {
- 		compatible = "fixed-clock";
- 		clock-frequency = <24000000>;
-@@ -296,6 +306,16 @@
- 			msi-controller;
- 			reg = <0x0 0xfee20000 0x0 0x20000>;
- 		};
-+
-+		ppi-partitions {
-+			part0: interrupt-partition-0 {
-+				affinity = <&cpu_l0 &cpu_l1 &cpu_l2 &cpu_l3>;
-+			};
-+
-+			part1: interrupt-partition-1 {
-+				affinity = <&cpu_b0 &cpu_b1>;
-+			};
-+		};
- 	};
- 
- 	i2c1: i2c@ff110000 {
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The mmc binding is less clear about that, and we may want to correct
+> that. In fact, the example in
+> Documentation/devicetree/bindings/mmc/mmc.txt even lists an invalid
+> compatible string, so that is even worse.
+>
+>         Arnd
