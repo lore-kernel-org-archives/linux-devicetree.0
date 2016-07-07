@@ -1,54 +1,72 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm, nvram_file_name
- dt property
-Date: Thu, 07 Jul 2016 11:24:53 +0200
-Message-ID: <5859938.CkoVuKNmJq@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <3996482.D5xdKXDiGl@wuerfel> <27f6d3d3-4bcc-8572-4c7b-b44966ad72f4@broadcom.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 0/6] power: add power sequence library
+Date: Thu, 7 Jul 2016 17:14:46 +0800
+Message-ID: <1467882892-27589-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBNF67C5QKGQE6SKZJPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <27f6d3d3-4bcc-8572-4c7b-b44966ad72f4-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org
+Cc: k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 7, 2016 11:16:59 AM CEST Arend Van Spriel wrote:
-> On 7-7-2016 10:46, Arnd Bergmann wrote:
-> > On Wednesday, July 6, 2016 9:19:41 PM CEST Arend Van Spriel wrote:
-> >> On 6-7-2016 15:42, Arnd Bergmann wrote:
-> >>> On Wednesday, July 6, 2016 10:08:55 AM CEST Arend Van Spriel wrote:
-> >>>> On Tue, Jul 5, 2016 at 3:43 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > I'm a bit confused by the interdependencies now. You say that there are
-> > board ID/rev values stored in OTP. What exactly prevents us from just
-> > using those to generate a file name to look up the nvram file on disk
-> > for the remaining values?
-> > 
-> > Do we require the firmware to be running before we can read the OTP,
-> > or are there cases where the board ID in OTP is wrong or missing?
-> 
-> Well, both. Primarily we need firmware running to get the info. If board
-> ID is missing in OTP the value from nvram file is used. If board ID in
-> OTP is wrong we are screwed 
+Hi all,
 
-Ok.
+This is a follow-up for my last power sequence framework patch set [1].
+According to Rob Herring and Ulf Hansson's comments[2], I use a generic
+power sequence library for parsing the power sequence elements on DT,
+and implement generic power sequence on library. The host driver
+can allocate power sequence instance, and calls pwrseq APIs accordingly.
 
-> > If we can't rely on OTP for one of those reasons and instead add two
-> > properties for boardtype/boardrev, I don't think that requires a
-> > change of the compatible string, we would just document those two
-> > as optional properties.
-> 
-> Right. I suppose the bindings update and driver update should preferably
-> be in the same kernel release although bindings are supposedly OS agnostic.
+In future, if there are special power sequence requirements, the special
+power sequence library can be created.
 
-It's a one-way dependency, we shouldn't add the kernel code handling
-the property without having agreed on and updated the binding first.
+This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+two hot-plug devices to simulate this use case, the related binding
+change is updated at patch[1/6], The udoo board changes were tested
+using my last power sequence patch set.[3]
 
-	Arnd
+Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+need to power on itself before it can be found by ULPI bus.
+
+[1] http://www.spinics.net/lists/linux-usb/msg142755.html
+[2] http://www.spinics.net/lists/linux-usb/msg143106.html
+[3] http://www.spinics.net/lists/linux-usb/msg142815.html
+
+Peter Chen (6):
+  binding-doc: power: pwrseq-generic: add binding doc for generic power
+    sequence library
+  power: add power sequence library
+  binding-doc: usb: usb-device: add optional properties for power
+    sequence
+  usb: core: add power sequence handling for USB devices
+  usb: chipidea: host: let the hcd know's parent device node
+  ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
+
+ .../bindings/power/pwrseq/pwrseq-generic.txt       |  56 +++++++++
+ .../devicetree/bindings/usb/usb-device.txt         |  10 ++
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  28 +++--
+ drivers/power/Kconfig                              |   1 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/pwrseq/Kconfig                       |  20 +++
+ drivers/power/pwrseq/Makefile                      |   2 +
+ drivers/power/pwrseq/core.c                        |  79 ++++++++++++
+ drivers/power/pwrseq/pwrseq_generic.c              | 134 +++++++++++++++++++++
+ drivers/usb/chipidea/host.c                        |  18 ++-
+ drivers/usb/core/Makefile                          |   1 +
+ drivers/usb/core/hub.c                             |  12 +-
+ drivers/usb/core/hub.h                             |  12 ++
+ drivers/usb/core/pwrseq.c                          | 102 ++++++++++++++++
+ include/linux/power/pwrseq.h                       |  55 +++++++++
+ 15 files changed, 511 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+ create mode 100644 drivers/power/pwrseq/Kconfig
+ create mode 100644 drivers/power/pwrseq/Makefile
+ create mode 100644 drivers/power/pwrseq/core.c
+ create mode 100644 drivers/power/pwrseq/pwrseq_generic.c
+ create mode 100644 drivers/usb/core/pwrseq.c
+ create mode 100644 include/linux/power/pwrseq.h
+
+-- 
+1.9.1
+
