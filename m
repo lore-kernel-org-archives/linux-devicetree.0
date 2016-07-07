@@ -1,50 +1,62 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH 5/6] usb: chipidea: host: let the hcd know's parent device node
-Date: Thu, 07 Jul 2016 15:56:51 -0700
-Message-ID: <146793221122.31330.7571458363004882365@sboyd-linaro>
-References: <1467882892-27589-1-git-send-email-peter.chen@nxp.com>
- <1467882892-27589-6-git-send-email-peter.chen@nxp.com>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: Re: [PATCH v2 3/5] drivers: net: phy: Add MDIO driver
+Date: Thu, 7 Jul 2016 15:57:36 -0700
+Message-ID: <CAKh23Fk2gBwoMxPN5dsV7=y=1zSYfoXRQhq5anTbG61gYf8z7Q@mail.gmail.com>
+References: <1464739840-21971-1-git-send-email-isubramanian@apm.com>
+ <1464739840-21971-4-git-send-email-isubramanian@apm.com> <20160601011148.GD31982@lunn.ch>
+ <CAKh23FmaQy8J=f-eyfBeNndz0oT5R0icvwJ3vrw1DMJnj9uv_g@mail.gmail.com>
+ <20160705134950.GC5230@lunn.ch> <CAKh23FnvgWRMo=M35Mj4=a_KeUpvOoHa8stU=bSk9Y3VSRtyzQ@mail.gmail.com>
+ <20160707140302.GP19800@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1467882892-27589-6-git-send-email-peter.chen@nxp.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org
-Cc: k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, linux-pm@vger.kernel.org, Peter Chen <peter.chen@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160707140302.GP19800@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Chen (2016-07-07 02:14:51)
-> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-> index 053bac9..55120ef 100644
-> --- a/drivers/usb/chipidea/host.c
-> +++ b/drivers/usb/chipidea/host.c
-> @@ -109,15 +109,25 @@ static int host_start(struct ci_hdrc *ci)
->         struct ehci_hcd *ehci;
->         struct ehci_ci_priv *priv;
->         int ret;
-> +       struct device *dev = ci->dev;
->  
-> -       if (usb_disabled())
-> +       if (usb_disabled() || !dev)
+Hi Andrew,
 
-Does that ever happen?
+On Thu, Jul 7, 2016 at 7:03 AM, Andrew Lunn <andrew@lunn.ch> wrote:
+>> Wed, Jul 06, 2016 at 04:44:44PM -0700, Iyappan Subramanian wrote:
+>> Hi Andrew,
+>>
+>> On Tue, Jul 5, 2016 at 6:49 AM, Andrew Lunn <andrew@lunn.ch> wrote:
+>> > On Mon, Jun 06, 2016 at 10:12:35AM -0700, Iyappan Subramanian wrote:
+>> >> Hi Andrew,
+>> >>
+>> >> Thanks for the review.
+>> >>
+>> >> On Tue, May 31, 2016 at 6:11 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+>> >> > On Tue, May 31, 2016 at 05:10:38PM -0700, Iyappan Subramanian wrote:
+>> >> >> +static int xgene_mdio_reset(struct xgene_mdio_pdata *pdata)
+>> >> >> +{
+>> >> >> +     int ret;
+>> >> >> +
+>> >> >> +     if (pdata->mdio_id == XGENE_MDIO_RGMII) {
+>> >> >> +             if (pdata->dev->of_node) {
+>> >> >> +                     clk_prepare_enable(pdata->clk);
+>> >> >> +                     clk_disable_unprepare(pdata->clk);
+>> >> >> +                     clk_prepare_enable(pdata->clk);
+>> >> >
+>> >> > Hi Iyappan
+>> >> >
+>> >> > Is that a workaround for a hardware problem? If so, i would suggest
+>> >> > adding a comment, to stop people submitting a patch simplifying it.
+>> >>
+>> >> Hardware expects this clock sequence.  I'll add comment as you suggested.
+>> >
+>> > What exactly does the hardware require? Is this a workaround for a bug
+>> > in the clock generator? Or a workaround for a bug in the MDIO device?
+>>
+>> Hardware requires a clock pulse.  There is no bug.
+>
+> And how are you guaranteeing a pulse? You enable/disable/enable
+> without any sleeps, so it could all happen within a single clock
+> cycle?
 
->                 return -ENODEV;
->  
-> -       hcd = usb_create_hcd(&ci_ehci_hc_driver, ci->dev, dev_name(ci->dev));
-> +       /*
-> +        * USB Core will try to get child node under roothub,
-> +        * but chipidea core has no of_node, and the child node
-> +        * for controller is located at glue layer's node which
-> +        * is chipidea core's parent.
-> +        */
-> +       if (dev->parent && dev->parent->of_node)
-> +               dev->of_node = dev->parent->of_node;
+I'll add delay to generate the pulse and resubmit the patch.
 
-Why not do this during the ci device probe? How is host special for
-having an of_node for the child device.
-
-Doing that would also make my ULPI bus DT discovery patch simpler
-because we wouldn't have to search the parent of the parent for a DT
-node to find the ULPI node that's a child of the ci glue device.
+>
+>         Andrew
