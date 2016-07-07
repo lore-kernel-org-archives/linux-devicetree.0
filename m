@@ -1,69 +1,39 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH v2] arm64: dts: berlin4ct: Add L2 cache topology
-Date: Thu, 7 Jul 2016 14:01:15 +0800
-Message-ID: <1467871275-4000-1-git-send-email-jszhang@marvell.com>
+From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 01/10] Documentation: dt-bindings: mailbox: tegra: Add
+ binding for HSP mailbox
+Date: Thu, 7 Jul 2016 14:24:13 +0800
+Message-ID: <577DF58D.4020901@nvidia.com>
+References: <20160705090431.5852-1-josephl@nvidia.com>
+ <20160705090431.5852-2-josephl@nvidia.com> <577D39B6.701@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <577D39B6.701-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the L2 cache topology for berlin4ct which has 1MB L2
-cache.
+On 07/07/2016 01:02 AM, Stephen Warren wrote:
+> On 07/05/2016 03:04 AM, Joseph Lo wrote:
+>> Add DT binding for the Hardware Synchronization Primitives (HSP). The
+>> HSP is designed for the processors to share resources and communicate
+>> together. It provides a set of hardware synchronization primitives for
+>> interprocessor communication. So the interprocessor communication (IPC)
+>> protocols can use hardware synchronization primitive, when operating
+>> between two processors not in an SMP relationship.
+>
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
----
-Since V1:
- - use lower case for node label
- - remove useless "0" in node label and node name
+Thanks,
+-Joseph
 
- arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-index 099ad93..deea38b 100644
---- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-+++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-@@ -68,6 +68,7 @@
- 			device_type = "cpu";
- 			reg = <0x0>;
- 			enable-method = "psci";
-+			next-level-cache = <&l2>;
- 			cpu-idle-states = <&CPU_SLEEP_0>;
- 		};
- 
-@@ -76,6 +77,7 @@
- 			device_type = "cpu";
- 			reg = <0x1>;
- 			enable-method = "psci";
-+			next-level-cache = <&l2>;
- 			cpu-idle-states = <&CPU_SLEEP_0>;
- 		};
- 
-@@ -84,6 +86,7 @@
- 			device_type = "cpu";
- 			reg = <0x2>;
- 			enable-method = "psci";
-+			next-level-cache = <&l2>;
- 			cpu-idle-states = <&CPU_SLEEP_0>;
- 		};
- 
-@@ -92,9 +95,14 @@
- 			device_type = "cpu";
- 			reg = <0x3>;
- 			enable-method = "psci";
-+			next-level-cache = <&l2>;
- 			cpu-idle-states = <&CPU_SLEEP_0>;
- 		};
- 
-+		l2: l2-cache {
-+			compatible = "cache";
-+		};
-+
- 		idle-states {
- 			entry-method = "psci";
- 			CPU_SLEEP_0: cpu-sleep-0 {
--- 
-2.8.1
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
