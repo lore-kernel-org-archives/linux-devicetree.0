@@ -1,60 +1,79 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 08/93] arm64: dts: rockchip: Add rktimer device node for rk3399
-Date: Thu,  7 Jul 2016 10:00:41 +0200
-Message-ID: <1467878526-1238-8-git-send-email-daniel.lezcano@linaro.org>
-References: <577E0BED.3020608@linaro.org>
- <1467878526-1238-1-git-send-email-daniel.lezcano@linaro.org>
+From: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Developing Linux Kernel Driver for media Codec Driver
+Date: Thu, 7 Jul 2016 16:12:21 +0800
+Message-ID: <CAJeuY79hD7Zzp7j1D=AfW+MRqmmFdOxJUW_eyQE+L9MjtQHGow@mail.gmail.com>
+Reply-To: hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467878526-1238-1-git-send-email-daniel.lezcano@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tglx@linutronix.de, daniel.lezcano@linaro.org
-Cc: Huang Tao <huangtao@rock-chips.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDKITZOARQMBBZU57C5QKGQECBV6FFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: wens-jdAy2FN1RRM@public.gmane.org
+Cc: kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Huang Tao <huangtao@rock-chips.com>
+hi all
 
-Add a 'rktimer' node in the device treee for the ARM64 rk3399 SoC.
+i am developing a linux kernel driver for a 4-CH AHD2.0 RX and 9-CH
+Audio Codec which is named nvp6124 .
 
-Signed-off-by: Huang Tao <huangtao@rock-chips.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Tested-by: Jianqun Xu <jay.xu@rock-chips.com>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+wedsite : http://www.nextchip.com/ch/products/product.asp?hGubun=AHD.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 46f325a..f0c0d76 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -492,6 +492,14 @@
- 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
-+	rktimer: rktimer@ff850000 {
-+		compatible = "rockchip,rk3399-timer";
-+		reg = <0x0 0xff850000 0x0 0x1000>;
-+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru PCLK_TIMER0>, <&cru SCLK_TIMER00>;
-+		clock-names = "pclk", "timer";
-+	};
-+
- 	spdif: spdif@ff870000 {
- 		compatible = "rockchip,rk3399-spdif";
- 		reg = <0x0 0xff870000 0x0 0x1000>;
--- 
-1.9.1
+below are few of its characteristics:
+
+video codec:
+it digitizes and decodes ntsc/pal/comet/AHD1.0/AHD2.O video signal into digital
+video components which represents 8bit bt656/1120 4:2:2 byte interleave fotmat.
+
+audio codec:
+output pcm digital signal converted from analog audio input signals and analog
+audio signals converted from pcm digital audio.
+
+control interface:
+control and configure through i2c interface.
+
+video interface:
+4ch analog video input and output 2ch digital signal, each channal has
+8 data ports and a clk clock port
+which can connect to the embedded processer.
+
+
+audio interface(two i2s interface):
+audio data convert to PCM data,and outputed via i2s interface .
+PCM data can also input via i2s interface, the input audio data is
+outputed via internal DAC.
+
+
+i want to submit the driver, but i have some problem on the below points:
+
+1.must i submit the driver through device tree binding? Does the
+kernel tree accept the driver without device tree binding?
+just see the video interface ,i know i2c port can binding below the
+i2c node, but, how can i bind other data port and clock signal port
+with device trees?
+
+2.how to use device tree to bind device and how does the kernel uses
+it to match device? can i obtain some document about this?
+
+3.i creat the driver for Cubieboard one(allwinner a10 processer) and
+Banana PI BPI-M1(allwinner a20 processer) ,if i submit patch
+,which  kernel version shoudle i use ? must i use the lastest kernel
+(download in www.kernel.org isn't the sdk of the board)in that boards
+?
+
+4.does someone know which lastest kernel version does Cubieboard one
+and Banana PI BPI-M1 supports?
+
+5.the maintainer doesn't has the device, how do they know the driver
+is work well on my board? just buit without error or warning ?
+
+
+
+Best regards :)
+
+Hao Zhang
