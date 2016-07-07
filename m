@@ -1,42 +1,44 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] dmaengine driver for Marvell XOR v2 engine
-Date: Thu, 7 Jul 2016 22:42:48 +0200
-Message-ID: <20160707224248.71511ecd@free-electrons.com>
-References: <1466080116-26777-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160628143850.GD14945@localhost>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH 2/4] soc: fsl: add GUTS driver for QorIQ platforms
+Date: Thu, 07 Jul 2016 15:42:54 -0500
+Message-ID: <1467924174.32358.69.camel@buserror.net>
+References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com>
+	 <1465609853.22191.151.camel@buserror.net>
+	 <HE1PR04MB0889646206BFAD68046F3473F83B0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+	 <4094106.qfxJu3tJbO@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160628143850.GD14945@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <4094106.qfxJu3tJbO@wuerfel>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Yangbo Lu <yangbo.lu@nxp.com>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Xiaob
 List-Id: devicetree@vger.kernel.org
 
-Hello Vinod,
+On Thu, 2016-07-07 at 10:30 +0200, Arnd Bergmann wrote:
+> On Thursday, July 7, 2016 2:35:33 AM CEST Yangbo Lu wrote:
+> >=20
+> > Hi Arnd,
+> >=20
+> > Could you reply when you see the email?
+> > If your method doesn=E2=80=99t resolve the problem, we still want t=
+o use our old
+> > patchset.
+> >=20
+> > This guts driver had been discussed about one year and blocked many
+> > workaround upstream.
+> > So please help to review and comment soon.
+> >=20
+> I don't really see how more discussion is going to help us here. I th=
+ink
+> I've made it pretty clear that I don't want to see another platform
+> specific way to read an SoC revision and I've even sent a proof-of-co=
+ncept
+> patch to show how the interface can work, now it's up to you to fit t=
+he
+> guts hardware into that and send a new patch series.
 
-On Tue, 28 Jun 2016 20:08:50 +0530, Vinod Koul wrote:
-> On Thu, Jun 16, 2016 at 02:28:32PM +0200, Thomas Petazzoni wrote:
-> > Hello,
-> > 
-> > Here is the fourth version of the mv_xor_v2 driver, which allows to
-> > use the XOR engines available on the Marvell Armada 7K/8K ARM64 SoCs.  
-> 
-> Looks okay. But need ack on two ARM patches...
+In which relevant maintainership capacity are you NACKing it?
 
-Now that the two ARM patches have been taken by the ARM mvebu
-maintainer, do you think you could merge the DT binding and driver
-patches (PATCH 1/2 and PATCH 2/2 of this series) ?
-
-Thanks a lot!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Scott
