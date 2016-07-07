@@ -1,222 +1,44 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 4/6] clk: mvebu Add the time base generator clocks for
- Armada 3700
-Date: Fri,  8 Jul 2016 00:37:49 +0200
-Message-ID: <1467931071-31004-5-git-send-email-gregory.clement@free-electrons.com>
-References: <1467931071-31004-1-git-send-email-gregory.clement@free-electrons.com>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: Re: [PATCH 6/7] dt-bindings: net: bgmac: add bindings documentation
+ for bgmac
+Date: Thu, 7 Jul 2016 18:42:22 -0400
+Message-ID: <CAC3K-4qnnbG2c8rQWhUx+ZTOvLKrKL+iZ3=WVZ1tuXCixHV3gw@mail.gmail.com>
+References: <1467327554-22074-1-git-send-email-jon.mason@broadcom.com>
+ <3327458.KVBg7y9SeP@wuerfel> <CAC3K-4qZ9tpEAuDBjL-bkjn5F2Xfr4CAmVGc=DpgVh8MrqEDtQ@mail.gmail.com>
+ <13160704.EGDxD1URaF@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467931071-31004-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Hua Jing <jinghua@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Terry Zhou <bjzhou@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <13160704.EGDxD1URaF@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Ray Jui <ray.jui@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, netdev@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-These clocks are children of the xtal clock and each one can be selected
-as a source for the peripheral clocks.
+On Wed, Jul 6, 2016 at 3:34 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday, July 5, 2016 7:18:45 PM CEST Jon Mason wrote:
+>> >
+>> > Ok, then I'd suggest making the compatible string here
+>> >
+>> >         compatible = "brcm,nsp-amac", "brcm,amac";
+>>
+>> It is called GMAC in the NS and NSP documentation, but AMAC is fine
+>> with me (as it is called this in the NS2 documentation).  I'll make
+>> the necessary change and repush.
+>
+> Ok, then we can use
+>
+>         compatible = "brcm,nsp-gmac", "brcm,amac";
+>
+> to be consistent with that documentation and have the generic name as the
+> fallback.
 
-According to the datasheet it should be possible to modify their rate,
-but currently it is not supported.
+After looking at the docs again, I see the blocks being referred to as
+"AXI MAC" (while the registers are being called GMAC).  To keep it
+consistent, I'll just change everything to be "amac".
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/clk/mvebu/Makefile          |   1 +
- drivers/clk/mvebu/armada-37xx-tbg.c | 165 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 166 insertions(+)
- create mode 100644 drivers/clk/mvebu/armada-37xx-tbg.c
+Thanks,
+Jon
 
-diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
-index 4257a36d0219..72e3512a9d4a 100644
---- a/drivers/clk/mvebu/Makefile
-+++ b/drivers/clk/mvebu/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_ARMADA_375_CLK)	+= armada-375.o
- obj-$(CONFIG_ARMADA_38X_CLK)	+= armada-38x.o
- obj-$(CONFIG_ARMADA_39X_CLK)	+= armada-39x.o
- obj-$(CONFIG_ARMADA_37XX_CLK)	+= armada-37xx-xtal.o
-+obj-$(CONFIG_ARMADA_37XX_CLK)	+= armada-37xx-tbg.o
- obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o
- obj-$(CONFIG_ARMADA_AP806_SYSCON) += ap806-system-controller.o
- obj-$(CONFIG_ARMADA_CP110_SYSCON) += cp110-system-controller.o
-diff --git a/drivers/clk/mvebu/armada-37xx-tbg.c b/drivers/clk/mvebu/armada-37xx-tbg.c
-new file mode 100644
-index 000000000000..f4af12593afa
---- /dev/null
-+++ b/drivers/clk/mvebu/armada-37xx-tbg.c
-@@ -0,0 +1,165 @@
-+/*
-+ * Marvell Armada 37xx SoC Time Base Generator clocks
-+ *
-+ * Copyright (C) 2016 Marvell
-+ *
-+ * Gregory CLEMENT <gregory.clement@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#define NUM_TBG	    4
-+
-+#define TBG_CTRL0		0x4
-+#define TBG_CTRL1		0x8
-+#define TBG_CTRL7		0x20
-+#define TBG_CTRL8		0x30
-+
-+#define TBG_DIV_MASK		0x1FF
-+
-+#define TBG_A_REFDIV		0
-+#define TBG_B_REFDIV		16
-+
-+#define TBG_A_FBDIV		2
-+#define TBG_B_FBDIV		18
-+
-+#define TBG_A_VCODIV_SE		0
-+#define TBG_B_VCODIV_SE		16
-+
-+#define TBG_A_VCODIV_DIFF	1
-+#define TBG_B_VCODIV_DIFF	17
-+
-+struct tbg_def {
-+	char *name;
-+	u32 refdiv_offset;
-+	u32 fbdiv_offset;
-+	u32 vcodiv_reg;
-+	u32 vcodiv_offset;
-+};
-+
-+const struct tbg_def tbg[NUM_TBG] = {
-+	{"TBG-A-P", TBG_A_REFDIV, TBG_A_FBDIV, TBG_CTRL8, TBG_A_VCODIV_DIFF},
-+	{"TBG-B-P", TBG_B_REFDIV, TBG_B_FBDIV, TBG_CTRL8, TBG_B_VCODIV_DIFF},
-+	{"TBG-A-S", TBG_A_REFDIV, TBG_A_FBDIV, TBG_CTRL1, TBG_A_VCODIV_SE},
-+	{"TBG-B-S", TBG_B_REFDIV, TBG_B_FBDIV, TBG_CTRL1, TBG_B_VCODIV_SE},
-+};
-+
-+unsigned int tbg_get_mult(void __iomem *reg, const struct tbg_def *ptbg)
-+{
-+	u32 val;
-+
-+	val = readl(reg + TBG_CTRL0);
-+
-+	return ((val >> ptbg->fbdiv_offset) & TBG_DIV_MASK) << 2;
-+}
-+
-+unsigned int tbg_get_div(void __iomem *reg, const struct tbg_def *ptbg)
-+{
-+	u32 val;
-+	unsigned int div;
-+
-+	val = readl(reg + TBG_CTRL7);
-+
-+	div = (val >> ptbg->refdiv_offset) & TBG_DIV_MASK;
-+	if (div == 0)
-+		div = 1;
-+	val = readl(reg + ptbg->vcodiv_reg);
-+
-+	div *= 1 << ((val >>  ptbg->vcodiv_offset) & TBG_DIV_MASK);
-+
-+	return div;
-+}
-+
-+
-+static int armada_3700_tbg_clock_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct clk_hw_onecell_data *hw_tbg_data;
-+	struct device *dev = &pdev->dev;
-+	const char *parent_name;
-+	struct resource *res;
-+	struct clk *parent;
-+	void __iomem *reg;
-+	int i, ret;
-+
-+	hw_tbg_data = devm_kzalloc(&pdev->dev, sizeof(*hw_tbg_data)
-+				   + sizeof(*hw_tbg_data->hws) * NUM_TBG,
-+				   GFP_KERNEL);
-+	if (!hw_tbg_data)
-+		return -ENOMEM;
-+	hw_tbg_data->num = NUM_TBG;
-+	platform_set_drvdata(pdev, hw_tbg_data);
-+
-+	parent = devm_clk_get(dev, 0);
-+	if (IS_ERR(parent)) {
-+		dev_err(dev, "Could get the clock parent\n");
-+		return -EINVAL;
-+	}
-+	parent_name = __clk_get_name(parent);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	reg = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(reg))
-+		return PTR_ERR(reg);
-+
-+	for (i = 0; i < NUM_TBG; i++) {
-+		const char *name;
-+		unsigned int mult, div;
-+
-+		name = tbg[i].name;
-+		mult = tbg_get_mult(reg, &tbg[i]);
-+		div = tbg_get_div(reg, &tbg[i]);
-+		hw_tbg_data->hws[i] = clk_hw_register_fixed_factor(NULL, name,
-+						parent_name, 0, mult, div);
-+		if (IS_ERR(hw_tbg_data->hws[i]))
-+			dev_err(dev, "Can't register TBG clock %s\n", name);
-+	}
-+
-+	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, hw_tbg_data);
-+
-+	return ret;
-+}
-+
-+static int armada_3700_tbg_clock_remove(struct platform_device *pdev)
-+{
-+	int i;
-+	struct clk_hw_onecell_data *hw_tbg_data = platform_get_drvdata(pdev);
-+
-+	of_clk_del_provider(pdev->dev.of_node);
-+	for (i = 0; i < hw_tbg_data->num; i++)
-+		clk_hw_unregister_fixed_factor(hw_tbg_data->hws[i]);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id armada_3700_tbg_clock_of_match[] = {
-+	{ .compatible = "marvell,armada-3700-tbg-clock", },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, armada_3700_tbg_clock_of_match);
-+
-+static struct platform_driver armada_3700_tbg_clock_driver = {
-+	.probe = armada_3700_tbg_clock_probe,
-+	.remove = armada_3700_tbg_clock_remove,
-+	.driver		= {
-+		.name	= "marvell-armada-3700-tbg-clock",
-+		.of_match_table = armada_3700_tbg_clock_of_match,
-+	},
-+};
-+
-+module_platform_driver(armada_3700_tbg_clock_driver);
-+
-+MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@free-electrons.com>");
-+MODULE_DESCRIPTION("Marvell Armada 37xx SoC Time Base Generator driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.5.0
+>
+>         Arnd
