@@ -1,56 +1,73 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] gpio: rcar: add R8A7792 support
-Date: Thu, 07 Jul 2016 17:11:45 +0300
-Message-ID: <3799541.jpRKLHA1Qm@wasted.cogentembedded.com>
-References: <1501145.5ro9yfox2Z@wasted.cogentembedded.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2 3/5] drivers: net: phy: Add MDIO driver
+Date: Thu, 7 Jul 2016 15:14:22 +0100
+Message-ID: <20160707141422.GQ1041@n2100.armlinux.org.uk>
+References: <1464739840-21971-1-git-send-email-isubramanian@apm.com>
+ <1464739840-21971-4-git-send-email-isubramanian@apm.com>
+ <20160601011148.GD31982@lunn.ch>
+ <CAKh23FmaQy8J=f-eyfBeNndz0oT5R0icvwJ3vrw1DMJnj9uv_g@mail.gmail.com>
+ <20160705134950.GC5230@lunn.ch>
+ <CAKh23FnvgWRMo=M35Mj4=a_KeUpvOoHa8stU=bSk9Y3VSRtyzQ@mail.gmail.com>
+ <20160707140302.GP19800@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1501145.5ro9yfox2Z@wasted.cogentembedded.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, gnurou@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160707140302.GP19800@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Iyappan Subramanian <isubramanian@apm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, patches <patches@apm.com>, Matthias Brugger <matthias.bgg@gmail.com>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Renesas  R8A7792 SoC is a member of the R-Car gen2 family, add support for
-its GPIO controllers.
+On Thu, Jul 07, 2016 at 04:03:02PM +0200, Andrew Lunn wrote:
+> > Wed, Jul 06, 2016 at 04:44:44PM -0700, Iyappan Subramanian wrote:
+> > Hi Andrew,
+> > 
+> > On Tue, Jul 5, 2016 at 6:49 AM, Andrew Lunn <andrew@lunn.ch> wrote:
+> > > On Mon, Jun 06, 2016 at 10:12:35AM -0700, Iyappan Subramanian wrote:
+> > >> Hi Andrew,
+> > >>
+> > >> Thanks for the review.
+> > >>
+> > >> On Tue, May 31, 2016 at 6:11 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+> > >> > On Tue, May 31, 2016 at 05:10:38PM -0700, Iyappan Subramanian wrote:
+> > >> >> +static int xgene_mdio_reset(struct xgene_mdio_pdata *pdata)
+> > >> >> +{
+> > >> >> +     int ret;
+> > >> >> +
+> > >> >> +     if (pdata->mdio_id == XGENE_MDIO_RGMII) {
+> > >> >> +             if (pdata->dev->of_node) {
+> > >> >> +                     clk_prepare_enable(pdata->clk);
+> > >> >> +                     clk_disable_unprepare(pdata->clk);
+> > >> >> +                     clk_prepare_enable(pdata->clk);
+> > >> >
+> > >> > Hi Iyappan
+> > >> >
+> > >> > Is that a workaround for a hardware problem? If so, i would suggest
+> > >> > adding a comment, to stop people submitting a patch simplifying it.
+> > >>
+> > >> Hardware expects this clock sequence.  I'll add comment as you suggested.
+> > >
+> > > What exactly does the hardware require? Is this a workaround for a bug
+> > > in the clock generator? Or a workaround for a bug in the MDIO device?
+> > 
+> > Hardware requires a clock pulse.  There is no bug.
+> 
+> And how are you guaranteeing a pulse? You enable/disable/enable
+> without any sleeps, so it could all happen within a single clock
+> cycle?
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+It's still really not good, because it does this:
 
----
-The patch is against the 'devel' branch of Linus Walleij's 'linux-gpio.git'
-repo.  It replaces previously posted patch "gpio: rcar: document R8A7792
-support."
+- prepare + enable
+- disable + unprepare
+- prepare + enable
 
- Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt |    1 +
- drivers/gpio/gpio-rcar.c                                     |    3 +++
- 2 files changed, 4 insertions(+)
+So every time the reset function is called, the prepare and enable
+counts against the clock get incremented.  That's a bug.  This needs
+a better solution.
 
-Index: linux-gpio/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-===================================================================
---- linux-gpio.orig/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+++ linux-gpio/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-@@ -7,6 +7,7 @@ Required Properties:
-     - "renesas,gpio-r8a7779": for R8A7779 (R-Car H1) compatible GPIO controller.
-     - "renesas,gpio-r8a7790": for R8A7790 (R-Car H2) compatible GPIO controller.
-     - "renesas,gpio-r8a7791": for R8A7791 (R-Car M2-W) compatible GPIO controller.
-+    - "renesas,gpio-r8a7792": for R8A7792 (R-Car V2H) compatible GPIO controller.
-     - "renesas,gpio-r8a7793": for R8A7793 (R-Car M2-N) compatible GPIO controller.
-     - "renesas,gpio-r8a7794": for R8A7794 (R-Car E2) compatible GPIO controller.
-     - "renesas,gpio-r8a7795": for R8A7795 (R-Car H3) compatible GPIO controller.
-Index: linux-gpio/drivers/gpio/gpio-rcar.c
-===================================================================
---- linux-gpio.orig/drivers/gpio/gpio-rcar.c
-+++ linux-gpio/drivers/gpio/gpio-rcar.c
-@@ -335,6 +335,9 @@ static const struct of_device_id gpio_rc
- 		.compatible = "renesas,gpio-r8a7791",
- 		.data = &gpio_rcar_info_gen2,
- 	}, {
-+		.compatible = "renesas,gpio-r8a7792",
-+		.data = &gpio_rcar_info_gen2,
-+	}, {
- 		.compatible = "renesas,gpio-r8a7793",
- 		.data = &gpio_rcar_info_gen2,
- 	}, {
-
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
