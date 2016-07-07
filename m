@@ -1,80 +1,123 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Thu, 07 Jul 2016 10:46:28 +0200
-Message-ID: <3996482.D5xdKXDiGl@wuerfel>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <3354017.XSBSmHHtrQ@wuerfel> <bb1beb8d-652d-aa97-e24b-e3e27397dd2e@broadcom.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH] drivers: led: is31fl319x: 6/9-channel light effect led
+ driver
+Date: Thu, 07 Jul 2016 10:46:56 +0200
+Message-ID: <577E1700.1050408@samsung.com>
+References: <cover.1461004995.git.hns@goldelico.com>
+ <75127f4bf2bb11343bdff5bfb1129a092e668c61.1461004995.git.hns@goldelico.com>
+ <20160418212504.29d67592.drivshin.allworx@gmail.com>
+ <80A3B3D8-2309-4A41-91F9-4A2EE6DDF975@goldelico.com>
+ <5717EECB.8010401@gmail.com>
+ <AD66BB31-C0EA-4F4D-AD17-F052EC7802CD@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBK5M7C5QKGQEPFWVAQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <bb1beb8d-652d-aa97-e24b-e3e27397dd2e-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <AD66BB31-C0EA-4F4D-AD17-F052EC7802CD@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 6, 2016 9:19:41 PM CEST Arend Van Spriel wrote:
-> On 6-7-2016 15:42, Arnd Bergmann wrote:
-> > On Wednesday, July 6, 2016 10:08:55 AM CEST Arend Van Spriel wrote:
-> >> On Tue, Jul 5, 2016 at 3:43 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > All existing uses of the model property in arch/arm/boot/dts and most of
-> > the ones in arch/powerpc/boot/dts are against the intended usage in
-> > one way or another, but adding different kind of incorrect usage won't
-> > improve that.
-> > 
-> > The only way I can see the model property being used correctly would
-> > be to have it match the first entry in the compatible property, but
-> > that is completely redundant, so we tend to omit it, except for the
-> > root node in which it is required. For the root node however, the
-> > historic practice that has crept in on ARM is to put something completely
-> > different in there, which is a human-readable description of the
-> > machine rather than something we can use as a unique indentifier.
-> > 
-> > I'd just consider the "model" property burned, and not use it for anything
-> > that doesn't already use it, just like we handle "device_type": a few
-> > things require it, nothing else should use it.
-> 
-> If that is the agreed approach in devicetree arena I am fine with it. I
-> have been unaware of this and just looked at the suggestion from Jonas
-> seeing a solution to the problem at hand.
+Hi Nikolaus,
 
-I don't think it has been discussed or decided before as the question
-has not come up, so for now this is my personal view. Maybe one of
-the devicetree maintainers can comment on this.
+On 07/06/2016 12:02 PM, H. Nikolaus Schaller wrote:
+> Hi,
+> finally, I found the time to update the driver according to the many comments
+> received a while ago.
+>
+> Most of them have been worked in, including the regmap idea and
+> brightness_set_blocking().
+>
+> The driver works on our system, so that I will mail [PATCH v2] as a followup.
+>
+> There is only one aspect of the new solution I am not sure if it is
+> really better than our old proposal (see below).
+>
+>
+>> Am 20.04.2016 um 23:04 schrieb Jacek Anaszewski <jacek.anaszewski@gmail.com>:
+>>
+>> On 04/19/2016 07:21 PM, H. Nikolaus Schaller wrote:
+>>>> I believe the LEDS core now handles the workqueues generically for
+>>>> blocking operations, so it's no longer needed in the individual drivers.
+>>>
+>>> We had a lot of trouble with locking and blocking especially if we
+>>> want to indicate CPU or (root) disk activity.
+>>
+>> What kind of troubles you had? Could you share more details?
+>> Does it mean that current LED core design doesn't fit for your
+>> use cases?
+>
+> The system started to flicker the LEDs irregularily and sometimes
+> the whole kernel stalled.
+>
+>>
+>>> So it is implemented in a way that changes can be requested faster
+>>> than the I2C bus can write new values to the chip.
+>>>
+>>> Only after one sequence of I2C writes is done, another work function
+>>> can be scheduled. And each group of writes updates as many LEDs
+>>> in parallel if necessary.
+>>
+>> You can serialize the operations in brightness_set_blocking with
+>> a mutex.
+>
+> Yes, that works fine in our (incomplete) test setup.
+>
+> But I think it assumes that the i2c bus is never congested by other i2c traffic.
+>
+> I have not found code that obviously takes care of the situation if led
+> trigger events (e.g. mmc or cpu triggers) are coming in faster than the
+> i2c (even using regmap) can write out over i2c.
+>
+> If I understand the led core code correctly, it will just do another schedule_work
+> for every single change of led brightness.
 
-> > I agree with your point that the "compatible" property in case of brcmfmac
-> > is really odd because it is not required to identify the hardware when
-> > the SDIO device identification is sufficient, and we just need it to guard
-> > the definition of the other properties. However it seems that now we
-> > actually do need to identify the hardware because we cannot read the
-> > board ID and revision that is supposed to come from nvram but also needed
-> > to read the nvram contents from a file.
-> 
-> The board ID and rev in the nvram may not be used if the device has
-> these stored in OTP. However, the problem is that the device need
-> firmware+nvram loaded into it before we can start the firmware on the
-> device. Now if we were to add boardtype and boardrev properties in the
-> binding to identify the hardware, I suppose a new compatible value would
-> be required.
+Please look at schedule_work documentation in include/linux/workqueue.h:
 
-I'm a bit confused by the interdependencies now. You say that there are
-board ID/rev values stored in OTP. What exactly prevents us from just
-using those to generate a file name to look up the nvram file on disk
-for the remaining values?
+/**
+  * schedule_work - put work task in global workqueue
+  * @work: job to be done
+  *
+  * Returns %false if @work was already on the kernel-global workqueue and
+  * %true otherwise.
+  *
+  * This puts a job in the kernel-global workqueue if it was not already
+  * queued and leaves it in the same position on the kernel-global
+  * workqueue otherwise.
+  */
+static inline bool schedule_work(struct work_struct *work)
+{
+         return queue_work(system_wq, work);
+}
 
-Do we require the firmware to be running before we can read the OTP,
-or are there cases where the board ID in OTP is wrong or missing?
+>
+> So I wonder if Is there some guarantee that this work queue will not fill
+> up memory and is really processed faster than being filled? I.e. can the
+> queue overflow?
+>
+> To reduce this risk, my original implementation strategy was different. The
+> update speed was limited by i2c writing. A new register update batch job
+> was only scheduled if the previous one is finished. If i2c was blocked/congested,
+> the writing worker thread would come to a halt.
+>
+> All incoming led brightness changes were simply accumulated until a new
+> batch job is started, because LEDs would anyways flicker invisibly fast.
+>
+> Tests with the new driver have shown that it seems not to run into this situation
+> on our system but it might depend on factors we have not yet tested (slow i2c,
+> other i2c traffic on the same bus, CPU speed, event types choosen).
+>
+> So I am a little in doubt about this risk. But I may have simply missed
+> the reason why the standard approach works and can never overflow.
+>
+> BR,
+> Nikolaus
+>
+>
+>
 
-If we can't rely on OTP for one of those reasons and instead add two
-properties for boardtype/boardrev, I don't think that requires a
-change of the compatible string, we would just document those two
-as optional properties.
 
-	Arnd
+-- 
+Best regards,
+Jacek Anaszewski
