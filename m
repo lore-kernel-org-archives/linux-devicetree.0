@@ -1,206 +1,78 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: clps711x: Driver refactor" to the spi tree
-Date: Thu, 07 Jul 2016 12:01:47 +0200
-Message-ID: <E1bL67v-0000tk-JL@finisterre>
-References: <20160706145326.2658600-1-arnd@arndb.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160706145326.2658600-1-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.orgArnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: support the usb2phy for rk3399 evb
+Date: Thu, 07 Jul 2016 12:11:41 +0200
+Message-ID: <2150255.RfISFviJKP@phil>
+References: <1467866800-24794-1-git-send-email-wxt@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467866800-24794-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi,
 
-   spi: clps711x: Driver refactor
+Am Donnerstag, 7. Juli 2016, 12:46:40 schrieb Caesar Wang:
+> From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> This patch adds the usb2phy needed dts node information for rk3399.
+> 
+> USB2.0 PHY is comprised of one Host port and one OTG port.
+> Host Port is for USB2.0 host controller; OTG port is for USB2.0 part of
+> USB3.0 OTG controller, and as a part to construct a fully feature TypeC
+> subsystem.
+> 
+> The USB2.0 vbus gpio is board specific, it's no same with all rk3399
+> boards, so move it into evb voard.
+> 
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+>  arch/arm64/boot/dts/rockchip/rk3399-evb.dts |  4 ++++
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi    | 19 +++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 4c84229..21d147f 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -242,6 +242,25 @@
+>  		status = "disabled";
+>  	};
+> 
+> +	usb2phy: usb2phy {
+> +		compatible = "rockchip,rk3399-usb-phy";
+> +		rockchip,grf = <&grf>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		usb2phy0: usb2-phy0 {
+> +			#phy-cells = <0>;
+> +			#clock-cells = <0>;
+> +			reg = <0xe458>;
+> +		};
+> +
+> +		usb2phy1: usb2-phy1 {
+> +			#phy-cells = <0>;
+> +			#clock-cells = <0>;
+> +			reg = <0xe468>;
+> +		};
+> +	};
+> +
 
-has been applied to the spi tree at
+The rk3399 uses the innosilicon usb2 phy and the binding we've come up for 
+it looks a lot different than the above. So I'm not sure where this is 
+coming from, especially as I haven't seen the driver part for the rk3399 at 
+all yet. So far Frank was always working on te rk3366 variant, which seemed 
+to be the most complete.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 6acaadc852f10b9f13b665a5798d4f2783317f80 Mon Sep 17 00:00:00 2001
-From: Alexander Shiyan <shc_work@mail.ru>
-Date: Wed, 6 Jul 2016 16:53:12 +0200
-Subject: [PATCH] spi: clps711x: Driver refactor
-
-This is a complex patch for refactoring CLPS711X SPI driver.
-This change adds devicetree support and removes board support.
-
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-clps711x.c | 69 +++++++++++++++++-----------------------------
- 1 file changed, 26 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/spi/spi-clps711x.c b/drivers/spi/spi-clps711x.c
-index 8c30de0315e7..18193df2eba8 100644
---- a/drivers/spi/spi-clps711x.c
-+++ b/drivers/spi/spi-clps711x.c
-@@ -1,7 +1,7 @@
- /*
-  *  CLPS711X SPI bus driver
-  *
-- *  Copyright (C) 2012-2014 Alexander Shiyan <shc_work@mail.ru>
-+ *  Copyright (C) 2012-2016 Alexander Shiyan <shc_work@mail.ru>
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-@@ -12,7 +12,6 @@
- #include <linux/io.h>
- #include <linux/clk.h>
- #include <linux/gpio.h>
--#include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/platform_device.h>
-@@ -20,9 +19,8 @@
- #include <linux/mfd/syscon.h>
- #include <linux/mfd/syscon/clps711x.h>
- #include <linux/spi/spi.h>
--#include <linux/platform_data/spi-clps711x.h>
- 
--#define DRIVER_NAME	"spi-clps711x"
-+#define DRIVER_NAME		"clps711x-spi"
- 
- #define SYNCIO_FRMLEN(x)	((x) << 8)
- #define SYNCIO_TXFRMEN		(1 << 14)
-@@ -40,6 +38,17 @@ struct spi_clps711x_data {
- 
- static int spi_clps711x_setup(struct spi_device *spi)
- {
-+	if (!spi->controller_state) {
-+		int ret;
-+
-+		ret = devm_gpio_request(&spi->master->dev, spi->cs_gpio,
-+					dev_name(&spi->master->dev));
-+		if (ret)
-+			return ret;
-+
-+		spi->controller_state = spi;
-+	}
-+
- 	/* We are expect that SPI-device is not selected */
- 	gpio_direction_output(spi->cs_gpio, !(spi->mode & SPI_CS_HIGH));
- 
-@@ -104,20 +113,9 @@ static irqreturn_t spi_clps711x_isr(int irq, void *dev_id)
- static int spi_clps711x_probe(struct platform_device *pdev)
- {
- 	struct spi_clps711x_data *hw;
--	struct spi_clps711x_pdata *pdata = dev_get_platdata(&pdev->dev);
- 	struct spi_master *master;
- 	struct resource *res;
--	int i, irq, ret;
--
--	if (!pdata) {
--		dev_err(&pdev->dev, "No platform data supplied\n");
--		return -EINVAL;
--	}
--
--	if (pdata->num_chipselect < 1) {
--		dev_err(&pdev->dev, "At least one CS must be defined\n");
--		return -EINVAL;
--	}
-+	int irq, ret;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
-@@ -127,40 +125,24 @@ static int spi_clps711x_probe(struct platform_device *pdev)
- 	if (!master)
- 		return -ENOMEM;
- 
--	master->cs_gpios = devm_kzalloc(&pdev->dev, sizeof(int) *
--					pdata->num_chipselect, GFP_KERNEL);
--	if (!master->cs_gpios) {
--		ret = -ENOMEM;
--		goto err_out;
--	}
--
--	master->bus_num = pdev->id;
-+	master->bus_num = -1;
- 	master->mode_bits = SPI_CPHA | SPI_CS_HIGH;
- 	master->bits_per_word_mask =  SPI_BPW_RANGE_MASK(1, 8);
--	master->num_chipselect = pdata->num_chipselect;
-+	master->dev.of_node = pdev->dev.of_node;
- 	master->setup = spi_clps711x_setup;
- 	master->prepare_message = spi_clps711x_prepare_message;
- 	master->transfer_one = spi_clps711x_transfer_one;
- 
- 	hw = spi_master_get_devdata(master);
- 
--	for (i = 0; i < master->num_chipselect; i++) {
--		master->cs_gpios[i] = pdata->chipselect[i];
--		ret = devm_gpio_request(&pdev->dev, master->cs_gpios[i],
--					DRIVER_NAME);
--		if (ret) {
--			dev_err(&pdev->dev, "Can't get CS GPIO %i\n", i);
--			goto err_out;
--		}
--	}
--
- 	hw->spi_clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(hw->spi_clk)) {
- 		ret = PTR_ERR(hw->spi_clk);
- 		goto err_out;
- 	}
- 
--	hw->syscon = syscon_regmap_lookup_by_pdevname("syscon.3");
-+	hw->syscon =
-+		syscon_regmap_lookup_by_compatible("cirrus,ep7209-syscon3");
- 	if (IS_ERR(hw->syscon)) {
- 		ret = PTR_ERR(hw->syscon);
- 		goto err_out;
-@@ -185,14 +167,8 @@ static int spi_clps711x_probe(struct platform_device *pdev)
- 		goto err_out;
- 
- 	ret = devm_spi_register_master(&pdev->dev, master);
--	if (!ret) {
--		dev_info(&pdev->dev,
--			 "SPI bus driver initialized. Master clock %u Hz\n",
--			 master->max_speed_hz);
-+	if (!ret)
- 		return 0;
--	}
--
--	dev_err(&pdev->dev, "Failed to register master\n");
- 
- err_out:
- 	spi_master_put(master);
-@@ -200,9 +176,16 @@ err_out:
- 	return ret;
- }
- 
-+static const struct of_device_id clps711x_spi_dt_ids[] = {
-+	{ .compatible = "cirrus,ep7209-spi", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, clps711x_spi_dt_ids);
-+
- static struct platform_driver clps711x_spi_driver = {
- 	.driver	= {
- 		.name	= DRIVER_NAME,
-+		.of_match_table = clps711x_spi_dt_ids,
- 	},
- 	.probe	= spi_clps711x_probe,
- };
--- 
-2.8.1
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
