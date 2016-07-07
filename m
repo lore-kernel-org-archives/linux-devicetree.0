@@ -1,50 +1,93 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC/PATCH] dt: Add of_device_compatible_match()
-Date: Thu, 07 Jul 2016 09:23:47 +0200
-Message-ID: <6164204.UI1kePjIeS@wuerfel>
-References: <1466981246.20278.27.camel@kernel.crashing.org> <1467872962.20157.1.camel@ellerman.id.au>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH -next] ARM: dts: sun8i: Add NFC node to Allwinner A23/A33
+ SoC
+Date: Thu, 7 Jul 2016 09:23:22 +0200
+Message-ID: <20160707072322.GC5907@lukather>
+References: <20160706003352.28194-1-icenowy@aosc.xyz>
+ <20160706202932.GD4247@lukather> <34841467849881@web8m.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467872962.20157.1.camel-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============5628899298908738685=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <34841467849881@web8m.yandex.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wens@csie.org" <wens@csie.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 7, 2016 4:29:22 PM CEST Michael Ellerman wrote:
-> On Mon, 2016-06-27 at 08:47 +1000, Benjamin Herrenschmidt wrote:
-> > This provides an equivalent of of_fdt_match() for non-flat trees.
-> > 
-> > This is more practical than matching an array of of_device_id structs
-> > when converting a bunch of existing users of of_fdt_match().
-> > 
-> > Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> > ---
-> > 
-> > This is a pre-requisite for some work I'm doing to move the platform
-> > identification in arch/powerpc until after we have unflattened the
-> > device-tree. Rewriting all those lists as of_device_id's would be
-> > significantly cumbersome.
-> > 
-> > Note: untested other than it compiles. I want an agreement on the
-> > interface ASAP since the conversion of all the platforms is a burden
-> > I'd like to avoid doing twice.
-> 
-> 
-> Any comments on this?
-> 
-> We need it as a pre-req for a powerpc series, so unless anyone yells I'll merge
-> it via there.
-> 
 
-I like the idea, we already have a number of drivers that would benefit
-from this.
+--===============5628899298908738685==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="z4+8/lEcDcG5Ke9S"
+Content-Disposition: inline
 
-	Arnd
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--z4+8/lEcDcG5Ke9S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 07, 2016 at 08:04:41AM +0800, Icenowy Zheng wrote:
+> with a http://linux-sunxi.org/Aoson_M751s tablet, (SKhynix
+> H27UCG8T2ETR-BC NAND chip).
+>=20
+> I used the patchset at
+> http://lists.infradead.org/pipermail/linux-mtd/2016-June/067848.html
+> to ensure the NAND chip to work properly (otherwise the chip id
+> cannot be correctly identified)
+
+(Please reply in-line and wrap your mails).
+
+Ok. That needs to be in the commit log then.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--z4+8/lEcDcG5Ke9S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXfgNpAAoJEBx+YmzsjxAgqRcQAL2l301mU0hdJMYkwq6yNYKJ
+LMd+Dx4sy+8VpG6H7Qu2LCQeeftXK2rP9GUqC7QfEQQRzaQNr/+KplLpYU0VFOGg
+/5LdcNuVyILTVlB+NFsfYeTDbD7Vf5AiuyWqPDk3vzle1vuVIFY4txL9MvuTQXDl
+L8uygt5WEbvtEqGoS/gTeXXWKFTO9DyKCbOqzJHve89xtVKmj9wAY1egh70dTlmf
+bzFACY27EAZEGnMqklS7ctyCguNZlEjvfY2WTcs+/V/GE6RT489onllu6l7NA8QH
+eJyO7t5K2HmHQ3HLaKTNv4M01a0SrfBqTyYQjXkUuoOkISgHRVa+aqtXBAFsOrC7
+hYKbyWvvTy3PD+MICbnlTDaI5QuuqS8sbBlhs4UJ60RT/V6Y6ALbh3O9Z18MntQt
+ieIdh6xR285Z7NRc8EGGhL+Fe++FboVxb9O86UysuPSMZoc6q32n2GHU5b+u13gO
+rivXvyuIDFcNr15oWG9FUILmS9WUmh7ugvX3uBWUv8fR2njnV3X6AZQvZu0zzVBV
+Hh+qRpkRmN0yc4wvZC2FCRpKapW3Q/Q8J2ROEYgFZs5GyaYiNbuI13rSr0Y5+22P
+dDx+fbAglv3ZlgJ6HetqDJbSBXycnlJ8oswwTBKRokB9EhTrIJ/A+LAAD4xwmk0C
+j3KqLvVGrSGWSyfk5co4
+=edlz
+-----END PGP SIGNATURE-----
+
+--z4+8/lEcDcG5Ke9S--
+
+
+--===============5628899298908738685==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5628899298908738685==--
