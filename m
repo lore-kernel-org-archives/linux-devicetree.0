@@ -1,93 +1,89 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH -next] ARM: dts: sun8i: Add NFC node to Allwinner A23/A33
- SoC
-Date: Thu, 7 Jul 2016 09:23:22 +0200
-Message-ID: <20160707072322.GC5907@lukather>
-References: <20160706003352.28194-1-icenowy@aosc.xyz>
- <20160706202932.GD4247@lukather> <34841467849881@web8m.yandex.ru>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v2] xen/arm: register clocks used by the hypervisor
+Date: Thu, 7 Jul 2016 09:32:34 +0200
+Message-ID: <dad950db-4c02-e5a2-0ce9-682a40cd12d7@de.bosch.com>
+References: <1467282752-14053-1-git-send-email-dirk.behme@de.bosch.com>
+ <146776885213.35356.11565744417822933094@resonance>
+ <577D035C.7090504@arm.com> <146783774807.35356.6362595927321996311@resonance>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5628899298908738685=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <34841467849881@web8m.yandex.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wens@csie.org" <wens@csie.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <146783774807.35356.6362595927321996311@resonance>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Julien Grall <julien.grall@arm.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: xen-devel@lists.xenproject.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Michael,
 
---===============5628899298908738685==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z4+8/lEcDcG5Ke9S"
-Content-Disposition: inline
-
-
---z4+8/lEcDcG5Ke9S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jul 07, 2016 at 08:04:41AM +0800, Icenowy Zheng wrote:
-> with a http://linux-sunxi.org/Aoson_M751s tablet, (SKhynix
-> H27UCG8T2ETR-BC NAND chip).
->=20
-> I used the patchset at
-> http://lists.infradead.org/pipermail/linux-mtd/2016-June/067848.html
-> to ensure the NAND chip to work properly (otherwise the chip id
-> cannot be correctly identified)
-
-(Please reply in-line and wrap your mails).
-
-Ok. That needs to be in the commit log then.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---z4+8/lEcDcG5Ke9S
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXfgNpAAoJEBx+YmzsjxAgqRcQAL2l301mU0hdJMYkwq6yNYKJ
-LMd+Dx4sy+8VpG6H7Qu2LCQeeftXK2rP9GUqC7QfEQQRzaQNr/+KplLpYU0VFOGg
-/5LdcNuVyILTVlB+NFsfYeTDbD7Vf5AiuyWqPDk3vzle1vuVIFY4txL9MvuTQXDl
-L8uygt5WEbvtEqGoS/gTeXXWKFTO9DyKCbOqzJHve89xtVKmj9wAY1egh70dTlmf
-bzFACY27EAZEGnMqklS7ctyCguNZlEjvfY2WTcs+/V/GE6RT489onllu6l7NA8QH
-eJyO7t5K2HmHQ3HLaKTNv4M01a0SrfBqTyYQjXkUuoOkISgHRVa+aqtXBAFsOrC7
-hYKbyWvvTy3PD+MICbnlTDaI5QuuqS8sbBlhs4UJ60RT/V6Y6ALbh3O9Z18MntQt
-ieIdh6xR285Z7NRc8EGGhL+Fe++FboVxb9O86UysuPSMZoc6q32n2GHU5b+u13gO
-rivXvyuIDFcNr15oWG9FUILmS9WUmh7ugvX3uBWUv8fR2njnV3X6AZQvZu0zzVBV
-Hh+qRpkRmN0yc4wvZC2FCRpKapW3Q/Q8J2ROEYgFZs5GyaYiNbuI13rSr0Y5+22P
-dDx+fbAglv3ZlgJ6HetqDJbSBXycnlJ8oswwTBKRokB9EhTrIJ/A+LAAD4xwmk0C
-j3KqLvVGrSGWSyfk5co4
-=edlz
------END PGP SIGNATURE-----
-
---z4+8/lEcDcG5Ke9S--
+On 06.07.2016 22:42, Michael Turquette wrote:
+> Hi Julien,
+>
+> Quoting Julien Grall (2016-07-06 06:10:52)
+>> On 06/07/16 02:34, Michael Turquette wrote:
+>>> Hi!
+>>
+>> Hello Michael,
+>>
+>>> Quoting Dirk Behme (2016-06-30 03:32:32)
+>>>> Some clocks might be used by the Xen hypervisor and not by the Linux
+>>>> kernel. If these are not registered by the Linux kernel, they might be
+>>>> disabled by clk_disable_unused() as the kernel doesn't know that they
+>>>> are used. The clock of the serial console handled by Xen is one
+>>>> example for this. It might be disabled by clk_disable_unused() which
+>>>> stops the whole serial output, even from Xen, then.
+>>>
+>>> This whole thread had me confused until I realized that it all boiled
+>>> down to some nomenclature issues (for me).
+>>>
+>>> This code does not _register_ any clocks. It simply gets them and
+>>> enables them, which is what every other clk consumer in the Linux kernel
+>>> does. More details below.
+>>>
+>>>>
+>>>> Up to now, the workaround for this has been to use the Linux kernel
+>>>> command line parameter 'clk_ignore_unused'. See Xen bug
+>>>>
+>>>> http://bugs.xenproject.org/xen/bug/45
+>>>
+>>> clk_ignore_unused is a band-aid, not a proper medical solution. Setting
+>>> that flag will not turn clocks on for you, nor will it guarantee that
+>>> those clocks are never turned off in the future. It looks like you
+>>> figured this out correctly in the patch below but it is worth repeating.
+>>>
+>>> Also the new CLK_IS_CRITICAL flag might be of interest to you, but that
+>>> flag only exists as a way to enable clocks that must be enabled for the
+>>> system to function (hence, "critical") AND when those same clocks do not
+>>> have an accompanying Linux driver to consume them and enable them.
+>>
+>> I don't think we want the kernel to enable the clock for the hypervisor.
+>> We want to tell the kernel "don't touch at all to this clock, it does
+>> not belong to you".
+>
+> But the patch *does* touch the clock from the kernel. It enables the
+> clock via a call clk_prepare_enable. I'm utterly confused.
 
 
---===============5628899298908738685==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Maybe we need some advice here :)
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============5628899298908738685==--
+I've used clk_prepare_enable() 'just' to get the enable count incremented
+
+http://lxr.free-electrons.com/source/drivers/clk/clk.c#L751
+
+Because it's my understanding that enable_count is needed to prevent 
+clk_disable_unused() from disabling the clock.
+
+
+If there is an other / better / correct way to achieve that, please let 
+us know.
+
+
+I've had a look to use the CLK_IGNORE_UNUSED flag, too. But couldn't 
+find a function exported by the clock framework to set that flag (?)
+
+
+Best regards
+
+Dirk
