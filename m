@@ -1,82 +1,55 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH V2 05/10] firmware: tegra: add BPMP support
-Date: Thu, 7 Jul 2016 11:24:39 +0900
-Message-ID: <CAAVeFuKd_w6jJbAXPNOX+M7aAgS9doR6c5h1QxHbRySRgzviHQ@mail.gmail.com>
-References: <20160705090431.5852-1-josephl@nvidia.com>
- <20160705090431.5852-6-josephl@nvidia.com>
- <CAAVeFuKvp4d=RoPZGGLmhqXs1oHZPrEOxTJd_b6b7-rHq_mqqg@mail.gmail.com>
- <577D363A.4010003@nvidia.com>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 13/14] clk: sunxi-ng: Add H3 clocks
+Date: Wed, 06 Jul 2016 19:33:08 -0700
+Message-ID: <146785878822.73491.15164592643568518865@resonance>
+References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
+ <20160629190535.11855-14-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <577D363A.4010003@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Longnecker <mlongnecker@nvidia.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jassi Brar <jassisinghbrar@gmail.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160629190535.11855-14-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 7, 2016 at 1:47 AM, Matt Longnecker <mlongnecker@nvidia.com> wrote:
-> Alex,
->
->
-> On 07/06/2016 04:39 AM, Alexandre Courbot wrote:
->>>
->>> diff --git a/include/soc/tegra/bpmp_abi.h b/include/soc/tegra/bpmp_abi.h
->>> >new file mode 100644
->>> >index 000000000000..0aaef5960e29
->>> >--- /dev/null
->>> >+++ b/include/soc/tegra/bpmp_abi.h
->>> >@@ -0,0 +1,1601 @@
->>> >+/*
->>> >+ * Copyright (c) 2014-2016, NVIDIA CORPORATION.  All rights reserved.
->>> >+ *
->>> >+ * This program is free software; you can redistribute it and/or modify
->>> > it
->>> >+ * under the terms and conditions of the GNU General Public License,
->>> >+ * version 2, as published by the Free Software Foundation.
->>> >+ *
->>> >+ * This program is distributed in the hope it will be useful, but
->>> > WITHOUT
->>> >+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
->>> > or
->>> >+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
->>> > License for
->>> >+ * more details.
->>> >+ *
->>> >+ * You should have received a copy of the GNU General Public License
->>> >+ * along with this program.  If not, see<http://www.gnu.org/licenses/>.
->>> >+ */
->>> >+
->>> >+#ifndef_ABI_BPMP_ABI_H_
->>> >+#define_ABI_BPMP_ABI_H_
->>> >+
->>>
->> ...
->>
->> There is a lot of stuff in this file, most of which we are not using
->> now - this is ok, but unless this is a file synced from an outside
->> resource maybe we should trim the structures we don't need and add
->> them as we make use of them? It helps dividing the work in bite-size
->> chunks.
->>
->> Regarding the documentation format of this file, is this valid kernel
->> documentation since the adoption of Sphynx? Or is it whatever the
->> origin is using?
->
-> bpmp_abi.h is meant to be delivered as is from an NVIDIA internal repo to a
-> variety of OS'es. Each of them has a different documentation standard and
-> coding standard.
->
-> I'd like to avoid trimming parts from the file (or even worse modifying
-> parts of the file) so that future deliveries are trivial.
+Hi Maxime,
 
-Makes sense, thanks to you and Stephen for the clarification.
+Quoting Maxime Ripard (2016-06-29 12:05:34)
+> +static void __init sun8i_h3_ccu_setup(struct device_node *node)
+> +{
+> +       void __iomem *reg;
+> +       u32 val;
+> +
+> +       reg = of_io_request_and_map(node, 0, of_node_full_name(node));
+> +       if (IS_ERR(reg)) {
+> +               pr_err("%s: Could not map the clock registers\n",
+> +                      of_node_full_name(node));
+> +               return;
+> +       }
+> +
+> +       /* Force the PLL-Audio-1x divider to 4 */
+> +       val = readl(reg + SUN8I_H3_PLL_AUDIO_REG);
+> +       val &= ~GENMASK(4, 0);
+> +       writel(val | 3, reg + SUN8I_H3_PLL_AUDIO_REG);
+> +
+> +       sunxi_ccu_probe(node, reg, &sun8i_h3_ccu_desc);
+> +}
+> +CLK_OF_DECLARE(sun8i_h3_ccu, "allwinner,sun8i-h3-ccu",
+> +              sun8i_h3_ccu_setup);
+
+There are several examples of drivers that split the clocks between
+"early" CLK_OF_DECLARE clocks and "late" module clocks. If you really
+need early clocks (which is less likely on a 64-bit platform with
+architected timers), it would be nice to pair that with a proper
+platform_driver (using builtin_platform_driver most likely).
+
+Otherwise that is my only nitpick with this series. Looks good!
+
+Best regards,
+Mike
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
