@@ -1,82 +1,91 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v2] clkdev: add devm_of_clk_get()
-Date: Wed, 06 Jul 2016 17:43:11 -0700
-Message-ID: <146785219147.73491.2827268663638530377@resonance>
-References: <87wpl2yyuw.wl%kuninori.morimoto.gx@renesas.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] PCI: Rockchip: Add Rockchip PCIe controller support
+Date: Wed, 6 Jul 2016 17:44:06 -0700
+Message-ID: <20160707004404.GA57063@google.com>
+References: <1467789398-13501-1-git-send-email-shawn.lin@rock-chips.com>
+ <1467789398-13501-2-git-send-email-shawn.lin@rock-chips.com>
+ <20160707001254.GA100467@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <87wpl2yyuw.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Linux-Kernel <linux-kernel@vger.kernel.org>, Linux-ARM <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160707001254.GA100467-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kuninori Morimoto (2016-07-03 18:36:50)
-> +struct clk *devm_of_clk_get(struct device *dev,
-> +                           struct device_node *np, int index)
+Hi again,
 
-Any reason not to use devm_clk_get? Why do we need this helper?
+On Wed, Jul 06, 2016 at 05:12:55PM -0700, Brian Norris wrote:
+> On Wed, Jul 06, 2016 at 03:16:38PM +0800, Shawn Lin wrote:
+> > +static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
+> > +{
+> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> > +	struct rockchip_pcie_port *port;
+> > +	u32 reg;
+> > +	u32 hwirq;
+> > +	u32 virq;
+> > +
+> > +	chained_irq_enter(chip, desc);
+> > +	port = irq_desc_get_handler_data(desc);
+> > +
+> > +	reg = pcie_read(port, PCIE_CLIENT_INT_STATUS);
+> > +	reg = (reg & ROCKCHIP_PCIE_RPIFR1_INTR_MASK) >>
+> > +	       ROCKCHIP_PCIE_RPIFR1_INTR_SHIFT;
+> > +
+> > +	while (reg) {
+> > +		hwirq = ffs(reg);
 
-Thanks,
-Mike
+As I noted on the DT binding patch, the use of 'ffs' here is causing you
+to make the interrupt controller binding implicitly 1-based, where it
+would seemingly make more sense to be 0-based I think.
 
-> +{
-> +       struct clk **ptr, *clk;
-> +
-> +       ptr = devres_alloc(devm_of_clk_release, sizeof(*ptr), GFP_KERNEL);
-> +       if (!ptr)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       clk = of_clk_get(np, index);
-> +       if (!IS_ERR(clk)) {
-> +               *ptr = clk;
-> +               devres_add(dev, ptr);
-> +       } else {
-> +               devres_free(ptr);
-> +       }
-> +
-> +       return clk;
-> +}
-> +EXPORT_SYMBOL(devm_of_clk_get);
-> +
->  static struct clk *__of_clk_get_by_name(struct device_node *np,
->                                         const char *dev_id,
->                                         const char *name)
-> diff --git a/include/linux/clk.h b/include/linux/clk.h
-> index a89ba4e..33cd540 100644
-> --- a/include/linux/clk.h
-> +++ b/include/linux/clk.h
-> @@ -502,6 +502,8 @@ struct of_phandle_args;
->  
->  #if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
->  struct clk *of_clk_get(struct device_node *np, int index);
-> +struct clk *devm_of_clk_get(struct device *dev,
-> +                           struct device_node *np, int index);
->  struct clk *of_clk_get_by_name(struct device_node *np, const char *name);
->  struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec);
->  #else
-> @@ -509,6 +511,11 @@ static inline struct clk *of_clk_get(struct device_node *np, int index)
->  {
->         return ERR_PTR(-ENOENT);
->  }
-> +static inline struct clk *devm_of_clk_get(struct device *dev,
-> +                           struct device_node *np, int index)
-> +{
-> +       return ERR_PTR(-ENOENT);
-> +}
->  static inline struct clk *of_clk_get_by_name(struct device_node *np,
->                                              const char *name)
->  {
-> -- 
-> 1.9.1
+> > +		reg &= ~BIT(hwirq);
 > 
+> Per Marc's suggestion, you have created an infinite loop :)
+> 
+> This should be:
+> 
+> 	hwirq = ffs(reg);
+> 	reg &= ~BIT(hwirq - 1);
+
+So, this should actually be:
+
+		hwirq = ffs(reg) - 1;
+		reg &= ~BIT(hwirq);
+
+> ...which brings me to this question: are you ever testing non-MSI (i.e.,
+> "legacy") interrupts on this driver? There seems to be quite a bit of
+> discussion about the structuring of the interrupt-map and
+> interrupt-controller handling, but it appears this mostly/only gets
+> actually *used* for the legacy interrupt case, and on my tests, legacy
+> interrupts aren't really working, at least not with the new binding
+> examples that you proposed. But then, you didn't send a rk3399.dtsi
+> update, so perhaps I constructed my DTS wrong...
+> 
+> If you haven't been testing legacy interrupts, I'd recommend booting
+> with "pci=nomsi" and see what happens.
+> 
+> > +
+> > +		virq = irq_find_mapping(port->irq_domain, hwirq);
+> > +		if (virq)
+> > +			generic_handle_irq(virq);
+> > +		else
+> > +			dev_err(port->dev, "unexpected IRQ, INT%d\n", hwirq);
+> > +	}
+> > +
+> > +	chained_irq_exit(chip, desc);
+> > +}
+> > +
+
+Brian
