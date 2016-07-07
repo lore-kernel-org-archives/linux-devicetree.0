@@ -1,318 +1,208 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v4 03/11] drivers: net: xgene: Fix module unload crash - change sw sequence
-Date: Wed,  6 Jul 2016 17:35:04 -0700
-Message-ID: <1467851712-24780-4-git-send-email-isubramanian@apm.com>
-References: <1467851712-24780-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1467851712-24780-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, matthias.bgg@gmail.com, andrew@lunn.ch, Iyappan Subramanian <isubramanian@apm.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v6 1/2] Documentation: bindings: add dt doc for Rockchip
+ PCIe controller
+Date: Wed, 6 Jul 2016 17:39:12 -0700
+Message-ID: <20160707003912.GB100467@google.com>
+References: <1467789398-13501-1-git-send-email-shawn.lin@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1467789398-13501-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When the driver is configured as kernel module and when it gets
-unloaded and reloaded, kernel crash was observed.  This patch
-addresses the software cleanup by doing the following,
+Hi Shawn,
 
-- Moved register_netdev call after hardware is ready
-- Since ndev is not ready, added set_irq_name to set irq name
-- Since ndev is not ready, changed mdio_bus->parent to pdev->dev
-- Replaced netif_start(stop)_queue by netif_tx_start(stop)_queues
-- Removed napi_del call since it's called by free_netdev
-- Added dev_close call, within remove
-- Added shutdown callback
-- Changed to use dmam_ APIs
+On Wed, Jul 06, 2016 at 03:16:37PM +0800, Shawn Lin wrote:
+> This patch adds a binding that describes the Rockchip PCIe controller
+> found on Rockchip SoCs PCIe interface.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+> Changes in v6:
+> - add ack tag from Rob
+> 
+> Changes in v5:
+> - fix wrong example reported by Marc
+> - add seperate section to describe the interrupt controller child
+>   node
+> 
+> Changes in v4:
+> - fix example of adding intermediate interrupt controller for pcie
+>   legacy interrrupt
+> 
+> Changes in v3:
+> - fix example dts code suggested by Rob and Marc
+> - remove driver's behaviour of regulator
+> 
+> Changes in v2:
+> - fix lots clk/reset stuff suggested by Heiko
+> - remove msi-parent and add msi-map suggested by Marc
+> - drop phy related stuff
+> - some others minor fixes
+> 
+>  .../devicetree/bindings/pci/rockchip-pcie.txt      | 104 +++++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> new file mode 100644
+> index 0000000..7616ecc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+> @@ -0,0 +1,104 @@
+> +* Rockchip AXI PCIe Root Port Bridge DT description
+> +
+> +Required properties:
+> +- #address-cells: Address representation for root ports, set to <3>
+> +- #size-cells: Size representation for root ports, set to <2>
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +		interrupt source. The value must be 1.
+> +- compatible: Should contain "rockchip,rk3399-pcie"
+> +- reg: Two register ranges as listed in the reg-names property
+> +- reg-names: Must include the following names
+> +	- "axi-base"
+> +	- "apb-base"
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +		See ../clocks/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries:
+> +	- "aclk"
+> +	- "aclk-perf"
+> +	- "hclk"
+> +	- "pm"
+> +- msi-map: Maps a Requester ID to an MSI controller and associated.
+> +		See ./pci-msi.txt
+> +- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
+> +- phy-names:  MUST be "pcie-phy".
+> +- interrupts: Three interrupt entries must be specified.
+> +- interrupt-names: Must include the following names
+> +	- "sys"
+> +	- "legacy"
+> +	- "client"
+> +- resets: Must contain five entries for each entry in reset-names.
+> +	   See ../reset/reset.txt for details.
+> +- reset-names: Must include the following names
+> +	- "core"
+> +	- "mgmt"
+> +	- "mgmt-sticky"
+> +	- "pipe"
+> +- pinctrl-names : The pin control state names
+> +- pinctrl-0: The "default" pinctrl state
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +- interrupt-map-mask and interrupt-map: standard PCI properties
+> +
+> +*Interrupt controller child node*
+> +The core controller provides a single interrupt for legacy INTx. So,
+> +pcie node should create a interrupt controller node to support 'interrupt-map'
+> +DT functionality. The driver will create an IRQ domain for this map, decode
+> +the four INTx interrupts in ISR and route them to this domain.
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Tested-by: Fushen Chen <fchen@apm.com>
-Tested-by: Toan Le <toanle@apm.com>
-Tested-by: Matthias Brugger <mbrugger@suse.com>
----
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.c   |   2 +-
- drivers/net/ethernet/apm/xgene/xgene_enet_main.c | 120 ++++++++++++++---------
- 2 files changed, 73 insertions(+), 49 deletions(-)
+Where in your driver do you actually handle this child node? I don't see
+anything, but perhaps I'm missing something. I see how your earlier
+revisions of this driver used of_get_next_child() to acquire the child
+node, for use with irq_domain_add_linear(). But that's not in this
+version...
 
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-index 009fb8e..4f98749 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-@@ -901,7 +901,7 @@ int xgene_enet_mdio_config(struct xgene_enet_pdata *pdata)
- 		 ndev->name);
- 
- 	mdio_bus->priv = pdata;
--	mdio_bus->parent = &ndev->dev;
-+	mdio_bus->parent = &pdata->pdev->dev;
- 
- 	ret = xgene_mdiobus_register(pdata, mdio_bus);
- 	if (ret) {
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-index f79950a..87e5929 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-@@ -608,6 +608,30 @@ static void xgene_enet_timeout(struct net_device *ndev)
- 	}
- }
- 
-+static void xgene_enet_set_irq_name(struct net_device *ndev)
-+{
-+	struct xgene_enet_pdata *pdata = netdev_priv(ndev);
-+	struct xgene_enet_desc_ring *ring;
-+	int i;
-+
-+	for (i = 0; i < pdata->rxq_cnt; i++) {
-+		ring = pdata->rx_ring[i];
-+		if (!pdata->cq_cnt) {
-+			snprintf(ring->irq_name, IRQ_ID_SIZE, "%s-rx-txc",
-+				 ndev->name);
-+		} else {
-+			snprintf(ring->irq_name, IRQ_ID_SIZE, "%s-rx-%d",
-+				 ndev->name, i);
-+		}
-+	}
-+
-+	for (i = 0; i < pdata->cq_cnt; i++) {
-+		ring = pdata->tx_ring[i]->cp_ring;
-+		snprintf(ring->irq_name, IRQ_ID_SIZE, "%s-txc-%d",
-+			 ndev->name, i);
-+	}
-+}
-+
- static int xgene_enet_register_irq(struct net_device *ndev)
- {
- 	struct xgene_enet_pdata *pdata = netdev_priv(ndev);
-@@ -615,6 +639,7 @@ static int xgene_enet_register_irq(struct net_device *ndev)
- 	struct xgene_enet_desc_ring *ring;
- 	int ret = 0, i;
- 
-+	xgene_enet_set_irq_name(ndev);
- 	for (i = 0; i < pdata->rxq_cnt; i++) {
- 		ring = pdata->rx_ring[i];
- 		irq_set_status_flags(ring->irq, IRQ_DISABLE_UNLAZY);
-@@ -723,7 +748,7 @@ static int xgene_enet_open(struct net_device *ndev)
- 
- 	mac_ops->tx_enable(pdata);
- 	mac_ops->rx_enable(pdata);
--	netif_start_queue(ndev);
-+	netif_tx_start_all_queues(ndev);
- 
- 	return ret;
- }
-@@ -734,7 +759,7 @@ static int xgene_enet_close(struct net_device *ndev)
- 	const struct xgene_mac_ops *mac_ops = pdata->mac_ops;
- 	int i;
- 
--	netif_stop_queue(ndev);
-+	netif_tx_stop_all_queues(ndev);
- 	mac_ops->tx_disable(pdata);
- 	mac_ops->rx_disable(pdata);
- 
-@@ -759,7 +784,7 @@ static void xgene_enet_delete_ring(struct xgene_enet_desc_ring *ring)
- 	dev = ndev_to_dev(ring->ndev);
- 
- 	pdata->ring_ops->clear(ring);
--	dma_free_coherent(dev, ring->size, ring->desc_addr, ring->dma);
-+	dmam_free_coherent(dev, ring->size, ring->desc_addr, ring->dma);
- }
- 
- static void xgene_enet_delete_desc_rings(struct xgene_enet_pdata *pdata)
-@@ -834,7 +859,7 @@ static void xgene_enet_free_desc_ring(struct xgene_enet_desc_ring *ring)
- 
- 	if (ring->desc_addr) {
- 		pdata->ring_ops->clear(ring);
--		dma_free_coherent(dev, ring->size, ring->desc_addr, ring->dma);
-+		dmam_free_coherent(dev, ring->size, ring->desc_addr, ring->dma);
- 	}
- 	devm_kfree(dev, ring);
- }
-@@ -892,9 +917,10 @@ static struct xgene_enet_desc_ring *xgene_enet_create_desc_ring(
- 			struct net_device *ndev, u32 ring_num,
- 			enum xgene_enet_ring_cfgsize cfgsize, u32 ring_id)
- {
--	struct xgene_enet_desc_ring *ring;
- 	struct xgene_enet_pdata *pdata = netdev_priv(ndev);
- 	struct device *dev = ndev_to_dev(ndev);
-+	struct xgene_enet_desc_ring *ring;
-+	void *irq_mbox_addr;
- 	int size;
- 
- 	size = xgene_enet_get_ring_size(dev, cfgsize);
-@@ -911,8 +937,8 @@ static struct xgene_enet_desc_ring *xgene_enet_create_desc_ring(
- 	ring->cfgsize = cfgsize;
- 	ring->id = ring_id;
- 
--	ring->desc_addr = dma_zalloc_coherent(dev, size, &ring->dma,
--					      GFP_KERNEL);
-+	ring->desc_addr = dmam_alloc_coherent(dev, size, &ring->dma,
-+					      GFP_KERNEL | __GFP_ZERO);
- 	if (!ring->desc_addr) {
- 		devm_kfree(dev, ring);
- 		return NULL;
-@@ -920,14 +946,16 @@ static struct xgene_enet_desc_ring *xgene_enet_create_desc_ring(
- 	ring->size = size;
- 
- 	if (is_irq_mbox_required(pdata, ring)) {
--		ring->irq_mbox_addr = dma_zalloc_coherent(dev, INTR_MBOX_SIZE,
--				&ring->irq_mbox_dma, GFP_KERNEL);
--		if (!ring->irq_mbox_addr) {
--			dma_free_coherent(dev, size, ring->desc_addr,
--					  ring->dma);
-+		irq_mbox_addr = dmam_alloc_coherent(dev, INTR_MBOX_SIZE,
-+						    &ring->irq_mbox_dma,
-+						    GFP_KERNEL | __GFP_ZERO);
-+		if (!irq_mbox_addr) {
-+			dmam_free_coherent(dev, size, ring->desc_addr,
-+					   ring->dma);
- 			devm_kfree(dev, ring);
- 			return NULL;
- 		}
-+		ring->irq_mbox_addr = irq_mbox_addr;
- 	}
- 
- 	ring->cmd_base = xgene_enet_ring_cmd_base(pdata, ring);
-@@ -988,6 +1016,7 @@ static int xgene_enet_create_desc_rings(struct net_device *ndev)
- 	u8 eth_bufnum = pdata->eth_bufnum;
- 	u8 bp_bufnum = pdata->bp_bufnum;
- 	u16 ring_num = pdata->ring_num;
-+	__le64 *exp_bufs;
- 	u16 ring_id;
- 	int i, ret, size;
- 
-@@ -1019,13 +1048,6 @@ static int xgene_enet_create_desc_rings(struct net_device *ndev)
- 		rx_ring->nbufpool = NUM_BUFPOOL;
- 		rx_ring->buf_pool = buf_pool;
- 		rx_ring->irq = pdata->irqs[i];
--		if (!pdata->cq_cnt) {
--			snprintf(rx_ring->irq_name, IRQ_ID_SIZE, "%s-rx-txc",
--				 ndev->name);
--		} else {
--			snprintf(rx_ring->irq_name, IRQ_ID_SIZE, "%s-rx%d",
--				 ndev->name, i);
--		}
- 		buf_pool->rx_skb = devm_kcalloc(dev, buf_pool->slots,
- 						sizeof(struct sk_buff *),
- 						GFP_KERNEL);
-@@ -1052,13 +1074,13 @@ static int xgene_enet_create_desc_rings(struct net_device *ndev)
- 		}
- 
- 		size = (tx_ring->slots / 2) * sizeof(__le64) * MAX_EXP_BUFFS;
--		tx_ring->exp_bufs = dma_zalloc_coherent(dev, size,
--							&dma_exp_bufs,
--							GFP_KERNEL);
--		if (!tx_ring->exp_bufs) {
-+		exp_bufs = dmam_alloc_coherent(dev, size, &dma_exp_bufs,
-+					       GFP_KERNEL | __GFP_ZERO);
-+		if (!exp_bufs) {
- 			ret = -ENOMEM;
- 			goto err;
- 		}
-+		tx_ring->exp_bufs = exp_bufs;
- 
- 		pdata->tx_ring[i] = tx_ring;
- 
-@@ -1078,8 +1100,6 @@ static int xgene_enet_create_desc_rings(struct net_device *ndev)
- 
- 			cp_ring->irq = pdata->irqs[pdata->rxq_cnt + i];
- 			cp_ring->index = i;
--			snprintf(cp_ring->irq_name, IRQ_ID_SIZE, "%s-txc%d",
--				 ndev->name, i);
- 		}
- 
- 		cp_ring->cp_skb = devm_kcalloc(dev, tx_ring->slots,
-@@ -1549,22 +1569,6 @@ static void xgene_enet_napi_add(struct xgene_enet_pdata *pdata)
- 	}
- }
- 
--static void xgene_enet_napi_del(struct xgene_enet_pdata *pdata)
--{
--	struct napi_struct *napi;
--	int i;
--
--	for (i = 0; i < pdata->rxq_cnt; i++) {
--		napi = &pdata->rx_ring[i]->napi;
--		netif_napi_del(napi);
--	}
--
--	for (i = 0; i < pdata->cq_cnt; i++) {
--		napi = &pdata->tx_ring[i]->cp_ring->napi;
--		netif_napi_del(napi);
--	}
--}
--
- static int xgene_enet_probe(struct platform_device *pdev)
- {
- 	struct net_device *ndev;
-@@ -1628,12 +1632,6 @@ static int xgene_enet_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	ret = register_netdev(ndev);
--	if (ret) {
--		netdev_err(ndev, "Failed to register netdev\n");
--		goto err;
--	}
--
- 	ret = xgene_enet_init_hw(pdata);
- 	if (ret)
- 		goto err_netdev;
-@@ -1648,7 +1646,14 @@ static int xgene_enet_probe(struct platform_device *pdev)
- 	}
- 
- 	xgene_enet_napi_add(pdata);
-+	ret = register_netdev(ndev);
-+	if (ret) {
-+		netdev_err(ndev, "Failed to register netdev\n");
-+		goto err;
-+	}
-+
- 	return 0;
-+
- err_netdev:
- 	unregister_netdev(ndev);
- err:
-@@ -1666,10 +1671,14 @@ static int xgene_enet_remove(struct platform_device *pdev)
- 	mac_ops = pdata->mac_ops;
- 	ndev = pdata->ndev;
- 
-+	rtnl_lock();
-+	if (netif_running(ndev))
-+		dev_close(ndev);
-+	rtnl_unlock();
-+
- 	mac_ops->rx_disable(pdata);
- 	mac_ops->tx_disable(pdata);
- 
--	xgene_enet_napi_del(pdata);
- 	if (pdata->phy_mode == PHY_INTERFACE_MODE_RGMII)
- 		xgene_enet_mdio_remove(pdata);
- 	unregister_netdev(ndev);
-@@ -1680,6 +1689,20 @@ static int xgene_enet_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static void xgene_enet_shutdown(struct platform_device *pdev)
-+{
-+	struct xgene_enet_pdata *pdata;
-+
-+	pdata = platform_get_drvdata(pdev);
-+	if (!pdata)
-+		return;
-+
-+	if (!pdata->ndev)
-+		return;
-+
-+	xgene_enet_remove(pdev);
-+}
-+
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id xgene_enet_acpi_match[] = {
- 	{ "APMC0D05", XGENE_ENET1},
-@@ -1714,6 +1737,7 @@ static struct platform_driver xgene_enet_driver = {
- 	},
- 	.probe = xgene_enet_probe,
- 	.remove = xgene_enet_remove,
-+	.shutdown = xgene_enet_shutdown,
- };
- 
- module_platform_driver(xgene_enet_driver);
--- 
-1.9.1
+> +
+> +Required properties for Interrupt controller child node:
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #address-cells: specifies the number of cells needed to encode an
+> +	address. The value must be 0.
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +
+> +Optional Property:
+
+These optional properties apply to the pcie node, not the interrupt
+controller child, right? Seems like the subnode and its properties
+should be last (i.e., the 'Optional Property' section should be above
+'Interrupt controller child node').
+
+> +- ep-gpios: contain the entry for pre-reset gpio
+> +- num-lanes: number of lanes to use
+> +- vpcie3v3-supply: The phandle to the 3.3v regulator to use for pcie.
+> +- vpcie1v8-supply: The phandle to the 1.8v regulator to use for pcie.
+> +- vpcie0v9-supply: The phandle to the 0.9v regulator to use for pcie.
+> +
+> +Example:
+> +
+> +pcie0: pcie@f8000000 {
+> +	compatible = "rockchip,rk3399-pcie";
+> +	#address-cells = <3>;
+> +	#size-cells = <2>;
+> +	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
+> +		 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
+> +	clock-names = "aclk", "aclk-perf",
+> +		      "hclk", "pm";
+> +	bus-range = <0x0 0x1>;
+> +	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "sys", "legacy", "client";
+> +	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
+> +	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
+> +	assigned-clock-rates = <100000000>;
+> +	ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
+> +	ranges = <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x600000
+> +		  0x81000000 0x0 0xfa600000 0x0 0xfa600000 0x0 0x100000>;
+> +	num-lanes = <4>;
+> +	msi-map = <0x0 &its 0x0 0x1000>;
+> +	reg = < 0x0 0xf8000000 0x0 0x2000000 >, < 0x0 0xfd000000 0x0 0x1000000 >;
+> +	reg-names = "axi-base", "apb-base";
+> +	resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
+> +		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
+> +	reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
+> +	phys = <&pcie_phy>;
+> +	phy-names = "pcie-phy";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie_clkreq>;
+> +	#interrupt-cells = <1>;
+> +	interrupt-map-mask = <0 0 0 7>;
+> +	interrupt-map = <0 0 0 1 &pcie0_intc 1>,
+> +			<0 0 0 2 &pcie0_intc 2>,
+> +			<0 0 0 3 &pcie0_intc 3>,
+> +			<0 0 0 4 &pcie0_intc 4>;
+
+I'm a little lost on this one, so forgive my ignorance; how did you
+determine the last value in each entry (i.e., the 1, 2, 3, and 4 IRQ
+numbers for pcie0_intc)? IIUC, those are supposed to represent indeces
+into the IRQ status register found in the PCIe interrupt status
+register, and so they should be 0-based (i.e., 0, 1, 2, 3). And then
+you'd have:
+
+	interrupt-map = <0 0 0 1 &pcie0_intc 0>,
+			<0 0 0 2 &pcie0_intc 1>,
+			<0 0 0 3 &pcie0_intc 2>,
+			<0 0 0 4 &pcie0_intc 3>;
+
+But then, I never got this sub-node binding to work quite right, so I
+may be missing something.
+
+EDIT: ooh, I see what's going on! I'll comment on the driver as well,
+but it looks like you're translating the register status to a HW IRQ
+number with 'ffs(reg)', which yields a 1-based index. I think it is most
+sensible to use a 0-based index (i.e., 'ffs(reg) - 1'). Now, that only
+will work if you get the whole interrupt-map + interrupt-controller
+thing right (i.e., using a subnode for the interrupt controller) --
+otherwise, IRQ mapping might not work right. I suspect that's one reason
+the original driver writer might have used 1-based indexing in the first
+place.
+
+Brian
+
+> +	pcie0_intc: interrupt-controller {
+> +		interrupt-controller;
+> +		#address-cells = <0>;
+> +		#interrupt-cells = <1>;
+> +	};
+> +};
+> -- 
+> 2.3.7
+> 
+> 
