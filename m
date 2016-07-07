@@ -1,129 +1,114 @@
-From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 3/5] nvmem: core: Add consumer API to get nvmem cell from node
-Date: Thu,  7 Jul 2016 12:09:28 +0530
-Message-ID: <0e6294d931bf181376a6f4e1a86df3f6c6a5d575.1467872014.git.maitysanchayan@gmail.com>
-References: <cover.1467872014.git.maitysanchayan@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1467872014.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1467872014.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1467872014.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: stefan-XLVq0VzYD2Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sanchayan Maity <maitysanchayan@gmail.com>
+Subject: [PATCH v4 0/5] Implement SoC driver for Vybrid
+Date: Thu,  7 Jul 2016 12:09:25 +0530
+Message-ID: <cover.1467872014.git.maitysanchayan@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de, shawnguo@kernel.org
+Cc: stefan@agner.ch, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Hello,
 
-The existing NVMEM consumer API's do not allow to get a
-NVMEM cell directly given a device tree node. This patch
-adds a function to provide this functionality.
+This fourth patch series is rebased on top of shawn's for-next branch
+and tested on Colibri Vybrid VF50 and VF61 modules.
 
-Assuming the nvmem cell id name is known, this can be used
-as follows
+This patchset implements SoC bus support for Freescale Vybrid platform,
+implementing the following
+https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-devices-soc
 
-struct device_node *cell_np;
-struct nvmem_cell *foo_cell;
+This a reworked version of an older patchset series posted in June 2015
+which was at v5 then [1]. Since the NVMEM framework was then getting
+introduced, we decided that first a NVMEM driver for OCOTP peripheral
+being in place would be better.
 
-cell_np = of_find_node_by_name(parent, "foo");
-foo_cell = of_nvmem_cell_get_direct(cell_np);
+Compared to the older revisions, this driver now relies on NVMEM
+consumer API using the NVMEM based vf610_ocotp driver which has
+already been in mainline for a while now.
 
-Parent node can also be the of_node of the main SoC device
-node.
+One point on which we were not sure here is whether we really should
+introduce a new Kconfig symbol as being introduced here. While we
+could just enable it when SOC_VF610 is selected, this however would
+introduce circular dependencies.
 
-Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/nvmem/core.c           | 44 +++++++++++++++++++++++++++++-------------
- include/linux/nvmem-consumer.h |  1 +
- 2 files changed, 32 insertions(+), 13 deletions(-)
+Feedback is most welcome.
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 965911d..470abee 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -743,29 +743,21 @@ static struct nvmem_cell *nvmem_cell_get_from_list(const char *cell_id)
- 
- #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
- /**
-- * of_nvmem_cell_get() - Get a nvmem cell from given device node and cell id
-+ * of_nvmem_cell_get_direct() - Get a nvmem cell from given device node
-  *
-- * @dev node: Device tree node that uses the nvmem cell
-- * @id: nvmem cell name from nvmem-cell-names property.
-+ * @dev node: Device tree node that uses nvmem cell
-  *
-  * Return: Will be an ERR_PTR() on error or a valid pointer
-  * to a struct nvmem_cell.  The nvmem_cell will be freed by the
-  * nvmem_cell_put().
-  */
--struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
--					    const char *name)
-+struct nvmem_cell *of_nvmem_cell_get_direct(struct device_node *cell_np)
- {
--	struct device_node *cell_np, *nvmem_np;
-+	struct device_node *nvmem_np;
- 	struct nvmem_cell *cell;
- 	struct nvmem_device *nvmem;
- 	const __be32 *addr;
--	int rval, len, index;
--
--	index = of_property_match_string(np, "nvmem-cell-names", name);
--
--	cell_np = of_parse_phandle(np, "nvmem-cells", index);
--	if (!cell_np)
--		return ERR_PTR(-EINVAL);
-+	int rval, len;
- 
- 	nvmem_np = of_get_next_parent(cell_np);
- 	if (!nvmem_np)
-@@ -824,6 +816,32 @@ err_mem:
- 
- 	return ERR_PTR(rval);
- }
-+EXPORT_SYMBOL_GPL(of_nvmem_cell_get_direct);
-+
-+/**
-+ * of_nvmem_cell_get() - Get a nvmem cell from given device node and cell id
-+ *
-+ * @dev node: Device tree node that uses the nvmem cell
-+ * @id: nvmem cell name from nvmem-cell-names property.
-+ *
-+ * Return: Will be an ERR_PTR() on error or a valid pointer
-+ * to a struct nvmem_cell.  The nvmem_cell will be freed by the
-+ * nvmem_cell_put().
-+ */
-+struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
-+					    const char *name)
-+{
-+	struct device_node *cell_np;
-+	int index;
-+
-+	index = of_property_match_string(np, "nvmem-cell-names", name);
-+
-+	cell_np = of_parse_phandle(np, "nvmem-cells", index);
-+	if (!cell_np)
-+		return ERR_PTR(-EINVAL);
-+
-+	return of_nvmem_cell_get_direct(cell_np);
-+}
- EXPORT_SYMBOL_GPL(of_nvmem_cell_get);
- #endif
- 
-diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-index 9bb77d3..bf879fc 100644
---- a/include/linux/nvmem-consumer.h
-+++ b/include/linux/nvmem-consumer.h
-@@ -136,6 +136,7 @@ static inline int nvmem_device_write(struct nvmem_device *nvmem,
- #endif /* CONFIG_NVMEM */
- 
- #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
-+struct nvmem_cell *of_nvmem_cell_get_direct(struct device_node *cell_np);
- struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
- 				     const char *name);
- struct nvmem_device *of_nvmem_device_get(struct device_node *np,
+@Rob Herring
+Does this patchset address the concerns you had? The only change
+to the device tree is now for the compatible property.
+
+@Srinivas
+Is this new NVMEM consumer API acceptable? Would you recommend a
+different approach?
+
+Changes since v3:
+1. Use just a compatible node at the SoC node and do not
+use a separate node for the binding
+2. Use syscon regmap lookup for getting information from
+MSCM and OCROM nodes.
+3. Introduce a NVMEM consumer API for getting a NVMEM cell
+given a device node containing that cell.
+4. Do not introduce any node at the SoC level.
+
+Changes since v2:
+1. Remove syscon_regmap_read_from_offset function and use the
+available syscon functions
+2. Remove fsl,vf610-soc-bus and related bindings at SoC node
+level and introduce a fsl,vf610-soc node which is used by the
+driver to bind and has all the required phandles plus the NVMEM
+consumer handles.
+3. Fix memory leak. of_node_put was not called for returned node
+of of_parse_phandle and memory allocated by nvmem_cell_read was
+not freed explicitly in return error paths.
+
+Changes since v1:
+Add device tree binding documentation.
+
+2016: v3 patchset
+https://lkml.org/lkml/2016/5/20/200
+
+2016: v2 patchset
+https://lkml.org/lkml/2016/5/2/69
+
+2016: v1 patchset
+https://lkml.org/lkml/2016/3/11/132
+
+[1] Older v5:
+http://lkml.iu.edu/hypermail/linux/kernel/1506.0/03787.html
+Even earlier versions:
+Version 4 of the patchset can be found here
+https://lkml.org/lkml/2015/5/26/199
+Version 3 of the patchset can be found here
+http://www.spinics.net/lists/arm-kernel/msg420847.html
+Version 2 of the patchset can be found here
+http://www.spinics.net/lists/devicetree/msg80654.html
+Version 1 of the patchset can be found here
+http://www.spinics.net/lists/devicetree/msg80257.html
+The RFC version can be found here
+https://lkml.org/lkml/2015/5/11/13
+
+Regards,
+Sanchayan.
+
+Sanchayan Maity (4):
+  ARM: dts: vfxxx: Add device tree node for OCOTP
+  ARM: dts: vfxxx: Add On-Chip ROM node for Vybrid
+  soc: Add SoC driver for Freescale Vybrid platform
+  ARM: dts: vfxxx: Add a compatible binding for Vybrid SoC bus driver
+
+Stefan Agner (1):
+  nvmem: core: Add consumer API to get nvmem cell from node
+
+ arch/arm/boot/dts/vfxxx.dtsi   |  23 ++++-
+ drivers/nvmem/core.c           |  44 ++++++---
+ drivers/soc/Kconfig            |   1 +
+ drivers/soc/fsl/Kconfig        |  10 ++
+ drivers/soc/fsl/Makefile       |   1 +
+ drivers/soc/fsl/soc-vf610.c    | 212 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/nvmem-consumer.h |   1 +
+ 7 files changed, 278 insertions(+), 14 deletions(-)
+ create mode 100644 drivers/soc/fsl/Kconfig
+ create mode 100644 drivers/soc/fsl/soc-vf610.c
+
 -- 
 2.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
