@@ -1,93 +1,145 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: add LG LP097QX1-SPA1 panel binding
-Date: Thu, 7 Jul 2016 23:57:01 +0200
-Message-ID: <20160707215659.GD744@mithrandir.ba.sec>
-References: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
- <20160707215523.GC744@mithrandir.ba.sec>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0686525892=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160707215523.GC744@mithrandir.ba.sec>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, dianders@chromium.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: [PATCH v2 00/22] Support qcom's HSIC USB and rewrite USB2 HS phy support
+Date: Thu,  7 Jul 2016 15:20:51 -0700
+Message-ID: <20160707222114.1673-1-stephen.boyd@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Peter Chen <peter.chen@nxp.com>, "Ivan T. Ivanov" <iivanov.xz@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+The state of USB ChipIdea support on Qualcomm's platforms is not great.
+The DT description of these devices requires up to three different nodes
+for what amounts to be the same hardware block, when there should really
+only be one. Furthermore, the "phy" driver that is in mainline (phy-msm-usb.c)
+duplicates the OTG state machine and touches the ci controller wrapper
+registers when it should really be focused on the phy and the ULPI accesses
+needed to get the phy working. There's also a slimmed down phy driver for
+the msm8916 platform, but really the phy hardware is the same as other MSMs,
+so we have two drivers doing pretty much the same thing. This leads to a
+situtaion where we have the chipidea core driver, the "phy" driver, and
+sometimes the ehci-msm.c driver operating the same device all at the same
+time with very little coordination. This just isn't very safe and is
+confusing from a driver perspective when trying to figure out who does what.
+Finally, there isn't any HSIC support on platforms like apq8074 so we
+should add that.
 
---===============0686525892==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="F8dlzb82+Fcn6AgP"
-Content-Disposition: inline
+This patch series updates the ChipIdea driver and the MSM wrapper
+(ci_hdrc_msm.c) to properly handle the PHY and wrapper bits at the right
+times in the right places. To get there, we update the ChipIdea core to
+have support for the ULPI phy bus introduced by Heikki. Along the way
+we fix bugs with the extcon handling for peripheral and OTG mode controllers
+and move the parts of phy-usb-msm.c that are touching the CI controller
+wrapper into the wrapper driver (ci_hdrc_msm.c). Finally we add support
+for the HSIC phy based on the ULPI bus and rewrite the HS phy driver
+(phy-usb-msm.c) as a standard ULPI phy driver.
 
+Once this series is accepted, we should be able to delete the phy-usb-msm.c,
+phy-qcom-8x16-usb.c, and ehci-msm.c drivers from the tree and use the ULPI
+based phy driver (which also lives in drivers/phy/ instead of drivers/usb/phy/)
+and the chipidea host core instead.
 
---F8dlzb82+Fcn6AgP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've also sent separate patches for other minor pieces to make this
+all work. The full tree can be found here[3], hacks and all to get
+things working. I've tested this on the db410c, apq8074 dragonboard,
+and ifc6410 with configfs gadgets and otg cables.
 
-On Thu, Jul 07, 2016 at 11:55:23PM +0200, Thierry Reding wrote:
-> On Sun, Jun 12, 2016 at 10:53:30AM +0800, Yakir Yang wrote:
-> > The LG LP097QX1-SPA1 is an 9.7", 2048x1536 (QXGA) TFT-LCD panel
-> > connected using eDP interfaces.
-> >=20
-> > Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Changes in v3: None
-> > Changes in v2:
-> > - Add Rob's acked for dt-bindings of LG LP097QX1-SPA1 panel
-> >=20
-> >  .../devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt         | 7=
- +++++++
-> >  1 file changed, 7 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/lg,=
-lp097qx1-spa1.txt
->=20
-> Applied all six patches, though I modified 3/6 as Doug suggested.
+Changes from v1:
 
-I mean patch 4/6, of course.
+ * Reworked ULPI device probing to keep using vendor/product ids that
+   come from DT if needed and falls back to OF style match when product id
+   is 0
 
-Thierry
+ * PHY init later patch was rejected so that moved to a quirk flag and
+   the msm wrapper started managing the phy on/off
 
---F8dlzb82+Fcn6AgP
-Content-Type: application/pgp-signature; name="signature.asc"
+ * Updated clk requirements for HSIC phy in binding doc
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ * Added optional clk in wrapper for "housekeeping" found on older qcom
+   platforms
+ 
+ * Bug fix to otgsc polling function
 
-iQIcBAABCAAGBQJXftArAAoJEN0jrNd/PrOhZcUP/iQ8w9Q6o2ZsMFYv00luO1d4
-j++KtnblWKFfjLuJSS2nCZtvfYq8iez+5WonkB3w5A78o/2/ctjsQyEPODADhxMK
-kDPSQRIm9RzYvpY443Md7bgcElQZUQjJJ9wrm0rHpiyaZBq0WCm+tNiy6EvlkyTa
-JfzwReKAezEVn4TpgQBN022VnWsio1DL/8OnLmEJaR9Wpe2m3bETzpGWjlcT9SG9
-95+YvR1ZtYW1WfzvayUVgZKOJBE60tX58z/I9hwk9+g8w9G7MNVYeM5uvNUKxkOq
-7QhqIABsgYMPPVNH3aPwCotiXHsoodYwY3s79cCTjraz9upz4fUjpT6YYt6TbO+i
-NY2meShDyKAxXQcN4Fb/poH2jjs8Jgqc/nNwlJRvcrI6Oc7J6bOao6Vj/Q8oQ+p2
-x738ftrIbi7OfK9WtOxluG5n2eaqB//x5jtJYkv78zNC60KigcSrbUgAjM1ix8zq
-8pTHizMh9Acx64Pv+ejesKJ2suSvU+2rgMxR79gziu8Qy6CLtteIDD52Zj27hxEz
-9Quvy7paNeD06Co1b0HhVNa/sNekRiq5aH2TvKF1SeXx2ixDPx7C97DnpQoWghv8
-+7k+RHKl0DQMIAYMhdnHIgfNuoGUYmHb5oDzZ+IhK3U09gbXhyJXkgS5VBkZU4Kq
-E6md+J1JPiIee9IqJeTo
-=UA9a
------END PGP SIGNATURE-----
+ * Changed runtime PM patch to set as active instead of get/put
 
---F8dlzb82+Fcn6AgP--
+TODO:
+ * DMA fails on arm64 so we need something like [1] to make it work.
 
---===============0686525892==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+ * The db410c needs a driver to toggle the onboard switch to connect
+   the usb hub instead of micro port when the usb cable is disconnected
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+ * apq8064 platforms need a vbus regulator to really use otg and I haven't
+   tried out the RPM based regulators yet
 
---===============0686525892==--
+ * The HSIC phy on the apq8074 dragonboard is connected to a usb4604
+   device which requires the i2c driver to probe and send an i2c
+   sequence before the HSIC controller enumerates or HSIC doesn't work.
+   Right now I have a hack to force the controller to probe defer
+   once so that usb4604 probes first. This needs a more proper solution
+   like having the DT describe a linkage between the controller and
+   the usb device so we can enforce probe ordering.
+ 
+ * OTG support requires a working VBUS supply on apq8074 dragonboard
+   and that requires changes to the smbb_charger driver to support
+   the OTG OVP switch as a regulator[2]. This series needs revival
+   on the list so that OTG works properly on that board.
+
+[1] https://lkml.org/lkml/2016/2/22/7
+[2] http://lkml.kernel.org/g/1449621618-11900-1-git-send-email-tim.bird@sonymobile.com
+[3] https://git.linaro.org/people/stephen.boyd/linux.git/shortlog/refs/heads/usb-hsic-8074
+
+Stephen Boyd (22):
+  of: device: Support loading a module with OF based modalias
+  of: device: Export of_device_{get_modalias,uvent_modalias} to modules
+  usb: ulpi: Support device discovery via device properties
+  usb: chipidea: Only read/write OTGSC from one place
+  usb: chipidea: Handle extcon events properly
+  usb: chipidea: Add platform flag for wrapper phy management
+  usb: chipidea: Notify events when switching host mode
+  usb: chipidea: Remove locking in ci_udc_start()
+  usb: chipidea: Kick OTG state machine for AVVIS with vbus extcon
+  usb: chipidea: Add support for ULPI PHY bus
+  usb: chipidea: msm: Mark device as runtime pm active
+  usb: chipidea: msm: Rely on core to override AHBBURST
+  usb: chipidea: msm: Use hw_write_id_reg() instead of writel
+  usb: chipidea: msm: Add proper clk and reset support
+  usb: chipidea: msm: Mux over secondary phy at the right time
+  usb: chipidea: msm: Restore wrapper settings after reset
+  usb: chipidea: msm: Make platform data driver local instead of global
+  usb: chipidea: msm: Add reset controller for PHY POR bit
+  usb: chipidea: msm: Handle phy power states
+  usb: chipidea: msm: Be silent on probe defer errors
+  phy: Add support for Qualcomm's USB HSIC phy
+  phy: Add support for Qualcomm's USB HS phy
+
+ .../devicetree/bindings/phy/qcom,usb-hs-phy.txt    |  83 ++++++
+ .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |  72 +++++
+ Documentation/devicetree/bindings/usb/ulpi.txt     |  35 +++
+ drivers/of/device.c                                |  25 ++
+ drivers/phy/Kconfig                                |  15 ++
+ drivers/phy/Makefile                               |   2 +
+ drivers/phy/phy-qcom-usb-hs.c                      | 295 +++++++++++++++++++++
+ drivers/phy/phy-qcom-usb-hsic.c                    | 167 ++++++++++++
+ drivers/usb/chipidea/Kconfig                       |   8 +
+ drivers/usb/chipidea/Makefile                      |   1 +
+ drivers/usb/chipidea/ci.h                          |  23 +-
+ drivers/usb/chipidea/ci_hdrc_msm.c                 | 275 ++++++++++++++++---
+ drivers/usb/chipidea/core.c                        |  77 +++---
+ drivers/usb/chipidea/host.c                        |  10 +
+ drivers/usb/chipidea/otg.c                         |  80 +++++-
+ drivers/usb/chipidea/otg_fsm.c                     |  17 ++
+ drivers/usb/chipidea/udc.c                         |   3 -
+ drivers/usb/chipidea/ulpi.c                        | 113 ++++++++
+ drivers/usb/common/ulpi.c                          |  74 +++++-
+ include/linux/of_device.h                          |   6 +
+ include/linux/usb/chipidea.h                       |   5 +-
+ 21 files changed, 1290 insertions(+), 96 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
+ create mode 100644 drivers/phy/phy-qcom-usb-hs.c
+ create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
+ create mode 100644 drivers/usb/chipidea/ulpi.c
+
+-- 
+2.9.0.rc2.8.ga28705d
