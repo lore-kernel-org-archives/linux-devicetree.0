@@ -1,41 +1,109 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/4] soc: fsl: add GUTS driver for QorIQ platforms
-Date: Thu, 07 Jul 2016 10:30:29 +0200
-Message-ID: <4094106.qfxJu3tJbO@wuerfel>
-References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com>
-	<1465609853.22191.151.camel@buserror.net>
-	<HE1PR04MB0889646206BFAD68046F3473F83B0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: Developing Linux Kernel Driver for media Codec Driver
+Date: Thu, 7 Jul 2016 10:32:50 +0200
+Message-ID: <577E13B2.4070501@xs4all.nl>
+References: <CAJeuY79hD7Zzp7j1D=AfW+MRqmmFdOxJUW_eyQE+L9MjtQHGow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <HE1PR04MB0889646206BFAD68046F3473F83B0-6LN7OEpIatX1kPMWxTxe+c9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs+mg8Ev75riOw@public.gmane.org
-	x-foundation.org" <iommu@>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJeuY79hD7Zzp7j1D=AfW+MRqmmFdOxJUW_eyQE+L9MjtQHGow@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hao Zhang <hao5781286@gmail.com>, wens@csie.org
+Cc: kernelnewbies@kernelnewbies.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1cnNkYXksIEp1bHkgNywgMjAxNiAyOjM1OjMzIEFNIENFU1QgWWFuZ2JvIEx1IHdyb3Rl
-Ogo+IEhpIEFybmQsCj4gCj4gQ291bGQgeW91IHJlcGx5IHdoZW4geW91IHNlZSB0aGUgZW1haWw/
-Cj4gSWYgeW91ciBtZXRob2QgZG9lc27igJl0IHJlc29sdmUgdGhlIHByb2JsZW0sIHdlIHN0aWxs
-IHdhbnQgdG8gdXNlIG91ciBvbGQgcGF0Y2hzZXQuCj4gCj4gVGhpcyBndXRzIGRyaXZlciBoYWQg
-YmVlbiBkaXNjdXNzZWQgYWJvdXQgb25lIHllYXIgYW5kIGJsb2NrZWQgbWFueSB3b3JrYXJvdW5k
-IHVwc3RyZWFtLgo+IFNvIHBsZWFzZSBoZWxwIHRvIHJldmlldyBhbmQgY29tbWVudCBzb29uLgo+
-IAoKSSBkb24ndCByZWFsbHkgc2VlIGhvdyBtb3JlIGRpc2N1c3Npb24gaXMgZ29pbmcgdG8gaGVs
-cCB1cyBoZXJlLiBJIHRoaW5rCkkndmUgbWFkZSBpdCBwcmV0dHkgY2xlYXIgdGhhdCBJIGRvbid0
-IHdhbnQgdG8gc2VlIGFub3RoZXIgcGxhdGZvcm0Kc3BlY2lmaWMgd2F5IHRvIHJlYWQgYW4gU29D
-IHJldmlzaW9uIGFuZCBJJ3ZlIGV2ZW4gc2VudCBhIHByb29mLW9mLWNvbmNlcHQKcGF0Y2ggdG8g
-c2hvdyBob3cgdGhlIGludGVyZmFjZSBjYW4gd29yaywgbm93IGl0J3MgdXAgdG8geW91IHRvIGZp
-dCB0aGUKZ3V0cyBoYXJkd2FyZSBpbnRvIHRoYXQgYW5kIHNlbmQgYSBuZXcgcGF0Y2ggc2VyaWVz
-LgoKCUFybmQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmlvbW11IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRw
-czovL2xpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
+On 07/07/16 10:12, Hao Zhang wrote:
+> hi all
+> 
+> i am developing a linux kernel driver for a 4-CH AHD2.0 RX and 9-CH
+> Audio Codec which is named nvp6124 .
+> 
+> wedsite : http://www.nextchip.com/ch/products/product.asp?hGubun=AHD.
+> 
+> below are few of its characteristics:
+> 
+> video codec:
+> it digitizes and decodes ntsc/pal/comet/AHD1.0/AHD2.O video signal into digital
+> video components which represents 8bit bt656/1120 4:2:2 byte interleave fotmat.
+> 
+> audio codec:
+> output pcm digital signal converted from analog audio input signals and analog
+> audio signals converted from pcm digital audio.
+> 
+> control interface:
+> control and configure through i2c interface.
+> 
+> video interface:
+> 4ch analog video input and output 2ch digital signal, each channal has
+> 8 data ports and a clk clock port
+> which can connect to the embedded processer.
+> 
+> 
+> audio interface(two i2s interface):
+> audio data convert to PCM data,and outputed via i2s interface .
+> PCM data can also input via i2s interface, the input audio data is
+> outputed via internal DAC.
+> 
+> 
+> i want to submit the driver, but i have some problem on the below points:
+> 
+> 1.must i submit the driver through device tree binding? Does the
+> kernel tree accept the driver without device tree binding?
+> just see the video interface ,i know i2c port can binding below the
+> i2c node, but, how can i bind other data port and clock signal port
+> with device trees?
+
+This driver should be implemented as a v4l2-subdevice (see many examples of
+such drivers in drivers/media/i2c). Drivers like this can be used both on
+embedded platforms using a device tree and on e.g. PCIe cards and in that
+case a struct platform_data is used to pass the necessary information to
+the driver. (Note: in the future there is a good chance that PCIe drivers will
+start to use device tree overlays for this, but not at the moment AFAIK).
+
+If you look at e.g. the adv7604.c driver you'll see that it can both parse the
+DT and use platform_data.
+
+See Documentation/devicetree/bindings/media/video-interfaces.txt for details
+on how to bind data/clock signals in the DT.
+
+If this is tested on an embedded board, then you'll need DT bindings.
+
+> 2.how to use device tree to bind device and how does the kernel uses
+> it to match device? can i obtain some document about this?
+
+Look at e.g. arch/arm/boot/dts/r8a7790-lager.dts and search for adv7180.
+
+> 3.i creat the driver for Cubieboard one(allwinner a10 processer) and
+> Banana PI BPI-M1(allwinner a20 processer) ,if i submit patch
+> ,which  kernel version shoudle i use ? must i use the lastest kernel
+> (download in www.kernel.org isn't the sdk of the board)in that boards
+> ?
+
+The master branch of our media repository (https://git.linuxtv.org/media_tree.git)
+is preferred.
+
+> 
+> 4.does someone know which lastest kernel version does Cubieboard one
+> and Banana PI BPI-M1 supports?
+
+I thought Cubieboard one supports the latest kernel, but I'm not sure about
+the banana board.
+
+> 
+> 5.the maintainer doesn't has the device, how do they know the driver
+> is work well on my board? just buit without error or warning ?
+
+I have a cubieboard one, so I should be able to test. But in general I
+assume that the developer actually has tested it (what's the point otherwise?!).
+
+Also, before I accept a driver it has to pass the v4l2-compliance test found here:
+
+https://git.linuxtv.org/v4l-utils.git/
+
+This does pretty exhaustive tests and if it all passes, then the driver is in
+pretty decent shape.
+
+Regards,
+
+	Hans
