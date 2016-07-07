@@ -1,60 +1,52 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 10/10] clk: mvebu: Add the peripheral clock driver for Armada 3700
-Date: Fri, 08 Jul 2016 01:12:42 +0200
-Message-ID: <87shvlujo5.fsf@free-electrons.com>
-References: <1465565018-14172-1-git-send-email-gregory.clement@free-electrons.com>
-	<1465565018-14172-11-git-send-email-gregory.clement@free-electrons.com>
-	<20160630200007.GB1521@codeaurora.org>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH] bindings: PCI: artpec: correct pci binding example
+Date: Fri, 8 Jul 2016 01:28:10 +0200
+Message-ID: <1467934090-12834-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160630200007.GB1521@codeaurora.org> (Stephen Boyd's message of
-	"Thu, 30 Jun 2016 13:00:07 -0700")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Niklas Cassel <niklass@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
- 
- On jeu., juin 30 2016, Stephen Boyd <sboyd@codeaurora.org> wrote:
+From: Niklas Cassel <niklas.cassel@axis.com>
 
->> +
->> +	spin_lock_init(&driver_data->lock);
->> +
->> +	for (i = 0; i < num_periph; i++) {
->> +		struct clk *clk = driver_data->clk_data.clks[i];
->> +
->> +		if (armada_3700_add_composite_clk(&data[i], parent_name, reg,
->> +						  &driver_data->lock, dev, clk))
->> +			dev_err(dev, "Can't register periph clock %s\n",
->> +			       data[i].name);
->> +	}
->> +
->> +	ret = of_clk_add_provider(np, of_clk_src_onecell_get,
->> +				  &driver_data->clk_data);
->> +	if (ret) {
->> +		for (i = 0; i < num_periph; i++)
->> +			clk_unregister(driver_data->clk_data.clks[i]);
->
-> It would be nice if we had devm_* registration in composite
-> clks
->
+ - Increase config size. When using a PCIe switch,
+   the previous config size only had room for one device.
+ - Add bus range. Inherited optional property.
+ - Map downstream I/O to PCI address 0. We can map it to any
+   address, but let's be consistent with other drivers.
 
-This comment is the only one I didn't take into account in the second
-version I've just sent. I agree it would be nice and I am willing to add
-it. However these last days I was very busy with the birth of my last
-child: I managed to find time to write this second version in time to be
-merged for 4.8 but not enough to add these new function. I will try to
-send a patch for it next week.
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+---
+ Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Thanks for your review,
-
-Gregory
-
-
+diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+index 330a45b..5ecaea1 100644
+--- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+@@ -24,16 +24,17 @@ Example:
+ 		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
+ 		reg = <0xf8050000 0x2000
+ 		       0xf8040000 0x1000
+-		       0xc0000000 0x1000>;
++		       0xc0000000 0x2000>;
+ 		reg-names = "dbi", "phy", "config";
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+ 		device_type = "pci";
+ 			  /* downstream I/O */
+-		ranges = <0x81000000 0 0x00010000 0xc0010000 0 0x00010000
++		ranges = <0x81000000 0 0 0xc0002000 0 0x00010000
+ 			  /* non-prefetchable memory */
+-			  0x82000000 0 0xc0020000 0xc0020000 0 0x1ffe0000>;
++			  0x82000000 0 0xc0012000 0xc0012000 0 0x1ffee000>;
+ 		num-lanes = <2>;
++		bus-range = <0x00 0xff>;
+ 		interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "msi";
+ 		#interrupt-cells = <1>;
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.1.4
