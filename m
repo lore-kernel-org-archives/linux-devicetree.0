@@ -1,60 +1,45 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 3/6] binding-doc: usb: usb-device: add optional properties for
- power sequence
-Date: Thu, 7 Jul 2016 17:14:49 +0800
-Message-ID: <1467882892-27589-4-git-send-email-peter.chen@nxp.com>
-References: <1467882892-27589-1-git-send-email-peter.chen@nxp.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: spi: add binding for clps711x SPI
+Date: Thu, 7 Jul 2016 11:25:46 +0200
+Message-ID: <20160707092546.GJ6247@sirena.org.uk>
+References: <20160706145326.2658600-1-arnd@arndb.de>
+ <20160706145326.2658600-2-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467882892-27589-1-git-send-email-peter.chen@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, stephen.boyd@linaro.org, oscar@naiandei.net, arnd@arndb.de, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, linux-usb@vger.kernel.org, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, Peter Chen <peter.chen@nxp.com>, p.zabel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="djsmrO0QNMuttZWM"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160706145326.2658600-2-arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shiyan <shc_work@mail.ru>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add optional properties for power sequence.
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
- Documentation/devicetree/bindings/usb/usb-device.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+--djsmrO0QNMuttZWM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-index 1c35e7b..ef0c9b2 100644
---- a/Documentation/devicetree/bindings/usb/usb-device.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-@@ -13,6 +13,10 @@ Required properties:
- - reg: the port number which this device is connecting to, the range
-   is 1-31.
- 
-+Optional properties:
-+power sequence properties, see
-+Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt for detail
-+
- Example:
- 
- &usb1 {
-@@ -24,5 +28,11 @@ Example:
- 	hub: genesys@1 {
- 		compatible = "usb5e3,608";
- 		reg = <1>;
-+
-+		power-sequence;
-+		clocks = <&clks IMX6SX_CLK_CKO>;
-+		clock-names = "pwrseq-clk";
-+		pwrseq-reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
-+		pwrseq-reset-duration-us = <10>;
- 	};
- }
--- 
-1.9.1
+On Wed, Jul 06, 2016 at 04:53:13PM +0200, Arnd Bergmann wrote:
+> This documents the binding used by Alexander Shiyan's DT support for
+> the clps711x SPI controller.
+
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
+
+--djsmrO0QNMuttZWM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXfiAVAAoJECTWi3JdVIfQAUEH/inHJW106JVKvaG7HKgXOZ0I
+OsSmplfG99M0qxf4ELunBE3TlKWMxaFiQ+3VjDNQGCT71NOW5dxe1e5+cfsyOlOS
+/5aa+aWLXLIvTbrtCVfx05S5/J6oablSrzJXF9YNXfcgslan3OQ9PDpmwHucsgrW
+FAOP2aweGozeYxuw926oixTMJhY86gTGdRbhMMtV0iwT0HOXrm8YNQLW4jNs+0OH
+egmZoDU//ALOOddUlBmzKigpW46RIH1SIm9lPbS/LJSU/ZVzELUtTRF6kHQoqIOQ
+Qwdh3slalxVel8CVYai90hojloZQn7WVGY09KW2tlARyB+rp0QD3J1ryOJ25NSU=
+=67Dw
+-----END PGP SIGNATURE-----
+
+--djsmrO0QNMuttZWM--
