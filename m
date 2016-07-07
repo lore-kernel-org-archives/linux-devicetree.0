@@ -1,109 +1,80 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: Developing Linux Kernel Driver for media Codec Driver
-Date: Thu, 7 Jul 2016 10:32:50 +0200
-Message-ID: <577E13B2.4070501@xs4all.nl>
-References: <CAJeuY79hD7Zzp7j1D=AfW+MRqmmFdOxJUW_eyQE+L9MjtQHGow@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Thu, 07 Jul 2016 10:46:28 +0200
+Message-ID: <3996482.D5xdKXDiGl@wuerfel>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com> <3354017.XSBSmHHtrQ@wuerfel> <bb1beb8d-652d-aa97-e24b-e3e27397dd2e@broadcom.com>
+Reply-To: arnd-r2nGTMty4D4@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJeuY79hD7Zzp7j1D=AfW+MRqmmFdOxJUW_eyQE+L9MjtQHGow@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hao Zhang <hao5781286@gmail.com>, wens@csie.org
-Cc: kernelnewbies@kernelnewbies.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRBK5M7C5QKGQEPFWVAQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <bb1beb8d-652d-aa97-e24b-e3e27397dd2e-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Arend Van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/07/16 10:12, Hao Zhang wrote:
-> hi all
+On Wednesday, July 6, 2016 9:19:41 PM CEST Arend Van Spriel wrote:
+> On 6-7-2016 15:42, Arnd Bergmann wrote:
+> > On Wednesday, July 6, 2016 10:08:55 AM CEST Arend Van Spriel wrote:
+> >> On Tue, Jul 5, 2016 at 3:43 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > All existing uses of the model property in arch/arm/boot/dts and most of
+> > the ones in arch/powerpc/boot/dts are against the intended usage in
+> > one way or another, but adding different kind of incorrect usage won't
+> > improve that.
+> > 
+> > The only way I can see the model property being used correctly would
+> > be to have it match the first entry in the compatible property, but
+> > that is completely redundant, so we tend to omit it, except for the
+> > root node in which it is required. For the root node however, the
+> > historic practice that has crept in on ARM is to put something completely
+> > different in there, which is a human-readable description of the
+> > machine rather than something we can use as a unique indentifier.
+> > 
+> > I'd just consider the "model" property burned, and not use it for anything
+> > that doesn't already use it, just like we handle "device_type": a few
+> > things require it, nothing else should use it.
 > 
-> i am developing a linux kernel driver for a 4-CH AHD2.0 RX and 9-CH
-> Audio Codec which is named nvp6124 .
+> If that is the agreed approach in devicetree arena I am fine with it. I
+> have been unaware of this and just looked at the suggestion from Jonas
+> seeing a solution to the problem at hand.
+
+I don't think it has been discussed or decided before as the question
+has not come up, so for now this is my personal view. Maybe one of
+the devicetree maintainers can comment on this.
+
+> > I agree with your point that the "compatible" property in case of brcmfmac
+> > is really odd because it is not required to identify the hardware when
+> > the SDIO device identification is sufficient, and we just need it to guard
+> > the definition of the other properties. However it seems that now we
+> > actually do need to identify the hardware because we cannot read the
+> > board ID and revision that is supposed to come from nvram but also needed
+> > to read the nvram contents from a file.
 > 
-> wedsite : http://www.nextchip.com/ch/products/product.asp?hGubun=AHD.
-> 
-> below are few of its characteristics:
-> 
-> video codec:
-> it digitizes and decodes ntsc/pal/comet/AHD1.0/AHD2.O video signal into digital
-> video components which represents 8bit bt656/1120 4:2:2 byte interleave fotmat.
-> 
-> audio codec:
-> output pcm digital signal converted from analog audio input signals and analog
-> audio signals converted from pcm digital audio.
-> 
-> control interface:
-> control and configure through i2c interface.
-> 
-> video interface:
-> 4ch analog video input and output 2ch digital signal, each channal has
-> 8 data ports and a clk clock port
-> which can connect to the embedded processer.
-> 
-> 
-> audio interface(two i2s interface):
-> audio data convert to PCM data,and outputed via i2s interface .
-> PCM data can also input via i2s interface, the input audio data is
-> outputed via internal DAC.
-> 
-> 
-> i want to submit the driver, but i have some problem on the below points:
-> 
-> 1.must i submit the driver through device tree binding? Does the
-> kernel tree accept the driver without device tree binding?
-> just see the video interface ,i know i2c port can binding below the
-> i2c node, but, how can i bind other data port and clock signal port
-> with device trees?
+> The board ID and rev in the nvram may not be used if the device has
+> these stored in OTP. However, the problem is that the device need
+> firmware+nvram loaded into it before we can start the firmware on the
+> device. Now if we were to add boardtype and boardrev properties in the
+> binding to identify the hardware, I suppose a new compatible value would
+> be required.
 
-This driver should be implemented as a v4l2-subdevice (see many examples of
-such drivers in drivers/media/i2c). Drivers like this can be used both on
-embedded platforms using a device tree and on e.g. PCIe cards and in that
-case a struct platform_data is used to pass the necessary information to
-the driver. (Note: in the future there is a good chance that PCIe drivers will
-start to use device tree overlays for this, but not at the moment AFAIK).
+I'm a bit confused by the interdependencies now. You say that there are
+board ID/rev values stored in OTP. What exactly prevents us from just
+using those to generate a file name to look up the nvram file on disk
+for the remaining values?
 
-If you look at e.g. the adv7604.c driver you'll see that it can both parse the
-DT and use platform_data.
+Do we require the firmware to be running before we can read the OTP,
+or are there cases where the board ID in OTP is wrong or missing?
 
-See Documentation/devicetree/bindings/media/video-interfaces.txt for details
-on how to bind data/clock signals in the DT.
+If we can't rely on OTP for one of those reasons and instead add two
+properties for boardtype/boardrev, I don't think that requires a
+change of the compatible string, we would just document those two
+as optional properties.
 
-If this is tested on an embedded board, then you'll need DT bindings.
-
-> 2.how to use device tree to bind device and how does the kernel uses
-> it to match device? can i obtain some document about this?
-
-Look at e.g. arch/arm/boot/dts/r8a7790-lager.dts and search for adv7180.
-
-> 3.i creat the driver for Cubieboard one(allwinner a10 processer) and
-> Banana PI BPI-M1(allwinner a20 processer) ,if i submit patch
-> ,which  kernel version shoudle i use ? must i use the lastest kernel
-> (download in www.kernel.org isn't the sdk of the board)in that boards
-> ?
-
-The master branch of our media repository (https://git.linuxtv.org/media_tree.git)
-is preferred.
-
-> 
-> 4.does someone know which lastest kernel version does Cubieboard one
-> and Banana PI BPI-M1 supports?
-
-I thought Cubieboard one supports the latest kernel, but I'm not sure about
-the banana board.
-
-> 
-> 5.the maintainer doesn't has the device, how do they know the driver
-> is work well on my board? just buit without error or warning ?
-
-I have a cubieboard one, so I should be able to test. But in general I
-assume that the developer actually has tested it (what's the point otherwise?!).
-
-Also, before I accept a driver it has to pass the v4l2-compliance test found here:
-
-https://git.linuxtv.org/v4l-utils.git/
-
-This does pretty exhaustive tests and if it all passes, then the driver is in
-pretty decent shape.
-
-Regards,
-
-	Hans
+	Arnd
