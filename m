@@ -1,301 +1,199 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH v3 3/3] arm64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Thu, 7 Jul 2016 20:59:59 +0800
-Message-ID: <577E524F.3030403@huawei.com>
-References: <1467412897-15220-1-git-send-email-oss@buserror.net>
- <1467412897-15220-3-git-send-email-oss@buserror.net>
- <577E2226.3020902@huawei.com> <577E25A4.2010800@arm.com>
- <577E3EF2.9080105@huawei.com> <577E424C.5030908@arm.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v4 3/5] nvmem: core: Add consumer API to get nvmem cell
+ from node
+Date: Thu, 7 Jul 2016 14:16:36 +0100
+Message-ID: <577E5634.7020805@linaro.org>
+References: <cover.1467872014.git.maitysanchayan@gmail.com>
+ <0e6294d931bf181376a6f4e1a86df3f6c6a5d575.1467872014.git.maitysanchayan@gmail.com>
+ <577E1E79.4090809@linaro.org>
+ <20160707123350.GA18563@Sanchayan-Arch.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <577E424C.5030908@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Scott Wood <oss@buserror.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160707123350.GA18563@Sanchayan-Arch.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maitysanchayan@gmail.com
+Cc: arnd@arndb.de, shawnguo@kernel.org, stefan@agner.ch, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016/7/7 19:51, Marc Zyngier wrote:
-> On 07/07/16 12:37, Ding Tianhong wrote:
->> On 2016/7/7 17:49, Marc Zyngier wrote:
->>> On 07/07/16 10:34, Ding Tianhong wrote:
->>>> On 2016/7/2 6:41, Scott Wood wrote:
->>>>> Erratum A-008585 says that the ARM generic timer counter "has the
->>>>> potential to contain an erroneous value for a small number of core
->>>>> clock cycles every time the timer value changes".  Accesses to TVAL
->>>>> (both read and write) are also affected due to the implicit counter
->>>>> read.  Accesses to CVAL are not affected.
->>>>>
->>>>> The workaround is to reread TVAL and count registers until successive reads
->>>>> return the same value, and when writing TVAL to retry until counter
->>>>> reads before and after the write return the same value.
->>>>>
->>>>> This erratum can be found on LS1043A and LS2080A.
->>>>>
->>>>> Signed-off-by: Scott Wood <oss@buserror.net>
->>>>> ---
->>>>> v3:
->>>>> - Used cval rather than a loop for the write side of the erratum
->>>>> - Added a Kconfig control
->>>>> - Moved the device tree binding into its own patch
->>>>> - Added erratum to silicon-errata.txt
->>>>> - Changed function names to contain the erratum name
->>>>> - Factored out the setting of erratum versions of set_next_event
->>>>>   to improve readability
->>>>> - Added a comment clarifying that the timeout is arbitrary
->>>>>
->>>>> v2:
->>>>> Significant rework based on feedback, including using static_key,
->>>>> disabling VDSO counter access rather than adding the workaround to the
->>>>> VDSO, and uninlining the loops.
->>>>>
->>>>> Dropped the separate property for indicating that writes to TVAL are
->>>>> affected, as I believe that's just a side effect of the implicit
->>>>> counter read being corrupted, and thus a chip that is affected by one
->>>>> will always be affected by the other.
->>>>>
->>>>> Dropped the arm32 portion as it seems there was confusion about whether
->>>>> LS1021A is affected.  Currently I am being told that it is not
->>>>> affected.
->>>>>
->>>>> I considered writing to CVAL rather than looping on TVAL writes, but
->>>>> that would still have required separate set_next_event() code for the
->>>>> erratum, and adding CVAL to the enum would have required a bunch of
->>>>> extra handlers in switch statements (even where unused, due to compiler
->>>>> warnings about unhandled enum values) including in an arm32 header.  It
->>>>> seemed better to avoid the arm32 interaction and new untested
->>>>> accessors.
->>>>> ---
->>>>>  Documentation/arm64/silicon-errata.txt |   2 +
->>>>>  arch/arm64/include/asm/arch_timer.h    |  48 ++++++++++++---
->>>>>  drivers/clocksource/Kconfig            |  10 ++++
->>>>>  drivers/clocksource/arm_arch_timer.c   | 103 +++++++++++++++++++++++++++++++++
->>>>>  4 files changed, 154 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
->>>>> index ba4b6ac..5778f62 100644
->>>>> --- a/Documentation/arm64/silicon-errata.txt
->>>>> +++ b/Documentation/arm64/silicon-errata.txt
->>>>> @@ -57,3 +57,5 @@ stable kernels.
->>>>>  | Cavium         | ThunderX ITS    | #22375, #24313  | CAVIUM_ERRATUM_22375    |
->>>>>  | Cavium         | ThunderX GICv3  | #23154          | CAVIUM_ERRATUM_23154    |
->>>>>  | Cavium         | ThunderX Core   | #27456          | CAVIUM_ERRATUM_27456    |
->>>>> +|                |                 |                 |                         |
->>>>> +| Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585     |
->>>>> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
->>>>> index fbe0ca3..70fbad9 100644
->>>>> --- a/arch/arm64/include/asm/arch_timer.h
->>>>> +++ b/arch/arm64/include/asm/arch_timer.h
->>>>> @@ -23,10 +23,34 @@
->>>>>  
->>>>>  #include <linux/bug.h>
->>>>>  #include <linux/init.h>
->>>>> +#include <linux/jump_label.h>
->>>>>  #include <linux/types.h>
->>>>>  
->>>>>  #include <clocksource/arm_arch_timer.h>
->>>>>  
->>>>> +extern struct static_key_false arch_timer_read_ool_enabled;
->>>>> +
->>>>> +#define ARCH_TIMER_REG_READ(reg, func) \
->>>>> +extern u64 func##_ool(void); \
->>>>> +static inline u64 __##func(void) \
->>>>> +{ \
->>>>> +	u64 val; \
->>>>> +	asm volatile("mrs %0, " reg : "=r" (val)); \
->>>>> +	return val; \
->>>>> +} \
->>>>> +static inline u64 _##func(void) \
->>>>> +{ \
->>>>> +	if (IS_ENABLED(CONFIG_FSL_ERRATUM_A008585) && \
->>>>> +	    static_branch_unlikely(&arch_timer_read_ool_enabled)) \
->>>>> +		return func##_ool(); \
->>>>> +	else \
->>>>> +		return __##func(); \
->>>>> +}
->>>>> +
->>>>> +ARCH_TIMER_REG_READ("cntp_tval_el0", arch_timer_get_ptval)
->>>>> +ARCH_TIMER_REG_READ("cntv_tval_el0", arch_timer_get_vtval)
->>>>> +ARCH_TIMER_REG_READ("cntvct_el0", arch_counter_get_cntvct)
->>>>> +
->>>>>  /*
->>>>>   * These register accessors are marked inline so the compiler can
->>>>>   * nicely work out which register we want, and chuck away the rest of
->>>>> @@ -58,6 +82,16 @@ void arch_timer_reg_write_cp15(int access, enum arch_timer_reg reg, u32 val)
->>>>>  	isb();
->>>>>  }
->>>>>  
->>>>> +static __always_inline void arch_timer_cval_write_cp15(int access, u64 val)
->>>>> +{
->>>>> +	if (access == ARCH_TIMER_PHYS_ACCESS)
->>>>> +		asm volatile("msr cntp_cval_el0, %0" : : "r" (val));
->>>>> +	else if (access == ARCH_TIMER_VIRT_ACCESS)
->>>>> +		asm volatile("msr cntv_cval_el0, %0" : : "r" (val));
->>>>> +
->>>>> +	isb();
->>>>> +}
->>>>> +
->>>>>  static __always_inline
->>>>>  u32 arch_timer_reg_read_cp15(int access, enum arch_timer_reg reg)
->>>>>  {
->>>>> @@ -66,19 +100,19 @@ u32 arch_timer_reg_read_cp15(int access, enum arch_timer_reg reg)
->>>>>  	if (access == ARCH_TIMER_PHYS_ACCESS) {
->>>>>  		switch (reg) {
->>>>>  		case ARCH_TIMER_REG_CTRL:
->>>>> -			asm volatile("mrs %0,  cntp_ctl_el0" : "=r" (val));
->>>>> +			asm volatile("mrs %0, cntp_ctl_el0" : "=r" (val));
->>>>>  			break;
->>>>>  		case ARCH_TIMER_REG_TVAL:
->>>>> -			asm volatile("mrs %0, cntp_tval_el0" : "=r" (val));
->>>>> +			val = _arch_timer_get_ptval();
->>>>>  			break;
->>>>>  		}
->>>>>  	} else if (access == ARCH_TIMER_VIRT_ACCESS) {
->>>>>  		switch (reg) {
->>>>>  		case ARCH_TIMER_REG_CTRL:
->>>>> -			asm volatile("mrs %0,  cntv_ctl_el0" : "=r" (val));
->>>>> +			asm volatile("mrs %0, cntv_ctl_el0" : "=r" (val));
->>>>>  			break;
->>>>>  		case ARCH_TIMER_REG_TVAL:
->>>>> -			asm volatile("mrs %0, cntv_tval_el0" : "=r" (val));
->>>>> +			val = _arch_timer_get_vtval();
->>>>>  			break;
->>>>>  		}
->>>>>  	}
->>>>> @@ -116,12 +150,8 @@ static inline u64 arch_counter_get_cntpct(void)
->>>>>  
->>>>>  static inline u64 arch_counter_get_cntvct(void)
->>>>>  {
->>>>> -	u64 cval;
->>>>> -
->>>>>  	isb();
->>>>> -	asm volatile("mrs %0, cntvct_el0" : "=r" (cval));
->>>>> -
->>>>> -	return cval;
->>>>> +	return _arch_counter_get_cntvct();
->>>>>  }
->>>>>  
->>>>>  static inline int arch_timer_arch_init(void)
->>>>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->>>>> index c346be6..672ddc3 100644
->>>>> --- a/drivers/clocksource/Kconfig
->>>>> +++ b/drivers/clocksource/Kconfig
->>>>> @@ -207,6 +207,16 @@ config ARM_ARCH_TIMER_EVTSTREAM
->>>>>  	  This must be disabled for hardware validation purposes to detect any
->>>>>  	  hardware anomalies of missing events.
->>>>>  
->>>>> +config FSL_ERRATUM_A008585
->>>>> +	bool "Workaround for Freescale/NXP Erratum A-008585"
->>>>> +	default y
->>>>> +	depends on ARM_ARCH_TIMER && ARM64
->>>>> +	help
->>>>> +	  This option enables a workaround for Freescale/NXP Erratum
->>>>> +	  A-008585 ("ARM generic timer may contain an erroneous
->>>>> +	  value").  The workaround will only be active if the
->>>>> +	  fsl,erratum-a008585 property is found in the timer node.
->>>>> +
->>>>>  config ARM_GLOBAL_TIMER
->>>>>  	bool
->>>>>  	select CLKSRC_OF if OF
->>>>> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
->>>>> index 5152b38..7ead4eb 100644
->>>>> --- a/drivers/clocksource/arm_arch_timer.c
->>>>> +++ b/drivers/clocksource/arm_arch_timer.c
->>>>> @@ -83,6 +83,51 @@ static bool arch_timer_mem_use_virtual;
->>>>>   * Architected system timer support.
->>>>>   */
->>>>>  
->>>>> +#ifdef CONFIG_FSL_ERRATUM_A008585
->>>>> +DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
->>>>> +EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
->>>>> +
->>>>> +/*
->>>>> + * __always_inline is used to ensure that func() is not an actual function
->>>>> + * pointer, which would result in the register accesses potentially being too
->>>>> + * far apart for the loop to work.
->>>>> + *
->>>>> + * The timeout is an arbitrary value well beyond the highest number
->>>>> + * of iterations the loop has been observed to take.
->>>>> + */
->>>>> +static __always_inline u64 fsl_a008585_reread_counter(u64 (*func)(void))
->>>>> +{
->>>>> +	u64 cval_old, cval_new;
->>>>> +	int timeout = 200;
->>>>> +
->>>>> +	do {
->>>>> +		isb();
->>>>> +		cval_old = func();
->>>>> +		cval_new = func();
->>>>> +		timeout--;
->>>>> +	} while (unlikely(cval_old != cval_new) && timeout);
->>>>> +
->>>>> +	WARN_ON_ONCE(!timeout);
->>>>> +	return cval_new;
->>>>> +}
->>>> Hi Scott:
->>>>
->>>> I have test this patch, this solution looks will break the performance a little more than I expected.
->>>> it will have more than 10% that the cval will read again, we could sure that the cval_old always equal to the
->>>> cval_new in the normal circumstances, so I prefer this way:
->>>>
->>>> 	do {
->>>> 		isb();
->>>> 		cval_old = func();
->>>> 		cval_new = func();
->>>> 		timeout--;	
->>>> 	} while (unlikely((cval_new - cval_old) >> 2) && timeout);
->>>
->>> What makes you think that ignoring the two bottom bits is a safe thing
->>> to do? Talking about performance when the HW has such a dramatic bug is
->>> like putting a bigger engine on a car that has no brakes: you just hit
->>> the wall quicker.
->>>
->>> Thanks,
->>>
+
+
+On 07/07/16 13:33, maitysanchayan@gmail.com wrote:
+> Hello Srinivas,
+>
+> On 16-07-07 10:18:49, Srinivas Kandagatla wrote:
 >>
->> I have a chip which has the same problem like Scott's chip, and I
->> wish to solve this problem in the same way, our chip designer told me
->> that if you got a wrong value from the cntvct_el0, you would not get
->> a wrong value until 8 cycles later, so I could ignoring the lowest 3
->> bits if I reading twice together.
-> 
-> Is that CPU cycles? Or timer cycles? What guarantees do you have that
-> the two reads are *always* done in the right timing window?
-> 
+>>
+>> On 07/07/16 07:39, Sanchayan Maity wrote:
+>>> From: Stefan Agner <stefan@agner.ch>
+>>>
+>>> The existing NVMEM consumer API's do not allow to get a
+>>> NVMEM cell directly given a device tree node. This patch
+>>> adds a function to provide this functionality.
+>>>
+>>> Assuming the nvmem cell id name is known, this can be used
+>>> as follows
+>>>
+>>> struct device_node *cell_np;
+>>> struct nvmem_cell *foo_cell;
+>>>
+>>> cell_np = of_find_node_by_name(parent, "foo");
+>>> foo_cell = of_nvmem_cell_get_direct(cell_np);
+>>
+>> I don't see a real gain in adding this new api,
+>> This will encourage people to use non-standard nvmem bindings.
+>>
+>> why not just use standard nvmem bindings.. and use
+>>
+>> of_nvmem_cell_get(np, "foo");
+>>
+>> which should work in your case.
+>
+> It will not work in our case. I believe what you are referring to will
+> work if I were to pass the device node pointer which was a NVMEM consumer
+> containing the nvmem-cells property. In our case, we pass the device node
+> pointer pointing to /soc which is not a nvmem consumer. In this case it
+> will not have nvmem-cells property causing of_nvmem_cell_get to return
+> EINVAL when it calls of_parse_phandle with "nvmem-cells".
 
-The timer counter only use 56 bits in aarch64, my chip would change one of the higher 
-bit(55 to 3) to a wrong value when occur bug, so there will be more than 8 cycles between
-correct value and wrong value from the timer counter. Maybe Scott's problem is not just like
-mine.
+I could not see any bindings/ dt patches or dt examples for this this 
+series.. so Am guessing your node would look like:
 
->> The key problem is the probability of this bug, my chip has 1/100000
->> chance to met this bug, so use 10% performance to fix this bug looks
->> more expensive.
-> 
-> You care about performance, I care about correctness. If 10% of your CPU
-> is wasted on a correct workaround, tough. Next time, your HW guy will
-> spend more time getting it right.
-> 
-> Anyway, what you are describing is a different bug from what FSL has, so
-> don't try and shoehorn your own constraints in another workaround.
-> Please implement your own.
-> 
+soc {
+	cfg0: cfg0 {
+		...
+	};
+	cfg1: cfg1 {
+		...
+	};
+};
 
-OK, In deed I should, thanks.
+If this is not how it looks, can you share the details.
 
-Ding
+What Am saying is that why not have:
 
-> Thanks,
-> 
-> 	M.
-> 
+soc {
+	nvmem-cells = <&cfg0>, <&cfg1>;
+	nvmem-cell-names = "cfg0", "cfg1";
+
+	cfg0: cfg0 {
+		...
+	};
+
+	cfg1: cfg1 {
+		...
+	};
+};
+
+>
+> Our requirement is to be able to pass the soc node pointer and then
+> be able to get a nvmem cell by specifying it's name. So for our case
+
+Why?
+
+> ocotp node has cfg0 and cfg1 which we want but we cannot use existing
+> nvmem consumer API since that requires having the nvmem consumer properties
+> in the node we are binding to viz. is a direct nvmem consumer.
+>
+> Regards,
+> Sanchayan.
+>
+>>
+>> thanks,
+>> srini
+>>>
+>>> Parent node can also be the of_node of the main SoC device
+>>> node.
+>>>
+>>> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+>>> ---
+>>>    drivers/nvmem/core.c           | 44 +++++++++++++++++++++++++++++-------------
+>>>    include/linux/nvmem-consumer.h |  1 +
+>>>    2 files changed, 32 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>>> index 965911d..470abee 100644
+>>> --- a/drivers/nvmem/core.c
+>>> +++ b/drivers/nvmem/core.c
+>>> @@ -743,29 +743,21 @@ static struct nvmem_cell *nvmem_cell_get_from_list(const char *cell_id)
+>>>
+>>>    #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
+>>>    /**
+>>> - * of_nvmem_cell_get() - Get a nvmem cell from given device node and cell id
+>>> + * of_nvmem_cell_get_direct() - Get a nvmem cell from given device node
+>>>     *
+>>> - * @dev node: Device tree node that uses the nvmem cell
+>>> - * @id: nvmem cell name from nvmem-cell-names property.
+>>> + * @dev node: Device tree node that uses nvmem cell
+>>>     *
+>>>     * Return: Will be an ERR_PTR() on error or a valid pointer
+>>>     * to a struct nvmem_cell.  The nvmem_cell will be freed by the
+>>>     * nvmem_cell_put().
+>>>     */
+>>> -struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
+>>> -					    const char *name)
+>>> +struct nvmem_cell *of_nvmem_cell_get_direct(struct device_node *cell_np)
+>>>    {
+>>> -	struct device_node *cell_np, *nvmem_np;
+>>> +	struct device_node *nvmem_np;
+>>>    	struct nvmem_cell *cell;
+>>>    	struct nvmem_device *nvmem;
+>>>    	const __be32 *addr;
+>>> -	int rval, len, index;
+>>> -
+>>> -	index = of_property_match_string(np, "nvmem-cell-names", name);
+>>> -
+>>> -	cell_np = of_parse_phandle(np, "nvmem-cells", index);
+>>> -	if (!cell_np)
+>>> -		return ERR_PTR(-EINVAL);
+>>> +	int rval, len;
+>>>
+>>>    	nvmem_np = of_get_next_parent(cell_np);
+>>>    	if (!nvmem_np)
+>>> @@ -824,6 +816,32 @@ err_mem:
+>>>
+>>>    	return ERR_PTR(rval);
+>>>    }
+>>> +EXPORT_SYMBOL_GPL(of_nvmem_cell_get_direct);
+>>> +
+>>> +/**
+>>> + * of_nvmem_cell_get() - Get a nvmem cell from given device node and cell id
+>>> + *
+>>> + * @dev node: Device tree node that uses the nvmem cell
+>>> + * @id: nvmem cell name from nvmem-cell-names property.
+>>> + *
+>>> + * Return: Will be an ERR_PTR() on error or a valid pointer
+>>> + * to a struct nvmem_cell.  The nvmem_cell will be freed by the
+>>> + * nvmem_cell_put().
+>>> + */
+>>> +struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
+>>> +					    const char *name)
+>>> +{
+>>> +	struct device_node *cell_np;
+>>> +	int index;
+>>> +
+>>> +	index = of_property_match_string(np, "nvmem-cell-names", name);
+>>> +
+>>> +	cell_np = of_parse_phandle(np, "nvmem-cells", index);
+>>> +	if (!cell_np)
+>>> +		return ERR_PTR(-EINVAL);
+>>> +
+>>> +	return of_nvmem_cell_get_direct(cell_np);
+>>> +}
+>>>    EXPORT_SYMBOL_GPL(of_nvmem_cell_get);
+>>>    #endif
+>>>
+>>> diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+>>> index 9bb77d3..bf879fc 100644
+>>> --- a/include/linux/nvmem-consumer.h
+>>> +++ b/include/linux/nvmem-consumer.h
+>>> @@ -136,6 +136,7 @@ static inline int nvmem_device_write(struct nvmem_device *nvmem,
+>>>    #endif /* CONFIG_NVMEM */
+>>>
+>>>    #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
+>>> +struct nvmem_cell *of_nvmem_cell_get_direct(struct device_node *cell_np);
+>>>    struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
+>>>    				     const char *name);
+>>>    struct nvmem_device *of_nvmem_device_get(struct device_node *np,
+>>>
