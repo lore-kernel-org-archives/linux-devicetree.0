@@ -1,12 +1,13 @@
 From: Thierry Reding <thierry.reding@gmail.com>
 Subject: Re: [PATCH v3 1/6] dt-bindings: add LG LP097QX1-SPA1 panel binding
-Date: Thu, 7 Jul 2016 23:55:24 +0200
-Message-ID: <20160707215523.GC744@mithrandir.ba.sec>
+Date: Thu, 7 Jul 2016 23:57:01 +0200
+Message-ID: <20160707215659.GD744@mithrandir.ba.sec>
 References: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
+ <20160707215523.GC744@mithrandir.ba.sec>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1232059441=="
+Content-Type: multipart/mixed; boundary="===============0686525892=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
+In-Reply-To: <20160707215523.GC744@mithrandir.ba.sec>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -21,62 +22,65 @@ Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll 
 List-Id: devicetree@vger.kernel.org
 
 
---===============1232059441==
+--===============0686525892==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GZVR6ND4mMseVXL/"
+	protocol="application/pgp-signature"; boundary="F8dlzb82+Fcn6AgP"
 Content-Disposition: inline
 
 
---GZVR6ND4mMseVXL/
+--F8dlzb82+Fcn6AgP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 12, 2016 at 10:53:30AM +0800, Yakir Yang wrote:
-> The LG LP097QX1-SPA1 is an 9.7", 2048x1536 (QXGA) TFT-LCD panel
-> connected using eDP interfaces.
+On Thu, Jul 07, 2016 at 11:55:23PM +0200, Thierry Reding wrote:
+> On Sun, Jun 12, 2016 at 10:53:30AM +0800, Yakir Yang wrote:
+> > The LG LP097QX1-SPA1 is an 9.7", 2048x1536 (QXGA) TFT-LCD panel
+> > connected using eDP interfaces.
+> >=20
+> > Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > ---
+> > Changes in v3: None
+> > Changes in v2:
+> > - Add Rob's acked for dt-bindings of LG LP097QX1-SPA1 panel
+> >=20
+> >  .../devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt         | 7=
+ +++++++
+> >  1 file changed, 7 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/lg,=
+lp097qx1-spa1.txt
 >=20
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes in v3: None
-> Changes in v2:
-> - Add Rob's acked for dt-bindings of LG LP097QX1-SPA1 panel
->=20
->  .../devicetree/bindings/display/panel/lg,lp097qx1-spa1.txt         | 7 +=
-++++++
->  1 file changed, 7 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/lg,lp=
-097qx1-spa1.txt
+> Applied all six patches, though I modified 3/6 as Doug suggested.
 
-Applied all six patches, though I modified 3/6 as Doug suggested.
+I mean patch 4/6, of course.
 
 Thierry
 
---GZVR6ND4mMseVXL/
+--F8dlzb82+Fcn6AgP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAABCAAGBQJXfs/KAAoJEN0jrNd/PrOhP0cP/3KOYA3TQmtq2BrFsLYl5iP1
-qD+UaHJlCjBHjRK+lqcPt2g0pflfNAANUXw+k4VgUGOK1ETnIwAGAMK0d8Sugbnd
-zd45GWU0MwHyv3oBc+1B+V4xL17DVBGxPn6/o255dF58YaMCeirN0CwLaH6sxkkn
-KCJpkzvh1eF4d2kXVVjrRAVtB8VnLxcwARB85Ui5UjAiaDcWHlbpOGuftKQMIxqs
-RAkOY7mOQR16aoZI5sRQ8WP219lTfRi6viDE/a34Ky3slndDSQDDDeJiVMqs/8F9
-zmI99cYJAiJKeLrd+7JinRoQpE51ETpYmgnYh/2pT6SKwKMYS+CKfZEZD6uQghfP
-nkdrMH9WjazAtMpXIKoKDZmV+Gc1RTxODLKAFbs/NWqAhcoPyb8x50W7IhMbY7UK
-JDEIBB336qyaHIKyXTVmQlmbhA7ME2fYeP3FDVxmoYx8+u0q52v6MwgoHyNOJ68b
-RMJPUo7Q6ew+baS8+sRfO75WJboC1bFADbJ7rjKGwXFFXqhh4RTPtGYINvoEpR/C
-e0bASjsoHc5bPcw/Zvy4hgjl34VEzsiuNjmgJLV1fYDcliTTqXuKy9VkjbGALpXs
-sm3bwL83bVH6kZKoaRi367LZE0WbjsxrQdFOXeQVFWOu/dPRxuFyVvWZzrTQ7Hle
-t6k+fj74b5SviUyHlDek
-=jB5r
+iQIcBAABCAAGBQJXftArAAoJEN0jrNd/PrOhZcUP/iQ8w9Q6o2ZsMFYv00luO1d4
+j++KtnblWKFfjLuJSS2nCZtvfYq8iez+5WonkB3w5A78o/2/ctjsQyEPODADhxMK
+kDPSQRIm9RzYvpY443Md7bgcElQZUQjJJ9wrm0rHpiyaZBq0WCm+tNiy6EvlkyTa
+JfzwReKAezEVn4TpgQBN022VnWsio1DL/8OnLmEJaR9Wpe2m3bETzpGWjlcT9SG9
+95+YvR1ZtYW1WfzvayUVgZKOJBE60tX58z/I9hwk9+g8w9G7MNVYeM5uvNUKxkOq
+7QhqIABsgYMPPVNH3aPwCotiXHsoodYwY3s79cCTjraz9upz4fUjpT6YYt6TbO+i
+NY2meShDyKAxXQcN4Fb/poH2jjs8Jgqc/nNwlJRvcrI6Oc7J6bOao6Vj/Q8oQ+p2
+x738ftrIbi7OfK9WtOxluG5n2eaqB//x5jtJYkv78zNC60KigcSrbUgAjM1ix8zq
+8pTHizMh9Acx64Pv+ejesKJ2suSvU+2rgMxR79gziu8Qy6CLtteIDD52Zj27hxEz
+9Quvy7paNeD06Co1b0HhVNa/sNekRiq5aH2TvKF1SeXx2ixDPx7C97DnpQoWghv8
++7k+RHKl0DQMIAYMhdnHIgfNuoGUYmHb5oDzZ+IhK3U09gbXhyJXkgS5VBkZU4Kq
+E6md+J1JPiIee9IqJeTo
+=UA9a
 -----END PGP SIGNATURE-----
 
---GZVR6ND4mMseVXL/--
+--F8dlzb82+Fcn6AgP--
 
---===============1232059441==
+--===============0686525892==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -86,4 +90,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============1232059441==--
+--===============0686525892==--
