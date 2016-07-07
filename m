@@ -1,90 +1,42 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 05/10] firmware: tegra: add BPMP support
-Date: Thu, 7 Jul 2016 13:55:08 -0600
-Message-ID: <577EB39C.6030605@wwwdotorg.org>
-References: <20160705090431.5852-1-josephl@nvidia.com>
- <20160705090431.5852-6-josephl@nvidia.com>
- <CAAVeFuKvp4d=RoPZGGLmhqXs1oHZPrEOxTJd_b6b7-rHq_mqqg@mail.gmail.com>
- <577E102E.8070602@nvidia.com>
- <CAAVeFu+6UO3_Zi3VTec0Qf6KBT2xY-usFNnd26raUQZ9ieEJbg@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] dmaengine driver for Marvell XOR v2 engine
+Date: Thu, 7 Jul 2016 22:42:48 +0200
+Message-ID: <20160707224248.71511ecd@free-electrons.com>
+References: <1466080116-26777-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160628143850.GD14945@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAVeFu+6UO3_Zi3VTec0Qf6KBT2xY-usFNnd26raUQZ9ieEJbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160628143850.GD14945@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/07/2016 04:18 AM, Alexandre Courbot wrote:
-> On Thu, Jul 7, 2016 at 5:17 PM, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 07/06/2016 07:39 PM, Alexandre Courbot wrote:
->>>
->>> Sorry, I will probably need to do several passes on this one to
->>> understand everything, but here is what I can say after a first look:
->>>
->>> On Tue, Jul 5, 2016 at 6:04 PM, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>>
->>>> The Tegra BPMP (Boot and Power Management Processor) is designed for the
->>>> booting process handling, offloading the power management tasks and
->>>> some system control services from the CPU. It can be clock, DVFS,
->>>> thermal/EDP, power gating operation and system suspend/resume handling.
->>>> So the CPU and the drivers of these modules can base on the service that
->>>> the BPMP firmware driver provided to signal the event for the specific PM
->>>> action to BPMP and receive the status update from BPMP.
->>>>
->>>> Comparing to the ARM SCPI, the service provided by BPMP is message-based
->>>> communication but not method-based. The BPMP firmware driver provides the
->>>> send/receive service for the users, when the user concerns the response
->>>> time. If the user needs to get the event or update from the firmware, it
->>>> can request the MRQ service as well. The user needs to take care of the
->>>> message format, which we call BPMP ABI.
->>>>
->>>> The BPMP ABI defines the message format for different modules or usages.
->>>> For example, the clock operation needs an MRQ service code called
->>>> MRQ_CLK with specific message format which includes different sub
->>>> commands for various clock operations. This is the message format that
->>>> BPMP can recognize.
->>>>
->>>> So the user needs two things to initiate IPC between BPMP. Get the
->>>> service from the bpmp_ops structure and maintain the message format as
->>>> the BPMP ABI defined.
+Hello Vinod,
 
->>>> +static struct tegra_bpmp *bpmp;
->>>
->>> static? Ok, we only need one... for now. How about a private member in
->>> your ivc structure that allows you to retrieve the bpmp and going
->>> dynamic? This will require an extra argument in many functions, but is
->>> cleaner design IMHO.
->>
->> IVC is designed as a generic IPC protocol among different modules (We have
->> not introduced some other usages of the IVC right now.). Maybe don't churn
->> some other stuff into IVC is better.
->
-> Anything is fine if you can get rid of that static.
+On Tue, 28 Jun 2016 20:08:50 +0530, Vinod Koul wrote:
+> On Thu, Jun 16, 2016 at 02:28:32PM +0200, Thomas Petazzoni wrote:
+> > Hello,
+> > 
+> > Here is the fourth version of the mv_xor_v2 driver, which allows to
+> > use the XOR engines available on the Marvell Armada 7K/8K ARM64 SoCs.  
+> 
+> Looks okay. But need ack on two ARM patches...
 
-Typically the way this is handled is to store the "struct ivc" inside 
-some other struct, and use the container_of macro to "move" from a 
-"struct ivc *" to a "struct XXX *" where "struct XXX" contains a "struct 
-ivc" field within it. That way, the IVC code's "struct ivc" knows 
-nothing about any IVC client's code/structures/..., doesn't have to 
-store any "client data", and yet the IVC client (the BPMP driver) can 
-acquire a "struct bpmp" pointer from any "struct ivc" pointer that it 
-"owns".
+Now that the two ARM patches have been taken by the ARM mvebu
+maintainer, do you think you could merge the DT binding and driver
+patches (PATCH 1/2 and PATCH 2/2 of this series) ?
 
-struct bpmp_mbox {
-     struct bpmp *bpmp;
-     struct ivc ivc;
-};
+Thanks a lot!
 
-void bpmp_call_ivc(struct bpmp_mbox *mb) {
-     ivc_something(&mb->ivc);
-}
-
-void bpmp_callback_from_ivc(struct ivc *ivc) {
-     struct bpmp_mbox *mb = container_of(struct bpmp_mbox, ivc, ivc);
-     struct bpmp *bpmp = mb->bpmp;
-}
-
-(I didn't check if I got the parameters to container_of correct above)
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
