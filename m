@@ -1,350 +1,60 @@
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: [PATCH v4 3/4] arm64: arch_timer: Work around QorIQ Erratum A-008585
-Date: Thu,  7 Jul 2016 02:46:11 -0500
-Message-ID: <1467877572-10817-3-git-send-email-oss@buserror.net>
-References: <1467877572-10817-1-git-send-email-oss@buserror.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467877572-10817-1-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 11/93] of: Add a new macro to declare_of for one parameter function returning a value
+Date: Thu,  7 Jul 2016 10:00:44 +0200
+Message-ID: <1467878526-1238-11-git-send-email-daniel.lezcano@linaro.org>
+References: <577E0BED.3020608@linaro.org>
+ <1467878526-1238-1-git-send-email-daniel.lezcano@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467878526-1238-1-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, daniel.lezcano@linaro.org
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Erratum A-008585 says that the ARM generic timer counter "has the
-potential to contain an erroneous value for a small number of core
-clock cycles every time the timer value changes".  Accesses to TVAL
-(both read and write) are also affected due to the implicit counter
-read.  Accesses to CVAL are not affected.
+The macro OF_DECLARE_1 expect a void (*func)(struct device_node *) while the
+OF_DECLARE_2 expect a int (*func)(struct device_node *, struct device_node *).
 
-The workaround is to reread TVAL and count registers until successive reads
-return the same value, and when writing TVAL to retry until counter
-reads before and after the write return the same value.
+The second one allows to pass an init function returning a value, which make
+possible to call the functions in the table and check the return value in order
+to catch at a higher level the errors and handle them from there instead of
+doing a panic in each driver (well at least this is the case for the clkevt).
 
-This erratum can be found on LS1043A and LS2080A.
+Unfortunately the OF_DECLARE_1 does not allow that and that lead to some code
+duplication and crappyness in the drivers.
 
-Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+The OF_DECLARE_1 is used by all the clk drivers and the clocksource/clockevent
+drivers. It is not possible to do the change in one shot as we have to change
+all the init functions.
+
+The OF_DECLARE_2 specifies an init function prototype with two parameters with
+the node and its parent. The latter won't be used, ever, in the timer drivers.
+
+Introduce a OF_DECLARE_1_RET macro to be used, and hopefully we can smoothly
+and iteratively change the users of OF_DECLARE_1 to use the new macro instead.
+
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
-v4:
-- Undef ARCH_TIMER_REG_READ after use
+ include/linux/of.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-v3:
-- Used cval rather than a loop for the write side of the erratum
-- Added a Kconfig control
-- Moved the device tree binding into its own patch
-- Added erratum to silicon-errata.txt
-- Changed function names to contain the erratum name
-- Factored out the setting of erratum versions of set_next_event
-  to improve readability
-- Added a comment clarifying that the timeout is arbitrary
-
-v2:
-Significant rework based on feedback, including using static_key,
-disabling VDSO counter access rather than adding the workaround to the
-VDSO, and uninlining the loops.
-
-Dropped the separate property for indicating that writes to TVAL are
-affected, as I believe that's just a side effect of the implicit
-counter read being corrupted, and thus a chip that is affected by one
-will always be affected by the other.
-
-Dropped the arm32 portion as it seems there was confusion about whether
-LS1021A is affected.  Currently I am being told that it is not
-affected.
-
-I considered writing to CVAL rather than looping on TVAL writes, but
-that would still have required separate set_next_event() code for the
-erratum, and adding CVAL to the enum would have required a bunch of
-extra handlers in switch statements (even where unused, due to compiler
-warnings about unhandled enum values) including in an arm32 header.  It
-seemed better to avoid the arm32 interaction and new untested
-accessors.
----
- Documentation/arm64/silicon-errata.txt |   2 +
- arch/arm64/include/asm/arch_timer.h    |  50 +++++++++++++---
- drivers/clocksource/Kconfig            |  10 ++++
- drivers/clocksource/arm_arch_timer.c   | 103 +++++++++++++++++++++++++++++++++
- 4 files changed, 156 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
-index 4da60b4..041e3a9 100644
---- a/Documentation/arm64/silicon-errata.txt
-+++ b/Documentation/arm64/silicon-errata.txt
-@@ -60,3 +60,5 @@ stable kernels.
- | Cavium         | ThunderX GICv3  | #23154          | CAVIUM_ERRATUM_23154    |
- | Cavium         | ThunderX Core   | #27456          | CAVIUM_ERRATUM_27456    |
- | Cavium         | ThunderX SMMUv2 | #27704          | N/A		       |
-+|                |                 |                 |                         |
-+| Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585     |
-diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-index fbe0ca3..927dc6f 100644
---- a/arch/arm64/include/asm/arch_timer.h
-+++ b/arch/arm64/include/asm/arch_timer.h
-@@ -23,10 +23,36 @@
+diff --git a/include/linux/of.h b/include/linux/of.h
+index c7292e8..552943d 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1009,10 +1009,13 @@ static inline int of_get_available_child_count(const struct device_node *np)
+ #endif
  
- #include <linux/bug.h>
- #include <linux/init.h>
-+#include <linux/jump_label.h>
- #include <linux/types.h>
+ typedef int (*of_init_fn_2)(struct device_node *, struct device_node *);
++typedef int (*of_init_fn_1_ret)(struct device_node *);
+ typedef void (*of_init_fn_1)(struct device_node *);
  
- #include <clocksource/arm_arch_timer.h>
+ #define OF_DECLARE_1(table, name, compat, fn) \
+ 		_OF_DECLARE(table, name, compat, fn, of_init_fn_1)
++#define OF_DECLARE_1_RET(table, name, compat, fn) \
++		_OF_DECLARE(table, name, compat, fn, of_init_fn_1_ret)
+ #define OF_DECLARE_2(table, name, compat, fn) \
+ 		_OF_DECLARE(table, name, compat, fn, of_init_fn_2)
  
-+extern struct static_key_false arch_timer_read_ool_enabled;
-+
-+#define ARCH_TIMER_REG_READ(reg, func) \
-+extern u64 func##_ool(void); \
-+static inline u64 __##func(void) \
-+{ \
-+	u64 val; \
-+	asm volatile("mrs %0, " reg : "=r" (val)); \
-+	return val; \
-+} \
-+static inline u64 _##func(void) \
-+{ \
-+	if (IS_ENABLED(CONFIG_FSL_ERRATUM_A008585) && \
-+	    static_branch_unlikely(&arch_timer_read_ool_enabled)) \
-+		return func##_ool(); \
-+	else \
-+		return __##func(); \
-+}
-+
-+ARCH_TIMER_REG_READ("cntp_tval_el0", arch_timer_get_ptval)
-+ARCH_TIMER_REG_READ("cntv_tval_el0", arch_timer_get_vtval)
-+ARCH_TIMER_REG_READ("cntvct_el0", arch_counter_get_cntvct)
-+
-+#undef ARCH_TIMER_REG_READ
-+
- /*
-  * These register accessors are marked inline so the compiler can
-  * nicely work out which register we want, and chuck away the rest of
-@@ -58,6 +84,16 @@ void arch_timer_reg_write_cp15(int access, enum arch_timer_reg reg, u32 val)
- 	isb();
- }
- 
-+static __always_inline void arch_timer_cval_write_cp15(int access, u64 val)
-+{
-+	if (access == ARCH_TIMER_PHYS_ACCESS)
-+		asm volatile("msr cntp_cval_el0, %0" : : "r" (val));
-+	else if (access == ARCH_TIMER_VIRT_ACCESS)
-+		asm volatile("msr cntv_cval_el0, %0" : : "r" (val));
-+
-+	isb();
-+}
-+
- static __always_inline
- u32 arch_timer_reg_read_cp15(int access, enum arch_timer_reg reg)
- {
-@@ -66,19 +102,19 @@ u32 arch_timer_reg_read_cp15(int access, enum arch_timer_reg reg)
- 	if (access == ARCH_TIMER_PHYS_ACCESS) {
- 		switch (reg) {
- 		case ARCH_TIMER_REG_CTRL:
--			asm volatile("mrs %0,  cntp_ctl_el0" : "=r" (val));
-+			asm volatile("mrs %0, cntp_ctl_el0" : "=r" (val));
- 			break;
- 		case ARCH_TIMER_REG_TVAL:
--			asm volatile("mrs %0, cntp_tval_el0" : "=r" (val));
-+			val = _arch_timer_get_ptval();
- 			break;
- 		}
- 	} else if (access == ARCH_TIMER_VIRT_ACCESS) {
- 		switch (reg) {
- 		case ARCH_TIMER_REG_CTRL:
--			asm volatile("mrs %0,  cntv_ctl_el0" : "=r" (val));
-+			asm volatile("mrs %0, cntv_ctl_el0" : "=r" (val));
- 			break;
- 		case ARCH_TIMER_REG_TVAL:
--			asm volatile("mrs %0, cntv_tval_el0" : "=r" (val));
-+			val = _arch_timer_get_vtval();
- 			break;
- 		}
- 	}
-@@ -116,12 +152,8 @@ static inline u64 arch_counter_get_cntpct(void)
- 
- static inline u64 arch_counter_get_cntvct(void)
- {
--	u64 cval;
--
- 	isb();
--	asm volatile("mrs %0, cntvct_el0" : "=r" (cval));
--
--	return cval;
-+	return _arch_counter_get_cntvct();
- }
- 
- static inline int arch_timer_arch_init(void)
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 47352d2..48c6039 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -223,6 +223,16 @@ config ARM_ARCH_TIMER_EVTSTREAM
- 	  This must be disabled for hardware validation purposes to detect any
- 	  hardware anomalies of missing events.
- 
-+config FSL_ERRATUM_A008585
-+	bool "Workaround for Freescale/NXP Erratum A-008585"
-+	default y
-+	depends on ARM_ARCH_TIMER && ARM64
-+	help
-+	  This option enables a workaround for Freescale/NXP Erratum
-+	  A-008585 ("ARM generic timer may contain an erroneous
-+	  value").  The workaround will only be active if the
-+	  fsl,erratum-a008585 property is found in the timer node.
-+
- config ARM_GLOBAL_TIMER
- 	bool
- 	select CLKSRC_OF if OF
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 4814446..b857027 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -83,6 +83,51 @@ static bool arch_timer_mem_use_virtual;
-  * Architected system timer support.
-  */
- 
-+#ifdef CONFIG_FSL_ERRATUM_A008585
-+DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
-+EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
-+
-+/*
-+ * __always_inline is used to ensure that func() is not an actual function
-+ * pointer, which would result in the register accesses potentially being too
-+ * far apart for the loop to work.
-+ *
-+ * The timeout is an arbitrary value well beyond the highest number
-+ * of iterations the loop has been observed to take.
-+ */
-+static __always_inline u64 fsl_a008585_reread_counter(u64 (*func)(void))
-+{
-+	u64 cval_old, cval_new;
-+	int timeout = 200;
-+
-+	do {
-+		isb();
-+		cval_old = func();
-+		cval_new = func();
-+		timeout--;
-+	} while (unlikely(cval_old != cval_new) && timeout);
-+
-+	WARN_ON_ONCE(!timeout);
-+	return cval_new;
-+}
-+
-+u64 arch_counter_get_cntvct_ool(void)
-+{
-+	return fsl_a008585_reread_counter(__arch_counter_get_cntvct);
-+}
-+
-+u64 arch_timer_get_vtval_ool(void)
-+{
-+	return fsl_a008585_reread_counter(__arch_timer_get_vtval);
-+}
-+
-+u64 arch_timer_get_ptval_ool(void)
-+{
-+	return fsl_a008585_reread_counter(__arch_timer_get_ptval);
-+}
-+
-+#endif /* CONFIG_FSL_ERRATUM_A008585 */
-+
- static __always_inline
- void arch_timer_reg_write(int access, enum arch_timer_reg reg, u32 val,
- 			  struct clock_event_device *clk)
-@@ -232,6 +277,35 @@ static __always_inline void set_next_event(const int access, unsigned long evt,
- 	arch_timer_reg_write(access, ARCH_TIMER_REG_CTRL, ctrl, clk);
- }
- 
-+#ifdef CONFIG_FSL_ERRATUM_A008585
-+static __always_inline void fsl_a008585_set_next_event(const int access,
-+		unsigned long evt, struct clock_event_device *clk)
-+{
-+	unsigned long ctrl;
-+	u64 cval = evt + arch_counter_get_cntvct();
-+
-+	ctrl = arch_timer_reg_read(access, ARCH_TIMER_REG_CTRL, clk);
-+	ctrl |= ARCH_TIMER_CTRL_ENABLE;
-+	ctrl &= ~ARCH_TIMER_CTRL_IT_MASK;
-+	arch_timer_cval_write_cp15(access, cval);
-+	arch_timer_reg_write(access, ARCH_TIMER_REG_CTRL, ctrl, clk);
-+}
-+
-+static int fsl_a008585_set_next_event_virt(unsigned long evt,
-+					   struct clock_event_device *clk)
-+{
-+	fsl_a008585_set_next_event(ARCH_TIMER_VIRT_ACCESS, evt, clk);
-+	return 0;
-+}
-+
-+static int fsl_a008585_set_next_event_phys(unsigned long evt,
-+					   struct clock_event_device *clk)
-+{
-+	fsl_a008585_set_next_event(ARCH_TIMER_PHYS_ACCESS, evt, clk);
-+	return 0;
-+}
-+#endif /* CONFIG_FSL_ERRATUM_A008585 */
-+
- static int arch_timer_set_next_event_virt(unsigned long evt,
- 					  struct clock_event_device *clk)
- {
-@@ -260,6 +334,19 @@ static int arch_timer_set_next_event_phys_mem(unsigned long evt,
- 	return 0;
- }
- 
-+static void fsl_a008585_set_sne(struct clock_event_device *clk)
-+{
-+#ifdef CONFIG_FSL_ERRATUM_A008585
-+	if (!static_branch_unlikely(&arch_timer_read_ool_enabled))
-+		return;
-+
-+	if (arch_timer_uses_ppi == VIRT_PPI)
-+		clk->set_next_event = fsl_a008585_set_next_event_virt;
-+	else
-+		clk->set_next_event = fsl_a008585_set_next_event_phys;
-+#endif
-+}
-+
- static void __arch_timer_setup(unsigned type,
- 			       struct clock_event_device *clk)
- {
-@@ -288,6 +375,8 @@ static void __arch_timer_setup(unsigned type,
- 		default:
- 			BUG();
- 		}
-+
-+		fsl_a008585_set_sne(clk);
- 	} else {
- 		clk->features |= CLOCK_EVT_FEAT_DYNIRQ;
- 		clk->name = "arch_mem_timer";
-@@ -485,6 +574,15 @@ static void __init arch_counter_register(unsigned type)
- 			arch_timer_read_counter = arch_counter_get_cntvct;
- 		else
- 			arch_timer_read_counter = arch_counter_get_cntpct;
-+
-+#ifdef CONFIG_FSL_ERRATUM_A008585
-+		/*
-+		 * Don't use the vdso fastpath if errata require using
-+		 * the out-of-line counter accessor.
-+		 */
-+		if (static_branch_unlikely(&arch_timer_read_ool_enabled))
-+			clocksource_counter.name = "arch_sys_counter_ool";
-+#endif
- 	} else {
- 		arch_timer_read_counter = arch_counter_get_cntvct_mem;
- 
-@@ -766,6 +864,11 @@ static void __init arch_timer_of_init(struct device_node *np)
- 
- 	arch_timer_c3stop = !of_property_read_bool(np, "always-on");
- 
-+#ifdef CONFIG_FSL_ERRATUM_A008585
-+	if (of_property_read_bool(np, "fsl,erratum-a008585"))
-+		static_branch_enable(&arch_timer_read_ool_enabled);
-+#endif
-+
- 	/*
- 	 * If we cannot rely on firmware initializing the timer registers then
- 	 * we should use the physical timers instead.
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
