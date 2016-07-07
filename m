@@ -1,48 +1,72 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [RFC] [PATCH v3 2/4] spi: spi-omap2-mcspi: Select SPI_SPLIT
-Date: Thu, 7 Jul 2016 10:33:54 -0700
-Message-ID: <577E9282.1070105@infradead.org>
-References: <1467911871-4508-1-git-send-email-fcooper@ti.com>
- <1467911871-4508-3-git-send-email-fcooper@ti.com>
+From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] arm64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Thu, 07 Jul 2016 12:39:42 -0500
+Message-ID: <1467913182.32358.68.camel@buserror.net>
+References: <1467412897-15220-1-git-send-email-oss@buserror.net>
+	 <1467412897-15220-3-git-send-email-oss@buserror.net>
+	 <577E2226.3020902@huawei.com> <577E25A4.2010800@arm.com>
+	 <577E3EF2.9080105@huawei.com> <577E424C.5030908@arm.com>
+	 <577E524F.3030403@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467911871-4508-3-git-send-email-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, tony@atomide.com, robh+dt@kernel.org, broonie@kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, andy.shevchenko@gmail.com, robert.jarzmik@free.fr, nsekhar@ti.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <577E524F.3030403-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/07/16 10:17, Franklin S Cooper Jr wrote:
-> The function spi_split will be used by spi-omap2-mcspi to handle a SoC
+On Thu, 2016-07-07 at 20:59 +0800, Ding Tianhong wrote:
+> On 2016/7/7 19:51, Marc Zyngier wrote:
+> >=20
+> > On 07/07/16 12:37, Ding Tianhong wrote:
+> > >=20
+> > > On 2016/7/7 17:49, Marc Zyngier wrote:
+> > > >=20
+> > > > What makes you think that ignoring the two bottom bits is a saf=
+e thing
+> > > > to do? Talking about performance when the HW has such a dramati=
+c bug
+> > > > is
+> > > > like putting a bigger engine on a car that has no brakes: you j=
+ust hit
+> > > > the wall quicker.
+> > > >=20
+> > > > Thanks,
+> > > >=20
+> > > I have a chip which has the same problem like Scott's chip, and I
+> > > wish to solve this problem in the same way, our chip designer tol=
+d me
+> > > that if you got a wrong value from the cntvct_el0, you would not =
+get
+> > > a wrong value until 8 cycles later, so I could ignoring the lowes=
+t 3
+> > > bits if I reading twice together.
+> > Is that CPU cycles? Or timer cycles? What guarantees do you have th=
+at
+> > the two reads are *always* done in the right timing window?
+> >=20
+> The timer counter only use 56 bits in aarch64, my chip would change o=
+ne of
+> the higher=C2=A0
+> bit(55 to 3) to a wrong value when occur bug, so there will be more t=
+han 8
+> cycles between
+> correct value and wrong value from the timer counter. Maybe Scott's p=
+roblem
+> is not just like
+> mine.
 
-s/spi_split/sg_split/
+It's not like yours. =C2=A0Most errors I saw were time going backwards =
+by 1, 3, or
+7 cycles (with occasional larger errors).
 
-> workaround in the SPI driver. Therefore, select SPI_SPLIT so this function
+-Scott
 
-s/SPI_SPLIT/SG_SPLIT/ on line above and in $Subject.
-
-> is available to the driver.
-> 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> ---
->  drivers/spi/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index 4b931ec..d6fb8d4 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -411,6 +411,7 @@ config SPI_OMAP24XX
->  	tristate "McSPI driver for OMAP"
->  	depends on HAS_DMA
->  	depends on ARCH_OMAP2PLUS || COMPILE_TEST
-> +	select SG_SPLIT
->  	help
->  	  SPI master controller for OMAP24XX and later Multichannel SPI
->  	  (McSPI) modules.
-> 
-
-
--- 
-~Randy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
