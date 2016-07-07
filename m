@@ -1,121 +1,115 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 1/3 v2] leds: pm8058: add device tree bindings
-Date: Thu, 07 Jul 2016 17:08:32 +0200
-Message-ID: <577E7070.80403@samsung.com>
-References: <1467841320-11251-1-git-send-email-linus.walleij@linaro.org>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] arm/arm64: arch_timer: Use archdata to indicate
+ vdso suitability
+Date: Thu, 7 Jul 2016 16:18:43 +0100
+Message-ID: <20160707151843.GD20682@arm.com>
+References: <1467877572-10817-1-git-send-email-oss@buserror.net>
+ <1467877572-10817-4-git-send-email-oss@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1467841320-11251-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467877572-10817-4-git-send-email-oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On 07/06/2016 11:42 PM, Linus Walleij wrote:
-> This adds the device tree bindings for the PM8058 LEDs.
->
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Jul 07, 2016 at 02:46:12AM -0500, Scott Wood wrote:
+> Instead of comparing the name to a magic string, use archdata to
+> explicitly communicate whether the arch timer is suitable for
+> direct vdso access.
+> 
+> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
 > ---
-> ChangeLog v1->v2:
-> - Fix some spelling mistakes
-> - Reference common bindings directly without any local descriptions
-> ---
->   .../devicetree/bindings/leds/leds-pm8058.txt       | 67 ++++++++++++++++++++++
->   1 file changed, 67 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8058.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pm8058.txt b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
+> v4: new patch
+> 
+> I'm putting this after the other patches, in the hopes that if there
+> are issues with this patch, it doesn't hold up the others.
+> 
+>  arch/arm/Kconfig                     |  1 +
+>  arch/arm/include/asm/clocksource.h   |  8 ++++++++
+>  arch/arm/kernel/vdso.c               |  2 +-
+>  arch/arm64/Kconfig                   |  1 +
+>  arch/arm64/include/asm/clocksource.h |  8 ++++++++
+>  arch/arm64/kernel/vdso.c             |  2 +-
+>  drivers/clocksource/arm_arch_timer.c | 11 +++--------
+>  7 files changed, 23 insertions(+), 10 deletions(-)
+>  create mode 100644 arch/arm/include/asm/clocksource.h
+>  create mode 100644 arch/arm64/include/asm/clocksource.h
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 90542db..dcdcd78 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1,6 +1,7 @@
+>  config ARM
+>  	bool
+>  	default y
+> +	select ARCH_CLOCKSOURCE_DATA
+>  	select ARCH_HAS_ATOMIC64_DEC_IF_POSITIVE
+>  	select ARCH_HAS_DEVMEM_IS_ALLOWED
+>  	select ARCH_HAS_ELF_RANDOMIZE
+> diff --git a/arch/arm/include/asm/clocksource.h b/arch/arm/include/asm/clocksource.h
 > new file mode 100644
-> index 000000000000..ee070e23fe61
+> index 0000000..0b350a7
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
-> @@ -0,0 +1,67 @@
-> +Qualcomm PM8058 LED driver
+> +++ b/arch/arm/include/asm/clocksource.h
+> @@ -0,0 +1,8 @@
+> +#ifndef _ASM_CLOCKSOURCE_H
+> +#define _ASM_CLOCKSOURCE_H
 > +
-> +The Qualcomm PM8058 is a multi-functional device which contains
-> +an LED driver block for up to six LEDs: three normal LEDs, two
-> +"flash" LEDs and one "keypad backlight" LED. The names are
-> +quoted because sometimes these LED drivers are used for wildly
-> +different things than flash or keypad backlight: their names
-> +are more of a suggestion than a hard-wired usecase.
-> +
-> +Hardware-wise the different LEDs support slightly different
-> +output currents. The "flash" LEDs do not need to charge nor
-> +do they support external triggers. They are just powerful LED
-> +drivers.
-> +
-> +The LEDs appear as children to the PM8058 device, with the
-> +proper compatible string. For the PM8058 bindings see:
-> +mfd/qcom-pm8xxx.txt.
-> +
-> +Each LED is represented as a sub-node of the syscon device. Each
-> +node's name represents the name of the corresponding LED.
-> +
-> +LED sub-node properties:
-> +
-> +Required properties:
-> +- compatible: one of
-> +  "qcom,pm8058-led" (for the normal LEDs at 0x131, 0x132 and 0x133)
-> +  "qcom,pm8058-keypad-led" (for the "keypad" LED at 0x48)
-> +  "qcom,pm8058-flash-led" (for the "flash" LEDs at 0x49 and 0xFB)
-> +
-> +Optional properties:
-> +- label: see Documentation/devicetree/bindings/leds/common.txt
-> +- default-state: see Documentation/devicetree/bindings/leds/common.txt
-> +- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +
-> +qcom,ssbi@500000 {
-> +	pmicintc: pmic@0 {
-> +		compatible = "qcom,pm8058";
-> +		led@48 {
-> +			compatible = "qcom,pm8058-keypad-led";
-> +			reg = <0x48>;
-> +			label = "keypad";
-
-Why not "pm8058::keypad"?
-
-Naming scheme is "devicename:colour:function".
-
-See Documentation/leds/leds-class.txt.
-
-> +			default-state = "off";
-> +		};
-> +		led@131 {
-> +			compatible = "qcom,pm8058-led";
-> +			reg = <0x131>;
-> +			label = "pm8058:red";
-> +			default-state = "off";
-> +		};
-> +		led@132 {
-> +			compatible = "qcom,pm8058-led";
-> +			reg = <0x132>;
-> +			label = "pm8058:yellow";
-> +			default-state = "off";
-> +			linux,default-trigger = "mmc0";
-> +		};
-> +		led@133 {
-> +			compatible = "qcom,pm8058-led";
-> +			reg = <0x133>;
-> +			label = "pm8058:green";
-> +			default-state = "on";
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
+> +struct arch_clocksource_data {
+> +	bool vdso_direct;	/* Usable for direct VDSO access? */
 > +};
->
+> +
+> +#endif
+> diff --git a/arch/arm/kernel/vdso.c b/arch/arm/kernel/vdso.c
+> index 994e971..a0affd1 100644
+> --- a/arch/arm/kernel/vdso.c
+> +++ b/arch/arm/kernel/vdso.c
+> @@ -270,7 +270,7 @@ static bool tk_is_cntvct(const struct timekeeper *tk)
+>  	if (!IS_ENABLED(CONFIG_ARM_ARCH_TIMER))
+>  		return false;
+>  
+> -	if (strcmp(tk->tkr_mono.clock->name, "arch_sys_counter") != 0)
+> +	if (!tk->tkr_mono.clock->archdata.vdso_direct)
+>  		return false;
+>  
+>  	return true;
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 5a0a691..24c4b2c 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -3,6 +3,7 @@ config ARM64
+>  	select ACPI_CCA_REQUIRED if ACPI
+>  	select ACPI_GENERIC_GSI if ACPI
+>  	select ACPI_REDUCED_HARDWARE_ONLY if ACPI
+> +	select ARCH_CLOCKSOURCE_DATA
+>  	select ARCH_HAS_DEVMEM_IS_ALLOWED
+>  	select ARCH_HAS_ATOMIC64_DEC_IF_POSITIVE
+>  	select ARCH_HAS_ELF_RANDOMIZE
+> diff --git a/arch/arm64/include/asm/clocksource.h b/arch/arm64/include/asm/clocksource.h
+> new file mode 100644
+> index 0000000..0b350a7
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/clocksource.h
+> @@ -0,0 +1,8 @@
+> +#ifndef _ASM_CLOCKSOURCE_H
+> +#define _ASM_CLOCKSOURCE_H
+> +
+> +struct arch_clocksource_data {
+> +	bool vdso_direct;	/* Usable for direct VDSO access? */
+> +};
 
+Looks fine to me. I'd rather we followed exactly what x86 does here, in
+the hope that it can eventually find its way into core code, but there's
+no ABI implication for this structure so we can always do that later.
 
--- 
-Best regards,
-Jacek Anaszewski
+Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
