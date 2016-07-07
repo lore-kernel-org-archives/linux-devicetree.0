@@ -1,50 +1,129 @@
-From: Sanchayan Maity <maitysanchayan@gmail.com>
-Subject: [PATCH v4 1/5] ARM: dts: vfxxx: Add device tree node for OCOTP
-Date: Thu,  7 Jul 2016 12:09:26 +0530
-Message-ID: <06549a1c2183391a840ab02af705cbd4857b7f49.1467872014.git.maitysanchayan@gmail.com>
+From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 3/5] nvmem: core: Add consumer API to get nvmem cell from node
+Date: Thu,  7 Jul 2016 12:09:28 +0530
+Message-ID: <0e6294d931bf181376a6f4e1a86df3f6c6a5d575.1467872014.git.maitysanchayan@gmail.com>
 References: <cover.1467872014.git.maitysanchayan@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1467872014.git.maitysanchayan@gmail.com>
-In-Reply-To: <cover.1467872014.git.maitysanchayan@gmail.com>
-References: <cover.1467872014.git.maitysanchayan@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, shawnguo@kernel.org
-Cc: stefan@agner.ch, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1467872014.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1467872014.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1467872014.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: stefan-XLVq0VzYD2Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree node for the OCOTP peripheral on Vybrid.
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+The existing NVMEM consumer API's do not allow to get a
+NVMEM cell directly given a device tree node. This patch
+adds a function to provide this functionality.
+
+Assuming the nvmem cell id name is known, this can be used
+as follows
+
+struct device_node *cell_np;
+struct nvmem_cell *foo_cell;
+
+cell_np = of_find_node_by_name(parent, "foo");
+foo_cell = of_nvmem_cell_get_direct(cell_np);
+
+Parent node can also be the of_node of the main SoC device
+node.
+
+Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/vfxxx.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/nvmem/core.c           | 44 +++++++++++++++++++++++++++++-------------
+ include/linux/nvmem-consumer.h |  1 +
+ 2 files changed, 32 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 2c13ec6..0e34d44 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -520,6 +520,22 @@
- 				status = "disabled";
- 			};
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 965911d..470abee 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -743,29 +743,21 @@ static struct nvmem_cell *nvmem_cell_get_from_list(const char *cell_id)
  
-+			ocotp@400a5000 {
-+				compatible = "fsl,vf610-ocotp";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0x400a5000 0xCF0>;
-+				clocks = <&clks VF610_CLK_OCOTP>;
+ #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
+ /**
+- * of_nvmem_cell_get() - Get a nvmem cell from given device node and cell id
++ * of_nvmem_cell_get_direct() - Get a nvmem cell from given device node
+  *
+- * @dev node: Device tree node that uses the nvmem cell
+- * @id: nvmem cell name from nvmem-cell-names property.
++ * @dev node: Device tree node that uses nvmem cell
+  *
+  * Return: Will be an ERR_PTR() on error or a valid pointer
+  * to a struct nvmem_cell.  The nvmem_cell will be freed by the
+  * nvmem_cell_put().
+  */
+-struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
+-					    const char *name)
++struct nvmem_cell *of_nvmem_cell_get_direct(struct device_node *cell_np)
+ {
+-	struct device_node *cell_np, *nvmem_np;
++	struct device_node *nvmem_np;
+ 	struct nvmem_cell *cell;
+ 	struct nvmem_device *nvmem;
+ 	const __be32 *addr;
+-	int rval, len, index;
+-
+-	index = of_property_match_string(np, "nvmem-cell-names", name);
+-
+-	cell_np = of_parse_phandle(np, "nvmem-cells", index);
+-	if (!cell_np)
+-		return ERR_PTR(-EINVAL);
++	int rval, len;
+ 
+ 	nvmem_np = of_get_next_parent(cell_np);
+ 	if (!nvmem_np)
+@@ -824,6 +816,32 @@ err_mem:
+ 
+ 	return ERR_PTR(rval);
+ }
++EXPORT_SYMBOL_GPL(of_nvmem_cell_get_direct);
 +
-+				ocotp_cfg0: cfg0@410 {
-+					reg = <0x410 0x4>;
-+				};
++/**
++ * of_nvmem_cell_get() - Get a nvmem cell from given device node and cell id
++ *
++ * @dev node: Device tree node that uses the nvmem cell
++ * @id: nvmem cell name from nvmem-cell-names property.
++ *
++ * Return: Will be an ERR_PTR() on error or a valid pointer
++ * to a struct nvmem_cell.  The nvmem_cell will be freed by the
++ * nvmem_cell_put().
++ */
++struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
++					    const char *name)
++{
++	struct device_node *cell_np;
++	int index;
 +
-+				ocotp_cfg1: cfg1@420 {
-+					reg = <0x420 0x4>;
-+				};
-+			};
++	index = of_property_match_string(np, "nvmem-cell-names", name);
 +
- 			snvs0: snvs@400a7000 {
- 			    compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
- 				reg = <0x400a7000 0x2000>;
++	cell_np = of_parse_phandle(np, "nvmem-cells", index);
++	if (!cell_np)
++		return ERR_PTR(-EINVAL);
++
++	return of_nvmem_cell_get_direct(cell_np);
++}
+ EXPORT_SYMBOL_GPL(of_nvmem_cell_get);
+ #endif
+ 
+diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+index 9bb77d3..bf879fc 100644
+--- a/include/linux/nvmem-consumer.h
++++ b/include/linux/nvmem-consumer.h
+@@ -136,6 +136,7 @@ static inline int nvmem_device_write(struct nvmem_device *nvmem,
+ #endif /* CONFIG_NVMEM */
+ 
+ #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
++struct nvmem_cell *of_nvmem_cell_get_direct(struct device_node *cell_np);
+ struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
+ 				     const char *name);
+ struct nvmem_device *of_nvmem_device_get(struct device_node *np,
 -- 
 2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
