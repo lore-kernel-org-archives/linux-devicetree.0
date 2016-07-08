@@ -1,61 +1,76 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH 5/6] usb: chipidea: host: let the hcd know's parent
- device node
-Date: Fri, 8 Jul 2016 09:54:47 +0800
-Message-ID: <20160708015447.GB27779@shlinux2>
-References: <1467882892-27589-1-git-send-email-peter.chen@nxp.com>
- <1467882892-27589-6-git-send-email-peter.chen@nxp.com>
- <146793221122.31330.7571458363004882365@sboyd-linaro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <146793221122.31330.7571458363004882365@sboyd-linaro>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, linux-pm@vger.kernel.org, Peter Chen <peter.chen@freescale.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun8i-h3: Rename sinovoip-bpi-m2-plus to bananapi-m2-plus
+Date: Fri,  8 Jul 2016 10:40:39 +0800
+Message-ID: <1467945639-12844-1-git-send-email-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 07, 2016 at 03:56:51PM -0700, Stephen Boyd wrote:
-> Quoting Peter Chen (2016-07-07 02:14:51)
-> > diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-> > index 053bac9..55120ef 100644
-> > --- a/drivers/usb/chipidea/host.c
-> > +++ b/drivers/usb/chipidea/host.c
-> > @@ -109,15 +109,25 @@ static int host_start(struct ci_hdrc *ci)
-> >         struct ehci_hcd *ehci;
-> >         struct ehci_ci_priv *priv;
-> >         int ret;
-> > +       struct device *dev = ci->dev;
-> >  
-> > -       if (usb_disabled())
-> > +       if (usb_disabled() || !dev)
-> 
-> Does that ever happen?
+The Banana Pi series is a well known series of single board computers.
+The manufacturer, Sinovoip, is less well known. Moreover, the board
+markings do not mention Sinovoip, but only the Banana Pi logo, and
+the BPI-M* model name.
 
-I don't think so, will delete it.
+Rename the dts file to use the more well known name. Also fix up
+some of the model names and labels to match other Banana Pi boards.
 
-> 
-> >                 return -ENODEV;
-> >  
-> > -       hcd = usb_create_hcd(&ci_ehci_hc_driver, ci->dev, dev_name(ci->dev));
-> > +       /*
-> > +        * USB Core will try to get child node under roothub,
-> > +        * but chipidea core has no of_node, and the child node
-> > +        * for controller is located at glue layer's node which
-> > +        * is chipidea core's parent.
-> > +        */
-> > +       if (dev->parent && dev->parent->of_node)
-> > +               dev->of_node = dev->parent->of_node;
-> 
-> Why not do this during the ci device probe? How is host special for
-> having an of_node for the child device.
-> 
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                                          | 2 +-
+ ...8i-h3-sinovoip-bpi-m2-plus.dts => sun8i-h3-bananapi-m2-plus.dts} | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+ rename arch/arm/boot/dts/{sun8i-h3-sinovoip-bpi-m2-plus.dts => sun8i-h3-bananapi-m2-plus.dts} (97%)
 
-Good idea. I did this when I added USB device DT support, but did not
-consider potential gadget/phy use cases.
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e9fcd25701a0..b18a26925fa5 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -764,11 +764,11 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a33-sinlinx-sina33.dtb \
+ 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+ 	sun8i-a83t-cubietruck-plus.dtb \
++	sun8i-h3-bananapi-m2-plus.dtb \
+ 	sun8i-h3-orangepi-2.dtb \
+ 	sun8i-h3-orangepi-one.dtb \
+ 	sun8i-h3-orangepi-pc.dtb \
+ 	sun8i-h3-orangepi-plus.dtb \
+-	sun8i-h3-sinovoip-bpi-m2-plus.dtb \
+ 	sun8i-r16-parrot.dtb
+ dtb-$(CONFIG_MACH_SUN9I) += \
+ 	sun9i-a80-optimus.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h3-sinovoip-bpi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+similarity index 97%
+rename from arch/arm/boot/dts/sun8i-h3-sinovoip-bpi-m2-plus.dts
+rename to arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+index d21bc57ce140..f3b1d5f6dbd2 100644
+--- a/arch/arm/boot/dts/sun8i-h3-sinovoip-bpi-m2-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+@@ -49,8 +49,8 @@
+ #include <dt-bindings/pinctrl/sun4i-a10.h>
+ 
+ / {
+-	model = "Sinovoip BPI-M2+";
+-	compatible = "sinovoip,bpi-m2+", "allwinner,sun8i-h3";
++	model = "Banana Pi BPI-M2-Plus";
++	compatible = "sinovoip,bpi-m2-plus", "allwinner,sun8i-h3";
+ 
+ 	aliases {
+ 		serial0 = &uart0;
+@@ -67,7 +67,7 @@
+ 		pinctrl-0 = <&pwr_led_bpi_m2p>;
+ 
+ 		pwr_led {
+-			label = "bpi-m2+:red:pwr";
++			label = "bananapi-m2-plus:red:pwr";
+ 			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
+ 			default-state = "on";
+ 		};
 -- 
+2.8.1
 
-Best Regards,
-Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
