@@ -1,83 +1,64 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v5 6/7] ARM: dts: sun9i: cubieboard4: Add device
- node for AC100
-Date: Fri,  8 Jul 2016 22:33:41 +0800
-Message-ID: <1467988422-17934-7-git-send-email-wens@csie.org>
-References: <1467988422-17934-1-git-send-email-wens@csie.org>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v5 1/3] Documentation: dt: Add Broadcom iproc pwm
+ controller binding
+Date: Fri, 8 Jul 2016 16:35:48 +0200
+Message-ID: <20160708143548.GA1151@ulmo.ba.sec>
+References: <1467698426-27600-1-git-send-email-yendapally.reddy@broadcom.com>
+ <1467698426-27600-2-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCMILY6JWQBBBVHT725QKGQEUO2AB2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1467988422-17934-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1467698426-27600-2-git-send-email-yendapally.reddy@broadcom.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
-Changes since v4: none
 
-Changes since v3:                           
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  - Moved 4M ADDA clk to codec side
+On Tue, Jul 05, 2016 at 02:00:24AM -0400, Yendapally Reddy Dhananjaya Reddy=
+ wrote:
+> Add a binding for Broadcom iproc pwm controller
+>=20
+> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadc=
+om.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/pwm/brcm,iproc-pwm.txt      | 21 +++++++++++++++=
+++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/brcm,iproc-pwm.=
+txt
 
-Changes since v2: none
-Changes since v1: none
----
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Applied, thanks.
 
-diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-index 1526b41c70f1..cf2f4b72a841 100644
---- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-@@ -250,6 +250,30 @@
- 			};
- 		};
- 	};
-+
-+	ac100: codec@e89 {
-+		compatible = "x-powers,ac100";
-+		reg = <0xe89>;
-+
-+		ac100_codec: codec {
-+			compatible = "x-powers,ac100-codec";
-+			interrupt-parent = <&r_pio>;
-+			interrupts = <0 9 IRQ_TYPE_LEVEL_LOW>; /* PL9 */
-+			#clock-cells = <0>;
-+			clock-output-names = "4M_adda";
-+		};
-+
-+		ac100_rtc: rtc {
-+			compatible = "x-powers,ac100-rtc";
-+			interrupt-parent = <&nmi_intc>;
-+			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&ac100_codec>;
-+			#clock-cells = <1>;
-+			clock-output-names = "cko1_rtc",
-+					     "cko2_rtc",
-+					     "cko3_rtc";
-+		};
-+	};
- };
- 
- #include "axp809.dtsi"
--- 
-2.8.1
+Thierry
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXf7pEAAoJEN0jrNd/PrOh7NsP/2mtAvxW7pqglXWVKrnhsNok
+Ci4IPFwx4s6FE/Us9DmFKt0NiLX9n4Jh6q8G54tMCfN1DUJ44DM3919Ink/+26b/
+/mnKkcDRkUgsrAZiKEgxAVzLcUXaV8CdcFS3OkQeAt6n4LLPgceF6RTuFo8KlFwO
+cfpFrGDUHeekDSE9ytiR0Yu5xqAvpUZ4zRXcllqvosGv0B2Lp67rIXbr/RpHGMeh
+xnR90DeZhiUPwwBFJo2T66zHLzXG0/D893cOpS/DYr6sQlbULAfLOtKltAtMbbrv
+wCMa36rl8nvduvAS18QKm1EB3/qX9QefA/XZCom0ILChjZLoVb7Z5bhVsZ7AkEZ4
+4uq91VQXtL835mbfJ9F2GlUYeMzpF/dFJ/3Ui0lrQJ+Dx0Xc5hMSCxN9X9eqXWmN
+5Ke1YcSFzW3QMKEAoMFaeET1krkq1QIbA4QW0JzK6Q4wJKK/fJMXzWXor1//Lc7Y
+tW3O7C+E7QGi0R5SEv23ONNAG1xQawrtFOAQrt0uCmotC6IkVWcSQvEQwVZrHANz
+IY0uTPO6XvQbzIFJdoGPw2ztz+wpPeBBSSvrSPtvmviEf4fUYEu2UWOpbryR3OwX
+SWHUZOJAOgKdxfIlzHlv+6/0lGWQlbBaOli//lzv44wfZo22PeWIhWWeaLz2I4TL
+pgIhDgb5wpdqf9IQMWLw
+=fhCs
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
