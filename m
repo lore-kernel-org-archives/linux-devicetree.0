@@ -1,24 +1,170 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 6/6] dt-bindings: net: bgmac: add bindings
- documentation for bgmac
-Date: Fri, 8 Jul 2016 11:12:12 -0700
-Message-ID: <577FECFC.7040706@gmail.com>
-References: <1467932938-21819-1-git-send-email-jon.mason@broadcom.com>
- <1467932938-21819-7-git-send-email-jon.mason@broadcom.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v2 6/6] clk: mvebu: Add the peripheral clock driver for Armada
+ 3700
+Date: Fri, 08 Jul 2016 11:27:02 -0700
+Message-ID: <146800242289.73491.4169295036354147972@resonance>
+References: <1467931071-31004-1-git-send-email-gregory.clement@free-electrons.com>
+ <1467931071-31004-7-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1467932938-21819-7-git-send-email-jon.mason@broadcom.com>
-Sender: netdev-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>, davem@davemloft.net, f.fainelli@gmail.com
-Cc: zajec5@gmail.com, hauke@hauke-m.de, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1467931071-31004-7-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Terry Zhou <bjzhou@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/07/2016 04:08 PM, Jon Mason wrote:
-> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+Quoting Gregory CLEMENT (2016-07-07 15:37:51)
+> +#include <linux/clk-provider.h>
+> +#include <linux/clk.h>
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Same question as my previous email. Is clk.h necessary? Is this driver
+also a clk consumer?
+
+> +static int armada_3700_add_composite_clk(const struct clk_periph_data *data,
+> +                                        const char * const *parent_name,
+> +                                        void __iomem *reg, spinlock_t *lock,
+> +                                        struct device *dev, struct clk_hw *hw)
+> +{
+> +       const struct clk_ops *mux_ops = NULL, *gate_ops = NULL,
+> +               *div_ops = NULL;
+> +       struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *div_hw = NULL;
+> +       const char * const *names;
+> +       struct clk_mux *mux = NULL;
+> +       struct clk_gate *gate = NULL;
+> +       struct clk_divider *div = NULL;
+> +       struct clk_double_div *double_div = NULL;
+> +       int num_parent;
+> +       int ret = 0;
+> +
+> +       if (data->gate_shift != UNUSED) {
+> +               gate = devm_kzalloc(dev, sizeof(*gate), GFP_KERNEL);
+> +
+> +               if (!gate)
+> +                       return -ENOMEM;
+> +
+> +               gate->reg = reg + CLK_DIS;
+> +               gate->bit_idx = data->gate_shift;
+> +               gate->lock = lock;
+> +               gate_ops = &clk_gate_ops;
+> +               gate_hw = &gate->hw;
+> +       }
+> +
+> +       if (data->mux_shift != UNUSED) {
+> +               mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
+> +
+> +               if (!mux) {
+> +                       ret = -ENOMEM;
+> +                       goto free_gate;
+> +               }
+> +
+> +               mux->reg = reg + TBG_SEL;
+> +               mux->shift = data->mux_shift;
+> +               mux->mask = 0x3;
+> +               mux->lock = lock;
+> +               mux_ops = &clk_mux_ro_ops;
+> +               mux_hw = &mux->hw;
+> +       }
+> +
+> +       if (data->div_reg1 != UNUSED) {
+> +               if (data->div_reg2 == UNUSED) {
+> +                       const struct clk_div_table *clkt;
+> +                       int table_size = 0;
+> +
+> +                       div = devm_kzalloc(dev, sizeof(*div), GFP_KERNEL);
+> +                       if (!div) {
+> +                               ret = -ENOMEM;
+> +                               goto free_mux;
+> +                       }
+> +
+> +                       div->reg = reg + data->div_reg1;
+> +                       div->table = data->table;
+> +                       for (clkt = div->table; clkt->div; clkt++)
+> +                               table_size++;
+> +                       div->width = order_base_2(table_size);
+> +                       div->lock = lock;
+> +                       div_ops = &clk_divider_ro_ops;
+> +                       div_hw = &div->hw;
+> +               } else {
+> +                       double_div = devm_kzalloc(dev, sizeof(*double_div),
+> +                                                 GFP_KERNEL);
+> +                       if (!double_div) {
+> +                               ret = -ENOMEM;
+> +                               goto free_mux;
+> +                       }
+> +
+> +                       double_div->reg1 = reg + data->div_reg1;
+> +                       double_div->shift1 = data->div_shift1;
+> +                       double_div->reg2 = reg + data->div_reg1;
+> +                       double_div->shift2 = data->div_shift2;
+> +                       div_ops = &clk_double_div_ops;
+> +                       div_hw = &double_div->hw;
+> +               }
+> +       }
+> +
+> +       switch (data->flags) {
+> +       case XTAL_CHILD:
+> +               /* the xtal clock is the 5th clock */
+> +               names = &parent_name[4];
+> +               num_parent = 1;
+> +               break;
+> +       case TBGA_S_CHILD:
+> +               /* the TBG A S clock is the 3rd clock */
+> +               names = &parent_name[2];
+> +               num_parent = 1;
+> +               break;
+> +       case GBE_CORE_CHILD:
+> +               names = &gbe_name[1];
+> +               num_parent = 1;
+> +               break;
+> +       case  GBE_50_CHILD:
+> +               names = &gbe_name[0];
+> +               num_parent = 1;
+> +               break;
+> +       case  GBE_125_CHILD:
+> +               names = &gbe_name[2];
+> +               num_parent = 1;
+> +               break;
+> +       default:
+> +               names = parent_name;
+> +               num_parent = 4;
+> +       }
+> +       hw = clk_hw_register_composite(dev, data->name,
+> +                                    names, num_parent,
+> +                                    mux_hw, mux_ops,
+> +                                    div_hw, div_ops,
+> +                                    gate_hw, gate_ops,
+> +                                    CLK_IGNORE_UNUSED);
+> +       if (IS_ERR(hw)) {
+> +               ret = PTR_ERR(hw);
+> +               goto free_div;
+> +       }
+> +
+> +       return 0;
+> +free_div:
+> +       devm_kfree(dev, div);
+> +       devm_kfree(dev, double_div);
+> +free_mux:
+> +       devm_kfree(dev, mux);
+> +free_gate:
+> +       devm_kfree(dev, gate);
+> +       return ret;
+> +}
+
+Can this "add" function (aka registration function) be replaced with
+static data instead? I think that all of the static data exists already,
+this function can be removed and your probe can call clk_hw_register
+directly.
+
+It might need a macro though, since composite clock structures are
+rather messy. This avoids a lot of unnecessary allocations and time
+populating data that we already have access to. In general I am trying
+to encourage clk drivers to use only clk_hw_register() in their probe
+instead of the helper registration functions.
+
+Similarly I am discouraging drivers from populating hw.init at run-time,
+since we already have that data for that at compile-time.
+
+Regards,
+Mike
