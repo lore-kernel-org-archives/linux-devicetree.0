@@ -1,141 +1,54 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: [PATCH v3] xen/arm: enable clocks used by the hypervisor
-Date: Fri, 8 Jul 2016 09:44:31 +0200
-Message-ID: <1467963871-31556-1-git-send-email-dirk.behme@de.bosch.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC] [PATCH v3 1/4] spi: omap2-mcspi: Add comments for RX only
+ DMA buffer workaround
+Date: Fri, 8 Jul 2016 10:46:24 +0200
+Message-ID: <20160708084624.GS6247@sirena.org.uk>
+References: <1467911871-4508-1-git-send-email-fcooper@ti.com>
+ <1467911871-4508-2-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Julien Grall <julien.grall@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>
-Cc: xen-devel@lists.xenproject.org, devicetree@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Dirk Behme <dirk.behme@de.bosch.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="onT/iYtSweZVW9zT"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467911871-4508-2-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Xen hypervisor drivers might replace native OS drivers. The result is
-that some important clocks that are enabled by the OS in the non-Xen
-case are not properly enabled in the presence of Xen. The clocks
-property enumerates the clocks that must be enabled by the Xen clock
-consumer.
 
-An example is a serial driver enabled by the hypervisor. Xen must
-consume and enable these clocks in the OS to ensure behavior continues
-after firmware configures the UART hardware and corresponding clock
-harder.
+--onT/iYtSweZVW9zT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Up to now, the workaround for this has been to use the Linux kernel
-command line parameter 'clk_ignore_unused'. See Xen bug
+On Thu, Jul 07, 2016 at 12:17:48PM -0500, Franklin S Cooper Jr wrote:
+> OMAP35x and OMAP37x mentions in the McSPI End-of-Transfer Sequences section
+> that if the McSPI is configured as a Master and only DMA RX is being
+> performed then the DMA transfer size needs to be reduced by 1 or 2.
 
-http://bugs.xenproject.org/xen/bug/45
+Please do not submit new versions of already applied patches, please
+submit incremental updates to the existing code.  Modifying existing
+commits creates problems for other users building on top of those
+commits so it's best practice to only change pubished git commits if
+absolutely essential.
 
-too.
+--onT/iYtSweZVW9zT
+Content-Type: application/pgp-signature; name="signature.asc"
 
-To fix this, we will add the "unused" clocks in Xen to the hypervisor
-node. The OS has to consume and enable the clocks from the hypervisor
-node, then.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Therefore, check if there is a "clocks" entry in the hypervisor node
-and if so consume and enable the given clocks. This prevents the clocks
-from being disabled by the OS.
+iQEcBAEBCAAGBQJXf2hgAAoJECTWi3JdVIfQNQEH/0zc6vi4VIt8HuxulY09TfYG
+23I2JBcq7kO9JNWLuSt9vfa4IXiCUBiQzr6h3mUPrDYq1c+o8use+4QLC/87jCfA
+PHk19k9q02P6OPXUVKA8RnW6Z8Oge5NhKnwkUSmSd56sAkSzFMSOA9SyR1FMaHKu
+Vic2N2a7mJ+oBizThfANHX+Nb9IH3L5EJC8Xag3/htqf/wtYLcKPYlD6l1J0UKzI
+99Gxn3wfL+NkYRjl5Z9hUREfPcfmuc5/KaD+GjTogyfMWdUdSlxnCaHb+Pg2SExV
+vz01RXjHMOuYbjUljj+snah8GhSvA+ABzjKJgI5yD0qef//fpdwhGv1VpVSOvsI=
+=jk7N
+-----END PGP SIGNATURE-----
 
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
----
-Changes in v3: Use the xen.txt description proposed by Michael. Thanks!
-
-Changes in v2: Drop the Linux implementation details like clk_disable_unused
-	       in xen.txt.
-
- Documentation/devicetree/bindings/arm/xen.txt | 13 ++++++++
- arch/arm/xen/enlighten.c                      | 47 +++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
-index c9b9321..00f2165 100644
---- a/Documentation/devicetree/bindings/arm/xen.txt
-+++ b/Documentation/devicetree/bindings/arm/xen.txt
-@@ -17,6 +17,19 @@ the following properties:
-   A GIC node is also required.
-   This property is unnecessary when booting Dom0 using ACPI.
- 
-+Optional properties:
-+
-+clocks: one or more clocks to be enabled
-+  Xen hypervisor drivers might replace native OS drivers. The result is
-+  that some important clocks that are enabled by the OS in the non-Xen
-+  case are not properly enabled in the presence of Xen. The clocks
-+  property enumerates the clocks that must be enabled by the Xen clock
-+  consumer.
-+  An example is a serial driver enabled by the hypervisor. Xen must
-+  consume and enable these clocks in the OS to ensure behavior continues
-+  after firmware configures the UART hardware and corresponding clock
-+  harder.
-+
- To support UEFI on Xen ARM virtual platforms, Xen populates the FDT "uefi" node
- under /hypervisor with following parameters:
- 
-diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-index 47acb36..5c546d0 100644
---- a/arch/arm/xen/enlighten.c
-+++ b/arch/arm/xen/enlighten.c
-@@ -24,6 +24,7 @@
- #include <linux/of_fdt.h>
- #include <linux/of_irq.h>
- #include <linux/of_address.h>
-+#include <linux/clk-provider.h>
- #include <linux/cpuidle.h>
- #include <linux/cpufreq.h>
- #include <linux/cpu.h>
-@@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
- }
- late_initcall(xen_pm_init);
- 
-+/*
-+ * Check if we want to register some clocks, that they
-+ * are not freed because unused by clk_disable_unused().
-+ * E.g. the serial console clock.
-+ */
-+static int __init xen_arm_register_clks(void)
-+{
-+	struct clk *clk;
-+	struct device_node *xen_node;
-+	unsigned int i, count;
-+	int ret = 0;
-+
-+	xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
-+	if (!xen_node) {
-+		pr_err("Xen support was detected before, but it has disappeared\n");
-+		return -EINVAL;
-+	}
-+
-+	count = of_clk_get_parent_count(xen_node);
-+	if (!count)
-+		goto out;
-+
-+	for (i = 0; i < count; i++) {
-+		clk = of_clk_get(xen_node, i);
-+		if (IS_ERR(clk)) {
-+			pr_err("Xen failed to register clock %i. Error: %li\n",
-+			       i, PTR_ERR(clk));
-+			ret = PTR_ERR(clk);
-+			goto out;
-+		}
-+
-+		ret = clk_prepare_enable(clk);
-+		if (ret < 0) {
-+			pr_err("Xen failed to enable clock %i. Error: %i\n",
-+			       i, ret);
-+			goto out;
-+		}
-+	}
-+
-+	ret = 0;
-+
-+out:
-+	of_node_put(xen_node);
-+	return ret;
-+}
-+late_initcall(xen_arm_register_clks);
- 
- /* empty stubs */
- void xen_arch_pre_suspend(void) { }
--- 
-2.8.0
-
+--onT/iYtSweZVW9zT--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
