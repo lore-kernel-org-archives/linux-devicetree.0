@@ -1,112 +1,114 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 15/15] ARM: dts: sun8i: Add dts file for inet86dz board
-Date: Fri,  8 Jul 2016 18:05:56 +0200
-Message-ID: <1467993956-19535-16-git-send-email-hdegoede@redhat.com>
-References: <1467993956-19535-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467993956-19535-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding of
+ STiH4xx platforms
+Date: Fri, 08 Jul 2016 09:08:24 -0700
+Message-ID: <146799410307.73491.9408637761157902031@resonance>
+References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
+ <20160619150458.GA26824@rob-hp-laptop>
+ <146794221378.73491.2803164814485320331@resonance> <577F6E83.3080006@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <577F6E83.3080006@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@st.com>, Rob Herring <robh@kernel.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Peter Gri
 List-Id: devicetree@vger.kernel.org
 
-The inet86dz board is a board used in 7" tablets from various oems.
+Quoting Gabriel Fernandez (2016-07-08 02:12:35)
+> Hi Mike,
+> 
+> On 07/08/2016 03:43 AM, Michael Turquette wrote:
+> > Quoting Rob Herring (2016-06-19 08:04:58)
+> >> On Thu, Jun 16, 2016 at 11:20:22AM +0200, Gabriel Fernandez wrote:
+> >>> This patch reworks the clock binding to avoid too much detail in DT.
+> >>> Now we have only compatible string per type of clock
+> >>> (remark from Rob https://lkml.org/lkml/2016/5/25/492)
+> >>>
+> >> I have no idea what the clock trees and clock controller in these chips
+> >> look like, so it's hard to say if the changes here are good. It still
+> >> looks like things are somewhat fine grained clocks in DT. I'll leave
+> >> it up to the platform maintainers to decide...
+> > Is this series breaking ABI? If yes, why not do what Maxime did for the
+> > Allwinner/sunxi clocks and just fully convert over to a
+> > one-node-per-clock-controller binding? This one-node-per-clock stuff is
+> > pretty unfortunate, and if we're deprecating platforms (patch #1) then
+> > now might be a good time to re-evaluate the whole thing.
+> 
+> The goal of my patchset was to be aligned with DRM / KMS development and 
+> to offer
+> the possibility to make a correct video playback on STiH407/STiH410 
+> platform.
+> Our milestone is the 4.8 for that.
+> 
+> Currently people need these patches to work.
+> I'm not sure it's a good time to re-evaluate the whole thing.
+> 
+> Is it possible to re-evaluate later ?
 
-These tablets are a23 based 7" tablets featuring a 1024x600 LCD,
-512MB RAM, 4G NAND, rtl8188etv usb wifi, gsl1680 touchschreen,
-micro-sd slot, 3.5mm headphone jack and a micro-usb otg connector
-which doubles as charging port.
+Are you OK to break ABI later? Or at a minimum, deprecate the current
+binding (maintain it forever for legacy platforms) and create a new
+clock controller binding description that supersedes the legacy binding
+for all new platforms?
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Use sun8i-reference-design-tablet.dtsi
----
- arch/arm/boot/dts/Makefile               |  1 +
- arch/arm/boot/dts/sun8i-a23-inet86dz.dts | 58 ++++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-a23-inet86dz.dts
+If the answer to either question is "yes", then I'm OK to put it aside
+for now. But if the answer to both is "no", and this patch series is
+breaking ABI, then we really should fix it now.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index fca6811..92eb004 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -753,6 +753,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a23-evb.dtb \
- 	sun8i-a23-gt90h-v4.dtb \
-+	sun8i-a23-inet86dz.dtb \
- 	sun8i-a23-ippo-q8h-v5.dtb \
- 	sun8i-a23-ippo-q8h-v1.2.dtb \
- 	sun8i-a23-polaroid-mid2407pxe03.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-a23-inet86dz.dts b/arch/arm/boot/dts/sun8i-a23-inet86dz.dts
-new file mode 100644
-index 0000000..0f9f71b
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a23-inet86dz.dts
-@@ -0,0 +1,58 @@
-+/*
-+ * Copyright 2016 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-a23.dtsi"
-+#include "sun8i-reference-design-tablet.dtsi"
-+
-+/ {
-+	model = "INet-86DZ Rev 01";
-+	compatible = "primux,inet86dz", "allwinner,sun8i-a23";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_dldo1>;
-+};
--- 
-2.7.4
+Regards,
+Mike
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Best regards,
+> Gabriel
+> 
+> > Regards,
+> > Mike
+> >
+> >>   
+> >>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> >>> ---
+> >>>   .../devicetree/bindings/clock/st/st,clkgen-mux.txt |  2 +-
+> >>>   .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
+> >>>   .../devicetree/bindings/clock/st/st,clkgen.txt     |  2 +-
+> >>>   .../devicetree/bindings/clock/st/st,quadfs.txt     |  6 +--
+> >>>   drivers/clk/st/clkgen-fsyn.c                       | 41 ++++++--------
+> >>>   drivers/clk/st/clkgen-mux.c                        | 28 ++++------
+> >>>   drivers/clk/st/clkgen-pll.c                        | 62 ++++++++++------------
+> >>>   7 files changed, 65 insertions(+), 87 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> >>> index 4d277d6..9a46cb1d7 100644
+> >>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> >>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> >>> @@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
+> >>>   Required properties:
+> >>>   
+> >>>   - compatible : shall be:
+> >>> -     "st,stih407-clkgen-a9-mux",     "st,clkgen-mux"
+> >>> +     "st,stih407-clkgen-a9-mux"
+> >>>   
+> >>>   - #clock-cells : from common clock binding; shall be set to 0.
+> >>>   
+> >>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> >>> index c9fd674..be0b043 100644
+> >>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> >>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> >>> @@ -9,11 +9,10 @@ Base address is located to the parent node. See clock binding[2]
+> >>>   Required properties:
+> >>>   
+> >>>   - compatible : shall be:
+> >>> -     "st,stih407-plls-c32-a0",       "st,clkgen-plls-c32"
+> >>> -     "st,stih407-plls-c32-a9",       "st,clkgen-plls-c32"
+> >>> -     "sst,plls-c32-cx_0",            "st,clkgen-plls-c32"
+> >>> -     "sst,plls-c32-cx_1",            "st,clkgen-plls-c32"
+> >>> -     "st,stih418-plls-c28-a9",       "st,clkgen-plls-c32"
+> >>> +     "st,clkgen-pll0"
+> >>> +     "st,clkgen-pll0"
+> >> Repeated. Supposed to be 0 and 1? This seems a bit generic, too.
+> >>
+> >>> +     "st,stih407-clkgen-plla9"
+> >>> +     "st,stih418-clkgen-plla9"
+> 
