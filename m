@@ -1,86 +1,421 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] spi s3c64xx ioclk handling
-Date: Fri, 08 Jul 2016 09:21:42 -0700
-Message-ID: <146799490260.73491.12050912045304218863@resonance>
-References: <1467989201-14661-1-git-send-email-andi.shyti@samsung.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 4/7] rtc: ac100: Add clk output support
+Date: Fri, 8 Jul 2016 18:29:32 +0200
+Message-ID: <20160708162932.GN22202@piout.net>
+References: <1467988422-17934-1-git-send-email-wens@csie.org>
+ <1467988422-17934-5-git-send-email-wens@csie.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467989201-14661-1-git-send-email-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBB55J765QKGQE6GMKCLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1467988422-17934-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Andi Shyti (2016-07-08 07:46:34)
-> Hi,
+On 08/07/2016 at 22:33:39 +0800, Chen-Yu Tsai wrote :
+> The AC100's RTC side has 3 clock outputs on external pins, which can
+> provide a clock signal to the SoC or other modules, such as WiFi or
+> GSM modules.
 > 
-> this patchset improves the compatibility between the s3c64xx
-> driver and the exynos5433. One point of incompatibility, indeed,
-> was that the SPI controller in exynos5433 is fed by three clocks
-> which need to be handled by the driver. The third clock is the
-> ioclk which support is the main purpose of this patchset.
->   
-> Patch 6 is a bit unrelated with the rest, it restores a
-> comment that has been removed earlier by mistake.
+> Support this with a custom clk driver integrated with the rtc driver.
 > 
-> The last patch was first sent on its own and it was its 5th
-> version, it has been queued to this patchset as there is a
-> dependency with it.
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Feel free to add the following to all of the patches:
-
-Reviewed-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-Regards,
-Mike
-
+> ---
+> Changes since v4: none
 > 
-> Changelog V1 -> V2:
+> Changes since v3:
 > 
->  - patch 1: the exynos5433-spi compatible is placed in
->    alphabetical order compared to exynos7-spi
+>   - Renamed clk32k prefixes to clkout, except for the internal 32k clk
+>   - Changed default clk output names to "ac100-cko{1,2,3}-rtc"
+>   - Moved 4M ADDA clk to codec side
 > 
->  - patch 1: deprecates exynos7-spi
+> Changes since v2: none
+> Changes since v1: none
 > 
->  - patch 2: [new] added the clocks and clock-name documentation
->    in the bindings
+> ---
+>  drivers/rtc/rtc-ac100.c | 302 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 302 insertions(+)
 > 
->  - patch 3: fixed some typos, renamed the goto label from
->    err_power_off to err_pm_put add the reviewd-by Krzysztof
-> 
->  - patch 4: new patch
-> 
->  - patch 5: fixed typos in commit message and use low letters for
->    hex numbers
-> 
->  - patch 6: removed one line of comment
-> 
->  - patch 7: added to ensure sequentiality.
-> 
-> Thanks,
-> Andi
-> 
-> 
-> Andi Shyti (7):
->   bindings: spi-samsung: add exynos5433 spi compatible
->   bindings: spi-samsung: document the clocks and the clock-name property
->   spi: s3c64xx: rename goto labels to meaningful names
->   spi: s3c64xx: use error code from clk_prepare_enable()
->   spi: s3c64xx: add exynos5433 compatible for ioclk handling
->   spi: s3c64xx: restore removed comments
->   clk: exynos5433: remove CLK_IGNORE_UNUSED flag from SPI clocks
-> 
->  .../devicetree/bindings/spi/spi-samsung.txt        | 11 ++-
->  drivers/clk/samsung/clk-exynos5433.c               |  5 +-
->  drivers/spi/spi-s3c64xx.c                          | 90 +++++++++++++++++-----
->  3 files changed, 81 insertions(+), 25 deletions(-)
-> 
+> diff --git a/drivers/rtc/rtc-ac100.c b/drivers/rtc/rtc-ac100.c
+> index 5a9ca89d04c7..70b4fd0f6122 100644
+> --- a/drivers/rtc/rtc-ac100.c
+> +++ b/drivers/rtc/rtc-ac100.c
+> @@ -16,6 +16,7 @@
+>   */
+>  
+>  #include <linux/bcd.h>
+> +#include <linux/clk-provider.h>
+>  #include <linux/device.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+> @@ -31,6 +32,15 @@
+>  /* Control register */
+>  #define AC100_RTC_CTRL_24HOUR	BIT(0)
+>  
+> +/* Clock output register bits */
+> +#define AC100_CLKOUT_PRE_DIV_SHIFT	5
+> +#define AC100_CLKOUT_PRE_DIV_WIDTH	3
+> +#define AC100_CLKOUT_MUX_SHIFT		4
+> +#define AC100_CLKOUT_MUX_WIDTH		1
+> +#define AC100_CLKOUT_DIV_SHIFT		1
+> +#define AC100_CLKOUT_DIV_WIDTH		3
+> +#define AC100_CLKOUT_EN			BIT(0)
+> +
+>  /* RTC */
+>  #define AC100_RTC_SEC_MASK	GENMASK(6, 0)
+>  #define AC100_RTC_MIN_MASK	GENMASK(6, 0)
+> @@ -67,14 +77,292 @@
+>  #define AC100_YEAR_MAX				2069
+>  #define AC100_YEAR_OFF				(AC100_YEAR_MIN - 1900)
+>  
+> +struct ac100_clkout {
+> +	struct clk_hw hw;
+> +	struct regmap *regmap;
+> +	u8 offset;
+> +};
+> +
+> +#define to_ac100_clkout(_hw) container_of(_hw, struct ac100_clkout, hw)
+> +
+> +#define AC100_RTC_32K_NAME	"ac100-rtc-32k"
+> +#define AC100_RTC_32K_RATE	32768
+> +#define AC100_CLKOUT_NUM	3
+> +
+> +static const char * const ac100_clkout_names[AC100_CLKOUT_NUM] = {
+> +	"ac100-cko1-rtc",
+> +	"ac100-cko2-rtc",
+> +	"ac100-cko3-rtc",
+> +};
+> +
+>  struct ac100_rtc_dev {
+>  	struct rtc_device *rtc;
+>  	struct device *dev;
+>  	struct regmap *regmap;
+>  	int irq;
+>  	unsigned long alarm;
+> +
+> +	struct clk_hw *rtc_32k_clk;
+> +	struct ac100_clkout clks[AC100_CLKOUT_NUM];
+> +	struct clk_hw_onecell_data *clk_data;
+>  };
+>  
+> +/**
+> + * Clock controls for 3 clock output pins
+> + */
+> +
+> +static const struct clk_div_table ac100_clkout_prediv[] = {
+> +	{ .val = 0, .div = 1 },
+> +	{ .val = 1, .div = 2 },
+> +	{ .val = 2, .div = 4 },
+> +	{ .val = 3, .div = 8 },
+> +	{ .val = 4, .div = 16 },
+> +	{ .val = 5, .div = 32 },
+> +	{ .val = 6, .div = 64 },
+> +	{ .val = 7, .div = 122 },
+> +	{ },
+> +};
+> +
+> +/* Abuse the fact that one parent is 32768 Hz, and the other is 4 MHz */
+> +static unsigned long ac100_clkout_recalc_rate(struct clk_hw *hw,
+> +					      unsigned long prate)
+> +{
+> +	struct ac100_clkout *clk = to_ac100_clkout(hw);
+> +	unsigned int reg, div;
+> +
+> +	regmap_read(clk->regmap, clk->offset, &reg);
+> +
+> +	/* Handle pre-divider first */
+> +	if (prate != AC100_RTC_32K_RATE) {
+> +		div = (reg >> AC100_CLKOUT_PRE_DIV_SHIFT) &
+> +			((1 << AC100_CLKOUT_PRE_DIV_WIDTH) - 1);
+> +		prate = divider_recalc_rate(hw, prate, div,
+> +					    ac100_clkout_prediv, 0);
+> +	}
+> +
+> +	div = (reg >> AC100_CLKOUT_DIV_SHIFT) &
+> +		(BIT(AC100_CLKOUT_DIV_WIDTH) - 1);
+> +	return divider_recalc_rate(hw, prate, div, NULL,
+> +				   CLK_DIVIDER_POWER_OF_TWO);
+> +}
+> +
+> +static long ac100_clkout_round_rate(struct clk_hw *hw, unsigned long rate,
+> +				    unsigned long prate)
+> +{
+> +	unsigned long best_rate = 0, tmp_rate, tmp_prate;
+> +	int i;
+> +
+> +	if (prate == AC100_RTC_32K_RATE)
+> +		return divider_round_rate(hw, rate, &prate, NULL,
+> +					  AC100_CLKOUT_DIV_WIDTH,
+> +					  CLK_DIVIDER_POWER_OF_TWO);
+> +
+> +	for (i = 0; ac100_clkout_prediv[i].div; i++) {
+> +		tmp_prate = DIV_ROUND_UP(prate, ac100_clkout_prediv[i].val);
+> +		tmp_rate = divider_round_rate(hw, rate, &tmp_prate, NULL,
+> +					      AC100_CLKOUT_DIV_WIDTH,
+> +					      CLK_DIVIDER_POWER_OF_TWO);
+> +
+> +		if (tmp_rate > rate)
+> +			continue;
+> +		if (rate - tmp_rate < best_rate - tmp_rate)
+> +			best_rate = tmp_rate;
+> +	}
+> +
+> +	return best_rate;
+> +}
+> +
+> +static int ac100_clkout_determine_rate(struct clk_hw *hw,
+> +				       struct clk_rate_request *req)
+> +{
+> +	struct clk_hw *best_parent;
+> +	unsigned long best = 0;
+> +	int i, num_parents = clk_hw_get_num_parents(hw);
+> +
+> +	for (i = 0; i < num_parents; i++) {
+> +		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
+> +		unsigned long tmp, prate = clk_hw_get_rate(parent);
+> +
+> +		tmp = ac100_clkout_round_rate(hw, req->rate, prate);
+> +
+> +		if (tmp > req->rate)
+> +			continue;
+> +		if (req->rate - tmp < req->rate - best) {
+> +			best = tmp;
+> +			best_parent = parent;
+> +		}
+> +	}
+> +
+> +	if (!best)
+> +		return -EINVAL;
+> +
+> +	req->best_parent_hw = best_parent;
+> +	req->best_parent_rate = best;
+> +	req->rate = best;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ac100_clkout_set_rate(struct clk_hw *hw, unsigned long rate,
+> +				 unsigned long prate)
+> +{
+> +	struct ac100_clkout *clk = to_ac100_clkout(hw);
+> +	int div = 0, pre_div = 0;
+> +
+> +	do {
+> +		div = divider_get_val(rate * ac100_clkout_prediv[pre_div].div,
+> +				      prate, NULL, AC100_CLKOUT_DIV_WIDTH,
+> +				      CLK_DIVIDER_POWER_OF_TWO);
+> +		if (div >= 0)
+> +			break;
+> +	} while (prate != AC100_RTC_32K_RATE &&
+> +		 ac100_clkout_prediv[++pre_div].div);
+> +
+> +	if (div < 0)
+> +		return div;
+> +
+> +	pre_div = ac100_clkout_prediv[pre_div].val;
+> +
+> +	regmap_update_bits(clk->regmap, clk->offset,
+> +			   ((1 << AC100_CLKOUT_DIV_WIDTH) - 1) << AC100_CLKOUT_DIV_SHIFT |
+> +			   ((1 << AC100_CLKOUT_PRE_DIV_WIDTH) - 1) << AC100_CLKOUT_PRE_DIV_SHIFT,
+> +			   (div - 1) << AC100_CLKOUT_DIV_SHIFT |
+> +			   (pre_div - 1) << AC100_CLKOUT_PRE_DIV_SHIFT);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ac100_clkout_prepare(struct clk_hw *hw)
+> +{
+> +	struct ac100_clkout *clk = to_ac100_clkout(hw);
+> +
+> +	return regmap_update_bits(clk->regmap, clk->offset, AC100_CLKOUT_EN,
+> +				  AC100_CLKOUT_EN);
+> +}
+> +
+> +static void ac100_clkout_unprepare(struct clk_hw *hw)
+> +{
+> +	struct ac100_clkout *clk = to_ac100_clkout(hw);
+> +
+> +	regmap_update_bits(clk->regmap, clk->offset, AC100_CLKOUT_EN, 0);
+> +}
+> +
+> +static int ac100_clkout_is_prepared(struct clk_hw *hw)
+> +{
+> +	struct ac100_clkout *clk = to_ac100_clkout(hw);
+> +	unsigned int reg;
+> +
+> +	regmap_read(clk->regmap, clk->offset, &reg);
+> +
+> +	return reg & AC100_CLKOUT_EN;
+> +}
+> +
+> +static u8 ac100_clkout_get_parent(struct clk_hw *hw)
+> +{
+> +	struct ac100_clkout *clk = to_ac100_clkout(hw);
+> +	unsigned int reg;
+> +
+> +	regmap_read(clk->regmap, clk->offset, &reg);
+> +
+> +	return (reg >> AC100_CLKOUT_MUX_SHIFT) & 0x1;
+> +}
+> +
+> +static int ac100_clkout_set_parent(struct clk_hw *hw, u8 index)
+> +{
+> +	struct ac100_clkout *clk = to_ac100_clkout(hw);
+> +
+> +	return regmap_update_bits(clk->regmap, clk->offset,
+> +				  BIT(AC100_CLKOUT_MUX_SHIFT),
+> +				  index ? BIT(AC100_CLKOUT_MUX_SHIFT) : 0);
+> +}
+> +
+> +static const struct clk_ops ac100_clkout_ops = {
+> +	.prepare	= ac100_clkout_prepare,
+> +	.unprepare	= ac100_clkout_unprepare,
+> +	.is_prepared	= ac100_clkout_is_prepared,
+> +	.recalc_rate	= ac100_clkout_recalc_rate,
+> +	.determine_rate	= ac100_clkout_determine_rate,
+> +	.get_parent	= ac100_clkout_get_parent,
+> +	.set_parent	= ac100_clkout_set_parent,
+> +	.set_rate	= ac100_clkout_set_rate,
+> +};
+> +
+> +static int ac100_rtc_register_clks(struct ac100_rtc_dev *chip)
+> +{
+> +	struct device_node *np = chip->dev->of_node;
+> +	const char *parents[2] = {AC100_RTC_32K_NAME};
+> +	int i, ret;
+> +
+> +	chip->clk_data = devm_kzalloc(chip->dev, sizeof(*chip->clk_data) +
+> +						 sizeof(*chip->clk_data->hws) *
+> +						 AC100_CLKOUT_NUM,
+> +						 GFP_KERNEL);
+> +	if (!chip->clk_data)
+> +		return -ENOMEM;
+> +
+> +	chip->rtc_32k_clk = clk_hw_register_fixed_rate(chip->dev,
+> +						       AC100_RTC_32K_NAME,
+> +						       NULL, 0,
+> +						       AC100_RTC_32K_RATE);
+> +	if (IS_ERR(chip->rtc_32k_clk)) {
+> +		ret = PTR_ERR(chip->rtc_32k_clk);
+> +		dev_err(chip->dev, "Failed to register RTC-32k clock: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	parents[1] = of_clk_get_parent_name(np, 0);
+> +	if (!parents[1]) {
+> +		dev_err(chip->dev, "Failed to get ADDA 4M clock\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; i < AC100_CLKOUT_NUM; i++) {
+> +		struct ac100_clkout *clk = &chip->clks[i];
+> +		struct clk_init_data init = {
+> +			.name = ac100_clkout_names[i],
+> +			.ops = &ac100_clkout_ops,
+> +			.parent_names = parents,
+> +			.num_parents = ARRAY_SIZE(parents),
+> +			.flags = 0,
+> +		};
+> +
+> +		clk->regmap = chip->regmap;
+> +		clk->offset = AC100_CLKOUT_CTRL1 + i;
+> +		clk->hw.init = &init;
+> +
+> +		ret = devm_clk_hw_register(chip->dev, &clk->hw);
+> +		if (ret) {
+> +			dev_err(chip->dev, "Failed to register clk '%s': %d\n",
+> +				init.name, ret);
+> +			goto err_unregister_rtc_32k;
+> +		}
+> +
+> +		chip->clk_data->hws[i] = &clk->hw;
+> +	}
+> +
+> +	chip->clk_data->num = i;
+> +	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, chip->clk_data);
+> +	if (ret)
+> +		goto err_unregister_rtc_32k;
+> +
+> +	return 0;
+> +
+> +err_unregister_rtc_32k:
+> +	clk_unregister_fixed_rate(chip->rtc_32k_clk->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static void ac100_rtc_unregister_clks(struct ac100_rtc_dev *chip)
+> +{
+> +	of_clk_del_provider(chip->dev->of_node);
+> +	clk_unregister_fixed_rate(chip->rtc_32k_clk->clk);
+> +}
+> +
+> +/**
+> + * RTC related bits
+> + */
+>  static int ac100_rtc_get_time(struct device *dev, struct rtc_time *rtc_tm)
+>  {
+>  	struct ac100_rtc_dev *chip = dev_get_drvdata(dev);
+> @@ -300,11 +588,24 @@ static int ac100_rtc_probe(struct platform_device *pdev)
+>  		return PTR_ERR(chip->rtc);
+>  	}
+>  
+> +	ret = ac100_rtc_register_clks(chip);
+> +	if (ret)
+> +		return ret;
+> +
+>  	dev_info(&pdev->dev, "RTC enabled\n");
+>  
+>  	return 0;
+>  }
+>  
+> +static int ac100_rtc_remove(struct platform_device *pdev)
+> +{
+> +	struct ac100_rtc_dev *chip = platform_get_drvdata(pdev);
+> +
+> +	ac100_rtc_unregister_clks(chip);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct of_device_id ac100_rtc_match[] = {
+>  	{ .compatible = "x-powers,ac100-rtc" },
+>  	{ },
+> @@ -313,6 +614,7 @@ MODULE_DEVICE_TABLE(of, ac100_rtc_match);
+>  
+>  static struct platform_driver ac100_rtc_driver = {
+>  	.probe		= ac100_rtc_probe,
+> +	.remove		= ac100_rtc_remove,
+>  	.driver		= {
+>  		.name		= "ac100-rtc",
+>  		.of_match_table	= of_match_ptr(ac100_rtc_match),
 > -- 
 > 2.8.1
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
