@@ -1,57 +1,47 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v3 3/9] DocBook/v4l: Add compressed video formats used on
- MT8173 codec driver
-Date: Fri, 8 Jul 2016 12:23:11 +0200
-Message-ID: <5a793171-24a7-4e9e-8bfd-f668c789f8e0@xs4all.nl>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-2-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-3-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-4-git-send-email-tiffany.lin@mediatek.com>
+From: <shh.xie@gmail.com>
+Subject: [PATCH 0/5] arm64: dts: add QorIQ LS1046A SoC and boards support
+Date: Fri, 8 Jul 2016 18:15:39 +0800
+Message-ID: <1467972944-12293-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464611363-14936-4-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: Shaohui Xie <Shaohui.Xie@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/30/2016 02:29 PM, Tiffany Lin wrote:
-> Add V4L2_PIX_FMT_MT21 documentation
-> 
-> Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/DocBook/media/v4l/pixfmt.xml |    6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/DocBook/media/v4l/pixfmt.xml b/Documentation/DocBook/media/v4l/pixfmt.xml
-> index 5a08aee..d40e0ce 100644
-> --- a/Documentation/DocBook/media/v4l/pixfmt.xml
-> +++ b/Documentation/DocBook/media/v4l/pixfmt.xml
-> @@ -1980,6 +1980,12 @@ array. Anything what's in between the UYVY lines is JPEG data and should be
->  concatenated to form the JPEG stream. </para>
->  </entry>
->  	  </row>
-> +	  <row id="V4L2_PIX_FMT_MT21">
-> +	    <entry><constant>V4L2_PIX_FMT_MT21</constant></entry>
-> +	    <entry>'MT21'</entry>
-> +	    <entry>Compressed two-planar YVU420 format used by Mediatek MT8173
-> +	    codec driver.</entry>
+From: Shaohui Xie <Shaohui.Xie@nxp.com>
 
-Can you give a few more details? The encoder driver doesn't seem to produce this
-format, so who is creating this? Where is this format documented?
+This patchest adds support for QorIQ LS1046A SoC which is based on ARMv8
+architecture, also adds LS1046A-RDB and LS1046A-QDS board support.
 
-Regards,
+Mingkai Hu (2):
+  arm64: dts: add QorIQ LS1046A SoC support
+  arm64: dts: add LS1046A-RDB board support
 
-	Hans
+Shaohui Xie (3):
+  Documentation: DT: Add entry for QorIQ LS1046A-RDB board
+  Documentation: DT: Add entry for QorIQ LS1046A-QDS board
+  arm64: dts: add LS1046A-QDS board support
 
-> +	  </row>
->  	</tbody>
->        </tgroup>
->      </table>
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/arm/fsl.txt     |   8 +
+ arch/arm64/boot/dts/freescale/Makefile            |   2 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 209 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 138 ++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi    | 549 ++++++++++++++++++++++
+ 5 files changed, 906 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+
+-- 
+2.1.0.27.g96db324
