@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 03/15] ARM: dts: sun5i: Rename sun5i-q8-common.dtsi sun5i-reference-design-tablet.dtsi
-Date: Fri,  8 Jul 2016 18:05:44 +0200
-Message-ID: <1467993956-19535-4-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 02/15] ARM: dts: sun5i: Move q8 display bits to sun5i-a13-q8-tablet.dts
+Date: Fri,  8 Jul 2016 18:05:43 +0200
+Message-ID: <1467993956-19535-3-git-send-email-hdegoede@redhat.com>
 References: <1467993956-19535-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1467993956-19535-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,35 +10,118 @@ To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripa
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rename sun5i-q8-common.dtsi to sun5i-reference-design-tablet.dtsi. This
-is part of renaming all the sun?i-q8-common.dtsi files to
-sun?i-reference-design-tablet.dtsi since most of the hw-config in there
-is shared by all sunxi tablets.
+This is a preparation patch for renaming sun5i-q8-common.dtsi to
+sun5i-reference-design-tablet.dtsi and sharing it between all
+the A13 tablet dts files.
+
+Since we only have a panel config for the 18 tablets (for now) move
+this to the q8 specific dts file.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-a13-q8-tablet.dts                               | 2 +-
- .../dts/{sun5i-q8-common.dtsi => sun5i-reference-design-tablet.dtsi}    | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename arch/arm/boot/dts/{sun5i-q8-common.dtsi => sun5i-reference-design-tablet.dtsi} (100%)
+ arch/arm/boot/dts/sun5i-a13-q8-tablet.dts | 36 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/sun5i-q8-common.dtsi    | 36 -------------------------------
+ 2 files changed, 36 insertions(+), 36 deletions(-)
 
 diff --git a/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts b/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
-index afe14f7..a89f29fa 100644
+index dce7782..afe14f7 100644
 --- a/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
 +++ b/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
-@@ -42,7 +42,7 @@
- 
- /dts-v1/;
- #include "sun5i-a13.dtsi"
--#include "sun5i-q8-common.dtsi"
-+#include "sun5i-reference-design-tablet.dtsi"
- 
+@@ -47,4 +47,40 @@
  / {
  	model = "Q8 A13 Tablet";
-diff --git a/arch/arm/boot/dts/sun5i-q8-common.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
-similarity index 100%
-rename from arch/arm/boot/dts/sun5i-q8-common.dtsi
-rename to arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+ 	compatible = "allwinner,q8-a13", "allwinner,sun5i-a13";
++
++	panel: panel {
++		compatible = "urt,umsh-8596md-t", "simple-panel";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			/* TODO: lcd panel uses axp gpio0 as enable pin */
++			backlight = <&backlight>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			panel_input: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&tcon0_out_lcd>;
++			};
++		};
++	};
++};
++
++&be0 {
++	status = "okay";
++};
++
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
++	status = "okay";
++};
++
++&tcon0_out {
++	tcon0_out_lcd: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&panel_input>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/sun5i-q8-common.dtsi b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+index 8977fb2..ca5d0c4 100644
+--- a/arch/arm/boot/dts/sun5i-q8-common.dtsi
++++ b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+@@ -59,29 +59,6 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+-
+-	panel: panel {
+-		compatible = "urt,umsh-8596md-t", "simple-panel";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		port@0 {
+-			reg = <0>;
+-			/* TODO: lcd panel uses axp gpio0 as enable pin */
+-			backlight = <&backlight>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			panel_input: endpoint@0 {
+-				reg = <0>;
+-				remote-endpoint = <&tcon0_out_lcd>;
+-			};
+-		};
+-	};
+-};
+-
+-&be0 {
+-	status = "okay";
+ };
+ 
+ &codec {
+@@ -202,19 +179,6 @@
+ 	status = "okay";
+ };
+ 
+-&tcon0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&lcd_rgb666_pins>;
+-	status = "okay";
+-};
+-
+-&tcon0_out {
+-	tcon0_out_lcd: endpoint@0 {
+-		reg = <0>;
+-		remote-endpoint = <&panel_input>;
+-	};
+-};
+-
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins_b>;
 -- 
 2.7.4
 
