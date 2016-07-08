@@ -1,72 +1,167 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/3] net: smsc911x: augment device tree bindings
-Date: Fri,  8 Jul 2016 11:07:30 +0200
-Message-ID: <1467968852-6175-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Steve Glendinning <steve.glendinning@smsc.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Jeremy Linton <jeremy.linton@arm.com>, Kamlakant Patel <kamlakant.patel@broadcom.com>, Pavel Fedin <p.fedin@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+Subject: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
+Date: Fri,  8 Jul 2016 11:11:59 +0200
+Message-ID: <1467969122-6552-2-git-send-email-linus.walleij@linaro.org>
+References: <1467969122-6552-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1467969122-6552-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for:
-
-- An optional GPIO line for releasing the RESET signal to the
-  SMSC911x devices
-
-- An optional PME (power management event) interrupt line that
-  can be utilized to wake up the system on network activity.
-  This signal exist on all the SMSC911x devices, it is just not
-  very often routed.
-
-Both these lines are routed to the SoC on the Qualcomm APQ8060
-Dragonboard and thus needs to be bound in the device tree.
+This adds device tree bindings for the External Bus Interface 2, EBI2
+to the Qualcomm SoC drivers.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- Documentation/devicetree/bindings/net/smsc911x.txt | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+Whoever has documentation on this block and willing to share: either share
+the documentation or tell me what I'm doing wrong by rephrasing. Thanks.
+---
+ .../devicetree/bindings/soc/qcom/qcom,ebi2.txt     | 134 +++++++++++++++++++++
+ 1 file changed, 134 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ebi2.txt
 
-diff --git a/Documentation/devicetree/bindings/net/smsc911x.txt b/Documentation/devicetree/bindings/net/smsc911x.txt
-index 3fed3c124411..7b01c37272c1 100644
---- a/Documentation/devicetree/bindings/net/smsc911x.txt
-+++ b/Documentation/devicetree/bindings/net/smsc911x.txt
-@@ -3,9 +3,12 @@
- Required properties:
- - compatible : Should be "smsc,lan<model>", "smsc,lan9115"
- - reg : Address and length of the io space for SMSC LAN
--- interrupts : Should contain SMSC LAN interrupt line
--- interrupt-parent : Should be the phandle for the interrupt controller
--  that services interrupts for this device
-+- interrupts/extended-interrupts : Should contain the SMSC LAN
-+  interrupt line as cell 0, cell 1 is an OPTIONAL PME (power
-+  management event) interrupt that is able to wake up the host
-+  system with a 50ms pulse on network activity
-+  For generic bindings for interrupt controller parents, refer to
-+  interrupt-controller/interrupts.txt
- - phy-mode : See ethernet.txt file in the same directory
- 
- Optional properties:
-@@ -21,6 +24,10 @@ Optional properties:
-   external PHY
- - smsc,save-mac-address : Indicates that mac address needs to be saved
-   before resetting the controller
-+- reset-gpios : a GPIO line connected to the RESET (active low) signal
-+  of the device. On many systems this is wired high so the device goes
-+  out of reset at power-on, but if it is under program control, this
-+  optional GPIO can wake up in response to it.
- 
- Examples:
- 
-@@ -29,7 +36,8 @@ lan9220@f4000000 {
- 	reg = <0xf4000000 0x2000000>;
- 	phy-mode = "mii";
- 	interrupt-parent = <&gpio1>;
--	interrupts = <31>;
-+	interrupts = <31>, <32>;
-+	reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
- 	reg-io-width = <4>;
- 	smsc,irq-push-pull;
- };
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ebi2.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,ebi2.txt
+new file mode 100644
+index 000000000000..b848a60352ca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ebi2.txt
+@@ -0,0 +1,134 @@
++Qualcomm External Bus Interface 2 (EBI2)
++
++The EBI2 contains two peripheral blocks: XMEM and LCDC. The XMEM handles any
++external memory (such as NAND or other memory-mapped peripherals) whereas
++LCDC handles LCD displays.
++
++As it says it connects devices to an external bus interface, meaning address
++lines (up to 9 address lines so can only address 1KiB external memory space),
++data lines (16 bits), OE (output enable), ADV (address valid, used on some
++NOR flash memories), WE (write enable). This on top of 6 different chip selects
++(CS0 thru CS5) so that in theory 6 different devices can be connected.
++
++Apparently this bus is clocked at 64MHz. It has dedicated pins on the package
++and the bus can only come out on these pins, however if some of the pins are
++unused they can be left unconnected or remuxed to be used as GPIO or in some
++cases other orthogonal functions as well.
++
++Also CS1 and CS2 has -A and -B signals. Why they have that is unclear to me.
++
++The chip selects have the following memory range assignments. This region of
++memory is referred to as "Chip Peripheral SS FPB0" and is 168MB big.
++
++Chip Select                     Physical address base
++CS0 GPIO134                     0x1a800000-0x1b000000 (8MB)
++CS1 GPIO39 (A) / GPIO123 (B)    0x1b000000-0x1b800000 (8MB)
++CS2 GPIO40 (A) / GPIO124 (B)    0x1b800000-0x1c000000 (8MB)
++CS3 GPIO133                     0x1d000000-0x25000000 (128 MB)
++CS4 GPIO132                     0x1c800000-0x1d000000 (8MB)
++CS5 GPIO131                     0x1c000000-0x1c800000 (8MB)
++
++The APQ8060 Qualcomm Application Processor User Guide, 80-N7150-14 Rev. A,
++August 6, 2012 contains some incomplete documentation of the EBI2.
++
++FIXME: the manual mentions "write precharge cycles" and "precharge cycles".
++We have not been able to figure out which bit fields these correspond to
++in the hardware, or what valid values exist. The current hypothesis is that
++this is something just used on the FAST chip selects and that the SLOW
++chip selects are understood fully. There is also a "byte device enable"
++flag somewhere for 8bit memories.
++
++FIXME: The chipselects have SLOW and FAST configuration registers. It's a bit
++unclear what this means, if they are mutually exclusive or can be used
++together, or if some chip selects are hardwired to be FAST and others are SLOW
++by design.
++
++The XMEM registers are totally undocumented but could be partially decoded
++because the Cypress AN49576 Antioch Westbridge apparently has suspiciously
++similar register layout, see: http://www.cypress.com/file/105771/download
++
++Required properties:
++- compatible: should be "qcom,ebi2"
++- #address-cells: shoule be <1>
++- #size-cells: should be <1>
++- ranges: boolean should be present
++- reg: two ranges of registers: EBI2 config and XMEM config areas
++- reg-names: should be "ebi2", "xmem"
++- clocks: two clocks, EBI_2X and EBI
++- clock-names: shoule be "ebi2x", "ebi2"
++
++Optional subnodes:
++- Nodes inside the EBI2 will be considered chipselect nodes. For each
++  chipselect under the EBI2 node you should have the following required
++  properties:
++
++Required subnode properties:
++- chipselect: <N> where N is the chipselect configured in this node
++- address-cells: should be <1>
++- size-cells: should be <1>
++- ranges: bool should be present
++
++Optional subnode properties for SLOW chip selects:
++- xmem-recovery-cycles: recovery cycles is the time the memory continues to
++  drive the data bus after OE is de-asserted, in order to avoid contention on
++  the data bus. They are inserted when reading one CS and switching to another
++  CS or read followed by write on the same CS. Valid values 0 thru 15. Minimum
++  value is actually 1, so a value of 0 will still yield 1 recovery cycle.
++- xmem-write-hold-cycles: write hold cycles, these are extra cycles inserted
++  after every write minimum 1. The data out is driven from the time WE is
++  asserted until CS is asserted. With a hold of 1 (value = 0), the CS stays
++  active for 1 extra cycle etc. Valid values 0 thru 15.
++- xmem-write-delta-cycles: initial latency for write cycles inserted for the
++  first write to a page or burst memory. Valid values 0 thru 255.
++- xmem-read-delta-cycles: initial latency for read cycles inserted for the
++  first read to a page or burst memory. Valid values 0 thru 255.
++- xmem-write-wait-cycles: number of wait cycles for every write access, 0=1
++  cycle. Valid values 0 thru 15.
++- xmem-read-wait-cycles: number of wait cycles for every read access, 0=1
++  cycle. Valid values 0 thru 15.
++
++Optional subnode properties for FAST chip selects:
++- xmem-address-hold-enable: this is a boolean property stating that we shall
++  holde the address for an extra cycle to meet hold time requirements with ADV
++  assertion.
++- xmem-adv-to-oe-recovery-cycles: the number of cycles elapsed before an OE
++  assertion, with respect to the cycle where ADV (address valid) is asserted.
++  2 means 2 cycles between ADV and OE. Valid values 0, 1, 2 or 3.
++- xmem-read-hold-cycles: the length in cycles of the first segment of a read
++  transfer. For a single read trandfer this will be the time from CS assertion
++  to OE assertion. Valid values 0 thru 15.
++
++Example:
++
++ebi2@1a100000 {
++	compatible = "qcom,ebi2";
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++	reg = <0x1a100000 0x1000>, <0x1a110000 0x1000>;
++	reg-names = "ebi2", "xmem";
++	clocks = <&gcc EBI2_2X_CLK>, <&gcc EBI2_CLK>;
++	clock-names = "ebi2x", "ebi2";
++	/* Make sure to set up the pin control for the EBI2 */
++	pinctrl-names = "default";
++	pinctrl-0 = <&foo_ebi2_pins>;
++
++	cs2@1b800000 {
++		chipselect = <2>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		xmem-recovery-cycles = <0>;
++		xmem-write-hold-cycles = <3>;
++		xmem-write-delta-cycles = <31>;
++		xmem-read-delta-cycles = <28>;
++		xmem-write-wait-cycles = <9>;
++		xmem-read-wait-cycles = <9>;
++
++		foo-ebi2@1b800000 {
++			compatible = "foo";
++			reg = <0x1b800000 0x100>;
++			(...)
++		};
++	};
++};
 -- 
 2.7.4
