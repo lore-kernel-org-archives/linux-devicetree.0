@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 06/15] ARM: dts: sun5i: Use sun5i-reference-design-tablet.dtsi for dit4350 dts
-Date: Fri,  8 Jul 2016 18:05:47 +0200
-Message-ID: <1467993956-19535-7-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 05/15] ARM: dts: sun5i: reference-design-tablet: Remove mention of q8
+Date: Fri,  8 Jul 2016 18:05:46 +0200
+Message-ID: <1467993956-19535-6-git-send-email-hdegoede@redhat.com>
 References: <1467993956-19535-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1467993956-19535-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,207 +10,35 @@ To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripa
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This results in quite a nice cleanup for this dts file.
-
-Note as a side-effect this also enables the on board speaker / headphones
-out. I've tested that this works as advertised.
+Remove all mention of q8 from sun5i-reference-design-tablet.dtsi.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-a13-difrnce-dit4350.dts | 178 +-----------------------
- 1 file changed, 1 insertion(+), 177 deletions(-)
+ arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun5i-a13-difrnce-dit4350.dts b/arch/arm/boot/dts/sun5i-a13-difrnce-dit4350.dts
-index 6546fa0..894c4c4 100644
---- a/arch/arm/boot/dts/sun5i-a13-difrnce-dit4350.dts
-+++ b/arch/arm/boot/dts/sun5i-a13-difrnce-dit4350.dts
-@@ -42,185 +42,9 @@
+diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+index e78452c..20cc940 100644
+--- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
++++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+@@ -98,7 +98,7 @@
  
- /dts-v1/;
- #include "sun5i-a13.dtsi"
--#include "sunxi-common-regulators.dtsi"
--#include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/input/input.h>
--#include <dt-bindings/interrupt-controller/irq.h>
--#include <dt-bindings/pinctrl/sun4i-a10.h>
--#include <dt-bindings/pwm/pwm.h>
-+#include "sun5i-reference-design-tablet.dtsi"
+ &mmc0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8>;
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+ 	vmmc-supply = <&reg_vcc3v0>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&pio 6 0 GPIO_ACTIVE_HIGH>; /* PG0 */
+@@ -118,7 +118,7 @@
+ 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 	};
  
- / {
- 	model = "Difrnce DIT4350";
- 	compatible = "difrnce,dit4350", "allwinner,sun5i-a13";
--
--	aliases {
--		serial0 = &uart1;
--	};
--
--	backlight: backlight {
--		compatible = "pwm-backlight";
--		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
--		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
--		default-brightness-level = <8>;
--		/* TODO: backlight uses axp gpio1 as enable pin */
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--};
--
--&cpu0 {
--	cpu-supply = <&reg_dcdc2>;
--};
--
--&ehci0 {
--	status = "okay";
--};
--
--&i2c0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c0_pins_a>;
--	status = "okay";
--
--	axp209: pmic@34 {
--		reg = <0x34>;
--		interrupts = <0>;
--	};
--};
--
--#include "axp209.dtsi"
--
--&i2c1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c1_pins_a>;
--	status = "okay";
--
--	pcf8563: rtc@51 {
--		compatible = "nxp,pcf8563";
--		reg = <0x51>;
--	};
--};
--
--&lradc {
--	vref-supply = <&reg_ldo2>;
--	status = "okay";
--
--	button@200 {
--		label = "Volume Up";
--		linux,code = <KEY_VOLUMEUP>;
--		channel = <0>;
--		voltage = <200000>;
--	};
--
--	button@400 {
--		label = "Volume Down";
--		linux,code = <KEY_VOLUMEDOWN>;
--		channel = <0>;
--		voltage = <400000>;
--	};
--};
--
--&mmc0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_d709>;
--	vmmc-supply = <&reg_vcc3v3>;
--	bus-width = <4>;
--	cd-gpios = <&pio 6 0 GPIO_ACTIVE_HIGH>; /* PG0 */
--	cd-inverted;
--	status = "okay";
--};
--
--&otg_sram {
--	status = "okay";
--};
--
--&pio {
--	mmc0_cd_pin_d709: mmc0_cd_pin@0 {
--		allwinner,pins = "PG0";
--		allwinner,function = "gpio_in";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
--	};
--
--	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
--		allwinner,pins = "PG1";
--		allwinner,function = "gpio_in";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
--	};
--
--	usb0_id_detect_pin: usb0_id_detect_pin@0 {
--		allwinner,pins = "PG2";
--		allwinner,function = "gpio_in";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
--	};
--};
--
--&pwm {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pwm0_pins>;
--	status = "okay";
--};
--
--&reg_dcdc2 {
--	regulator-always-on;
--	regulator-min-microvolt = <1000000>;
--	regulator-max-microvolt = <1400000>;
--	regulator-name = "vdd-cpu";
--};
--
--&reg_dcdc3 {
--	regulator-always-on;
--	regulator-min-microvolt = <1250000>;
--	regulator-max-microvolt = <1250000>;
--	regulator-name = "vdd-int-pll";
--};
--
--&reg_ldo1 {
--	regulator-name = "vdd-rtc";
--};
--
--&reg_ldo2 {
--	regulator-always-on;
--	regulator-min-microvolt = <3000000>;
--	regulator-max-microvolt = <3000000>;
--	regulator-name = "avcc";
--};
--
--&reg_ldo3 {
--	regulator-min-microvolt = <3300000>;
--	regulator-max-microvolt = <3300000>;
--	regulator-name = "vcc-wifi";
--};
--
--&reg_usb0_vbus {
--	gpio = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
--	status = "okay";
--};
--
--&uart1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart1_pins_b>;
--	status = "okay";
--};
--
--&usb_otg {
--	dr_mode = "otg";
--	status = "okay";
--};
--
--&usb0_vbus_pin_a {
--	allwinner,pins = "PG12";
--};
--
--&usbphy {
--	pinctrl-names = "default";
--	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
--	usb0_id_det-gpio = <&pio 6 2 GPIO_ACTIVE_HIGH>; /* PG2 */
--	usb0_vbus_det-gpio = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
--	usb0_vbus-supply = <&reg_usb0_vbus>;
--	usb1_vbus-supply = <&reg_ldo3>;
--	status = "okay";
- };
+-	mmc0_cd_pin_q8: mmc0_cd_pin@0 {
++	mmc0_cd_pin: mmc0_cd_pin@0 {
+ 		allwinner,pins = "PG0";
+ 		allwinner,function = "gpio_in";
+ 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
 -- 
 2.7.4
 
