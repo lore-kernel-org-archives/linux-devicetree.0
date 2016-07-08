@@ -1,40 +1,52 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: Applied "spi: omap2-mcspi: Select SPI_SPLIT" to the spi tree
-Date: Fri, 8 Jul 2016 14:24:24 +0530
-Message-ID: <577F6A40.1030004@ti.com>
-References: <E1bLRTH-0004lu-Mz@finisterre>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH 1/7] dt-bindings: add rk3399 support for dw-mipi-rockchip
+Date: Fri,  8 Jul 2016 17:04:55 +0800
+Message-ID: <1467968701-15620-2-git-send-email-zyw@rock-chips.com>
+References: <1467968701-15620-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1bLRTH-0004lu-Mz@finisterre>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1467968701-15620-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Mark,
-
-On Friday 08 July 2016 02:19 PM, Mark Brown wrote:
-> From 2b32e987c48c65a1a40b3b4294435f761e063b6b Mon Sep 17 00:00:00 2001
-> From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-> Date: Thu, 7 Jul 2016 12:17:49 -0500
-> Subject: [PATCH] spi: omap2-mcspi: Select SPI_SPLIT
-
-Looks like you fixed up the description locally but forgot to fix the
-subject line. It still shows SPI_SPLIT.
-
-> 
-> The function sg_split will be used by spi-omap2-mcspi to handle a SoC
-> workaround in the SPI driver. Therefore, select SG_SPLIT so this function
-> is available to the driver.
-> 
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIGR3LW1pcGktZHNpIG9mIHJrMzM5OSBpcyBhbG1vc3QgdGhlIHNhbWUgYXMgcmszMjg4LCB0
+aGUgcmszMzk5IGhhcwphZGRpdGlvbmFsIHBoeSBjb25maWcgY2xvY2suCgpTaWduZWQtb2ZmLWJ5
+OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgotLS0KCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAgICB8IDUg
+KysrKysKIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2Rz
+aV9yb2NrY2hpcC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQKaW5kZXggMTc1M2YwYy4uNGQ1OWRm
+MyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4
+dApAQCAtNSw2ICs1LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIC0gI2FkZHJlc3MtY2VsbHM6
+IFNob3VsZCBiZSA8MT4uCiAtICNzaXplLWNlbGxzOiBTaG91bGQgYmUgPDA+LgogLSBjb21wYXRp
+YmxlOiAicm9ja2NoaXAscmszMjg4LW1pcGktZHNpIiwgInNucHMsZHctbWlwaS1kc2kiLgorCSAg
+ICAgICJyb2NrY2hpcCxyazMzOTktbWlwaS1kc2kiLCAic25wcyxkdy1taXBpLWRzaSIuCiAtIHJl
+ZzogUmVwcmVzZW50IHRoZSBwaHlzaWNhbCBhZGRyZXNzIHJhbmdlIG9mIHRoZSBjb250cm9sbGVy
+LgogLSBpbnRlcnJ1cHRzOiBSZXByZXNlbnQgdGhlIGNvbnRyb2xsZXIncyBpbnRlcnJ1cHQgdG8g
+dGhlIENQVShzKS4KIC0gY2xvY2tzLCBjbG9jay1uYW1lczogUGhhbmRsZXMgdG8gdGhlIGNvbnRy
+b2xsZXIncyBwbGwgcmVmZXJlbmNlCkBAIC0xMyw2ICsxNCwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgogLSBwb3J0czogY29udGFpbiBhIHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmluaXRp
+b25zIGFzIGRlZmluZWQgaW4gWzJdLgogICBGb3Igdm9wYixzZXQgdGhlIHJlZyA9IDwwPiBhbmQg
+c2V0IHRoZSByZWcgPSA8MT4gZm9yIHZvcGwuCiAKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIGNs
+b2NrcywgY2xvY2stbmFtZXM6IHBoYW5kbGUgdG8gdGhlIGR3LW1pcGkgcGh5IGNsb2NrLCBuYW1l
+IHNob3VsZCBiZQorCQkgICAgICAgInBoeV9jZmciLgorCiBbMV0gRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dAogWzJdIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAogCi0tIAoy
+LjYuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
