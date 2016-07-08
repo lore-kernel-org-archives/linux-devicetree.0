@@ -1,70 +1,76 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] rtc: ds1302: support control with
- using GPIO lines
-Date: Fri, 8 Jul 2016 16:28:53 +0200
-Message-ID: <20160708142853.GJ22202@piout.net>
-References: <1467026362-29446-1-git-send-email-akinobu.mita@gmail.com>
- <1467026362-29446-3-git-send-email-akinobu.mita@gmail.com>
- <20160628205704.GT3737@rob-hp-laptop>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v5 5/7] ARM: dts: sun9i: a80-optimus: Add device
+ node for AC100
+Date: Fri,  8 Jul 2016 22:33:40 +0800
+Message-ID: <1467988422-17934-6-git-send-email-wens@csie.org>
+References: <1467988422-17934-1-git-send-email-wens@csie.org>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBJXR725QKGQEJDZV5LY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCMILY6JWQBBBUXT725QKGQE64XZZBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160628205704.GT3737@rob-hp-laptop>
+In-Reply-To: <1467988422-17934-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
 List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/rtc-linux/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/06/2016 at 15:57:04 -0500, Rob Herring wrote :
-> On Mon, Jun 27, 2016 at 08:19:22PM +0900, Akinobu Mita wrote:
-> > This adds support control with GPIO lines connected to the DS1302
-> > which can communicate with three wires.
-> > 
-> > Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> > Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/rtc/maxim-ds1302.txt       |  13 +
-> >  drivers/rtc/Kconfig                                |  17 +-
-> >  drivers/rtc/rtc-ds1302.c                           | 320 ++++++++++++++++++++-
-> >  3 files changed, 331 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt b/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
-> > index ba470c5..d489753 100644
-> > --- a/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
-> > +++ b/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
-> > @@ -27,6 +27,12 @@ Required SPI properties:
-> >  - spi-cs-high: DS-1302 has active high chip select line. This is
-> >    required unless inverted in hardware.
-> >  
-> > +Required properties when using GPIO lines:
-> > +
-> > +- gpio-ce: GPIO connected to CE pin
-> > +- gpio-io: GPIO connected to I/O pin
-> > +- gpio-reset: GPIO connected to SCLK pin
-> > +
-> 
-> IIRC, we got rid of the direct gpio bit-banging in this driver (or a 
-> similar one) and replaced it with SPI GPIO driver. We should do that 
-> here.
-> 
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+Changes since v4: none
 
-Well, the fact is that it is not actually SPI but microwire which has
-different timings and we didn't reach a conclusion yet with Mark.
+Changes since v3:
 
+  - Moved 4M ADDA clk to codec side
+
+Changes since v2: none
+Changes since v1: none
+---
+ arch/arm/boot/dts/sun9i-a80-optimus.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+index 7fd22e888602..e35c06c162a7 100644
+--- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
++++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+@@ -322,6 +322,30 @@
+ 			};
+ 		};
+ 	};
++
++	ac100: codec@e89 {
++		compatible = "x-powers,ac100";
++		reg = <0xe89>;
++
++		ac100_codec: codec {
++			compatible = "x-powers,ac100-codec";
++			interrupt-parent = <&r_pio>;
++			interrupts = <0 9 IRQ_TYPE_LEVEL_LOW>; /* PL9 */
++			#clock-cells = <0>;
++			clock-output-names = "4M_adda";
++		};
++
++		ac100_rtc: rtc {
++			compatible = "x-powers,ac100-rtc";
++			interrupt-parent = <&nmi_intc>;
++			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&ac100_codec>;
++			#clock-cells = <1>;
++			clock-output-names = "cko1_rtc",
++					     "cko2_rtc",
++					     "cko3_rtc";
++		};
++	};
+ };
+ 
+ #include "axp809.dtsi"
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.8.1
 
 -- 
 You received this message because you are subscribed to "rtc-linux".
