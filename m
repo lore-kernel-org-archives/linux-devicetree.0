@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 08/15] ARM: dts: Copy sun8i-q8-common.dtsi sun8i-reference-design-tablet.dtsi
-Date: Fri,  8 Jul 2016 18:05:49 +0200
-Message-ID: <1467993956-19535-9-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 11/15] ARM: dts: sun8i: Use sun8i-reference-design-tablet for gt90h dts
+Date: Fri,  8 Jul 2016 18:05:52 +0200
+Message-ID: <1467993956-19535-12-git-send-email-hdegoede@redhat.com>
 References: <1467993956-19535-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1467993956-19535-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,35 +10,36 @@ To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripa
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Copy sun8i-q8-common.dtsi to sun8i-reference-design-tablet.dtsi. This
-is part of renaming all the sun?i-q8-common.dtsi files to
-sun?i-reference-design-tablet.dtsi since most of the hw-config in there
-is shared by all sunxi tablets.
+This results in quite a nice cleanup for this dts file.
 
-Note that in this case we keep sun5i-q8-common.dtsi as it is shared
-between a23 / a33 q8 tablets. Also we leave the usb-wifi config in
-there (rather then in sun8i-reference-design-tablet.dtsi) as most
-sun8i tablets use sdio wifi rather then usb wifi.
+As an added bonus this also enables full otg support. I've tested that
+this works as advertised.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-q8-common.dtsi             | 171 +--------------------
- ...mon.dtsi => sun8i-reference-design-tablet.dtsi} |  13 +-
- 2 files changed, 5 insertions(+), 179 deletions(-)
- copy arch/arm/boot/dts/{sun8i-q8-common.dtsi => sun8i-reference-design-tablet.dtsi} (96%)
+ arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts | 215 +------------------------------
+ 1 file changed, 1 insertion(+), 214 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-q8-common.dtsi b/arch/arm/boot/dts/sun8i-q8-common.dtsi
-index 0b85ea4..60fa958 100644
---- a/arch/arm/boot/dts/sun8i-q8-common.dtsi
-+++ b/arch/arm/boot/dts/sun8i-q8-common.dtsi
-@@ -40,181 +40,12 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- #include "sunxi-reference-design-tablet.dtsi"
+diff --git a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+index d05406c..f27ebbb 100644
+--- a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
++++ b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+@@ -42,86 +42,18 @@
+ 
+ /dts-v1/;
+ #include "sun8i-a23.dtsi"
+-#include "sunxi-common-regulators.dtsi"
 -
+-#include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/input/input.h>
+-#include <dt-bindings/pinctrl/sun4i-a10.h>
 -#include <dt-bindings/pwm/pwm.h>
++#include "sun8i-reference-design-tablet.dtsi"
+ 
+ / {
+ 	model = "Allwinner GT90H Dual Core Tablet (v4)";
+ 	compatible = "allwinner,gt90h-v4", "allwinner,sun8i-a23";
 -
--/ {
 -	aliases {
 -		serial0 = &r_uart;
 -	};
@@ -46,7 +47,7 @@ index 0b85ea4..60fa958 100644
 -	backlight: backlight {
 -		compatible = "pwm-backlight";
 -		pinctrl-names = "default";
--		pinctrl-0 = <&bl_en_pin_q8>;
+-		pinctrl-0 = <&bl_en_pin_gt90h>;
 -		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
 -		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
 -		default-brightness-level = <8>;
@@ -56,17 +57,69 @@ index 0b85ea4..60fa958 100644
 -	chosen {
 -		stdout-path = "serial0:115200n8";
 -	};
--};
-+#include "sun8i-reference-design-tablet.dtsi"
+ };
  
  &ehci0 {
- 	status  = "okay";
+ 	status = "okay";
+ };
+ 
+-&i2c0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_pins_a>;
+-	status = "okay";
+-	/*
+-	 * The gsl1680 is rated at 400KHz and it will not work reliable at
+-	 * 100KHz, this has been confirmed on multiple different tablets.
+-	 * The gsl1680 is the only device on this bus.
+-	 */
+-	clock-frequency = <400000>;
+-
+-	gsl1680: touchscreen@40 {
+-		compatible = "silead,gsl1680";
+-		reg = <0x40>;
+-		interrupt-parent = <&pio>;
+-		interrupts = <1 5 IRQ_TYPE_EDGE_FALLING>; /* PB5 */
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&ts_power_pin_gth90h>;
+-		power-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+-	};
+-};
+-
+-&i2c1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins_a>;
+-	status = "okay";
+-};
+-
+ &lradc {
+-	vref-supply = <&reg_vcc3v0>;
+-	status = "okay";
+-
+-	button@200 {
+-		label = "Volume Up";
+-		linux,code = <KEY_VOLUMEUP>;
+-		channel = <0>;
+-		voltage = <200000>;
+-	};
+-
+-	button@400 {
+-		label = "Volume Down";
+-		linux,code = <KEY_VOLUMEDOWN>;
+-		channel = <0>;
+-		voltage = <400000>;
+-	};
+-
+ 	button@600 {
+ 		label = "Back";
+ 		linux,code = <KEY_BACK>;
+@@ -130,151 +62,6 @@
+ 	};
  };
  
 -&mmc0 {
 -	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8>;
--	vmmc-supply = <&reg_dcdc1>;
+-	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_gt90h>;
+-	vmmc-supply = <&reg_aldo1>;
 -	bus-width = <4>;
 -	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
 -	cd-inverted;
@@ -74,26 +127,32 @@ index 0b85ea4..60fa958 100644
 -};
 -
 -&pio {
--	bl_en_pin_q8: bl_en_pin@0 {
+-	bl_en_pin_gt90h: bl_en_pin@0 {
 -		allwinner,pins = "PH6";
 -		allwinner,function = "gpio_in";
 -		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
 -		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
 -	};
 -
--	mmc0_cd_pin_q8: mmc0_cd_pin@0 {
+-	mmc0_cd_pin_gt90h: mmc0_cd_pin@0 {
 -		allwinner,pins = "PB4";
 -		allwinner,function = "gpio_in";
 -		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
 -		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
 -	};
 -
--	usb0_id_detect_pin: usb0_id_detect_pin@0 {
--		allwinner,pins = "PH8";
--		allwinner,function = "gpio_in";
+-	ts_power_pin_gth90h: ts_power_pin@0 {
+-		allwinner,pins = "PH1";
+-		allwinner,function = "gpio_out";
 -		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+-		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
 -	};
+-};
+-
+-&pwm {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pwm0_pins>;
+-	status = "okay";
 -};
 -
 -&r_rsb {
@@ -105,8 +164,13 @@ index 0b85ea4..60fa958 100644
 -		interrupt-parent = <&nmi_intc>;
 -		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
 -		eldoin-supply = <&reg_dcdc1>;
--		x-powers,drive-vbus-en;
 -	};
+-};
+-
+-&r_uart {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&r_uart_pins_a>;
+-	status = "okay";
 -};
 -
 -#include "axp22x.dtsi"
@@ -177,97 +241,28 @@ index 0b85ea4..60fa958 100644
 -	regulator-name = "vcc-wifi";
 -};
 -
--&reg_drivevbus {
--	regulator-name = "usb0-vbus";
--	status = "okay";
--};
--
 -&reg_rtc_ldo {
 -	regulator-name = "vcc-rtc";
--};
--
--&r_uart {
--	pinctrl-names = "default";
--	pinctrl-0 = <&r_uart_pins_a>;
--	status = "okay";
 -};
 -
 -&simplefb_lcd {
 -	vcc-lcd-supply = <&reg_dc1sw>;
 -};
 -
+-/*
+- * FIXME for now we only support host mode and rely on u-boot to have
+- * turned on Vbus which is controlled by the axp223 pmic on the board.
+- *
+- * Once we have axp223 support we should switch to fully supporting otg.
+- */
 -&usb_otg {
--	dr_mode = "otg";
--	status = "okay";
--};
--
--&usb_power_supply {
+-	dr_mode = "host";
 -	status = "okay";
 -};
 -
  &usbphy {
--	pinctrl-names = "default";
--	pinctrl-0 = <&usb0_id_detect_pin>;
--	usb0_id_det-gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
--	usb0_vbus_power-supply = <&usb_power_supply>;
--	usb0_vbus-supply = <&reg_drivevbus>;
  	usb1_vbus-supply = <&reg_dldo1>;
 -	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/sun8i-q8-common.dtsi b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-similarity index 96%
-copy from arch/arm/boot/dts/sun8i-q8-common.dtsi
-copy to arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-index 0b85ea4..b8546ef 100644
---- a/arch/arm/boot/dts/sun8i-q8-common.dtsi
-+++ b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-@@ -51,7 +51,7 @@
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pinctrl-names = "default";
--		pinctrl-0 = <&bl_en_pin_q8>;
-+		pinctrl-0 = <&bl_en_pin>;
- 		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
- 		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
- 		default-brightness-level = <8>;
-@@ -63,13 +63,9 @@
- 	};
- };
- 
--&ehci0 {
--	status  = "okay";
--};
--
- &mmc0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8>;
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
- 	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
- 	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
-@@ -78,14 +74,14 @@
- };
- 
- &pio {
--	bl_en_pin_q8: bl_en_pin@0 {
-+	bl_en_pin: bl_en_pin@0 {
- 		allwinner,pins = "PH6";
- 		allwinner,function = "gpio_in";
- 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
- 
--	mmc0_cd_pin_q8: mmc0_cd_pin@0 {
-+	mmc0_cd_pin: mmc0_cd_pin@0 {
- 		allwinner,pins = "PB4";
- 		allwinner,function = "gpio_in";
- 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-@@ -215,6 +211,5 @@
- 	usb0_id_det-gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
- 	usb0_vbus_power-supply = <&usb_power_supply>;
- 	usb0_vbus-supply = <&reg_drivevbus>;
--	usb1_vbus-supply = <&reg_dldo1>;
- 	status = "okay";
  };
 -- 
 2.7.4
