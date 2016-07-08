@@ -1,82 +1,140 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] arm64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Fri, 8 Jul 2016 08:51:37 +0800
-Message-ID: <577EF919.4040809@huawei.com>
-References: <1467412897-15220-1-git-send-email-oss@buserror.net>
- <1467412897-15220-3-git-send-email-oss@buserror.net>
- <577E2226.3020902@huawei.com> <577E25A4.2010800@arm.com>
- <577E3EF2.9080105@huawei.com> <577E424C.5030908@arm.com>
- <577E524F.3030403@huawei.com> <1467913182.32358.68.camel@buserror.net>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: Re: [PATCH v5 7/8] drm/rockchip: Use common IOMMU API to attach
+ devices
+Date: Fri, 8 Jul 2016 08:54:26 +0800
+Message-ID: <577EF9C2.2070902@rock-chips.com>
+References: <1466734413-7453-1-git-send-email-zhengsq@rock-chips.com>
+ <1466734413-7453-8-git-send-email-zhengsq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467913182.32358.68.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1466734413-7453-8-git-send-email-zhengsq@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shunqian Zheng <zhengsq@rock-chips.com>, joro@8bytes.org, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, airlied@linux.ie, tfiga@google.com, xxm@rock-chips.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomasz Figa <tfiga@chromium.org>, linux-rockchip@lists.infradead.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016/7/8 1:39, Scott Wood wrote:
-> On Thu, 2016-07-07 at 20:59 +0800, Ding Tianhong wrote:
->> On 2016/7/7 19:51, Marc Zyngier wrote:
->>>
->>> On 07/07/16 12:37, Ding Tianhong wrote:
->>>>
->>>> On 2016/7/7 17:49, Marc Zyngier wrote:
->>>>>
->>>>> What makes you think that ignoring the two bottom bits is a safe =
-thing
->>>>> to do? Talking about performance when the HW has such a dramatic =
-bug
->>>>> is
->>>>> like putting a bigger engine on a car that has no brakes: you jus=
-t hit
->>>>> the wall quicker.
->>>>>
->>>>> Thanks,
->>>>>
->>>> I have a chip which has the same problem like Scott's chip, and I
->>>> wish to solve this problem in the same way, our chip designer told=
- me
->>>> that if you got a wrong value from the cntvct_el0, you would not g=
-et
->>>> a wrong value until 8 cycles later, so I could ignoring the lowest=
- 3
->>>> bits if I reading twice together.
->>> Is that CPU cycles? Or timer cycles? What guarantees do you have th=
-at
->>> the two reads are *always* done in the right timing window?
->>>
->> The timer counter only use 56 bits in aarch64, my chip would change =
-one of
->> the higher=20
->> bit(55 to 3) to a wrong value when occur bug, so there will be more =
-than 8
->> cycles between
->> correct value and wrong value from the timer counter. Maybe Scott's =
-problem
->> is not just like
->> mine.
->=20
-> It's not like yours.  Most errors I saw were time going backwards by =
-1, 3, or
-> 7 cycles (with occasional larger errors).
->=20
-Looks more series, agree with your solution, thanks=E3=80=82
-
-Thanks.
-Ding
-> -Scott
->=20
->=20
-> .
->=20
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjAxNuW5tDA25pyIMjTml6UgMTA6MTMsIFNodW5xaWFuIFpoZW5nIHdyb3RlOgo+IFJvY2tj
+aGlwIERSTSB1c2VkIHRoZSBhcm0gc3BlY2lhbCBBUEksIGFybV9pb21tdV8qKCksIHRvIGF0dGFj
+aAo+IGlvbW11IGZvciBBUk0zMiBTb0NzLiBUaGlzIHBhdGNoIGNvbnZlcnQgdG8gY29tbW9uIGlv
+bW11IEFQSQo+IHNvIGl0IHdvdWxkIHN1cHBvcnQgQVJNNjQgbGlrZSBSSzMzOTkuCj4KPiBTaW5j
+ZSBwcmV2aW91cyBwYXRjaCBhZGRlZCBzdXBwb3J0IGZvciBkaXJlY3QgSU9NTVUgYWRkcmVzcyBz
+cGFjZQo+IG1hbmFnZW1lbnQsIHRoZXJlIGlzIG5vIG5lZWQgdG8gdXNlIERNQSBBUEkgYW55bW9y
+ZSBhbmQgdGhpcyBwYXRjaCB3aXJlcwo+IHRoaW5ncyB0byB1c2UgdGhlIG5ldyBtZXRob2QuCj4K
+PiBTaWduZWQtb2ZmLWJ5OiBTaHVucWlhbiBaaGVuZyA8emhlbmdzcUByb2NrLWNoaXBzLmNvbT4K
+PiBTaWduZWQtb2ZmLWJ5OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3JnPgoKTG9va3Mg
+Z29vZCBmb3IgbWUsIGFuZCBpdCB3b3JrcyBvbiByazMzOTkgYm9hcmQsIHNvCgpBY2tlZC1ieTog
+TWFyayBZYW8gPG1hcmsueWFvQHJvY2stY2hpcHMuY29tPgoKPiAtLS0KPiAgIGRyaXZlcnMvZ3B1
+L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2LmMgfCAxMDAgKysrKysrKysrKysrKysrLS0t
+LS0tLS0tLS0tLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDUzIGluc2VydGlvbnMoKyksIDQ3IGRlbGV0
+aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hp
+cF9kcm1fZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX2Rydi5j
+Cj4gaW5kZXggOGI5NmM2OS4uY2E5NjI0ZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvcm9ja2NoaXBfZHJtX2Rydi5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL3JvY2tjaGlwX2RybV9kcnYuYwo+IEBAIC0xNCwxOCArMTQsMTggQEAKPiAgICAqIEdOVSBH
+ZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuCj4gICAgKi8KPiAgIAo+IC0j
+aW5jbHVkZSA8YXNtL2RtYS1pb21tdS5oPgo+IC0KPiAgICNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+
+ICAgI2luY2x1ZGUgPGRybS9kcm1fY3J0Y19oZWxwZXIuaD4KPiAgICNpbmNsdWRlIDxkcm0vZHJt
+X2ZiX2hlbHBlci5oPgo+ICAgI2luY2x1ZGUgPGRybS9kcm1fZ2VtX2NtYV9oZWxwZXIuaD4KPiAg
+ICNpbmNsdWRlIDxsaW51eC9kbWEtbWFwcGluZy5oPgo+ICsjaW5jbHVkZSA8bGludXgvZG1hLWlv
+bW11Lmg+Cj4gICAjaW5jbHVkZSA8bGludXgvcG1fcnVudGltZS5oPgo+ICAgI2luY2x1ZGUgPGxp
+bnV4L21vZHVsZS5oPgo+ICAgI2luY2x1ZGUgPGxpbnV4L29mX2dyYXBoLmg+Cj4gICAjaW5jbHVk
+ZSA8bGludXgvY29tcG9uZW50Lmg+Cj4gICAjaW5jbHVkZSA8bGludXgvY29uc29sZS5oPgo+ICsj
+aW5jbHVkZSA8bGludXgvaW9tbXUuaD4KPiAgIAo+ICAgI2luY2x1ZGUgPGRybS9yb2NrY2hpcF9k
+cm0uaD4KPiAgIAo+IEBAIC01MSwyOCArNTEsMzEgQEAgc3RhdGljIHN0cnVjdCBkcm1fZHJpdmVy
+IHJvY2tjaGlwX2RybV9kcml2ZXI7Cj4gICBpbnQgcm9ja2NoaXBfZHJtX2RtYV9hdHRhY2hfZGV2
+aWNlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LAo+ICAgCQkJCSAgIHN0cnVjdCBkZXZpY2Ug
+KmRldikKPiAgIHsKPiAtCXN0cnVjdCBkbWFfaW9tbXVfbWFwcGluZyAqbWFwcGluZyA9IGRybV9k
+ZXYtPmRldi0+YXJjaGRhdGEubWFwcGluZzsKPiArCXN0cnVjdCByb2NrY2hpcF9kcm1fcHJpdmF0
+ZSAqcHJpdmF0ZSA9IGRybV9kZXYtPmRldl9wcml2YXRlOwo+ICAgCWludCByZXQ7Cj4gICAKPiAg
+IAlpZiAoIWlzX3N1cHBvcnRfaW9tbXUpCj4gICAJCXJldHVybiAwOwo+ICAgCj4gLQlyZXQgPSBk
+bWFfc2V0X2NvaGVyZW50X21hc2soZGV2LCBETUFfQklUX01BU0soMzIpKTsKPiAtCWlmIChyZXQp
+Cj4gKwlyZXQgPSBpb21tdV9hdHRhY2hfZGV2aWNlKHByaXZhdGUtPmRvbWFpbiwgZGV2KTsKPiAr
+CWlmIChyZXQpIHsKPiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBhdHRhY2ggaW9tbXUgZGV2
+aWNlXG4iKTsKPiAgIAkJcmV0dXJuIHJldDsKPiArCX0KPiAgIAo+IC0JZG1hX3NldF9tYXhfc2Vn
+X3NpemUoZGV2LCBETUFfQklUX01BU0soMzIpKTsKPiAtCj4gLQlyZXR1cm4gYXJtX2lvbW11X2F0
+dGFjaF9kZXZpY2UoZGV2LCBtYXBwaW5nKTsKPiArCXJldHVybiAwOwo+ICAgfQo+ICAgCj4gICB2
+b2lkIHJvY2tjaGlwX2RybV9kbWFfZGV0YWNoX2RldmljZShzdHJ1Y3QgZHJtX2RldmljZSAqZHJt
+X2RldiwKPiAgIAkJCQkgICAgc3RydWN0IGRldmljZSAqZGV2KQo+ICAgewo+ICsJc3RydWN0IHJv
+Y2tjaGlwX2RybV9wcml2YXRlICpwcml2YXRlID0gZHJtX2Rldi0+ZGV2X3ByaXZhdGU7Cj4gKwlz
+dHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4gPSBwcml2YXRlLT5kb21haW47Cj4gKwo+ICAgCWlm
+ICghaXNfc3VwcG9ydF9pb21tdSkKPiAgIAkJcmV0dXJuOwo+ICAgCj4gLQlhcm1faW9tbXVfZGV0
+YWNoX2RldmljZShkZXYpOwo+ICsJaW9tbXVfZGV0YWNoX2RldmljZShkb21haW4sIGRldik7Cj4g
+ICB9Cj4gICAKPiAgIGludCByb2NrY2hpcF9yZWdpc3Rlcl9jcnRjX2Z1bmNzKHN0cnVjdCBkcm1f
+Y3J0YyAqY3J0YywKPiBAQCAtMTM3LDExICsxNDAsNDUgQEAgc3RhdGljIHZvaWQgcm9ja2NoaXBf
+ZHJtX2NydGNfZGlzYWJsZV92Ymxhbmsoc3RydWN0IGRybV9kZXZpY2UgKmRldiwKPiAgIAkJcHJp
+di0+Y3J0Y19mdW5jc1twaXBlXS0+ZGlzYWJsZV92YmxhbmsoY3J0Yyk7Cj4gICB9Cj4gICAKPiAr
+c3RhdGljIGludCByb2NrY2hpcF9kcm1faW5pdF9pb21tdShzdHJ1Y3QgZHJtX2RldmljZSAqZHJt
+X2RldikKPiArewo+ICsJc3RydWN0IHJvY2tjaGlwX2RybV9wcml2YXRlICpwcml2YXRlID0gZHJt
+X2Rldi0+ZGV2X3ByaXZhdGU7Cj4gKwlzdHJ1Y3QgaW9tbXVfZG9tYWluX2dlb21ldHJ5ICpnZW9t
+ZXRyeTsKPiArCXU2NCBzdGFydCwgZW5kOwo+ICsKPiArCWlmICghaXNfc3VwcG9ydF9pb21tdSkK
+PiArCQlyZXR1cm4gMDsKPiArCj4gKwlwcml2YXRlLT5kb21haW4gPSBpb21tdV9kb21haW5fYWxs
+b2MoJnBsYXRmb3JtX2J1c190eXBlKTsKPiArCWlmICghcHJpdmF0ZS0+ZG9tYWluKQo+ICsJCXJl
+dHVybiAtRU5PTUVNOwo+ICsKPiArCWdlb21ldHJ5ID0gJnByaXZhdGUtPmRvbWFpbi0+Z2VvbWV0
+cnk7Cj4gKwlzdGFydCA9IGdlb21ldHJ5LT5hcGVydHVyZV9zdGFydDsKPiArCWVuZCA9IGdlb21l
+dHJ5LT5hcGVydHVyZV9lbmQ7Cj4gKwo+ICsJRFJNX0RFQlVHKCJJT01NVSBjb250ZXh0IGluaXRp
+YWxpemVkIChhcGVydHVyZTogJSNsbHgtJSNsbHgpXG4iLAo+ICsJCSAgc3RhcnQsIGVuZCk7Cj4g
+Kwlkcm1fbW1faW5pdCgmcHJpdmF0ZS0+bW0sIHN0YXJ0LCBlbmQgLSBzdGFydCArIDEpOwo+ICsK
+PiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCByb2NrY2hpcF9pb21tdV9jbGVh
+bnVwKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2KQo+ICt7Cj4gKwlzdHJ1Y3Qgcm9ja2NoaXBf
+ZHJtX3ByaXZhdGUgKnByaXZhdGUgPSBkcm1fZGV2LT5kZXZfcHJpdmF0ZTsKPiArCj4gKwlpZiAo
+IWlzX3N1cHBvcnRfaW9tbXUpCj4gKwkJcmV0dXJuOwo+ICsKPiArCWRybV9tbV90YWtlZG93bigm
+cHJpdmF0ZS0+bW0pOwo+ICsJaW9tbXVfZG9tYWluX2ZyZWUocHJpdmF0ZS0+ZG9tYWluKTsKPiAr
+fQo+ICsKPiAgIHN0YXRpYyBpbnQgcm9ja2NoaXBfZHJtX2JpbmQoc3RydWN0IGRldmljZSAqZGV2
+KQo+ICAgewo+ICAgCXN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2Owo+ICAgCXN0cnVjdCByb2Nr
+Y2hpcF9kcm1fcHJpdmF0ZSAqcHJpdmF0ZTsKPiAtCXN0cnVjdCBkbWFfaW9tbXVfbWFwcGluZyAq
+bWFwcGluZyA9IE5VTEw7Cj4gICAJaW50IHJldDsKPiAgIAo+ICAgCWRybV9kZXYgPSBkcm1fZGV2
+X2FsbG9jKCZyb2NrY2hpcF9kcm1fZHJpdmVyLCBkZXYpOwo+IEBAIC0xNjIsMzggKzE5OSwxNCBA
+QCBzdGF0aWMgaW50IHJvY2tjaGlwX2RybV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPiAgIAo+
+ICAgCXJvY2tjaGlwX2RybV9tb2RlX2NvbmZpZ19pbml0KGRybV9kZXYpOwo+ICAgCj4gLQlkZXYt
+PmRtYV9wYXJtcyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqZGV2LT5kbWFfcGFybXMpLAo+
+IC0JCQkJICAgICAgR0ZQX0tFUk5FTCk7Cj4gLQlpZiAoIWRldi0+ZG1hX3Bhcm1zKSB7Cj4gLQkJ
+cmV0ID0gLUVOT01FTTsKPiArCXJldCA9IHJvY2tjaGlwX2RybV9pbml0X2lvbW11KGRybV9kZXYp
+Owo+ICsJaWYgKHJldCkKPiAgIAkJZ290byBlcnJfY29uZmlnX2NsZWFudXA7Cj4gLQl9Cj4gLQo+
+IC0JaWYgKGlzX3N1cHBvcnRfaW9tbXUpIHsKPiAtCQkvKiBUT0RPKGRqa3VydHopOiBmZXRjaCB0
+aGUgbWFwcGluZyBzdGFydC9zaXplIGZyb20gc29tZXdoZXJlICovCj4gLQkJbWFwcGluZyA9IGFy
+bV9pb21tdV9jcmVhdGVfbWFwcGluZygmcGxhdGZvcm1fYnVzX3R5cGUsCj4gLQkJCQkJCSAgIDB4
+MDAwMDAwMDAsCj4gLQkJCQkJCSAgIFNaXzJHKTsKPiAtCQlpZiAoSVNfRVJSKG1hcHBpbmcpKSB7
+Cj4gLQkJCXJldCA9IFBUUl9FUlIobWFwcGluZyk7Cj4gLQkJCWdvdG8gZXJyX2NvbmZpZ19jbGVh
+bnVwOwo+IC0JCX0KPiAtCj4gLQkJcmV0ID0gZG1hX3NldF9tYXNrX2FuZF9jb2hlcmVudChkZXYs
+IERNQV9CSVRfTUFTSygzMikpOwo+IC0JCWlmIChyZXQpCj4gLQkJCWdvdG8gZXJyX3JlbGVhc2Vf
+bWFwcGluZzsKPiAtCj4gLQkJZG1hX3NldF9tYXhfc2VnX3NpemUoZGV2LCBETUFfQklUX01BU0so
+MzIpKTsKPiAtCj4gLQkJcmV0ID0gYXJtX2lvbW11X2F0dGFjaF9kZXZpY2UoZGV2LCBtYXBwaW5n
+KTsKPiAtCQlpZiAocmV0KQo+IC0JCQlnb3RvIGVycl9yZWxlYXNlX21hcHBpbmc7Cj4gLQl9Cj4g
+ICAKPiAgIAkvKiBUcnkgdG8gYmluZCBhbGwgc3ViIGRyaXZlcnMuICovCj4gICAJcmV0ID0gY29t
+cG9uZW50X2JpbmRfYWxsKGRldiwgZHJtX2Rldik7Cj4gICAJaWYgKHJldCkKPiAtCQlnb3RvIGVy
+cl9kZXRhY2hfZGV2aWNlOwo+ICsJCWdvdG8gZXJyX2lvbW11X2NsZWFudXA7Cj4gICAKPiAgIAkv
+KiBpbml0IGttcyBwb2xsIGZvciBoYW5kbGluZyBocGQgKi8KPiAgIAlkcm1fa21zX2hlbHBlcl9w
+b2xsX2luaXQoZHJtX2Rldik7Cj4gQEAgLTIxOCw4ICsyMzEsNiBAQCBzdGF0aWMgaW50IHJvY2tj
+aGlwX2RybV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPiAgIAlpZiAocmV0KQo+ICAgCQlnb3Rv
+IGVycl9mYmRldl9maW5pOwo+ICAgCj4gLQlpZiAoaXNfc3VwcG9ydF9pb21tdSkKPiAtCQlhcm1f
+aW9tbXVfcmVsZWFzZV9tYXBwaW5nKG1hcHBpbmcpOwo+ICAgCXJldHVybiAwOwo+ICAgZXJyX2Zi
+ZGV2X2Zpbmk6Cj4gICAJcm9ja2NoaXBfZHJtX2ZiZGV2X2ZpbmkoZHJtX2Rldik7Cj4gQEAgLTIy
+OCwxMiArMjM5LDggQEAgZXJyX3ZibGFua19jbGVhbnVwOgo+ICAgZXJyX2ttc19oZWxwZXJfcG9s
+bF9maW5pOgo+ICAgCWRybV9rbXNfaGVscGVyX3BvbGxfZmluaShkcm1fZGV2KTsKPiAgIAljb21w
+b25lbnRfdW5iaW5kX2FsbChkZXYsIGRybV9kZXYpOwo+IC1lcnJfZGV0YWNoX2RldmljZToKPiAt
+CWlmIChpc19zdXBwb3J0X2lvbW11KQo+IC0JCWFybV9pb21tdV9kZXRhY2hfZGV2aWNlKGRldik7
+Cj4gLWVycl9yZWxlYXNlX21hcHBpbmc6Cj4gLQlpZiAoaXNfc3VwcG9ydF9pb21tdSkKPiAtCQlh
+cm1faW9tbXVfcmVsZWFzZV9tYXBwaW5nKG1hcHBpbmcpOwo+ICtlcnJfaW9tbXVfY2xlYW51cDoK
+PiArCXJvY2tjaGlwX2lvbW11X2NsZWFudXAoZHJtX2Rldik7Cj4gICBlcnJfY29uZmlnX2NsZWFu
+dXA6Cj4gICAJZHJtX21vZGVfY29uZmlnX2NsZWFudXAoZHJtX2Rldik7Cj4gICAJZHJtX2Rldi0+
+ZGV2X3ByaXZhdGUgPSBOVUxMOwo+IEBAIC0yNTAsOCArMjU3LDcgQEAgc3RhdGljIHZvaWQgcm9j
+a2NoaXBfZHJtX3VuYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gICAJZHJtX3ZibGFua19jbGVh
+bnVwKGRybV9kZXYpOwo+ICAgCWRybV9rbXNfaGVscGVyX3BvbGxfZmluaShkcm1fZGV2KTsKPiAg
+IAljb21wb25lbnRfdW5iaW5kX2FsbChkZXYsIGRybV9kZXYpOwo+IC0JaWYgKGlzX3N1cHBvcnRf
+aW9tbXUpCj4gLQkJYXJtX2lvbW11X2RldGFjaF9kZXZpY2UoZGV2KTsKPiArCXJvY2tjaGlwX2lv
+bW11X2NsZWFudXAoZHJtX2Rldik7Cj4gICAJZHJtX21vZGVfY29uZmlnX2NsZWFudXAoZHJtX2Rl
+dik7Cj4gICAJZHJtX2Rldi0+ZGV2X3ByaXZhdGUgPSBOVUxMOwo+ICAgCWRybV9kZXZfdW5yZWdp
+c3Rlcihkcm1fZGV2KTsKCgotLSAK77ytYXJrIFlhbwoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
