@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 12/15] ARM: dts: sun8i: Use sun8i-reference-design-tablet for ga10h dts
-Date: Fri,  8 Jul 2016 18:05:53 +0200
-Message-ID: <1467993956-19535-13-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 07/15] ARM: dts: sun5i: Use sun5i-reference-design-tablet.dtsi for utoo p66 dts
+Date: Fri,  8 Jul 2016 18:05:48 +0200
+Message-ID: <1467993956-19535-8-git-send-email-hdegoede@redhat.com>
 References: <1467993956-19535-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1467993956-19535-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,62 +10,111 @@ To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripa
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This results in quite a nice cleanup for this dts file.
-
-As an added bonus this also enables backlight, regulator and full otg
-support. I've tested that all these works as advertised.
+This results in a nice cleanup for this dts file.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts | 77 +-----------------------------
- 1 file changed, 1 insertion(+), 76 deletions(-)
+ arch/arm/boot/dts/sun5i-a13-utoo-p66.dts | 180 ++++---------------------------
+ 1 file changed, 21 insertions(+), 159 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-index 1aefc67..6566032 100644
---- a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-+++ b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-@@ -42,59 +42,18 @@
+diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+index fa9ddfd..a8b0bcc 100644
+--- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
++++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+@@ -42,24 +42,20 @@
  
  /dts-v1/;
- #include "sun8i-a33.dtsi"
+ #include "sun5i-a13.dtsi"
 -#include "sunxi-common-regulators.dtsi"
--
 -#include <dt-bindings/gpio/gpio.h>
 -#include <dt-bindings/input/input.h>
++#include "sun5i-reference-design-tablet.dtsi"
+ #include <dt-bindings/interrupt-controller/irq.h>
 -#include <dt-bindings/pinctrl/sun4i-a10.h>
-+#include "sun8i-reference-design-tablet.dtsi"
+-#include <dt-bindings/pwm/pwm.h>
  
  / {
- 	model = "Allwinner GA10H Quad Core Tablet (v1.1)";
- 	compatible = "allwinner,ga10h-v1.1", "allwinner,sun8i-a33";
--
--	aliases {
--		serial0 = &r_uart;
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
+ 	model = "Utoo P66";
+ 	compatible = "utoo,p66", "allwinner,sun5i-a13";
+ 
+-	backlight: backlight {
+-		compatible = "pwm-backlight";
+-		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+-		/* Note levels of 10 / 20% result in backlight off */
+-		brightness-levels = <0 30 40 50 60 70 80 90 100>;
+-		default-brightness-level = <6>;
+-		/* TODO: backlight uses axp gpio1 as enable pin */
++	/* The P66 uses the uart pins as gpios */
++	aliases {
++		/delete-property/serial0;
++	};
++
++	chosen {
++		/delete-property/stdout-path;
+ 	};
+ 
+ 	i2c_lcd: i2c@0 {
+@@ -73,39 +69,21 @@
+ 	};
  };
  
- &ehci0 {
- 	status = "okay";
+-&codec {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&codec_pa_pin>;
+-	allwinner,pa-gpios = <&pio 6 3 GPIO_ACTIVE_HIGH>; /* PG3 */
+-	status = "okay";
+-};
+-
+-&cpu0 {
+-	cpu-supply = <&reg_dcdc2>;
++&backlight {
++	/* Note levels of 10 / 20% result in backlight off */
++	brightness-levels = <0 30 40 50 60 70 80 90 100>;
++	default-brightness-level = <6>;
+ };
+ 
+-&ehci0 {
+-	status = "okay";
++&codec {
++	allwinner,pa-gpios = <&pio 6 3 GPIO_ACTIVE_HIGH>; /* PG3 */
  };
  
 -&i2c0 {
 -	pinctrl-names = "default";
 -	pinctrl-0 = <&i2c0_pins_a>;
 -	status = "okay";
--};
 -
--&i2c1 {
+-	axp209: pmic@34 {
+-		reg = <0x34>;
+-		interrupts = <0>;
+-	};
++&codec_pa_pin {
++	allwinner,pins = "PG3";
+ };
+ 
+-#include "axp209.dtsi"
+-
+ &i2c1 {
 -	pinctrl-names = "default";
 -	pinctrl-0 = <&i2c1_pins_a>;
 -	status = "okay";
+-
+ 	icn8318: touchscreen@40 {
+ 		compatible = "chipone,icn8318";
+ 		reg = <0x40>;
+@@ -119,40 +97,6 @@
+ 		touchscreen-inverted-x;
+ 		touchscreen-swapped-x-y;
+ 	};
+-
+-	pcf8563: rtc@51 {
+-		compatible = "nxp,pcf8563";
+-		reg = <0x51>;
+-	};
 -};
 -
- &lradc {
--	vref-supply = <&reg_vcc3v0>;
+-&lradc {
+-	vref-supply = <&reg_ldo2>;
 -	status = "okay";
 -
 -	button@200 {
@@ -81,51 +130,132 @@ index 1aefc67..6566032 100644
 -		channel = <0>;
 -		voltage = <400000>;
 -	};
+-};
 -
- 	button@600 {
- 		label = "Back";
- 		linux,code = <KEY_BACK>;
-@@ -103,40 +62,6 @@
+-&mmc0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_p66>;
+-	vmmc-supply = <&reg_vcc3v3>;
+-	bus-width = <4>;
+-	cd-gpios = <&pio 6 0 GPIO_ACTIVE_HIGH>; /* PG0 */
+-	cd-inverted;
+-	status = "okay";
+ };
+ 
+ &mmc2 {
+@@ -170,39 +114,7 @@
  	};
  };
  
--&mmc0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8h>;
--	vmmc-supply = <&reg_vcc3v0>;
--	bus-width = <4>;
--	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
--	cd-inverted;
+-&otg_sram {
 -	status = "okay";
 -};
 -
- &ohci0 {
- 	status = "okay";
- };
+ &pio {
+-	codec_pa_pin: codec_pa_pin@0 {
+-		allwinner,pins = "PG3";
+-		allwinner,function = "gpio_out";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+-	};
 -
--&pio {
--	mmc0_cd_pin_q8h: mmc0_cd_pin@0 {
--		allwinner,pins = "PB4";
+-	mmc0_cd_pin_p66: mmc0_cd_pin@0 {
+-		allwinner,pins = "PG0";
 -		allwinner,function = "gpio_in";
 -		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
 -		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
 -	};
+-
+-	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
+-		allwinner,pins = "PG1";
+-		allwinner,function = "gpio_in";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
+-	};
+-
+-	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+-		allwinner,pins = "PG2";
+-		allwinner,function = "gpio_in";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+-	};
+-
+ 	i2c_lcd_pins: i2c_lcd_pin@0 {
+ 		allwinner,pins = "PG10", "PG12";
+ 		allwinner,function = "gpio_out";
+@@ -217,67 +129,17 @@
+ 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 	};
+ 
+-	usb0_vbus_pin_a: usb0_vbus_pin@0 {
+-		allwinner,pins = "PB4";
+-		allwinner,function = "gpio_out";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+-	};
 -};
 -
--&r_uart {
+-&pwm {
 -	pinctrl-names = "default";
--	pinctrl-0 = <&r_uart_pins_a>;
+-	pinctrl-0 = <&pwm0_pins>;
 -	status = "okay";
 -};
 -
+-&reg_dcdc2 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <1000000>;
+-	regulator-max-microvolt = <1500000>;
+-	regulator-name = "vdd-cpu";
+-};
+-
+-&reg_dcdc3 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <1000000>;
+-	regulator-max-microvolt = <1400000>;
+-	regulator-name = "vdd-int-pll";
+-};
+-
+-&reg_ldo1 {
+-	regulator-name = "vdd-rtc";
+-};
+-
+-&reg_ldo2 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <3000000>;
+-	regulator-max-microvolt = <3000000>;
+-	regulator-name = "avcc";
+-};
+-
+-&reg_ldo3 {
+-	regulator-min-microvolt = <3300000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "vcc-wifi";
+ };
+ 
+ &reg_usb0_vbus {
+ 	gpio = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+-	status = "okay";
+ };
+ 
 -&usb_otg {
--	dr_mode = "host";
+-	dr_mode = "otg";
 -	status = "okay";
--};
--
++&uart1 {
++	/* The P66 uses the uart pins as gpios */
++	status = "disabled";
+ };
+ 
 -&usbphy {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
+-	usb0_id_det-gpio = <&pio 6 2 GPIO_ACTIVE_HIGH>; /* PG2 */
+-	usb0_vbus_det-gpio = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
+-	usb0_vbus-supply = <&reg_usb0_vbus>;
+-	usb1_vbus-supply = <&reg_ldo3>;
 -	status = "okay";
--};
++&usb0_vbus_pin_a {
++	allwinner,pins = "PB4";
+ };
 -- 
 2.7.4
 
