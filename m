@@ -1,47 +1,50 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 5/7] spi: s3c64xx: add exynos5433 compatible for ioclk
- handling
-Date: Fri, 8 Jul 2016 22:39:27 +0200
-Message-ID: <20160708203927.GB26626@kozik-lap>
-References: <1467989201-14661-1-git-send-email-andi.shyti@samsung.com>
- <1467989201-14661-6-git-send-email-andi.shyti@samsung.com>
+From: Andrey Utkin <andrey_utkin@fastmail.com>
+Subject: Re: [PATCH v3 1/2] drivers: led: is31fl319x: 1/3/6/9-channel light
+ effect led driver
+Date: Fri, 8 Jul 2016 23:53:42 +0300
+Message-ID: <20160708205342.GT5934@zver>
+References: <cover.1468007377.git.hns@goldelico.com>
+ <524f16ecba240bacf57924f43ec38404cfdcde8f.1468007377.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467989201-14661-6-git-send-email-andi.shyti@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi@etezian.org>
+In-Reply-To: <524f16ecba240bacf57924f43ec38404cfdcde8f.1468007377.git.hns@goldelico.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 08, 2016 at 11:46:39PM +0900, Andi Shyti wrote:
-> The new compatible is related to the Samsung Exynos5433 SoC. The
-> difference between the previous is that in the exynos5433 the SPI
-> controller is driven by three clocks instead of only one.
-> 
-> The new clock (ioclk) is controlling the input/output clock
-> whenever the controller is slave or master.
-> 
-> The presence of the clock line is detected from the compatibility
-> structure (exynos5433_spi_port_config) as a boolean value.
-> 
-> The probe function checks whether the ioclk is present and if so,
-> it acquires.
-> 
-> The runtime suspend and resume functions will handle the clock
-> enabling and disabling as well.
-> 
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> ---
->  drivers/spi/spi-s3c64xx.c | 57 ++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 52 insertions(+), 5 deletions(-)
->
+On Fri, Jul 08, 2016 at 09:49:37PM +0200, H. Nikolaus Schaller wrote:
+> +static int is31fl319x_microamp_to_cs(u32 microamp)
+> +{
+> +	switch (microamp) {
+> +	default:
+> +		WARN(1, "Invalid microamp setting");
+> +	case 20000: return 0;
+> +	case 15000: return 1;
+> +	case 10000: return 2;
+> +	case 5000:  return 3;
+> +	case 40000: return 4;
+> +	case 35000: return 5;
+> +	case 30000: return 6;
+> +	case 25000: return 7;
+> +	}
+> +}
+> +
+...
+> +	regmap_write(is31->regmap, IS31FL319X_CONFIG2,
+> +		     is31fl319x_microamp_to_cs(aggregated_led_microamp) << 4 |
+> +		     is31->audio_gain_db / 3);
 
-Looks fine to me, thanks for updates.
+As I figured out by now, previous implementation of current setting (by
+inline expression) was fine, this new one is just more obvious. So if
+you wonder why it was replaced, I can say - "because of
+misunderstanding". So switching back to that implementation is possible.
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> +static struct i2c_driver is31fl319x_driver = {
+> +	.driver   = {
+> +		.name    = "leds-is31fl319x",
+> +		.of_match_table = of_match_ptr(of_is31fl319x_leds_match),
 
-Best regards,
-Krzysztof
-
+Broken alignment :/ If this gets another iteration, i'll fix it.
