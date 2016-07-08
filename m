@@ -1,50 +1,92 @@
-From: Andrey Utkin <andrey_utkin@fastmail.com>
-Subject: Re: [PATCH v3 1/2] drivers: led: is31fl319x: 1/3/6/9-channel light
- effect led driver
-Date: Fri, 8 Jul 2016 23:53:42 +0300
-Message-ID: <20160708205342.GT5934@zver>
-References: <cover.1468007377.git.hns@goldelico.com>
- <524f16ecba240bacf57924f43ec38404cfdcde8f.1468007377.git.hns@goldelico.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 13/14] clk: sunxi-ng: Add H3 clocks
+Date: Fri, 8 Jul 2016 23:35:06 +0200
+Message-ID: <20160708213506.GD4522@lukather>
+References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
+ <20160629190535.11855-14-maxime.ripard@free-electrons.com>
+ <146785878822.73491.15164592643568518865@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <524f16ecba240bacf57924f43ec38404cfdcde8f.1468007377.git.hns@goldelico.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org
+In-Reply-To: <146785878822.73491.15164592643568518865@resonance>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jean-Francois Moine <moinejf@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 08, 2016 at 09:49:37PM +0200, H. Nikolaus Schaller wrote:
-> +static int is31fl319x_microamp_to_cs(u32 microamp)
-> +{
-> +	switch (microamp) {
-> +	default:
-> +		WARN(1, "Invalid microamp setting");
-> +	case 20000: return 0;
-> +	case 15000: return 1;
-> +	case 10000: return 2;
-> +	case 5000:  return 3;
-> +	case 40000: return 4;
-> +	case 35000: return 5;
-> +	case 30000: return 6;
-> +	case 25000: return 7;
-> +	}
-> +}
-> +
-...
-> +	regmap_write(is31->regmap, IS31FL319X_CONFIG2,
-> +		     is31fl319x_microamp_to_cs(aggregated_led_microamp) << 4 |
-> +		     is31->audio_gain_db / 3);
 
-As I figured out by now, previous implementation of current setting (by
-inline expression) was fine, this new one is just more obvious. So if
-you wonder why it was replaced, I can say - "because of
-misunderstanding". So switching back to that implementation is possible.
+--jq0ap7NbKX2Kqbes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +static struct i2c_driver is31fl319x_driver = {
-> +	.driver   = {
-> +		.name    = "leds-is31fl319x",
-> +		.of_match_table = of_match_ptr(of_is31fl319x_leds_match),
+Hi Mike,
 
-Broken alignment :/ If this gets another iteration, i'll fix it.
+On Wed, Jul 06, 2016 at 07:33:08PM -0700, Michael Turquette wrote:
+> Hi Maxime,
+>=20
+> Quoting Maxime Ripard (2016-06-29 12:05:34)
+> > +static void __init sun8i_h3_ccu_setup(struct device_node *node)
+> > +{
+> > +       void __iomem *reg;
+> > +       u32 val;
+> > +
+> > +       reg =3D of_io_request_and_map(node, 0, of_node_full_name(node));
+> > +       if (IS_ERR(reg)) {
+> > +               pr_err("%s: Could not map the clock registers\n",
+> > +                      of_node_full_name(node));
+> > +               return;
+> > +       }
+> > +
+> > +       /* Force the PLL-Audio-1x divider to 4 */
+> > +       val =3D readl(reg + SUN8I_H3_PLL_AUDIO_REG);
+> > +       val &=3D ~GENMASK(4, 0);
+> > +       writel(val | 3, reg + SUN8I_H3_PLL_AUDIO_REG);
+> > +
+> > +       sunxi_ccu_probe(node, reg, &sun8i_h3_ccu_desc);
+> > +}
+> > +CLK_OF_DECLARE(sun8i_h3_ccu, "allwinner,sun8i-h3-ccu",
+> > +              sun8i_h3_ccu_setup);
+>=20
+> There are several examples of drivers that split the clocks between
+> "early" CLK_OF_DECLARE clocks and "late" module clocks. If you really
+> need early clocks (which is less likely on a 64-bit platform with
+> architected timers), it would be nice to pair that with a proper
+> platform_driver (using builtin_platform_driver most likely).
+
+I think we discussed that already, but yeah, we do have timers that
+are not the architected ones (and this is a ARMv7 platform). I have
+the feeling that splitting the two doesn't really bring any benefit,
+but complexify a lot the driver.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--jq0ap7NbKX2Kqbes
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXgByKAAoJEBx+YmzsjxAguFgP/2WpKChtDyTQ5tgd1pxBaP6P
+kGkKQNOdBOc3wXQf3G59+Ph76lgpkQiJNTMMN3zh4p4vF1p/UvyIhoAr1ct5a+bA
+nrIFs/EMRHi1UkqbrzTEpA6ZWBXlJnV+XLF0AOlFak/IfjXSVbsax933RN7j62ph
+BkZCIJ1zdPvumszQwTz06xnVSZ1pXfgahirYpXqZ2a7dpBGW43GCvdcZlPX4fG0v
+LHPjGXXx/mBC4LQfLZv3HK5kHwktdfvR5vGGm87Thugaalm30InWmimjnfyTmsmT
+xXWeEcbLxeUEJVr7Z1ozrLk+rimhBmqJWcKRaDXLs6TrWMvELSi72mGBLnbuLEfU
+eEJ9lyOR4TVMk8tKXUHQGrC6OVqarS0H3HDk2hFzJNZ+NLluDtZUnwW9z/UHzR0G
+5ckIfyEOFRkrPGWBYqgn/ArTBnUPrFFv0PXHmeS4360OiQnZ9/ei8hGuoqzuU88L
+DNxDS8TVYO5fj3k5HxPtTeQ9g/mt52Q5mz+is/9nyRvkAvaKHvykXcTc/V9WSzq9
+qZuGmSe1po852wtwJEnHV1X2GpsyCCLcUcaxiHaPyydPqluSqyUW2JuDNnNZRLsr
+nhNcaOTOsD/01IH0EcjfiLh6XylJCpbDWwjj/C+rTal6Bm56PdZ5xNiCBVznIJXm
+2kQdnLoWGbpHEDdk5/sw
+=0m3t
+-----END PGP SIGNATURE-----
+
+--jq0ap7NbKX2Kqbes--
