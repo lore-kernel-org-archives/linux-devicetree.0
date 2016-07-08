@@ -1,42 +1,72 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 3/7] dt-bindings: add power domain node for dw-mipi-rockchip
-Date: Fri,  8 Jul 2016 17:04:57 +0800
-Message-ID: <1467968701-15620-4-git-send-email-zyw@rock-chips.com>
-References: <1467968701-15620-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1467968701-15620-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/3] net: smsc911x: augment device tree bindings
+Date: Fri,  8 Jul 2016 11:07:30 +0200
+Message-ID: <1467968852-6175-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Steve Glendinning <steve.glendinning@smsc.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Jeremy Linton <jeremy.linton@arm.com>, Kamlakant Patel <kamlakant.patel@broadcom.com>, Pavel Fedin <p.fedin@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4KLS0tCgogLi4u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hp
-cC50eHQgICAgICAgIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hp
-cC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQKaW5kZXggNGQ1
-OWRmMy4uZTQzM2JhNSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0CisrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNp
-X3JvY2tjaGlwLnR4dApAQCAtMTcsNiArMTcsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogT3B0
-aW9uYWwgcHJvcGVydGllczoKIC0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRsZSB0byB0aGUg
-ZHctbWlwaSBwaHkgY2xvY2ssIG5hbWUgc2hvdWxkIGJlCiAJCSAgICAgICAicGh5X2NmZyIuCist
-IHBvd2VyLWRvbWFpbnM6IGEgcGhhbmRsZSB0byBtaXBpIGRzaSBwb3dlciBkb21haW4gbm9kZS4K
-IAogWzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5k
-aW5ncy50eHQKIFsyXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlk
-ZW8taW50ZXJmYWNlcy50eHQKLS0gCjIuNi4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+This adds device tree bindings for:
+
+- An optional GPIO line for releasing the RESET signal to the
+  SMSC911x devices
+
+- An optional PME (power management event) interrupt line that
+  can be utilized to wake up the system on network activity.
+  This signal exist on all the SMSC911x devices, it is just not
+  very often routed.
+
+Both these lines are routed to the SoC on the Qualcomm APQ8060
+Dragonboard and thus needs to be bound in the device tree.
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ Documentation/devicetree/bindings/net/smsc911x.txt | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/smsc911x.txt b/Documentation/devicetree/bindings/net/smsc911x.txt
+index 3fed3c124411..7b01c37272c1 100644
+--- a/Documentation/devicetree/bindings/net/smsc911x.txt
++++ b/Documentation/devicetree/bindings/net/smsc911x.txt
+@@ -3,9 +3,12 @@
+ Required properties:
+ - compatible : Should be "smsc,lan<model>", "smsc,lan9115"
+ - reg : Address and length of the io space for SMSC LAN
+-- interrupts : Should contain SMSC LAN interrupt line
+-- interrupt-parent : Should be the phandle for the interrupt controller
+-  that services interrupts for this device
++- interrupts/extended-interrupts : Should contain the SMSC LAN
++  interrupt line as cell 0, cell 1 is an OPTIONAL PME (power
++  management event) interrupt that is able to wake up the host
++  system with a 50ms pulse on network activity
++  For generic bindings for interrupt controller parents, refer to
++  interrupt-controller/interrupts.txt
+ - phy-mode : See ethernet.txt file in the same directory
+ 
+ Optional properties:
+@@ -21,6 +24,10 @@ Optional properties:
+   external PHY
+ - smsc,save-mac-address : Indicates that mac address needs to be saved
+   before resetting the controller
++- reset-gpios : a GPIO line connected to the RESET (active low) signal
++  of the device. On many systems this is wired high so the device goes
++  out of reset at power-on, but if it is under program control, this
++  optional GPIO can wake up in response to it.
+ 
+ Examples:
+ 
+@@ -29,7 +36,8 @@ lan9220@f4000000 {
+ 	reg = <0xf4000000 0x2000000>;
+ 	phy-mode = "mii";
+ 	interrupt-parent = <&gpio1>;
+-	interrupts = <31>;
++	interrupts = <31>, <32>;
++	reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
+ 	reg-io-width = <4>;
+ 	smsc,irq-push-pull;
+ };
+-- 
+2.7.4
