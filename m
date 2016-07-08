@@ -1,68 +1,138 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Permissions for GPIOs [Was: [PATCH] gpio: document how to order
- GPIO controllers]
-Date: Fri, 8 Jul 2016 13:25:40 +0200
-Message-ID: <CACRpkdbr1kpaEq-CAcv0HL5w7QC2KSBuuJ+bUWbX2ZVRknZZWw@mail.gmail.com>
-References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20160705140546.GA10601@rob-hp-laptop> <20160705180447.GP16643@pengutronix.de>
- <CACRpkdbH+KRXbxFdfyAE44fBNctK4cWV+KRLwQBTzSGLvLMEDg@mail.gmail.com>
- <20160706102750.GH23470@localhost> <CACRpkdZhx3yTbtuj-ZTP+mtUSr4uxL4bHtu8jVZOoxrUy6=iYw@mail.gmail.com>
- <1467814334.2472.154.camel@pengutronix.de>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
+Date: Fri, 8 Jul 2016 13:44:41 +0200
+Message-ID: <e2952cc2-3abd-894e-9481-b91a45cf7891@xs4all.nl>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+ <577D0576.2050706@xs4all.nl> <1467886612.21382.18.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467814334.2472.154.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1467886612.21382.18.camel@mtksdaap41>
+Sender: linux-media-owner@vger.kernel.org
+To: tiffany lin <tiffany.lin@mediatek.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Kamil Debski <k.debski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 6, 2016 at 4:12 PM, Jan L=C3=BCbbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wro=
-te:
+On 07/07/2016 12:16 PM, tiffany lin wrote:
+> Hi Hans,
+> 
+> 
+> On Wed, 2016-07-06 at 15:19 +0200, Hans Verkuil wrote:
+>> Hi Tiffany,
+>>
+>> I plan to review this patch series on Friday, but one obvious question is
+>> what the reason for these failures is:
+>>
+>>> Input/Output configuration ioctls:
+>>>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>>>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>>>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>>>         test VIDIOC_G/S_EDID: OK (Not Supported)
+>>>
+>>>         Control ioctls:
+>>>                 test VIDIOC_QUERYCTRL/MENU: OK
+>>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(357): g_ctrl returned an error (11)
+>>>                 test VIDIOC_G/S_CTRL: FAIL
+>>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(579): g_ext_ctrls returned an error (11)
+>>>                 test VIDIOC_G/S/TRY_EXT_CTRLS: FAIL
+> These fails are because VIDIOC_G_CTRL and VIDIOC_G_EXT_CTRLS return
+> V4L2_CID_MIN_BUFFERS_FOR_CAPTURE only when dirver in MTK_STATE_HEADER
+> state, or it will return EAGAIN.
+> This could help user space get correct value, not default value that may
+> changed base on media content.
 
-> This discussion caused me remember a concern regarding the chardev
-> interface: Is it still be possible to give specific users/groups acce=
-ss
-> to individual GPIOs? This is currently possible in the sysfs interfac=
-e
-> with chown/chmod. I don't see how per-GPIO permissions would translat=
-e
-> to a per-gpiochip device.
+OK, I really don't like this. I also looked what the s5p-mfc-dec driver does (the only other
+driver currently implementing this), and that returns -EINVAL.
 
-It is not possible because it is a different model. The /dev/gpiochipN
-is similar to /dev/sda for example, either you access the whole device
-file not parts of it.
+My proposal would be to change this. If this information isn't known yet, why not
+just return 0 as the value? The doc would have to be updated and (preferably) also
+the s5p-mfc-dec driver. I've added Samsung devs to the Cc list, let me know what you
+think.
 
-I think the old sysfs wrongly gives people the impression that this is
-needed just because it happens to have one value per file, I can't thin=
-k
-of a usecase for it.
+> 
+>>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(721): subscribe event for control 'User Controls' failed
+>>>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+> Driver do not support subscribe event for control 'User Controls' for
+> now.
+> Do we need to support this?
 
-It's a bit like if we had a sysfs or similar that could give you write
-permissions to just certain blocks of a disk or something using chmod.
-I don't see anyone needing that other than in theory.
+I don't see why this would fail. It's OK to subscribe to such controls, although
+you'll never get an event.
 
-> Am I overlooking some better way to give non-root users granular acce=
-ss
-> to GPIOs? Or is that intentionally out of scope for the chardev
-> interface?
+>>>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>>>                 Standard Controls: 2 Private Controls: 0
+>>>
+>>>         Format ioctls:
+>>>                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>>>                 test VIDIOC_G/S_PARM: OK (Not Supported)
+>>>                 test VIDIOC_G_FBUF: OK (Not Supported)
+>>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-formats.cpp(405): expected EINVAL, but got 11 when getting format for buftype 9
+>>>                 test VIDIOC_G_FMT: FAIL
+> This is because vidioc_vdec_g_fmt only succeed when context is in
+> MTK_STATE_HEADER state, or user space cannot get correct format data
+> using this function.
 
-Intentionally out of scope I don't know, nobody raised it during review=
-,
-and I have never seen a real-world usecase.
+Comparing this to s5p-mfc-dec I see that -EINVAL is returned in that case.
 
-Are there any distributions out there that ship with something like ude=
-v
-files that actually go to the trouble of setting up different permissio=
-ns
-on GPIO sysfs files, or are we talking about hacks in a lab or even
-just theoretical issues?
+I am not opposed to using EAGAIN in s5p-mfc-dec as well. Marek, Kamil, what is
+your opinion?
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>>>                 test VIDIOC_TRY_FMT: OK (Not Supported)
+>>>                 test VIDIOC_S_FMT: OK (Not Supported)
+>>>                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>>>
+>>>         Codec ioctls:
+>>>                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>>>                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>>>                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+>>>
+>>>         Buffer ioctls:
+>>>                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(500): q.has_expbuf(node)
+> Our OUTPUT and CAPTURE queue support both VB2_DMABUF and VB2_MMAP, user
+> space can select which to use in runtime.
+> So our driver default support v4l2_m2m_ioctl_expbuf functionality.
+> In v4l2-compliance test, it will check v4l2_m2m_ioctl_expbuf only valid
+> when node->valid_memorytype is V4L2_MEMORY_MMAP.
+> So when go through node->valid_memorytype is V4L2_MEMORY_DMABUF, it
+> fail.
+
+valid_memorytype should have both MMAP and DMABUF flags.
+
+But v4l-utils-1.6.0 is way too old to be certain it isn't some v4l2-compliance bug
+that has since been fixed.
+
+Regards,
+
+	Hans
+
+> 
+> 
+> best regards,
+> Tiffany
+> 
+> 
+> 
+>>>                 test VIDIOC_EXPBUF: FAIL
+>>>
+>>>
+>>> Total: 38, Succeeded: 33, Failed: 5, Warnings: 0
+>>
+>> If it is due to a bug in v4l2-compliance, then let me know and I'll fix it. If not,
+>> then it should be fixed in the driver.
+>>
+>> Frankly, it was the presence of these failures that made me think this patch series
+>> wasn't final. Before a v4l2 driver can be accepted in the kernel, v4l2-compliance must pass.
+>>
+>> Regards,
+>>
+>> 	Hans
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
