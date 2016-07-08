@@ -1,124 +1,278 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 00/14] regulator: pwm: various improvements
-Date: Fri, 8 Jul 2016 18:35:42 +0200
-Message-ID: <20160708163542.GD1151@ulmo.ba.sec>
-References: <1465895602-31008-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] nvmem: core: Add consumer API to get nvmem cell
+ from node
+Date: Fri, 08 Jul 2016 09:42:17 -0700
+Message-ID: <951a63bf305d7df6486b652974cdb3c0@agner.ch>
+References: <cover.1467872014.git.maitysanchayan@gmail.com>
+ <0e6294d931bf181376a6f4e1a86df3f6c6a5d575.1467872014.git.maitysanchayan@gmail.com>
+ <577E1E79.4090809@linaro.org>
+ <20160707123350.GA18563@Sanchayan-Arch.localdomain>
+ <577E5634.7020805@linaro.org>
+ <20160707134811.GA2692@Sanchayan-Arch.localdomain>
+ <577FC9BA.2020402@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n/aVsWSeQ4JHkrmm"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465895602-31008-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-pwm@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Doug Anderson <dianders@google.com>, Caesar Wang <wxt@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, Brian Norris <briannorris@chromium.org>, Ajit Pal Singh <ajitpal.singh@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, kernel@stlinux.com, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <577FC9BA.2020402-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016-07-08 08:41, Srinivas Kandagatla wrote:
+> On 07/07/16 14:48, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> Hello Srinivas,
+>>
+>> On 16-07-07 14:16:36, Srinivas Kandagatla wrote:
+>>>
+>>>
+>>> On 07/07/16 13:33, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>>> Hello Srinivas,
+>>>>
+>>>> On 16-07-07 10:18:49, Srinivas Kandagatla wrote:
+>>>>>
+>>>>>
+>>>>> On 07/07/16 07:39, Sanchayan Maity wrote:
+>>>>>> From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>>>>>>
+>>>>>> The existing NVMEM consumer API's do not allow to get a
+>>>>>> NVMEM cell directly given a device tree node. This patch
+>>>>>> adds a function to provide this functionality.
+>>>>>>
+>>>>>> Assuming the nvmem cell id name is known, this can be used
+>>>>>> as follows
+>>>>>>
+>>>>>> struct device_node *cell_np;
+>>>>>> struct nvmem_cell *foo_cell;
+>>>>>>
+>>>>>> cell_np = of_find_node_by_name(parent, "foo");
+>>>>>> foo_cell = of_nvmem_cell_get_direct(cell_np);
+>>>>>
+>>>>> I don't see a real gain in adding this new api,
+>>>>> This will encourage people to use non-standard nvmem bindings.
+>>>>>
+>>>>> why not just use standard nvmem bindings.. and use
+>>>>>
+>>>>> of_nvmem_cell_get(np, "foo");
+>>>>>
+>>>>> which should work in your case.
+>>>>
+>>>> It will not work in our case. I believe what you are referring to will
+>>>> work if I were to pass the device node pointer which was a NVMEM consumer
+>>>> containing the nvmem-cells property. In our case, we pass the device node
+>>>> pointer pointing to /soc which is not a nvmem consumer. In this case it
+>>>> will not have nvmem-cells property causing of_nvmem_cell_get to return
+>>>> EINVAL when it calls of_parse_phandle with "nvmem-cells".
+>>>
+>>> I could not see any bindings/ dt patches or dt examples for this this
+>>> series.. so Am guessing your node would look like:
+>>>
+>>> soc {
+>>> 	cfg0: cfg0 {
+>>> 		...
+>>> 	};
+>>> 	cfg1: cfg1 {
+>>> 		...
+>>> 	};
+>>> };
+>>>
+>>> If this is not how it looks, can you share the details.
+>>>
+>>> What Am saying is that why not have:
+>>>
+>>> soc {
+>>> 	nvmem-cells = <&cfg0>, <&cfg1>;
+>>> 	nvmem-cell-names = "cfg0", "cfg1";
+>>>
+>>> 	cfg0: cfg0 {
+>>> 		...
+>>> 	};
+>>>
+>>> 	cfg1: cfg1 {
+>>> 		...
+>>> 	};
+>>> };
+>>>
+>>>>
+>>>> Our requirement is to be able to pass the soc node pointer and then
+>>>> be able to get a nvmem cell by specifying it's name. So for our case
+>>>
+>>> Why?
+>>
+>> Sorry for not providing the background directly. The patches before this
+>> series used that approach. In the previous discussions it has been pointed
+>> out that it is not acceptable to have additional device tree bindings for
+>> providing data that the driver wants at the SoC node level or to have bindings
+>> just for the SoC bus driver alone since we aren't really describing the
+>> hardware.
+>>
+> SOC driver seems to search for an arbitrary node by its name, which is
+> not a binding and can break anytime in cases If the scope of nvmem
+> provider is out of soc node or if the nvmem cells are not named as
+> expected. That looks very fragile.
 
---n/aVsWSeQ4JHkrmm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In that case, that just "won't happen" because the soc driver is a very
+soc specific driver only used for this device tree. We it will always
+bind to that high level soc node.
 
-On Tue, Jun 14, 2016 at 11:13:08AM +0200, Boris Brezillon wrote:
-> Hello,
->=20
-> This patch series series aims at adding two important features to the
-> pwm-regulator driver.
->=20
-> The first one is the support for 'smooth handover' between the
-> bootloader and the kernel. This is mainly solving problems we have when
-> the PWM is controlling a critical regulator (like the one powering the
-> DDR chip). Currently, when the PWM regulator acquire the PWM device it
-> assumes it was off and it's safe to change the configuration before
-> enabling it, which can generate glitches on the PWM signal which in turn
-> generated glitches on the output voltage.
-> To solve that we've introduced support for hardware readout to the
-> PWM framework, so that the PWM regulator driver can adjust the PWM
-> a probe time and avoid glitches.
-> Atomic update is also helping in this regard.
->=20
-> Patch 1 is adding convenient helpers (at the PWM level) that will be
-> used by the PWM regulator driver.
-> Patches 2 to 7 are preparing everything on the PWM driver side to make
-> hardware readout available to all platforms using the PWM regulator
-> driver (rockchip and sti).
-> Patches 8 to 11 are making use of the atomic update and hardware readout
-> features to implement this smooth handover.
->=20
-> The second feature we add to the driver is the capability of using
-> a sub duty_cycle range in continuous mode. By default the regulator
-> is assuming that min_uV is achieved with a 0% dutycyle and max_uV
-> with a 100% dutycycle, but this is not necessarily true.
-> Moreover, in some cases (when the PWM device does not support
-> polarity inversion), we might have min_uV at 100% and max_uV at 0%.
-> Hence the addition of new properties to the existing DT bindings.
-> The feature is added in patch 12 and 13.
->=20
-> Best Regards,
->=20
-> Boris
->=20
-> Changes since v2:
-> - add Heiko's Tested-by
-> - split patch 1 in 2 patches
-> - rework the documentation
-> - rename pwm_prepare_new_state() into pwm_init_state()
-> - make pwm_set_relative_duty_cycle() return an error code when scale
->   or duty_cycle are inconsistent
->=20
-> Changes since v1:
-> - dropped already applied patches
-> - added R-b/A-b/T-b tags
-> - s/readl/readl_relaxed/ in patch 3 (as suggested by Brian)
-> - fixed pwm-regulator DT binding doc
-> - added some comments in the code
-> - replaced pwm_get_state() + if (state.enabled) by if (pwm_is_enabled())
->=20
-> Boris Brezillon (14):
->   pwm: Add an helper to prepare a new PWM state
->   pwm: Add two helpers to ease relative duty cycle manipulation
->   pwm: rockchip: Fix period and duty_cycle approximation
->   pwm: rockchip: Add support for hardware readout
->   pwm: rockchip: Avoid glitches on already running PWMs
->   pwm: rockchip: Add support for atomic update
->   pwm: sti: Add support for hardware readout
->   pwm: sti: Avoid glitches on already running PWMs
->   regulator: pwm: Adjust PWM config at probe time
->   regulator: pwm: Switch to the atomic PWM API
->   regulator: pwm: Properly initialize the ->state field
->   regulator: pwm: Retrieve correct voltage
->   regulator: pwm: Support extra continuous mode cases
->   regulator: pwm: Document pwm-dutycycle-unit and pwm-dutycycle-range
+> 
+> If the soc node is actual consumer of nvmem cells, I see no reason why
+> we should not use proper nvmem bindings?
 
-I've applied everything in this series to the PWM tree, except for the
-two pwm-sti driver patches, which I'd like to get an Acked-by from one
-of the maintainers.
+There is a reason: We don't describe the hardware with it...
 
-Mark, let me know how you'd like to handle the miniature conflict in the
-regulator-pwm driver that I mentioned in one of the patches.
+The cfg0/cfg1 register which Sanchayan needs to read in the soc bus
+driver are just two register with a unique ID of the SoC. In whatever
+driver throughout the system we use that ID (e.g. in a random generator
+for initialization) we never describe an actual hardware relation... Its
+just software and how we use that unique ID. The device tree is ment to
+describe hardware. Hence the NVMEM consumer binding is not suited for
+such NVMEM cells...
 
-Thierry
+By describing the NVMEM cells location in device tree (producer API, the
+NVMEM cells are in hardware at that location, so using the device tree
+for that part is fine) and hard coding the NVMEM cell we need in the
+driver code we don't violate the device tree matra "describe the
+hardware"...
 
---n/aVsWSeQ4JHkrmm
-Content-Type: application/pgp-signature; name="signature.asc"
+Looking-up the nodes direcly is what Rob suggested here:
+https://lkml.org/lkml/2016/5/23/573
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> 
+> Given the fact that the patch is potentially bypassing the nvmem
+> bindings, am not happy to take it!
 
-iQIcBAABCAAGBQJXf9ZbAAoJEN0jrNd/PrOhhvAP/id19sAxwTv6pemfbCbfg2HF
-fUmCm9rGz6XNuNmdNaZWXC7U3e2K2Uc07slCpK/mQHCARk+d6o9G64SnYmaN8NlN
-PQI2G5X2mTs57oBDc9bTIaztvVBqK7hmRur2WufGgTEjOGtZyuTOstBb9iy05t7N
-9PrNz6ArZNlo3kVlklYM8GraomDOiYzsnKtnvXaUT8mpPaVwRXxaYY8w7Y9uyy0a
-6PhrZO8WDFGVuWojADdQv8DU1bmGGQA0JjWNFRElgj8v0f3ePCfDornRINa0joEX
-qzqXpza/dVMFyvhpAb7tca7ZcvA3qhkMEK5M+W8qgfRuLnNmlyjGMaUf1RsjYEqt
-Tx2RB7Uz+Ytz+8CkNbTla/haTxoaIB/BBocTG1PE5I4YZyUhxox0IDMGekuozIsD
-4EqBOI8zo/hTqzKpnBvuy0PuD0dcRqFmoxxcLjfyXxykjGRC1thzRmqS7iDS7wMS
-3bt62xmP4YNqT8+WBzU2dqWCRsO2i7JlU+4qm0xiG3DG79xGMNLl5yvFohJRGGhc
-RyLUfSvZS7hnkMzESvKowdeQw8YbcIiDkDmwEkczUU7MzHUJ5XSKNxEQshlxqzUe
-0B5yWCqQlH+laacmd/b6mGSbwiy+Y/EpmqYsJ0Nmt/6YhuAxlpFL37m++BJOGkNu
-yVdtKPI098XrdwIKvBfr
-=rfTA
------END PGP SIGNATURE-----
+If you can provide a solution acceptable by the device tree folks and
+works without this patch, I am happy to do it...
 
---n/aVsWSeQ4JHkrmm--
+Btw, I am not entirely happy with the API name, but did not had a better
+idea... And we we should probably add a note that the device tree
+consumer binding is the preferred way to do it.
+
+--
+Stefan
+
+
+> 
+> thanks,
+> srini
+> 
+>> For the discussion,
+>> https://lkml.org/lkml/2016/5/23/573
+>> https://lkml.org/lkml/2016/5/2/71
+>>
+>> Regards,
+>> Sanchayan.
+>>
+>>
+>>>
+>>>> ocotp node has cfg0 and cfg1 which we want but we cannot use existing
+>>>> nvmem consumer API since that requires having the nvmem consumer properties
+>>>> in the node we are binding to viz. is a direct nvmem consumer.
+>>>>
+>>>> Regards,
+>>>> Sanchayan.
+>>>>
+>>>>>
+>>>>> thanks,
+>>>>> srini
+>>>>>>
+>>>>>> Parent node can also be the of_node of the main SoC device
+>>>>>> node.
+>>>>>>
+>>>>>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>> ---
+>>>>>>     drivers/nvmem/core.c           | 44 +++++++++++++++++++++++++++++-------------
+>>>>>>     include/linux/nvmem-consumer.h |  1 +
+>>>>>>     2 files changed, 32 insertions(+), 13 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>>>>>> index 965911d..470abee 100644
+>>>>>> --- a/drivers/nvmem/core.c
+>>>>>> +++ b/drivers/nvmem/core.c
+>>>>>> @@ -743,29 +743,21 @@ static struct nvmem_cell *nvmem_cell_get_from_list(const char *cell_id)
+>>>>>>
+>>>>>>     #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
+>>>>>>     /**
+>>>>>> - * of_nvmem_cell_get() - Get a nvmem cell from given device node and cell id
+>>>>>> + * of_nvmem_cell_get_direct() - Get a nvmem cell from given device node
+>>>>>>      *
+>>>>>> - * @dev node: Device tree node that uses the nvmem cell
+>>>>>> - * @id: nvmem cell name from nvmem-cell-names property.
+>>>>>> + * @dev node: Device tree node that uses nvmem cell
+>>>>>>      *
+>>>>>>      * Return: Will be an ERR_PTR() on error or a valid pointer
+>>>>>>      * to a struct nvmem_cell.  The nvmem_cell will be freed by the
+>>>>>>      * nvmem_cell_put().
+>>>>>>      */
+>>>>>> -struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
+>>>>>> -					    const char *name)
+>>>>>> +struct nvmem_cell *of_nvmem_cell_get_direct(struct device_node *cell_np)
+>>>>>>     {
+>>>>>> -	struct device_node *cell_np, *nvmem_np;
+>>>>>> +	struct device_node *nvmem_np;
+>>>>>>     	struct nvmem_cell *cell;
+>>>>>>     	struct nvmem_device *nvmem;
+>>>>>>     	const __be32 *addr;
+>>>>>> -	int rval, len, index;
+>>>>>> -
+>>>>>> -	index = of_property_match_string(np, "nvmem-cell-names", name);
+>>>>>> -
+>>>>>> -	cell_np = of_parse_phandle(np, "nvmem-cells", index);
+>>>>>> -	if (!cell_np)
+>>>>>> -		return ERR_PTR(-EINVAL);
+>>>>>> +	int rval, len;
+>>>>>>
+>>>>>>     	nvmem_np = of_get_next_parent(cell_np);
+>>>>>>     	if (!nvmem_np)
+>>>>>> @@ -824,6 +816,32 @@ err_mem:
+>>>>>>
+>>>>>>     	return ERR_PTR(rval);
+>>>>>>     }
+>>>>>> +EXPORT_SYMBOL_GPL(of_nvmem_cell_get_direct);
+>>>>>> +
+>>>>>> +/**
+>>>>>> + * of_nvmem_cell_get() - Get a nvmem cell from given device node and cell id
+>>>>>> + *
+>>>>>> + * @dev node: Device tree node that uses the nvmem cell
+>>>>>> + * @id: nvmem cell name from nvmem-cell-names property.
+>>>>>> + *
+>>>>>> + * Return: Will be an ERR_PTR() on error or a valid pointer
+>>>>>> + * to a struct nvmem_cell.  The nvmem_cell will be freed by the
+>>>>>> + * nvmem_cell_put().
+>>>>>> + */
+>>>>>> +struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
+>>>>>> +					    const char *name)
+>>>>>> +{
+>>>>>> +	struct device_node *cell_np;
+>>>>>> +	int index;
+>>>>>> +
+>>>>>> +	index = of_property_match_string(np, "nvmem-cell-names", name);
+>>>>>> +
+>>>>>> +	cell_np = of_parse_phandle(np, "nvmem-cells", index);
+>>>>>> +	if (!cell_np)
+>>>>>> +		return ERR_PTR(-EINVAL);
+>>>>>> +
+>>>>>> +	return of_nvmem_cell_get_direct(cell_np);
+>>>>>> +}
+>>>>>>     EXPORT_SYMBOL_GPL(of_nvmem_cell_get);
+>>>>>>     #endif
+>>>>>>
+>>>>>> diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+>>>>>> index 9bb77d3..bf879fc 100644
+>>>>>> --- a/include/linux/nvmem-consumer.h
+>>>>>> +++ b/include/linux/nvmem-consumer.h
+>>>>>> @@ -136,6 +136,7 @@ static inline int nvmem_device_write(struct nvmem_device *nvmem,
+>>>>>>     #endif /* CONFIG_NVMEM */
+>>>>>>
+>>>>>>     #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
+>>>>>> +struct nvmem_cell *of_nvmem_cell_get_direct(struct device_node *cell_np);
+>>>>>>     struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
+>>>>>>     				     const char *name);
+>>>>>>     struct nvmem_device *of_nvmem_device_get(struct device_node *np,
+>>>>>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
