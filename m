@@ -1,76 +1,83 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 1/8] arm64: mm: change IOMMU notifier action to attach
- DMA ops
-Date: Fri, 8 Jul 2016 15:55:21 +0100
-Message-ID: <20160708145521.GD6493@arm.com>
-References: <cover.1467388950.git.robin.murphy@arm.com>
- <06d430a86f5d7f461308a9278bf25f40fb50d93c.1467388950.git.robin.murphy@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 1/2] media: i2c/ov5645: add the device tree binding document
+Date: Fri,  8 Jul 2016 17:54:38 +0300
+Message-ID: <1467989679-29774-2-git-send-email-todor.tomov@linaro.org>
+References: <1467989679-29774-1-git-send-email-todor.tomov@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <06d430a86f5d7f461308a9278bf25f40fb50d93c.1467388950.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1467989679-29774-1-git-send-email-todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, matrandg-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Catalin,
+Add the document for ov5645 device tree binding.
 
-On Fri, Jul 01, 2016 at 05:50:10PM +0100, Robin Murphy wrote:
-> From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> 
-> Current bus notifier in ARM64 (__iommu_attach_notifier)
-> attempts to attach dma_ops to a device on BUS_NOTIFY_ADD_DEVICE
-> action notification.
-> 
-> This will cause issues on ACPI based systems, where PCI devices
-> can be added before the IOMMUs the devices are attached to
-> had a chance to be probed, causing failures on attempts to
-> attach dma_ops in that the domain for the respective IOMMU
-> may not be set-up yet by the time the bus notifier is run.
-> 
-> Devices dma_ops do not require to be set-up till the matching
-> device drivers are probed. This means that instead of running
-> the notifier attaching dma_ops to devices (__iommu_attach_notifier)
-> on BUS_NOTIFY_ADD_DEVICE action, it can be run just before the
-> device driver is bound to the device in question (on action
-> BUS_NOTIFY_BIND_DRIVER) so that it is certain that its IOMMU
-> group and domain are set-up accordingly at the time the
-> notifier is triggered.
-> 
-> This patch changes the notifier action upon which dma_ops
-> are attached to devices and defer it to driver binding time,
-> so that IOMMU devices have a chance to be probed and to register
-> their bus notifiers before the dma_ops attach sequence for a
-> device is actually carried out.
-> 
-> As a result we also no longer need worry about racing with
-> iommu_bus_notifier(), or about retrying the queue in case devices
-> were added too early on DT-based systems, so clean up the notifier
-> itself plus the additional workaround from 722ec35f7fae ("arm64:
-> dma-mapping: fix handling of devices registered before arch_initcall")
-> 
-> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> [rm: get rid of other now-redundant bits]
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
-> 
-> v4: No change.
-> 
->  arch/arm64/mm/dma-mapping.c | 22 +++++-----------------
->  1 file changed, 5 insertions(+), 17 deletions(-)
+Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/media/i2c/ov5645.txt       | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
 
-Whilst this series is unlikely to make it for 4.8, this patch is
-independent and it would be good to see it queued in the arm64 tree for
-4.8, if possible. It shouldn't change anything on its own, but it's a
-prerequisite for this series and anything on the IORT side from Lorenzo,
-so it makes sense to me to keep the delta down if we can.
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+new file mode 100644
+index 0000000..468cf83
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+@@ -0,0 +1,50 @@
++* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
++
++The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
++an active array size of 2592H x 1944V. It is programmable through a serial I2C
++interface.
++
++Required Properties:
++- compatible: Value should be "ovti,ov5645".
++- clocks: Reference to the xclk clock.
++- clock-names: Should be "xclk".
++- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH.
++- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW.
++- vdddo-supply: Chip digital IO regulator.
++- vdda-supply: Chip analog regulator.
++- vddd-supply: Chip digital core regulator.
++
++The device node must contain one 'port' child node for its digital output
++video port, in accordance with the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	&i2c1 {
++		...
++
++		ov5645: ov5645@78 {
++			compatible = "ovti,ov5645";
++			reg = <0x78>;
++
++			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&camera_rear_default>;
++
++			clocks = <&clks 200>;
++			clock-names = "xclk";
++
++			vdddo-supply = <&camera_dovdd_1v8>;
++			vdda-supply = <&camera_avdd_2v8>;
++			vddd-supply = <&camera_dvdd_1v2>;
++
++			port {
++				ov5645_ep: endpoint {
++					clock-lanes = <1>;
++					data-lanes = <0 2>;
++					remote-endpoint = <&csi0_ep>;
++				};
++			};
++		};
++	};
+-- 
+1.9.1
 
-Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
