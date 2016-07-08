@@ -1,167 +1,111 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
-Date: Fri,  8 Jul 2016 11:11:59 +0200
-Message-ID: <1467969122-6552-2-git-send-email-linus.walleij@linaro.org>
-References: <1467969122-6552-1-git-send-email-linus.walleij@linaro.org>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v2 03/22] usb: ulpi: Support device discovery via device
+ properties
+Date: Fri, 8 Jul 2016 17:04:58 +0800
+Message-ID: <20160708090458.GB20485@shlinux2>
+References: <20160707222114.1673-1-stephen.boyd@linaro.org>
+ <20160707222114.1673-4-stephen.boyd@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1467969122-6552-1-git-send-email-linus.walleij@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20160707222114.1673-4-stephen.boyd@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the External Bus Interface 2, EBI2
-to the Qualcomm SoC drivers.
+On Thu, Jul 07, 2016 at 03:20:54PM -0700, Stephen Boyd wrote:
+> @@ -39,6 +42,10 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
+>  	struct ulpi *ulpi = to_ulpi_dev(dev);
+>  	const struct ulpi_device_id *id;
+>  
+> +	/* Some ULPI devices don't have a product id so rely on OF match */
+> +	if (ulpi->id.product == 0)
+> +		return of_driver_match_device(dev, driver);
+> +
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-Whoever has documentation on this block and willing to share: either share
-the documentation or tell me what I'm doing wrong by rephrasing. Thanks.
----
- .../devicetree/bindings/soc/qcom/qcom,ebi2.txt     | 134 +++++++++++++++++++++
- 1 file changed, 134 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ebi2.txt
+How about using vendor id? It can't be 0, but pid may be 0.
+See: http://www.linux-usb.org/usb.ids
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ebi2.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,ebi2.txt
-new file mode 100644
-index 000000000000..b848a60352ca
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ebi2.txt
-@@ -0,0 +1,134 @@
-+Qualcomm External Bus Interface 2 (EBI2)
-+
-+The EBI2 contains two peripheral blocks: XMEM and LCDC. The XMEM handles any
-+external memory (such as NAND or other memory-mapped peripherals) whereas
-+LCDC handles LCD displays.
-+
-+As it says it connects devices to an external bus interface, meaning address
-+lines (up to 9 address lines so can only address 1KiB external memory space),
-+data lines (16 bits), OE (output enable), ADV (address valid, used on some
-+NOR flash memories), WE (write enable). This on top of 6 different chip selects
-+(CS0 thru CS5) so that in theory 6 different devices can be connected.
-+
-+Apparently this bus is clocked at 64MHz. It has dedicated pins on the package
-+and the bus can only come out on these pins, however if some of the pins are
-+unused they can be left unconnected or remuxed to be used as GPIO or in some
-+cases other orthogonal functions as well.
-+
-+Also CS1 and CS2 has -A and -B signals. Why they have that is unclear to me.
-+
-+The chip selects have the following memory range assignments. This region of
-+memory is referred to as "Chip Peripheral SS FPB0" and is 168MB big.
-+
-+Chip Select                     Physical address base
-+CS0 GPIO134                     0x1a800000-0x1b000000 (8MB)
-+CS1 GPIO39 (A) / GPIO123 (B)    0x1b000000-0x1b800000 (8MB)
-+CS2 GPIO40 (A) / GPIO124 (B)    0x1b800000-0x1c000000 (8MB)
-+CS3 GPIO133                     0x1d000000-0x25000000 (128 MB)
-+CS4 GPIO132                     0x1c800000-0x1d000000 (8MB)
-+CS5 GPIO131                     0x1c000000-0x1c800000 (8MB)
-+
-+The APQ8060 Qualcomm Application Processor User Guide, 80-N7150-14 Rev. A,
-+August 6, 2012 contains some incomplete documentation of the EBI2.
-+
-+FIXME: the manual mentions "write precharge cycles" and "precharge cycles".
-+We have not been able to figure out which bit fields these correspond to
-+in the hardware, or what valid values exist. The current hypothesis is that
-+this is something just used on the FAST chip selects and that the SLOW
-+chip selects are understood fully. There is also a "byte device enable"
-+flag somewhere for 8bit memories.
-+
-+FIXME: The chipselects have SLOW and FAST configuration registers. It's a bit
-+unclear what this means, if they are mutually exclusive or can be used
-+together, or if some chip selects are hardwired to be FAST and others are SLOW
-+by design.
-+
-+The XMEM registers are totally undocumented but could be partially decoded
-+because the Cypress AN49576 Antioch Westbridge apparently has suspiciously
-+similar register layout, see: http://www.cypress.com/file/105771/download
-+
-+Required properties:
-+- compatible: should be "qcom,ebi2"
-+- #address-cells: shoule be <1>
-+- #size-cells: should be <1>
-+- ranges: boolean should be present
-+- reg: two ranges of registers: EBI2 config and XMEM config areas
-+- reg-names: should be "ebi2", "xmem"
-+- clocks: two clocks, EBI_2X and EBI
-+- clock-names: shoule be "ebi2x", "ebi2"
-+
-+Optional subnodes:
-+- Nodes inside the EBI2 will be considered chipselect nodes. For each
-+  chipselect under the EBI2 node you should have the following required
-+  properties:
-+
-+Required subnode properties:
-+- chipselect: <N> where N is the chipselect configured in this node
-+- address-cells: should be <1>
-+- size-cells: should be <1>
-+- ranges: bool should be present
-+
-+Optional subnode properties for SLOW chip selects:
-+- xmem-recovery-cycles: recovery cycles is the time the memory continues to
-+  drive the data bus after OE is de-asserted, in order to avoid contention on
-+  the data bus. They are inserted when reading one CS and switching to another
-+  CS or read followed by write on the same CS. Valid values 0 thru 15. Minimum
-+  value is actually 1, so a value of 0 will still yield 1 recovery cycle.
-+- xmem-write-hold-cycles: write hold cycles, these are extra cycles inserted
-+  after every write minimum 1. The data out is driven from the time WE is
-+  asserted until CS is asserted. With a hold of 1 (value = 0), the CS stays
-+  active for 1 extra cycle etc. Valid values 0 thru 15.
-+- xmem-write-delta-cycles: initial latency for write cycles inserted for the
-+  first write to a page or burst memory. Valid values 0 thru 255.
-+- xmem-read-delta-cycles: initial latency for read cycles inserted for the
-+  first read to a page or burst memory. Valid values 0 thru 255.
-+- xmem-write-wait-cycles: number of wait cycles for every write access, 0=1
-+  cycle. Valid values 0 thru 15.
-+- xmem-read-wait-cycles: number of wait cycles for every read access, 0=1
-+  cycle. Valid values 0 thru 15.
-+
-+Optional subnode properties for FAST chip selects:
-+- xmem-address-hold-enable: this is a boolean property stating that we shall
-+  holde the address for an extra cycle to meet hold time requirements with ADV
-+  assertion.
-+- xmem-adv-to-oe-recovery-cycles: the number of cycles elapsed before an OE
-+  assertion, with respect to the cycle where ADV (address valid) is asserted.
-+  2 means 2 cycles between ADV and OE. Valid values 0, 1, 2 or 3.
-+- xmem-read-hold-cycles: the length in cycles of the first segment of a read
-+  transfer. For a single read trandfer this will be the time from CS assertion
-+  to OE assertion. Valid values 0 thru 15.
-+
-+Example:
-+
-+ebi2@1a100000 {
-+	compatible = "qcom,ebi2";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+	reg = <0x1a100000 0x1000>, <0x1a110000 0x1000>;
-+	reg-names = "ebi2", "xmem";
-+	clocks = <&gcc EBI2_2X_CLK>, <&gcc EBI2_CLK>;
-+	clock-names = "ebi2x", "ebi2";
-+	/* Make sure to set up the pin control for the EBI2 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&foo_ebi2_pins>;
-+
-+	cs2@1b800000 {
-+		chipselect = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		xmem-recovery-cycles = <0>;
-+		xmem-write-hold-cycles = <3>;
-+		xmem-write-delta-cycles = <31>;
-+		xmem-read-delta-cycles = <28>;
-+		xmem-write-wait-cycles = <9>;
-+		xmem-read-wait-cycles = <9>;
-+
-+		foo-ebi2@1b800000 {
-+			compatible = "foo";
-+			reg = <0x1b800000 0x100>;
-+			(...)
-+		};
-+	};
-+};
+> +static int ulpi_of_register(struct ulpi *ulpi)
+> +{
+> +	struct device_node *np = NULL, *child;
+> +
+> +	/* Find a ulpi bus underneath the parent or the parent of the parent */
+> +	if (ulpi->dev.parent->of_node)
+> +		np = of_find_node_by_name(ulpi->dev.parent->of_node, "ulpi");
+> +	else if (ulpi->dev.parent->parent && ulpi->dev.parent->parent->of_node)
+> +		np = of_find_node_by_name(ulpi->dev.parent->parent->of_node,
+> +					  "ulpi");
+> +	if (!np)
+> +		return 0;
+> +
+> +	child = of_get_next_available_child(np, NULL);
+> +	if (!child)
+> +		return -EINVAL;
+
+You may need to call of_node_put on parent (np), not on child node
+below.
+
+> +
+> +	ulpi->dev.of_node = child;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ulpi_read_id(struct ulpi *ulpi)
+>  {
+>  	int ret;
+>  
+> @@ -174,14 +218,39 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+>  	ulpi->id.product = ulpi_read(ulpi, ULPI_PRODUCT_ID_LOW);
+>  	ulpi->id.product |= ulpi_read(ulpi, ULPI_PRODUCT_ID_HIGH) << 8;
+>  
+> +	return 0;
+> +}
+> +
+
+What does this API for? Why it still needs to be called after
+vid/pid gets from firmware?
+
+> +static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+> +{
+> +	int ret;
+> +
+>  	ulpi->dev.parent = dev;
+>  	ulpi->dev.bus = &ulpi_bus;
+>  	ulpi->dev.type = &ulpi_dev_type;
+>  	dev_set_name(&ulpi->dev, "%s.ulpi", dev_name(dev));
+>  
+> +	if (IS_ENABLED(CONFIG_OF)) {
+> +		ret = ulpi_of_register(ulpi);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	ACPI_COMPANION_SET(&ulpi->dev, ACPI_COMPANION(dev));
+>  
+> -	request_module("ulpi:v%04xp%04x", ulpi->id.vendor, ulpi->id.product);
+> +	ret = device_property_read_u16(&ulpi->dev, "ulpi-vendor",
+> +				       &ulpi->id.vendor);
+> +	ret |= device_property_read_u16(&ulpi->dev, "ulpi-product",
+> +					&ulpi->id.product);
+> +	if (ret) {
+> +		ret = ulpi_read_id(ulpi);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+[...]
+
+>  void ulpi_unregister_interface(struct ulpi *ulpi)
+>  {
+> +	of_node_put(ulpi->dev.of_node);
+
+[...]
+
 -- 
-2.7.4
+
+Best Regards,
+Peter Chen
