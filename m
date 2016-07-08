@@ -1,170 +1,100 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v2 6/6] clk: mvebu: Add the peripheral clock driver for Armada
- 3700
-Date: Fri, 08 Jul 2016 11:27:02 -0700
-Message-ID: <146800242289.73491.4169295036354147972@resonance>
-References: <1467931071-31004-1-git-send-email-gregory.clement@free-electrons.com>
- <1467931071-31004-7-git-send-email-gregory.clement@free-electrons.com>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 4/7] rtc: ac100: Add clk output support
+Date: Fri, 08 Jul 2016 11:36:16 -0700
+Message-ID: <146800297598.73491.13472152266331488346@resonance>
+References: <1467302331-9663-1-git-send-email-wens@csie.org>
+ <1467302331-9663-5-git-send-email-wens@csie.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1467931071-31004-7-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Terry Zhou <bjzhou@marvell.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCYKZMUQ7QBBBI7F765QKGQEDNOXJCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1467302331-9663-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Gregory CLEMENT (2016-07-07 15:37:51)
-> +#include <linux/clk-provider.h>
-> +#include <linux/clk.h>
-
-Same question as my previous email. Is clk.h necessary? Is this driver
-also a clk consumer?
-
-> +static int armada_3700_add_composite_clk(const struct clk_periph_data *data,
-> +                                        const char * const *parent_name,
-> +                                        void __iomem *reg, spinlock_t *lock,
-> +                                        struct device *dev, struct clk_hw *hw)
+Quoting Chen-Yu Tsai (2016-06-30 08:58:48)
+> +static long ac100_clkout_round_rate(struct clk_hw *hw, unsigned long rate,
+> +                                   unsigned long prate)
 > +{
-> +       const struct clk_ops *mux_ops = NULL, *gate_ops = NULL,
-> +               *div_ops = NULL;
-> +       struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *div_hw = NULL;
-> +       const char * const *names;
-> +       struct clk_mux *mux = NULL;
-> +       struct clk_gate *gate = NULL;
-> +       struct clk_divider *div = NULL;
-> +       struct clk_double_div *double_div = NULL;
-> +       int num_parent;
-> +       int ret = 0;
+> +       unsigned long best_rate = 0, tmp_rate, tmp_prate;
+> +       int i;
 > +
-> +       if (data->gate_shift != UNUSED) {
-> +               gate = devm_kzalloc(dev, sizeof(*gate), GFP_KERNEL);
+> +       if (prate == AC100_RTC_32K_RATE)
+> +               return divider_round_rate(hw, rate, &prate, NULL,
+> +                                         AC100_CLKOUT_DIV_WIDTH,
+> +                                         CLK_DIVIDER_POWER_OF_TWO);
 > +
-> +               if (!gate)
-> +                       return -ENOMEM;
+> +       for (i = 0; ac100_clkout_prediv[i].div; i++) {
+> +               tmp_prate = DIV_ROUND_UP(prate, ac100_clkout_prediv[i].val);
+> +               tmp_rate = divider_round_rate(hw, rate, &tmp_prate, NULL,
+> +                                             AC100_CLKOUT_DIV_WIDTH,
+> +                                             CLK_DIVIDER_POWER_OF_TWO);
 > +
-> +               gate->reg = reg + CLK_DIS;
-> +               gate->bit_idx = data->gate_shift;
-> +               gate->lock = lock;
-> +               gate_ops = &clk_gate_ops;
-> +               gate_hw = &gate->hw;
+> +               if (tmp_rate > rate)
+> +                       continue;
+> +               if (rate - tmp_rate < best_rate - tmp_rate)
+> +                       best_rate = tmp_rate;
 > +       }
 > +
-> +       if (data->mux_shift != UNUSED) {
-> +               mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
+> +       return best_rate;
+> +}
 > +
-> +               if (!mux) {
-> +                       ret = -ENOMEM;
-> +                       goto free_gate;
-> +               }
+> +static int ac100_clkout_determine_rate(struct clk_hw *hw,
+> +                                      struct clk_rate_request *req)
+> +{
+> +       struct clk_hw *best_parent;
+> +       unsigned long best = 0;
+> +       int i, num_parents = clk_hw_get_num_parents(hw);
 > +
-> +               mux->reg = reg + TBG_SEL;
-> +               mux->shift = data->mux_shift;
-> +               mux->mask = 0x3;
-> +               mux->lock = lock;
-> +               mux_ops = &clk_mux_ro_ops;
-> +               mux_hw = &mux->hw;
-> +       }
+> +       for (i = 0; i < num_parents; i++) {
+> +               struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
+> +               unsigned long tmp, prate = clk_hw_get_rate(parent);
 > +
-> +       if (data->div_reg1 != UNUSED) {
-> +               if (data->div_reg2 == UNUSED) {
-> +                       const struct clk_div_table *clkt;
-> +                       int table_size = 0;
+> +               tmp = ac100_clkout_round_rate(hw, req->rate, prate);
 > +
-> +                       div = devm_kzalloc(dev, sizeof(*div), GFP_KERNEL);
-> +                       if (!div) {
-> +                               ret = -ENOMEM;
-> +                               goto free_mux;
-> +                       }
-> +
-> +                       div->reg = reg + data->div_reg1;
-> +                       div->table = data->table;
-> +                       for (clkt = div->table; clkt->div; clkt++)
-> +                               table_size++;
-> +                       div->width = order_base_2(table_size);
-> +                       div->lock = lock;
-> +                       div_ops = &clk_divider_ro_ops;
-> +                       div_hw = &div->hw;
-> +               } else {
-> +                       double_div = devm_kzalloc(dev, sizeof(*double_div),
-> +                                                 GFP_KERNEL);
-> +                       if (!double_div) {
-> +                               ret = -ENOMEM;
-> +                               goto free_mux;
-> +                       }
-> +
-> +                       double_div->reg1 = reg + data->div_reg1;
-> +                       double_div->shift1 = data->div_shift1;
-> +                       double_div->reg2 = reg + data->div_reg1;
-> +                       double_div->shift2 = data->div_shift2;
-> +                       div_ops = &clk_double_div_ops;
-> +                       div_hw = &double_div->hw;
+> +               if (tmp > req->rate)
+> +                       continue;
+> +               if (req->rate - tmp < req->rate - best) {
+> +                       best = tmp;
+> +                       best_parent = parent;
 > +               }
 > +       }
 > +
-> +       switch (data->flags) {
-> +       case XTAL_CHILD:
-> +               /* the xtal clock is the 5th clock */
-> +               names = &parent_name[4];
-> +               num_parent = 1;
-> +               break;
-> +       case TBGA_S_CHILD:
-> +               /* the TBG A S clock is the 3rd clock */
-> +               names = &parent_name[2];
-> +               num_parent = 1;
-> +               break;
-> +       case GBE_CORE_CHILD:
-> +               names = &gbe_name[1];
-> +               num_parent = 1;
-> +               break;
-> +       case  GBE_50_CHILD:
-> +               names = &gbe_name[0];
-> +               num_parent = 1;
-> +               break;
-> +       case  GBE_125_CHILD:
-> +               names = &gbe_name[2];
-> +               num_parent = 1;
-> +               break;
-> +       default:
-> +               names = parent_name;
-> +               num_parent = 4;
-> +       }
-> +       hw = clk_hw_register_composite(dev, data->name,
-> +                                    names, num_parent,
-> +                                    mux_hw, mux_ops,
-> +                                    div_hw, div_ops,
-> +                                    gate_hw, gate_ops,
-> +                                    CLK_IGNORE_UNUSED);
-> +       if (IS_ERR(hw)) {
-> +               ret = PTR_ERR(hw);
-> +               goto free_div;
-> +       }
+> +       if (!best)
+> +               return -EINVAL;
+> +
+> +       req->best_parent_hw = best_parent;
+> +       req->best_parent_rate = best;
+> +       req->rate = best;
 > +
 > +       return 0;
-> +free_div:
-> +       devm_kfree(dev, div);
-> +       devm_kfree(dev, double_div);
-> +free_mux:
-> +       devm_kfree(dev, mux);
-> +free_gate:
-> +       devm_kfree(dev, gate);
-> +       return ret;
 > +}
 
-Can this "add" function (aka registration function) be replaced with
-static data instead? I think that all of the static data exists already,
-this function can be removed and your probe can call clk_hw_register
-directly.
+You only need one of the two functions above. Keep the .determine_rate
+callback and drop .round_rate.
 
-It might need a macro though, since composite clock structures are
-rather messy. This avoids a lot of unnecessary allocations and time
-populating data that we already have access to. In general I am trying
-to encourage clk drivers to use only clk_hw_register() in their probe
-instead of the helper registration functions.
+Otherwise the rest of the clk support looks great to me. Feel free to
+add:
 
-Similarly I am discouraging drivers from populating hw.init at run-time,
-since we already have that data for that at compile-time.
+Reviewed-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
 Regards,
 Mike
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
