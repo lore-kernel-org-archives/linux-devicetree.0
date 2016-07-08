@@ -1,111 +1,100 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v2 03/22] usb: ulpi: Support device discovery via device
- properties
-Date: Fri, 8 Jul 2016 17:04:58 +0800
-Message-ID: <20160708090458.GB20485@shlinux2>
-References: <20160707222114.1673-1-stephen.boyd@linaro.org>
- <20160707222114.1673-4-stephen.boyd@linaro.org>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding
+ of STiH4xx platforms
+Date: Fri, 8 Jul 2016 11:12:35 +0200
+Message-ID: <577F6E83.3080006@st.com>
+References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
+ <20160619150458.GA26824@rob-hp-laptop>
+ <146794221378.73491.2803164814485320331@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160707222114.1673-4-stephen.boyd@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <146794221378.73491.2803164814485320331@resonance>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Peter Griffin <peter.griffin@linar>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 07, 2016 at 03:20:54PM -0700, Stephen Boyd wrote:
-> @@ -39,6 +42,10 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
->  	struct ulpi *ulpi = to_ulpi_dev(dev);
->  	const struct ulpi_device_id *id;
->  
-> +	/* Some ULPI devices don't have a product id so rely on OF match */
-> +	if (ulpi->id.product == 0)
-> +		return of_driver_match_device(dev, driver);
-> +
+Hi Mike,
 
-How about using vendor id? It can't be 0, but pid may be 0.
-See: http://www.linux-usb.org/usb.ids
+On 07/08/2016 03:43 AM, Michael Turquette wrote:
+> Quoting Rob Herring (2016-06-19 08:04:58)
+>> On Thu, Jun 16, 2016 at 11:20:22AM +0200, Gabriel Fernandez wrote:
+>>> This patch reworks the clock binding to avoid too much detail in DT.
+>>> Now we have only compatible string per type of clock
+>>> (remark from Rob https://lkml.org/lkml/2016/5/25/492)
+>>>
+>> I have no idea what the clock trees and clock controller in these chips
+>> look like, so it's hard to say if the changes here are good. It still
+>> looks like things are somewhat fine grained clocks in DT. I'll leave
+>> it up to the platform maintainers to decide...
+> Is this series breaking ABI? If yes, why not do what Maxime did for the
+> Allwinner/sunxi clocks and just fully convert over to a
+> one-node-per-clock-controller binding? This one-node-per-clock stuff is
+> pretty unfortunate, and if we're deprecating platforms (patch #1) then
+> now might be a good time to re-evaluate the whole thing.
 
-> +static int ulpi_of_register(struct ulpi *ulpi)
-> +{
-> +	struct device_node *np = NULL, *child;
-> +
-> +	/* Find a ulpi bus underneath the parent or the parent of the parent */
-> +	if (ulpi->dev.parent->of_node)
-> +		np = of_find_node_by_name(ulpi->dev.parent->of_node, "ulpi");
-> +	else if (ulpi->dev.parent->parent && ulpi->dev.parent->parent->of_node)
-> +		np = of_find_node_by_name(ulpi->dev.parent->parent->of_node,
-> +					  "ulpi");
-> +	if (!np)
-> +		return 0;
-> +
-> +	child = of_get_next_available_child(np, NULL);
-> +	if (!child)
-> +		return -EINVAL;
+The goal of my patchset was to be aligned with DRM / KMS development and 
+to offer
+the possibility to make a correct video playback on STiH407/STiH410 
+platform.
+Our milestone is the 4.8 for that.
 
-You may need to call of_node_put on parent (np), not on child node
-below.
+Currently people need these patches to work.
+I'm not sure it's a good time to re-evaluate the whole thing.
 
-> +
-> +	ulpi->dev.of_node = child;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ulpi_read_id(struct ulpi *ulpi)
->  {
->  	int ret;
->  
-> @@ -174,14 +218,39 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
->  	ulpi->id.product = ulpi_read(ulpi, ULPI_PRODUCT_ID_LOW);
->  	ulpi->id.product |= ulpi_read(ulpi, ULPI_PRODUCT_ID_HIGH) << 8;
->  
-> +	return 0;
-> +}
-> +
+Is it possible to re-evaluate later ?
 
-What does this API for? Why it still needs to be called after
-vid/pid gets from firmware?
+Best regards,
+Gabriel
 
-> +static int ulpi_register(struct device *dev, struct ulpi *ulpi)
-> +{
-> +	int ret;
-> +
->  	ulpi->dev.parent = dev;
->  	ulpi->dev.bus = &ulpi_bus;
->  	ulpi->dev.type = &ulpi_dev_type;
->  	dev_set_name(&ulpi->dev, "%s.ulpi", dev_name(dev));
->  
-> +	if (IS_ENABLED(CONFIG_OF)) {
-> +		ret = ulpi_of_register(ulpi);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	ACPI_COMPANION_SET(&ulpi->dev, ACPI_COMPANION(dev));
->  
-> -	request_module("ulpi:v%04xp%04x", ulpi->id.vendor, ulpi->id.product);
-> +	ret = device_property_read_u16(&ulpi->dev, "ulpi-vendor",
-> +				       &ulpi->id.vendor);
-> +	ret |= device_property_read_u16(&ulpi->dev, "ulpi-product",
-> +					&ulpi->id.product);
-> +	if (ret) {
-> +		ret = ulpi_read_id(ulpi);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-[...]
+> Regards,
+> Mike
+>
+>>   
+>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>>> ---
+>>>   .../devicetree/bindings/clock/st/st,clkgen-mux.txt |  2 +-
+>>>   .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
+>>>   .../devicetree/bindings/clock/st/st,clkgen.txt     |  2 +-
+>>>   .../devicetree/bindings/clock/st/st,quadfs.txt     |  6 +--
+>>>   drivers/clk/st/clkgen-fsyn.c                       | 41 ++++++--------
+>>>   drivers/clk/st/clkgen-mux.c                        | 28 ++++------
+>>>   drivers/clk/st/clkgen-pll.c                        | 62 ++++++++++------------
+>>>   7 files changed, 65 insertions(+), 87 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>> index 4d277d6..9a46cb1d7 100644
+>>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>> @@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
+>>>   Required properties:
+>>>   
+>>>   - compatible : shall be:
+>>> -     "st,stih407-clkgen-a9-mux",     "st,clkgen-mux"
+>>> +     "st,stih407-clkgen-a9-mux"
+>>>   
+>>>   - #clock-cells : from common clock binding; shall be set to 0.
+>>>   
+>>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>> index c9fd674..be0b043 100644
+>>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>> @@ -9,11 +9,10 @@ Base address is located to the parent node. See clock binding[2]
+>>>   Required properties:
+>>>   
+>>>   - compatible : shall be:
+>>> -     "st,stih407-plls-c32-a0",       "st,clkgen-plls-c32"
+>>> -     "st,stih407-plls-c32-a9",       "st,clkgen-plls-c32"
+>>> -     "sst,plls-c32-cx_0",            "st,clkgen-plls-c32"
+>>> -     "sst,plls-c32-cx_1",            "st,clkgen-plls-c32"
+>>> -     "st,stih418-plls-c28-a9",       "st,clkgen-plls-c32"
+>>> +     "st,clkgen-pll0"
+>>> +     "st,clkgen-pll0"
+>> Repeated. Supposed to be 0 and 1? This seems a bit generic, too.
+>>
+>>> +     "st,stih407-clkgen-plla9"
+>>> +     "st,stih418-clkgen-plla9"
 
->  void ulpi_unregister_interface(struct ulpi *ulpi)
->  {
-> +	of_node_put(ulpi->dev.of_node);
-
-[...]
-
--- 
-
-Best Regards,
-Peter Chen
