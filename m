@@ -1,90 +1,40 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH 7/7] ARM: dts: NSP: Add bgmac entries
-Date: Fri, 8 Jul 2016 09:14:17 -0700
-Message-ID: <577FD159.7000905@broadcom.com>
-References: <1467993362-13229-1-git-send-email-jon.mason@broadcom.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] rtc: support for amlogic meson rtc
+Date: Fri, 08 Jul 2016 09:16:30 -0700
+Message-ID: <7hoa6885r5.fsf@baylibre.com>
+References: <1467748122-14833-1-git-send-email-ben.dooks@codethink.co.uk>
+	<1467748122-14833-3-git-send-email-ben.dooks@codethink.co.uk>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467993362-13229-1-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Mason <jon.mason@broadcom.com>, davem@davemloft.net, f.fainelli@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hauke@hauke-m.de, zajec5@gmail.com, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDX5ZRH7XQGRBYFD765QKGQEAV5OGJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1467748122-14833-3-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+	(Ben Dooks's message of "Tue, 5 Jul 2016 20:48:41 +0100")
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> writes:
 
-In Subject line, you mean add amac entries.
+> Add support for the AMLogic meson8b/meson6 RTC block.
+>
+> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 
+Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-On 16-07-08 08:56 AM, Jon Mason wrote:
-> Add device tree entries for the ethernet devices present on the
-> Broadcom Northstar Plus SoCs
->
-> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
-> ---
->   arch/arm/boot/dts/bcm-nsp.dtsi   | 18 ++++++++++++++++++
->   arch/arm/boot/dts/bcm958625k.dts |  8 ++++++++
->   2 files changed, 26 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-> index def9e78..f6d5abe 100644
-> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
-> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-> @@ -192,6 +192,24 @@
->   			status = "disabled";
->   		};
->
-> +		amac0: ethernet@22000 {
-> +			compatible = "brcm,nsp-amac";
-> +			reg = <0x022000 0x1000>,
-> +			      <0x110000 0x1000>;
-> +			reg-names = "amac_base", "idm_base";
-> +			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
-> +		amac1: ethernet@23000 {
-> +			compatible = "brcm,nsp-amac";
-> +			reg = <0x023000 0x1000>,
-> +			      <0x111000 0x1000>;
-> +			reg-names = "amac_base", "idm_base";
-> +			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
->   		nand: nand@26000 {
->   			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
->   			reg = <0x026000 0x600>,
-> diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-> index e298450..f41a13b 100644
-> --- a/arch/arm/boot/dts/bcm958625k.dts
-> +++ b/arch/arm/boot/dts/bcm958625k.dts
-> @@ -56,6 +56,14 @@
->   	status = "okay";
->   };
->
-> +&amac0 {
-> +	status = "okay";
-> +};
-> +
-> +&amac1 {
-> +	status = "okay";
-> +};
-> +
->   &pcie0 {
->   	status = "okay";
->   };
->
-
-Regards,
-  Scott
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
