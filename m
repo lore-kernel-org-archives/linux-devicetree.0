@@ -1,76 +1,77 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH] ARM: dts: armada388-clearfog: number LAN ports properly
-Date: Fri, 08 Jul 2016 14:58:39 +0100
-Message-ID: <E1bLWIh-0001ZK-Ai@rmk-PC.armlinux.org.uk>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] rtc: ds1302: support control with
+ using GPIO lines
+Date: Fri, 8 Jul 2016 16:28:53 +0200
+Message-ID: <20160708142853.GJ22202@piout.net>
+References: <1467026362-29446-1-git-send-email-akinobu.mita@gmail.com>
+ <1467026362-29446-3-git-send-email-akinobu.mita@gmail.com>
+ <20160628205704.GT3737@rob-hp-laptop>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBJXR725QKGQEJDZV5LY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160628205704.GT3737@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, the ports as seen from the rear number as:
+On 28/06/2016 at 15:57:04 -0500, Rob Herring wrote :
+> On Mon, Jun 27, 2016 at 08:19:22PM +0900, Akinobu Mita wrote:
+> > This adds support control with GPIO lines connected to the DS1302
+> > which can communicate with three wires.
+> > 
+> > Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Sergey Yanovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+> > Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/rtc/maxim-ds1302.txt       |  13 +
+> >  drivers/rtc/Kconfig                                |  17 +-
+> >  drivers/rtc/rtc-ds1302.c                           | 320 ++++++++++++++++++++-
+> >  3 files changed, 331 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt b/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
+> > index ba470c5..d489753 100644
+> > --- a/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
+> > @@ -27,6 +27,12 @@ Required SPI properties:
+> >  - spi-cs-high: DS-1302 has active high chip select line. This is
+> >    required unless inverted in hardware.
+> >  
+> > +Required properties when using GPIO lines:
+> > +
+> > +- gpio-ce: GPIO connected to CE pin
+> > +- gpio-io: GPIO connected to I/O pin
+> > +- gpio-reset: GPIO connected to SCLK pin
+> > +
+> 
+> IIRC, we got rid of the direct gpio bit-banging in this driver (or a 
+> similar one) and replaced it with SPI GPIO driver. We should do that 
+> here.
+> 
 
-	eth0 sfp lan5 lan4 lan3 lan2 lan1 lan6
+Well, the fact is that it is not actually SPI but microwire which has
+different timings and we didn't reach a conclusion yet with Mark.
 
-which is illogical - this came about because the rev 2.0 boards have the
-LEDs on the front for the DSA switch (lan5-1) reversed.  Rev 2.1 boards
-fixed the LED issue, and the Clearfog case numbers the lan ports
-increasing from left to right.
-
-Maintaining this illogical numbering causes confusion, with reports that
-"my link isn't coming up" and "my connection negotiates 10base-Half"
-both of which are due to people thinking that the port next to the SFP
-is lan1.
-
-Fix this by renumbering the ports to match people's expectations.
-
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
----
- arch/arm/boot/dts/armada-388-clearfog.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
-index 54bf0749e15e..42d760da4e82 100644
---- a/arch/arm/boot/dts/armada-388-clearfog.dts
-+++ b/arch/arm/boot/dts/armada-388-clearfog.dts
-@@ -386,12 +386,12 @@
- 
- 			port@0 {
- 				reg = <0>;
--				label = "lan1";
-+				label = "lan5";
- 			};
- 
- 			port@1 {
- 				reg = <1>;
--				label = "lan2";
-+				label = "lan4";
- 			};
- 
- 			port@2 {
-@@ -401,12 +401,12 @@
- 
- 			port@3 {
- 				reg = <3>;
--				label = "lan4";
-+				label = "lan2";
- 			};
- 
- 			port@4 {
- 				reg = <4>;
--				label = "lan5";
-+				label = "lan1";
- 			};
- 
- 			port@5 {
 -- 
-2.1.0
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
