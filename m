@@ -1,57 +1,90 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] spi: s3c64xx: add exynos5433 compatible for ioclk handling
-Date: Fri, 08 Jul 2016 09:13:32 -0700
-Message-ID: <146799441227.73491.13833003558807352160@resonance>
-References: <1467989201-14661-1-git-send-email-andi.shyti@samsung.com>
- <1467989201-14661-6-git-send-email-andi.shyti@samsung.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH 7/7] ARM: dts: NSP: Add bgmac entries
+Date: Fri, 8 Jul 2016 09:14:17 -0700
+Message-ID: <577FD159.7000905@broadcom.com>
+References: <1467993362-13229-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467989201-14661-6-git-send-email-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1467993362-13229-1-git-send-email-jon.mason@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Mason <jon.mason@broadcom.com>, davem@davemloft.net, f.fainelli@gmail.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hauke@hauke-m.de, zajec5@gmail.com, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Andi Shyti (2016-07-08 07:46:39)
-> @@ -1147,6 +1150,21 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
->                 goto err_disable_clk;
->         }
->  
-> +       if (sdd->port_conf->clk_ioclk) {
-> +               sdd->ioclk = devm_clk_get(&pdev->dev, "spi_ioclk");
-> +               if (IS_ERR(sdd->ioclk)) {
-> +                       dev_err(&pdev->dev, "Unable to acquire 'ioclk'\n");
-> +                       ret = PTR_ERR(sdd->ioclk);
-> +                       goto err_disable_src_clk;
-> +               }
-> +
-> +               ret = clk_prepare_enable(sdd->ioclk);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "Couldn't enable clock 'ioclk'\n");
-> +                       goto err_disable_src_clk;
-> +               }
-> +       }
-> +
->         pm_runtime_set_autosuspend_delay(&pdev->dev, AUTOSUSPEND_TIMEOUT);
->         pm_runtime_use_autosuspend(&pdev->dev);
->         pm_runtime_set_active(&pdev->dev);
-> @@ -1193,6 +1211,8 @@ err_pm_put:
->         pm_runtime_disable(&pdev->dev);
->         pm_runtime_set_suspended(&pdev->dev);
->  
-> +       clk_disable_unprepare(sdd->ioclk);
-> +err_disable_src_clk:
->         clk_disable_unprepare(sdd->src_clk);
->  err_disable_clk:
->         clk_disable_unprepare(sdd->clk);
+Hi Jon,
 
-Why aren't these clocks enabled/disabled by calls to pm_runtime_get/put?
+In Subject line, you mean add amac entries.
+
+
+On 16-07-08 08:56 AM, Jon Mason wrote:
+> Add device tree entries for the ethernet devices present on the
+> Broadcom Northstar Plus SoCs
+>
+> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+> ---
+>   arch/arm/boot/dts/bcm-nsp.dtsi   | 18 ++++++++++++++++++
+>   arch/arm/boot/dts/bcm958625k.dts |  8 ++++++++
+>   2 files changed, 26 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+> index def9e78..f6d5abe 100644
+> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
+> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+> @@ -192,6 +192,24 @@
+>   			status = "disabled";
+>   		};
+>
+> +		amac0: ethernet@22000 {
+> +			compatible = "brcm,nsp-amac";
+> +			reg = <0x022000 0x1000>,
+> +			      <0x110000 0x1000>;
+> +			reg-names = "amac_base", "idm_base";
+> +			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +		};
+> +
+> +		amac1: ethernet@23000 {
+> +			compatible = "brcm,nsp-amac";
+> +			reg = <0x023000 0x1000>,
+> +			      <0x111000 0x1000>;
+> +			reg-names = "amac_base", "idm_base";
+> +			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +			status = "disabled";
+> +		};
+> +
+>   		nand: nand@26000 {
+>   			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
+>   			reg = <0x026000 0x600>,
+> diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+> index e298450..f41a13b 100644
+> --- a/arch/arm/boot/dts/bcm958625k.dts
+> +++ b/arch/arm/boot/dts/bcm958625k.dts
+> @@ -56,6 +56,14 @@
+>   	status = "okay";
+>   };
+>
+> +&amac0 {
+> +	status = "okay";
+> +};
+> +
+> +&amac1 {
+> +	status = "okay";
+> +};
+> +
+>   &pcie0 {
+>   	status = "okay";
+>   };
+>
 
 Regards,
-Mike
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  Scott
