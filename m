@@ -1,85 +1,65 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding of
- STiH4xx platforms
-Date: Thu, 07 Jul 2016 18:43:33 -0700
-Message-ID: <146794221378.73491.2803164814485320331@resonance>
-References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
- <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
- <20160619150458.GA26824@rob-hp-laptop>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v3 4/6] drm/panel: simple: Add support for Samsung
+ LSN122DL01-C01 2560x1600 panel
+Date: Fri, 8 Jul 2016 09:51:43 +0800
+Message-ID: <577F072F.6010608@rock-chips.com>
+References: <1465700010-13483-1-git-send-email-ykk@rock-chips.com>
+ <1465700173-13671-1-git-send-email-ykk@rock-chips.com>
+ <CAD=FV=VL0KgZnpjvAvYgK8rzgntKL2N0D6QbG6V0LO8vkaQkig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160619150458.GA26824@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Peter Gri
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAD=FV=VL0KgZnpjvAvYgK8rzgntKL2N0D6QbG6V0LO8vkaQkig@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Emil Velikov <emil.l.velikov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2016-06-19 08:04:58)
-> On Thu, Jun 16, 2016 at 11:20:22AM +0200, Gabriel Fernandez wrote:
-> > This patch reworks the clock binding to avoid too much detail in DT.
-> > Now we have only compatible string per type of clock
-> > (remark from Rob https://lkml.org/lkml/2016/5/25/492)
-> >
-> 
-> I have no idea what the clock trees and clock controller in these chips 
-> look like, so it's hard to say if the changes here are good. It still 
-> looks like things are somewhat fine grained clocks in DT. I'll leave 
-> it up to the platform maintainers to decide...
-
-Is this series breaking ABI? If yes, why not do what Maxime did for the
-Allwinner/sunxi clocks and just fully convert over to a
-one-node-per-clock-controller binding? This one-node-per-clock stuff is
-pretty unfortunate, and if we're deprecating platforms (patch #1) then
-now might be a good time to re-evaluate the whole thing.
-
-Regards,
-Mike
-
->  
-> > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> > ---
-> >  .../devicetree/bindings/clock/st/st,clkgen-mux.txt |  2 +-
-> >  .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
-> >  .../devicetree/bindings/clock/st/st,clkgen.txt     |  2 +-
-> >  .../devicetree/bindings/clock/st/st,quadfs.txt     |  6 +--
-> >  drivers/clk/st/clkgen-fsyn.c                       | 41 ++++++--------
-> >  drivers/clk/st/clkgen-mux.c                        | 28 ++++------
-> >  drivers/clk/st/clkgen-pll.c                        | 62 ++++++++++------------
-> >  7 files changed, 65 insertions(+), 87 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
-> > index 4d277d6..9a46cb1d7 100644
-> > --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
-> > +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
-> > @@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
-> >  Required properties:
-> >  
-> >  - compatible : shall be:
-> > -     "st,stih407-clkgen-a9-mux",     "st,clkgen-mux"
-> > +     "st,stih407-clkgen-a9-mux"
-> >  
-> >  - #clock-cells : from common clock binding; shall be set to 0.
-> >  
-> > diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-> > index c9fd674..be0b043 100644
-> > --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-> > +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-> > @@ -9,11 +9,10 @@ Base address is located to the parent node. See clock binding[2]
-> >  Required properties:
-> >  
-> >  - compatible : shall be:
-> > -     "st,stih407-plls-c32-a0",       "st,clkgen-plls-c32"
-> > -     "st,stih407-plls-c32-a9",       "st,clkgen-plls-c32"
-> > -     "sst,plls-c32-cx_0",            "st,clkgen-plls-c32"
-> > -     "sst,plls-c32-cx_1",            "st,clkgen-plls-c32"
-> > -     "st,stih418-plls-c28-a9",       "st,clkgen-plls-c32"
-> 
-> > +     "st,clkgen-pll0"
-> > +     "st,clkgen-pll0"
-> 
-> Repeated. Supposed to be 0 and 1? This seems a bit generic, too.
-> 
-> > +     "st,stih407-clkgen-plla9"
-> > +     "st,stih418-clkgen-plla9"
+RG91ZywKCk9uIDA2LzE0LzIwMTYgMDE6MDAgQU0sIERvdWcgQW5kZXJzb24gd3JvdGU6Cj4gWWFr
+aXIsCj4KPiBPbiBTYXQsIEp1biAxMSwgMjAxNiBhdCA3OjU2IFBNLCBZYWtpciBZYW5nIDx5a2tA
+cm9jay1jaGlwcy5jb20+IHdyb3RlOgo+PiBUaGUgU2Ftc3VuZyBMU04xMjJETDAxLUMwMSBpcyBh
+biAxMi4yIiAyNTYweDE2MDAgKFdRWEdBKSBURlQtTENEIHBhbmVsCj4+IGNvbm5lY3RlZCB1c2lu
+ZyBlRFAgaW50ZXJmYWNlcy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJv
+Y2stY2hpcHMuY29tPgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2MzoKPj4gLSBDb3JyZWN0IHRoZSBz
+aXplIG9mIHBhbmVsX2Rlc2MgdG8gYWN0aXZlIGFyZWEgMjYybW14MTY0bW0gKEVtaWwsIFN0w6lw
+aGFuZSkKPj4KPj4gQ2hhbmdlcyBpbiB2MjogTm9uZQo+Pgo+PiAgIGRyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9wYW5lbC1zaW1wbGUuYyB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysrKysKPj4gICAx
+IGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
+bmVsLXNpbXBsZS5jCj4+IGluZGV4IDJkNDBhMjEuLjE3Y2M5NzMgMTAwNjQ0Cj4+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKPj4gQEAgLTEyNDYsNiArMTI0NiwyOCBAQCBzdGF0aWMg
+Y29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgcWQ0MzAwM2MwXzQwID0gewo+PiAgICAgICAgICAuYnVz
+X2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYMjQsCj4+ICAgfTsKPj4KPj4gK3N0YXRp
+YyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBzYW1zdW5nX2xzbjEyMmRsMDFfYzAxX21v
+ZGUgPSB7Cj4+ICsgICAgICAgLmNsb2NrID0gMjcxNTYwLAo+PiArICAgICAgIC5oZGlzcGxheSA9
+IDI1NjAsCj4+ICsgICAgICAgLmhzeW5jX3N0YXJ0ID0gMjU2MCArIDQ4LAo+PiArICAgICAgIC5o
+c3luY19lbmQgPSAyNTYwICsgNDggKyAzMiwKPj4gKyAgICAgICAuaHRvdGFsID0gMjU2MCArIDQ4
+ICsgMzIgKyA4MCwKPj4gKyAgICAgICAudmRpc3BsYXkgPSAxNjAwLAo+PiArICAgICAgIC52c3lu
+Y19zdGFydCA9IDE2MDAgKyAyLAo+PiArICAgICAgIC52c3luY19lbmQgPSAxNjAwICsgMiArIDUs
+Cj4+ICsgICAgICAgLnZ0b3RhbCA9IDE2MDAgKyAyICsgNSArIDU3LAo+PiArICAgICAgIC52cmVm
+cmVzaCA9IDYwLAo+PiArfTsKPj4gKwo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNj
+IHNhbXN1bmdfbHNuMTIyZGwwMV9jMDEgPSB7Cj4+ICsgICAgICAgLm1vZGVzID0gJnNhbXN1bmdf
+bHNuMTIyZGwwMV9jMDFfbW9kZSwKPj4gKyAgICAgICAubnVtX21vZGVzID0gMSwKPj4gKyAgICAg
+ICAuc2l6ZSA9IHsKPj4gKyAgICAgICAgICAgICAgIC53aWR0aCA9IDI2MiwKPj4gKyAgICAgICAg
+ICAgICAgIC5oZWlnaHQgPSAxNjQsCj4gRWFybGllciB5b3Ugc2FpZCB0aGF0IHRoZSBhY3RpdmUg
+YXJlYSBvZiB0aGlzIHBhbmVsIHdhczoKPgo+PiBEaXNwbGF5IGFyZWEgICAgIDI2Mi42NTYoSCkg
+WCAxNjQuMTYoVikgICAgICAgICAoMTIuMuKAnWRpYWdvbmFsKQo+IEluIG90aGVyIHBhbmVscyBJ
+IGxvb2tlZCBhdCB0aGUgRURJRCB0ZW5kZWQgdG8gcm91bmQgbnVtYmVycywgbm90Cj4gdHJ1bmNh
+dGUgdGhlbS4gIEZvciBpbnN0YW5jZSB0aGUgU3RhcnJ5IHBhbmVsIHRoYXQgSSBzZW50IHRoZSBw
+YXRjaAo+IGZvciBzYXlzIGluIHRoZSBtYW51YWwgIjI2Mi43NzEyIChIKSB4IDE2NC4yMzIgKFYp
+IiBidXQgdGhlbiB0aGUgRURJRAo+IHNheXMgIjI2MyB4IDE2NCIuCgpBaCwgZ290IGl0LCBkb25l
+LgoKVGhhbmtzLAotIFlha2lyCgo+IFRoYXQgd291bGQgbWVhbiB5b3VyIHdpZHRoIHNob3VsZCBi
+ZSAyNjMgbW0sIG5vdCAyNjIgbW0uCj4KPiAtRG91Zwo+Cj4KPgoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
