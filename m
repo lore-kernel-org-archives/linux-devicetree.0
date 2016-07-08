@@ -1,133 +1,82 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH 3/4] arm: dts: qcom: apq8064: Add display DT nodes
-Date: Fri,  8 Jul 2016 11:25:53 +0530
-Message-ID: <1467957354-7620-4-git-send-email-architt@codeaurora.org>
-References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: robdclark@gmail.com, andy.gross@linaro.org
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH] arm64: dts: berlin4ct: Add L2 cache topology
+Date: Fri, 8 Jul 2016 14:05:56 +0800
+Message-ID: <20160708140556.4ae8abaa@xhacker>
+References: <1466066418-1141-1-git-send-email-jszhang@marvell.com>
+	<577D448D.8030701@gmail.com>	<20160707134807.08b70b38@xhacker>
+	<577E8D02.5010401@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <577E8D02.5010401@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-APQ8064 contains a MDP4 based display controller. It contains a HDMI, LVDS
-and 2 DSI outputs.
+Dear Sebastian,
 
-Add display DT nodes for MDP4, HDMI TX and HDMI PHY. MDP4 based display
-blocks have a flat device hierarchy.
+On Thu, 7 Jul 2016 19:10:26 +0200 Sebastian Hesselbarth wrote:
 
-Nodes for other outputs will be added later.
+> On 07.07.2016 07:48, Jisheng Zhang wrote:
+> > On Wed, 6 Jul 2016 19:49:01 +0200 Sebastian Hesselbarth wrote:  
+> >> On 16.06.2016 10:40, Jisheng Zhang wrote:  
+> >>> This patch adds the L2 cache topology for berlin4ct which has 1MB L2
+> >>> cache.
+> >>>
+> >>> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> >>> ---
+> >>>  arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 8 ++++++++
+> >>>  1 file changed, 8 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> >>> index 099ad93..c9e3a98 100644
+> >>> --- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> >>> +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi    
+> >> [...]  
+> >>> @@ -92,9 +95,14 @@
+> >>>  			device_type = "cpu";
+> >>>  			reg = <0x3>;
+> >>>  			enable-method = "psci";
+> >>> +			next-level-cache = <&L2_0>;
+> >>>  			cpu-idle-states = <&CPU_SLEEP_0>;
+> >>>  		};
+> >>>  
+> >>> +		L2_0: l2-cache0 {    
+> >>
+> >> The node name should just have a generic name that reflects
+> >> the purpose of the unit it represents, i.e.
+> >> s/l2-cache0/cache/  
+> > 
+> > IMHO, "cache" is too generic, this is L2 cache topology, so in v2, I use 
+> > "l2-cache" instead. what do you think?
+> > 
+> > PS: I found other arm64 SoCs also use "l2-cache" as the node name.  
+> 
+> Yeah, I realized that too. Anyway, the node name should be as generic
+> as possible. Moreover, the more specific compatible string below also
+> is "cache", too. So I see no reason why the node name should be more
+> specific than the compatible.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
+make sense, I agree with you now.
 
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
- arch/arm/boot/dts/qcom-apq8064.dtsi | 91 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
+> 
+> >>> +			compatible = "cache";
+> >>> +		};  
+> 
+> If you want to have the cache-level represented in the node, I guess
+> you can use cache-level property. However, I cannot find any cache
+> related binding documentation other than for arm(32) and powerpc that
+> mentions cache-level property.
+> 
+> If you are fine with it, I can pick up the v2 you sent earlier, rename
+> the node to "cache" only, and add a cache-level = <2>; property while
+> applying.
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index df96ccd..435a3ab 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -946,6 +946,97 @@
- 			reset-names = "axi", "ahb", "por", "pci", "phy";
- 			status = "disabled";
- 		};
-+
-+		hdmi: hdmi-tx@4a00000 {
-+			compatible = "qcom,hdmi-tx-8960";
-+			reg = <0x04a00000 0x2f0>;
-+			reg-names = "core_physical";
-+			interrupts = <GIC_SPI 79 IRQ_TYPE_NONE>;
-+			clocks = <&mmcc HDMI_APP_CLK>,
-+				 <&mmcc HDMI_M_AHB_CLK>,
-+				 <&mmcc HDMI_S_AHB_CLK>;
-+			clock-names = "core_clk",
-+				      "master_iface_clk",
-+				      "slave_iface_clk";
-+
-+			phys = <&hdmi_phy>;
-+			phy-names = "hdmi-phy";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					hdmi_in: endpoint {
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					hdmi_out: endpoint {
-+					};
-+				};
-+			};
-+		};
-+
-+		hdmi_phy: hdmi-phy@4a00400 {
-+			compatible = "qcom,hdmi-phy-8960";
-+			reg = <0x4a00400 0x60>,
-+			      <0x4a00500 0x100>;
-+			reg-names = "hdmi_phy",
-+				    "hdmi_pll";
-+
-+			clocks = <&mmcc HDMI_S_AHB_CLK>;
-+			clock-names = "slave_iface_clk";
-+		};
-+
-+		mdp: mdp@5100000 {
-+			compatible = "qcom,mdp4";
-+			reg = <0x05100000 0xf0000>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_NONE>;
-+			clocks = <&mmcc MDP_CLK>,
-+				 <&mmcc MDP_AHB_CLK>,
-+				 <&mmcc MDP_AXI_CLK>,
-+				 <&mmcc MDP_LUT_CLK>,
-+				 <&mmcc HDMI_TV_CLK>,
-+				 <&mmcc MDP_TV_CLK>;
-+			clock-names = "core_clk",
-+				      "iface_clk",
-+				      "bus_clk",
-+				      "lut_clk",
-+				      "hdmi_clk",
-+				      "tv_clk";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					mdp_lvds_out: endpoint {
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					mdp_dsi1_out: endpoint {
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					mdp_dsi2_out: endpoint {
-+					};
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					mdp_dtv_out: endpoint {
-+					};
-+				};
-+			};
-+		};
- 	};
- };
- #include "qcom-apq8064-pins.dtsi"
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Per my understanding of the code, drivers/base/cacheinfo.c and related
+source code, the "cache-level" property isn't used at all, so could you
+please only rename the node to "cache"? 
+
+Thanks in advance,
+Jisheng
