@@ -1,52 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bindings: PCI: artpec: correct pci binding example
-Date: Fri, 08 Jul 2016 11:39:24 +0200
-Message-ID: <1838529.X3K6mcn6MA@wuerfel>
-References: <1467934090-12834-1-git-send-email-niklass@axis.com>
+From: Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH v4] wlcore: spi: add wl18xx support
+Date: Fri, 08 Jul 2016 12:57:51 +0300
+Message-ID: <87bn281mg0.fsf@kamboji.qca.qualcomm.com>
+References: <1466935675-14696-1-git-send-email-eyalr@ti.com>
+	<8665E2433BC68541A24DFFCA87B70F5B3613BF60@DFRE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1467934090-12834-1-git-send-email-niklass@axis.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Niklas Cassel <niklass@axis.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B3613BF60@DFRE01.ent.ti.com>
+	(Eyal Reizer's message of "Sun, 26 Jun 2016 10:10:54 +0000")
+Sender: netdev-owner@vger.kernel.org
+To: "Reizer, Eyal" <eyalr@ti.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, July 8, 2016 1:28:10 AM CEST Niklas Cassel wrote:
-> From: Niklas Cassel <niklas.cassel@axis.com>
-> 
->  - Increase config size. When using a PCIe switch,
->    the previous config size only had room for one device.
->  - Add bus range. Inherited optional property.
->  - Map downstream I/O to PCI address 0. We can map it to any
->    address, but let's be consistent with other drivers.
-> 
-> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+"Reizer, Eyal" <eyalr@ti.com> writes:
+
+> Add support for using with both wl12xx and wl18xx.
+>
+> - all wilink family needs special init command for entering wspi mode.
+>   extra clock cycles should be sent after the spi init command while the
+>   cs pin is high.
+> - Use inverted chip select for sending a dummy 4 bytes command that
+>   completes the init stage.
+>
+> Signed-off-by: Eyal Reizer <eyalr@ti.com>
 > ---
->  Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> index 330a45b..5ecaea1 100644
-> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> @@ -24,16 +24,17 @@ Example:
->  		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
->  		reg = <0xf8050000 0x2000
->  		       0xf8040000 0x1000
-> -		       0xc0000000 0x1000>;
-> +		       0xc0000000 0x2000>;
+> v1->v2:update device tree bindings configuration
+> v2->v3:revert from manual gpio manipulation. use inverted chip select instead
+> for sending the extra init cycle which, achieves the same hardware purpose.
+> update device tree bindings docucmentation accordingly
+> v3->v4: Remove redundant data form binding documentation and fix chip select
+> number mismatch in wl1271 example
 
-If this is your config space size
+Doesn't apply to wireless-drivers-next, please resend.
 
->  		num-lanes = <2>;
-> +		bus-range = <0x00 0xff>;
+Applying: wlcore: spi: add wl18xx support
+Using index info to reconstruct a base tree...
+Falling back to patching base and 3-way merge...
+Auto-merging drivers/net/wireless/ti/wlcore/spi.c
+CONFLICT (content): Merge conflict in drivers/net/wireless/ti/wlcore/spi.c
+Failed to merge in the changes.
+Patch failed at 0001 wlcore: spi: add wl18xx support
 
-then the bus range looks too large. These two are typically connected.
-I couldn't immediately see which config space access function is
-used, but if you have 0x1000 bytes per bus, then the bus range matching
-a 0x2000 byte config space would be either <0x00 0x01> or <0x00 0x02>
-depending whether the root bus is part of that range.
-
-	Arnd
+-- 
+Kalle Valo
