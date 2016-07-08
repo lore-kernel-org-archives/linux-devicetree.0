@@ -1,75 +1,85 @@
 From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v2] clkdev: add devm_of_clk_get()
-Date: Thu, 07 Jul 2016 18:30:09 -0700
-Message-ID: <146794140875.73491.7115209079607438738@resonance>
-References: <87wpl2yyuw.wl%kuninori.morimoto.gx@renesas.com>
- <146785219147.73491.2827268663638530377@resonance>
- <87ziptixv7.wl%kuninori.morimoto.gx@renesas.com>
- <20160707122636.GP1041@n2100.armlinux.org.uk>
- <8760shgfzu.wl%kuninori.morimoto.gx@renesas.com>
+Subject: Re: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding of
+ STiH4xx platforms
+Date: Thu, 07 Jul 2016 18:43:33 -0700
+Message-ID: <146794221378.73491.2803164814485320331@resonance>
+References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
+ <20160619150458.GA26824@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <8760shgfzu.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Linux-Kernel <linux-kernel@vger.kernel.org>, Linux-DT <devicetree@vger.kernel.org>, Linux-ARM <linux-arm-kernel@lists.infradead.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-clk@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160619150458.GA26824@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Peter Gri
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kuninori Morimoto (2016-07-07 17:03:00)
+Quoting Rob Herring (2016-06-19 08:04:58)
+> On Thu, Jun 16, 2016 at 11:20:22AM +0200, Gabriel Fernandez wrote:
+> > This patch reworks the clock binding to avoid too much detail in DT.
+> > Now we have only compatible string per type of clock
+> > (remark from Rob https://lkml.org/lkml/2016/5/25/492)
+> >
 > 
-> Hi Russell
-> 
-> > > > > +struct clk *devm_of_clk_get(struct device *dev,
-> > > > > +                           struct device_node *np, int index)
-> > > > 
-> > > > Any reason not to use devm_clk_get? Why do we need this helper?
-> > > 
-> > > Because of_clk_get() can parse "clocks", "#clock-cells" on DT.
-> > 
-> > clk_get() should also work just fine.  clk_get() uses
-> > __of_clk_get_by_name() internally, which uses "clock-names" to
-> > locate the index if a connection id is given.  of_clk_get() allows
-> > lookup of a clock by index only, omitting the name, which means
-> > you need to coordinate the order of clocks in DT with the order
-> > that the driver wants... which sounds error prone to me.
-> 
-> Thanks.
-> 
-> But, I have 1 issue on [devm_]clk_get().
-> It can't select device_node on [devm_]clk_get(), it uses dev->of_node directly.
-> 
-> struct clk *clk_get(struct device *dev, const char *con_id)
-> {
->         ...
->         if (dev) {
->                 clk = __of_clk_get_by_name(dev->of_node, dev_id, con_id);
->                                            ~~~~~~~~~~~~
->                 ...
->         }
-> }
-> 
-> I would like to select specific device_node.
+> I have no idea what the clock trees and clock controller in these chips 
+> look like, so it's hard to say if the changes here are good. It still 
+> looks like things are somewhat fine grained clocks in DT. I'll leave 
+> it up to the platform maintainers to decide...
 
-Do you have access to the struct device that you want to target? Can you
-pass that device into either clk_get or devm_clk_get?
+Is this series breaking ABI? If yes, why not do what Maxime did for the
+Allwinner/sunxi clocks and just fully convert over to a
+one-node-per-clock-controller binding? This one-node-per-clock stuff is
+pretty unfortunate, and if we're deprecating platforms (patch #1) then
+now might be a good time to re-evaluate the whole thing.
 
 Regards,
 Mike
 
+>  
+> > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> > ---
+> >  .../devicetree/bindings/clock/st/st,clkgen-mux.txt |  2 +-
+> >  .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
+> >  .../devicetree/bindings/clock/st/st,clkgen.txt     |  2 +-
+> >  .../devicetree/bindings/clock/st/st,quadfs.txt     |  6 +--
+> >  drivers/clk/st/clkgen-fsyn.c                       | 41 ++++++--------
+> >  drivers/clk/st/clkgen-mux.c                        | 28 ++++------
+> >  drivers/clk/st/clkgen-pll.c                        | 62 ++++++++++------------
+> >  7 files changed, 65 insertions(+), 87 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> > index 4d277d6..9a46cb1d7 100644
+> > --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> > +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> > @@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
+> >  Required properties:
+> >  
+> >  - compatible : shall be:
+> > -     "st,stih407-clkgen-a9-mux",     "st,clkgen-mux"
+> > +     "st,stih407-clkgen-a9-mux"
+> >  
+> >  - #clock-cells : from common clock binding; shall be set to 0.
+> >  
+> > diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> > index c9fd674..be0b043 100644
+> > --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> > +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> > @@ -9,11 +9,10 @@ Base address is located to the parent node. See clock binding[2]
+> >  Required properties:
+> >  
+> >  - compatible : shall be:
+> > -     "st,stih407-plls-c32-a0",       "st,clkgen-plls-c32"
+> > -     "st,stih407-plls-c32-a9",       "st,clkgen-plls-c32"
+> > -     "sst,plls-c32-cx_0",            "st,clkgen-plls-c32"
+> > -     "sst,plls-c32-cx_1",            "st,clkgen-plls-c32"
+> > -     "st,stih418-plls-c28-a9",       "st,clkgen-plls-c32"
 > 
->         sound_soc {
->                 ...
->                 cpu {
->                         ...
-> =>                      clocks = <&xxx>;
->                 };
+> > +     "st,clkgen-pll0"
+> > +     "st,clkgen-pll0"
 > 
->                 codec {
->                         ...
-> =>                      clocks = <&xxx>;
->                 };
->         };
+> Repeated. Supposed to be 0 and 1? This seems a bit generic, too.
 > 
-> But, of_clk_get_by_name() / of_clk_get() doesn't have devm_xxx version
+> > +     "st,stih407-clkgen-plla9"
+> > +     "st,stih418-clkgen-plla9"
