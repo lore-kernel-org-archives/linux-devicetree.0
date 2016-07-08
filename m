@@ -1,53 +1,77 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: [PATCH v2 7/7] clk: exynos5433: remove CLK_IGNORE_UNUSED flag from SPI
- clocks
-Date: Fri, 08 Jul 2016 23:46:41 +0900
-Message-ID: <1467989201-14661-8-git-send-email-andi.shyti@samsung.com>
-References: <1467989201-14661-1-git-send-email-andi.shyti@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1467989201-14661-1-git-send-email-andi.shyti@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 1/8] arm64: mm: change IOMMU notifier action to attach
+ DMA ops
+Date: Fri, 8 Jul 2016 15:55:21 +0100
+Message-ID: <20160708145521.GD6493@arm.com>
+References: <cover.1467388950.git.robin.murphy@arm.com>
+ <06d430a86f5d7f461308a9278bf25f40fb50d93c.1467388950.git.robin.murphy@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <06d430a86f5d7f461308a9278bf25f40fb50d93c.1467388950.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Because the Exynos5433 SPI driver supports the ioclk handling and
-the following patch:
+Hi Catalin,
 
-  http://marc.info/?l=linux-kernel&m=146787645626318&w=2
+On Fri, Jul 01, 2016 at 05:50:10PM +0100, Robin Murphy wrote:
+> From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> 
+> Current bus notifier in ARM64 (__iommu_attach_notifier)
+> attempts to attach dma_ops to a device on BUS_NOTIFY_ADD_DEVICE
+> action notification.
+> 
+> This will cause issues on ACPI based systems, where PCI devices
+> can be added before the IOMMUs the devices are attached to
+> had a chance to be probed, causing failures on attempts to
+> attach dma_ops in that the domain for the respective IOMMU
+> may not be set-up yet by the time the bus notifier is run.
+> 
+> Devices dma_ops do not require to be set-up till the matching
+> device drivers are probed. This means that instead of running
+> the notifier attaching dma_ops to devices (__iommu_attach_notifier)
+> on BUS_NOTIFY_ADD_DEVICE action, it can be run just before the
+> device driver is bound to the device in question (on action
+> BUS_NOTIFY_BIND_DRIVER) so that it is certain that its IOMMU
+> group and domain are set-up accordingly at the time the
+> notifier is triggered.
+> 
+> This patch changes the notifier action upon which dma_ops
+> are attached to devices and defer it to driver binding time,
+> so that IOMMU devices have a chance to be probed and to register
+> their bus notifiers before the dma_ops attach sequence for a
+> device is actually carried out.
+> 
+> As a result we also no longer need worry about racing with
+> iommu_bus_notifier(), or about retrying the queue in case devices
+> were added too early on DT-based systems, so clean up the notifier
+> itself plus the additional workaround from 722ec35f7fae ("arm64:
+> dma-mapping: fix handling of devices registered before arch_initcall")
+> 
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> [rm: get rid of other now-redundant bits]
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+> 
+> v4: No change.
+> 
+>  arch/arm64/mm/dma-mapping.c | 22 +++++-----------------
+>  1 file changed, 5 insertions(+), 17 deletions(-)
 
-fixes a synchronus abort issue, none of the SPI clocks require
-any critical handling: remove, then, the CLK_IGNORE_UNUSED flag
-for the SPI related clocks.
+Whilst this series is unlikely to make it for 4.8, this patch is
+independent and it would be good to see it queued in the arm64 tree for
+4.8, if possible. It shouldn't change anything on its own, but it's a
+prerequisite for this series and anything on the IORT side from Lorenzo,
+so it makes sense to me to keep the delta down if we can.
 
-Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- drivers/clk/samsung/clk-exynos5433.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index c3a5318..fb19525 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -1661,8 +1661,7 @@ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
- 	GATE(CLK_SCLK_IOCLK_SPI2, "sclk_ioclk_spi2", "ioclk_spi2_clk_in",
- 			ENABLE_SCLK_PERIC, 13, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_IOCLK_SPI1, "sclk_ioclk_spi1", "ioclk_spi1_clk_in",
--			ENABLE_SCLK_PERIC, 12,
--			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
-+			ENABLE_SCLK_PERIC, 12, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_IOCLK_SPI0, "sclk_ioclk_spi0", "ioclk_spi0_clk_in",
- 			ENABLE_SCLK_PERIC, 11, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_IOCLK_I2S1_BCLK, "sclk_ioclk_i2s1_bclk",
-@@ -1677,7 +1676,7 @@ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
- 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
- 			5, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
--			4, CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
-+			4, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_SPI0, "sclk_spi0", "sclk_spi0_peric", ENABLE_SCLK_PERIC,
- 			3, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_UART2, "sclk_uart2", "sclk_uart2_peric",
--- 
-2.8.1
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
