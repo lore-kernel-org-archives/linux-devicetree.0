@@ -1,44 +1,55 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: How do /dev/ttyS* devices get assigned from the device tree?
-Date: Sat, 9 Jul 2016 22:37:31 +0300
-Message-ID: <20160709193731.GA3870@tarshish>
-References: <CAF_dkJBmgxyQLNtJqXWyQtzsmcK3QCqjYugsMG7MXGUdjL6nvA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAF_dkJBmgxyQLNtJqXWyQtzsmcK3QCqjYugsMG7MXGUdjL6nvA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Patrick Doyle <wpdster@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 3/4] ARM: dts: sun8i: Add ethernet1 alias to Orange Pi 2 dts
+Date: Sat,  9 Jul 2016 22:21:57 +0200
+Message-ID: <1468095718-18515-3-git-send-email-hdegoede@redhat.com>
+References: <1468095718-18515-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468095718-18515-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Patrick,
+This will allow u-boot to fill in a mac-address for Orange Pi 2
+variants which use an sdio wifi without an eeprom for the mac.
 
-On Fri, Jul 08, 2016 at 12:58:06PM -0400, Patrick Doyle wrote:
-> Do they show up numerically in the sequence in which they appear in
-> the device tree?
-> 
-> Where could I learn more?
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Adding devicetree ML to Cc.
-
-You may use an "aliases" node for that, if your UART driver supports that. The 
-8250/16550 driver does. See arch/arm/boot/dts/aspeed-ast2500-evb.dts, for 
-example. Note though that the use of aliases for this purpose is contentious.
-
-baruch
-
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+index f93f5d1..f89fe00 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+@@ -54,6 +54,8 @@
+ 
+ 	aliases {
+ 		serial0 = &uart0;
++		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
++		ethernet1 = &rtl8189;
+ 	};
+ 
+ 	chosen {
+@@ -131,6 +133,14 @@
+ 	bus-width = <4>;
+ 	non-removable;
+ 	status = "okay";
++
++	/*
++	 * Explicitly define the sdio device, so that we can add an ethernet
++	 * alias for it (which e.g. makes u-boot set a mac-address).
++	 */
++	rtl8189: sdio_wifi@1 {
++		reg = <1>;
++	};
+ };
+ 
+ &pio {
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
