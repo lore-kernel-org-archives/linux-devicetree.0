@@ -1,134 +1,197 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: [PATCH V2 04/10] firmware: tegra: add IVC library
-Date: Sat, 9 Jul 2016 19:45:07 -0400
-Message-ID: <CAP=VYLoX5CkXGFrXtMFYYuJUs_+_9zzzus1o+_7twvf4rkU_Og@mail.gmail.com>
-References: <20160705090431.5852-1-josephl@nvidia.com> <20160705090431.5852-5-josephl@nvidia.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] usb: dwc3: add phyif_utmi_quirk
+Date: Sun, 10 Jul 2016 01:47:48 +0200
+Message-ID: <4648785.SDx8KzkhqW@phil>
+References: <1467860066-15142-1-git-send-email-william.wu@rock-chips.com> <87d1moi7g7.fsf@linux.intel.com> <f5daa697-3125-cfbf-7318-d4900f666362@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160705090431.5852-5-josephl@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joseph Lo <josephl@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, linux-tegra@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Matthew Longnecker <MLongnecker@nvidia.com>, devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, LKML <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f5daa697-3125-cfbf-7318-d4900f666362-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "William.wu" <William.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 5, 2016 at 5:04 AM, Joseph Lo <josephl@nvidia.com> wrote:
-> The Inter-VM communication (IVC) is a communication protocol, which is
-> designed for interprocessor communication (IPC) or the communication
-> between the hypervisor and the virtual machine with a guest OS on it. So
-> it can be translated as inter-virtual memory or inter-virtual machine
-> communication. The message channels are maintained on the DRAM or SRAM
-> and the data coherency should be considered. Or the data could be
-> corrupted or out of date when the remote client checking it.
->
-> Inside the IVC, it maintains memory-based descriptors for the TX/RX
-> channels and the coherency issue of the counter and payloads. So the
-> clients can use it to send/receive messages to/from remote ones.
->
-> We introduce it as a library for the firmware drivers, which can use it
-> for IPC.
->
-> Based-on-the-work-by:
-> Peter Newman <pnewman@nvidia.com>
->
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> ---
-> Changes in V2:
-> - None
-> ---
->  drivers/firmware/Kconfig        |   1 +
->  drivers/firmware/Makefile       |   1 +
->  drivers/firmware/tegra/Kconfig  |  13 +
->  drivers/firmware/tegra/Makefile |   1 +
->  drivers/firmware/tegra/ivc.c    | 659 ++++++++++++++++++++++++++++++++++++++++
->  include/soc/tegra/ivc.h         | 102 +++++++
->  6 files changed, 777 insertions(+)
->  create mode 100644 drivers/firmware/tegra/Kconfig
->  create mode 100644 drivers/firmware/tegra/Makefile
->  create mode 100644 drivers/firmware/tegra/ivc.c
->  create mode 100644 include/soc/tegra/ivc.h
->
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index 5e618058defe..bbd64ae8c4c6 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -200,5 +200,6 @@ config HAVE_ARM_SMCCC
->  source "drivers/firmware/broadcom/Kconfig"
->  source "drivers/firmware/google/Kconfig"
->  source "drivers/firmware/efi/Kconfig"
-> +source "drivers/firmware/tegra/Kconfig"
->
->  endmenu
-> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-> index 474bada56fcd..9a4df8171cc4 100644
-> --- a/drivers/firmware/Makefile
-> +++ b/drivers/firmware/Makefile
-> @@ -24,3 +24,4 @@ obj-y                         += broadcom/
->  obj-$(CONFIG_GOOGLE_FIRMWARE)  += google/
->  obj-$(CONFIG_EFI)              += efi/
->  obj-$(CONFIG_UEFI_CPER)                += efi/
-> +obj-y                          += tegra/
-> diff --git a/drivers/firmware/tegra/Kconfig b/drivers/firmware/tegra/Kconfig
-> new file mode 100644
-> index 000000000000..1fa3e4e136a5
-> --- /dev/null
-> +++ b/drivers/firmware/tegra/Kconfig
-> @@ -0,0 +1,13 @@
-> +menu "Tegra firmware driver"
-> +
-> +config TEGRA_IVC
-> +       bool "Tegra IVC protocol"
+Am Samstag, 9. Juli 2016, 11:38:00 schrieb William.wu:
+> Dear Heiko & Balbi=EF=BC=8C
+>=20
+> On 2016/7/8 21:29, Felipe Balbi wrote:
+> > Hi,
+> >=20
+> > Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> writes:
+> >> Am Donnerstag, 7. Juli 2016, 10:54:24 schrieb William Wu:
+> >>> Add a quirk to configure the core to support the
+> >>> UTMI+ PHY with an 8- or 16-bit interface. UTMI+ PHY
+> >>> interface is hardware property, and it's platform
+> >>> dependent. Normall, the PHYIf can be configured
+> >>> during coreconsultant. But for some specific usb
+> >>> cores(e.g. rk3399 soc dwc3), the default PHYIf
+> >>> configuration value is fault, so we need to
+> >>> reconfigure it by software.
+> >>>=20
+> >>> And refer to the dwc3 databook, the GUSB2PHYCFG.USBTRDTIM
+> >>> must be set to the corresponding value according to
+> >>> the UTMI+ PHY interface.
+> >>>=20
+> >>> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >>> ---
+> >>=20
+> >> [...]
+> >>=20
+> >>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+> >>> b/Documentation/devicetree/bindings/usb/dwc3.txt index
+> >>> 020b0e9..8d7317d
+> >>> 100644
+> >>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> >>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> >>>=20
+> >>> @@ -42,6 +42,10 @@ Optional properties:
+> >>>    - snps,dis-u2-freeclk-exists-quirk: when set, clear the
+> >>>=20
+> >>> u2_freeclk_exists in GUSB2PHYCFG, specify that USB2 PHY doesn't
+> >>> provide
+> >>>=20
+> >>>   			a free-running PHY clock.
+> >>>=20
+> >>> + - snps,phyif-utmi-quirk: when set core will set phyif UTMI+
+> >>> interface.
+> >>> + - snps,phyif-utmi: the value to configure the core to support a
+> >>> UTMI+
+> >>> PHY +			with an 8- or 16-bit interface. Value 0=20
+select 8-bit
+> >>> +			interface, value 1 select 16-bit interface.
+> >>=20
+> >> maybe
+> >>=20
+> >> 	snps,phyif-utmi-width =3D <8> or <16>;
+> >>=20
+> >> devicetree is about describing the hardware, not the things that g=
+et
+> >> written to registers :-) . The conversion from the described width=
+ to
+> >> the register value can easily be done in the driver.
+>=20
+> Thanks for your suggestion:-)
+> Yes=EF=BC=8C =E2=80=9Csnps,phyif-utmi-width =3D <8> or <16>=E2=80=9D =
+is much clearer and easier to
+> understand.
+> And I have considered the same dts property for phyif-utmi, but I hav=
+e
+> no good idea about
+> the conversion from described width to the registers value for the ti=
+me
+> being.
+>=20
+> About phyif utmi width configuration=EF=BC=8C we need to set two plac=
+es in
+> GUSB2PHYCFG register=EF=BC=8C
+> according to DWC3 USB3.0 controller databook version3.00a=EF=BC=8C6.3=
+=2E46
+> GUSB2PHYCFG
+>=20
+> ---------------------------------------------------------------------=
+-----
+> -------------------- Bits   |  Name                 |     Description
+> ---------------------------------------------------------------------=
+-----
+> -------------------- 13:10  |   USBTRDTIM       |     Sets the turnar=
+ound
+> time in PHY clocks.
+>              |                            |     4'h5: When the MAC
+>=20
+> interface is 16-bit UTMI+
+>=20
+>              |                            |     4'h9: When the MAC
+>=20
+> interface is 8-bit UTMI+/ULPI.
+> ---------------------------------------------------------------------=
+-----
+> -------------------- 3        |   PHYIF                |    If UTMI+ =
+is
+> selected, the application uses this bit to configure
+>=20
+>              |                            |    core to support a UTMI=
++
+>=20
+> PHY with an 8- or 16-bit interface.
+>=20
+>              |                            |    1'b0: 8 bits
+>              |                            |    1'b1: 16 bits
+>=20
+> ---------------------------------------------------------------------=
+-----
+> --------------------
+>=20
+> And I think maybe I can try to do this:
+> change it in dts:
+>          snps,phyif-utmi-width =3D <8> or <16>;
+>=20
+> Then convert to register value like this=EF=BC=9A
+>         device_property_read_u8(dev, "snps,phyif-utmi-width",
+>                                               &phyif_utmi_width);
+>=20
+>         dwc->phyif_utmi =3D phyif_utmi_width >> 4;
+>=20
+>   Ater the conversion=EF=BC=8C dwc->phyif_utmi value 0 means 8 bits, =
+value 1
+> means 16 bits,
+>   and it's easier for us to config GUSB2PHYCFG.
+>=20
+> Is it OK?
 
-If this driver is not tristate, then why does the driver include the
-module.h header below?
+or you could just store the actual width value read from the dts and ma=
+ke=20
+the core handle accordingly, making everything a bit more explicit.
 
-> +       depends on ARCH_TEGRA
-> +       help
-> +         IVC (Inter-VM Communication) protocol is part of the IPC
-> +         (Inter Processor Communication) framework on Tegra. It maintains the
-> +         data and the different commuication channels in SysRAM or RAM and
-> +         keeps the content is synchronization between host CPU and remote
-> +         processors.
-> +
-> +endmenu
-> diff --git a/drivers/firmware/tegra/Makefile b/drivers/firmware/tegra/Makefile
-> new file mode 100644
-> index 000000000000..92e2153e8173
-> --- /dev/null
-> +++ b/drivers/firmware/tegra/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_TEGRA_IVC)                += ivc.o
-> diff --git a/drivers/firmware/tegra/ivc.c b/drivers/firmware/tegra/ivc.c
-> new file mode 100644
-> index 000000000000..3e736bb9915a
-> --- /dev/null
-> +++ b/drivers/firmware/tegra/ivc.c
-> @@ -0,0 +1,659 @@
-> +/*
-> + * Copyright (c) 2014-2016, NVIDIA CORPORATION.  All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + */
-> +
-> +#include <linux/module.h>
- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+I guess personally I'd do something like:
 
-I'm sure it "works" since module.h includes nearly everything else,
-but that is less than ideal for exactly the same reason.
+make dwc->phyif_utmi a regular unsigned int
 
-Thanks,
-Paul.
+in probe:
+      	ret =3D device_property_read_u8(dev, "snps,phyif-utmi-width",
+                                              &dwc->phyif_utmi);
+	if (ret < 0) {
+		dwc->phyif_utmi =3D 0;
+	else if (dwc->phyif_utmi !=3D 16 && dwc->phyif_utmi !=3D 8) {
+		dev_err(dev, "unsupported utmi interface width %d\n",
+			dwc->phyif_utmi);
+		return -EINVAL;
+	}
+
+
+when setting your GUSB2PHYCFG register:
+
+       if (dwc->phyif_utmi > 0) {
+               reg &=3D ~(DWC3_GUSB2PHYCFG_PHYIF_MASK |
+                      DWC3_GUSB2PHYCFG_USBTRDTIM_MASK);
+               usbtrdtim =3D (dwc->phyif_utmi =3D=3D 16) ? USBTRDTIM_UT=
+MI_16_BIT :
+                           USBTRDTIM_UTMI_8_BIT;
+		phyif =3D (dwc->phyif_utmi =3D=3D 16) ? 1 : 0;
+               reg |=3D DWC3_GUSB2PHYCFG_PHYIF(phyif) |
+                      DWC3_GUSB2PHYCFG_USBTRDTIM(usbtrdtim) |
+       }
+
+
+> >> Also I don't think you need two properties for this. If the
+> >> snps,phyif-utmi property is specified it indicates that you want t=
+o
+> >> manually set the width and if it is absent you want to use the IC
+> >> default. All functions reading property-values indicate if the
+> >> property is missing.
+>=20
+> Ah, it seems very good to me. One dts property "snps,phyif-utmi" can =
+help
+> to reconfig phyif utmi width. And it seems that Felipe likes it very =
+much
+> too. :-D
+
+yes, but please name it snps,phyif-utmi-width :-)
+
+
+Heiko
 --
-
-> +
-> +#include <soc/tegra/ivc.h>
-> +
-> +#define IVC_ALIGN 64
-> +
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
