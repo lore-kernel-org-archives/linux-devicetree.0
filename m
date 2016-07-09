@@ -1,54 +1,88 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v9 01/10] clk: fix initial state of critical clock's
- parents
-Date: Fri, 8 Jul 2016 17:46:43 -0700
-Message-ID: <57804973.4050306@codeaurora.org>
-References: <1466581229-2342-1-git-send-email-erin.lo@mediatek.com>
- <1466581229-2342-2-git-send-email-erin.lo@mediatek.com>
- <20160702012140.GB17071@codeaurora.org> <1467604308.26485.4.camel@mtksdaap41>
- <146802073038.73491.6675612765998057903@resonance>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v3 13/14] clk: sunxi-ng: Add H3 clocks
+Date: Fri, 08 Jul 2016 18:17:16 -0700
+Message-ID: <146802703641.73491.4992163597821488987@resonance>
+References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
+ <20160629190535.11855-14-maxime.ripard@free-electrons.com>
+ <146785878822.73491.15164592643568518865@resonance>
+ <20160708213506.GD4522@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <146802073038.73491.6675612765998057903@resonance>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>
-Cc: Erin Lo <erin.lo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160708213506.GD4522@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, devicetree@vger.kernel.org, Jean-Francois Moine <moinejf@free.fr>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/2016 04:32 PM, Michael Turquette wrote:
-> ---
->  drivers/clk/clk.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 820a939fb6bb..70efe4c4e0cc 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -2449,8 +2449,14 @@ static int __clk_core_init(struct clk_core *core)
->  	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
->  		struct clk_core *parent = __clk_init_parent(orphan);
->  
-> -		if (parent)
-> -			clk_core_reparent(orphan, parent);
-> +		/*
-> +		 * we could call __clk_set_parent, but that would result in a
-> +		 * reducant call to the .set_rate op, if it exists
+Quoting Maxime Ripard (2016-07-08 14:35:06)
+> Hi Mike,
+> 
+> On Wed, Jul 06, 2016 at 07:33:08PM -0700, Michael Turquette wrote:
+> > Hi Maxime,
+> > 
+> > Quoting Maxime Ripard (2016-06-29 12:05:34)
+> > > +static void __init sun8i_h3_ccu_setup(struct device_node *node)
+> > > +{
+> > > +       void __iomem *reg;
+> > > +       u32 val;
+> > > +
+> > > +       reg = of_io_request_and_map(node, 0, of_node_full_name(node));
+> > > +       if (IS_ERR(reg)) {
+> > > +               pr_err("%s: Could not map the clock registers\n",
+> > > +                      of_node_full_name(node));
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       /* Force the PLL-Audio-1x divider to 4 */
+> > > +       val = readl(reg + SUN8I_H3_PLL_AUDIO_REG);
+> > > +       val &= ~GENMASK(4, 0);
+> > > +       writel(val | 3, reg + SUN8I_H3_PLL_AUDIO_REG);
+> > > +
+> > > +       sunxi_ccu_probe(node, reg, &sun8i_h3_ccu_desc);
+> > > +}
+> > > +CLK_OF_DECLARE(sun8i_h3_ccu, "allwinner,sun8i-h3-ccu",
+> > > +              sun8i_h3_ccu_setup);
+> > 
+> > There are several examples of drivers that split the clocks between
+> > "early" CLK_OF_DECLARE clocks and "late" module clocks. If you really
+> > need early clocks (which is less likely on a 64-bit platform with
+> > architected timers), it would be nice to pair that with a proper
+> > platform_driver (using builtin_platform_driver most likely).
+> 
+> I think we discussed that already, but yeah, we do have timers that
+> are not the architected ones (and this is a ARMv7 platform). I have
+> the feeling that splitting the two doesn't really bring any benefit,
+> but complexify a lot the driver.
 
-Did you mean .set_parent op?
+Cool. I've pushed patches 1-13 to the clk tree under a shared, immutable
+branch: clk-sunxi-ng
 
-> +		 */
-> +		if (parent) {
-> +			__clk_set_parent_before(orphan, parent);
-> +			__clk_set_parent_after(orphan, parent, NULL);
-> +		}
->  	}
->  
->  	/*
+I've merged this branch into clk-next to get some soak testing.
 
+I did not merge patch #14. Feel free to add my reviewed-by to that
+patch.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Were you going to spin another version? If so I can replace v3 with v4
+when it is ready. Thanks again for your hard work on this! Very happy to
+see the binding be reworked :-)
 
+Regards,
+Mike
+
+> 
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
