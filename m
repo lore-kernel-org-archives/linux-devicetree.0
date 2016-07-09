@@ -1,98 +1,224 @@
-From: Wan Zongshun <vw@iommu.org>
-Subject: Re: [PATCH 4/6] irqchip: add irqchip driver for nuc900
-Date: Sat, 9 Jul 2016 11:25:19 +0800
-Message-ID: <57806E9F.3020407@iommu.org>
-References: <1466851042-22239-1-git-send-email-vw@iommu.org>
- <1466851042-22239-5-git-send-email-vw@iommu.org> <8706947.5rzUDVsB2F@wuerfel>
+From: "William.wu" <William.wu@rock-chips.com>
+Subject: Re: [PATCH v6 3/5] usb: dwc3: add phyif_utmi_quirk
+Date: Sat, 9 Jul 2016 11:38:00 +0800
+Message-ID: <f5daa697-3125-cfbf-7318-d4900f666362@rock-chips.com>
+References: <1467860066-15142-1-git-send-email-william.wu@rock-chips.com>
+ <1467860066-15142-4-git-send-email-william.wu@rock-chips.com>
+ <2213342.0Nx5tnEW8p@phil> <87d1moi7g7.fsf@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8706947.5rzUDVsB2F@wuerfel>
+In-Reply-To: <87d1moi7g7.fsf@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+To: Felipe Balbi <balbi@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: gregkh@linuxfoundation.org, linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Dear Heiko & Balbi=EF=BC=8C
 
 
-On 2016=E5=B9=B406=E6=9C=8829=E6=97=A5 23:27, Arnd Bergmann wrote:
-> On Saturday, June 25, 2016 6:37:20 PM CEST Wan Zongshun wrote:
->> +#define IRQ_WDT		W90X900_IRQ(1)
->> +#define IRQ_WWDT	W90X900_IRQ(2)
->> +#define IRQ_LVD		W90X900_IRQ(3)
->> +#define IRQ_EXT0	W90X900_IRQ(4)
->> +#define IRQ_EXT1	W90X900_IRQ(5)
->> +#define IRQ_EXT2	W90X900_IRQ(6)
->> +#define IRQ_EXT3	W90X900_IRQ(7)
->> +#define IRQ_EXT4	W90X900_IRQ(8)
->> +#define IRQ_EXT5	W90X900_IRQ(9)
->> +#define IRQ_EXT6	W90X900_IRQ(10)
+On 2016/7/8 21:29, Felipe Balbi wrote:
+> Hi,
 >
-> I'd suggest dropping the list, the contents are now in the dts.
+> Heiko Stuebner <heiko@sntech.de> writes:
+>> Am Donnerstag, 7. Juli 2016, 10:54:24 schrieb William Wu:
+>>> Add a quirk to configure the core to support the
+>>> UTMI+ PHY with an 8- or 16-bit interface. UTMI+ PHY
+>>> interface is hardware property, and it's platform
+>>> dependent. Normall, the PHYIf can be configured
+>>> during coreconsultant. But for some specific usb
+>>> cores(e.g. rk3399 soc dwc3), the default PHYIf
+>>> configuration value is fault, so we need to
+>>> reconfigure it by software.
+>>>
+>>> And refer to the dwc3 databook, the GUSB2PHYCFG.USBTRDTIM
+>>> must be set to the corresponding value according to
+>>> the UTMI+ PHY interface.
+>>>
+>>> Signed-off-by: William Wu <william.wu@rock-chips.com>
+>>> ---
+>> [...]
+>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> b/Documentation/devicetree/bindings/usb/dwc3.txt index 020b0e9..8d7=
+317d
+>>> 100644
+>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> @@ -42,6 +42,10 @@ Optional properties:
+>>>    - snps,dis-u2-freeclk-exists-quirk: when set, clear the
+>>> u2_freeclk_exists in GUSB2PHYCFG, specify that USB2 PHY doesn't pro=
+vide
+>>>   			a free-running PHY clock.
+>>> + - snps,phyif-utmi-quirk: when set core will set phyif UTMI+ inter=
+face.
+>>> + - snps,phyif-utmi: the value to configure the core to support a U=
+TMI+
+>>> PHY +			with an 8- or 16-bit interface. Value 0 select 8-bit
+>>> +			interface, value 1 select 16-bit interface.
+>> maybe
+>> 	snps,phyif-utmi-width =3D <8> or <16>;
+>>
+>> devicetree is about describing the hardware, not the things that get=
+ written
+>> to registers :-) . The conversion from the described width to the re=
+gister
+>> value can easily be done in the driver.
+Thanks for your suggestion:-)
+Yes=EF=BC=8C =E2=80=9Csnps,phyif-utmi-width =3D <8> or <16>=E2=80=9D is=
+ much clearer and easier to=20
+understand.
+And I have considered the same dts property for phyif-utmi, but I have=20
+no good idea about
+the conversion from described width to the registers value for the time=
+=20
+being.
 
-Arnd, I will drop this file later, since old w90x900 plat still need it=
-=2E
-but I will remove the Macros related to nuc970 and avoid nuc970=20
-interrupt using those Macro.
+About phyif utmi width configuration=EF=BC=8C we need to set two places=
+ in=20
+GUSB2PHYCFG register=EF=BC=8C
+according to DWC3 USB3.0 controller databook version3.00a=EF=BC=8C6.3.4=
+6=20
+GUSB2PHYCFG
 
-But I still need hack this irqs.h like below, since here NR_IRQS define=
-d=20
-and it is need for nuc970 irqchip driver.
+-----------------------------------------------------------------------=
+-----------------------
+     Bits   |  Name                 |     Description
+-----------------------------------------------------------------------=
+-----------------------
+   13:10  |   USBTRDTIM       |     Sets the turnaround time in PHY clo=
+cks.
+             |                            |     4'h5: When the MAC=20
+interface is 16-bit UTMI+
+             |                            |     4'h9: When the MAC=20
+interface is 8-bit UTMI+/ULPI.
+-----------------------------------------------------------------------=
+-----------------------
+   3        |   PHYIF                |    If UTMI+ is selected, the=20
+application uses this bit to configure
+             |                            |    core to support a UTMI+=20
+PHY with an 8- or 16-bit interface.
+             |                            |    1'b0: 8 bits
+             |                            |    1'b1: 16 bits
+-----------------------------------------------------------------------=
+-----------------------
 
-#if !defined(CONFIG_SOC_NUC900)
-#define NR_IRQS		(IRQ_ADC+1)
-#else
-#define NR_IRQS		62
-#endif
+And I think maybe I can try to do this:
+change it in dts:
+         snps,phyif-utmi-width =3D <8> or <16>;
 
->
->> diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h b/=
-arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
->> new file mode 100644
->> index 0000000..7a77016
->> --- /dev/null
->> +++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
->> @@ -0,0 +1,53 @@
->> +#ifndef __ASM_ARCH_REGS_AIC_H
->> +#define __ASM_ARCH_REGS_AIC_H
->> +
->> +/*NUC970 AIC regs*/
->> +
->> +#define	REG_AIC_SCR1	0x00
->> +#define	REG_AIC_SCR2	0x04
->> +#define	REG_AIC_SCR3	0x08
->> +#define	REG_AIC_SCR4	0x0C
->> +#define	REG_AIC_SCR5	0x10
->
-> And like the clk driver, these should all be in the irqchip driver in=
-stead
-> of a separate header.
->
->> +
->> +static void __iomem *aic_base;
->> +static struct irq_domain *aic_domain;
->> +#define MAKE_HWIRQ(irqnum)	(irqnum)
->
-> The macro appears to be unused.
->
->> +static void nuc970_irq_mask(struct irq_data *d)
->> +{
->> +	if (d->irq < 32)
->> +		__raw_writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
->> +	else
->> +		__raw_writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
->> +}
->
-> writel()
->
-> 	Arnd
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+Then convert to register value like this=EF=BC=9A
+        device_property_read_u8(dev, "snps,phyif-utmi-width",
+                                              &phyif_utmi_width);
+
+        dwc->phyif_utmi =3D phyif_utmi_width >> 4;
+
+  Ater the conversion=EF=BC=8C dwc->phyif_utmi value 0 means 8 bits, va=
+lue 1=20
+means 16 bits,
+  and it's easier for us to config GUSB2PHYCFG.
+
+Is it OK?
+
+>>
+>>
+>> Also I don't think you need two properties for this. If the snps,phy=
+if-utmi
+>> property is specified it indicates that you want to manually set the=
+ width
+>> and if it is absent you want to use the IC default. All functions re=
+ading
+>> property-values indicate if the property is missing.
+Ah, it seems very good to me. One dts property "snps,phyif-utmi" can he=
+lp to
+reconfig phyif utmi width. And it seems that Felipe likes it very much=20
+too. :-D
+>> But it looks like there is already a precendence in
+>> snps,tx_de_emphasis(_quirk), so maybe Felipe has a different opinion=
+ here?
+>>
+>>
+>>
+>>>    - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+>>>   			utmi_l1_suspend_n, false when asserts utmi_sleep_n
+>>>    - snps,hird-threshold: HIRD threshold
+>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>> index 0b7bfd2..94036b1 100644
+>>> --- a/drivers/usb/dwc3/core.c
+>>> +++ b/drivers/usb/dwc3/core.c
+>>> @@ -408,6 +408,7 @@ static void dwc3_cache_hwparams(struct dwc3 *dw=
+c)
+>>>   static int dwc3_phy_setup(struct dwc3 *dwc)
+>>>   {
+>>>   	u32 reg;
+>>> +	u32 usbtrdtim;
+>>>   	int ret;
+>>>
+>>>   	reg =3D dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
+>>> @@ -503,6 +504,15 @@ static int dwc3_phy_setup(struct dwc3 *dwc)
+>>>   	if (dwc->dis_u2_freeclk_exists_quirk)
+>>>   		reg &=3D ~DWC3_GUSB2PHYCFG_U2_FREECLK_EXISTS;
+>>>
+>>> +	if (dwc->phyif_utmi_quirk) {
+>>> +		reg &=3D ~(DWC3_GUSB2PHYCFG_PHYIF_MASK |
+>>> +		       DWC3_GUSB2PHYCFG_USBTRDTIM_MASK);
+>>> +		usbtrdtim =3D dwc->phyif_utmi ? USBTRDTIM_UTMI_16_BIT :
+>>> +			    USBTRDTIM_UTMI_8_BIT;
+>>> +		reg |=3D DWC3_GUSB2PHYCFG_PHYIF(dwc->phyif_utmi) |
+>>> +		       DWC3_GUSB2PHYCFG_USBTRDTIM(usbtrdtim);
+>>> +	}
+>>> +
+>>>   	dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+>>>
+>>>   	return 0;
+>>> @@ -834,6 +844,7 @@ static int dwc3_probe(struct platform_device *p=
+dev)
+>>>   	struct resource		*res;
+>>>   	struct dwc3		*dwc;
+>>>   	u8			lpm_nyet_threshold;
+>>> +	u8			phyif_utmi;
+>>>   	u8			tx_de_emphasis;
+>>>   	u8			hird_threshold;
+>>>
+>>> @@ -880,6 +891,9 @@ static int dwc3_probe(struct platform_device *p=
+dev)
+>>>   	/* default to highest possible threshold */
+>>>   	lpm_nyet_threshold =3D 0xff;
+>>>
+>>> +	/* default to UTMI+ 8-bit interface */
+>>> +	phyif_utmi =3D 0;
+>>> +
+>>>   	/* default to -3.5dB de-emphasis */
+>>>   	tx_de_emphasis =3D 1;
+>>>
+>>> @@ -929,6 +943,10 @@ static int dwc3_probe(struct platform_device *=
+pdev)
+>>>   				"snps,dis_rxdet_inp3_quirk");
+>>>   	dwc->dis_u2_freeclk_exists_quirk =3D device_property_read_bool(d=
+ev,
+>>>   				"snps,dis-u2-freeclk-exists-quirk");
+>>> +	dwc->phyif_utmi_quirk =3D device_property_read_bool(dev,
+>>> +				"snps,phyif-utmi-quirk");
+>>> +	 device_property_read_u8(dev, "snps,phyif-utmi",
+>>> +				 &phyif_utmi);
+>>
+>> As described above device_property_read_u8 will return an error if t=
+he
+>> property is not present, so you could fill your dwc->phyif_utmi_quir=
+k from
+>> that:
+>>
+>> 	ret =3D device_property_read_u8(dev, "snps,phyif-utmi",
+>> 				 &phyif_utmi);
+>> 	dwc->phyif_utmi_quirk =3D (ret =3D=3D 0) ? true : false;
+> I like this much better :-) Unfortunately can't fix tx_deemphasis due=
+ to
+> backwards compatibility :-s
+I'll try to follow Heiko's suggestion and fix the dwc->phyif_utmi_quirk=
+=20
+next patch.
+
+Best regards,
+        William.wu
 >
