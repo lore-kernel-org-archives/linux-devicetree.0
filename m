@@ -1,59 +1,68 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v4 2/3] ath9k: add a helper to get the string representation of ath_bus_type
-Date: Sun, 10 Jul 2016 01:28:33 +0200
-Message-ID: <20160709232834.31654-3-martin.blumenstingl@googlemail.com>
-References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com>
- <20160709232834.31654-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160709232834.31654-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org
-Cc: mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: [PATCH v2 2/6] clk: mvebu: Add the xtal clock for Armada 3700 SoC
+Date: Sat, 9 Jul 2016 19:34:59 -0400
+Message-ID: <CAP=VYLoZdyqP7vLa_pCx3mNpFuYCRaNgkT-STtk571U0KAgdLw@mail.gmail.com>
+References: <1467931071-31004-1-git-send-email-gregory.clement@free-electrons.com>
+ <1467931071-31004-3-git-send-email-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1467931071-31004-3-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Terry Zhou <bjzhou@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-This can be used when the ath_bus_type has to be presented in a log
-message or firmware filename.
+On Thu, Jul 7, 2016 at 6:37 PM, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
+> This clock is the parent of all the Armada 3700 clocks. It is a fixed
+> rate clock which depends on the gpio configuration read when resetting
+> the SoC.
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  drivers/clk/mvebu/Kconfig            |  3 ++
+>  drivers/clk/mvebu/Makefile           |  1 +
+>  drivers/clk/mvebu/armada-37xx-xtal.c | 98 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 102 insertions(+)
+>  create mode 100644 drivers/clk/mvebu/armada-37xx-xtal.c
+>
+> diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
+> index 3165da77d525..fddc8ac5faff 100644
+> --- a/drivers/clk/mvebu/Kconfig
+> +++ b/drivers/clk/mvebu/Kconfig
+> @@ -24,6 +24,9 @@ config ARMADA_39X_CLK
+>         bool
+>         select MVEBU_CLK_COMMON
+>
+> +config ARMADA_37XX_CLK
+> +       bool
+> +
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- drivers/net/wireless/ath/ath.h  | 6 ++++++
- drivers/net/wireless/ath/main.c | 7 +++++++
- 2 files changed, 13 insertions(+)
+Since the driver is not tristate, can you please remove all modular
+references from it?   With the author and license etc. at the top you
+can just delete the last three lines, the DEVICE_TABLE and register
+with builtin_platform_driver, and then no need for module.h either.
 
-diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireless/ath/ath.h
-index da7a7c8..f3f2784 100644
---- a/drivers/net/wireless/ath/ath.h
-+++ b/drivers/net/wireless/ath/ath.h
-@@ -327,4 +327,10 @@ static inline const char *ath_opmode_to_string(enum nl80211_iftype opmode)
- }
- #endif
- 
-+extern const char *ath_bus_type_strings[];
-+static inline const char *ath_bus_type_to_string(enum ath_bus_type bustype)
-+{
-+	return ath_bus_type_strings[bustype];
-+}
-+
- #endif /* ATH_H */
-diff --git a/drivers/net/wireless/ath/main.c b/drivers/net/wireless/ath/main.c
-index 338d723..89f4b05 100644
---- a/drivers/net/wireless/ath/main.c
-+++ b/drivers/net/wireless/ath/main.c
-@@ -90,3 +90,10 @@ void ath_printk(const char *level, const struct ath_common* common,
- 	va_end(args);
- }
- EXPORT_SYMBOL(ath_printk);
-+
-+const char *ath_bus_type_strings[] = {
-+	[ATH_PCI] = "pci",
-+	[ATH_AHB] = "ahb",
-+	[ATH_USB] = "usb",
-+};
-+EXPORT_SYMBOL(ath_bus_type_strings);
--- 
-2.9.0
+Either that, or change it to a tristate, if that use case makes sense.
 
+Thanks,
+Paul.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+>  config ARMADA_XP_CLK
+>         bool
+>         select MVEBU_CLK_COMMON
+> diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
+> index 7172ef65693d..4257a36d0219 100644
+> --- a/drivers/clk/mvebu/Makefile
+> +++ b/drivers/clk/mvebu/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_ARMADA_370_CLK)    += armada-370.o
+>  obj-$(CONFIG_ARMADA_375_CLK)   += armada-375.o
+>  obj-$(CONFIG_ARMADA_38X_CLK)   += armada-38x.o
+>  obj-$(CONFIG_ARMADA_39X_CLK)   += armada-39x.o
+> +obj-$(CONFIG_ARMADA_37XX_CLK)  += armada-37xx-xtal.o
+>  obj-$(CONFIG_ARMADA_XP_
+
+[...]
