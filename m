@@ -1,88 +1,98 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v3 13/14] clk: sunxi-ng: Add H3 clocks
-Date: Fri, 08 Jul 2016 18:17:16 -0700
-Message-ID: <146802703641.73491.4992163597821488987@resonance>
-References: <20160629190535.11855-1-maxime.ripard@free-electrons.com>
- <20160629190535.11855-14-maxime.ripard@free-electrons.com>
- <146785878822.73491.15164592643568518865@resonance>
- <20160708213506.GD4522@lukather>
+From: Wan Zongshun <vw@iommu.org>
+Subject: Re: [PATCH 4/6] irqchip: add irqchip driver for nuc900
+Date: Sat, 9 Jul 2016 11:25:19 +0800
+Message-ID: <57806E9F.3020407@iommu.org>
+References: <1466851042-22239-1-git-send-email-vw@iommu.org>
+ <1466851042-22239-5-git-send-email-vw@iommu.org> <8706947.5rzUDVsB2F@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160708213506.GD4522@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, devicetree@vger.kernel.org, Jean-Francois Moine <moinejf@free.fr>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8706947.5rzUDVsB2F@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Maxime Ripard (2016-07-08 14:35:06)
-> Hi Mike,
-> 
-> On Wed, Jul 06, 2016 at 07:33:08PM -0700, Michael Turquette wrote:
-> > Hi Maxime,
-> > 
-> > Quoting Maxime Ripard (2016-06-29 12:05:34)
-> > > +static void __init sun8i_h3_ccu_setup(struct device_node *node)
-> > > +{
-> > > +       void __iomem *reg;
-> > > +       u32 val;
-> > > +
-> > > +       reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-> > > +       if (IS_ERR(reg)) {
-> > > +               pr_err("%s: Could not map the clock registers\n",
-> > > +                      of_node_full_name(node));
-> > > +               return;
-> > > +       }
-> > > +
-> > > +       /* Force the PLL-Audio-1x divider to 4 */
-> > > +       val = readl(reg + SUN8I_H3_PLL_AUDIO_REG);
-> > > +       val &= ~GENMASK(4, 0);
-> > > +       writel(val | 3, reg + SUN8I_H3_PLL_AUDIO_REG);
-> > > +
-> > > +       sunxi_ccu_probe(node, reg, &sun8i_h3_ccu_desc);
-> > > +}
-> > > +CLK_OF_DECLARE(sun8i_h3_ccu, "allwinner,sun8i-h3-ccu",
-> > > +              sun8i_h3_ccu_setup);
-> > 
-> > There are several examples of drivers that split the clocks between
-> > "early" CLK_OF_DECLARE clocks and "late" module clocks. If you really
-> > need early clocks (which is less likely on a 64-bit platform with
-> > architected timers), it would be nice to pair that with a proper
-> > platform_driver (using builtin_platform_driver most likely).
-> 
-> I think we discussed that already, but yeah, we do have timers that
-> are not the architected ones (and this is a ARMv7 platform). I have
-> the feeling that splitting the two doesn't really bring any benefit,
-> but complexify a lot the driver.
 
-Cool. I've pushed patches 1-13 to the clk tree under a shared, immutable
-branch: clk-sunxi-ng
 
-I've merged this branch into clk-next to get some soak testing.
+On 2016=E5=B9=B406=E6=9C=8829=E6=97=A5 23:27, Arnd Bergmann wrote:
+> On Saturday, June 25, 2016 6:37:20 PM CEST Wan Zongshun wrote:
+>> +#define IRQ_WDT		W90X900_IRQ(1)
+>> +#define IRQ_WWDT	W90X900_IRQ(2)
+>> +#define IRQ_LVD		W90X900_IRQ(3)
+>> +#define IRQ_EXT0	W90X900_IRQ(4)
+>> +#define IRQ_EXT1	W90X900_IRQ(5)
+>> +#define IRQ_EXT2	W90X900_IRQ(6)
+>> +#define IRQ_EXT3	W90X900_IRQ(7)
+>> +#define IRQ_EXT4	W90X900_IRQ(8)
+>> +#define IRQ_EXT5	W90X900_IRQ(9)
+>> +#define IRQ_EXT6	W90X900_IRQ(10)
+>
+> I'd suggest dropping the list, the contents are now in the dts.
 
-I did not merge patch #14. Feel free to add my reviewed-by to that
-patch.
+Arnd, I will drop this file later, since old w90x900 plat still need it=
+=2E
+but I will remove the Macros related to nuc970 and avoid nuc970=20
+interrupt using those Macro.
 
-Were you going to spin another version? If so I can replace v3 with v4
-when it is ready. Thanks again for your hard work on this! Very happy to
-see the binding be reworked :-)
+But I still need hack this irqs.h like below, since here NR_IRQS define=
+d=20
+and it is need for nuc970 irqchip driver.
 
-Regards,
-Mike
+#if !defined(CONFIG_SOC_NUC900)
+#define NR_IRQS		(IRQ_ADC+1)
+#else
+#define NR_IRQS		62
+#endif
 
-> 
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+>
+>> diff --git a/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h b/=
+arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
+>> new file mode 100644
+>> index 0000000..7a77016
+>> --- /dev/null
+>> +++ b/arch/arm/mach-w90x900/include/mach/nuc970-regs-aic.h
+>> @@ -0,0 +1,53 @@
+>> +#ifndef __ASM_ARCH_REGS_AIC_H
+>> +#define __ASM_ARCH_REGS_AIC_H
+>> +
+>> +/*NUC970 AIC regs*/
+>> +
+>> +#define	REG_AIC_SCR1	0x00
+>> +#define	REG_AIC_SCR2	0x04
+>> +#define	REG_AIC_SCR3	0x08
+>> +#define	REG_AIC_SCR4	0x0C
+>> +#define	REG_AIC_SCR5	0x10
+>
+> And like the clk driver, these should all be in the irqchip driver in=
+stead
+> of a separate header.
+>
+>> +
+>> +static void __iomem *aic_base;
+>> +static struct irq_domain *aic_domain;
+>> +#define MAKE_HWIRQ(irqnum)	(irqnum)
+>
+> The macro appears to be unused.
+>
+>> +static void nuc970_irq_mask(struct irq_data *d)
+>> +{
+>> +	if (d->irq < 32)
+>> +		__raw_writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
+>> +	else
+>> +		__raw_writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
+>> +}
+>
+> writel()
+>
+> 	Arnd
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
