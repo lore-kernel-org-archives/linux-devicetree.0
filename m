@@ -1,68 +1,82 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i-h3: Rename sinovoip-bpi-m2-plus to
- bananapi-m2-plus
-Date: Sat, 9 Jul 2016 10:11:28 +0200
-Message-ID: <20160709081128.GE4522@lukather>
-References: <1467945639-12844-1-git-send-email-wens@csie.org>
+Subject: Re: [PATCH 8/9] ARM: dts: sun7i: bananapi-m1-plus: Add
+ PMIC regulators and OPPs for cpufreq
+Date: Sat, 9 Jul 2016 10:18:27 +0200
+Message-ID: <20160709081827.GF4522@lukather>
+References: <1467796250-22010-1-git-send-email-wens@csie.org>
+ <1467796250-22010-9-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVHGQK6AKGQEJTCSIGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1467945639-12844-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1467796250-22010-9-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---7qSK/uQB79J36Y4o
-Content-Type: text/plain; charset=us-ascii
+--6Nae48J/T25AfBN4
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 08, 2016 at 10:40:39AM +0800, Chen-Yu Tsai wrote:
-> The Banana Pi series is a well known series of single board computers.
-> The manufacturer, Sinovoip, is less well known. Moreover, the board
-> markings do not mention Sinovoip, but only the Banana Pi logo, and
-> the BPI-M* model name.
->=20
-> Rename the dts file to use the more well known name. Also fix up
-> some of the model names and labels to match other Banana Pi boards.
->=20
+Hi,
+
+On Wed, Jul 06, 2016 at 05:10:49PM +0800, Chen-Yu Tsai wrote:
+> The Bananapi M1+, like other Allwinner A20 based boards, uses the AXP209
+> PMIC to supply its power. The vendor FEX file's DVFS table suggests the
+> board's CPU power rail has a voltage drop of 25 ~ 50 mV.
+> 
+> Add the PMIC regulator nodes and copy the DVFS table from the FEX file.
+> 
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 48 ++++++++++++++++++++++--
+>  1 file changed, 44 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> index ba5bca0fe997..7bb418bd1b6e 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+> @@ -105,6 +105,22 @@
+>  	status = "okay";
+>  };
+>  
+> +&cpu0 {
+> +	cpu-supply = <&reg_dcdc2>;
+> +
+> +	/* The custom DVFS table suggests a voltage drop of 25 ~ 50 mV */
+> +	operating-points = <
+> +		/* kHz    uV */
+> +		1080000	1450000
+> +		912000	1425000
+> +		864000	1350000
+> +		720000	1250000
+> +		528000	1150000
+> +		312000	1100000
+> +		144000	1050000
+> +		>;
+> +};
+> +
 
-Applied, thanks!
+We've always tried to not use all the non-sense OPPs coming from the
+FEX files. Have you experienced any issues with the default ones?
+
+The other patches have been queued either for 4.8 as fixes, or 4.9.
+
+Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---7qSK/uQB79J36Y4o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXgLGwAAoJEBx+YmzsjxAggx4QALG7QbbyU448bmhL8j99sUnl
-Bj65DeFz0peJgcK6frOP+HGD41Luzb3D8Dyfl8hQXy5JnAIB7guwdv0+pZ8CvL1I
-zkOcgdsqA6IffBDMBLnBizu7t5yE6CkcU0/zlA8eemcs6jIsG2gvpGp7UjDQrBDh
-Q8zai18SeUgIzKCfPWQa1V5oqwgYPSkLgV1rBT0ezRlhF/Rd3XdWMc92DCKjSE6T
-Emw58WVIQLWy1uod+51ZUDDNdoEJKT/tdOXvVa+BQdt74nXCwHGcDgWx1MgiA47/
-I0yxpWcUoIpW8jemqiVYIp0NPr5s1LO+PbTQ+MHciDZ3Jak0OQgNb8sOvIgOUQGu
-cg9D+naL/4czAk727w9wEtKqvhwNS1c5LLcElAQBMpDYmo7hkzjsFbuusrZtZW25
-Z9gHfo8z7v+b1f0cISCpIvyuF2s0lQxB2Jg+XIggx81HWsQqkW9qojXkk2u/GaGc
-bjiEVRzO7vYhD1b5Pv1O3SRHm7a2F/+dSLN7ndJZAobV3CXjGvmHMuFCIZagX8nd
-zQ497quTQXS5JnyicEA6nYRFqY10/sEtMX30AsB4yRhHSrVeTS3Ey9dgVG0o3FFT
-DKCihZnOix2mIKOamih2oOUZZzFbdrJ1wujpJsDVlbMtWQzSN1iLUvWRds4gPH33
-5cMJwlD86S86zgnTAhJe
-=IK3l
------END PGP SIGNATURE-----
-
---7qSK/uQB79J36Y4o--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--6Nae48J/T25AfBN4--
