@@ -1,59 +1,78 @@
-From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: [PATCH 2/3] rtc: s3c: add device data for samsung,exynos3250-rtc
-Date: Sat,  9 Jul 2016 17:23:45 +0800
-Message-ID: <1468056226-19128-3-git-send-email-ayaka@soulik.info>
-References: <1468056226-19128-1-git-send-email-ayaka@soulik.info>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 05/15] ARM: dts: sun5i: reference-design-tablet: Remove
+ mention of q8
+Date: Sat, 9 Jul 2016 11:28:11 +0200
+Message-ID: <c62ce392-f965-1f44-dd9b-1d784969803b@redhat.com>
+References: <1467993956-19535-1-git-send-email-hdegoede@redhat.com>
+ <1467993956-19535-6-git-send-email-hdegoede@redhat.com>
+ <CAGb2v67S9s5PifX4JOjp6DK57Q3aVRrKMdf7y75vna2rdrASFA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468056226-19128-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+In-Reply-To: <CAGb2v67S9s5PifX4JOjp6DK57Q3aVRrKMdf7y75vna2rdrASFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The device data for samsung,exynos3250-rtc and samsung,s3c6410-rtc
-are just have a difference, but keeping using the same device data
-would cause the platform using the other IP core not work.
+Hi,
 
-Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
----
- drivers/rtc/rtc-s3c.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+On 09-07-16 05:53, Chen-Yu Tsai wrote:
+> On Sat, Jul 9, 2016 at 12:05 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Remove all mention of q8 from sun5i-reference-design-tablet.dtsi.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+>> index e78452c..20cc940 100644
+>> --- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+>> +++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+>> @@ -98,7 +98,7 @@
+>>
+>>  &mmc0 {
+>>         pinctrl-names = "default";
+>> -       pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8>;
+>> +       pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+>>         vmmc-supply = <&reg_vcc3v0>;
+>>         bus-width = <4>;
+>>         cd-gpios = <&pio 6 0 GPIO_ACTIVE_HIGH>; /* PG0 */
+>> @@ -118,7 +118,7 @@
+>>                 allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>         };
+>>
+>> -       mmc0_cd_pin_q8: mmc0_cd_pin@0 {
+>> +       mmc0_cd_pin: mmc0_cd_pin@0 {
+>
+> We could name this mmc0_cd_pin_reference_design and put it in
+> sun5i-a13.dtsi. We already do this for A10/A20.
 
-diff --git a/drivers/rtc/rtc-s3c.c b/drivers/rtc/rtc-s3c.c
-index 5dc18ca..e9f6151 100644
---- a/drivers/rtc/rtc-s3c.c
-+++ b/drivers/rtc/rtc-s3c.c
-@@ -810,6 +810,18 @@ static struct s3c_rtc_data const s3c6410_rtc_data = {
- 	.disable		= s3c6410_rtc_disable,
- };
- 
-+static struct s3c_rtc_data const exynos3250_rtc_data = {
-+	.max_user_freq		= 32768,
-+	.needs_src_clk          = true,
-+	.irq_handler		= s3c6410_rtc_irq,
-+	.set_freq		= s3c6410_rtc_setfreq,
-+	.enable_tick		= s3c6410_rtc_enable_tick,
-+	.save_tick_cnt		= s3c6410_rtc_save_tick_cnt,
-+	.restore_tick_cnt	= s3c6410_rtc_restore_tick_cnt,
-+	.enable			= s3c24xx_rtc_enable,
-+	.disable		= s3c6410_rtc_disable,
-+};
-+
- static const struct of_device_id s3c_rtc_dt_match[] = {
- 	{
- 		.compatible = "samsung,s3c2410-rtc",
-@@ -825,7 +837,7 @@ static const struct of_device_id s3c_rtc_dt_match[] = {
- 		.data = (void *)&s3c6410_rtc_data,
- 	}, {
- 		.compatible = "samsung,exynos3250-rtc",
--		.data = (void *)&s3c6410_rtc_data,
-+		.data = (void *)&exynos3250_rtc_data,
- 	},
- 	{ /* sentinel */ },
- };
--- 
-2.7.4
+I would prefer to keep this this way, I was never really fond
+of the A10/A20 solution, in retrospect we should have done
+a sun4i-a10-reference-design.dtsi defining a lot more stuff
+then just the cd_pin.
 
+> This works equally well though.
+>
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+Thanks.
+
+Regards,
+
+Hans
+
+
+>
+>>                 allwinner,pins = "PG0";
+>>                 allwinner,function = "gpio_in";
+>>                 allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> --
+>> 2.7.4
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
