@@ -1,68 +1,44 @@
-From: ayaka <ayaka@soulik.info>
-Subject: Re: [PATCH 0/3] ARM: dts: the dts support for rk3288 firefly reload
-Date: Sat, 9 Jul 2016 23:42:28 +0800
-Message-ID: <c7f8b96b-ceff-0449-8957-bac2779c9508@soulik.info>
-References: <3015470.z4L7UQJKa9@phil>
- <1467829380-16242-1-git-send-email-ayaka@soulik.info>
- <2686572.mni1Mn7R6t@phil>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: How do /dev/ttyS* devices get assigned from the device tree?
+Date: Sat, 9 Jul 2016 22:37:31 +0300
+Message-ID: <20160709193731.GA3870@tarshish>
+References: <CAF_dkJBmgxyQLNtJqXWyQtzsmcK3QCqjYugsMG7MXGUdjL6nvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2686572.mni1Mn7R6t@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAF_dkJBmgxyQLNtJqXWyQtzsmcK3QCqjYugsMG7MXGUdjL6nvA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Patrick Doyle <wpdster@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you for you review, HeiKo
+Hi Patrick,
 
+On Fri, Jul 08, 2016 at 12:58:06PM -0400, Patrick Doyle wrote:
+> Do they show up numerically in the sequence in which they appear in
+> the device tree?
+> 
+> Where could I learn more?
 
-On 07/08/2016 05:35 AM, Heiko Stuebner wrote:
-> Hi Randy,
->
-> Am Donnerstag, 7. Juli 2016, 02:22:57 schrieb Randy Li:
->> The rk3288 firefly reload  is a Rockchip RK3288 based board be found by
->> core board and main board. The regulators are connected in a different
->> way to the previous version of firefly boards, it is necessary to
->> move some common code to uncommon place.
->>
->> I only tested the ethernet and confirmed that works.
->> The usb in this board won't caused by the bugs in the driver.
->>
->> This version follow the suggests from Heiko Stuebner,
->> except the duplicated supply name problem, I don't think
->> it could be fixed in that way.
-> I've now had a chance to look at that reload board on the firefly site.
-> Firefly also is the company name, so a board named that way is not
-> necessarily a "variant" :-) .
->
-> And looking at the "reload" board this definitly seems to be a very
-> different product with it being a system-on-module+baseboard design with
-> additional peripherals like that sata bridge, camera interfaces and probably
-sata bridge is just a SATA to usb bridge and the "reload" bring back the 
-DVP camera interface and
-a HDMI rx chip connected to the other MIPI camera interface.
-> more.
->
-> As you might've seen, most Rockchip boards are based on some reference-
-> design, so are similar in a big part of their core layout.
-Yes, from the evb. But the even the main board of evb in rockchip 
-company have at lease 3 versions
-as I known.
-Also the evb is found by power board, main board and core board.
-> So, looking at the vastly different product the reload is, I'd really like
-> to have a separate dts for the reload, to not run into more confusing
-> differences later on.
-The main problem is that power connections are different. That is why I 
-decide to make a
-separate dts. If the kernel introduce the override dts, I could have a 
-better way to implement
-it.
-> Also, when adding a new board, please also add an entry to
-> Documentation/devicetree/bindingd/arm/rockchip.txt
-I would send a patch set in a few days.
-> Thanks
-> Heiko
-Thank you for you review and you patient again
-Randy
+Adding devicetree ML to Cc.
+
+You may use an "aliases" node for that, if your UART driver supports that. The 
+8250/16550 driver does. See arch/arm/boot/dts/aspeed-ast2500-evb.dts, for 
+example. Note though that the use of aliases for this purpose is contentious.
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
