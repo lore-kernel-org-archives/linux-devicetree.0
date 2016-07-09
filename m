@@ -1,82 +1,38 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 8/9] ARM: dts: sun7i: bananapi-m1-plus: Add
- PMIC regulators and OPPs for cpufreq
-Date: Sat, 9 Jul 2016 10:18:27 +0200
-Message-ID: <20160709081827.GF4522@lukather>
-References: <1467796250-22010-1-git-send-email-wens@csie.org>
- <1467796250-22010-9-git-send-email-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] firmware: Amlogic: Add secure monitor driver
+Date: Sat, 9 Jul 2016 10:32:05 +0200
+Message-ID: <20160709083205.GA11899@localhost>
+References: <1467203656-14381-1-git-send-email-carlo@caione.org>
+ <1467203656-14381-2-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVHGQK6AKGQEJTCSIGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1467796250-22010-9-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1467203656-14381-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---6Nae48J/T25AfBN4
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi,
-
-On Wed, Jul 06, 2016 at 05:10:49PM +0800, Chen-Yu Tsai wrote:
-> The Bananapi M1+, like other Allwinner A20 based boards, uses the AXP209
-> PMIC to supply its power. The vendor FEX file's DVFS table suggests the
-> board's CPU power rail has a voltage drop of 25 ~ 50 mV.
+On 29/06/16 14:34, Carlo Caione wrote:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 > 
-> Add the PMIC regulator nodes and copy the DVFS table from the FEX file.
+> Introduce a driver to provide calls into secure monitor mode.
 > 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 48 ++++++++++++++++++++++--
->  1 file changed, 44 insertions(+), 4 deletions(-)
+> In the Amlogic SoCs these calls are used for multiple reasons: access to
+> NVMEM, set USB boot, enable JTAG, etc...
 > 
-> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> index ba5bca0fe997..7bb418bd1b6e 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-> @@ -105,6 +105,22 @@
->  	status = "okay";
->  };
->  
-> +&cpu0 {
-> +	cpu-supply = <&reg_dcdc2>;
-> +
-> +	/* The custom DVFS table suggests a voltage drop of 25 ~ 50 mV */
-> +	operating-points = <
-> +		/* kHz    uV */
-> +		1080000	1450000
-> +		912000	1425000
-> +		864000	1350000
-> +		720000	1250000
-> +		528000	1150000
-> +		312000	1100000
-> +		144000	1050000
-> +		>;
-> +};
-> +
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-We've always tried to not use all the non-sense OPPs coming from the
-FEX files. Have you experienced any issues with the default ones?
+(gentle ping)
 
-The other patches have been queued either for 4.8 as fixes, or 4.9.
+Mark,
+any comment on this?
 
-Thanks!
-Maxime
+thanks,
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---6Nae48J/T25AfBN4--
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
