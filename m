@@ -1,44 +1,91 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ath9k: parse the device configuration from an OF node
-Date: Sun, 10 Jul 2016 22:56:39 +0200
-Message-ID: <CAFBinCD0b9=o0B4_Orwe6uJfrbexr_Jf5JDctfRDmTnh3vPPug@mail.gmail.com>
-References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com>
- <20160709232834.31654-1-martin.blumenstingl@googlemail.com>
- <20160709232834.31654-4-martin.blumenstingl@googlemail.com> <87inwe9wfb.fsf@miraculix.mork.no>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
+Date: Sun, 10 Jul 2016 17:51:48 -0400
+Message-ID: <CAP=VYLoAQ-0bNAHZFU0Bu9+1to6QFojyEY8YFoHxyP9QZgE5LQ@mail.gmail.com>
+References: <1468135649-19980-1-git-send-email-vw@iommu.org> <1468135649-19980-3-git-send-email-vw@iommu.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87inwe9wfb.fsf-3F4PFWf5pNjpjLOzFPqGjWGXanvQGlWp@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn-yOkvZcmFvRU@public.gmane.org>
-Cc: ath9k-devel-juf53994utBLZpfksSYvnA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1468135649-19980-3-git-send-email-vw@iommu.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Wan Zongshun <vw@iommu.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>, robh@kernel.org, Jason Cooper <jason@lakedaemon.net>, p.zabel@pengutronix.de, Wan Zongshun <mcuos.com@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 10, 2016 at 2:19 AM, Bj=C3=B8rn Mork <bjorn-yOkvZcmFvRU@public.gmane.org> wrote:
-> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+On Sun, Jul 10, 2016 at 3:27 AM, Wan Zongshun <vw@iommu.org> wrote:
+> This patch is to add irqchip driver support for nuc900 plat,
+> current this driver only supports nuc970 SoC.
 >
->> +     if (of_property_read_bool(np, "qca,clk-25mhz"))
->> +             ah->is_clk_25mhz =3D true;
->> +
->> +     if (of_property_read_bool(np, "qca,disable-2ghz"))
->> +             ah->disable_2ghz =3D true;
->> +
->> +     if (of_property_read_bool(np, "qca,disable-5ghz"))
->> +             ah->disable_5ghz =3D true;
+> Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
+> ---
+>  arch/arm/mach-w90x900/include/mach/irqs.h |   5 +
+>  drivers/irqchip/Makefile                  |   1 +
+>  drivers/irqchip/irq-nuc900.c              | 150 ++++++++++++++++++++++++++++++
+>  3 files changed, 156 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-nuc900.c
 >
-> This is bike-shedding, but how about
+> diff --git a/arch/arm/mach-w90x900/include/mach/irqs.h b/arch/arm/mach-w90x900/include/mach/irqs.h
+> index 9d5cba3..3b035c6 100644
+> --- a/arch/arm/mach-w90x900/include/mach/irqs.h
+> +++ b/arch/arm/mach-w90x900/include/mach/irqs.h
+> @@ -59,7 +59,12 @@
+>  #define IRQ_KPI                W90X900_IRQ(29)
+>  #define IRQ_P2SGROUP   W90X900_IRQ(30)
+>  #define IRQ_ADC                W90X900_IRQ(31)
+> +
+> +#if !defined(CONFIG_SOC_NUC900)
+>  #define NR_IRQS                (IRQ_ADC+1)
+> +#else
+> +#define NR_IRQS                62
+> +#endif
 >
->         ah->is_clk_25mhz =3D of_property_read_bool(np, "qca,clk-25mhz=
-");
->         ah->disable_2ghz =3D of_property_read_bool(np, "qca,disable-2=
-ghz");
->         ah->disable_5ghz =3D of_property_read_bool(np, "qca,disable-5=
-ghz");
-I'm fine with either way - I'll simply adhere to the coding style that
-the ath9k devs want to use, so just let me know which one you prefer.
+>  /*for irq group*/
+>
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 38853a1..9ccd5af8a 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -69,3 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)              += irq-pic32-evic.o
+>  obj-$(CONFIG_MVEBU_ODMI)               += irq-mvebu-odmi.o
+>  obj-$(CONFIG_LS_SCFG_MSI)              += irq-ls-scfg-msi.o
+>  obj-$(CONFIG_EZNPS_GIC)                        += irq-eznps.o
+> +obj-$(CONFIG_SOC_NUC970)               += irq-nuc900.o
+> diff --git a/drivers/irqchip/irq-nuc900.c b/drivers/irqchip/irq-nuc900.c
+> new file mode 100644
+> index 0000000..c4b2e39
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-nuc900.c
+> @@ -0,0 +1,150 @@
+> +/*
+> + * Copyright 2016 Wan Zongshun <mcuos.com@gmail.com>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/module.h>
+
+Why do you include module.h when I don't see anything modular in
+this driver?
+
+Paul.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireles=
-s" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> +#include <linux/init.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/io.h>
+> +#include <linux/ioport.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +
+> +#include <asm/exception.h>
+> +#include <asm/hardirq.h>
+> +
+
+[...]
