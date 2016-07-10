@@ -1,8 +1,8 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: armada-388-clearfog: remove duplicate mdio
  entry
-Date: Sun, 10 Jul 2016 22:32:20 +0200
-Message-ID: <20160710203220.GA26397@lunn.ch>
+Date: Sun, 10 Jul 2016 22:37:51 +0200
+Message-ID: <20160710203751.GB26397@lunn.ch>
 References: <E1bMGdu-00005c-Dy@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -17,13 +17,28 @@ List-Id: devicetree@vger.kernel.org
 On Sun, Jul 10, 2016 at 04:27:38PM +0100, Russell King wrote:
 > The clearfog DTS should not be defining the on-board phy, this device
 > is located on the microsom.  Remove the duplicated definition.
-> 
-> Reported-by: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Hi Russell
 
-    Andrew
+While reviewing this patch i noticed that the microsom .dtsi file has
+
+                        pinctrl@18000 {
+                                microsom_phy_clk_pins: microsom-phy-clk-pins {
+                                        marvell,pins = "mpp45";
+                                        marvell,function = "ref";
+                                };
+                        };
+
+The armada-38x.dtsi has
+
+                                ref_clk0_pins: ref-clk-pins-0 {
+                                        marvell,pins = "mpp45";
+                                        marvell,function = "ref";
+                                };
+
+which you could reference rather then defining it yourself.
+
+      Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
