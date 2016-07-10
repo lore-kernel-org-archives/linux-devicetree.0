@@ -1,60 +1,32 @@
-From: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
-Date: Sun, 10 Jul 2016 15:27:22 +0800
-Message-ID: <1468135649-19980-3-git-send-email-vw@iommu.org>
+From: Wan Zongshun <vw@iommu.org>
+Subject: [PATCH v2 07/10] ARM: dts: Add clock header file into dt-bindings
+Date: Sun, 10 Jul 2016 15:27:27 +0800
+Message-ID: <1468135649-19980-8-git-send-email-vw@iommu.org>
 References: <1468135649-19980-1-git-send-email-vw@iommu.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468135649-19980-1-git-send-email-vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1468135649-19980-1-git-send-email-vw@iommu.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, robh@kernel.org, jason@lakedaemon.net, p.zabel@pengutronix.de, Wan Zongshun <vw@iommu.org>, Wan Zongshun <mcuos.com@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add irqchip driver support for nuc900 plat,
-current this driver only supports nuc970 SoC.
+This patch is to add nuc970 clock Macros header file
+into include/dt-bindings/clock.
 
-Signed-off-by: Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
 ---
- arch/arm/mach-w90x900/include/mach/irqs.h |   5 +
- drivers/irqchip/Makefile                  |   1 +
- drivers/irqchip/irq-nuc900.c              | 150 ++++++++++++++++++++++++++++++
- 3 files changed, 156 insertions(+)
- create mode 100644 drivers/irqchip/irq-nuc900.c
+ include/dt-bindings/clock/nuc970-clock.h | 233 +++++++++++++++++++++++++++++++
+ 1 file changed, 233 insertions(+)
+ create mode 100644 include/dt-bindings/clock/nuc970-clock.h
 
-diff --git a/arch/arm/mach-w90x900/include/mach/irqs.h b/arch/arm/mach-w90x900/include/mach/irqs.h
-index 9d5cba3..3b035c6 100644
---- a/arch/arm/mach-w90x900/include/mach/irqs.h
-+++ b/arch/arm/mach-w90x900/include/mach/irqs.h
-@@ -59,7 +59,12 @@
- #define IRQ_KPI		W90X900_IRQ(29)
- #define IRQ_P2SGROUP	W90X900_IRQ(30)
- #define IRQ_ADC		W90X900_IRQ(31)
-+
-+#if !defined(CONFIG_SOC_NUC900)
- #define NR_IRQS		(IRQ_ADC+1)
-+#else
-+#define NR_IRQS		62
-+#endif
- 
- /*for irq group*/
- 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 38853a1..9ccd5af8a 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -69,3 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
-+obj-$(CONFIG_SOC_NUC970)		+= irq-nuc900.o
-diff --git a/drivers/irqchip/irq-nuc900.c b/drivers/irqchip/irq-nuc900.c
+diff --git a/include/dt-bindings/clock/nuc970-clock.h b/include/dt-bindings/clock/nuc970-clock.h
 new file mode 100644
-index 0000000..c4b2e39
+index 0000000..cbfcc77
 --- /dev/null
-+++ b/drivers/irqchip/irq-nuc900.c
-@@ -0,0 +1,150 @@
++++ b/include/dt-bindings/clock/nuc970-clock.h
+@@ -0,0 +1,233 @@
 +/*
-+ * Copyright 2016 Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ * Copyright 2016 Wan Zongshun <mcuos.com@gmail.com>
 + *
 + * The code contained herein is licensed under the GNU General Public
 + * License. You may obtain a copy of the GNU General Public License
@@ -64,149 +36,228 @@ index 0000000..c4b2e39
 + * http://www.gnu.org/copyleft/gpl.html
 + */
 +
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
++#ifndef __DT_BINDINGS_CLOCK_NUC970_H
++#define __DT_BINDINGS_CLOCK_NUC970_H
 +
-+#include <asm/exception.h>
-+#include <asm/hardirq.h>
++/*SOURCE*/
 +
-+#define	REG_AIC_SCR1	0x00
-+#define	REG_AIC_SCR2	0x04
-+#define	REG_AIC_SCR3	0x08
-+#define	REG_AIC_SCR4	0x0C
-+#define	REG_AIC_SCR5	0x10
-+#define	REG_AIC_SCR6	0x14
-+#define	REG_AIC_SCR7	0x18
-+#define	REG_AIC_SCR8	0x1C
-+#define	REG_AIC_SCR9	0x20
-+#define	REG_AIC_SCR10	0x24
-+#define	REG_AIC_SCR11	0x28
-+#define	REG_AIC_SCR12	0x2C
-+#define	REG_AIC_SCR13	0x30
-+#define	REG_AIC_SCR14	0x34
-+#define	REG_AIC_SCR15	0x38
-+#define	REG_AIC_IRSR	0x100
-+#define	REG_AIC_IRSRH	0x104
-+#define	REG_AIC_IASR	0x108
-+#define	REG_AIC_IASRH	0x10C
-+#define	REG_AIC_ISR	0x110
-+#define	REG_AIC_ISRH	0x114
-+#define	REG_AIC_IPER	0x118
-+#define	REG_AIC_ISNR	0x120
-+#define	REG_AIC_OISR	0x124
-+#define	REG_AIC_IMR	0x128
-+#define	REG_AIC_IMRH	0x12C
-+#define	REG_AIC_MECR	0x130
-+#define	REG_AIC_MECRH	0x134
-+#define	REG_AIC_MDCR	0x138
-+#define	REG_AIC_MDCRH	0x13C
-+#define	REG_AIC_SSCR	0x140
-+#define	REG_AIC_SSCRH	0x144
-+#define	REG_AIC_SCCR	0x148
-+#define	REG_AIC_SCCRH	0x14C
-+#define	REG_AIC_EOSCR	0x150
++#define	XIN			0
++#define	APLL			1
++#define	UPLL			2
++#define	XIN32K			3
++#define	XIN128_DIV		4
 +
-+static void __iomem *aic_base;
-+static struct irq_domain *aic_domain;
++/*ECLK*/
 +
-+static void nuc900_irq_mask(struct irq_data *d)
-+{
-+	if (d->irq < 32)
-+		writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
-+	else
-+		writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
-+}
++#define	USB_APLLDIV		5
++#define	USB_UPLLDIV		6
++#define	USB_ECLK_MUX		7
++#define	USB_ECLK_DIV		8
++#define	USB_ECLK_GATE		9
++#define	SD_APLLDIV		10
++#define	SD_UPLLDIV		11
++#define	SD_ECLK_MUX		12
++#define	SD_ECLK_DIV		13
++#define	SD_ECLK_GATE		14
++#define	LCD_APLLDIV		15
++#define	LCD_UPLLDIV		16
++#define	LCD_ECLK_MUX		17
++#define	LCD_ECLK_DIV		18
++#define	LCD_ECLK_GATE		19
++#define	ADC_APLLDIV		20
++#define	ADC_UPLLDIV		21
++#define	ADC_ECLK_MUX		22
++#define	ADC_ECLK_DIV		23
++#define	ADC_ECLK_GATE		24
++#define	AUDIO_APLLDIV		25
++#define	AUDIO_UPLLDIV		26
++#define	AUDIO_ECLK_MUX		27
++#define	AUDIO_ECLK_DIV		28
++#define	AUDIO_ECLK_GATE		29
++#define	CAP_APLLDIV		30
++#define	CAP_UPLLDIV		31
++#define	CAP_ECLK_MUX		32
++#define	CAP_ECLK_DIV		33
++#define	CAP_ECLK_GATE		34
++#define	SDH_APLLDIV		35
++#define	SDH_UPLLDIV		36
++#define	SDH_ECLK_MUX		37
++#define	SDH_ECLK_DIV		38
++#define	SDH_ECLK_GATE		39
++#define	EMMC_APLLDIV		40
++#define	EMMC_UPLLDIV		41
++#define	EMMC_ECLK_MUX		42
++#define	EMMC_ECLK_DIV		43
++#define	EMMC_ECLK_GATE		44
++#define	UART0_APLLDIV		45
++#define	UART0_UPLLDIV		46
++#define	UART0_ECLK_MUX		47
++#define	UART0_ECLK_DIV		48
++#define	UART0_ECLK_GATE		49
++#define	UART1_APLLDIV		50
++#define	UART1_UPLLDIV		51
++#define	UART1_ECLK_MUX		52
++#define	UART1_ECLK_DIV		53
++#define	UART1_ECLK_GATE		54
++#define	UART2_APLLDIV		55
++#define	UART2_UPLLDIV		56
++#define	UART2_ECLK_MUX		57
++#define	UART2_ECLK_DIV		58
++#define	UART2_ECLK_GATE		59
++#define	UART3_APLLDIV		60
++#define	UART3_UPLLDIV		61
++#define	UART3_ECLK_MUX		62
++#define	UART3_ECLK_DIV		63
++#define	UART3_ECLK_GATE		64
++#define	UART4_APLLDIV		65
++#define	UART4_UPLLDIV		66
++#define	UART4_ECLK_MUX		67
++#define	UART4_ECLK_DIV		68
++#define	UART4_ECLK_GATE		69
++#define	UART5_APLLDIV		70
++#define	UART5_UPLLDIV		71
++#define	UART5_ECLK_MUX		72
++#define	UART5_ECLK_DIV		73
++#define	UART5_ECLK_GATE		74
++#define	UART6_APLLDIV		75
++#define	UART6_UPLLDIV		76
++#define	UART6_ECLK_MUX		77
++#define	UART6_ECLK_DIV		78
++#define	UART6_ECLK_GATE		79
++#define	UART7_APLLDIV		80
++#define	UART7_UPLLDIV		81
++#define	UART7_ECLK_MUX		82
++#define	UART7_ECLK_DIV		83
++#define	UART7_ECLK_GATE		84
++#define	UART8_APLLDIV		85
++#define	UART8_UPLLDIV		86
++#define	UART8_ECLK_MUX		87
++#define	UART8_ECLK_DIV		88
++#define	UART8_ECLK_GATE		89
++#define	UART9_APLLDIV		90
++#define	UART9_UPLLDIV		91
++#define	UART9_ECLK_MUX		92
++#define	UART9_ECLK_DIV		93
++#define	UART9_ECLK_GATE		94
++#define	UART10_APLLDIV		95
++#define	UART10_UPLLDIV		96
++#define	UART10_ECLK_MUX		97
++#define	UART10_ECLK_DIV		98
++#define	UART10_ECLK_GATE	99
++#define	SYSTEM_APLLDIV		100
++#define	SYSTEM_UPLLDIV		101
++#define	SYSTEM_ECLK_MUX		102
++#define	SYSTEM_ECLK_DIV		103
++#define	SYSTEM_ECLK_GATE	104
++#define	GPIO_ECLK_MUX		105
++#define	GPIO_ECLK_DIV		106
++#define	GPIO_ECLK_GATE		107
++#define	KPI_ECLK_MUX		108
++#define	KPI_ECLK_DIV		109
++#define	KPI_ECLK_GATE		110
++#define	ETIMER0_ECLK_MUX	111
++#define	ETIMER0_ECLK_GATE	12
++#define	ETIMER1_ECLK_MUX	113
++#define	ETIMER1_ECLK_GATE	114
++#define	ETIMER2_ECLK_MUX	115
++#define	ETIMER2_ECLK_GATE	116
++#define	ETIMER3_ECLK_MUX	117
++#define	ETIMER3_ECLK_GATE	118
++#define	WWDT_ECLK_MUX		119
++#define	WWDT_ECLK_GATE		120
++#define	WDT_ECLK_MUX		121
++#define	WDT_ECLK_GATE		122
++#define	SMC0_ECLK_DIV		123
++#define	SMC0_ECLK_GATE		124
++#define	SMC0_GATE		125
++#define	SMC1_ECLK_DIV		126
++#define	SMC1_ECLK_GATE		127
++#define	SMC1_GATE		128
 +
-+static void nuc900_irq_ack(struct irq_data *d)
-+{
-+	writel(0x01, aic_base + REG_AIC_EOSCR);
-+}
++/*SYS*/
 +
-+static void nuc900_irq_unmask(struct irq_data *d)
-+{
-+	if (d->irq < 32)
-+		writel(1 << (d->irq), aic_base + REG_AIC_MECR);
-+	else
-+		writel(1 << (d->irq - 32), aic_base + REG_AIC_MECRH);
-+}
++#define	SYS_MUX			129
++#define	SYS_DIV			130
++#define	CPU_DIV			131
++#define	CPU_GATE		132
++#define	DDR_GATE		133
 +
-+static struct irq_chip nuc900_irq_chip = {
-+	.irq_ack	= nuc900_irq_ack,
-+	.irq_mask	= nuc900_irq_mask,
-+	.irq_unmask	= nuc900_irq_unmask,
-+};
++/*HCLK*/
 +
-+void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
-+{
-+	u32 hwirq;
++#define	HCLK_GATE		134
++#define	HCLK1_DIV		135
++#define	GDMA_GATE		136
++#define	EBI_GATE		137
++#define	TIC_GATE		138
++#define	SRAM_GATE		139
++#define	HCLKN_DIV		140
++#define	DRAM_GATE		141
++#define	HCLK234_DIV		142
++#define	USBH_GATE		143
++#define	EMAC1_GATE		144
++#define	EMAC1_ECLK_DIV		145
++#define	EMAC1_ECLK_GATE		146
++#define	USBD_GATE		147
++#define	FMI_GATE		148
++#define	NAND_GATE		149
++#define	EMMC_GATE		150
++#define	CRYPTO_GATE		151
++#define	JPEG_GATE		152
++#define	JPEG_ECLK_DIV		153
++#define	JPEG_ECLK_GATE		154
++#define	GE2D_GATE		155
++#define	GE2D_ECLK_DIV		156
++#define	GE2D_ECLK_GATE		157
++#define	EMAC0_GATE		158
++#define	EMAC0_ECLK_DIV		159
++#define	EMAC0_ECLK_GATE		160
++#define	SDH_GATE		161
++#define	AUDIO_GATE		162
++#define	LCD_GATE		163
++#define	CAP_GATE		164
++#define	SENSOR_GATE		165
 +
-+	hwirq = readl(aic_base + REG_AIC_IPER);
-+	hwirq = readl(aic_base + REG_AIC_ISNR);
-+	if (!hwirq)
-+		writel(0x01, aic_base + REG_AIC_EOSCR);
++/*PCLK*/
 +
-+	handle_IRQ((irq_find_mapping(aic_domain, hwirq)), regs);
-+}
++#define	PCLK_DIV		166
++#define	PCLK4096_DIV		167
++#define	I2C0_GATE		168
++#define	I2C1_GATE		169
++#define	SPI0_GATE		170
++#define	SPI1_GATE		171
++#define	UART0_GATE		172
++#define	UART1_GATE		173
++#define	UART2_GATE		174
++#define	UART3_GATE		175
++#define	UART4_GATE		176
++#define	UART5_GATE		177
++#define	UART6_GATE		178
++#define	UART7_GATE		179
++#define	UART8_GATE		180
++#define	UART9_GATE		181
++#define	UART10_GATE		182
++#define	TIMER0_GATE		183
++#define	TIMER1_GATE		184
++#define	TIMER2_GATE		185
++#define	TIMER3_GATE		186
++#define	TIMER4_GATE		187
++#define	WDT_GATE		188
++#define	RTC_GATE		189
++#define	WWDT_GATE		190
++#define	GPIO_GATE		191
++#define	ADC_GATE		192
++#define	KPI_GATE		193
++#define	MTPC_GATE		194
++#define	PWM_GATE		195
++#define	ETIMER0_GATE		196
++#define	ETIMER1_GATE		197
++#define	ETIMER2_GATE		198
++#define	ETIMER3_GATE		199
++#define	CAN0_GATE		200
++#define	CAN1_GATE		201
++#define	NUC970_CLK_MAX		202
 +
-+static int aic_irq_domain_map(struct irq_domain *d, unsigned int virq,
-+			      irq_hw_number_t hw)
-+{
-+	irq_set_chip_and_handler(virq, &nuc900_irq_chip, handle_level_irq);
-+	irq_clear_status_flags(virq, IRQ_NOREQUEST);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops aic_irq_domain_ops = {
-+	.map = aic_irq_domain_map,
-+	.xlate = irq_domain_xlate_onecell,
-+};
-+
-+static int __init aic_of_init(struct device_node *node,
-+			      struct device_node *parent)
-+{
-+	int ret;
-+
-+	aic_base = of_iomap(node, 0);
-+	if (!aic_base) {
-+		ret = -ENOMEM;
-+		pr_err("%s: unable to map registers\n", node->full_name);
-+		goto err_iomap;
-+	}
-+
-+	writel(0xFFFFFFFC, aic_base + REG_AIC_MDCR);
-+	writel(0xFFFFFFFF, aic_base + REG_AIC_MDCRH);
-+
-+	aic_domain = irq_domain_add_linear(node, NR_IRQS,
-+					   &aic_irq_domain_ops, NULL);
-+
-+	if (!aic_domain) {
-+		ret = -ENOMEM;
-+		pr_err("%s: unable to create IRQ domain\n", node->full_name);
-+		goto err_aic_domain;
-+	}
-+
-+	set_handle_irq(aic_handle_irq);
-+	return 0;
-+
-+err_aic_domain:
-+	iounmap(aic_base);
-+err_iomap:
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(nuc900, "nuvoton,nuc900-aic", aic_of_init);
++#endif
 -- 
 2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
