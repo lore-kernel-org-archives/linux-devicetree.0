@@ -1,92 +1,58 @@
-From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ath9k: parse the device configuration from an OF
- node
-Date: Sun, 10 Jul 2016 11:28:22 +0200
-Message-ID: <57821536.3020000@rempel-privat.de>
-References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com>
- <20160709232834.31654-1-martin.blumenstingl@googlemail.com>
- <20160709232834.31654-4-martin.blumenstingl@googlemail.com>
- <87inwe9wfb.fsf@miraculix.mork.no>
+From: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 28/54] MAINTAINERS: Add file patterns for media device
+ tree bindings
+Date: Sun, 10 Jul 2016 12:27:35 -0300
+Message-ID: <20160710122735.240b07fc@recife.lan>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+	<1463907991-7916-29-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="2G07aagLxm6TmdhJgFd3JVxrEk0FhicIL"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87inwe9wfb.fsf-3F4PFWf5pNjpjLOzFPqGjWGXanvQGlWp@public.gmane.org>
+In-Reply-To: <1463907991-7916-29-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn-yOkvZcmFvRU@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: ath9k-devel-juf53994utBLZpfksSYvnA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---2G07aagLxm6TmdhJgFd3JVxrEk0FhicIL
-Content-Type: multipart/mixed; boundary="Id1sqr1CI0Gfbo1lLbu8qAhs6d0UmrCV7"
-From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-To: =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn-yOkvZcmFvRU@public.gmane.org>,
- Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: ath9k-devel-juf53994utBLZpfksSYvnA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org,
- mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org,
- ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org,
- robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org,
- arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Message-ID: <57821536.3020000-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ath9k: parse the device configuration from an OF
- node
-References: <20160624123430.4097-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
- <20160709232834.31654-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
- <20160709232834.31654-4-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
- <87inwe9wfb.fsf-3F4PFWf5pNjpjLOzFPqGjWGXanvQGlWp@public.gmane.org>
-In-Reply-To: <87inwe9wfb.fsf-3F4PFWf5pNjpjLOzFPqGjWGXanvQGlWp@public.gmane.org>
+Em Sun, 22 May 2016 11:06:05 +0200
+Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> escreveu:
 
---Id1sqr1CI0Gfbo1lLbu8qAhs6d0UmrCV7
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
 
-Am 10.07.2016 um 02:19 schrieb Bj=C3=B8rn Mork:
-> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
->=20
->> +	if (of_property_read_bool(np, "qca,clk-25mhz"))
->> +		ah->is_clk_25mhz =3D true;
->> +
->> +	if (of_property_read_bool(np, "qca,disable-2ghz"))
->> +		ah->disable_2ghz =3D true;
->> +
->> +	if (of_property_read_bool(np, "qca,disable-5ghz"))
->> +		ah->disable_5ghz =3D true;
->=20
-> This is bike-shedding, but how about
->=20
-> 	ah->is_clk_25mhz =3D of_property_read_bool(np, "qca,clk-25mhz");
-> 	ah->disable_2ghz =3D of_property_read_bool(np, "qca,disable-2ghz");
-> 	ah->disable_5ghz =3D of_property_read_bool(np, "qca,disable-5ghz");
->=20
-> instead?
+I'm assuming that this patch will go via DT git tree, so:
+> 
+> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
-Hm... i assume each WiFi hw in the world can reuse this settings, may be
-it i worth to use generic names?
+Acked-by: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 
---=20
-Regards,
-Oleksij
+> Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7acb65bb2590a321..c230cd9ec8aefe45 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7376,6 +7376,7 @@ W:	https://linuxtv.org
+>  Q:	http://patchwork.kernel.org/project/linux-media/list/
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/media/
+>  F:	Documentation/dvb/
+>  F:	Documentation/video4linux/
+>  F:	Documentation/DocBook/media/
 
 
---Id1sqr1CI0Gfbo1lLbu8qAhs6d0UmrCV7--
-
---2G07aagLxm6TmdhJgFd3JVxrEk0FhicIL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iF4EAREIAAYFAleCFUYACgkQHwImuRkmbWkbfQD/QmWNTeL6XkKEncYbzGKQijUk
-Yuv3MxQ2qc5oFBiTMpYA/038A3ay4mfifoGXoi5Mm1VRVZPLMKmyYHCJu07APQng
-=Cglo
------END PGP SIGNATURE-----
-
---2G07aagLxm6TmdhJgFd3JVxrEk0FhicIL--
+-- 
+Thanks,
+Mauro
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
