@@ -1,64 +1,60 @@
-From: Wan Zongshun <vw@iommu.org>
-Subject: [PATCH v2 05/10] power/reset: Add reset driver support for nuc900
-Date: Sun, 10 Jul 2016 15:27:25 +0800
-Message-ID: <1468135649-19980-6-git-send-email-vw@iommu.org>
+From: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
+Date: Sun, 10 Jul 2016 15:27:22 +0800
+Message-ID: <1468135649-19980-3-git-send-email-vw@iommu.org>
 References: <1468135649-19980-1-git-send-email-vw@iommu.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468135649-19980-1-git-send-email-vw@iommu.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, robh@kernel.org, jason@lakedaemon.net, p.zabel@pengutronix.de, Wan Zongshun <vw@iommu.org>, Wan Zongshun <mcuos.com@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468135649-19980-1-git-send-email-vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver is to add reset support for nuc900 series,
-currently, it only supports nuc970 SoC reset.
+This patch is to add irqchip driver support for nuc900 plat,
+current this driver only supports nuc970 SoC.
 
-Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
+Signed-off-by: Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/power/reset/Kconfig        |  7 +++
- drivers/power/reset/Makefile       |  1 +
- drivers/power/reset/nuc900-reset.c | 93 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 101 insertions(+)
- create mode 100644 drivers/power/reset/nuc900-reset.c
+ arch/arm/mach-w90x900/include/mach/irqs.h |   5 +
+ drivers/irqchip/Makefile                  |   1 +
+ drivers/irqchip/irq-nuc900.c              | 150 ++++++++++++++++++++++++++++++
+ 3 files changed, 156 insertions(+)
+ create mode 100644 drivers/irqchip/irq-nuc900.c
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 9bb2622..8c84892 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -94,6 +94,13 @@ config POWER_RESET_MSM
- 	help
- 	  Power off and restart support for Qualcomm boards.
- 
-+config POWER_RESET_NUC900
-+	bool "Nuc900 restart driver"
-+	depends on ARCH_W90X900
-+	help
-+	  Power off and restart support for Nuvoton NUC900 family of
-+	  reference boards.
+diff --git a/arch/arm/mach-w90x900/include/mach/irqs.h b/arch/arm/mach-w90x900/include/mach/irqs.h
+index 9d5cba3..3b035c6 100644
+--- a/arch/arm/mach-w90x900/include/mach/irqs.h
++++ b/arch/arm/mach-w90x900/include/mach/irqs.h
+@@ -59,7 +59,12 @@
+ #define IRQ_KPI		W90X900_IRQ(29)
+ #define IRQ_P2SGROUP	W90X900_IRQ(30)
+ #define IRQ_ADC		W90X900_IRQ(31)
 +
- config POWER_RESET_LTC2952
- 	bool "LTC2952 PowerPath power-off driver"
- 	depends on OF_GPIO
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index ab7aa86..d4df889 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
- obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
- obj-$(CONFIG_POWER_RESET_IMX) += imx-snvs-poweroff.o
- obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
-+obj-$(CONFIG_POWER_RESET_NUC900) += nuc900-reset.o
- obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
- obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
- obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
-diff --git a/drivers/power/reset/nuc900-reset.c b/drivers/power/reset/nuc900-reset.c
++#if !defined(CONFIG_SOC_NUC900)
+ #define NR_IRQS		(IRQ_ADC+1)
++#else
++#define NR_IRQS		62
++#endif
+ 
+ /*for irq group*/
+ 
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 38853a1..9ccd5af8a 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -69,3 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
+ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
+ obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
+ obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
++obj-$(CONFIG_SOC_NUC970)		+= irq-nuc900.o
+diff --git a/drivers/irqchip/irq-nuc900.c b/drivers/irqchip/irq-nuc900.c
 new file mode 100644
-index 0000000..49986b7
+index 0000000..c4b2e39
 --- /dev/null
-+++ b/drivers/power/reset/nuc900-reset.c
-@@ -0,0 +1,93 @@
++++ b/drivers/irqchip/irq-nuc900.c
+@@ -0,0 +1,150 @@
 +/*
-+ * Copyright 2016 Wan Zongshun <mcuos.com@gmail.com>
++ * Copyright 2016 Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
 + * The code contained herein is licensed under the GNU General Public
 + * License. You may obtain a copy of the GNU General Public License
@@ -67,88 +63,150 @@ index 0000000..49986b7
 + * http://www.opensource.org/licenses/gpl-license.html
 + * http://www.gnu.org/copyleft/gpl.html
 + */
-+#include <linux/init.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
++
 +#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
++#include <linux/init.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqdomain.h>
++#include <linux/io.h>
++#include <linux/ioport.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
 +
-+#define REG_WRPRTR	0x1fc
-+#define REG_AHBIPRST	0x060
++#include <asm/exception.h>
++#include <asm/hardirq.h>
 +
-+static struct regmap *syscon;
++#define	REG_AIC_SCR1	0x00
++#define	REG_AIC_SCR2	0x04
++#define	REG_AIC_SCR3	0x08
++#define	REG_AIC_SCR4	0x0C
++#define	REG_AIC_SCR5	0x10
++#define	REG_AIC_SCR6	0x14
++#define	REG_AIC_SCR7	0x18
++#define	REG_AIC_SCR8	0x1C
++#define	REG_AIC_SCR9	0x20
++#define	REG_AIC_SCR10	0x24
++#define	REG_AIC_SCR11	0x28
++#define	REG_AIC_SCR12	0x2C
++#define	REG_AIC_SCR13	0x30
++#define	REG_AIC_SCR14	0x34
++#define	REG_AIC_SCR15	0x38
++#define	REG_AIC_IRSR	0x100
++#define	REG_AIC_IRSRH	0x104
++#define	REG_AIC_IASR	0x108
++#define	REG_AIC_IASRH	0x10C
++#define	REG_AIC_ISR	0x110
++#define	REG_AIC_ISRH	0x114
++#define	REG_AIC_IPER	0x118
++#define	REG_AIC_ISNR	0x120
++#define	REG_AIC_OISR	0x124
++#define	REG_AIC_IMR	0x128
++#define	REG_AIC_IMRH	0x12C
++#define	REG_AIC_MECR	0x130
++#define	REG_AIC_MECRH	0x134
++#define	REG_AIC_MDCR	0x138
++#define	REG_AIC_MDCRH	0x13C
++#define	REG_AIC_SSCR	0x140
++#define	REG_AIC_SSCRH	0x144
++#define	REG_AIC_SCCR	0x148
++#define	REG_AIC_SCCRH	0x14C
++#define	REG_AIC_EOSCR	0x150
 +
-+static int nuc900_restart_handler(struct notifier_block *this,
-+				  unsigned long mode, void *cmd)
++static void __iomem *aic_base;
++static struct irq_domain *aic_domain;
++
++static void nuc900_irq_mask(struct irq_data *d)
 +{
-+	/*0:register protect enable*/
-+	int write_protect = 0;
-+
-+	/*register protection disable*/
-+	do {
-+		regmap_read(syscon, REG_WRPRTR, &write_protect);
-+
-+		if (write_protect != 1) {
-+			regmap_write(syscon, REG_WRPRTR, 0x59);
-+			regmap_write(syscon, REG_WRPRTR, 0x16);
-+			regmap_write(syscon, REG_WRPRTR, 0x88);
-+		}
-+
-+	} while (write_protect != 1);
-+
-+	/*trigger reset*/
-+	regmap_write(syscon, REG_AHBIPRST, 0x01);
-+
-+	return NOTIFY_DONE;
++	if (d->irq < 32)
++		writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
++	else
++		writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
 +}
 +
-+static struct notifier_block nuc900_restart_nb = {
-+	.notifier_call = nuc900_restart_handler,
-+	.priority = 128,
++static void nuc900_irq_ack(struct irq_data *d)
++{
++	writel(0x01, aic_base + REG_AIC_EOSCR);
++}
++
++static void nuc900_irq_unmask(struct irq_data *d)
++{
++	if (d->irq < 32)
++		writel(1 << (d->irq), aic_base + REG_AIC_MECR);
++	else
++		writel(1 << (d->irq - 32), aic_base + REG_AIC_MECRH);
++}
++
++static struct irq_chip nuc900_irq_chip = {
++	.irq_ack	= nuc900_irq_ack,
++	.irq_mask	= nuc900_irq_mask,
++	.irq_unmask	= nuc900_irq_unmask,
 +};
 +
-+static int nuc900_reset_probe(struct platform_device *pdev)
++void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
 +{
-+	struct device *dev = &pdev->dev;
-+	int err;
++	u32 hwirq;
 +
-+	syscon = syscon_regmap_lookup_by_phandle(dev->of_node, "syscon");
-+	if (IS_ERR(syscon)) {
-+		pr_err("%s: syscon lookup failed\n", dev->of_node->name);
-+		return PTR_ERR(syscon);
++	hwirq = readl(aic_base + REG_AIC_IPER);
++	hwirq = readl(aic_base + REG_AIC_ISNR);
++	if (!hwirq)
++		writel(0x01, aic_base + REG_AIC_EOSCR);
++
++	handle_IRQ((irq_find_mapping(aic_domain, hwirq)), regs);
++}
++
++static int aic_irq_domain_map(struct irq_domain *d, unsigned int virq,
++			      irq_hw_number_t hw)
++{
++	irq_set_chip_and_handler(virq, &nuc900_irq_chip, handle_level_irq);
++	irq_clear_status_flags(virq, IRQ_NOREQUEST);
++
++	return 0;
++}
++
++static struct irq_domain_ops aic_irq_domain_ops = {
++	.map = aic_irq_domain_map,
++	.xlate = irq_domain_xlate_onecell,
++};
++
++static int __init aic_of_init(struct device_node *node,
++			      struct device_node *parent)
++{
++	int ret;
++
++	aic_base = of_iomap(node, 0);
++	if (!aic_base) {
++		ret = -ENOMEM;
++		pr_err("%s: unable to map registers\n", node->full_name);
++		goto err_iomap;
 +	}
 +
-+	err = register_restart_handler(&nuc900_restart_nb);
-+	if (err)
-+		dev_err(dev, "cannot register restart handler (err=%d)\n", err);
++	writel(0xFFFFFFFC, aic_base + REG_AIC_MDCR);
++	writel(0xFFFFFFFF, aic_base + REG_AIC_MDCRH);
 +
-+	return err;
++	aic_domain = irq_domain_add_linear(node, NR_IRQS,
++					   &aic_irq_domain_ops, NULL);
++
++	if (!aic_domain) {
++		ret = -ENOMEM;
++		pr_err("%s: unable to create IRQ domain\n", node->full_name);
++		goto err_aic_domain;
++	}
++
++	set_handle_irq(aic_handle_irq);
++	return 0;
++
++err_aic_domain:
++	iounmap(aic_base);
++err_iomap:
++	return ret;
 +}
 +
-+static const struct of_device_id of_nuc900_reset_match[] = {
-+	{ .compatible = "nuvoton,nuc900-reset", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_nuc900_reset_match);
-+
-+static struct platform_driver nuc900_reset_driver = {
-+	.probe = nuc900_reset_probe,
-+	.driver = {
-+		.name = "nuc900-reset",
-+		.of_match_table = of_match_ptr(of_nuc900_reset_match),
-+	},
-+};
-+
-+static int __init nuc900_reset_init(void)
-+{
-+	return platform_driver_register(&nuc900_reset_driver);
-+}
-+device_initcall(nuc900_reset_init);
++IRQCHIP_DECLARE(nuc900, "nuvoton,nuc900-aic", aic_of_init);
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
