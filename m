@@ -1,39 +1,46 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: armada-388-clearfog: remove duplicate mdio
- entry
-Date: Sun, 10 Jul 2016 21:45:46 +0100
-Message-ID: <20160710204546.GS1041@n2100.armlinux.org.uk>
-References: <E1bMGdu-00005c-Dy@rmk-PC.armlinux.org.uk>
- <20160710203751.GB26397@lunn.ch>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] Documentation: dt: net: add ath9k wireless device binding
+Date: Sun, 10 Jul 2016 22:52:03 +0200
+Message-ID: <1746957.vJhcHQMZVi@wuerfel>
+References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com> <20160709232834.31654-1-martin.blumenstingl@googlemail.com> <20160709232834.31654-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160710203751.GB26397-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160709232834.31654-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 10, 2016 at 10:37:51PM +0200, Andrew Lunn wrote:
-> The armada-38x.dtsi has
-> 
->                                 ref_clk0_pins: ref-clk-pins-0 {
->                                         marvell,pins = "mpp45";
->                                         marvell,function = "ref";
->                                 };
-> 
-> which you could reference rather then defining it yourself.
+On Sunday, July 10, 2016 1:28:32 AM CEST Martin Blumenstingl wrote:
+> +- qca,check-eeprom-endianness: When enabled, the driver checks if the
+> +                               endianness of the EEPROM (based on the two
+> +                               magic bytes at the start of the EEPROM)
+> +                               matches the host system's native endianness.
+> +                               The data will be swapped accordingly if there
+> +                               is a mismatch.
+> +                               Leaving this disabled means that the EEPROM
+> +                               data will be interpreted in the system's
+> +                               native endianness, regardless of the magic
+> +                               bytes.
+> +                               Enable this option only when the magic bytes
+> +                               are known to indicate the correct endianness
+> +                               of the EEPROM data, because otherwise the
+> +                               EEPROM data may be swapped and thus may be
+> +                               parsed incorrectly.
 
-Weren't these going to be deleted from the main SoC dtsi files,
-eventually?  I thought that was the idea, to prevent cluttering
-up the .dtb files with nodes which aren't ever used.
+Defining properties in terms of "native" endianess is usually not a good
+idea, as some architectures (ARMv6+, PowerPC, ...) allow running either
+big-endian or little-endian without changing the endianess of device
+registers in the process.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+It's better to document the property as defaulting to a specific endianess
+unless you have an override or the autodetection flag, regardless of
+the CPU endianess.
+
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
