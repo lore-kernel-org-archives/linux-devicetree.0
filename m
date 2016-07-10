@@ -1,58 +1,56 @@
-From: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH 28/54] MAINTAINERS: Add file patterns for media device
- tree bindings
-Date: Sun, 10 Jul 2016 12:27:35 -0300
-Message-ID: <20160710122735.240b07fc@recife.lan>
-References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
-	<1463907991-7916-29-git-send-email-geert@linux-m68k.org>
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH] ARM: dts: armada-388-clearfog: remove duplicate mdio entry
+Date: Sun, 10 Jul 2016 16:27:38 +0100
+Message-ID: <E1bMGdu-00005c-Dy@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1463907991-7916-29-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Em Sun, 22 May 2016 11:06:05 +0200
-Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> escreveu:
+The clearfog DTS should not be defining the on-board phy, this device
+is located on the microsom.  Remove the duplicated definition.
 
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
+Reported-by: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-388-clearfog.dts | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-I'm assuming that this patch will go via DT git tree, so:
-> 
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-
-Acked-by: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-
-> Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> Please apply this patch directly if you want to be involved in device
-> tree binding documentation for your subsystem.
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7acb65bb2590a321..c230cd9ec8aefe45 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7376,6 +7376,7 @@ W:	https://linuxtv.org
->  Q:	http://patchwork.kernel.org/project/linux-media/list/
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Maintained
-> +F:	Documentation/devicetree/bindings/media/
->  F:	Documentation/dvb/
->  F:	Documentation/video4linux/
->  F:	Documentation/DocBook/media/
-
-
+diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
+index 2e9246f749a2..a6dfa8dc3423 100644
+--- a/arch/arm/boot/dts/armada-388-clearfog.dts
++++ b/arch/arm/boot/dts/armada-388-clearfog.dts
+@@ -208,22 +208,6 @@
+ 				status = "okay";
+ 			};
+ 
+-			mdio@72004 {
+-				pinctrl-0 = <&mdio_pins>;
+-				pinctrl-names = "default";
+-
+-				phy_dedicated: ethernet-phy@0 {
+-					/*
+-					 * Annoyingly, the marvell phy driver
+-					 * configures the LED register, rather
+-					 * than preserving reset-loaded setting.
+-					 * We undo that rubbish here.
+-					 */
+-					marvell,reg-init = <3 16 0 0x101e>;
+-					reg = <0>;
+-				};
+-			};
+-
+ 			pinctrl@18000 {
+ 				clearfog_dsa0_clk_pins: clearfog-dsa0-clk-pins {
+ 					marvell,pins = "mpp46";
 -- 
-Thanks,
-Mauro
+2.1.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
