@@ -1,7 +1,7 @@
 From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v2 09/10] Documentation: devicetree: Add dts description for nuc900
-Date: Mon, 11 Jul 2016 00:17:52 +0200
-Message-ID: <1850749.ap1S8Xq0fA@wuerfel>
+Date: Mon, 11 Jul 2016 00:22:09 +0200
+Message-ID: <1618088.N8H7ez3XRZ@wuerfel>
 References: <1468136542-2656-1-git-send-email-vw@iommu.org> <1468136542-2656-2-git-send-email-vw@iommu.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -14,31 +14,31 @@ Cc: Wan Zongshun <vw@iommu.org>, Russell King <linux@armlinux.org.uk>, devicetre
 List-Id: devicetree@vger.kernel.org
 
 On Sunday, July 10, 2016 3:42:21 PM CEST Wan Zongshun wrote:
+> diff --git a/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,nuc900-soc.txt b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,nuc900-soc.txt
+> new file mode 100644
+> index 0000000..0284edf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,nuc900-soc.txt
+> @@ -0,0 +1,12 @@
+> +. Nuvoton NUC900 series, Soc specific driver binding.
 > +
 > +Required properties:
-> +- compatible : Should be "nuvoton,nuc970-tmr"
-> +- reg : Address and length of the register set
-> +- clocks : Reference on the timer input clock
-> +- interrupts : Reference to the timer interrupt
+> +- compatible : Should be "nuvoton,nuc900-soc"
+> +- syscon : Reference to gcr controller.
 > +
 > +Example:
 > +
-> +tmr@0xb8001000 {
-
-The name should be "timer", not "tmr", and the address should
-not contain a leading "0x".
-
-> +       compatible = "nuvoton,nuc970-tmr";
-> +       reg = <0xb8001000 0x1000>;
-> +       interrupts = <16>;
-> +       clocks = <&clks TIMER0_GATE>,
-> +       <&clks TIMER1_GATE>;
-> +       clock-names = "timer0", "timer1";
+> +reset {
+> +       compatible = "nuvoton,nuc900-soc";
+> +       syscon = <&gcr>;
 > +};
 
-The clocks/clock-names description does not match the example:
-you only define a single clock in the required properties, but
-have two separate inputs in the example. Please fix one or the
-other.
+I think this one should be dropped: Instead of modeling the DT based on what
+is convenient for the current Linux driver implementation, we only want to
+list devices in the dts that are physically present, and the "soc" is really
+the sum of all the on-chip devices.
+
+Better change the soc_device driver to bind directly to the "nuvoton,nuc970-gcr"
+device.
 
 	Arnd
