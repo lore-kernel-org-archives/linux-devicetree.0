@@ -1,81 +1,44 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: [PATCH v7 3/4] perf: xgene: Add APM X-Gene SoC Performance
- Monitoring Unit driver
-Date: Sat, 9 Jul 2016 20:00:42 -0400
-Message-ID: <CAP=VYLrsfOTgJmMBz-R_pQ+GXa4UEb2a=jH7TJBwcHz6UTxGKQ@mail.gmail.com>
-References: <1467850045-10584-1-git-send-email-ttnguyen@apm.com> <1467850045-10584-4-git-send-email-ttnguyen@apm.com>
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn-yOkvZcmFvRU@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] ath9k: parse the device configuration from an OF node
+Date: Sun, 10 Jul 2016 02:19:36 +0200
+Message-ID: <87inwe9wfb.fsf@miraculix.mork.no>
+References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com>
+	<20160709232834.31654-1-martin.blumenstingl@googlemail.com>
+	<20160709232834.31654-4-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467850045-10584-4-git-send-email-ttnguyen@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tai Nguyen <ttnguyen@apm.com>
-Cc: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, patches@apm.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160709232834.31654-4-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+	(Martin Blumenstingl's message of "Sun, 10 Jul 2016 01:28:34 +0200")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: ath9k-devel-juf53994utBLZpfksSYvnA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 6, 2016 at 8:07 PM, Tai Nguyen <ttnguyen@apm.com> wrote:
-> Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
-> ---
->  Documentation/perf/xgene-pmu.txt |   48 ++
->  drivers/perf/Kconfig             |    7 +
->  drivers/perf/Makefile            |    1 +
->  drivers/perf/xgene_pmu.c         | 1398 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 1454 insertions(+)
->  create mode 100644 Documentation/perf/xgene-pmu.txt
->  create mode 100644 drivers/perf/xgene_pmu.c
->
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-[...]
-
-> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-> index 04e2653..4d5c5f9 100644
-> --- a/drivers/perf/Kconfig
-> +++ b/drivers/perf/Kconfig
-> @@ -12,4 +12,11 @@ config ARM_PMU
->           Say y if you want to use CPU performance monitors on ARM-based
->           systems.
->
-> +config XGENE_PMU
-> +        depends on PERF_EVENTS && ARCH_XGENE
-> +        bool "APM X-Gene SoC PMU"
-
-If the driver is bool, then please avoid using module.h and anything from
-within it.  They are either no-ops when built in, or there are non-modular
-equivalents available, so it is entirely avoidable, and makes for smaller
-and better code.
-
-> +        default n
-> +        help
-> +          Say y if you want to use APM X-Gene SoC performance monitors.
+> +	if (of_property_read_bool(np, "qca,clk-25mhz"))
+> +		ah->is_clk_25mhz =3D true;
 > +
->  endmenu
-> diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-> index acd2397..b116e98 100644
-> --- a/drivers/perf/Makefile
-> +++ b/drivers/perf/Makefile
-> @@ -1 +1,2 @@
->  obj-$(CONFIG_ARM_PMU) += arm_pmu.o
-> +obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
-
-[...]
-                    ver = {
-> +               .name           = "xgene-pmu",
-> +               .of_match_table = xgene_pmu_of_match,
-> +               .acpi_match_table = ACPI_PTR(xgene_pmu_acpi_match),
-> +       },
-> +};
+> +	if (of_property_read_bool(np, "qca,disable-2ghz"))
+> +		ah->disable_2ghz =3D true;
 > +
-> +module_platform_driver(xgene_pmu_driver);
+> +	if (of_property_read_bool(np, "qca,disable-5ghz"))
+> +		ah->disable_5ghz =3D true;
 
-builtin_platform_driver
+This is bike-shedding, but how about
 
-> +
-> +MODULE_DESCRIPTION("APM X-Gene SoC PMU driver");
-> +MODULE_AUTHOR("Hoan Tran <hotran@apm.com>");
-> +MODULE_AUTHOR("Tai Nguyen <ttnguyen@apm.com>");
-> +MODULE_LICENSE("GPL");
+	ah->is_clk_25mhz =3D of_property_read_bool(np, "qca,clk-25mhz");
+	ah->disable_2ghz =3D of_property_read_bool(np, "qca,disable-2ghz");
+	ah->disable_5ghz =3D of_property_read_bool(np, "qca,disable-5ghz");
 
-As long as this information is at the top of the file, then these can
-go away too -- just like MODULE_DEVICE_TABLE they are no-op.
+instead?
 
-Paul.
+
+Bj=C3=B8rn
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireles=
+s" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
