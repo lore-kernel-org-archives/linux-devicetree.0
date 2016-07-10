@@ -1,44 +1,106 @@
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn-yOkvZcmFvRU@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ath9k: parse the device configuration from an OF node
-Date: Sun, 10 Jul 2016 02:19:36 +0200
-Message-ID: <87inwe9wfb.fsf@miraculix.mork.no>
-References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com>
-	<20160709232834.31654-1-martin.blumenstingl@googlemail.com>
-	<20160709232834.31654-4-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160709232834.31654-4-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-	(Martin Blumenstingl's message of "Sun, 10 Jul 2016 01:28:34 +0200")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: ath9k-devel-juf53994utBLZpfksSYvnA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH v2 00/10] ARM: NUC900: Add NUC970 SoC support
+Date: Sun, 10 Jul 2016 15:27:20 +0800
+Message-ID: <1468135649-19980-1-git-send-email-vw@iommu.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+Hi,
 
-> +	if (of_property_read_bool(np, "qca,clk-25mhz"))
-> +		ah->is_clk_25mhz =3D true;
-> +
-> +	if (of_property_read_bool(np, "qca,disable-2ghz"))
-> +		ah->disable_2ghz =3D true;
-> +
-> +	if (of_property_read_bool(np, "qca,disable-5ghz"))
-> +		ah->disable_5ghz =3D true;
+This patch series added Nuvoton new SoC NUC970 development board
+support, this nuc970 belongs to nuc900 series, but many features are
+not compatible with old nuc900 SoCs like nuc910, nuc920.
 
-This is bike-shedding, but how about
+Those patches are basing on old w90x900 codes, and are using standard
+linux subsystem interface, such as dts, driver/clk, driver/clocksource
+, driver/irqchip drivers.
 
-	ah->is_clk_25mhz =3D of_property_read_bool(np, "qca,clk-25mhz");
-	ah->disable_2ghz =3D of_property_read_bool(np, "qca,disable-2ghz");
-	ah->disable_5ghz =3D of_property_read_bool(np, "qca,disable-5ghz");
+The old w90x900 plat such as nuc910,nuc960 codes will also be changed
+to new style according to nuc970 codes after those patches was accepted.
 
-instead?
+PATCH V2:
+The V2 patches change some code style, re-archtect some drivers and add reset
+and soc drivers, split some dts patches according to maillist's comments.
 
+Wan Zongshun (10):
+  ARM: NUC900: Add nuc970 machine support
+  irqchip: add irqchip driver for nuc900
+  Clocksource: add nuc970 clocksource driver
+  clk: add Clock driver for nuc970
+  power/reset: Add reset driver support for nuc900
+  soc: Add SoC specific driver support for nuc900
+  ARM: dts: Add clock header file into dt-bindings
+  ARM: dts: nuc900: Add nuc970 dts files
+  Documentation: devicetree: Add dts description for nuc900
+  nuc900: add nuc970 platform defconfig file
 
-Bj=C3=B8rn
+ .../devicetree/bindings/arm/nuvoton/nuc970.txt     |  12 +
+ .../bindings/clock/nuvoton,nuc970-clk.txt          |  13 +
+ .../interrupt-controller/nuvoton,nuc900-aic.txt    |  15 +
+ .../bindings/reset/nuvoton,nuc900-reset.txt        |  12 +
+ .../devicetree/bindings/serial/nuc970-uart.txt     |  22 +
+ .../bindings/soc/nuvoton/nuvoton,nuc900-soc.txt    |  12 +
+ .../bindings/timer/nuvoton,nuc970-tmr.txt          |  20 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/nuc970-evb.dts                   |  34 +
+ arch/arm/boot/dts/nuc970.dtsi                      |  88 ++
+ arch/arm/configs/nuc970_defconfig                  |  76 ++
+ arch/arm/mach-w90x900/Kconfig                      |  20 +
+ arch/arm/mach-w90x900/Makefile                     |   3 +
+ arch/arm/mach-w90x900/include/mach/irqs.h          |   5 +
+ arch/arm/mach-w90x900/nuc900.c                     |  41 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/nuc900/Makefile                        |   6 +
+ drivers/clk/nuc900/clk-apll.c                      | 168 ++++
+ drivers/clk/nuc900/clk-ccf.h                       |  53 ++
+ drivers/clk/nuc900/clk-nuc970.c                    | 925 +++++++++++++++++++++
+ drivers/clk/nuc900/clk-upll.c                      |  83 ++
+ drivers/clocksource/Kconfig                        |   8 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/timer-nuc900.c                 | 305 +++++++
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-nuc900.c                       | 150 ++++
+ drivers/power/reset/Kconfig                        |   7 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/nuc900-reset.c                 |  93 +++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/nuvoton/Kconfig                        |  10 +
+ drivers/soc/nuvoton/Makefile                       |   1 +
+ drivers/soc/nuvoton/soc-nuc900.c                   | 100 +++
+ include/dt-bindings/clock/nuc970-clock.h           | 233 ++++++
+ 35 files changed, 2522 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/nuvoton/nuc970.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,nuc970-clk.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nuvoton,nuc900-aic.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/nuvoton,nuc900-reset.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/nuc970-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/nuvoton/nuvoton,nuc900-soc.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,nuc970-tmr.txt
+ create mode 100644 arch/arm/boot/dts/nuc970-evb.dts
+ create mode 100644 arch/arm/boot/dts/nuc970.dtsi
+ create mode 100644 arch/arm/configs/nuc970_defconfig
+ create mode 100644 arch/arm/mach-w90x900/nuc900.c
+ create mode 100644 drivers/clk/nuc900/Makefile
+ create mode 100644 drivers/clk/nuc900/clk-apll.c
+ create mode 100644 drivers/clk/nuc900/clk-ccf.h
+ create mode 100644 drivers/clk/nuc900/clk-nuc970.c
+ create mode 100644 drivers/clk/nuc900/clk-upll.c
+ create mode 100644 drivers/clocksource/timer-nuc900.c
+ create mode 100644 drivers/irqchip/irq-nuc900.c
+ create mode 100644 drivers/power/reset/nuc900-reset.c
+ create mode 100644 drivers/soc/nuvoton/Kconfig
+ create mode 100644 drivers/soc/nuvoton/Makefile
+ create mode 100644 drivers/soc/nuvoton/soc-nuc900.c
+ create mode 100644 include/dt-bindings/clock/nuc970-clock.h
+
+-- 
+2.7.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireles=
-s" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
