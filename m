@@ -1,48 +1,69 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] Documentation: mmc: add description for new no-sd*
- and no-mmc
-Date: Mon, 11 Jul 2016 08:57:35 -0500
-Message-ID: <20160711135735.GA18339@rob-hp-laptop>
-References: <1467359130-11409-1-git-send-email-shawn.lin@rock-chips.com>
- <1467359130-11409-4-git-send-email-shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v5 19/22] sh: IO-DATA HDL-U (a.k.a landisk) IRQCHIP driver
+Date: Mon, 11 Jul 2016 09:02:12 -0500
+Message-ID: <20160711140212.GA21332@rob-hp-laptop>
+References: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
+ <1467564402-2649-20-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467359130-11409-4-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org
+In-Reply-To: <1467564402-2649-20-git-send-email-ysato@users.sourceforge.jp>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 03:45:30PM +0800, Shawn Lin wrote:
-> This patch adds description for no-sd, no-sdio, no-mmc. We
-> expect the specific boards adds these in DT to improve
-> the initialization. For instance, for a soldered eMMC slot,
-> we could skip sending SDIO and SD commands to probe its card
-> types as it's always should be the type fo MMC card.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+On Mon, Jul 04, 2016 at 01:46:39AM +0900, Yoshinori Sato wrote:
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 > ---
+>  .../interrupt-controller/iodata-landisk.txt        | 31 ++++++++++
+>  drivers/irqchip/Makefile                           |  2 +-
+>  drivers/irqchip/irq-io-landisk.c                   | 72 ++++++++++++++++++++++
+>  3 files changed, 104 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+>  create mode 100644 drivers/irqchip/irq-io-landisk.c
 > 
->  Documentation/devicetree/bindings/mmc/mmc.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index ecc007a..b2046c6 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -49,6 +49,9 @@ Optional properties:
->  - mmc-hs400-enhanced-strobe: eMMC HS400 enhanced strobe mode is supported
->  - dsr: Value the card's (optional) Driver Stage Register (DSR) should be
->    programmed with. Valid range: [0 .. 0xffff].
-> +- no-sdio: skip sending sdio cmd during initialization
-> +- no-sd: skip sending sd cmd during initialization
-> +- no-mmc: skip sending mmc cmd during initialization
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+> new file mode 100644
+> index 0000000..cf461dc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
+> @@ -0,0 +1,31 @@
+> +DT bindings for the I/O DATA HDL-U interrupt controller
+> +
+> +Required properties:
+> +
+> +  - compatible: has to be "iodata,landisk-intc".
+> +
+> +  - reg: Base address and length of interrupt controller register.
+> +
+> +  - #interrupt-cells: has to be <1>: an interrupt index.
+> +
+> +  - #address-cells: has to be <0>
+> +
+> +  - interrupt-map: Interrupt mapping on parent controller.
+> +
+> +Example
+> +-------
+> +
+> +	cpldintc: cpld@b0000000 {
+> +		compatible = "iodata,landisk-intc";
+> +		#interrupt-cells = <1>;
+> +		#address-cells = <0>;
+> +		reg = <0xb0000000 8>;
+> +		interrupt-map=<0 &shintc evt2irq(0x2a0)>,
 
-I still have issue with the description for these properties and the 
-commit msg. They are fine if described as controller limitations as Ulf 
-described. If folks want to (ab)use the properties for just skipping 
-init, then that's their problem.
+What is evt2irq? We only allow simple defines for DT files, not complex 
+macros.
 
-Rob
+Spaces around the '=' also needed.
+
+> +		              <1 &shintc evt2irq(0x2c0)>,
+> +		              <2 &shintc evt2irq(0x2e0)>,
+> +			      <3 &shintc evt2irq(0x300)>,
+> +		              <4 &shintc evt2irq(0x320)>,
+> +			      <5 &shintc evt2irq(0x340)>,
+> +		              <6 &shintc evt2irq(0x360)>,
+> +			      <7 &shintc evt2irq(0x380)>;
+> +	};
