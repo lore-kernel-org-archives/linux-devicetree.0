@@ -1,73 +1,86 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 06/10] soc: Add SoC specific driver support for nuc900
-Date: Mon, 11 Jul 2016 12:24:21 +0200
-Message-ID: <1606219.BzcByuFgJm@wuerfel>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org> <4765191.NGpMC1JR46@wuerfel> <578361B5.7010803@iommu.org>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
+Date: Mon, 11 Jul 2016 10:07:31 +0000
+Message-ID: <C89496FEAE474D468F30D558A9468D9F26CF8BC0@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
+ <20160602225815.GA5508@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <578361B5.7010803@iommu.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wan Zongshun <vw@iommu.org>
-Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, jason@lakedaemon.net, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, Wan Zongshun <mcuos.com@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hyun Kwon <hyunk@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Radhey Shyam Pandey <radheys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 11, 2016 5:07:01 PM CEST Wan Zongshun wrote:
->=20
-> On 2016=E5=B9=B407=E6=9C=8811=E6=97=A5 16:03, Arnd Bergmann wrote:
-> > On Sunday, July 10, 2016 3:27:26 PM CEST Wan Zongshun wrote:
-> >> +       ret =3D of_property_read_string(np, "compatible", &soc_dev=
-_attr->soc_id);
-> >> +       if (ret)
-> >>                return -EINVAL;
-> >> +
-> >> +       soc_dev_attr->machine =3D "NUC900EVB";
-> >> +       soc_dev_attr->family =3D "NUC900";
-> >> +       soc_dev =3D soc_device_register(soc_dev_attr);
-> >> +       if (IS_ERR(soc_dev)) {
-> >> +               kfree(soc_dev_attr);
-> >> +               return -ENODEV;
-> >> +       }
-> >> +
-> >> +       ret =3D regmap_read(syscon_regmap, GCR_CHIPID, &nuc900_chi=
-pid);
-> >> +       if (ret)
-> >> +               return -ENODEV;
-> >> +
-> >> +       device_create_file(soc_device_to_device(soc_dev), &nuc900_=
-chipid_attr);
-> >> +       device_create_file(soc_device_to_device(soc_dev), &nuc900_=
-version_attr);
-> >> +
-> >> +       dev_info(&pdev->dev, "Nuvoton Chip ID: 0x%x, Version ID:0x=
-%x\n",
-> >> +                nuc900_chipid & GCR_CHIPID_MASK,
-> >> +                (nuc900_chipid >> 24) & 0xff);
+Ping!!
+
+> -----Original Message-----
+> From: Nava kishore Manne
+> Sent: Monday, June 27, 2016 6:18 PM
+> To: 'Rob Herring' <robh@kernel.org>
+> Cc: pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+> balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
+> <hyunk@xilinx.com>; Radhey Shyam Pandey <radheys@xilinx.com>;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org
+> Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
+>
+> Ping!!
+>
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Friday, June 03, 2016 4:28 AM
+> > To: Nava kishore Manne <navam@xilinx.com>
+> > Cc: pawel.moll@arm.com; mark.rutland@arm.com;
+> > ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+> > <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+> > balbi@ti.com; gregkh@linuxfoundation.org; Hyun Kwon
+> > <hyunk@xilinx.com>; Nava kishore Manne <navam@xilinx.com>; Radhey
+> > Shyam Pandey <radheys@xilinx.com>; devicetree@vger.kernel.org; linux-
+> > arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
 > >
-> > I'm still a bit unsure about the set of attributes here.
+> > On Mon, May 30, 2016 at 10:16:38PM +0530, Nava kishore Manne wrote:
+> > > This patch updates the driver to support 64-bit DMA addressing.
+> > >
+> > > Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+> > > ---
+> > > Changes for v4:
+> > >           -Used boolen property insted of addrwith property in the DT
+> > >            as suggested by Arnd Bergmann.
+> > >           -Adopt the DT relevant changes into the driver.
+> > >
+> > > Changes for v3:
+> > >                 -Added new compatable string for 5.00 IP version as suggested by
+> > >                  Arnd Bergmann.
+> > >                 -Used write_fn() insted of lo_hi_writeq() as suggested by
+> > >                  Arnd Bergmann.
+> > >
+> > > Changes for v2:
+> > >                 -Added dma-ranges property in device tree as
+> > > suggested by Arnd
+> > Bergmann.
+> > >                 -Modified the driver code based on the xlnx,addrwidth.
+> > >
+> > >  .../devicetree/bindings/usb/udc-xilinx.txt         |  5 ++-
 > >
-> > - The "soc_id" is read from the device tree from the field that con=
-tains
-> >    the board name, I think for consistency you should try to map th=
-e
-> >    GCR_CHIPID to the name of the SoC and assign that here
->=20
-> I will try to get chipid and map it to soc name like: =E2=80=9Cnuc970=
-=E2=80=9D, "nuc910".
->=20
-> And I will set this soc name to soc_id, ok?
+> > Acked-by: Rob Herring <robh@kernel.org>
+> >
+> > >  drivers/usb/gadget/udc/udc-xilinx.c                | 52
+> > +++++++++++++++++++++-
+> > >  2 files changed, 54 insertions(+), 3 deletions(-)
 
-Ok.
 
-> > - The "machine" is hardcoded to "NUC900EVB", which in turn looks li=
-ke
-> >    a particular board but not the one you are running on. Maybe rea=
-d
-> >    that from the DT instead?
->=20
-> Should I read nuc970-evb.dts's "model" or "compatible" properties?
-
-I think "model" is best here, but see what the others do.
-
-	Arnd
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
