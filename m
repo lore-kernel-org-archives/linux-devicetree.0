@@ -1,73 +1,75 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 06/10] soc: Add SoC specific driver support for nuc900
-Date: Mon, 11 Jul 2016 12:36:16 +0200
-Message-ID: <3879062.QodNaKgPKS@wuerfel>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org> <1606219.BzcByuFgJm@wuerfel> <CAKT61h_vxcvVqqaDOn2XgtF7cBEpziSjfHRaY3eCWmM1ATfDXw@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v8 4/9] pwm: pwm-tiecap: Update dt binding document to
+ use proper unit address
+Date: Mon, 11 Jul 2016 12:33:45 +0200
+Message-ID: <20160711103345.GB5503@ulmo.ba.sec>
+References: <1462291015-1919-1-git-send-email-fcooper@ti.com>
+ <1462291015-1919-5-git-send-email-fcooper@ti.com>
+ <20160711095623.GI5823@ulmo.ba.sec>
+ <20160711100629.GJ5823@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="EuxKj2iCbKjpUGkD"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKT61h_vxcvVqqaDOn2XgtF7cBEpziSjfHRaY3eCWmM1ATfDXw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20160711100629.GJ5823@ulmo.ba.sec>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wan ZongShun <mcuos.com@gmail.com>
-Cc: Wan Zongshun <vw@iommu.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: robh+dt@kernel.org, tony@atomide.com, linux@arm.linux.org.uk, paul@pwsan.com, t-kristo@ti.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 11, 2016 6:28:57 PM CEST Wan ZongShun wrote:
-> 2016-07-11 18:24 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> > On Monday, July 11, 2016 5:07:01 PM CEST Wan Zongshun wrote:
-> >>
-> >> On 2016=E5=B9=B407=E6=9C=8811=E6=97=A5 16:03, Arnd Bergmann wrote:
-> >> > On Sunday, July 10, 2016 3:27:26 PM CEST Wan Zongshun wrote:
-> >> >> +       ret =3D of_property_read_string(np, "compatible", &soc_=
-dev_attr->soc_id);
-> >> >> +       if (ret)
-> >> >>                return -EINVAL;
-> >> >> +
-> >> >> +       soc_dev_attr->machine =3D "NUC900EVB";
-> >> >> +       soc_dev_attr->family =3D "NUC900";
-> >> >> +       soc_dev =3D soc_device_register(soc_dev_attr);
-> >> >> +       if (IS_ERR(soc_dev)) {
-> >> >> +               kfree(soc_dev_attr);
-> >> >> +               return -ENODEV;
-> >> >> +       }
-> >> >> +
-> >> >> +       ret =3D regmap_read(syscon_regmap, GCR_CHIPID, &nuc900_=
-chipid);
-> >> >> +       if (ret)
-> >> >> +               return -ENODEV;
-> >> >> +
-> >> >> +       device_create_file(soc_device_to_device(soc_dev), &nuc9=
-00_chipid_attr);
-> >> >> +       device_create_file(soc_device_to_device(soc_dev), &nuc9=
-00_version_attr);
-> >> >> +
-> >> >> +       dev_info(&pdev->dev, "Nuvoton Chip ID: 0x%x, Version ID=
-:0x%x\n",
-> >> >> +                nuc900_chipid & GCR_CHIPID_MASK,
-> >> >> +                (nuc900_chipid >> 24) & 0xff);
-> >> >
-> >> > I'm still a bit unsure about the set of attributes here.
-> >> >
-> >> > - The "soc_id" is read from the device tree from the field that =
-contains
-> >> >    the board name, I think for consistency you should try to map=
- the
-> >> >    GCR_CHIPID to the name of the SoC and assign that here
-> >>
-> >> I will try to get chipid and map it to soc name like: =E2=80=9Cnuc=
-970=E2=80=9D, "nuc910".
-> >>
-> >> And I will set this soc name to soc_id, ok?
-> >
-> > Ok.
->=20
-> Maybe I also can set versionid as soc name partly, like
-> nuc970-version1,nuc970-version2? and then set the to soc_id, make
-> sense?
->=20
 
-I didn't exactly understand what the suggestion is, maybe send that
-as code so I see what you mean.
+--EuxKj2iCbKjpUGkD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	Arnd
+On Mon, Jul 11, 2016 at 12:06:29PM +0200, Thierry Reding wrote:
+> On Mon, Jul 11, 2016 at 11:56:23AM +0200, Thierry Reding wrote:
+> > On Tue, May 03, 2016 at 10:56:50AM -0500, Franklin S Cooper Jr wrote:
+> > > Replace unit address from 0 to the proper physical address. Also insu=
+re
+> > > that the unit address matches the reg property address.
+> > >=20
+> > > Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/pwm/pwm-tiecap.txt | 8 ++++----
+> > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >=20
+> > I applied this long ago but never let you know: Applied, thanks.
+>=20
+> Actually I didn't. And it seems the reason is that it doesn't apply
+> cleanly. For some reason my tree doesn't have an entry for the ecap
+> example on am437x. Am I missing a patch? Can you resend whatever is
+> not in linux-next yet?
+
+Oh, nevermind my blabbering, it took me too long to realize that this is
+the series that Tony had picked up for the most part, and I hadn't
+properly marked it done in patchwork.
+
+I'll go get some coffee now.
+
+Thierry
+
+--EuxKj2iCbKjpUGkD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXg3YJAAoJEN0jrNd/PrOhzdwP/iZmYhqh/Q7NjSWzUse3NL/x
+K6W5441H1aNOs9T9gE8iTWd3d+wVimySETpZTCg7rFH0BdDrRUx5ZhKbtWOlcem4
+L6DpCjhEsPu9ObVw8vBUGaqVkh+GVueV1p6sRlb8F2FdDZtlhBj+mn89xtxDpFKQ
+/fp4rykEsh5PhalxBg//9Zbk3at4ouVev7jUNfB3Qxl5U0kxiPmkQ/sETNp2sjoX
+TxqbA23rD0B0YDAsk5iYUognAOLUcOXVqeyaw46r2/j/w35a8wzW/BLlfS0ePl9J
+Nn2o6xxWm4yEG/5F7+souAa0/65DTERe1nE5OW1UplpVsFFzBHCiH9hjgX2eiRHW
+BTCcibLN5y/w9r+tJadsE1ppN5SxdmBsFDwTdRj1/FscGJmc6nb59bHTf6HxVRHW
+fLlgCDu44WEJ1LkrAqrq/PEiI0Il/hpO90IEHGJgF1Jbyc7eJfIluSJBsT2D94C5
+faQtqO8ZC/rI01LF9pB3IfB9keb43H7c8u+T5t9gHG6QWY1smN9KNUyEJQ4HU8yz
+zfMqp7RlQdfFcnJWGLv60wv1pArOUwIYLgIfiMXgo47evWFrwM51QezWQ+iwgntA
+IPG+o1CeU/PeUub0Cir53su4Rb9J+oJGTMM5kiLicMf5envlFyBY/mfDq9vezBDn
+09ar2DQzX2bP1KfWORs5
+=Mx4R
+-----END PGP SIGNATURE-----
+
+--EuxKj2iCbKjpUGkD--
