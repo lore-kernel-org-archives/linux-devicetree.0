@@ -1,56 +1,90 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V8 1/2] regulator: Add document for MT6323 regulator
-Date: Mon, 11 Jul 2016 22:07:54 +0100
-Message-ID: <20160711210754.GA9976@sirena.org.uk>
-References: <1468240179-7558-1-git-send-email-john@phrozen.org>
- <20160711180805.GG3701@sirena.org.uk>
- <cef78bd8-9a4a-e848-d7cb-13a27127f11e@phrozen.org>
- <20160711192211.GI3701@sirena.org.uk>
- <c1acbf13-93a0-4257-ee48-4885a87fede5@phrozen.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] Documentation: dt: net: add ath9k wireless device binding
+Date: Mon, 11 Jul 2016 23:21:26 +0200
+Message-ID: <CAFBinCBYmpBVph9vmWcPT512o2ObgmYn4naS2cTrpL61q6u1xw@mail.gmail.com>
+References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com>
+ <1746957.vJhcHQMZVi@wuerfel> <CAFBinCBbzMM0Pz8s444YE+NSN+035+o8PtNBoUn4v8yPMzG9Mw@mail.gmail.com>
+ <1877260.9mAQ7eY9me@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c1acbf13-93a0-4257-ee48-4885a87fede5@phrozen.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Crispin <john@phrozen.org>
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1877260.9mAQ7eY9me@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 11, 2016 at 12:01 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> ath9k reads the data from the EEPROM into memory. With that property
+>> disabled ath9k simply assumes that the endianness of the values in the
+>> EEPROM are having the correct endianness for the host system (in other
+>> words: no swap is being applied).
+>> I am not sure I understand you correctly, but isn't what you are
+>> explaining an issue in the ath9k code, rather than in this
+>> documentation?
+>
+> I looked at the code more to find that out now, but I'm more confused
+> now, as the eeprom seems to be read as a byte stream, and the endianess
+> conversion that the driver performs is not on the data values in it,
+> but seems to instead swap the bytes in each 16-bit word, regardless
+> of the contents (the values inside of the byte stream are always
+> interpreted as big-endian). Is that a correct observation?
+that seems to be the case for the ar9003 eeprom. Other implementations
+are doing it different, look at ath9k_hw_ar9287_check_eeprom for
+example: first ath9k_hw_nvram_swap_data checks the two magic bytes at
+the beginning of the data and swaps the bytes in each 16-bit word if
+the magic bytes don't match the magic bytes for the "native system
+endianness" (see AR5416_EEPROM_MAGIC). Then more swapping is applied.
+I asked for more details about the EEPROM format (specifically the
+endianness part) here [0] as I don't have access to the datasheets
+(all I have is the ath9k code)
 
---M9NhX3UHpAaciwkO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> What I see in ath_pci_eeprom_read() is that the 16-bit words are taken
+> from the lower 16 bit of the little-endian AR_EEPROM_STATUS_DATA
+> register. As this is coming from a PCI register, it must have a device
+> specific endianess that is identical on all CPUs, so in the description
+> above, mentioning CPU endianess is a bit confusing. I could not find
+> the code that does the conditional byteswap, instead this function
+>
+> static bool ar9300_eeprom_read_byte(struct ath_hw *ah, int address,
+>                                     u8 *buffer)
+> {
+>         u16 val;
+>
+>         if (unlikely(!ath9k_hw_nvram_read(ah, address / 2, &val)))
+>                 return false;
+>
+>         *buffer = (val >> (8 * (address % 2))) & 0xff;
+>         return true;
+> }
+>
+> evidently assumes that the lower 8 bit of the 16-bit data from PCI
+> come first, i.e. it byteswaps on big-endian CPUs to get the bytestream
+> back into the order in which it is stored in the EEPROM.
+Please have a look at the ath9k_hw_nvram_swap_data function and
+eeprom_ops.check_eeprom (for example ath9k_hw_ar9287_check_eeprom).
+These are performing the conditional swapping (in addition to whatever
+previous swapping there was).
+The basic code works like this: read the full EEPROM data into memory
+(either from PCI bus, ath9k_platform_data or request_firmware), then
+eeprom_ops.check_eeprom will call ath9k_hw_nvram_swap_data for 16-bit
+word swapping and afterwards the check_eeprom implementation will doe
+further swapping.
+Apart from that your findings seem correct (at least this is identical
+to how I would interpret the code).
 
-On Mon, Jul 11, 2016 at 10:31:45PM +0200, John Crispin wrote:
+> Interestingly, this also seems to happen for ath_ahb_eeprom_read()
+> even though on that one the value does not get swapped by the bus
+> accessor, so presumably big-endian machines with a ahb based ath9k
+> store their eeprom byte-reversed?
+on AHB the eeprom data has to be provided via ath9k_platform_data /
+request_firmware mechanism. Thus there is no bus specific swapping,
+only the ath9k_hw_nvram_swap_data / eeprom_ops.check_eeprom swapping
+is applied in this case.
 
-> maybe i am missing something here, but i can see the dependencies inside
-> the for-next branch of
-> git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git. is
-> this not the tree i should base patches on for v4.8 ?
 
-Oh, so these aren't things that Lee just applied but rather things that
-have propagated through?  You didn't say what commits you were talking
-about, you linked to a long gitweb URL that would have been difficult to
-paste due to wrapping.  This sort of thing is why it's really helpful to
-make your e-mails directly human readable, saying something like "these
-depend on change X which is in Linus' tree now" would've made this
-clear.
-
---M9NhX3UHpAaciwkO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXhAqoAAoJECTWi3JdVIfQTLoH/jr0xdIPvmi8cunTocybOSrB
-5HkLOuAGuIrxyuU20n/1gXVohQHT47HhGteqi8Vw4HSDkwBhVvz8uruJ2EnPDxcC
-SCLwsuYVD82hI/cBU4z2lNzctFf7BsaHZ6lOGNTItUw/DuA84R0b3QkCD9IqyS9a
-Ym15a3jm+Xfa+vsXTSULWWLI7VPswmSuh49w86RHr9G4Pbmosoa42LBvWLl1ph8V
-bqe4Kb75rYoIjdQV1il2k+cNFXnUk2kqGwW3xBF63Bz56wB6sCf9Su9FN5oTpIm0
-yn16u1rr8GRdpM5Ov9AdXjwveEWVFUhatfogkNOycnPyACXdmY74yPem7Ht0WnY=
-=ckCh
------END PGP SIGNATURE-----
-
---M9NhX3UHpAaciwkO--
+[0] http://thread.gmane.org/gmane.linux.kernel.wireless.general/153569
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
