@@ -1,52 +1,122 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: dts: r8a7792: remove ADSP clock
-Date: Tue, 12 Jul 2016 00:52:43 +0300
-Message-ID: <6927311.Po2EPBmxEp@wasted.cogentembedded.com>
-References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v2 04/10] clk: add Clock driver for nuc970
+Date: Mon, 11 Jul 2016 15:14:35 -0700
+Message-ID: <146827527560.73491.7859004638616123566@resonance>
+References: <1468135649-19980-1-git-send-email-vw@iommu.org>
+ <1468135649-19980-5-git-send-email-vw@iommu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1529351.Fac5N2tKoF@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1468135649-19980-5-git-send-email-vw@iommu.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, robh@kernel.org, jason@lakedaemon.net, p.zabel@pengutronix.de, Wan Zongshun <vw@iommu.org>, Wan Zongshun <mcuos.com@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Simon Horman told  me  that R8A7792 had ADSP clock (based on the most recent
-R-Car gen2 manual) but when I  got that manual as well, this claim proved
-to be false: R8A7792 is the only gen2 SoC that doesn't  have ADSP at all.
-Remove that  clock  for good...
+Quoting Wan Zongshun (2016-07-10 00:27:24)
+> diff --git a/drivers/clk/nuc900/clk-apll.c b/drivers/clk/nuc900/clk-apll.c
+> new file mode 100644
+> index 0000000..a05aec7
+> --- /dev/null
+> +++ b/drivers/clk/nuc900/clk-apll.c
+> @@ -0,0 +1,168 @@
+> +/*
+> + * Copyright 2016 Wan Zongshun <mcuos.com@gmail.com>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/io.h>
+> +#include <linux/slab.h>
+> +#include <linux/kernel.h>
+> +#include <linux/err.h>
+> +
+> +#include "clk-ccf.h"
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Maybe call it clk-nuc.h?
 
----
- arch/arm/boot/dts/r8a7792.dtsi            |    2 +-
- include/dt-bindings/clock/r8a7792-clock.h |    1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+> +static struct clk_ops clk_apll_ops = {
+> +       .recalc_rate = clk_apll_recalc_rate,
+> +       .enable = clk_apll_enable,
+> +       .disable = clk_apll_disable,
 
-Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-@@ -464,7 +464,7 @@
- 			clocks = <&extal_clk>;
- 			#clock-cells = <1>;
- 			clock-output-names = "main", "pll0", "pll1", "pll3",
--					     "lb", "qspi", "z", "adsp";
-+					     "lb", "qspi", "z";
- 			#power-domain-cells = <0>;
- 		};
- 
-Index: renesas/include/dt-bindings/clock/r8a7792-clock.h
-===================================================================
---- renesas.orig/include/dt-bindings/clock/r8a7792-clock.h
-+++ renesas/include/dt-bindings/clock/r8a7792-clock.h
-@@ -18,7 +18,6 @@
- #define R8A7792_CLK_LB			4
- #define R8A7792_CLK_QSPI		5
- #define R8A7792_CLK_Z			6
--#define R8A7792_CLK_ADSP		7
- 
- /* MSTP0 */
- #define R8A7792_CLK_MSIOF0		0
+Can you provide a .is_enabled?
+
+> +static void __init nuc970_clocks_init(struct device_node *np)
+> +{
+> +       int i, ret;
+> +
+> +       clkctrl = of_iomap(np, 0);
+> +       if (!clkctrl)
+> +               pr_err("%s: unable to map registers\n", np->full_name);
+> +
+> +
+> +       /* source */
+> +       clk[XIN]        = nuc970_clk_fixed("xin", 12000000);
+> +       clk[XIN32K]     = nuc970_clk_fixed("xin32k", 32768);
+> +       clk[APLL]       = nuc970_clk_apll("apll", "xin", REG_CLK_APLLCON);
+> +       clk[UPLL]       = nuc970_clk_upll("upll", "xin", REG_CLK_UPLLCON);
+> +       clk[XIN128_DIV] = nuc970_clk_fixed_factor("xin128_div", "xin", 1, 128);
+> +       clk[SYS_MUX]    = nuc970_clk_mux("sys_mux", REG_CLK_DIV0, 3, 2,
+> +                                        sys_sel_clks,
+> +                                        ARRAY_SIZE(sys_sel_clks));
+
+Instead of executing all of these registration functions, how about
+initializing your clock data statically, and then simply calling
+clk_hw_register?
+
+For an example see the recently merged drivers/clk/meson/gxbb.c
+
+> +       for (i = 0; i < ARRAY_SIZE(clk); i++)
+> +               if (IS_ERR(clk[i]))
+> +                       pr_err("nuc970 clk %d: register failed with %ld\n",
+> +                               i, PTR_ERR(clk[i]));
+
+Better to fail quickly, bail out and unwind your clk registration
+instead of trying to register everything and then walk the list looking
+for failures.
+
+> +
+> +       clk_data.clks = clk;
+> +       clk_data.clk_num = ARRAY_SIZE(clk);
+> +
+> +       ret = of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
+> +       if (ret)
+> +               pr_err("Failed to register OF clock provider\n");
+> +
+> +       /* Register clock device */
+> +       clk_register_clkdev(clk[TIMER0_GATE], "timer0", NULL);
+> +       clk_register_clkdev(clk[TIMER1_GATE], "timer1", NULL);
+
+Again, look at how the gxbb.c driver does this. Why do you need to call
+clk_register_clkdev? You're using of_clk_add_provider above, so that
+should be enough to perform lookups.
+
+> +       /* enable some important clocks */
+> +       clk_prepare_enable(clk_get(NULL, "cpu"));
+> +       clk_prepare_enable(clk_get(NULL, "hclk"));
+> +       clk_prepare_enable(clk_get(NULL, "sram"));
+> +       clk_prepare_enable(clk_get(NULL, "dram"));
+> +       clk_prepare_enable(clk_get(NULL, "ddr_hclk"));
+
+You can use the CLK_IS_CRITICAL flag for these clocks if you want. It
+would be better to have drivers that claim them and enable them of
+course.
+
+> +}
+> +
+> +CLK_OF_DECLARE(nuc970_clk, "nuvoton,nuc970-clk", nuc970_clocks_init);
+
+Why do you need to use CLK_OF_DECLARE? Please convert this to a
+platform_driver and load it at module_init.
+
+Regards,
+Mike
