@@ -1,66 +1,73 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v8 4/9] pwm: pwm-tiecap: Update dt binding document to
- use proper unit address
-Date: Mon, 11 Jul 2016 12:06:29 +0200
-Message-ID: <20160711100629.GJ5823@ulmo.ba.sec>
-References: <1462291015-1919-1-git-send-email-fcooper@ti.com>
- <1462291015-1919-5-git-send-email-fcooper@ti.com>
- <20160711095623.GI5823@ulmo.ba.sec>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 06/10] soc: Add SoC specific driver support for nuc900
+Date: Mon, 11 Jul 2016 12:24:21 +0200
+Message-ID: <1606219.BzcByuFgJm@wuerfel>
+References: <1468135649-19980-1-git-send-email-vw@iommu.org> <4765191.NGpMC1JR46@wuerfel> <578361B5.7010803@iommu.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ed/6oDxOLijJh8b0"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160711095623.GI5823@ulmo.ba.sec>
+In-Reply-To: <578361B5.7010803@iommu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: robh+dt@kernel.org, tony@atomide.com, linux@arm.linux.org.uk, paul@pwsan.com, t-kristo@ti.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com
+To: Wan Zongshun <vw@iommu.org>
+Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, jason@lakedaemon.net, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, Wan Zongshun <mcuos.com@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---ed/6oDxOLijJh8b0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 11, 2016 at 11:56:23AM +0200, Thierry Reding wrote:
-> On Tue, May 03, 2016 at 10:56:50AM -0500, Franklin S Cooper Jr wrote:
-> > Replace unit address from 0 to the proper physical address. Also insure
-> > that the unit address matches the reg property address.
-> >=20
-> > Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> > ---
-> >  Documentation/devicetree/bindings/pwm/pwm-tiecap.txt | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
+On Monday, July 11, 2016 5:07:01 PM CEST Wan Zongshun wrote:
 >=20
-> I applied this long ago but never let you know: Applied, thanks.
+> On 2016=E5=B9=B407=E6=9C=8811=E6=97=A5 16:03, Arnd Bergmann wrote:
+> > On Sunday, July 10, 2016 3:27:26 PM CEST Wan Zongshun wrote:
+> >> +       ret =3D of_property_read_string(np, "compatible", &soc_dev=
+_attr->soc_id);
+> >> +       if (ret)
+> >>                return -EINVAL;
+> >> +
+> >> +       soc_dev_attr->machine =3D "NUC900EVB";
+> >> +       soc_dev_attr->family =3D "NUC900";
+> >> +       soc_dev =3D soc_device_register(soc_dev_attr);
+> >> +       if (IS_ERR(soc_dev)) {
+> >> +               kfree(soc_dev_attr);
+> >> +               return -ENODEV;
+> >> +       }
+> >> +
+> >> +       ret =3D regmap_read(syscon_regmap, GCR_CHIPID, &nuc900_chi=
+pid);
+> >> +       if (ret)
+> >> +               return -ENODEV;
+> >> +
+> >> +       device_create_file(soc_device_to_device(soc_dev), &nuc900_=
+chipid_attr);
+> >> +       device_create_file(soc_device_to_device(soc_dev), &nuc900_=
+version_attr);
+> >> +
+> >> +       dev_info(&pdev->dev, "Nuvoton Chip ID: 0x%x, Version ID:0x=
+%x\n",
+> >> +                nuc900_chipid & GCR_CHIPID_MASK,
+> >> +                (nuc900_chipid >> 24) & 0xff);
+> >
+> > I'm still a bit unsure about the set of attributes here.
+> >
+> > - The "soc_id" is read from the device tree from the field that con=
+tains
+> >    the board name, I think for consistency you should try to map th=
+e
+> >    GCR_CHIPID to the name of the SoC and assign that here
+>=20
+> I will try to get chipid and map it to soc name like: =E2=80=9Cnuc970=
+=E2=80=9D, "nuc910".
+>=20
+> And I will set this soc name to soc_id, ok?
 
-Actually I didn't. And it seems the reason is that it doesn't apply
-cleanly. For some reason my tree doesn't have an entry for the ecap
-example on am437x. Am I missing a patch? Can you resend whatever is
-not in linux-next yet?
+Ok.
 
-Thierry
+> > - The "machine" is hardcoded to "NUC900EVB", which in turn looks li=
+ke
+> >    a particular board but not the one you are running on. Maybe rea=
+d
+> >    that from the DT instead?
+>=20
+> Should I read nuc970-evb.dts's "model" or "compatible" properties?
 
---ed/6oDxOLijJh8b0
-Content-Type: application/pgp-signature; name="signature.asc"
+I think "model" is best here, but see what the others do.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXg2+jAAoJEN0jrNd/PrOh5JsP/i0T3/m0XUoP5hAgP9iz4fEz
-+dFTXJChc/J0DklRURH1d0UAM6GQU1TpBon9hY4GKU9A00DNNemxo+hyDCix0ETE
-H90PtwWoIsD3kbd+sFpbZFqLNTRM3r9oI18He6OAyy0Gvbx6G1aakqF78V14xxfc
-w5sLmrJQDHNY6PqoNTks7ZgNxRLm+zQbl2NvbRDXSh1WS+5smj44W1RfkaLCq6jt
-ewfEpV4dvFJR6/bX+PiFerDndG98pCeZIQjgLDT2gcabbaPzo8C2pq9kti3kmeXi
-ubDLo17vK/DsZCgO3LyyRVUiadHs0z5DgtCbVbg7MVziFKduZZuEzP5X9tzB01zk
-ja6v2Bibra2YL93KOc6erNsrzLfPuPtkp3bqraZpcGf3u4TpIl9niLrRNPKeM16+
-FOk3oJtn+ROKeOfHBgEPHNsDSWF2aBBCjrahZqWHPJUui7XkSEq3prL88fEJPIPn
-4JShghxqXdbtsyNgbFv3wLnAUrobQBFlDGAFIlIotiJKP9m2xR6L6vnxkaL048iX
-Bbgnhaz5UzsG+t4XNDQxt2orG7V2NnQLOV6ha67e57NNmYrrrCJFgx8bozIZ1ycv
-AAB2iQBt7mOGlzKr+e90hBAKCyT0CXTjeRzeHOgEqRXfkP8qbLs1YAQZL759TrA6
-29zFvSmIXuSPc2pdTP2N
-=T0aR
------END PGP SIGNATURE-----
-
---ed/6oDxOLijJh8b0--
+	Arnd
