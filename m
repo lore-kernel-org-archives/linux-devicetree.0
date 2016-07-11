@@ -1,41 +1,90 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: Re: [PATCH v5 2/3] pwm: iproc: Add support for Broadcom iproc pwm controller
-Date: Mon, 11 Jul 2016 12:22:38 +0530
-Message-ID: <CAL2FKYkH86zhPOrEZQ8Q=WeKUV=2KFfxfA-JTrxiqMnCceQ87g@mail.gmail.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v2 2/5] usb: DT binding documentation for qoriq usb 2.0
+ controller
+Date: Mon, 11 Jul 2016 14:48:45 +0800
+Message-ID: <20160711064845.GH31647@shlinux2>
+References: <1468038656-10345-1-git-send-email-rajesh.bhagat@nxp.com>
+ <1468038656-10345-3-git-send-email-rajesh.bhagat@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468038656-10345-3-git-send-email-rajesh.bhagat@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-kernel@vger.kernel.org
+To: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Peter.Chen@nxp.com, gregkh@linuxfoundation.org, kishon@ti.com, robh+dt@kernel.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+On Sat, Jul 09, 2016 at 10:00:53AM +0530, Rajesh Bhagat wrote:
+> Describes the qoriq usb 2.0 controller driver binding, currently used
+> for LS1021A and LS1012A platform.
+> 
+> Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+> ---
+> Changes in v2: 
+>  - Adds DT binding documentation for qoriq usb 2.0 controller
+>  - Changed the compatible string to fsl,ci-qoriq-usb2
+> 
+>  .../devicetree/bindings/usb/ci-hdrc-qoriq.txt      | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-qoriq.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-qoriq.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-qoriq.txt
+> new file mode 100644
+> index 0000000..8ad7306
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-qoriq.txt
+> @@ -0,0 +1,34 @@
+> +* Freescale QorIQ SoC USB 2.0 Controllers
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,ci-qoriq-usb2"
+> +  Wherever applicable, the IP version of the USB controller should
+> +  also be mentioned (for eg. fsl,ci-qoriq-usb2-vX.Y).
+> +  where, X.Y is IP version of USB controller.
 
-On Fri, Jul 8, 2016 at 8:46 PM, Thierry Reding <thierry.reding@gmail.com> wrote:
-> On Tue, Jul 05, 2016 at 02:00:25AM -0400, Yendapally Reddy Dhananjaya Reddy wrote:
->> Add support for the PWM controller present in Broadcom's iProc
->> family of SoCs.It has been tested on the  Northstar+ bcm958625HR board.
->>
->> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
->> ---
->>  drivers/pwm/Kconfig         |  10 ++
->>  drivers/pwm/Makefile        |   1 +
->>  drivers/pwm/pwm-bcm-iproc.c | 268 ++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 279 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-bcm-iproc.c
->
-> I've applied this, but I had to make a couple of changes for coding
-> style and to squash compiler warnings. Please check the PWM tree's
-> for-next branch to see if it still works for you.
->
+Why you need to add IP version at compatible string?
+Does it can't be read out from ID register of Identification Registers.
 
-  Thanks. It is working fine for me. A small change is required here,
-NSEC_PER_SEC
-instead of USEC_PER_SEC in two places.
+> +- reg: Should contain registers location and length
+> +- interrupts: Should contain controller interrupt
+> +- phy-names: from the *Generic PHY* bindings
+> +- phys: from the *Generic PHY* bindings
+> +- clocks: clock provider specifier
+> +- clock-names: shall be "usb2-clock"
+> +Refer to clk/clock-bindings.txt for generic clock consumer properties
+> +
+> +Recommended properties:
+> +- dr_mode: One of "host" or "peripheral".
 
-Thanks
-Dhananjay
+Do you support dual-role?
 
+> +- phy_type: the type of the phy connected to the core. Should be one
+> +  of "utmi", "utmi_wide", "ulpi", "serial" or "hsic". Without this
+> +  property the PORTSC register won't be touched
+> +
+> +Examples:
+> +usb@8600000 {
+> +	compatible =  "fsl,ci-qoriq-usb2",
+> +		      "fsl,ci-qoriq-usb2-v2.5";
+> +	reg = <0x0 0x8600000 0x0 0x1000>;
+> +	interrupts = <0 139 0x4>;
+> +	phy-names = "usb2-phy";
+> +	phys = <&usbphy0>;
+> +	clock-names = "usb2-clock";
+> +	clocks = <&clockgen 4 3>;
+> +	dr_mode = "host";
+> +	phy_type = "ulpi";
+> +};
+> -- 
+> 2.6.2.198.g614a2ac
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-> Thierry
+-- 
+
+Best Regards,
+Peter Chen
