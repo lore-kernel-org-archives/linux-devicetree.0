@@ -1,40 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] drivers/perf: arm-pmu: Handle per-interrupt affinity
- mask
-Date: Mon, 11 Jul 2016 09:37:16 -0500
-Message-ID: <20160711143716.GA9267@rob-hp-laptop>
-References: <1467815627-4061-1-git-send-email-marc.zyngier@arm.com>
+Subject: Re: [PATCH 2/2] dt-bindings: spi: add binding for clps711x SPI
+Date: Mon, 11 Jul 2016 09:42:38 -0500
+Message-ID: <20160711144238.GA10877@rob-hp-laptop>
+References: <20160706145326.2658600-1-arnd@arndb.de>
+ <20160706145326.2658600-2-arnd@arndb.de>
+ <20160707092546.GJ6247@sirena.org.uk>
+ <3501318.cujsGY8KyD@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467815627-4061-1-git-send-email-marc.zyngier@arm.com>
+In-Reply-To: <3501318.cujsGY8KyD@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Will Deacon <will.deacon@arm.com>, cf@rock-chips.com, huangtao@rock-chips.com, jay.xu@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Mark Rutland <mark.rutland@arm.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shiyan <shc_work@mail.ru>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 06, 2016 at 03:33:47PM +0100, Marc Zyngier wrote:
-> On a big-little system, PMUs can be wired to CPUs using per CPU
-> interrups (PPI). In this case, it is important to make sure that
-> the enable/disable do happen on the right set of CPUs.
+On Thu, Jul 07, 2016 at 11:48:25AM +0200, Arnd Bergmann wrote:
+> On Thursday, July 7, 2016 11:25:46 AM CEST Mark Brown wrote:
+> > On Wed, Jul 06, 2016 at 04:53:13PM +0200, Arnd Bergmann wrote:
+> > > This documents the binding used by Alexander Shiyan's DT support for
+> > > the clps711x SPI controller.
+> > 
+> > Please use subject lines matching the style for the subsystem.  This
+> > makes it easier for people to identify relevant patches.
 > 
-> So instead of relying on the interrupt-affinity property, we can
-> use the actual percpu affinity that DT exposes as part of the
-> interrupt specifier. The DT binding is also updated to reflect
-> the fact that the interrupt-affinity property shouldn't be used
-> in that case.
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
-> * From v1:
->   - propagate the error if irq_get_percpu_devid_partition fails
-> 
->  Documentation/devicetree/bindings/arm/pmu.txt |  4 +++-
+> I tried, though it's a bit tricky for dt-bindings. When I created the
+> patch, using 'dt-bindings: $SUBSYSTEM' appeared to be the most common
+> one, ahead of '$SUBSYSTEM' (mainly used for combined patches)
+> and other random prefixes.
 
-I acked v1, please add acks.
+There isn't. Mark and I don't agree here as the former is my 
+preference, but I care less than he does. :) 
 
 Rob
-
->  drivers/perf/arm_pmu.c                        | 27 ++++++++++++++++++++++-----
->  2 files changed, 25 insertions(+), 6 deletions(-)
