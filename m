@@ -1,84 +1,26 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: support the usb2phy for rk3399 evb
-Date: Mon, 11 Jul 2016 15:43:03 +0800
-Message-ID: <cd9056c1-6fff-d02c-3fc0-3d48d9850504@rock-chips.com>
-References: <1467866800-24794-1-git-send-email-wxt@rock-chips.com>
- <2150255.RfISFviJKP@phil>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: rcar: add R8A7792 support
+Date: Mon, 11 Jul 2016 09:49:05 +0200
+Message-ID: <CACRpkdawxq6G-h3tAKA4vdq=ix44C2AAjBmK5ipvkfqsrEAF0g@mail.gmail.com>
+References: <1501145.5ro9yfox2Z@wasted.cogentembedded.com> <3799541.jpRKLHA1Qm@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2150255.RfISFviJKP@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, william.wu@rock-chips.com, huangtao@rock-chips.com, eddie.cai@rock-chips.comwilliam.wu@rock-chips.com, frank.wang@rock-chips.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <3799541.jpRKLHA1Qm@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Thu, Jul 7, 2016 at 4:11 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
 
-On 2016/7/7 18:11, Heiko Stuebner wrote:
-> Hi,
+> Renesas  R8A7792 SoC is a member of the R-Car gen2 family, add support for
+> its GPIO controllers.
 >
-> Am Donnerstag, 7. Juli 2016, 12:46:40 schrieb Caesar Wang:
->> From: Frank Wang <frank.wang@rock-chips.com>
->>
->> This patch adds the usb2phy needed dts node information for rk3399.
->>
->> USB2.0 PHY is comprised of one Host port and one OTG port.
->> Host Port is for USB2.0 host controller; OTG port is for USB2.0 part of
->> USB3.0 OTG controller, and as a part to construct a fully feature TypeC
->> subsystem.
->>
->> The USB2.0 vbus gpio is board specific, it's no same with all rk3399
->> boards, so move it into evb voard.
->>
->> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
->> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
->> ---
->>
->>   arch/arm64/boot/dts/rockchip/rk3399-evb.dts |  4 ++++
->>   arch/arm64/boot/dts/rockchip/rk3399.dtsi    | 19 +++++++++++++++++++
->>   2 files changed, 23 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 4c84229..21d147f 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -242,6 +242,25 @@
->>   		status = "disabled";
->>   	};
->>
->> +	usb2phy: usb2phy {
->> +		compatible = "rockchip,rk3399-usb-phy";
->> +		rockchip,grf = <&grf>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		usb2phy0: usb2-phy0 {
->> +			#phy-cells = <0>;
->> +			#clock-cells = <0>;
->> +			reg = <0xe458>;
->> +		};
->> +
->> +		usb2phy1: usb2-phy1 {
->> +			#phy-cells = <0>;
->> +			#clock-cells = <0>;
->> +			reg = <0xe468>;
->> +		};
->> +	};
->> +
-> The rk3399 uses the innosilicon usb2 phy and the binding we've come up for
-> it looks a lot different than the above. So I'm not sure where this is
-> coming from, especially as I haven't seen the driver part for the rk3399 at
-> all yet. So far Frank was always working on te rk3366 variant, which seemed
-> to be the most complete.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Yeah, rk3399 is ready for using the new driver and the binding which I 
-have handed out earlier, but it seems that they have not applied yet, so 
-shall we send out the new patches for rk3399 until they will be applied?
+Patch applied.
 
-BR.
-Frank
-
-> Heiko
->
+Yours,
+Linus Walleij
