@@ -1,27 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt/bindings: Add bindings for JC-42.4 compatible
- temperature sensors
-Date: Mon, 11 Jul 2016 09:30:25 -0500
-Message-ID: <20160711143025.GA6312@rob-hp-laptop>
-References: <1467737073-7949-1-git-send-email-linux@roeck-us.net>
+Subject: Re: [PATCH v4 1/4] mfd: Add DT bindings documentation for Samsung
+ Exynos LPASS
+Date: Mon, 11 Jul 2016 09:32:34 -0500
+Message-ID: <20160711143234.GA7163@rob-hp-laptop>
+References: <1467738785-31410-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467737073-7949-1-git-send-email-linux@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Joachim Eastwood <manabian@gmail.com>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
+In-Reply-To: <1467738785-31410-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: lee.jones@linaro.org, broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, ideal.song@samsung.com, inki.dae@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 05, 2016 at 09:44:31AM -0700, Guenter Roeck wrote:
-> Provide generic bindings for all Jedec JC-42.4 compatible temperature
-> sensor chips.
+On Tue, Jul 05, 2016 at 07:13:05PM +0200, Sylwester Nawrocki wrote:
+> This patch adds documentation of the DT bindings for the Samsung
+> Exynos SoC Low Power Audio Subsystem.
 > 
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > ---
->  Documentation/devicetree/bindings/hwmon/jc42.txt | 42 ++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/jc42.txt
+> 
+> There were few rather significant additions since v3 and I had to drop tags:
+>  Acked-by: Rob Herring <robh@kernel.org>
+>  Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
+> Changes since v3:
+>  - moved to Documentation/devicetree/bindings/mfd,
+>  - added #address-cells, #size-cells, ranges as required
+>    properties,
+>  - added description of the IP block subnodes and links
+>    to their binding's documentation.
+> 
+> Changes since v2:
+>  - none.
+> ---
+>  .../bindings/mfd/samsung,exynos5433-lpass.txt       | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
