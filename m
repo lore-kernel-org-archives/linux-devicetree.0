@@ -1,28 +1,58 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v7 1/1] net: ethernet: Add TSE PCS support to
- dwmac-socfpga
-Date: Sun, 10 Jul 2016 22:08:03 -0700 (PDT)
-Message-ID: <20160710.220803.1531663330702517286.davem@davemloft.net>
-References: <1467948210-21325-1-git-send-email-thloh@altera.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] making rtc cores from s3c6410 and
+ exynos3250 both work
+Date: Mon, 11 Jul 2016 07:46:40 +0200
+Message-ID: <578332C0.4010601@samsung.com>
+References: <1468056226-19128-1-git-send-email-ayaka@soulik.info>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467948210-21325-1-git-send-email-thloh@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thloh@altera.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, preid@electromag.com.au, dinguyen@opensource.altera.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cnphoon@altera.com, thloh85@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDKZNNNLXAHBBR7FRS6AKGQEKKV7TVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-reply-to: <1468056226-19128-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: <thloh@altera.com>
-Date: Thu, 7 Jul 2016 20:23:30 -0700
-
-> From: Tien Hock Loh <thloh@altera.com>
+On 07/09/2016 11:23 AM, Randy Li wrote:
+> The 8792f7772f4f40ffc68bad5f28311205584b734d would just make those
+> platform using rtc core from exynos3250 work but have a huge 
+> effect on those platforms using the rtc core from s3c6410.
+> These patches would fix this problem.
 > 
-> This adds support for TSE PCS that uses SGMII adapter when the phy-mode of
-> the dwmac is set to sgmii.
-> 
-> Signed-off-by: Tien Hock Loh <thloh@altera.com>
-> Acked-by: Rob Herring <robh@kernel.org>
 
-Applied to net-next, thanks.
+Which problem? What huge effect? On which platforms? You didn't describe
+it...
+
+Your change breaks the ABI and is not compatible with current bindings
+documentation.
+
+Best regards,
+Krzysztof
+
+> Randy Li (3):
+>   Revert "drivers/rtc/rtc-s3c.c: add .needs_src_clk to s3c6410 RTC data"
+>   rtc: s3c: add device data for samsung,exynos3250-rtc
+>   ARM: dts: exynos: correct the rtc compatible value for exynos5
+> 
+>  arch/arm/boot/dts/exynos3250.dtsi |  2 +-
+>  arch/arm/boot/dts/exynos5.dtsi    |  2 +-
+>  drivers/rtc/rtc-s3c.c             | 15 +++++++++++++--
+>  3 files changed, 15 insertions(+), 4 deletions(-)
+> 
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
