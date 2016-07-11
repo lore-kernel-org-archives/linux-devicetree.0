@@ -1,115 +1,45 @@
-From: Dongpo Li <lidongpo@hisilicon.com>
-Subject: Re: [PATCH 3/3] net: hisilicon: Add Fast Ethernet MAC driver
-Date: Mon, 11 Jul 2016 16:33:46 +0800
-Message-ID: <578359EA.3060407@hisilicon.com>
-References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com>
- <4787248.HAfgOdBKVY@wuerfel> <57831617.6080506@hisilicon.com>
- <6408034.HDp0l1gLKO@wuerfel>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/2] drm/bridge: tc358767: Add DPI to eDP bridge driver
+Date: Mon, 11 Jul 2016 10:44:15 +0200
+Message-ID: <1468226655.3048.2.camel@pengutronix.de>
+References: <1467384610-29908-1-git-send-email-p.zabel@pengutronix.de>
+ <1467384610-29908-3-git-send-email-p.zabel@pengutronix.de>
+ <577B39D9.705@codeaurora.org> <1467705603.2978.22.camel@pengutronix.de>
+ <57835993.4020709@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6408034.HDp0l1gLKO@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <57835993.4020709@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016/7/11 16:16, Arnd Bergmann wrote:
-> On Monday, July 11, 2016 11:44:23 AM CEST Dongpo Li wrote:
->> Hi Arnd,
->>
->> On 2016/6/28 17:34, Arnd Bergmann wrote:
->>> On Tuesday, June 28, 2016 5:21:19 PM CEST Dongpo Li wrote:
->>>> On 2016/6/15 5:20, Arnd Bergmann wrote:
->>>>> On Tuesday, June 14, 2016 9:17:44 PM CEST Li Dongpo wrote:
->>>>>> On 2016/6/13 17:06, Arnd Bergmann wrote:
->>>>>>> On Monday, June 13, 2016 2:07:56 PM CEST Dongpo Li wrote:
->>>>>>> You tx function uses BQL to optimize the queue length, and that
->>>>>>> is great. You also check xmit reclaim for rx interrupts, so
->>>>>>> as long as you have both rx and tx traffic, this should work
->>>>>>> great.
->>>>>>>
->>>>>>> However, I notice that you only have a 'tx fifo empty'
->>>>>>> interrupt triggering the napi poll, so I guess on a tx-only
->>>>>>> workload you will always end up pushing packets into the
->>>>>>> queue until BQL throttles tx, and then get the interrupt
->>>>>>> after all packets have been sent, which will cause BQL to
->>>>>>> make the queue longer up to the maximum queue size, and that
->>>>>>> negates the effect of BQL.
->>>>>>>
->>>>>>> Is there any way you can get a tx interrupt earlier than
->>>>>>> this in order to get a more balanced queue, or is it ok
->>>>>>> to just rely on rx packets to come in occasionally, and
->>>>>>> just use the tx fifo empty interrupt as a fallback?
->>>>>>>
->>>>>> In tx direction, there are only two kinds of interrupts, 'tx fifo empty'
->>>>>> and 'tx one packet finish'. I didn't use 'tx one packet finish' because
->>>>>> it would lead to high hardware interrupts rate. This has been verified in
->>>>>> our chips. It's ok to just use tx fifo empty interrupt.
->>>>>
->>>>> I'm not convinced by the explanation, I don't think that has anything
->>>>> to do with the hardware design, but instead is about the correctness
->>>>> of the BQL logic with your driver.
->>>>>
->>>>> Maybe your xmit function can do something like
->>>>>
->>>>>       if (dql_avail(netdev_get_tx_queue(dev, 0)->dql) < 0)
->>>>>               enable per-packet interrupt
->>>>>       else
->>>>>               use only fifo-empty interrupt
->>>>>
->>>>> That way, you don't get a lot of interrupts when the system is
->>>>> in a state of packets being received and sent continuously,
->>>>> but if you get to the point where your tx queue fills up
->>>>> and no rx interrupts arrive, you don't have to wait for it
->>>>> to become completely empty before adding new packets, and
->>>>> BQL won't keep growing the queue.
->>>>>
->>>> Hi, Arnd
->>>> I tried enable per-packet interrupt when tx queue full in xmit function
->>>> and disable it in NAPI poll. But the number of interrupts are a little
->>>> bigger than only using fifo-empty interrupt.
->>>
->>> Right, I'd expect that to be the case, it basically means that the
->>> algorithm works as expected.
->>>
->>> Just to be sure you didn't have extra interrupts: you only enable the
->>> per-packet interrupts if interrupts are currently enabled, not in
->>> NAPI polling mode, right?
->>>
->> Sorry so long to reply to you. I use the per-packet interrupt like this:
->> In my xmit function,
->> 	if (hardware tx fifo is full) {
->> 		enable tx per-packet interrupt;
->> 		netif_stop_queue(dev);
->> 		return NETDEV_TX_BUSY;
->> 	}
->>
->> In interrupt handle function,
->> 	if (interrupt is tx per-packet or tx fifo-empty or rx) {
->> 		disable tx per-packet interrupt;
->> 		napi_schedule(&priv->napi);
->> 	}
->> We disable tx per-packet interrupt anyway because the NAPI poll will reclaim
->> the tx fifo.
->> When the NAPI poll completed, it will only enable the tx fifo-empty interrupt
->> and rx interrupt except the tx per-packet interrupt.
->>
->> Is this solution okay?
-> 
-> Yes, this looks good to me.
-> 
-Okay, many thanks for your review.
-
-> 	Arnd
-> 
-> .
-> 
-
-    Regards,
-    Dongpo
-
-.
+QW0gTW9udGFnLCBkZW4gMTEuMDcuMjAxNiwgMTQ6MDIgKzA1MzAgc2NocmllYiBBcmNoaXQgVGFu
+ZWphOgpbLi4uXQo+ID4+PiArCS8qIFBYTCBQTEwgc2V0dXAgKi8KPiA+Pj4gKwlpZiAodGMtPnRl
+c3RfcGF0dGVybikgewo+ID4+Cj4gPj4gSSBjb3VsZG4ndCBmaW5kIG91dCB3aG8gaXMgc2V0dGlu
+ZyB0Yy0+dGVzdF9wYXR0ZXJuLiBJcyBpdCBhbHdheXMKPiA+PiAwPwo+ID4KPiA+IEhtLCB5b3Ug
+YXJlIHJpZ2h0LiBJIHdvbmRlciB3aGF0IGEgZ29vZCBtZWNoYW5pc20gd291bGQgYmUgdG8gZW5h
+YmxlIGEKPiA+IHRlc3QgcGF0dGVybiBmb3IgYSBicmlkZ2UgZHJpdmVyLiBNb2R1bGUgcGFyYW1l
+dGVycz8gV2UgZG9uJ3QgaGF2ZQo+ID4gYW55aHRpbmcgbGlrZSBWNEwyX0NJRF9URVNUX1BBVFRF
+Uk4gaW4gZHJtLiBJIGNvdWxkIGFsc28gZHJvcCB0ZXN0Cj4gPiBwYXR0ZXJuIHN1cHBvcnQgZnJv
+bSB0aGUgaW5pdGlhbCBwYXRjaCBhbmQgc3VibWl0IGl0IHNlcGFyYXRlbHkuCj4gCj4gTW9kdWxl
+IHBhcmFtZXRlciBzb3VuZHMgbGlrZSBhIGdvb2Qgb3B0aW9uLgoKT2suCgo+IEFsdGhvdWdoLCBp
+dCBzZWVtcyBsaWtlIHRoZSBwbGwgaXMgZW5hYmxlZCBvbmx5IHdoZW4gdGVzdF9wYXR0ZXJuIGlz
+Cj4gc2V0LiBIb3cgZG9lcyB0aGUgYnJpZGdlIHdvcmsgaWYgdGhlIHBsbCBpc24ndCBlbmFibGVk
+PwoKVGhlIFBYTCBQTEwgaXMgb25seSBuZWNlc3NhcnkgcmVnZW5lcmF0ZSB0aGUgcGl4ZWwgY2xv
+Y2sgZnJvbSB0aGUgRFNJIEhTCmNsb2NrLCBvciB0byBjcmVhdGUgdGhlIHRlc3QgcGF0dGVybi4g
+SW4gRFBJIG1vZGUgdGhlIHBpeGVsIGNsb2NrIGZyb20KdGhlIHBhcmFsbGVsIGludGVyZmFjZSBp
+cyB1c2VkIGRpcmVjdGx5LgoKcmVnYXJkcwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
