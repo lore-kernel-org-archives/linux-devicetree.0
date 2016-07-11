@@ -1,78 +1,80 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos: correct the rtc
- compatible value for exynos5
-Date: Mon, 11 Jul 2016 07:52:31 +0200
-Message-ID: <5783341F.1030006@samsung.com>
-References: <1468056226-19128-1-git-send-email-ayaka@soulik.info>
- <1468056226-19128-4-git-send-email-ayaka@soulik.info>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: Re: [PATCH v6] ASoC: rockchip: Add machine driver for RK3399 GRU
+ Boards
+Date: Mon, 11 Jul 2016 14:20:01 +0800
+Message-ID: <57833A91.7090109@rock-chips.com>
+References: <1466080858-29565-1-git-send-email-zhengxing@rock-chips.com>
+ <20160620130812.GA24614@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDKZNNNLXAHBBJPIRS6AKGQE7EYL5ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-reply-to: <1468056226-19128-4-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160620130812.GA24614@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-rockchip@lists.infradead.org, dianders@chromium.org, heiko@sntech.de, smbarber@google.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/2016 11:23 AM, Randy Li wrote:
-> Those platforms are reported to use the same rtc IP core
-> as exynos3250's.
+Hi Mark,
+     In your opinion, is there anything needs to be optimized in this p=
+atch?
 
-Insufficient. Exynos4 also has to be updated. Actually all SoC from SoC
-family requires rtc src clock. I think S3C6410 also requires it but I
-don't have all the data necessary to confirm this.
+Thanks.
 
-Best regards,
-Krzysztof
+On 2016=E5=B9=B406=E6=9C=8820=E6=97=A5 21:08, Rob Herring wrote:
+> On Thu, Jun 16, 2016 at 08:40:58PM +0800, Xing Zheng wrote:
+>> Because we need to support the multiple codecs (MAX98357A/RT5514/DA7=
+219)
+>> on the RK3399 GRU boards, this patch can help us to support these co=
+decs.
+>>
+>> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+>> ---
+>>
+>> Changes in v6:
+>> - remove enable/disable dapm pins, and to switch codecs via user spa=
+ce
+>> - fix "Speaker" dapm route for max98357a
+>> - add SND_JACK_LINEOUT flag for da7219 jack detection
+>>
+>> Changes in v5:
+>> - fix the build warning for missing I2C/CLKDEV_LOOKUP dependency
+>>
+>> Changes in v4:
+>> - the compatible name needs to be based on a single reference design=
+,
+>>    and the name of the board is called "GRU"
+>> - use one i2sX card "rockchip,cpu =3D <&i2s0>" instead of array that=
+ is
+>>    based on GRU
+>> - rename DOC to rockchip,rk3399-gru-sound.txt
+>> - rename compatible to rockchip,rk3399-gru-sound
+>> - rename source code to rk3399_gru_sound.c
+>>
+>> Changes in v3:
+>> - rename DOC to rockchip,rk3399-max98357a-rt5514-da7219.txt
+>> - rename compatible to rockchip,rk3399-max98357a-rt5514-da7219
+>> - rename source code to rk3399_max98357a_rt5514_da7219.c
+>>
+>> Changes in v2:
+>> - use the FS 256 to set mclks of the max98357a and rt5514 danamicall=
+y
+>> - add more sample rate for da7219
+>>
+>>   .../bindings/sound/rockchip,rk3399-gru-sound.txt   |   15 +
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+>>   sound/soc/rockchip/Kconfig                         |   11 +
+>>   sound/soc/rockchip/Makefile                        |    2 +
+>>   sound/soc/rockchip/rk3399_gru_sound.c              |  322 ++++++++=
+++++++++++++
+>>   4 files changed, 350 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/sound/rockchi=
+p,rk3399-gru-sound.txt
+>>   create mode 100644 sound/soc/rockchip/rk3399_gru_sound.c
+>
+>
 
-> 
-> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos3250.dtsi | 2 +-
->  arch/arm/boot/dts/exynos5.dtsi    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index 62f3dcd..cdd69a0 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -208,7 +208,7 @@
->  		};
->  
->  		rtc: rtc@10070000 {
-> -			compatible = "samsung,s3c6410-rtc";
-> +			compatible = "samsung,exynos3250-rtc";
->  			reg = <0x10070000 0x100>;
->  			interrupts = <0 73 0>, <0 74 0>;
->  			interrupt-parent = <&pmu_system_controller>;
-> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-> index d5c0f18..71a1ad2 100644
-> --- a/arch/arm/boot/dts/exynos5.dtsi
-> +++ b/arch/arm/boot/dts/exynos5.dtsi
-> @@ -88,7 +88,7 @@
->  	};
->  
->  	rtc: rtc@101E0000 {
-> -		compatible = "samsung,s3c6410-rtc";
-> +		compatible = "samsung,exynos3250-rtc";
->  		reg = <0x101E0000 0x100>;
->  		interrupts = <0 43 0>, <0 44 0>;
->  		status = "disabled";
-> 
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--=20
+- Xing Zheng
