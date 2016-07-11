@@ -1,35 +1,76 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 01/10] ARM: NUC900: Add nuc970 machine support
-Date: Mon, 11 Jul 2016 18:04:35 +0200
-Message-ID: <18260150.aRRy8ybKlm@wuerfel>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org> <1468135649-19980-2-git-send-email-vw@iommu.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 03/10] Documentation: dt-bindings: firmware: tegra: add
+ bindings of the BPMP
+Date: Mon, 11 Jul 2016 10:05:50 -0600
+Message-ID: <5783C3DE.3080708@wwwdotorg.org>
+References: <20160705090431.5852-1-josephl@nvidia.com>
+ <20160705090431.5852-4-josephl@nvidia.com>
+ <20160711142238.GA30600@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468135649-19980-2-git-send-email-vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160711142238.GA30600@rob-hp-laptop>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday, July 10, 2016 3:27:21 PM CEST Wan Zongshun wrote:
-> +ifeq ($(CONFIG_SOC_NUC970),)
->  obj-y                          := irq.o time.o mfp.o gpio.o clock.o
->  obj-y                          += clksel.o dev.o cpu.o
-> +endif
->  # W90X900 CPU support files
+On 07/11/2016 08:22 AM, Rob Herring wrote:
+> On Tue, Jul 05, 2016 at 05:04:24PM +0800, Joseph Lo wrote:
+>> The BPMP is a specific processor in Tegra chip, which is designed for
+>> booting process handling and offloading the power management, clock
+>> management, and reset control tasks from the CPU. The binding document
+>> defines the resources that would be used by the BPMP firmware driver,
+>> which can create the interprocessor communication (IPC) between the CPU
+>> and BPMP.
 
-When mfp.o is disabled like this, I get a link error in two drivers
-using the exported interface:
+>> diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
 
-ERROR: "mfp_set_groupg" [drivers/spi/spi-nuc900.ko] undefined!
-ERROR: "mfp_set_groupi" [drivers/input/keyboard/w90p910_keypad.ko] undefined!
+>> +NVIDIA Tegra Boot and Power Management Processor (BPMP)
+>> +
+>> +The BPMP is a specific processor in Tegra chip, which is designed for
+>> +booting process handling and offloading the power management, clock
+>> +management, and reset control tasks from the CPU. The binding document
+>> +defines the resources that would be used by the BPMP firmware driver,
+>> +which can create the interprocessor communication (IPC) between the CPU
+>> +and BPMP.
+>> +
+>> +Required properties:
+>> +- name : Should be bpmp
+>> +- compatible
+>> +    Array of strings
+>> +    One of:
+>> +    - "nvidia,tegra186-bpmp"
+>> +- mboxes : The phandle of mailbox controller and the mailbox specifier.
+>> +- shmem : List of the phandle of the TX and RX shared memory area that
+>> +	  the IPC between CPU and BPMP is based on.
+>
+> I think you can use memory-region here.
 
-Any idea for a better migration strategy?
+Isn't memory-region intended for references into the /reserved-memory 
+node. If so, that isn't appropriate in this case since this property 
+typically points at on-chip SRAM that isn't included in the OS's view of 
+"system RAM".
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Or, should /reserved-memory be used even for (e.g. non-DRAM) memory 
+regions that aren't represented by the /memory/reg property?
+
+>> diff --git a/include/dt-bindings/clock/tegra186-clock.h b/include/dt-bindings/clock/tegra186-clock.h
+
+>> +/** @file */
+>> +
+>> +#ifndef _MACH_T186_CLK_T186_H
+>> +#define _MACH_T186_CLK_T186_H
+>> +
+>> +/**
+>> + * @defgroup clock_ids Clock Identifiers
+>
+> Aren't these doxygen markup? Does that work with docbook? If not,
+> remove.
+
+These headers are part of the BPMP FW release. It's preferable not to 
+edit them when incorporating them into the Linux kernel (or any other SW 
+stack) to simplify integration of any updated versions of the header, by 
+removing the need to edit the file when doing so. Given that, do you 
+still object?
