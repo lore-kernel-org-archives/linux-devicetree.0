@@ -1,78 +1,100 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v1 6/6] drm/rockchip: dw_hdmi: introduce the pclk for grf
-Date: Mon, 11 Jul 2016 19:05:52 +0800
-Message-ID: <1468235152-29683-1-git-send-email-ykk@rock-chips.com>
-References: <1468235079-29152-1-git-send-email-ykk@rock-chips.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 5/8] iommu/of: Introduce iommu_fwspec
+Date: Mon, 11 Jul 2016 12:07:34 +0100
+Message-ID: <57837DF6.5060504@arm.com>
+References: <cover.1467388950.git.robin.murphy@arm.com>
+ <7947dbaa0e0d4ace8eebe8de1fe5810fe05f7734.1467388950.git.robin.murphy@arm.com>
+ <20160707165631.GB2685@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1468235079-29152-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>
-Cc: devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, xhc@rock-chips.com, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160707165631.GB2685@red-moon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rm9yIFJLMzM5OSdzIEdSRiBtb2R1bGUsIGlmIHdlIHdhbnQgdG8gb3BlcmF0ZSB0aGUgZ3JhcGhp
-YyByZWxhdGVkIGdyZgpyZWdpc3RlcnMsIHdlIG5lZWQgdG8gZW5hYmxlIHRoZSBwY2xrX3Zpb19n
-cmYgd2hpY2ggc3VwcGx5IHBvd2VyIGZvciBWSU8KR1JGIElPcywgc28gaXQncyBiZXR0ZXIgdG8g
-aW50cm9kdWNlIGFuIG9wdGlvbmFsIGdyZiBjbG9jayBpbiBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5
-OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3Bs
-YXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQgICB8ICAzICsrLQogZHJpdmVycy9ncHUv
-ZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyAgICAgICAgICB8IDIwICsrKysrKysrKysr
-KysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24o
-LSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0CmluZGV4IDRl
-MjNjYTQuLmUyMmQ3MGYgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0CisrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2No
-aXAudHh0CkBAIC0xOCw3ICsxOCw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiBPcHRpb25hbCBw
-cm9wZXJ0aWVzCiAtIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVz
-ZWQgZm9yIEREQyBFRElEIHByb2JpbmcKIC0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRsZSB0
-byB0aGUgSERNSSBDRUMgY2xvY2ssIG5hbWUgc2hvdWxkIGJlICJjZWMiLAotCQkgICAgICAgcGhh
-bmRsZSB0byB0aGUgVlBMTCBjbG9jaywgbmFtZSBzaG91bGQgYmUgInZwbGwiLgorCQkgICAgICAg
-cGhhbmRsZSB0byB0aGUgVlBMTCBjbG9jaywgbmFtZSBzaG91bGQgYmUgInZwbGwiLAorCQkgICAg
-ICAgcGhhbmRsZSB0byB0aGUgR1JGIGNsb2NrLCBuYW1lIHNob3VsZCBiZSAiZ3JmIi4KIAogRXhh
-bXBsZToKIGhkbWk6IGhkbWlAZmY5ODAwMDAgewpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9k
-d19oZG1pLXJvY2tjaGlwLmMKaW5kZXggNzAxYmI3My4uNjllNmVmYiAxMDA2NDQKLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYworKysgYi9kcml2ZXJzL2dw
-dS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCkBAIC0zNiw2ICszNiw3IEBAIHN0cnVj
-dCByb2NrY2hpcF9oZG1pIHsKIAlzdHJ1Y3QgZHJtX2VuY29kZXIgZW5jb2RlcjsKIAllbnVtIGR3
-X2hkbWlfZGV2dHlwZSBkZXZfdHlwZTsKIAlzdHJ1Y3QgY2xrICp2cGxsX2NsazsKKwlzdHJ1Y3Qg
-Y2xrICpncmZfY2xrOwogfTsKIAogI2RlZmluZSB0b19yb2NrY2hpcF9oZG1pKHgpCWNvbnRhaW5l
-cl9vZih4LCBzdHJ1Y3Qgcm9ja2NoaXBfaGRtaSwgeCkKQEAgLTE2Niw2ICsxNjcsMTYgQEAgc3Rh
-dGljIGludCByb2NrY2hpcF9oZG1pX3BhcnNlX2R0KHN0cnVjdCByb2NrY2hpcF9oZG1pICpoZG1p
-KQogCQlyZXR1cm4gUFRSX0VSUihoZG1pLT52cGxsX2Nsayk7CiAJfQogCisJaGRtaS0+Z3JmX2Ns
-ayA9IGRldm1fY2xrX2dldChoZG1pLT5kZXYsICJncmYiKTsKKwlpZiAoUFRSX0VSUihoZG1pLT5n
-cmZfY2xrKSA9PSAtRU5PRU5UKSB7CisJCWhkbWktPmdyZl9jbGsgPSBOVUxMOworCX0gZWxzZSBp
-ZiAoUFRSX0VSUihoZG1pLT5ncmZfY2xrKSA9PSAtRVBST0JFX0RFRkVSKSB7CisJCXJldHVybiAt
-RVBST0JFX0RFRkVSOworCX0gZWxzZSBpZiAoSVNfRVJSKGhkbWktPmdyZl9jbGspKSB7CisJCWRl
-dl9lcnIoaGRtaS0+ZGV2LCAiZmFpbGVkIHRvIGdldCBncmYgY2xvY2tcbiIpOworCQlyZXR1cm4g
-UFRSX0VSUihoZG1pLT5ncmZfY2xrKTsKKwl9CisKIAlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUo
-aGRtaS0+dnBsbF9jbGspOwogCWlmIChyZXQpIHsKIAkJZGV2X2VycihoZG1pLT5kZXYsICJGYWls
-ZWQgdG8gZW5hYmxlIEhETUkgdnBsbDogJWRcbiIsIHJldCk7CkBAIC0yMjUsNiArMjM2LDcgQEAg
-c3RhdGljIHZvaWQgZHdfaGRtaV9yb2NrY2hpcF9lbmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2Vu
-Y29kZXIgKmVuY29kZXIpCiAJdTMyIGxjZHNlbF9ncmZfcmVnLCBsY2RzZWxfbWFzazsKIAl1MzIg
-dmFsOwogCWludCBtdXg7CisJaW50IHJldDsKIAogCXN3aXRjaCAoaGRtaS0+ZGV2X3R5cGUpIHsK
-IAljYXNlIFJLMzI4OF9IRE1JOgpAQCAtMjQ1LDkgKzI1NywxNyBAQCBzdGF0aWMgdm9pZCBkd19o
-ZG1pX3JvY2tjaGlwX2VuY29kZXJfZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikK
-IAllbHNlCiAJCXZhbCA9IEhJV09SRF9VUERBVEUoMCwgbGNkc2VsX21hc2spOwogCisJcmV0ID0g
-Y2xrX3ByZXBhcmVfZW5hYmxlKGhkbWktPmdyZl9jbGspOworCWlmIChyZXQgPCAwKSB7CisJCWRl
-dl9lcnIoaGRtaS0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBncmZjbGsgJWRcbiIsIHJldCk7CisJ
-CXJldHVybjsKKwl9CisKIAlyZWdtYXBfd3JpdGUoaGRtaS0+cmVnbWFwLCBsY2RzZWxfZ3JmX3Jl
-ZywgdmFsKTsKIAlkZXZfZGJnKGhkbWktPmRldiwgInZvcCAlcyBvdXRwdXQgdG8gaGRtaVxuIiwK
-IAkJKG11eCkgPyAiTElUIiA6ICJCSUciKTsKKworCWNsa19kaXNhYmxlX3VucHJlcGFyZShoZG1p
-LT5ncmZfY2xrKTsKIH0KIAogc3RhdGljIGludAotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 07/07/16 17:56, Lorenzo Pieralisi wrote:
+> On Fri, Jul 01, 2016 at 05:50:14PM +0100, Robin Murphy wrote:
+> 
+> [...]
+> 
+>> +int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids)
+>> +{
+>> +	struct iommu_fwspec *fwspec = dev->archdata.iommu;
+>> +	size_t size;
+>> +
+>> +	if (!fwspec)
+>> +		return -EINVAL;
+>> +
+>> +	size = offsetof(struct iommu_fwspec, ids[fwspec->num_ids + 1]);
+> 								^^^^
+> 
+> + num_ids ?
+
+Oops, quite right. Thanks!
+
+Robin.
+
+> Lorenzo
+> 
+>> +	fwspec = krealloc(dev->archdata.iommu, size, GFP_KERNEL);
+>> +	if (!fwspec)
+>> +		return -ENOMEM;
+>> +
+>> +	while (num_ids--)
+>> +		fwspec->ids[fwspec->num_ids++] = *ids++;
+>> +
+>> +	dev->archdata.iommu = fwspec;
+>> +	return 0;
+>> +}
+>> +
+>> +inline struct iommu_fwspec *dev_iommu_fwspec(struct device *dev)
+>> +{
+>> +	return dev->archdata.iommu;
+>> +}
+>> diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+>> index bd02b44902d0..308791fca32d 100644
+>> --- a/include/linux/of_iommu.h
+>> +++ b/include/linux/of_iommu.h
+>> @@ -15,6 +15,14 @@ extern void of_iommu_init(void);
+>>  extern const struct iommu_ops *of_iommu_configure(struct device *dev,
+>>  					struct device_node *master_np);
+>>  
+>> +struct iommu_fwspec {
+>> +	const struct iommu_ops	*iommu_ops;
+>> +	struct device_node	*iommu_np;
+>> +	void			*iommu_priv;
+>> +	unsigned int		num_ids;
+>> +	u32			ids[];
+>> +};
+>> +
+>>  #else
+>>  
+>>  static inline int of_get_dma_window(struct device_node *dn, const char *prefix,
+>> @@ -31,8 +39,15 @@ static inline const struct iommu_ops *of_iommu_configure(struct device *dev,
+>>  	return NULL;
+>>  }
+>>  
+>> +struct iommu_fwspec;
+>> +
+>>  #endif	/* CONFIG_OF_IOMMU */
+>>  
+>> +int iommu_fwspec_init(struct device *dev, struct device_node *iommu_np);
+>> +void iommu_fwspec_free(struct device *dev);
+>> +int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids);
+>> +struct iommu_fwspec *dev_iommu_fwspec(struct device *dev);
+>> +
+>>  void of_iommu_set_ops(struct device_node *np, const struct iommu_ops *ops);
+>>  const struct iommu_ops *of_iommu_get_ops(struct device_node *np);
+>>  
+>> -- 
+>> 2.8.1.dirty
+>>
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
