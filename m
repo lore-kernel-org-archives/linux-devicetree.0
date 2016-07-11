@@ -1,59 +1,62 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: armada-388-clearfog: remove duplicate mdio
- entry
-Date: Mon, 11 Jul 2016 00:53:59 +0200
-Message-ID: <20160710225359.GO8426@lunn.ch>
-References: <E1bMGdu-00005c-Dy@rmk-PC.armlinux.org.uk>
- <20160710203751.GB26397@lunn.ch>
- <20160710204546.GS1041@n2100.armlinux.org.uk>
- <20160710222743.GN8426@lunn.ch>
- <20160710223804.GT1041@n2100.armlinux.org.uk>
+From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] [media] : v4l: add Mediatek compressed video
+ block format
+Date: Mon, 11 Jul 2016 10:04:42 +0800
+Message-ID: <1468202682.3725.0.camel@mtksdaap41>
+References: <1463052250-38262-1-git-send-email-tiffany.lin@mediatek.com>
+	 <1463052250-38262-2-git-send-email-tiffany.lin@mediatek.com>
+	 <1463052250-38262-3-git-send-email-tiffany.lin@mediatek.com>
+	 <78c9f4a1-e2b8-69ef-acc5-d24984497b33@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160710223804.GT1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+In-Reply-To: <78c9f4a1-e2b8-69ef-acc5-d24984497b33-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 10, 2016 at 11:38:04PM +0100, Russell King - ARM Linux wrote:
-> On Mon, Jul 11, 2016 at 12:27:43AM +0200, Andrew Lunn wrote:
-> > On Sun, Jul 10, 2016 at 09:45:46PM +0100, Russell King - ARM Linux wrote:
-> > > On Sun, Jul 10, 2016 at 10:37:51PM +0200, Andrew Lunn wrote:
-> > > > The armada-38x.dtsi has
-> > > > 
-> > > >                                 ref_clk0_pins: ref-clk-pins-0 {
-> > > >                                         marvell,pins = "mpp45";
-> > > >                                         marvell,function = "ref";
-> > > >                                 };
-> > > > 
-> > > > which you could reference rather then defining it yourself.
-> > > 
-> > > Weren't these going to be deleted from the main SoC dtsi files,
-> > > eventually?  I thought that was the idea, to prevent cluttering
-> > > up the .dtb files with nodes which aren't ever used.
+Hi Hans,
+
+On Fri, 2016-07-08 at 12:18 +0200, Hans Verkuil wrote:
+> On 05/12/2016 01:24 PM, Tiffany Lin wrote:
+> > Add V4L2_PIX_FMT_MT21 format used on MT8173 driver.
+> > It is compressed format and need MT8173 MDP driver to transfer to other 
+> > standard format.
 > > 
-> > I've not heard they are going to be removed....
+> > Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  include/uapi/linux/videodev2.h |    1 +
+> >  1 file changed, 1 insertion(+)
 > > 
-> > Having work on mvebu, and a Freescale Vybrid board, i see two
-> > different styles. mvebu defines all the common pinctrl values in the
-> > .dtsi file, so making the .dts file pretty minimalist. For the vybrid
-> > board there was nothing in the .dtsi file, the dts file is huge, and i
-> > made at least one error, missing at required pin which took me a while
-> > to debug.
-> > 
-> > I would also say cluttered .dtb because of unused nodes it a compiler
-> > issue. Why does it not optimise them out?
+> > diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> > index 8f95191..52feea6 100644
+> > --- a/include/uapi/linux/videodev2.h
+> > +++ b/include/uapi/linux/videodev2.h
+> > @@ -625,6 +625,7 @@ struct v4l2_pix_format {
+> >  #define V4L2_PIX_FMT_Y8I      v4l2_fourcc('Y', '8', 'I', ' ') /* Greyscale 8-bit L/R interleaved */
+> >  #define V4L2_PIX_FMT_Y12I     v4l2_fourcc('Y', '1', '2', 'I') /* Greyscale 12-bit L/R interleaved */
+> >  #define V4L2_PIX_FMT_Z16      v4l2_fourcc('Z', '1', '6', ' ') /* Depth data 16-bit */
+> > +#define V4L2_PIX_FMT_MT21     v4l2_fourcc('M', 'T', '2', '1') /* Mediatek compressed block mode  */
 > 
-> How does it know that the pinmux nodes (which are nodes in their own
-> right, just like any node specifying a real device) are "unused" ?
+> v4l2-ioctl.c should be modified as well so the correct description string is filled in.
+> 
+Got it. I will fix this.
 
-Yes, you are right. A phandle pointing to it shows it is used, but not
-being references via a phandle does not mean it is unused.
+best regards,
+Tiffany
 
-      Andrew
+> Regards,
+> 
+> 	Hans
+> 
+> >  
+> >  /* SDR formats - used only for Software Defined Radio devices */
+> >  #define V4L2_SDR_FMT_CU8          v4l2_fourcc('C', 'U', '0', '8') /* IQ u8 */
+> > 
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
