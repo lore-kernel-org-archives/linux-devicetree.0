@@ -1,49 +1,53 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 2/2] drm/bridge: tc358767: Add DPI to eDP bridge driver
-Date: Mon, 11 Jul 2016 14:16:44 +0530
-Message-ID: <57835CF4.2080601@codeaurora.org>
-References: <1467384610-29908-1-git-send-email-p.zabel@pengutronix.de>
- <1467384610-29908-3-git-send-email-p.zabel@pengutronix.de>
- <577B39D9.705@codeaurora.org> <1467705603.2978.22.camel@pengutronix.de>
- <57835993.4020709@codeaurora.org> <1468226655.3048.2.camel@pengutronix.de>
+From: dawei chien <dawei.chien@mediatek.com>
+Subject: Re: [PATCH 1/3] dt-bindings: thermal: Add binding document for
+ Mediatek thermal controller
+Date: Mon, 11 Jul 2016 16:52:04 +0800
+Message-ID: <1468227124.15776.29.camel@mtksdaap41>
+References: <1467882386-40544-1-git-send-email-dawei.chien@mediatek.com>
+	 <1467882386-40544-2-git-send-email-dawei.chien@mediatek.com>
+	 <577E385C.9080501@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1468226655.3048.2.camel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <577E385C.9080501@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <a0393675@ti.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Fan Chen <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNy8xMS8yMDE2IDAyOjE0IFBNLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+IEFtIE1vbnRh
-ZywgZGVuIDExLjA3LjIwMTYsIDE0OjAyICswNTMwIHNjaHJpZWIgQXJjaGl0IFRhbmVqYToKPiBb
-Li4uXQo+Pj4+PiArCS8qIFBYTCBQTEwgc2V0dXAgKi8KPj4+Pj4gKwlpZiAodGMtPnRlc3RfcGF0
-dGVybikgewo+Pj4+Cj4+Pj4gSSBjb3VsZG4ndCBmaW5kIG91dCB3aG8gaXMgc2V0dGluZyB0Yy0+
-dGVzdF9wYXR0ZXJuLiBJcyBpdCBhbHdheXMKPj4+PiAwPwo+Pj4KPj4+IEhtLCB5b3UgYXJlIHJp
-Z2h0LiBJIHdvbmRlciB3aGF0IGEgZ29vZCBtZWNoYW5pc20gd291bGQgYmUgdG8gZW5hYmxlIGEK
-Pj4+IHRlc3QgcGF0dGVybiBmb3IgYSBicmlkZ2UgZHJpdmVyLiBNb2R1bGUgcGFyYW1ldGVycz8g
-V2UgZG9uJ3QgaGF2ZQo+Pj4gYW55aHRpbmcgbGlrZSBWNEwyX0NJRF9URVNUX1BBVFRFUk4gaW4g
-ZHJtLiBJIGNvdWxkIGFsc28gZHJvcCB0ZXN0Cj4+PiBwYXR0ZXJuIHN1cHBvcnQgZnJvbSB0aGUg
-aW5pdGlhbCBwYXRjaCBhbmQgc3VibWl0IGl0IHNlcGFyYXRlbHkuCj4+Cj4+IE1vZHVsZSBwYXJh
-bWV0ZXIgc291bmRzIGxpa2UgYSBnb29kIG9wdGlvbi4KPgo+IE9rLgo+Cj4+IEFsdGhvdWdoLCBp
-dCBzZWVtcyBsaWtlIHRoZSBwbGwgaXMgZW5hYmxlZCBvbmx5IHdoZW4gdGVzdF9wYXR0ZXJuIGlz
-Cj4+IHNldC4gSG93IGRvZXMgdGhlIGJyaWRnZSB3b3JrIGlmIHRoZSBwbGwgaXNuJ3QgZW5hYmxl
-ZD8KPgo+IFRoZSBQWEwgUExMIGlzIG9ubHkgbmVjZXNzYXJ5IHJlZ2VuZXJhdGUgdGhlIHBpeGVs
-IGNsb2NrIGZyb20gdGhlIERTSSBIUwo+IGNsb2NrLCBvciB0byBjcmVhdGUgdGhlIHRlc3QgcGF0
-dGVybi4gSW4gRFBJIG1vZGUgdGhlIHBpeGVsIGNsb2NrIGZyb20KPiB0aGUgcGFyYWxsZWwgaW50
-ZXJmYWNlIGlzIHVzZWQgZGlyZWN0bHkuCgpPa2F5LiBUaGFua3MgZm9yIHRoZSBjbGFyaWZpY2F0
-aW9uLgoKQXJjaGl0Cgo+Cj4gcmVnYXJkcwo+IFBoaWxpcHAKPgoKLS0gClF1YWxjb21tIElubm92
-YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExp
-bnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Dear Keerthy,
+
+On Thu, 2016-07-07 at 16:39 +0530, Keerthy wrote:
+> 
+> On Thursday 07 July 2016 02:36 PM, Dawei Chien wrote:
+> > This adds the device tree binding documentation for the mediatek thermal
+> > controller found on Mediatek MT2701.
+> >
+> > Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> > ---
+> >   .../bindings/thermal/mediatek-thermal.txt          |    2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> > index 81f9a51..bb55e79 100644
+> > --- a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> > +++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> > @@ -8,7 +8,7 @@ apmixedsys register space via AHB bus accesses, so a phandle to the APMIXEDSYS
+> >   is also needed.
+> >
+> >   Required properties:
+> > -- compatible: "mediatek,mt8173-thermal"
+> > +- compatible: "mediatek,mt8173-thermal" or "mediatek,mt2701-thermal"
+> 
+> - compatible :
+>   - "mediatek,mt8173-thermal" : For MT8173 family of SoCs
+>   - "mediatek,mt2701-thermal" : For MT2701 family of SoCs
+
+Thank you, I will update it on next version.
+
+> 
+> >   - reg: Address range of the thermal controller
+> >   - interrupts: IRQ for the thermal controller
+> >   - clocks, clock-names: Clocks needed for the thermal controller. required
+> >
