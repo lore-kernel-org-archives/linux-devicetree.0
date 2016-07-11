@@ -1,58 +1,100 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 06/10] soc: Add SoC specific driver support for nuc900
-Date: Mon, 11 Jul 2016 10:03:25 +0200
-Message-ID: <4765191.NGpMC1JR46@wuerfel>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org> <1468135649-19980-7-git-send-email-vw@iommu.org>
+Subject: Re: [PATCH 3/3] net: hisilicon: Add Fast Ethernet MAC driver
+Date: Mon, 11 Jul 2016 10:16:25 +0200
+Message-ID: <6408034.HDp0l1gLKO@wuerfel>
+References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com> <4787248.HAfgOdBKVY@wuerfel> <57831617.6080506@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1468135649-19980-7-git-send-email-vw@iommu.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Wan Zongshun <vw@iommu.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, jason@lakedaemon.net, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, Wan Zongshun <mcuos.com@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57831617.6080506@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dongpo Li <lidongpo@hisilicon.com>
+Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday, July 10, 2016 3:27:26 PM CEST Wan Zongshun wrote:
-> +       ret = of_property_read_string(np, "compatible", &soc_dev_attr->soc_id);
-> +       if (ret)
->               return -EINVAL;
-> +
-> +       soc_dev_attr->machine = "NUC900EVB";
-> +       soc_dev_attr->family = "NUC900";
-> +       soc_dev = soc_device_register(soc_dev_attr);
-> +       if (IS_ERR(soc_dev)) {
-> +               kfree(soc_dev_attr);
-> +               return -ENODEV;
-> +       }
-> +
-> +       ret = regmap_read(syscon_regmap, GCR_CHIPID, &nuc900_chipid);
-> +       if (ret)
-> +               return -ENODEV;
-> +
-> +       device_create_file(soc_device_to_device(soc_dev), &nuc900_chipid_attr);
-> +       device_create_file(soc_device_to_device(soc_dev), &nuc900_version_attr);
-> +
-> +       dev_info(&pdev->dev, "Nuvoton Chip ID: 0x%x, Version ID:0x%x\n",
-> +                nuc900_chipid & GCR_CHIPID_MASK,
-> +                (nuc900_chipid >> 24) & 0xff);
+On Monday, July 11, 2016 11:44:23 AM CEST Dongpo Li wrote:
+> Hi Arnd,
+> 
+> On 2016/6/28 17:34, Arnd Bergmann wrote:
+> > On Tuesday, June 28, 2016 5:21:19 PM CEST Dongpo Li wrote:
+> >> On 2016/6/15 5:20, Arnd Bergmann wrote:
+> >>> On Tuesday, June 14, 2016 9:17:44 PM CEST Li Dongpo wrote:
+> >>>> On 2016/6/13 17:06, Arnd Bergmann wrote:
+> >>>>> On Monday, June 13, 2016 2:07:56 PM CEST Dongpo Li wrote:
+> >>>>> You tx function uses BQL to optimize the queue length, and that
+> >>>>> is great. You also check xmit reclaim for rx interrupts, so
+> >>>>> as long as you have both rx and tx traffic, this should work
+> >>>>> great.
+> >>>>>
+> >>>>> However, I notice that you only have a 'tx fifo empty'
+> >>>>> interrupt triggering the napi poll, so I guess on a tx-only
+> >>>>> workload you will always end up pushing packets into the
+> >>>>> queue until BQL throttles tx, and then get the interrupt
+> >>>>> after all packets have been sent, which will cause BQL to
+> >>>>> make the queue longer up to the maximum queue size, and that
+> >>>>> negates the effect of BQL.
+> >>>>>
+> >>>>> Is there any way you can get a tx interrupt earlier than
+> >>>>> this in order to get a more balanced queue, or is it ok
+> >>>>> to just rely on rx packets to come in occasionally, and
+> >>>>> just use the tx fifo empty interrupt as a fallback?
+> >>>>>
+> >>>> In tx direction, there are only two kinds of interrupts, 'tx fifo empty'
+> >>>> and 'tx one packet finish'. I didn't use 'tx one packet finish' because
+> >>>> it would lead to high hardware interrupts rate. This has been verified in
+> >>>> our chips. It's ok to just use tx fifo empty interrupt.
+> >>>
+> >>> I'm not convinced by the explanation, I don't think that has anything
+> >>> to do with the hardware design, but instead is about the correctness
+> >>> of the BQL logic with your driver.
+> >>>
+> >>> Maybe your xmit function can do something like
+> >>>
+> >>>       if (dql_avail(netdev_get_tx_queue(dev, 0)->dql) < 0)
+> >>>               enable per-packet interrupt
+> >>>       else
+> >>>               use only fifo-empty interrupt
+> >>>
+> >>> That way, you don't get a lot of interrupts when the system is
+> >>> in a state of packets being received and sent continuously,
+> >>> but if you get to the point where your tx queue fills up
+> >>> and no rx interrupts arrive, you don't have to wait for it
+> >>> to become completely empty before adding new packets, and
+> >>> BQL won't keep growing the queue.
+> >>>
+> >> Hi, Arnd
+> >> I tried enable per-packet interrupt when tx queue full in xmit function
+> >> and disable it in NAPI poll. But the number of interrupts are a little
+> >> bigger than only using fifo-empty interrupt.
+> > 
+> > Right, I'd expect that to be the case, it basically means that the
+> > algorithm works as expected.
+> > 
+> > Just to be sure you didn't have extra interrupts: you only enable the
+> > per-packet interrupts if interrupts are currently enabled, not in
+> > NAPI polling mode, right?
+> > 
+> Sorry so long to reply to you. I use the per-packet interrupt like this:
+> In my xmit function,
+> 	if (hardware tx fifo is full) {
+> 		enable tx per-packet interrupt;
+> 		netif_stop_queue(dev);
+> 		return NETDEV_TX_BUSY;
+> 	}
+> 
+> In interrupt handle function,
+> 	if (interrupt is tx per-packet or tx fifo-empty or rx) {
+> 		disable tx per-packet interrupt;
+> 		napi_schedule(&priv->napi);
+> 	}
+> We disable tx per-packet interrupt anyway because the NAPI poll will reclaim
+> the tx fifo.
+> When the NAPI poll completed, it will only enable the tx fifo-empty interrupt
+> and rx interrupt except the tx per-packet interrupt.
+> 
+> Is this solution okay?
 
-I'm still a bit unsure about the set of attributes here.
-
-- The "soc_id" is read from the device tree from the field that contains
-  the board name, I think for consistency you should try to map the
-  GCR_CHIPID to the name of the SoC and assign that here
-
-- The "machine" is hardcoded to "NUC900EVB", which in turn looks like
-  a particular board but not the one you are running on. Maybe read
-  that from the DT instead?
-
-- The "revision" is not filled at all, I would suggest using something
-  derived from the GCR_CHIPID register here
-
-- you have two nonstandard attributes "chipid" and "version", which
-  I'd hope to avoid -- the set of standard attributes is supposed to
-  give enough information about the machine, and platform independent
-  user space will never read those.
+Yes, this looks good to me.
 
 	Arnd
