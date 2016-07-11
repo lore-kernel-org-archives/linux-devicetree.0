@@ -1,139 +1,83 @@
-From: Tai Nguyen <ttnguyen@apm.com>
-Subject: [PATCH v8 2/4] Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
-Date: Mon, 11 Jul 2016 12:05:42 -0700
-Message-ID: <1468263944-10634-3-git-send-email-ttnguyen@apm.com>
-References: <1468263944-10634-1-git-send-email-ttnguyen@apm.com>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: [PATCH v2] ARM: dts: da850: Add new ECAP and EPWM bindings
+Date: Mon, 11 Jul 2016 14:11:46 -0500
+Message-ID: <1468264306-3806-1-git-send-email-fcooper@ti.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468263944-10634-1-git-send-email-ttnguyen@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com, joe@perches.com, paul.gortmaker@windriver.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, Tai Nguyen <ttnguyen@apm.com>
+To: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
+Cc: "Cooper Jr., Franklin" <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
+From: "Cooper Jr., Franklin" <fcooper@ti.com>
+
+For some devices, the PWMSS is a parent of eCAP and ePWM and provided the
+functional clocks for those submodules. The ti,am33xx-ecap and
+ti,am33xx-ehrpwm were based on this parent child relationship where the
+functional clock would be grabbed from the module's parent.
+
+However, DA850 doesn't have a PWMSS and the eCAP and ePWM provides their
+functional clock themselves. Therefore, prefer the new binding that doesn't
+assume this parent child relationship.
+
+Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
 Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/perf/apm-xgene-pmu.txt     | 112 +++++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+v2 changes:
+Fix commit message
 
-diff --git a/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-new file mode 100644
-index 0000000..afb11cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-@@ -0,0 +1,112 @@
-+* APM X-Gene SoC PMU bindings
-+
-+This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
-+The following PMU devices are supported:
-+
-+  L3C			- L3 cache controller
-+  IOB			- IO bridge
-+  MCB			- Memory controller bridge
-+  MC			- Memory controller
-+
-+The following section describes the SoC PMU DT node binding.
-+
-+Required properties:
-+- compatible		: Shall be "apm,xgene-pmu" for revision 1 or
-+                          "apm,xgene-pmu-v2" for revision 2.
-+- regmap-csw		: Regmap of the CPU switch fabric (CSW) resource.
-+- regmap-mcba		: Regmap of the MCB-A (memory bridge) resource.
-+- regmap-mcbb		: Regmap of the MCB-B (memory bridge) resource.
-+- reg			: First resource shall be the CPU bus PMU resource.
-+- interrupts            : Interrupt-specifier for PMU IRQ.
-+
-+Required properties for L3C subnode:
-+- compatible		: Shall be "apm,xgene-pmu-l3c".
-+- reg			: First resource shall be the L3C PMU resource.
-+
-+Required properties for IOB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-iob".
-+- reg			: First resource shall be the IOB PMU resource.
-+
-+Required properties for MCB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mcb".
-+- reg			: First resource shall be the MCB PMU resource.
-+- enable-bit-index	: The bit indicates if the according MCB is enabled.
-+
-+Required properties for MC subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mc".
-+- reg			: First resource shall be the MC PMU resource.
-+- enable-bit-index	: The bit indicates if the according MC is enabled.
-+
-+Example:
-+	csw: csw@7e200000 {
-+		compatible = "apm,xgene-csw", "syscon";
-+		reg = <0x0 0x7e200000 0x0 0x1000>;
-+	};
-+
-+	mcba: mcba@7e700000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e700000 0x0 0x1000>;
-+	};
-+
-+	mcbb: mcbb@7e720000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e720000 0x0 0x1000>;
-+	};
-+
-+	pmu: pmu@78810000 {
-+		compatible = "apm,xgene-pmu-v2";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		regmap-csw = <&csw>;
-+		regmap-mcba = <&mcba>;
-+		regmap-mcbb = <&mcbb>;
-+		reg = <0x0 0x78810000 0x0 0x1000>;
-+		interrupts = <0x0 0x22 0x4>;
-+
-+		pmul3c@7e610000 {
-+			compatible = "apm,xgene-pmu-l3c";
-+			reg = <0x0 0x7e610000 0x0 0x1000>;
-+		};
-+
-+		pmuiob@7e940000 {
-+			compatible = "apm,xgene-pmu-iob";
-+			reg = <0x0 0x7e940000 0x0 0x1000>;
-+		};
-+
-+		pmucmcb@7e710000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e710000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmcb@7e730000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e730000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e810000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e810000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmc@7e850000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e850000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e890000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e890000 0x0 0x1000>;
-+			enable-bit-index = <2>;
-+		};
-+
-+		pmucmc@7e8d0000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e8d0000 0x0 0x1000>;
-+			enable-bit-index = <3>;
-+		};
-+	};
+This patch handles the da850 portion that wouldn't apply from the
+following patch that has been accepted:
+https://patchwork.kernel.org/patch/9005661/
+
+
+ arch/arm/boot/dts/da850.dtsi | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 25f0f8e..09cf663 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -274,31 +274,36 @@
+ 			status = "disabled";
+ 		};
+ 		ehrpwm0: pwm@300000 {
+-			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
++			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
++				     "ti,am33xx-ehrpwm";
+ 			#pwm-cells = <3>;
+ 			reg = <0x300000 0x2000>;
+ 			status = "disabled";
+ 		};
+ 		ehrpwm1: pwm@302000 {
+-			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
++			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
++				     "ti,am33xx-ehrpwm";
+ 			#pwm-cells = <3>;
+ 			reg = <0x302000 0x2000>;
+ 			status = "disabled";
+ 		};
+ 		ecap0: ecap@306000 {
+-			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
++			compatible = "ti,da850-ecap", "ti,am3352-ecap",
++				     "ti,am33xx-ecap";
+ 			#pwm-cells = <3>;
+ 			reg = <0x306000 0x80>;
+ 			status = "disabled";
+ 		};
+ 		ecap1: ecap@307000 {
+-			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
++			compatible = "ti,da850-ecap", "ti,am3352-ecap",
++				     "ti,am33xx-ecap";
+ 			#pwm-cells = <3>;
+ 			reg = <0x307000 0x80>;
+ 			status = "disabled";
+ 		};
+ 		ecap2: ecap@308000 {
+-			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
++			compatible = "ti,da850-ecap", "ti,am3352-ecap",
++				     "ti,am33xx-ecap";
+ 			#pwm-cells = <3>;
+ 			reg = <0x308000 0x80>;
+ 			status = "disabled";
 -- 
-1.9.1
+2.7.0
