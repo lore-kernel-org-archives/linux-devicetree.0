@@ -1,69 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 19/22] sh: IO-DATA HDL-U (a.k.a landisk) IRQCHIP driver
-Date: Mon, 11 Jul 2016 09:02:12 -0500
-Message-ID: <20160711140212.GA21332@rob-hp-laptop>
-References: <1467564402-2649-1-git-send-email-ysato@users.sourceforge.jp>
- <1467564402-2649-20-git-send-email-ysato@users.sourceforge.jp>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 01/10] Documentation: dt-bindings: mailbox: tegra: Add
+ binding for HSP mailbox
+Date: Mon, 11 Jul 2016 09:14:07 -0500
+Message-ID: <20160711141407.GA25042@rob-hp-laptop>
+References: <20160705090431.5852-1-josephl@nvidia.com>
+ <20160705090431.5852-2-josephl@nvidia.com>
+ <20160707181356.GA6864@kickseed.nvidia.com>
+ <577EA0D6.9020308@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1467564402-2649-20-git-send-email-ysato@users.sourceforge.jp>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <577EA0D6.9020308-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 04, 2016 at 01:46:39AM +0900, Yoshinori Sato wrote:
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  .../interrupt-controller/iodata-landisk.txt        | 31 ++++++++++
->  drivers/irqchip/Makefile                           |  2 +-
->  drivers/irqchip/irq-io-landisk.c                   | 72 ++++++++++++++++++++++
->  3 files changed, 104 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
->  create mode 100644 drivers/irqchip/irq-io-landisk.c
+On Thu, Jul 07, 2016 at 12:35:02PM -0600, Stephen Warren wrote:
+> On 07/07/2016 12:13 PM, Sivaram Nair wrote:
+> >On Tue, Jul 05, 2016 at 05:04:22PM +0800, Joseph Lo wrote:
+> >>Add DT binding for the Hardware Synchronization Primitives (HSP). The
+> >>HSP is designed for the processors to share resources and communicate
+> >>together. It provides a set of hardware synchronization primitives for
+> >>interprocessor communication. So the interprocessor communication (IPC)
+> >>protocols can use hardware synchronization primitive, when operating
+> >>between two processors not in an SMP relationship.
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
-> new file mode 100644
-> index 0000000..cf461dc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/iodata-landisk.txt
-> @@ -0,0 +1,31 @@
-> +DT bindings for the I/O DATA HDL-U interrupt controller
-> +
-> +Required properties:
-> +
-> +  - compatible: has to be "iodata,landisk-intc".
-> +
-> +  - reg: Base address and length of interrupt controller register.
-> +
-> +  - #interrupt-cells: has to be <1>: an interrupt index.
-> +
-> +  - #address-cells: has to be <0>
-> +
-> +  - interrupt-map: Interrupt mapping on parent controller.
-> +
-> +Example
-> +-------
-> +
-> +	cpldintc: cpld@b0000000 {
-> +		compatible = "iodata,landisk-intc";
-> +		#interrupt-cells = <1>;
-> +		#address-cells = <0>;
-> +		reg = <0xb0000000 8>;
-> +		interrupt-map=<0 &shintc evt2irq(0x2a0)>,
+> >>diff --git a/include/dt-bindings/mailbox/tegra186-hsp.h b/include/dt-bindings/mailbox/tegra186-hsp.h
+> 
+> >>+#define HSP_MBOX_TYPE_DB 0x0
+> >>+#define HSP_MBOX_TYPE_SM 0x1
+> >>+#define HSP_MBOX_TYPE_SS 0x2
+> >>+#define HSP_MBOX_TYPE_AS 0x3
+> >>+
+> >>+#define HSP_DB_MASTER_CCPLEX 17
+> >>+#define HSP_DB_MASTER_BPMP 19
+> >>+
+> >>+#define HSP_MBOX_ID(type, ID) \
+> >>+		(HSP_MBOX_TYPE_##type << 16 | ID)
+> >
+> >It will be nicer if you avoid the macro glue magic '##' for 'type'. I
+> >would also suggest to use braces around 'type' and 'ID'.
+> 
+> This technique been used without issue in quite a few other places without
+> issue, and has the benefit of simplifying the text wherever the macro is
+> used. What issue do you foresee?
 
-What is evt2irq? We only allow simple defines for DT files, not complex 
-macros.
+I'm not a fan of using the macros to begin with and less so anything 
+more complex than a single constant value. I'd rather see 2 cells here 
+with the first being the id and the 2nd being the type. 
 
-Spaces around the '=' also needed.
+An issue with token pasting is grepping for DB, SM, etc. in kernel tree 
+is probably noisy. Not such a big deal here, but a major PIA when you 
+have more complex sets of includes.
 
-> +		              <1 &shintc evt2irq(0x2c0)>,
-> +		              <2 &shintc evt2irq(0x2e0)>,
-> +			      <3 &shintc evt2irq(0x300)>,
-> +		              <4 &shintc evt2irq(0x320)>,
-> +			      <5 &shintc evt2irq(0x340)>,
-> +		              <6 &shintc evt2irq(0x360)>,
-> +			      <7 &shintc evt2irq(0x380)>;
-> +	};
+Rob
