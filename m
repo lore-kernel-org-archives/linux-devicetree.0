@@ -1,60 +1,55 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] dt-bindings: Add vendor prefix for Starry
-Date: Mon, 11 Jul 2016 14:13:48 +0200
-Message-ID: <20160711121348.GC14586@ulmo.ba.sec>
-References: <1465581717-18497-1-git-send-email-dianders@chromium.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RFC] drivers: misc: boardcfg: Export GPIOs from device
+ tree to user space
+Date: Mon, 11 Jul 2016 14:29:46 +0200
+Message-ID: <CACRpkdZuUxQbceMAMsB8W34jAANd16wANEzaw=jOH_9HJcb4qA@mail.gmail.com>
+References: <1467887440-17737-1-git-send-email-dirk.behme@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1465581717-18497-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, emil.l.velikov@gmail.com, treding@nvidia.com, ralf@linux-mips.org, jic23@kernel.org, shawnguo@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1467887440-17737-1-git-send-email-dirk.behme@de.bosch.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>, Jonas Oester <jonas.oester@de.bosch.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 7, 2016 at 12:30 PM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
 
---ncSAzJYg3Aa9+CRW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: Oleksij Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
+>
+> The device tree is the only source of board dependent information in
+> the system, and thus it is the logical place to list which GPIOs, ADC
+> channels etc. to use for various functions.  It is straight-forward to
+> use this information in kernel space and the contents of the device
+> tree can also be exported to user space.
+>
+> If user space applications need to use GPIOs, they can do so over the
+> existing sysfs interface and they could use the device tree
+> information to find out which GPIO pin to use for a given function,
+> but unfortunately the numbering of GPIOs exported through sysfs is
+> totally unrelated to the device tree standard for how references to
+> GPIO pins are made.  This patch creates a virtual device which is used
+> to provide symbolic links to GPIO pins in sysfs using logical names
+> taken from the device tree.
+>
+> Signed-off-by: Jonas Oester <jonas.oester@de.bosch.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
 
-On Fri, Jun 10, 2016 at 11:01:57AM -0700, Douglas Anderson wrote:
-> From their website:
->     http://www.b001.com.cn/
->=20
-> Starry appears to be a company involved in LCD panels and related
-> components.
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+NACK! But a year ago it would have been a completely valid reasoning.
 
-Applied, thanks.
+In kernel v4.6 I introduced a GPIO character device, and since v4.7
+it is possible to name lines from the device tree using gpio-names
+like I do in this patch:
+http://marc.info/?l=linux-arm-kernel&m=146672328215354&w=2
 
-Thierry
+For the kernel v4.8 merge window I am also adding ABIs to hammer
+GPIOs up/down and to listen for GPIO events using the character
+device.
 
---ncSAzJYg3Aa9+CRW
-Content-Type: application/pgp-signature; name="signature.asc"
+Just checkout linux-next, go to tools/gpio and enjoy the new stuff
+from userspace as it was designed by the example of lsgpio,
+gpio-hammer and gpio-event-mon.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXg418AAoJEN0jrNd/PrOhKoEP/3/6KOr6uLSmM60BHS3ybLtQ
-uwUJfgRn8BNXbgh1TMndPsKX+DiiXksACYdklxf/M5tsTndavEGs7GPIIlr7fF4e
-5TuZm3tTexdttCFpe4Rkwoyu5tyWqHxMIT+VB5IVAspFimZikfx627TWp8dwnbs2
-LbQofof1I69cy10bZEVcOUnCBMByeHJ4mZXuHyVMroJhDAfTrDkl1B3wMqEXAoT4
-ZPbk94zLJUruZbi3vg4H4xoV1J9brW05/HIlt3SAHiq65F4JAadAO9WpgaE5iALx
-mtwyMRqOWu+k8UUm+SkFQyUlvDKfeG/Q9MysE60ivQ21+hu6X7cL6NqXS1WDetqh
-wT4gC3HsN4skHddhSa0ZbukkcZKn8wIL1SAfDTmE3mgT5sRPyDjkq9DDrdk5qJqf
-XREUPVOu85qewJlYyeDLcB93PloQpFc+y185eS/7ARKaiELke0Texj13HPEFiZP0
-SN5oVE0SqtIyrF2Tuyv7RwLyWOvgtAM/nSjr6pWkKgGUejrMxoim6VvlhR3T9odr
-DbE8GwlPSR84MIBVePOBTmOiTZmjpTng6a1MQZZBlxBFJv6XahMzQR1U9SUMF6in
-psCmi8Dz8LcTjQDPqVQhJdI4DUqri36JXr8rjsLBMt1AAEpiVTwoDamsVrXT0E1g
-8tj8dlrXlcQ17uUgFyrV
-=OFRq
------END PGP SIGNATURE-----
-
---ncSAzJYg3Aa9+CRW--
+Yours,
+Linus Walleij
