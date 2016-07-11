@@ -1,284 +1,111 @@
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH V8 1/2] regulator: Add document for MT6323 regulator
-Date: Mon, 11 Jul 2016 14:29:38 +0200
-Message-ID: <1468240179-7558-1-git-send-email-john@phrozen.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 13/15] ARM: dts: sun8i: Add dt node for rtl8703as wifi
+ chip on ga10h
+Date: Mon, 11 Jul 2016 14:36:43 +0200
+Message-ID: <f5f0a0d0-96a8-e9ad-7b4d-b8f19999f0e9@redhat.com>
+References: <1467993956-19535-1-git-send-email-hdegoede@redhat.com>
+ <1467993956-19535-14-git-send-email-hdegoede@redhat.com>
+ <20160711063909.GA4589@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160711063909.GA4589@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-This is a resend as V7 was dropped due to a merge order conflict.
+Hi,
 
-Changes in V7
-* remove another compatible string
-* small wording changes
+On 11-07-16 08:39, Maxime Ripard wrote:
+> Hi,
+>
+> On Fri, Jul 08, 2016 at 06:05:54PM +0200, Hans de Goede wrote:
+>> The ga10h tablet has a rtl8703as wifi chip, add a dt node describing it.
+>>
+>> This enables usage of wifi on this tablet (together with the out of
+>> tree rtl8732bs driver).
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
+>> index 6566032..de6269d 100644
+>> --- a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
+>> +++ b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
+>> @@ -47,6 +47,11 @@
+>>  / {
+>>  	model = "Allwinner GA10H Quad Core Tablet (v1.1)";
+>>  	compatible = "allwinner,ga10h-v1.1", "allwinner,sun8i-a33";
+>> +
+>> +	aliases {
+>> +		/* Make u-boot set mac-address for rtl8703as (no eeprom) */
+>> +		ethernet0 = &rtl8703as;
+>> +	};
+>>  };
+>>
+>>  &ehci0 {
+>> @@ -62,6 +67,19 @@
+>>  	};
+>>  };
+>>
+>> +&mmc1 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&mmc1_pins_a>;
+>> +	vmmc-supply = <&reg_dldo1>;
+>> +	bus-width = <4>;
+>> +	non-removable;
+>> +	status = "okay";
+>> +
+>> +	rtl8703as: sdio_wifi@1 {
+>
+> Shouldn't that need a compatible ?
 
-Changes in V6
-* remove the compatible string
+There is no upstream driver yet, so no devicetree binding for the specific
+wifi chip used. But all we really need is to follow generic sdio / network
+bindings:
 
-Changes in V5
-* regulator vs regulators
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mmc/mmc-card.txt
 
-Changes in V4
-* regulator is a subnode and not a property
+Describes how to create a mmc-host child-node describing an (e)mmc-card or
+sdio-function, in this case we are adding a node for sdio-function 1,
+hence the reg = <1>; in the child-node.
 
- .../bindings/regulator/mt6323-regulator.txt        |  239 ++++++++++++++++++++
- 1 file changed, 239 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+Linux implementation wise, this will make the mmc core set the dev->of_node
+ptr to this node for the struct device it passes into the sdio-drivers
+probe function.
 
-diff --git a/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-new file mode 100644
-index 0000000..9fd95e7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-@@ -0,0 +1,239 @@
-+Mediatek MT6323 Regulator Driver
-+
-+All voltage regulators are defined as subnodes of the regulators node. A list
-+of regulators provided by this controller are defined as subnodes of the
-+PMIC's node. Each regulator is named according to its regulator type,
-+buck_<name> and ldo_<name>. The definition for each of these nodes is defined
-+using the standard binding for regulators at
-+Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+The valid names for regulators are::
-+BUCK:
-+  buck_vproc, buck_vsys, buck_vpa
-+LDO:
-+  ldo_vtcxo, ldo_vcn28, ldo_vcn33_bt, ldo_vcn33_wifi, ldo_va, ldo_vcama,
-+  ldo_vio28, ldo_vusb, ldo_vmc, ldo_vmch, ldo_vemc3v3, ldo_vgp1, ldo_vgp2,
-+  ldo_vgp3, ldo_vcn18, ldo_vsim1, ldo_vsim2, ldo_vrtc, ldo_vcamaf, ldo_vibr,
-+  ldo_vrf18, ldo_vm, ldo_vio18, ldo_vcamd, ldo_vcamio
-+
-+Example:
-+
-+	pmic: mt6323 {
-+		compatible = "mediatek,mt6323";
-+
-+		mt6323regulator: regulators {
-+			mt6323_vproc_reg: buck_vproc{
-+				regulator-name = "vproc";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vsys_reg: buck_vsys{
-+				regulator-name = "vsys";
-+				regulator-min-microvolt = <1400000>;
-+				regulator-max-microvolt = <2987500>;
-+				regulator-ramp-delay = <25000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vpa_reg: buck_vpa{
-+				regulator-name = "vpa";
-+				regulator-min-microvolt = < 500000>;
-+				regulator-max-microvolt = <3650000>;
-+			};
-+
-+			mt6323_vtcxo_reg: ldo_vtcxo{
-+				regulator-name = "vtcxo";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <90>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcn28_reg: ldo_vcn28{
-+				regulator-name = "vcn28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <185>;
-+			};
-+
-+			mt6323_vcn33_bt_reg: ldo_vcn33_bt{
-+				regulator-name = "vcn33_bt";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-enable-ramp-delay = <185>;
-+			};
-+
-+			mt6323_vcn33_wifi_reg: ldo_vcn33_wifi{
-+				regulator-name = "vcn33_wifi";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-enable-ramp-delay = <185>;
-+			};
-+
-+			mt6323_va_reg: ldo_va{
-+				regulator-name = "va";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcama_reg: ldo_vcama{
-+				regulator-name = "vcama";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vio28_reg: ldo_vio28{
-+				regulator-name = "vio28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vusb_reg: ldo_vusb{
-+				regulator-name = "vusb";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vmc_reg: ldo_vmc{
-+				regulator-name = "vmc";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vmch_reg: ldo_vmch{
-+				regulator-name = "vmch";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vemc3v3_reg: ldo_vemc3v3{
-+				regulator-name = "vemc3v3";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vgp1_reg: ldo_vgp1{
-+				regulator-name = "vgp1";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vgp2_reg: ldo_vgp2{
-+				regulator-name = "vgp2";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vgp3_reg: ldo_vgp3{
-+				regulator-name = "vgp3";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vcn18_reg: ldo_vcn18{
-+				regulator-name = "vcn18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vsim1_reg: ldo_vsim1{
-+				regulator-name = "vsim1";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vsim2_reg: ldo_vsim2{
-+				regulator-name = "vsim2";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vrtc_reg: ldo_vrtc{
-+				regulator-name = "vrtc";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcamaf_reg: ldo_vcamaf{
-+				regulator-name = "vcamaf";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vibr_reg: ldo_vibr{
-+				regulator-name = "vibr";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+			};
-+
-+			mt6323_vrf18_reg: ldo_vrf18{
-+				regulator-name = "vrf18";
-+				regulator-min-microvolt = <1825000>;
-+				regulator-max-microvolt = <1825000>;
-+				regulator-enable-ramp-delay = <187>;
-+			};
-+
-+			mt6323_vm_reg: ldo_vm{
-+				regulator-name = "vm";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vio18_reg: ldo_vio18{
-+				regulator-name = "vio18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcamd_reg: ldo_vcamd{
-+				regulator-name = "vcamd";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vcamio_reg: ldo_vcamio{
-+				regulator-name = "vcamio";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+		};
-+	};
--- 
-1.7.10.4
+And u-boot will add a local-mac-address property as documented here:
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/net/ethernet.txt
 
+to the node pointed to by ethernet%d aliases.
+
+To actually make use of this I've modified the out of tree driver to check
+for the "local-mac-address" property:
+
+https://github.com/jwrdegoede/rtl8723bs/commit/be5e87ea71677120ede457213208902ed9942653
+
+So that each device actually gets a unique address rather then the
+(stupid) behavior of the out of tree driver to set the same fixes
+mac address on every device which does not have a mac address in
+eeprom / nvram.
+
+Since this follows the existing ethernet bindings standard I
+believe the dts bits can go upstream as is, but since there
+is no upstream-able driver yet, I do not believe that making up
+a compatible string to add to the child-node is a good idea.
+
+More-over on q8 tablets we will want to do the same (again for
+eeprom / nvram less boards) but without pinning ourselves to
+a specific sdio-wifi module / compatible, instead relying on
+sdio enumeration to figure out which sdio-wifi module is present.
+
+Regards,
+
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
