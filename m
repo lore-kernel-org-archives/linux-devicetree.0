@@ -1,83 +1,63 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v2] ARM: dts: da850: Add new ECAP and EPWM bindings
-Date: Mon, 11 Jul 2016 14:11:46 -0500
-Message-ID: <1468264306-3806-1-git-send-email-fcooper@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
-Cc: "Cooper Jr., Franklin" <fcooper@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V8 1/2] regulator: Add document for MT6323 regulator
+Date: Mon, 11 Jul 2016 20:22:11 +0100
+Message-ID: <20160711192211.GI3701@sirena.org.uk>
+References: <1468240179-7558-1-git-send-email-john@phrozen.org>
+ <20160711180805.GG3701@sirena.org.uk>
+ <cef78bd8-9a4a-e848-d7cb-13a27127f11e@phrozen.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nO3oAMapP4dBpMZi"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cef78bd8-9a4a-e848-d7cb-13a27127f11e-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Cooper Jr., Franklin" <fcooper@ti.com>
 
-For some devices, the PWMSS is a parent of eCAP and ePWM and provided the
-functional clocks for those submodules. The ti,am33xx-ecap and
-ti,am33xx-ehrpwm were based on this parent child relationship where the
-functional clock would be grabbed from the module's parent.
+--nO3oAMapP4dBpMZi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-However, DA850 doesn't have a PWMSS and the eCAP and ePWM provides their
-functional clock themselves. Therefore, prefer the new binding that doesn't
-assume this parent child relationship.
+On Mon, Jul 11, 2016 at 08:55:24PM +0200, John Crispin wrote:
+> On 11/07/2016 20:08, Mark Brown wrote:
+> > On Mon, Jul 11, 2016 at 02:29:38PM +0200, John Crispin wrote:
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v2 changes:
-Fix commit message
+> >> This is a resend as V7 was dropped due to a merge order conflict.
 
-This patch handles the da850 portion that wouldn't apply from the
-following patch that has been accepted:
-https://patchwork.kernel.org/patch/9005661/
+> > What were the dependencies and why will simply resending this resolve
+> > them?
 
+> the dependency was the mt6323 support inside the mt6397 MFD device [1]
+> and the headers that it included. this has been merged so the regulator
+> driver is good to go for 4.8
 
- arch/arm/boot/dts/da850.dtsi | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+No, that's not resolving the dependencies - if I apply these patches
+without the dependencies in the regulator tree that will still break the
+build for my tree until after the merge window.  It'll also break Linus'
+tree if (as is normal) I send my pull requests early on.  I'd need to
+merge the MFD commits into my tree which would need coordination with
+Lee, he'd need to make a tag for me to pull in.
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 25f0f8e..09cf663 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -274,31 +274,36 @@
- 			status = "disabled";
- 		};
- 		ehrpwm0: pwm@300000 {
--			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
-+			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
-+				     "ti,am33xx-ehrpwm";
- 			#pwm-cells = <3>;
- 			reg = <0x300000 0x2000>;
- 			status = "disabled";
- 		};
- 		ehrpwm1: pwm@302000 {
--			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
-+			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
-+				     "ti,am33xx-ehrpwm";
- 			#pwm-cells = <3>;
- 			reg = <0x302000 0x2000>;
- 			status = "disabled";
- 		};
- 		ecap0: ecap@306000 {
--			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+			compatible = "ti,da850-ecap", "ti,am3352-ecap",
-+				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x306000 0x80>;
- 			status = "disabled";
- 		};
- 		ecap1: ecap@307000 {
--			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+			compatible = "ti,da850-ecap", "ti,am3352-ecap",
-+				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x307000 0x80>;
- 			status = "disabled";
- 		};
- 		ecap2: ecap@308000 {
--			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
-+			compatible = "ti,da850-ecap", "ti,am3352-ecap",
-+				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x308000 0x80>;
- 			status = "disabled";
--- 
-2.7.0
+--nO3oAMapP4dBpMZi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXg/HiAAoJECTWi3JdVIfQ9ZYH/RHe04hNjqfmSARVP7bZryh0
+pW1CsKmuKz8Vr/kszKZ+X2yZK1UFn6lwEPNal8R3l6n63B0i/wVDi9eYsm8VuGFQ
+IHJ61u2V0UMkHLd1W+s8cEBsoLz5niGA6UEH27BUDZ96hGY6oBvjfeHBHu68Ht66
+t/PFaSY1aU6Iy1YJtnPjBWoB16ltha6B5ZCD7C3IgLxwmx9NJbO7UrBMYlVp7t1v
+9c6oc5x7/MOlyE+geiYKj7EgHLGDdebqf0zFmL9mFFvZ2Xo7zRgX9FjCL4FAf15O
++K10LAn7iSyg0XUwRmilwKciMlZ9iRnrHqntraxZGs2+LINq2NAVeADESCKvQ5Y=
+=ZhPf
+-----END PGP SIGNATURE-----
+
+--nO3oAMapP4dBpMZi--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
