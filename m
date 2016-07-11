@@ -1,117 +1,70 @@
-From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: dts: thermal: add thermal/auxadc node.
-Date: Mon, 11 Jul 2016 14:39:26 +0530
-Message-ID: <57836246.3010800@ti.com>
-References: <1467882386-40544-1-git-send-email-dawei.chien@mediatek.com>
- <1467882386-40544-4-git-send-email-dawei.chien@mediatek.com>
- <577E465D.8070004@ti.com> <1468227415.15776.34.camel@mtksdaap41>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 0/5] pwm: Fixes and support for Tegra186
+Date: Mon, 11 Jul 2016 11:31:40 +0200
+Message-ID: <20160711093140.GD5823@ulmo.ba.sec>
+References: <1466596043-27262-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1468227415.15776.34.camel@mtksdaap41>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: dawei chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="llIrKcgUOe3dCx0c"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1466596043-27262-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, swarren@wwwdotorg.org, gnurou@gmail.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--llIrKcgUOe3dCx0c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Monday 11 July 2016 02:26 PM, dawei chien wrote:
-> Dear Keerthy,
->
-> On Thu, 2016-07-07 at 17:39 +0530, Keerthy wrote:
->>
->> On Thursday 07 July 2016 02:36 PM, Dawei Chien wrote:
->>> This adds the thermal controller and auxadc nodes
->>> to the Mediatek MT2701 dtsi file.
->>>
->>> Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> ---
->>> This patch depned on:
->>> https://patchwork.kernel.org/patch/9213545/
->>> ---
->>>    arch/arm/boot/dts/mt2701.dtsi |   43 +++++++++++++++++++++++++++++++++++++++++
->>>    1 file changed, 43 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
->>> index 2ac8b50..0834a23 100644
->>> --- a/arch/arm/boot/dts/mt2701.dtsi
->>> +++ b/arch/arm/boot/dts/mt2701.dtsi
->>> @@ -77,6 +77,36 @@
->>>    		#clock-cells = <0>;
->>>    	};
->>>
->>> +	thermal-zones {
->>> +		cpu_thermal: cpu_thermal {
->>> +			polling-delay-passive = <1000>; /* milliseconds */
->>> +			polling-delay = <1000>; /* milliseconds */
->>> +
->>> +			thermal-sensors = <&thermal 0>;
->>> +			sustainable-power = <1000>;
->>> +
->>> +			trips {
->>> +				threshold: trip-point@0 {
->>> +					temperature = <68000>;
->>> +					hysteresis = <2000>;
->>> +					type = "passive";
->>> +				};
->>> +
->>> +				target: trip-point@1 {
->>> +					temperature = <85000>;
->>> +					hysteresis = <2000>;
->>> +					type = "passive";
->>> +				};
->>> +
->>> +				cpu_crit: cpu_crit@0 {
->>> +					temperature = <115000>;
->>> +					hysteresis = <2000>;
->>> +					type = "critical";
->>> +				};
->>> +			};
->>> +		};
->>> +	};
->>> +
->>
->> are there any corresponding cooling-maps?
->
-> Since MT2701 does not register CPUFREQ cooling device and its' own
-> device node, I could not add cooling-maps so far.
-> Could we add cooling map after CPUFREQ ready, thank you.
+On Wed, Jun 22, 2016 at 05:17:18PM +0530, Laxman Dewangan wrote:
+> Have fixes for 100% duty cycle, avoid computation loss for duty
+> period calculation and add support the Tegra186.
+>=20
+> Hyong Bin Kim (1):
+>   pwm: tegra: fix overflow when calculating duty cycle
+>=20
+> Laxman Dewangan (2):
+>   pwm: tegra: Add DT node compatible for Tegra186
+>   pwm: tegra: Add support for Tegra186
+>=20
+> Rohith Seelaboyina (1):
+>   pwm: tegra: Add support for reset control
+>=20
+> Victor(Weiguo) Pan (1):
+>   pwm: tegra: Allow 100% duty cycle
+>=20
+>  .../devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 10 +++--
+>  drivers/pwm/pwm-tegra.c                            | 46 ++++++++++++++++=
+++----
+>  2 files changed, 45 insertions(+), 11 deletions(-)
 
-Okay. I was curious to know about the cooling agents.
+All of these applied, with some minor changes.
 
->
->>
->>>    	timer {
->>>    		compatible = "arm,armv7-timer";
->>>    		interrupt-parent = <&gic>;
->>> @@ -183,4 +213,17 @@
->>>    		clocks = <&uart_clk>;
->>>    		status = "disabled";
->>>    	};
->>> +
->>> +	thermal: thermal@1100b000 {
->>> +		#thermal-sensor-cells = <0>;
->>> +		compatible = "mediatek,mt2701-thermal";
->>> +		reg = <0 0x1100b000 0 0x1000>;
->>> +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
->>> +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
->>> +		clock-names = "therm", "auxadc";
->>> +		resets = <&pericfg 0x10>;
->>> +		reset-names = "therm";
->>> +		mediatek,auxadc = <&auxadc>;
->>> +		mediatek,apmixedsys = <&apmixedsys>;
->>> +	};
->>>    };
->>>
->
->
+Thierry
+
+--llIrKcgUOe3dCx0c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXg2d6AAoJEN0jrNd/PrOhHW4P/ii6bT1N4cxSOaqNueCGQzbr
+sWd+oNdXJ9EQGBgvCF81aOKtuWW5vY+cjXqLceIpvmaHEEt2HxrE24NxdXHoOxsI
+ebCJ3Mm2Js//w0bomIOIfXWHEryqNuf6MyFRWp6yqCO/oXuXvgFrNyLEG8ChJ6cb
+2oinzYODPdZGFUPlsMz6gA06/e2QUQQk8wKR8kvzdGm0aw9NrPF00QWXbxEYZZlN
+UeTmqmPZBC/3g0pAz7tU0OfRV7HQqKFJVShC7Hd71EGayxLzWUU02RRSYq3aZ9SX
+xK2V4DhfHxu7Q1xaE/v4hYhMWzTOIH0V/TX5u3Ujo1HjyOSKRzpBts01HY1BIxuH
+xzJiKhnmgz9U2ap4bckkOg01Lx1YDLMAxzAybBiyShUStk85iYbY7a2nsJtuVvXb
+UFrYP1Q0qMhJEoMlG03gRTbAYJRZv1bcXTWNpdLQnbfFMbKbqgFMXKDBWI6IWmot
+pXR7pyzq7KSXdrhx0MFm3Kw5PDMQ6rEhwuubJFz3N9IJEnC0kESb7+LAXr3cM325
+qtWuhc7x4o+tqzDPaltATfwRgTapMoIZcfS1dVANjMm6GLnsC/Zg48ZCJ2OqswlB
++Q8quKPnaK4bM/V80n6OaroHdWJulswoHFi1eHkk6HdPLPfswGIJJTjqqOrIm5he
+j4mi326cxQjBdGr62x1b
+=U9lr
+-----END PGP SIGNATURE-----
+
+--llIrKcgUOe3dCx0c--
