@@ -1,130 +1,115 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 2/2] drm/bridge: tc358767: Add DPI to eDP bridge driver
-Date: Mon, 11 Jul 2016 14:02:19 +0530
-Message-ID: <57835993.4020709@codeaurora.org>
-References: <1467384610-29908-1-git-send-email-p.zabel@pengutronix.de>
- <1467384610-29908-3-git-send-email-p.zabel@pengutronix.de>
- <577B39D9.705@codeaurora.org> <1467705603.2978.22.camel@pengutronix.de>
+From: Dongpo Li <lidongpo@hisilicon.com>
+Subject: Re: [PATCH 3/3] net: hisilicon: Add Fast Ethernet MAC driver
+Date: Mon, 11 Jul 2016 16:33:46 +0800
+Message-ID: <578359EA.3060407@hisilicon.com>
+References: <1465798076-176393-1-git-send-email-lidongpo@hisilicon.com>
+ <4787248.HAfgOdBKVY@wuerfel> <57831617.6080506@hisilicon.com>
+ <6408034.HDp0l1gLKO@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1467705603.2978.22.camel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6408034.HDp0l1gLKO@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, xuejiancheng@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNy8wNS8yMDE2IDAxOjMwIFBNLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+IEhpIEFyY2hp
-dCwKPgo+IHRoYW5rcyBmb3IgdGhlIHJldmlldyEKPgo+IEFtIERpZW5zdGFnLCBkZW4gMDUuMDcu
-MjAxNiwgMTA6MDggKzA1MzAgc2NocmllYiBBcmNoaXQgVGFuZWphOgo+IFsuLi5dCj4+PiArI2lu
-Y2x1ZGUgPGRybS9kcm1QLmg+Cj4+Cj4+IFRoaXMgbWF5IG5vdCBiZSBuZWVkZWQuCj4KPiBJJ2xs
-IGNoZWNrIGFuZCByZW1vdmUgaXQuCj4KPj4+ICsjaWZuZGVmIHJlZ21hcF9yZWFkX3BvbGxfdGlt
-ZW91dAo+Pj4gKyNkZWZpbmUgcmVnbWFwX3JlYWRfcG9sbF90aW1lb3V0KG1hcCwgYWRkciwgdmFs
-LCBjb25kLCBzbGVlcF91cywgdGltZW91dF91cykgXAo+Pj4gKyh7IFwKPj4+ICsJa3RpbWVfdCB0
-aW1lb3V0ID0ga3RpbWVfYWRkX3VzKGt0aW1lX2dldCgpLCB0aW1lb3V0X3VzKTsgXAo+Pj4gKwlp
-bnQgcmV0OyBcCj4+PiArCW1pZ2h0X3NsZWVwX2lmKHNsZWVwX3VzKTsgXAo+Pj4gKwlmb3IgKDs7
-KSB7IFwKPj4+ICsJCXJldCA9IHJlZ21hcF9yZWFkKChtYXApLCAoYWRkciksICYodmFsKSk7IFwK
-Pj4+ICsJCWlmIChyZXQpIFwKPj4+ICsJCQlicmVhazsgXAo+Pj4gKwkJaWYgKGNvbmQpIFwKPj4+
-ICsJCQlicmVhazsgXAo+Pj4gKwkJaWYgKHRpbWVvdXRfdXMgJiYga3RpbWVfY29tcGFyZShrdGlt
-ZV9nZXQoKSwgdGltZW91dCkgPiAwKSB7IFwKPj4+ICsJCQlyZXQgPSByZWdtYXBfcmVhZCgobWFw
-KSwgKGFkZHIpLCAmKHZhbCkpOyBcCj4+PiArCQkJYnJlYWs7IFwKPj4+ICsJCX0gXAo+Pj4gKwkJ
-aWYgKHNsZWVwX3VzKSBcCj4+PiArCQkJdXNsZWVwX3JhbmdlKChzbGVlcF91cyA+PiAyKSArIDEs
-IHNsZWVwX3VzKTsgXAo+Pj4gKwl9IFwKPj4+ICsJcmV0ID86ICgoY29uZCkgPyAwIDogLUVUSU1F
-RE9VVCk7IFwKPj4+ICt9KQo+Pj4gKyNlbmRpZgo+Pgo+PiBJcyB0aGVyZSBhIHJlYXNvbiB3aHkg
-dGhpcyBpcyB3cmFwcGVkIGFyb3VuZCBhICNpZm5kZWY/IEkgZG9uJ3Qgc2VlIGl0Cj4+IGluIHRo
-ZSBjdXJyZW50IHJlZ21hcC5oIGhlYWRlcnMuIEl0IHdvdWxkIGFsc28gYmUgbmljZSBpZiBpdCB3
-ZXJlIG1hZGUKPj4gaW50byBhIGZ1bmN0aW9uLgo+Cj4gVGhpcyBpcyBhIG1hY3JvIHNpbWlsYXIg
-dG8gdGhvc2UgZGVmaW5lZCBpbiBpb3BvbGwuaC4gSXQgY2FuJ3QgYmUgYQo+IGZ1bmN0aW9uIGJl
-Y2F1c2UgdGhlICJjb25kIml0aW9uIGlzIHNwZWNpZmllZCBieSB0aGUgY2FsbGVyIGFuZCBoYXMg
-dG8KPiBiZSBldmFsdWF0ZWQgaW4gdGhlIGxvb3AuCj4gSSdsbCBzdWJtaXQgdGhpcyBmb3IgcmVn
-bWFwLiBJZiBpdCBkb2Vzbid0IGdldCBhY2NlcHRlZCBJJ2xsIGNoYW5nZSB0aGlzCj4gaW50byB0
-d28gcHJvcGVybHkgbmFtZWQgZnVuY3Rpb25zLgo+Cj4gWy4uLl0KPj4+ICtzdGF0aWMgaW50IHRj
-X3B4bF9wbGxfZW4oc3RydWN0IHRjX2RhdGEgKnRjLCB1MzIgcmVmY2xrKQo+Pj4gK3sKPj4+ICsJ
-aW50IHJldDsKPj4+ICsJaW50IGlfcHJlLCBiZXN0X3ByZSA9IDE7Cj4+PiArCWludCBpX3Bvc3Qs
-IGJlc3RfcG9zdCA9IDE7Cj4+PiArCWludCBkaXYsIGJlc3RfZGl2ID0gMTsKPj4+ICsJaW50IG11
-bCwgYmVzdF9tdWwgPSAxOwo+Pj4gKwlpbnQgZGVsdGEsIGJlc3RfZGVsdGE7Cj4+PiArCWludCBl
-eHRfZGl2W10gPSB7MSwgMiwgMywgNSwgN307Cj4+PiArCWludCBiZXN0X3BpeGVsY2xvY2sgPSAw
-Owo+Pj4gKwlpbnQgdmNvX2hpID0gMDsKPj4+ICsJaW50IHBpeGVsY2xvY2s7Cj4+PiArCj4+PiAr
-CXBpeGVsY2xvY2sgPSB0Yy0+cGxsX2NsazsKPj4+ICsKPj4+ICsJZGV2X2RiZyh0Yy0+ZGV2LCAi
-UExMOiByZXF1ZXN0ZWQgJWQgcGl4ZWxjbG9jaywgcmVmICVkXG4iLCBwaXhlbGNsb2NrLAo+Pj4g
-KwkJcmVmY2xrKTsKPj4+ICsJYmVzdF9kZWx0YSA9IHBpeGVsY2xvY2s7Cj4+PiArCS8qIGJpZyBs
-b29wcyAqLwo+Pgo+PiBUaGUgYWJvdmUgY29tbWVudCBjb3VsZCBiZSBpbXByb3ZlZC4KPgo+IFdp
-bGwgZG8uCj4KPj4+ICsJZm9yIChpX3ByZSA9IDA7IGlfcHJlIDwgQVJSQVlfU0laRShleHRfZGl2
-KTsgaV9wcmUrKykgewo+Pj4gKwkJLyogcmVmY2xrIC8gZXh0X3ByZV9kaXYgc2hvdWxkIGJlIGlu
-IHRoZSAxIHRvIDIwMCBNSHogcmFuZ2UgKi8KPj4+ICsJCWlmICgocmVmY2xrIC8gZXh0X2Rpdltp
-X3ByZV0gPiAyMDAwMDAwMDApIHx8Cj4+Cj4+IFRoZSA+IDIwMCBNaHogY2hlY2sgc2VlbXMgcmVk
-dW5kYW50LCBzaW5jZSBubyByZWZjbGsgYmV5b25kIDM4LjQgTWh6IGlzCj4+IHN1cHBvcnRlZC4K
-Pgo+IEluZGVlZC4gSSdsbCBkcm9wIHRoZSBjaGVjayBhbmQgdXBkYXRlIHRoZSBjb21tZW50Lgo+
-Cj4+PiArCQkgICAgKHJlZmNsayAvIGV4dF9kaXZbaV9wcmVdIDwgMTAwMDAwMCkpCj4+PiArCQkJ
-Y29udGludWU7Cj4+PiArCQlmb3IgKGlfcG9zdCA9IDA7IGlfcG9zdCA8IEFSUkFZX1NJWkUoZXh0
-X2Rpdik7IGlfcG9zdCsrKSB7Cj4+PiArCQkJZm9yIChkaXYgPSAxOyBkaXYgPD0gMTY7IGRpdisr
-KSB7Cj4+PiArCQkJCXUzMiBjbGs7Cj4+PiArCQkJCXU2NCB0bXA7Cj4+PiArCj4+PiArCQkJCXRt
-cCA9IHBpeGVsY2xvY2sgKiBleHRfZGl2W2lfcHJlXSAqCj4+PiArCQkJCSAgICAgIGV4dF9kaXZb
-aV9wb3N0XSAqIGRpdjsKPj4+ICsJCQkJZG9fZGl2KHRtcCwgcmVmY2xrKTsKPj4+ICsJCQkJbXVs
-ID0gdG1wOwo+Pj4gKwo+Pj4gKwkJCQljbGsgPSByZWZjbGsgLyBleHRfZGl2W2lfcHJlXSAvIGRp
-diAqIG11bCAvCj4+PiArCQkJCSAgICAgIGV4dF9kaXZbaV9wb3N0XTsKPj4KPj4gU29tZSBicmFj
-ZXMgZm9yIHRoZSBhYm92ZSBleHByZXNzaW9uIG1pZ2h0IGhlbHAgOikKPgo+IE9rLgo+Cj4+PiAr
-CQkJCWRlbHRhID0gY2xrIC0gcGl4ZWxjbG9jazsKPj4+ICsKPj4+ICsJCQkJLyogY2hlY2sgbGlt
-aXRzICovCj4+PiArCQkJCWlmICgobXVsIDwgMSkgfHwKPj4+ICsJCQkJICAgIChtdWwgPiAxMjgp
-KQo+Pgo+PiBtaW5vciBjb21tZW50OiB0aGUgYWJvdmUgY2hlY2sgY291bGQgYmUgaW4gYSBzaW5n
-bGUgbGluZS4KPgo+IE92ZXJzaWdodCwgd2lsbCBmaXguCj4KPiBbLi4uXQo+Pj4gK3N0YXRpYyBp
-bnQgdGNfYXV4X2xpbmtfc2V0dXAoc3RydWN0IHRjX2RhdGEgKnRjKQo+Pj4gK3sKPj4+ICsJdW5z
-aWduZWQgbG9uZyByYXRlOwo+Pj4gKwl1MzIgdmFsdWU7Cj4+PiArCWludCByZXQ7Cj4+PiArCj4+
-PiArCXJhdGUgPSBjbGtfZ2V0X3JhdGUodGMtPnJlZmNsayk7Cj4+Cj4+IEFoLCB5b3UgY2FuIGRp
-c2NhcmQgbXkgY29tbWVudCBvbiB0aGUgY2xvY2sgYmluZGluZyBpbiB0aGUgRFQgcGF0Y2guCj4+
-IEkgZ3Vlc3MgeW91IG5lZWRlZCBpdCB0byBmaWd1cmUgb3V0IHRoZSByYXRlLgo+Cj4gQWxyaWdo
-dCwgZ29pbmcgYmFjayB0byB0aGUgb3RoZXIgbWFpbCBhbmQgdXBkYXRpbmcgbXkgYW5zd2VyLgo+
-Cj4+PiArCXN3aXRjaCAocmF0ZSkgewo+Pj4gKwljYXNlIDM4NDAwMDAwOgo+Pj4gKwkJdmFsdWUg
-PSBSRUZfRlJFUV8zOE00Owo+Pj4gKwkJYnJlYWs7Cj4+PiArCWNhc2UgMjYwMDAwMDA6Cj4+PiAr
-CQl2YWx1ZSA9IFJFRl9GUkVRXzI2TTsKPj4+ICsJCWJyZWFrOwo+Pj4gKwljYXNlIDE5MjAwMDAw
-Ogo+Pj4gKwkJdmFsdWUgPSBSRUZfRlJFUV8xOU0yOwo+Pj4gKwkJYnJlYWs7Cj4+PiArCWNhc2Ug
-MTMwMDAwMDA6Cj4+PiArCQl2YWx1ZSA9IFJFRl9GUkVRXzEzTTsKPj4+ICsJCWJyZWFrOwo+Pj4g
-KwlkZWZhdWx0Ogo+Pj4gKwkJZGV2X2Vycih0Yy0+ZGV2LCAiSW52YWxpZCByZWZjbGsgcmF0ZTog
-JWx1IEh6XG4iLCByYXRlKTsKPj4+ICsJCXJldHVybiAtRUlOVkFMOwo+Pj4gKwl9Cj4+PiArCj4+
-PiArCS8qIFNldHVwIERQLVBIWSAvIFBMTCAqLwo+Pj4gKwl2YWx1ZSB8PSBTWVNDTEtfU0VMX0xT
-Q0xLIHwgTFNDTEtfRElWXzI7Cj4+PiArCXRjX3dyaXRlKFNZU19QTExQQVJBTSwgdmFsdWUpOwo+
-Pj4gKwo+Pj4gKwl0Y193cml0ZShEUF9QSFlfQ1RSTCwgQkdSRU4gfCBQV1JfU1dfRU4gfCBCSVQo
-MikgfCBQSFlfQTBfRU4pOwo+Pgo+PiBJdCBzZWVtcyBhIGJpdCBzdHJhbmdlIHRvIGhhdmUgQklU
-KDIpIGJlc2lkZXMgdGhlIG90aGVyIHByZWRlZmluZWQKPj4gbWFjcm9zLgo+Cj4gSSBhY2NpZGVu
-dGFsbHkgbG9zdCB0aGUgY29tbWVudCB3aGVuIHNob3J0ZW5pbmcgdGhpcywgQklUKDIpIGlzIHJl
-c2VydmVkCj4gYnV0IHNldC4KPgo+IFsuLi5dCj4+PiArCS8qIFBYTCBQTEwgc2V0dXAgKi8KPj4+
-ICsJaWYgKHRjLT50ZXN0X3BhdHRlcm4pIHsKPj4KPj4gSSBjb3VsZG4ndCBmaW5kIG91dCB3aG8g
-aXMgc2V0dGluZyB0Yy0+dGVzdF9wYXR0ZXJuLiBJcyBpdCBhbHdheXMKPj4gMD8KPgo+IEhtLCB5
-b3UgYXJlIHJpZ2h0LiBJIHdvbmRlciB3aGF0IGEgZ29vZCBtZWNoYW5pc20gd291bGQgYmUgdG8g
-ZW5hYmxlIGEKPiB0ZXN0IHBhdHRlcm4gZm9yIGEgYnJpZGdlIGRyaXZlci4gTW9kdWxlIHBhcmFt
-ZXRlcnM/IFdlIGRvbid0IGhhdmUKPiBhbnlodGluZyBsaWtlIFY0TDJfQ0lEX1RFU1RfUEFUVEVS
-TiBpbiBkcm0uIEkgY291bGQgYWxzbyBkcm9wIHRlc3QKPiBwYXR0ZXJuIHN1cHBvcnQgZnJvbSB0
-aGUgaW5pdGlhbCBwYXRjaCBhbmQgc3VibWl0IGl0IHNlcGFyYXRlbHkuCgpNb2R1bGUgcGFyYW1l
-dGVyIHNvdW5kcyBsaWtlIGEgZ29vZCBvcHRpb24uIEFsdGhvdWdoLCBpdCBzZWVtcyBsaWtlIHRo
-ZQpwbGwgaXMgZW5hYmxlZCBvbmx5IHdoZW4gdGVzdF9wYXR0ZXJuIGlzIHNldC4gSG93IGRvZXMg
-dGhlIGJyaWRnZSB3b3JrCmlmIHRoZSBwbGwgaXNuJ3QgZW5hYmxlZD8KCkFyY2hpdAoKPgo+IFsu
-Li5dCj4+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX2hlbHBlcl9mdW5jcyB0
-Y19jb25uZWN0b3JfaGVscGVyX2Z1bmNzID0gewo+Pj4gKwkuZ2V0X21vZGVzID0gdGNfY29ubmVj
-dG9yX2dldF9tb2RlcywKPj4+ICsJLm1vZGVfdmFsaWQgPSB0Y19jb25uZWN0b3JfbW9kZV92YWxp
-ZCwKPj4+ICsJLmJlc3RfZW5jb2RlciA9IHRjX2Nvbm5lY3Rvcl9iZXN0X2VuY29kZXIsCj4+PiAr
-fTsKPj4+ICsKPj4+ICtzdGF0aWMgdm9pZCB0Y19jb25uZWN0b3JfZGVzdHJveShzdHJ1Y3QgZHJt
-X2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+Pj4gK3sKPj4+ICsJZHJtX2Nvbm5lY3Rvcl91bnJlZ2lz
-dGVyKGNvbm5lY3Rvcik7Cj4+PiArCWRybV9jb25uZWN0b3JfY2xlYW51cChjb25uZWN0b3IpOwo+
-Pj4gK30KPj4+ICsKPj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9jb25uZWN0b3JfZnVuY3Mg
-dGNfY29ubmVjdG9yX2Z1bmNzID0gewo+Pj4gKwkuZHBtcyA9IGRybV9oZWxwZXJfY29ubmVjdG9y
-X2RwbXMsCj4+PiArCS5maWxsX21vZGVzID0gZHJtX2hlbHBlcl9wcm9iZV9zaW5nbGVfY29ubmVj
-dG9yX21vZGVzLAo+Pj4gKwkuZGV0ZWN0ID0gdGNfY29ubmVjdG9yX2RldGVjdCwKPj4+ICsJLmRl
-c3Ryb3kgPSB0Y19jb25uZWN0b3JfZGVzdHJveSwKPj4KPj4gQ2FuIHdlIHVzZSBhdG9taWMgaGVs
-cGVycyB3aGVyZSBhcHBsaWNhYmxlPwo+Cj4gSSBoYXZlIHdvcmtlZCBvbiB0aGlzIG9uIGkuTVg2
-LCB3aGljaCBkb2Vzbid0IGhhdmUgYXRvbWljIHN1cHBvcnQgbWVyZ2VkCj4geWV0LiBJJ2xsIHRl
-c3Qgd2l0aCBMaXUgWWluZydzIGkuTVg2IGF0b21pYyBtb2Rlc2V0IHBhdGNoZXMgYW5kIHVwZGF0
-ZQo+IHRvIGF0b21pYyBoZWxwZXJzIGhlcmUuCj4KPiByZWdhcmRzCj4gUGhpbGlwcAo+CgotLSAK
-UXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJv
-cmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On 2016/7/11 16:16, Arnd Bergmann wrote:
+> On Monday, July 11, 2016 11:44:23 AM CEST Dongpo Li wrote:
+>> Hi Arnd,
+>>
+>> On 2016/6/28 17:34, Arnd Bergmann wrote:
+>>> On Tuesday, June 28, 2016 5:21:19 PM CEST Dongpo Li wrote:
+>>>> On 2016/6/15 5:20, Arnd Bergmann wrote:
+>>>>> On Tuesday, June 14, 2016 9:17:44 PM CEST Li Dongpo wrote:
+>>>>>> On 2016/6/13 17:06, Arnd Bergmann wrote:
+>>>>>>> On Monday, June 13, 2016 2:07:56 PM CEST Dongpo Li wrote:
+>>>>>>> You tx function uses BQL to optimize the queue length, and that
+>>>>>>> is great. You also check xmit reclaim for rx interrupts, so
+>>>>>>> as long as you have both rx and tx traffic, this should work
+>>>>>>> great.
+>>>>>>>
+>>>>>>> However, I notice that you only have a 'tx fifo empty'
+>>>>>>> interrupt triggering the napi poll, so I guess on a tx-only
+>>>>>>> workload you will always end up pushing packets into the
+>>>>>>> queue until BQL throttles tx, and then get the interrupt
+>>>>>>> after all packets have been sent, which will cause BQL to
+>>>>>>> make the queue longer up to the maximum queue size, and that
+>>>>>>> negates the effect of BQL.
+>>>>>>>
+>>>>>>> Is there any way you can get a tx interrupt earlier than
+>>>>>>> this in order to get a more balanced queue, or is it ok
+>>>>>>> to just rely on rx packets to come in occasionally, and
+>>>>>>> just use the tx fifo empty interrupt as a fallback?
+>>>>>>>
+>>>>>> In tx direction, there are only two kinds of interrupts, 'tx fifo empty'
+>>>>>> and 'tx one packet finish'. I didn't use 'tx one packet finish' because
+>>>>>> it would lead to high hardware interrupts rate. This has been verified in
+>>>>>> our chips. It's ok to just use tx fifo empty interrupt.
+>>>>>
+>>>>> I'm not convinced by the explanation, I don't think that has anything
+>>>>> to do with the hardware design, but instead is about the correctness
+>>>>> of the BQL logic with your driver.
+>>>>>
+>>>>> Maybe your xmit function can do something like
+>>>>>
+>>>>>       if (dql_avail(netdev_get_tx_queue(dev, 0)->dql) < 0)
+>>>>>               enable per-packet interrupt
+>>>>>       else
+>>>>>               use only fifo-empty interrupt
+>>>>>
+>>>>> That way, you don't get a lot of interrupts when the system is
+>>>>> in a state of packets being received and sent continuously,
+>>>>> but if you get to the point where your tx queue fills up
+>>>>> and no rx interrupts arrive, you don't have to wait for it
+>>>>> to become completely empty before adding new packets, and
+>>>>> BQL won't keep growing the queue.
+>>>>>
+>>>> Hi, Arnd
+>>>> I tried enable per-packet interrupt when tx queue full in xmit function
+>>>> and disable it in NAPI poll. But the number of interrupts are a little
+>>>> bigger than only using fifo-empty interrupt.
+>>>
+>>> Right, I'd expect that to be the case, it basically means that the
+>>> algorithm works as expected.
+>>>
+>>> Just to be sure you didn't have extra interrupts: you only enable the
+>>> per-packet interrupts if interrupts are currently enabled, not in
+>>> NAPI polling mode, right?
+>>>
+>> Sorry so long to reply to you. I use the per-packet interrupt like this:
+>> In my xmit function,
+>> 	if (hardware tx fifo is full) {
+>> 		enable tx per-packet interrupt;
+>> 		netif_stop_queue(dev);
+>> 		return NETDEV_TX_BUSY;
+>> 	}
+>>
+>> In interrupt handle function,
+>> 	if (interrupt is tx per-packet or tx fifo-empty or rx) {
+>> 		disable tx per-packet interrupt;
+>> 		napi_schedule(&priv->napi);
+>> 	}
+>> We disable tx per-packet interrupt anyway because the NAPI poll will reclaim
+>> the tx fifo.
+>> When the NAPI poll completed, it will only enable the tx fifo-empty interrupt
+>> and rx interrupt except the tx per-packet interrupt.
+>>
+>> Is this solution okay?
+> 
+> Yes, this looks good to me.
+> 
+Okay, many thanks for your review.
+
+> 	Arnd
+> 
+> .
+> 
+
+    Regards,
+    Dongpo
+
+.
