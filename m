@@ -1,148 +1,52 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 1/4] soc: mediatek: Refine scpsys to support multiple
- platform
-Date: Tue, 12 Jul 2016 10:21:13 +0200
-Message-ID: <f904dc9b-d723-f466-0ee4-78af920ccd72@gmail.com>
-References: <1463390894-32062-1-git-send-email-jamesjj.liao@mediatek.com>
- <1463390894-32062-2-git-send-email-jamesjj.liao@mediatek.com>
- <6762e420-0d68-0376-b584-bfc878b5e95f@gmail.com>
- <1467783564.26485.22.camel@mtksdaap41> <577E3AE9.5080202@gmail.com>
- <1468227390.31247.20.camel@mtksdaap41> <57839AE3.2070103@gmail.com>
- <1468294448.31247.28.camel@mtksdaap41>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] spi: s3c64xx: restore removed comments
+Date: Tue, 12 Jul 2016 09:22:56 +0100
+Message-ID: <20160712082256.GD9976@sirena.org.uk>
+References: <57837606.8050906@samsung.com>
+ <1468306444-18512-1-git-send-email-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468294448.31247.28.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZARJHfwaSJQLOEUz"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1468306444-18512-1-git-send-email-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--ZARJHfwaSJQLOEUz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 12/07/16 05:34, James Liao wrote:
-> Hi Matthias,
->
-> On Mon, 2016-07-11 at 15:10 +0200, Matthias Brugger wrote:
->>
->> On 11/07/16 10:56, James Liao wrote:
->>
->> [...]
->>
->>>>>>> @@ -467,28 +386,54 @@ static int scpsys_probe(struct platform_device *pdev)
->>>>>>>    			if (PTR_ERR(scpd->supply) == -ENODEV)
->>>>>>>    				scpd->supply = NULL;
->>>>>>>    			else
->>>>>>> -				return PTR_ERR(scpd->supply);
->>>>>>> +				return ERR_CAST(scpd->supply);
->>>>>>>    		}
->>>>>>>    	}
->>>>>>>
->>>>>>> -	pd_data->num_domains = NUM_DOMAINS;
->>>>>>> +	pd_data->num_domains = num;
->>>>>>>
->>>>>>> -	for (i = 0; i < NUM_DOMAINS; i++) {
->>>>>>> +	init_clks(pdev, clk);
->>>>>>> +
->>>>>>> +	for (i = 0; i < num; i++) {
->>>>>>>    		struct scp_domain *scpd = &scp->domains[i];
->>>>>>>    		struct generic_pm_domain *genpd = &scpd->genpd;
->>>>>>>    		const struct scp_domain_data *data = &scp_domain_data[i];
->>>>>>>
->>>>>>> +		for (j = 0; j < MAX_CLKS && data->clk_id[j]; j++) {
->>>>>>> +			struct clk *c = clk[data->clk_id[j]];
->>>>>>> +
->>>>>>> +			if (IS_ERR(c)) {
->>>>>>> +				dev_err(&pdev->dev, "%s: clk unavailable\n",
->>>>>>> +					data->name);
->>>>>>> +				return ERR_CAST(c);
->>>>>>> +			}
->>>>>>> +
->>>>>>> +			scpd->clk[j] = c;
->>>>>>
->>>>>> Put this in the else branch. Apart from that is there any reason you
->>>>>
->>>>> Do you mean to change like this?
->>>>>
->>>>> 	if (IS_ERR(c)) {
->>>>> 		...
->>>>> 		return ERR_CAST(c);
->>>>> 	} else {
->>>>> 		scpd->clk[j] = c;
->>>>> 	}
->>>>>
->>>>> checkpatch.pl will warn for above code due to it returns in 'if' branch.
->>>>>
->>>>
->>>> I tried that on top of next-20160706 and it checkpatch didn't throw any
->>>> warning. Which kernel version are based on?
->>>
->>> I don't remember which version of checkpatch warn on this pattern. This
->>> patch series develop across several kernel versions.
->>
->> We as the kernel community develop against master or linux-next. We only
->> care about older kernel version in the sense that we intent hard not to
->> break any userspace/kernel or firmware/kernel interfaces. Apart from
->> that it's up to every individual to backport patches from mainline
->> kernel to his respective version. But that's nothing the community as a
->> hole can take care of.
->>
->>>
->>> So do you prefer to put "scpd->clk[j] = c;" into 'else' branch?
->>>
->>
->> Yes please :)
->
-> Yingjoe had tested in the latest checkpatch.pl and it showed checkpatch
-> warn on the else-branch. He had replied the results in previous email.
->
+On Tue, Jul 12, 2016 at 03:54:04PM +0900, Andi Shyti wrote:
+> Patch a9e93e8 has erroneously removed some comments which are
+> important to understand why the bus frequency is multiplied by
+> two during the spi transfer.
 
-Yes you are right. Not sure what I was testing. Sorry for that.
+Please don't bury patches in the middle of old threads, it makes it very
+confusing trying to figure out what's going on especially when you do
+this one patch at a time in a series.  Submit new patches as a complete
+series, ideally not threaded in with anything else (at least for me).
 
->>>>>> moved the for up in the function? If not, I would prefer not to move it,
->>>>>> to make it easier to read the diff.
->>>>>
->>>>> The new 'for' block are far different from original one. And I think
->>>>> it's easy to read if we keep simple assign statements in the same block.
->>>>>
->>>>
->>>> It's different in the sense that it checks if struct clk *c is an error.
->>>> I don't see the reason why we need to move it up in the file.
->>>> It's not too important but I would prefer not to move it if there is no
->>>> reason.
->>>
->>> I think I may misunderstand your comments. Which 'for' block did you
->>> mention for? 'for (i = 0; i < num ...' or 'for (j = 0; j < MAX_CLKS
->>> && ...' ?
->>>
->>> The 'for(i)' exists in original code, this patch just change its counter
->>> from 'NUM_DOMAINS' to 'num'. The 'for(j)' is a new for-block, so it was
->>> not moved from other blocks.
->>>
->>
->> for (j = 0; j < MAX_CLKS... is present in the actual scpsys_probe in
->> linux-next (line 485 as of today). This patch moves this for a few lines
->> up, to be precise before executing this code sequence:
->> <code>
->> pd_data->domains[i] = genpd;
->> scpd->scp = scp;
->>
->> scpd->data = data;
->> </code>
->>
->> AFAIK there is no reason to do so. It adds unnecessary complexity to the
->> patch. So please fix this together with the other comments you got.
->
-> I see. So you prefer to put the for(j < MAX_CLKS) after 'scpd->data =
-> data' right? I can change it in next patch.
->
+--ZARJHfwaSJQLOEUz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Ok, thanks.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Regards,
-Matthias
+iQEcBAEBCAAGBQJXhKjfAAoJECTWi3JdVIfQSQ8H/imKcL5X9zL3/qnSek1oyoD8
+Zdq2JKr2OiJ57H7NtoTFcZqHfEdSFgXqNVumGTeA0Nzpn04PT1UsMzcS/xjwt2l8
+c52YhqCZx7JCOPwPY9/IOtVa5B2OkE6HH7pzPVtFyJY5LbswpPCpzXYomjig5Yxq
+f2og8S1BvMX31EiIJQCN2CY1O1OQV6gOMR866l9I2ii4G1Ji47hOsWUGBUJ25ick
+1dhKP48XFPNs1fkTkdzPmAIyw4qVEG6Hv0qNDH+RPIKe2cW/rZQixLOLlcHIzmzo
+eX3mFgUeEjfgnr8FDDtsC1nUxQKxFR5zwSyFK7LabRtsxM2mqQr2eJ3zWDNr698=
+=sadm
+-----END PGP SIGNATURE-----
+
+--ZARJHfwaSJQLOEUz--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
