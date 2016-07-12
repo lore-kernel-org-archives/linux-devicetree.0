@@ -1,83 +1,54 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH v4 1/2] input: adc-keys: add DT binding documentation
-Date: Tue, 12 Jul 2016 21:36:25 +0200
-Message-ID: <1468352186-14190-1-git-send-email-alexandre.belloni@free-electrons.com>
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [PATCH v18 0/6] Device Tree support for FPGA Programming
+Date: Tue, 12 Jul 2016 14:36:39 -0500
+Message-ID: <20160712193645.9098-1-atull@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for ADC keys
+v18 has very minimal changes to address comments about the device
+tree bindings and device tree examples in the bindings document.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
+The diffstat from v17 is:
+  4 files changed, 11 insertions(+), 18 deletions(-)
+If there are more changes, it would be easier to
+send these upstream and just start adding small
+patches to fix whatever else.
 
-Changes v2..v4:
- - Documented autorepeat and poll-interval
+Alan Tull (6):
+  fpga: add bindings document for fpga region
+  ARM: socfpga: add bindings document for fpga bridge drivers
+  add sysfs document for fpga bridge class
+  fpga: add fpga bridge framework
+  fpga: fpga-region: device tree control for FPGA
+  ARM: socfpga: fpga bridge driver support
 
+ Documentation/ABI/testing/sysfs-class-fpga-bridge  |  11 +
+ .../bindings/fpga/altera-fpga2sdram-bridge.txt     |  16 +
+ .../bindings/fpga/altera-hps2fpga-bridge.txt       |  39 ++
+ .../devicetree/bindings/fpga/fpga-region.txt       | 491 ++++++++++++++++++
+ drivers/fpga/Kconfig                               |  21 +
+ drivers/fpga/Makefile                              |   7 +
+ drivers/fpga/altera-fpga2sdram.c                   | 174 +++++++
+ drivers/fpga/altera-hps2fpga.c                     | 213 ++++++++
+ drivers/fpga/fpga-bridge.c                         | 388 ++++++++++++++
+ drivers/fpga/fpga-region.c                         | 555 +++++++++++++++++++++
+ include/linux/fpga/fpga-bridge.h                   |  55 ++
+ include/linux/fpga/fpga-mgr.h                      |   2 +
+ 12 files changed, 1972 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.txt
+ create mode 100644 drivers/fpga/altera-fpga2sdram.c
+ create mode 100644 drivers/fpga/altera-hps2fpga.c
+ create mode 100644 drivers/fpga/fpga-bridge.c
+ create mode 100644 drivers/fpga/fpga-region.c
+ create mode 100644 include/linux/fpga/fpga-bridge.h
 
- .../devicetree/bindings/input/adc-keys.txt         | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/adc-keys.txt
-
-diff --git a/Documentation/devicetree/bindings/input/adc-keys.txt b/Documentation/devicetree/bindings/input/adc-keys.txt
-new file mode 100644
-index 000000000000..6f26ad75ed2b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/adc-keys.txt
-@@ -0,0 +1,50 @@
-+ADC attached resistor ladder buttons
-+------------------------------------
-+
-+Required properties:
-+ - compatible: "adc-keys"
-+ - io-channels: Phandle to an ADC channel
-+ - io-channel-names = "buttons";
-+ - keyup-threshold-mvolt: Voltage at which all the keys are considered up.
-+
-+Optional properties:
-+	- poll-interval: Poll interval time in milliseconds
-+	- autorepeat: Boolean, Enable auto repeat feature of Linux input
-+	  subsystem.
-+
-+Each button (key) is represented as a sub-node of "adc-keys":
-+
-+Required subnode-properties:
-+	- label: Descriptive name of the key.
-+	- linux,code: Keycode to emit.
-+	- press-threshold-mvolt: Voltage adc input when this key is pressed.
-+
-+Example:
-+
-+#include <dt-bindings/input/input.h>
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&lradc 0>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-mvolt = <2000>;
-+
-+		button@1500 {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			press-threshold-mvolt = <1500>;
-+		};
-+
-+		button@1000 {
-+			label = "Volume Down";
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			press-threshold-mvolt = <1000>;
-+		};
-+
-+		button@500 {
-+			label = "Enter";
-+			linux,code = <KEY_ENTER>;
-+			press-threshold-mvolt = <500>;
-+		};
-+	};
-+
 -- 
-2.8.1
+2.9.1
