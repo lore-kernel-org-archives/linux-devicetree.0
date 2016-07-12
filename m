@@ -1,97 +1,56 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v3] xen/arm: enable clocks used by the hypervisor
-Date: Tue, 12 Jul 2016 11:11:30 -0700
-Message-ID: <146834709006.73491.4165577782297554867@resonance>
-References: <1467963871-31556-1-git-send-email-dirk.behme@de.bosch.com>
- <577F73B3.8090807@arm.com> <146799758568.73491.4432005583661196579@resonance>
- <5784B688.7050903@arm.com>
+From: "Steven J. Hill" <steven.hill@cavium.com>
+Subject: [PATCH V8 0/2] mmc: OCTEON: Add OCTEON MMC controller.
+Date: Tue, 12 Jul 2016 13:18:22 -0500
+Message-ID: <5785346E.8020702@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <5784B688.7050903@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Julien Grall <julien.grall@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>
-Cc: xen-devel@lists.xenproject.org, devicetree@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Julien Grall (2016-07-12 02:21:12)
-> Hi Mike,
-> 
-> On 08/07/16 18:06, Michael Turquette wrote:
-> > Quoting Julien Grall (2016-07-08 02:34:43)
-> >> Hi Dirk,
-> >>
-> >> On 08/07/16 08:44, Dirk Behme wrote:
-> >>> Xen hypervisor drivers might replace native OS drivers. The result is
-> >>> that some important clocks that are enabled by the OS in the non-Xen
-> >>> case are not properly enabled in the presence of Xen. The clocks
-> >>> property enumerates the clocks that must be enabled by the Xen clock
-> >>> consumer.
-> >>>
-> >>> An example is a serial driver enabled by the hypervisor. Xen must
-> >>
-> >> I would say "An example is the UART used by the hypervisor."
-> >>
-> >>> consume and enable these clocks in the OS to ensure behavior continues
-> >>> after firmware configures the UART hardware and corresponding clock
-> >>> harder.
-> >>
-> >> What do you mean by "harder"?
-> >>
-> >> Also, relying on DOM0 to enable the clock looks very wrong to me and you
-> >> give an example which prove that. The UART will be used before hand by
-> >> Xen, however it will not be possible to use it if you expect DOM0 to
-> >> enable the clock (or even modify the clock frequency).
-> >>
-> >> The clock should be enabled either by the firmware or Xen. But not DOM0.
-> >> DOM0 should not touch this clock at all.
-> >>
-> >> Furthermore, this property could be used for clock associated to device
-> >> that will be passthrough-ed to a guest. In this case, the clock would be
-> >> enabled even if the device is not in use which will result more power
-> >> consumption.
-> >
-> > Is there a need to pass clock references through to guests? If so the
-> > unmerged CLK_ENABLE_HAND_OFF[0] feature might be useful to you? If this
-> > flag is set on a given clk, it will be enabled at the time it is
-> > registered by the clk provider driver, and it's enable_count reference
-> > counter will be "handed off" to the first consumer that calls clk_get()
-> > and clk_prepare_enable() on it. This means the clock CAN be gated by
-> > it's proper driver, but it will be enabled at boot time as well.
-> 
-> Some driver requires to have the clock in hand to be able to configure 
-> the clock (such as setting the rate). So we would have to find a way to 
-> let the guest using the clock either by assigning the clock or some PV 
-> clock driver.
-> 
-> However, platform device passthrough (i.e non-pci device) cannot be done 
-> generically. The user has to provide a lots of information manually 
-> (such as MMIO, IRQ, device tree node...). So I am not sure if we want to 
-> have a generic solution here.
-> 
-> I though it would be worth to mention it because we may (or not) use 
-> this clock to tell DOM0 (don't touch it).
-> 
-> > This is useful for use cases like splash screens where the bootloader
-> > configures the display and plays some animation, and we want the linux
-> > kernel to take over the display controller hardware without cutting
-> > clocks, blanking or reseting it. Handing off the clock reference count
-> > helps achieve this.
-> 
->  From my understanding, any device used by Xen would be in a similar 
-> situation, although there will be no driver in Linux. The current patch 
-> (as well as the v4) is calling clk_prepare_enable for each clock used by 
-> Xen. Could enabling the clock create unexpected behavior such as the 
-> UART loosing/dropping characters?
+The OCTEON MMC controller is currently found on cn61XX and cnf71XX
+devices. Device parameters are configured from device tree data.
 
-In general, no, it will not cause any bad side effect.
+The MMC controller can be connected to up to 4 "slots" which may be
+eMMC, MMC or SD card devices. As there is a single controller, each
+available slot is represented as a child node of the controller.
 
-Regards,
-Mike
+This MMC driver is the product of previous versions and discussions
+which can be found at the below URLs.
 
-> 
-> Regards,
-> 
-> -- 
-> Julien Grall
+[V7] https://patchwork.linux-mips.org/patch/12566/
+     https://patchwork.linux-mips.org/patch/12567/
+[V6] https://patchwork.linux-mips.org/patch/12538/
+     https://patchwork.linux-mips.org/patch/12539/
+     https://patchwork.linux-mips.org/patch/12540/
+[V5] https://patchwork.linux-mips.org/patch/12533/
+[V4] https://patchwork.linux-mips.org/patch/9558/
+[V3] https://patchwork.linux-mips.org/patch/9462/
+[V2] https://patchwork.linux-mips.org/patch/9086/
+[V1] https://patchwork.linux-mips.org/patch/9079/
+
+Steven J. Hill (2):
+  mmc: OCTEON: Add DT bindings for OCTEON MMC controller.
+  mmc: OCTEON: Add host driver for OCTEON MMC controller.
+
+ .../devicetree/bindings/mmc/octeon-mmc.txt         |   72 ++
+ drivers/mmc/host/Kconfig                           |   10 +
+ drivers/mmc/host/Makefile                          |    1 +
+ drivers/mmc/host/octeon_mmc.c                      | 1331 ++++++++++++++++++++
+ 4 files changed, 1414 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+ create mode 100644 drivers/mmc/host/octeon_mmc.c
+
+-- 
+1.9.1
