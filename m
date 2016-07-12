@@ -1,71 +1,222 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] rtc: support for amlogic meson rtc
-Date: Tue, 12 Jul 2016 18:27:12 +0100
-Message-ID: <4d98df06-cf00-b4fd-dfb5-1ac5d9c548fc@codethink.co.uk>
-References: <1467748122-14833-1-git-send-email-ben.dooks@codethink.co.uk>
- <1467748122-14833-3-git-send-email-ben.dooks@codethink.co.uk>
- <20160712172235.GU22202@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v2 6/6] clk: mvebu: Add the peripheral clock driver for
+ Armada 3700
+Date: Tue, 12 Jul 2016 10:28:17 -0700
+Message-ID: <146834449725.73491.6964712305765408246@resonance>
+References: <1467931071-31004-1-git-send-email-gregory.clement@free-electrons.com>
+ <1467931071-31004-7-git-send-email-gregory.clement@free-electrons.com>
+ <146800242289.73491.4169295036354147972@resonance>
+ <87r3aystsl.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCEPJZEDQIBBB5GQSS6AKGQEEEQFHNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160712172235.GU22202-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87r3aystsl.fsf@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Romain Perier <romain.perier@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Omri Itach <omrii@marvell.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Terry Zhou <bjzhou@marvell.com>, Victor Gu <xigu@marvell.com>, Hua Jing <jinghua@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/07/16 18:22, Alexandre Belloni wrote:
-> Hi,
+Quoting Gregory CLEMENT (2016-07-12 09:30:34)
+> Hi Michael,
+>  
+>  On ven., juil. 08 2016, Michael Turquette <mturquette@baylibre.com> wrote:
 > 
-> Very few comments below
+> > Quoting Gregory CLEMENT (2016-07-07 15:37:51)
+> >> +#include <linux/clk-provider.h>
+> >> +#include <linux/clk.h>
+> >
+> > Same question as my previous email. Is clk.h necessary? Is this driver
+> > also a clk consumer?
 > 
-> On 05/07/2016 at 20:48:41 +0100, Ben Dooks wrote :
->> +/* registers accessed from cpu bus */
->> +#define RTC_REG(x)		((x) * 4)	/* rtc registers 0-4 */
->> +
->> +#define LINE_SDI		(1 << 2)
->> +#define LINE_SEN		(1 << 1)
->> +#define LINE_SCLK		(1 << 0)
+> I think I can remove it indeed.
 > 
-> Maybe use BIT() here.
-
-I'll sort that out later.
-
->> +/* RTC interface layer functions */
->> +
->> +static int meson_rtc_gettime(struct device *dev, struct rtc_time *tm)
->> +{
->> +	struct meson_rtc *rtc = dev_get_drvdata(dev);
->> +	int ret;
->> +	u32 time;
->> +
->> +	mutex_lock(&rtc->lock);
->> +
->> +	ret = meson_rtc_read(rtc, RTC_COUNTER, &time);
->> +	if (!ret) {
->> +		rtc_time_to_tm(time, tm);
+> >
+> >> +static int armada_3700_add_composite_clk(const struct clk_periph_data *data,
+> >> +                                        const char * const *parent_name,
+> >> +                                        void __iomem *reg, spinlock_t *lock,
+> >> +                                        struct device *dev, struct clk_hw *hw)
+> >> +{
+> >> +       const struct clk_ops *mux_ops = NULL, *gate_ops = NULL,
+> >> +               *div_ops = NULL;
+> >> +       struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *div_hw = NULL;
+> >> +       const char * const *names;
+> >> +       struct clk_mux *mux = NULL;
+> >> +       struct clk_gate *gate = NULL;
+> >> +       struct clk_divider *div = NULL;
+> >> +       struct clk_double_div *double_div = NULL;
+> >> +       int num_parent;
+> >> +       int ret = 0;
+> >> +
+> >> +       if (data->gate_shift != UNUSED) {
+> >> +               gate = devm_kzalloc(dev, sizeof(*gate), GFP_KERNEL);
+> >> +
+> >> +               if (!gate)
+> >> +                       return -ENOMEM;
+> >> +
+> >> +               gate->reg = reg + CLK_DIS;
+> >> +               gate->bit_idx = data->gate_shift;
+> >> +               gate->lock = lock;
+> >> +               gate_ops = &clk_gate_ops;
+> >> +               gate_hw = &gate->hw;
+> >> +       }
+> >> +
+> >> +       if (data->mux_shift != UNUSED) {
+> >> +               mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
+> >> +
+> >> +               if (!mux) {
+> >> +                       ret = -ENOMEM;
+> >> +                       goto free_gate;
+> >> +               }
+> >> +
+> >> +               mux->reg = reg + TBG_SEL;
+> >> +               mux->shift = data->mux_shift;
+> >> +               mux->mask = 0x3;
+> >> +               mux->lock = lock;
+> >> +               mux_ops = &clk_mux_ro_ops;
+> >> +               mux_hw = &mux->hw;
+> >> +       }
+> >> +
+> >> +       if (data->div_reg1 != UNUSED) {
+> >> +               if (data->div_reg2 == UNUSED) {
+> >> +                       const struct clk_div_table *clkt;
+> >> +                       int table_size = 0;
+> >> +
+> >> +                       div = devm_kzalloc(dev, sizeof(*div), GFP_KERNEL);
+> >> +                       if (!div) {
+> >> +                               ret = -ENOMEM;
+> >> +                               goto free_mux;
+> >> +                       }
+> >> +
+> >> +                       div->reg = reg + data->div_reg1;
+> >> +                       div->table = data->table;
+> >> +                       for (clkt = div->table; clkt->div; clkt++)
+> >> +                               table_size++;
+> >> +                       div->width = order_base_2(table_size);
+> >> +                       div->lock = lock;
+> >> +                       div_ops = &clk_divider_ro_ops;
+> >> +                       div_hw = &div->hw;
+> >> +               } else {
+> >> +                       double_div = devm_kzalloc(dev, sizeof(*double_div),
+> >> +                                                 GFP_KERNEL);
+> >> +                       if (!double_div) {
+> >> +                               ret = -ENOMEM;
+> >> +                               goto free_mux;
+> >> +                       }
+> >> +
+> >> +                       double_div->reg1 = reg + data->div_reg1;
+> >> +                       double_div->shift1 = data->div_shift1;
+> >> +                       double_div->reg2 = reg + data->div_reg1;
+> >> +                       double_div->shift2 = data->div_shift2;
+> >> +                       div_ops = &clk_double_div_ops;
+> >> +                       div_hw = &double_div->hw;
+> >> +               }
+> >> +       }
+> >> +
+> >> +       switch (data->flags) {
+> >> +       case XTAL_CHILD:
+> >> +               /* the xtal clock is the 5th clock */
+> >> +               names = &parent_name[4];
+> >> +               num_parent = 1;
+> >> +               break;
+> >> +       case TBGA_S_CHILD:
+> >> +               /* the TBG A S clock is the 3rd clock */
+> >> +               names = &parent_name[2];
+> >> +               num_parent = 1;
+> >> +               break;
+> >> +       case GBE_CORE_CHILD:
+> >> +               names = &gbe_name[1];
+> >> +               num_parent = 1;
+> >> +               break;
+> >> +       case  GBE_50_CHILD:
+> >> +               names = &gbe_name[0];
+> >> +               num_parent = 1;
+> >> +               break;
+> >> +       case  GBE_125_CHILD:
+> >> +               names = &gbe_name[2];
+> >> +               num_parent = 1;
+> >> +               break;
+> >> +       default:
+> >> +               names = parent_name;
+> >> +               num_parent = 4;
+> >> +       }
+> >> +       hw = clk_hw_register_composite(dev, data->name,
+> >> +                                    names, num_parent,
+> >> +                                    mux_hw, mux_ops,
+> >> +                                    div_hw, div_ops,
+> >> +                                    gate_hw, gate_ops,
+> >> +                                    CLK_IGNORE_UNUSED);
+> >> +       if (IS_ERR(hw)) {
+> >> +               ret = PTR_ERR(hw);
+> >> +               goto free_div;
+> >> +       }
+> >> +
+> >> +       return 0;
+> >> +free_div:
+> >> +       devm_kfree(dev, div);
+> >> +       devm_kfree(dev, double_div);
+> >> +free_mux:
+> >> +       devm_kfree(dev, mux);
+> >> +free_gate:
+> >> +       devm_kfree(dev, gate);
+> >> +       return ret;
+> >> +}
+> >
+> > Can this "add" function (aka registration function) be replaced with
+> > static data instead? I think that all of the static data exists already,
+> > this function can be removed and your probe can call clk_hw_register
+> > directly.
+> >
 > 
-> Can you use the 64bit version?
+> I see your point and indeed we can remove some allocation. However using
+> clk_hw_register with composite clock is not straight forward. Indeed the
+> clk_ops is filled in the clk_hw_register_composite function and none of
+> these operations are exported outside the clk-composite.c file.
+> 
+> We can't directly point a clk_gate_ops structure or a clk_divider_ops as
+> you did in the drivers/clk/meson/gxbb.c file for example. For clk
+> composite it would need modify the framework to either export all the
+> operation or to create set of operations directly usable and I would
+> like to avoid doing it when we are close to the merge window.
+> 
+> However I can use static data for the clk_mux, clk_gate and clk_divider
+> struct.
+> 
+> Is it OK for you?
 
-What would the 64bit version gain? The hardware register is 32bit.
+Yes, that sounds good. Let's convert the ones we can for now. Some day
+we might have a better solution for the composite clock stuff.
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+Regards,
+Mike
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> 
+> Thanks,
+> 
+> Gregory
+> 
+> > It might need a macro though, since composite clock structures are
+> > rather messy. This avoids a lot of unnecessary allocations and time
+> > populating data that we already have access to. In general I am trying
+> > to encourage clk drivers to use only clk_hw_register() in their probe
+> > instead of the helper registration functions.
+> >
+> > Similarly I am discouraging drivers from populating hw.init at run-time,
+> > since we already have that data for that at compile-time.
+> >
+> > Regards,
+> > Mike
+> 
+> -- 
+> Gregory Clement, Free Electrons
+> Kernel, drivers, real-time and embedded Linux
+> development, consulting, training and support.
+> http://free-electrons.com
