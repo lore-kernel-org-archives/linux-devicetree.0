@@ -1,51 +1,82 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] device-tree: nexus7: Set phy mode to otg instead of host
-Date: Tue, 12 Jul 2016 11:36:28 -0700
-Message-ID: <20160712183628.GF23833@tuxbot>
-References: <1467437605-11691-1-git-send-email-john.stultz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1467437605-11691-1-git-send-email-john.stultz@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Stephen Boyd <stephen.boyd@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Subject: [PATCH v3 1/2] Documentation: Add sbs-manager device tree node documentation
+Date: Tue, 12 Jul 2016 20:48:14 +0200
+Message-ID: <1468349295-4935-2-git-send-email-karl-heinz@schneider-inet.de>
+References: <1bIiDr-0004G1-0P>
+ <1468349295-4935-1-git-send-email-karl-heinz@schneider-inet.de>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1468349295-4935-1-git-send-email-karl-heinz@schneider-inet.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>, Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 01 Jul 22:33 PDT 2016, John Stultz wrote:
+This patch adds device tree documentation for the sbs-manager
 
-> In order to have the usb phy work in gadget mode, override
-> the default host mode with otg mode.
-> 
-> This allows gadget mode to work w/o any hacks to the dtsi file.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Andy Gross <agross@codeaurora.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Stephen Boyd <stephen.boyd@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-> index 7b05f07..94e9cbb 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-> @@ -253,6 +253,7 @@
->  			vddcx-supply	= <&pm8921_s3>;
->  			v3p3-supply	= <&pm8921_l3>;
->  			v1p8-supply	= <&pm8921_l4>;
-> +			dr_mode		= "otg";
+Reviewed-by: Phil Reid <preid@electromag.com.au>
+Signed-off-by: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+---
+ .../devicetree/bindings/power/sbs,sbs-manager.txt  | 52 ++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
 
-Wouldn't this be the standard case for the first/primary USB on most
-8064s? Looks like both the ifc6410 and  sd600eval has OTG support on the
-micro-usb.
-
-Andy, how about we just change the dtsi instead?
-
-Regards,
-Bjorn
+diff --git a/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt b/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+new file mode 100644
+index 0000000..f0e2253
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+@@ -0,0 +1,52 @@
++Binding for sbs-manager
++
++Required properties:
++- compatible: should be "lltc,ltc1760" or use "sbs,sbs-manager" as fallback.
++- reg: integer, i2c address of the device. Should be <0xa>.
++
++From OS view the device is basically an i2c-mux used to communicate with up to
++four smart battery devices at address 0xb. The driver actually implements this
++behaviour. So standard i2c-mux nodes can be used to register up to four slave
++batteries. Channels will be numerated starting from 1 to 4.
++
++Example:
++
++batman@0a {
++    compatible = "lltc,ltc1760";
++    reg = <0x0a>;
++    #address-cells = <1>;
++    #size-cells = <0>;
++
++    i2c@1 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <1>;
++
++        battery@0b {
++            compatible = "ti,bq2060", "sbs,sbs-battery";
++            reg = <0x0b>;
++        };
++    };
++
++    i2c@2 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <2>;
++
++        battery@0b {
++            compatible = "ti,bq2060", "sbs,sbs-battery";
++            reg = <0x0b>;
++        };
++    };
++
++    i2c@3 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <3>;
++
++        battery@0b {
++            compatible = "ti,bq2060", "sbs,sbs-battery";
++            reg = <0x0b>;
++        };
++    };
++};
+--
+1.9.1
