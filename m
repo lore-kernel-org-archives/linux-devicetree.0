@@ -1,204 +1,64 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 6/6] clk: mvebu: Add the peripheral clock driver for Armada 3700
-Date: Tue, 12 Jul 2016 18:30:34 +0200
-Message-ID: <87r3aystsl.fsf@free-electrons.com>
-References: <1467931071-31004-1-git-send-email-gregory.clement@free-electrons.com>
-	<1467931071-31004-7-git-send-email-gregory.clement@free-electrons.com>
-	<146800242289.73491.4169295036354147972@resonance>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] AMLogic Meson SoC RTC driver
+Date: Tue, 12 Jul 2016 17:45:22 +0100
+Message-ID: <53016146-6647-224c-ba1a-f2a9dc364a86@codethink.co.uk>
+References: <1467748089-14718-1-git-send-email-ben.dooks@codethink.co.uk>
+ <7hinwg85k7.fsf@baylibre.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <146800242289.73491.4169295036354147972@resonance> (Michael
-	Turquette's message of "Fri, 08 Jul 2016 11:27:02 -0700")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Terry Zhou <bjzhou@marvell.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCEPJZEDQIBBBJV5SS6AKGQECI3C6FA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <7hinwg85k7.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
- 
- On ven., juil. 08 2016, Michael Turquette <mturquette@baylibre.com> wrote:
+On 08/07/16 17:20, Kevin Hilman wrote:
+> Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> writes:
+> 
+>> This series adds support for the on SoC RTC driver on the
+>> AMLogic Meson devices.
+> 
+> -ECONFUSED
+> 
+> In reply to this patch, there are two other "PATCH v3 0/2" replies, an
+> then the two patches themselves, have "PATCH n/4" subjects when one
+> would expect "PATCH n/2" subjects.
 
-> Quoting Gregory CLEMENT (2016-07-07 15:37:51)
->> +#include <linux/clk-provider.h>
->> +#include <linux/clk.h>
->
-> Same question as my previous email. Is clk.h necessary? Is this driver
-> also a clk consumer?
+This was my mistake of formatting the patch then thinking it would
+be easy to remove the other two patches I decided to keep separate
+(for reasons below)
 
-I think I can remove it indeed.
+> Anyways, I was able to test this version with the DTs from the previous
+> version, and it works ok.
 
->
->> +static int armada_3700_add_composite_clk(const struct clk_periph_data *data,
->> +                                        const char * const *parent_name,
->> +                                        void __iomem *reg, spinlock_t *lock,
->> +                                        struct device *dev, struct clk_hw *hw)
->> +{
->> +       const struct clk_ops *mux_ops = NULL, *gate_ops = NULL,
->> +               *div_ops = NULL;
->> +       struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *div_hw = NULL;
->> +       const char * const *names;
->> +       struct clk_mux *mux = NULL;
->> +       struct clk_gate *gate = NULL;
->> +       struct clk_divider *div = NULL;
->> +       struct clk_double_div *double_div = NULL;
->> +       int num_parent;
->> +       int ret = 0;
->> +
->> +       if (data->gate_shift != UNUSED) {
->> +               gate = devm_kzalloc(dev, sizeof(*gate), GFP_KERNEL);
->> +
->> +               if (!gate)
->> +                       return -ENOMEM;
->> +
->> +               gate->reg = reg + CLK_DIS;
->> +               gate->bit_idx = data->gate_shift;
->> +               gate->lock = lock;
->> +               gate_ops = &clk_gate_ops;
->> +               gate_hw = &gate->hw;
->> +       }
->> +
->> +       if (data->mux_shift != UNUSED) {
->> +               mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
->> +
->> +               if (!mux) {
->> +                       ret = -ENOMEM;
->> +                       goto free_gate;
->> +               }
->> +
->> +               mux->reg = reg + TBG_SEL;
->> +               mux->shift = data->mux_shift;
->> +               mux->mask = 0x3;
->> +               mux->lock = lock;
->> +               mux_ops = &clk_mux_ro_ops;
->> +               mux_hw = &mux->hw;
->> +       }
->> +
->> +       if (data->div_reg1 != UNUSED) {
->> +               if (data->div_reg2 == UNUSED) {
->> +                       const struct clk_div_table *clkt;
->> +                       int table_size = 0;
->> +
->> +                       div = devm_kzalloc(dev, sizeof(*div), GFP_KERNEL);
->> +                       if (!div) {
->> +                               ret = -ENOMEM;
->> +                               goto free_mux;
->> +                       }
->> +
->> +                       div->reg = reg + data->div_reg1;
->> +                       div->table = data->table;
->> +                       for (clkt = div->table; clkt->div; clkt++)
->> +                               table_size++;
->> +                       div->width = order_base_2(table_size);
->> +                       div->lock = lock;
->> +                       div_ops = &clk_divider_ro_ops;
->> +                       div_hw = &div->hw;
->> +               } else {
->> +                       double_div = devm_kzalloc(dev, sizeof(*double_div),
->> +                                                 GFP_KERNEL);
->> +                       if (!double_div) {
->> +                               ret = -ENOMEM;
->> +                               goto free_mux;
->> +                       }
->> +
->> +                       double_div->reg1 = reg + data->div_reg1;
->> +                       double_div->shift1 = data->div_shift1;
->> +                       double_div->reg2 = reg + data->div_reg1;
->> +                       double_div->shift2 = data->div_shift2;
->> +                       div_ops = &clk_double_div_ops;
->> +                       div_hw = &double_div->hw;
->> +               }
->> +       }
->> +
->> +       switch (data->flags) {
->> +       case XTAL_CHILD:
->> +               /* the xtal clock is the 5th clock */
->> +               names = &parent_name[4];
->> +               num_parent = 1;
->> +               break;
->> +       case TBGA_S_CHILD:
->> +               /* the TBG A S clock is the 3rd clock */
->> +               names = &parent_name[2];
->> +               num_parent = 1;
->> +               break;
->> +       case GBE_CORE_CHILD:
->> +               names = &gbe_name[1];
->> +               num_parent = 1;
->> +               break;
->> +       case  GBE_50_CHILD:
->> +               names = &gbe_name[0];
->> +               num_parent = 1;
->> +               break;
->> +       case  GBE_125_CHILD:
->> +               names = &gbe_name[2];
->> +               num_parent = 1;
->> +               break;
->> +       default:
->> +               names = parent_name;
->> +               num_parent = 4;
->> +       }
->> +       hw = clk_hw_register_composite(dev, data->name,
->> +                                    names, num_parent,
->> +                                    mux_hw, mux_ops,
->> +                                    div_hw, div_ops,
->> +                                    gate_hw, gate_ops,
->> +                                    CLK_IGNORE_UNUSED);
->> +       if (IS_ERR(hw)) {
->> +               ret = PTR_ERR(hw);
->> +               goto free_div;
->> +       }
->> +
->> +       return 0;
->> +free_div:
->> +       devm_kfree(dev, div);
->> +       devm_kfree(dev, double_div);
->> +free_mux:
->> +       devm_kfree(dev, mux);
->> +free_gate:
->> +       devm_kfree(dev, gate);
->> +       return ret;
->> +}
->
-> Can this "add" function (aka registration function) be replaced with
-> static data instead? I think that all of the static data exists already,
-> this function can be removed and your probe can call clk_hw_register
-> directly.
->
+Yes, no changes for the DT bits so I decided to remove them as firstly
+they depend on the reset-controller changes going in and secondly
+the rtc driver part doesn't need them to be there to be able to build.
 
-I see your point and indeed we can remove some allocation. However using
-clk_hw_register with composite clock is not straight forward. Indeed the
-clk_ops is filled in the clk_hw_register_composite function and none of
-these operations are exported outside the clk-composite.c file.
+> Can you respin one more time (including the Tested-by) so the RTC
+> maintainers can pick it up?
 
-We can't directly point a clk_gate_ops structure or a clk_divider_ops as
-you did in the drivers/clk/meson/gxbb.c file for example. For clk
-composite it would need modify the framework to either export all the
-operation or to create set of operations directly usable and I would
-like to avoid doing it when we are close to the merge window.
-
-However I can use static data for the clk_mux, clk_gate and clk_divider
-struct.
-
-Is it OK for you?
-
-Thanks,
-
-Gregory
-
-> It might need a macro though, since composite clock structures are
-> rather messy. This avoids a lot of unnecessary allocations and time
-> populating data that we already have access to. In general I am trying
-> to encourage clk drivers to use only clk_hw_register() in their probe
-> instead of the helper registration functions.
->
-> Similarly I am discouraging drivers from populating hw.init at run-time,
-> since we already have that data for that at compile-time.
->
-> Regards,
-> Mike
+I'll do that now and try and post them tonight.
+Thankyou for testing.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
