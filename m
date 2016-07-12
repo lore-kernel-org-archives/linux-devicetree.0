@@ -1,69 +1,52 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: [PATCH v4 2/2] meson-rtc: add device-tree binding
-Date: Tue, 12 Jul 2016 18:16:39 +0100
-Message-ID: <1468343799-12844-3-git-send-email-ben.dooks@codethink.co.uk>
-References: <1468343799-12844-1-git-send-email-ben.dooks@codethink.co.uk>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v2 0/2] Toshiba TC358767 eDP bridge driver
+Date: Tue, 12 Jul 2016 19:21:29 +0200
+Message-ID: <1468344091-7921-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCEPJZEDQIBBBBWMSS6AKGQEFYDMVUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1468343799-12844-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the AMLogic Meson RTC.
-
-Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/rtc/rtc-amlogic.txt         | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
-
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-amlogic.txt b/Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
-new file mode 100644
-index 0000000..efc7672
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
-@@ -0,0 +1,21 @@
-+* AMlogic Meson RTC
-+
-+Required properties:
-+- compatible: should be one of the following describing the hardware:
-+	* "amlogic,meson6-rtc"
-+	* "amlogic,meson8-rtc"
-+	* "amlogic,meson8b-rtc"
-+
-+- reg: physical register space for the controller's memory mapped registers.
-+
-+Optional properties:
-+- resets: reset controller reference to allow reset of the controller
-+- interrupts: single interrupt reference if interrupt support needed
-+
-+Example:
-+
-+	rtc: rtc@c8100740 {
-+		compatible = "amlogic,meson6-rtc";
-+		reg = <0xc8100740 0x14>;
-+		status = "disabled";
-+	};
--- 
-2.8.1
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+SGksCgp0aGlzIHBhdGNoc2V0IGFkZHMgRFQgYmluZGluZyBkb2NzIGFuZCBhIGRybV9icmlkZ2Ug
+ZHJpdmVyIGZvciB0aGUKVG9zaGliYSBUQzM1ODc2NyBlRFAgYnJpZGdlLCBjdXJyZW50bHkgc3Vw
+cG9ydGluZyBvbmx5IDI0LWJpdCBEUEkgaW5wdXQKYW5kIGNvbnRyb2wgdmlhIEkyQy4gVGhlIGNo
+aXAgaXMgYWxzbyBjYXBhYmxlIHRvIGFjdCBhcyBhIERTSSBzaW5rLCBidXQKdGhlIGRyaXZlciBk
+b2Vzbid0IHN1cHBvcnQgdGhhdCB5ZXQuCkl0IGlzIGJhc2VkIG9uIEFuZHJleSdzIGluaXRpYWwg
+ZHJpdmVyLCB3aGljaCBjYW4gYmUgZm91bmQgYXQKaHR0cHM6Ly9naXRodWIuY29tL0NvZ2VudEVt
+YmVkZGVkL2xpbnV4LXpvZGlhYy5naXQsIGNvbW1pdCA0YWJiMWQwYTlhMWMKKCJkcm0vaTJjOiB0
+YzM1ODc2NyBlRFAgZW5jb2RlciBpbml0aWFsIGNvbW1pdCIpLiBJIGhhdmUgdHVybmVkIGl0IGlu
+dG8KYSBkcm1fYnJpZGdlIGRyaXZlciBhbmQgY2hhbmdlZCBpdCB0byB1c2UgcmVnbWFwIGFuZCB0
+aGUgZHJtX2RwIGhlbHBlcnMuCgpDaGFuZ2VzIHNpbmNlIHYxOgogLSBFeHBsaWNpdGx5IGRlc2Ny
+aWJlIERTSSBhbmQgRFBJIGlucHV0IHBvcnRzIGluIGRldmljZSB0cmVlLCB0aGlzIG1vdmVzCiAg
+IERQSSBpbnB1dCB0byBwb3J0QDEgYW5kIGVEUC9EUCBvdXRwdXQgdG8gcG9ydEAyLgogLSBSZXBs
+YWNlZCB0aGUgcmVnbWFwX3JlYWRfcG9sbF90aW1lb3V0IG1hY3JvIHdpdGggYSBmdW5jdGlvbi4K
+IC0gUmViYXNlZCBvbiB0b3Agb2YgU2lJOTAyeCBkcml2ZXIgbWVyZ2UgdG8gYXZvaWQgTWFrZWZp
+bGUvS2NvbmZpZyBjb25mbGljdHMuCiAtIEZpeGVkIHRjX3B4bF9wbGxfZW46IHJlbW92ZWQgdW5u
+ZWNlc3NhcnkgY2hlY2tzLCB3aGl0ZXNwYWNlIGFuZCBjb21tZW50CiAgIGltcHJvdmVtZW50cy4K
+IC0gU3dpdGNoZWQgdG8gYXRvbWljIGNvbm5lY3RvciBmdW5jcy4KCnJlZ2FyZHMKUGhpbGlwcAoK
+QW5kcmV5IEd1c2Frb3YgKDEpOgogIGRybS9icmlkZ2U6IHRjMzU4NzY3OiBBZGQgRFBJIHRvIGVE
+UCBicmlkZ2UgZHJpdmVyCgpQaGlsaXBwIFphYmVsICgxKToKICBkdC1iaW5kaW5nczogdGMzNTg3
+Njc6IGFkZCBEVCBkb2N1bWVudGF0aW9uCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rv
+c2hpYmEsdGMzNTg3NjcudHh0ICAgfCAgIDUxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICAgOCArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwogZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS90YzM1ODc2Ny5jICAgICAgICAgICAgICAgICAgfCAxNDIxICsrKysrKysrKysrKysrKysr
+KysrCiA0IGZpbGVzIGNoYW5nZWQsIDE0ODEgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3No
+aWJhLHRjMzU4NzY3LnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvdGMzNTg3NjcuYwoKLS0gCjIuOC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
