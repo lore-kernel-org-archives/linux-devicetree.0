@@ -1,113 +1,155 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v1 5/6] drm/rockchip: dw_hdmi: introduce the VPLL clock
- setting
-Date: Tue, 12 Jul 2016 16:27:40 +0200
-Message-ID: <3636683.EuFECY2EQB@diego>
-References: <1468235079-29152-1-git-send-email-ykk@rock-chips.com>
- <1468235149-29625-1-git-send-email-ykk@rock-chips.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] libfdt: Add fdt_setprop_inplace_namelen_partial
+Date: Tue, 12 Jul 2016 21:45:20 +1000
+Message-ID: <20160712114520.GB16355@voom.fritz.box>
+References: <20160711195623.12840-1-maxime.ripard@free-electrons.com>
+ <20160711195623.12840-6-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1468235149-29625-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: devicetree@vger.kernel.org, xhc@rock-chips.com, Daniel Vetter <daniel.vetter@ffwll.ch>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Zheng Yang <zhengyang@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pS0IeWLqOQV1qy0L"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160711195623.12840-6-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgWWFraXIsCgpBbSBNb250YWcsIDExLiBKdWxpIDIwMTYsIDE5OjA1OjQ5IHNjaHJpZWIgWWFr
-aXIgWWFuZzoKPiBGb3IgUkszMzk5IEhETUksIHRoZXJlIGlzIGFuIGV4dGVybmFsIGNsb2NrIG5l
-ZWQgZm9yIEhETUkgUEhZLAo+IGFuZCBpdCBzaG91bGQga2VlcCB0aGUgc2FtZSBjbG9jayByYXRl
-IHdpdGggVk9QIERDTEsuCj4gCj4gVlBMTCBoYXZlIHN1cHBvcnRlZCB0aGUgY2xvY2sgZm9yIEhE
-TUkgUEhZLCBidXQgdGhlcmUgaXMgbm8KPiBjbG9jayBkaXZpZGVyIGJld3RlZW4gVlBMTCBhbmQg
-SERNSSBQSFkuIFNvIHdlIG5lZWQgdG8gc2V0IHRoZQo+IFZQTEwgcmF0ZSBtYW51YWxseSBpbiBI
-RE1JIGRyaXZlci4KCkkgZG9uJ3QgdGhpbmsgcmVzZXJ2aW5nIHRoZSB2cGxsIGZvciB0aGUgaGRt
-aSBhdCBhbGwgdGltZXMgaXMgdGhlIHJpZ2h0IHdheSB0byAKZ28uIAoKV2hpbGUgSSBkbyBhZ3Jl
-ZSB0aGF0IHJlc2VydmluZyB0aGUgVlBMTCAoYW5kIE5QTEwgb24gdGhlIHJrMzI4OCkgZm9yIGdy
-YXBoaWNzIAp1c2UgbG9va3MgbGlrZSB0aGUgcmlnaHQgd2F5LCBJIHRoaW5rIHRoZSBjb3JlIFJv
-Y2tjaGlwIGRybSBkcml2ZXIgc2hvdWxkIGJlIApyZXNwb25zaWJsZSBmb3IgbWFuYWdpbmcgaXQg
-YW5kIGFsc28gZm9yIGRlY2lkaW5nIHdoaWNoIG91dHB1dCBlbmNvZGVyIGdldHMgdG8gCnVzZSBp
-dC4KCldoaWxlIHRydWUgdGhhdCBvbiB0aGUgQ2hyb21lYm9vayBkZXZpY2UtdHlwZXMgdGhlIGVk
-cCBpcyBzdGF0aWMgYW5kIGhkbWkgCm5lZWRzIHRoZSBicm9hZCByYW5nZSBvZiBkeW5hbWljIGZy
-ZXF1ZW5jaWVzLCB0aGlzIGlzIG5vdCBuZWNlc3NhcmlseSB0aGUgY2FzZSAKZm9yIGFsbCBmdXR1
-cmUgZGV2aWNlIHR5cGVzIGFuZC9vciBzb2NzLgoKSW4gdGhlIG90aGVyIHRocmVhZCB3ZSBkaXNj
-dXNzZWQgYWRkaW5nIHRoYXQgYXMgcm9ja2NoaXAsZGNsay1wbGwgPSA8Ji4uLj47IHRvIAp0aGUg
-YmFzZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlLCBEb3VnIGRpZG4ndCBtYW5hZ2UgdG8gZmluZCB0
-aW1lIHRvIHJlc3BvbmQgeWV0IAp0aG91Z2ggLSBhbmQgaXMgb24gdmFjYXRpb24gcmlnaHQgbm93
-LgoKSSBzdGlsbCBiZWxpZXZlIHRoYXQgd291bGQgYmUgdGhlIGJlc3Qgc29sdXRpb24gOi0pIC4K
-CgpUaGF0IHByb3BlcnR5IGNvdWxkIGxpc3QgMSBvciBldmVuIDIgcGxscywgZGVwZW5kaW5nIG9u
-IHRoZSBzb2Mgb3IgYm9hcmQgCmxheW91dCAtIG1heWJlIHNvbWVvbmUgZnJlZXMgdXAgdGhlIGNw
-bGwgaW4gc29tZSBzcGVjaWFsIGxheW91dCBvciBzb21ldGhpbmcuCklmIG5vbmUgYXJlIGxpc3Rl
-ZCwgdGhlbiB0aGUgZHJtIGRyaXZlciB3b3VsZCBuZWVkIHRvIGNvcGUgd2l0aCBpdHMgYXZhaWxh
-YmxlIApjbG9ja3MuCgpJbXBsZW1lbnRhdGlvbi13aXNlIHlvdSBjb3VsZCBldmVuIHN0aWxsIGtl
-ZXAgeW91ciBzaG9ydGN1dCB1bnRpbCB3ZSBlbmNvdW50ZXIgCmEgZGV2aWNlIHdpdGggZGlmZmVy
-ZW50ICwgbGV0IHRoZSBkcm0gdXNlIHRoZSBwbGwgZm9yIGhkbWkgb25seSB1bnRpbCBzb21lb25l
-IApjb21lcyB1cCB3aXRoIGEgYmV0dGVyIGNvbmNlcHQsIGJ1dCBzdGlsbCB0aGUgYmluZGluZyBz
-aG91bGQgYmUgY29ycmVjdCBhbmQgCnZlcnNhdGlsZSBmcm9tIHRoZSBzdGFydC4KCgpIZWlrbwoK
-PiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50
-eHQgfCAgMyArKy0KPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAu
-YyAgICAgICAgfCAyNQo+ICsrKysrKysrKysrKysrKysrKysrKy0gMiBmaWxlcyBjaGFuZ2VkLCAy
-NiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQKPiBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9j
-a2NoaXAudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
-b2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dAo+IGluZGV4IDRlNTczZDIuLjRlMjNjYTQgMTAw
-NjQ0Cj4gLS0tCj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
-b2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dAo+ICsrKwo+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQKPiBA
-QCAtMTcsNyArMTcsOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IAo+ICBPcHRpb25hbCBwcm9w
-ZXJ0aWVzCj4gIC0gZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNl
-ZCBmb3IgRERDIEVESUQgcHJvYmluZwo+IC0tIGNsb2NrcywgY2xvY2stbmFtZXM6IHBoYW5kbGUg
-dG8gdGhlIEhETUkgQ0VDIGNsb2NrLCBuYW1lIHNob3VsZCBiZSAiY2VjIgo+ICstIGNsb2Nrcywg
-Y2xvY2stbmFtZXM6IHBoYW5kbGUgdG8gdGhlIEhETUkgQ0VDIGNsb2NrLCBuYW1lIHNob3VsZCBi
-ZSAiY2VjIiwKPiArCQkgICAgICAgcGhhbmRsZSB0byB0aGUgVlBMTCBjbG9jaywgbmFtZSBzaG91
-bGQgYmUgInZwbGwiLgo+IAo+ICBFeGFtcGxlOgo+ICBoZG1pOiBoZG1pQGZmOTgwMDAwIHsKPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYwo+
-IGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyBpbmRleCAzMjkw
-OTliLi43MDFiYjczIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19o
-ZG1pLXJvY2tjaGlwLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1y
-b2NrY2hpcC5jCj4gQEAgLTcsMTAgKzcsMTIgQEAKPiAgICogKGF0IHlvdXIgb3B0aW9uKSBhbnkg
-bGF0ZXIgdmVyc2lvbi4KPiAgICovCj4gCj4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiArI2lu
-Y2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+
-ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gLSNpbmNsdWRlIDxsaW51eC9t
-ZmQvc3lzY29uLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9yZWdtYXAuaD4KPiArCj4gICNpbmNsdWRl
-IDxkcm0vZHJtX29mLmg+Cj4gICNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+ICAjaW5jbHVkZSA8ZHJt
-L2RybV9jcnRjX2hlbHBlci5oPgo+IEBAIC0zMyw2ICszNSw3IEBAIHN0cnVjdCByb2NrY2hpcF9o
-ZG1pIHsKPiAgCXN0cnVjdCByZWdtYXAgKnJlZ21hcDsKPiAgCXN0cnVjdCBkcm1fZW5jb2RlciBl
-bmNvZGVyOwo+ICAJZW51bSBkd19oZG1pX2RldnR5cGUgZGV2X3R5cGU7Cj4gKwlzdHJ1Y3QgY2xr
-ICp2cGxsX2NsazsKPiAgfTsKPiAKPiAgI2RlZmluZSB0b19yb2NrY2hpcF9oZG1pKHgpCWNvbnRh
-aW5lcl9vZih4LCBzdHJ1Y3Qgcm9ja2NoaXBfaGRtaSwgeCkKPiBAQCAtMTQ1LDYgKzE0OCw3IEBA
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHdfaGRtaV9waHlfY29uZmlnCj4gcm9ja2NoaXBfcGh5X2Nv
-bmZpZ1tdID0geyBzdGF0aWMgaW50IHJvY2tjaGlwX2hkbWlfcGFyc2VfZHQoc3RydWN0Cj4gcm9j
-a2NoaXBfaGRtaSAqaGRtaSkKPiAgewo+ICAJc3RydWN0IGRldmljZV9ub2RlICpucCA9IGhkbWkt
-PmRldi0+b2Zfbm9kZTsKPiArCWludCByZXQ7Cj4gCj4gIAloZG1pLT5yZWdtYXAgPSBzeXNjb25f
-cmVnbWFwX2xvb2t1cF9ieV9waGFuZGxlKG5wLCAicm9ja2NoaXAsZ3JmIik7Cj4gIAlpZiAoSVNf
-RVJSKGhkbWktPnJlZ21hcCkpIHsKPiBAQCAtMTUyLDYgKzE1NiwyMiBAQCBzdGF0aWMgaW50IHJv
-Y2tjaGlwX2hkbWlfcGFyc2VfZHQoc3RydWN0IHJvY2tjaGlwX2hkbWkKPiAqaGRtaSkgcmV0dXJu
-IFBUUl9FUlIoaGRtaS0+cmVnbWFwKTsKPiAgCX0KPiAKPiArCWhkbWktPnZwbGxfY2xrID0gZGV2
-bV9jbGtfZ2V0KGhkbWktPmRldiwgInZwbGwiKTsKPiArCWlmIChQVFJfRVJSKGhkbWktPnZwbGxf
-Y2xrKSA9PSAtRU5PRU5UKSB7Cj4gKwkJaGRtaS0+dnBsbF9jbGsgPSBOVUxMOwo+ICsJfSBlbHNl
-IGlmIChQVFJfRVJSKGhkbWktPnZwbGxfY2xrKSA9PSAtRVBST0JFX0RFRkVSKSB7Cj4gKwkJcmV0
-dXJuIC1FUFJPQkVfREVGRVI7Cj4gKwl9IGVsc2UgaWYgKElTX0VSUihoZG1pLT52cGxsX2Nsaykp
-IHsKPiArCQlkZXZfZXJyKGhkbWktPmRldiwgImZhaWxlZCB0byBnZXQgZ3JmIGNsb2NrXG4iKTsK
-PiArCQlyZXR1cm4gUFRSX0VSUihoZG1pLT52cGxsX2Nsayk7Cj4gKwl9Cj4gKwo+ICsJcmV0ID0g
-Y2xrX3ByZXBhcmVfZW5hYmxlKGhkbWktPnZwbGxfY2xrKTsKPiArCWlmIChyZXQpIHsKPiArCQlk
-ZXZfZXJyKGhkbWktPmRldiwgIkZhaWxlZCB0byBlbmFibGUgSERNSSB2cGxsOiAlZFxuIiwgcmV0
-KTsKPiArCQlyZXR1cm4gcmV0Owo+ICsJfQo+ICsKPiAgCXJldHVybiAwOwo+ICB9Cj4gCj4gQEAg
-LTE5NCw2ICsyMTQsOSBAQCBzdGF0aWMgdm9pZCBkd19oZG1pX3JvY2tjaGlwX2VuY29kZXJfbW9k
-ZV9zZXQoc3RydWN0Cj4gZHJtX2VuY29kZXIgKmVuY29kZXIsIHN0cnVjdCBkcm1fZGlzcGxheV9t
-b2RlICptb2RlLAo+ICAJCQkJCSAgICAgIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICphZGpfbW9k
-ZSkKPiAgewo+ICsJc3RydWN0IHJvY2tjaGlwX2hkbWkgKmhkbWkgPSB0b19yb2NrY2hpcF9oZG1p
-KGVuY29kZXIpOwo+ICsKPiArCWNsa19zZXRfcmF0ZShoZG1pLT52cGxsX2NsaywgYWRqX21vZGUt
-PmNsb2NrICogMTAwMCk7Cj4gIH0KPiAKPiAgc3RhdGljIHZvaWQgZHdfaGRtaV9yb2NrY2hpcF9l
-bmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--pS0IeWLqOQV1qy0L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 11, 2016 at 09:56:22PM +0200, Maxime Ripard wrote:
+> Add a function to modify inplace only a portion of a property..
+>=20
+> This is especially useful when the property is an array of values, and you
+> want to update one of them without changing the DT size.
+>=20
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Reviewed-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+
+Now it just needs some testcases..
+
+> ---
+>  libfdt/fdt_wip.c | 29 +++++++++++++++++++++++++----
+>  libfdt/libfdt.h  | 21 +++++++++++++++++++++
+>  2 files changed, 46 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/libfdt/fdt_wip.c b/libfdt/fdt_wip.c
+> index c5bbb68d3273..fd53e0b67416 100644
+> --- a/libfdt/fdt_wip.c
+> +++ b/libfdt/fdt_wip.c
+> @@ -55,21 +55,42 @@
+> =20
+>  #include "libfdt_internal.h"
+> =20
+> +int fdt_setprop_inplace_namelen_partial(void *fdt, int nodeoffset,
+> +					const char *name, int namelen,
+> +					uint32_t index, const void *val,
+> +					int len)
+> +{
+> +	void *propval;
+> +	int proplen;
+> +
+> +	propval =3D fdt_getprop_namelen_w(fdt, nodeoffset, name, namelen,
+> +					&proplen);
+> +	if (!propval)
+> +		return proplen;
+> +
+> +	if (proplen < (len + index))
+> +		return -FDT_ERR_NOSPACE;
+> +
+> +	memcpy((unsigned char *)propval + index, val, len);
+> +	return 0;
+> +}
+> +
+>  int fdt_setprop_inplace(void *fdt, int nodeoffset, const char *name,
+>  			const void *val, int len)
+>  {
+> -	void *propval;
+> +	const void *propval;
+>  	int proplen;
+> =20
+> -	propval =3D fdt_getprop_w(fdt, nodeoffset, name, &proplen);
+> +	propval =3D fdt_getprop(fdt, nodeoffset, name, &proplen);
+>  	if (! propval)
+>  		return proplen;
+> =20
+>  	if (proplen !=3D len)
+>  		return -FDT_ERR_NOSPACE;
+> =20
+> -	memcpy(propval, val, len);
+> -	return 0;
+> +	return fdt_setprop_inplace_namelen_partial(fdt, nodeoffset, name,
+> +						   strlen(name), 0,
+> +						   val, len);
+>  }
+> =20
+>  static void _fdt_nop_region(void *start, int len)
+> diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+> index 1da2c540b607..a22a16b6878a 100644
+> --- a/libfdt/libfdt.h
+> +++ b/libfdt/libfdt.h
+> @@ -1072,6 +1072,27 @@ int fdt_size_cells(const void *fdt, int nodeoffset=
+);
+>  /* Write-in-place functions                                           */
+>  /**********************************************************************/
+> =20
+> +/**
+> + * fdt_setprop_inplace_namelen_partial - change a property's value,
+> + *                                       but not its size
+> + * @fdt: pointer to the device tree blob
+> + * @nodeoffset: offset of the node whose property to change
+> + * @name: name of the property to change
+> + * @namelen: number of characters of name to consider
+> + * @index: index of the property to change in the array
+> + * @val: pointer to data to replace the property value with
+> + * @len: length of the property value
+> + *
+> + * Identical to fdt_setprop_inplace(), but modifies the given property
+> + * starting from the given index, and using only the first characters
+> + * of the name. It is useful when you want to manipulate only one value =
+of
+> + * an array and you have a string that doesn't end with \0.
+> + */
+> +int fdt_setprop_inplace_namelen_partial(void *fdt, int nodeoffset,
+> +					const char *name, int namelen,
+> +					uint32_t index, const void *val,
+> +					int len);
+> +
+>  /**
+>   * fdt_setprop_inplace - change a property's value, but not its size
+>   * @fdt: pointer to the device tree blob
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--pS0IeWLqOQV1qy0L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXhNhQAAoJEGw4ysog2bOSPjsP/Am/G6fWeNjcA2ckGVhK16s4
+kcLcXvWZJ82/sxfetzyoCdRrTcELYiTtahUouf6ENkeSgSwXumRKhvdQqj3o9PV4
+FxotQgU0i1kEynxveUfJldh/HgBh5NjRlEvL65XoY5bqkHvBSmEoGD/RUWZn9Moi
+0LqeilZYewPHqD8EhX0Ah9TwbqdsS5S3aF4fEfnfx0TexBz1SwyYR2xU8zcMNbXV
++8ezSBplIy9bn7uMgEhOcgPLeloDoOWFv+5dnlVab4Q4vRSlox4EKsGt4f6EgND7
++N10cLoj1wRnlrrk3zIM8F0pZmB6O26G7o+UDqguC1L5I1oEw519x9NhveuvbIXM
+/IpgC+vJDgN7sF3RuCh6eG06Y7rIVc63JI0e6upe/5g3HeldPY4WVhu/l5L6F3zO
+9+55y3jmYGJ7WsF1tzsKHRvbTk4MkyZIdb2Se08Poj1RxC98w2XeZJaAjAQlH6+L
+cLbTKBmKHL/qDczFikEesMbjkjgWCryM7Wcs7BEW9STgTR3JfCU7ONMo//NzCxyU
+stQDGmfphXQLpXu93zagvaWQk1yyXu2nTKxeK+9rlVD+R8v3afebV7u8Q49Vo8sS
+uq3TtaAw1KNA8esw5fw7q1E7MxpoUy6Vgl0Xi6prFrEJIR6SVsy/cZdMpQPgIGLy
+GWnsZ4x0U2FiC8xOL7JT
+=UefU
+-----END PGP SIGNATURE-----
+
+--pS0IeWLqOQV1qy0L--
