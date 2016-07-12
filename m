@@ -1,35 +1,48 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v3 3/3] ARM64: dts: amlogic: meson-gxbb: Add watchdog node
-Date: Mon, 11 Jul 2016 21:12:08 -0700
-Message-ID: <7hbn237aw7.fsf@baylibre.com>
-References: <1468141867-4172-1-git-send-email-narmstrong@baylibre.com>
-	<1468141867-4172-4-git-send-email-narmstrong@baylibre.com>
-	<578271D3.4080704@roeck-us.net>
+From: Wan Zongshun <vw@iommu.org>
+Subject: Re: [PATCH v2 01/10] ARM: NUC900: Add nuc970 machine support
+Date: Tue, 12 Jul 2016 12:30:48 +0800
+Message-ID: <57847278.8000408@iommu.org>
+References: <1468135649-19980-1-git-send-email-vw@iommu.org>
+ <1468135649-19980-2-git-send-email-vw@iommu.org>
+ <18260150.aRRy8ybKlm@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <578271D3.4080704@roeck-us.net> (Guenter Roeck's message of "Sun,
-	10 Jul 2016 09:03:31 -0700")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Wim Van Sebroeck <wim@iguana.be>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <18260150.aRRy8ybKlm@wuerfel>
+Sender: linux-clk-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, robh@kernel.org, jason@lakedaemon.net, p.zabel@pengutronix.de, Wan Zongshun <mcuos.com@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Guenter Roeck <linux@roeck-us.net> writes:
 
-> On 07/10/2016 02:11 AM, Neil Armstrong wrote:
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+
+On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 00:04, Arnd Bergmann wrote:
+> On Sunday, July 10, 2016 3:27:21 PM CEST Wan Zongshun wrote:
+>> +ifeq ($(CONFIG_SOC_NUC970),)
+>>   obj-y                          :=3D irq.o time.o mfp.o gpio.o cloc=
+k.o
+>>   obj-y                          +=3D clksel.o dev.o cpu.o
+>> +endif
+>>   # W90X900 CPU support files
 >
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> When mfp.o is disabled like this, I get a link error in two drivers
+> using the exported interface:
 >
-> Would this go in through one of the arm trees ?
+> ERROR: "mfp_set_groupg" [drivers/spi/spi-nuc900.ko] undefined!
+> ERROR: "mfp_set_groupi" [drivers/input/keyboard/w90p910_keypad.ko] un=
+defined!
 
-You can take the driver through the watchdog tree, but I'll take the DT
-stuff through the amlogic tree (and submit via arm-soc).  
+Why remove mfp modules? this multifunction pin driver should be used fo=
+r=20
+those two drivers, if no mfp_set_groupX, I don't think driver can work.
 
-However, with your ack, and since this is a brand new driver, I could
-take the driver as well.  Just let me know your preference.
+Now mfp has standard driver subsystem?
 
-Thanks,
-
-Kevin
+>
+> Any idea for a better migration strategy?
+>
+> 	Arnd
+>
+>
