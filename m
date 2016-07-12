@@ -1,85 +1,68 @@
 From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH 3/4] Documentation: dt: usb: atmel-usb: add unit-address
-Date: Wed, 13 Jul 2016 01:07:29 +0200
-Message-ID: <1468364850-32475-3-git-send-email-alexandre.belloni@free-electrons.com>
-References: <1468364850-32475-1-git-send-email-alexandre.belloni@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468364850-32475-1-git-send-email-alexandre.belloni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 1/4] Documentation: dt: iio: at91_adc: fix trigger node names
+Date: Wed, 13 Jul 2016 01:07:27 +0200
+Message-ID: <1468364850-32475-1-git-send-email-alexandre.belloni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The endpoint nodes have a reg property, they also need a unit-address. Add
-them in the example.
+The trigger doesn't need the reg property. When it is not defined, the node
+name doesn't need a unit-address. Remove them from the example.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 ---
- Documentation/devicetree/bindings/usb/atmel-usb.txt | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/iio/adc/at91_adc.txt | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-index 5883b73ea1b5..f4262ed60582 100644
---- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-@@ -113,13 +113,13 @@ usb2: gadget@fff78000 {
- 	clock-names = "hclk", "pclk";
- 	atmel,vbus-gpio = <&pioB 19 0>;
+diff --git a/Documentation/devicetree/bindings/iio/adc/at91_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91_adc.txt
+index 0f813dec5e08..f65b04fb7962 100644
+--- a/Documentation/devicetree/bindings/iio/adc/at91_adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/at91_adc.txt
+@@ -59,28 +59,24 @@ adc0: adc@fffb0000 {
+ 	atmel,adc-res-names = "lowres", "highres";
+ 	atmel,adc-use-res = "lowres";
  
--	ep0 {
-+	ep@0 {
- 		reg = <0>;
- 		atmel,fifo-size = <64>;
- 		atmel,nb-banks = <1>;
+-	trigger@0 {
+-		reg = <0>;
++	trigger0 {
+ 		trigger-name = "external-rising";
+ 		trigger-value = <0x1>;
+ 		trigger-external;
+ 	};
+-	trigger@1 {
+-		reg = <1>;
++	trigger1 {
+ 		trigger-name = "external-falling";
+ 		trigger-value = <0x2>;
+ 		trigger-external;
  	};
  
--	ep1 {
-+	ep@1 {
- 		reg = <1>;
- 		atmel,fifo-size = <1024>;
- 		atmel,nb-banks = <2>;
-@@ -127,7 +127,7 @@ usb2: gadget@fff78000 {
- 		atmel,can-isoc;
+-	trigger@2 {
+-		reg = <2>;
++	trigger2 {
+ 		trigger-name = "external-any";
+ 		trigger-value = <0x3>;
+ 		trigger-external;
  	};
  
--	ep2 {
-+	ep@2 {
- 		reg = <2>;
- 		atmel,fifo-size = <1024>;
- 		atmel,nb-banks = <2>;
-@@ -135,21 +135,21 @@ usb2: gadget@fff78000 {
- 		atmel,can-isoc;
+-	trigger@3 {
+-		reg = <3>;
++	trigger3 {
+ 		trigger-name = "continuous";
+ 		trigger-value = <0x6>;
  	};
- 
--	ep3 {
-+	ep@3 {
- 		reg = <3>;
- 		atmel,fifo-size = <1024>;
- 		atmel,nb-banks = <3>;
- 		atmel,can-dma;
- 	};
- 
--	ep4 {
-+	ep@4 {
- 		reg = <4>;
- 		atmel,fifo-size = <1024>;
- 		atmel,nb-banks = <3>;
- 		atmel,can-dma;
- 	};
- 
--	ep5 {
-+	ep@5 {
- 		reg = <5>;
- 		atmel,fifo-size = <1024>;
- 		atmel,nb-banks = <3>;
-@@ -157,7 +157,7 @@ usb2: gadget@fff78000 {
- 		atmel,can-isoc;
- 	};
- 
--	ep6 {
-+	ep@6 {
- 		reg = <6>;
- 		atmel,fifo-size = <1024>;
- 		atmel,nb-banks = <3>;
 -- 
 2.8.1
