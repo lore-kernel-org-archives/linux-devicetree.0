@@ -1,86 +1,89 @@
-From: Wan Zongshun <vw@iommu.org>
-Subject: Re: [PATCH v2 06/10] soc: Add SoC specific driver support for nuc900
-Date: Tue, 12 Jul 2016 17:06:10 +0800
-Message-ID: <5784B302.80307@iommu.org>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org>
- <1468135649-19980-7-git-send-email-vw@iommu.org> <4765191.NGpMC1JR46@wuerfel>
+From: Julien Grall <julien.grall@arm.com>
+Subject: Re: [PATCH v3] xen/arm: enable clocks used by the hypervisor
+Date: Tue, 12 Jul 2016 10:21:12 +0100
+Message-ID: <5784B688.7050903@arm.com>
+References: <1467963871-31556-1-git-send-email-dirk.behme@de.bosch.com>
+ <577F73B3.8090807@arm.com> <146799758568.73491.4432005583661196579@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4765191.NGpMC1JR46@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <146799758568.73491.4432005583661196579@resonance>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>
+Cc: xen-devel@lists.xenproject.org, devicetree@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mike,
 
+On 08/07/16 18:06, Michael Turquette wrote:
+> Quoting Julien Grall (2016-07-08 02:34:43)
+>> Hi Dirk,
+>>
+>> On 08/07/16 08:44, Dirk Behme wrote:
+>>> Xen hypervisor drivers might replace native OS drivers. The result is
+>>> that some important clocks that are enabled by the OS in the non-Xen
+>>> case are not properly enabled in the presence of Xen. The clocks
+>>> property enumerates the clocks that must be enabled by the Xen clock
+>>> consumer.
+>>>
+>>> An example is a serial driver enabled by the hypervisor. Xen must
+>>
+>> I would say "An example is the UART used by the hypervisor."
+>>
+>>> consume and enable these clocks in the OS to ensure behavior continues
+>>> after firmware configures the UART hardware and corresponding clock
+>>> harder.
+>>
+>> What do you mean by "harder"?
+>>
+>> Also, relying on DOM0 to enable the clock looks very wrong to me and you
+>> give an example which prove that. The UART will be used before hand by
+>> Xen, however it will not be possible to use it if you expect DOM0 to
+>> enable the clock (or even modify the clock frequency).
+>>
+>> The clock should be enabled either by the firmware or Xen. But not DOM0.
+>> DOM0 should not touch this clock at all.
+>>
+>> Furthermore, this property could be used for clock associated to device
+>> that will be passthrough-ed to a guest. In this case, the clock would be
+>> enabled even if the device is not in use which will result more power
+>> consumption.
+>
+> Is there a need to pass clock references through to guests? If so the
+> unmerged CLK_ENABLE_HAND_OFF[0] feature might be useful to you? If this
+> flag is set on a given clk, it will be enabled at the time it is
+> registered by the clk provider driver, and it's enable_count reference
+> counter will be "handed off" to the first consumer that calls clk_get()
+> and clk_prepare_enable() on it. This means the clock CAN be gated by
+> it's proper driver, but it will be enabled at boot time as well.
 
-On 2016=E5=B9=B407=E6=9C=8811=E6=97=A5 16:03, Arnd Bergmann wrote:
-> On Sunday, July 10, 2016 3:27:26 PM CEST Wan Zongshun wrote:
->> +       ret =3D of_property_read_string(np, "compatible", &soc_dev_a=
-ttr->soc_id);
->> +       if (ret)
->>                return -EINVAL;
->> +
->> +       soc_dev_attr->machine =3D "NUC900EVB";
->> +       soc_dev_attr->family =3D "NUC900";
->> +       soc_dev =3D soc_device_register(soc_dev_attr);
->> +       if (IS_ERR(soc_dev)) {
->> +               kfree(soc_dev_attr);
->> +               return -ENODEV;
->> +       }
->> +
->> +       ret =3D regmap_read(syscon_regmap, GCR_CHIPID, &nuc900_chipi=
-d);
->> +       if (ret)
->> +               return -ENODEV;
->> +
->> +       device_create_file(soc_device_to_device(soc_dev), &nuc900_ch=
-ipid_attr);
->> +       device_create_file(soc_device_to_device(soc_dev), &nuc900_ve=
-rsion_attr);
->> +
->> +       dev_info(&pdev->dev, "Nuvoton Chip ID: 0x%x, Version ID:0x%x=
-\n",
->> +                nuc900_chipid & GCR_CHIPID_MASK,
->> +                (nuc900_chipid >> 24) & 0xff);
->
-> I'm still a bit unsure about the set of attributes here.
->
-> - The "soc_id" is read from the device tree from the field that conta=
-ins
->    the board name, I think for consistency you should try to map the
->    GCR_CHIPID to the name of the SoC and assign that here
->
-> - The "machine" is hardcoded to "NUC900EVB", which in turn looks like
->    a particular board but not the one you are running on. Maybe read
->    that from the DT instead?
->
-> - The "revision" is not filled at all, I would suggest using somethin=
-g
->    derived from the GCR_CHIPID register here
->
-> - you have two nonstandard attributes "chipid" and "version", which
->    I'd hope to avoid -- the set of standard attributes is supposed to
->    give enough information about the machine, and platform independen=
-t
->    user space will never read those.
+Some driver requires to have the clock in hand to be able to configure 
+the clock (such as setting the rate). So we would have to find a way to 
+let the guest using the clock either by assigning the clock or some PV 
+clock driver.
 
-So, Maybe I can remove those two codes, no need push those information=20
-to user space?
+However, platform device passthrough (i.e non-pci device) cannot be done 
+generically. The user has to provide a lots of information manually 
+(such as MMIO, IRQ, device tree node...). So I am not sure if we want to 
+have a generic solution here.
 
-device_create_file(soc_device_to_device(soc_dev), &nuc900_chipid_attr);
-device_create_file(soc_device_to_device(soc_dev), &nuc900_version_attr)=
-;
+I though it would be worth to mention it because we may (or not) use 
+this clock to tell DOM0 (don't touch it).
 
->
-> 	Arnd
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
+> This is useful for use cases like splash screens where the bootloader
+> configures the display and plays some animation, and we want the linux
+> kernel to take over the display controller hardware without cutting
+> clocks, blanking or reseting it. Handing off the clock reference count
+> helps achieve this.
+
+ From my understanding, any device used by Xen would be in a similar 
+situation, although there will be no driver in Linux. The current patch 
+(as well as the v4) is calling clk_prepare_enable for each clock used by 
+Xen. Could enabling the clock create unexpected behavior such as the 
+UART loosing/dropping characters?
+
+Regards,
+
+-- 
+Julien Grall
