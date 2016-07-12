@@ -1,59 +1,148 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 01/10] ARM: NUC900: Add nuc970 machine support
-Date: Tue, 12 Jul 2016 10:23:32 +0200
-Message-ID: <7624955.nn13su4oq1@wuerfel>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org> <57847278.8000408@iommu.org> <578498E7.4080709@iommu.org>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] soc: mediatek: Refine scpsys to support multiple
+ platform
+Date: Tue, 12 Jul 2016 10:21:13 +0200
+Message-ID: <f904dc9b-d723-f466-0ee4-78af920ccd72@gmail.com>
+References: <1463390894-32062-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1463390894-32062-2-git-send-email-jamesjj.liao@mediatek.com>
+ <6762e420-0d68-0376-b584-bfc878b5e95f@gmail.com>
+ <1467783564.26485.22.camel@mtksdaap41> <577E3AE9.5080202@gmail.com>
+ <1468227390.31247.20.camel@mtksdaap41> <57839AE3.2070103@gmail.com>
+ <1468294448.31247.28.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <578498E7.4080709@iommu.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Wan Zongshun <vw@iommu.org>
-Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468294448.31247.28.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 12, 2016 3:14:47 PM CEST Wan Zongshun wrote:
-> On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 12:30, Wan Zongshun wrote:
-> >
-> >
-> > On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 00:04, Arnd Bergmann wrote:
-> >> On Sunday, July 10, 2016 3:27:21 PM CEST Wan Zongshun wrote:
-> >>> +ifeq ($(CONFIG_SOC_NUC970),)
-> >>>   obj-y                          :=3D irq.o time.o mfp.o gpio.o c=
-lock.o
-> >>>   obj-y                          +=3D clksel.o dev.o cpu.o
-> >>> +endif
-> >>>   # W90X900 CPU support files
-> >>
-> >> When mfp.o is disabled like this, I get a link error in two driver=
-s
-> >> using the exported interface:
-> >>
-> >> ERROR: "mfp_set_groupg" [drivers/spi/spi-nuc900.ko] undefined!
-> >> ERROR: "mfp_set_groupi" [drivers/input/keyboard/w90p910_keypad.ko]
-> >> undefined!
-> >
-> > Why remove mfp modules? this multifunction pin driver should be use=
-d for
-> > those two drivers, if no mfp_set_groupX, I don't think driver can w=
-ork.
-> >
-> > Now mfp has standard driver subsystem?
-> >
-> >>
-> >> Any idea for a better migration strategy?
->=20
-> Arnd, If you still think the mfp should be removed, we can send a ser=
-ies=20
-> patches to instead of using mfp interface quickly, and do mfp set in=20
-> local driver. Do you think it is ok?
 
-I don't think setting it locally in the driver is a good idea.
 
-In the long run, this should go through the pinctrl framework, but
-there is no need to implement that right away. Until then, I think
-using the existing mfp.o code is fine, it will just need to be
-adapted slightly to understand the DT based device names.
+On 12/07/16 05:34, James Liao wrote:
+> Hi Matthias,
+>
+> On Mon, 2016-07-11 at 15:10 +0200, Matthias Brugger wrote:
+>>
+>> On 11/07/16 10:56, James Liao wrote:
+>>
+>> [...]
+>>
+>>>>>>> @@ -467,28 +386,54 @@ static int scpsys_probe(struct platform_device *pdev)
+>>>>>>>    			if (PTR_ERR(scpd->supply) == -ENODEV)
+>>>>>>>    				scpd->supply = NULL;
+>>>>>>>    			else
+>>>>>>> -				return PTR_ERR(scpd->supply);
+>>>>>>> +				return ERR_CAST(scpd->supply);
+>>>>>>>    		}
+>>>>>>>    	}
+>>>>>>>
+>>>>>>> -	pd_data->num_domains = NUM_DOMAINS;
+>>>>>>> +	pd_data->num_domains = num;
+>>>>>>>
+>>>>>>> -	for (i = 0; i < NUM_DOMAINS; i++) {
+>>>>>>> +	init_clks(pdev, clk);
+>>>>>>> +
+>>>>>>> +	for (i = 0; i < num; i++) {
+>>>>>>>    		struct scp_domain *scpd = &scp->domains[i];
+>>>>>>>    		struct generic_pm_domain *genpd = &scpd->genpd;
+>>>>>>>    		const struct scp_domain_data *data = &scp_domain_data[i];
+>>>>>>>
+>>>>>>> +		for (j = 0; j < MAX_CLKS && data->clk_id[j]; j++) {
+>>>>>>> +			struct clk *c = clk[data->clk_id[j]];
+>>>>>>> +
+>>>>>>> +			if (IS_ERR(c)) {
+>>>>>>> +				dev_err(&pdev->dev, "%s: clk unavailable\n",
+>>>>>>> +					data->name);
+>>>>>>> +				return ERR_CAST(c);
+>>>>>>> +			}
+>>>>>>> +
+>>>>>>> +			scpd->clk[j] = c;
+>>>>>>
+>>>>>> Put this in the else branch. Apart from that is there any reason you
+>>>>>
+>>>>> Do you mean to change like this?
+>>>>>
+>>>>> 	if (IS_ERR(c)) {
+>>>>> 		...
+>>>>> 		return ERR_CAST(c);
+>>>>> 	} else {
+>>>>> 		scpd->clk[j] = c;
+>>>>> 	}
+>>>>>
+>>>>> checkpatch.pl will warn for above code due to it returns in 'if' branch.
+>>>>>
+>>>>
+>>>> I tried that on top of next-20160706 and it checkpatch didn't throw any
+>>>> warning. Which kernel version are based on?
+>>>
+>>> I don't remember which version of checkpatch warn on this pattern. This
+>>> patch series develop across several kernel versions.
+>>
+>> We as the kernel community develop against master or linux-next. We only
+>> care about older kernel version in the sense that we intent hard not to
+>> break any userspace/kernel or firmware/kernel interfaces. Apart from
+>> that it's up to every individual to backport patches from mainline
+>> kernel to his respective version. But that's nothing the community as a
+>> hole can take care of.
+>>
+>>>
+>>> So do you prefer to put "scpd->clk[j] = c;" into 'else' branch?
+>>>
+>>
+>> Yes please :)
+>
+> Yingjoe had tested in the latest checkpatch.pl and it showed checkpatch
+> warn on the else-branch. He had replied the results in previous email.
+>
 
-	Arnd
+Yes you are right. Not sure what I was testing. Sorry for that.
+
+>>>>>> moved the for up in the function? If not, I would prefer not to move it,
+>>>>>> to make it easier to read the diff.
+>>>>>
+>>>>> The new 'for' block are far different from original one. And I think
+>>>>> it's easy to read if we keep simple assign statements in the same block.
+>>>>>
+>>>>
+>>>> It's different in the sense that it checks if struct clk *c is an error.
+>>>> I don't see the reason why we need to move it up in the file.
+>>>> It's not too important but I would prefer not to move it if there is no
+>>>> reason.
+>>>
+>>> I think I may misunderstand your comments. Which 'for' block did you
+>>> mention for? 'for (i = 0; i < num ...' or 'for (j = 0; j < MAX_CLKS
+>>> && ...' ?
+>>>
+>>> The 'for(i)' exists in original code, this patch just change its counter
+>>> from 'NUM_DOMAINS' to 'num'. The 'for(j)' is a new for-block, so it was
+>>> not moved from other blocks.
+>>>
+>>
+>> for (j = 0; j < MAX_CLKS... is present in the actual scpsys_probe in
+>> linux-next (line 485 as of today). This patch moves this for a few lines
+>> up, to be precise before executing this code sequence:
+>> <code>
+>> pd_data->domains[i] = genpd;
+>> scpd->scp = scp;
+>>
+>> scpd->data = data;
+>> </code>
+>>
+>> AFAIK there is no reason to do so. It adds unnecessary complexity to the
+>> patch. So please fix this together with the other comments you got.
+>
+> I see. So you prefer to put the for(j < MAX_CLKS) after 'scpd->data =
+> data' right? I can change it in next patch.
+>
+
+Ok, thanks.
+
+Regards,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
