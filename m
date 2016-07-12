@@ -1,63 +1,63 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] iio: magn: DT bindings for AK8974
-Date: Tue, 12 Jul 2016 17:07:03 +0200
-Message-ID: <1468336024-24030-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+From: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] libfdt: Add overlay application function
+Date: Tue, 12 Jul 2016 16:07:49 +0100
+Message-ID: <CAPhXvM5nCbP81ujx3dhy9GvibdoBDy+N8EuArJj2-RFKO3ixfQ@mail.gmail.com>
+References: <20160711195623.12840-1-maxime.ripard@free-electrons.com>
+ <20160711195623.12840-7-maxime.ripard@free-electrons.com> <ed025e59-ddb3-0309-b2da-f6c2d1fa95d0@gmail.com>
+ <20160712143404.GD16355@voom.fritz.box>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160712143404.GD16355-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the AK8974 magnetometer, similar
-to those for the AK8975.
+On Tue, Jul 12, 2016 at 3:34 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Mon, Jul 11, 2016 at 09:20:44PM +0100, Phil Elwell wrote:
+>> On 11/07/2016 20:56, Maxime Ripard wrote:
+> [snip]
+>
+>> > +static int overlay_merge(void *fdt, void *fdto)
+>> > +{
+>> > +   int fragment;
+>> > +
+>> > +   fdt_for_each_subnode(fragment, fdto, 0) {
+>> > +           int overlay;
+>> > +           int target;
+>> > +           int ret;
+>> > +
+>> > +           target = overlay_get_target(fdt, fdto, fragment);
+>> > +           if (target < 0)
+>> > +                   continue;
+>> > +
+>> > +           overlay = fdt_subnode_offset(fdto, fragment, "__overlay__");
+>> > +           if (overlay < 0)
+>> > +                   return overlay;
+>
+>> Why does the absence of a target cause a fragment to be ignored but
+>> the absence of an "__overlay__" property cause the merging to be
+>> abandoned with an error? Can't we just ignore fragments that aren't
+>> recognised?
+>
+> So, I had the same question.  But fragments we can't make sense MUST
+> cause failures, and not be silently ignored.
+>
+> An incompletely applied overlay is almost certainly going to cause you
+> horrible grief at some point, so you absolutely want to know early if
+> your overlay is in a format your tool doesn't understand.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v2->v3:
-- No changes, just reposting to keep together with the series
-ChangeLog v1->v2:
-- No changes, just reposting to keep together with the series
----
- .../bindings/iio/magnetometer/ak8974.txt           | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
+Cards on the table time - at Raspberry Pi we've found it convenient to
+selectively enable or disable fragments within an overlay based on
+user-supplied parameters. The way I've implemented this is by using
+"__dormant__" as an antonym to "__overlay__" (partly chosen because it
+is the same length), and then pre-processing the overlay before
+applying it. This scheme works with the kernel overlay support and our
+firmware loader (obviously).
 
-diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
-new file mode 100644
-index 000000000000..967f8e9b9319
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
-@@ -0,0 +1,28 @@
-+* Asahi Kasei AK8974 magnetometer sensor
-+
-+Required properties:
-+
-+- compatible : should be "asahi-kasei,ak8974"
-+- reg : the I2C address of the magnetometer
-+
-+Optional properties:
-+
-+- avdd-supply: regulator supply for the analog voltage
-+  (see regulator/regulator.txt)
-+- dvdd-supply: regulator supply for the digital voltage
-+  (see regulator/regulator.txt)
-+- interrupts: data ready (DRDY) and interrupt (INT1) lines
-+  from the chip, the DRDY interrupt must be placed first.
-+  The interrupts can be triggered on rising or falling
-+  edges alike.
-+
-+Example:
-+
-+ak8974@0f {
-+	compatible = "asahi-kasei,ak8974";
-+	reg = <0x0f>;
-+	avdd-supply = <&foo_reg>;
-+	dvdd-supply = <&bar_reg>;
-+	interrupts = <0 IRQ_TYPE_EDGE_RISING>,
-+		     <1 IRQ_TYPE_EDGE_RISING>;
-+};
--- 
-2.7.4
+Although I could invent a similar scheme that uses antonyms of
+"target" and "target-path", I don't see why this is inherently safer.
+
+Phil (phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org)
