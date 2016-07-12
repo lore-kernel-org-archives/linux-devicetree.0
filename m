@@ -1,113 +1,52 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH 4/5] arm64: dts: msm8916: Add thermal zones, tsens and qfprom nodes
-Date: Tue, 12 Jul 2016 12:22:53 +0530
-Message-ID: <1468306374-24153-5-git-send-email-rnayak@codeaurora.org>
-References: <1468306374-24153-1-git-send-email-rnayak@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468306374-24153-1-git-send-email-rnayak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: [PATCH v3 6/7] spi: s3c64xx: restore removed comments
+Date: Tue, 12 Jul 2016 15:54:04 +0900
+Message-ID: <1468306444-18512-1-git-send-email-andi.shyti@samsung.com>
+References: <57837606.8050906@samsung.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <57837606.8050906@samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-Add thermal zones, tsens and qfprom nodes
+Patch a9e93e8 has erroneously removed some comments which are
+important to understand why the bus frequency is multiplied by
+two during the spi transfer.
 
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Reword the previous comment to a more appropriate message.
+
+Suggested-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+Reviewed-by: Michael Turquette <mturquette@baylibre.com>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 72 +++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 11bdc24..0f850a1 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -155,6 +155,57 @@
- 		interrupts = <GIC_PPI 7 GIC_CPU_MASK_SIMPLE(4)>;
- 	};
+despite Mike's comments I'm sending the patch as it was
+originally meant. I think that fixing the exact clk where to set
+the rate should anyway go in a different patch.
+
+V2->V3
+The comment has been reworded as Sylwester recommended.
+
+Thanks,
+Andi
+
+ drivers/spi/spi-s3c64xx.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index 6da663f..5bedafc 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -639,6 +639,7 @@ static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
+ 	writel(val, regs + S3C64XX_SPI_MODE_CFG);
  
-+	thermal-zones {
-+		cpu-thermal0 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens 4>;
-+
-+			trips {
-+				cpu_alert0: trip@0 {
-+					temperature = <75000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				cpu_crit0: trip@1 {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				/* TODO: Add when cpufreq support is available */
-+			};
-+		};
-+
-+		cpu-thermal1 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens 3>;
-+
-+			trips {
-+				cpu_alert1: trip@0 {
-+					temperature = <75000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				cpu_crit1: trip@1 {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				/* TODO: Add when cpufreq support is available */
-+			};
-+		};
-+
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -609,6 +660,27 @@
- 			clocks = <&gcc GCC_PRNG_AHB_CLK>;
- 			clock-names = "core";
- 		};
-+
-+		qfprom: qfprom@5c000 {
-+			compatible = "qcom,qfprom";
-+			reg = <0x5c000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			tsens_caldata: caldata@d0 {
-+				reg = <0xd0 0x8>;
-+			};
-+			tsens_calsel: calsel@ec {
-+				reg = <0xec 0x4>;
-+			};
-+		};
-+
-+		tsens: thermal-sensor@4a8000 {
-+			compatible = "qcom,msm8916-tsens";
-+			reg = <0x4a8000 0x2000>;
-+			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
-+			nvmem-cell-names = "calib", "calib_sel";
-+			#thermal-sensor-cells = <1>;
-+		};
- 	};
- 
- 	smd {
+ 	if (sdd->port_conf->clk_from_cmu) {
++		/* The src_clk clock is divided internally by 2 */
+ 		clk_set_rate(sdd->src_clk, sdd->cur_speed * 2);
+ 	} else {
+ 		/* Configure Clock */
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.8.1
+
