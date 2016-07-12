@@ -1,57 +1,64 @@
 From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] AMLogic Meson SoC RTC driver
-Date: Tue, 12 Jul 2016 17:45:22 +0100
-Message-ID: <53016146-6647-224c-ba1a-f2a9dc364a86@codethink.co.uk>
-References: <1467748089-14718-1-git-send-email-ben.dooks@codethink.co.uk>
- <7hinwg85k7.fsf@baylibre.com>
+Subject: [PATCH v4 0/2] AMLogic Meson SoC RTC driver
+Date: Tue, 12 Jul 2016 18:16:37 +0100
+Message-ID: <1468343799-12844-1-git-send-email-ben.dooks@codethink.co.uk>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCEPJZEDQIBBBJV5SS6AKGQECI3C6FA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCEPJZEDQIBBBBGMSS6AKGQEV365ATI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <7hinwg85k7.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
 List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/rtc-linux/subscribe>
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/07/16 17:20, Kevin Hilman wrote:
-> Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> writes:
-> 
->> This series adds support for the on SoC RTC driver on the
->> AMLogic Meson devices.
-> 
-> -ECONFUSED
-> 
-> In reply to this patch, there are two other "PATCH v3 0/2" replies, an
-> then the two patches themselves, have "PATCH n/4" subjects when one
-> would expect "PATCH n/2" subjects.
+This series adds support for the on SoC RTC driver on the
+AMLogic Meson devices. The device-tree updates are not included
+as they depend on the reset-controller support in -next.
 
-This was my mistake of formatting the patch then thinking it would
-be easy to remove the other two patches I decided to keep separate
-(for reasons below)
+The series does not have any build dependencies, but does require
+the reset controller and device-tree entries for the device-tree
+files for the relevant boards. 
 
-> Anyways, I was able to test this version with the DTs from the previous
-> version, and it works ok.
+The series tested by myself on the ODroid-C1 board with a battery
+pack attached. It has also been tested by Kevin Hilman.
 
-Yes, no changes for the DT bits so I decided to remove them as firstly
-they depend on the reset-controller changes going in and secondly
-the rtc driver part doesn't need them to be there to be able to build.
+I will send the DT changes in a second series so that they can be
+merged once the dependencies have been satisified.
 
-> Can you respin one more time (including the Tested-by) so the RTC
-> maintainers can pick it up?
+Changes since V3:
+  <1467748122-14833-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+- Added Kevin's tested by
 
-I'll do that now and try and post them tonight.
-Thankyou for testing.
+Changes since V1:
+  <1467039135-26588-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+
+ - Fixed checkpatch and sparse errors
+ - Fixed minor locking bug when writing static-control register
+ - Updated the code ordering in the rtc-meson.c driver
+ - Fixed alphanumeric ordering in on-cpu rtc block
+ - Added Rob Hering's ack for the DT binding documentation
+ - Added better description to the RTC driver header.
+
+Ben Dooks (2):
+  rtc: support for amlogic meson rtc
+  meson-rtc: add device-tree binding
+
+ .../devicetree/bindings/rtc/rtc-amlogic.txt        |  21 ++
+ drivers/rtc/Kconfig                                |   9 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-meson.c                            | 349 +++++++++++++++++++++
+ 4 files changed, 380 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
+ create mode 100644 drivers/rtc/rtc-meson.c
 
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+2.8.1
 
 -- 
 You received this message because you are subscribed to "rtc-linux".
