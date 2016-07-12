@@ -1,48 +1,63 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] dmaengine driver for Marvell XOR v2 engine
-Date: Tue, 12 Jul 2016 09:10:48 +0200
-Message-ID: <20160712091048.681b727b@free-electrons.com>
-References: <1466080116-26777-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160628143850.GD14945@localhost>
-	<20160707224248.71511ecd@free-electrons.com>
-	<20160712044248.GQ9681@localhost>
+From: Wan Zongshun <vw@iommu.org>
+Subject: Re: [PATCH v2 01/10] ARM: NUC900: Add nuc970 machine support
+Date: Tue, 12 Jul 2016 15:14:47 +0800
+Message-ID: <578498E7.4080709@iommu.org>
+References: <1468135649-19980-1-git-send-email-vw@iommu.org>
+ <1468135649-19980-2-git-send-email-vw@iommu.org>
+ <18260150.aRRy8ybKlm@wuerfel> <57847278.8000408@iommu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160712044248.GQ9681@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <57847278.8000408@iommu.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On Tue, 12 Jul 2016 10:12:48 +0530, Vinod Koul wrote:
 
-> > Now that the two ARM patches have been taken by the ARM mvebu
-> > maintainer, do you think you could merge the DT binding and driver
-> > patches (PATCH 1/2 and PATCH 2/2 of this series) ?  
-> 
-> Sorry for bit delay, I have applied them now :)
+On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 12:30, Wan Zongshun wrote:
+>
+>
+> On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 00:04, Arnd Bergmann wrote:
+>> On Sunday, July 10, 2016 3:27:21 PM CEST Wan Zongshun wrote:
+>>> +ifeq ($(CONFIG_SOC_NUC970),)
+>>>   obj-y                          :=3D irq.o time.o mfp.o gpio.o clo=
+ck.o
+>>>   obj-y                          +=3D clksel.o dev.o cpu.o
+>>> +endif
+>>>   # W90X900 CPU support files
+>>
+>> When mfp.o is disabled like this, I get a link error in two drivers
+>> using the exported interface:
+>>
+>> ERROR: "mfp_set_groupg" [drivers/spi/spi-nuc900.ko] undefined!
+>> ERROR: "mfp_set_groupi" [drivers/input/keyboard/w90p910_keypad.ko]
+>> undefined!
+>
+> Why remove mfp modules? this multifunction pin driver should be used =
+for
+> those two drivers, if no mfp_set_groupX, I don't think driver can wor=
+k.
+>
+> Now mfp has standard driver subsystem?
+>
+>>
+>> Any idea for a better migration strategy?
 
-Thanks a lot!
+Arnd, If you still think the mfp should be removed, we can send a serie=
+s=20
+patches to instead of using mfp interface quickly, and do mfp set in=20
+local driver. Do you think it is ok?
 
-> I modified commit of patch 2 for correcting subsystem name
-> 
-> While applying notice git warned of empty newline in the new file, have
-> remove that as well
-
-Thanks for those last minute fixes.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>     Arnd
+>>
+>>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
