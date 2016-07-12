@@ -1,85 +1,87 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 8/9] ARM: dts: sun7i: bananapi-m1-plus: Add
- PMIC regulators and OPPs for cpufreq
-Date: Tue, 12 Jul 2016 10:12:46 +0800
-Message-ID: <CAGb2v655vL=U7MyzTY_Khx-bCWorb-WbQCaFm_e-yH8+dGhddQ@mail.gmail.com>
-References: <1467796250-22010-1-git-send-email-wens@csie.org>
- <1467796250-22010-9-git-send-email-wens@csie.org> <20160709081827.GF4522@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] libfdt: Add fdt_getprop_namelen_w
+Date: Tue, 12 Jul 2016 12:03:33 +1000
+Message-ID: <20160712020333.GQ16355@voom.fritz.box>
+References: <20160711195623.12840-1-maxime.ripard@free-electrons.com>
+ <20160711195623.12840-5-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNNESG6AKGQE5NYOIQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160709081827.GF4522@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Pes7OZCOzfZhFQfq"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160711195623.12840-5-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Sat, Jul 9, 2016 at 4:18 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Wed, Jul 06, 2016 at 05:10:49PM +0800, Chen-Yu Tsai wrote:
->> The Bananapi M1+, like other Allwinner A20 based boards, uses the AXP209
->> PMIC to supply its power. The vendor FEX file's DVFS table suggests the
->> board's CPU power rail has a voltage drop of 25 ~ 50 mV.
->>
->> Add the PMIC regulator nodes and copy the DVFS table from the FEX file.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 48 ++++++++++++++++++++++--
->>  1 file changed, 44 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
->> index ba5bca0fe997..7bb418bd1b6e 100644
->> --- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
->> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
->> @@ -105,6 +105,22 @@
->>       status = "okay";
->>  };
->>
->> +&cpu0 {
->> +     cpu-supply = <&reg_dcdc2>;
->> +
->> +     /* The custom DVFS table suggests a voltage drop of 25 ~ 50 mV */
->> +     operating-points = <
->> +             /* kHz    uV */
->> +             1080000 1450000
->> +             912000  1425000
->> +             864000  1350000
->> +             720000  1250000
->> +             528000  1150000
->> +             312000  1100000
->> +             144000  1050000
->> +             >;
->> +};
->> +
->
-> We've always tried to not use all the non-sense OPPs coming from the
-> FEX files. Have you experienced any issues with the default ones?
+--Pes7OZCOzfZhFQfq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll find some time to run a stress test on it.
+On Mon, Jul 11, 2016 at 09:56:21PM +0200, Maxime Ripard wrote:
+> Add a function to retrieve a writeable property only by the first
+> characters of its name.
+>=20
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> The other patches have been queued either for 4.8 as fixes, or 4.9.
+Reviewed-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Thanks!
+> ---
+>  libfdt/libfdt.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+> index 812937fede44..1da2c540b607 100644
+> --- a/libfdt/libfdt.h
+> +++ b/libfdt/libfdt.h
+> @@ -622,6 +622,13 @@ const void *fdt_getprop_by_offset(const void *fdt, i=
+nt offset,
+>   */
+>  const void *fdt_getprop_namelen(const void *fdt, int nodeoffset,
+>  				const char *name, int namelen, int *lenp);
+> +static inline void *fdt_getprop_namelen_w(void *fdt, int nodeoffset,
+> +					  const char *name, int namelen,
+> +					  int *lenp)
+> +{
+> +	return (void *)(uintptr_t)fdt_getprop_namelen(fdt, nodeoffset, name,
+> +						      namelen, lenp);
+> +}
+> =20
+>  /**
+>   * fdt_getprop - retrieve the value of a given property
 
-ChenYu
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+--Pes7OZCOzfZhFQfq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXhE/1AAoJEGw4ysog2bOSyTEQAJlvojLP5Y1sdREencj1yRtJ
+m5AYlwCdnjGEaHG2tNuv70Vbvv2zXsa+jVpjz+HzzIJ/+xeB85jI8uLqYE3ZIwy9
+KD6Fc8OUGfG66klglO3bAzqs1/K/dWpVxQ0kZfIMl9Qej0uMlRFyU4euCRWUqxny
+CmrlDZynhwmWE7KlpFd/QfYK1wn7rhQQ6GE1oKKgwClEYig/K3CTBxZZHnOh1FDQ
+7n2Gn3IyijA3Y3Cqd3FOGfZv4gRHaGlAnp7CZyj63/DeIufVPi7wyQkrq9K8SK+1
+68UMGcuHUkhD7q24egt7I97L+dLEyPJPOEGFOPR9Euct/0PIQA7AcT/iA0p749Or
+s1/AbFhTAH4C31SE5IIGIZgruFh90m6yN6QUjUXwctbVzTFlrlAA6pHYb/uustNf
+APHiSTatUBEGRgMeXUkQulMnIqibqgpDRgkFLDBZdcy41bk9LRzRFW32YTiTXV0t
+W+IYF41E5FsNGa2GU4QUBahbkmz50ZkaWnVbeQcQt1ewsHJKfDV1LyokRHIHtocT
+iKO9PPngxANXoJoiyLEVYM6hTat6KLpKhBrT8vsiA4blrNpLXwWSmuU00VBAt/Fi
+J4f5JqA4R34YsIOKqvJHqAXIXA5xeEBzWwxtn6MFupC7s2ImIZblyBs65FGo4fzm
+I6G4NYu5LmUaMQaRNEIk
+=ibJe
+-----END PGP SIGNATURE-----
+
+--Pes7OZCOzfZhFQfq--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
