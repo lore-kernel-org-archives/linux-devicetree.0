@@ -1,49 +1,49 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2 6/7] spi: s3c64xx: restore removed comments
-Date: Tue, 12 Jul 2016 14:16:40 +0200
-Message-ID: <5784DFA8.60606@samsung.com>
-References: <1467989201-14661-1-git-send-email-andi.shyti@samsung.com>
- <1467989201-14661-7-git-send-email-andi.shyti@samsung.com>
- <146799464881.73491.7507792367941552864@resonance>
- <57837606.8050906@samsung.com>
- <146827545163.73491.5083923656346798965@resonance>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH 0/2] usb: add HCD providers
+Date: Tue, 12 Jul 2016 14:35:18 +0200
+Message-ID: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <146827545163.73491.5083923656346798965@resonance>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Andi Shyti <andi.shyti@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/12/2016 12:17 AM, Michael Turquette wrote:
-> Quoting Sylwester Nawrocki (2016-07-11 03:33:42)
->> On 07/08/2016 06:17 PM, Michael Turquette wrote:
+Hi,
 
-> Sure, but it's only a few lines of code to this, and there are examples
-> in the kernel already.
-> 
->> Additionally, the "There is half-multiplier before the SPI" comment
->> seems to be obfuscating how the hardware really looks like to me.
->> It talks about multiplier (which reminds me of PLLs with a divider
->> in the feedback loop) while there is a simple divider which should
->> be considered as an integral part of the controller IP block.
->>
->> While we are at it, I'd propose to change this comment to something
->> like:
->>
->> /* The SCLK_SPI clock is divided internally by 2 */
-> 
-> It's your choice, but debug output would benefit from showing the real
-> clock frequency at some point.
+I was working on an "usbport" LED trigger driver and specifying its
+default state in DT. I realized I can't really determine numbering of
+USB ports on any device as it depends on compiled drivers and the
+loading orders.
 
-OK, it's indeed fairly easy to add a fixed rate divide-by-two clock,
-but for the older SoCs we would need to also model the internal mux, gate,
-and an 8-bit divider.  Then it becomes a bit bigger task. Anyway it might
-be worth to try it, this could let us deprecate the samsung,spi-src-clk
-property and for all the SoCs use assigned-clock-parents.
+It means that my physical USB port can be e.g. 1-1 or 2-1 depending on
+my current config/setup. I needed a way to specify a particular HCD in
+DT and then hardcode port number (as this part doesn't change).
 
--- 
-Thanks,
-Sylwester
+These 2 patches add providers to usb core subsystem. I successfully
+tested it with "usbport" trigger and generic-ohci, generic-ehci &
+generic-xhci.
+
+The last (third) patch is not supposed to be applied, it's used only as
+a proof and example of how providers can be used.
+
+If there is anything wrong with this idea/implementation, please let me
+know.
+
+Rafa=C5=82 Mi=C5=82ecki (2):
+  usb: core: add support for HCD providers
+  ohci-platform: register HCD provider
+
+ drivers/usb/core/Makefile        |  1 +
+ drivers/usb/core/provider.c      | 79 ++++++++++++++++++++++++++++++++=
+++++++++
+ drivers/usb/host/ohci-platform.c |  9 +++++
+ include/linux/usb/provider.h     | 39 ++++++++++++++++++++
+ 4 files changed, 128 insertions(+)
+ create mode 100644 drivers/usb/core/provider.c
+ create mode 100644 include/linux/usb/provider.h
+
+--=20
+1.8.4.5
