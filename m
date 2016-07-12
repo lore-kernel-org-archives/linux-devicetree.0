@@ -1,154 +1,68 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH 2/2] fpga-manager: Add Socfpga Arria10 support
-Date: Tue, 12 Jul 2016 14:31:05 -0700
-Message-ID: <CAAtXAHfSBzLisqBgF4Vry0vrcL3+DB4b1ctMOrTdOq5ue4D7JQ@mail.gmail.com>
-References: <20160712190709.5964-1-atull@opensource.altera.com> <20160712190709.5964-3-atull@opensource.altera.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v3 7/7] clk: exynos5433: remove CLK_IGNORE_UNUSED flag from SPI
+ clocks
+Date: Tue, 12 Jul 2016 15:17:27 -0700
+Message-ID: <146836184696.73491.9452469757415968654@resonance>
+References: <1468317736-18841-1-git-send-email-andi.shyti@samsung.com>
+ <1468317736-18841-8-git-send-email-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160712190709.5964-3-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alan Tull <delicious.quinoa@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1468317736-18841-8-git-send-email-andi.shyti@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+Quoting Andi Shyti (2016-07-12 03:02:16)
+> Because the Exynos5433 SPI driver supports the ioclk handling and
+> the following patch:
+> 
+>   http://marc.info/?l=linux-kernel&m=146787645626318&w=2
+> 
+> fixes a synchronus abort issue, none of the SPI clocks require
+> any critical handling: remove, then, the CLK_IGNORE_UNUSED flag
+> for the SPI related clocks.
+> 
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Reviewed-by: Michael Turquette <mturquette@baylibre.com>
+> Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-couple of nits inline below.
+Do you want these patches to go through same tree? If not, I can take
+this patch into clk-next.
 
-On Tue, Jul 12, 2016 at 12:07 PM, Alan Tull <atull@opensource.altera.com> wrote:
+Regards,
+Mike
 
-> +static int socfpga_a10_fpga_write_complete(struct fpga_manager *mgr, u32 flags)
-> +{
-> +       struct a10_fpga_priv *priv = mgr->priv;
-> +       u32 reg;
-> +       int ret;
-> +
-> +       /* Wait for pr_done */
-> +       ret = socfpga_a10_fpga_wait_for_pr_done(priv);
-> +
-> +       /* Clear pr_request */
-> +       regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
-> +                          A10_FPGAMGR_IMGCFG_CTL_01_S2F_PR_REQUEST, 0);
-> +
-> +       /* Send some clocks to clear out any errors */
-> +       socfpga_a10_fpga_generate_dclks(priv, 256);
-> +
-> +       /* Disable s2f dclk and data */
-> +       regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_02_OFST,
-> +                          A10_FPGAMGR_IMGCFG_CTL_02_EN_CFG_CTRL, 0);
-
-Maybe replace 0 with named constant.
-> +
-> +       /* Deassert chip select */
-> +       regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
-> +                          A10_FPGAMGR_IMGCFG_CTL_01_S2F_NCE,
-> +                          A10_FPGAMGR_IMGCFG_CTL_01_S2F_NCE);
-> +
-> +       /* Disable data, dclk, nce, and pr_request override to CSS */
-> +       regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
-> +                          A10_FPGAMGR_IMGCFG_CTL_01_S2F_NENABLE_CONFIG,
-> +                          A10_FPGAMGR_IMGCFG_CTL_01_S2F_NENABLE_CONFIG);
-> +
-> +       /* Return any errors regarding pr_done or pr_error */
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Final check */
-> +       reg = socfpga_a10_fpga_read_stat(priv);
-> +
-> +       if (((reg & A10_FPGAMGR_IMGCFG_STAT_F2S_USERMODE) == 0) ||
-> +           ((reg & A10_FPGAMGR_IMGCFG_STAT_F2S_CONDONE_PIN) == 0) ||
-> +           ((reg & A10_FPGAMGR_IMGCFG_STAT_F2S_NSTATUS_PIN) == 0)) {
-> +               dev_dbg(&mgr->dev,
-> +                       "Timeout in final check. Status=%08xf\n", reg);
-> +               return -ETIMEDOUT;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static enum fpga_mgr_states socfpga_a10_fpga_state(struct fpga_manager *mgr)
-> +{
-> +       struct a10_fpga_priv *priv = mgr->priv;
-> +       u32 reg = socfpga_a10_fpga_read_stat(priv);
-> +
-> +       if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_USERMODE)
-> +               return FPGA_MGR_STATE_OPERATING;
-> +
-> +       if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_PR_READY)
-> +               return FPGA_MGR_STATE_WRITE;
-> +
-> +       if (reg & A10_FPGAMGR_IMGCFG_STAT_F2S_CRC_ERROR)
-> +               return FPGA_MGR_STATE_WRITE_COMPLETE_ERR;
-> +
-> +       if ((reg & A10_FPGAMGR_IMGCFG_STAT_F2S_NSTATUS_PIN) == 0)
-> +               return FPGA_MGR_STATE_RESET;
-> +
-> +       return FPGA_MGR_STATE_UNKNOWN;
-> +}
-> +
-> +static const struct fpga_manager_ops socfpga_a10_fpga_mgr_ops = {
-> +       .state = socfpga_a10_fpga_state,
-> +       .write_init = socfpga_a10_fpga_write_init,
-> +       .write = socfpga_a10_fpga_write,
-> +       .write_complete = socfpga_a10_fpga_write_complete,
-> +};
-> +
-> +static int socfpga_a10_fpga_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct a10_fpga_priv *priv;
-> +       void __iomem *reg_base;
-> +       struct resource *res;
-> +       int ret;
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       /* First mmio base is for register access */
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       reg_base = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(reg_base))
-> +               return PTR_ERR(reg_base);
-> +
-> +       /* Second mmio base is for writing FPGA image data */
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       priv->fpga_data_addr = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(priv->fpga_data_addr))
-> +               return PTR_ERR(priv->fpga_data_addr);
-> +
-> +       /* regmap for register access */
-> +       priv->regmap = devm_regmap_init_mmio(dev, reg_base,
-> +                                            &socfpga_a10_fpga_regmap_config);
-> +       if (IS_ERR(priv->regmap))
-> +               return -ENODEV;
-> +
-> +       priv->clk = devm_clk_get(dev, NULL);
-> +       if (IS_ERR(priv->clk)) {
-> +               dev_err(dev, "no clock specified\n");
-> +               return PTR_ERR(priv->clk);
-> +       }
-> +
-> +       ret = clk_prepare_enable(priv->clk);
-> +       if (ret) {
-> +               dev_err(dev, "could not enable clock\n");
-> +               clk_put(priv->clk);
-
-Seen that you used devm_clk_get() is this one necessary?
-
-> +static int socfpga_a10_fpga_remove(struct platform_device *pdev)
-> +{
-> +       struct fpga_manager *mgr = platform_get_drvdata(pdev);
-> +       struct a10_fpga_priv *priv = mgr->priv;
-> +
-> +       fpga_mgr_unregister(&pdev->dev);
-> +       clk_disable_unprepare(priv->clk);
-> +       clk_put(priv->clk);
-
-Same here, if needed at all shouldn't it be devm_clk_put() ?
-
-Cheers,
-
-Moritz
+> ---
+>  drivers/clk/samsung/clk-exynos5433.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+> index c3a5318..fb19525 100644
+> --- a/drivers/clk/samsung/clk-exynos5433.c
+> +++ b/drivers/clk/samsung/clk-exynos5433.c
+> @@ -1661,8 +1661,7 @@ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
+>         GATE(CLK_SCLK_IOCLK_SPI2, "sclk_ioclk_spi2", "ioclk_spi2_clk_in",
+>                         ENABLE_SCLK_PERIC, 13, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_IOCLK_SPI1, "sclk_ioclk_spi1", "ioclk_spi1_clk_in",
+> -                       ENABLE_SCLK_PERIC, 12,
+> -                       CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
+> +                       ENABLE_SCLK_PERIC, 12, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_IOCLK_SPI0, "sclk_ioclk_spi0", "ioclk_spi0_clk_in",
+>                         ENABLE_SCLK_PERIC, 11, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_IOCLK_I2S1_BCLK, "sclk_ioclk_i2s1_bclk",
+> @@ -1677,7 +1676,7 @@ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
+>         GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
+>                         5, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
+> -                       4, CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
+> +                       4, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_SPI0, "sclk_spi0", "sclk_spi0_peric", ENABLE_SCLK_PERIC,
+>                         3, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_UART2, "sclk_uart2", "sclk_uart2_peric",
+> -- 
+> 2.8.1
+> 
