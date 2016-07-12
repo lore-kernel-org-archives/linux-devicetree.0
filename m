@@ -1,24 +1,54 @@
-From: Afzal Mohammed <afzal.mohd.ma@gmail.com>
-Subject: Re: [PATCH v2 08/10] ARM: dts: nuc900: Add nuc970 dts files
-Date: Tue, 12 Jul 2016 21:09:10 +0530
-Message-ID: <20160712153910.GA3507@afzalpc>
-References: <1468136542-2656-1-git-send-email-vw@iommu.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 28/54] MAINTAINERS: Add file patterns for media device
+ tree bindings
+Date: Tue, 12 Jul 2016 17:40:45 +0200
+Message-ID: <CAMuHMdVXp2kwMdHWrHtmf0MvejV7p=teGyE=t9BCEYzixc7_zQ@mail.gmail.com>
+References: <1463907991-7916-1-git-send-email-geert@linux-m68k.org>
+ <1463907991-7916-29-git-send-email-geert@linux-m68k.org> <20160710122735.240b07fc@recife.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468136542-2656-1-git-send-email-vw@iommu.org>
+In-Reply-To: <20160710122735.240b07fc@recife.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wan Zongshun <vw@iommu.org>
-Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, robh@kernel.org, jason@lakedaemon.net, p.zabel@pengutronix.de, Wan Zongshun <mcuos.com@gmail.com>
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Mauro,
 
-On Sun, Jul 10, 2016 at 03:42:20PM +0800, Wan Zongshun wrote:
-> This patch is to add dts support for nuc970 platform.
+On Sun, Jul 10, 2016 at 5:27 PM, Mauro Carvalho Chehab
+<mchehab@osg.samsung.com> wrote:
+> Em Sun, 22 May 2016 11:06:05 +0200
+> Geert Uytterhoeven <geert@linux-m68k.org> escreveu:
+>
+>> Submitters of device tree binding documentation may forget to CC
+>> the subsystem maintainer if this is missing.
+>
+> I'm assuming that this patch will go via DT git tree, so:
 
-cpu ! in soc ? lost in fab ? ;)
+No, please see below...
 
-Regards
-afzal
+>> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+>
+> Acked-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+
+Thanks.
+
+>> Cc: linux-media@vger.kernel.org
+>> ---
+>> Please apply this patch directly if you want to be involved in device
+>> tree binding documentation for your subsystem.
+
+... and apply it. Thanks again!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
