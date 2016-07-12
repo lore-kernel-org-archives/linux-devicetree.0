@@ -1,253 +1,73 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH 2/4] ARM: dts: at91: Fix ADC trigger nodes
-Date: Wed, 13 Jul 2016 01:07:28 +0200
-Message-ID: <1468364850-32475-2-git-send-email-alexandre.belloni@free-electrons.com>
-References: <1468364850-32475-1-git-send-email-alexandre.belloni@free-electrons.com>
+From: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH] userspace API definitions for auto-focus coil
+Date: Tue, 12 Jul 2016 20:32:01 -0300
+Message-ID: <20160712203201.7ffd8f22@recife.lan>
+References: <20160602074544.GR26360@valkosipuli.retiisi.org.uk>
+	<20160602193027.GB7984@amd>
+	<20160602212746.GT26360@valkosipuli.retiisi.org.uk>
+	<20160605190716.GA11321@amd>
+	<575512E5.5030000@gmail.com>
+	<20160611220654.GC26360@valkosipuli.retiisi.org.uk>
+	<20160612084811.GA27446@amd>
+	<20160612112253.GD26360@valkosipuli.retiisi.org.uk>
+	<20160613191753.GA17459@amd>
+	<20160617213545.GH24980@valkosipuli.retiisi.org.uk>
+	<20160618153846.GA15662@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1468364850-32475-1-git-send-email-alexandre.belloni@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160618153846.GA15662@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The triggers don't need a reg property, remove it when prenset. Also remove
-the unit-address from their name.
+Em Sat, 18 Jun 2016 17:38:46 +0200
+Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> escreveu:
 
-This solves:
-Warning (unit_address_vs_reg): Node /ahb/apb/adc@fc034000/trigger@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /ahb/apb/adc@fc034000/trigger@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /ahb/apb/adc@fc034000/trigger@2 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /ahb/apb/adc@fc034000/trigger@3 has a unit name, but no reg property
+> Hi!
+> 
+> > > Not V4L2_CID_USER_AD5820...?  
+> > 
+> > The rest of the controls have no USER as part of the macro name, so I
+> > wouldn't use it here either.  
+> 
+> Ok.
+> 
+> > > Ok, separate header file for 2 lines seemed like a bit of overkill,
+> > > but why not.  
+> > 
+> > That follows an existing pattern of how controls have been implemented in
+> > other drivers.  
+> 
+> Ok.
+> 
+> > Could you merge this with the driver patch? I've dropped that from my ad5820
+> > branch as it does not compile.  
+> 
+> Yes, merged patch should be in your inbox now.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- arch/arm/boot/dts/at91sam9260.dtsi | 12 ++++--------
- arch/arm/boot/dts/at91sam9g45.dtsi | 12 ++++--------
- arch/arm/boot/dts/at91sam9rl.dtsi  | 12 ++++--------
- arch/arm/boot/dts/at91sam9x5.dtsi  | 12 ++++--------
- arch/arm/boot/dts/sama5d3.dtsi     | 12 ++++--------
- arch/arm/boot/dts/sama5d4.dtsi     |  8 ++++----
- 6 files changed, 24 insertions(+), 44 deletions(-)
+The V4L2 core changes should be on a separate patch. Btw, you'll also
+need to patch documentation to reflect such changes. We're right now
+moving from DocBook to ReST markup language. The patches for it are
+right now on a separate topic branch (docs-next), to be merged for
+Kernel 4.8 on the next merge window.
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index af5ba315315f..49a02f5a4476 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -938,25 +938,21 @@
- 				atmel,adc-res-names = "lowres", "highres";
- 				atmel,adc-use-res = "highres";
- 
--				trigger@0 {
--					reg = <0>;
-+				trigger0 {
- 					trigger-name = "timer-counter-0";
- 					trigger-value = <0x1>;
- 				};
--				trigger@1 {
--					reg = <1>;
-+				trigger1 {
- 					trigger-name = "timer-counter-1";
- 					trigger-value = <0x3>;
- 				};
- 
--				trigger@2 {
--					reg = <2>;
-+				trigger2 {
- 					trigger-name = "timer-counter-2";
- 					trigger-value = <0x5>;
- 				};
- 
--				trigger@3 {
--					reg = <3>;
-+				trigger3 {
- 					trigger-name = "external";
- 					trigger-value = <0xd>;
- 					trigger-external;
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 8837b7e4292c..048a9815a9e5 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -1044,28 +1044,24 @@
- 				atmel,adc-res-names = "lowres", "highres";
- 				atmel,adc-use-res = "highres";
- 
--				trigger@0 {
--					reg = <0>;
-+				trigger0 {
- 					trigger-name = "external-rising";
- 					trigger-value = <0x1>;
- 					trigger-external;
- 				};
--				trigger@1 {
--					reg = <1>;
-+				trigger1 {
- 					trigger-name = "external-falling";
- 					trigger-value = <0x2>;
- 					trigger-external;
- 				};
- 
--				trigger@2 {
--					reg = <2>;
-+				trigger2 {
- 					trigger-name = "external-any";
- 					trigger-value = <0x3>;
- 					trigger-external;
- 				};
- 
--				trigger@3 {
--					reg = <3>;
-+				trigger3 {
- 					trigger-name = "continuous";
- 					trigger-value = <0x6>;
- 				};
-diff --git a/arch/arm/boot/dts/at91sam9rl.dtsi b/arch/arm/boot/dts/at91sam9rl.dtsi
-index 6d829db4e887..201a3ca56874 100644
---- a/arch/arm/boot/dts/at91sam9rl.dtsi
-+++ b/arch/arm/boot/dts/at91sam9rl.dtsi
-@@ -265,25 +265,21 @@
- 				atmel,adc-res-names = "lowres", "highres";
- 				atmel,adc-use-res = "highres";
- 
--				trigger@0 {
--					reg = <0>;
-+				trigger0 {
- 					trigger-name = "timer-counter-0";
- 					trigger-value = <0x1>;
- 				};
--				trigger@1 {
--					reg = <1>;
-+				trigger1 {
- 					trigger-name = "timer-counter-1";
- 					trigger-value = <0x3>;
- 				};
- 
--				trigger@2 {
--					reg = <2>;
-+				trigger2 {
- 					trigger-name = "timer-counter-2";
- 					trigger-value = <0x5>;
- 				};
- 
--				trigger@3 {
--					reg = <3>;
-+				trigger3 {
- 					trigger-name = "external";
- 					trigger-value = <0x13>;
- 					trigger-external;
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index cd0cd5fd09a3..075d5881770d 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -1048,29 +1048,25 @@
- 				atmel,adc-res-names = "lowres", "highres";
- 				atmel,adc-use-res = "highres";
- 
--				trigger@0 {
--					reg = <0>;
-+				trigger0 {
- 					trigger-name = "external-rising";
- 					trigger-value = <0x1>;
- 					trigger-external;
- 				};
- 
--				trigger@1 {
--					reg = <1>;
-+				trigger1 {
- 					trigger-name = "external-falling";
- 					trigger-value = <0x2>;
- 					trigger-external;
- 				};
- 
--				trigger@2 {
--					reg = <2>;
-+				trigger2 {
- 					trigger-name = "external-any";
- 					trigger-value = <0x3>;
- 					trigger-external;
- 				};
- 
--				trigger@3 {
--					reg = <3>;
-+				trigger3 {
- 					trigger-name = "continuous";
- 					trigger-value = <0x6>;
- 				};
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 36301bd9a14a..a7c5cf4d4ea5 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -326,26 +326,22 @@
- 				atmel,adc-res-names = "lowres", "highres";
- 				status = "disabled";
- 
--				trigger@0 {
--					reg = <0>;
-+				trigger0 {
- 					trigger-name = "external-rising";
- 					trigger-value = <0x1>;
- 					trigger-external;
- 				};
--				trigger@1 {
--					reg = <1>;
-+				trigger1 {
- 					trigger-name = "external-falling";
- 					trigger-value = <0x2>;
- 					trigger-external;
- 				};
--				trigger@2 {
--					reg = <2>;
-+				trigger2 {
- 					trigger-name = "external-any";
- 					trigger-value = <0x3>;
- 					trigger-external;
- 				};
--				trigger@3 {
--					reg = <3>;
-+				trigger3 {
- 					trigger-name = "continuous";
- 					trigger-value = <0x6>;
- 				};
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 4e2cc30d6615..5a9f50fb8d65 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -1226,22 +1226,22 @@
- 				atmel,adc-ts-pressure-threshold = <10000>;
- 				status = "disabled";
- 
--				trigger@0 {
-+				trigger0 {
- 					trigger-name = "external-rising";
- 					trigger-value = <0x1>;
- 					trigger-external;
- 				};
--				trigger@1 {
-+				trigger1 {
- 					trigger-name = "external-falling";
- 					trigger-value = <0x2>;
- 					trigger-external;
- 				};
--				trigger@2 {
-+				trigger2 {
- 					trigger-name = "external-any";
- 					trigger-value = <0x3>;
- 					trigger-external;
- 				};
--				trigger@3 {
-+				trigger3 {
- 					trigger-name = "continuous";
- 					trigger-value = <0x6>;
- 				};
+You should either base the patch on such branch or wait for it to be
+merged back mainstream to write such documentation additions.
+
+
+> 
+> Thanks,
+> 									Pavel
+> 
+
+
 -- 
-2.8.1
+Thanks,
+Mauro
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
