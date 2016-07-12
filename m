@@ -1,66 +1,34 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v18 0/6] Device Tree support for FPGA Programming
-Date: Tue, 12 Jul 2016 14:43:00 -0500
-Message-ID: <alpine.DEB.2.02.1607121441250.9146@linuxheads99>
-References: <20160712193645.9098-1-atull@opensource.altera.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 2/2] power: Adds support for Smart Battery System
+ Manager
+Date: Wed, 13 Jul 2016 04:06:55 +0800
+Message-ID: <201607130449.xU6uiSoe%fengguang.wu@intel.com>
+References: <1468349295-4935-3-git-send-email-karl-heinz@schneider-inet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160712193645.9098-1-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, delicious.quinoa@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468349295-4935-3-git-send-email-karl-heinz@schneider-inet.de>
+Sender: linux-acpi-owner@vger.kernel.org
+Cc: kbuild-all@01.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>, Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Jul 2016, Alan Tull wrote:
+Hi,
 
-> v18 has very minimal changes to address comments about the device
-> tree bindings and device tree examples in the bindings document.
-> 
-> The diffstat from v17 is:
->   4 files changed, 11 insertions(+), 18 deletions(-)
-> If there are more changes, it would be easier to
-> send these upstream and just start adding small
-> patches to fix whatever else.
+[auto build test WARNING on battery/master]
+[also build test WARNING on v4.7-rc7 next-20160712]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-As with v17, this patchset needs the "of overlay notifications"
-patch, which has been approved.
+url:    https://github.com/0day-ci/linux/commits/Karl-Heinz-Schneider/Documentation-Add-sbs-manager-device-tree-node-documentation/20160713-025704
+base:   git://git.infradead.org/battery-2.6.git master
 
-  https://lkml.org/lkml/2016/4/19/704
 
-> 
-> Alan Tull (6):
->   fpga: add bindings document for fpga region
->   ARM: socfpga: add bindings document for fpga bridge drivers
->   add sysfs document for fpga bridge class
->   fpga: add fpga bridge framework
->   fpga: fpga-region: device tree control for FPGA
->   ARM: socfpga: fpga bridge driver support
-> 
->  Documentation/ABI/testing/sysfs-class-fpga-bridge  |  11 +
->  .../bindings/fpga/altera-fpga2sdram-bridge.txt     |  16 +
->  .../bindings/fpga/altera-hps2fpga-bridge.txt       |  39 ++
->  .../devicetree/bindings/fpga/fpga-region.txt       | 491 ++++++++++++++++++
->  drivers/fpga/Kconfig                               |  21 +
->  drivers/fpga/Makefile                              |   7 +
->  drivers/fpga/altera-fpga2sdram.c                   | 174 +++++++
->  drivers/fpga/altera-hps2fpga.c                     | 213 ++++++++
->  drivers/fpga/fpga-bridge.c                         | 388 ++++++++++++++
->  drivers/fpga/fpga-region.c                         | 555 +++++++++++++++++++++
->  include/linux/fpga/fpga-bridge.h                   |  55 ++
->  include/linux/fpga/fpga-mgr.h                      |   2 +
->  12 files changed, 1972 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
->  create mode 100644 Documentation/devicetree/bindings/fpga/fpga-region.txt
->  create mode 100644 drivers/fpga/altera-fpga2sdram.c
->  create mode 100644 drivers/fpga/altera-hps2fpga.c
->  create mode 100644 drivers/fpga/fpga-bridge.c
->  create mode 100644 drivers/fpga/fpga-region.c
->  create mode 100644 include/linux/fpga/fpga-bridge.h
-> 
-> -- 
-> 2.9.1
-> 
-> 
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/power/sbs-manager.c:315:3-8: No need to set .owner here. The core will do it.
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
