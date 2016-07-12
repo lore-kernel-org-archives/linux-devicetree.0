@@ -1,53 +1,59 @@
-From: Nicolas Dufresne <nicolas.dufresne@gmail.com>
-Subject: Re: [PATCH v3 3/9] DocBook/v4l: Add compressed video formats used
- on MT8173 codec driver
-Date: Tue, 12 Jul 2016 15:08:31 -0400
-Message-ID: <1468350511.8843.16.camel@gmail.com>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-2-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-3-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-4-git-send-email-tiffany.lin@mediatek.com>
- <5a793171-24a7-4e9e-8bfd-f668c789f8e0@xs4all.nl>
-	 <1468205771.3725.8.camel@mtksdaap41>
-	 <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
-Reply-To: nicolas@ndufresne.ca
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [PATCH 1/2] ARM: socfpga: add bindings doc for arria10 fpga manager
+Date: Tue, 12 Jul 2016 14:07:08 -0500
+Message-ID: <20160712190709.5964-2-atull@opensource.altera.com>
+References: <20160712190709.5964-1-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wu-Cheng Li =?UTF-8?Q?=28=E6=9D=8E=E5=8B=99=E8=AA=A0=29?= <wuchengli@chromium.org>, tiffany lin <tiffany.lin@mediatek.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Lin PoChun <PoChun.Lin@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160712190709.5964-1-atull@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Alan Tull <atull@opensource.altera.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Le mardi 12 juillet 2016 =C3=A0 16:16 +0800, Wu-Cheng Li (=E6=9D=8E=E5=8B=
-=99=E8=AA=A0) a =C3=A9crit=C2=A0:
-> Decoder hardware produces MT21 (compressed). Image processor can
-> convert it to a format that can be input of display driver. Tiffany.
-> When do you plan to upstream image processor (mtk-mdp)?
-> >
-> > It can be as input format for encoder, MDP and display drivers in
-> our
-> > platform.
-> I remember display driver can only accept uncompressed MT21. Right?
-> Basically V4L2_PIX_FMT_MT21 is compressed and is like an opaque
-> format. It's not usable until it's decompressed and converted by
-> image
-> processor.
+Add a device tree bindings document for the SoCFPGA Arria10
+FPGA Manager driver.
 
-Previously it was described as MediaTek block mode, and now as a
-MediaTek compressed format. It makes me think you have no idea what
-this pixel format really is. Is that right ?
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+ .../bindings/fpga/altera-socfpga-a10-fpga-mgr.txt     | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
 
-The main reason why I keep asking, is that we often find similarities
-between what vendor like to call their proprietary formats. Doing the
-proper research helps not creating a mess like in Android where you
-have a lot of formats that all point to the same format. I believe
-there was the same concern when Samsung wanted to introduce their Z-
-flip-Z NV12 tile format. In the end they simply provided sufficient
-documentation so we could document it and implement software converters
-for test and validation purpose.
-
-regards,
-Nicolas
+diff --git a/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
+new file mode 100644
+index 0000000..2fd8e7a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
+@@ -0,0 +1,19 @@
++Altera SOCFPGA Arria10 FPGA Manager
++
++Required properties:
++- compatible : should contain "altr,socfpga-a10-fpga-mgr"
++- reg        : base address and size for memory mapped io.
++               - The first index is for FPGA manager register access.
++               - The second index is for writing FPGA configuration data.
++- resets     : Phandle and reset specifier for the device's reset.
++- clocks     : Clocks used by the device.
++
++Example:
++
++	fpga_mgr: fpga-mgr@ffd03000 {
++		compatible = "altr,socfpga-a10-fpga-mgr";
++		reg = <0xffd03000 0x100
++		       0xffcfe400 0x20>;
++		clocks = <&l4_mp_clk>;
++		resets = <&rst FPGAMGR_RESET>;
++	};
+-- 
+2.9.1
