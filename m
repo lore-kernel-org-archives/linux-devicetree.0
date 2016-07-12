@@ -1,82 +1,129 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] libfdt: Add iterator over properties
-Date: Tue, 12 Jul 2016 12:29:02 +1000
-Message-ID: <20160712022902.GR16355@voom.fritz.box>
-References: <20160711195623.12840-1-maxime.ripard@free-electrons.com>
- <20160711195623.12840-3-maxime.ripard@free-electrons.com>
- <20160712015335.GO16355@voom.fritz.box>
- <alpine.LFD.2.20.1607111856210.14522@localhost.localdomain>
+From: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Subject: RE: [PATCH v2 2/5] usb: DT binding documentation for qoriq usb 2.0
+ controller
+Date: Tue, 12 Jul 2016 03:59:14 +0000
+Message-ID: <HE1PR0401MB23319FBFD0D42D997A05AB34E3300@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+References: <1468038656-10345-1-git-send-email-rajesh.bhagat@nxp.com>
+ <1468038656-10345-3-git-send-email-rajesh.bhagat@nxp.com>
+ <20160711064845.GH31647@shlinux2>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uLzYCuFow5JXEQYy"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.20.1607111856210.14522-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160711064845.GH31647@shlinux2>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---uLzYCuFow5JXEQYy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 11, 2016 at 06:57:46PM -0700, Robert P. J. Day wrote:
-> On Tue, 12 Jul 2016, David Gibson wrote:
->=20
-> > On Mon, Jul 11, 2016 at 09:56:19PM +0200, Maxime Ripard wrote:
-> > > +/**
-> > > + * fdt_for_each_property - iterate over all properties of a node
-> > > + * @property_offset:	property offset (int)
-> > > + * @fdt:		FDT blob (const void *)
-> > > + * @node:		node offset (int)
-> > > + *
-> > > + * This is actually a wrapper around a for loop and would be used li=
-ke so:
-> > > + *
-> > > + *	fdt_for_each_property(fdt, node, property) {
+> -----Original Message-----
+> From: Peter Chen [mailto:hzpeterchen@gmail.com]
+> Sent: Monday, July 11, 2016 12:19 PM
+> To: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+> Cc: linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; Peter Chen <peter.chen@nxp.com>;
+> gregkh@linuxfoundation.org; kishon@ti.com; robh+dt@kernel.org;
+> shawnguo@kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH v2 2/5] usb: DT binding documentation for qoriq usb 2.0
+> controller
+> 
+> On Sat, Jul 09, 2016 at 10:00:53AM +0530, Rajesh Bhagat wrote:
+> > Describes the qoriq usb 2.0 controller driver binding, currently used
+> > for LS1021A and LS1012A platform.
 > >
-> > Again, parameter order is out of date.
->=20
->   also, when did kerneldoc content start specifying data types in the
-> comment? (int, const void*, ...). i don't think that's standard.
+> > Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+> > ---
+> > Changes in v2:
+> >  - Adds DT binding documentation for qoriq usb 2.0 controller
+> >  - Changed the compatible string to fsl,ci-qoriq-usb2
+> >
+> >  .../devicetree/bindings/usb/ci-hdrc-qoriq.txt      | 34
+> ++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/usb/ci-hdrc-qoriq.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-qoriq.txt
+> > b/Documentation/devicetree/bindings/usb/ci-hdrc-qoriq.txt
+> > new file mode 100644
+> > index 0000000..8ad7306
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-qoriq.txt
+> > @@ -0,0 +1,34 @@
+> > +* Freescale QorIQ SoC USB 2.0 Controllers
+> > +
+> > +Required properties:
+> > +- compatible: Should be "fsl,ci-qoriq-usb2"
+> > +  Wherever applicable, the IP version of the USB controller should
+> > +  also be mentioned (for eg. fsl,ci-qoriq-usb2-vX.Y).
+> > +  where, X.Y is IP version of USB controller.
 
-It's not, but because this is a macro, not a function, I think it's a
-good idea to include.  The data types are constrained by the functions
-the macro invokes, but unlike a function comment those aren't obvious
-=66rom the function signature immediately below.
+Hello Peter, 
 
-Actually.. rather than the somewhat longwinded comment about @node, it
-might be worth just noting that it's an lvalue in the parameter
-description here.
+> 
+> Why you need to add IP version at compatible string?
+> Does it can't be read out from ID register of Identification Registers.
+> 
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+I agree. Will drop this controller version thing in DTS in v3.
 
---uLzYCuFow5JXEQYy
-Content-Type: application/pgp-signature; name="signature.asc"
+> > +- reg: Should contain registers location and length
+> > +- interrupts: Should contain controller interrupt
+> > +- phy-names: from the *Generic PHY* bindings
+> > +- phys: from the *Generic PHY* bindings
+> > +- clocks: clock provider specifier
+> > +- clock-names: shall be "usb2-clock"
+> > +Refer to clk/clock-bindings.txt for generic clock consumer properties
+> > +
+> > +Recommended properties:
+> > +- dr_mode: One of "host" or "peripheral".
+> 
+> Do you support dual-role?
+> 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Yes. We do support  both host/peripheral mode. 
 
-iQIcBAEBAgAGBQJXhFXuAAoJEGw4ysog2bOSaZEQAMN1jmKFCR31WvVmsTasTu0d
-3aa9zIX1HR8SRLKtT+WTVmAAHKjBL2z5bdUMUrS8sQE6tnLEf0Pi34VPTcPt3e3b
-nxhLJoeA765KqymcU/rEpvH0mgtoSa7SvZiqe1qiaNJbuaP+S9rK9NnCwipDaC8P
-UYxLfrKt+TR9pkEf2nzyVMo/LX3LvJhbv9Dtj7SEJP4FkPrNefSvvvacZ4qXZWEd
-4DjrEwggIyDQQ23eaw0zkpc6eTFdNipSko+8wjplu1FS3pbfGB7qDs7C0Depd/SS
-JJxUExp3CF3tLY+j4bODproieC3OT/nhoSgZi+ODPK9YcbcnfaSoPPoo+rVvqX6T
-a0dPcGgHUkH3BKcd/AWc6PHyeCVU5VU7Va/Ybun1c9Sogc7klOXzzc1yAbH1sOKP
-kM6BA8Ua4bYhuRP7LQ+Sqibm1qr3TkqtLrX3k5X7BcGuUnDKeFzAHMDkd1uIZfbH
-AobHCwJwG2I5H+coPSI3zOrtG/RuR4JFX95Dt/PSg7p28P9g/Yz2LulhVqHfmyUu
-MV0xJuJPAdosEO5cREhYsEP+WYB+GrAtwaiNDeY2ENqT2a3J5Mnncc1HO70QUpxH
-0uG8xecejEbxiI9NPOfRJ1Cv01fs/zsQXy4VUTjgZDNLDOFc/RMjvDz/UZE4glug
-gK30xxbTixpxfw1xndoW
-=J3Xm
------END PGP SIGNATURE-----
 
---uLzYCuFow5JXEQYy--
+Best Regards,
+Rajesh Bhagat 
+
+> > +- phy_type: the type of the phy connected to the core. Should be one
+> > +  of "utmi", "utmi_wide", "ulpi", "serial" or "hsic". Without this
+> > +  property the PORTSC register won't be touched
+> > +
+> > +Examples:
+> > +usb@8600000 {
+> > +	compatible =  "fsl,ci-qoriq-usb2",
+> > +		      "fsl,ci-qoriq-usb2-v2.5";
+> > +	reg = <0x0 0x8600000 0x0 0x1000>;
+> > +	interrupts = <0 139 0x4>;
+> > +	phy-names = "usb2-phy";
+> > +	phys = <&usbphy0>;
+> > +	clock-names = "usb2-clock";
+> > +	clocks = <&clockgen 4 3>;
+> > +	dr_mode = "host";
+> > +	phy_type = "ulpi";
+> > +};
+> > --
+> > 2.6.2.198.g614a2ac
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-usb"
+> > in the body of a message to majordomo@vger.kernel.org More majordomo
+> > info at  http://vger.kernel.org/majordomo-info.html
+> 
+> --
+> 
+> Best Regards,
+> Peter Chen
