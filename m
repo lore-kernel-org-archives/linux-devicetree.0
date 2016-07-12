@@ -1,64 +1,43 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v5 7/7] ARM: dts: sun9i: Switch to the AC100 RTC clock
- outputs for osc32k
-Date: Tue, 12 Jul 2016 10:02:55 +0800
-Message-ID: <CAGb2v66OhH=C5CqB56jN=T4c8TDgyuC=F0689d7=GBhy_rEonA@mail.gmail.com>
-References: <1467988422-17934-1-git-send-email-wens@csie.org>
- <1467988422-17934-8-git-send-email-wens@csie.org> <20160711065042.GC4589@lukather>
+From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] libfdt: Add iterator over properties
+Date: Mon, 11 Jul 2016 18:57:46 -0700 (PDT)
+Message-ID: <alpine.LFD.2.20.1607111856210.14522@localhost.localdomain>
+References: <20160711195623.12840-1-maxime.ripard@free-electrons.com> <20160711195623.12840-3-maxime.ripard@free-electrons.com> <20160712015335.GO16355@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160711065042.GC4589@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-kernel <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160712015335.GO16355-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?ISO-8859-15?Q?Antoine_T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 11, 2016 at 2:50 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Hi,
->
-> On Fri, Jul 08, 2016 at 10:33:42PM +0800, Chen-Yu Tsai wrote:
->> The 32.768 kHz clock inside the A80 SoC is fed from an external source,
->> typically the AC100 RTC module.
->>
->> Make the osc32k placeholder a fixed-factor clock so board dts files can
->> specify its source.
->>
->> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> ---
->> Changes since v4: none
->> Changes since v3: none
->> Changes since v2: none
->> Changes since v1: none
->> ---
->>  arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 5 +++++
->>  arch/arm/boot/dts/sun9i-a80-optimus.dts     | 5 +++++
->>  arch/arm/boot/dts/sun9i-a80.dtsi            | 9 +++------
->>  3 files changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
->> index cf2f4b72a841..04b014603659 100644
->> --- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
->> +++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
->> @@ -103,6 +103,11 @@
->>       allwinner,drive = <SUN4I_PINCTRL_40_MA>;
->>  };
->>
->> +&osc32k {
->> +     /* osc32k input is from AC100 */
->> +     clocks = <&ac100_rtc 0>;
->> +};
->> +
->
-> I'm guessing that an unresolved dependency when the driver has not
-> loaded yet, or is not even compiled ?
->
-> How is it working then?
+On Tue, 12 Jul 2016, David Gibson wrote:
 
-I assume the clk framework will leave it unresolved and unusable.
-Also it seems that none of existing clks use it as a parent by
-default. I will need to check the remaining unimplemented ones
-though.
+> On Mon, Jul 11, 2016 at 09:56:19PM +0200, Maxime Ripard wrote:
+> > +/**
+> > + * fdt_for_each_property - iterate over all properties of a node
+> > + * @property_offset:	property offset (int)
+> > + * @fdt:		FDT blob (const void *)
+> > + * @node:		node offset (int)
+> > + *
+> > + * This is actually a wrapper around a for loop and would be used like so:
+> > + *
+> > + *	fdt_for_each_property(fdt, node, property) {
+>
+> Again, parameter order is out of date.
 
-ChenYu
+  also, when did kerneldoc content start specifying data types in the
+comment? (int, const void*, ...). i don't think that's standard.
+
+rday
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
