@@ -1,63 +1,97 @@
 From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v3 6/7] spi: s3c64xx: restore removed comments
-Date: Tue, 12 Jul 2016 11:07:53 -0700
-Message-ID: <146834687302.73491.6686338412638288829@resonance>
-References: <57837606.8050906@samsung.com>
- <1468306444-18512-1-git-send-email-andi.shyti@samsung.com>
+Subject: Re: [PATCH v3] xen/arm: enable clocks used by the hypervisor
+Date: Tue, 12 Jul 2016 11:11:30 -0700
+Message-ID: <146834709006.73491.4165577782297554867@resonance>
+References: <1467963871-31556-1-git-send-email-dirk.behme@de.bosch.com>
+ <577F73B3.8090807@arm.com> <146799758568.73491.4432005583661196579@resonance>
+ <5784B688.7050903@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1468306444-18512-1-git-send-email-andi.shyti@samsung.com>
+In-Reply-To: <5784B688.7050903@arm.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+To: Julien Grall <julien.grall@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>
+Cc: xen-devel@lists.xenproject.org, devicetree@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Andi Shyti (2016-07-11 23:54:04)
-> Patch a9e93e8 has erroneously removed some comments which are
-> important to understand why the bus frequency is multiplied by
-> two during the spi transfer.
+Quoting Julien Grall (2016-07-12 02:21:12)
+> Hi Mike,
 > 
-> Reword the previous comment to a more appropriate message.
+> On 08/07/16 18:06, Michael Turquette wrote:
+> > Quoting Julien Grall (2016-07-08 02:34:43)
+> >> Hi Dirk,
+> >>
+> >> On 08/07/16 08:44, Dirk Behme wrote:
+> >>> Xen hypervisor drivers might replace native OS drivers. The result is
+> >>> that some important clocks that are enabled by the OS in the non-Xen
+> >>> case are not properly enabled in the presence of Xen. The clocks
+> >>> property enumerates the clocks that must be enabled by the Xen clock
+> >>> consumer.
+> >>>
+> >>> An example is a serial driver enabled by the hypervisor. Xen must
+> >>
+> >> I would say "An example is the UART used by the hypervisor."
+> >>
+> >>> consume and enable these clocks in the OS to ensure behavior continues
+> >>> after firmware configures the UART hardware and corresponding clock
+> >>> harder.
+> >>
+> >> What do you mean by "harder"?
+> >>
+> >> Also, relying on DOM0 to enable the clock looks very wrong to me and you
+> >> give an example which prove that. The UART will be used before hand by
+> >> Xen, however it will not be possible to use it if you expect DOM0 to
+> >> enable the clock (or even modify the clock frequency).
+> >>
+> >> The clock should be enabled either by the firmware or Xen. But not DOM0.
+> >> DOM0 should not touch this clock at all.
+> >>
+> >> Furthermore, this property could be used for clock associated to device
+> >> that will be passthrough-ed to a guest. In this case, the clock would be
+> >> enabled even if the device is not in use which will result more power
+> >> consumption.
+> >
+> > Is there a need to pass clock references through to guests? If so the
+> > unmerged CLK_ENABLE_HAND_OFF[0] feature might be useful to you? If this
+> > flag is set on a given clk, it will be enabled at the time it is
+> > registered by the clk provider driver, and it's enable_count reference
+> > counter will be "handed off" to the first consumer that calls clk_get()
+> > and clk_prepare_enable() on it. This means the clock CAN be gated by
+> > it's proper driver, but it will be enabled at boot time as well.
 > 
-> Suggested-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> Reviewed-by: Michael Turquette <mturquette@baylibre.com>
-> ---
-> Hi,
+> Some driver requires to have the clock in hand to be able to configure 
+> the clock (such as setting the rate). So we would have to find a way to 
+> let the guest using the clock either by assigning the clock or some PV 
+> clock driver.
 > 
-> despite Mike's comments I'm sending the patch as it was
-> originally meant. I think that fixing the exact clk where to set
-> the rate should anyway go in a different patch.
+> However, platform device passthrough (i.e non-pci device) cannot be done 
+> generically. The user has to provide a lots of information manually 
+> (such as MMIO, IRQ, device tree node...). So I am not sure if we want to 
+> have a generic solution here.
+> 
+> I though it would be worth to mention it because we may (or not) use 
+> this clock to tell DOM0 (don't touch it).
+> 
+> > This is useful for use cases like splash screens where the bootloader
+> > configures the display and plays some animation, and we want the linux
+> > kernel to take over the display controller hardware without cutting
+> > clocks, blanking or reseting it. Handing off the clock reference count
+> > helps achieve this.
+> 
+>  From my understanding, any device used by Xen would be in a similar 
+> situation, although there will be no driver in Linux. The current patch 
+> (as well as the v4) is calling clk_prepare_enable for each clock used by 
+> Xen. Could enabling the clock create unexpected behavior such as the 
+> UART loosing/dropping characters?
 
-That sounds fair.
+In general, no, it will not cause any bad side effect.
 
 Regards,
 Mike
 
 > 
-> V2->V3
-> The comment has been reworded as Sylwester recommended.
+> Regards,
 > 
-> Thanks,
-> Andi
-> 
->  drivers/spi/spi-s3c64xx.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> index 6da663f..5bedafc 100644
-> --- a/drivers/spi/spi-s3c64xx.c
-> +++ b/drivers/spi/spi-s3c64xx.c
-> @@ -639,6 +639,7 @@ static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
->         writel(val, regs + S3C64XX_SPI_MODE_CFG);
->  
->         if (sdd->port_conf->clk_from_cmu) {
-> +               /* The src_clk clock is divided internally by 2 */
->                 clk_set_rate(sdd->src_clk, sdd->cur_speed * 2);
->         } else {
->                 /* Configure Clock */
 > -- 
-> 2.8.1
-> 
+> Julien Grall
