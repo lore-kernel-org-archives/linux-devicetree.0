@@ -1,63 +1,77 @@
 From: Wan Zongshun <vw@iommu.org>
-Subject: Re: [PATCH v2 01/10] ARM: NUC900: Add nuc970 machine support
-Date: Tue, 12 Jul 2016 15:14:47 +0800
-Message-ID: <578498E7.4080709@iommu.org>
+Subject: Re: [PATCH v2 03/10] Clocksource: add nuc970 clocksource driver
+Date: Tue, 12 Jul 2016 15:32:59 +0800
+Message-ID: <57849D2B.60305@iommu.org>
 References: <1468135649-19980-1-git-send-email-vw@iommu.org>
- <1468135649-19980-2-git-send-email-vw@iommu.org>
- <18260150.aRRy8ybKlm@wuerfel> <57847278.8000408@iommu.org>
+ <1468135649-19980-4-git-send-email-vw@iommu.org> <3277576.eNgdG7zPqq@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
+Content-Type: text/plain; charset=UTF-8;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <57847278.8000408@iommu.org>
+In-Reply-To: <3277576.eNgdG7zPqq@wuerfel>
 Sender: linux-clk-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, jason@lakedaemon.net, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, Wan Zongshun <mcuos.com@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 12:30, Wan Zongshun wrote:
->
->
-> On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 00:04, Arnd Bergmann wrote:
->> On Sunday, July 10, 2016 3:27:21 PM CEST Wan Zongshun wrote:
->>> +ifeq ($(CONFIG_SOC_NUC970),)
->>>   obj-y                          :=3D irq.o time.o mfp.o gpio.o clo=
-ck.o
->>>   obj-y                          +=3D clksel.o dev.o cpu.o
->>> +endif
->>>   # W90X900 CPU support files
+On 2016=E5=B9=B407=E6=9C=8811=E6=97=A5 23:36, Arnd Bergmann wrote:
+> On Sunday, July 10, 2016 3:27:23 PM CEST Wan Zongshun wrote:
 >>
->> When mfp.o is disabled like this, I get a link error in two drivers
->> using the exported interface:
+>> +config NUC900_TIMER
+>> +        bool "Clocksource timer for nuc900 platform" if COMPILE_TES=
+T
+>> +        depends on ARM
+>> +        select CLKSRC_OF if OF
+>> +        select CLKSRC_MMIO
+>> +        help
+>> +          Enables the clocksource for the NUC900 platform.
 >>
->> ERROR: "mfp_set_groupg" [drivers/spi/spi-nuc900.ko] undefined!
->> ERROR: "mfp_set_groupi" [drivers/input/keyboard/w90p910_keypad.ko]
->> undefined!
 >
-> Why remove mfp modules? this multifunction pin driver should be used =
-for
-> those two drivers, if no mfp_set_groupX, I don't think driver can wor=
-k.
+> I have put this patch into my randconfig build system and found that
+> it lacks a dependency:
 >
-> Now mfp has standard driver subsystem?
 >
->>
->> Any idea for a better migration strategy?
+>
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
+g
+> index e18ef32776a3..59b9251eef37 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -523,7 +523,7 @@ config CLKSRC_ST_LPC
+>
+>   config NUC900_TIMER
+>           bool "Clocksource timer for nuc900 platform" if COMPILE_TES=
+T
+> -        depends on ARM
+> +        depends on ARM && GENERIC_CLOCKEVENTS
+>           select CLKSRC_OF if OF
+>           select CLKSRC_MMIO
+>           help
+> =09
 
-Arnd, If you still think the mfp should be removed, we can send a serie=
-s=20
-patches to instead of using mfp interface quickly, and do mfp set in=20
-local driver. Do you think it is ok?
+So this patch, I still need submit or you have merged it?
 
->>
->>     Arnd
->>
->>
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Also the init function has changed its return type in linux-next:
+>
+>> +static void __init nuc970_timer_of_init(struct device_node *node)
+>
+> This now needs to return an error code or we get:
+>
+> ../include/linux/of.h:1004:20: error: comparison of distinct pointer =
+types lacks a cast [-Werror]
+>          .data =3D (fn =3D=3D (fn_type)NULL) ? fn : fn  }
+>
+> Daniel Lezcano seems to have implemented a migration strategy, but I
+> can't see what you are supposed to do here, since the
+> CLOCKSOURCE_OF_DECLARE_RET macro is no longer part of linux-next.
+
+Wait for Daniel's comments? or what should I do now?
+
+>
+> 	Arnd
+>
+>
