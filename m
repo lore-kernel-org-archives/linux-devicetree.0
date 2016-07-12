@@ -1,56 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 06/10] soc: Add SoC specific driver support for nuc900
-Date: Tue, 12 Jul 2016 11:50:28 +0200
-Message-ID: <1510379.YVtTfMI32O@wuerfel>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org> <4765191.NGpMC1JR46@wuerfel> <5784B302.80307@iommu.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: [PATCH v3 4/7] spi: s3c64xx: use error code from clk_prepare_enable()
+Date: Tue, 12 Jul 2016 19:02:13 +0900
+Message-ID: <1468317736-18841-5-git-send-email-andi.shyti@samsung.com>
+References: <1468317736-18841-1-git-send-email-andi.shyti@samsung.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <5784B302.80307@iommu.org>
+In-reply-to: <1468317736-18841-1-git-send-email-andi.shyti@samsung.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Wan Zongshun <vw@iommu.org>, devicetree@vger.kernel.org, jason@lakedaemon.net, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 12, 2016 5:06:10 PM CEST Wan Zongshun wrote:
-> On 2016=E5=B9=B407=E6=9C=8811=E6=97=A5 16:03, Arnd Bergmann wrote:
-> > On Sunday, July 10, 2016 3:27:26 PM CEST Wan Zongshun wrote:
-> > I'm still a bit unsure about the set of attributes here.
-> >
-> > - The "soc_id" is read from the device tree from the field that con=
-tains
-> >    the board name, I think for consistency you should try to map th=
-e
-> >    GCR_CHIPID to the name of the SoC and assign that here
-> >
-> > - The "machine" is hardcoded to "NUC900EVB", which in turn looks li=
-ke
-> >    a particular board but not the one you are running on. Maybe rea=
-d
-> >    that from the DT instead?
-> >
-> > - The "revision" is not filled at all, I would suggest using someth=
-ing
-> >    derived from the GCR_CHIPID register here
-> >
-> > - you have two nonstandard attributes "chipid" and "version", which
-> >    I'd hope to avoid -- the set of standard attributes is supposed =
-to
-> >    give enough information about the machine, and platform independ=
-ent
-> >    user space will never read those.
->=20
-> So, Maybe I can remove those two codes, no need push those informatio=
-n=20
-> to user space?
->=20
-> device_create_file(soc_device_to_device(soc_dev), &nuc900_chipid_attr=
-);
-> device_create_file(soc_device_to_device(soc_dev), &nuc900_version_att=
-r);
->=20
+If clk_prepare_enable() fails do not return -EBUSY but use the
+value provided by the function itself.
 
-Yes, that would be good.
+Suggested-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+Reviewed-by: Michael Turquette <mturquette@baylibre.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ drivers/spi/spi-s3c64xx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-	Arnd
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index 0784a4d..3a65adf 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -1126,9 +1126,9 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+ 		goto err_deref_master;
+ 	}
+ 
+-	if (clk_prepare_enable(sdd->clk)) {
++	ret = clk_prepare_enable(sdd->clk);
++	if (ret) {
+ 		dev_err(&pdev->dev, "Couldn't enable clock 'spi'\n");
+-		ret = -EBUSY;
+ 		goto err_deref_master;
+ 	}
+ 
+@@ -1141,9 +1141,9 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+ 		goto err_disable_clk;
+ 	}
+ 
+-	if (clk_prepare_enable(sdd->src_clk)) {
++	ret = clk_prepare_enable(sdd->src_clk);
++	if (ret) {
+ 		dev_err(&pdev->dev, "Couldn't enable clock '%s'\n", clk_name);
+-		ret = -EBUSY;
+ 		goto err_disable_clk;
+ 	}
+ 
+-- 
+2.8.1
+
