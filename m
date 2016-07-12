@@ -1,52 +1,55 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: [PATCH v3 6/7] spi: s3c64xx: restore removed comments
-Date: Tue, 12 Jul 2016 15:54:04 +0900
-Message-ID: <1468306444-18512-1-git-send-email-andi.shyti@samsung.com>
-References: <57837606.8050906@samsung.com>
+From: Wan Zongshun <vw@iommu.org>
+Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
+Date: Tue, 12 Jul 2016 15:04:42 +0800
+Message-ID: <5784968A.7080007@iommu.org>
+References: <1468135649-19980-1-git-send-email-vw@iommu.org>
+ <1468135649-19980-3-git-send-email-vw@iommu.org> <1761342.TGgYi16yul@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-reply-to: <57837606.8050906@samsung.com>
+In-Reply-To: <1761342.TGgYi16yul@wuerfel>
 Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Patch a9e93e8 has erroneously removed some comments which are
-important to understand why the bus frequency is multiplied by
-two during the spi transfer.
 
-Reword the previous comment to a more appropriate message.
 
-Suggested-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-Reviewed-by: Michael Turquette <mturquette@baylibre.com>
----
-Hi,
+On 2016=E5=B9=B407=E6=9C=8811=E6=97=A5 23:46, Arnd Bergmann wrote:
+> On Sunday, July 10, 2016 3:27:22 PM CEST Wan Zongshun wrote:
+>> +
+>> +#if !defined(CONFIG_SOC_NUC900)
+>>   #define NR_IRQS                (IRQ_ADC+1)
+>> +#else
+>> +#define NR_IRQS                62
+>> +#endif
+>>
+>
+> The Kconfig symbols are a bit confusing here: CONFIG_SOC_NUC900
+> controls the compilation of the soc_device driver, but I guess
+> what you actually mean here is CONFIG_SOC_NUC970, which is the
+> support for the actual chip.
+>
+> Maybe rename the former to something less confusing and change
+> this to CONFIG_SOC_NUC970?
 
-despite Mike's comments I'm sending the patch as it was
-originally meant. I think that fixing the exact clk where to set
-the rate should anyway go in a different patch.
+You are right, it should _NUC970. Many thanks!
 
-V2->V3
-The comment has been reworded as Sylwester recommended.
+>
+> Ideally, this should just go away once we use SPARSE_IRQ.
 
-Thanks,
-Andi
+This platform also can use SPARSE_IRQ? this just a simple irq map and n=
+o=20
+more irq number in this Soc.
 
- drivers/spi/spi-s3c64xx.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index 6da663f..5bedafc 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -639,6 +639,7 @@ static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
- 	writel(val, regs + S3C64XX_SPI_MODE_CFG);
- 
- 	if (sdd->port_conf->clk_from_cmu) {
-+		/* The src_clk clock is divided internally by 2 */
- 		clk_set_rate(sdd->src_clk, sdd->cur_speed * 2);
- 	} else {
- 		/* Configure Clock */
--- 
-2.8.1
-
+>
+> 	Arnd
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
