@@ -1,100 +1,204 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific
- power-saving options
-Date: Tue, 12 Jul 2016 09:21:14 -0700
-Message-ID: <CAHQ1cqErr9g83qpDASymTnR78YGJcS8tvb=VD8CthOZMJTNEpw@mail.gmail.com>
-References: <1465970379-14703-1-git-send-email-andrew.smirnov@gmail.com>
- <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com>
- <20160619142934.GA8522@rob-hp-laptop> <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
- <20160621204904.GA9779@rob-hp-laptop> <20160621210739.GY5809@piout.net> <CAHQ1cqGRqhOAqfJZEixkxAHZ4Y8dd-hD__T1ci0LS28Orphs3Q@mail.gmail.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 6/6] clk: mvebu: Add the peripheral clock driver for Armada 3700
+Date: Tue, 12 Jul 2016 18:30:34 +0200
+Message-ID: <87r3aystsl.fsf@free-electrons.com>
+References: <1467931071-31004-1-git-send-email-gregory.clement@free-electrons.com>
+	<1467931071-31004-7-git-send-email-gregory.clement@free-electrons.com>
+	<146800242289.73491.4169295036354147972@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDKOBWPM5ABRB7FRSS6AKGQECZOTKBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAHQ1cqGRqhOAqfJZEixkxAHZ4Y8dd-hD__T1ci0LS28Orphs3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <146800242289.73491.4169295036354147972@resonance> (Michael
+	Turquette's message of "Fri, 08 Jul 2016 11:27:02 -0700")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Terry Zhou <bjzhou@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 21, 2016 at 7:34 PM, Andrey Smirnov
-<andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Jun 21, 2016 at 2:07 PM, Alexandre Belloni
-> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On 21/06/2016 at 15:49:04 -0500, Rob Herring wrote :
->>> So wouldn't you want to set one mode while running and the lower power
->>> mode while suspended? I'm trying to understand the frequency of changing
->>> this. If it is always one setting for a board, then yes it belongs in
->>> DT. If it is a user decision, then it probably shouldn't be in DT.
->>>
->>> Seeing as these are reused, I've probably already had this discussion...
->>>
->>
->> I would agree with Rob here. It may be better to provide a sysfs
->> interface to configure that particular behavior.
->
-> I don't see any value in doing that, could you give me a realistic
-> example of a scenario in which a user would want to spend some of
-> uptime with RTC oscillator fault detection/glitch filtering disabled
-> and then enable it?
->
->> This is usually ok because the use case is:
->>  - the RTC is not configured, time has never been set
->>  - time is set for the first time
->>  - the user can set the oscillator mode/detection/...
->
-> Unfortunately exposing that feature using sysfs gives you a leaky
-> abstraction and your userspace instead of using a generic RTC starts
-> using DS1341 RTC. So to accommodate for that a user would have to:
->
-> a) Write + integrate a userspace tool to set the mode (which IMHO is
-> decided upon once and doesn't change)
-> b) If a board design is new and there's a chance of moving this chip
-> to a different I2C bus, the code above would have to account for that
-> and not hardcore sysfs path
-> c) If board's BSP is intended to be used in multiple generations of a
-> product, not all of which would use DS1341, it would be necessary to
-> accommodate for that by either more code in the tool or an additional
-> BSP build configuration variant
->
->>  - on subsequent reboots, the mode is kept alongside the time and date
->>
->
-> This assumes that your bootloader leaves those mode bits alone.
->
->> I would advise against trying to set a mode automatically in the driver
->> because you may have unexpected power cuts and it may then let the RTC
->> consume more power than what you really want.
->>
->
-> I fell like I am not understanding you correctly.  Why would moving
-> configuration decision logic into userspace improve the situation in
-> case of unexpected power loss?
->
-> Andrey
+Hi Michael,
+ 
+ On ven., juil. 08 2016, Michael Turquette <mturquette@baylibre.com> wrote:
 
+> Quoting Gregory CLEMENT (2016-07-07 15:37:51)
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/clk.h>
+>
+> Same question as my previous email. Is clk.h necessary? Is this driver
+> also a clk consumer?
 
-Alexandre, what's the status of this discussion/patchset? Would it be
-more acceptable if I dropped all of the refactoring and just kept the
-code adding new feature + DT binding for it? I am more than happy to
-drop all but essential parts of the patches if that would allow us to
-make progress.
+I think I can remove it indeed.
 
-Thank you,
-Andrey
+>
+>> +static int armada_3700_add_composite_clk(const struct clk_periph_data *data,
+>> +                                        const char * const *parent_name,
+>> +                                        void __iomem *reg, spinlock_t *lock,
+>> +                                        struct device *dev, struct clk_hw *hw)
+>> +{
+>> +       const struct clk_ops *mux_ops = NULL, *gate_ops = NULL,
+>> +               *div_ops = NULL;
+>> +       struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *div_hw = NULL;
+>> +       const char * const *names;
+>> +       struct clk_mux *mux = NULL;
+>> +       struct clk_gate *gate = NULL;
+>> +       struct clk_divider *div = NULL;
+>> +       struct clk_double_div *double_div = NULL;
+>> +       int num_parent;
+>> +       int ret = 0;
+>> +
+>> +       if (data->gate_shift != UNUSED) {
+>> +               gate = devm_kzalloc(dev, sizeof(*gate), GFP_KERNEL);
+>> +
+>> +               if (!gate)
+>> +                       return -ENOMEM;
+>> +
+>> +               gate->reg = reg + CLK_DIS;
+>> +               gate->bit_idx = data->gate_shift;
+>> +               gate->lock = lock;
+>> +               gate_ops = &clk_gate_ops;
+>> +               gate_hw = &gate->hw;
+>> +       }
+>> +
+>> +       if (data->mux_shift != UNUSED) {
+>> +               mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
+>> +
+>> +               if (!mux) {
+>> +                       ret = -ENOMEM;
+>> +                       goto free_gate;
+>> +               }
+>> +
+>> +               mux->reg = reg + TBG_SEL;
+>> +               mux->shift = data->mux_shift;
+>> +               mux->mask = 0x3;
+>> +               mux->lock = lock;
+>> +               mux_ops = &clk_mux_ro_ops;
+>> +               mux_hw = &mux->hw;
+>> +       }
+>> +
+>> +       if (data->div_reg1 != UNUSED) {
+>> +               if (data->div_reg2 == UNUSED) {
+>> +                       const struct clk_div_table *clkt;
+>> +                       int table_size = 0;
+>> +
+>> +                       div = devm_kzalloc(dev, sizeof(*div), GFP_KERNEL);
+>> +                       if (!div) {
+>> +                               ret = -ENOMEM;
+>> +                               goto free_mux;
+>> +                       }
+>> +
+>> +                       div->reg = reg + data->div_reg1;
+>> +                       div->table = data->table;
+>> +                       for (clkt = div->table; clkt->div; clkt++)
+>> +                               table_size++;
+>> +                       div->width = order_base_2(table_size);
+>> +                       div->lock = lock;
+>> +                       div_ops = &clk_divider_ro_ops;
+>> +                       div_hw = &div->hw;
+>> +               } else {
+>> +                       double_div = devm_kzalloc(dev, sizeof(*double_div),
+>> +                                                 GFP_KERNEL);
+>> +                       if (!double_div) {
+>> +                               ret = -ENOMEM;
+>> +                               goto free_mux;
+>> +                       }
+>> +
+>> +                       double_div->reg1 = reg + data->div_reg1;
+>> +                       double_div->shift1 = data->div_shift1;
+>> +                       double_div->reg2 = reg + data->div_reg1;
+>> +                       double_div->shift2 = data->div_shift2;
+>> +                       div_ops = &clk_double_div_ops;
+>> +                       div_hw = &double_div->hw;
+>> +               }
+>> +       }
+>> +
+>> +       switch (data->flags) {
+>> +       case XTAL_CHILD:
+>> +               /* the xtal clock is the 5th clock */
+>> +               names = &parent_name[4];
+>> +               num_parent = 1;
+>> +               break;
+>> +       case TBGA_S_CHILD:
+>> +               /* the TBG A S clock is the 3rd clock */
+>> +               names = &parent_name[2];
+>> +               num_parent = 1;
+>> +               break;
+>> +       case GBE_CORE_CHILD:
+>> +               names = &gbe_name[1];
+>> +               num_parent = 1;
+>> +               break;
+>> +       case  GBE_50_CHILD:
+>> +               names = &gbe_name[0];
+>> +               num_parent = 1;
+>> +               break;
+>> +       case  GBE_125_CHILD:
+>> +               names = &gbe_name[2];
+>> +               num_parent = 1;
+>> +               break;
+>> +       default:
+>> +               names = parent_name;
+>> +               num_parent = 4;
+>> +       }
+>> +       hw = clk_hw_register_composite(dev, data->name,
+>> +                                    names, num_parent,
+>> +                                    mux_hw, mux_ops,
+>> +                                    div_hw, div_ops,
+>> +                                    gate_hw, gate_ops,
+>> +                                    CLK_IGNORE_UNUSED);
+>> +       if (IS_ERR(hw)) {
+>> +               ret = PTR_ERR(hw);
+>> +               goto free_div;
+>> +       }
+>> +
+>> +       return 0;
+>> +free_div:
+>> +       devm_kfree(dev, div);
+>> +       devm_kfree(dev, double_div);
+>> +free_mux:
+>> +       devm_kfree(dev, mux);
+>> +free_gate:
+>> +       devm_kfree(dev, gate);
+>> +       return ret;
+>> +}
+>
+> Can this "add" function (aka registration function) be replaced with
+> static data instead? I think that all of the static data exists already,
+> this function can be removed and your probe can call clk_hw_register
+> directly.
+>
+
+I see your point and indeed we can remove some allocation. However using
+clk_hw_register with composite clock is not straight forward. Indeed the
+clk_ops is filled in the clk_hw_register_composite function and none of
+these operations are exported outside the clk-composite.c file.
+
+We can't directly point a clk_gate_ops structure or a clk_divider_ops as
+you did in the drivers/clk/meson/gxbb.c file for example. For clk
+composite it would need modify the framework to either export all the
+operation or to create set of operations directly usable and I would
+like to avoid doing it when we are close to the merge window.
+
+However I can use static data for the clk_mux, clk_gate and clk_divider
+struct.
+
+Is it OK for you?
+
+Thanks,
+
+Gregory
+
+> It might need a macro though, since composite clock structures are
+> rather messy. This avoids a lot of unnecessary allocations and time
+> populating data that we already have access to. In general I am trying
+> to encourage clk drivers to use only clk_hw_register() in their probe
+> instead of the helper registration functions.
+>
+> Similarly I am discouraging drivers from populating hw.init at run-time,
+> since we already have that data for that at compile-time.
+>
+> Regards,
+> Mike
 
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
