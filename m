@@ -1,176 +1,96 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH v4] xen/arm: Add a clock property
-Date: Wed, 13 Jul 2016 10:35:42 +0200
-Message-ID: <c320f820-8749-f4a4-435e-ddd9379655b5@de.bosch.com>
-References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
- <146836236759.73491.11707389619985827497@resonance>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] libfdt: Add overlay application function
+Date: Wed, 13 Jul 2016 10:38:03 +0200
+Message-ID: <20160713083803.GD4761@lukather>
+References: <20160711195623.12840-1-maxime.ripard@free-electrons.com>
+ <20160711195623.12840-7-maxime.ripard@free-electrons.com>
+ <ed025e59-ddb3-0309-b2da-f6c2d1fa95d0@gmail.com>
+ <20160712143404.GD16355@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <146836236759.73491.11707389619985827497@resonance>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, linux-arm-kernel@lists.infradead.org, Julien Grall <julien.grall@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: xen-devel@lists.xenproject.org, devicetree@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/unnNtmY43mpUSKx"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160712143404.GD16355-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13.07.2016 00:26, Michael Turquette wrote:
-> Quoting Dirk Behme (2016-07-12 00:46:45)
->> Clocks described by this property are reserved for use by Xen, and the OS
->> must not alter their state any way, such as disabling or gating a clock,
->> or modifying its rate. Ensuring this may impose constraints on parent
->> clocks or other resources used by the clock tree.
->
-> Note that clk_prepare_enable will not prevent the rate from changing
-> (clk_set_rate) or a parent from changing (clk_set_parent). The only way
-> to do this currently would be to set the following flags on the effected
-> clocks:
->
-> 	CLK_SET_RATE_GATE
-> 	CLK_SET_PARENT_GATE
 
+--/unnNtmY43mpUSKx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi David,
 
-Regarding setting flags, I think we already talked about that. I think 
-the conclusion was that in our case its not possible to manipulate the 
-flags in the OS as this isn't intended to be done in cases like ours. 
-Therefore no API is exported for this.
+On Wed, Jul 13, 2016 at 12:34:04AM +1000, David Gibson wrote:
+> On Mon, Jul 11, 2016 at 09:20:44PM +0100, Phil Elwell wrote:
+> > On 11/07/2016 20:56, Maxime Ripard wrote:
+> [snip]
+>=20
+> > > +static int overlay_merge(void *fdt, void *fdto)
+> > > +{
+> > > +	int fragment;
+> > > +
+> > > +	fdt_for_each_subnode(fragment, fdto, 0) {
+> > > +		int overlay;
+> > > +		int target;
+> > > +		int ret;
+> > > +
+> > > +		target =3D overlay_get_target(fdt, fdto, fragment);
+> > > +		if (target < 0)
+> > > +			continue;
+> > > +
+> > > +		overlay =3D fdt_subnode_offset(fdto, fragment, "__overlay__");
+> > > +		if (overlay < 0)
+> > > +			return overlay;
+>=20
+> > Why does the absence of a target cause a fragment to be ignored but
+> > the absence of an "__overlay__" property cause the merging to be
+> > abandoned with an error? Can't we just ignore fragments that aren't
+> > recognised?
+>=20
+> So, I had the same question.  But fragments we can't make sense MUST
+> cause failures, and not be silently ignored.
+>=20
+> An incompletely applied overlay is almost certainly going to cause you
+> horrible grief at some point, so you absolutely want to know early if
+> your overlay is in a format your tool doesn't understand.
 
-I.e. if we need to set these flags, we have to do that in Xen where we 
-add the clocks to the hypervisor node in the device tree. And not in the 
-kernel patch discussed here.
+I'm not sure how we can achieve that without applying it once, and see
+if it fails. The obvious things are easy to detect (like a missing
+__overlay__ node), but some others really aren't (like a poorly
+formatted phandle, or one that overflows) without applying it
+entirely. And that seems difficult without malloc.
 
-Best regards
+Maxime
 
-Dirk
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
+--/unnNtmY43mpUSKx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> And then enable the clocks. All calls to clk_set_parent and clk_set_rate
-> with those clocks in the path will fail, so long as they are prepared
-> and enabled. This implementation detail is specific to Linux and
-> definitely should not go into the binding.
->
->>
->> This property is used to proxy clocks for devices Xen has taken ownership
->> of, such as UARTs, for which the associated clock controller(s) remain
->> under the control of Dom0.
->
-> I'm still not completely sure about this type of layering and whether or
-> not it is sane. If you want Xen to manage the clock controller, AND you
-> want Linux guests or dom0 to consume those clocks and manipulate them in
-> other drivers, then this solution won't work.
->
-> Regards,
-> Mike
->
->>
->> Up to now, the workaround for this has been to use the Linux kernel
->> command line parameter 'clk_ignore_unused'. See Xen bug
->>
->> http://bugs.xenproject.org/xen/bug/45
->>
->> too.
->>
->> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
->> ---
->> Changes in v4: Switch to the xen.txt description proposed by Mark:
->>                https://www.spinics.net/lists/arm-kernel/msg516158.html
->>
->> Changes in v3: Use the xen.txt description proposed by Michael. Thanks!
->>
->> Changes in v2: Drop the Linux implementation details like clk_disable_unused
->>                in xen.txt.
->>
->>  Documentation/devicetree/bindings/arm/xen.txt | 12 +++++++
->>  arch/arm/xen/enlighten.c                      | 47 +++++++++++++++++++++++++++
->>  2 files changed, 59 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
->> index c9b9321..437e50b 100644
->> --- a/Documentation/devicetree/bindings/arm/xen.txt
->> +++ b/Documentation/devicetree/bindings/arm/xen.txt
->> @@ -17,6 +17,18 @@ the following properties:
->>    A GIC node is also required.
->>    This property is unnecessary when booting Dom0 using ACPI.
->>
->> +Optional properties:
->> +
->> +- clocks: a list of phandle + clock-specifier pairs
->> +  Clocks described by this property are reserved for use by Xen, and the
->> +  OS must not alter their state any way, such as disabling or gating a
->> +  clock, or modifying its rate. Ensuring this may impose constraints on
->> +  parent clocks or other resources used by the clock tree.
->> +
->> +  Note: this property is used to proxy clocks for devices Xen has taken
->> +  ownership of, such as UARTs, for which the associated clock
->> +  controller(s) remain under the control of Dom0.
->> +
->>  To support UEFI on Xen ARM virtual platforms, Xen populates the FDT "uefi" node
->>  under /hypervisor with following parameters:
->>
->> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
->> index 47acb36..5c546d0 100644
->> --- a/arch/arm/xen/enlighten.c
->> +++ b/arch/arm/xen/enlighten.c
->> @@ -24,6 +24,7 @@
->>  #include <linux/of_fdt.h>
->>  #include <linux/of_irq.h>
->>  #include <linux/of_address.h>
->> +#include <linux/clk-provider.h>
->>  #include <linux/cpuidle.h>
->>  #include <linux/cpufreq.h>
->>  #include <linux/cpu.h>
->> @@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
->>  }
->>  late_initcall(xen_pm_init);
->>
->> +/*
->> + * Check if we want to register some clocks, that they
->> + * are not freed because unused by clk_disable_unused().
->> + * E.g. the serial console clock.
->> + */
->> +static int __init xen_arm_register_clks(void)
->> +{
->> +       struct clk *clk;
->> +       struct device_node *xen_node;
->> +       unsigned int i, count;
->> +       int ret = 0;
->> +
->> +       xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
->> +       if (!xen_node) {
->> +               pr_err("Xen support was detected before, but it has disappeared\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       count = of_clk_get_parent_count(xen_node);
->> +       if (!count)
->> +               goto out;
->> +
->> +       for (i = 0; i < count; i++) {
->> +               clk = of_clk_get(xen_node, i);
->> +               if (IS_ERR(clk)) {
->> +                       pr_err("Xen failed to register clock %i. Error: %li\n",
->> +                              i, PTR_ERR(clk));
->> +                       ret = PTR_ERR(clk);
->> +                       goto out;
->> +               }
->> +
->> +               ret = clk_prepare_enable(clk);
->> +               if (ret < 0) {
->> +                       pr_err("Xen failed to enable clock %i. Error: %i\n",
->> +                              i, ret);
->> +                       goto out;
->> +               }
->> +       }
->> +
->> +       ret = 0;
->> +
->> +out:
->> +       of_node_put(xen_node);
->> +       return ret;
->> +}
->> +late_initcall(xen_arm_register_clks);
->>
->>  /* empty stubs */
->>  void xen_arch_pre_suspend(void) { }
->> --
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXhf3rAAoJEBx+YmzsjxAgTDMP/jj/GtiP0lfy1wz7KxBHG9Fp
+Yw536HN7UTJz1gps/8i99rgJWLwwHOYipoppiuFKOsUF3ioyz/9tThMfMFZC/8Jq
+wJFkzK6mEfozt+dzgvukTUcS0CCDYo7vMj1EiA7pvscZoKX2z0YJ5JRz4BL9JaVS
+IMsH8ggYI8Fs9krj/3Q+clj8OZlqYuvBl1Iq72nuMe2GgGJji0+nslW/+S2WCGo9
+Ymgg+NT9gsZe5eRG4m3K8AEWgb8pqSk4ln79xPppSc1eoPMhtUzHzffNn+Znsd4P
+C1HP/eNmRBe0eNWRJ4kAWC+TYphmdxCX4lpGp5h3wvf3SD86TrNgOYHJ4pVQtU4t
+IkMP4IUazPmHB0c/epeAeM+3rLRHU9lZslwV1ZK7KfAVlRnVr0A7QU+hPvNyh3ql
+6JcWjqGpXNmoib3aziiMgctWY+nmr1PZNyiprbodYqNsM46yBJ2X1uvF8YbRlcmw
+2aVzhIdzs6NMbLuqDqu3aOQi0+VQT3e2eWGqsJ4MMauinfELVv9upQN+341k7yJ7
+oFPvqX70hOZLKQChPdGF1EnIB1/47JMyHJfiBFJT7nMBPIq6vw0OYtPjNm8eLRPA
+YUS01Ky8+K/qTYcvmooS41oRSKjZbzmR021yt5TkrwIjLtt8otDap/AWWE9ySV56
+DYCw7jzD2PTwID7MyUPJ
+=BBcP
+-----END PGP SIGNATURE-----
+
+--/unnNtmY43mpUSKx--
