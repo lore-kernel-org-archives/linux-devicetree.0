@@ -1,56 +1,83 @@
-From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v2 5/6] usb: chipidea: let chipidea core device of_node equal's glue layer device of_node
-Date: Wed, 13 Jul 2016 10:06:49 +0800
-Message-ID: <1468375610-18625-6-git-send-email-peter.chen@nxp.com>
-References: <1468375610-18625-1-git-send-email-peter.chen@nxp.com>
+From: =?UTF-8?B?V3UtQ2hlbmcgTGkgKOadjuWLmeiqoCk=?= <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 3/9] DocBook/v4l: Add compressed video formats used on
+ MT8173 codec driver
+Date: Wed, 13 Jul 2016 10:22:20 +0800
+Message-ID: <CAOMLVLhQFCbn6RFcT3Gv0SnY5Y_=ANek2hOzC69UAiK9Zk8VRg@mail.gmail.com>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+ <1464611363-14936-2-git-send-email-tiffany.lin@mediatek.com>
+ <1464611363-14936-3-git-send-email-tiffany.lin@mediatek.com>
+ <1464611363-14936-4-git-send-email-tiffany.lin@mediatek.com>
+ <5a793171-24a7-4e9e-8bfd-f668c789f8e0@xs4all.nl>
+ <1468205771.3725.8.camel@mtksdaap41>
+ <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
+ <1468350511.8843.16.camel@gmail.com> <1468350842.8843.18.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468375610-18625-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1468350842.8843.18.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Lin PoChun <PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?V3UtQ2hlbmcgTGkgKOadjuWLmeiqoCk=?= <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-At device tree, we have no device node for chipidea core,
-the glue layer's node is the parent node for host and udc
-device. But in related driver, the parent device is chipidea
-core. So, in order to let the common driver get parent's node,
-we let the core's device node equals glue layer device node.
-
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Tested-by: Maciej S. Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
----
- drivers/usb/chipidea/core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 69426e6..0d05812 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -914,6 +914,16 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 	if (!ci)
- 		return -ENOMEM;
- 
-+	/*
-+	 * At device tree, we have no device node for chipidea core,
-+	 * the glue layer's node is the parent node for host and udc
-+	 * device. But in related driver, the parent device is chipidea
-+	 * core. So, in order to let the common driver get parent's node,
-+	 * we let the core's device node equals glue layer's node.
-+	 */
-+	if (dev->parent && dev->parent->of_node)
-+		dev->of_node = dev->parent->of_node;
-+
- 	ci->dev = dev;
- 	ci->platdata = dev_get_platdata(dev);
- 	ci->imx28_write_fix = !!(ci->platdata->flags &
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBKdWwgMTMsIDIwMTYgYXQgMzoxNCBBTSwgTmljb2xhcyBEdWZyZXNuZQo8bmljb2xh
+cy5kdWZyZXNuZUBnbWFpbC5jb20+IHdyb3RlOgo+IExlIG1hcmRpIDEyIGp1aWxsZXQgMjAxNiDD
+oCAxNTowOCAtMDQwMCwgTmljb2xhcyBEdWZyZXNuZSBhIMOpY3JpdCA6Cj4+IExlIG1hcmRpIDEy
+IGp1aWxsZXQgMjAxNiDDoCAxNjoxNiArMDgwMCwgV3UtQ2hlbmcgTGkgKOadjuWLmeiqoCkgYSDD
+qWNyaXQgOgo+PiA+IERlY29kZXIgaGFyZHdhcmUgcHJvZHVjZXMgTVQyMSAoY29tcHJlc3NlZCku
+IEltYWdlIHByb2Nlc3NvciBjYW4KPj4gPiBjb252ZXJ0IGl0IHRvIGEgZm9ybWF0IHRoYXQgY2Fu
+IGJlIGlucHV0IG9mIGRpc3BsYXkgZHJpdmVyLgo+PiA+IFRpZmZhbnkuCj4+ID4gV2hlbiBkbyB5
+b3UgcGxhbiB0byB1cHN0cmVhbSBpbWFnZSBwcm9jZXNzb3IgKG10ay1tZHApPwo+PiA+ID4KPj4g
+PiA+IEl0IGNhbiBiZSBhcyBpbnB1dCBmb3JtYXQgZm9yIGVuY29kZXIsIE1EUCBhbmQgZGlzcGxh
+eSBkcml2ZXJzIGluCj4+ID4gb3VyCj4+ID4gPiBwbGF0Zm9ybS4KPj4gPiBJIHJlbWVtYmVyIGRp
+c3BsYXkgZHJpdmVyIGNhbiBvbmx5IGFjY2VwdCB1bmNvbXByZXNzZWQgTVQyMS4gUmlnaHQ/Cj4+
+ID4gQmFzaWNhbGx5IFY0TDJfUElYX0ZNVF9NVDIxIGlzIGNvbXByZXNzZWQgYW5kIGlzIGxpa2Ug
+YW4gb3BhcXVlCj4+ID4gZm9ybWF0LiBJdCdzIG5vdCB1c2FibGUgdW50aWwgaXQncyBkZWNvbXBy
+ZXNzZWQgYW5kIGNvbnZlcnRlZCBieQo+PiA+IGltYWdlCj4+ID4gcHJvY2Vzc29yLgo+Pgo+PiBQ
+cmV2aW91c2x5IGl0IHdhcyBkZXNjcmliZWQgYXMgTWVkaWFUZWsgYmxvY2sgbW9kZSwgYW5kIG5v
+dyBhcyBhCj4+IE1lZGlhVGVrIGNvbXByZXNzZWQgZm9ybWF0LiBJdCBtYWtlcyBtZSB0aGluayB5
+b3UgaGF2ZSBubyBpZGVhIHdoYXQKPj4gdGhpcyBwaXhlbCBmb3JtYXQgcmVhbGx5IGlzLiBJcyB0
+aGF0IHJpZ2h0ID8KPj4KPj4gVGhlIG1haW4gcmVhc29uIHdoeSBJIGtlZXAgYXNraW5nLCBpcyB0
+aGF0IHdlIG9mdGVuIGZpbmQgc2ltaWxhcml0aWVzCj4+IGJldHdlZW4gd2hhdCB2ZW5kb3IgbGlr
+ZSB0byBjYWxsIHRoZWlyIHByb3ByaWV0YXJ5IGZvcm1hdHMuIERvaW5nIHRoZQo+PiBwcm9wZXIg
+cmVzZWFyY2ggaGVscHMgbm90IGNyZWF0aW5nIGEgbWVzcyBsaWtlIGluIEFuZHJvaWQgd2hlcmUg
+eW91Cj4+IGhhdmUgYSBsb3Qgb2YgZm9ybWF0cyB0aGF0IGFsbCBwb2ludCB0byB0aGUgc2FtZSBm
+b3JtYXQuIEkgYmVsaWV2ZQo+PiB0aGVyZSB3YXMgdGhlIHNhbWUgY29uY2VybiB3aGVuIFNhbXN1
+bmcgd2FudGVkIHRvIGludHJvZHVjZSB0aGVpciBaLQo+PiBmbGlwLVogTlYxMiB0aWxlIGZvcm1h
+dC4gSW4gdGhlIGVuZCB0aGV5IHNpbXBseSBwcm92aWRlZCBzdWZmaWNpZW50Cj4+IGRvY3VtZW50
+YXRpb24gc28gd2UgY291bGQgZG9jdW1lbnQgaXQgYW5kIGltcGxlbWVudCBzb2Z0d2FyZQo+PiBj
+b252ZXJ0ZXJzCj4+IGZvciB0ZXN0IGFuZCB2YWxpZGF0aW9uIHB1cnBvc2UuCj4KPiBIZXJlJ3Mg
+dGhlIGtpbmQgb2YgaW5mb3JtYXRpb24gd2Ugd2FudCBpbiB0aGUgZG9jdW1lbnRhdGlvbi4KPgo+
+IGh0dHBzOi8vY2hyb21pdW0uZ29vZ2xlc291cmNlLmNvbS9jaHJvbWl1bS9zcmMvbWVkaWEvKy9t
+YXN0ZXIvYmFzZS92aWRlCj4gb190eXBlcy5oIzQwClRoYXQgaXMgdGhlIGRvY3VtZW50YXRpb24g
+b2YgZGVjb21wcmVzc2VkIE1UMjEuIE9yaWdpbmFsbHkgTVQyMSB3YXMgbWVhbnQKdG8gYmUgYSBZ
+VVYgZm9ybWF0IGFuZCB3ZSBjYW4gbWFwIGl0IGluIENQVSB0byB1c2UgaXQuIFRoZSBuYW1lIHdh
+cyBjaGFuZ2VkCnRvIG1lYW4gYSBjb21wcmVzc2VkIGZvcm1hdC4gVGhlIGN1cnJlbnQgZGVzaWdu
+IGlzIG9ubHkgTVRLIGltYWdlIHByb2Nlc3NvcgpjYW4gY29udmVydCBpdC4gU29mdHdhcmUgY2Fu
+bm90IGRlY29tcHJlc3MgaXQuIEknbSBub3Qgc3VyZSBpZiB3ZQpzaG91bGQgZG9jdW1lbnQKdGhl
+IGZvcm1hdCBpbnNpZGUgaWYgd2UgY2Fubm90IGRlY29tcHJlc3MgaW4gc29mdHdhcmUuIEZvciBj
+aHJvbWl1bSwgSSdsbCB1cGRhdGUKdGhlIGNvZGUgdG8gZXhwbGFpbiBNVDIxIGlzIGFuIG9wYXF1
+ZSBjb21wcmVzc2VkIGZvcm1hdC4KPgo+ICAgLy8gTWVkaWFUZWsgcHJvcHJpZXRhcnkgZm9ybWF0
+LiBNVDIxIGlzIHNpbWlsYXIgdG8gTlYyMSBleGNlcHQgdGhlIG1lbW9yeQo+ICAgLy8gbGF5b3V0
+IGFuZCBwaXhlbCBsYXlvdXQgKHN3aXp6bGVzKS4gMTJicHAgd2l0aCBZIHBsYW5lIGZvbGxvd2Vk
+IGJ5IGEgMngyCj4gICAvLyBpbnRlcmxlYXZlZCBWVSBwbGFuZS4gRWFjaCBpbWFnZSBjb250YWlu
+cyB0d28gYnVmZmVycyAtLSBZIHBsYW5lIGFuZCBWVQo+ICAgLy8gcGxhbmUuIFR3byBwbGFuZXMg
+Y2FuIGJlIG5vbi1jb250aWd1b3VzIGluIG1lbW9yeS4gVGhlIHN0YXJ0aW5nIGFkZHJlc3Nlcwo+
+ICAgLy8gb2YgWSBwbGFuZSBhbmQgVlUgcGxhbmUgYXJlIDRLQiBhbGlnbm1lbnQuCj4gICAvLyBT
+dXBwb3NlIGltYWdlIGRpbWVuc2lvbiBpcyAod2lkdGgsIGhlaWdodCkuIEZvciBib3RoIFkgcGxh
+bmUgYW5kIFZVIHBsYW5lOgo+ICAgLy8gUm93IHBpdGNoID0gKCh3aWR0aCsxNSkvMTYpICogMTYu
+Cj4gICAvLyBQbGFuZSBzaXplID0gUm93IHBpdGNoICogKCgoaGVpZ2h0KzMxKS8zMikqMzIpCj4K
+PiBOb3cgb2J2aW91c2x5IHRoaXMgaXMgaW5jb21wbGV0ZSwgYXMgdGhlIHN3aXp6bGluZyBuZWVk
+IHRvIGJlIGRvY3VtZW50ZWQgb2YgY291cnNlLgo+Cj4+Cj4+IHJlZ2FyZHMsCj4+IE5pY29sYXMK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LW1l
+ZGlhdGVrIG1haWxpbmcgbGlzdApMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsK
