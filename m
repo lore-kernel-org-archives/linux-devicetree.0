@@ -1,75 +1,60 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 20/20] dt-bindings: pwm: sti: Update DT bindings with
- recent changes
-Date: Wed, 13 Jul 2016 10:02:46 +0100
-Message-ID: <20160713090246.GA11154@dell>
-References: <20160608092135.21184-1-lee.jones@linaro.org>
- <20160608092135.21184-21-lee.jones@linaro.org>
- <20160608205152.GA5511@rob-hp-laptop> <20160609114107.GB1388@dell>
- <20160610131855.GG27142@ulmo.ba.sec> <20160610140635.GC1537@dell>
- <20160610145323.GO27142@ulmo.ba.sec>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] meson-rtc: add device-tree binding
+Date: Wed, 13 Jul 2016 10:09:44 +0100
+Message-ID: <51411c13-8cb4-3623-f70e-03b4190655f2@codethink.co.uk>
+References: <1467748122-14833-1-git-send-email-ben.dooks@codethink.co.uk>
+ <1467748122-14833-4-git-send-email-ben.dooks@codethink.co.uk>
+ <5785D83C.2000809@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20160610145323.GO27142@ulmo.ba.sec>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: kernel@stlinux.com, linux-pwm@vger.kernel.org, patrice.chotard@st.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, maxime.coquelin@st.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCEPJZEDQIBBBXMKTC6AKGQEJN2AELY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <5785D83C.2000809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAxMCBKdW4gMjAxNiwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gT24gRnJpLCBKdW4g
-MTAsIDIwMTYgYXQgMDM6MDY6MzVQTSArMDEwMCwgTGVlIEpvbmVzIHdyb3RlOgo+ID4gT24gRnJp
-LCAxMCBKdW4gMjAxNiwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gPiAKPiA+ID4gPiA+ID4gVGhl
-IHNlY29uZCBkb2N1bWVudGF0aW9uIGFkYXB0aW9uIGVudGFpbHMgYWRkaW5nIHN1cHBvcnQgZm9y
-IFBXTQo+ID4gPiA+ID4gPiBjYXB0dXJlIGRldmljZXMuICBBIG5ldyBjbG9jayBpcyByZXF1aXJl
-ZCBhcyB3ZWxsIGFzIGFuIElSUSBsaW5lLgo+ID4gPiA+ID4gPiBXZSdyZSBhbHNvIGFkZGluZyBh
-IG5ldyBwcm9wZXJ0eSBzaW1pbGFyIHRvIHRoZSBvbmUgZGVzY3JpYmVkCj4gPiA+ID4gPiA+IGFi
-b3ZlLCBidXQgZm9yIGNhcHR1cmUgY2hhbm5lbHMuICBUeXBpY2FsbHksIHRoZXJlIHdpbGwgYmUg
-bGVzcwo+ID4gPiA+ID4gPiBjYXB0dXJlIGNoYW5uZWxzIHRoYW4gUFdNLW91dCwgc2luY2UgYWxs
-IGNoYW5uZWxzIGhhdmUgdGhlIGxhdHRlcgo+ID4gPiA+ID4gPiBjYXBhYmlsaXR5LCBidXQgb25s
-eSBzb21lIGhhdmUgY2FwdHVyZSBzdXBwb3J0Lgo+ID4gPiA+ID4gCj4gPiA+ID4gPiBIdW1tLCBz
-b3VuZHMgbGlrZSBhbGwgb2YgdGhpcyBzaG91bGQgYmUgaW1wbGllZCBmcm9tIGNvbXBhdGlibGUg
-c3RyaW5ncy4KPiA+ID4gPiAKPiA+ID4gPiBZb3UgbWVhbiBoYXZlIGEgYnVuY2ggb2Ygb2ZfbWFj
-aGluZV9pc19jb21wYXRpYmxlcygpIHNjYXR0ZXJlZCBhcm91bmQ/Cj4gPiA+IAo+ID4gPiBJIGRv
-bid0IHVuZGVyc3RhbmQgd2h5IHlvdSBuZWVkIHRoaXMgYXQgYWxsLiBRdWl0ZSBmcmFua2x5IEkg
-ZG9uJ3QgZXZlbgo+ID4gPiBrbm93IHdoeSBzdCxwd20tbnVtLWRldnMgZXhpc3RzLiBJIHByb2Jh
-Ymx5IG1pc3NlZCBpdCBiYWNrIGF0IHRoZSB0aW1lLgo+ID4gPiBVc3VhbGx5LCBsaWtlIFJvYiBz
-dWdnZXN0cywgdGhpcyBzaG91bGQgYmUgaW5mZXJyZWQgZnJvbSB0aGUgY29tcGF0aWJsZQo+ID4g
-PiBzdHJpbmcuIE9uZSBjb21tb25seSB1c2VkIHdheSB0byBhdm9pZCBzY2F0dGVyaW5nIGV4cGxp
-Y2l0IGNoZWNrcyBmb3IKPiA+ID4gdGhlIGNvbXBhdGlibGUgc3RyaW5nIGlzIHRvIGFkZCB0aGlz
-IGluZm9ybWF0aW9uIHRvIHRoZSBvZl9kZXZpY2VfaWQKPiA+ID4gdGFibGUuIFNlZSBhIGJ1bmNo
-IG9mIGV4aXN0aW5nIGRyaXZlcnMgZm9yIHJlZmVyZW5jZS4KPiA+IAo+ID4gWWVzLCBJIGFtIGF3
-YXJlIG9mIHRoZSBzdHJhdGVneSwgYW5kIGhhcHB5IHRvIG9ibGlnZSBpZiB0aGlzIGlzIHlvdXIK
-PiA+IHN1Z2dlc3Rpb24uICBJJ2xsIG1vdmUgYWxsIHBsYXRmb3JtIGRhdGEgaW50byB0aGUgZHJp
-dmVyIGFuZCBlcmFkaWNhdGUKPiA+IHRoZSBEVCBwcm9wZXJ0aWVzLgo+IAo+IEdyZWF0IQoKU29y
-cnkgaXQncyB0YWtlbiBzbyBsb25nIHRvIGdldCBiYWNrIGFyb3VuZCB0byB0aGlzLgoKU28gSSBq
-dXN0IGhhZCBhIGNyYWNrIGF0IGltcGxlbWVudGluZyB0aGlzIHNvbHV0aW9uIGFuZCByYW4gaW50
-bwppc3N1ZXMuICBVbmZvcnR1bmF0ZWx5LCB0aGUgY29uZmlndXJhdGlvbiBpc24ndCBlYXN5IHRv
-IGRlc2NyaWJlIHVzaW5nCmNvbXBhdGlibGUgc3RyaW5ncy4KClVubGVzcyB3ZSBhcmUgcHJlcGFy
-ZWQgdG8gaGF2ZSBzdHJpbmdzIGxpa2U6CgogIHN0LHN0aS1wd20tc3RpaDQwNy1wd20wCiAgc3Qs
-c3RpLXB3bS1zdGloNDA3LXB3bTEKICBzdCxzdGktcHdtLXN0aWg0MTYtcHdtMAogIHN0LHN0aS1w
-d20tc3RpaDQxNi1wd20xCgpPciBwZXJoYXBzOgoKICBzdCxzdGktcHdtLTRvdXQtMmNwdAogIHN0
-LHN0aS1wd20tMW91dC0xY3B0CgouLi4gc2luY2Ugc29tZSBvZiB0aGUgUFdNcyBoYXZlIGFuIG9k
-ZCBudW1iZXIgb2YgT1VUIGFuZCBDUFQKY2hhbm5lbHMvZGV2aWNlcy4gIEluIG15IG9waW5pb24g
-aG93ZXZlciwgdGhpcyBpcyB1Z2x5LiAgSSBkb24ndCB0aGluawp3ZSBkbyB0aGlzIGZvciBhbnkg
-b3RoZXIgdHlwZSBvZiBjaGFubmVsL2RldmljZS9wb3J0IGV0YywgZG8gd2U/CgpQZXJzb25hbGx5
-IEkgdGhpbmsgdGhlcmUgaXNuJ3QgYW55dGhpbmcgd3Jvbmcgd2l0aCBoYXZpbmcgRFQKcHJvcGVy
-dGllcyBkZXNjcmliaW5nIGhvdyBtYW55IGNoYW5uZWxzL2RldmljZXMgdGhlcmUgYXJlLCBidXQg
-SSdtCm9rYXkgd2l0aCB3aGF0ZXZlciB5b3UgYm90aCBkZWNpZGUuICBObyBza2luIG9mIG15IG5v
-c2UgcmVhbGx5LiA6KQoKV2hhdCBzYXkgeW91PwoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RNaWNy
-b2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNl
-IHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIg
-fCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+On 13/07/16 06:57, Frank Rowand wrote:
+> On 07/05/16 12:48, Ben Dooks wrote:
+>> Add documentation for the AMLogic Meson RTC.
+>>
+>> Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/rtc/rtc-amlogic.txt         | 21 +++++++++++++++++++++
+>>  1 file changed, 21 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-amlogic.txt
+> 
+> Hi Ben,
+> 
+> I suspect you already know this since you have Rob's ack, but you need to
+> send bindings to
+> 
+>   Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>   Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+Sorry, missed copying the email when sending.
+
+I hope he's seen them from being on the devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+list? I've added him as an CC: on this one to check.
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
