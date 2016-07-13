@@ -1,33 +1,119 @@
-From: Thomas Pedersen <twp@codeaurora.org>
-Subject: [PATCH] ipq8064: dts: force AP148 SATA port mapping
-Date: Wed, 13 Jul 2016 11:47:22 -0700
-Message-ID: <1468435642-23452-1-git-send-email-twp@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: linux@qca.qualcomm.com, devicetree@vger.kernel.org, Thomas Pedersen <twp@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>
+From: Dirk Behme <dirk.behme@gmail.com>
+Subject: Re: [Xen-devel] [PATCH v4] xen/arm: Add a clock property
+Date: Wed, 13 Jul 2016 20:47:16 +0200
+Message-ID: <57868CB4.1090504@gmail.com>
+References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
+ <alpine.DEB.2.10.1607131932530.26575@sstabellini-ThinkPad-X260>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.10.1607131932530.26575@sstabellini-ThinkPad-X260>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Julien Grall <julien.grall@arm.com>, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-AP148 has a SATA port, but no entity to populate the AHCI
-Port Implemented register, so force this in DT.
+On 13.07.2016 20:35, Stefano Stabellini wrote:
+> On Tue, 12 Jul 2016, Dirk Behme wrote:
+>> Clocks described by this property are reserved for use by Xen, and the OS
+>> must not alter their state any way, such as disabling or gating a clock,
+>> or modifying its rate. Ensuring this may impose constraints on parent
+>> clocks or other resources used by the clock tree.
+>>
+>> This property is used to proxy clocks for devices Xen has taken ownership
+>> of, such as UARTs, for which the associated clock controller(s) remain
+>> under the control of Dom0.
+>>
+>> Up to now, the workaround for this has been to use the Linux kernel
+>> command line parameter 'clk_ignore_unused'. See Xen bug
+>>
+>> http://bugs.xenproject.org/xen/bug/45
+>>
+>> too.
+>>
+>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+>> ---
+>> Changes in v4: Switch to the xen.txt description proposed by Mark:
+>>                 https://www.spinics.net/lists/arm-kernel/msg516158.html
+>>
+>> Changes in v3: Use the xen.txt description proposed by Michael. Thanks!
+>>
+>> Changes in v2: Drop the Linux implementation details like clk_disable_unused
+>> 	       in xen.txt.
+>>
+>>   Documentation/devicetree/bindings/arm/xen.txt | 12 +++++++
+>>   arch/arm/xen/enlighten.c                      | 47 +++++++++++++++++++++++++++
+>>   2 files changed, 59 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
+>> index c9b9321..437e50b 100644
+>> --- a/Documentation/devicetree/bindings/arm/xen.txt
+>> +++ b/Documentation/devicetree/bindings/arm/xen.txt
+>> @@ -17,6 +17,18 @@ the following properties:
+>>     A GIC node is also required.
+>>     This property is unnecessary when booting Dom0 using ACPI.
+>>
+>> +Optional properties:
+>> +
+>> +- clocks: a list of phandle + clock-specifier pairs
+>> +  Clocks described by this property are reserved for use by Xen, and the
+>> +  OS must not alter their state any way, such as disabling or gating a
+>> +  clock, or modifying its rate. Ensuring this may impose constraints on
+>> +  parent clocks or other resources used by the clock tree.
+>> +
+>> +  Note: this property is used to proxy clocks for devices Xen has taken
+>> +  ownership of, such as UARTs, for which the associated clock
+>> +  controller(s) remain under the control of Dom0.
+>> +
+>>   To support UEFI on Xen ARM virtual platforms, Xen populates the FDT "uefi" node
+>>   under /hypervisor with following parameters:
+>>
+>> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+>> index 47acb36..5c546d0 100644
+>> --- a/arch/arm/xen/enlighten.c
+>> +++ b/arch/arm/xen/enlighten.c
+>> @@ -24,6 +24,7 @@
+>>   #include <linux/of_fdt.h>
+>>   #include <linux/of_irq.h>
+>>   #include <linux/of_address.h>
+>> +#include <linux/clk-provider.h>
+>>   #include <linux/cpuidle.h>
+>>   #include <linux/cpufreq.h>
+>>   #include <linux/cpu.h>
+>> @@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
+>>   }
+>>   late_initcall(xen_pm_init);
+>>
+>> +/*
+>> + * Check if we want to register some clocks, that they
+>> + * are not freed because unused by clk_disable_unused().
+>> + * E.g. the serial console clock.
+>> + */
+>> +static int __init xen_arm_register_clks(void)
+>> +{
+>> +	struct clk *clk;
+>> +	struct device_node *xen_node;
+>> +	unsigned int i, count;
+>> +	int ret = 0;
+>> +
+>> +	xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
+>> +	if (!xen_node) {
+>> +		pr_err("Xen support was detected before, but it has disappeared\n");
+>> +		return -EINVAL;
+>> +	}
+>
+> Given that this is a late initcall, the following should work:
+>
+>      if (!xen_domain())
+>          return -ENODEV;
 
-Signed-off-by: Thomas Pedersen <twp@codeaurora.org>
----
- arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-index d501382..348503d 100644
---- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-+++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-@@ -95,6 +95,7 @@
- 		};
- 
- 		sata@29000000 {
-+			ports-implemented = <0x1>;
- 			status = "ok";
- 		};
- 	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Hmm, sorry, "should work" for what?
+
+We need the xen_node from device tree, anyway.
+
+Best regards
+
+Dirk
+
