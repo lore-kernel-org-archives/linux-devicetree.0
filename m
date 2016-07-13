@@ -1,15 +1,15 @@
 From: "William.wu" <William.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Subject: Re: [PATCH v6 3/5] usb: dwc3: add phyif_utmi_quirk
-Date: Wed, 13 Jul 2016 11:39:16 +0800
-Message-ID: <77a15788-a460-7f59-cb52-88ce012f9eca@rock-chips.com>
+Date: Wed, 13 Jul 2016 12:02:29 +0800
+Message-ID: <8c62e88e-aa13-a978-1b92-2fe942671c04@rock-chips.com>
 References: <1467860066-15142-1-git-send-email-william.wu@rock-chips.com>
  <1467860066-15142-4-git-send-email-william.wu@rock-chips.com>
- <2213342.0Nx5tnEW8p@phil> <20160711145447.GA16636@rob-hp-laptop>
+ <20160711145854.GB16636@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20160711145447.GA16636@rob-hp-laptop>
+In-Reply-To: <20160711145854.GB16636@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -19,72 +19,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob,
-
-
-On 2016/7/11 22:54, Rob Herring wrote:
-> On Fri, Jul 08, 2016 at 02:33:09PM +0200, Heiko Stuebner wrote:
->> Hi William,
->>
->> Am Donnerstag, 7. Juli 2016, 10:54:24 schrieb William Wu:
->>> Add a quirk to configure the core to support the
->>> UTMI+ PHY with an 8- or 16-bit interface. UTMI+ PHY
->>> interface is hardware property, and it's platform
->>> dependent. Normall, the PHYIf can be configured
->>> during coreconsultant. But for some specific usb
->>> cores(e.g. rk3399 soc dwc3), the default PHYIf
->>> configuration value is fault, so we need to
->>> reconfigure it by software.
->>>
->>> And refer to the dwc3 databook, the GUSB2PHYCFG.USBTRDTIM
->>> must be set to the corresponding value according to
->>> the UTMI+ PHY interface.
->>>
->>> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> ---
->> [...]
->>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
->>> b/Documentation/devicetree/bindings/usb/dwc3.txt index 020b0e9..8d7317d
->>> 100644
->>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->>> @@ -42,6 +42,10 @@ Optional properties:
->>>    - snps,dis-u2-freeclk-exists-quirk: when set, clear the
->>> u2_freeclk_exists in GUSB2PHYCFG, specify that USB2 PHY doesn't provide
->>>   			a free-running PHY clock.
->>> + - snps,phyif-utmi-quirk: when set core will set phyif UTMI+ interface.
->>> + - snps,phyif-utmi: the value to configure the core to support a UTMI+
->>> PHY +			with an 8- or 16-bit interface. Value 0 select 8-bit
->>> +			interface, value 1 select 16-bit interface.
->> maybe
->> 	snps,phyif-utmi-width =3D <8> or <16>;
-> Seems like this could be common. Any other bindings have something
-> similar already? If not "utmi-width" is fine.
-
-It seems that there's not any dwc3 binding similar to this.
-So I prefer to use =93utmi-width=94. :-)
-
->
->> devicetree is about describing the hardware, not the things that get wri=
-tten
->> to registers :-) . The conversion from the described width to the regist=
-er
->> value can easily be done in the driver.
->>
->>
->> Also I don't think you need two properties for this. If the snps,phyif-u=
-tmi
->> property is specified it indicates that you want to manually set the wid=
-th
->> and if it is absent you want to use the IC default. All functions reading
->> property-values indicate if the property is missing.
-> Agreed.
->
-> Rob
->
->
->
+RGVhciBSb2IsCgoKT24gMjAxNi83LzExIDIyOjU4LCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBU
+aHUsIEp1bCAwNywgMjAxNiBhdCAxMDo1NDoyNEFNICswODAwLCBXaWxsaWFtIFd1IHdyb3RlOgo+
+PiBBZGQgYSBxdWlyayB0byBjb25maWd1cmUgdGhlIGNvcmUgdG8gc3VwcG9ydCB0aGUKPj4gVVRN
+SSsgUEhZIHdpdGggYW4gOC0gb3IgMTYtYml0IGludGVyZmFjZS4gVVRNSSsgUEhZCj4+IGludGVy
+ZmFjZSBpcyBoYXJkd2FyZSBwcm9wZXJ0eSwgYW5kIGl0J3MgcGxhdGZvcm0KPj4gZGVwZW5kZW50
+LiBOb3JtYWxsLCB0aGUgUEhZSWYgY2FuIGJlIGNvbmZpZ3VyZWQKPiBzL05vcm1hbGwvTm9ybWFs
+bHkvClllYWjvvIxJJ2xsIGZpeCBpdC46LSkKPiBzL1BIWUlmL1BIWUlGLwpSZWZlciB0byBEV0Mz
+IGNvbnRyb2xsZXIgZGF0YWJvb2ssICJQSFkgSW50ZXJmYWNlIiBjYWxsZWQgIlBIWUlmIiwKc28g
+SSBkZXNjcmliZSAiUEhZSWYiIGhlcmUuIEhvd2V2ZXLvvIwgIlBIWUlG4oCdc2VlbXMgbW9yZSB0
+aGUgbm9ybSwKSSdsbCBmaXggaXQuOi0pCj4KPj4gZHVyaW5nIGNvcmVjb25zdWx0YW50LiBCdXQg
+Zm9yIHNvbWUgc3BlY2lmaWMgdXNiCj4gcy91c2IvVVNCLwoKVGhhbmtzLCBJJ2xsIGZpeCBpdC46
+LSkKCj4KPj4gY29yZXMoZS5nLiByazMzOTkgc29jIGR3YzMpLCB0aGUgZGVmYXVsdCBQSFlJZgo+
+PiBjb25maWd1cmF0aW9uIHZhbHVlIGlzIGZhdWx0LCBzbyB3ZSBuZWVkIHRvCj4+IHJlY29uZmln
+dXJlIGl0IGJ5IHNvZnR3YXJlLgo+Pgo+PiBBbmQgcmVmZXIgdG8gdGhlIGR3YzMgZGF0YWJvb2ss
+IHRoZSBHVVNCMlBIWUNGRy5VU0JUUkRUSU0KPiBzL2R3YzMvRFdDMy8KVGhhbmtzLCBJJ2xsIGZp
+eCBpdCB0b28uCj4KPj4gbXVzdCBiZSBzZXQgdG8gdGhlIGNvcnJlc3BvbmRpbmcgdmFsdWUgYWNj
+b3JkaW5nIHRvCj4+IHRoZSBVVE1JKyBQSFkgaW50ZXJmYWNlLgo+IEFuZCB3cmFwIHlvdXIgbGlu
+ZXMgYXQgNzAtNzQgY2hhcmFjdGVycy4KClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uLCBJJ2xs
+IHBheSBhdHRlbnRpb24gdG8gdGhpcyBwcm9ibGVtIG5leHQgCnBhdGNoLjotKQoKQmVzdCBSZWdh
+cmRz77yMCiAgICAgICAgIFdpbGxpYW0gV3UKPgo+IFJvYgo+Cj4KPgoKCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5n
+IGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
