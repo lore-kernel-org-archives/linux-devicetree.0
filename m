@@ -1,63 +1,124 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v3 1/2] dt-bindings: tc358767: add DT documentation
-Date: Wed, 13 Jul 2016 09:07:10 +0200
-Message-ID: <1468393631-12042-2-git-send-email-p.zabel@pengutronix.de>
-References: <1468393631-12042-1-git-send-email-p.zabel@pengutronix.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 13/15] ARM: dts: sun8i: Add dt node for rtl8703as wifi
+ chip on ga10h
+Date: Wed, 13 Jul 2016 09:18:44 +0200
+Message-ID: <20160713071844.GB4761@lukather>
+References: <1467993956-19535-1-git-send-email-hdegoede@redhat.com>
+ <1467993956-19535-14-git-send-email-hdegoede@redhat.com>
+ <20160711063909.GA4589@lukather>
+ <f5f0a0d0-96a8-e9ad-7b4d-b8f19999f0e9@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1468393631-12042-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f5f0a0d0-96a8-e9ad-7b4d-b8f19999f0e9-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIFRvc2hpYmEgVEMzNTg3NjcgZURQ
-IGJyaWRnZS4KClNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9u
-aXguZGU+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3Njcu
-dHh0ICAgfCA1MSArKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNTEgaW5z
-ZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJhLHRjMzU4NzY3LnR4dAoKZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJh
-LHRjMzU4NzY3LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2JyaWRnZS90b3NoaWJhLHRjMzU4NzY3LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAw
-MDAwMDAwLi4wNWFkYTI4Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjcudHh0CkBAIC0wLDAg
-KzEsNTEgQEAKK1Rvc2hpYmEgVEMzNTg3NjcgZURQIGJyaWRnZSBiaW5kaW5ncworCitSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgorIC0gY29tcGF0aWJsZTogInRvc2hpYmEsdGMzNTg3NjciCisgLSByZWc6
-IGkyYyBhZGRyZXNzIG9mIHRoZSBicmlkZ2UsIDB4Njggb3IgMHgwZiwgZGVwZW5kaW5nIG9uIGJv
-b3RzdHJhcCBwaW5zCisgLSBjbG9jay1uYW1lczogc2hvdWxkIGJlICJyZWYiCisgLSBjbG9ja3M6
-IE9GIGRldmljZS10cmVlIGNsb2NrIHNwZWNpZmljYXRpb24gZm9yIHJlZmNsayBpbnB1dC4gVGhl
-IHJlZmVyZW5jZQorICAgY2xvY2sgcmF0ZSBtdXN0IGJlIDEzIE1IeiwgMTkuMiBNSHosIDI2IE1I
-eiwgb3IgMzguNCBNSHouCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CisgLSBzaHV0ZG93bi1ncGlv
-czogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBTRCBwaW4KKyAgICAgICAg
-ICAgICAgICAgICAoYWN0aXZlIGhpZ2ggc2h1dGRvd24gaW5wdXQpCisgLSByZXNldC1ncGlvczog
-T0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBSU1RYIHBpbgorICAgICAgICAg
-ICAgICAgIChhY3RpdmUgbG93IHN5c3RlbSByZXNldCkKKyAtIHBvcnRzOiB0aGUgcG9ydHMgbm9k
-ZSBjYW4gY29udGFpbiB2aWRlbyBpbnRlcmZhY2UgcG9ydCBub2RlcyB0byBjb25uZWN0CisgICB0
-byBhIERQSS9EU0kgc291cmNlIGFuZCB0byBhbiBlRFAvRFAgc2luayBhY2NvcmRpbmcgdG8gWzFd
-WzJdOgorICAgIC0gcG9ydEAwOiBEU0kgaW5wdXQgcG9ydAorICAgIC0gcG9ydEAxOiBEUEkgaW5w
-dXQgcG9ydAorICAgIC0gcG9ydEAyOiBlRFAvRFAgb3V0cHV0IHBvcnQKKworWzFdOiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0CitbMl06IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAorCitFeGFtcGxl
-OgorCWVkcC1icmlkZ2VANjggeworCQljb21wYXRpYmxlID0gInRvc2hpYmEsdGMzNTg3NjciOwor
-CQlyZWcgPSA8MHg2OD47CisJCXNodXRkb3duLWdwaW9zID0gPCZncGlvMyAyMyBHUElPX0FDVElW
-RV9ISUdIPjsKKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8zIDI0IEdQSU9fQUNUSVZFX0xPVz47CisJ
-CWNsb2NrLW5hbWVzID0gInJlZiI7CisJCWNsb2NrcyA9IDwmZWRwX3JlZmNsaz47CisKKwkJcG9y
-dHMgeworCQkJcG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisKKwkJCQlicmlkZ2VfaW46IGVuZHBv
-aW50IHsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkcGlfb3V0PjsKKwkJCQl9OworCQkJfTsK
-KworCQkJcG9ydEAyIHsKKwkJCQlyZWcgPSA8Mj47CisKKwkJCQlicmlkZ2Vfb3V0OiBlbmRwb2lu
-dCB7CisJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW4+OworCQkJCX07CisJCQl9Owor
-CQl9OworCX07CisKLS0gCjIuOC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 11, 2016 at 02:36:43PM +0200, Hans de Goede wrote:
+> >>+&mmc1 {
+> >>+	pinctrl-names =3D "default";
+> >>+	pinctrl-0 =3D <&mmc1_pins_a>;
+> >>+	vmmc-supply =3D <&reg_dldo1>;
+> >>+	bus-width =3D <4>;
+> >>+	non-removable;
+> >>+	status =3D "okay";
+> >>+
+> >>+	rtl8703as: sdio_wifi@1 {
+> >
+> >Shouldn't that need a compatible ?
+>=20
+> There is no upstream driver yet, so no devicetree binding for the specific
+> wifi chip used. But all we really need is to follow generic sdio / network
+> bindings:
+>=20
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Docu=
+mentation/devicetree/bindings/mmc/mmc-card.txt
+>=20
+> Describes how to create a mmc-host child-node describing an (e)mmc-card or
+> sdio-function, in this case we are adding a node for sdio-function 1,
+> hence the reg =3D <1>; in the child-node.
+
+Both that file and
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Docume=
+ntation/devicetree/bindings/mmc/mmc.txt
+list the compatible property as mandatory.
+
+>=20
+> Linux implementation wise, this will make the mmc core set the dev->of_no=
+de
+> ptr to this node for the struct device it passes into the sdio-drivers
+> probe function.
+>=20
+> And u-boot will add a local-mac-address property as documented here:
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Docu=
+mentation/devicetree/bindings/net/ethernet.txt
+>=20
+> to the node pointed to by ethernet%d aliases.
+>=20
+> To actually make use of this I've modified the out of tree driver to check
+> for the "local-mac-address" property:
+>=20
+> https://github.com/jwrdegoede/rtl8723bs/commit/be5e87ea71677120ede4572132=
+08902ed9942653
+>=20
+> So that each device actually gets a unique address rather then the
+> (stupid) behavior of the out of tree driver to set the same fixes
+> mac address on every device which does not have a mac address in
+> eeprom / nvram.
+>=20
+> Since this follows the existing ethernet bindings standard I
+> believe the dts bits can go upstream as is, but since there
+> is no upstream-able driver yet, I do not believe that making up
+> a compatible string to add to the child-node is a good idea.
+>=20
+> More-over on q8 tablets we will want to do the same (again for
+> eeprom / nvram less boards) but without pinning ourselves to
+> a specific sdio-wifi module / compatible, instead relying on
+> sdio enumeration to figure out which sdio-wifi module is present.
+
+Feel free to raise that issue to the DT maintainers. But this patch
+breaks the existing bindings, so it cannot be merged as is.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXhetUAAoJEBx+YmzsjxAgRMoP/jenNGhs5UZGLXwuWEn38HuO
+ns3LZWUuP9KBKcxJTUijGgDiD0cikJV9CQoOefFJg7iiDPriO8FDqG7iKcudp5Hl
+nBaSHJ1yukUZazCJgienPSp1n981KS7204Xz48CyMWmRCojVFKnhtWFxXCeg7jei
+A612S+xW0thNLZEdvBlVr0nbfq1djOgCx41fyq6FH0oQtiJqVqk5KJ1M/7YnzIAr
+589T87cY9Ntcz2qvNF18fxWDKY/+FQzwr2XBRf4Lqh8PSmBsCR+Q2mBUyDA/j/I7
+z2QflEmjppSssg9Vv8M1RyBR1W297vN0fvMy06obFzzQ2v6iqopajPDPsKuWRI6V
+cIwlx5sP0A7KFPPHj9eCD2TzOScxgPjK9Z8sJhOIKgKn3rUNPS7xphWVryMPJ87A
+rGkloRK5Y8Ku86Cl+JZBSG58+vbMLD7bwLVkf+QB+hpGLtJtQqTibbF9yRkCX+NC
+j52GzUSHiVPaev0avdqYSK4HOu/BluVDPizsvUuEMK4LvfRwrqG90E6jG8If99Hb
+rcJ/U/I1G3Fv9ubmflb0jUeA7h7lV9TUqS/FF8sMYKI4iCNgB1V948r1IXOYboNa
+VgzgeHgCtmKI4qraT950CgLVf+OFK/xsiqAfRpxUoco3kfA/t8sNf4JdDRiHcD+j
+J6U9h+6DKibeKGeIK7I5
+=/GYt
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
