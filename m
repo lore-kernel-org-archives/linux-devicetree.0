@@ -1,121 +1,96 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v1 5/6] drm/rockchip: dw_hdmi: introduce the VPLL clock
- setting
-Date: Wed, 13 Jul 2016 15:45:06 +0800
-Message-ID: <5785F182.5070901@rock-chips.com>
-References: <1468235079-29152-1-git-send-email-ykk@rock-chips.com>
- <1468235149-29625-1-git-send-email-ykk@rock-chips.com>
- <3636683.EuFECY2EQB@diego>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v3 1/2] drivers: led: is31fl319x: 1/3/6/9-channel light
+ effect led driver
+Date: Wed, 13 Jul 2016 09:45:01 +0200
+Message-ID: <5785F17D.3010108@samsung.com>
+References: <cover.1468007377.git.hns@goldelico.com>
+ <524f16ecba240bacf57924f43ec38404cfdcde8f.1468007377.git.hns@goldelico.com>
+ <57854FB0.1080605@gmail.com>
+ <55F90A44-0B60-4342-8143-56F85EA24772@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3636683.EuFECY2EQB@diego>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, xhc@rock-chips.com, Daniel Vetter <daniel.vetter@ffwll.ch>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Zheng Yang <zhengyang@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <55F90A44-0B60-4342-8143-56F85EA24772@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVpa28sCgpPbiAwNy8xMi8yMDE2IDEwOjI3IFBNLCBIZWlrbyBTdMO8Ym5lciB3cm90ZToKPiBI
-aSBZYWtpciwKPgo+IEFtIE1vbnRhZywgMTEuIEp1bGkgMjAxNiwgMTk6MDU6NDkgc2NocmllYiBZ
-YWtpciBZYW5nOgo+PiBGb3IgUkszMzk5IEhETUksIHRoZXJlIGlzIGFuIGV4dGVybmFsIGNsb2Nr
-IG5lZWQgZm9yIEhETUkgUEhZLAo+PiBhbmQgaXQgc2hvdWxkIGtlZXAgdGhlIHNhbWUgY2xvY2sg
-cmF0ZSB3aXRoIFZPUCBEQ0xLLgo+Pgo+PiBWUExMIGhhdmUgc3VwcG9ydGVkIHRoZSBjbG9jayBm
-b3IgSERNSSBQSFksIGJ1dCB0aGVyZSBpcyBubwo+PiBjbG9jayBkaXZpZGVyIGJld3RlZW4gVlBM
-TCBhbmQgSERNSSBQSFkuIFNvIHdlIG5lZWQgdG8gc2V0IHRoZQo+PiBWUExMIHJhdGUgbWFudWFs
-bHkgaW4gSERNSSBkcml2ZXIuCj4gSSBkb24ndCB0aGluayByZXNlcnZpbmcgdGhlIHZwbGwgZm9y
-IHRoZSBoZG1pIGF0IGFsbCB0aW1lcyBpcyB0aGUgcmlnaHQgd2F5IHRvCj4gZ28uCj4KPiBXaGls
-ZSBJIGRvIGFncmVlIHRoYXQgcmVzZXJ2aW5nIHRoZSBWUExMIChhbmQgTlBMTCBvbiB0aGUgcmsz
-Mjg4KSBmb3IgZ3JhcGhpY3MKPiB1c2UgbG9va3MgbGlrZSB0aGUgcmlnaHQgd2F5LCBJIHRoaW5r
-IHRoZSBjb3JlIFJvY2tjaGlwIGRybSBkcml2ZXIgc2hvdWxkIGJlCj4gcmVzcG9uc2libGUgZm9y
-IG1hbmFnaW5nIGl0IGFuZCBhbHNvIGZvciBkZWNpZGluZyB3aGljaCBvdXRwdXQgZW5jb2RlciBn
-ZXRzIHRvCj4gdXNlIGl0Lgo+IFdoaWxlIHRydWUgdGhhdCBvbiB0aGUgQ2hyb21lYm9vayBkZXZp
-Y2UtdHlwZXMgdGhlIGVkcCBpcyBzdGF0aWMgYW5kIGhkbWkKPiBuZWVkcyB0aGUgYnJvYWQgcmFu
-Z2Ugb2YgZHluYW1pYyBmcmVxdWVuY2llcywgdGhpcyBpcyBub3QgbmVjZXNzYXJpbHkgdGhlIGNh
-c2UKPiBmb3IgYWxsIGZ1dHVyZSBkZXZpY2UgdHlwZXMgYW5kL29yIHNvY3MuCj4KPiBJbiB0aGUg
-b3RoZXIgdGhyZWFkIHdlIGRpc2N1c3NlZCBhZGRpbmcgdGhhdCBhcyByb2NrY2hpcCxkY2xrLXBs
-bCA9IDwmLi4uPjsgdG8KPiB0aGUgYmFzZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlLCBEb3VnIGRp
-ZG4ndCBtYW5hZ2UgdG8gZmluZCB0aW1lIHRvIHJlc3BvbmQgeWV0Cj4gdGhvdWdoIC0gYW5kIGlz
-IG9uIHZhY2F0aW9uIHJpZ2h0IG5vdy4KCkdyZWF0IGlkZWEuIExldCBhIHNlcGFyYXRlIGRybS1w
-bGwgZHJpdmVyIHRvIG1haW50YWluIGFsbCBjb25uZWN0b3IncyAKY2xvY2sgcmVxdWlyZW1lbnQu
-Cgo+IEkgc3RpbGwgYmVsaWV2ZSB0aGF0IHdvdWxkIGJlIHRoZSBiZXN0IHNvbHV0aW9uIDotKSAu
-Cj4KPgo+IFRoYXQgcHJvcGVydHkgY291bGQgbGlzdCAxIG9yIGV2ZW4gMiBwbGxzLCBkZXBlbmRp
-bmcgb24gdGhlIHNvYyBvciBib2FyZAo+IGxheW91dCAtIG1heWJlIHNvbWVvbmUgZnJlZXMgdXAg
-dGhlIGNwbGwgaW4gc29tZSBzcGVjaWFsIGxheW91dCBvciBzb21ldGhpbmcuCj4gSWYgbm9uZSBh
-cmUgbGlzdGVkLCB0aGVuIHRoZSBkcm0gZHJpdmVyIHdvdWxkIG5lZWQgdG8gY29wZSB3aXRoIGl0
-cyBhdmFpbGFibGUKPiBjbG9ja3MuCj4KPiBJbXBsZW1lbnRhdGlvbi13aXNlIHlvdSBjb3VsZCBl
-dmVuIHN0aWxsIGtlZXAgeW91ciBzaG9ydGN1dCB1bnRpbCB3ZSBlbmNvdW50ZXIKPiBhIGRldmlj
-ZSB3aXRoIGRpZmZlcmVudCAsIGxldCB0aGUgZHJtIHVzZSB0aGUgcGxsIGZvciBoZG1pIG9ubHkg
-dW50aWwgc29tZW9uZQo+IGNvbWVzIHVwIHdpdGggYSBiZXR0ZXIgY29uY2VwdCwgYnV0IHN0aWxs
-IHRoZSBiaW5kaW5nIHNob3VsZCBiZSBjb3JyZWN0IGFuZAo+IHZlcnNhdGlsZSBmcm9tIHRoZSBz
-dGFydC4KClNvbWVvbmUgc2hvdWxkIHN0YXJ0IHRvIHByZXBhcmUgdGhlIGRybSBjb3JlIHBsbCBk
-cml2ZXIsIGl0J3MgZ3JlYXQgaWRlYS4KCkJSLAotIFlha2lyCgo+Cj4gSGVpa28KPgo+PiAtLS0K
-Pj4gICAuLi4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dCB8
-ICAzICsrLQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMg
-ICAgICAgIHwgMjUKPj4gKysrKysrKysrKysrKysrKysrKysrLSAyIGZpbGVzIGNoYW5nZWQsIDI2
-IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQKPj4gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19oZG1pLXJv
-Y2tjaGlwLnR4dAo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0Cj4+IGluZGV4IDRlNTczZDIuLjRlMjNjYTQg
-MTAwNjQ0Cj4+IC0tLQo+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0Cj4+ICsrKwo+PiBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAu
-dHh0Cj4+IEBAIC0xNyw3ICsxNyw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Cj4+ICAgT3B0
-aW9uYWwgcHJvcGVydGllcwo+PiAgIC0gZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNv
-bnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQgcHJvYmluZwo+PiAtLSBjbG9ja3MsIGNsb2NrLW5h
-bWVzOiBwaGFuZGxlIHRvIHRoZSBIRE1JIENFQyBjbG9jaywgbmFtZSBzaG91bGQgYmUgImNlYyIK
-Pj4gKy0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRsZSB0byB0aGUgSERNSSBDRUMgY2xvY2ss
-IG5hbWUgc2hvdWxkIGJlICJjZWMiLAo+PiArCQkgICAgICAgcGhhbmRsZSB0byB0aGUgVlBMTCBj
-bG9jaywgbmFtZSBzaG91bGQgYmUgInZwbGwiLgo+Pgo+PiAgIEV4YW1wbGU6Cj4+ICAgaGRtaTog
-aGRtaUBmZjk4MDAwMCB7Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
-ZHdfaGRtaS1yb2NrY2hpcC5jCj4+IGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWkt
-cm9ja2NoaXAuYyBpbmRleCAzMjkwOTliLi43MDFiYjczIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCj4+ICsrKyBiL2RyaXZlcnMvZ3B1
-L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMKPj4gQEAgLTcsMTAgKzcsMTIgQEAKPj4g
-ICAgKiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgo+PiAgICAqLwo+Pgo+PiAr
-I2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4K
-Pj4gICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4+ICAgI2luY2x1ZGUgPGxpbnV4L3BsYXRm
-b3JtX2RldmljZS5oPgo+PiAtI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KPj4gICAjaW5j
-bHVkZSA8bGludXgvcmVnbWFwLmg+Cj4+ICsKPj4gICAjaW5jbHVkZSA8ZHJtL2RybV9vZi5oPgo+
-PiAgICNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+PiAgICNpbmNsdWRlIDxkcm0vZHJtX2NydGNfaGVs
-cGVyLmg+Cj4+IEBAIC0zMyw2ICszNSw3IEBAIHN0cnVjdCByb2NrY2hpcF9oZG1pIHsKPj4gICAJ
-c3RydWN0IHJlZ21hcCAqcmVnbWFwOwo+PiAgIAlzdHJ1Y3QgZHJtX2VuY29kZXIgZW5jb2RlcjsK
-Pj4gICAJZW51bSBkd19oZG1pX2RldnR5cGUgZGV2X3R5cGU7Cj4+ICsJc3RydWN0IGNsayAqdnBs
-bF9jbGs7Cj4+ICAgfTsKPj4KPj4gICAjZGVmaW5lIHRvX3JvY2tjaGlwX2hkbWkoeCkJY29udGFp
-bmVyX29mKHgsIHN0cnVjdCByb2NrY2hpcF9oZG1pLCB4KQo+PiBAQCAtMTQ1LDYgKzE0OCw3IEBA
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHdfaGRtaV9waHlfY29uZmlnCj4+IHJvY2tjaGlwX3BoeV9j
-b25maWdbXSA9IHsgc3RhdGljIGludCByb2NrY2hpcF9oZG1pX3BhcnNlX2R0KHN0cnVjdAo+PiBy
-b2NrY2hpcF9oZG1pICpoZG1pKQo+PiAgIHsKPj4gICAJc3RydWN0IGRldmljZV9ub2RlICpucCA9
-IGhkbWktPmRldi0+b2Zfbm9kZTsKPj4gKwlpbnQgcmV0Owo+Pgo+PiAgIAloZG1pLT5yZWdtYXAg
-PSBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9waGFuZGxlKG5wLCAicm9ja2NoaXAsZ3JmIik7Cj4+
-ICAgCWlmIChJU19FUlIoaGRtaS0+cmVnbWFwKSkgewo+PiBAQCAtMTUyLDYgKzE1NiwyMiBAQCBz
-dGF0aWMgaW50IHJvY2tjaGlwX2hkbWlfcGFyc2VfZHQoc3RydWN0IHJvY2tjaGlwX2hkbWkKPj4g
-KmhkbWkpIHJldHVybiBQVFJfRVJSKGhkbWktPnJlZ21hcCk7Cj4+ICAgCX0KPj4KPj4gKwloZG1p
-LT52cGxsX2NsayA9IGRldm1fY2xrX2dldChoZG1pLT5kZXYsICJ2cGxsIik7Cj4+ICsJaWYgKFBU
-Ul9FUlIoaGRtaS0+dnBsbF9jbGspID09IC1FTk9FTlQpIHsKPj4gKwkJaGRtaS0+dnBsbF9jbGsg
-PSBOVUxMOwo+PiArCX0gZWxzZSBpZiAoUFRSX0VSUihoZG1pLT52cGxsX2NsaykgPT0gLUVQUk9C
-RV9ERUZFUikgewo+PiArCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKPj4gKwl9IGVsc2UgaWYgKElT
-X0VSUihoZG1pLT52cGxsX2NsaykpIHsKPj4gKwkJZGV2X2VycihoZG1pLT5kZXYsICJmYWlsZWQg
-dG8gZ2V0IGdyZiBjbG9ja1xuIik7Cj4+ICsJCXJldHVybiBQVFJfRVJSKGhkbWktPnZwbGxfY2xr
-KTsKPj4gKwl9Cj4+ICsKPj4gKwlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoaGRtaS0+dnBsbF9j
-bGspOwo+PiArCWlmIChyZXQpIHsKPj4gKwkJZGV2X2VycihoZG1pLT5kZXYsICJGYWlsZWQgdG8g
-ZW5hYmxlIEhETUkgdnBsbDogJWRcbiIsIHJldCk7Cj4+ICsJCXJldHVybiByZXQ7Cj4+ICsJfQo+
-PiArCj4+ICAgCXJldHVybiAwOwo+PiAgIH0KPj4KPj4gQEAgLTE5NCw2ICsyMTQsOSBAQCBzdGF0
-aWMgdm9pZCBkd19oZG1pX3JvY2tjaGlwX2VuY29kZXJfbW9kZV9zZXQoc3RydWN0Cj4+IGRybV9l
-bmNvZGVyICplbmNvZGVyLCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSwKPj4gICAJCQkJ
-CSAgICAgIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICphZGpfbW9kZSkKPj4gICB7Cj4+ICsJc3Ry
-dWN0IHJvY2tjaGlwX2hkbWkgKmhkbWkgPSB0b19yb2NrY2hpcF9oZG1pKGVuY29kZXIpOwo+PiAr
-Cj4+ICsJY2xrX3NldF9yYXRlKGhkbWktPnZwbGxfY2xrLCBhZGpfbW9kZS0+Y2xvY2sgKiAxMDAw
-KTsKPj4gICB9Cj4+Cj4+ICAgc3RhdGljIHZvaWQgZHdfaGRtaV9yb2NrY2hpcF9lbmNvZGVyX2Vu
-YWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4KPgo+CgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Nikolaus,
+
+On 07/13/2016 08:09 AM, H. Nikolaus Schaller wrote:
+[...]
+>>> +	/*
+>>> +	 * Kernel conventions require per-LED led-max-microamp property.
+>>> +	 * But the chip does not allow to limit individual LEDs.
+>>> +	 * So we take minimum from all subnodes.
+>>
+>> Why minimum? Choose maximum and reduce max_brightness properties
+>> of the sub-LEDs with lesser led-max-microamp.
+>
+> Hm. Is this really the correct way to handle it?
+>
+> Assume you connect an LED which is specified with 10mA peak current.
+> And another with 20mA peak current.
+>
+> So you define led-max-microamp in the DT as 10 mA and 20 mA.
+>
+> Firstly a user can set the brightness only to 50% of LED_FULL since it is limited
+> by a reduced max_brightness. And heshe finds that not all LEDs have the same
+> max_brightness. The first LED will have 127 and the second one 255 for reasons
+> not directly understandable.
+
+You have to know that led-max-microamp property was introduced
+to standarize Device Tree definition of maximum brightness allowed for
+a sub-LED.
+
+Earlier people defined max-brightness property in DT, but at
+some point we realized that brightness level is not a proper unit for
+describing a hardware property.
+
+It was not global max-microamp setting that appears in recent LED
+controllers that drove the introduction of led-max-microamp property.
+
+If you question the idea of having different maximum brightness per
+sub-LEDs controlled by the same device, then it means that you have
+objections to the entire idea of LED subsystem max_brightness property,
+whereas it has been broadly accepted and successfully used for years.
+
+> This entangles "brightness" with "max-current" - which are IMHO two independent
+> things.
+
+The fact that recent LED controllers use the same notion for one of its
+settings shouldn't mislead us.
+
+> Next, this will set the hardware limit to 20 mA. So there will be current peaks
+> of 20 mA for an LED where the DT developer thinks to have specified a led-max-microamp
+> of 10 mA. So you run the LED outside of its specs although the DT seems to
+> tell that it is inside and user-space thinks it is ok. This will reduce lifetime of LEDs.
+
+In what circumstances would such current peaks occur? On reset?
+Shouldn't such a device be considered as broken by design?
+What if all LEDs would have low amperage? Would there be some way
+to protect them from being damaged by current peaks?
+
+> So either "led-max-microamp" is the wrong name for this property (could better
+> be "led-max-average-microamp") or the whole logic is broken.
+>
+> This is why we hesitate to hide (or even disable because you can't set the limit
+> to 10mA by DT) the current limiting chip feature by such a difficult to understand
+> automatic feature.
+>
+> Using the minimum of all led-max-microamp keeps everything on the safe
+> side, running some LEDs with less current than specified. But never outside
+> of the spec. And all LEDs have the same max_brightness which is IMHO
+> more intuitive for the user.
+>
+> Our original proposal was to define led-max-microamp for the whole chip
+> instead of individual LEDs, which is IMHO much easier to understand,
+> because it corresponds one-to-one with the data sheet.
+
+
+
+-- 
+Best regards,
+Jacek Anaszewski
