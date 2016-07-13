@@ -1,96 +1,93 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v3 1/2] drivers: led: is31fl319x: 1/3/6/9-channel light
- effect led driver
-Date: Wed, 13 Jul 2016 09:45:01 +0200
-Message-ID: <5785F17D.3010108@samsung.com>
-References: <cover.1468007377.git.hns@goldelico.com>
- <524f16ecba240bacf57924f43ec38404cfdcde8f.1468007377.git.hns@goldelico.com>
- <57854FB0.1080605@gmail.com>
- <55F90A44-0B60-4342-8143-56F85EA24772@goldelico.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/3] Documentation: dt: net: add ath9k
+	wireless device binding
+Date: Wed, 13 Jul 2016 09:47:36 +0200
+Message-ID: <4498290.rJrZT5XFlG@wuerfel>
+References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com>
+	<20160709232834.31654-2-martin.blumenstingl@googlemail.com>
+	<87a8hmauls.fsf@purkki.adurom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <55F90A44-0B60-4342-8143-56F85EA24772@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
+Return-path: <ath9k-devel-bounces@lists.ath9k.org>
+In-Reply-To: <87a8hmauls.fsf@purkki.adurom.net>
+List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
+List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
+List-Post: <mailto:ath9k-devel@lists.ath9k.org>
+List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
+List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
+Sender: ath9k-devel-bounces@lists.ath9k.org
+Errors-To: ath9k-devel-bounces@lists.ath9k.org
+To: Kalle Valo <kvalo@codeaurora.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arend.vanspriel@broadcom.com, pawel.moll@arm.com, mcgrof@do-not-panic.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, julian.calaby@gmail.com, ijc+devicetree@hellion.org.uk, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, robh+dt@kernel.org, ath9k-devel@lists.ath9k.org, galak@codeaurora.org, chunkeey@googlemail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Nikolaus,
+On Wednesday, July 13, 2016 10:02:39 AM CEST Kalle Valo wrote:
+> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+> 
+> > Add documentation how devicetree can be used to configure ath9k based
+> > devices.
+> >
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  .../devicetree/bindings/net/wireless/qca,ath9k.txt | 59 ++++++++++++++++++++++
+> >  1 file changed, 59 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> > new file mode 100644
+> > index 0000000..7c62c59
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> > @@ -0,0 +1,59 @@
+> > +* Qualcomm Atheros ath9k wireless devices
+> > +
+> > +This node provides properties for configuring the ath9k wireless device. The
+> > +node is expected to be specified as a child node of the PCI controller to
+> > +which the wireless chip is connected.
+> > +
+> > +Required properties:
+> > +- compatible: Should be "qca,ath9k"
+> 
+> Isn't this supposed to use the chipset name? ath9k is the driver name
+> and something like ar9462 is the chip name. I know in ath10k we used
+> "qca,ath10k" but I'm starting to suspect that was a mistake.
+> 
 
-On 07/13/2016 08:09 AM, H. Nikolaus Schaller wrote:
-[...]
->>> +	/*
->>> +	 * Kernel conventions require per-LED led-max-microamp property.
->>> +	 * But the chip does not allow to limit individual LEDs.
->>> +	 * So we take minimum from all subnodes.
->>
->> Why minimum? Choose maximum and reduce max_brightness properties
->> of the sub-LEDs with lesser led-max-microamp.
->
-> Hm. Is this really the correct way to handle it?
->
-> Assume you connect an LED which is specified with 10mA peak current.
-> And another with 20mA peak current.
->
-> So you define led-max-microamp in the DT as 10 mA and 20 mA.
->
-> Firstly a user can set the brightness only to 50% of LED_FULL since it is limited
-> by a reduced max_brightness. And heshe finds that not all LEDs have the same
-> max_brightness. The first LED will have 127 and the second one 255 for reasons
-> not directly understandable.
+You are right, but it's actually more complicated than that. For PCI
+devices, the format of the compatible strings is defined in
+http://www.o3one.org/hwdocs/openfirmware/pci_supplement_2_1.pdf
+and it doesn't use the "vendor,device" syntax at all but instead
+uses pciVVVV,DDDD where VVVV and DDDD are the hexadecimal (without
+leading 0x) vendor and device ID numbers. The document also specifies
+seven other formats and in theory you should list them all, but
+that really only makes sense for Open Firmware that programatically
+creates those strings.
 
-You have to know that led-max-microamp property was introduced
-to standarize Device Tree definition of maximum brightness allowed for
-a sub-LED.
+For a hand-written DTS source, I'd just use the shortest one of those.
+Linux actually doesn't care at all, as PCI drivers don't use the
+compatible string but instead look at the config register values
+that were read by the PCI core.
 
-Earlier people defined max-brightness property in DT, but at
-some point we realized that brightness level is not a proper unit for
-describing a hardware property.
+For USB, we do basically the same thing, but have very few examples
+of that as Linux only recently started supporting this.
 
-It was not global max-microamp setting that appears in recent LED
-controllers that drove the introduction of led-max-microamp property.
+For SDIO devices we should have done the same thing but screwed up
+when we made the generic binding and we have no policy, the example
+even lists one that makes no sense at all ("brcm,bcm43xx-fmac")
+as it is neither a specific device nor something derived from the IDs.
 
-If you question the idea of having different maximum brightness per
-sub-LEDs controlled by the same device, then it means that you have
-objections to the entire idea of LED subsystem max_brightness property,
-whereas it has been broadly accepted and successfully used for years.
+For on-chip devices, we should follow the common policy for on-chip
+devices and use the "vendor,chip-funcion" with fallbacks for
+compatible devices such as:
 
-> This entangles "brightness" with "max-current" - which are IMHO two independent
-> things.
+	compatible = "tplink,tp9343-wifi", "qca,qca9561-wifi", "atheros,ar9001-wifi";
 
-The fact that recent LED controllers use the same notion for one of its
-settings shouldn't mislead us.
-
-> Next, this will set the hardware limit to 20 mA. So there will be current peaks
-> of 20 mA for an LED where the DT developer thinks to have specified a led-max-microamp
-> of 10 mA. So you run the LED outside of its specs although the DT seems to
-> tell that it is inside and user-space thinks it is ok. This will reduce lifetime of LEDs.
-
-In what circumstances would such current peaks occur? On reset?
-Shouldn't such a device be considered as broken by design?
-What if all LEDs would have low amperage? Would there be some way
-to protect them from being damaged by current peaks?
-
-> So either "led-max-microamp" is the wrong name for this property (could better
-> be "led-max-average-microamp") or the whole logic is broken.
->
-> This is why we hesitate to hide (or even disable because you can't set the limit
-> to 10mA by DT) the current limiting chip feature by such a difficult to understand
-> automatic feature.
->
-> Using the minimum of all led-max-microamp keeps everything on the safe
-> side, running some LEDs with less current than specified. But never outside
-> of the spec. And all LEDs have the same max_brightness which is IMHO
-> more intuitive for the user.
->
-> Our original proposal was to define led-max-microamp for the whole chip
-> instead of individual LEDs, which is IMHO much easier to understand,
-> because it corresponds one-to-one with the data sheet.
+For a chip that is branded by TP-Link and derived from a Qualcomm Atheros
+chip it is 100% compatible with, and in turn derived from an older
+implementation (just guessing which one was the original ath9k).
 
 
-
--- 
-Best regards,
-Jacek Anaszewski
+	Arnd
