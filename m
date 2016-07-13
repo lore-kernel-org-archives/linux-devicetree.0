@@ -1,76 +1,163 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v2 1/6] binding-doc: power: pwrseq-generic: add binding
- doc for generic power sequence library
-Date: Wed, 13 Jul 2016 16:42:50 +0800
-Message-ID: <20160713084250.GB11863@shlinux2>
-References: <1468375610-18625-1-git-send-email-peter.chen@nxp.com>
- <1468375610-18625-2-git-send-email-peter.chen@nxp.com>
- <1468394851.3638.13.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1468394851.3638.13.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, Peter Chen <peter.chen@nxp.com>, ulf.hansson@linaro.org, stephen.boyd@linaro.org, k.kozlowski@samsung.com, festevam@gmail.com, stillcompiling@gmail.com, pawel.moll@arm.com, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, arnd@arndb.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, sre@kernel.org, broonie@kernel.org, shawnguo@kernel.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v3 1/2] drivers: led: is31fl319x: 1/3/6/9-channel light effect led driver
+Date: Wed, 13 Jul 2016 10:52:07 +0200
+Message-ID: <D91D4F2A-D5CE-48FB-97DE-E9CFE2C01E3F@goldelico.com>
+References: <cover.1468007377.git.hns@goldelico.com> <524f16ecba240bacf57924f43ec38404cfdcde8f.1468007377.git.hns@goldelico.com> <57854FB0.1080605@gmail.com> <55F90A44-0B60-4342-8143-56F85EA24772@goldelico.com> <5785F17D.3010108@samsung.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <5785F17D.3010108@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 13, 2016 at 09:27:31AM +0200, Philipp Zabel wrote:
-> Am Mittwoch, den 13.07.2016, 10:06 +0800 schrieb Peter Chen:
-> > Add binding doc for generic power sequence library.
-> > 
-> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> > ---
-> >  .../bindings/power/pwrseq/pwrseq-generic.txt       | 53 ++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
-> > new file mode 100644
-> > index 0000000..186c58c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
-> > @@ -0,0 +1,53 @@
-> > +The generic power sequence library
-> > +
-> > +Some hard-wired USB/MMC devices need to do power sequence to let the
-> > +device work normally,
+Hi Jacek,
+
+> Am 13.07.2016 um 09:45 schrieb Jacek Anaszewski <j.anaszewski@samsung.com>:
 > 
-> I would replace "to let the device work normally" with "before the
-> device can be enumerated [on the bus]" here.
+> Hi Nikolaus,
+> 
+> On 07/13/2016 08:09 AM, H. Nikolaus Schaller wrote:
+> [...]
+>>>> +	/*
+>>>> +	 * Kernel conventions require per-LED led-max-microamp property.
+>>>> +	 * But the chip does not allow to limit individual LEDs.
+>>>> +	 * So we take minimum from all subnodes.
+>>> 
+>>> Why minimum? Choose maximum and reduce max_brightness properties
+>>> of the sub-LEDs with lesser led-max-microamp.
+>> 
+>> Hm. Is this really the correct way to handle it?
+>> 
+>> Assume you connect an LED which is specified with 10mA peak current.
+>> And another with 20mA peak current.
+>> 
+>> So you define led-max-microamp in the DT as 10 mA and 20 mA.
+>> 
+>> Firstly a user can set the brightness only to 50% of LED_FULL since it is limited
+>> by a reduced max_brightness. And heshe finds that not all LEDs have the same
+>> max_brightness. The first LED will have 127 and the second one 255 for reasons
+>> not directly understandable.
+> 
+> You have to know that led-max-microamp property was introduced
+> to standarize Device Tree definition of maximum brightness allowed for
+> a sub-LED.
+
+> 
+> Earlier people defined max-brightness property in DT, but at
+> some point we realized that brightness level is not a proper unit for
+> describing a hardware property.
+
+Indeed it isn't. It could be if it were brightness in some physical unit, but
+here it is a user-space range definition. 
+
+> It was not global max-microamp setting that appears in recent LED
+> controllers that drove the introduction of led-max-microamp property.
+
+> 
+> If you question the idea of having different maximum brightness per
+> sub-LEDs controlled by the same device, then it means that you have
+> objections to the entire idea of LED subsystem max_brightness property,
+> whereas it has been broadly accepted and successfully used for years.
+
+Perhaps the max_brightness visible in user space could be standardized
+to be always identical to LED_FULL.
+
+> 
+>> This entangles "brightness" with "max-current" - which are IMHO two independent
+>> things.
+> 
+> The fact that recent LED controllers use the same notion for one of its
+> settings shouldn't mislead us.
+
+BTW, some LEDs may have the same brightness (measured physical light
+intensity) at very different currents, but that is not the key point.
+
+> 
+>> Next, this will set the hardware limit to 20 mA. So there will be current peaks
+>> of 20 mA for an LED where the DT developer thinks to have specified a led-max-microamp
+>> of 10 mA. So you run the LED outside of its specs although the DT seems to
+>> tell that it is inside and user-space thinks it is ok. This will reduce lifetime of LEDs.
+> 
+> In what circumstances would such current peaks occur? On reset?
+
+During PWM operation. PWM makes pulses with different duty cycle.
+
+Some % of the time it is 0 mA and some it is some max current. In our chip
+this max current is defined for all LEDs by some global control register.
+
+If you limit to 50% of the max current of all LEDS (e.g. 20 mA) you have
+10 mA average described in the DT.
+
+But this means permanent pulses of 20 mA e.g. 50% of the time at LED_HALF.
+50% of the time the current is above what is described in DT.
+
+> Shouldn't such a device be considered as broken by design?
+
+Yes but only if it would do it during reset.
+
+The problem I refer to is during normal operation and occurs because
+we try to pretend that we can limit the max current for each LED individually,
+which the chip does not provide.
+
+We can only limit the average current of each LED and not the peak current.
+
+> What if all LEDs would have low amperage?
+
+Yes, the chip can reduce the max current in steps of 5 mA up to 40 mA. So
+you can reduce it to the lowest led-max-microamp of any of the LEDs. Which
+is the minimum-rule we have in v3.
+
+If all LEDs are the same, this will be like a global limit.
+
+> Would there be some way
+> to protect them from being damaged by current peaks?
+
+Yes, there would be a hardware means to limit the current: series resistors.
+
+But I think neither driver implementation nor DT considerations should drive
+hardware design into a specific solution...
+
+That all is why we initially proposed a new global led-max-microamp DT property.
+It would IMHO better describe the chip in DT and not loose any user-space
+capabilities.
+
+Ah, writing this sentence opens my eyes to where we are not talking about the same
+picture. It appears that I am thinking chip-focussed about describing the
+current-limiting facility of the chip. Hence the global property.
+
+Contrary to that, the subnode led-max-microamp describes the LEDs (and not a chip).
+And leaves it to the driver to set up the chip in a way that the LEDs never get
+more current than specified there. Right?
+
+This means we have to take the minimum (not the maximum) and round it down
+to the nearest value the chip can provide.
+
+I.e. if you specify one LED with 10mA and one with 1000mA, the whole chip would
+limit to 10mA. This means the 1000mA LED will never be visibly bright (even at
+max_brightness). But that is not a fault of the chip or the driver but of the hardware
+designer choosing such imbalanced LEDs.
+
+> 
+>> So either "led-max-microamp" is the wrong name for this property (could better
+>> be "led-max-average-microamp") or the whole logic is broken.
+>> 
+>> This is why we hesitate to hide (or even disable because you can't set the limit
+>> to 10mA by DT) the current limiting chip feature by such a difficult to understand
+>> automatic feature.
+>> 
+>> Using the minimum of all led-max-microamp keeps everything on the safe
+>> side, running some LEDs with less current than specified. But never outside
+>> of the spec. And all LEDs have the same max_brightness which is IMHO
+>> more intuitive for the user.
+>> 
+>> Our original proposal was to define led-max-microamp for the whole chip
+>> instead of individual LEDs, which is IMHO much easier to understand,
+>> because it corresponds one-to-one with the data sheet.
+> 
 > 
 
-Ok.
-
-> >  the typical power sequence like: enable USB
-> > +PHY clock, toggle reset pin, etc. But current Linux USB driver
-> > +lacks of such code to do it, it may cause some hard-wired USB devices
-> > +works abnormal or can't be recognized by controller at all. The
-> > +power sequence will be done before this device can be found at USB
-> > +bus.
-> > +
-> > +The power sequence properties is under the device node.
-> > +
-> > +Required properties:
-> > +- power-sequence: this device needs to do power sequence before enumeration
-> 
-> As Joshua pointed out, is this even needed at all?
-> 
-
-If no, how we decide whether allocates pwrseq instance through pwrseq
-library or not?
-
--- 
-
-Best Regards,
-Peter Chen
+BR and thanks,
+Nikolaus
