@@ -1,232 +1,227 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
-Date: Wed, 13 Jul 2016 20:09:06 +0000
-Message-ID: <20160713200906.GB31509@io.lakedaemon.net>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org>
- <1468135649-19980-3-git-send-email-vw@iommu.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] libfdt: Add overlay application function
+Date: Wed, 13 Jul 2016 22:12:16 +0200
+Message-ID: <20160713201216.GM4761@lukather>
+References: <20160711195623.12840-1-maxime.ripard@free-electrons.com>
+ <20160711195623.12840-7-maxime.ripard@free-electrons.com>
+ <20160712143120.GC16355@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kunpHVz1op/+13PW"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1468135649-19980-3-git-send-email-vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160712143120.GC16355-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wan Zongshun,
 
-On Sun, Jul 10, 2016 at 03:27:22PM +0800, Wan Zongshun wrote:
-> This patch is to add irqchip driver support for nuc900 plat,
-> current this driver only supports nuc970 SoC.
-> 
-> Signed-off-by: Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/mach-w90x900/include/mach/irqs.h |   5 +
->  drivers/irqchip/Makefile                  |   1 +
->  drivers/irqchip/irq-nuc900.c              | 150 ++++++++++++++++++++++++++++++
->  3 files changed, 156 insertions(+)
->  create mode 100644 drivers/irqchip/irq-nuc900.c
-> 
-> diff --git a/arch/arm/mach-w90x900/include/mach/irqs.h b/arch/arm/mach-w90x900/include/mach/irqs.h
-> index 9d5cba3..3b035c6 100644
-> --- a/arch/arm/mach-w90x900/include/mach/irqs.h
-> +++ b/arch/arm/mach-w90x900/include/mach/irqs.h
-> @@ -59,7 +59,12 @@
->  #define IRQ_KPI		W90X900_IRQ(29)
->  #define IRQ_P2SGROUP	W90X900_IRQ(30)
->  #define IRQ_ADC		W90X900_IRQ(31)
-> +
-> +#if !defined(CONFIG_SOC_NUC900)
->  #define NR_IRQS		(IRQ_ADC+1)
-> +#else
-> +#define NR_IRQS		62
-> +#endif
+--kunpHVz1op/+13PW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Arnd already covered this...
+Hi David,
 
->  
->  /*for irq group*/
->  
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 38853a1..9ccd5af8a 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -69,3 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
->  obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
->  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
->  obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
-> +obj-$(CONFIG_SOC_NUC970)		+= irq-nuc900.o
-> diff --git a/drivers/irqchip/irq-nuc900.c b/drivers/irqchip/irq-nuc900.c
-> new file mode 100644
-> index 0000000..c4b2e39
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-nuc900.c
-> @@ -0,0 +1,150 @@
-> +/*
-> + * Copyright 2016 Wan Zongshun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +
-> +#include <asm/exception.h>
-> +#include <asm/hardirq.h>
-> +
-> +#define	REG_AIC_SCR1	0x00
-> +#define	REG_AIC_SCR2	0x04
-> +#define	REG_AIC_SCR3	0x08
-> +#define	REG_AIC_SCR4	0x0C
-> +#define	REG_AIC_SCR5	0x10
-> +#define	REG_AIC_SCR6	0x14
-> +#define	REG_AIC_SCR7	0x18
-> +#define	REG_AIC_SCR8	0x1C
-> +#define	REG_AIC_SCR9	0x20
-> +#define	REG_AIC_SCR10	0x24
-> +#define	REG_AIC_SCR11	0x28
-> +#define	REG_AIC_SCR12	0x2C
-> +#define	REG_AIC_SCR13	0x30
-> +#define	REG_AIC_SCR14	0x34
-> +#define	REG_AIC_SCR15	0x38
-> +#define	REG_AIC_IRSR	0x100
-> +#define	REG_AIC_IRSRH	0x104
-> +#define	REG_AIC_IASR	0x108
-> +#define	REG_AIC_IASRH	0x10C
-> +#define	REG_AIC_ISR	0x110
-> +#define	REG_AIC_ISRH	0x114
-> +#define	REG_AIC_IPER	0x118
-> +#define	REG_AIC_ISNR	0x120
-> +#define	REG_AIC_OISR	0x124
-> +#define	REG_AIC_IMR	0x128
-> +#define	REG_AIC_IMRH	0x12C
-> +#define	REG_AIC_MECR	0x130
-> +#define	REG_AIC_MECRH	0x134
-> +#define	REG_AIC_MDCR	0x138
-> +#define	REG_AIC_MDCRH	0x13C
-> +#define	REG_AIC_SSCR	0x140
-> +#define	REG_AIC_SSCRH	0x144
-> +#define	REG_AIC_SCCR	0x148
-> +#define	REG_AIC_SCCRH	0x14C
-> +#define	REG_AIC_EOSCR	0x150
+I'll fix your comments, but I have a bunch of questions, see below.
 
-Please remove unused defines.
+On Wed, Jul 13, 2016 at 12:31:20AM +1000, David Gibson wrote:
+> > +/**
+> > + * overlay_adjust_node_phandles - Offsets the phandles of a node
+> > + * @fdto: Device tree overlay blob
+> > + * @node: Offset of the node we want to adjust
+> > + * @delta: Offset to shift the phandles of
+> > + *
+> > + * overlay_adjust_node_phandles() adds a constant to all the phandles
+> > + * of a given node. This is mainly use as part of the overlay
+> > + * application process, when we want to update all the overlay
+> > + * phandles to not conflict with the overlays of the base device tree.
+> > + *
+> > + * returns:
+> > + *      0 on success
+> > + *      Negative error code on failure
+> > + */
+> > +static int overlay_adjust_node_phandles(void *fdto, int node,
+> > +					uint32_t delta)
+> > +{
+> > +	unsigned char found =3D 0;
+>=20
+> Just use an int.  I should probably think about introducing bool to libfd=
+t.
+>=20
+> > +	int child;
+> > +	int ret;
+> > +
+> > +	ret =3D overlay_phandle_add_offset(fdto, node, "phandle", delta);
+> > +	if (ret && ret !=3D -FDT_ERR_NOTFOUND)
+> > +		return ret;
+> > +
+> > +	if (!ret)
+> > +		found =3D 1;
+> > +
+> > +	ret =3D overlay_phandle_add_offset(fdto, node, "linux,phandle", delta=
+);
+> > +	if (ret && ret !=3D -FDT_ERR_NOTFOUND)
+> > +		return ret;
+> > +
+> > +	/*
+> > +	 * If neither phandle nor linux,phandle have been found return
+> > +	 * an error.
+> > +	 */
+> > +	if (!found && !ret)
+> > +		return ret;
+>=20
+> Clearer to return 0 here, since ret must equal 0.
+>=20
+> Except.. it's not mandatory for a node to have a phandle, so this just
+> looks wrong, anyway.
 
-> +
-> +static void __iomem *aic_base;
-> +static struct irq_domain *aic_domain;
-> +
-> +static void nuc900_irq_mask(struct irq_data *d)
-> +{
-> +	if (d->irq < 32)
-> +		writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
-> +	else
-> +		writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
-> +}
-> +
-> +static void nuc900_irq_ack(struct irq_data *d)
-> +{
-> +	writel(0x01, aic_base + REG_AIC_EOSCR);
-> +}
-> +
-> +static void nuc900_irq_unmask(struct irq_data *d)
-> +{
-> +	if (d->irq < 32)
-> +		writel(1 << (d->irq), aic_base + REG_AIC_MECR);
-> +	else
-> +		writel(1 << (d->irq - 32), aic_base + REG_AIC_MECRH);
-> +}
-> +
-> +static struct irq_chip nuc900_irq_chip = {
-> +	.irq_ack	= nuc900_irq_ack,
-> +	.irq_mask	= nuc900_irq_mask,
-> +	.irq_unmask	= nuc900_irq_unmask,
-> +};
-> +
-> +void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
-> +{
-> +	u32 hwirq;
-> +
-> +	hwirq = readl(aic_base + REG_AIC_IPER);
-> +	hwirq = readl(aic_base + REG_AIC_ISNR);
-> +	if (!hwirq)
-> +		writel(0x01, aic_base + REG_AIC_EOSCR);
+Hmmm, that's true. I have no idea how that can possibly work
+though. It should break at the very first node, since the root node
+will not have one...
 
-Could you explain what's going on here?
+I'll look into this.
 
-> +
-> +	handle_IRQ((irq_find_mapping(aic_domain, hwirq)), regs);
-> +}
-> +
-> +static int aic_irq_domain_map(struct irq_domain *d, unsigned int virq,
-> +			      irq_hw_number_t hw)
-> +{
-> +	irq_set_chip_and_handler(virq, &nuc900_irq_chip, handle_level_irq);
-> +	irq_clear_status_flags(virq, IRQ_NOREQUEST);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct irq_domain_ops aic_irq_domain_ops = {
-> +	.map = aic_irq_domain_map,
-> +	.xlate = irq_domain_xlate_onecell,
-> +};
-> +
-> +static int __init aic_of_init(struct device_node *node,
-> +			      struct device_node *parent)
-> +{
-> +	int ret;
-> +
-> +	aic_base = of_iomap(node, 0);
-> +	if (!aic_base) {
-> +		ret = -ENOMEM;
-> +		pr_err("%s: unable to map registers\n", node->full_name);
-> +		goto err_iomap;
-> +	}
-> +
-> +	writel(0xFFFFFFFC, aic_base + REG_AIC_MDCR);
-> +	writel(0xFFFFFFFF, aic_base + REG_AIC_MDCRH);
-> +
-> +	aic_domain = irq_domain_add_linear(node, NR_IRQS,
-> +					   &aic_irq_domain_ops, NULL);
-> +
-> +	if (!aic_domain) {
-> +		ret = -ENOMEM;
-> +		pr_err("%s: unable to create IRQ domain\n", node->full_name);
-> +		goto err_aic_domain;
-> +	}
-> +
-> +	set_handle_irq(aic_handle_irq);
-> +	return 0;
-> +
-> +err_aic_domain:
-> +	iounmap(aic_base);
-> +err_iomap:
-> +	return ret;
-> +}
-> +
-> +IRQCHIP_DECLARE(nuc900, "nuvoton,nuc900-aic", aic_of_init);
+>=20
+> > +
+> > +	fdt_for_each_subnode(child, fdto, node)
+> > +		overlay_adjust_node_phandles(fdto, child, delta);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/**
+> > + * overlay_adjust_local_phandles - Adjust the phandles of a whole over=
+lay
+> > + * @fdto: Device tree overlay blob
+> > + * @delta: Offset to shift the phandles of
+> > + *
+> > + * overlay_adjust_local_phandles() adds a constant to all the
+> > + * phandles of an overlay. This is mainly use as part of the overlay
+> > + * application process, when we want to update all the overlay
+> > + * phandles to not conflict with the overlays of the base device tree.
+> > + *
+> > + * returns:
+> > + *      0 on success
+> > + *      Negative error code on failure
+> > + */
+> > +static int overlay_adjust_local_phandles(void *fdto, uint32_t delta)
+> > +{
+> > +	/*
+> > +	 * Start adjusting the phandles from the overlay root
+> > +	 */
+> > +	return overlay_adjust_node_phandles(fdto, 0, delta);
+> > +}
+> > +
+> > +/**
+> > + * overlay_update_local_node_references - Adjust the overlay references
+> > + * @fdto: Device tree overlay blob
+> > + * @tree_node: Node offset of the node to operate on
+> > + * @fixup_node: Node offset of the matching local fixups node
+> > + * @delta: Offset to shift the phandles of
+> > + *
+> > + * overlay_update_local_nodes_references() update the phandles
+> > + * pointing to a node within the device tree overlay by adding a
+> > + * constant delta.
+> > + *
+> > + * This is mainly used as part of a device tree application process,
+> > + * where you want the device tree overlays phandles to not conflict
+> > + * with the ones from the base device tree before merging them.
+> > + *
+> > + * returns:
+> > + *      0 on success
+> > + *      Negative error code on failure
+> > + */
+> > +static int overlay_update_local_node_references(void *fdto,
+> > +						int tree_node,
+> > +						int fixup_node,
+> > +						uint32_t delta)
+> > +{
+> > +	int fixup_prop;
+> > +	int fixup_child;
+> > +	int ret;
+> > +
+> > +	fdt_for_each_property_offset(fixup_prop, fdto, fixup_node) {
+> > +		const unsigned char *fixup_val, *tree_val;
+>=20
+> You might as well make fixup_val a u32 *, it should remove some casts
+> below.
 
-afaict, there is no 'nuc900', that's a family.  If so, this compatible
-needs to be 'nuvoton,nuc970-aic'.
+Yes, but then, if it's poorly formatted, we might get unaligned
+accesses too.. And we can't really use memcpy here, since we don't
+know the size of the property at compile time.
 
-thx,
+> > +		const char *name;
+> > +		int fixup_len;
+> > +		int tree_len;
+> > +		int i;
+> > +
+> > +		fixup_val =3D fdt_getprop_by_offset(fdto, fixup_prop,
+> > +						  &name, &fixup_len);
+> > +		if (!fixup_val)
+> > +			return fixup_len;
+> > +
+> > +		tree_val =3D fdt_getprop(fdto, tree_node, name, &tree_len);
+> > +		if (!tree_val)
+> > +			return tree_len;
+> > +		for (i =3D 0; i < fixup_len; i +=3D sizeof(uint32_t)) {
+>=20
+> This could lead to an unsafe dereference if fixup_len is not a
+> multiple of 4 (i.e. badly formatted fixup properyt).  Another reason
+> to use a u32 *.
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Then maybe the safest would be to simply check that the length is a
+multiple of 4, and return an error if it's not?
+
+> > diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+> > index 6a2662b2abaf..054758298de9 100755
+> > --- a/tests/run_tests.sh
+> > +++ b/tests/run_tests.sh
+> > @@ -280,6 +280,14 @@ libfdt_tests () {
+> >      run_test get_alias aliases.dtb
+> >      run_test path_offset_aliases aliases.dtb
+> > =20
+> > +    # Overlay tests
+> > +    echo "/dts-v1/; / {};" | $DTC -@ > /dev/null 2>&1
+>=20
+>        ^^^^^
+>=20
+> What's this about?
+
+In current master tree, calling dtc with -@ will fail, since the
+support to compile the overlays is not upstream yet (afaik).
+
+This is just to make sur that the dtc binary is actually able to
+compile something we can run our test on. Otherwise we would have
+failed tests, while the code might or might not work, which seems bad.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--kunpHVz1op/+13PW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXhqCgAAoJEBx+YmzsjxAgNYkP/idSDSgU9Rmv/EL9Gx0xjwlw
+YRU1203AzYQyB88pnVkppLc8e9/nEG+luMajGf8ZEHTVjasGzv8FcZDXjWGthJA7
+QXyYqGbnDgR1ZKQZSJZTBy9dFPbam0lv/PBYFFhRIVewUWqOt8rA8BytleTtKSvw
+ppB5MGv+BkQDz2ibjEs2mZxEv2EAI8laEgM4ys4xqz847kdWdiiVzqgLfI+qDkLc
+NURRTAMXu4fz5eCy6lk3p3u9rJTCIyRoDOtHr3kKLn6K/d3WefTwxAmyiq/OyWgs
+VYIxxMHEc+kX3ktOWG+5VPjEO7iFuJfsbHIsYbMEy4d9hEplBJqFUKQmbRghV+al
+YsovZWrxTqREdtB7QL7Z/GoZB1+/1RwALgCntW0sxjQVRTnGuJNdoDo+cZzvBXKd
+NP5TeyLo5jCZJ0f4ch3XMgausSVPnPzQfU98jaSZ3xKw04T/zI0B+0iD5YASqzG6
+NnKfUUsbtOXoK0MIKiRiQnhSTsuJZhqItOSyeeE7WQ1A1Ui2t7Nll+LWB3EgaIKz
+7V27oAaZrTvPHTPm84nGW3x2SjYd5j7xeMLNxzY7XHh+xtX/hUJ38YB7OdPkcsI0
+pRPWNgQVi/YdG6hCWLDyKBc/VLx+h79oXX35vNo/N6T2TWeqZ5o3lamGD3oHWsSS
+1WikT/WwtSkzQkqXtkLq
+=0+6O
+-----END PGP SIGNATURE-----
+
+--kunpHVz1op/+13PW--
