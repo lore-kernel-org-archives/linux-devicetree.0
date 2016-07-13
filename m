@@ -1,15 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/7] dt-bindings: add rk3399 support for dw-mipi-rockchip
-Date: Wed, 13 Jul 2016 08:49:41 -0500
-Message-ID: <20160713134941.GA10985@rob-hp-laptop>
+Subject: Re: [PATCH 3/7] dt-bindings: add power domain node for
+ dw-mipi-rockchip
+Date: Wed, 13 Jul 2016 08:50:29 -0500
+Message-ID: <20160713135029.GA12147@rob-hp-laptop>
 References: <1467968701-15620-1-git-send-email-zyw@rock-chips.com>
- <1467968701-15620-2-git-send-email-zyw@rock-chips.com>
+ <1467968701-15620-4-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1467968701-15620-2-git-send-email-zyw@rock-chips.com>
+In-Reply-To: <1467968701-15620-4-git-send-email-zyw@rock-chips.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -23,34 +24,11 @@ To: Chris Zhong <zyw@rock-chips.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgMDgsIDIwMTYgYXQgMDU6MDQ6NTVQTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gVGhlIGR3LW1pcGktZHNpIG9mIHJrMzM5OSBpcyBhbG1vc3QgdGhlIHNhbWUgYXMgcmsz
-Mjg4LCB0aGUgcmszMzk5IGhhcwo+IGFkZGl0aW9uYWwgcGh5IGNvbmZpZyBjbG9jay4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgo+IC0tLQo+IAo+
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3Jv
-Y2tjaGlwLnR4dCAgICB8IDUgKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
-KQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50
-eHQKPiBpbmRleCAxNzUzZjBjLi40ZDU5ZGYzIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlw
-LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jv
-Y2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dAo+IEBAIC01LDYgKzUsNyBAQCBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgo+ICAtICNhZGRyZXNzLWNlbGxzOiBTaG91bGQgYmUgPDE+Lgo+ICAtICNz
-aXplLWNlbGxzOiBTaG91bGQgYmUgPDA+Lgo+ICAtIGNvbXBhdGlibGU6ICJyb2NrY2hpcCxyazMy
-ODgtbWlwaS1kc2kiLCAic25wcyxkdy1taXBpLWRzaSIuCj4gKwkgICAgICAicm9ja2NoaXAscmsz
-Mzk5LW1pcGktZHNpIiwgInNucHMsZHctbWlwaS1kc2kiLgo+ICAtIHJlZzogUmVwcmVzZW50IHRo
-ZSBwaHlzaWNhbCBhZGRyZXNzIHJhbmdlIG9mIHRoZSBjb250cm9sbGVyLgo+ICAtIGludGVycnVw
-dHM6IFJlcHJlc2VudCB0aGUgY29udHJvbGxlcidzIGludGVycnVwdCB0byB0aGUgQ1BVKHMpLgo+
-ICAtIGNsb2NrcywgY2xvY2stbmFtZXM6IFBoYW5kbGVzIHRvIHRoZSBjb250cm9sbGVyJ3MgcGxs
-IHJlZmVyZW5jZQo+IEBAIC0xMyw2ICsxNCwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAt
-IHBvcnRzOiBjb250YWluIGEgcG9ydCBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMgYXMg
-ZGVmaW5lZCBpbiBbMl0uCj4gICAgRm9yIHZvcGIsc2V0IHRoZSByZWcgPSA8MD4gYW5kIHNldCB0
-aGUgcmVnID0gPDE+IGZvciB2b3BsLgo+ICAKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArLSBj
-bG9ja3MsIGNsb2NrLW5hbWVzOiBwaGFuZGxlIHRvIHRoZSBkdy1taXBpIHBoeSBjbG9jaywgbmFt
-ZSBzaG91bGQgYmUKPiArCQkgICAgICAgInBoeV9jZmciLgo+ICsKClRoaXMgaXMgbm90IHJlYWxs
-eSBvcHRpb25hbC4gSXQgaXMgcmVxdWlyZWQgZm9yIHJrMzM5OS4gRG9jdW1lbnQgd2l0aCAKdGhl
-IHJlc3Qgb2YgdGhlIGNsb2NrcyBhbmQgbm90ZSB0aGlzIG9uZSBpcyByazMzOTkgb25seS4KClJv
-YgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+T24gRnJpLCBKdWwgMDgsIDIwMTYgYXQgMDU6MDQ6NTdQTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
+dGU6Cj4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4KPiAt
+LS0KPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBp
+X2RzaV9yb2NrY2hpcC50eHQgICAgICAgIHwgMSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2Vy
+dGlvbigrKQoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
