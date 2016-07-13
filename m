@@ -1,35 +1,44 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v1 4/6] drm/rockchip: dw_hdmi: add RK3399 HDMI support
-Date: Wed, 13 Jul 2016 15:30:17 +0800
-Message-ID: <5785EE09.3070406@rock-chips.com>
-References: <1468235079-29152-1-git-send-email-ykk@rock-chips.com>
- <1468235146-29575-1-git-send-email-ykk@rock-chips.com>
- <1468237912.3048.26.camel@pengutronix.de>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
+Date: Wed, 13 Jul 2016 07:30:16 +0000
+Message-ID: <C89496FEAE474D468F30D558A9468D9F26CF934F@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
+ <20160602225815.GA5508@rob-hp-laptop>
+ <C89496FEAE474D468F30D558A9468D9F26CF8BC0@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160711220623.GB8465@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1468237912.3048.26.camel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, xhc@rock-chips.com, Daniel Vetter <daniel.vetter@ffwll.ch>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Zheng Yang <zhengyang@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160711220623.GB8465@kroah.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-UGhpbGlwcCwKCk9uIDA3LzExLzIwMTYgMDc6NTEgUE0sIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4g
-QW0gTW9udGFnLCBkZW4gMTEuMDcuMjAxNiwgMTk6MDUgKzA4MDAgc2NocmllYiBZYWtpciBZYW5n
-Ogo+PiBSSzMzOTkgYW5kIFJLMzI4OCBzaGFyZWQgdGhlIHNhbWUgSERNSSBJUCBjb250cm9sbGVy
-LCBvbmx5IHNvbWUgbGlnaHQKPj4gZGlmZmVyZW5jZSB3aXRoIEdSRiBjb25maWd1cmUuCj4+Cj4+
-IFNpZ25lZC1vZmYtYnk6IFlha2lyIFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KPiBSZXZpZXdl
-ZC1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KClRoYW5rcyBmb3Ig
-eW91ciBmYXN0IHJlc3BvbmQgOi1ECi0gWWFraXIKCj4gcmVnYXJkcwo+IFBoaWxpcHAKPgo+Cj4K
-PgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Greg,
+
+> > Ping!!
+> 
+> <snip>
+> 
+> >
+> > This email and any attachments are intended for the sole use of the named
+> recipient(s) and contain(s) confidential information that may be proprietary,
+> privileged or copyrighted under applicable law. If you are not the intended
+> recipient, do not read, copy, or forward this email message or any
+> attachments. Delete this email message and any attachments immediately.
+> 
+> You do realize that with an email footer like this, you prevent any of us from
+> responding to you, sorry.  I shouldn't even be writing this...
+
+Sorry something fishy happened with my email-client
+I have fixed it now next time onwards will take care before giving replies...
+
+Regards,
+Navakishore.
+> 
+
+
+> greg k-h
