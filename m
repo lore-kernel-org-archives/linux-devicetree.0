@@ -1,65 +1,46 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Tue, 12 Jul 2016 19:05:31 -0700
-Message-ID: <20160713020531.GA14833@google.com>
-References: <1467789398-13501-1-git-send-email-shawn.lin@rock-chips.com>
- <20160707003912.GB100467@google.com>
- <59b328c9-3a21-36fa-7f28-4ba24d77fef0@rock-chips.com>
- <20160713013117.GA130126@google.com>
- <95a7ffdd-becc-bb3f-c026-d07c691b7a53@rock-chips.com>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH v3 7/7] clk: exynos5433: remove CLK_IGNORE_UNUSED flag from
+ SPI clocks
+Date: Wed, 13 Jul 2016 11:08:52 +0900
+Message-ID: <20160713020852.GH18237@samsunx.samsung>
+References: <1468317736-18841-1-git-send-email-andi.shyti@samsung.com>
+ <1468317736-18841-8-git-send-email-andi.shyti@samsung.com>
+ <CGME20160712221734epcas1p2e2069af657e3afa912bea5bf7217e08a@epcas1p2.samsung.com>
+ <146836184696.73491.9452469757415968654@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <95a7ffdd-becc-bb3f-c026-d07c691b7a53-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-disposition: inline
+In-reply-to: <146836184696.73491.9452469757415968654@resonance>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIEp1bCAxMywgMjAxNiBhdCAwOTo0NTo0M0FNICswODAwLCBTaGF3biBMaW4g
-d3JvdGU6Cj4g5ZyoIDIwMTYvNy8xMyA5OjMxLCBCcmlhbiBOb3JyaXMg5YaZ6YGTOgo+ID5PbiBX
-ZWQsIEp1bCAxMywgMjAxNiBhdCAwOToxMDoxNUFNICswODAwLCBTaGF3biBMaW4gd3JvdGU6Cj4g
-PkF0IHNvbWUgbGV2ZWwsIGl0J3MgYSBtYXR0ZXIgb2YgcHJlZmVyZW5jZS4gQnV0IHdoZW4geW91
-J3JlIHRhbGtpbmcKPiA+YWJvdXQgdGhlIHJrMzM5OSBQQ0llICJpbnRlcnJ1cHQgY29udHJvbGxl
-ciIgZG9tYWluLCBpdCBzZWVtcyB0aGF0IHlvdQo+ID5zaG91bGQgYmUgdGFsa2luZyBhYm91dCBI
-VyBiaXRzIGluIHRoZSBjb250cm9sbGVyIC0tIGkuZS4sIHlvdSBoYXZlIGEKPiA+NC1iaXQgaW50
-ZXJydXB0IHN0YXR1cyBiaXRmaWVsZCwgdGhhdCB3ZSB0eXBpY2FsbHkgY2FsbCBbMDozXS4gSWYg
-eW91Cj4gPnVzZSBbMTo0XSwgdGhlbiB5b3UgaGF2ZSB0byByZW1lbWJlciB0byBzdWJ0cmFjdCAx
-IG1lbnRhbGx5IHdoZW4gbWFwcGluZwo+ID50byB0aGUgYWN0dWFsIEhXIGJpdC4gSSBiZWxpZXZl
-IHRoYXQgY29uZnVzaW9uIChzaW5jZSBiaXRmaWVsZHMgbm9ybWFsbHkKPiA+Y291bnQgZnJvbSAw
-KSBtaWdodCBoYXZlIGhlbHBlZCBjYXVzZSB0aGUgaW5maW5pdGUgbG9vcCBidWcgSSBub3RpY2Vk
-Cj4gPnRvby4gQW5kIEkgYWxzbyB0aGluayB0aGF0IGNvdW50aW5nIGZyb20gMCBoZWxwcyBjbGFy
-aWZ5IHRoZSBmYWN0IHRoYXQKPiA+eW91ciBpbnRlcnJ1cHQgY29udHJvbGxlciBpbmRleGluZyBp
-cyBhbiBpbmRlcGVuZGVudCBudW1iZXJpbmcgZnJvbSB0aGUKPiA+UENJIGludGVycnVwdCBudW1i
-ZXJpbmcsIGV2ZW4gdGhvdWdoIHRoZXkgaGFwcGVuIHRvIG1hcCAxOjEuCj4gCj4gSWYgdGhhdCdz
-IHRoZSBmYWN0IG9mIGhvdyB3ZSBzaG91bGQgbnVtYmVyaW5nIG91ciBpbmRleCBiYXNlLCB3ZSBz
-aG91bGQKPiBwcm9iYWJseSBzdGFydCBpZiBmcm9tIDUgYXMgdGhlIGxheW91dCBvZiBJTlR4IGlz
-Cj4gUENJRV9DTElFTlRfSU5UX1NUQVRVU1s1OjhdLi4uID8KClBvc3NpYmx5IGJldHRlciB0aGFu
-IHN0YXJ0aW5nIGZyb20gMSwgYnV0IElNTyBhbHNvIGRvZXNuJ3QgbWFrZSBzZW5zZSwKYmVjYXVz
-ZSB0aGUgb3RoZXIgYml0cyBhcmVuJ3QgaW50ZXJydXB0cyB5b3Ugd2FudCB0byB0cmFuc2xhdGUg
-b24gYmVoYWxmCm9mIG90aGVyIGRldmljZXMgKGFyZSB0aGV5PykgLS0gdGhleSdyZSBpbnRlcnJ1
-cHQgYml0cyBjb25zdW1lZCBieSB0aGUKaG9zdCBjb250cm9sbGVyIGl0c2VsZi4gKElmIHRoZXkg
-YXJlIHBvc3NpYmx5IG5lZWRlZCBmb3IgdHJhbnNsYXRpb24sCnRoZW4gc3VyZSwgaW5kZXggdGhl
-IGVudGlyZSBzdGF0dXMgcmVnaXN0ZXIgYW5kIGhhbmRsZSBpdCBpbiB0aGUgZHJpdmVyLAphbmQg
-c3RhcnQgdGhlIElOVHggbWFwcGluZyBmcm9tIDUgaGVyZS4pCgpbLi4uXQoKPiA+SWYgeW91IHN0
-aWxsIHRoaW5rIGl0IG1ha2VzIG1vcmUgc2Vuc2UgdG8gY291bnQgZnJvbSAxLCB0aGVuIEkgd29u
-J3QKPiA+c3RvcCB5b3UuCj4gCj4gSSBkb24ndCBoYXZlIGEgaGFyZCBvcGluaW9uIGZvciB0aGUg
-aW5kZXggYmFzZSBhcyBJIHRoaW5rIGl0J3MgdHJpdmlhbC4KCkl0J3Mgc2ltcGxlLCBidXQgSSB0
-aGluayBpdCBpbmZsdWVuY2VkIGNvZGUgdW5kZXJzdGFuZGluZyBhbmQgYnVnZ2luZXNzLgoKPiBT
-byBpZiBpdCdzIG1vcmUgc2Vuc2libGUgdG8geW91LCBJIHdpbGwgYXBwbHkgeW91ciBzdWdnZXN0
-aW9uLgoKV2VsbCwgSSB3YXMganVzdCBvZmZlcmluZyBteSBvcGluaW9uLiBJIHRoaW5rIGl0IG1h
-a2VzIG1vcmUgc2Vuc2UsIGJ1dAptYXliZSBpdCBkb2Vzbid0IHRvIHlvdS4KCkJyaWFuCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hp
-cCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
+Hi Mike,
+
+> > Because the Exynos5433 SPI driver supports the ioclk handling and
+> > the following patch:
+> > 
+> >   http://marc.info/?l=linux-kernel&m=146787645626318&w=2
+> > 
+> > fixes a synchronus abort issue, none of the SPI clocks require
+> > any critical handling: remove, then, the CLK_IGNORE_UNUSED flag
+> > for the SPI related clocks.
+> > 
+> > Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+> > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > Reviewed-by: Michael Turquette <mturquette@baylibre.com>
+> > Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> 
+> Do you want these patches to go through same tree? If not, I can take
+> this patch into clk-next.
+
+I think this patchset doesn't apply in your repository, but in
+Mark Brown's spi/topic/s3c64xx branch. So that I guess Mark
+should take this patchset.
+
+Sorry, I should have specified it in the cover letter.
+
+Thanks,
+Andi
