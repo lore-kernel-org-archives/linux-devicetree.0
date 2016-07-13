@@ -1,93 +1,74 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/3] Documentation: dt: net: add ath9k
-	wireless device binding
-Date: Wed, 13 Jul 2016 09:47:36 +0200
-Message-ID: <4498290.rJrZT5XFlG@wuerfel>
-References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com>
-	<20160709232834.31654-2-martin.blumenstingl@googlemail.com>
-	<87a8hmauls.fsf@purkki.adurom.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ath9k-devel-bounces@lists.ath9k.org>
-In-Reply-To: <87a8hmauls.fsf@purkki.adurom.net>
-List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
-	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
-List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
-List-Post: <mailto:ath9k-devel@lists.ath9k.org>
-List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
-List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
-	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
-Sender: ath9k-devel-bounces@lists.ath9k.org
-Errors-To: ath9k-devel-bounces@lists.ath9k.org
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arend.vanspriel@broadcom.com, pawel.moll@arm.com, mcgrof@do-not-panic.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, julian.calaby@gmail.com, ijc+devicetree@hellion.org.uk, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, robh+dt@kernel.org, ath9k-devel@lists.ath9k.org, galak@codeaurora.org, chunkeey@googlemail.com
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] Bluetooth: Add LED triggers for HCI frames tx and rx
+Date: Wed, 13 Jul 2016 09:07:58 +0100
+Message-ID: <D2545F6D-7100-4B59-A19D-7CF878902BAA@holtmann.org>
+References: <1466657923-5776-1-git-send-email-guodong.xu@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1466657923-5776-1-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 13, 2016 10:02:39 AM CEST Kalle Valo wrote:
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+Hi Guodong,
+
+> Two LED triggers are defined: tx_led and rx_led. Upon frames
+> available in HCI core layer, for tx or for rx, the combined LED
+> can blink.
 > 
-> > Add documentation how devicetree can be used to configure ath9k based
-> > devices.
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  .../devicetree/bindings/net/wireless/qca,ath9k.txt | 59 ++++++++++++++++++++++
-> >  1 file changed, 59 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
-> > new file mode 100644
-> > index 0000000..7c62c59
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
-> > @@ -0,0 +1,59 @@
-> > +* Qualcomm Atheros ath9k wireless devices
-> > +
-> > +This node provides properties for configuring the ath9k wireless device. The
-> > +node is expected to be specified as a child node of the PCI controller to
-> > +which the wireless chip is connected.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "qca,ath9k"
+> Verified on HiKey, 96boards. It uses hi6220 SoC and TI WL1835 combo
+> chip.
 > 
-> Isn't this supposed to use the chipset name? ath9k is the driver name
-> and something like ar9462 is the chip name. I know in ath10k we used
-> "qca,ath10k" but I'm starting to suspect that was a mistake.
+> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> include/net/bluetooth/hci_core.h |  1 +
+> net/bluetooth/hci_core.c         |  3 +++
+> net/bluetooth/leds.c             | 15 +++++++++++++++
+> net/bluetooth/leds.h             |  2 ++
+> 4 files changed, 21 insertions(+)
 > 
+> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> index dc71473..37b8dd9 100644
+> --- a/include/net/bluetooth/hci_core.h
+> +++ b/include/net/bluetooth/hci_core.h
+> @@ -398,6 +398,7 @@ struct hci_dev {
+> 	bdaddr_t		rpa;
+> 
+> 	struct led_trigger	*power_led;
+> +	struct led_trigger	*tx_led, *rx_led;
+> 
+> 	int (*open)(struct hci_dev *hdev);
+> 	int (*close)(struct hci_dev *hdev);
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 45a9fc6..c6e1210 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -3248,6 +3248,7 @@ int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
+> 	skb_queue_tail(&hdev->rx_q, skb);
+> 	queue_work(hdev->workqueue, &hdev->rx_work);
+> 
+> +	hci_leds_blink_oneshot(hdev->rx_led);
+> 	return 0;
+> }
+> EXPORT_SYMBOL(hci_recv_frame);
+> @@ -3325,6 +3326,8 @@ static void hci_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
+> 		BT_ERR("%s sending frame failed (%d)", hdev->name, err);
+> 		kfree_skb(skb);
+> 	}
+> +
+> +	hci_leds_blink_oneshot(hdev->tx_led);
+> }
 
-You are right, but it's actually more complicated than that. For PCI
-devices, the format of the compatible strings is defined in
-http://www.o3one.org/hwdocs/openfirmware/pci_supplement_2_1.pdf
-and it doesn't use the "vendor,device" syntax at all but instead
-uses pciVVVV,DDDD where VVVV and DDDD are the hexadecimal (without
-leading 0x) vendor and device ID numbers. The document also specifies
-seven other formats and in theory you should list them all, but
-that really only makes sense for Open Firmware that programatically
-creates those strings.
+so I am not convinced that this is the right way of doing TX/RX activity leds. This would have them purely based on HCI traffic and this would include control frames. I think that we want activity leds for actual radio activity. Meaning that when we have an active connection and ACL packets are exchanged or when we are scanning.
 
-For a hand-written DTS source, I'd just use the shortest one of those.
-Linux actually doesn't care at all, as PCI drivers don't use the
-compatible string but instead look at the config register values
-that were read by the PCI core.
+Regards
 
-For USB, we do basically the same thing, but have very few examples
-of that as Linux only recently started supporting this.
+Marcel
 
-For SDIO devices we should have done the same thing but screwed up
-when we made the generic binding and we have no policy, the example
-even lists one that makes no sense at all ("brcm,bcm43xx-fmac")
-as it is neither a specific device nor something derived from the IDs.
-
-For on-chip devices, we should follow the common policy for on-chip
-devices and use the "vendor,chip-funcion" with fallbacks for
-compatible devices such as:
-
-	compatible = "tplink,tp9343-wifi", "qca,qca9561-wifi", "atheros,ar9001-wifi";
-
-For a chip that is branded by TP-Link and derived from a Qualcomm Atheros
-chip it is 100% compatible with, and in turn derived from an older
-implementation (just guessing which one was the original ath9k).
-
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
