@@ -1,166 +1,76 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V2 PROOF OF CONCEPT 2/1] trigger: ledtrig-usbport: read
- initial state from DT
-Date: Wed, 13 Jul 2016 16:48:07 +0200
-Message-ID: <578654A7.2020909@samsung.com>
-References: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
- <1468413734-9569-1-git-send-email-zajec5@gmail.com>
- <1468413734-9569-3-git-send-email-zajec5@gmail.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH 2/2] fpga-manager: Add Socfpga Arria10 support
+Date: Wed, 13 Jul 2016 09:47:03 -0500
+Message-ID: <alpine.DEB.2.02.1607130944410.10735@linuxheads99>
+References: <20160712190709.5964-1-atull@opensource.altera.com>
+ <20160712190709.5964-3-atull@opensource.altera.com>
+ <CAAtXAHfSBzLisqBgF4Vry0vrcL3+DB4b1ctMOrTdOq5ue4D7JQ@mail.gmail.com>
+ <20160712222029.GW1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1468413734-9569-3-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160712222029.GW1041@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Alan Tull <delicious.quinoa@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafa=C5=82,
+On Tue, 12 Jul 2016, Russell King - ARM Linux wrote:
 
-On 07/13/2016 02:42 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
-> This allows specifying USB ports that should be observed by a trigger
-> right after activating it. Example:
->
-> usb {
-> 	gpios =3D <&gpio 0 GPIO_ACTIVE_HIGH>;
-> 	linux,default-trigger =3D "usbport";
-> 	usb-controllers =3D <&ohci>, <&ehci>, <&xhci USB_HCD_SHARED>;
-> 	usb-ports =3D "1", "1", "1";
+> On Tue, Jul 12, 2016 at 02:31:05PM -0700, Moritz Fischer wrote:
+> > On Tue, Jul 12, 2016 at 12:07 PM, Alan Tull <atull@opensource.altera.com> wrote:
+> > > +       priv->clk = devm_clk_get(dev, NULL);
+> > > +       if (IS_ERR(priv->clk)) {
+> > > +               dev_err(dev, "no clock specified\n");
+> > > +               return PTR_ERR(priv->clk);
+> > > +       }
+> > > +
+> > > +       ret = clk_prepare_enable(priv->clk);
+> > > +       if (ret) {
+> > > +               dev_err(dev, "could not enable clock\n");
+> > > +               clk_put(priv->clk);
+> > 
+> > Seen that you used devm_clk_get() is this one necessary?
+> 
+> That's actually a bug.
 
-Port is a numerical value, right?
-Wouldn't it be better to define it as an array of integers?
+Yes, it's wrong.  And not needed anyway.
 
-e.g.: usb-ports =3D <1>. <1>, <1>;
+>  Never clk_put() a devm_clk_get()'d clock.
+> devm_clk_put() is what you want if provided.  However, I think
+> this clk_put() call is useless here.
+> 
+> > > +static int socfpga_a10_fpga_remove(struct platform_device *pdev)
+> > > +{
+> > > +       struct fpga_manager *mgr = platform_get_drvdata(pdev);
+> > > +       struct a10_fpga_priv *priv = mgr->priv;
+> > > +
+> > > +       fpga_mgr_unregister(&pdev->dev);
+> > > +       clk_disable_unprepare(priv->clk);
+> > > +       clk_put(priv->clk);
+> > 
+> > Same here, if needed at all shouldn't it be devm_clk_put() ?
+> 
+> And also useless here, as the whole point of the devm_* stuff is to
+> clean up the resources that were claimed on probe failure or when
+> the device is unbound from its driver.
 
-> };
+Thanks for pointing this out.  I'll take out the clk_put's.
 
-Please provide a patch with DT bindings documentation for this
-trigger. I infer that usb-controllers and usb-ports are new
-properties.
+Alan
 
-Adding also Felipe, Mark and Rob.
-
->
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->   drivers/leds/trigger/ledtrig-usbport.c | 72 +++++++++++++++++++++++=
-+++++++++++
->   1 file changed, 72 insertions(+)
->
-> diff --git a/drivers/leds/trigger/ledtrig-usbport.c b/drivers/leds/tr=
-igger/ledtrig-usbport.c
-> index eb20a8f..5724f63 100644
-> --- a/drivers/leds/trigger/ledtrig-usbport.c
-> +++ b/drivers/leds/trigger/ledtrig-usbport.c
-> @@ -12,8 +12,10 @@
->   #include <linux/device.h>
->   #include <linux/leds.h>
->   #include <linux/module.h>
-> +#include <linux/of.h>
->   #include <linux/slab.h>
->   #include <linux/usb.h>
-> +#include <linux/usb/provider.h>
->   #include "../leds.h"
->
->   struct usbport_trig_port {
-> @@ -94,6 +96,75 @@ static bool usbport_trig_match(struct usbport_trig=
-_data *usbport_data,
->   	return false;
->   }
->
-> +static int usbport_trig_new_port(struct usbport_trig_data *usbport_d=
-ata,
-> +				 int busnum, const char *suffix)
-> +{
-> +	struct usbport_trig_port *port;
-> +	size_t len;
-> +	int tmp;
-> +
-> +	tmp =3D busnum;
-> +	len =3D 1;
-> +	while (tmp >=3D 10) {
-> +		tmp /=3D 10;
-> +		len++;
-> +	}
-> +	len++; /* '-' */
-> +	len +=3D strlen(suffix);
-> +	len++; /* '\0' */
-> +
-> +	port =3D kzalloc(sizeof(*port), GFP_KERNEL);
-> +	if (!port)
-> +		return -ENOMEM;
-> +
-> +	port->name =3D kzalloc(len, GFP_KERNEL);
-> +	if (!port->name) {
-> +		kfree(port);
-> +		return -ENOMEM;
-> +	}
-> +	snprintf(port->name, len, "%d-%s", busnum, suffix);
-> +
-> +	list_add_tail(&port->list, &usbport_data->ports);
-> +
-> +	return 0;
-> +}
-> +
-> +static int usbport_trig_fill(struct usbport_trig_data *usbport_data)
-> +{
-> +	struct device_node *np =3D usbport_data->led_cdev->dev->of_node;
-> +	struct of_phandle_args args;
-> +	int count, i;
-> +	int err =3D 0;
-> +
-> +	if (!np)
-> +		return -ENOENT;
-> +
-> +	count =3D of_property_count_strings(np, "usb-ports");
-> +	if (count < 0)
-> +		return count;
-> +
-> +	for (i =3D 0; i < count; i++) {
-> +		const char *port;
-> +		struct usb_hcd *hcd;
-> +
-> +		err =3D of_property_read_string_index(np, "usb-ports", i, &port);
-> +		if (err)
-> +			continue;
-> +
-> +		err =3D of_parse_phandle_with_args(np, "usb-controllers", "#usb-ce=
-lls", i, &args);
-> +		if (err)
-> +			continue;
-> +
-> +		hcd =3D of_hcd_get_from_provider(&args);
-> +		if (!IS_ERR(hcd))
-> +			usbport_trig_new_port(usbport_data, hcd->self.busnum, port);
-> +
-> +		of_node_put(args.np);
-> +	}
-> +
-> +	return err;
-> +}
-> +
->   static int usbport_trig_notify(struct notifier_block *nb, unsigned =
-long action,
->   			       void *data)
->   {
-> @@ -129,6 +200,7 @@ static void usbport_trig_activate(struct led_clas=
-sdev *led_cdev)
->   		return;
->   	usbport_data->led_cdev =3D led_cdev;
->   	INIT_LIST_HEAD(&usbport_data->ports);
-> +	usbport_trig_fill(usbport_data);
->   	usbport_data->nb.notifier_call =3D usbport_trig_notify,
->   	led_cdev->trigger_data =3D usbport_data;
->
->
-
-
---=20
-Best regards,
-Jacek Anaszewski
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> -- 
+> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+> according to speedtest.net.
+> 
