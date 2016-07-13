@@ -1,85 +1,51 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] usb: add HCD providers
-Date: Wed, 13 Jul 2016 16:02:42 +0800
-Message-ID: <20160713080242.GA11863@shlinux2>
-References: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
- <20160713045140.GA29915@shlinux2>
- <CACna6rw6QOuY247qvDmO4mKrW3y4yXoeM3qr8SXAwn3CuYAMpw@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/2] spi: add DT binding for clps711x SPI
+Date: Wed, 13 Jul 2016 10:13:58 +0200
+Message-ID: <9132787.CoNHcRuYpT@wuerfel>
+References: <20160707094952.4111577-1-arnd@arndb.de>
+ <20160707094952.4111577-2-arnd@arndb.de>
+ <20160712204947.GA6182@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACna6rw6QOuY247qvDmO4mKrW3y4yXoeM3qr8SXAwn3CuYAMpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LED SUBSYSTEM" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160712204947.GA6182@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 13, 2016 at 07:21:09AM +0200, Rafa=C5=82 Mi=C5=82ecki wrote=
-:
-> On 13 July 2016 at 06:51, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Tue, Jul 12, 2016 at 02:35:18PM +0200, Rafa=C5=82 Mi=C5=82ecki w=
-rote:
-> >> I was working on an "usbport" LED trigger driver and specifying it=
-s
-> >> default state in DT. I realized I can't really determine numbering=
- of
-> >> USB ports on any device as it depends on compiled drivers and the
-> >> loading orders.
-> >>
-> >> It means that my physical USB port can be e.g. 1-1 or 2-1 dependin=
-g on
-> >> my current config/setup. I needed a way to specify a particular HC=
-D in
-> >> DT and then hardcode port number (as this part doesn't change).
-> >>
-> >
-> > I have a question:
-> >
-> > What does your "usbport" LED trigger for? What kinds of information
-> > you would like to show on LED?
->=20
-> It's a trigger that turns on LED whenever USB device appears at
-> specified USB port. There are plenty of home routers that have USB
-> labeled LED(s). To support them nicely, first of all we need a trigge=
-r
-> that will watch for USB subsystem events. Secondly we need a way to
-> setup its initial state correctly as most users don't want to play
-> with sysfs on their own.
->=20
-> I sent usbport trigger in:
-> [PATCH] leds: trigger: Introduce an USB port trigger
-> <1468239883-22695-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> https://lkml.org/lkml/2016/7/11/305
-> You may read commit message and ledtrig-usbport.txt for more details.
->=20
+On Tuesday, July 12, 2016 3:49:47 PM CEST Rob Herring wrote:
+> On Thu, Jul 07, 2016 at 11:49:46AM +0200, Arnd Bergmann wrote:
+> > +
+> > +An additional register is present in the system controller,
+> > +which is assumed to be in the same device tree, with and marked
+> > +as compatible with "cirrus,ep7209-syscon3".
+> > +
+> > +Example:
+> > +
+> > +spi@80000500 {
+> > +     #address-cells = <1>;
+> > +     #size-cells = <0>;
+> > +     compatible = "cirrus,ep7209-spi";
+> > +     reg = <0x80000500 0x4>;
+> > +     interrupts = <15>;
+> > +     clocks = <&clks CLPS711X_CLK_SPI>;
+> > +     status = "disabled";
+> > +};
+> > +
+> > +syscon3: syscon@80002200 {
+> 
+> This looks like it shouldn't be here.
 
-Well, it is an interesting use case. You can try to add provider (un)re=
-gister
-at hub driver (drivers/usb/core/hub.c) instead of each platform drivers=
-, you
-could refer my USB pwrseq as an example[1].
+The label, or the entire node?
 
-=46or roothub, you can get the busnum through comparing controller's of=
-_node, for
-internal hub, you can get hub's dev name like (1-1) through comparing
-its of_node (you need to describe your hard-wired hub on dts).
-
-http://www.spinics.net/lists/linux-usb/msg143699.html
-
-Two more questions:
-
-- How to support the USB device on the port when boots up?
-- Any cases we need to add mapping using new_port_store, the user may
-not know bus number for physical port.
-
---=20
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
