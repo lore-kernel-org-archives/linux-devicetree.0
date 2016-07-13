@@ -1,39 +1,107 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 7/7] clk: exynos5433: remove CLK_IGNORE_UNUSED flag from
- SPI clocks
-Date: Wed, 13 Jul 2016 11:54:52 +0200
-Message-ID: <57860FEC.3090004@samsung.com>
-References: <1468317736-18841-1-git-send-email-andi.shyti@samsung.com>
- <1468317736-18841-8-git-send-email-andi.shyti@samsung.com>
- <146836184696.73491.9452469757415968654@resonance>
- <578607FD.6050705@samsung.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/4] ARM: dts: sun8i: Extend Orange Pi PC dt to also
+ handle the PC Plus
+Date: Wed, 13 Jul 2016 12:01:41 +0200
+Message-ID: <bce2b340-a930-8771-4560-dc61bf5828d5@redhat.com>
+References: <1468095718-18515-1-git-send-email-hdegoede@redhat.com>
+ <20160713084505.GE4761@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <578607FD.6050705-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160713084505.GE4761@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/13/2016 11:21 AM, Sylwester Nawrocki wrote:
-> On 07/13/2016 12:17 AM, Michael Turquette wrote:
+Hi,
+
+On 13-07-16 10:45, Maxime Ripard wrote:
+> On Sat, Jul 09, 2016 at 10:21:55PM +0200, Hans de Goede wrote:
+>> There is a new Orange Pi PC Plus available now, rather then adding
+>> yet another dts file for this variant, extend the existing
+>> Orange Pi PC to support the sdio wifi and emmc found on this variant.
 >>
->> Do you want these patches to go through same tree? If not, I can take
->> this patch into clk-next.
-> 
-> I think this patch can safely go separately through the clk tree,
-> we just need to ensure whole series is merged for same release
-> to avoid regressions. There should be no problems with git bisect
-> since there is no exynos5433 based board dts in mainline yet.
+>> Downside of this approach is the following messages in dmesg when run
+>> on the non Plus Orange Pi PC:
+>>
+>> sunxi-mmc 1c10000.mmc: fatal err update clk timeout
+>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 8, RTO !!
+>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
+>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
+>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
+>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
+>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 1, RTO !!
+>>
+>> Note these are completely harmless and there is no adverse effect
+>> to the functioning of the non Plus Orange Pi PC.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 40 +++++++++++++++++++++++++++++-
+>>  1 file changed, 39 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+>> index b8340f7..f9bf260 100644
+>> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+>> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+>> @@ -49,11 +49,13 @@
+>>  #include <dt-bindings/pinctrl/sun4i-a10.h>
+>>
+>>  / {
+>> -	model = "Xunlong Orange Pi PC";
+>> +	model = "Xunlong Orange Pi PC / PC Plus";
+>>  	compatible = "xunlong,orangepi-pc", "allwinner,sun8i-h3";
+>>
+>>  	aliases {
+>>  		serial0 = &uart0;
+>> +		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
+>> +		ethernet1 = &rtl8189ftv;
+>>  	};
+>>
+>>  	chosen {
+>> @@ -118,6 +120,42 @@
+>>  	status = "okay";
+>>  };
+>>
+>> +/* Note only present on orangepi pc *plus* */
+>> +&mmc1 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&mmc1_pins_a>;
+>> +	vmmc-supply = <&reg_vcc3v3>;
+>> +	bus-width = <4>;
+>> +	non-removable;
+>> +	status = "okay";
+>> +
+>> +	/*
+>> +	 * Explicitly define the sdio device, so that we can add an ethernet
+>> +	 * alias for it (which e.g. makes u-boot set a mac-address).
+>> +	 */
+>> +	rtl8189ftv: sdio_wifi@1 {
+>> +		reg = <1>;
+>> +	};
+>> +};
+>
+> Nothing prevents you from including the orange pi pc dts, from the
+> orange pi plus dts.
+>
+> It prevents the duplication you were trying to avoid, and it doesn't
+> create all those spurious errors and devices.
 
-Ack.
+That would solve the copy paste problem on the kernel side, but that
+would still mean adding a new u-boot defconfig for this, which means that
+all the distro's which ship with prebuild u-boot binaries need to build
+for yet another board, something which I would like to avoid.
 
-Best regards,
-Krzysztof
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
