@@ -1,163 +1,95 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v3 1/2] drivers: led: is31fl319x: 1/3/6/9-channel light effect led driver
-Date: Wed, 13 Jul 2016 10:52:07 +0200
-Message-ID: <D91D4F2A-D5CE-48FB-97DE-E9CFE2C01E3F@goldelico.com>
-References: <cover.1468007377.git.hns@goldelico.com> <524f16ecba240bacf57924f43ec38404cfdcde8f.1468007377.git.hns@goldelico.com> <57854FB0.1080605@gmail.com> <55F90A44-0B60-4342-8143-56F85EA24772@goldelico.com> <5785F17D.3010108@samsung.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <5785F17D.3010108@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH RFC] serial: imx: support an enable-gpio
+Date: Wed, 13 Jul 2016 11:01:35 +0200
+Message-ID: <1468400495-10471-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+A part of my machine looks as follows (simplified):
 
-> Am 13.07.2016 um 09:45 schrieb Jacek Anaszewski <j.anaszewski@samsung.com>:
-> 
-> Hi Nikolaus,
-> 
-> On 07/13/2016 08:09 AM, H. Nikolaus Schaller wrote:
-> [...]
->>>> +	/*
->>>> +	 * Kernel conventions require per-LED led-max-microamp property.
->>>> +	 * But the chip does not allow to limit individual LEDs.
->>>> +	 * So we take minimum from all subnodes.
->>> 
->>> Why minimum? Choose maximum and reduce max_brightness properties
->>> of the sub-LEDs with lesser led-max-microamp.
->> 
->> Hm. Is this really the correct way to handle it?
->> 
->> Assume you connect an LED which is specified with 10mA peak current.
->> And another with 20mA peak current.
->> 
->> So you define led-max-microamp in the DT as 10 mA and 20 mA.
->> 
->> Firstly a user can set the brightness only to 50% of LED_FULL since it is limited
->> by a reduced max_brightness. And heshe finds that not all LEDs have the same
->> max_brightness. The first LED will have 127 and the second one 255 for reasons
->> not directly understandable.
-> 
-> You have to know that led-max-microamp property was introduced
-> to standarize Device Tree definition of maximum brightness allowed for
-> a sub-LED.
+,------------------------.
+| ,---------.            |
+| |  imx25  o--RX----=E2=97=81---o---
+| |         o--GPIO--'   |
+| `---------'            |
+`------------------------'
 
-> 
-> Earlier people defined max-brightness property in DT, but at
-> some point we realized that brightness level is not a proper unit for
-> describing a hardware property.
+that is, there is a driver on the RX line that must be enabled before
+the UART can be used. (That is necessary because the default mux of the
+RX pad after reset is an output.)
 
-Indeed it isn't. It could be if it were brightness in some physical unit, but
-here it is a user-space range definition. 
+To represent this in the device tree I do:
 
-> It was not global max-microamp setting that appears in recent LED
-> controllers that drove the introduction of led-max-microamp property.
+	pinctrl_uart5: uart5 {
+		fsl,pins =3D <
+			...
+			MX25_PAD_LBA__UART5_RXD		0x00000000
+			MX25_PAD_CS5__GPIO_3_21		0x00002001
+			...
+	};
 
-> 
-> If you question the idea of having different maximum brightness per
-> sub-LEDs controlled by the same device, then it means that you have
-> objections to the entire idea of LED subsystem max_brightness property,
-> whereas it has been broadly accepted and successfully used for years.
+	&uart5 {
+		pinctrl-names =3D "default";
+		pinctrl-0 =3D <&pinctrl_uart5>;
 
-Perhaps the max_brightness visible in user space could be standardized
-to be always identical to LED_FULL.
+		enable-gpio =3D <&gpio3 21 GPIO_ACTIVE_LOW>;
+		...
+	};
 
-> 
->> This entangles "brightness" with "max-current" - which are IMHO two independent
->> things.
-> 
-> The fact that recent LED controllers use the same notion for one of its
-> settings shouldn't mislead us.
+This way it's ensured that the gpio is only enabled when the LBA pad is
+muxed as RX (together with the bootloader that sets the GPIO high).
 
-BTW, some LEDs may have the same brightness (measured physical light
-intensity) at very different currents, but that is not the key point.
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+Hello,
 
-> 
->> Next, this will set the hardware limit to 20 mA. So there will be current peaks
->> of 20 mA for an LED where the DT developer thinks to have specified a led-max-microamp
->> of 10 mA. So you run the LED outside of its specs although the DT seems to
->> tell that it is inside and user-space thinks it is ok. This will reduce lifetime of LEDs.
-> 
-> In what circumstances would such current peaks occur? On reset?
+I'm not sure about the naming. Do you have a better suggestion how to h=
+andle
+this situation?
 
-During PWM operation. PWM makes pulses with different duty cycle.
+Best regards
+Uwe
 
-Some % of the time it is 0 mA and some it is some max current. In our chip
-this max current is defined for all LEDs by some global control register.
+ drivers/tty/serial/imx.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-If you limit to 50% of the max current of all LEDS (e.g. 20 mA) you have
-10 mA average described in the DT.
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 0df2b1c091ae..56eaa18aa5be 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -39,6 +39,7 @@
+ #include <linux/of_device.h>
+ #include <linux/io.h>
+ #include <linux/dma-mapping.h>
++#include <linux/gpio/consumer.h>
+=20
+ #include <asm/irq.h>
+ #include <linux/platform_data/serial-imx.h>
+@@ -1987,7 +1988,9 @@ static int serial_imx_probe_dt(struct imx_port *s=
+port,
+ 	if (of_get_property(np, "fsl,dte-mode", NULL))
+ 		sport->dte_mode =3D 1;
+=20
+-	return 0;
++	ret =3D PTR_ERR_OR_ZERO(devm_gpiod_get_optional(&pdev->dev, "enable",=
+ GPIOD_OUT_HIGH));
++	dev_info(&pdev->dev, "Tralala: ret =3D %d\n", ret);
++	return ret;
+ }
+ #else
+ static inline int serial_imx_probe_dt(struct imx_port *sport,
+--=20
+2.8.1
 
-But this means permanent pulses of 20 mA e.g. 50% of the time at LED_HALF.
-50% of the time the current is above what is described in DT.
-
-> Shouldn't such a device be considered as broken by design?
-
-Yes but only if it would do it during reset.
-
-The problem I refer to is during normal operation and occurs because
-we try to pretend that we can limit the max current for each LED individually,
-which the chip does not provide.
-
-We can only limit the average current of each LED and not the peak current.
-
-> What if all LEDs would have low amperage?
-
-Yes, the chip can reduce the max current in steps of 5 mA up to 40 mA. So
-you can reduce it to the lowest led-max-microamp of any of the LEDs. Which
-is the minimum-rule we have in v3.
-
-If all LEDs are the same, this will be like a global limit.
-
-> Would there be some way
-> to protect them from being damaged by current peaks?
-
-Yes, there would be a hardware means to limit the current: series resistors.
-
-But I think neither driver implementation nor DT considerations should drive
-hardware design into a specific solution...
-
-That all is why we initially proposed a new global led-max-microamp DT property.
-It would IMHO better describe the chip in DT and not loose any user-space
-capabilities.
-
-Ah, writing this sentence opens my eyes to where we are not talking about the same
-picture. It appears that I am thinking chip-focussed about describing the
-current-limiting facility of the chip. Hence the global property.
-
-Contrary to that, the subnode led-max-microamp describes the LEDs (and not a chip).
-And leaves it to the driver to set up the chip in a way that the LEDs never get
-more current than specified there. Right?
-
-This means we have to take the minimum (not the maximum) and round it down
-to the nearest value the chip can provide.
-
-I.e. if you specify one LED with 10mA and one with 1000mA, the whole chip would
-limit to 10mA. This means the 1000mA LED will never be visibly bright (even at
-max_brightness). But that is not a fault of the chip or the driver but of the hardware
-designer choosing such imbalanced LEDs.
-
-> 
->> So either "led-max-microamp" is the wrong name for this property (could better
->> be "led-max-average-microamp") or the whole logic is broken.
->> 
->> This is why we hesitate to hide (or even disable because you can't set the limit
->> to 10mA by DT) the current limiting chip feature by such a difficult to understand
->> automatic feature.
->> 
->> Using the minimum of all led-max-microamp keeps everything on the safe
->> side, running some LEDs with less current than specified. But never outside
->> of the spec. And all LEDs have the same max_brightness which is IMHO
->> more intuitive for the user.
->> 
->> Our original proposal was to define led-max-microamp for the whole chip
->> instead of individual LEDs, which is IMHO much easier to understand,
->> because it corresponds one-to-one with the data sheet.
-> 
-> 
-
-BR and thanks,
-Nikolaus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
