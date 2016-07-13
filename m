@@ -1,14 +1,15 @@
-From: Wan Zongshun <vw@iommu.org>
-Subject: Re: [PATCH v2 08/10] ARM: dts: nuc900: Add nuc970 dts files
-Date: Wed, 13 Jul 2016 15:26:40 +0800
-Message-ID: <5785ED30.4090206@iommu.org>
-References: <1468136542-2656-1-git-send-email-vw@iommu.org>
- <20160712153910.GA3507@afzalpc>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 1/6] binding-doc: power: pwrseq-generic: add binding
+ doc for generic power sequence library
+Date: Wed, 13 Jul 2016 09:27:31 +0200
+Message-ID: <1468394851.3638.13.camel@pengutronix.de>
+References: <1468375610-18625-1-git-send-email-peter.chen@nxp.com>
+ <1468375610-18625-2-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160712153910.GA3507@afzalpc>
+In-Reply-To: <1468375610-18625-2-git-send-email-peter.chen@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,18 +19,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Afzal Mohammed <afzal.mohd.ma@gmail.com>
-Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, Wan Zongshun <mcuos.com@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Peter Chen <peter.chen@nxp.com>
+Cc: mark.rutland@arm.com, ulf.hansson@linaro.org, stephen.boyd@linaro.org, k.kozlowski@samsung.com, festevam@gmail.com, stillcompiling@gmail.com, pawel.moll@arm.com, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, arnd@arndb.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, sre@kernel.org, broonie@kernel.org, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyMDE25bm0MDfmnIgxMuaXpSAyMzozOSwgQWZ6YWwgTW9oYW1tZWQgd3JvdGU6Cj4gSGks
-Cj4KPiBPbiBTdW4sIEp1bCAxMCwgMjAxNiBhdCAwMzo0MjoyMFBNICswODAwLCBXYW4gWm9uZ3No
-dW4gd3JvdGU6Cj4+IFRoaXMgcGF0Y2ggaXMgdG8gYWRkIGR0cyBzdXBwb3J0IGZvciBudWM5NzAg
-cGxhdGZvcm0uCj4KPiBjcHUgISBpbiBzb2MgPyBsb3N0IGluIGZhYiA/IDspCgpEbyB5b3UgbWVh
-biBJIHNob3VsZCBhZGQgY3B1cyBpbnRvIHNvYyBsaWtlPwoKCgljcHVzIHsKCQkjYWRkcmVzcy1j
-ZWxscyA9IDwwPjsKCQkjc2l6ZS1jZWxscyA9IDwwPjsKCgkJY3B1IHsKCQkJY29tcGF0aWJsZSA9
-ICJhcm0sYXJtOTI2ZWotcyI7CgkJCWRldmljZV90eXBlID0gImNwdSI7CgkJfTsKCX07Cgo+Cj4g
-UmVnYXJkcwo+IGFmemFsCj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Am Mittwoch, den 13.07.2016, 10:06 +0800 schrieb Peter Chen:
+> Add binding doc for generic power sequence library.
+> 
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> ---
+>  .../bindings/power/pwrseq/pwrseq-generic.txt       | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> new file mode 100644
+> index 0000000..186c58c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> @@ -0,0 +1,53 @@
+> +The generic power sequence library
+> +
+> +Some hard-wired USB/MMC devices need to do power sequence to let the
+> +device work normally,
+
+I would replace "to let the device work normally" with "before the
+device can be enumerated [on the bus]" here.
+
+>  the typical power sequence like: enable USB
+> +PHY clock, toggle reset pin, etc. But current Linux USB driver
+> +lacks of such code to do it, it may cause some hard-wired USB devices
+> +works abnormal or can't be recognized by controller at all. The
+> +power sequence will be done before this device can be found at USB
+> +bus.
+> +
+> +The power sequence properties is under the device node.
+> +
+> +Required properties:
+> +- power-sequence: this device needs to do power sequence before enumeration
+
+As Joshua pointed out, is this even needed at all?
+
+> +Optional properties:
+> +- clocks: the input clock for device.
+> +- reset-gpios: Should specify the GPIO for reset.
+> +- reset-duration-us: the duration in microsecond for assert reset signal.
+
+With the above two issues sorted out,
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+regards
+Philipp
