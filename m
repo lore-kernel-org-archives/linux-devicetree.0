@@ -1,95 +1,75 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH RFC] serial: imx: support an enable-gpio
-Date: Wed, 13 Jul 2016 11:01:35 +0200
-Message-ID: <1468400495-10471-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 20/20] dt-bindings: pwm: sti: Update DT bindings with
+ recent changes
+Date: Wed, 13 Jul 2016 10:02:46 +0100
+Message-ID: <20160713090246.GA11154@dell>
+References: <20160608092135.21184-1-lee.jones@linaro.org>
+ <20160608092135.21184-21-lee.jones@linaro.org>
+ <20160608205152.GA5511@rob-hp-laptop> <20160609114107.GB1388@dell>
+ <20160610131855.GG27142@ulmo.ba.sec> <20160610140635.GC1537@dell>
+ <20160610145323.GO27142@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20160610145323.GO27142@ulmo.ba.sec>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: kernel@stlinux.com, linux-pwm@vger.kernel.org, patrice.chotard@st.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
 
-A part of my machine looks as follows (simplified):
-
-,------------------------.
-| ,---------.            |
-| |  imx25  o--RX----=E2=97=81---o---
-| |         o--GPIO--'   |
-| `---------'            |
-`------------------------'
-
-that is, there is a driver on the RX line that must be enabled before
-the UART can be used. (That is necessary because the default mux of the
-RX pad after reset is an output.)
-
-To represent this in the device tree I do:
-
-	pinctrl_uart5: uart5 {
-		fsl,pins =3D <
-			...
-			MX25_PAD_LBA__UART5_RXD		0x00000000
-			MX25_PAD_CS5__GPIO_3_21		0x00002001
-			...
-	};
-
-	&uart5 {
-		pinctrl-names =3D "default";
-		pinctrl-0 =3D <&pinctrl_uart5>;
-
-		enable-gpio =3D <&gpio3 21 GPIO_ACTIVE_LOW>;
-		...
-	};
-
-This way it's ensured that the gpio is only enabled when the LBA pad is
-muxed as RX (together with the bootloader that sets the GPIO high).
-
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-Hello,
-
-I'm not sure about the naming. Do you have a better suggestion how to h=
-andle
-this situation?
-
-Best regards
-Uwe
-
- drivers/tty/serial/imx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 0df2b1c091ae..56eaa18aa5be 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -39,6 +39,7 @@
- #include <linux/of_device.h>
- #include <linux/io.h>
- #include <linux/dma-mapping.h>
-+#include <linux/gpio/consumer.h>
-=20
- #include <asm/irq.h>
- #include <linux/platform_data/serial-imx.h>
-@@ -1987,7 +1988,9 @@ static int serial_imx_probe_dt(struct imx_port *s=
-port,
- 	if (of_get_property(np, "fsl,dte-mode", NULL))
- 		sport->dte_mode =3D 1;
-=20
--	return 0;
-+	ret =3D PTR_ERR_OR_ZERO(devm_gpiod_get_optional(&pdev->dev, "enable",=
- GPIOD_OUT_HIGH));
-+	dev_info(&pdev->dev, "Tralala: ret =3D %d\n", ret);
-+	return ret;
- }
- #else
- static inline int serial_imx_probe_dt(struct imx_port *sport,
---=20
-2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAxMCBKdW4gMjAxNiwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gT24gRnJpLCBKdW4g
+MTAsIDIwMTYgYXQgMDM6MDY6MzVQTSArMDEwMCwgTGVlIEpvbmVzIHdyb3RlOgo+ID4gT24gRnJp
+LCAxMCBKdW4gMjAxNiwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gPiAKPiA+ID4gPiA+ID4gVGhl
+IHNlY29uZCBkb2N1bWVudGF0aW9uIGFkYXB0aW9uIGVudGFpbHMgYWRkaW5nIHN1cHBvcnQgZm9y
+IFBXTQo+ID4gPiA+ID4gPiBjYXB0dXJlIGRldmljZXMuICBBIG5ldyBjbG9jayBpcyByZXF1aXJl
+ZCBhcyB3ZWxsIGFzIGFuIElSUSBsaW5lLgo+ID4gPiA+ID4gPiBXZSdyZSBhbHNvIGFkZGluZyBh
+IG5ldyBwcm9wZXJ0eSBzaW1pbGFyIHRvIHRoZSBvbmUgZGVzY3JpYmVkCj4gPiA+ID4gPiA+IGFi
+b3ZlLCBidXQgZm9yIGNhcHR1cmUgY2hhbm5lbHMuICBUeXBpY2FsbHksIHRoZXJlIHdpbGwgYmUg
+bGVzcwo+ID4gPiA+ID4gPiBjYXB0dXJlIGNoYW5uZWxzIHRoYW4gUFdNLW91dCwgc2luY2UgYWxs
+IGNoYW5uZWxzIGhhdmUgdGhlIGxhdHRlcgo+ID4gPiA+ID4gPiBjYXBhYmlsaXR5LCBidXQgb25s
+eSBzb21lIGhhdmUgY2FwdHVyZSBzdXBwb3J0Lgo+ID4gPiA+ID4gCj4gPiA+ID4gPiBIdW1tLCBz
+b3VuZHMgbGlrZSBhbGwgb2YgdGhpcyBzaG91bGQgYmUgaW1wbGllZCBmcm9tIGNvbXBhdGlibGUg
+c3RyaW5ncy4KPiA+ID4gPiAKPiA+ID4gPiBZb3UgbWVhbiBoYXZlIGEgYnVuY2ggb2Ygb2ZfbWFj
+aGluZV9pc19jb21wYXRpYmxlcygpIHNjYXR0ZXJlZCBhcm91bmQ/Cj4gPiA+IAo+ID4gPiBJIGRv
+bid0IHVuZGVyc3RhbmQgd2h5IHlvdSBuZWVkIHRoaXMgYXQgYWxsLiBRdWl0ZSBmcmFua2x5IEkg
+ZG9uJ3QgZXZlbgo+ID4gPiBrbm93IHdoeSBzdCxwd20tbnVtLWRldnMgZXhpc3RzLiBJIHByb2Jh
+Ymx5IG1pc3NlZCBpdCBiYWNrIGF0IHRoZSB0aW1lLgo+ID4gPiBVc3VhbGx5LCBsaWtlIFJvYiBz
+dWdnZXN0cywgdGhpcyBzaG91bGQgYmUgaW5mZXJyZWQgZnJvbSB0aGUgY29tcGF0aWJsZQo+ID4g
+PiBzdHJpbmcuIE9uZSBjb21tb25seSB1c2VkIHdheSB0byBhdm9pZCBzY2F0dGVyaW5nIGV4cGxp
+Y2l0IGNoZWNrcyBmb3IKPiA+ID4gdGhlIGNvbXBhdGlibGUgc3RyaW5nIGlzIHRvIGFkZCB0aGlz
+IGluZm9ybWF0aW9uIHRvIHRoZSBvZl9kZXZpY2VfaWQKPiA+ID4gdGFibGUuIFNlZSBhIGJ1bmNo
+IG9mIGV4aXN0aW5nIGRyaXZlcnMgZm9yIHJlZmVyZW5jZS4KPiA+IAo+ID4gWWVzLCBJIGFtIGF3
+YXJlIG9mIHRoZSBzdHJhdGVneSwgYW5kIGhhcHB5IHRvIG9ibGlnZSBpZiB0aGlzIGlzIHlvdXIK
+PiA+IHN1Z2dlc3Rpb24uICBJJ2xsIG1vdmUgYWxsIHBsYXRmb3JtIGRhdGEgaW50byB0aGUgZHJp
+dmVyIGFuZCBlcmFkaWNhdGUKPiA+IHRoZSBEVCBwcm9wZXJ0aWVzLgo+IAo+IEdyZWF0IQoKU29y
+cnkgaXQncyB0YWtlbiBzbyBsb25nIHRvIGdldCBiYWNrIGFyb3VuZCB0byB0aGlzLgoKU28gSSBq
+dXN0IGhhZCBhIGNyYWNrIGF0IGltcGxlbWVudGluZyB0aGlzIHNvbHV0aW9uIGFuZCByYW4gaW50
+bwppc3N1ZXMuICBVbmZvcnR1bmF0ZWx5LCB0aGUgY29uZmlndXJhdGlvbiBpc24ndCBlYXN5IHRv
+IGRlc2NyaWJlIHVzaW5nCmNvbXBhdGlibGUgc3RyaW5ncy4KClVubGVzcyB3ZSBhcmUgcHJlcGFy
+ZWQgdG8gaGF2ZSBzdHJpbmdzIGxpa2U6CgogIHN0LHN0aS1wd20tc3RpaDQwNy1wd20wCiAgc3Qs
+c3RpLXB3bS1zdGloNDA3LXB3bTEKICBzdCxzdGktcHdtLXN0aWg0MTYtcHdtMAogIHN0LHN0aS1w
+d20tc3RpaDQxNi1wd20xCgpPciBwZXJoYXBzOgoKICBzdCxzdGktcHdtLTRvdXQtMmNwdAogIHN0
+LHN0aS1wd20tMW91dC0xY3B0CgouLi4gc2luY2Ugc29tZSBvZiB0aGUgUFdNcyBoYXZlIGFuIG9k
+ZCBudW1iZXIgb2YgT1VUIGFuZCBDUFQKY2hhbm5lbHMvZGV2aWNlcy4gIEluIG15IG9waW5pb24g
+aG93ZXZlciwgdGhpcyBpcyB1Z2x5LiAgSSBkb24ndCB0aGluawp3ZSBkbyB0aGlzIGZvciBhbnkg
+b3RoZXIgdHlwZSBvZiBjaGFubmVsL2RldmljZS9wb3J0IGV0YywgZG8gd2U/CgpQZXJzb25hbGx5
+IEkgdGhpbmsgdGhlcmUgaXNuJ3QgYW55dGhpbmcgd3Jvbmcgd2l0aCBoYXZpbmcgRFQKcHJvcGVy
+dGllcyBkZXNjcmliaW5nIGhvdyBtYW55IGNoYW5uZWxzL2RldmljZXMgdGhlcmUgYXJlLCBidXQg
+SSdtCm9rYXkgd2l0aCB3aGF0ZXZlciB5b3UgYm90aCBkZWNpZGUuICBObyBza2luIG9mIG15IG5v
+c2UgcmVhbGx5LiA6KQoKV2hhdCBzYXkgeW91PwoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RNaWNy
+b2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNl
+IHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIg
+fCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
