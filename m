@@ -1,32 +1,87 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add SD clocks
-Date: Wed, 13 Jul 2016 03:29:57 +0200
-Message-ID: <CAMuHMdXcu3-ReeMBjarQ4QYZ+jbeSF6ooWUavTmgM-xLUOZjLA@mail.gmail.com>
-References: <2441635.ESeLhIjWEX@wasted.cogentembedded.com> <5720002.roQESv2v7G@wasted.cogentembedded.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] Documentation: bindings: add dt doc for Rockchip
+ PCIe controller
+Date: Tue, 12 Jul 2016 18:31:18 -0700
+Message-ID: <20160713013117.GA130126@google.com>
+References: <1467789398-13501-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160707003912.GB100467@google.com>
+ <59b328c9-3a21-36fa-7f28-4ba24d77fef0@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <5720002.roQESv2v7G@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <59b328c9-3a21-36fa-7f28-4ba24d77fef0-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 12, 2016 at 11:10 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Describe the SDHI0 clock and its parent, SD clock in the R8A7792 device tree.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgU2hhd24sCgpPbiBXZWQsIEp1bCAxMywgMjAxNiBhdCAwOToxMDoxNUFNICswODAwLCBTaGF3
+biBMaW4gd3JvdGU6Cj4g5ZyoIDIwMTYvNy83IDg6MzksIEJyaWFuIE5vcnJpcyDlhpnpgZM6Cj4g
+Pk9uIFdlZCwgSnVsIDA2LCAyMDE2IGF0IDAzOjE2OjM3UE0gKzA4MDAsIFNoYXduIExpbiB3cm90
+ZToKPiA+PisJI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPiA+PisJaW50ZXJydXB0LW1hcC1tYXNr
+ID0gPDAgMCAwIDc+Owo+ID4+KwlpbnRlcnJ1cHQtbWFwID0gPDAgMCAwIDEgJnBjaWUwX2ludGMg
+MT4sCj4gPj4rCQkJPDAgMCAwIDIgJnBjaWUwX2ludGMgMj4sCj4gPj4rCQkJPDAgMCAwIDMgJnBj
+aWUwX2ludGMgMz4sCj4gPj4rCQkJPDAgMCAwIDQgJnBjaWUwX2ludGMgND47Cj4gPgo+ID5JJ20g
+YSBsaXR0bGUgbG9zdCBvbiB0aGlzIG9uZSwgc28gZm9yZ2l2ZSBteSBpZ25vcmFuY2U7IGhvdyBk
+aWQgeW91Cj4gPmRldGVybWluZSB0aGUgbGFzdCB2YWx1ZSBpbiBlYWNoIGVudHJ5IChpLmUuLCB0
+aGUgMSwgMiwgMywgYW5kIDQgSVJRCj4gPm51bWJlcnMgZm9yIHBjaWUwX2ludGMpPyBJSVVDLCB0
+aG9zZSBhcmUgc3VwcG9zZWQgdG8gcmVwcmVzZW50IGluZGVjZXMKPiA+aW50byB0aGUgSVJRIHN0
+YXR1cyByZWdpc3RlciBmb3VuZCBpbiB0aGUgUENJZSBpbnRlcnJ1cHQgc3RhdHVzCj4gPnJlZ2lz
+dGVyLCBhbmQgc28gdGhleSBzaG91bGQgYmUgMC1iYXNlZCAoaS5lLiwgMCwgMSwgMiwgMykuIEFu
+ZCB0aGVuCj4gPnlvdSdkIGhhdmU6Cj4gPgo+ID4JaW50ZXJydXB0LW1hcCA9IDwwIDAgMCAxICZw
+Y2llMF9pbnRjIDA+LAo+ID4JCQk8MCAwIDAgMiAmcGNpZTBfaW50YyAxPiwKPiA+CQkJPDAgMCAw
+IDMgJnBjaWUwX2ludGMgMj4sCj4gPgkJCTwwIDAgMCA0ICZwY2llMF9pbnRjIDM+Owo+ID4KPiA+
+QnV0IHRoZW4sIEkgbmV2ZXIgZ290IHRoaXMgc3ViLW5vZGUgYmluZGluZyB0byB3b3JrIHF1aXRl
+IHJpZ2h0LCBzbyBJCj4gPm1heSBiZSBtaXNzaW5nIHNvbWV0aGluZy4KPiA+Cj4gPkVESVQ6IG9v
+aCwgSSBzZWUgd2hhdCdzIGdvaW5nIG9uISBJJ2xsIGNvbW1lbnQgb24gdGhlIGRyaXZlciBhcyB3
+ZWxsLAo+ID5idXQgaXQgbG9va3MgbGlrZSB5b3UncmUgdHJhbnNsYXRpbmcgdGhlIHJlZ2lzdGVy
+IHN0YXR1cyB0byBhIEhXIElSUQo+ID5udW1iZXIgd2l0aCAnZmZzKHJlZyknLCB3aGljaCB5aWVs
+ZHMgYSAxLWJhc2VkIGluZGV4LiBJIHRoaW5rIGl0IGlzIG1vc3QKPiA+c2Vuc2libGUgdG8gdXNl
+IGEgMC1iYXNlZCBpbmRleCAoaS5lLiwgJ2ZmcyhyZWcpIC0gMScpLiBOb3csIHRoYXQgb25seQo+
+ID53aWxsIHdvcmsgaWYgeW91IGdldCB0aGUgd2hvbGUgaW50ZXJydXB0LW1hcCArIGludGVycnVw
+dC1jb250cm9sbGVyCj4gPnRoaW5nIHJpZ2h0IChpLmUuLCB1c2luZyBhIHN1Ym5vZGUgZm9yIHRo
+ZSBpbnRlcnJ1cHQgY29udHJvbGxlcikgLS0KPiA+b3RoZXJ3aXNlLCBJUlEgbWFwcGluZyBtaWdo
+dCBub3Qgd29yayByaWdodC4gSSBzdXNwZWN0IHRoYXQncyBvbmUgcmVhc29uCj4gPnRoZSBvcmln
+aW5hbCBkcml2ZXIgd3JpdGVyIG1pZ2h0IGhhdmUgdXNlZCAxLWJhc2VkIGluZGV4aW5nIGluIHRo
+ZSBmaXJzdAo+ID5wbGFjZS4KPiAKPiB5ZXMsIEkgZ290IGl0IGJ1dC4uLi4ud2hhdCdzIHRoZSBk
+aWZmZXJlbmNlPwoKQXQgc29tZSBsZXZlbCwgaXQncyBhIG1hdHRlciBvZiBwcmVmZXJlbmNlLiBC
+dXQgd2hlbiB5b3UncmUgdGFsa2luZwphYm91dCB0aGUgcmszMzk5IFBDSWUgImludGVycnVwdCBj
+b250cm9sbGVyIiBkb21haW4sIGl0IHNlZW1zIHRoYXQgeW91CnNob3VsZCBiZSB0YWxraW5nIGFi
+b3V0IEhXIGJpdHMgaW4gdGhlIGNvbnRyb2xsZXIgLS0gaS5lLiwgeW91IGhhdmUgYQo0LWJpdCBp
+bnRlcnJ1cHQgc3RhdHVzIGJpdGZpZWxkLCB0aGF0IHdlIHR5cGljYWxseSBjYWxsIFswOjNdLiBJ
+ZiB5b3UKdXNlIFsxOjRdLCB0aGVuIHlvdSBoYXZlIHRvIHJlbWVtYmVyIHRvIHN1YnRyYWN0IDEg
+bWVudGFsbHkgd2hlbiBtYXBwaW5nCnRvIHRoZSBhY3R1YWwgSFcgYml0LiBJIGJlbGlldmUgdGhh
+dCBjb25mdXNpb24gKHNpbmNlIGJpdGZpZWxkcyBub3JtYWxseQpjb3VudCBmcm9tIDApIG1pZ2h0
+IGhhdmUgaGVscGVkIGNhdXNlIHRoZSBpbmZpbml0ZSBsb29wIGJ1ZyBJIG5vdGljZWQKdG9vLiBB
+bmQgSSBhbHNvIHRoaW5rIHRoYXQgY291bnRpbmcgZnJvbSAwIGhlbHBzIGNsYXJpZnkgdGhlIGZh
+Y3QgdGhhdAp5b3VyIGludGVycnVwdCBjb250cm9sbGVyIGluZGV4aW5nIGlzIGFuIGluZGVwZW5k
+ZW50IG51bWJlcmluZyBmcm9tIHRoZQpQQ0kgaW50ZXJydXB0IG51bWJlcmluZywgZXZlbiB0aG91
+Z2ggdGhleSBoYXBwZW4gdG8gbWFwIDE6MS4KCkJ1dCB0aGVuLCBQQ0kgSU5UeCBudW1iZXJpbmcg
+aXMga2luZGEgd2VpcmQgYWxyZWFkeSwgYXMgaXQgc3RhcnRzIGZyb20KMS4gU28gbWF5YmUgaXQn
+cyBqdXN0IGFzIHZhbGlkIHRvIHNheSBvdXIgZG9tYWluIHN0YXJ0cyBmcm9tIDEgYXMgd2VsbC4K
+Cj4gWW91IHN0aWxsIG5lZWQgdG8gZ2V0IHRoZSB3aG9sZSBpbnRlcnJ1cHQtbWFwICsgaW50ZXJy
+dXB0LWNvbnRyb2xsZXIKPiB0aGluZ3MgcmlnaHQgYW5kIHRoZSBjb2RlKGZmcyhyZWcpIC0gMSlp
+ZiBhcHBsaWVkIHlvdXIgc3VnZ2VzdGlvbi4KClllcywgb2YgY291cnNlLiBBbmQgSSBhbHJlYWR5
+IHNlbnQgeW91IHBhdGNoZXMgdGhhdCBkbyB0aGF0LgoKPiBMb29rIGF0IG1vc3Qgb2YgdGhlIGRv
+Y3MgZm9yIHBjaWUgYmluZGluZ3MsIEkgc2F3IHRoZXkgYWxzbyB0YWtlCj4gMC1iYXNlIGluZGV4
+LCBob3cgYWJvdXQ/CgpJIGRvbid0IGtub3cgd2hpY2ggb25lcyB5b3UncmUgcmVmZXJyaW5nIHRv
+LiBJIHNlZSB0aGF0IGFsdGVyYS1wY2llLnR4dApzdXBwb3J0cyBpbnRlcnJ1cHQgaW5kZWNlcyBj
+b3VudGluZyBmcm9tIDEsIGJ1dCB0aGF0J3MgcHJvYmFibHkgYmVjYXVzZQp0aGV5J3JlIHVzaW5n
+IHRoZSBzYW1lIGJyb2tlbiBiaW5kaW5nIHRoYXQgd2FzIGluIHlvdXIgfnYzIHBhdGNoZXMKKHdo
+ZXJlIHRoZSBwY2llIG5vZGUgaGFzIGJvdGggJ2ludGVycnVwdC1jb250cm9sbGVyJyBhbmQKJ2lu
+dGVycnVwdC1tYXAnLCB3aXRoIHBoYW5kbGVzIHRvIGl0c2VsZiksIHNvIHRoZXkgaGFkIG5vIG90
+aGVyIGNob2ljZS4KCklmIHlvdSBzdGlsbCB0aGluayBpdCBtYWtlcyBtb3JlIHNlbnNlIHRvIGNv
+dW50IGZyb20gMSwgdGhlbiBJIHdvbid0CnN0b3AgeW91LgoKUmVnYXJkcywKQnJpYW4KCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlw
+IG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
