@@ -1,16 +1,15 @@
 From: "William.wu" <William.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Subject: Re: [PATCH v6 3/5] usb: dwc3: add phyif_utmi_quirk
-Date: Wed, 13 Jul 2016 11:21:59 +0800
-Message-ID: <620c4bcc-04db-143d-c2a1-74ab5c6c51f0@rock-chips.com>
+Date: Wed, 13 Jul 2016 11:39:16 +0800
+Message-ID: <77a15788-a460-7f59-cb52-88ce012f9eca@rock-chips.com>
 References: <1467860066-15142-1-git-send-email-william.wu@rock-chips.com>
- <87d1moi7g7.fsf@linux.intel.com>
- <f5daa697-3125-cfbf-7318-d4900f666362@rock-chips.com>
- <4648785.SDx8KzkhqW@phil>
+ <1467860066-15142-4-git-send-email-william.wu@rock-chips.com>
+ <2213342.0Nx5tnEW8p@phil> <20160711145447.GA16636@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <4648785.SDx8KzkhqW@phil>
+In-Reply-To: <20160711145447.GA16636@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -20,117 +19,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBIZWlrbywKCgpPbiAyMDE2LzcvMTAgNzo0NywgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4g
-QW0gU2Ftc3RhZywgOS4gSnVsaSAyMDE2LCAxMTozODowMCBzY2hyaWViIFdpbGxpYW0ud3U6Cj4+
-IERlYXIgSGVpa28gJiBCYWxiae+8jAo+Pgo+PiBPbiAyMDE2LzcvOCAyMToyOSwgRmVsaXBlIEJh
-bGJpIHdyb3RlOgo+Pj4gSGksCj4+Pgo+Pj4gSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5k
-ZT4gd3JpdGVzOgo+Pj4+IEFtIERvbm5lcnN0YWcsIDcuIEp1bGkgMjAxNiwgMTA6NTQ6MjQgc2No
-cmllYiBXaWxsaWFtIFd1Ogo+Pj4+PiBBZGQgYSBxdWlyayB0byBjb25maWd1cmUgdGhlIGNvcmUg
-dG8gc3VwcG9ydCB0aGUKPj4+Pj4gVVRNSSsgUEhZIHdpdGggYW4gOC0gb3IgMTYtYml0IGludGVy
-ZmFjZS4gVVRNSSsgUEhZCj4+Pj4+IGludGVyZmFjZSBpcyBoYXJkd2FyZSBwcm9wZXJ0eSwgYW5k
-IGl0J3MgcGxhdGZvcm0KPj4+Pj4gZGVwZW5kZW50LiBOb3JtYWxsLCB0aGUgUEhZSWYgY2FuIGJl
-IGNvbmZpZ3VyZWQKPj4+Pj4gZHVyaW5nIGNvcmVjb25zdWx0YW50LiBCdXQgZm9yIHNvbWUgc3Bl
-Y2lmaWMgdXNiCj4+Pj4+IGNvcmVzKGUuZy4gcmszMzk5IHNvYyBkd2MzKSwgdGhlIGRlZmF1bHQg
-UEhZSWYKPj4+Pj4gY29uZmlndXJhdGlvbiB2YWx1ZSBpcyBmYXVsdCwgc28gd2UgbmVlZCB0bwo+
-Pj4+PiByZWNvbmZpZ3VyZSBpdCBieSBzb2Z0d2FyZS4KPj4+Pj4KPj4+Pj4gQW5kIHJlZmVyIHRv
-IHRoZSBkd2MzIGRhdGFib29rLCB0aGUgR1VTQjJQSFlDRkcuVVNCVFJEVElNCj4+Pj4+IG11c3Qg
-YmUgc2V0IHRvIHRoZSBjb3JyZXNwb25kaW5nIHZhbHVlIGFjY29yZGluZyB0bwo+Pj4+PiB0aGUg
-VVRNSSsgUEhZIGludGVyZmFjZS4KPj4+Pj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogV2lsbGlhbSBX
-dSA8d2lsbGlhbS53dUByb2NrLWNoaXBzLmNvbT4KPj4+Pj4gLS0tCj4+Pj4gWy4uLl0KPj4+Pgo+
-Pj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9k
-d2MzLnR4dAo+Pj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdj
-My50eHQgaW5kZXgKPj4+Pj4gMDIwYjBlOS4uOGQ3MzE3ZAo+Pj4+PiAxMDA2NDQKPj4+Pj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dAo+Pj4+PiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0Cj4+Pj4+
-Cj4+Pj4+IEBAIC00Miw2ICs0MiwxMCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+Pj4+PiAgICAg
-LSBzbnBzLGRpcy11Mi1mcmVlY2xrLWV4aXN0cy1xdWlyazogd2hlbiBzZXQsIGNsZWFyIHRoZQo+
-Pj4+Pgo+Pj4+PiB1Ml9mcmVlY2xrX2V4aXN0cyBpbiBHVVNCMlBIWUNGRywgc3BlY2lmeSB0aGF0
-IFVTQjIgUEhZIGRvZXNuJ3QKPj4+Pj4gcHJvdmlkZQo+Pj4+Pgo+Pj4+PiAgICAJCQlhIGZyZWUt
-cnVubmluZyBQSFkgY2xvY2suCj4+Pj4+Cj4+Pj4+ICsgLSBzbnBzLHBoeWlmLXV0bWktcXVpcms6
-IHdoZW4gc2V0IGNvcmUgd2lsbCBzZXQgcGh5aWYgVVRNSSsKPj4+Pj4gaW50ZXJmYWNlLgo+Pj4+
-PiArIC0gc25wcyxwaHlpZi11dG1pOiB0aGUgdmFsdWUgdG8gY29uZmlndXJlIHRoZSBjb3JlIHRv
-IHN1cHBvcnQgYQo+Pj4+PiBVVE1JKwo+Pj4+PiBQSFkgKwkJCXdpdGggYW4gOC0gb3IgMTYtYml0
-IGludGVyZmFjZS4gVmFsdWUgMAo+IHNlbGVjdCA4LWJpdAo+Pj4+PiArCQkJaW50ZXJmYWNlLCB2
-YWx1ZSAxIHNlbGVjdCAxNi1iaXQgaW50ZXJmYWNlLgo+Pj4+IG1heWJlCj4+Pj4KPj4+PiAJc25w
-cyxwaHlpZi11dG1pLXdpZHRoID0gPDg+IG9yIDwxNj47Cj4+Pj4KPj4+PiBkZXZpY2V0cmVlIGlz
-IGFib3V0IGRlc2NyaWJpbmcgdGhlIGhhcmR3YXJlLCBub3QgdGhlIHRoaW5ncyB0aGF0IGdldAo+
-Pj4+IHdyaXR0ZW4gdG8gcmVnaXN0ZXJzIDotKSAuIFRoZSBjb252ZXJzaW9uIGZyb20gdGhlIGRl
-c2NyaWJlZCB3aWR0aCB0bwo+Pj4+IHRoZSByZWdpc3RlciB2YWx1ZSBjYW4gZWFzaWx5IGJlIGRv
-bmUgaW4gdGhlIGRyaXZlci4KPj4gVGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb246LSkKPj4gWWVz
-77yMIOKAnHNucHMscGh5aWYtdXRtaS13aWR0aCA9IDw4PiBvciA8MTY+4oCdIGlzIG11Y2ggY2xl
-YXJlciBhbmQgZWFzaWVyIHRvCj4+IHVuZGVyc3RhbmQuCj4+IEFuZCBJIGhhdmUgY29uc2lkZXJl
-ZCB0aGUgc2FtZSBkdHMgcHJvcGVydHkgZm9yIHBoeWlmLXV0bWksIGJ1dCBJIGhhdmUKPj4gbm8g
-Z29vZCBpZGVhIGFib3V0Cj4+IHRoZSBjb252ZXJzaW9uIGZyb20gZGVzY3JpYmVkIHdpZHRoIHRv
-IHRoZSByZWdpc3RlcnMgdmFsdWUgZm9yIHRoZSB0aW1lCj4+IGJlaW5nLgo+Pgo+PiBBYm91dCBw
-aHlpZiB1dG1pIHdpZHRoIGNvbmZpZ3VyYXRpb27vvIwgd2UgbmVlZCB0byBzZXQgdHdvIHBsYWNl
-cyBpbgo+PiBHVVNCMlBIWUNGRyByZWdpc3Rlcu+8jAo+PiBhY2NvcmRpbmcgdG8gRFdDMyBVU0Iz
-LjAgY29udHJvbGxlciBkYXRhYm9vayB2ZXJzaW9uMy4wMGHvvIw2LjMuNDYKPj4gR1VTQjJQSFlD
-RkcKPj4KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0gQml0cyAg
-IHwgIE5hbWUgICAgICAgICAgICAgICAgIHwgICAgIERlc2NyaXB0aW9uCj4+IC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tCj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tIDEzOjEwICB8ICAgVVNCVFJEVElNICAgICAg
-IHwgICAgIFNldHMgdGhlIHR1cm5hcm91bmQKPj4gdGltZSBpbiBQSFkgY2xvY2tzLgo+PiAgICAg
-ICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgNCdoNTogV2hlbiB0
-aGUgTUFDCj4+Cj4+IGludGVyZmFjZSBpcyAxNi1iaXQgVVRNSSsKPj4KPj4gICAgICAgICAgICAg
-ICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgIDQnaDk6IFdoZW4gdGhlIE1BQwo+
-Pgo+PiBpbnRlcmZhY2UgaXMgOC1iaXQgVVRNSSsvVUxQSS4KPj4gLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
-Pj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0gMyAgICAgICAgfCAgIFBIWUlGICAgICAgICAgICAgICAg
-IHwgICAgSWYgVVRNSSsgaXMKPj4gc2VsZWN0ZWQsIHRoZSBhcHBsaWNhdGlvbiB1c2VzIHRoaXMg
-Yml0IHRvIGNvbmZpZ3VyZQo+Pgo+PiAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgICBjb3JlIHRvIHN1cHBvcnQgYSBVVE1JKwo+Pgo+PiBQSFkgd2l0aCBhbiA4
-LSBvciAxNi1iaXQgaW50ZXJmYWNlLgo+Pgo+PiAgICAgICAgICAgICAgIHwgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAgICAxJ2IwOiA4IGJpdHMKPj4gICAgICAgICAgICAgICB8ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICAgMSdiMTogMTYgYml0cwo+Pgo+PiAtLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLQo+Pgo+PiBBbmQgSSB0aGluayBtYXliZSBJ
-IGNhbiB0cnkgdG8gZG8gdGhpczoKPj4gY2hhbmdlIGl0IGluIGR0czoKPj4gICAgICAgICAgIHNu
-cHMscGh5aWYtdXRtaS13aWR0aCA9IDw4PiBvciA8MTY+Owo+Pgo+PiBUaGVuIGNvbnZlcnQgdG8g
-cmVnaXN0ZXIgdmFsdWUgbGlrZSB0aGlz77yaCj4+ICAgICAgICAgIGRldmljZV9wcm9wZXJ0eV9y
-ZWFkX3U4KGRldiwgInNucHMscGh5aWYtdXRtaS13aWR0aCIsCj4+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJnBoeWlmX3V0bWlfd2lkdGgpOwo+Pgo+PiAg
-ICAgICAgICBkd2MtPnBoeWlmX3V0bWkgPSBwaHlpZl91dG1pX3dpZHRoID4+IDQ7Cj4+Cj4+ICAg
-IEF0ZXIgdGhlIGNvbnZlcnNpb27vvIwgZHdjLT5waHlpZl91dG1pIHZhbHVlIDAgbWVhbnMgOCBi
-aXRzLCB2YWx1ZSAxCj4+IG1lYW5zIDE2IGJpdHMsCj4+ICAgIGFuZCBpdCdzIGVhc2llciBmb3Ig
-dXMgdG8gY29uZmlnIEdVU0IyUEhZQ0ZHLgo+Pgo+PiBJcyBpdCBPSz8KPiBvciB5b3UgY291bGQg
-anVzdCBzdG9yZSB0aGUgYWN0dWFsIHdpZHRoIHZhbHVlIHJlYWQgZnJvbSB0aGUgZHRzIGFuZCBt
-YWtlCj4gdGhlIGNvcmUgaGFuZGxlIGFjY29yZGluZ2x5LCBtYWtpbmcgZXZlcnl0aGluZyBhIGJp
-dCBtb3JlIGV4cGxpY2l0Lgo+Cj4gSSBndWVzcyBwZXJzb25hbGx5IEknZCBkbyBzb21ldGhpbmcg
-bGlrZToKPgo+IG1ha2UgZHdjLT5waHlpZl91dG1pIGEgcmVndWxhciB1bnNpZ25lZCBpbnQKPgo+
-IGluIHByb2JlOgo+ICAgICAgICAJcmV0ID0gZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTgoZGV2LCAi
-c25wcyxwaHlpZi11dG1pLXdpZHRoIiwKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICZkd2MtPnBoeWlmX3V0bWkpOwo+IAlpZiAocmV0IDwgMCkgewo+IAkJ
-ZHdjLT5waHlpZl91dG1pID0gMDsKPiAJZWxzZSBpZiAoZHdjLT5waHlpZl91dG1pICE9IDE2ICYm
-IGR3Yy0+cGh5aWZfdXRtaSAhPSA4KSB7Cj4gCQlkZXZfZXJyKGRldiwgInVuc3VwcG9ydGVkIHV0
-bWkgaW50ZXJmYWNlIHdpZHRoICVkXG4iLAo+IAkJCWR3Yy0+cGh5aWZfdXRtaSk7Cj4gCQlyZXR1
-cm4gLUVJTlZBTDsKPiAJfQo+Cj4KPiB3aGVuIHNldHRpbmcgeW91ciBHVVNCMlBIWUNGRyByZWdp
-c3RlcjoKPgo+ICAgICAgICAgaWYgKGR3Yy0+cGh5aWZfdXRtaSA+IDApIHsKPiAgICAgICAgICAg
-ICAgICAgcmVnICY9IH4oRFdDM19HVVNCMlBIWUNGR19QSFlJRl9NQVNLIHwKPiAgICAgICAgICAg
-ICAgICAgICAgICAgIERXQzNfR1VTQjJQSFlDRkdfVVNCVFJEVElNX01BU0spOwo+ICAgICAgICAg
-ICAgICAgICB1c2J0cmR0aW0gPSAoZHdjLT5waHlpZl91dG1pID09IDE2KSA/IFVTQlRSRFRJTV9V
-VE1JXzE2X0JJVCA6Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIFVTQlRSRFRJTV9VVE1J
-XzhfQklUOwo+IAkJcGh5aWYgPSAoZHdjLT5waHlpZl91dG1pID09IDE2KSA/IDEgOiAwOwo+ICAg
-ICAgICAgICAgICAgICByZWcgfD0gRFdDM19HVVNCMlBIWUNGR19QSFlJRihwaHlpZikgfAo+ICAg
-ICAgICAgICAgICAgICAgICAgICAgRFdDM19HVVNCMlBIWUNGR19VU0JUUkRUSU0odXNidHJkdGlt
-KSB8Cj4gICAgICAgICB9Cj4KQWggeWVz77yMIGl0IHNlZW1zIHZlcnkgZ29vZCB0byBtZSwgdmVy
-eSBleHBsaWNpdC4KSSdsbCB1cGxvYWQgYSBuZXcgcGF0Y2ggYWNjb3JkaW5nIHRvIHlvdXIgc3Vn
-Z2VzdGlvbiB0b2RheS4KVGhhbmtzIGEgbG90fjotRAo+Pj4+IEFsc28gSSBkb24ndCB0aGluayB5
-b3UgbmVlZCB0d28gcHJvcGVydGllcyBmb3IgdGhpcy4gSWYgdGhlCj4+Pj4gc25wcyxwaHlpZi11
-dG1pIHByb3BlcnR5IGlzIHNwZWNpZmllZCBpdCBpbmRpY2F0ZXMgdGhhdCB5b3Ugd2FudCB0bwo+
-Pj4+IG1hbnVhbGx5IHNldCB0aGUgd2lkdGggYW5kIGlmIGl0IGlzIGFic2VudCB5b3Ugd2FudCB0
-byB1c2UgdGhlIElDCj4+Pj4gZGVmYXVsdC4gQWxsIGZ1bmN0aW9ucyByZWFkaW5nIHByb3BlcnR5
-LXZhbHVlcyBpbmRpY2F0ZSBpZiB0aGUKPj4+PiBwcm9wZXJ0eSBpcyBtaXNzaW5nLgo+PiBBaCwg
-aXQgc2VlbXMgdmVyeSBnb29kIHRvIG1lLiBPbmUgZHRzIHByb3BlcnR5ICJzbnBzLHBoeWlmLXV0
-bWkiIGNhbiBoZWxwCj4+IHRvIHJlY29uZmlnIHBoeWlmIHV0bWkgd2lkdGguIEFuZCBpdCBzZWVt
-cyB0aGF0IEZlbGlwZSBsaWtlcyBpdCB2ZXJ5IG11Y2gKPj4gdG9vLiA6LUQKPiB5ZXMsIGJ1dCBw
-bGVhc2UgbmFtZSBpdCBzbnBzLHBoeWlmLXV0bWktd2lkdGggOi0pCgpZZWFoLCB0aGFuayB5b3Ug
-dmVyeSBtdWNoOi0pCgpCZXN0IFJlZ2FyZHMKICAgICAgICAgV2lsbGlhbSBXdQo+Cj4KPiBIZWlr
-bwo+Cj4KPgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LXJvY2tjaGlwCg==
+Dear Rob,
+
+
+On 2016/7/11 22:54, Rob Herring wrote:
+> On Fri, Jul 08, 2016 at 02:33:09PM +0200, Heiko Stuebner wrote:
+>> Hi William,
+>>
+>> Am Donnerstag, 7. Juli 2016, 10:54:24 schrieb William Wu:
+>>> Add a quirk to configure the core to support the
+>>> UTMI+ PHY with an 8- or 16-bit interface. UTMI+ PHY
+>>> interface is hardware property, and it's platform
+>>> dependent. Normall, the PHYIf can be configured
+>>> during coreconsultant. But for some specific usb
+>>> cores(e.g. rk3399 soc dwc3), the default PHYIf
+>>> configuration value is fault, so we need to
+>>> reconfigure it by software.
+>>>
+>>> And refer to the dwc3 databook, the GUSB2PHYCFG.USBTRDTIM
+>>> must be set to the corresponding value according to
+>>> the UTMI+ PHY interface.
+>>>
+>>> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>> ---
+>> [...]
+>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> b/Documentation/devicetree/bindings/usb/dwc3.txt index 020b0e9..8d7317d
+>>> 100644
+>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> @@ -42,6 +42,10 @@ Optional properties:
+>>>    - snps,dis-u2-freeclk-exists-quirk: when set, clear the
+>>> u2_freeclk_exists in GUSB2PHYCFG, specify that USB2 PHY doesn't provide
+>>>   			a free-running PHY clock.
+>>> + - snps,phyif-utmi-quirk: when set core will set phyif UTMI+ interface.
+>>> + - snps,phyif-utmi: the value to configure the core to support a UTMI+
+>>> PHY +			with an 8- or 16-bit interface. Value 0 select 8-bit
+>>> +			interface, value 1 select 16-bit interface.
+>> maybe
+>> 	snps,phyif-utmi-width =3D <8> or <16>;
+> Seems like this could be common. Any other bindings have something
+> similar already? If not "utmi-width" is fine.
+
+It seems that there's not any dwc3 binding similar to this.
+So I prefer to use =93utmi-width=94. :-)
+
+>
+>> devicetree is about describing the hardware, not the things that get wri=
+tten
+>> to registers :-) . The conversion from the described width to the regist=
+er
+>> value can easily be done in the driver.
+>>
+>>
+>> Also I don't think you need two properties for this. If the snps,phyif-u=
+tmi
+>> property is specified it indicates that you want to manually set the wid=
+th
+>> and if it is absent you want to use the IC default. All functions reading
+>> property-values indicate if the property is missing.
+> Agreed.
+>
+> Rob
+>
+>
+>
