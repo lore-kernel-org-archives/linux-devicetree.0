@@ -1,123 +1,99 @@
-From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH V2 0/1] usb: add HCD providers
-Date: Wed, 13 Jul 2016 16:50:35 +0300
-Message-ID: <87inw9ir4k.fsf@linux.intel.com>
-References: <1468326921-26485-1-git-send-email-zajec5@gmail.com> <1468413734-9569-1-git-send-email-zajec5@gmail.com> <87lh15isi7.fsf@linux.intel.com> <CACna6rxGN5evQhRpNORUP4RP3-pMa292pQW=4=VWLLnzJyhJJw@mail.gmail.com>
+From: Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
+Subject: Re: [PATCH v3 3/9] DocBook/v4l: Add compressed video formats used
+ on MT8173 codec driver
+Date: Wed, 13 Jul 2016 09:55:57 -0400
+Message-ID: <1468418157.2867.12.camel@ndufresne.ca>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+ <1464611363-14936-2-git-send-email-tiffany.lin@mediatek.com>
+ <1464611363-14936-3-git-send-email-tiffany.lin@mediatek.com>
+ <1464611363-14936-4-git-send-email-tiffany.lin@mediatek.com>
+ <5a793171-24a7-4e9e-8bfd-f668c789f8e0@xs4all.nl>
+ <1468205771.3725.8.camel@mtksdaap41>
+ <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
+ <1468350511.8843.16.camel@gmail.com> <1468350842.8843.18.camel@gmail.com>
+ <1468375209.2462.20.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6rxGN5evQhRpNORUP4RP3-pMa292pQW=4=VWLLnzJyhJJw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LED SUBSYSTEM" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1468375209.2462.20.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Lin PoChun <PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wu-Cheng Li =?UTF-8?Q?=28=E6=9D=8E=E5=8B=99=E8=AA=A0=29?= <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-> On 13 July 2016 at 15:20, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wro=
-te:
->> Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->>> Hi again,
->>>
->>> This is my second try of getting HCD providers into usb subsystem.
->>>
->>> During discussion of V1 I realized there are about 26 drivers adding a
->>> single HCD and all of them would need to be modified. So instead I
->>> decided to put relevant code in usb_add_hcd. It checks if the HCD we
->>> register is a primary one and if so, it registers a proper provider.
->>>
->>> Please note that of_hcd_xlate_simple was also extended to allow getting
->>> shared HCD (which is used e.g. in case of XHCI).
->>>
->>> So now you can have something like:
->>>
->>> ohci: ohci@21000 {
->>>       #usb-cells =3D <0>;
->>>       compatible =3D "generic-ohci";
->>>       reg =3D <0x00001000 0x1000>;
->>>       interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
->>> };
->>>
->>> ehci: ehci@22000 {
->>>       #usb-cells =3D <0>;
->>>       compatible =3D "generic-ehci";
->>>       reg =3D <0x00002000 0x1000>;
->>>       interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
->>> };
->>>
->>> xhci: xhci@23000 {
->>>       #usb-cells =3D <1>;
->>>       compatible =3D "generic-xhci";
->>>       reg =3D <0x00003000 0x1000>;
->>>       interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
->>> };
->>>
->>> The last (second) patch is not supposed to be applied, it's used only as
->>> a proof and example of how providers can be used.
->>
->> nowhere here (or in previous patch) you clarify why exactly you need
->> this. What is your LED trigger supposed to do? Why can't it handle ports
->> changing number in different boots? Why do we need this at all? Why is
->> your code DT-specific?
->>
->> There are still too many 'unknowns' here.
->
-> Are you sure you saw my reply to Peter's question?
-> <CACna6rw6QOuY247qvDmO4mKrW3y4yXoeM3qr8SXAwn3CuYAMpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-> http://www.spinics.net/lists/linux-usb/msg143708.html
-> http://marc.info/?l=3Dlinux-usb&m=3D146838735627093&w=3D2
->
-> I think it should answer (some of?) your questions. Can you read it
-> and see if it gets a bit clearer?
-
-well, all that says is that you're writing a LED trigger to toggle LED
-when a USB device gets added to a specified port. I don't think you need
-the actual port number for that. You should have a phandle to the actual
-port, whatever its number is, or a phandle to the (root-)Hub and a port
-number from that hub.
-
-The problem, really, is that DT descriptor of USB Hosts is very, very
-minimal. Perhaps there's something more extensively defined from the
-original Open Firmware USB Addendum.
-
-There's also no documentation for your new bindings nor are there any
-user demonstrating how DT should be written to use these new bindings.
-
-IMO, if you're describing it in DT and you need a specific port name,
-your bindings are wrong.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXhkcrAAoJEIaOsuA1yqRE0sMP/1rrK3SFOyTsRev5tPHgAhD2
-7JjSLJ95ughDCrP7bOHQaXFGWR1B/sWzk33NhzFYxAAnawIFg1BB1w+56Z00Mnnc
-Z0oOuVVfowR7buX+EXp3MwyPqciNyvtzPw/8Z/Zcr3NsEW532F4LSH8TJjvZsc+d
-dhVREFLUQxZMViRdxs36nJrAldq9mdqvjgiXk3fMlxKCDYUHjYgx7M2m+Vd+lYtE
-lHKu6ffmhNzVwb96RXd1V4KyyDIz1uNvmBWR7zqrWRt20SqGAoUhbMIwtosM7LMw
-sgQ5Io4h/K87xWtOr5eh5a2QS3HsX0VlzzoFy1ipObMDd+H6gR/opYwHkJkz0/hx
-RNYAY6wuXlAhlH/HDq5Uj4Ap5CU1w3DXRhUF16CYYwtX0TTBpLzJC1hfrZEp+fkw
-oQXHnjUGGYXnOW4YzjCQNOPKA0DXp2y3akESptIfua36LfXEWmjySgtQ8pA4MLgF
-8rpJx6b7SLd552ltayKaJlpin5w29w7lgFug7aeC1xcoNVRRnN5NfavIqAu7u8Ct
-docwlf5GsAORrd2/FcJa/x/IvJE/llOWBDoGmMRkY2WWfeC0xAuo/n2VYdL/blQU
-ass3DlxFxNsdf6FzYUeRiVuunReqMBIdUP7JPNfdnYkVthnb3WLqLje0SCE/+vEY
-tkue8kOKdN7pnGgmjy4P
-=cnSL
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+TGUgbWVyY3JlZGkgMTMganVpbGxldCAyMDE2IMOgIDEwOjAwICswODAwLCB0aWZmYW55IGxpbiBh
+IMOpY3JpdMKgOgo+IEhpIE5pY29sYXMsCj4gCj4gT24gVHVlLCAyMDE2LTA3LTEyIGF0IDE1OjE0
+IC0wNDAwLCBOaWNvbGFzIER1ZnJlc25lIHdyb3RlOgo+ID4gTGUgbWFyZGkgMTIganVpbGxldCAy
+MDE2IMOgIDE1OjA4IC0wNDAwLCBOaWNvbGFzIER1ZnJlc25lIGEgw6ljcml0IDoKPiA+ID4gTGUg
+bWFyZGkgMTIganVpbGxldCAyMDE2IMOgIDE2OjE2ICswODAwLCBXdS1DaGVuZyBMaSAo5p2O5YuZ
+6KqgKSBhIMOpY3JpdAo+IDoKPiA+ID4gPiBEZWNvZGVyIGhhcmR3YXJlIHByb2R1Y2VzIE1UMjEg
+KGNvbXByZXNzZWQpLiBJbWFnZSBwcm9jZXNzb3IKPiBjYW4KPiA+ID4gPiBjb252ZXJ0IGl0IHRv
+IGEgZm9ybWF0IHRoYXQgY2FuIGJlIGlucHV0IG9mIGRpc3BsYXkgZHJpdmVyLgo+ID4gPiA+IFRp
+ZmZhbnkuCj4gPiA+ID4gV2hlbiBkbyB5b3UgcGxhbiB0byB1cHN0cmVhbSBpbWFnZSBwcm9jZXNz
+b3IgKG10ay1tZHApPwo+ID4gPiA+ID7CoAo+ID4gPiA+ID4gSXQgY2FuIGJlIGFzIGlucHV0IGZv
+cm1hdCBmb3IgZW5jb2RlciwgTURQIGFuZCBkaXNwbGF5Cj4gZHJpdmVycyBpbgo+ID4gPiA+IG91
+cgo+ID4gPiA+ID4gcGxhdGZvcm0uCj4gPiA+ID4gSSByZW1lbWJlciBkaXNwbGF5IGRyaXZlciBj
+YW4gb25seSBhY2NlcHQgdW5jb21wcmVzc2VkIE1UMjEuCj4gUmlnaHQ/Cj4gPiA+ID4gQmFzaWNh
+bGx5IFY0TDJfUElYX0ZNVF9NVDIxIGlzIGNvbXByZXNzZWQgYW5kIGlzIGxpa2UgYW4gb3BhcXVl
+Cj4gPiA+ID4gZm9ybWF0LiBJdCdzIG5vdCB1c2FibGUgdW50aWwgaXQncyBkZWNvbXByZXNzZWQg
+YW5kIGNvbnZlcnRlZAo+IGJ5Cj4gPiA+ID4gaW1hZ2UKPiA+ID4gPiBwcm9jZXNzb3IuCj4gPiA+
+wqAKPiA+ID4gUHJldmlvdXNseSBpdCB3YXMgZGVzY3JpYmVkIGFzIE1lZGlhVGVrIGJsb2NrIG1v
+ZGUsIGFuZCBub3cgYXMgYQo+ID4gPiBNZWRpYVRlayBjb21wcmVzc2VkIGZvcm1hdC4gSXQgbWFr
+ZXMgbWUgdGhpbmsgeW91IGhhdmUgbm8gaWRlYQo+IHdoYXQKPiA+ID4gdGhpcyBwaXhlbCBmb3Jt
+YXQgcmVhbGx5IGlzLiBJcyB0aGF0IHJpZ2h0ID8KPiA+ID7CoAo+ID4gPiBUaGUgbWFpbiByZWFz
+b24gd2h5IEkga2VlcCBhc2tpbmcsIGlzIHRoYXQgd2Ugb2Z0ZW4gZmluZAo+IHNpbWlsYXJpdGll
+cwo+ID4gPiBiZXR3ZWVuIHdoYXQgdmVuZG9yIGxpa2UgdG8gY2FsbCB0aGVpciBwcm9wcmlldGFy
+eSBmb3JtYXRzLiBEb2luZwo+IHRoZQo+ID4gPiBwcm9wZXIgcmVzZWFyY2ggaGVscHMgbm90IGNy
+ZWF0aW5nIGEgbWVzcyBsaWtlIGluIEFuZHJvaWQgd2hlcmUKPiB5b3UKPiA+ID4gaGF2ZSBhIGxv
+dCBvZiBmb3JtYXRzIHRoYXQgYWxsIHBvaW50IHRvIHRoZSBzYW1lIGZvcm1hdC4gSQo+IGJlbGll
+dmUKPiA+ID4gdGhlcmUgd2FzIHRoZSBzYW1lIGNvbmNlcm4gd2hlbiBTYW1zdW5nIHdhbnRlZCB0
+byBpbnRyb2R1Y2UgdGhlaXIKPiBaLQo+ID4gPiBmbGlwLVogTlYxMiB0aWxlIGZvcm1hdC4gSW4g
+dGhlIGVuZCB0aGV5IHNpbXBseSBwcm92aWRlZAo+IHN1ZmZpY2llbnQKPiA+ID4gZG9jdW1lbnRh
+dGlvbiBzbyB3ZSBjb3VsZCBkb2N1bWVudCBpdCBhbmQgaW1wbGVtZW50IHNvZnR3YXJlCj4gPiA+
+IGNvbnZlcnRlcnMKPiA+ID4gZm9yIHRlc3QgYW5kIHZhbGlkYXRpb24gcHVycG9zZS4KPiA+wqAK
+PiA+IEhlcmUncyB0aGUga2luZCBvZiBpbmZvcm1hdGlvbiB3ZSB3YW50IGluIHRoZSBkb2N1bWVu
+dGF0aW9uLgo+ID7CoAo+ID4gaHR0cHM6Ly9jaHJvbWl1bS5nb29nbGVzb3VyY2UuY29tL2Nocm9t
+aXVtL3NyYy9tZWRpYS8rL21hc3Rlci9iYXNlLwo+IHZpZGUKPiA+IG9fdHlwZXMuaCM0MAo+ID7C
+oAo+ID7CoMKgIC8vIE1lZGlhVGVrIHByb3ByaWV0YXJ5IGZvcm1hdC4gTVQyMSBpcyBzaW1pbGFy
+IHRvIE5WMjEgZXhjZXB0Cj4gdGhlIG1lbW9yeQo+ID7CoMKgIC8vIGxheW91dCBhbmQgcGl4ZWwg
+bGF5b3V0IChzd2l6emxlcykuIDEyYnBwIHdpdGggWSBwbGFuZQo+IGZvbGxvd2VkIGJ5IGEgMngy
+Cj4gPsKgwqAgLy8gaW50ZXJsZWF2ZWQgVlUgcGxhbmUuIEVhY2ggaW1hZ2UgY29udGFpbnMgdHdv
+IGJ1ZmZlcnMgLS0gWQo+IHBsYW5lIGFuZCBWVQo+ID7CoMKgIC8vIHBsYW5lLiBUd28gcGxhbmVz
+IGNhbiBiZSBub24tY29udGlndW91cyBpbiBtZW1vcnkuIFRoZQo+IHN0YXJ0aW5nIGFkZHJlc3Nl
+cwo+ID7CoMKgIC8vIG9mIFkgcGxhbmUgYW5kIFZVIHBsYW5lIGFyZSA0S0IgYWxpZ25tZW50Lgo+
+ID7CoMKgIC8vIFN1cHBvc2UgaW1hZ2UgZGltZW5zaW9uIGlzICh3aWR0aCwgaGVpZ2h0KS4gRm9y
+IGJvdGggWSBwbGFuZQo+IGFuZCBWVSBwbGFuZToKPiA+wqDCoCAvLyBSb3cgcGl0Y2ggPSAoKHdp
+ZHRoKzE1KS8xNikgKiAxNi4KPiA+wqDCoCAvLyBQbGFuZSBzaXplID0gUm93IHBpdGNoICogKCgo
+aGVpZ2h0KzMxKS8zMikqMzIpCj4gPsKgCj4gPiBOb3cgb2J2aW91c2x5IHRoaXMgaXMgaW5jb21w
+bGV0ZSwgYXMgdGhlIHN3aXp6bGluZyBuZWVkIHRvIGJlCj4gZG9jdW1lbnRlZCBvZiBjb3Vyc2Uu
+Cj4gPsKgCj4gQmVjYXVzZSBpdCdzIGZpbmFsbHkgYSBjb21wcmVzc2VkIGZvcm1hdCBmcm9tIG91
+ciBjb2RlYyBodywgd2UgY2Fubm90Cj4gZGVzY3JpYmUgaXRzIHN3aXp6bGluZy4KCkNhbiB5b3Ug
+Y2xhcmlmeSB3aHkgaXQgY2Fubm90IGJlIGRlc2NyaWJlZCA/IEkgZG9uJ3QgYnV5IGFueSBhcmd1
+bWVudAp0aGF0IGl0J3MgaW1wb3NzaWJsZSB0byBjb252ZXJ0IHdpdGhvdXQgaGFyZHdhcmUuIElu
+dGVsIGRpZCBkb2N1bWVudAp0aGVpciBjb21wcmVzc2VkIGZvcm1hdHMuCgpEZWJ1Z2dpbmcgYW4g
+aW50ZWdyYXRpb24gd2l0aCBzdWNoIGZvcm1hdCB0aGF0IHdlIGhhdmUgbGl0ZXJhbGx5CmRlY2lk
+ZWQgdG8gbm8gbWFrZSBwdWJsaWMgaXMgYSBwYWluLiBBIGxvdCBvZiBkZWNvZGVyIGdvdCBhYmFu
+ZG9uZWQgb3IKbmV2ZXIgdXNlZCBiZWNhdXNlIG9mIHRoYXQuCgpJdCB3b3VsZCBiZSBuaWNlIHRv
+IGV4cGxhaW4gdGhlIGFyY2hpdGVjdHVyZSB5b3UgYXJlIHN1Z2dlc3RpbmcgdG8gbWFrZQp0aGlz
+IGRlY29kZXIgdXNlZnVsLiBIb3cgd2lsbCB1c2Vyc3BhY2UgYXBwbGljYXRpb24gYmUgYWJsZSB0
+byB1c2UgeW91cgpkZWNvZGVyLiBXaWxsIHRoZSBpbWFnZSBwcm9jZXNzb3IgdXNhYmxlIG91dHNp
+ZGUgdGhlIGRpc3BsYXkgcGF0aCA/ClBlb3BsZSBtaWdodCB3YW50IHRvIGRvIHRyYW5zY29kaW5n
+LCBvciBvdGhlciByZWxhdGl2ZWx5IGNvbW1vbiB0YXNrCnRoYXQgZG9lcyBub3QgaW1wbHkgYSBk
+aXNwbGF5LgoKcmVnYXJkcywKTmljb2xhcwoKcC5zLgpBIHNtYWxsIG5vdGUgdG8gV3UtQ2hlbmcs
+IHRoZSBkZWZpbml0aW9uIG9mIHRoZSBEUk0gZm9ybWF0IGluIHlvdXIKQ2hyb21pdW0gYnJhbmNo
+IGlzIG5vdCBjb3JyZWN0LiBEUk0gdXNlcyBmb3JtYXQgbW9kaWZpZXIsIHN1Y2ggdGhhdCB0aGUK
+Zm9ybWF0IGlzIHRoZSBmYW1pbHksIGluIHlvdXIgY2FzZSBpdCdzIG1vc3QgbGlrZWx5IE5WMjEs
+IGFuZCB0aGUKbW9kaWZpZXIgaXMgdGhlIGNvbXByZXNzaW9uIG9yIHRpbGluZyBhbGdvcml0aG0g
+aW4gcGxhY2UgKG9yIGJvdGggYXMKbmVlZGVkKS4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCkxpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdApMaW51eC1t
+ZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsK
