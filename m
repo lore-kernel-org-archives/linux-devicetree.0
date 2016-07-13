@@ -1,76 +1,59 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] userspace API definitions for auto-focus coil
-Date: Wed, 13 Jul 2016 08:57:00 +0200
-Message-ID: <20160713065700.GA3781@amd>
-References: <20160602212746.GT26360@valkosipuli.retiisi.org.uk>
- <20160605190716.GA11321@amd>
- <575512E5.5030000@gmail.com>
- <20160611220654.GC26360@valkosipuli.retiisi.org.uk>
- <20160612084811.GA27446@amd>
- <20160612112253.GD26360@valkosipuli.retiisi.org.uk>
- <20160613191753.GA17459@amd>
- <20160617213545.GH24980@valkosipuli.retiisi.org.uk>
- <20160618153846.GA15662@amd>
- <20160712203201.7ffd8f22@recife.lan>
+From: Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH v4 1/3] Documentation: dt: net: add ath9k
+	wireless device binding
+Date: Wed, 13 Jul 2016 10:02:39 +0300
+Message-ID: <87a8hmauls.fsf@purkki.adurom.net>
+References: <20160624123430.4097-1-martin.blumenstingl@googlemail.com>
+	<20160709232834.31654-1-martin.blumenstingl@googlemail.com>
+	<20160709232834.31654-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160712203201.7ffd8f22@recife.lan>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, patrikbachan@gmail.com, serge@hallyn.com, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ath9k-devel-bounces@lists.ath9k.org>
+In-Reply-To: <20160709232834.31654-2-martin.blumenstingl@googlemail.com>
+	(Martin Blumenstingl's message of "Sun, 10 Jul 2016 01:28:32 +0200")
+List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
+List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
+List-Post: <mailto:ath9k-devel@lists.ath9k.org>
+List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
+List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
+Sender: ath9k-devel-bounces@lists.ath9k.org
+Errors-To: ath9k-devel-bounces@lists.ath9k.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arend.vanspriel@broadcom.com, pawel.moll@arm.com, mcgrof@do-not-panic.com, julian.calaby@gmail.com, ijc+devicetree@hellion.org.uk, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, robh+dt@kernel.org, ath9k-devel@lists.ath9k.org, galak@codeaurora.org, chunkeey@googlemail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2016-07-12 20:32:01, Mauro Carvalho Chehab wrote:
-1;2802;0c> Em Sat, 18 Jun 2016 17:38:46 +0200
-> Pavel Machek <pavel@ucw.cz> escreveu:
-> 
-> > Hi!
-> > 
-> > > > Not V4L2_CID_USER_AD5820...?  
-> > > 
-> > > The rest of the controls have no USER as part of the macro name, so I
-> > > wouldn't use it here either.  
-> > 
-> > Ok.
-> > 
-> > > > Ok, separate header file for 2 lines seemed like a bit of overkill,
-> > > > but why not.  
-> > > 
-> > > That follows an existing pattern of how controls have been implemented in
-> > > other drivers.  
-> > 
-> > Ok.
-> > 
-> > > Could you merge this with the driver patch? I've dropped that from my ad5820
-> > > branch as it does not compile.  
-> > 
-> > Yes, merged patch should be in your inbox now.
-> 
-> The V4L2 core changes should be on a separate patch. Btw, you'll also
-> need to patch documentation to reflect such changes. We're right now
-> moving from DocBook to ReST markup language. The patches for it are
-> right now on a separate topic branch (docs-next), to be merged for
-> Kernel 4.8 on the next merge window.
-> 
-> You should either base the patch on such branch or wait for it to be
-> merged back mainstream to write such documentation additions.
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-So how many iterations and how many releases does it take to get
-trivial driver into the tree?
+> Add documentation how devicetree can be used to configure ath9k based
+> devices.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../devicetree/bindings/net/wireless/qca,ath9k.txt | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> new file mode 100644
+> index 0000000..7c62c59
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+> @@ -0,0 +1,59 @@
+> +* Qualcomm Atheros ath9k wireless devices
+> +
+> +This node provides properties for configuring the ath9k wireless device. The
+> +node is expected to be specified as a child node of the PCI controller to
+> +which the wireless chip is connected.
+> +
+> +Required properties:
+> +- compatible: Should be "qca,ath9k"
 
-I did what Sakari asked me to do. The driver is trivial. You can see
-pretty easily what I'm changing in the core... and it is not much. Can
-you just add your acked-by to it, merge it and me done with it?
+Isn't this supposed to use the chipset name? ath9k is the driver name
+and something like ar9462 is the chip name. I know in ath10k we used
+"qca,ath10k" but I'm starting to suspect that was a mistake.
 
-If some more docs is required, I can do the docs, but stalling patch
-for months and then claiming "hey, we have these new rules you have to
-follow" is not a nice thing.
-
-Thanks,
-
-									Pavel
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Kalle Valo
