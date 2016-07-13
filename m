@@ -1,35 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Fix spelling errors in Documentation/devicetree
-Date: Wed, 13 Jul 2016 12:14:39 -0500
-Message-ID: <CAL_JsqKdqhJhs1o_nM2Mw9SmjHTmaHZEfC_mbK5hb2sqjbgJow@mail.gmail.com>
-References: <1467708506-18010-1-git-send-email-otto@seravo.fi>
- <20160705204702.GA28168@rob-hp-laptop> <CAHj_TLCzme5cvmpWub=XOghVxn6TiEqh2iq-cr1OAardJPvKEA@mail.gmail.com>
- <CAL_Jsq+TrC2Ws7tMzoWROTrnAyf+4GmaY9ShRs5GNz-Ug-+Zmw@mail.gmail.com> <CAHj_TLCYgxcjobrypFKjr91Jtesb8-r4GOSyD+4TmkzMy+9Y=A@mail.gmail.com>
+From: Afzal Mohammed <afzal.mohd.ma@gmail.com>
+Subject: Re: [PATCH v2 08/10] ARM: dts: nuc900: Add nuc970 dts files
+Date: Wed, 13 Jul 2016 22:48:10 +0530
+Message-ID: <20160713171810.GA4887@afzalpc>
+References: <1468136542-2656-1-git-send-email-vw@iommu.org>
+ <20160712153910.GA3507@afzalpc> <5785ED30.4090206@iommu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHj_TLCYgxcjobrypFKjr91Jtesb8-r4GOSyD+4TmkzMy+9Y=A@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?T3R0byBLZWvDpGzDpGluZW4=?= <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <5785ED30.4090206@iommu.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wan Zongshun <vw@iommu.org>
+Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, Wan Zongshun <mcuos.com@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 13, 2016 at 9:02 AM, Otto Kek=C3=A4l=C3=A4inen <otto@seravo=
-=2Efi> wrote:
-> Hello!
->
-> Attached https://github.com/torvalds/linux/compare/master...ottok:fix=
--spelling-devicetree.patch
-> as requested.
+Hi,
 
-=46irst, please don't top post on mail lists. Second, don't send patche=
-s
-as attachments. See SubmittingPatches in the kernel.
+On Wed, Jul 13, 2016 at 03:26:40PM +0800, Wan Zongshun wrote:
+> Do you mean I should add cpus into soc
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+yes
+
+Regards
+afzal
