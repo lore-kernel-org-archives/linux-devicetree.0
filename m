@@ -1,203 +1,195 @@
-From: =?UTF-8?B?T3R0byBLZWvDpGzDpGluZW4=?= <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>
-Subject: Re: [PATCH] Fix spelling errors in Documentation/devicetree
-Date: Wed, 13 Jul 2016 17:02:11 +0300
-Message-ID: <CAHj_TLCYgxcjobrypFKjr91Jtesb8-r4GOSyD+4TmkzMy+9Y=A@mail.gmail.com>
-References: <1467708506-18010-1-git-send-email-otto@seravo.fi>
- <20160705204702.GA28168@rob-hp-laptop> <CAHj_TLCzme5cvmpWub=XOghVxn6TiEqh2iq-cr1OAardJPvKEA@mail.gmail.com>
- <CAL_Jsq+TrC2Ws7tMzoWROTrnAyf+4GmaY9ShRs5GNz-Ug-+Zmw@mail.gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 0/1] usb: add HCD providers
+Date: Wed, 13 Jul 2016 16:40:53 +0200
+Message-ID: <CACna6rxscQAE_hrM7Rnsntp5QZjL2kD0+mbuXgfo6kPQZ=UDJw@mail.gmail.com>
+References: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
+ <1468413734-9569-1-git-send-email-zajec5@gmail.com> <87lh15isi7.fsf@linux.intel.com>
+ <CACna6rxGN5evQhRpNORUP4RP3-pMa292pQW=4=VWLLnzJyhJJw@mail.gmail.com> <87inw9ir4k.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary=001a114bd18eb5d36a053784d6a5
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+TrC2Ws7tMzoWROTrnAyf+4GmaY9ShRs5GNz-Ug-+Zmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87inw9ir4k.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LED SUBSYSTEM" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---001a114bd18eb5d36a053784d6a5
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hello!
-
-Attached https://github.com/torvalds/linux/compare/master...ottok:fix-spell=
-ing-devicetree.patch
-as requested.
-
-2016-07-13 16:30 GMT+03:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Tue, Jul 5, 2016 at 4:21 PM, Otto Kek=C3=A4l=C3=A4inen <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org=
+On 13 July 2016 at 15:50, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> w=
+rote:
+> Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>> On 13 July 2016 at 15:20, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org=
 > wrote:
->> 2016-07-05 23:47 GMT+03:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->>> On Tue, Jul 05, 2016 at 11:48:26AM +0300, Otto Kek=C3=A4l=C3=A4inen wro=
-te:
->>>> Signed-off-by: Otto Kek=C3=A4l=C3=A4inen <otto-Gh1NM5ZPXYb1KXRcyAk9cg@public.gmane.org>
->>>> ---
+>>> Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>>>> Hi again,
 >>>>
->>>> I sent this originally to trivial@, but they adviced to submit this di=
-rectly to you.
->>>> Please apply. Thank you!
->>>
->>> I would, but...
->>>
+>>>> This is my second try of getting HCD providers into usb subsystem.
 >>>>
->>>>  Documentation/device-mapper/dm-crypt.txt           |    2 +-
->>>>  Documentation/device-mapper/verity.txt             |    2 +-
+>>>> During discussion of V1 I realized there are about 26 drivers addi=
+ng a
+>>>> single HCD and all of them would need to be modified. So instead I
+>>>> decided to put relevant code in usb_add_hcd. It checks if the HCD =
+we
+>>>> register is a primary one and if so, it registers a proper provide=
+r.
+>>>>
+>>>> Please note that of_hcd_xlate_simple was also extended to allow ge=
+tting
+>>>> shared HCD (which is used e.g. in case of XHCI).
+>>>>
+>>>> So now you can have something like:
+>>>>
+>>>> ohci: ohci@21000 {
+>>>>       #usb-cells =3D <0>;
+>>>>       compatible =3D "generic-ohci";
+>>>>       reg =3D <0x00001000 0x1000>;
+>>>>       interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>>>> };
+>>>>
+>>>> ehci: ehci@22000 {
+>>>>       #usb-cells =3D <0>;
+>>>>       compatible =3D "generic-ehci";
+>>>>       reg =3D <0x00002000 0x1000>;
+>>>>       interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>>>> };
+>>>>
+>>>> xhci: xhci@23000 {
+>>>>       #usb-cells =3D <1>;
+>>>>       compatible =3D "generic-xhci";
+>>>>       reg =3D <0x00003000 0x1000>;
+>>>>       interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+>>>> };
+>>>>
+>>>> The last (second) patch is not supposed to be applied, it's used o=
+nly as
+>>>> a proof and example of how providers can be used.
 >>>
->>> These 2 are not part of DT. Otherwise, looks fine.
+>>> nowhere here (or in previous patch) you clarify why exactly you nee=
+d
+>>> this. What is your LED trigger supposed to do? Why can't it handle =
+ports
+>>> changing number in different boots? Why do we need this at all? Why=
+ is
+>>> your code DT-specific?
+>>>
+>>> There are still too many 'unknowns' here.
 >>
->> The corrected, slimmed down patch available now. Instead of
->> resubmitting, I provide the url:
+>> Are you sure you saw my reply to Peter's question?
+>> <CACna6rw6QOuY247qvDmO4mKrW3y4yXoeM3qr8SXAwn3CuYAMpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+>> http://www.spinics.net/lists/linux-usb/msg143708.html
+>> http://marc.info/?l=3Dlinux-usb&m=3D146838735627093&w=3D2
 >>
->> curl -O https://github.com/torvalds/linux/compare/master...ottok:fix-spe=
-lling-devicetree.patch
+>> I think it should answer (some of?) your questions. Can you read it
+>> and see if it gets a bit clearer?
 >
-> Please just resend.
+> well, all that says is that you're writing a LED trigger to toggle LE=
+D
+> when a USB device gets added to a specified port. I don't think you n=
+eed
+> the actual port number for that. You should have a phandle to the act=
+ual
+> port, whatever its number is, or a phandle to the (root-)Hub and a po=
+rt
+> number from that hub.
 >
-> Rob
+> The problem, really, is that DT descriptor of USB Hosts is very, very
+> minimal. Perhaps there's something more extensively defined from the
+> original Open Firmware USB Addendum.
+
+Thanks for your effort and looking at this closely. You're right, I'm
+interested in referencing USB ports, but I'm using controller phandle
+(and then I specify ports manually).
+
+Having each port described by DT would be helpful, it's just something
+I didn't find implemented, so I started looking for different ways. It
+seems I should have picked a different solution.
+
+So should I work on describing USB ports in DT instead? This looks
+like a complex thing to describe, so I'd like to ask for some guidance
+first. What do you think about following schema/example?
+
+ohci@1000 {
+        compatible =3D "generic-ohci";
+        reg =3D <0x00001000 0x1000>;
+        interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+
+        primary-hcd {
+                ohci_port0: port@0 {
+                        reg =3D <0>;
+                };
+
+                ohci_port1: port@1 {
+                        reg =3D <1>;
+                };
+        }
+};
+
+ehci@2000 {
+        compatible =3D "generic-ehci";
+        reg =3D <0x00002000 0x1000>;
+        interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+
+        primary-hcd {
+                ehci_port0: port@0 {
+                        reg =3D <0>;
+                };
+
+                ehci_port1: port@1 {
+                        reg =3D <1>;
+                };
+        }
+};
+
+xhci@3000 {
+        compatible =3D "generic-xhci";
+        reg =3D <0x00003000 0x1000>;
+        interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+
+        primary-hcd {
+        };
+
+        shared-hcd {
+                xhci_port0: port@0 {
+                        reg =3D <0>;
+                };
+        }
+};
+
+With such a DT struct, how could I query port for a Linux-assigned numb=
+er?
+
+=46or example with OHCI, EHCI and XHCI drivers compiled, Linux assigns
+number 4 to my XHCI's shared HCD's root hub:
+xhci-hcd 18023000.xhci: xHCI Host Controller
+xhci-hcd 18023000.xhci: new USB bus registered, assigned bus number 4
+hub 4-0:1.0: USB hub found
+hub 4-0:1.0: 1 port detected
+
+If I disable OHCI and EHCI I get:
+xhci-hcd xhci-hcd.0: xHCI Host Controller
+xhci-hcd xhci-hcd.0: new USB bus registered, assigned bus number 2
+hub 2-0:1.0: USB hub found
+hub 2-0:1.0: 1 port detected
+
+So I need my "usbport" trigger driver to be able to get "4-1" in the
+first case and "2-1" in the second case. I guess I should use
+&xhci_port0 but what then? How could I translate it into
+Linux-assigned numbering?
 
 
+> There's also no documentation for your new bindings nor are there any
+> user demonstrating how DT should be written to use these new bindings=
+=2E
+>
+> IMO, if you're describing it in DT and you need a specific port name,
+> your bindings are wrong.
+
+OK, point taken. I'll make sure to document it once we agree how to
+proceed with implementation.
 
 --=20
-Check out our blog at http://seravo.fi/blog
-and follow @ottokekalainen
-
---001a114bd18eb5d36a053784d6a5
-Content-Type: text/x-patch; charset=UTF-8;
-	name="master...ottok_fix-spelling-devicetree.patch"
-Content-Disposition: attachment;
-	filename="master...ottok_fix-spelling-devicetree.patch"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_iqkygu5q0
-
-RnJvbSAzN2U0NmZlYmQzNWU5MThmNzU0YzhhNDkzMDg5ODNlMTkxMTlhMGU2IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiA9P1VURi04P3E/T3R0bz0yMEtlaz1DMz1BNGw9QzM9QTRpbmVu
-Pz0gPG90dG9Ac2VyYXZvLmZpPgpEYXRlOiBUdWUsIDUgSnVsIDIwMTYgMjM6MTc6NTcgKzAzMDAK
-U3ViamVjdDogW1BBVENIXSBGaXggc3BlbGxpbmcgZXJyb3JzIGluIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZQpNSU1FLVZlcnNpb246IDEuMApDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJz
-ZXQ9VVRGLTgKQ29udGVudC1UcmFuc2Zlci1FbmNvZGluZzogOGJpdAoKU2lnbmVkLW9mZi1ieTog
-T3R0byBLZWvDpGzDpGluZW4gPG90dG9Ac2VyYXZvLmZpPgotLS0KIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9hcm0vbDJjMngwLnR4dCAgICAgICAgICAgICAgICAgICAgICB8IDQg
-KystLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9kc2EvZHNhLnR4dCAg
-ICAgICAgICAgICAgICAgICAgIHwgMiArLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0ICAgICAgICAgICAgICAgIHwgNCArKy0tCiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVnbWFwL3JlZ21hcC50eHQgICAgICAgICAgICAg
-ICAgICAgfCAyICstCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc2VyaWFsL3Fj
-b20sbXNtLXVhcnRkbS50eHQgICAgICAgICAgfCA0ICsrLS0KIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9zb3VuZC9zaW1wbGUtY2FyZC50eHQgICAgICAgICAgICAgICB8IDIgKy0K
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvdGlfcXNwaS50eHQgICAgICAg
-ICAgICAgICAgICAgICB8IDIgKy0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL2FsbHdp
-bm5lcixzdW41aS1hMTMtaHN0aW1lci50eHQgICAgICAgICB8IDIgKy0KIDggZmlsZXMgY2hhbmdl
-ZCwgMTEgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9sMmMyeDAudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9sMmMyeDAudHh0CmluZGV4IGM0NTNhYjUuLjkxNzE5
-OWYgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbDJj
-MngwLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2wyYzJ4
-MC50eHQKQEAgLTg2LDEwICs4NiwxMCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgogICBmaXJtd2Fy
-ZSkKIC0gYXJtLGR5bmFtaWMtY2xvY2stZ2F0aW5nIDogTDIgZHluYW1pYyBjbG9jayBnYXRpbmcu
-IFZhbHVlOiA8MD4gKGZvcmNpYmx5CiAgIGRpc2FibGUpLCA8MT4gKGZvcmNpYmx5IGVuYWJsZSks
-IHByb3BlcnR5IGFic2VudCAoT1Mgc3BlY2lmaWMgYmVoYXZpb3IsCi0gIHByZWZlcnJhYmx5IHJl
-dGFpbiBmaXJtd2FyZSBzZXR0aW5ncykKKyAgcHJlZmVyYWJseSByZXRhaW4gZmlybXdhcmUgc2V0
-dGluZ3MpCiAtIGFybSxzdGFuZGJ5LW1vZGU6IEwyIHN0YW5kYnkgbW9kZSBlbmFibGUuIFZhbHVl
-IDwwPiAoZm9yY2libHkgZGlzYWJsZSksCiAgIDwxPiAoZm9yY2libHkgZW5hYmxlKSwgcHJvcGVy
-dHkgYWJzZW50IChPUyBzcGVjaWZpYyBiZWhhdmlvciwKLSAgcHJlZmVycmFibHkgcmV0YWluIGZp
-cm13YXJlIHNldHRpbmdzKQorICBwcmVmZXJhYmx5IHJldGFpbiBmaXJtd2FyZSBzZXR0aW5ncykK
-IAogRXhhbXBsZToKIApkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL25ldC9kc2EvZHNhLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9u
-ZXQvZHNhL2RzYS50eHQKaW5kZXggOWY0ODA3Zi4uZWIxM2VhZiAxMDA2NDQKLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9kc2EvZHNhLnR4dAorKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2RzYS9kc2EudHh0CkBAIC00Myw3ICs0Myw3
-IEBAIEVhY2ggcG9ydCBjaGlsZHJlbiBub2RlIG11c3QgaGF2ZSB0aGUgZm9sbG93aW5nIG1hbmRh
-dG9yeSBwcm9wZXJ0aWVzOgogTm90ZSB0aGF0IGEgcG9ydCBsYWJlbGxlZCAiZHNhIiB3aWxsIGlt
-cGx5IGNoZWNraW5nIGZvciB0aGUgdXBsaW5rIHBoYW5kbGUKIGRlc2NyaWJlZCBiZWxvdy4KIAot
-T3B0aW9ubmFsIHByb3BlcnR5OgorT3B0aW9uYWwgcHJvcGVydHk6CiAtIGxpbmsJCQk6IFNob3Vs
-ZCBiZSBhIGxpc3Qgb2YgcGhhbmRsZXMgdG8gYW5vdGhlciBzd2l0Y2gncyBEU0EgcG9ydC4KIAkJ
-CSAgVGhpcyBwcm9wZXJ0eSBpcyBvbmx5IHVzZWQgd2hlbiBzd2l0Y2hlcyBhcmUgYmVpbmcKIAkJ
-CSAgY2hhaW5lZC9jYXNjYWRlZCB0b2dldGhlci4gVGhpcyBwb3J0IGlzIHVzZWQgYXMgb3V0Z29p
-bmcgcG9ydApkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
-d2VycGMvZnNsL2ZtYW4udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
-d2VycGMvZnNsL2ZtYW4udHh0CmluZGV4IDU1YzJjMDMuLmRmODczZDEgMTAwNjQ0Ci0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dAorKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQK
-QEAgLTM1LDcgKzM1LDcgQEAgUFJPUEVSVElFUwogCQlEZWZpbml0aW9uOiBTcGVjaWZpZXMgdGhl
-IGluZGV4IG9mIHRoZSBGTWFuIHVuaXQuCiAKIAkJVGhlIGNlbGwtaW5kZXggdmFsdWUgbWF5IGJl
-IHVzZWQgYnkgdGhlIFNvQywgdG8gaWRlbnRpZnkgdGhlCi0JCUZNYW4gdW5pdCBpbiB0aGUgU29D
-IG1lbW9yeSBtYXAuIEluIHRoZSB0YWJsZSBiZWxsb3csCisJCUZNYW4gdW5pdCBpbiB0aGUgU29D
-IG1lbW9yeSBtYXAuIEluIHRoZSB0YWJsZSBiZWxvdywKIAkJdGhlcmUncyBhIGRlc2NyaXB0aW9u
-IG9mIHRoZSBjZWxsLWluZGV4IHVzZSBpbiBlYWNoIFNvQzoKIAogCQktIFAxMDIzOgpAQCAtMjQ3
-LDcgKzI0Nyw3IEBAIFBST1BFUlRJRVMKIAogCQlUaGUgY2VsbC1pbmRleCB2YWx1ZSBtYXkgYmUg
-dXNlZCBieSB0aGUgRk1hbiBvciB0aGUgU29DLCB0bwogCQlpZGVudGlmeSB0aGUgTUFDIHVuaXQg
-aW4gdGhlIEZNYW4gKG9yIFNvQykgbWVtb3J5IG1hcC4KLQkJSW4gdGhlIHRhYmxlcyBiZWxsb3cg
-dGhlcmUncyBhIGRlc2NyaXB0aW9uIG9mIHRoZSBjZWxsLWluZGV4CisJCUluIHRoZSB0YWJsZXMg
-YmVsb3cgdGhlcmUncyBhIGRlc2NyaXB0aW9uIG9mIHRoZSBjZWxsLWluZGV4CiAJCXVzZSwgdGhl
-cmUgYXJlIHR3byB0YWJsZXMsIG9uZSBkZXNjcmliZXMgdGhlIHVzZSBvZiBjZWxsLWluZGV4CiAJ
-CWJ5IHRoZSBGTWFuLCB0aGUgc2Vjb25kIGRlc2NyaWJlcyB0aGUgdXNlIGJ5IHRoZSBTb0M6CiAK
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWdtYXAvcmVn
-bWFwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWdtYXAvcmVnbWFw
-LnR4dAppbmRleCAwMTI3YmUzLi44NzMwOTZiIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcmVnbWFwL3JlZ21hcC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ21hcC9yZWdtYXAudHh0CkBAIC0xNCw3ICsxNCw3IEBAIGFy
-Y2hpdGVjdHVyZXMgdGhhdCB0eXBpY2FsbHkgcnVuIGJpZy1lbmRpYW4gb3BlcmF0aW5nIHN5c3Rl
-bXMKIGJlIG1hcmtlZCB0aGF0IHdheSBpbiB0aGUgZGV2aWNldHJlZS4KIAogT24gU29DcyB0aGF0
-IGNhbiBiZSBvcGVyYXRlZCBpbiBib3RoIGJpZy1lbmRpYW4gYW5kIGxpdHRsZS1lbmRpYW4KLW1v
-ZGVzLCB3aXRoIGEgc2luZ2xlIGhhcmR3YXJlIHN3aXRjaCBjb250cm9sbGluZyBib3RoIHRoZSBl
-bmRpYW5lc3MKK21vZGVzLCB3aXRoIGEgc2luZ2xlIGhhcmR3YXJlIHN3aXRjaCBjb250cm9sbGlu
-ZyBib3RoIHRoZSBlbmRpYW5uZXNzCiBvZiB0aGUgQ1BVIGFuZCBhIGJ5dGVzd2FwIGZvciBNTUlP
-IHJlZ2lzdGVycyAoZS5nLiBtYW55IEJyb2FkY29tIE1JUFMKIGNoaXBzKSwgIm5hdGl2ZS1lbmRp
-YW4iIGlzIHVzZWQgdG8gYWxsb3cgdXNpbmcgdGhlIHNhbWUgZGV2aWNlIHRyZWUKIGJsb2IgaW4g
-Ym90aCBjYXNlcy4KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9zZXJpYWwvcWNvbSxtc20tdWFydGRtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9zZXJpYWwvcWNvbSxtc20tdWFydGRtLnR4dAppbmRleCAxODI3NzdmLi5kNWY3M2I4
-IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc2VyaWFsL3Fj
-b20sbXNtLXVhcnRkbS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NlcmlhbC9xY29tLG1zbS11YXJ0ZG0udHh0CkBAIC0yOCwxMCArMjgsMTAgQEAgT3B0aW9uYWwg
-cHJvcGVydGllczoKIC0gZG1hLW5hbWVzOiBTaG91bGQgY29udGFpbiAidHgiIGZvciB0cmFuc21p
-dCBhbmQgInJ4IiBmb3IgcmVjZWl2ZSBjaGFubmVscwogLSBxY29tLHR4LWNyY2k6IElkZW50aWZp
-Y2F0b3IgPHUzMj4gZm9yIENsaWVudCBSYXRlIENvbnRyb2wgSW50ZXJmYWNlIHRvIGJlCiAgICAg
-ICAgICAgIHVzZWQgd2l0aCBUWCBETUEgY2hhbm5lbC4gUmVxdWlyZWQgd2hlbiB1c2luZyBETUEg
-Zm9yIHRyYW5zbWlzc2lvbgotICAgICAgICAgICB3aXRoIFVBUlRETSB2MS4zIGFuZCBiZWxsb3cu
-CisgICAgICAgICAgIHdpdGggVUFSVERNIHYxLjMgYW5kIGJlbG93LgogLSBxY29tLHJ4LWNyY2k6
-IElkZW50aWZpY2F0b3IgPHUzMj4gZm9yIENsaWVudCBSYXRlIENvbnRyb2wgSW50ZXJmYWNlIHRv
-IGJlCiAgICAgICAgICAgIHVzZWQgd2l0aCBSWCBETUEgY2hhbm5lbC4gUmVxdWlyZWQgd2hlbiB1
-c2luZyBETUEgZm9yIHJlY2VwdGlvbgotICAgICAgICAgICB3aXRoIFVBUlRETSB2MS4zIGFuZCBi
-ZWxsb3cuCisgICAgICAgICAgIHdpdGggVUFSVERNIHYxLjMgYW5kIGJlbG93LgogCiBOb3RlOiBB
-bGlhc2VzIG1heSBiZSBkZWZpbmVkIHRvIGVuc3VyZSB0aGUgY29ycmVjdCBvcmRlcmluZyBvZiB0
-aGUgVUFSVHMuCiBUaGUgYWxpYXMgc2VyaWFsTiB3aWxsIHJlc3VsdCBpbiB0aGUgVUFSVCBiZWlu
-ZyBhc3NpZ25lZCBwb3J0IE4uICBJZiBhbnkKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zaW1wbGUtY2FyZC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc291bmQvc2ltcGxlLWNhcmQudHh0CmluZGV4IGNmMzk3OWUuLjU5
-ZDg2MjggMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3Vu
-ZC9zaW1wbGUtY2FyZC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NvdW5kL3NpbXBsZS1jYXJkLnR4dApAQCAtMzAsNyArMzAsNyBAQCBPcHRpb25hbCBzdWJub2Rl
-czoKIAkJCQkJICBzdWItbm9kZXMuIFRoaXMgY29udGFpbmVyIG1heSBiZQogCQkJCQkgIG9taXR0
-ZWQgd2hlbiB0aGUgY2FyZCBoYXMgb25seSBvbmUKIAkJCQkJICBEQUkgbGluay4gU2VlIHRoZSBl
-eGFtcGxlcyBhbmQgdGhlCi0JCQkJCSAgc2VjdGlvbiBiZWxsb3cuCisJCQkJCSAgc2VjdGlvbiBi
-ZWxvdy4KIAogRGFpLWxpbmsgc3Vibm9kZSBwcm9wZXJ0aWVzIGFuZCBzdWJub2RlczoKIApkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS90aV9xc3BpLnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvdGlfcXNwaS50eHQKaW5k
-ZXggNTBiMTRmNi4uZTY1ZmRlNCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3NwaS90aV9xc3BpLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3Mvc3BpL3RpX3FzcGkudHh0CkBAIC0yMCw3ICsyMCw3IEBAIE9wdGlvbmFsIHByb3Bl
-cnRpZXM6CiAJCSAgICAgIGNoaXBzZWxlY3QgcmVnaXN0ZXIgYW5kIG9mZnNldCBvZiB0aGF0IHJl
-Z2lzdGVyLgogCiBOT1RFOiBUSSBRU1BJIGNvbnRyb2xsZXIgcmVxdWlyZXMgZGlmZmVyZW50IHBp
-bm11eCBhbmQgSU9EZWxheQotcGFyYW1hdGVycyBmb3IgTW9kZS0wIGFuZCBNb2RlLTMgb3BlcmF0
-aW9ucywgd2hpY2ggbmVlZHMgdG8gYmUgc2V0IHVwIGJ5CitwYXJhbWV0ZXJzIGZvciBNb2RlLTAg
-YW5kIE1vZGUtMyBvcGVyYXRpb25zLCB3aGljaCBuZWVkcyB0byBiZSBzZXQgdXAgYnkKIHRoZSBi
-b290bG9hZGVyIChVLUJvb3QpLiBEZWZhdWx0IGNvbmZpZ3VyYXRpb24gb25seSBzdXBwb3J0cyBN
-b2RlLTAKIG9wZXJhdGlvbi4gSGVuY2UsICJzcGktY3BvbCIgYW5kICJzcGktY3BoYSIgRFQgcHJv
-cGVydGllcyBjYW5ub3QgYmUKIHNwZWNpZmllZCBpbiB0aGUgc2xhdmUgbm9kZXMgb2YgVEkgUVNQ
-SSBjb250cm9sbGVyIHdpdGhvdXQgYXBwcm9wcmlhdGUKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9hbGx3aW5uZXIsc3VuNWktYTEzLWhzdGltZXIu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL2FsbHdpbm5lcixz
-dW41aS1hMTMtaHN0aW1lci50eHQKaW5kZXggMjdjZmM3ZC4uOGQ2ZTRmZCAxMDA2NDQKLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL2FsbHdpbm5lcixzdW41aS1h
-MTMtaHN0aW1lci50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Rp
-bWVyL2FsbHdpbm5lcixzdW41aS1hMTMtaHN0aW1lci50eHQKQEAgLTksNyArOSw3IEBAIFJlcXVp
-cmVkIHByb3BlcnRpZXM6CiAJCW9uZSkKIC0gY2xvY2tzOiBwaGFuZGxlIHRvIHRoZSBzb3VyY2Ug
-Y2xvY2sgKHVzdWFsbHkgdGhlIEFIQiBjbG9jaykKIAotT3B0aW9ubmFsIHByb3BlcnRpZXM6CitP
-cHRpb25hbCBwcm9wZXJ0aWVzOgogLSByZXNldHM6IHBoYW5kbGUgdG8gYSByZXNldCBjb250cm9s
-bGVyIGFzc2VydGluZyB0aGUgdGltZXIKIAogRXhhbXBsZToK
---001a114bd18eb5d36a053784d6a5--
+Rafa=C5=82
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
