@@ -1,95 +1,98 @@
 From: tiffany lin <tiffany.lin@mediatek.com>
 Subject: Re: [PATCH v3 3/9] DocBook/v4l: Add compressed video formats used
  on MT8173 codec driver
-Date: Wed, 13 Jul 2016 10:00:09 +0800
-Message-ID: <1468375209.2462.20.camel@mtksdaap41>
+Date: Wed, 13 Jul 2016 10:03:08 +0800
+Message-ID: <1468375388.2462.22.camel@mtksdaap41>
 References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
-	   <1464611363-14936-2-git-send-email-tiffany.lin@mediatek.com>
-	   <1464611363-14936-3-git-send-email-tiffany.lin@mediatek.com>
-	   <1464611363-14936-4-git-send-email-tiffany.lin@mediatek.com>
-	   <5a793171-24a7-4e9e-8bfd-f668c789f8e0@xs4all.nl>
-	  <1468205771.3725.8.camel@mtksdaap41>
-	  <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
-	 <1468350511.8843.16.camel@gmail.com> <1468350842.8843.18.camel@gmail.com>
+	 <1464611363-14936-2-git-send-email-tiffany.lin@mediatek.com>
+	 <1464611363-14936-3-git-send-email-tiffany.lin@mediatek.com>
+	 <1464611363-14936-4-git-send-email-tiffany.lin@mediatek.com>
+	 <5a793171-24a7-4e9e-8bfd-f668c789f8e0@xs4all.nl>
+	 <1468205771.3725.8.camel@mtksdaap41>
+	 <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468350842.8843.18.camel@gmail.com>
+In-Reply-To: <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas@ndufresne.ca
-Cc: Wu-Cheng Li =?UTF-8?Q?=28=E6=9D=8E=E5=8B=99=E8=AA=A0=29?= <wuchengli@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Lin PoChun <PoChun.Lin@mediatek.com>
+To: Wu-Cheng Li =?UTF-8?Q?=28=E6=9D=8E=E5=8B=99=E8=AA=A0=29?= <wuchengli@chromium.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Lin PoChun <PoChun.Lin@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+On Tue, 2016-07-12 at 16:16 +0800, Wu-Cheng Li (=E6=9D=8E=E5=8B=99=E8=AA=
+=A0) wrote:
+> On Mon, Jul 11, 2016 at 10:56 AM, tiffany lin <tiffany.lin@mediatek.c=
+om> wrote:
+> > Hi Hans,
+> >
+> > On Fri, 2016-07-08 at 12:23 +0200, Hans Verkuil wrote:
+> >> On 05/30/2016 02:29 PM, Tiffany Lin wrote:
+> >> > Add V4L2_PIX_FMT_MT21 documentation
+> >> >
+> >> > Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> >> > ---
+> >> >  Documentation/DocBook/media/v4l/pixfmt.xml |    6 ++++++
+> >> >  1 file changed, 6 insertions(+)
+> >> >
+> >> > diff --git a/Documentation/DocBook/media/v4l/pixfmt.xml b/Docume=
+ntation/DocBook/media/v4l/pixfmt.xml
+> >> > index 5a08aee..d40e0ce 100644
+> >> > --- a/Documentation/DocBook/media/v4l/pixfmt.xml
+> >> > +++ b/Documentation/DocBook/media/v4l/pixfmt.xml
+> >> > @@ -1980,6 +1980,12 @@ array. Anything what's in between the UYV=
+Y lines is JPEG data and should be
+> >> >  concatenated to form the JPEG stream. </para>
+> >> >  </entry>
+> >> >       </row>
+> >> > +     <row id=3D"V4L2_PIX_FMT_MT21">
+> >> > +       <entry><constant>V4L2_PIX_FMT_MT21</constant></entry>
+> >> > +       <entry>'MT21'</entry>
+> >> > +       <entry>Compressed two-planar YVU420 format used by Media=
+tek MT8173
+> >> > +       codec driver.</entry>
+> >>
+> >> Can you give a few more details? The encoder driver doesn't seem t=
+o produce this
+> >> format, so who is creating this? Where is this format documented?
+> Decoder hardware produces MT21 (compressed). Image processor can
+> convert it to a format that can be input of display driver. Tiffany.
+> When do you plan to upstream image processor (mtk-mdp)?
+> >
+We are working on this. Will upstream soon.
 
-On Tue, 2016-07-12 at 15:14 -0400, Nicolas Dufresne wrote:
-> Le mardi 12 juillet 2016 =C3=A0 15:08 -0400, Nicolas Dufresne a =C3=A9=
-crit :
-> > Le mardi 12 juillet 2016 =C3=A0 16:16 +0800, Wu-Cheng Li (=E6=9D=8E=
-=E5=8B=99=E8=AA=A0) a =C3=A9crit :
-> > > Decoder hardware produces MT21 (compressed). Image processor can
-> > > convert it to a format that can be input of display driver.
-> > > Tiffany.
-> > > When do you plan to upstream image processor (mtk-mdp)?
-> > > >=20
-> > > > It can be as input format for encoder, MDP and display drivers =
-in
-> > > our
-> > > > platform.
-> > > I remember display driver can only accept uncompressed MT21. Righ=
-t?
-> > > Basically V4L2_PIX_FMT_MT21 is compressed and is like an opaque
-> > > format. It's not usable until it's decompressed and converted by
-> > > image
-> > > processor.
-> >=20
-> > Previously it was described as MediaTek block mode, and now as a
-> > MediaTek compressed format. It makes me think you have no idea what
-> > this pixel format really is. Is that right ?
-> >=20
-> > The main reason why I keep asking, is that we often find similariti=
-es
-> > between what vendor like to call their proprietary formats. Doing t=
-he
-> > proper research helps not creating a mess like in Android where you
-> > have a lot of formats that all point to the same format. I believe
-> > there was the same concern when Samsung wanted to introduce their Z=
--
-> > flip-Z NV12 tile format. In the end they simply provided sufficient
-> > documentation so we could document it and implement software
-> > converters
-> > for test and validation purpose.
->=20
-> Here's the kind of information we want in the documentation.
->=20
-> https://chromium.googlesource.com/chromium/src/media/+/master/base/vi=
-de
-> o_types.h#40
->=20
->   // MediaTek proprietary format. MT21 is similar to NV21 except the =
-memory
->   // layout and pixel layout (swizzles). 12bpp with Y plane followed =
-by a 2x2
->   // interleaved VU plane. Each image contains two buffers -- Y plane=
- and VU
->   // plane. Two planes can be non-contiguous in memory. The starting =
-addresses
->   // of Y plane and VU plane are 4KB alignment.
->   // Suppose image dimension is (width, height). For both Y plane and=
- VU plane:
->   // Row pitch =3D ((width+15)/16) * 16.
->   // Plane size =3D Row pitch * (((height+31)/32)*32)
->=20
-> Now obviously this is incomplete, as the swizzling need to be documen=
-ted of course.
->=20
-Because it's finally a compressed format from our codec hw, we cannot
-describe its swizzling.
+> > It can be as input format for encoder, MDP and display drivers in o=
+ur
+> > platform.
+> I remember display driver can only accept uncompressed MT21. Right?
+> Basically V4L2_PIX_FMT_MT21 is compressed and is like an opaque
+> format. It's not usable until it's decompressed and converted by imag=
+e
+> processor.
+That's right in MT8173 platform.
 
 best regards,
 Tiffany
-
-> >=20
-> > regards,
-> > Nicolas
+> > This private format is only available in our platform.
+> > So I put it in "Reserved Format Identifiers" sections.
+> >
+> >
+> > best regards,
+> > Tiffany
+> >
+> >> Regards,
+> >>
+> >>       Hans
+> >>
+> >> > +     </row>
+> >> >     </tbody>
+> >> >        </tgroup>
+> >> >      </table>
+> >> >
+> >
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-med=
+ia" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
