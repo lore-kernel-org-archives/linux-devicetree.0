@@ -1,74 +1,85 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] Bluetooth: Add LED triggers for HCI frames tx and rx
-Date: Wed, 13 Jul 2016 09:07:58 +0100
-Message-ID: <D2545F6D-7100-4B59-A19D-7CF878902BAA@holtmann.org>
-References: <1466657923-5776-1-git-send-email-guodong.xu@linaro.org>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] usb: add HCD providers
+Date: Wed, 13 Jul 2016 16:02:42 +0800
+Message-ID: <20160713080242.GA11863@shlinux2>
+References: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
+ <20160713045140.GA29915@shlinux2>
+ <CACna6rw6QOuY247qvDmO4mKrW3y4yXoeM3qr8SXAwn3CuYAMpw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1466657923-5776-1-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACna6rw6QOuY247qvDmO4mKrW3y4yXoeM3qr8SXAwn3CuYAMpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LED SUBSYSTEM" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guodong,
+On Wed, Jul 13, 2016 at 07:21:09AM +0200, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+> On 13 July 2016 at 06:51, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Tue, Jul 12, 2016 at 02:35:18PM +0200, Rafa=C5=82 Mi=C5=82ecki w=
+rote:
+> >> I was working on an "usbport" LED trigger driver and specifying it=
+s
+> >> default state in DT. I realized I can't really determine numbering=
+ of
+> >> USB ports on any device as it depends on compiled drivers and the
+> >> loading orders.
+> >>
+> >> It means that my physical USB port can be e.g. 1-1 or 2-1 dependin=
+g on
+> >> my current config/setup. I needed a way to specify a particular HC=
+D in
+> >> DT and then hardcode port number (as this part doesn't change).
+> >>
+> >
+> > I have a question:
+> >
+> > What does your "usbport" LED trigger for? What kinds of information
+> > you would like to show on LED?
+>=20
+> It's a trigger that turns on LED whenever USB device appears at
+> specified USB port. There are plenty of home routers that have USB
+> labeled LED(s). To support them nicely, first of all we need a trigge=
+r
+> that will watch for USB subsystem events. Secondly we need a way to
+> setup its initial state correctly as most users don't want to play
+> with sysfs on their own.
+>=20
+> I sent usbport trigger in:
+> [PATCH] leds: trigger: Introduce an USB port trigger
+> <1468239883-22695-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> https://lkml.org/lkml/2016/7/11/305
+> You may read commit message and ledtrig-usbport.txt for more details.
+>=20
 
-> Two LED triggers are defined: tx_led and rx_led. Upon frames
-> available in HCI core layer, for tx or for rx, the combined LED
-> can blink.
-> 
-> Verified on HiKey, 96boards. It uses hi6220 SoC and TI WL1835 combo
-> chip.
-> 
-> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> include/net/bluetooth/hci_core.h |  1 +
-> net/bluetooth/hci_core.c         |  3 +++
-> net/bluetooth/leds.c             | 15 +++++++++++++++
-> net/bluetooth/leds.h             |  2 ++
-> 4 files changed, 21 insertions(+)
-> 
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> index dc71473..37b8dd9 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -398,6 +398,7 @@ struct hci_dev {
-> 	bdaddr_t		rpa;
-> 
-> 	struct led_trigger	*power_led;
-> +	struct led_trigger	*tx_led, *rx_led;
-> 
-> 	int (*open)(struct hci_dev *hdev);
-> 	int (*close)(struct hci_dev *hdev);
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 45a9fc6..c6e1210 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -3248,6 +3248,7 @@ int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
-> 	skb_queue_tail(&hdev->rx_q, skb);
-> 	queue_work(hdev->workqueue, &hdev->rx_work);
-> 
-> +	hci_leds_blink_oneshot(hdev->rx_led);
-> 	return 0;
-> }
-> EXPORT_SYMBOL(hci_recv_frame);
-> @@ -3325,6 +3326,8 @@ static void hci_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
-> 		BT_ERR("%s sending frame failed (%d)", hdev->name, err);
-> 		kfree_skb(skb);
-> 	}
-> +
-> +	hci_leds_blink_oneshot(hdev->tx_led);
-> }
+Well, it is an interesting use case. You can try to add provider (un)re=
+gister
+at hub driver (drivers/usb/core/hub.c) instead of each platform drivers=
+, you
+could refer my USB pwrseq as an example[1].
 
-so I am not convinced that this is the right way of doing TX/RX activity leds. This would have them purely based on HCI traffic and this would include control frames. I think that we want activity leds for actual radio activity. Meaning that when we have an active connection and ACL packets are exchanged or when we are scanning.
+=46or roothub, you can get the busnum through comparing controller's of=
+_node, for
+internal hub, you can get hub's dev name like (1-1) through comparing
+its of_node (you need to describe your hard-wired hub on dts).
 
-Regards
+http://www.spinics.net/lists/linux-usb/msg143699.html
 
-Marcel
+Two more questions:
 
+- How to support the USB device on the port when boots up?
+- Any cases we need to add mapping using new_port_store, the user may
+not know bus number for physical port.
+
+--=20
+
+Best Regards,
+Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
