@@ -1,56 +1,42 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH v3 7/7] clk: exynos5433: remove CLK_IGNORE_UNUSED flag from
- SPI clocks
-Date: Wed, 13 Jul 2016 21:44:16 +0900
-Message-ID: <20160713124416.GN18237@samsunx.samsung>
-References: <1468317736-18841-1-git-send-email-andi.shyti@samsung.com>
- <1468317736-18841-8-git-send-email-andi.shyti@samsung.com>
- <CGME20160712222323epcas1p4020f224ba47b193243867ab41bc109c8@epcas1p4.samsung.com>
- <146836184696.73491.9452469757415968654@resonance>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: at91-sama5d4ek.dts, lcd_bus node?
+Date: Wed, 13 Jul 2016 15:08:00 +0200
+Message-ID: <20160713130800.GA898@piout.net>
+References: <alpine.DEB.2.02.1607131228320.10743@pmeerw.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-disposition: inline
-In-reply-to: <146836184696.73491.9452469757415968654@resonance>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-spi@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1607131228320.10743-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
-
-> > Because the Exynos5433 SPI driver supports the ioclk handling and
-> > the following patch:
-> > 
-> >   http://marc.info/?l=linux-kernel&m=146787645626318&w=2
-> > 
-> > fixes a synchronus abort issue, none of the SPI clocks require
-> > any critical handling: remove, then, the CLK_IGNORE_UNUSED flag
-> > for the SPI related clocks.
-> > 
-> > Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > Reviewed-by: Michael Turquette <mturquette@baylibre.com>
-> > Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+On 13/07/2016 at 12:33:36 +0200, Peter Meerwald-Stadler wrote :
+> Hello,
 > 
-> Do you want these patches to go through same tree? If not, I can take
-> this patch into clk-next.
+> is the lcd_bus stuff still needed in at91-sama5d4ek.dts?
+> 
 
-oh yes, as Krzysztof and Sylwester pointed out, the dependency is
-not that strict as there is no exynos5433 dts yet, so that we
-wouldn't break anything if patch 7/7 gets in before the others.
+It is not, I just prepared a patch yesterday regarding this issue that I
+didn't send yet (part of the dtc warnings cleanup).
 
-If you want to take in your branch the 7/7, please feel free to
-do so. Only the patches on the drivers/spi/spi-s3c64xx.c file
-have some dependencies on some previous patches I sent to Mark.
+> the sama5d4_xplained*.dts don't seem to have it and I don't see any 
+> reference to it
+> 
+> thanks, regards, p.
+> 
+> -- 
+> 
+> Peter Meerwald-Stadler
+> +43-664-2444418 (mobile)
 
-Andi
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
