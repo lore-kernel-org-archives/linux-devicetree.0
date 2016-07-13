@@ -1,72 +1,35 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 1/6] binding-doc: power: pwrseq-generic: add binding
- doc for generic power sequence library
-Date: Wed, 13 Jul 2016 09:27:31 +0200
-Message-ID: <1468394851.3638.13.camel@pengutronix.de>
-References: <1468375610-18625-1-git-send-email-peter.chen@nxp.com>
- <1468375610-18625-2-git-send-email-peter.chen@nxp.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v1 4/6] drm/rockchip: dw_hdmi: add RK3399 HDMI support
+Date: Wed, 13 Jul 2016 15:30:17 +0800
+Message-ID: <5785EE09.3070406@rock-chips.com>
+References: <1468235079-29152-1-git-send-email-ykk@rock-chips.com>
+ <1468235146-29575-1-git-send-email-ykk@rock-chips.com>
+ <1468237912.3048.26.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1468375610-18625-2-git-send-email-peter.chen@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: mark.rutland@arm.com, ulf.hansson@linaro.org, stephen.boyd@linaro.org, k.kozlowski@samsung.com, festevam@gmail.com, stillcompiling@gmail.com, pawel.moll@arm.com, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, arnd@arndb.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, sre@kernel.org, broonie@kernel.org, shawnguo@kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1468237912.3048.26.camel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, xhc@rock-chips.com, Daniel Vetter <daniel.vetter@ffwll.ch>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Zheng Yang <zhengyang@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 13.07.2016, 10:06 +0800 schrieb Peter Chen:
-> Add binding doc for generic power sequence library.
-> 
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  .../bindings/power/pwrseq/pwrseq-generic.txt       | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
-> new file mode 100644
-> index 0000000..186c58c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
-> @@ -0,0 +1,53 @@
-> +The generic power sequence library
-> +
-> +Some hard-wired USB/MMC devices need to do power sequence to let the
-> +device work normally,
-
-I would replace "to let the device work normally" with "before the
-device can be enumerated [on the bus]" here.
-
->  the typical power sequence like: enable USB
-> +PHY clock, toggle reset pin, etc. But current Linux USB driver
-> +lacks of such code to do it, it may cause some hard-wired USB devices
-> +works abnormal or can't be recognized by controller at all. The
-> +power sequence will be done before this device can be found at USB
-> +bus.
-> +
-> +The power sequence properties is under the device node.
-> +
-> +Required properties:
-> +- power-sequence: this device needs to do power sequence before enumeration
-
-As Joshua pointed out, is this even needed at all?
-
-> +Optional properties:
-> +- clocks: the input clock for device.
-> +- reset-gpios: Should specify the GPIO for reset.
-> +- reset-duration-us: the duration in microsecond for assert reset signal.
-
-With the above two issues sorted out,
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
+UGhpbGlwcCwKCk9uIDA3LzExLzIwMTYgMDc6NTEgUE0sIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4g
+QW0gTW9udGFnLCBkZW4gMTEuMDcuMjAxNiwgMTk6MDUgKzA4MDAgc2NocmllYiBZYWtpciBZYW5n
+Ogo+PiBSSzMzOTkgYW5kIFJLMzI4OCBzaGFyZWQgdGhlIHNhbWUgSERNSSBJUCBjb250cm9sbGVy
+LCBvbmx5IHNvbWUgbGlnaHQKPj4gZGlmZmVyZW5jZSB3aXRoIEdSRiBjb25maWd1cmUuCj4+Cj4+
+IFNpZ25lZC1vZmYtYnk6IFlha2lyIFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KPiBSZXZpZXdl
+ZC1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KClRoYW5rcyBmb3Ig
+eW91ciBmYXN0IHJlc3BvbmQgOi1ECi0gWWFraXIKCj4gcmVnYXJkcwo+IFBoaWxpcHAKPgo+Cj4K
+PgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
