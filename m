@@ -1,32 +1,26 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add PLL1 divided by 2 clock
-Date: Wed, 13 Jul 2016 03:20:49 +0200
-Message-ID: <CAMuHMdVaj=gnPXR4vDzGScRbJf-54=kbAJ4TWEJm7-atmSAg2g@mail.gmail.com>
-References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com>
- <40786877.3MNoIeTZcz@wasted.cogentembedded.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7792: remove ADSP clock
+Date: Wed, 13 Jul 2016 03:23:10 +0200
+Message-ID: <CAMuHMdVkWPrfA0dc_pS1w2C7AB9mO+D59RiL1RLcFBg9W_tecQ@mail.gmail.com>
+References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com> <6927311.Po2EPBmxEp@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <40786877.3MNoIeTZcz@wasted.cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <6927311.Po2EPBmxEp@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 11, 2016 at 11:51 PM, Sergei Shtylyov
+On Mon, Jul 11, 2016 at 11:52 PM, Sergei Shtylyov
 <sergei.shtylyov@cogentembedded.com> wrote:
-> Despite the QSPI clock has PLL1/VCOx1/4 clock as a parent, the latter
-> hasn't been added to the R8A7792 device tree  -- fix this overlook at
-> last...
+> Simon Horman told  me  that R8A7792 had ADSP clock (based on the most recent
+
+... based on a probably incorrect table in ...
+
+> R-Car gen2 manual) but when I  got that manual as well, this claim proved
+> to be false: R8A7792 is the only gen2 SoC that doesn't  have ADSP at all.
+> Remove that  clock  for good...
 >
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
