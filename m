@@ -1,144 +1,56 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 PROOF OF CONCEPT 2/1] trigger: ledtrig-usbport: read initial state from DT
-Date: Wed, 13 Jul 2016 14:42:14 +0200
-Message-ID: <1468413734-9569-3-git-send-email-zajec5@gmail.com>
-References: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
- <1468413734-9569-1-git-send-email-zajec5@gmail.com>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH v3 7/7] clk: exynos5433: remove CLK_IGNORE_UNUSED flag from
+ SPI clocks
+Date: Wed, 13 Jul 2016 21:44:16 +0900
+Message-ID: <20160713124416.GN18237@samsunx.samsung>
+References: <1468317736-18841-1-git-send-email-andi.shyti@samsung.com>
+ <1468317736-18841-8-git-send-email-andi.shyti@samsung.com>
+ <CGME20160712222323epcas1p4020f224ba47b193243867ab41bc109c8@epcas1p4.samsung.com>
+ <146836184696.73491.9452469757415968654@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468413734-9569-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-disposition: inline
+In-reply-to: <146836184696.73491.9452469757415968654@resonance>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-spi@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This allows specifying USB ports that should be observed by a trigger
-right after activating it. Example:
+Hi Mike,
 
-usb {
-	gpios =3D <&gpio 0 GPIO_ACTIVE_HIGH>;
-	linux,default-trigger =3D "usbport";
-	usb-controllers =3D <&ohci>, <&ehci>, <&xhci USB_HCD_SHARED>;
-	usb-ports =3D "1", "1", "1";
-};
+> > Because the Exynos5433 SPI driver supports the ioclk handling and
+> > the following patch:
+> > 
+> >   http://marc.info/?l=linux-kernel&m=146787645626318&w=2
+> > 
+> > fixes a synchronus abort issue, none of the SPI clocks require
+> > any critical handling: remove, then, the CLK_IGNORE_UNUSED flag
+> > for the SPI related clocks.
+> > 
+> > Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+> > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > Reviewed-by: Michael Turquette <mturquette@baylibre.com>
+> > Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> 
+> Do you want these patches to go through same tree? If not, I can take
+> this patch into clk-next.
 
-Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/leds/trigger/ledtrig-usbport.c | 72 ++++++++++++++++++++++++++=
-++++++++
- 1 file changed, 72 insertions(+)
+oh yes, as Krzysztof and Sylwester pointed out, the dependency is
+not that strict as there is no exynos5433 dts yet, so that we
+wouldn't break anything if patch 7/7 gets in before the others.
 
-diff --git a/drivers/leds/trigger/ledtrig-usbport.c b/drivers/leds/trig=
-ger/ledtrig-usbport.c
-index eb20a8f..5724f63 100644
---- a/drivers/leds/trigger/ledtrig-usbport.c
-+++ b/drivers/leds/trigger/ledtrig-usbport.c
-@@ -12,8 +12,10 @@
- #include <linux/device.h>
- #include <linux/leds.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
- #include <linux/usb.h>
-+#include <linux/usb/provider.h>
- #include "../leds.h"
-=20
- struct usbport_trig_port {
-@@ -94,6 +96,75 @@ static bool usbport_trig_match(struct usbport_trig_d=
-ata *usbport_data,
- 	return false;
- }
-=20
-+static int usbport_trig_new_port(struct usbport_trig_data *usbport_dat=
-a,
-+				 int busnum, const char *suffix)
-+{
-+	struct usbport_trig_port *port;
-+	size_t len;
-+	int tmp;
-+
-+	tmp =3D busnum;
-+	len =3D 1;
-+	while (tmp >=3D 10) {
-+		tmp /=3D 10;
-+		len++;
-+	}
-+	len++; /* '-' */
-+	len +=3D strlen(suffix);
-+	len++; /* '\0' */
-+
-+	port =3D kzalloc(sizeof(*port), GFP_KERNEL);
-+	if (!port)
-+		return -ENOMEM;
-+
-+	port->name =3D kzalloc(len, GFP_KERNEL);
-+	if (!port->name) {
-+		kfree(port);
-+		return -ENOMEM;
-+	}
-+	snprintf(port->name, len, "%d-%s", busnum, suffix);
-+
-+	list_add_tail(&port->list, &usbport_data->ports);
-+
-+	return 0;
-+}
-+
-+static int usbport_trig_fill(struct usbport_trig_data *usbport_data)
-+{
-+	struct device_node *np =3D usbport_data->led_cdev->dev->of_node;
-+	struct of_phandle_args args;
-+	int count, i;
-+	int err =3D 0;
-+
-+	if (!np)
-+		return -ENOENT;
-+
-+	count =3D of_property_count_strings(np, "usb-ports");
-+	if (count < 0)
-+		return count;
-+
-+	for (i =3D 0; i < count; i++) {
-+		const char *port;
-+		struct usb_hcd *hcd;
-+
-+		err =3D of_property_read_string_index(np, "usb-ports", i, &port);
-+		if (err)
-+			continue;
-+
-+		err =3D of_parse_phandle_with_args(np, "usb-controllers", "#usb-cell=
-s", i, &args);
-+		if (err)
-+			continue;
-+
-+		hcd =3D of_hcd_get_from_provider(&args);
-+		if (!IS_ERR(hcd))
-+			usbport_trig_new_port(usbport_data, hcd->self.busnum, port);
-+
-+		of_node_put(args.np);
-+	}
-+
-+	return err;
-+}
-+
- static int usbport_trig_notify(struct notifier_block *nb, unsigned lon=
-g action,
- 			       void *data)
- {
-@@ -129,6 +200,7 @@ static void usbport_trig_activate(struct led_classd=
-ev *led_cdev)
- 		return;
- 	usbport_data->led_cdev =3D led_cdev;
- 	INIT_LIST_HEAD(&usbport_data->ports);
-+	usbport_trig_fill(usbport_data);
- 	usbport_data->nb.notifier_call =3D usbport_trig_notify,
- 	led_cdev->trigger_data =3D usbport_data;
-=20
---=20
-1.8.4.5
+If you want to take in your branch the 7/7, please feel free to
+do so. Only the patches on the drivers/spi/spi-s3c64xx.c file
+have some dependencies on some previous patches I sent to Mark.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andi
