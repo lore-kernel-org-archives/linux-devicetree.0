@@ -1,67 +1,68 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v3 7/7] clk: exynos5433: remove CLK_IGNORE_UNUSED flag from SPI
- clocks
-Date: Wed, 13 Jul 2016 14:56:43 -0700
-Message-ID: <146844700397.73491.13145116929743702472@resonance>
-References: <1468317736-18841-1-git-send-email-andi.shyti@samsung.com>
- <1468317736-18841-8-git-send-email-andi.shyti@samsung.com>
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: Re: [PATCH v2 1/6] binding-doc: power: pwrseq-generic: add binding
+ doc for generic power sequence library
+Date: Wed, 13 Jul 2016 16:20:06 -0700
+Message-ID: <5786CCA6.2090709@gmail.com>
+References: <1468375610-18625-1-git-send-email-peter.chen@nxp.com>
+ <1468375610-18625-2-git-send-email-peter.chen@nxp.com>
+ <1468394851.3638.13.camel@pengutronix.de> <20160713084250.GB11863@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1468317736-18841-8-git-send-email-andi.shyti@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160713084250.GB11863@shlinux2>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Andi Shyti (2016-07-12 03:02:16)
-> Because the Exynos5433 SPI driver supports the ioclk handling and
-> the following patch:
-> 
->   http://marc.info/?l=linux-kernel&m=146787645626318&w=2
-> 
-> fixes a synchronus abort issue, none of the SPI clocks require
-> any critical handling: remove, then, the CLK_IGNORE_UNUSED flag
-> for the SPI related clocks.
-> 
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Reviewed-by: Michael Turquette <mturquette@baylibre.com>
-> Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-Applied towards v4.8.
 
-Regards,
-Mike
+On 07/13/2016 01:42 AM, Peter Chen wrote:
+> On Wed, Jul 13, 2016 at 09:27:31AM +0200, Philipp Zabel wrote:
+>> Am Mittwoch, den 13.07.2016, 10:06 +0800 schrieb Peter Chen:
+>>> Add binding doc for generic power sequence library.
+>>>
+>>> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+>>> ---
+>>>  .../bindings/power/pwrseq/pwrseq-generic.txt       | 53 ++++++++++++++++++++++
+>>>  1 file changed, 53 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+>>> new file mode 100644
+>>> index 0000000..186c58c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+>>> @@ -0,0 +1,53 @@
+>>> +The generic power sequence library
+>>> +
+>>> +Some hard-wired USB/MMC devices need to do power sequence to let the
+>>> +device work normally,
+>> I would replace "to let the device work normally" with "before the
+>> device can be enumerated [on the bus]" here.
+>>
+> Ok.
+>
+>>>  the typical power sequence like: enable USB
+>>> +PHY clock, toggle reset pin, etc. But current Linux USB driver
+>>> +lacks of such code to do it, it may cause some hard-wired USB devices
+>>> +works abnormal or can't be recognized by controller at all. The
+>>> +power sequence will be done before this device can be found at USB
+>>> +bus.
+>>> +
+>>> +The power sequence properties is under the device node.
+>>> +
+>>> +Required properties:
+>>> +- power-sequence: this device needs to do power sequence before enumeration
+>> As Joshua pointed out, is this even needed at all?
+>>
+> If no, how we decide whether allocates pwrseq instance through pwrseq
+> library or not?
+>
+The pwrseq driver is Linux specific. The dts is supposed to be OS agnostic.
+It seems to me that If a driver supports pwrseq and the dts elements
+are there, it should use them, e.g. if there is a clock, enable the clock.
+if there is a reset gpio then take the device into and out of reset during probe.
 
-> ---
->  drivers/clk/samsung/clk-exynos5433.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-> index c3a5318..fb19525 100644
-> --- a/drivers/clk/samsung/clk-exynos5433.c
-> +++ b/drivers/clk/samsung/clk-exynos5433.c
-> @@ -1661,8 +1661,7 @@ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
->         GATE(CLK_SCLK_IOCLK_SPI2, "sclk_ioclk_spi2", "ioclk_spi2_clk_in",
->                         ENABLE_SCLK_PERIC, 13, CLK_SET_RATE_PARENT, 0),
->         GATE(CLK_SCLK_IOCLK_SPI1, "sclk_ioclk_spi1", "ioclk_spi1_clk_in",
-> -                       ENABLE_SCLK_PERIC, 12,
-> -                       CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
-> +                       ENABLE_SCLK_PERIC, 12, CLK_SET_RATE_PARENT, 0),
->         GATE(CLK_SCLK_IOCLK_SPI0, "sclk_ioclk_spi0", "ioclk_spi0_clk_in",
->                         ENABLE_SCLK_PERIC, 11, CLK_SET_RATE_PARENT, 0),
->         GATE(CLK_SCLK_IOCLK_I2S1_BCLK, "sclk_ioclk_i2s1_bclk",
-> @@ -1677,7 +1676,7 @@ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
->         GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
->                         5, CLK_SET_RATE_PARENT, 0),
->         GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
-> -                       4, CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
-> +                       4, CLK_SET_RATE_PARENT, 0),
->         GATE(CLK_SCLK_SPI0, "sclk_spi0", "sclk_spi0_peric", ENABLE_SCLK_PERIC,
->                         3, CLK_SET_RATE_PARENT, 0),
->         GATE(CLK_SCLK_UART2, "sclk_uart2", "sclk_uart2_peric",
-> -- 
-> 2.8.1
-> 
+Can you see a  problem with that approach?
