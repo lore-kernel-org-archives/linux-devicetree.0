@@ -1,36 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 6/6] dt-bindings: net: bgmac: add bindings
- documentation for bgmac
-Date: Wed, 13 Jul 2016 08:39:00 -0500
-Message-ID: <20160713133900.GA30521@rob-hp-laptop>
-References: <1467932938-21819-1-git-send-email-jon.mason@broadcom.com>
- <1467932938-21819-7-git-send-email-jon.mason@broadcom.com>
+Subject: Re: [PATCH 2/4] drm/msm/hdmi: Use more DT friendly GPIO names
+Date: Wed, 13 Jul 2016 08:45:55 -0500
+Message-ID: <20160713134555.GA7799@rob-hp-laptop>
+References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
+ <1467957354-7620-3-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1467932938-21819-7-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Mason <jon.mason@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, f.fainelli@gmail.com, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, hauke@hauke-m.de, zajec5@gmail.com, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1467957354-7620-3-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 07, 2016 at 07:08:58PM -0400, Jon Mason wrote:
-> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
-> ---
->  .../devicetree/bindings/net/brcm,amac.txt          | 24 ++++++++++++++++++++++
->  .../devicetree/bindings/net/brcm,bgmac-nsp.txt     | 24 ++++++++++++++++++++++
->  2 files changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/brcm,amac.txt
->  create mode 100644 Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gRnJpLCBKdWwgMDgsIDIwMTYgYXQgMTE6MjU6NTJBTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
+cm90ZToKPiBVcGRhdGUgdGhlIGdwaW8gbmFtZSBwYXJzaW5nIGNvZGUgdG8gdHJ5IHRvIHNlYXJj
+aCBmb3Igd2l0aG91dCB0aGUKPiAicWNvbSxoZG1pLXR4LSIgcHJlZml4LiBUaGUgb2xkZXIgZG93
+bnN0cmVhbSBiaW5kaW5ncyB0aGF0IGV4cGVjdAo+ICJxY29tLGhkbWktdHgteHl6IiBvciAicWNv
+bSxoZG1pLXR4LXh5ei1ncGlvIiB3b3VsZCB3b3JrIGFzIHRoZQo+IHByb3BlcnR5IG5hbWUgd291
+bGQgd29yayBhcyBiZWZvcmUuCgpXaHk/Cgo+IFVwZGF0ZSB0aGUgYmluZGluZyBkb2MuIEFkZCBh
+biBlbnRyeSBmb3IgdGhlIG1pc3NpbmcgaHBkIGFuZCBscG0KPiBncGlvcy4KPiAKPiBDYzogUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmcKPiAKPiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEu
+b3JnPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9t
+c20vaGRtaS50eHQgfCAgNiArKysrLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9oZG1pL2hkbWku
+YyAgICAgICAgICAgICAgICAgICAgICAgIHwgMTYgKysrKysrKysrKysrKysrKwo+ICAyIGZpbGVz
+IGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4
+dAo+IGluZGV4IGI2M2Y2MTQuLjRkYTFhYmQgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0Cj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0Cj4gQEAgLTIzLDgg
+KzIzLDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIC0gcGh5LW5hbWVzOiB0aGUgbmFtZSBv
+ZiB0aGUgY29ycmVzcG9uZGluZyBQSFkgZGV2aWNlCj4gIAo+ICBPcHRpb25hbCBwcm9wZXJ0aWVz
+Ogo+IC0tIHFjb20saGRtaS10eC1tdXgtZW4tZ3BpbzogaGRtaSBtdXggZW5hYmxlIHBpbgo+IC0t
+IHFjb20saGRtaS10eC1tdXgtc2VsLWdwaW86IGhkbWkgbXV4IHNlbGVjdCBwaW4KPiArLSBocGQt
+Z3BpbzogaGRtaSBocGQgcGluCgpocGQtZ3Bpb3MgaXMgdGhlIHNvbWV3aGF0IHN0YW5kYXJkIG5h
+bWUuCgo+ICstIG11eC1lbi1ncGlvOiBoZG1pIG11eCBlbmFibGUgcGluCj4gKy0gbXV4LXNlbC1n
+cGlvOiBoZG1pIG11eCBzZWxlY3QgcGluCj4gKy0gbXV4LWxwbS1ncGlvOiBoZG1pIG11eCBscG0g
+cGluCgpUaGVzZSBsb29rIHByZXR0eSBRQ29tIHNwZWNpZmljIGFuZCBzaG91bGQga2VlcCB0aGUg
+dmVuZG9yIHByZWZpeC4KCkkgdW5kZXJzdGFuZCB3aHkgeW91IGRvbid0IGhhdmUgJy1ncGlvcycs
+IGJ1dCBpZiB3ZSBjaGFuZ2UgdGhlc2UgdGhleSAKc2hvdWxkIHVzZSB0aGUgcHJlZmVycmVkIGZv
+cm0uCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
