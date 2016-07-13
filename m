@@ -1,98 +1,65 @@
-From: tiffany lin <tiffany.lin@mediatek.com>
-Subject: Re: [PATCH v3 3/9] DocBook/v4l: Add compressed video formats used
- on MT8173 codec driver
-Date: Wed, 13 Jul 2016 10:03:08 +0800
-Message-ID: <1468375388.2462.22.camel@mtksdaap41>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1464611363-14936-2-git-send-email-tiffany.lin@mediatek.com>
-	 <1464611363-14936-3-git-send-email-tiffany.lin@mediatek.com>
-	 <1464611363-14936-4-git-send-email-tiffany.lin@mediatek.com>
-	 <5a793171-24a7-4e9e-8bfd-f668c789f8e0@xs4all.nl>
-	 <1468205771.3725.8.camel@mtksdaap41>
-	 <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] Documentation: bindings: add dt doc for Rockchip
+ PCIe controller
+Date: Tue, 12 Jul 2016 19:05:31 -0700
+Message-ID: <20160713020531.GA14833@google.com>
+References: <1467789398-13501-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160707003912.GB100467@google.com>
+ <59b328c9-3a21-36fa-7f28-4ba24d77fef0@rock-chips.com>
+ <20160713013117.GA130126@google.com>
+ <95a7ffdd-becc-bb3f-c026-d07c691b7a53@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wu-Cheng Li =?UTF-8?Q?=28=E6=9D=8E=E5=8B=99=E8=AA=A0=29?= <wuchengli@chromium.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Lin PoChun <PoChun.Lin@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <95a7ffdd-becc-bb3f-c026-d07c691b7a53-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-07-12 at 16:16 +0800, Wu-Cheng Li (=E6=9D=8E=E5=8B=99=E8=AA=
-=A0) wrote:
-> On Mon, Jul 11, 2016 at 10:56 AM, tiffany lin <tiffany.lin@mediatek.c=
-om> wrote:
-> > Hi Hans,
-> >
-> > On Fri, 2016-07-08 at 12:23 +0200, Hans Verkuil wrote:
-> >> On 05/30/2016 02:29 PM, Tiffany Lin wrote:
-> >> > Add V4L2_PIX_FMT_MT21 documentation
-> >> >
-> >> > Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
-> >> > ---
-> >> >  Documentation/DocBook/media/v4l/pixfmt.xml |    6 ++++++
-> >> >  1 file changed, 6 insertions(+)
-> >> >
-> >> > diff --git a/Documentation/DocBook/media/v4l/pixfmt.xml b/Docume=
-ntation/DocBook/media/v4l/pixfmt.xml
-> >> > index 5a08aee..d40e0ce 100644
-> >> > --- a/Documentation/DocBook/media/v4l/pixfmt.xml
-> >> > +++ b/Documentation/DocBook/media/v4l/pixfmt.xml
-> >> > @@ -1980,6 +1980,12 @@ array. Anything what's in between the UYV=
-Y lines is JPEG data and should be
-> >> >  concatenated to form the JPEG stream. </para>
-> >> >  </entry>
-> >> >       </row>
-> >> > +     <row id=3D"V4L2_PIX_FMT_MT21">
-> >> > +       <entry><constant>V4L2_PIX_FMT_MT21</constant></entry>
-> >> > +       <entry>'MT21'</entry>
-> >> > +       <entry>Compressed two-planar YVU420 format used by Media=
-tek MT8173
-> >> > +       codec driver.</entry>
-> >>
-> >> Can you give a few more details? The encoder driver doesn't seem t=
-o produce this
-> >> format, so who is creating this? Where is this format documented?
-> Decoder hardware produces MT21 (compressed). Image processor can
-> convert it to a format that can be input of display driver. Tiffany.
-> When do you plan to upstream image processor (mtk-mdp)?
-> >
-We are working on this. Will upstream soon.
-
-> > It can be as input format for encoder, MDP and display drivers in o=
-ur
-> > platform.
-> I remember display driver can only accept uncompressed MT21. Right?
-> Basically V4L2_PIX_FMT_MT21 is compressed and is like an opaque
-> format. It's not usable until it's decompressed and converted by imag=
-e
-> processor.
-That's right in MT8173 platform.
-
-best regards,
-Tiffany
-> > This private format is only available in our platform.
-> > So I put it in "Reserved Format Identifiers" sections.
-> >
-> >
-> > best regards,
-> > Tiffany
-> >
-> >> Regards,
-> >>
-> >>       Hans
-> >>
-> >> > +     </row>
-> >> >     </tbody>
-> >> >        </tgroup>
-> >> >      </table>
-> >> >
-> >
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-med=
-ia" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpPbiBXZWQsIEp1bCAxMywgMjAxNiBhdCAwOTo0NTo0M0FNICswODAwLCBTaGF3biBMaW4g
+d3JvdGU6Cj4g5ZyoIDIwMTYvNy8xMyA5OjMxLCBCcmlhbiBOb3JyaXMg5YaZ6YGTOgo+ID5PbiBX
+ZWQsIEp1bCAxMywgMjAxNiBhdCAwOToxMDoxNUFNICswODAwLCBTaGF3biBMaW4gd3JvdGU6Cj4g
+PkF0IHNvbWUgbGV2ZWwsIGl0J3MgYSBtYXR0ZXIgb2YgcHJlZmVyZW5jZS4gQnV0IHdoZW4geW91
+J3JlIHRhbGtpbmcKPiA+YWJvdXQgdGhlIHJrMzM5OSBQQ0llICJpbnRlcnJ1cHQgY29udHJvbGxl
+ciIgZG9tYWluLCBpdCBzZWVtcyB0aGF0IHlvdQo+ID5zaG91bGQgYmUgdGFsa2luZyBhYm91dCBI
+VyBiaXRzIGluIHRoZSBjb250cm9sbGVyIC0tIGkuZS4sIHlvdSBoYXZlIGEKPiA+NC1iaXQgaW50
+ZXJydXB0IHN0YXR1cyBiaXRmaWVsZCwgdGhhdCB3ZSB0eXBpY2FsbHkgY2FsbCBbMDozXS4gSWYg
+eW91Cj4gPnVzZSBbMTo0XSwgdGhlbiB5b3UgaGF2ZSB0byByZW1lbWJlciB0byBzdWJ0cmFjdCAx
+IG1lbnRhbGx5IHdoZW4gbWFwcGluZwo+ID50byB0aGUgYWN0dWFsIEhXIGJpdC4gSSBiZWxpZXZl
+IHRoYXQgY29uZnVzaW9uIChzaW5jZSBiaXRmaWVsZHMgbm9ybWFsbHkKPiA+Y291bnQgZnJvbSAw
+KSBtaWdodCBoYXZlIGhlbHBlZCBjYXVzZSB0aGUgaW5maW5pdGUgbG9vcCBidWcgSSBub3RpY2Vk
+Cj4gPnRvby4gQW5kIEkgYWxzbyB0aGluayB0aGF0IGNvdW50aW5nIGZyb20gMCBoZWxwcyBjbGFy
+aWZ5IHRoZSBmYWN0IHRoYXQKPiA+eW91ciBpbnRlcnJ1cHQgY29udHJvbGxlciBpbmRleGluZyBp
+cyBhbiBpbmRlcGVuZGVudCBudW1iZXJpbmcgZnJvbSB0aGUKPiA+UENJIGludGVycnVwdCBudW1i
+ZXJpbmcsIGV2ZW4gdGhvdWdoIHRoZXkgaGFwcGVuIHRvIG1hcCAxOjEuCj4gCj4gSWYgdGhhdCdz
+IHRoZSBmYWN0IG9mIGhvdyB3ZSBzaG91bGQgbnVtYmVyaW5nIG91ciBpbmRleCBiYXNlLCB3ZSBz
+aG91bGQKPiBwcm9iYWJseSBzdGFydCBpZiBmcm9tIDUgYXMgdGhlIGxheW91dCBvZiBJTlR4IGlz
+Cj4gUENJRV9DTElFTlRfSU5UX1NUQVRVU1s1OjhdLi4uID8KClBvc3NpYmx5IGJldHRlciB0aGFu
+IHN0YXJ0aW5nIGZyb20gMSwgYnV0IElNTyBhbHNvIGRvZXNuJ3QgbWFrZSBzZW5zZSwKYmVjYXVz
+ZSB0aGUgb3RoZXIgYml0cyBhcmVuJ3QgaW50ZXJydXB0cyB5b3Ugd2FudCB0byB0cmFuc2xhdGUg
+b24gYmVoYWxmCm9mIG90aGVyIGRldmljZXMgKGFyZSB0aGV5PykgLS0gdGhleSdyZSBpbnRlcnJ1
+cHQgYml0cyBjb25zdW1lZCBieSB0aGUKaG9zdCBjb250cm9sbGVyIGl0c2VsZi4gKElmIHRoZXkg
+YXJlIHBvc3NpYmx5IG5lZWRlZCBmb3IgdHJhbnNsYXRpb24sCnRoZW4gc3VyZSwgaW5kZXggdGhl
+IGVudGlyZSBzdGF0dXMgcmVnaXN0ZXIgYW5kIGhhbmRsZSBpdCBpbiB0aGUgZHJpdmVyLAphbmQg
+c3RhcnQgdGhlIElOVHggbWFwcGluZyBmcm9tIDUgaGVyZS4pCgpbLi4uXQoKPiA+SWYgeW91IHN0
+aWxsIHRoaW5rIGl0IG1ha2VzIG1vcmUgc2Vuc2UgdG8gY291bnQgZnJvbSAxLCB0aGVuIEkgd29u
+J3QKPiA+c3RvcCB5b3UuCj4gCj4gSSBkb24ndCBoYXZlIGEgaGFyZCBvcGluaW9uIGZvciB0aGUg
+aW5kZXggYmFzZSBhcyBJIHRoaW5rIGl0J3MgdHJpdmlhbC4KCkl0J3Mgc2ltcGxlLCBidXQgSSB0
+aGluayBpdCBpbmZsdWVuY2VkIGNvZGUgdW5kZXJzdGFuZGluZyBhbmQgYnVnZ2luZXNzLgoKPiBT
+byBpZiBpdCdzIG1vcmUgc2Vuc2libGUgdG8geW91LCBJIHdpbGwgYXBwbHkgeW91ciBzdWdnZXN0
+aW9uLgoKV2VsbCwgSSB3YXMganVzdCBvZmZlcmluZyBteSBvcGluaW9uLiBJIHRoaW5rIGl0IG1h
+a2VzIG1vcmUgc2Vuc2UsIGJ1dAptYXliZSBpdCBkb2Vzbid0IHRvIHlvdS4KCkJyaWFuCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hp
+cCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
