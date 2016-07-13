@@ -1,104 +1,92 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH] gpio: document how to order GPIO controllers
-Date: Wed, 13 Jul 2016 15:14:12 +0200
-Message-ID: <20160713131412.GO6442@localhost>
-References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20160705140546.GA10601@rob-hp-laptop>
- <20160705180447.GP16643@pengutronix.de>
- <CACRpkdbH+KRXbxFdfyAE44fBNctK4cWV+KRLwQBTzSGLvLMEDg@mail.gmail.com>
- <20160706102750.GH23470@localhost>
- <CACRpkdZhx3yTbtuj-ZTP+mtUSr4uxL4bHtu8jVZOoxrUy6=iYw@mail.gmail.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: [PATCH V2 0/1] usb: add HCD providers
+Date: Wed, 13 Jul 2016 16:20:48 +0300
+Message-ID: <87lh15isi7.fsf@linux.intel.com>
+References: <1468326921-26485-1-git-send-email-zajec5@gmail.com> <1468413734-9569-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZhx3yTbtuj-ZTP+mtUSr4uxL4bHtu8jVZOoxrUy6=iYw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Johan Hovold <johan@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1468413734-9569-1-git-send-email-zajec5@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, =?utf-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 06, 2016 at 02:34:39PM +0200, Linus Walleij wrote:
-> On Wed, Jul 6, 2016 at 12:27 PM, Johan Hovold <johan@kernel.org> wrote:
-> > On Wed, Jul 06, 2016 at 11:34:37AM +0200, Linus Walleij wrote:
-> 
-> >> I *THINK* the view of the device core maintainers is that udev
-> >> and sysfs hierarchies should be used to uniquely identify a certain
-> >> device, and that relying on device numbering is too fragile.
-> >
-> > I thought the whole idea (or at least a large part of) the new
-> > user-space interface was to allow lookups by line names precisely in
-> > order not to have to rely on gpio numbers, which may not only change
-> > between boots, but also between hardware revisions, etc.
-> 
-> That is true for the individual pins, but not the device names.
-> Devices are just names gpiochipN where N is the instance
-> number. Topological info on the device can be found in sysfs.
-> 
-> The discussion here pertaining to the new chardev is just about
-> the intuitiveness of the number N, whether it should be
-> "whatever" or something predictable.
-> 
-> For the purpose of picking a certain named GPIO line (see below)
-> knowing this number is unnecessary. To that mechanism all gpio
-> chips are equal and the instance number does not matter.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-My point was that with gpio line names (and possibly topological
-information to resolve duplicates), the N number should not matter
-anymore.
 
-[ It was also a comment to a comment made earlier in the thread were the
-use case was said to be to "control GPIO48 with /sys/class/gpio/gpio48".
-And it seems we are in agreement there. ]
+Hi,
 
-If one needs to look up a particular gpiochip based on some hardware
-naming convention, why not associate a name with the chip instead of
-trying to shoehorn the dynamic gpiochip range in there?
+Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> writes:
+> Hi again,
+>
+> This is my second try of getting HCD providers into usb subsystem.
+>
+> During discussion of V1 I realized there are about 26 drivers adding a
+> single HCD and all of them would need to be modified. So instead I
+> decided to put relevant code in usb_add_hcd. It checks if the HCD we
+> register is a primary one and if so, it registers a proper provider.
+>
+> Please note that of_hcd_xlate_simple was also extended to allow getting
+> shared HCD (which is used e.g. in case of XHCI).
+>
+> So now you can have something like:
+>
+> ohci: ohci@21000 {
+> 	#usb-cells =3D <0>;
+> 	compatible =3D "generic-ohci";
+> 	reg =3D <0x00001000 0x1000>;
+> 	interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+> };
+>
+> ehci: ehci@22000 {
+> 	#usb-cells =3D <0>;
+> 	compatible =3D "generic-ehci";
+> 	reg =3D <0x00002000 0x1000>;
+> 	interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> };
+>
+> xhci: xhci@23000 {
+> 	#usb-cells =3D <1>;
+> 	compatible =3D "generic-xhci";
+> 	reg =3D <0x00003000 0x1000>;
+> 	interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> };
+>
+> The last (second) patch is not supposed to be applied, it's used only as
+> a proof and example of how providers can be used.
 
-> > What's wrong with naming the pins in DT and use that for lookups?
-> 
-> That works. It relies on the developers using sane naming conventions
-> though. (This problem is prevalent everywhere I guess, a human problem,
-> not a technical one.) I made this patch:
-> http://marc.info/?l=linux-arm-kernel&m=146672328215354&w=2
-> 
-> There is a standard document for these boards (96board) specifying
-> the names of the GPIO lines to be "GPIO-A" thru "GPIO-L".
-> 
-> So a user can iterate across the gpiochips (as is done in lsgpio)
-> and pick the lines with the right names.
-> 
-> This works fine, given you have such conventions or equal.
-> 
-> I.e. the person writing the DTS file naming the lines must not
-> be a complete lunatic.
+nowhere here (or in previous patch) you clarify why exactly you need
+this. What is your LED trigger supposed to do? Why can't it handle ports
+changing number in different boots? Why do we need this at all? Why is
+your code DT-specific?
 
-Again, it seems we're on the same page here.
+There are still too many 'unknowns' here.
 
-> I can think of scenarios where bad use can make things problematic:
-> i.e. name two lines the same thing, albeit on different GPIO chips.
-> That is currently allowed, and if that happens, the user must
-> use topological information about the gpiochip (from sysfs) to
-> uniquely identify the GPIO line.
-> 
-> I wouldn't recommend that since it is essentially inventing a
-> problem for oneself to solve, but I don't know what reasons
-> people may have to do something like that. There is no technical
-> problem with it.
+=2D-=20
+balbi
 
-And this may even be unavoidable with dynamic buses such as USB or
-greybus, where you can have multiple devices associating the same name
-with a pin. That's fine as long as the user-space interface allows for a
-way to distinguish them (e.g. through topological information).
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Johan
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXhkAwAAoJEIaOsuA1yqREgfUQAJm9E1DG1W9AaaospLHfMGTL
+d64cZOYdJqo6btLEdzUb0apnMWDNgflM93pgA9+6WpET+zJKyfQ5ldI+C4jcYSva
+Q6bQWDnd5FlpEYZSe5kjfK50RhMyG0LHu7WqHD44ZJNE2Mn58UK2dEmbwteFYgYu
+VnwijGL7g5mNaAWEfrTlDO1TQFikY/lggEM414e6acWGwkNIjF01ER8UWgYgvV6o
+WRGZVVgFXBbvJ1iao923GpwMJRK67grLw8dUCoI9Yl1AtYslOu8+kLOcW3JMQP+x
+UCBPR3WTfV1QuJh4hZa6QMXWIW4Xi9QcjY8uOa89tE8erXVrd5qfAoD3+D+i5+0Z
+PYAMEMe8NHnvpnvcqV2Ej1cdLc8o1kaH7TZamFd4Uzs27Oc5KpQGq+mEMXV6rDLu
+1Cix/BCyE/TWlgvajl79X3+OZV6zSIKD3/7jHgAb6sqv0XFvf1aIS3Hb2Z03rmwE
+CuaKdAepZMGix+YxpPpayTNbskfVpyGH6BQxb0+wXbYpdXlP+QAa6xUP93/6vuYn
+rx88fG6IWCMaMX7z3r3j4Kmy8GLvOanJByvTy2qZfyjKOb1Icao0QKktASKNZYiG
+xifWaGJLY/tjlVJsFoIt8lCv2IO3mdk8dzHQQyJ/LH/yZAm+EGJuAvirt3CPl8Tl
+1uyN5bMCi5OZieOha2Wd
+=PAxZ
+-----END PGP SIGNATURE-----
+--=-=-=--
