@@ -1,129 +1,57 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH 2/2] fpga-manager: Add Socfpga Arria10 support
-Date: Wed, 13 Jul 2016 09:58:42 -0500
-Message-ID: <alpine.DEB.2.02.1607130953450.10735@linuxheads99>
-References: <20160712190709.5964-1-atull@opensource.altera.com>
- <20160712190709.5964-3-atull@opensource.altera.com>
- <CAAtXAHfSBzLisqBgF4Vry0vrcL3+DB4b1ctMOrTdOq5ue4D7JQ@mail.gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 PROOF OF CONCEPT 2/1] trigger: ledtrig-usbport: read
+ initial state from DT
+Date: Wed, 13 Jul 2016 17:05:32 +0200
+Message-ID: <CACna6rwgjZoPiU1Qo_4PU35ZuovN-cBe5kVZpUQQPDUf1xQyLA@mail.gmail.com>
+References: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
+ <1468413734-9569-1-git-send-email-zajec5@gmail.com> <1468413734-9569-3-git-send-email-zajec5@gmail.com>
+ <578654A7.2020909@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAAtXAHfSBzLisqBgF4Vry0vrcL3+DB4b1ctMOrTdOq5ue4D7JQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Alan Tull <delicious.quinoa@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <578654A7.2020909-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LED SUBSYSTEM" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Jul 2016, Moritz Fischer wrote:
+On 13 July 2016 at 16:48, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> w=
+rote:
+> On 07/13/2016 02:42 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
+>>
+>> This allows specifying USB ports that should be observed by a trigge=
+r
+>> right after activating it. Example:
+>>
+>> usb {
+>>         gpios =3D <&gpio 0 GPIO_ACTIVE_HIGH>;
+>>         linux,default-trigger =3D "usbport";
+>>         usb-controllers =3D <&ohci>, <&ehci>, <&xhci USB_HCD_SHARED>=
+;
+>>         usb-ports =3D "1", "1", "1";
+>
+>
+> Port is a numerical value, right?
+> Wouldn't it be better to define it as an array of integers?
+>
+> e.g.: usb-ports =3D <1>. <1>, <1>;
 
-> Hi Alan,
-> 
-> couple of nits inline below.
-> 
+Not always. Let me quote this part of "usbport" documentation:
 
-Hi Moritz!
+> This also allows handling devices with internal hubs (when root hub's=
+ port has
+> always a device (hub) connected). User can simply specify specify int=
+ernal hub
+> ports then (e.g. 1-1.1, 1-1.2, etc.).
 
-Thanks for your review!
+In such case we'd need usb-ports =3D "1.1", "1.2";
 
-> On Tue, Jul 12, 2016 at 12:07 PM, Alan Tull <atull@opensource.altera.com> wrote:
-> 
-> > +static int socfpga_a10_fpga_write_complete(struct fpga_manager *mgr, u32 flags)
-> > +{
-> > +       struct a10_fpga_priv *priv = mgr->priv;
-> > +       u32 reg;
-> > +       int ret;
-> > +
-> > +       /* Wait for pr_done */
-> > +       ret = socfpga_a10_fpga_wait_for_pr_done(priv);
-> > +
-> > +       /* Clear pr_request */
-> > +       regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_01_OFST,
-> > +                          A10_FPGAMGR_IMGCFG_CTL_01_S2F_PR_REQUEST, 0);
-> > +
-> > +       /* Send some clocks to clear out any errors */
-> > +       socfpga_a10_fpga_generate_dclks(priv, 256);
-> > +
-> > +       /* Disable s2f dclk and data */
-> > +       regmap_update_bits(priv->regmap, A10_FPGAMGR_IMGCFG_CTL_02_OFST,
-> > +                          A10_FPGAMGR_IMGCFG_CTL_02_EN_CFG_CTRL, 0);
-> 
-> Maybe replace 0 with named constant.
-
-Generally I use named constants, but since regmap_updates_bits uses a
-mask, it is clear that we're clearing the
-A10_FPGAMGR_IMGCFG_CTL_02_EN_CFG_CTRL bit.
-
-
-> > +static int socfpga_a10_fpga_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device *dev = &pdev->dev;
-> > +       struct a10_fpga_priv *priv;
-> > +       void __iomem *reg_base;
-> > +       struct resource *res;
-> > +       int ret;
-> > +
-> > +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +       if (!priv)
-> > +               return -ENOMEM;
-> > +
-> > +       /* First mmio base is for register access */
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       reg_base = devm_ioremap_resource(dev, res);
-> > +       if (IS_ERR(reg_base))
-> > +               return PTR_ERR(reg_base);
-> > +
-> > +       /* Second mmio base is for writing FPGA image data */
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > +       priv->fpga_data_addr = devm_ioremap_resource(dev, res);
-> > +       if (IS_ERR(priv->fpga_data_addr))
-> > +               return PTR_ERR(priv->fpga_data_addr);
-> > +
-> > +       /* regmap for register access */
-> > +       priv->regmap = devm_regmap_init_mmio(dev, reg_base,
-> > +                                            &socfpga_a10_fpga_regmap_config);
-> > +       if (IS_ERR(priv->regmap))
-> > +               return -ENODEV;
-> > +
-> > +       priv->clk = devm_clk_get(dev, NULL);
-> > +       if (IS_ERR(priv->clk)) {
-> > +               dev_err(dev, "no clock specified\n");
-> > +               return PTR_ERR(priv->clk);
-> > +       }
-> > +
-> > +       ret = clk_prepare_enable(priv->clk);
-> > +       if (ret) {
-> > +               dev_err(dev, "could not enable clock\n");
-> > +               clk_put(priv->clk);
-> 
-> Seen that you used devm_clk_get() is this one necessary?
-
-Yes, this is wrong.  I'll fix it.
-
-Thanks,
-Alan
-
-> 
-> > +static int socfpga_a10_fpga_remove(struct platform_device *pdev)
-> > +{
-> > +       struct fpga_manager *mgr = platform_get_drvdata(pdev);
-> > +       struct a10_fpga_priv *priv = mgr->priv;
-> > +
-> > +       fpga_mgr_unregister(&pdev->dev);
-> > +       clk_disable_unprepare(priv->clk);
-> > +       clk_put(priv->clk);
-> 
-> Same here, if needed at all shouldn't it be devm_clk_put() ?
-> 
-> Cheers,
-> 
-> Moritz
-> 
+Anyway, there is a discussion ongoing in:
+[PATCH V2 0/1] usb: add HCD providers
+so let's see if someone will have a better idea for referencing USB
+ports inside DT.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
