@@ -1,111 +1,178 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] libfdt: Add overlay application function
-Date: Thu, 14 Jul 2016 01:07:45 +1000
-Message-ID: <20160713150745.GG14615@voom.fritz.box>
-References: <20160711195623.12840-1-maxime.ripard@free-electrons.com>
- <20160711195623.12840-7-maxime.ripard@free-electrons.com>
- <ed025e59-ddb3-0309-b2da-f6c2d1fa95d0@gmail.com>
- <20160712143404.GD16355@voom.fritz.box>
- <20160713083803.GD4761@lukather>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: [PATCH V1] regulator: da9210: addition of device tree support
+Date: Wed, 13 Jul 2016 16:41:19 +0100
+Message-ID: <20160713154433.496843FAD9@swsrvapps-01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cyV/sMl4KAhiehtf"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160713083803.GD4761@lukather>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: DEVICETREE <devicetree@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Steve Twiss <stwiss.opensource@diasemi.com>
 
---cyV/sMl4KAhiehtf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Addition of device tree support for DA9210.
 
-On Wed, Jul 13, 2016 at 10:38:03AM +0200, Maxime Ripard wrote:
-> Hi David,
->=20
-> On Wed, Jul 13, 2016 at 12:34:04AM +1000, David Gibson wrote:
-> > On Mon, Jul 11, 2016 at 09:20:44PM +0100, Phil Elwell wrote:
-> > > On 11/07/2016 20:56, Maxime Ripard wrote:
-> > [snip]
-> >=20
-> > > > +static int overlay_merge(void *fdt, void *fdto)
-> > > > +{
-> > > > +	int fragment;
-> > > > +
-> > > > +	fdt_for_each_subnode(fragment, fdto, 0) {
-> > > > +		int overlay;
-> > > > +		int target;
-> > > > +		int ret;
-> > > > +
-> > > > +		target =3D overlay_get_target(fdt, fdto, fragment);
-> > > > +		if (target < 0)
-> > > > +			continue;
-> > > > +
-> > > > +		overlay =3D fdt_subnode_offset(fdto, fragment, "__overlay__");
-> > > > +		if (overlay < 0)
-> > > > +			return overlay;
-> >=20
-> > > Why does the absence of a target cause a fragment to be ignored but
-> > > the absence of an "__overlay__" property cause the merging to be
-> > > abandoned with an error? Can't we just ignore fragments that aren't
-> > > recognised?
-> >=20
-> > So, I had the same question.  But fragments we can't make sense MUST
-> > cause failures, and not be silently ignored.
-> >=20
-> > An incompletely applied overlay is almost certainly going to cause you
-> > horrible grief at some point, so you absolutely want to know early if
-> > your overlay is in a format your tool doesn't understand.
->=20
-> I'm not sure how we can achieve that without applying it once, and see
-> if it fails. The obvious things are easy to detect (like a missing
-> __overlay__ node), but some others really aren't (like a poorly
-> formatted phandle, or one that overflows) without applying it
-> entirely. And that seems difficult without malloc.
+Two files are modified, the driver source file and the binding document.
+Updates for the regulator source file include an .of_match_table entry, node
+match checking in the probe() function for a compatible da9210 string, and
+a new "BUCK" regulator entry. The binding documentation changes have been
+made to reflect these updates.
 
-So, atomically applying either the whole overlay or nothing would be a
-nice property, but it is indeed infeasibly difficult to achieve
-without malloc().  Well.. we sort of could by making apply_overlay()
-take an output buffer separate from the base tree, but that's not what
-I'm suggesting.
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
 
-I'm fine with the base tree being trashed with an incomplete
-application when apply_overlay() reports failure.  WHat I'm not ok
-with is *silent* failure.  If you ignore fragments you don't
-understand, then - if the overlay uses features that aren't supported
-by this version of the code - you'll end up with an incompletely
-applied overlay while the apply_overlay() function *reports success*.
-That is a recipe for disaster.
+---
+Checks performed with linux-next/v4.7-rc7/scripts/checkpatch.pl
+ da9210-regulator.c        total: 0 errors, 0 warnings, 295 lines checked
+ da9210.txt                total: 0 errors, 0 warnings, 40 lines checked
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+This patch applies against linux-next and v4.7-rc7
 
---cyV/sMl4KAhiehtf
-Content-Type: application/pgp-signature; name="signature.asc"
+Hi All,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Looking at previous similar submissions, it seems to be okay to put
+both regulator and documentation changes in the same patch.
 
-iQIcBAEBAgAGBQJXhllBAAoJEGw4ysog2bOSLVwQAIxG969OLU91HLItVbSeM8mw
-kKDuJbQZfE0fVW5ZcCc0tPNCS3LM5hqSJ9ZJurtnfXL9xqVKd6oB/NYq4N3bNR+m
-iL5Nq0agCfkkb65sJebJJUW8hA3UAZ2hvvA5JJ9IronfCrt17NIVkz1hoBD4ZkUG
-x2di2wTJPusXV2uSmptiTfLNynrsbg0srtXmLy2+fS662VjDFeqedvecpo74ydxL
-8X0/y7IZZ1mY04hYc5SXlFQD7zhKV7+IMlf4O7BUcumtPL9q4EgaLUbCb2DnLjyU
-AdlgxcAHwWV5wMyFRzEh6Iiq73oxqbTwplBGY17GoagBP6tUME1ThXutiM8gJtod
-I7wi+cyexsCGVcTBRQNba91JijqcERICrwJCDUeBFh+PnHIJT33hhg2/RfowS+t7
-yNfcXhaWs164jytaAYct3cG3DgCurccsKKI5ZymP9BhdHjfgbDIH9QwYA7yNYmgr
-RigI5E+xIBmIJjs/uzftnTOSap46Ijjevkl2SMwY69pN2LupLtpJBNrKjEG1SVbq
-a1jybJdPt/5Xz0hrfog7SNGCEFeApCNs567fQUEdQ1kt4B053F1ZV1L+64aoqWN1
-RWuGXn2BG11bDL0jPfIV1W6aZLB+gRg512YuFosAIM79FCMPIQimFGWDKif2BDw+
-RxHVEwlMLZodNzyyc0sB
-=L62b
------END PGP SIGNATURE-----
+An itemised list of the changes in this patch V1 are:
 
---cyV/sMl4KAhiehtf--
+@ Mark/Liam,
+
+Changes for regulator code: da9210-regulator.c
+- Include header file clean-up.
+- New .of_match "BUCK" and .regulators_node entries in the regulator_desc
+- Addition of MODULE_DEVICE_TABLE() list and .of_match_table entry into
+  struct i2c_driver, device tree match checking inside the probe() function 
+
+@ Rob/Mark,
+
+Changes for binding document: da9210.txt
+- Title change to more accurately describe the part
+- Addition of a regulators description
+- More verbose example for new regulator node "BUCK"
+
+Regards,
+Steve
+
+
+ .../devicetree/bindings/regulator/da9210.txt       | 27 +++++++++++++++++-----
+ drivers/regulator/da9210-regulator.c               | 23 ++++++++++++++++--
+ 2 files changed, 42 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/da9210.txt b/Documentation/devicetree/bindings/regulator/da9210.txt
+index 7aa9b1f..fe9dc7e 100644
+--- a/Documentation/devicetree/bindings/regulator/da9210.txt
++++ b/Documentation/devicetree/bindings/regulator/da9210.txt
+@@ -1,9 +1,15 @@
+-* Dialog Semiconductor DA9210 Voltage Regulator
++* Dialog Semiconductor DA9210 Multi-phase 12A DCDC BUCK Converter
+ 
+ Required properties:
+ 
+ - compatible:	must be "dlg,da9210"
+ - reg:		the i2c slave address of the regulator. It should be 0x68.
++- regulators:	a sub-node identified using the node's name, with valid values
++		listed below. The content of the sub-node is defined by the
++		standard binding for regulators, see regulator.txt.
++
++The valid name for regulator is:
++	BUCK
+ 
+ Optional properties:
+ 
+@@ -14,12 +20,21 @@ DCDC.
+ 
+ Example:
+ 
+-	da9210@68 {
++	pmic0 da9210@68 {
+ 		compatible = "dlg,da9210";
+ 		reg = <0x68>;
+ 
+-		regulator-min-microvolt = <900000>;
+-		regulator-max-microvolt = <1000000>;
+-		regulator-boot-on;
+-		regulator-always-on;
++		interrupt-parent = <...>;
++		interrupts = <...>;
++
++		regulators {
++			da9210_buck: BUCK {
++				regulator-name = "BUCK";
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1570000>;
++				regulator-min-microamp = <1600000>;
++				regulator-max-microamp = <4600000>;
++				regulator-boot-on;
++			};
++		};
+ 	};
+diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-regulator.c
+index 01c0e37..41a4d96 100644
+--- a/drivers/regulator/da9210-regulator.c
++++ b/drivers/regulator/da9210-regulator.c
+@@ -21,12 +21,11 @@
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+-#include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+-#include <linux/slab.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
++#include <linux/of_device.h>
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/regmap.h>
+ 
+@@ -72,6 +71,8 @@ static const struct regulator_desc da9210_reg = {
+ 	.name = "DA9210",
+ 	.id = 0,
+ 	.ops = &da9210_buck_ops,
++	.of_match = of_match_ptr("BUCK"),
++	.regulators_node = of_match_ptr("regulators"),
+ 	.type = REGULATOR_VOLTAGE,
+ 	.n_voltages = ((DA9210_MAX_MV - DA9210_MIN_MV) / DA9210_STEP_MV) + 1,
+ 	.min_uV = (DA9210_MIN_MV * 1000),
+@@ -179,6 +180,13 @@ error_i2c:
+ /*
+  * I2C driver interface functions
+  */
++
++static const struct of_device_id da9210_dt_ids[] = {
++	{ .compatible = "dlg,da9210", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, da9210_dt_ids);
++
+ static int da9210_i2c_probe(struct i2c_client *i2c,
+ 			    const struct i2c_device_id *id)
+ {
+@@ -188,6 +196,16 @@ static int da9210_i2c_probe(struct i2c_client *i2c,
+ 	struct regulator_dev *rdev = NULL;
+ 	struct regulator_config config = { };
+ 	int error;
++	const struct of_device_id *match;
++
++	if (i2c->dev.of_node && !pdata) {
++		match = of_match_device(of_match_ptr(da9210_dt_ids),
++						&i2c->dev);
++		if (!match) {
++			dev_err(&i2c->dev, "Error: No device match found\n");
++			return -ENODEV;
++		}
++	}
+ 
+ 	chip = devm_kzalloc(&i2c->dev, sizeof(struct da9210), GFP_KERNEL);
+ 	if (!chip)
+@@ -264,6 +282,7 @@ MODULE_DEVICE_TABLE(i2c, da9210_i2c_id);
+ static struct i2c_driver da9210_regulator_driver = {
+ 	.driver = {
+ 		.name = "da9210",
++		.of_match_table = of_match_ptr(da9210_dt_ids),
+ 	},
+ 	.probe = da9210_i2c_probe,
+ 	.id_table = da9210_i2c_id,
+-- 
+end-of-patch for PATCH V1
