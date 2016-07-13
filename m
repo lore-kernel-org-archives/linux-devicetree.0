@@ -1,45 +1,106 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH] ARM: dts: NSP: Correct RAM amount for BCM958625HR board
-Date: Wed, 13 Jul 2016 14:18:49 -0400
-Message-ID: <1468433929-12232-1-git-send-email-jon.mason@broadcom.com>
+From: Stefano Stabellini <sstabellini@kernel.org>
+Subject: Re: [PATCH v4] xen/arm: Add a clock property
+Date: Wed, 13 Jul 2016 19:35:05 +0100 (BST)
+Message-ID: <alpine.DEB.2.10.1607131932530.26575@sstabellini-ThinkPad-X260>
+References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: f.fainelli@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: linux-arm-kernel@lists.infradead.org, Julien Grall <julien.grall@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, xen-devel@lists.xenproject.org, devicetree@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, linux-clk@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The BCM958625HR board has 2GB of RAM available.  Increase the amount
-from 512MB to 2GB and add the device type to the memory entry.
+On Tue, 12 Jul 2016, Dirk Behme wrote:
+> Clocks described by this property are reserved for use by Xen, and the OS
+> must not alter their state any way, such as disabling or gating a clock,
+> or modifying its rate. Ensuring this may impose constraints on parent
+> clocks or other resources used by the clock tree.
+> 
+> This property is used to proxy clocks for devices Xen has taken ownership
+> of, such as UARTs, for which the associated clock controller(s) remain
+> under the control of Dom0.
+> 
+> Up to now, the workaround for this has been to use the Linux kernel
+> command line parameter 'clk_ignore_unused'. See Xen bug
+> 
+> http://bugs.xenproject.org/xen/bug/45
+> 
+> too.
+> 
+> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+> ---
+> Changes in v4: Switch to the xen.txt description proposed by Mark:
+>                https://www.spinics.net/lists/arm-kernel/msg516158.html
+> 
+> Changes in v3: Use the xen.txt description proposed by Michael. Thanks!
+> 
+> Changes in v2: Drop the Linux implementation details like clk_disable_unused
+> 	       in xen.txt.
+> 
+>  Documentation/devicetree/bindings/arm/xen.txt | 12 +++++++
+>  arch/arm/xen/enlighten.c                      | 47 +++++++++++++++++++++++++++
+>  2 files changed, 59 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
+> index c9b9321..437e50b 100644
+> --- a/Documentation/devicetree/bindings/arm/xen.txt
+> +++ b/Documentation/devicetree/bindings/arm/xen.txt
+> @@ -17,6 +17,18 @@ the following properties:
+>    A GIC node is also required.
+>    This property is unnecessary when booting Dom0 using ACPI.
+>  
+> +Optional properties:
+> +
+> +- clocks: a list of phandle + clock-specifier pairs
+> +  Clocks described by this property are reserved for use by Xen, and the
+> +  OS must not alter their state any way, such as disabling or gating a
+> +  clock, or modifying its rate. Ensuring this may impose constraints on
+> +  parent clocks or other resources used by the clock tree.
+> +
+> +  Note: this property is used to proxy clocks for devices Xen has taken
+> +  ownership of, such as UARTs, for which the associated clock
+> +  controller(s) remain under the control of Dom0.
+> +
+>  To support UEFI on Xen ARM virtual platforms, Xen populates the FDT "uefi" node
+>  under /hypervisor with following parameters:
+>  
+> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> index 47acb36..5c546d0 100644
+> --- a/arch/arm/xen/enlighten.c
+> +++ b/arch/arm/xen/enlighten.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/of_fdt.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_address.h>
+> +#include <linux/clk-provider.h>
+>  #include <linux/cpuidle.h>
+>  #include <linux/cpufreq.h>
+>  #include <linux/cpu.h>
+> @@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
+>  }
+>  late_initcall(xen_pm_init);
+>  
+> +/*
+> + * Check if we want to register some clocks, that they
+> + * are not freed because unused by clk_disable_unused().
+> + * E.g. the serial console clock.
+> + */
+> +static int __init xen_arm_register_clks(void)
+> +{
+> +	struct clk *clk;
+> +	struct device_node *xen_node;
+> +	unsigned int i, count;
+> +	int ret = 0;
+> +
+> +	xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
+> +	if (!xen_node) {
+> +		pr_err("Xen support was detected before, but it has disappeared\n");
+> +		return -EINVAL;
+> +	}
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
----
- arch/arm/boot/dts/bcm958625hr.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Given that this is a late initcall, the following should work:
 
-diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
-index 4239e58..66c658a 100644
---- a/arch/arm/boot/dts/bcm958625hr.dts
-+++ b/arch/arm/boot/dts/bcm958625hr.dts
-@@ -47,7 +47,8 @@
- 	};
- 
- 	memory {
--		reg = <0x60000000 0x20000000>;
-+		device_type = "memory";
-+		reg = <0x60000000 0x40000000>;
- 	};
- };
- 
--- 
-1.9.1
+    if (!xen_domain())
+        return -ENODEV;
