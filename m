@@ -1,76 +1,127 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] dt: bindings: Add a generic ethernet device binding
-Date: Wed, 13 Jul 2016 12:20:04 +0200
-Message-ID: <1468405204-5845-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH v3 1/2] ASoC: atmel-i2s: add DT bindings for I2S controller
+Date: Wed, 13 Jul 2016 12:25:38 +0200
+Message-ID: <901eec0b7edfa488ff735e7057fbc25ea8dc59f7.1468405019.git.cyrille.pitchen@atmel.com>
+References: <cover.1468405019.git.cyrille.pitchen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1468405019.git.cyrille.pitchen@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.ferre@atmel.com, broonie@kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On some boards (android tablets) different batches use different sdio
-wifi modules. This is not a problem since sdio is a discoverable bus,
-so we only need to describe and activate the mmc controller in dt and
-then the kernel will automatically load the right driver.
+This patch adds DT bindings for the new Atmel I2S controller embedded
+inside sama5d2x SoCs.
 
-But sometimes it is useful to specify certain ethernet properties for
-these "unknown" sdio devices, specifically we want the boot-loader
-to be able to set "local-mac-address" as some of these sdio wifi
-modules come without an eeprom / without a factory programmed mac
-address.
-
-Since the exact device is unknown (differs per batch) we cannot use
-a wifi-chip specific compatible. This commit adds a new
-"generic,ethernet" binding for use in dt-nodes describing such an
-unknown ethernet device.
-
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
 ---
- Documentation/devicetree/bindings/net/generic.txt | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/generic.txt
+ .../devicetree/bindings/sound/atmel-i2s.txt        | 87 ++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-i2s.txt
 
-diff --git a/Documentation/devicetree/bindings/net/generic.txt b/Documentation/devicetree/bindings/net/generic.txt
+diff --git a/Documentation/devicetree/bindings/sound/atmel-i2s.txt b/Documentation/devicetree/bindings/sound/atmel-i2s.txt
 new file mode 100644
-index 0000000..2325709
+index 000000000000..25dcb32314bf
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/net/generic.txt
-@@ -0,0 +1,30 @@
-+* Generic ethernet controller
-+
-+This binding is for ethernet devices which need a dt node so that certain
-+standard properties, e.g. a mac-address can be specified via dt, but
-+otherwise can be detected automatically as they are on a discoverable bus.
++++ b/Documentation/devicetree/bindings/sound/atmel-i2s.txt
+@@ -0,0 +1,87 @@
++* Atmel I2S controller
 +
 +Required properties:
-+- compatible: should be "generic,ethernet"
++- compatible:     Should be "atmel,sama5d2-i2s".
++- reg:            Should be the physical base address of the controller and the
++                  length of memory mapped region.
++- interrupts:     Should contain the interrupt for the controller.
++- dmas:           Should be a list of pairs of DMA controller phandle and flags.
++- dma-names:      Should be a list of DMA channel name among "rx", "tx" or
++                  "rx-tx".
++- clocks:         Should be a list of phandles of clocks used by the controller
++                  (1).
++- clock-names:    Should be a list matching the clocks phandles list:
++                  - "pclk" (peripheral clock) Required.
++                  - "gclk" (generated clock) Optional (1).
++                  - "aclk" (Audio PLL clock) Optional (1).
 +
 +Optional properties:
-+- See bindings/ethernet.txt
++- pinctrl-0:      Should specify pin control groups used for this controller.
++- princtrl-names: Should contain only one value - "default".
++
++
++(1) : Only the peripheral clock is required. The generated clock and the Audio
++      PLL clock are optional and should only be set together.
 +
 +Example:
 +
-+/ {
-+	aliases {
-+		/* Make u-boot set mac-address for the sdio-wifi (no eeprom) */
-+		ethernet0 = &sdio_wifi;
++	i2s@f8050000 {
++		compatible = "atmel,sama5d2-i2s";
++		reg = <0xf8050000 0x300>;
++		interrupts = <54 IRQ_TYPE_LEVEL_HIGH 7>;
++		dmas = <&dma0
++			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
++			 AT91_XDMAC_DT_PERID(31))>,
++		       <&dma0
++			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
++			 AT91_XDMAC_DT_PERID(32))>;
++		dma-names = "tx", "rx";
++		clocks = <&i2s0_clk>, <&i2s0_gclk>, <&audio_pll_pmc>;
++		clock-names = "pclk", "gclk", "aclk";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2s0_default>;
 +	};
++
++
++sama5d2 SoCs only:
++
++When the I2S controller is configured as a master, it generates the master,
++bitrate and frame clocks from a PMC input clock. This PMC input clock can be
++either the I2S peripheral clock or the I2S generated clock.
++The generated clock can reach higher frequencies and is more suited for audio
++applications hence should be preferred to the peripheral clock.
++The I2SCLKSEL register of the Special Function Register (SFR) is used to select
++the relevant PMC input clock: bit0 selects the input clock for I2S controller 0
++whereas bit1 selects the input clock for I2S controller 1.
++
++Aliases are used in the device-tree to retrieve the index of each I2S controller
++so the right bit can be updated in the I2SCLKSEL register.
++
++Finally, the SFR itself is handled by the generic syscon driver.
++Its "compatible" DT property must contain the "atmel,sama5d2-sfr" string so the
++I2S controller driver (and likely other drivers) can find the SFR node when
++needed.
++
++aliases {
++	i2s0 = &i2s0;
++	i2s1 = &i2s1;
 +};
 +
-+&mmc1 {
-+	non-removable;
-+	status = "okay";
++...
 +
-+	sdio_wifi: sdio_wifi@1 {
-+		compatible = "generic,ethernet"
-+		reg = <1>;
++ahb {
++	apb {
++		sfr@f8030000 {
++			compatible = "atmel,sama5d2-sfr", "syscon";
++			reg = <0xf8030000 0x98>;
++		};
++
++		i2s0: i2s@f8050000 {
++			...
++		};
++
++		i2s1: i2s@fc04c000 {
++			...
++		};
 +	};
 +};
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.2
