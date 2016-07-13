@@ -1,68 +1,65 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: Re: [PATCH v2 1/6] binding-doc: power: pwrseq-generic: add binding
- doc for generic power sequence library
-Date: Wed, 13 Jul 2016 16:20:06 -0700
-Message-ID: <5786CCA6.2090709@gmail.com>
-References: <1468375610-18625-1-git-send-email-peter.chen@nxp.com>
- <1468375610-18625-2-git-send-email-peter.chen@nxp.com>
- <1468394851.3638.13.camel@pengutronix.de> <20160713084250.GB11863@shlinux2>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: Re: [PATCH] bindings: PCI: artpec: correct pci binding example
+Date: Thu, 14 Jul 2016 01:54:20 +0200
+Message-ID: <1336f919-e145-7875-9204-c1fc124fb9fe@axis.com>
+References: <1467934090-12834-1-git-send-email-niklass@axis.com>
+ <1838529.X3K6mcn6MA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160713084250.GB11863@shlinux2>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1838529.X3K6mcn6MA@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 07/13/2016 01:42 AM, Peter Chen wrote:
-> On Wed, Jul 13, 2016 at 09:27:31AM +0200, Philipp Zabel wrote:
->> Am Mittwoch, den 13.07.2016, 10:06 +0800 schrieb Peter Chen:
->>> Add binding doc for generic power sequence library.
->>>
->>> Signed-off-by: Peter Chen <peter.chen@nxp.com>
->>> ---
->>>  .../bindings/power/pwrseq/pwrseq-generic.txt       | 53 ++++++++++++++++++++++
->>>  1 file changed, 53 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
->>> new file mode 100644
->>> index 0000000..186c58c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
->>> @@ -0,0 +1,53 @@
->>> +The generic power sequence library
->>> +
->>> +Some hard-wired USB/MMC devices need to do power sequence to let the
->>> +device work normally,
->> I would replace "to let the device work normally" with "before the
->> device can be enumerated [on the bus]" here.
+On 07/08/2016 11:39 AM, Arnd Bergmann wrote:
+> On Friday, July 8, 2016 1:28:10 AM CEST Niklas Cassel wrote:
+>> From: Niklas Cassel <niklas.cassel@axis.com>
 >>
-> Ok.
->
->>>  the typical power sequence like: enable USB
->>> +PHY clock, toggle reset pin, etc. But current Linux USB driver
->>> +lacks of such code to do it, it may cause some hard-wired USB devices
->>> +works abnormal or can't be recognized by controller at all. The
->>> +power sequence will be done before this device can be found at USB
->>> +bus.
->>> +
->>> +The power sequence properties is under the device node.
->>> +
->>> +Required properties:
->>> +- power-sequence: this device needs to do power sequence before enumeration
->> As Joshua pointed out, is this even needed at all?
+>>  - Increase config size. When using a PCIe switch,
+>>    the previous config size only had room for one device.
+>>  - Add bus range. Inherited optional property.
+>>  - Map downstream I/O to PCI address 0. We can map it to any
+>>    address, but let's be consistent with other drivers.
 >>
-> If no, how we decide whether allocates pwrseq instance through pwrseq
-> library or not?
+>> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+>> ---
+>>  Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 7 ++++---
+>>  1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>> index 330a45b..5ecaea1 100644
+>> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>> @@ -24,16 +24,17 @@ Example:
+>>  		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
+>>  		reg = <0xf8050000 0x2000
+>>  		       0xf8040000 0x1000
+>> -		       0xc0000000 0x1000>;
+>> +		       0xc0000000 0x2000>;
+> If this is your config space size
 >
-The pwrseq driver is Linux specific. The dts is supposed to be OS agnostic.
-It seems to me that If a driver supports pwrseq and the dts elements
-are there, it should use them, e.g. if there is a clock, enable the clock.
-if there is a reset gpio then take the device into and out of reset during probe.
+>>  		num-lanes = <2>;
+>> +		bus-range = <0x00 0xff>;
+> then the bus range looks too large. These two are typically connected.
+> I couldn't immediately see which config space access function is
+> used, but if you have 0x1000 bytes per bus, then the bus range matching
+> a 0x2000 byte config space would be either <0x00 0x01> or <0x00 0x02>
+> depending whether the root bus is part of that range.
 
-Can you see a  problem with that approach?
+I see your point, a config space size of 0x2000 is only enough to
+hold two configuration space headers.
+
+However, all other PCIe controllers based on Synopsys DesignWare IP
+with a config space size of 0x2000, uses a bus-range of 0x0-0xff.
+(Except hisilicon which for some reason uses 0x0-0xf).
+Isn't it better to be consistent with the other DesignWare based controllers?
+
+Also, isn't is possible to have a device behind bus 1, then nothing behind
+bus 2, and then a device behind bus 3?
+Not sure if this could actually happen though, since Linux appears to assign
+the bus numbers, unless already defined by BIOS.
