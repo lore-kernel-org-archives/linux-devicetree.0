@@ -1,56 +1,53 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] usb: add HCD providers
-Date: Wed, 13 Jul 2016 07:21:09 +0200
-Message-ID: <CACna6rw6QOuY247qvDmO4mKrW3y4yXoeM3qr8SXAwn3CuYAMpw@mail.gmail.com>
-References: <1468326921-26485-1-git-send-email-zajec5@gmail.com> <20160713045140.GA29915@shlinux2>
+From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: Add MediaTek USB3 DRD Driver
+Date: Wed, 13 Jul 2016 13:40:11 +0800
+Message-ID: <1468388411.29220.4.camel@mhfsdcap03>
+References: <1465960040-768-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160713045140.GA29915@shlinux2>
+In-Reply-To: <1465960040-768-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LED SUBSYSTEM" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13 July 2016 at 06:51, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Jul 12, 2016 at 02:35:18PM +0200, Rafa=C5=82 Mi=C5=82ecki wro=
-te:
->> I was working on an "usbport" LED trigger driver and specifying its
->> default state in DT. I realized I can't really determine numbering o=
-f
->> USB ports on any device as it depends on compiled drivers and the
->> loading orders.
->>
->> It means that my physical USB port can be e.g. 1-1 or 2-1 depending =
-on
->> my current config/setup. I needed a way to specify a particular HCD =
-in
->> DT and then hardcode port number (as this part doesn't change).
->>
->
-> I have a question:
->
-> What does your "usbport" LED trigger for? What kinds of information
-> you would like to show on LED?
+Hi Felipe:
 
-It's a trigger that turns on LED whenever USB device appears at
-specified USB port. There are plenty of home routers that have USB
-labeled LED(s). To support them nicely, first of all we need a trigger
-that will watch for USB subsystem events. Secondly we need a way to
-setup its initial state correctly as most users don't want to play
-with sysfs on their own.
+Could you please give me some suggestions if you have already reviewed
+some codes.
 
-I sent usbport trigger in:
-[PATCH] leds: trigger: Introduce an USB port trigger
-<1468239883-22695-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-https://lkml.org/lkml/2016/7/11/305
-You may read commit message and ledtrig-usbport.txt for more details.
+Thanks a lot.
 
---=20
-Rafa=C5=82
+
+On Wed, 2016-06-15 at 11:07 +0800, Chunfeng Yun wrote:
+> From 48552e96e4e33f8830cb6a59154fe148425532fd Mon Sep 17 00:00:00 2001
+> From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Date: Wed, 15 Jun 2016 10:58:10 +0800
+> Subject: [PATCH v4,0/5] Add MediaTek USB3 DRD Driver
+> 
+> These patches introduce the MediaTek USB3 dual-role controller
+> driver.
+> 
+> The driver can be configured as Dual-Role Device (DRD),
+> Peripheral Only and Host Only (xHCI) modes. It works well
+> with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
+> tested on MT8173 platform which only contains USB2.0 device IP,
+> and on MT6290 platform which contains USB3.0 device IP.
+> 
+> Change in v4:
+> 1. fix build errors on non-mediatek platforms
+> 2. provide manual dual-role switch via debugfs instead of sysfs
+> 
+
+> --
+> 1.7.9.5
+> 
+> 
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
