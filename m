@@ -1,65 +1,35 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] userspace API definitions for auto-focus coil
-Date: Wed, 13 Jul 2016 09:26:38 +0200
-Message-ID: <20160713072638.GB3781@amd>
-References: <20160602212746.GT26360@valkosipuli.retiisi.org.uk>
- <20160605190716.GA11321@amd>
- <575512E5.5030000@gmail.com>
- <20160611220654.GC26360@valkosipuli.retiisi.org.uk>
- <20160612084811.GA27446@amd>
- <20160612112253.GD26360@valkosipuli.retiisi.org.uk>
- <20160613191753.GA17459@amd>
- <20160617213545.GH24980@valkosipuli.retiisi.org.uk>
- <20160618153846.GA15662@amd>
- <20160712203201.7ffd8f22@recife.lan>
+From: Wan Zongshun <vw@iommu.org>
+Subject: Re: [PATCH v2 08/10] ARM: dts: nuc900: Add nuc970 dts files
+Date: Wed, 13 Jul 2016 15:26:40 +0800
+Message-ID: <5785ED30.4090206@iommu.org>
+References: <1468136542-2656-1-git-send-email-vw@iommu.org>
+ <20160712153910.GA3507@afzalpc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160712203201.7ffd8f22@recife.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, pali.rohar@gmail.com, sre@kernel.org, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, patrikbachan@gmail.com, serge@hallyn.com, linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160712153910.GA3507@afzalpc>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Afzal Mohammed <afzal.mohd.ma@gmail.com>
+Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, Wan Zongshun <mcuos.com@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2016-07-12 20:32:01, Mauro Carvalho Chehab wrote:
-> Em Sat, 18 Jun 2016 17:38:46 +0200
-> Pavel Machek <pavel@ucw.cz> escreveu:
-> 
-> > Hi!
-> > 
-> > > > Not V4L2_CID_USER_AD5820...?  
-> > > 
-> > > The rest of the controls have no USER as part of the macro name, so I
-> > > wouldn't use it here either.  
-> > 
-> > Ok.
-> > 
-> > > > Ok, separate header file for 2 lines seemed like a bit of overkill,
-> > > > but why not.  
-> > > 
-> > > That follows an existing pattern of how controls have been implemented in
-> > > other drivers.  
-> > 
-> > Ok.
-> > 
-> > > Could you merge this with the driver patch? I've dropped that from my ad5820
-> > > branch as it does not compile.  
-> > 
-> > Yes, merged patch should be in your inbox now.
-> 
-> The V4L2 core changes should be on a separate patch. Btw, you'll also
-> need to patch documentation to reflect such changes. We're right now
-> moving from DocBook to ReST markup language. The patches for it are
-> right now on a separate topic branch (docs-next), to be merged for
-> Kernel 4.8 on the next merge window.
-
-What about: I drop all the functionality but FOCUS_ABSOLUTE, which is
-core functionality, anyway, and does not need core changes. When V4L2
-core stabilizes, it can be reintroduced.
-
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+CgpPbiAyMDE25bm0MDfmnIgxMuaXpSAyMzozOSwgQWZ6YWwgTW9oYW1tZWQgd3JvdGU6Cj4gSGks
+Cj4KPiBPbiBTdW4sIEp1bCAxMCwgMjAxNiBhdCAwMzo0MjoyMFBNICswODAwLCBXYW4gWm9uZ3No
+dW4gd3JvdGU6Cj4+IFRoaXMgcGF0Y2ggaXMgdG8gYWRkIGR0cyBzdXBwb3J0IGZvciBudWM5NzAg
+cGxhdGZvcm0uCj4KPiBjcHUgISBpbiBzb2MgPyBsb3N0IGluIGZhYiA/IDspCgpEbyB5b3UgbWVh
+biBJIHNob3VsZCBhZGQgY3B1cyBpbnRvIHNvYyBsaWtlPwoKCgljcHVzIHsKCQkjYWRkcmVzcy1j
+ZWxscyA9IDwwPjsKCQkjc2l6ZS1jZWxscyA9IDwwPjsKCgkJY3B1IHsKCQkJY29tcGF0aWJsZSA9
+ICJhcm0sYXJtOTI2ZWotcyI7CgkJCWRldmljZV90eXBlID0gImNwdSI7CgkJfTsKCX07Cgo+Cj4g
+UmVnYXJkcwo+IGFmemFsCj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
