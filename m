@@ -1,70 +1,147 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: [PATCH v3 3/8] Input: synaptics-rmi4: Add dribble and palm gesture parameters to device tree
-Date: Wed, 13 Jul 2016 23:08:42 -0700
-Message-ID: <1468476522-8032-1-git-send-email-aduggan@synaptics.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [Xen-devel] [PATCH v4] xen/arm: Add a clock property
+Date: Thu, 14 Jul 2016 08:11:16 +0200
+Message-ID: <094be367-ff91-aec7-cbd6-cfb8dc711c54@de.bosch.com>
+References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
+ <alpine.DEB.2.10.1607131932530.26575@sstabellini-ThinkPad-X260>
+ <57868CB4.1090504@gmail.com>
+ <alpine.DEB.2.10.1607132002000.26575@sstabellini-ThinkPad-X260>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andrew Duggan <aduggan@synaptics.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Nick Dyer <nick@shmanahar.org>, Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.10.1607132002000.26575@sstabellini-ThinkPad-X260>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Dirk Behme <dirk.behme@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Julien Grall <julien.grall@arm.com>, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
----
-This version includes Nick's suggestion of adding force to the device tree
-parameters so make it obvious that these parameters overwrite the
-default values set in the firware config.
+On 13.07.2016 21:07, Stefano Stabellini wrote:
+> On Wed, 13 Jul 2016, Dirk Behme wrote:
+>> On 13.07.2016 20:35, Stefano Stabellini wrote:
+>>> On Tue, 12 Jul 2016, Dirk Behme wrote:
+>>>> Clocks described by this property are reserved for use by Xen, and the OS
+>>>> must not alter their state any way, such as disabling or gating a clock,
+>>>> or modifying its rate. Ensuring this may impose constraints on parent
+>>>> clocks or other resources used by the clock tree.
+>>>>
+>>>> This property is used to proxy clocks for devices Xen has taken ownership
+>>>> of, such as UARTs, for which the associated clock controller(s) remain
+>>>> under the control of Dom0.
+>>>>
+>>>> Up to now, the workaround for this has been to use the Linux kernel
+>>>> command line parameter 'clk_ignore_unused'. See Xen bug
+>>>>
+>>>> http://bugs.xenproject.org/xen/bug/45
+>>>>
+>>>> too.
+>>>>
+>>>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+>>>> ---
+>>>> Changes in v4: Switch to the xen.txt description proposed by Mark:
+>>>>                 https://www.spinics.net/lists/arm-kernel/msg516158.html
+>>>>
+>>>> Changes in v3: Use the xen.txt description proposed by Michael. Thanks!
+>>>>
+>>>> Changes in v2: Drop the Linux implementation details like
+>>>> clk_disable_unused
+>>>> 	       in xen.txt.
+>>>>
+>>>>   Documentation/devicetree/bindings/arm/xen.txt | 12 +++++++
+>>>>   arch/arm/xen/enlighten.c                      | 47
+>>>> +++++++++++++++++++++++++++
+>>>>   2 files changed, 59 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/xen.txt
+>>>> b/Documentation/devicetree/bindings/arm/xen.txt
+>>>> index c9b9321..437e50b 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/xen.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/xen.txt
+>>>> @@ -17,6 +17,18 @@ the following properties:
+>>>>     A GIC node is also required.
+>>>>     This property is unnecessary when booting Dom0 using ACPI.
+>>>>
+>>>> +Optional properties:
+>>>> +
+>>>> +- clocks: a list of phandle + clock-specifier pairs
+>>>> +  Clocks described by this property are reserved for use by Xen, and the
+>>>> +  OS must not alter their state any way, such as disabling or gating a
+>>>> +  clock, or modifying its rate. Ensuring this may impose constraints on
+>>>> +  parent clocks or other resources used by the clock tree.
+>>>> +
+>>>> +  Note: this property is used to proxy clocks for devices Xen has taken
+>>>> +  ownership of, such as UARTs, for which the associated clock
+>>>> +  controller(s) remain under the control of Dom0.
+>>>> +
+>>>>   To support UEFI on Xen ARM virtual platforms, Xen populates the FDT
+>>>> "uefi" node
+>>>>   under /hypervisor with following parameters:
+>>>>
+>>>> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+>>>> index 47acb36..5c546d0 100644
+>>>> --- a/arch/arm/xen/enlighten.c
+>>>> +++ b/arch/arm/xen/enlighten.c
+>>>> @@ -24,6 +24,7 @@
+>>>>   #include <linux/of_fdt.h>
+>>>>   #include <linux/of_irq.h>
+>>>>   #include <linux/of_address.h>
+>>>> +#include <linux/clk-provider.h>
+>>>>   #include <linux/cpuidle.h>
+>>>>   #include <linux/cpufreq.h>
+>>>>   #include <linux/cpu.h>
+>>>> @@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
+>>>>   }
+>>>>   late_initcall(xen_pm_init);
+>>>>
+>>>> +/*
+>>>> + * Check if we want to register some clocks, that they
+>>>> + * are not freed because unused by clk_disable_unused().
+>>>> + * E.g. the serial console clock.
+>>>> + */
+>>>> +static int __init xen_arm_register_clks(void)
+>>>> +{
+>>>> +	struct clk *clk;
+>>>> +	struct device_node *xen_node;
+>>>> +	unsigned int i, count;
+>>>> +	int ret = 0;
+>>>> +
+>>>> +	xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
+>>>> +	if (!xen_node) {
+>>>> +		pr_err("Xen support was detected before, but it has
+>>>> disappeared\n");
+>>>> +		return -EINVAL;
+>>>> +	}
+>>>
+>>> Given that this is a late initcall, the following should work:
+>>>
+>>>      if (!xen_domain())
+>>>          return -ENODEV;
+>>
+>>
+>> Hmm, sorry, "should work" for what?
+>
+> As a Xen check, if (!xen_domain()) is the common pattern.
+>
+>> We need the xen_node from device tree, anyway.
+>
+> In that case, what don't you just use the global xen_node in this file?
 
- .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt        | 10 ++++++++++
- drivers/input/rmi4/rmi_2d_sensor.c                          | 13 +++++++++++++
- 2 files changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
-index f2c30c8..c00665d 100644
---- a/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
-+++ b/Documentation/devicetree/bindings/input/rmi4/rmi_2d_sensor.txt
-@@ -37,6 +37,16 @@ Optional Properties:
- 				disable reporing absolute position data.
- - syna,rezero-wait-ms: Time in miliseconds to wait after issuing a rezero
- 				command.
-+- syna,dribble-force-enable: Enable reporting of dribble packets in the firmware
-+				(overwrites default value in firmware config).
-+- syna,dribble-force-disable: Disable reporting of dribble packets in the firmware.
-+				(overwrites default value in firmware config).
-+- syna,palm-detect-force-enable: Enable reporting the palm detect gesture in the
-+				firmware.  (overwrites default value in firmware
-+				config).
-+- syna,palm-detect-force-disable: Disable reporting the palm detect gesture in
-+				the firmware.  (overwrites default value in
-+				firmware config).
- 
- 
- Example of a RMI4 I2C device with F11:
-diff --git a/drivers/input/rmi4/rmi_2d_sensor.c b/drivers/input/rmi4/rmi_2d_sensor.c
-index e97bd7f..a092f6a 100644
---- a/drivers/input/rmi4/rmi_2d_sensor.c
-+++ b/drivers/input/rmi4/rmi_2d_sensor.c
-@@ -317,6 +317,19 @@ int rmi_2d_sensor_of_probe(struct device *dev,
- 
- 	pdata->rezero_wait = val;
- 
-+	if (of_property_read_bool(dev->of_node, "syna,dribble-force-enable"))
-+		pdata->dribble = RMI_REG_STATE_ON;
-+	else if (of_property_read_bool(dev->of_node,
-+	    "syna,dribble-force-disable"))
-+		pdata->dribble = RMI_REG_STATE_OFF;
-+
-+	if (of_property_read_bool(dev->of_node,
-+	    "syna,palm-detect-force-enable"))
-+		pdata->palm_detect = RMI_REG_STATE_ON;
-+	else if (of_property_read_bool(dev->of_node,
-+				"syna,palm-detect-force-disable"))
-+		pdata->palm_detect = RMI_REG_STATE_OFF;
-+
- 	return 0;
- }
- #else
--- 
-2.5.0
+With the recent code there is no global xen_node any more:
 
+https://lists.xen.org/archives/html/xen-devel/2016-06/msg02878.html
+
+-- cut --
+The code in this file has changed quite a lot with the support of ACPI. 
+For instance "xen_node" is not anymore a global variable. Can you rebase 
+your rework on top of the branch for-linus-4.8?
+
+
+You can find the branch in:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git
+-- cut --
+
+Best regards
+
+Dirk
