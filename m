@@ -1,87 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
-Date: Thu, 14 Jul 2016 13:09:54 +0200
-Message-ID: <4372420.eqVKsk1ckW@wuerfel>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org> <5434334.4rKzx80y6W@wuerfel> <578752CD.3010408@iommu.org>
+From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v10 0/4] Mediatek MT8173 CMDQ support
+Date: Thu, 14 Jul 2016 19:28:49 +0800
+Message-ID: <1468495733-12178-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <578752CD.3010408@iommu.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wan Zongshun <vw@iommu.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, jason@lakedaemon.net, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 14, 2016 4:52:29 PM CEST Wan Zongshun wrote:
->=20
-> On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 16:26, Arnd Bergmann wrote:
-> > On Tuesday, July 12, 2016 3:04:42 PM CEST Wan Zongshun wrote:
-> >>>
-> >>> Ideally, this should just go away once we use SPARSE_IRQ.
-> >>
-> >> This platform also can use SPARSE_IRQ? this just a simple irq map =
-and no
-> >> more irq number in this Soc.
-> >>
-> >
-> > SPARSE_IRQ is implied by ARCH_MULTIPLATFORM, so we will have to
-> > use it once that gets enabled.
-> >
-> > Your new irqchip driver already handles IRQ domains, so it will
-> > work out of the box with SPARSE_IRQ, but you have to change the
-> > reference to "NR_IRQS" into something else.
-> >
-> > I've prototyped a patch series to enable ARCH_MULTIPLATFORM,
-> > I hope you can start working from what I have and get it to run.
->=20
-> I go through the ARCH_MULTIPLATFORM and SPARSE_IRQ related codes, but=
- I=20
-> find I also have to define the NUC900_NR_IRQS firstly like below, so=20
-> that I can init the .nr_irq.
->=20
-> +#if !defined(CONFIG_SOC_NUC970)
->   #define NUC900_NR_IRQS		(IRQ_ADC+1)
-> +#else
-> +#define NUC900_NR_IRQS		62
-> +#endif
->=20
->   DT_MACHINE_START(nuc900_dt, "Nuvoton NUC900 (Device Tree Support)")
->          .dt_compat      =3D nuc900_dt_compat,
-> +       .nr_irqs        =3D NUC900_NR_IRQS,
->   MACHINE_END
+Hi,
 
-You don't need to set this for the DT based machines, this number
-is just for the set of IRQ that have a hardcoded mapping. With DT,
-they get dynamically allocated as required.
+This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+to help write registers with critical time limitation, such as
+updating display configuration during the vblank. It controls Global
+Command Engine (GCE) hardware to achieve this requirement.
 
-=46or the board files, you can hardcode the original definition of 32
-IRQs, but I think you don't need that if you register a legacy IRQ
-domain in mach-w90x900/irq.c.
+These patches have a build dependency on top of v4.7-rc1.
 
-> and then in my irqchip driver, I will use the NUC900_NR_IRQS:
->=20
-> +aic_domain =3D irq_domain_add_linear(node, NUC900_NR_IRQS,
-> +				    &aic_irq_domain_ops, NULL);
->=20
->=20
-> Is that a right usage?
+Changes since v9:
+ - rename merge_wfe to atomic_exec
+   atomic_exec should merge wfe (wait for event) commands and prevent
+   to suspend gce when gce starts to execute commands after wfe.
+ - merge cmdq_rec into cmdq_task since command buffer allocation for
+   cmdq_task had been modified to the same as cmdq_rec in CMDQ v9
+ - refine mailbox part in device tree binding document
 
-This does not look right when NUC900_NR_IRQS can have configuration
-dependent values. I can see two ways of handling it:
+Best regards,
+HS Liao
 
-a) register the maximum number of IRQs that the irqchip can handle.
-   There is no real cost for having a large number here, as SPARSE_IRQ
-   ensures we only need to allocate the descriptors that are actually
-   used.
+HS Liao (4):
+  dt-bindings: soc: Add documentation for the MediaTek GCE unit
+  CMDQ: Mediatek CMDQ driver
+  arm64: dts: mt8173: Add GCE node
+  CMDQ: save more energy in idle
 
-b) make the number of interrupts dependent on the compatible string
-   for the irqchip, and handle NUC970 differently from the others
-   in the driver.
+ .../devicetree/bindings/soc/mediatek/gce.txt       |  47 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  10 +
+ drivers/soc/mediatek/Kconfig                       |  11 +
+ drivers/soc/mediatek/Makefile                      |   1 +
+ drivers/soc/mediatek/mtk-cmdq.c                    | 987 +++++++++++++++++++++
+ include/soc/mediatek/cmdq.h                        | 179 ++++
+ 6 files changed, 1235 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
+ create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
+ create mode 100644 include/soc/mediatek/cmdq.h
 
-In the meantime, I also have a series to enable multiplatform support
-for all of mach-w90x900 based on your patches, but lacking a proper
-clk driver. I'll send that to you so you can include it in your
-series (after verifying that it works, or fixing it where necessary).
-
-	Arnd
+-- 
+1.9.1
