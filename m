@@ -1,64 +1,61 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] ARM: tegra: fix erroneous address in dts
-Date: Fri, 15 Jul 2016 00:02:21 +0200
-Message-ID: <20160714220218.GB4205@mithrandir.ba.sec>
-References: <1468514937-23250-1-git-send-email-ralf@ramses-pyramidenbau.de>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v3 04/12] of: add J-Core timer bindings
+Date: Thu, 14 Jul 2016 18:18:08 -0400
+Message-ID: <20160714221808.GP15995@brightrain.aerifal.cx>
+References: <cover.1464148904.git.dalias@libc.org>
+ <5341dfbb085d5647ebb6fe4390ca329b63e0e03d.1464148904.git.dalias@libc.org>
+ <20160601135852.GA17217@rob-hp-laptop>
+ <20160601175307.GC10893@brightrain.aerifal.cx>
+ <CAL_JsqJYyvdc06v2+R=Wnmkk-cO7ZFq=7uGOhPxXdL0UfEu-iA@mail.gmail.com>
+ <20160602013407.GA12184@brightrain.aerifal.cx>
+ <20160602224425.GA15163@rob-hp-laptop>
+ <20160623211608.GA10893@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1468514937-23250-1-git-send-email-ralf@ramses-pyramidenbau.de>
+In-Reply-To: <20160623211608.GA10893@brightrain.aerifal.cx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Ramsauer <ralf@ramses-pyramidenbau.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 23, 2016 at 05:16:08PM -0400, Rich Felker wrote:
+> On Thu, Jun 02, 2016 at 05:44:25PM -0500, Rob Herring wrote:
+> > > > > In theory it would even be possible to just require a DT node per
+> > > > > cpulocal timer, but I didn't see a good way to make the bindings
+> > > > > represent the relationship to cpus or to make the driver handle irqs
+> > > > > correctly for such a setup, so I'd need a viable proposal for how that
+> > > > > could be done to even consider such an approach.
+> > > > 
+> > > > Yeah, there's not really a standard way to map per cpu blocks to cpus.
+> > > > We could, but doesn't really seem necessary here.
+> > > > 
+> > > > For the irqs, percpu irqs doesn't help you?
+> > > 
+> > > What I mean is that, if there were a separate device node and driver
+> > > instance per cpu, they'd all want to register the same irq just to
+> > > handle it on their own cpu, so we'd have a lot of spurious handlers
+> > > running. The right way to model this, I think, would be as a virtual
+> > > irqchip that's the irq parent of all the timer nodes, and that
+> > > multiplexes the real irq to one virq per cpu (where the current cpu id
+> > > becomes the irq number in its irq domain). But that's a lot of virtual
+> > > infrastructure just for the sake of modelling each percpu timer as its
+> > > own DT node and I don't think it makes sense to do it that way.
+> > 
+> > I would have thought your interrupt controller did all this. On the ARM 
+> > GIC for example, you have the same irq number but there is a per cpu 
+> > interface and really N (== # cpus) physical irq lines.
+> 
+> I've looked at the ARM GIC code and bindings and I don't see where the
+> per-cpu interrupt interfaces are modelled with multiple interrupt
+> controller nodes or irq domains. It looks to me like it just uses a
+> single interrupt controller/domain with percpu irq. Does that match
+> your understanding?
 
---3uo+9/B/ebqu+fSQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ping.
 
-On Thu, Jul 14, 2016 at 06:48:57PM +0200, Ralf Ramsauer wrote:
-> c90bb7b enabled the high speed UARTs of the Jetson TK1. The address
-> specification inside the dts is wrong. Fix it and use the correct
-> address.
->=20
-> Fixes: c90bb7b9b9 ("ARM: tegra: Add high speed UARTs to Jetson TK1 device=
- tree")
-> Signed-off-by: Ralf Ramsauer <ralf@ramses-pyramidenbau.de>
-> ---
->  arch/arm/boot/dts/tegra124-jetson-tk1.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+I want to submit this again for the upcoming merge window and need to
+know whether you still want me to pursue different approaches.
 
-These addresses are correct. The 0, prefix was dropped from the unit
-address in commit b5896f67ab3c ("ARM: tegra: Remove commas from unit
-addresses on Tegra124").
-
-What's the problem that you're seeing? What's not working for you?
-
-Thierry
-
---3uo+9/B/ebqu+fSQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXiAvnAAoJEN0jrNd/PrOhXaAQALITZx+57pNYpPiyMuE5h9Ki
-icW8OmJnGrGTp5wLT/OCC3ZdgjQTmBLYz/2Ul93Q8d2d+kI+eULysHRr1c8zBKrM
-wADktAx6FsTJ//FqdDlilyexKaskN6abvZXE/KImiEr8ALDO/5LojI2H7YlVz4ZP
-zFvEBMPQB4DDN3AZ5x3JVQPvJ0/h66WOcmj6IrOVCdueXQYSq+PNAuWaM8B4Iht/
-xyWEVtZPNtMYqxeBZXii1VeIsu0m9jod+z6+0wswtgmK/gevNnYQa/2+9vh0kayY
-7kcmYYZxsCC6q9JISvfEocUqh01brSRLlW2KvqTaSBdMAlbOd1pnB/JngbzphGfb
-qOsjEzd1Fqyh7mffwg93u1ObfOgStxdqiny1zArN1IzbMsGqbuLL7IUZGFrMruVW
-FLc3uBTvauJiSAyjvHYtksL0wJ0BkqARb01reus9IVYAF2IWetQM03IaL83Yx7vB
-/2iF72RzOwpMw+FV0cZqZqDUpXwtGJnTHRnC3RfieRYx5gbtHmcRb0fI3V/qyX+A
-AhTzTAVdxS0KzNLdJSoEfuWEFUexnM0yWz4K7VwnificY9TQD/ls3yA3iwPELBST
-mtTACBfwIhev6e7VxEwJQ7u266ZPgK8FEvoZrX6AbV3Ou1uT2x3x9sYRMp26t69p
-0OkcvQHHD4eachJz7aiB
-=+02h
------END PGP SIGNATURE-----
-
---3uo+9/B/ebqu+fSQ--
+Rich
