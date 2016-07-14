@@ -1,65 +1,146 @@
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: Re: [PATCH] bindings: PCI: artpec: correct pci binding example
-Date: Thu, 14 Jul 2016 01:54:20 +0200
-Message-ID: <1336f919-e145-7875-9204-c1fc124fb9fe@axis.com>
-References: <1467934090-12834-1-git-send-email-niklass@axis.com>
- <1838529.X3K6mcn6MA@wuerfel>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3] Input: synaptics-rmi4: Support regulator supplies
+Date: Wed, 13 Jul 2016 17:19:55 -0700
+Message-ID: <20160714001955.GA11247@dtor-ws>
+References: <1465622722-31714-1-git-send-email-bjorn.andersson@linaro.org>
+ <576DD2E0.9000002@synaptics.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1838529.X3K6mcn6MA@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <576DD2E0.9000002@synaptics.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Andrew Duggan <aduggan@synaptics.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Christopher Heiny <cheiny@synaptics.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jun 24, 2016 at 05:40:00PM -0700, Andrew Duggan wrote:
+> On 06/10/2016 10:25 PM, Bjorn Andersson wrote:
+> >From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> >
+> >Support the two supplies - vdd and vio - to make it possible to control
+> >power to the Synaptics chip.
+> >
+> >Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> >Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Reviewed-by: Andrew Duggan <aduggan@synaptics.com>
 
+Applied, thank you.
 
-On 07/08/2016 11:39 AM, Arnd Bergmann wrote:
-> On Friday, July 8, 2016 1:28:10 AM CEST Niklas Cassel wrote:
->> From: Niklas Cassel <niklas.cassel@axis.com>
->>
->>  - Increase config size. When using a PCIe switch,
->>    the previous config size only had room for one device.
->>  - Add bus range. Inherited optional property.
->>  - Map downstream I/O to PCI address 0. We can map it to any
->>    address, but let's be consistent with other drivers.
->>
->> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
->> ---
->>  Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 7 ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
->> index 330a45b..5ecaea1 100644
->> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
->> @@ -24,16 +24,17 @@ Example:
->>  		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
->>  		reg = <0xf8050000 0x2000
->>  		       0xf8040000 0x1000
->> -		       0xc0000000 0x1000>;
->> +		       0xc0000000 0x2000>;
-> If this is your config space size
->
->>  		num-lanes = <2>;
->> +		bus-range = <0x00 0xff>;
-> then the bus range looks too large. These two are typically connected.
-> I couldn't immediately see which config space access function is
-> used, but if you have 0x1000 bytes per bus, then the bus range matching
-> a 0x2000 byte config space would be either <0x00 0x01> or <0x00 0x02>
-> depending whether the root bus is part of that range.
+> 
+> >---
+> >  .../devicetree/bindings/input/rmi4/rmi_i2c.txt     |  9 +++++
+> >  drivers/input/rmi4/rmi_i2c.c                       | 41 ++++++++++++++++++++++
+> >  2 files changed, 50 insertions(+)
+> >
+> >diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+> >index 95fa715c6046..ec908b91fd90 100644
+> >--- a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+> >+++ b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+> >@@ -22,6 +22,15 @@ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> >  - syna,reset-delay-ms: The number of milliseconds to wait after resetting the
+> >  			device.
+> >+- syna,startup-delay-ms: The number of milliseconds to wait after powering on
+> >+			 the device.
+> >+
+> >+- vdd-supply: VDD power supply.
+> >+See ../regulator/regulator.txt
+> >+
+> >+- vio-supply: VIO power supply
+> >+See ../regulator/regulator.txt
+> >+
+> >  Function Parameters:
+> >  Parameters specific to RMI functions are contained in child nodes of the rmi device
+> >   node. Documentation for the parameters of each function can be found in:
+> >diff --git a/drivers/input/rmi4/rmi_i2c.c b/drivers/input/rmi4/rmi_i2c.c
+> >index a96a326b53bd..71dc6cdde8ac 100644
+> >--- a/drivers/input/rmi4/rmi_i2c.c
+> >+++ b/drivers/input/rmi4/rmi_i2c.c
+> >@@ -11,6 +11,8 @@
+> >  #include <linux/rmi.h>
+> >  #include <linux/irq.h>
+> >  #include <linux/of.h>
+> >+#include <linux/delay.h>
+> >+#include <linux/regulator/consumer.h>
+> >  #include "rmi_driver.h"
+> >  #define BUFFER_SIZE_INCREMENT 32
+> >@@ -37,6 +39,9 @@ struct rmi_i2c_xport {
+> >  	u8 *tx_buf;
+> >  	size_t tx_buf_size;
+> >+
+> >+	struct regulator_bulk_data supplies[2];
+> >+	u32 startup_delay;
+> >  };
+> >  #define RMI_PAGE_SELECT_REGISTER 0xff
+> >@@ -246,6 +251,24 @@ static int rmi_i2c_probe(struct i2c_client *client,
+> >  		return -ENODEV;
+> >  	}
+> >+	rmi_i2c->supplies[0].supply = "vdd";
+> >+	rmi_i2c->supplies[1].supply = "vio";
+> >+	retval = devm_regulator_bulk_get(&client->dev,
+> >+					 ARRAY_SIZE(rmi_i2c->supplies),
+> >+					 rmi_i2c->supplies);
+> >+	if (retval < 0)
+> >+		return retval;
+> >+
+> >+	retval = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
+> >+				       rmi_i2c->supplies);
+> >+	if (retval < 0)
+> >+		return retval;
+> >+
+> >+	of_property_read_u32(client->dev.of_node, "syna,startup-delay-ms",
+> >+			     &rmi_i2c->startup_delay);
+> >+
+> >+	msleep(rmi_i2c->startup_delay);
+> >+
+> >  	rmi_i2c->client = client;
+> >  	mutex_init(&rmi_i2c->page_mutex);
+> >@@ -286,6 +309,7 @@ static int rmi_i2c_remove(struct i2c_client *client)
+> >  	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+> >  	rmi_unregister_transport_device(&rmi_i2c->xport);
+> >+	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+> >  	return 0;
+> >  }
+> >@@ -308,6 +332,9 @@ static int rmi_i2c_suspend(struct device *dev)
+> >  			dev_warn(dev, "Failed to enable irq for wake: %d\n",
+> >  				ret);
+> >  	}
+> >+
+> >+	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+> >+
+> >  	return ret;
+> >  }
+> >@@ -317,6 +344,12 @@ static int rmi_i2c_resume(struct device *dev)
+> >  	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+> >  	int ret;
+> >+	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+> >+	if (ret)
+> >+		return ret;
+> >+
+> >+	msleep(rmi_i2c->startup_delay);
+> >+
+> >  	enable_irq(rmi_i2c->irq);
+> >  	if (device_may_wakeup(&client->dev)) {
+> >  		ret = disable_irq_wake(rmi_i2c->irq);
+> >@@ -346,6 +379,8 @@ static int rmi_i2c_runtime_suspend(struct device *dev)
+> >  	disable_irq(rmi_i2c->irq);
+> >+	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+> >+
+> >  	return 0;
+> >  }
+> >@@ -355,6 +390,12 @@ static int rmi_i2c_runtime_resume(struct device *dev)
+> >  	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+> >  	int ret;
+> >+	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
+> >+	if (ret)
+> >+		return ret;
+> >+
+> >+	msleep(rmi_i2c->startup_delay);
+> >+
+> >  	enable_irq(rmi_i2c->irq);
+> >  	ret = rmi_driver_resume(rmi_i2c->xport.rmi_dev);
+> 
 
-I see your point, a config space size of 0x2000 is only enough to
-hold two configuration space headers.
-
-However, all other PCIe controllers based on Synopsys DesignWare IP
-with a config space size of 0x2000, uses a bus-range of 0x0-0xff.
-(Except hisilicon which for some reason uses 0x0-0xf).
-Isn't it better to be consistent with the other DesignWare based controllers?
-
-Also, isn't is possible to have a device behind bus 1, then nothing behind
-bus 2, and then a device behind bus 3?
-Not sure if this could actually happen though, since Linux appears to assign
-the bus numbers, unless already defined by BIOS.
+-- 
+Dmitry
