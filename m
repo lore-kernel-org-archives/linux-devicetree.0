@@ -1,64 +1,73 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 2/4] drm/msm/hdmi: Use more DT friendly GPIO names
-Date: Thu, 14 Jul 2016 14:04:44 +0530
-Message-ID: <57874EA4.3010605@codeaurora.org>
-References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
- <1467957354-7620-3-git-send-email-architt@codeaurora.org>
- <20160713134555.GA7799@rob-hp-laptop>
+From: Wan Zongshun <vw@iommu.org>
+Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
+Date: Thu, 14 Jul 2016 16:52:29 +0800
+Message-ID: <578752CD.3010408@iommu.org>
+References: <1468135649-19980-1-git-send-email-vw@iommu.org>
+ <1761342.TGgYi16yul@wuerfel> <5784968A.7080007@iommu.org>
+ <5434334.4rKzx80y6W@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160713134555.GA7799@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>, robdclark@gmail.com
-Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5434334.4rKzx80y6W@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNy8xMy8yMDE2IDA3OjE1IFBNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBGcmksIEp1
-bCAwOCwgMjAxNiBhdCAxMToyNTo1MkFNICswNTMwLCBBcmNoaXQgVGFuZWphIHdyb3RlOgo+PiBV
-cGRhdGUgdGhlIGdwaW8gbmFtZSBwYXJzaW5nIGNvZGUgdG8gdHJ5IHRvIHNlYXJjaCBmb3Igd2l0
-aG91dCB0aGUKPj4gInFjb20saGRtaS10eC0iIHByZWZpeC4gVGhlIG9sZGVyIGRvd25zdHJlYW0g
-YmluZGluZ3MgdGhhdCBleHBlY3QKPj4gInFjb20saGRtaS10eC14eXoiIG9yICJxY29tLGhkbWkt
-dHgteHl6LWdwaW8iIHdvdWxkIHdvcmsgYXMgdGhlCj4+IHByb3BlcnR5IG5hbWUgd291bGQgd29y
-ayBhcyBiZWZvcmUuCj4KPiBXaHk/CgpXaHkgd2Ugd2FudCB0aGUgb2xkZXIgbmFtZXMgdG8gd29y
-az8gSnVzdCB0byBtYWtlIGxpZmUgZWFzaWVyIGlmCmJhY2twb3J0aW5nIHRoZSBkcm0gZHJpdmVy
-IHRvIGEgZG93bnN0cmVhbSBtc20ga2VybmVsIChsaWtlIGEgMy4xMCwKb3IgMy4xOCkuCgo+Cj4+
-IFVwZGF0ZSB0aGUgYmluZGluZyBkb2MuIEFkZCBhbiBlbnRyeSBmb3IgdGhlIG1pc3NpbmcgaHBk
-IGFuZCBscG0KPj4gZ3Bpb3MuCj4+Cj4+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
-Pgo+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4KPj4gU2lnbmVkLW9mZi1ieTog
-QXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPj4gLS0tCj4+ICAgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0IHwgIDYgKysr
-Ky0tCj4+ICAgZHJpdmVycy9ncHUvZHJtL21zbS9oZG1pL2hkbWkuYyAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgMTYgKysrKysrKysrKysrKysrKwo+PiAgIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5z
-ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dAo+PiBpbmRleCBiNjNm
-NjE0Li40ZGExYWJkIDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0Cj4+IEBAIC0yMyw4ICsyMywxMCBAQCBS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiAgIC0gcGh5LW5hbWVzOiB0aGUgbmFtZSBvZiB0aGUgY29y
-cmVzcG9uZGluZyBQSFkgZGV2aWNlCj4+Cj4+ICAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gLS0g
-cWNvbSxoZG1pLXR4LW11eC1lbi1ncGlvOiBoZG1pIG11eCBlbmFibGUgcGluCj4+IC0tIHFjb20s
-aGRtaS10eC1tdXgtc2VsLWdwaW86IGhkbWkgbXV4IHNlbGVjdCBwaW4KPj4gKy0gaHBkLWdwaW86
-IGhkbWkgaHBkIHBpbgo+Cj4gaHBkLWdwaW9zIGlzIHRoZSBzb21ld2hhdCBzdGFuZGFyZCBuYW1l
-Lgo+Cj4+ICstIG11eC1lbi1ncGlvOiBoZG1pIG11eCBlbmFibGUgcGluCj4+ICstIG11eC1zZWwt
-Z3BpbzogaGRtaSBtdXggc2VsZWN0IHBpbgo+PiArLSBtdXgtbHBtLWdwaW86IGhkbWkgbXV4IGxw
-bSBwaW4KPgo+IFRoZXNlIGxvb2sgcHJldHR5IFFDb20gc3BlY2lmaWMgYW5kIHNob3VsZCBrZWVw
-IHRoZSB2ZW5kb3IgcHJlZml4LgoKT2theS4KCj4KPiBJIHVuZGVyc3RhbmQgd2h5IHlvdSBkb24n
-dCBoYXZlICctZ3Bpb3MnLCBidXQgaWYgd2UgY2hhbmdlIHRoZXNlIHRoZXkKPiBzaG91bGQgdXNl
-IHRoZSBwcmVmZXJyZWQgZm9ybS4KCgpTdXJlLCBJJ2xsIHVwZGF0ZSB0aGVzZSB0byB0aGUgcHJl
-ZmVycmVkIGZvcm0uCgpBcmNoaXQKCi0tIApRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5j
-LiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENv
-bGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+
+
+On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 16:26, Arnd Bergmann wrote:
+> On Tuesday, July 12, 2016 3:04:42 PM CEST Wan Zongshun wrote:
+>>>
+>>> Ideally, this should just go away once we use SPARSE_IRQ.
+>>
+>> This platform also can use SPARSE_IRQ? this just a simple irq map an=
+d no
+>> more irq number in this Soc.
+>>
+>
+> SPARSE_IRQ is implied by ARCH_MULTIPLATFORM, so we will have to
+> use it once that gets enabled.
+>
+> Your new irqchip driver already handles IRQ domains, so it will
+> work out of the box with SPARSE_IRQ, but you have to change the
+> reference to "NR_IRQS" into something else.
+>
+> I've prototyped a patch series to enable ARCH_MULTIPLATFORM,
+> I hope you can start working from what I have and get it to run.
+
+I go through the ARCH_MULTIPLATFORM and SPARSE_IRQ related codes, but I=
+=20
+find I also have to define the NUC900_NR_IRQS firstly like below, so=20
+that I can init the .nr_irq.
+
++#if !defined(CONFIG_SOC_NUC970)
+  #define NUC900_NR_IRQS		(IRQ_ADC+1)
++#else
++#define NUC900_NR_IRQS		62
++#endif
+
+  DT_MACHINE_START(nuc900_dt, "Nuvoton NUC900 (Device Tree Support)")
+         .dt_compat      =3D nuc900_dt_compat,
++       .nr_irqs        =3D NUC900_NR_IRQS,
+  MACHINE_END
+
+and then in my irqchip driver, I will use the NUC900_NR_IRQS:
+
++aic_domain =3D irq_domain_add_linear(node, NUC900_NR_IRQS,
++				    &aic_irq_domain_ops, NULL);
+
+
+Is that a right usage?
+
+>
+> 	Arnd
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
