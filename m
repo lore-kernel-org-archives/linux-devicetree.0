@@ -1,52 +1,59 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] net: phy: micrel: Add KSZ8041FTL fiber mode support
-Date: Thu, 14 Jul 2016 16:46:30 +0200
-Message-ID: <1468507590.2260.49.camel@pengutronix.de>
-References: <1468506583-27299-1-git-send-email-p.zabel@pengutronix.de>
-	 <7346758.UKW3x0KYDY@wuerfel>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] ARM: dts: msm8974: Add nodes for blsp1_uart1 serial port
+Date: Thu, 14 Jul 2016 07:51:54 -0700
+Message-ID: <20160714145154.GP23833@tuxbot>
+References: <20160713073426.32555-1-bshah@kde.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7346758.UKW3x0KYDY@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160713073426.32555-1-bshah@kde.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bhushan Shah <bshah@kde.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 14.07.2016, 16:33 +0200 schrieb Arnd Bergmann:
-> On Thursday, July 14, 2016 4:29:43 PM CEST Philipp Zabel wrote:
-> > +
-> > + - micrel,fiber-mode: If present the PHY is configured to operate in fiber mode
-> > +
-> > +       Some PHYs, such as the KSZ8041FTL variant, support fiber mode, enabled
-> > +       by the FXEN boot strapping pin. It can't be determined from the PHY
-> > +       registers whether the PHY is in fiber mode, so this boolean device tree
-> > +       property can be used to describe it.
-> > +
-> > +       In fiber mode, auto-negotiation is disabled and the PHY can only work in
-> > +       100base-fx (full and half duplex) modes.
-> > 
+On Wed 13 Jul 00:34 PDT 2016, Bhushan Shah wrote:
+
+> This serial port is used by LG Nexus 5 (codenammed hammerhead).
 > 
-> Could the generic "phy-mode" property used for this, to avoid the need for
-> definingn a custom property?
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-According to ethernet.txt, that property currently describes the
-internal interface:
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-  - phy-mode: string, operation mode of the PHY interface; supported values are                                                                 
-    "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
-    "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a de-facto
-    standard property;
+Regards,
+Bjorn
 
-In this case I have a phy-mode = "rmii" on the MAC. Wouldn't setting
-phy-mode = "fiber" on the phy be confusing since for the internal
-interface it should be "rmii"?
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: Stephen Boyd <stephen.boyd@linaro.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Bhushan Shah <bshah@kde.org>
+> ---
+>  arch/arm/boot/dts/qcom-msm8974.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> index 6f16426..dc2ce00 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -422,6 +422,15 @@
+>  			reg = <0xfc428000 0x4000>;
+>  		};
+>  
+> +		blsp1_uart1: serial@f991d000 {
+> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+> +			reg = <0xf991d000 0x1000>;
+> +			interrupts = <0 107 0x0>;
+> +			clocks = <&gcc GCC_BLSP1_UART1_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +			status = "disabled";
+> +		};
+> +
+>  		blsp1_uart2: serial@f991e000 {
+>  			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+>  			reg = <0xf991e000 0x1000>;
+> -- 
+> 2.9.0
+> 
