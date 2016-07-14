@@ -1,142 +1,45 @@
-From: Tai Nguyen <ttnguyen@apm.com>
-Subject: [PATCH v9 2/4] Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
-Date: Thu, 14 Jul 2016 10:27:44 -0700
-Message-ID: <1468517266-1642-3-git-send-email-ttnguyen@apm.com>
-References: <1468517266-1642-1-git-send-email-ttnguyen@apm.com>
+From: Duc Dang <dhdang@apm.com>
+Subject: Re: [PATCH v8 0/4] perf: Add APM X-Gene SoC Performance Monitoring
+ Unit driver
+Date: Thu, 14 Jul 2016 10:37:25 -0700
+Message-ID: <CADaLNDnNVC48Ce1A+KU2WMULkY+skKVSm1GpaoQ6HvAEmscD=A@mail.gmail.com>
+References: <1468263944-10634-1-git-send-email-ttnguyen@apm.com>
+ <20160714131602.GJ29455@arm.com> <CACgAJHyBt4TCoDjm0XGyX8usD_Wt_-7_JA918Wr4oF567wY_EA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468517266-1642-1-git-send-email-ttnguyen@apm.com>
+In-Reply-To: <CACgAJHyBt4TCoDjm0XGyX8usD_Wt_-7_JA918Wr4oF567wY_EA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com, joe@perches.com, paul.gortmaker@windriver.com
-Cc: dhdang@apm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, Tai Nguyen <ttnguyen@apm.com>
+To: Tai Tri Nguyen <ttnguyen@apm.com>
+Cc: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Joe Perches <joe@perches.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, LKML <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Driver providing perf backend for the SoC-wide PMU hardware found
-in APM X-Gene SoCs.
+On Thu, Jul 14, 2016 at 10:28 AM, Tai Tri Nguyen <ttnguyen@apm.com> wrote:
+>
+> Hi Will,
+>
+> On Thu, Jul 14, 2016 at 6:16 AM, Will Deacon <will.deacon@arm.com> wrote:
+> > On Mon, Jul 11, 2016 at 12:05:40PM -0700, Tai Nguyen wrote:
+> >> In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
+> >> are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
+> >> memory controller bridges and memory. These PMU devices are loosely
+> >> architected to follow the same model as the PMU for ARM cores.
+> >
+> > You might want to add commit messages to patches 1,2 and 4, but then you
+> > can route this via the arm-soc tree.
+> >
+> > Will
+>
+> I will add the commit messages to these patches 1, 2 and 4 and rout
+> this via arm-soc tree.
+> CC: Duc (dhdang@apm.com)
 
-Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/perf/apm-xgene-pmu.txt     | 112 +++++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+I will pull patch 1, 2 and 4 into xgene-next tree and send pull
+request to Arnd and Olof.
 
-diff --git a/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-new file mode 100644
-index 0000000..afb11cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-@@ -0,0 +1,112 @@
-+* APM X-Gene SoC PMU bindings
-+
-+This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
-+The following PMU devices are supported:
-+
-+  L3C			- L3 cache controller
-+  IOB			- IO bridge
-+  MCB			- Memory controller bridge
-+  MC			- Memory controller
-+
-+The following section describes the SoC PMU DT node binding.
-+
-+Required properties:
-+- compatible		: Shall be "apm,xgene-pmu" for revision 1 or
-+                          "apm,xgene-pmu-v2" for revision 2.
-+- regmap-csw		: Regmap of the CPU switch fabric (CSW) resource.
-+- regmap-mcba		: Regmap of the MCB-A (memory bridge) resource.
-+- regmap-mcbb		: Regmap of the MCB-B (memory bridge) resource.
-+- reg			: First resource shall be the CPU bus PMU resource.
-+- interrupts            : Interrupt-specifier for PMU IRQ.
-+
-+Required properties for L3C subnode:
-+- compatible		: Shall be "apm,xgene-pmu-l3c".
-+- reg			: First resource shall be the L3C PMU resource.
-+
-+Required properties for IOB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-iob".
-+- reg			: First resource shall be the IOB PMU resource.
-+
-+Required properties for MCB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mcb".
-+- reg			: First resource shall be the MCB PMU resource.
-+- enable-bit-index	: The bit indicates if the according MCB is enabled.
-+
-+Required properties for MC subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mc".
-+- reg			: First resource shall be the MC PMU resource.
-+- enable-bit-index	: The bit indicates if the according MC is enabled.
-+
-+Example:
-+	csw: csw@7e200000 {
-+		compatible = "apm,xgene-csw", "syscon";
-+		reg = <0x0 0x7e200000 0x0 0x1000>;
-+	};
-+
-+	mcba: mcba@7e700000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e700000 0x0 0x1000>;
-+	};
-+
-+	mcbb: mcbb@7e720000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e720000 0x0 0x1000>;
-+	};
-+
-+	pmu: pmu@78810000 {
-+		compatible = "apm,xgene-pmu-v2";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		regmap-csw = <&csw>;
-+		regmap-mcba = <&mcba>;
-+		regmap-mcbb = <&mcbb>;
-+		reg = <0x0 0x78810000 0x0 0x1000>;
-+		interrupts = <0x0 0x22 0x4>;
-+
-+		pmul3c@7e610000 {
-+			compatible = "apm,xgene-pmu-l3c";
-+			reg = <0x0 0x7e610000 0x0 0x1000>;
-+		};
-+
-+		pmuiob@7e940000 {
-+			compatible = "apm,xgene-pmu-iob";
-+			reg = <0x0 0x7e940000 0x0 0x1000>;
-+		};
-+
-+		pmucmcb@7e710000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e710000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmcb@7e730000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e730000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e810000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e810000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmc@7e850000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e850000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e890000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e890000 0x0 0x1000>;
-+			enable-bit-index = <2>;
-+		};
-+
-+		pmucmc@7e8d0000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e8d0000 0x0 0x1000>;
-+			enable-bit-index = <3>;
-+		};
-+	};
--- 
-1.9.1
+>
+> Thanks,
+> --
+> Tai
+Regards,
+Duc Dang.
