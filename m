@@ -1,44 +1,167 @@
-From: HS Liao <hs.liao@mediatek.com>
-Subject: [PATCH v10 3/4] arm64: dts: mt8173: Add GCE node
-Date: Thu, 14 Jul 2016 19:28:52 +0800
-Message-ID: <1468495733-12178-4-git-send-email-hs.liao@mediatek.com>
+From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v10 4/4] CMDQ: save more energy in idle
+Date: Thu, 14 Jul 2016 19:28:53 +0800
+Message-ID: <1468495733-12178-5-git-send-email-hs.liao@mediatek.com>
 References: <1468495733-12178-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468495733-12178-1-git-send-email-hs.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, HS Liao <hs.liao@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468495733-12178-1-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device node of the GCE hardware for CMDQ module.
+Use clk_disable_unprepare instead of clk_disable to save more energy
+when CMDQ is idle.
 
-Signed-off-by: HS Liao <hs.liao@mediatek.com>
+Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/soc/mediatek/mtk-cmdq.c | 55 +++++++++++++++++++++++++++++++++++------
+ 1 file changed, 47 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 05f89c4..a68207c 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -343,6 +343,16 @@
- 			#clock-cells = <1>;
- 		};
+diff --git a/drivers/soc/mediatek/mtk-cmdq.c b/drivers/soc/mediatek/mtk-cmdq.c
+index d032603..35b791eb2 100644
+--- a/drivers/soc/mediatek/mtk-cmdq.c
++++ b/drivers/soc/mediatek/mtk-cmdq.c
+@@ -32,6 +32,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/suspend.h>
+ #include <linux/timer.h>
++#include <linux/workqueue.h>
+ #include <soc/mediatek/cmdq.h>
  
-+		gce: gce@10212000 {
-+			compatible = "mediatek,mt8173-gce";
-+			reg = <0 0x10212000 0 0x1000>;
-+			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_GCE>;
-+			clock-names = "gce";
+ #define CMDQ_THR_MAX_COUNT		3 /* main, sub, general(misc) */
+@@ -132,10 +133,16 @@ struct cmdq_task {
+ 	struct cmdq_task_cb	cb;
+ };
+ 
++struct cmdq_clk_release {
++	struct cmdq		*cmdq;
++	struct work_struct	release_work;
++};
 +
-+			#mbox-cells = <2>;
-+		};
+ struct cmdq {
+ 	struct mbox_controller	mbox;
+ 	void __iomem		*base;
+ 	u32			irq;
++	struct workqueue_struct	*clk_release_wq;
+ 	struct cmdq_thread	thread[CMDQ_THR_MAX_COUNT];
+ 	struct mutex		task_mutex;
+ 	struct clk		*clock;
+@@ -301,11 +308,19 @@ static void cmdq_thread_wait_end(struct cmdq_thread *thread,
+ static void cmdq_task_exec(struct cmdq_task *task, struct cmdq_thread *thread)
+ {
+ 	struct cmdq *cmdq = task->cmdq;
+-	unsigned long curr_pa, end_pa;
++	unsigned long curr_pa, end_pa, flags;
+ 
+ 	task->thread = thread;
+ 	if (list_empty(&thread->task_busy_list)) {
+-		WARN_ON(clk_enable(cmdq->clock) < 0);
++		/*
++		 * Unlock for clk prepare (sleeping function).
++		 * We are safe to do that since we have task_mutex and
++		 * only flush will add task.
++		 */
++		spin_unlock_irqrestore(&thread->chan->lock, flags);
++		WARN_ON(clk_prepare_enable(cmdq->clock) < 0);
++		spin_lock_irqsave(&thread->chan->lock, flags);
 +
- 		gic: interrupt-controller@10220000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
+ 		WARN_ON(cmdq_thread_reset(cmdq, thread) < 0);
+ 
+ 		writel(task->pa_base, thread->base + CMDQ_THR_CURR_ADDR);
+@@ -387,6 +402,26 @@ static void cmdq_task_handle_error(struct cmdq_task *task)
+ 	cmdq_thread_resume(thread);
+ }
+ 
++static void cmdq_clk_release_work(struct work_struct *work_item)
++{
++	struct cmdq_clk_release *clk_release = container_of(work_item,
++			struct cmdq_clk_release, release_work);
++	struct cmdq *cmdq = clk_release->cmdq;
++
++	clk_disable_unprepare(cmdq->clock);
++	kfree(clk_release);
++}
++
++static void cmdq_clk_release_schedule(struct cmdq *cmdq)
++{
++	struct cmdq_clk_release *clk_release;
++
++	clk_release = kmalloc(sizeof(*clk_release), GFP_ATOMIC);
++	clk_release->cmdq = cmdq;
++	INIT_WORK(&clk_release->release_work, cmdq_clk_release_work);
++	queue_work(cmdq->clk_release_wq, &clk_release->release_work);
++}
++
+ static void cmdq_thread_irq_handler(struct cmdq *cmdq,
+ 				    struct cmdq_thread *thread)
+ {
+@@ -436,7 +471,7 @@ static void cmdq_thread_irq_handler(struct cmdq *cmdq,
+ 
+ 	if (list_empty(&thread->task_busy_list)) {
+ 		cmdq_thread_disable(cmdq, thread);
+-		clk_disable(cmdq->clock);
++		cmdq_clk_release_schedule(cmdq);
+ 	} else {
+ 		mod_timer(&thread->timeout,
+ 			  jiffies + msecs_to_jiffies(CMDQ_TIMEOUT_MS));
+@@ -495,7 +530,7 @@ static void cmdq_thread_handle_timeout(unsigned long data)
+ 
+ 	cmdq_thread_resume(thread);
+ 	cmdq_thread_disable(cmdq, thread);
+-	clk_disable(cmdq->clock);
++	cmdq_clk_release_schedule(cmdq);
+ 	spin_unlock_irqrestore(&thread->chan->lock, flags);
+ }
+ 
+@@ -783,7 +818,7 @@ static int cmdq_suspend(struct device *dev)
+ 		msleep(20);
+ 	}
+ 
+-	clk_unprepare(cmdq->clock);
++	flush_workqueue(cmdq->clk_release_wq);
+ 	return 0;
+ }
+ 
+@@ -791,7 +826,6 @@ static int cmdq_resume(struct device *dev)
+ {
+ 	struct cmdq *cmdq = dev_get_drvdata(dev);
+ 
+-	WARN_ON(clk_prepare(cmdq->clock) < 0);
+ 	cmdq->suspended = false;
+ 	return 0;
+ }
+@@ -800,8 +834,8 @@ static int cmdq_remove(struct platform_device *pdev)
+ {
+ 	struct cmdq *cmdq = platform_get_drvdata(pdev);
+ 
++	destroy_workqueue(cmdq->clk_release_wq);
+ 	mbox_controller_unregister(&cmdq->mbox);
+-	clk_unprepare(cmdq->clock);
+ 	return 0;
+ }
+ 
+@@ -919,8 +953,13 @@ static int cmdq_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	mutex_init(&cmdq->task_mutex);
++
++	cmdq->clk_release_wq = alloc_ordered_workqueue(
++			"%s", WQ_MEM_RECLAIM | WQ_HIGHPRI,
++			"cmdq_clk_release");
++
+ 	platform_set_drvdata(pdev, cmdq);
+-	WARN_ON(clk_prepare(cmdq->clock) < 0);
++
+ 	return 0;
+ }
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
