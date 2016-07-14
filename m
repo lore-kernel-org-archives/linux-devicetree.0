@@ -1,125 +1,106 @@
-From: Caesar Wang <caesar.upstream@gmail.com>
-Subject: Re: [PATCH v2 0/2] arm64: dts: rockchip: Support PMU for rk3399 SoCs
-Date: Thu, 14 Jul 2016 09:14:57 +0800
-Message-ID: <5786E791.1010906@gmail.com>
-References: <1467792357-9749-1-git-send-email-wxt@rock-chips.com> <20160706112444.GB14657@leverpostej>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 4/7] rtc: ac100: Add clk output support
+Date: Thu, 14 Jul 2016 11:34:34 +0800
+Message-ID: <CAGb2v67ft=EktCcfGFdBN1K4SoOyK+Stz2WuvqScMmRjoBWxfA@mail.gmail.com>
+References: <1467302331-9663-1-git-send-email-wens@csie.org>
+ <1467302331-9663-5-git-send-email-wens@csie.org> <146800297598.73491.13472152266331488346@resonance>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160706112444.GB14657@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Caesar Wang <wxt@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, huangtao@rock-chips.com, devicetree@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, cf@rock-chips.com, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCMILY6JWQBBBYUQTS6AKGQEAXVNBQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <146800297598.73491.13472152266331488346@resonance>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2016=E5=B9=B407=E6=9C=8806=E6=97=A5 19:24, Mark Rutland wrote:
-> On Wed, Jul 06, 2016 at 04:05:55PM +0800, Caesar Wang wrote:
->> Hello Heiko, Marc & ARM guys
-> Hi,
+On Sat, Jul 9, 2016 at 2:36 AM, Michael Turquette
+<mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Quoting Chen-Yu Tsai (2016-06-30 08:58:48)
+>> +static long ac100_clkout_round_rate(struct clk_hw *hw, unsigned long rate,
+>> +                                   unsigned long prate)
+>> +{
+>> +       unsigned long best_rate = 0, tmp_rate, tmp_prate;
+>> +       int i;
+>> +
+>> +       if (prate == AC100_RTC_32K_RATE)
+>> +               return divider_round_rate(hw, rate, &prate, NULL,
+>> +                                         AC100_CLKOUT_DIV_WIDTH,
+>> +                                         CLK_DIVIDER_POWER_OF_TWO);
+>> +
+>> +       for (i = 0; ac100_clkout_prediv[i].div; i++) {
+>> +               tmp_prate = DIV_ROUND_UP(prate, ac100_clkout_prediv[i].val);
+>> +               tmp_rate = divider_round_rate(hw, rate, &tmp_prate, NULL,
+>> +                                             AC100_CLKOUT_DIV_WIDTH,
+>> +                                             CLK_DIVIDER_POWER_OF_TWO);
+>> +
+>> +               if (tmp_rate > rate)
+>> +                       continue;
+>> +               if (rate - tmp_rate < best_rate - tmp_rate)
+>> +                       best_rate = tmp_rate;
+>> +       }
+>> +
+>> +       return best_rate;
+>> +}
+>> +
+>> +static int ac100_clkout_determine_rate(struct clk_hw *hw,
+>> +                                      struct clk_rate_request *req)
+>> +{
+>> +       struct clk_hw *best_parent;
+>> +       unsigned long best = 0;
+>> +       int i, num_parents = clk_hw_get_num_parents(hw);
+>> +
+>> +       for (i = 0; i < num_parents; i++) {
+>> +               struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
+>> +               unsigned long tmp, prate = clk_hw_get_rate(parent);
+>> +
+>> +               tmp = ac100_clkout_round_rate(hw, req->rate, prate);
+>> +
+>> +               if (tmp > req->rate)
+>> +                       continue;
+>> +               if (req->rate - tmp < req->rate - best) {
+>> +                       best = tmp;
+>> +                       best_parent = parent;
+>> +               }
+>> +       }
+>> +
+>> +       if (!best)
+>> +               return -EINVAL;
+>> +
+>> +       req->best_parent_hw = best_parent;
+>> +       req->best_parent_rate = best;
+>> +       req->rate = best;
+>> +
+>> +       return 0;
+>> +}
 >
-> These patches themselves look fine, so FWIW:
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> You only need one of the two functions above. Keep the .determine_rate
+> callback and drop .round_rate.
 
-Thanks your ack.
+Only .round_rate is set in the clk_ops. ac100_clkout_round_rate just
+serves to split out some of the calculations done per parent.
 
+> Otherwise the rest of the clk support looks great to me. Feel free to
+> add:
 >
-> The prerequisite patch from Marc [1] also largely looks fine, but the=
-re
-> are some minor details to sort out [2], so at this point in time I'm
-> guesssing this is all v4.9 material.
->
-> Thanks,
-> Mark.
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/4=
-40647.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/4=
-41495.html
+> Reviewed-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Okay, I saw the Marc's patch had been merged on next kernel.:-)
+Thanks!
 
+ChenYu
 
--Caesar
->
->> When Jay first submitted the rk3399.dtsi upstream
->> <https://patchwork.kernel.org/patch/8885821/> he had the PMU node in=
- there,
->> but then took it out because the upstream binding wasn't done yet.
->> It looks as if the upstream stuff has landed, since in linux/master =
-I see:
->> 287e9357abcc DT/arm,gic-v3: Documment PPI partition support
->> e3825ba1af3a irqchip/gic-v3: Add support for partitioned PPIs
->> 9e2c986cb460 irqchip: Add per-cpu interrupt partitioning library
->> 222df54fd8b7 genirq: Allow the affinity of a percpu interrupt to be =
-set/retrieved
->> 651e8b54abde irqdomain: Allow domain matching on irq_fwspec
->>
->> This series patches add to support the rk3399 SoCs PMU.
->> I pick up the https://patchwork.kernel.org/patch/9209369/.
->>
->> As do some tests with ChromeOs for my rk3399 board.
->> Tested with linus master 4.7-rc6 kernel on rk3399 board.
->> https://github.com/Caesar-github/rockchip/tree/rk3399/pmu-upstream
->>
->> localhost / # perf list
->>
->> List of pre-defined events (to be used in -e):
->> cpu-cycles OR cycles [Hardware event]
->> instructions [Hardware event]
->> cache-references [Hardware event]
->> cache-misses [Hardware event]
->> branch-instructions OR branches [Hardware event]
->> branch-misses [Hardware event]
->> bus-cycles [Hardware event]
->> ...
->>
->> perf stat --cpu 0/1/2/3..... to minitor
->> e.g. cpu0;
->>
->> localhost / # perf stat --cpu 0
->>
->> Performance counter stats for 'CPU(s) 0':
->>
->> 3374.917571 task-clock (msec) # 1.001 CPUs utilized [100.00%]
->> 20 context-switches # 0.006 K/sec [100.00%]
->> 2 cpu-migrations # 0.001 K/sec [100.00%]
->> 55 page-faults # 0.016 K/sec
->> 7151843 cycles # 0.002 GHz [100.00%]
->> <not supported> stalled-cycles-frontend
->> <not supported> stalled-cycles-backend
->> 4272536 instructions # 0.60 insns per cycle [100.00%]
->> 568406 branches # 0.168 M/sec [100.00%]
->> 65652 branch-misses # 11.55% of all branches
->>
->> Also, 'perf top' to monitor the PMU interrupts from cpus
->>
->> -Caesar
->>
->>
->> Changes in v2:
->> - AS Mark comments on https://patchwork.kernel.org/patch/9209369/
->>    remove the interrupt-affinity property, we need depend on Marc' p=
-erf
->>    code on https://patchwork.kernel.org/patch/9209369/.
->>
->> Caesar Wang (2):
->>    arm64: dts: rockchip: change all interrupts cells for 4 on rk3399=
- SoCs
->>    arm64: dts: rockchip: support the pmu node for rk3399
->>
->>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 118 ++++++++++++++++++-=
-------------
->>   1 file changed, 69 insertions(+), 49 deletions(-)
->>
->> --=20
->> 1.9.1
->>
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
