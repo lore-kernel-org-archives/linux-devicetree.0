@@ -1,70 +1,28 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Subject: Re: [PATCH] net: phy: micrel: Add KSZ8041FTL fiber mode support
-Date: Thu, 14 Jul 2016 15:16:16 +0200
-Message-ID: <1468502176.2260.31.camel@pengutronix.de>
+Date: Thu, 14 Jul 2016 15:37:06 +0200
+Message-ID: <20160714133706.GF6667@lunn.ch>
 References: <1468491528-17515-1-git-send-email-p.zabel@pengutronix.de>
-	 <d7474fed-89cb-1089-5b52-f8964cd7f840@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <d7474fed-89cb-1089-5b52-f8964cd7f840@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1468491528-17515-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On Thu, Jul 14, 2016 at 12:18:48PM +0200, Philipp Zabel wrote:
+> We can't detect the FXEN (fiber mode) bootstrap pin, so configure
+> it via a boolean device tree property "fxen".
 
-Am Donnerstag, den 14.07.2016, 14:35 +0300 schrieb Sergei Shtylyov:
-> Hello.
-> 
-> On 7/14/2016 1:18 PM, Philipp Zabel wrote:
-> 
-> > We can't detect the FXEN (fiber mode) bootstrap pin, so configure
-> > it via a boolean device tree property "fxen". If it is enabled,
-> > auto-negotiation is not supported. The only available modes are
-> > 100base-fx (full duplex and half duplex).
-> >
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> > I didn't see a way to reliably detect whether the PHY is set to fiber
-> > mode in the datasheet [1], so this patch adds a device tree property
-> > to enforce fiber mode (disable auto-negotiation, set speed to 100).
-> >
-> > [1] http://ww1.microchip.com/downloads/en/DeviceDoc/ksz8041tl-ftl-mll.pdf
-> > ---
-> >  .../devicetree/bindings/net/micrel-ksz8041.txt     | 24 ++++++++++++++++
-> >  drivers/net/phy/micrel.c                           | 32 ++++++++++++++++++++--
-> >  include/linux/micrel_phy.h                         |  1 +
-> >  3 files changed, 55 insertions(+), 2 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/net/micrel-ksz8041.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/micrel-ksz8041.txt b/Documentation/devicetree/bindings/net/micrel-ksz8041.txt
-> > new file mode 100644
-> > index 0000000..4bce38d2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/micrel-ksz8041.txt
-> 
->     I think your text should be added to micrel.txt instead.
+Hi Philipp
 
-Thank you for the comments. Since FXEN may be relevant for PHYs other
-than KSZ8041FTL, too, I'll move it into micrel.txt as you suggest.
+Could you use a more descriptive property name? "micrel,enable-fiber"?
 
-> > @@ -0,0 +1,24 @@
-> > +Micrel KSZ8041 Gigabit Ethernet PHY
-> > +
-> > +The KSZ8041FTL variant supports fiber mode, enabled by the FXEN boot
-> > +strapping pin. It can't be determined from the PHY registers whether
-> > +the PHY is in fiber mode, so a boolean device tree property can be
-> > +used to describe this.
-> > +
-> > +Optional properties:
-> > + - fxen : KSZ8041FTL is strapped to fiber mode. Auto-negotiation is disabled
-> 
->     It should be named micrel,fxen.
-
-Ok, I'll rename it.
-
-regards
-Philipp
+      Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
