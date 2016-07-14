@@ -1,69 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bindings: PCI: artpec: correct pci binding example
-Date: Thu, 14 Jul 2016 10:31:15 +0200
-Message-ID: <12381657.aqKGT5pz07@wuerfel>
-References: <1467934090-12834-1-git-send-email-niklass@axis.com> <1838529.X3K6mcn6MA@wuerfel> <1336f919-e145-7875-9204-c1fc124fb9fe@axis.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 2/4] drm/msm/hdmi: Use more DT friendly GPIO names
+Date: Thu, 14 Jul 2016 14:04:44 +0530
+Message-ID: <57874EA4.3010605@codeaurora.org>
+References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
+ <1467957354-7620-3-git-send-email-architt@codeaurora.org>
+ <20160713134555.GA7799@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1336f919-e145-7875-9204-c1fc124fb9fe@axis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160713134555.GA7799@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>, robdclark@gmail.com
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 14, 2016 1:54:20 AM CEST Niklas Cassel wrote:
-> On 07/08/2016 11:39 AM, Arnd Bergmann wrote:
-> > On Friday, July 8, 2016 1:28:10 AM CEST Niklas Cassel wrote:
-> >> From: Niklas Cassel <niklas.cassel@axis.com>
-> >>
-> >>  - Increase config size. When using a PCIe switch,
-> >>    the previous config size only had room for one device.
-> >>  - Add bus range. Inherited optional property.
-> >>  - Map downstream I/O to PCI address 0. We can map it to any
-> >>    address, but let's be consistent with other drivers.
-> >>
-> >> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 7 ++++---
-> >>  1 file changed, 4 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> >> index 330a45b..5ecaea1 100644
-> >> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> >> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> >> @@ -24,16 +24,17 @@ Example:
-> >>              compatible = "axis,artpec6-pcie", "snps,dw-pcie";
-> >>              reg = <0xf8050000 0x2000
-> >>                     0xf8040000 0x1000
-> >> -                   0xc0000000 0x1000>;
-> >> +                   0xc0000000 0x2000>;
-> > If this is your config space size
-> >
-> >>              num-lanes = <2>;
-> >> +            bus-range = <0x00 0xff>;
-> > then the bus range looks too large. These two are typically connected.
-> > I couldn't immediately see which config space access function is
-> > used, but if you have 0x1000 bytes per bus, then the bus range matching
-> > a 0x2000 byte config space would be either <0x00 0x01> or <0x00 0x02>
-> > depending whether the root bus is part of that range.
-> 
-> I see your point, a config space size of 0x2000 is only enough to
-> hold two configuration space headers.
-> 
-> However, all other PCIe controllers based on Synopsys DesignWare IP
-> with a config space size of 0x2000, uses a bus-range of 0x0-0xff.
-> (Except hisilicon which for some reason uses 0x0-0xf).
-> Isn't it better to be consistent with the other DesignWare based controllers?
-
-No, if we found a bug, we should fix it for all of them.
-
-> Also, isn't is possible to have a device behind bus 1, then nothing behind
-> bus 2, and then a device behind bus 3?
-> Not sure if this could actually happen though, since Linux appears to assign
-> the bus numbers, unless already defined by BIOS.
-
-I think this might happen with hotplugged devices.
-
-	Arnd
+CgpPbiAwNy8xMy8yMDE2IDA3OjE1IFBNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBGcmksIEp1
+bCAwOCwgMjAxNiBhdCAxMToyNTo1MkFNICswNTMwLCBBcmNoaXQgVGFuZWphIHdyb3RlOgo+PiBV
+cGRhdGUgdGhlIGdwaW8gbmFtZSBwYXJzaW5nIGNvZGUgdG8gdHJ5IHRvIHNlYXJjaCBmb3Igd2l0
+aG91dCB0aGUKPj4gInFjb20saGRtaS10eC0iIHByZWZpeC4gVGhlIG9sZGVyIGRvd25zdHJlYW0g
+YmluZGluZ3MgdGhhdCBleHBlY3QKPj4gInFjb20saGRtaS10eC14eXoiIG9yICJxY29tLGhkbWkt
+dHgteHl6LWdwaW8iIHdvdWxkIHdvcmsgYXMgdGhlCj4+IHByb3BlcnR5IG5hbWUgd291bGQgd29y
+ayBhcyBiZWZvcmUuCj4KPiBXaHk/CgpXaHkgd2Ugd2FudCB0aGUgb2xkZXIgbmFtZXMgdG8gd29y
+az8gSnVzdCB0byBtYWtlIGxpZmUgZWFzaWVyIGlmCmJhY2twb3J0aW5nIHRoZSBkcm0gZHJpdmVy
+IHRvIGEgZG93bnN0cmVhbSBtc20ga2VybmVsIChsaWtlIGEgMy4xMCwKb3IgMy4xOCkuCgo+Cj4+
+IFVwZGF0ZSB0aGUgYmluZGluZyBkb2MuIEFkZCBhbiBlbnRyeSBmb3IgdGhlIG1pc3NpbmcgaHBk
+IGFuZCBscG0KPj4gZ3Bpb3MuCj4+Cj4+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+Pgo+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4KPj4gU2lnbmVkLW9mZi1ieTog
+QXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPj4gLS0tCj4+ICAgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0IHwgIDYgKysr
+Ky0tCj4+ICAgZHJpdmVycy9ncHUvZHJtL21zbS9oZG1pL2hkbWkuYyAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgMTYgKysrKysrKysrKysrKysrKwo+PiAgIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5z
+ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dAo+PiBpbmRleCBiNjNm
+NjE0Li40ZGExYWJkIDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0Cj4+IEBAIC0yMyw4ICsyMywxMCBAQCBS
+ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiAgIC0gcGh5LW5hbWVzOiB0aGUgbmFtZSBvZiB0aGUgY29y
+cmVzcG9uZGluZyBQSFkgZGV2aWNlCj4+Cj4+ICAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gLS0g
+cWNvbSxoZG1pLXR4LW11eC1lbi1ncGlvOiBoZG1pIG11eCBlbmFibGUgcGluCj4+IC0tIHFjb20s
+aGRtaS10eC1tdXgtc2VsLWdwaW86IGhkbWkgbXV4IHNlbGVjdCBwaW4KPj4gKy0gaHBkLWdwaW86
+IGhkbWkgaHBkIHBpbgo+Cj4gaHBkLWdwaW9zIGlzIHRoZSBzb21ld2hhdCBzdGFuZGFyZCBuYW1l
+Lgo+Cj4+ICstIG11eC1lbi1ncGlvOiBoZG1pIG11eCBlbmFibGUgcGluCj4+ICstIG11eC1zZWwt
+Z3BpbzogaGRtaSBtdXggc2VsZWN0IHBpbgo+PiArLSBtdXgtbHBtLWdwaW86IGhkbWkgbXV4IGxw
+bSBwaW4KPgo+IFRoZXNlIGxvb2sgcHJldHR5IFFDb20gc3BlY2lmaWMgYW5kIHNob3VsZCBrZWVw
+IHRoZSB2ZW5kb3IgcHJlZml4LgoKT2theS4KCj4KPiBJIHVuZGVyc3RhbmQgd2h5IHlvdSBkb24n
+dCBoYXZlICctZ3Bpb3MnLCBidXQgaWYgd2UgY2hhbmdlIHRoZXNlIHRoZXkKPiBzaG91bGQgdXNl
+IHRoZSBwcmVmZXJyZWQgZm9ybS4KCgpTdXJlLCBJJ2xsIHVwZGF0ZSB0aGVzZSB0byB0aGUgcHJl
+ZmVycmVkIGZvcm0uCgpBcmNoaXQKCi0tIApRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5j
+LiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENv
+bGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
