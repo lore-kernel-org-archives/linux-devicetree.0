@@ -1,62 +1,117 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] net: phy: micrel: Add KSZ8041FTL fiber mode support
-Date: Thu, 14 Jul 2016 14:35:59 +0300
-Message-ID: <d7474fed-89cb-1089-5b52-f8964cd7f840@cogentembedded.com>
-References: <1468491528-17515-1-git-send-email-p.zabel@pengutronix.de>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: [PATCH] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+Date: Thu, 14 Jul 2016 13:47:05 +0200
+Message-ID: <1468496825-4896-1-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1468491528-17515-1-git-send-email-p.zabel@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, netdev@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: fixed-term.Oleksij.Rempel@de.bosch.com
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Oleksij Rempel <linux@rempel-privat.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This names the GPIO lines on the Banana Pi board in accordance with
+the A20_Banana_Pi v1.4 Specification.
 
-On 7/14/2016 1:18 PM, Philipp Zabel wrote:
+This will make these line names reflect through to userspace
+so that they can easily be identified and used with the new
+character device ABI.
 
-> We can't detect the FXEN (fiber mode) bootstrap pin, so configure
-> it via a boolean device tree property "fxen". If it is enabled,
-> auto-negotiation is not supported. The only available modes are
-> 100base-fx (full duplex and half duplex).
->
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> I didn't see a way to reliably detect whether the PHY is set to fiber
-> mode in the datasheet [1], so this patch adds a device tree property
-> to enforce fiber mode (disable auto-negotiation, set speed to 100).
->
-> [1] http://ww1.microchip.com/downloads/en/DeviceDoc/ksz8041tl-ftl-mll.pdf
-> ---
->  .../devicetree/bindings/net/micrel-ksz8041.txt     | 24 ++++++++++++++++
->  drivers/net/phy/micrel.c                           | 32 ++++++++++++++++++++--
->  include/linux/micrel_phy.h                         |  1 +
->  3 files changed, 55 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/micrel-ksz8041.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/micrel-ksz8041.txt b/Documentation/devicetree/bindings/net/micrel-ksz8041.txt
-> new file mode 100644
-> index 0000000..4bce38d2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/micrel-ksz8041.txt
+Some care has been taken to name all lines, not just those used
+by the external connectors, also lines that are muxed into some
+other function than GPIO: these are named "[FOO]" so that users
+can see with lsgpio what all lines are used for.
 
-    I think your text should be added to micrel.txt instead.
+Ps: most of the text was taken from Linux Wallej patch.
 
-> @@ -0,0 +1,24 @@
-> +Micrel KSZ8041 Gigabit Ethernet PHY
-> +
-> +The KSZ8041FTL variant supports fiber mode, enabled by the FXEN boot
-> +strapping pin. It can't be determined from the PHY registers whether
-> +the PHY is in fiber mode, so a boolean device tree property can be
-> +used to describe this.
-> +
-> +Optional properties:
-> + - fxen : KSZ8041FTL is strapped to fiber mode. Auto-negotiation is disabled
+Cc: devicetree@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+---
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 60 ++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-    It should be named micrel,fxen.
-
-[...]
-
-MBR, Sergei
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 67c8a76..7529be1 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -178,6 +178,66 @@
+ };
+ 
+ &pio {
++	/*
++	 * Legend: proper name = the GPIO line is used as GPIO
++	 *         NC = not connected (not routed from the SoC)
++	 *         "[PER]" = pin is muxed for peripheral (not GPIO)
++	 *         "" = no idea, schematic doesn't say, could be
++	 *              unrouted (not connected to any external pin)
++	 *         LSEC = Low Speed External Connector
++	 *         HSEC = High Speed External Connector
++	 */
++	gpio-line-names =
++		/* PA */
++		"[ERXD3]", "[ERXD2]", "[ERXD1]", "[ERXD0]", "[ETXD3]",
++			"[ETXD2]", "[ETXD1]", "[ETXD0]",
++		"[ERXCK]", "[ERXERR]", "[ERXDV]", "[EMDC]", "[EMDIO]",
++			"[ETXEN]", "[ETXCK]", "[ECRS]",
++		"[ECOL]", "[ETXERR]", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PB */
++		"[PMU-SCK]", "[PMU-SDA]", "", "", "", "NC", "NC", "NC",
++		"NC", "[USB0-DRV]", "NC", "NC", "NC", "NC", "", "",
++		"", "", "", "", "SCL", "SDA", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PC */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PD */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PE */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PF */
++		"[SD0-D1]", "[SD0-D0]", "[SD0-CLK]", "[SD0-CMD]", "[SD0-D3]",
++			"[SD0-D2]", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PG */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PH */
++		"TXD0", "RXD0", "IO-1", "PH3", "[USB0-IDDET]", "PH5", "", "",
++		"", "", "[SD0-DET]", "", "", "", "", "",
++		"NC", "", "", "", "IO-4", "IO-5", "NC", "[EMAC-PWR-EN]",
++		"[LED1]", "NC", "NC", "NC", "", "", "", "",
++		/* PI */
++		"", "", "", "IO-GCLK", "NC", "NC", "NC", "NC",
++		"NC", "NC", "[SPI-CE0]", "[SPI-CLK]", "[SPI-MOSI]",
++			"[SPI-MISO]", "[SPI-CE1]", "NC",
++		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
++		"", "", "", "", "", "", "", "";
++
+ 	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+ 		allwinner,pins = "PH4";
+ 		allwinner,function = "gpio_in";
+-- 
+2.7.4
