@@ -1,74 +1,162 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Bluetooth: Add LED triggers for HCI frames tx and rx
-Date: Thu, 14 Jul 2016 15:08:20 +0800
-Message-ID: <CAFGCpxzYLgJu6NWOHHTAQRmPEA5xz3GUpO4Ru1dKgRdMxyCU1A@mail.gmail.com>
-References: <1466657923-5776-1-git-send-email-guodong.xu@linaro.org> <D2545F6D-7100-4B59-A19D-7CF878902BAA@holtmann.org>
+From: tiffany lin <tiffany.lin@mediatek.com>
+Subject: Re: [PATCH v3 3/9] DocBook/v4l: Add compressed video formats used
+ on MT8173 codec driver
+Date: Thu, 14 Jul 2016 15:30:10 +0800
+Message-ID: <1468481410.27199.17.camel@mtksdaap41>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+	  <1464611363-14936-2-git-send-email-tiffany.lin@mediatek.com>
+	  <1464611363-14936-3-git-send-email-tiffany.lin@mediatek.com>
+	  <1464611363-14936-4-git-send-email-tiffany.lin@mediatek.com>
+	  <5a793171-24a7-4e9e-8bfd-f668c789f8e0@xs4all.nl>
+	  <1468205771.3725.8.camel@mtksdaap41>
+	  <CAOMLVLiZU3D587dSyp2b2v4DV+MS9vh85bA4BoG7ddK6556rbA@mail.gmail.com>
+	  <1468350511.8843.16.camel@gmail.com> <1468350842.8843.18.camel@gmail.com>
+	 <1468375209.2462.20.camel@mtksdaap41>
+	 <1468418157.2867.12.camel@ndufresne.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <D2545F6D-7100-4B59-A19D-7CF878902BAA-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Cc: "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1468418157.2867.12.camel@ndufresne.ca>
+Sender: linux-media-owner@vger.kernel.org
+To: Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: Wu-Cheng Li =?UTF-8?Q?=28=E6=9D=8E=E5=8B=99=E8=AA=A0=29?= <wuchengli@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Lin PoChun <PoChun.Lin@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13 July 2016 at 16:07, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> wrote:
-> Hi Guodong,
->
->> Two LED triggers are defined: tx_led and rx_led. Upon frames
->> available in HCI core layer, for tx or for rx, the combined LED
->> can blink.
->>
->> Verified on HiKey, 96boards. It uses hi6220 SoC and TI WL1835 combo
->> chip.
->>
->> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> include/net/bluetooth/hci_core.h |  1 +
->> net/bluetooth/hci_core.c         |  3 +++
->> net/bluetooth/leds.c             | 15 +++++++++++++++
->> net/bluetooth/leds.h             |  2 ++
->> 4 files changed, 21 insertions(+)
->>
->> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
->> index dc71473..37b8dd9 100644
->> --- a/include/net/bluetooth/hci_core.h
->> +++ b/include/net/bluetooth/hci_core.h
->> @@ -398,6 +398,7 @@ struct hci_dev {
->>       bdaddr_t                rpa;
->>
->>       struct led_trigger      *power_led;
->> +     struct led_trigger      *tx_led, *rx_led;
->>
->>       int (*open)(struct hci_dev *hdev);
->>       int (*close)(struct hci_dev *hdev);
->> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
->> index 45a9fc6..c6e1210 100644
->> --- a/net/bluetooth/hci_core.c
->> +++ b/net/bluetooth/hci_core.c
->> @@ -3248,6 +3248,7 @@ int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
->>       skb_queue_tail(&hdev->rx_q, skb);
->>       queue_work(hdev->workqueue, &hdev->rx_work);
->>
->> +     hci_leds_blink_oneshot(hdev->rx_led);
->>       return 0;
->> }
->> EXPORT_SYMBOL(hci_recv_frame);
->> @@ -3325,6 +3326,8 @@ static void hci_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
->>               BT_ERR("%s sending frame failed (%d)", hdev->name, err);
->>               kfree_skb(skb);
->>       }
->> +
->> +     hci_leds_blink_oneshot(hdev->tx_led);
->> }
->
-> so I am not convinced that this is the right way of doing TX/RX activity leds. This would have them purely based on HCI traffic and this would include control frames. I think that we want activity leds for actual radio activity. Meaning that when we have an active connection and ACL packets are exchanged or when we are scanning.
->
+Hi Nicolas,
 
-Thanks. I got your point. I will revise the code and submit again.
+On Wed, 2016-07-13 at 09:55 -0400, Nicolas Dufresne wrote:
+> Le mercredi 13 juillet 2016 =C3=A0 10:00 +0800, tiffany lin a =C3=A9c=
+rit :
+> > Hi Nicolas,
+> >=20
+> > On Tue, 2016-07-12 at 15:14 -0400, Nicolas Dufresne wrote:
+> > > Le mardi 12 juillet 2016 =C3=A0 15:08 -0400, Nicolas Dufresne a =C3=
+=A9crit :
+> > > > Le mardi 12 juillet 2016 =C3=A0 16:16 +0800, Wu-Cheng Li (=E6=9D=
+=8E=E5=8B=99=E8=AA=A0) a =C3=A9crit
+> > :
+> > > > > Decoder hardware produces MT21 (compressed). Image processor
+> > can
+> > > > > convert it to a format that can be input of display driver.
+> > > > > Tiffany.
+> > > > > When do you plan to upstream image processor (mtk-mdp)?
+> > > > > >=20
+> > > > > > It can be as input format for encoder, MDP and display
+> > drivers in
+> > > > > our
+> > > > > > platform.
+> > > > > I remember display driver can only accept uncompressed MT21.
+> > Right?
+> > > > > Basically V4L2_PIX_FMT_MT21 is compressed and is like an opaq=
+ue
+> > > > > format. It's not usable until it's decompressed and converted
+> > by
+> > > > > image
+> > > > > processor.
+> > > >=20
+> > > > Previously it was described as MediaTek block mode, and now as =
+a
+> > > > MediaTek compressed format. It makes me think you have no idea
+> > what
+> > > > this pixel format really is. Is that right ?
+> > > >=20
+> > > > The main reason why I keep asking, is that we often find
+> > similarities
+> > > > between what vendor like to call their proprietary formats. Doi=
+ng
+> > the
+> > > > proper research helps not creating a mess like in Android where
+> > you
+> > > > have a lot of formats that all point to the same format. I
+> > believe
+> > > > there was the same concern when Samsung wanted to introduce the=
+ir
+> > Z-
+> > > > flip-Z NV12 tile format. In the end they simply provided
+> > sufficient
+> > > > documentation so we could document it and implement software
+> > > > converters
+> > > > for test and validation purpose.
+> > >=20
+> > > Here's the kind of information we want in the documentation.
+> > >=20
+> > > https://chromium.googlesource.com/chromium/src/media/+/master/bas=
+e/
+> > vide
+> > > o_types.h#40
+> > >=20
+> > >   // MediaTek proprietary format. MT21 is similar to NV21 except
+> > the memory
+> > >   // layout and pixel layout (swizzles). 12bpp with Y plane
+> > followed by a 2x2
+> > >   // interleaved VU plane. Each image contains two buffers -- Y
+> > plane and VU
+> > >   // plane. Two planes can be non-contiguous in memory. The
+> > starting addresses
+> > >   // of Y plane and VU plane are 4KB alignment.
+> > >   // Suppose image dimension is (width, height). For both Y plane
+> > and VU plane:
+> > >   // Row pitch =3D ((width+15)/16) * 16.
+> > >   // Plane size =3D Row pitch * (((height+31)/32)*32)
+> > >=20
+> > > Now obviously this is incomplete, as the swizzling need to be
+> > documented of course.
+> > >=20
+> > Because it's finally a compressed format from our codec hw, we cann=
+ot
+> > describe its swizzling.
+>=20
+> Can you clarify why it cannot be described ? I don't buy any argument
+> that it's impossible to convert without hardware. Intel did document
+> their compressed formats.
+>=20
+What's the Intel compressed formats? Could you provide link so we could
+reference how they provide this information.
 
-> Regards
->
-> Marcel
->
+> Debugging an integration with such format that we have literally
+> decided to no make public is a pain. A lot of decoder got abandoned o=
+r
+> never used because of that.
+>=20
+> It would be nice to explain the architecture you are suggesting to ma=
+ke
+> this decoder useful. How will userspace application be able to use yo=
+ur
+> decoder. Will the image processor usable outside the display path ?
+> People might want to do transcoding, or other relatively common task
+> that does not imply a display.
+>=20
+
+In MT8173 platform, it has MDP driver, it could convert
+V4L2_PIX_FMT_MT21 to V4L2_PIX_FMT_NV12M or V4L2_PIX_FMT_YUV420M.
+
+MDP is stand alone driver, it is usable outside the display path.
+
+NV12M/YUV420M/MT21 -> MDP -> NV12M/YUV420M
+
+NV12M/NV21M/YUV420M/YVU420M -> mt8173 Encoder -> H264/VP8
+
+H264/VP8/VP9 -> mtk8173 Decoder -> MT21
+
+When encode with MT21 source, the pipeline will be:
+MT21 -> MDP driver-> NV12M/NV21M/YUV420M/YVU420M -> Encoder -> H264/VP8
+
+When playback, the pipeline will be:
+H264/VP8/VP9 -> Decoder driver -> MT21 -> MDP Driver -> DRM
+
+
+best regards,
+Tiffany
+
+
+> regards,
+> Nicolas
+>=20
+> p.s.
+> A small note to Wu-Cheng, the definition of the DRM format in your
+> Chromium branch is not correct. DRM uses format modifier, such that t=
+he
+> format is the family, in your case it's most likely NV21, and the
+> modifier is the compression or tiling algorithm in place (or both as
+> needed).
