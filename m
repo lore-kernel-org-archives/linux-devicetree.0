@@ -1,27 +1,32 @@
-From: Andrew Lunn <andrew@lunn.ch>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH] net: phy: micrel: Add KSZ8041FTL fiber mode support
-Date: Thu, 14 Jul 2016 16:32:29 +0200
-Message-ID: <20160714143229.GG6667@lunn.ch>
-References: <1468491528-17515-1-git-send-email-p.zabel@pengutronix.de>
- <20160714133706.GF6667@lunn.ch>
- <1468504316.2260.35.camel@pengutronix.de>
+Date: Thu, 14 Jul 2016 16:33:26 +0200
+Message-ID: <7346758.UKW3x0KYDY@wuerfel>
+References: <1468506583-27299-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468504316.2260.35.camel@pengutronix.de>
+In-Reply-To: <1468506583-27299-1-git-send-email-p.zabel@pengutronix.de>
 Sender: netdev-owner@vger.kernel.org
 To: Philipp Zabel <p.zabel@pengutronix.de>
 Cc: netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-> > Hi Philipp
-> > 
-> > Could you use a more descriptive property name? "micrel,enable-fiber"?
+On Thursday, July 14, 2016 4:29:43 PM CEST Philipp Zabel wrote:
+> +
+> + - micrel,fiber-mode: If present the PHY is configured to operate in fiber mode
+> +
+> +       Some PHYs, such as the KSZ8041FTL variant, support fiber mode, enabled
+> +       by the FXEN boot strapping pin. It can't be determined from the PHY
+> +       registers whether the PHY is in fiber mode, so this boolean device tree
+> +       property can be used to describe it.
+> +
+> +       In fiber mode, auto-negotiation is disabled and the PHY can only work in
+> +       100base-fx (full and half duplex) modes.
 > 
-> "micrel,fiber-mode" ?
 
-Sure,
+Could the generic "phy-mode" property used for this, to avoid the need for
+definingn a custom property?
 
-Thanks,
-	Andrew
+	Arnd
