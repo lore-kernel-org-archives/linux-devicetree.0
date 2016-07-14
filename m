@@ -1,67 +1,444 @@
-From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-Subject: [PATCH 1/4] VPU: mediatek: Add mdp support
-Date: Thu, 14 Jul 2016 20:17:58 +0800
-Message-ID: <1468498681-19955-2-git-send-email-minghsiu.tsai@mediatek.com>
-References: <1468498681-19955-1-git-send-email-minghsiu.tsai@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1468498681-19955-1-git-send-email-minghsiu.tsai@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] arm64: dts: rockchip: Add basic support for orion-r68
+Date: Thu, 14 Jul 2016 14:28:22 +0200
+Message-ID: <1468499302-16508-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VPU driver add mdp support
+This patch adds basic support for the Tronsmart orion r86 set-top-box.
 
-Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Signed-off-by: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
 ---
- drivers/media/platform/mtk-vpu/mtk_vpu.h |    5 +++++
- 1 file changed, 5 insertions(+)
+Changes since v1:
+- change memory node to 2GB
+- change compatible and file name
+- add uart4
+- add second led
 
-diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.h b/drivers/media/platform/mtk-vpu/mtk_vpu.h
-index f457479..291ae46 100644
---- a/drivers/media/platform/mtk-vpu/mtk_vpu.h
-+++ b/drivers/media/platform/mtk-vpu/mtk_vpu.h
-@@ -53,6 +53,8 @@ typedef void (*ipi_handler_t) (void *data,
- 			 handle H264 video encoder job, and vice versa.
-  * @IPI_VENC_VP8:	 The interrupt fro vpu is to notify kernel to
- 			 handle VP8 video encoder job,, and vice versa.
-+ * @IPI_MDP:		 The interrupt from vpu is to notify kernel to
-+			 handle MDP (Media Data Path) job, and vice versa.
-  * @IPI_MAX:		 The maximum IPI number
-  */
+ Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+ arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+ .../boot/dts/rockchip/rk3368-orion-r68-meta.dts    | 382 +++++++++++++++++++++
+ 3 files changed, 387 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+index 715d960..1d5c65e0 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.txt
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -110,3 +110,7 @@ Rockchip platforms device tree bindings
+ - Rockchip RK3399 evb:
+     Required root node properties:
+       - compatible = "rockchip,rk3399-evb", "rockchip,rk3399";
++
++- Tronsmart Orion R68 Meta
++    Required root node properties:
++      - compatible = "tronsmart,orion-r68-meta", "rockchip,rk3368";
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 7037a16..87669f6 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -1,5 +1,6 @@
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-orion-r68-meta.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
  
-@@ -63,6 +65,7 @@ enum ipi_id {
- 	IPI_VDEC_VP9,
- 	IPI_VENC_H264,
- 	IPI_VENC_VP8,
-+	IPI_MDP,
- 	IPI_MAX,
- };
- 
-@@ -71,11 +74,13 @@ enum ipi_id {
-  *
-  * @VPU_RST_ENC: encoder reset id
-  * @VPU_RST_DEC: decoder reset id
-+ * @VPU_RST_MDP: MDP (Media Data Path) reset id
-  * @VPU_RST_MAX: maximum reset id
-  */
- enum rst_id {
- 	VPU_RST_ENC,
- 	VPU_RST_DEC,
-+	VPU_RST_MDP,
- 	VPU_RST_MAX,
- };
- 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
+new file mode 100644
+index 0000000..8c8671f
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
+@@ -0,0 +1,382 @@
++/*
++ * Copyright (c) 2016 Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "rk3368.dtsi"
++
++/ {
++	model = "Rockchip Orion R68";
++	compatible = "tronsmart,orion-r68-meta", "rockchip,rk3368";
++
++	chosen {
++		stdout-path = "serial2:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x80000000>;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		pinctrl-0 = <&emmc_reset>;
++		pinctrl-names = "default";
++		reset-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
++	};
++
++	ext_gmac: external-gmac-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <125000000>;
++		clock-output-names = "ext_gmac";
++	};
++
++	keys: gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwr_key>;
++
++		button@0 {
++			gpio-key,wakeup = <1>;
++			gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
++			label = "GPIO Power";
++			linux,code = <116>;
++		};
++	};
++
++	leds: gpio-leds {
++		compatible = "gpio-leds";
++
++		red {
++			gpios = <&gpio3 29 GPIO_ACTIVE_HIGH>;
++			label = "orion:red:led";
++			pinctrl-names = "default";
++			pinctrl-0 = <&led_ctl>;
++			default-state = "on";
++		};
++
++		blue {
++			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
++			label = "orion:blue:led";
++			pinctrl-names = "default";
++			pinctrl-0 = <&stby_pwren>;
++			default-state = "off";
++		};
++	};
++
++	vcc_18: vcc18-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_18";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++	/* supplies both host and otg */
++	vcc_host: vcc-host-regulator {
++		compatible = "regulator-fixed";
++		gpio = <&gpio0 4 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&host_vbus_drv>;
++		regulator-name = "vcc_host";
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++	vccio_sd: vcc-io-sd-regulator {
++		regulator-name= "vccio_sd";
++		gpio = <&gpio0 9 GPIO_ACTIVE_LOW>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vcc_sd: vcc-sd-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_sd";
++		gpio = <&gpio3 11 GPIO_ACTIVE_LOW>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_io>;
++	};
++
++	vcc_io: vcc-io-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_io";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++	vcc_lan: vcc-lan-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_lan";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_io>;
++	};
++
++	vcc_sys: vcc-sys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_sys";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vccio_wl: vccio-wl-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vccio_wl";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_io>;
++	};
++
++	vdd_10: vdd-10-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_10";
++		regulator-min-microvolt = <1000000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++	};
++};
++
++&emmc {
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	disable-wp;
++	mmc-pwrseq = <&emmc_pwrseq>;
++	non-removable;
++	num-slots = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
++	status = "okay";
++};
++
++&gmac {
++	assigned-clocks = <&cru SCLK_MAC>;
++	assigned-clock-parents = <&ext_gmac>;
++	phy-supply = <&vcc_lan>;
++	phy-mode = "rgmii";
++	clock_in_out = "input";
++	snps,reset-gpio = <&gpio3 12 0>;
++	snps,reset-active-low;
++	snps,reset-delays-us = <0 10000 1000000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins>;
++	tx_delay = <0x30>;
++	rx_delay = <0x10>;
++	status = "ok";
++};
++
++&i2c0 {
++	status = "okay";
++
++	vdd_cpu: syr827@40 {
++		compatible = "silergy,syr827";
++		reg = <0x40>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-name = "vdd_cpu";
++		regulator-enable-ramp-delay = <300>;
++		regulator-min-microvolt = <712500>;
++		regulator-max-microvolt = <1500000>;
++		regulator-ramp-delay = <8000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++	};
++
++	hym8563: hym8563@51 {
++		compatible = "haoyu,hym8563";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		clock-output-names = "xin32k";
++		/* rtc_int is not connected */
++	};
++};
++
++&pinctrl {
++	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
++		bias-disable;
++		drive-strength = <8>;
++	};
++
++	pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
++		bias-pull-up;
++		drive-strength = <8>;
++	};
++
++	emmc {
++		emmc_bus8: emmc-bus8 {
++			rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++					<1 19 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++					<1 20 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++					<1 21 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++					<1 22 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++					<1 23 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++					<1 24 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
++					<1 25 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
++		};
++
++		emmc-clk {
++			rockchip,pins = <2 4 RK_FUNC_2 &pcfg_pull_none_drv_8ma>;
++		};
++
++		emmc-cmd {
++			rockchip,pins = <1 26 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
++		};
++
++		emmc_reset: emmc-reset {
++			rockchip,pins = <2 3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	keys {
++		pwr_key: pwr-key {
++			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
++
++	leds {
++		stby_pwren: stby-pwren {
++			rockchip,pins = <0 12 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		led_ctl: led-ctl {
++			rockchip,pins = <3 29 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	sdmmc {
++		sdmmc_clk: sdmmc-clk {
++			rockchip,pins = <2 9 RK_FUNC_1 &pcfg_pull_none_drv_8ma>;
++		};
++
++		sdmmc_cmd: sdmmc-cmd {
++			rockchip,pins = <2 10 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
++		};
++
++		sdmmc_cd: sdmmc-cd {
++			rockchip,pins = <2 11 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
++		};
++
++		sdmmc_bus1: sdmmc-bus1 {
++			rockchip,pins = <2 5 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
++		};
++
++		sdmmc_bus4: sdmmc-bus4 {
++			rockchip,pins = <2 5 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
++					<2 6 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
++					<2 7 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
++					<2 8 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
++		};
++	};
++
++	usb {
++		host_vbus_drv: host-vbus-drv {
++			rockchip,pins = <0 4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++};
++
++&saradc {
++	vref-supply = <&vcc_18>;
++	status = "okay";
++};
++
++&sdmmc {
++	clock-frequency = <50000000>;
++	clock-freq-min-max = <400000 50000000>;
++	cap-sd-highspeed;
++	supports-sd;
++	broken-cd;
++	card-detect-delay = <200>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
++	bus-width = <4>;
++	num-slots = <1>;
++	ignore-pm-notify;
++	keep-power-in-suspend;
++
++	vmmc-supply = <&vcc_sd>;
++	vqmmc-supply = <&vccio_sd>;
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart4 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_xfer>;
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_otg {
++	status = "okay";
++};
++
++&wdt {
++	status = "okay";
++};
 -- 
-1.7.9.5
+2.6.6
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
