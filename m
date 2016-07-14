@@ -1,136 +1,125 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v12] mtd: spi-nor: add hisilicon spi-nor flash controller
- driver
-Date: Wed, 13 Jul 2016 18:13:31 -0700
-Message-ID: <20160714011331.GE54628@google.com>
-References: <1467100099-6172-1-git-send-email-xuejiancheng@hisilicon.com>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH v2 0/2] arm64: dts: rockchip: Support PMU for rk3399 SoCs
+Date: Thu, 14 Jul 2016 09:14:57 +0800
+Message-ID: <5786E791.1010906@gmail.com>
+References: <1467792357-9749-1-git-send-email-wxt@rock-chips.com> <20160706112444.GB14657@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467100099-6172-1-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Binquan Peng <pengbinquan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160706112444.GB14657@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, huangtao@rock-chips.com, devicetree@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, cf@rock-chips.com, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 28, 2016 at 03:48:19PM +0800, Jiancheng Xue wrote:
-> Add hisilicon spi-nor flash controller driver
-> 
-> Signed-off-by: Binquan Peng <pengbinquan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> Reviewed-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
-> change log
-> v12:
-> 1)Made SPI_HISI_SFC depend on HAS_DMA to fix the kbuild test robot error.
-> 2)Added "Reviewed-by Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>" and 
-> "Reviewed-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>" in the commit message.
-> v11:
-> Fixed issues pointed by Brian Norris and Cyrille Pitchen.
-> 1)Changed hisi_spi_nor_read_reg()/write_reg() to configure registers
-> without sniffing the opcodes.
-> 2)Deleted hisi_spi_nor_erase() and used default implementation instead.
-> 3)Changed hisi_spi_nor_dma_transfer() to return a integer type value
-> instead of nothing.
-> 4)Simplified hisi_spi_nor_read()/write() as Brian suggested.
-> 
-> v10:
-> Fixed issues pointed by Marek Vasut.
-> 1)Droped the underscores in the argument names of some macros' definition.
-> 2)Changed some varibles to correct type.
-> 3)Rewrote hisi_spi_nor_read/write for readability.
-> 4)Added new functions hisi_spi_nor_register/unregister_all
-> 5)Changed to dynamically allocation for spi_nor embeded in hifmc_host.
-> Fixed issues pointed by Brian Norris.
-> 1)Replaced some headers with more accurate ones.
-> v9:
-> Fixed issues pointed by Jagan Teki.
-> v8:
-> Fixed issues pointed by Ezequiel Garcia and Brian Norris.
-> Moved dts binding file to mtd directory.
-> Changed the compatible string more specific.
-> v7:
-> Rebased to v4.5-rc3.
-> Fixed issues pointed by Ezequiel Garcia.
-> v6:
-> Based on v4.5-rc2
-> Fixed issues pointed by Ezequiel Garcia.
-> v5:
-> Fixed a compile error.
-> v4:
-> Rebased to v4.5-rc1
-> v3:
-> Added a compatible string "hisilicon,hi3519-sfc".
-> v2:
-> Fixed some compiling warings.
->  .../bindings/mtd/hisilicon,fmc-spi-nor.txt         |  24 +
->  drivers/mtd/spi-nor/Kconfig                        |   7 +
->  drivers/mtd/spi-nor/Makefile                       |   1 +
->  drivers/mtd/spi-nor/hisi-sfc.c                     | 489 +++++++++++++++++++++
->  4 files changed, 521 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
->  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
+Hi,
 
-Pushed to l2-mtd.git, with the following diff due to API changes. Please
-review to be sure it looks OK to you.
+On 2016=E5=B9=B407=E6=9C=8806=E6=97=A5 19:24, Mark Rutland wrote:
+> On Wed, Jul 06, 2016 at 04:05:55PM +0800, Caesar Wang wrote:
+>> Hello Heiko, Marc & ARM guys
+> Hi,
+>
+> These patches themselves look fine, so FWIW:
+>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Also, please base changes on l2-mtd.git or linux-next.git in the future.
+Thanks your ack.
 
-Regards,
-Brian
+>
+> The prerequisite patch from Marc [1] also largely looks fine, but the=
+re
+> are some minor details to sort out [2], so at this point in time I'm
+> guesssing this is all v4.9 material.
+>
+> Thanks,
+> Mark.
+>
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/4=
+40647.html
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/4=
+41495.html
 
-diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/hisi-sfc.c
-index 44664c3fc5ff..20378b0d55e9 100644
---- a/drivers/mtd/spi-nor/hisi-sfc.c
-+++ b/drivers/mtd/spi-nor/hisi-sfc.c
-@@ -269,8 +269,8 @@ static int hisi_spi_nor_dma_transfer(struct spi_nor *nor, loff_t start_off,
- 	return wait_op_finish(host);
- }
- 
--static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
--		size_t *retlen, u_char *read_buf)
-+static ssize_t hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
-+		u_char *read_buf)
- {
- 	struct hifmc_priv *priv = nor->priv;
- 	struct hifmc_host *host = priv->host;
-@@ -287,14 +287,13 @@ static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
- 			return ret;
- 		}
- 		memcpy(read_buf + offset, host->buffer, trans);
--		*retlen += trans;
- 	}
- 
--	return 0;
-+	return len;
- }
- 
--static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
--			size_t len, size_t *retlen, const u_char *write_buf)
-+static ssize_t hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
-+			size_t len, const u_char *write_buf)
- {
- 	struct hifmc_priv *priv = nor->priv;
- 	struct hifmc_host *host = priv->host;
-@@ -309,10 +308,11 @@ static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
- 			to + offset, host->dma_buffer, trans, FMC_OP_WRITE);
- 		if (ret) {
- 			dev_warn(nor->dev, "DMA write timeout\n");
--			return;
-+			return ret;
- 		}
--		*retlen += len;
- 	}
-+
-+	return len;
- }
- 
- /**
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay, I saw the Marc's patch had been merged on next kernel.:-)
+
+
+-Caesar
+>
+>> When Jay first submitted the rk3399.dtsi upstream
+>> <https://patchwork.kernel.org/patch/8885821/> he had the PMU node in=
+ there,
+>> but then took it out because the upstream binding wasn't done yet.
+>> It looks as if the upstream stuff has landed, since in linux/master =
+I see:
+>> 287e9357abcc DT/arm,gic-v3: Documment PPI partition support
+>> e3825ba1af3a irqchip/gic-v3: Add support for partitioned PPIs
+>> 9e2c986cb460 irqchip: Add per-cpu interrupt partitioning library
+>> 222df54fd8b7 genirq: Allow the affinity of a percpu interrupt to be =
+set/retrieved
+>> 651e8b54abde irqdomain: Allow domain matching on irq_fwspec
+>>
+>> This series patches add to support the rk3399 SoCs PMU.
+>> I pick up the https://patchwork.kernel.org/patch/9209369/.
+>>
+>> As do some tests with ChromeOs for my rk3399 board.
+>> Tested with linus master 4.7-rc6 kernel on rk3399 board.
+>> https://github.com/Caesar-github/rockchip/tree/rk3399/pmu-upstream
+>>
+>> localhost / # perf list
+>>
+>> List of pre-defined events (to be used in -e):
+>> cpu-cycles OR cycles [Hardware event]
+>> instructions [Hardware event]
+>> cache-references [Hardware event]
+>> cache-misses [Hardware event]
+>> branch-instructions OR branches [Hardware event]
+>> branch-misses [Hardware event]
+>> bus-cycles [Hardware event]
+>> ...
+>>
+>> perf stat --cpu 0/1/2/3..... to minitor
+>> e.g. cpu0;
+>>
+>> localhost / # perf stat --cpu 0
+>>
+>> Performance counter stats for 'CPU(s) 0':
+>>
+>> 3374.917571 task-clock (msec) # 1.001 CPUs utilized [100.00%]
+>> 20 context-switches # 0.006 K/sec [100.00%]
+>> 2 cpu-migrations # 0.001 K/sec [100.00%]
+>> 55 page-faults # 0.016 K/sec
+>> 7151843 cycles # 0.002 GHz [100.00%]
+>> <not supported> stalled-cycles-frontend
+>> <not supported> stalled-cycles-backend
+>> 4272536 instructions # 0.60 insns per cycle [100.00%]
+>> 568406 branches # 0.168 M/sec [100.00%]
+>> 65652 branch-misses # 11.55% of all branches
+>>
+>> Also, 'perf top' to monitor the PMU interrupts from cpus
+>>
+>> -Caesar
+>>
+>>
+>> Changes in v2:
+>> - AS Mark comments on https://patchwork.kernel.org/patch/9209369/
+>>    remove the interrupt-affinity property, we need depend on Marc' p=
+erf
+>>    code on https://patchwork.kernel.org/patch/9209369/.
+>>
+>> Caesar Wang (2):
+>>    arm64: dts: rockchip: change all interrupts cells for 4 on rk3399=
+ SoCs
+>>    arm64: dts: rockchip: support the pmu node for rk3399
+>>
+>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 118 ++++++++++++++++++-=
+------------
+>>   1 file changed, 69 insertions(+), 49 deletions(-)
+>>
+>> --=20
+>> 1.9.1
+>>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
