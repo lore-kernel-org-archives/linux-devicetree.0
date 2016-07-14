@@ -1,117 +1,123 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: [PATCH] arm: dts: sun7i-a20-bananapi: name the GPIO lines
-Date: Thu, 14 Jul 2016 13:47:05 +0200
-Message-ID: <1468496825-4896-1-git-send-email-linux@rempel-privat.de>
+From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Subject: [PATCH 2/4] dt-bindings: Add a binding for Mediatek MDP
+Date: Thu, 14 Jul 2016 20:17:59 +0800
+Message-ID: <1468498681-19955-3-git-send-email-minghsiu.tsai@mediatek.com>
+References: <1468498681-19955-1-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: fixed-term.Oleksij.Rempel@de.bosch.com
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Oleksij Rempel <linux@rempel-privat.de>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1468498681-19955-1-git-send-email-minghsiu.tsai@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This names the GPIO lines on the Banana Pi board in accordance with
-the A20_Banana_Pi v1.4 Specification.
+Add a DT binding documentation of MDP for the MT8173 SoC
+from Mediatek
 
-This will make these line names reflect through to userspace
-so that they can easily be identified and used with the new
-character device ABI.
-
-Some care has been taken to name all lines, not just those used
-by the external connectors, also lines that are muxed into some
-other function than GPIO: these are named "[FOO]" so that users
-can see with lsgpio what all lines are used for.
-
-Ps: most of the text was taken from Linux Wallej patch.
-
-Cc: devicetree@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 ---
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 60 ++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ .../devicetree/bindings/media/mediatek-mdp.txt     |   92 ++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index 67c8a76..7529be1 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -178,6 +178,66 @@
- };
- 
- &pio {
-+	/*
-+	 * Legend: proper name = the GPIO line is used as GPIO
-+	 *         NC = not connected (not routed from the SoC)
-+	 *         "[PER]" = pin is muxed for peripheral (not GPIO)
-+	 *         "" = no idea, schematic doesn't say, could be
-+	 *              unrouted (not connected to any external pin)
-+	 *         LSEC = Low Speed External Connector
-+	 *         HSEC = High Speed External Connector
-+	 */
-+	gpio-line-names =
-+		/* PA */
-+		"[ERXD3]", "[ERXD2]", "[ERXD1]", "[ERXD0]", "[ETXD3]",
-+			"[ETXD2]", "[ETXD1]", "[ETXD0]",
-+		"[ERXCK]", "[ERXERR]", "[ERXDV]", "[EMDC]", "[EMDIO]",
-+			"[ETXEN]", "[ETXCK]", "[ECRS]",
-+		"[ECOL]", "[ETXERR]", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PB */
-+		"[PMU-SCK]", "[PMU-SDA]", "", "", "", "NC", "NC", "NC",
-+		"NC", "[USB0-DRV]", "NC", "NC", "NC", "NC", "", "",
-+		"", "", "", "", "SCL", "SDA", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PC */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PD */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PE */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PF */
-+		"[SD0-D1]", "[SD0-D0]", "[SD0-CLK]", "[SD0-CMD]", "[SD0-D3]",
-+			"[SD0-D2]", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PG */
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		/* PH */
-+		"TXD0", "RXD0", "IO-1", "PH3", "[USB0-IDDET]", "PH5", "", "",
-+		"", "", "[SD0-DET]", "", "", "", "", "",
-+		"NC", "", "", "", "IO-4", "IO-5", "NC", "[EMAC-PWR-EN]",
-+		"[LED1]", "NC", "NC", "NC", "", "", "", "",
-+		/* PI */
-+		"", "", "", "IO-GCLK", "NC", "NC", "NC", "NC",
-+		"NC", "NC", "[SPI-CE0]", "[SPI-CLK]", "[SPI-MOSI]",
-+			"[SPI-MISO]", "[SPI-CE1]", "NC",
-+		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
+diff --git a/Documentation/devicetree/bindings/media/mediatek-mdp.txt b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
+new file mode 100644
+index 0000000..ef570c3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
+@@ -0,0 +1,92 @@
++* Mediatek Media Data Path
 +
- 	usb0_id_detect_pin: usb0_id_detect_pin@0 {
- 		allwinner,pins = "PH4";
- 		allwinner,function = "gpio_in";
++Media Data Path is used for scaling and color space conversion.
++
++Required properties:
++  - compatible : should contain them as below:
++        "mediatek,mt8173-mdp"
++        "mediatek,mt8173-mdp-rdma"
++        "mediatek,mt8173-mdp-rsz"
++        "mediatek,mt8173-mdp-wdma"
++        "mediatek,mt8173-mdp-wrot"
++  - clocks : device clocks
++  - power-domains : a phandle to the power domain.
++  - mediatek,larb : should contain the larbes of current platform
++  - iommus : Mediatek IOMMU H/W has designed the fixed associations with
++        the multimedia H/W. and there is only one multimedia iommu domain.
++        "iommus = <&iommu portid>" the "portid" is from
++        dt-bindings\iommu\mt8173-iommu-port.h, it means that this portid will
++        enable iommu. The portid default is disable iommu if "<&iommu portid>"
++        don't be added.
++  - mediatek,vpu : the node of video processor unit
++
++Example:
++	mdp_rdma0: rdma@14001000 {
++		compatible = "mediatek,mt8173-mdp-rdma",
++			     "mediatek,mt8173-mdp";
++		reg = <0 0x14001000 0 0x1000>;
++		clocks = <&mmsys CLK_MM_MDP_RDMA0>,
++			 <&mmsys CLK_MM_MUTEX_32K>;
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++		iommus = <&iommu M4U_PORT_MDP_RDMA0>;
++		mediatek,larb = <&larb0>;
++		mediatek,vpu = <&vpu>;
++	};
++
++	mdp_rdma1: rdma@14002000 {
++		compatible = "mediatek,mt8173-mdp-rdma";
++		reg = <0 0x14002000 0 0x1000>;
++		clocks = <&mmsys CLK_MM_MDP_RDMA1>,
++			 <&mmsys CLK_MM_MUTEX_32K>;
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++		iommus = <&iommu M4U_PORT_MDP_RDMA1>;
++		mediatek,larb = <&larb4>;
++	};
++
++	mdp_rsz0: rsz@14003000 {
++		compatible = "mediatek,mt8173-mdp-rsz";
++		reg = <0 0x14003000 0 0x1000>;
++		clocks = <&mmsys CLK_MM_MDP_RSZ0>;
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++	};
++
++	mdp_rsz1: rsz@14004000 {
++		compatible = "mediatek,mt8173-mdp-rsz";
++		reg = <0 0x14004000 0 0x1000>;
++		clocks = <&mmsys CLK_MM_MDP_RSZ1>;
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++	};
++
++	mdp_rsz2: rsz@14005000 {
++		compatible = "mediatek,mt8173-mdp-rsz";
++		reg = <0 0x14005000 0 0x1000>;
++		clocks = <&mmsys CLK_MM_MDP_RSZ2>;
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++	};
++
++	mdp_wdma0: wdma@14006000 {
++		compatible = "mediatek,mt8173-mdp-wdma";
++		reg = <0 0x14006000 0 0x1000>;
++		clocks = <&mmsys CLK_MM_MDP_WDMA>;
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++		iommus = <&iommu M4U_PORT_MDP_WDMA>;
++		mediatek,larb = <&larb0>;
++	};
++
++	mdp_wrot0: wrot@14007000 {
++		compatible = "mediatek,mt8173-mdp-wrot";
++		reg = <0 0x14007000 0 0x1000>;
++		clocks = <&mmsys CLK_MM_MDP_WROT0>;
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++		iommus = <&iommu M4U_PORT_MDP_WROT0>;
++		mediatek,larb = <&larb0>;
++	};
++
++	mdp_wrot1: wrot@14008000 {
++		compatible = "mediatek,mt8173-mdp-wrot";
++		reg = <0 0x14008000 0 0x1000>;
++		clocks = <&mmsys CLK_MM_MDP_WROT1>;
++		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++		iommus = <&iommu M4U_PORT_MDP_WROT1>;
++		mediatek,larb = <&larb4>;
++	};
 -- 
-2.7.4
+1.7.9.5
