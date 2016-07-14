@@ -1,38 +1,40 @@
-From: Shuah Khan <shuahkh@osg.samsung.com>
-Subject: [PATCH] media: Doc add missing documentation for samsung,exynos4212-jpeg
-Date: Thu, 14 Jul 2016 14:01:39 -0600
-Message-ID: <1468526499-8840-1-git-send-email-shuahkh@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kgene@kernel.org, k.kozlowski@samsung.com, mchehab@osg.samsung.com, andrzej.p@samsung.com, j.anaszewski@samsung.com, hans.verkuil@cisco.com
-Cc: Shuah Khan <shuahkh@osg.samsung.com>, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: NSP: Correct RAM amount for BCM958625HR board
+Date: Thu, 14 Jul 2016 16:14:17 -0400
+Message-ID: <1468527257-3339-1-git-send-email-jon.mason@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add add missing documentation for samsung,exynos4212-jpeg codec,
-reorder entries to improve readability and make it easier to add
-new entries.
+The BCM958625HR board has 2GB of RAM available.  Increase the amount
+from 512MB to 2GB and add the device type to the memory entry.
 
-Signed-off-by: Shuah Khan <shuahkh@osg.samsung.com>
+Fixes: 9a4865d42fe5 ("ARM: dts: NSP: Specify RAM amount for BCM958625HR board")
+Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/bcm958625hr.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
-index 38941db..093614c 100644
---- a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
-+++ b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
-@@ -3,9 +3,9 @@ Samsung S5P/EXYNOS SoC series JPEG codec
- Required properties:
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index 4239e58..4caa8fa 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -47,7 +47,8 @@
+ 	};
  
- - compatible	: should be one of:
--		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg",
--		  "samsung,exynos3250-jpeg", "samsung,exynos5420-jpeg",
--		  "samsung,exynos5433-jpeg";
-+		  "samsung,s5pv210-jpeg", "samsung,exynos3250-jpeg",
-+		  "samsung,exynos4210-jpeg", "samsung,exynos4212-jpeg",
-+		  "samsung,exynos5420-jpeg", "samsung,exynos5433-jpeg";
- - reg		: address and length of the JPEG codec IP register set;
- - interrupts	: specifies the JPEG codec IP interrupt;
- - clock-names   : should contain:
+ 	memory {
+-		reg = <0x60000000 0x20000000>;
++		device_type = "memory";
++		reg = <0x60000000 0x80000000>;
+ 	};
+ };
+ 
 -- 
-2.7.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
