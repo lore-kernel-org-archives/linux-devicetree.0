@@ -1,96 +1,265 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] Bluetooth: Add LED triggers for HCI frames tx and rx
-Date: Thu, 14 Jul 2016 10:42:16 +0100
-Message-ID: <3C106ED5-5F2C-4EAC-8E60-D915D2AD027A@holtmann.org>
-References: <1466657923-5776-1-git-send-email-guodong.xu@linaro.org> <D2545F6D-7100-4B59-A19D-7CF878902BAA@holtmann.org> <CAFGCpxwuOH83hdPc-c0DV5A_cKMp-0rjxg+3tMwOPTukHGd6vA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFGCpxwuOH83hdPc-c0DV5A_cKMp-0rjxg+3tMwOPTukHGd6vA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH V2 0/1] usb: add HCD providers
+Date: Thu, 14 Jul 2016 17:48:36 +0800
+Message-ID: <20160714094836.GB28730@shlinux2>
+References: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
+ <1468413734-9569-1-git-send-email-zajec5@gmail.com>
+ <87lh15isi7.fsf@linux.intel.com>
+ <CACna6rxGN5evQhRpNORUP4RP3-pMa292pQW=4=VWLLnzJyhJJw@mail.gmail.com>
+ <87inw9ir4k.fsf@linux.intel.com>
+ <CACna6rxscQAE_hrM7Rnsntp5QZjL2kD0+mbuXgfo6kPQZ=UDJw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACna6rxscQAE_hrM7Rnsntp5QZjL2kD0+mbuXgfo6kPQZ=UDJw@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guodong,
+On Wed, Jul 13, 2016 at 04:40:53PM +0200, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+> On 13 July 2016 at 15:50, Felipe Balbi <felipe.balbi@linux.intel.com>=
+ wrote:
+> > Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> writes:
+> >> On 13 July 2016 at 15:20, Felipe Balbi <felipe.balbi@linux.intel.c=
+om> wrote:
+> >>> Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> writes:
+> >>>> Hi again,
+> >>>>
+> >>>> This is my second try of getting HCD providers into usb subsyste=
+m.
+> >>>>
+> >>>> During discussion of V1 I realized there are about 26 drivers ad=
+ding a
+> >>>> single HCD and all of them would need to be modified. So instead=
+ I
+> >>>> decided to put relevant code in usb_add_hcd. It checks if the HC=
+D we
+> >>>> register is a primary one and if so, it registers a proper provi=
+der.
+> >>>>
+> >>>> Please note that of_hcd_xlate_simple was also extended to allow =
+getting
+> >>>> shared HCD (which is used e.g. in case of XHCI).
+> >>>>
+> >>>> So now you can have something like:
+> >>>>
+> >>>> ohci: ohci@21000 {
+> >>>>       #usb-cells =3D <0>;
+> >>>>       compatible =3D "generic-ohci";
+> >>>>       reg =3D <0x00001000 0x1000>;
+> >>>>       interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+> >>>> };
+> >>>>
+> >>>> ehci: ehci@22000 {
+> >>>>       #usb-cells =3D <0>;
+> >>>>       compatible =3D "generic-ehci";
+> >>>>       reg =3D <0x00002000 0x1000>;
+> >>>>       interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> >>>> };
+> >>>>
+> >>>> xhci: xhci@23000 {
+> >>>>       #usb-cells =3D <1>;
+> >>>>       compatible =3D "generic-xhci";
+> >>>>       reg =3D <0x00003000 0x1000>;
+> >>>>       interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> >>>> };
+> >>>>
+> >>>> The last (second) patch is not supposed to be applied, it's used=
+ only as
+> >>>> a proof and example of how providers can be used.
+> >>>
+> >>> nowhere here (or in previous patch) you clarify why exactly you n=
+eed
+> >>> this. What is your LED trigger supposed to do? Why can't it handl=
+e ports
+> >>> changing number in different boots? Why do we need this at all? W=
+hy is
+> >>> your code DT-specific?
+> >>>
+> >>> There are still too many 'unknowns' here.
+> >>
+> >> Are you sure you saw my reply to Peter's question?
+> >> <CACna6rw6QOuY247qvDmO4mKrW3y4yXoeM3qr8SXAwn3CuYAMpw@mail.gmail.co=
+m>
+> >> http://www.spinics.net/lists/linux-usb/msg143708.html
+> >> http://marc.info/?l=3Dlinux-usb&m=3D146838735627093&w=3D2
+> >>
+> >> I think it should answer (some of?) your questions. Can you read i=
+t
+> >> and see if it gets a bit clearer?
+> >
+> > well, all that says is that you're writing a LED trigger to toggle =
+LED
+> > when a USB device gets added to a specified port. I don't think you=
+ need
+> > the actual port number for that. You should have a phandle to the a=
+ctual
+> > port, whatever its number is, or a phandle to the (root-)Hub and a =
+port
+> > number from that hub.
+> >
+> > The problem, really, is that DT descriptor of USB Hosts is very, ve=
+ry
+> > minimal. Perhaps there's something more extensively defined from th=
+e
+> > original Open Firmware USB Addendum.
+>=20
+> Thanks for your effort and looking at this closely. You're right, I'm
+> interested in referencing USB ports, but I'm using controller phandle
+> (and then I specify ports manually).
+>=20
+> Having each port described by DT would be helpful, it's just somethin=
+g
+> I didn't find implemented, so I started looking for different ways. I=
+t
+> seems I should have picked a different solution.
+>=20
+> So should I work on describing USB ports in DT instead? This looks
+> like a complex thing to describe, so I'd like to ask for some guidanc=
+e
+> first. What do you think about following schema/example?
+>=20
+> ohci@1000 {
+>         compatible =3D "generic-ohci";
+>         reg =3D <0x00001000 0x1000>;
+>         interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>=20
+>         primary-hcd {
+>                 ohci_port0: port@0 {
+>                         reg =3D <0>;
+>                 };
+>=20
+>                 ohci_port1: port@1 {
+>                         reg =3D <1>;
+>                 };
+>         }
+> };
+>=20
+> ehci@2000 {
+>         compatible =3D "generic-ehci";
+>         reg =3D <0x00002000 0x1000>;
+>         interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>=20
+>         primary-hcd {
+>                 ehci_port0: port@0 {
+>                         reg =3D <0>;
+>                 };
+>=20
+>                 ehci_port1: port@1 {
+>                         reg =3D <1>;
+>                 };
+>         }
+> };
+>=20
+> xhci@3000 {
+>         compatible =3D "generic-xhci";
+>         reg =3D <0x00003000 0x1000>;
+>         interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+>=20
+>         primary-hcd {
+>         };
+>=20
+>         shared-hcd {
+>                 xhci_port0: port@0 {
+>                         reg =3D <0>;
+>                 };
+>         }
+> };
+>=20
+> With such a DT struct, how could I query port for a Linux-assigned nu=
+mber?
+>=20
+> For example with OHCI, EHCI and XHCI drivers compiled, Linux assigns
+> number 4 to my XHCI's shared HCD's root hub:
+> xhci-hcd 18023000.xhci: xHCI Host Controller
+> xhci-hcd 18023000.xhci: new USB bus registered, assigned bus number 4
+> hub 4-0:1.0: USB hub found
+> hub 4-0:1.0: 1 port detected
+>=20
+> If I disable OHCI and EHCI I get:
+> xhci-hcd xhci-hcd.0: xHCI Host Controller
+> xhci-hcd xhci-hcd.0: new USB bus registered, assigned bus number 2
+> hub 2-0:1.0: USB hub found
+> hub 2-0:1.0: 1 port detected
+>=20
+> So I need my "usbport" trigger driver to be able to get "4-1" in the
+> first case and "2-1" in the second case. I guess I should use
+> &xhci_port0 but what then? How could I translate it into
+> Linux-assigned numbering?
+>=20
 
->>> Two LED triggers are defined: tx_led and rx_led. Upon frames
->>> available in HCI core layer, for tx or for rx, the combined LED
->>> can blink.
->>> 
->>> Verified on HiKey, 96boards. It uses hi6220 SoC and TI WL1835 combo
->>> chip.
->>> 
->>> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>> include/net/bluetooth/hci_core.h |  1 +
->>> net/bluetooth/hci_core.c         |  3 +++
->>> net/bluetooth/leds.c             | 15 +++++++++++++++
->>> net/bluetooth/leds.h             |  2 ++
->>> 4 files changed, 21 insertions(+)
->>> 
->>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
->>> index dc71473..37b8dd9 100644
->>> --- a/include/net/bluetooth/hci_core.h
->>> +++ b/include/net/bluetooth/hci_core.h
->>> @@ -398,6 +398,7 @@ struct hci_dev {
->>>      bdaddr_t                rpa;
->>> 
->>>      struct led_trigger      *power_led;
->>> +     struct led_trigger      *tx_led, *rx_led;
->>> 
->>>      int (*open)(struct hci_dev *hdev);
->>>      int (*close)(struct hci_dev *hdev);
->>> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
->>> index 45a9fc6..c6e1210 100644
->>> --- a/net/bluetooth/hci_core.c
->>> +++ b/net/bluetooth/hci_core.c
->>> @@ -3248,6 +3248,7 @@ int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
->>>      skb_queue_tail(&hdev->rx_q, skb);
->>>      queue_work(hdev->workqueue, &hdev->rx_work);
->>> 
->>> +     hci_leds_blink_oneshot(hdev->rx_led);
->>>      return 0;
->>> }
->>> EXPORT_SYMBOL(hci_recv_frame);
->>> @@ -3325,6 +3326,8 @@ static void hci_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
->>>              BT_ERR("%s sending frame failed (%d)", hdev->name, err);
->>>              kfree_skb(skb);
->>>      }
->>> +
->>> +     hci_leds_blink_oneshot(hdev->tx_led);
->>> }
->> 
->> so I am not convinced that this is the right way of doing TX/RX activity leds. This would have them purely based on HCI traffic and this would include control frames.
->> 
-> 
-> Hi, Marcel
-> 
-> +       if (hci_skb_pkt_type(skb) == HCI_ACLDATA_PKT ||
-> +           hci_skb_pkt_type(skb) == HCI_SCODATA_PKT)
-> +               hci_leds_blink_oneshot(hdev->rx_led);
-> +
-> 
-> By adding pkt_type checks, we can limit LED blinks only at ACL/SCO
-> DATA_PKT. Similar checks can be added for tx_led too.
-> 
-> Does this look good to you? If you agree, I can send v2 to include this change.
+=46or your current design, you need to fix shared hcd for xHCI problem,
+since xHCI has two buses.
 
-we are not going to keep comparing packet types over and over again. The code is already doing that. So functions like hci_sched_acl and hci_acldata_packet are already present in the code.
+Below I supply another thought, please check if it is feasible.
+In below design, you don't need to change any usb codes.
 
->> I think that we want activity leds for actual radio activity. Meaning that when we have an active connection and ACL packets are exchanged or when we are scanning.
->> 
-> 
-> Radio is controlled in Bluetooth module side, not Host. So I'm afraid
-> actual radio activity cannot be captured in its exact form in Host
-> side. The purpose of this patch is not for radio, it is for
-> incoming/outgoing data. For example, it can give user a blinking
-> indicator on RX frames after a Bluetooth mouse is connected. Another
-> example, it can blink at bluetooth streamed audio (TX).
+dts:
 
-So radio activity is caused by RX/TX meaning ACL/SCO packets for sure. There is also other radio activity caused by scanning, inquiry, create connection etc. And the question is if this should be there as well.
+led_1 {
+	led_gpio_1;
+	usb_port =3D &ohci_port0, &ehci_port1;
+}
 
-Regards
+led_2 {
+	led_gpio_2;
+	usb_port =3D &xhci_port0, &xhci_port1;
+}
 
-Marcel
+ohci@1000 {
+        compatible =3D "generic-ohci";
+        reg =3D <0x00001000 0x1000>;
+        interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+
+	ohci_port0: port@0 {
+		reg =3D <0>;
+	};
+
+	ohci_port1: port@1 {
+		reg =3D <1>;
+	};
+};
+
+ehci@2000 {
+        compatible =3D "generic-ehci";
+        reg =3D <0x00002000 0x1000>;
+        interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+
+	ehci_port0: port@0 {
+		reg =3D <0>;
+	};
+
+	ehci_port1: port@1 {
+		reg =3D <1>;
+	};
+};
+
+xhci@3000 {
+        compatible =3D "generic-xhci";
+        reg =3D <0x00003000 0x1000>;
+        interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+
+	/* for xhci, port 0 - [N-1] is USB3, N - [M-1] is USB2/1.
+	 * The port 0 and port N is the same physical port
+	 */
+	xhci_port0: port@0 {
+		reg =3D <0>;
+	};
+
+	xhci_port1: port@1 {
+		reg =3D <1>;
+	};
+
+};
+
+At code, compare the usb_device's device_node at usbport_trig_notify
+if it is at led_1's usb device list, light on it.
+
+--=20
+
+Best Regards,
+Peter Chen
