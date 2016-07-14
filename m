@@ -1,45 +1,61 @@
-From: Duc Dang <dhdang@apm.com>
-Subject: Re: [PATCH v8 0/4] perf: Add APM X-Gene SoC Performance Monitoring
- Unit driver
-Date: Thu, 14 Jul 2016 10:37:25 -0700
-Message-ID: <CADaLNDnNVC48Ce1A+KU2WMULkY+skKVSm1GpaoQ6HvAEmscD=A@mail.gmail.com>
-References: <1468263944-10634-1-git-send-email-ttnguyen@apm.com>
- <20160714131602.GJ29455@arm.com> <CACgAJHyBt4TCoDjm0XGyX8usD_Wt_-7_JA918Wr4oF567wY_EA@mail.gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v9 3/4] perf: xgene: Add APM X-Gene SoC Performance
+ Monitoring Unit driver
+Date: Thu, 14 Jul 2016 10:47:08 -0700
+Message-ID: <1468518428.8745.43.camel@perches.com>
+References: <1468517266-1642-1-git-send-email-ttnguyen@apm.com>
+	 <1468517266-1642-4-git-send-email-ttnguyen@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACgAJHyBt4TCoDjm0XGyX8usD_Wt_-7_JA918Wr4oF567wY_EA@mail.gmail.com>
+In-Reply-To: <1468517266-1642-4-git-send-email-ttnguyen@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tai Tri Nguyen <ttnguyen@apm.com>
-Cc: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Joe Perches <joe@perches.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, LKML <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+To: Tai Nguyen <ttnguyen@apm.com>, mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com, paul.gortmaker@windriver.com
+Cc: dhdang@apm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2016 at 10:28 AM, Tai Tri Nguyen <ttnguyen@apm.com> wrote:
->
-> Hi Will,
->
-> On Thu, Jul 14, 2016 at 6:16 AM, Will Deacon <will.deacon@arm.com> wrote:
-> > On Mon, Jul 11, 2016 at 12:05:40PM -0700, Tai Nguyen wrote:
-> >> In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
-> >> are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
-> >> memory controller bridges and memory. These PMU devices are loosely
-> >> architected to follow the same model as the PMU for ARM cores.
-> >
-> > You might want to add commit messages to patches 1,2 and 4, but then you
-> > can route this via the arm-soc tree.
-> >
-> > Will
->
-> I will add the commit messages to these patches 1, 2 and 4 and rout
-> this via arm-soc tree.
-> CC: Duc (dhdang@apm.com)
+On Thu, 2016-07-14 at 10:27 -0700, Tai Nguyen wrote:
+> This patch adds a driver for the SoC-wide (AKA uncore) PMU hardware
+> found in APM X-Gene SoCs.
 
-I will pull patch 1, 2 and 4 into xgene-next tree and send pull
-request to Arnd and Olof.
+trivia:
 
->
-> Thanks,
-> --
-> Tai
-Regards,
-Duc Dang.
+> diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
+[]
+> +struct xgene_pmu_dev_ctx {
+> +	char *name;
+> +	struct list_head next;
+> +	struct xgene_pmu_dev *pmu_dev;
+> +	struct hw_pmu_info inf;
+> +};
+
+Probably better to use something like
+	char	name[20];
+as the kasprintf can fail and this doesn't
+seem to be freed anywhere.
+> +static char *xgene_pmu_dev_name(u32 type, int id)
+> +{
+> +	switch (type) {
+> +	case PMU_TYPE_L3C:
+> +		return kasprintf(GFP_KERNEL, "l3c%d", id);
+> +	case PMU_TYPE_IOB:
+> +		return kasprintf(GFP_KERNEL, "iob%d", id);
+> +	case PMU_TYPE_MCB:
+> +		return kasprintf(GFP_KERNEL, "mcb%d", id);
+> +	case PMU_TYPE_MC:
+> +		return kasprintf(GFP_KERNEL, "mc%d", id);
+> +	default:
+> +		return kasprintf(GFP_KERNEL, "unknown");
+> +	}
+> +}
+
+[]
+=09
+> +static struct
+> +xgene_pmu_dev_ctx *acpi_get_pmu_hw_inf(struct xgene_pmu *xgene_pmu,
+> +				=A0=A0=A0=A0=A0=A0=A0struct acpi_device *adev, u32 type)
+> +{
+[]
+> +	ctx->name =3D xgene_pmu_dev_name(type, enable_bit);
+>=20
