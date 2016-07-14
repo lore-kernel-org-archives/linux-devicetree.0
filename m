@@ -1,243 +1,111 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
-Date: Thu, 14 Jul 2016 13:54:26 +0000
-Message-ID: <20160714135426.GC31509@io.lakedaemon.net>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org>
- <1468135649-19980-3-git-send-email-vw@iommu.org>
- <20160713200906.GB31509@io.lakedaemon.net>
- <578708D5.6050009@iommu.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <578708D5.6050009@iommu.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wan Zongshun <vw@iommu.org>
-Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, robh@kernel.org, p.zabel@pengutronix.de, Wan Zongshun <mcuos.com@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH] net: phy: micrel: Add KSZ8041FTL fiber mode support
+Date: Thu, 14 Jul 2016 16:29:43 +0200
+Message-ID: <1468506583-27299-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wan Zongshun,
+We can't detect the FXEN (fiber mode) bootstrap pin, so configure
+it via a boolean device tree property "micrel,fiber-mode".
+If it is enabled, auto-negotiation is not supported.
+The only available modes are 100base-fx (full duplex and half duplex).
 
-On Thu, Jul 14, 2016 at 11:36:53AM +0800, Wan Zongshun wrote:
-> On 2016=E5=B9=B407=E6=9C=8814=E6=97=A5 04:09, Jason Cooper wrote:
-> >On Sun, Jul 10, 2016 at 03:27:22PM +0800, Wan Zongshun wrote:
-> >>This patch is to add irqchip driver support for nuc900 plat,
-> >>current this driver only supports nuc970 SoC.
-> >>
-> >>Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
-> >>---
-> >>  arch/arm/mach-w90x900/include/mach/irqs.h |   5 +
-> >>  drivers/irqchip/Makefile                  |   1 +
-> >>  drivers/irqchip/irq-nuc900.c              | 150 +++++++++++++++++=
-+++++++++++++
-> >>  3 files changed, 156 insertions(+)
-> >>  create mode 100644 drivers/irqchip/irq-nuc900.c
-> >>
-> >>diff --git a/arch/arm/mach-w90x900/include/mach/irqs.h b/arch/arm/m=
-ach-w90x900/include/mach/irqs.h
-> >>index 9d5cba3..3b035c6 100644
-> >>--- a/arch/arm/mach-w90x900/include/mach/irqs.h
-> >>+++ b/arch/arm/mach-w90x900/include/mach/irqs.h
-> >>@@ -59,7 +59,12 @@
-> >>  #define IRQ_KPI		W90X900_IRQ(29)
-> >>  #define IRQ_P2SGROUP	W90X900_IRQ(30)
-> >>  #define IRQ_ADC		W90X900_IRQ(31)
-> >>+
-> >>+#if !defined(CONFIG_SOC_NUC900)
-> >>  #define NR_IRQS		(IRQ_ADC+1)
-> >>+#else
-> >>+#define NR_IRQS		62
-> >>+#endif
-> >
-> >Arnd already covered this...
-> >
-> >>
-> >>  /*for irq group*/
-> >>
-> >>diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> >>index 38853a1..9ccd5af8a 100644
-> >>--- a/drivers/irqchip/Makefile
-> >>+++ b/drivers/irqchip/Makefile
-> >>@@ -69,3 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+=3D irq-pic32-evic.o
-> >>  obj-$(CONFIG_MVEBU_ODMI)		+=3D irq-mvebu-odmi.o
-> >>  obj-$(CONFIG_LS_SCFG_MSI)		+=3D irq-ls-scfg-msi.o
-> >>  obj-$(CONFIG_EZNPS_GIC)			+=3D irq-eznps.o
-> >>+obj-$(CONFIG_SOC_NUC970)		+=3D irq-nuc900.o
-> >>diff --git a/drivers/irqchip/irq-nuc900.c b/drivers/irqchip/irq-nuc=
-900.c
-> >>new file mode 100644
-> >>index 0000000..c4b2e39
-> >>--- /dev/null
-> >>+++ b/drivers/irqchip/irq-nuc900.c
-> >>@@ -0,0 +1,150 @@
-> >>+/*
-> >>+ * Copyright 2016 Wan Zongshun <mcuos.com@gmail.com>
-> >>+ *
-> >>+ * The code contained herein is licensed under the GNU General Pub=
-lic
-> >>+ * License. You may obtain a copy of the GNU General Public Licens=
-e
-> >>+ * Version 2 or later at the following locations:
-> >>+ *
-> >>+ * http://www.opensource.org/licenses/gpl-license.html
-> >>+ * http://www.gnu.org/copyleft/gpl.html
-> >>+ */
-> >>+
-> >>+#include <linux/module.h>
-> >>+#include <linux/init.h>
-> >>+#include <linux/irq.h>
-> >>+#include <linux/irqchip.h>
-> >>+#include <linux/irqdomain.h>
-> >>+#include <linux/io.h>
-> >>+#include <linux/ioport.h>
-> >>+#include <linux/of_address.h>
-> >>+#include <linux/of_irq.h>
-> >>+
-> >>+#include <asm/exception.h>
-> >>+#include <asm/hardirq.h>
-> >>+
-> >>+#define	REG_AIC_SCR1	0x00
-> >>+#define	REG_AIC_SCR2	0x04
-> >>+#define	REG_AIC_SCR3	0x08
-> >>+#define	REG_AIC_SCR4	0x0C
-> >>+#define	REG_AIC_SCR5	0x10
-> >>+#define	REG_AIC_SCR6	0x14
-> >>+#define	REG_AIC_SCR7	0x18
-> >>+#define	REG_AIC_SCR8	0x1C
-> >>+#define	REG_AIC_SCR9	0x20
-> >>+#define	REG_AIC_SCR10	0x24
-> >>+#define	REG_AIC_SCR11	0x28
-> >>+#define	REG_AIC_SCR12	0x2C
-> >>+#define	REG_AIC_SCR13	0x30
-> >>+#define	REG_AIC_SCR14	0x34
-> >>+#define	REG_AIC_SCR15	0x38
-> >>+#define	REG_AIC_IRSR	0x100
-> >>+#define	REG_AIC_IRSRH	0x104
-> >>+#define	REG_AIC_IASR	0x108
-> >>+#define	REG_AIC_IASRH	0x10C
-> >>+#define	REG_AIC_ISR	0x110
-> >>+#define	REG_AIC_ISRH	0x114
-> >>+#define	REG_AIC_IPER	0x118
-> >>+#define	REG_AIC_ISNR	0x120
-> >>+#define	REG_AIC_OISR	0x124
-> >>+#define	REG_AIC_IMR	0x128
-> >>+#define	REG_AIC_IMRH	0x12C
-> >>+#define	REG_AIC_MECR	0x130
-> >>+#define	REG_AIC_MECRH	0x134
-> >>+#define	REG_AIC_MDCR	0x138
-> >>+#define	REG_AIC_MDCRH	0x13C
-> >>+#define	REG_AIC_SSCR	0x140
-> >>+#define	REG_AIC_SSCRH	0x144
-> >>+#define	REG_AIC_SCCR	0x148
-> >>+#define	REG_AIC_SCCRH	0x14C
-> >>+#define	REG_AIC_EOSCR	0x150
-> >
-> >Please remove unused defines.
->=20
-> Okay.
->=20
-> >
-> >>+
-> >>+static void __iomem *aic_base;
-> >>+static struct irq_domain *aic_domain;
-> >>+
-> >>+static void nuc900_irq_mask(struct irq_data *d)
-> >>+{
-> >>+	if (d->irq < 32)
-> >>+		writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
-> >>+	else
-> >>+		writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
-> >>+}
-> >>+
-> >>+static void nuc900_irq_ack(struct irq_data *d)
-> >>+{
-> >>+	writel(0x01, aic_base + REG_AIC_EOSCR);
-> >>+}
-> >>+
-> >>+static void nuc900_irq_unmask(struct irq_data *d)
-> >>+{
-> >>+	if (d->irq < 32)
-> >>+		writel(1 << (d->irq), aic_base + REG_AIC_MECR);
-> >>+	else
-> >>+		writel(1 << (d->irq - 32), aic_base + REG_AIC_MECRH);
-> >>+}
-> >>+
-> >>+static struct irq_chip nuc900_irq_chip =3D {
-> >>+	.irq_ack	=3D nuc900_irq_ack,
-> >>+	.irq_mask	=3D nuc900_irq_mask,
-> >>+	.irq_unmask	=3D nuc900_irq_unmask,
-> >>+};
-> >>+
-> >>+void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
-> >>+{
-> >>+	u32 hwirq;
-> >>+
-> >>+	hwirq =3D readl(aic_base + REG_AIC_IPER);
-> >>+	hwirq =3D readl(aic_base + REG_AIC_ISNR);
-> >>+	if (!hwirq)
-> >>+		writel(0x01, aic_base + REG_AIC_EOSCR);
-> >
-> >Could you explain what's going on here?
->=20
-> AIC_IPER, When the AIC generates the interrupt, VECTOR represents
-> the interrupt channel number that is active, enabled, and has the
-> highest priority.
->=20
-> The value of VECTOR is copied to the register AIC_ISNR thereafter by
-> the AIC. This register was restored a value 0 after it was read by
-> the
-> interrupt handler.
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+Changes since v1:
+ - Rename device tree property from "fxen" to "micrel,fiber-mode".
+ - Move device tree documentation into micrel.txt, this property could be
+   useful for other PHYs, too.
+---
+ Documentation/devicetree/bindings/net/micrel.txt | 10 +++++++
+ drivers/net/phy/micrel.c                         | 34 ++++++++++++++++++++++--
+ include/linux/micrel_phy.h                       |  1 +
+ 3 files changed, 43 insertions(+), 2 deletions(-)
 
-So, iiuc, the first readl() of AIC_IPER kicks the AIC to copy the value
-of VECTOR into AIC_ISNR?  Then we can read it?
-
-If so, please add a comment above the code explaining that.
-
-> So I must read two registers for one irq number, after read IPER,
-> the ISNR(bit0:5) will be updated. ISNR value has no need do offset,
-> it is better than read IPER(bit2:7).
-
-But you aren't using the value from the first readl(...AIC_IPER)?  You
-overwrite hwirq with the value from the second readl(...AIC_ISNR)
-=2E..
-
-The first part of your explaination makes sense, but this part isn't
-clear to me.
-
-
-> =E2=80=9Cwritel(0x01, aic_base + REG_AIC_EOSCR);=E2=80=9D=E3=80=80see=
-ms not necessary here,
-> since irqchip has the ack interface. I will remove it.
-
-Ok, thanks.
-
-> This AIC_EOSCR register is used by the interrupt service routine to
-> indicate that it is completely served. Thus, the
-> interrupt handler can write any value to this register to indicate
-> the end of its interrupt service.
-
-A short comment in the ack routine would be helpful.
-
-
-> >>+IRQCHIP_DECLARE(nuc900, "nuvoton,nuc900-aic", aic_of_init);
-> >
-> >afaict, there is no 'nuc900', that's a family.  If so, this compatib=
-le
-> >needs to be 'nuvoton,nuc970-aic'.
-> >
->=20
-> IRQCHIP_DECLARE(nuvoton, "nuvoton,nuc900-aic", aic_of_init);, change
-> nuc900 to nuvoton, ok?
-
-No, I was only talking about the second argument.  The compatible
-string.  For devicetree, it needs to refer to a specific model number.
-I suspect 'nuc900' is equivalent to saying 'nuc9xx'.  Meaning it refers
-to a family of devices.  The compatible string needs to refer
-specifically to the first model that the binding is compatible with.  I=
-n
-this case, I presume that would be 'nuvoton,nuc970-aic'.
-
-thx,
-
-Jason.
+diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
+index 87496a8..8d157f0 100644
+--- a/Documentation/devicetree/bindings/net/micrel.txt
++++ b/Documentation/devicetree/bindings/net/micrel.txt
+@@ -35,3 +35,13 @@ Optional properties:
+ 	supported clocks:
+ 	- KSZ8021, KSZ8031, KSZ8081, KSZ8091: "rmii-ref": The RMII reference
+ 	  input clock. Used to determine the XI input clock.
++
++ - micrel,fiber-mode: If present the PHY is configured to operate in fiber mode
++
++	Some PHYs, such as the KSZ8041FTL variant, support fiber mode, enabled
++	by the FXEN boot strapping pin. It can't be determined from the PHY
++	registers whether the PHY is in fiber mode, so this boolean device tree
++	property can be used to describe it.
++
++	In fiber mode, auto-negotiation is disabled and the PHY can only work in
++	100base-fx (full and half duplex) modes.
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 5a8fefc..059f13b 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -311,6 +311,36 @@ static int kszphy_config_init(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++static int ksz8041_config_init(struct phy_device *phydev)
++{
++	struct device_node *of_node = phydev->mdio.dev.of_node;
++
++	/* Limit supported and advertised modes in fiber mode */
++	if (of_property_read_bool(of_node, "micrel,fiber-mode")) {
++		phydev->dev_flags |= MICREL_PHY_FXEN;
++		phydev->supported &= SUPPORTED_FIBRE |
++				     SUPPORTED_100baseT_Full |
++				     SUPPORTED_100baseT_Half;
++		phydev->advertising &= ADVERTISED_FIBRE |
++				       ADVERTISED_100baseT_Full |
++				       ADVERTISED_100baseT_Half;
++		phydev->autoneg = AUTONEG_DISABLE;
++	}
++
++	return kszphy_config_init(phydev);
++}
++
++static int ksz8041_config_aneg(struct phy_device *phydev)
++{
++	/* Skip auto-negotiation in fiber mode */
++	if (phydev->dev_flags & MICREL_PHY_FXEN) {
++		phydev->speed = SPEED_100;
++		return 0;
++	}
++
++	return genphy_config_aneg(phydev);
++}
++
+ static int ksz9021_load_values_from_of(struct phy_device *phydev,
+ 				       const struct device_node *of_node,
+ 				       u16 reg,
+@@ -788,8 +818,8 @@ static struct phy_driver ksphy_driver[] = {
+ 	.flags		= PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
+ 	.driver_data	= &ksz8041_type,
+ 	.probe		= kszphy_probe,
+-	.config_init	= kszphy_config_init,
+-	.config_aneg	= genphy_config_aneg,
++	.config_init	= ksz8041_config_init,
++	.config_aneg	= ksz8041_config_aneg,
+ 	.read_status	= genphy_read_status,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+ 	.config_intr	= kszphy_config_intr,
+diff --git a/include/linux/micrel_phy.h b/include/linux/micrel_phy.h
+index 2e5b194..257173e 100644
+--- a/include/linux/micrel_phy.h
++++ b/include/linux/micrel_phy.h
+@@ -37,6 +37,7 @@
+ 
+ /* struct phy_device dev_flags definitions */
+ #define MICREL_PHY_50MHZ_CLK	0x00000001
++#define MICREL_PHY_FXEN		0x00000002
+ 
+ #define MICREL_KSZ9021_EXTREG_CTRL	0xB
+ #define MICREL_KSZ9021_EXTREG_DATA_WRITE	0xC
+-- 
+2.8.1
