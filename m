@@ -1,7 +1,7 @@
 From: Tai Nguyen <ttnguyen@apm.com>
-Subject: [PATCH v9 1/4] MAINTAINERS: Add entry for APM X-Gene SoC PMU driver
-Date: Thu, 14 Jul 2016 10:27:43 -0700
-Message-ID: <1468517266-1642-2-git-send-email-ttnguyen@apm.com>
+Subject: [PATCH v9 4/4] arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
+Date: Thu, 14 Jul 2016 10:27:46 -0700
+Message-ID: <1468517266-1642-5-git-send-email-ttnguyen@apm.com>
 References: <1468517266-1642-1-git-send-email-ttnguyen@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1468517266-1642-1-git-send-email-ttnguyen@apm.com>
@@ -10,30 +10,81 @@ To: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com, joe@perc
 Cc: dhdang@apm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, Tai Nguyen <ttnguyen@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the MAINTAINERS entry for APM X-Gene SoC PMU driver.
+This patch adds APM X-Gene SoC PMU DTS entries.
 
 Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/apm/apm-storm.dtsi | 58 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1209323..41938e7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -841,6 +841,13 @@ S:	Supported
- F:	drivers/net/ethernet/apm/xgene/
- F:	Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+index 5147d76..1d57820 100644
+--- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+@@ -572,6 +572,64 @@
+ 			};
+ 		};
  
-+APPLIED MICRO (APM) X-GENE SOC PMU
-+M:	Tai Nguyen <ttnguyen@apm.com>
-+S:	Supported
-+F:	drivers/perf/xgene_pmu.c
-+F:	Documentation/perf/xgene-pmu.txt
-+F:	Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
++		pmu: pmu@78810000 {
++			compatible = "apm,xgene-pmu-v2";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			regmap-csw = <&csw>;
++			regmap-mcba = <&mcba>;
++			regmap-mcbb = <&mcbb>;
++			reg = <0x0 0x78810000 0x0 0x1000>;
++			interrupts = <0x0 0x22 0x4>;
 +
- APTINA CAMERA SENSOR PLL
- M:	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
- L:	linux-media@vger.kernel.org
++			pmul3c@7e610000 {
++				compatible = "apm,xgene-pmu-l3c";
++				reg = <0x0 0x7e610000 0x0 0x1000>;
++			};
++
++			pmuiob@7e940000 {
++				compatible = "apm,xgene-pmu-iob";
++				reg = <0x0 0x7e940000 0x0 0x1000>;
++			};
++
++			pmucmcb@7e710000 {
++				compatible = "apm,xgene-pmu-mcb";
++				reg = <0x0 0x7e710000 0x0 0x1000>;
++				enable-bit-index = <0>;
++			};
++
++			pmucmcb@7e730000 {
++				compatible = "apm,xgene-pmu-mcb";
++				reg = <0x0 0x7e730000 0x0 0x1000>;
++				enable-bit-index = <1>;
++			};
++
++			pmucmc@7e810000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e810000 0x0 0x1000>;
++				enable-bit-index = <0>;
++			};
++
++			pmucmc@7e850000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e850000 0x0 0x1000>;
++				enable-bit-index = <1>;
++			};
++
++			pmucmc@7e890000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e890000 0x0 0x1000>;
++				enable-bit-index = <2>;
++			};
++
++			pmucmc@7e8d0000 {
++				compatible = "apm,xgene-pmu-mc";
++				reg = <0x0 0x7e8d0000 0x0 0x1000>;
++				enable-bit-index = <3>;
++			};
++		};
++
+ 		pcie0: pcie@1f2b0000 {
+ 			status = "disabled";
+ 			device_type = "pci";
 -- 
 1.9.1
