@@ -1,73 +1,37 @@
-From: Wan Zongshun <vw@iommu.org>
-Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
-Date: Thu, 14 Jul 2016 16:52:29 +0800
-Message-ID: <578752CD.3010408@iommu.org>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org>
- <1761342.TGgYi16yul@wuerfel> <5784968A.7080007@iommu.org>
- <5434334.4rKzx80y6W@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5434334.4rKzx80y6W@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, jason@lakedaemon.net, Wan Zongshun <mcuos.com@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, p.zabel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org
+From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v7 0/5] support rockchip dwc3 driver
+Date: Thu, 14 Jul 2016 16:59:17 +0800
+Message-ID: <1468486762-21960-1-git-send-email-william.wu@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This series add support for rockchip dwc3 driver,
+and add additional optional properties for specific
+platforms (e.g., rockchip rk3399 platform).
+
+William Wu (5):
+  usb: dwc3: of-simple: add compatible for rockchip rk3399
+  usb: dwc3: add dis_u2_freeclk_exists_quirk
+  usb: dwc3: make usb2 phy utmi interface configurable in DT
+  usb: dwc3: add dis_del_phy_power_chg_quirk
+  usb: dwc3: rockchip: add devicetree bindings documentation
+
+ Documentation/devicetree/bindings/usb/dwc3.txt     |  8 +++
+ .../devicetree/bindings/usb/rockchip,dwc3.txt      | 59 ++++++++++++++++++++++
+ drivers/usb/dwc3/core.c                            | 35 +++++++++++++
+ drivers/usb/dwc3/core.h                            | 18 +++++++
+ drivers/usb/dwc3/dwc3-of-simple.c                  |  1 +
+ 5 files changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+
+-- 
+1.9.1
 
 
-On 2016=E5=B9=B407=E6=9C=8812=E6=97=A5 16:26, Arnd Bergmann wrote:
-> On Tuesday, July 12, 2016 3:04:42 PM CEST Wan Zongshun wrote:
->>>
->>> Ideally, this should just go away once we use SPARSE_IRQ.
->>
->> This platform also can use SPARSE_IRQ? this just a simple irq map an=
-d no
->> more irq number in this Soc.
->>
->
-> SPARSE_IRQ is implied by ARCH_MULTIPLATFORM, so we will have to
-> use it once that gets enabled.
->
-> Your new irqchip driver already handles IRQ domains, so it will
-> work out of the box with SPARSE_IRQ, but you have to change the
-> reference to "NR_IRQS" into something else.
->
-> I've prototyped a patch series to enable ARCH_MULTIPLATFORM,
-> I hope you can start working from what I have and get it to run.
-
-I go through the ARCH_MULTIPLATFORM and SPARSE_IRQ related codes, but I=
-=20
-find I also have to define the NUC900_NR_IRQS firstly like below, so=20
-that I can init the .nr_irq.
-
-+#if !defined(CONFIG_SOC_NUC970)
-  #define NUC900_NR_IRQS		(IRQ_ADC+1)
-+#else
-+#define NUC900_NR_IRQS		62
-+#endif
-
-  DT_MACHINE_START(nuc900_dt, "Nuvoton NUC900 (Device Tree Support)")
-         .dt_compat      =3D nuc900_dt_compat,
-+       .nr_irqs        =3D NUC900_NR_IRQS,
-  MACHINE_END
-
-and then in my irqchip driver, I will use the NUC900_NR_IRQS:
-
-+aic_domain =3D irq_domain_add_linear(node, NUC900_NR_IRQS,
-+				    &aic_irq_domain_ops, NULL);
-
-
-Is that a right usage?
-
->
-> 	Arnd
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
