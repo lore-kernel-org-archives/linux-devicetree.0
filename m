@@ -1,123 +1,225 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH] net: phy: micrel: Add KSZ8041FTL fiber mode support
-Date: Thu, 14 Jul 2016 12:18:48 +0200
-Message-ID: <1468491528-17515-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Philipp Zabel <p.zabel@pengutronix.de>
+From: Stefano Stabellini <sstabellini@kernel.org>
+Subject: Re: [Xen-devel] [PATCH v4] xen/arm: Add a clock property
+Date: Thu, 14 Jul 2016 11:25:21 +0100 (BST)
+Message-ID: <alpine.DEB.2.10.1607141118490.26575@sstabellini-ThinkPad-X260>
+References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com> <146836236759.73491.11707389619985827497@resonance> <c320f820-8749-f4a4-435e-ddd9379655b5@de.bosch.com> <alpine.DEB.2.10.1607131941200.26575@sstabellini-ThinkPad-X260> <57868EDE.6060406@gmail.com>
+ <146844380895.73491.4867379517577413421@resonance>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <146844380895.73491.4867379517577413421@resonance>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Dirk Behme <dirk.behme@gmail.com>, Stefano Stabellini <sstabellini@kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Julien Grall <julien.grall@arm.com>, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We can't detect the FXEN (fiber mode) bootstrap pin, so configure
-it via a boolean device tree property "fxen". If it is enabled,
-auto-negotiation is not supported. The only available modes are
-100base-fx (full duplex and half duplex).
+On Wed, 13 Jul 2016, Michael Turquette wrote:
+> Quoting Dirk Behme (2016-07-13 11:56:30)
+> > On 13.07.2016 20:43, Stefano Stabellini wrote:
+> > > On Wed, 13 Jul 2016, Dirk Behme wrote:
+> > >> On 13.07.2016 00:26, Michael Turquette wrote:
+> > >>> Quoting Dirk Behme (2016-07-12 00:46:45)
+> > >>>> Clocks described by this property are reserved for use by Xen, and the OS
+> > >>>> must not alter their state any way, such as disabling or gating a clock,
+> > >>>> or modifying its rate. Ensuring this may impose constraints on parent
+> > >>>> clocks or other resources used by the clock tree.
+> > >>>
+> > >>> Note that clk_prepare_enable will not prevent the rate from changing
+> > >>> (clk_set_rate) or a parent from changing (clk_set_parent). The only way
+> > >>> to do this currently would be to set the following flags on the effected
+> > >>> clocks:
+> > >>>
+> > >>>     CLK_SET_RATE_GATE
+> > >>>     CLK_SET_PARENT_GATE
+> > >>
+> > >>
+> > >>
+> > >> Regarding setting flags, I think we already talked about that. I think the
+> > >> conclusion was that in our case its not possible to manipulate the flags in
+> > >> the OS as this isn't intended to be done in cases like ours. Therefore no API
+> > >> is exported for this.
+> > >>
+> > >> I.e. if we need to set these flags, we have to do that in Xen where we add the
+> > >> clocks to the hypervisor node in the device tree. And not in the kernel patch
+> > >> discussed here.
+> > >
+> > > These are internal Linux flags, aren't they?
+> > 
+> > 
+> > I've been under the impression that you can set clock "flags" via the 
+> > device tree. Seems I need to re-check that ;)
+> 
+> Right, you cannot set flags from the device tree. Also, setting these
+> flags is done by the clock provider driver, not a consumer. Xen is the
+> consumer.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
-I didn't see a way to reliably detect whether the PHY is set to fiber
-mode in the datasheet [1], so this patch adds a device tree property
-to enforce fiber mode (disable auto-negotiation, set speed to 100).
+Just for disambiguation, I guess you are referring to the Xen code in
+Linux (such as arch/arm/xen/enlighten.c), right?
 
-[1] http://ww1.microchip.com/downloads/en/DeviceDoc/ksz8041tl-ftl-mll.pdf
----
- .../devicetree/bindings/net/micrel-ksz8041.txt     | 24 ++++++++++++++++
- drivers/net/phy/micrel.c                           | 32 ++++++++++++++++++++--
- include/linux/micrel_phy.h                         |  1 +
- 3 files changed, 55 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/micrel-ksz8041.txt
+We have "Xen", the hypervisor, which runs before Linux and it is a
+separate component running at EL2, and we have Xen support in Linux,
+such as arch/arm/xen and drivers/xen. These are drivers to communicate
+with the Xen hypervisor and other components in a Xen system.
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-ksz8041.txt b/Documentation/devicetree/bindings/net/micrel-ksz8041.txt
-new file mode 100644
-index 0000000..4bce38d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/micrel-ksz8041.txt
-@@ -0,0 +1,24 @@
-+Micrel KSZ8041 Gigabit Ethernet PHY
-+
-+The KSZ8041FTL variant supports fiber mode, enabled by the FXEN boot
-+strapping pin. It can't be determined from the PHY registers whether
-+the PHY is in fiber mode, so a boolean device tree property can be
-+used to describe this.
-+
-+Optional properties:
-+ - fxen : KSZ8041FTL is strapped to fiber mode. Auto-negotiation is disabled
-+          and the PHY can only work in 100base-fx (full and half duplex) modes.
-+
-+Examples:
-+
-+	mdio {
-+		phy0: ethernet-phy@0 {
-+			reg = <0>;
-+			fxen;
-+		};
-+	};
-+	ethernet@70000 {
-+		status = "okay";
-+		phy = <&phy0>;
-+		phy-mode = "rgmii-id";
-+	};
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 5a8fefc..4ecd929 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -311,6 +311,34 @@ static int kszphy_config_init(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int ksz8041_config_init(struct phy_device *phydev)
-+{
-+	/* Limit supported and advertised modes in fiber mode */
-+	if (of_property_read_bool(phydev->mdio.dev.of_node, "fxen")) {
-+		phydev->dev_flags |= MICREL_PHY_FXEN;
-+		phydev->supported &= SUPPORTED_FIBRE |
-+				     SUPPORTED_100baseT_Full |
-+				     SUPPORTED_100baseT_Half;
-+		phydev->advertising &= ADVERTISED_FIBRE |
-+				       ADVERTISED_100baseT_Full |
-+				       ADVERTISED_100baseT_Half;
-+		phydev->autoneg = AUTONEG_DISABLE;
-+	}
-+
-+	return kszphy_config_init(phydev);
-+}
-+
-+static int ksz8041_config_aneg(struct phy_device *phydev)
-+{
-+	/* Skip auto-negotiation in fiber mode */
-+	if (phydev->dev_flags & MICREL_PHY_FXEN) {
-+		phydev->speed = SPEED_100;
-+		return 0;
-+	}
-+
-+	return genphy_config_aneg(phydev);
-+}
-+
- static int ksz9021_load_values_from_of(struct phy_device *phydev,
- 				       const struct device_node *of_node,
- 				       u16 reg,
-@@ -788,8 +816,8 @@ static struct phy_driver ksphy_driver[] = {
- 	.flags		= PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
- 	.driver_data	= &ksz8041_type,
- 	.probe		= kszphy_probe,
--	.config_init	= kszphy_config_init,
--	.config_aneg	= genphy_config_aneg,
-+	.config_init	= ksz8041_config_init,
-+	.config_aneg	= ksz8041_config_aneg,
- 	.read_status	= genphy_read_status,
- 	.ack_interrupt	= kszphy_ack_interrupt,
- 	.config_intr	= kszphy_config_intr,
-diff --git a/include/linux/micrel_phy.h b/include/linux/micrel_phy.h
-index 2e5b194..257173e 100644
---- a/include/linux/micrel_phy.h
-+++ b/include/linux/micrel_phy.h
-@@ -37,6 +37,7 @@
- 
- /* struct phy_device dev_flags definitions */
- #define MICREL_PHY_50MHZ_CLK	0x00000001
-+#define MICREL_PHY_FXEN		0x00000002
- 
- #define MICREL_KSZ9021_EXTREG_CTRL	0xB
- #define MICREL_KSZ9021_EXTREG_DATA_WRITE	0xC
--- 
-2.8.1
+In this case, the Xen hypervisor would be the owner of the clock. Xen
+support in Linux, specifically arch/arm/xen/enlighten.c, only comes into
+the picture to "warn" Linux that shouldn't really be messing with the
+clocks. I guess that from a Linux clock driver point of view, it is a
+consumer.
+
+I hope that helps.
+
+
+> > > They cannot be set in Xen.
+> > >
+> > > If the only way to make sure that clk_set_rate and clk_set_parent fail
+> > > on one of the clocks "owned" by Xen is to set CLK_SET_RATE_GATE and
+> > > CLK_SET_PARENT_GATE, we'll have to do that. Even if it means introducing
+> > > a new internal Linux API.
+> > >
+> > >
+> > >>> And then enable the clocks. All calls to clk_set_parent and clk_set_rate
+> > >>> with those clocks in the path will fail, so long as they are prepared
+> > >>> and enabled. This implementation detail is specific to Linux and
+> > >>> definitely should not go into the binding.
+> > >>>
+> > >>>>
+> > >>>> This property is used to proxy clocks for devices Xen has taken ownership
+> > >>>> of, such as UARTs, for which the associated clock controller(s) remain
+> > >>>> under the control of Dom0.
+> > >>>
+> > >>> I'm still not completely sure about this type of layering and whether or
+> > >>> not it is sane. If you want Xen to manage the clock controller, AND you
+> > >>> want Linux guests or dom0 to consume those clocks and manipulate them in
+> > >>> other drivers, then this solution won't work.
+> > >>>
+> > >>> Regards,
+> > >>> Mike
+> > >>>
+> > >>>>
+> > >>>> Up to now, the workaround for this has been to use the Linux kernel
+> > >>>> command line parameter 'clk_ignore_unused'. See Xen bug
+> > >>>>
+> > >>>> http://bugs.xenproject.org/xen/bug/45
+> > >>>>
+> > >>>> too.
+> > >>>>
+> > >>>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+> > >>>> ---
+> > >>>> Changes in v4: Switch to the xen.txt description proposed by Mark:
+> > >>>>                 https://www.spinics.net/lists/arm-kernel/msg516158.html
+> > >>>>
+> > >>>> Changes in v3: Use the xen.txt description proposed by Michael. Thanks!
+> > >>>>
+> > >>>> Changes in v2: Drop the Linux implementation details like
+> > >>>> clk_disable_unused
+> > >>>>                 in xen.txt.
+> > >>>>
+> > >>>>   Documentation/devicetree/bindings/arm/xen.txt | 12 +++++++
+> > >>>>   arch/arm/xen/enlighten.c                      | 47
+> > >>>> +++++++++++++++++++++++++++
+> > >>>>   2 files changed, 59 insertions(+)
+> > >>>>
+> > >>>> diff --git a/Documentation/devicetree/bindings/arm/xen.txt
+> > >>>> b/Documentation/devicetree/bindings/arm/xen.txt
+> > >>>> index c9b9321..437e50b 100644
+> > >>>> --- a/Documentation/devicetree/bindings/arm/xen.txt
+> > >>>> +++ b/Documentation/devicetree/bindings/arm/xen.txt
+> > >>>> @@ -17,6 +17,18 @@ the following properties:
+> > >>>>     A GIC node is also required.
+> > >>>>     This property is unnecessary when booting Dom0 using ACPI.
+> > >>>>
+> > >>>> +Optional properties:
+> > >>>> +
+> > >>>> +- clocks: a list of phandle + clock-specifier pairs
+> > >>>> +  Clocks described by this property are reserved for use by Xen, and the
+> > >>>> +  OS must not alter their state any way, such as disabling or gating a
+> > >>>> +  clock, or modifying its rate. Ensuring this may impose constraints on
+> > >>>> +  parent clocks or other resources used by the clock tree.
+> > >>>> +
+> > >>>> +  Note: this property is used to proxy clocks for devices Xen has taken
+> > >>>> +  ownership of, such as UARTs, for which the associated clock
+> > >>>> +  controller(s) remain under the control of Dom0.
+> > >>>> +
+> > >>>>   To support UEFI on Xen ARM virtual platforms, Xen populates the FDT
+> > >>>> "uefi" node
+> > >>>>   under /hypervisor with following parameters:
+> > >>>>
+> > >>>> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> > >>>> index 47acb36..5c546d0 100644
+> > >>>> --- a/arch/arm/xen/enlighten.c
+> > >>>> +++ b/arch/arm/xen/enlighten.c
+> > >>>> @@ -24,6 +24,7 @@
+> > >>>>   #include <linux/of_fdt.h>
+> > >>>>   #include <linux/of_irq.h>
+> > >>>>   #include <linux/of_address.h>
+> > >>>> +#include <linux/clk-provider.h>
+> > >>>>   #include <linux/cpuidle.h>
+> > >>>>   #include <linux/cpufreq.h>
+> > >>>>   #include <linux/cpu.h>
+> > >>>> @@ -444,6 +445,52 @@ static int __init xen_pm_init(void)
+> > >>>>   }
+> > >>>>   late_initcall(xen_pm_init);
+> > >>>>
+> > >>>> +/*
+> > >>>> + * Check if we want to register some clocks, that they
+> > >>>> + * are not freed because unused by clk_disable_unused().
+> > >>>> + * E.g. the serial console clock.
+> > >>>> + */
+> > >>>> +static int __init xen_arm_register_clks(void)
+> > >>>> +{
+> > >>>> +       struct clk *clk;
+> > >>>> +       struct device_node *xen_node;
+> > >>>> +       unsigned int i, count;
+> > >>>> +       int ret = 0;
+> > >>>> +
+> > >>>> +       xen_node = of_find_compatible_node(NULL, NULL, "xen,xen");
+> > >>>> +       if (!xen_node) {
+> > >>>> +               pr_err("Xen support was detected before, but it has
+> > >>>> disappeared\n");
+> > >>>> +               return -EINVAL;
+> > >>>> +       }
+> > >>>> +
+> > >>>> +       count = of_clk_get_parent_count(xen_node);
+> > >>>> +       if (!count)
+> > >>>> +               goto out;
+> > >>>> +
+> > >>>> +       for (i = 0; i < count; i++) {
+> > >>>> +               clk = of_clk_get(xen_node, i);
+> > >>>> +               if (IS_ERR(clk)) {
+> > >>>> +                       pr_err("Xen failed to register clock %i. Error:
+> > >>>> %li\n",
+> > >>>> +                              i, PTR_ERR(clk));
+> > >>>> +                       ret = PTR_ERR(clk);
+> > >>>> +                       goto out;
+> > >>>> +               }
+> > >>>> +
+> > >>>> +               ret = clk_prepare_enable(clk);
+> > >>>> +               if (ret < 0) {
+> > >>>> +                       pr_err("Xen failed to enable clock %i. Error:
+> > >>>> %i\n",
+> > >>>> +                              i, ret);
+> > >>>> +                       goto out;
+> > >>>> +               }
+> > >>>> +       }
+> > >>>> +
+> > >>>> +       ret = 0;
+> > >>>> +
+> > >>>> +out:
+> > >>>> +       of_node_put(xen_node);
+> > >>>> +       return ret;
+> > >>>> +}
+> > >>>> +late_initcall(xen_arm_register_clks);
+> > >>>>
+> > >>>>   /* empty stubs */
+> > >>>>   void xen_arch_pre_suspend(void) { }
+> > >>>> --
+> > >>
+> > >
+> > > _______________________________________________
+> > > Xen-devel mailing list
+> > > Xen-devel@lists.xen.org
+> > > https://lists.xen.org/xen-devel
+> > >
+> > 
+> 
