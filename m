@@ -1,61 +1,41 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v3 04/12] of: add J-Core timer bindings
-Date: Thu, 14 Jul 2016 18:18:08 -0400
-Message-ID: <20160714221808.GP15995@brightrain.aerifal.cx>
-References: <cover.1464148904.git.dalias@libc.org>
- <5341dfbb085d5647ebb6fe4390ca329b63e0e03d.1464148904.git.dalias@libc.org>
- <20160601135852.GA17217@rob-hp-laptop>
- <20160601175307.GC10893@brightrain.aerifal.cx>
- <CAL_JsqJYyvdc06v2+R=Wnmkk-cO7ZFq=7uGOhPxXdL0UfEu-iA@mail.gmail.com>
- <20160602013407.GA12184@brightrain.aerifal.cx>
- <20160602224425.GA15163@rob-hp-laptop>
- <20160623211608.GA10893@brightrain.aerifal.cx>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] dt: bindings: Add a generic ethernet device binding
+Date: Thu, 14 Jul 2016 16:17:07 -0700 (PDT)
+Message-ID: <20160714.161707.2089949241813985527.davem@davemloft.net>
+References: <1468405204-5845-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160623211608.GA10893@brightrain.aerifal.cx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1468405204-5845-1-git-send-email-hdegoede@redhat.com>
+Sender: netdev-owner@vger.kernel.org
+To: hdegoede@redhat.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 23, 2016 at 05:16:08PM -0400, Rich Felker wrote:
-> On Thu, Jun 02, 2016 at 05:44:25PM -0500, Rob Herring wrote:
-> > > > > In theory it would even be possible to just require a DT node per
-> > > > > cpulocal timer, but I didn't see a good way to make the bindings
-> > > > > represent the relationship to cpus or to make the driver handle irqs
-> > > > > correctly for such a setup, so I'd need a viable proposal for how that
-> > > > > could be done to even consider such an approach.
-> > > > 
-> > > > Yeah, there's not really a standard way to map per cpu blocks to cpus.
-> > > > We could, but doesn't really seem necessary here.
-> > > > 
-> > > > For the irqs, percpu irqs doesn't help you?
-> > > 
-> > > What I mean is that, if there were a separate device node and driver
-> > > instance per cpu, they'd all want to register the same irq just to
-> > > handle it on their own cpu, so we'd have a lot of spurious handlers
-> > > running. The right way to model this, I think, would be as a virtual
-> > > irqchip that's the irq parent of all the timer nodes, and that
-> > > multiplexes the real irq to one virq per cpu (where the current cpu id
-> > > becomes the irq number in its irq domain). But that's a lot of virtual
-> > > infrastructure just for the sake of modelling each percpu timer as its
-> > > own DT node and I don't think it makes sense to do it that way.
-> > 
-> > I would have thought your interrupt controller did all this. On the ARM 
-> > GIC for example, you have the same irq number but there is a per cpu 
-> > interface and really N (== # cpus) physical irq lines.
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Wed, 13 Jul 2016 12:20:04 +0200
+
+> On some boards (android tablets) different batches use different sdio
+> wifi modules. This is not a problem since sdio is a discoverable bus,
+> so we only need to describe and activate the mmc controller in dt and
+> then the kernel will automatically load the right driver.
 > 
-> I've looked at the ARM GIC code and bindings and I don't see where the
-> per-cpu interrupt interfaces are modelled with multiple interrupt
-> controller nodes or irq domains. It looks to me like it just uses a
-> single interrupt controller/domain with percpu irq. Does that match
-> your understanding?
+> But sometimes it is useful to specify certain ethernet properties for
+> these "unknown" sdio devices, specifically we want the boot-loader
+> to be able to set "local-mac-address" as some of these sdio wifi
+> modules come without an eeprom / without a factory programmed mac
+> address.
+> 
+> Since the exact device is unknown (differs per batch) we cannot use
+> a wifi-chip specific compatible. This commit adds a new
+> "generic,ethernet" binding for use in dt-nodes describing such an
+> unknown ethernet device.
+> 
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Ping.
-
-I want to submit this again for the upcoming merge window and need to
-know whether you still want me to pursue different approaches.
-
-Rich
+Precedence exists for a "system ethernet address" as far back as the
+original sparc device tree implementation, so please just specify it
+that way rather than trying to force having to make an alias or
+reference to it from a specific device.
