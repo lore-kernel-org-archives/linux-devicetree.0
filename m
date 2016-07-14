@@ -1,146 +1,136 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3] Input: synaptics-rmi4: Support regulator supplies
-Date: Wed, 13 Jul 2016 17:19:55 -0700
-Message-ID: <20160714001955.GA11247@dtor-ws>
-References: <1465622722-31714-1-git-send-email-bjorn.andersson@linaro.org>
- <576DD2E0.9000002@synaptics.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v12] mtd: spi-nor: add hisilicon spi-nor flash controller
+ driver
+Date: Wed, 13 Jul 2016 18:13:31 -0700
+Message-ID: <20160714011331.GE54628@google.com>
+References: <1467100099-6172-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <576DD2E0.9000002@synaptics.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Andrew Duggan <aduggan@synaptics.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Christopher Heiny <cheiny@synaptics.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+In-Reply-To: <1467100099-6172-1-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linshunquan1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Binquan Peng <pengbinquan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 24, 2016 at 05:40:00PM -0700, Andrew Duggan wrote:
-> On 06/10/2016 10:25 PM, Bjorn Andersson wrote:
-> >From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> >
-> >Support the two supplies - vdd and vio - to make it possible to control
-> >power to the Synaptics chip.
-> >
-> >Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> >Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Tue, Jun 28, 2016 at 03:48:19PM +0800, Jiancheng Xue wrote:
+> Add hisilicon spi-nor flash controller driver
 > 
-> Reviewed-by: Andrew Duggan <aduggan@synaptics.com>
-
-Applied, thank you.
-
+> Signed-off-by: Binquan Peng <pengbinquan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+> Reviewed-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+> change log
+> v12:
+> 1)Made SPI_HISI_SFC depend on HAS_DMA to fix the kbuild test robot error.
+> 2)Added "Reviewed-by Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>" and 
+> "Reviewed-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>" in the commit message.
+> v11:
+> Fixed issues pointed by Brian Norris and Cyrille Pitchen.
+> 1)Changed hisi_spi_nor_read_reg()/write_reg() to configure registers
+> without sniffing the opcodes.
+> 2)Deleted hisi_spi_nor_erase() and used default implementation instead.
+> 3)Changed hisi_spi_nor_dma_transfer() to return a integer type value
+> instead of nothing.
+> 4)Simplified hisi_spi_nor_read()/write() as Brian suggested.
 > 
-> >---
-> >  .../devicetree/bindings/input/rmi4/rmi_i2c.txt     |  9 +++++
-> >  drivers/input/rmi4/rmi_i2c.c                       | 41 ++++++++++++++++++++++
-> >  2 files changed, 50 insertions(+)
-> >
-> >diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
-> >index 95fa715c6046..ec908b91fd90 100644
-> >--- a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
-> >+++ b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
-> >@@ -22,6 +22,15 @@ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> >  - syna,reset-delay-ms: The number of milliseconds to wait after resetting the
-> >  			device.
-> >+- syna,startup-delay-ms: The number of milliseconds to wait after powering on
-> >+			 the device.
-> >+
-> >+- vdd-supply: VDD power supply.
-> >+See ../regulator/regulator.txt
-> >+
-> >+- vio-supply: VIO power supply
-> >+See ../regulator/regulator.txt
-> >+
-> >  Function Parameters:
-> >  Parameters specific to RMI functions are contained in child nodes of the rmi device
-> >   node. Documentation for the parameters of each function can be found in:
-> >diff --git a/drivers/input/rmi4/rmi_i2c.c b/drivers/input/rmi4/rmi_i2c.c
-> >index a96a326b53bd..71dc6cdde8ac 100644
-> >--- a/drivers/input/rmi4/rmi_i2c.c
-> >+++ b/drivers/input/rmi4/rmi_i2c.c
-> >@@ -11,6 +11,8 @@
-> >  #include <linux/rmi.h>
-> >  #include <linux/irq.h>
-> >  #include <linux/of.h>
-> >+#include <linux/delay.h>
-> >+#include <linux/regulator/consumer.h>
-> >  #include "rmi_driver.h"
-> >  #define BUFFER_SIZE_INCREMENT 32
-> >@@ -37,6 +39,9 @@ struct rmi_i2c_xport {
-> >  	u8 *tx_buf;
-> >  	size_t tx_buf_size;
-> >+
-> >+	struct regulator_bulk_data supplies[2];
-> >+	u32 startup_delay;
-> >  };
-> >  #define RMI_PAGE_SELECT_REGISTER 0xff
-> >@@ -246,6 +251,24 @@ static int rmi_i2c_probe(struct i2c_client *client,
-> >  		return -ENODEV;
-> >  	}
-> >+	rmi_i2c->supplies[0].supply = "vdd";
-> >+	rmi_i2c->supplies[1].supply = "vio";
-> >+	retval = devm_regulator_bulk_get(&client->dev,
-> >+					 ARRAY_SIZE(rmi_i2c->supplies),
-> >+					 rmi_i2c->supplies);
-> >+	if (retval < 0)
-> >+		return retval;
-> >+
-> >+	retval = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
-> >+				       rmi_i2c->supplies);
-> >+	if (retval < 0)
-> >+		return retval;
-> >+
-> >+	of_property_read_u32(client->dev.of_node, "syna,startup-delay-ms",
-> >+			     &rmi_i2c->startup_delay);
-> >+
-> >+	msleep(rmi_i2c->startup_delay);
-> >+
-> >  	rmi_i2c->client = client;
-> >  	mutex_init(&rmi_i2c->page_mutex);
-> >@@ -286,6 +309,7 @@ static int rmi_i2c_remove(struct i2c_client *client)
-> >  	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
-> >  	rmi_unregister_transport_device(&rmi_i2c->xport);
-> >+	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
-> >  	return 0;
-> >  }
-> >@@ -308,6 +332,9 @@ static int rmi_i2c_suspend(struct device *dev)
-> >  			dev_warn(dev, "Failed to enable irq for wake: %d\n",
-> >  				ret);
-> >  	}
-> >+
-> >+	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
-> >+
-> >  	return ret;
-> >  }
-> >@@ -317,6 +344,12 @@ static int rmi_i2c_resume(struct device *dev)
-> >  	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
-> >  	int ret;
-> >+	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	msleep(rmi_i2c->startup_delay);
-> >+
-> >  	enable_irq(rmi_i2c->irq);
-> >  	if (device_may_wakeup(&client->dev)) {
-> >  		ret = disable_irq_wake(rmi_i2c->irq);
-> >@@ -346,6 +379,8 @@ static int rmi_i2c_runtime_suspend(struct device *dev)
-> >  	disable_irq(rmi_i2c->irq);
-> >+	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
-> >+
-> >  	return 0;
-> >  }
-> >@@ -355,6 +390,12 @@ static int rmi_i2c_runtime_resume(struct device *dev)
-> >  	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
-> >  	int ret;
-> >+	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies), rmi_i2c->supplies);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	msleep(rmi_i2c->startup_delay);
-> >+
-> >  	enable_irq(rmi_i2c->irq);
-> >  	ret = rmi_driver_resume(rmi_i2c->xport.rmi_dev);
-> 
+> v10:
+> Fixed issues pointed by Marek Vasut.
+> 1)Droped the underscores in the argument names of some macros' definition.
+> 2)Changed some varibles to correct type.
+> 3)Rewrote hisi_spi_nor_read/write for readability.
+> 4)Added new functions hisi_spi_nor_register/unregister_all
+> 5)Changed to dynamically allocation for spi_nor embeded in hifmc_host.
+> Fixed issues pointed by Brian Norris.
+> 1)Replaced some headers with more accurate ones.
+> v9:
+> Fixed issues pointed by Jagan Teki.
+> v8:
+> Fixed issues pointed by Ezequiel Garcia and Brian Norris.
+> Moved dts binding file to mtd directory.
+> Changed the compatible string more specific.
+> v7:
+> Rebased to v4.5-rc3.
+> Fixed issues pointed by Ezequiel Garcia.
+> v6:
+> Based on v4.5-rc2
+> Fixed issues pointed by Ezequiel Garcia.
+> v5:
+> Fixed a compile error.
+> v4:
+> Rebased to v4.5-rc1
+> v3:
+> Added a compatible string "hisilicon,hi3519-sfc".
+> v2:
+> Fixed some compiling warings.
+>  .../bindings/mtd/hisilicon,fmc-spi-nor.txt         |  24 +
+>  drivers/mtd/spi-nor/Kconfig                        |   7 +
+>  drivers/mtd/spi-nor/Makefile                       |   1 +
+>  drivers/mtd/spi-nor/hisi-sfc.c                     | 489 +++++++++++++++++++++
+>  4 files changed, 521 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
+>  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
 
--- 
-Dmitry
+Pushed to l2-mtd.git, with the following diff due to API changes. Please
+review to be sure it looks OK to you.
+
+Also, please base changes on l2-mtd.git or linux-next.git in the future.
+
+Regards,
+Brian
+
+diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/hisi-sfc.c
+index 44664c3fc5ff..20378b0d55e9 100644
+--- a/drivers/mtd/spi-nor/hisi-sfc.c
++++ b/drivers/mtd/spi-nor/hisi-sfc.c
+@@ -269,8 +269,8 @@ static int hisi_spi_nor_dma_transfer(struct spi_nor *nor, loff_t start_off,
+ 	return wait_op_finish(host);
+ }
+ 
+-static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
+-		size_t *retlen, u_char *read_buf)
++static ssize_t hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
++		u_char *read_buf)
+ {
+ 	struct hifmc_priv *priv = nor->priv;
+ 	struct hifmc_host *host = priv->host;
+@@ -287,14 +287,13 @@ static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
+ 			return ret;
+ 		}
+ 		memcpy(read_buf + offset, host->buffer, trans);
+-		*retlen += trans;
+ 	}
+ 
+-	return 0;
++	return len;
+ }
+ 
+-static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
+-			size_t len, size_t *retlen, const u_char *write_buf)
++static ssize_t hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
++			size_t len, const u_char *write_buf)
+ {
+ 	struct hifmc_priv *priv = nor->priv;
+ 	struct hifmc_host *host = priv->host;
+@@ -309,10 +308,11 @@ static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
+ 			to + offset, host->dma_buffer, trans, FMC_OP_WRITE);
+ 		if (ret) {
+ 			dev_warn(nor->dev, "DMA write timeout\n");
+-			return;
++			return ret;
+ 		}
+-		*retlen += len;
+ 	}
++
++	return len;
+ }
+ 
+ /**
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
