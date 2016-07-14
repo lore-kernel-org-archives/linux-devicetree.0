@@ -1,7 +1,7 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCH 05/10] EDAC, altera: Add Arria10 NAND EDAC support
-Date: Thu, 14 Jul 2016 11:06:43 -0500
-Message-ID: <1468512408-5156-6-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCH 07/10] EDAC, altera: Add Arria10 USB EDAC support
+Date: Thu, 14 Jul 2016 11:06:45 -0500
+Message-ID: <1468512408-5156-8-git-send-email-tthayer@opensource.altera.com>
 References: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,7 +23,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add Altera Arria10 NAND FIFO memory EDAC support.
+Add Altera Arria10 USB FIFO memory EDAC support.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
@@ -32,36 +32,36 @@ Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
  2 files changed, 40 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index d0c1dab..47378b3 100644
+index d1fd57a..1966068 100644
 --- a/drivers/edac/Kconfig
 +++ b/drivers/edac/Kconfig
-@@ -398,6 +398,13 @@ config EDAC_ALTERA_ETHERNET
+@@ -412,6 +412,13 @@ config EDAC_ALTERA_DMA
  	  Support for error detection and correction on the
- 	  Altera Ethernet FIFO Memory for Altera SoCs.
+ 	  Altera DMA FIFO Memory for Altera SoCs.
  
-+config EDAC_ALTERA_NAND
-+	bool "Altera NAND FIFO ECC"
-+	depends on EDAC_ALTERA=y && MTD_NAND_DENALI
++config EDAC_ALTERA_USB
++	bool "Altera USB FIFO ECC"
++	depends on EDAC_ALTERA=y && USB_DWC2
 +	help
 +	  Support for error detection and correction on the
-+	  Altera NAND FIFO Memory for Altera SoCs.
++	  Altera USB FIFO Memory for Altera SoCs.
 +
  config EDAC_SYNOPSYS
  	tristate "Synopsys DDR Memory Controller"
  	depends on EDAC_MM_EDAC && ARCH_ZYNQ
 diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 2398d07..35d87d1 100644
+index 6e4afbc..439d6cb 100644
 --- a/drivers/edac/altera_edac.c
 +++ b/drivers/edac/altera_edac.c
-@@ -1285,6 +1285,33 @@ early_initcall(socfpga_init_ethernet_ecc);
+@@ -1339,6 +1339,33 @@ early_initcall(socfpga_init_dma_ecc);
  
- #endif	/* CONFIG_EDAC_ALTERA_ETHERNET */
+ #endif	/* CONFIG_EDAC_ALTERA_DMA */
  
-+/********************** NAND Device Functions **********************/
++/********************** USB Device Functions **********************/
 +
-+#ifdef CONFIG_EDAC_ALTERA_NAND
++#ifdef CONFIG_EDAC_ALTERA_USB
 +
-+static const struct edac_device_prv_data a10_nandecc_data = {
++static const struct edac_device_prv_data a10_usbecc_data = {
 +	.setup = altr_check_ecc_deps,
 +	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
 +	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
@@ -75,36 +75,36 @@ index 2398d07..35d87d1 100644
 +	.inject_fops = &altr_edac_a10_device_inject_fops,
 +};
 +
-+static int __init socfpga_init_nand_ecc(void)
++static int __init socfpga_init_usb_ecc(void)
 +{
-+	return altr_init_a10_ecc_device_type("altr,socfpga-nand-ecc");
++	return altr_init_a10_ecc_device_type("altr,socfpga-usb-ecc");
 +}
 +
-+early_initcall(socfpga_init_nand_ecc);
++early_initcall(socfpga_init_usb_ecc);
 +
-+#endif	/* CONFIG_EDAC_ALTERA_NAND */
++#endif	/* CONFIG_EDAC_ALTERA_USB */
 +
  /********************* Arria10 EDAC Device Functions *************************/
  static const struct of_device_id altr_edac_a10_device_of_match[] = {
  #ifdef CONFIG_EDAC_ALTERA_L2C
-@@ -1298,6 +1325,9 @@ static const struct of_device_id altr_edac_a10_device_of_match[] = {
- 	{ .compatible = "altr,socfpga-eth-mac-ecc",
- 	  .data = &a10_enetecc_data },
+@@ -1358,6 +1385,9 @@ static const struct of_device_id altr_edac_a10_device_of_match[] = {
+ #ifdef CONFIG_EDAC_ALTERA_DMA
+ 	{ .compatible = "altr,socfpga-dma-ecc", .data = &a10_dmaecc_data },
  #endif
-+#ifdef CONFIG_EDAC_ALTERA_NAND
-+	{ .compatible = "altr,socfpga-nand-ecc", .data = &a10_nandecc_data },
++#ifdef CONFIG_EDAC_ALTERA_USB
++	{ .compatible = "altr,socfpga-usb-ecc", .data = &a10_usbecc_data },
 +#endif
  	{},
  };
  MODULE_DEVICE_TABLE(of, altr_edac_a10_device_of_match);
-@@ -1589,7 +1619,9 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
- 		else if ((of_device_is_compatible(child,
- 					"altr,socfpga-a10-ocram-ecc")) ||
+@@ -1653,7 +1683,9 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
  			 (of_device_is_compatible(child,
--					"altr,socfpga-eth-mac-ecc")))
-+					"altr,socfpga-eth-mac-ecc")) ||
+ 						  "altr,socfpga-nand-ecc")) ||
+ 			 (of_device_is_compatible(child,
+-						  "altr,socfpga-dma-ecc")))
++						  "altr,socfpga-dma-ecc")) ||
 +			 (of_device_is_compatible(child,
-+						  "altr,socfpga-nand-ecc")))
++						  "altr,socfpga-usb-ecc")))
  			altr_edac_a10_device_add(edac, child);
  		else if (of_device_is_compatible(child,
  						 "altr,sdram-edac-a10"))
