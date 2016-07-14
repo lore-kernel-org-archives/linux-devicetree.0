@@ -1,56 +1,49 @@
-From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v9 3/4] perf: xgene: Add APM X-Gene SoC Performance
- Monitoring Unit driver
-Date: Thu, 14 Jul 2016 11:05:48 -0700
-Message-ID: <CACgAJHw7UMFKY=j8UBKUi=hNHfyzVoNMr_A5qOahhbgM+14KBQ@mail.gmail.com>
-References: <1468517266-1642-1-git-send-email-ttnguyen@apm.com>
- <1468517266-1642-4-git-send-email-ttnguyen@apm.com> <1468518428.8745.43.camel@perches.com>
- <CACgAJHwzWG_6iWG4OcL3v5QcUF892DwBcJxayqbH4f2kd7=kQQ@mail.gmail.com>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: NSP: Correct RAM amount for BCM958625HR board
+Date: Thu, 14 Jul 2016 14:18:08 -0400
+Message-ID: <CAC3K-4ra7wmhqUi_Tc5KrML5uJGLX7-YPF1Upt=7juuTBM6QeA@mail.gmail.com>
+References: <1468433929-12232-1-git-send-email-jon.mason@broadcom.com> <5786B159.7060102@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACgAJHwzWG_6iWG4OcL3v5QcUF892DwBcJxayqbH4f2kd7=kQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5786B159.7060102-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+On Wed, Jul 13, 2016 at 5:23 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 07/13/2016 11:18 AM, Jon Mason wrote:
+>> The BCM958625HR board has 2GB of RAM available.  Increase the amount
+>> from 512MB to 2GB and add the device type to the memory entry.
+>>
+>> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/bcm958625hr.dts | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+>> index 4239e58..66c658a 100644
+>> --- a/arch/arm/boot/dts/bcm958625hr.dts
+>> +++ b/arch/arm/boot/dts/bcm958625hr.dts
+>> @@ -47,7 +47,8 @@
+>>       };
+>>
+>>       memory {
+>> -             reg = <0x60000000 0x20000000>;
+>> +             device_type = "memory";
+>> +             reg = <0x60000000 0x40000000>;
+>
+> That's just one 1GB, did you intend to provide 0x8000_0000 instead here?
 
-On Thu, Jul 14, 2016 at 10:54 AM, Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
-> Hi Joe,
->
-> On Thu, Jul 14, 2016 at 10:47 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
->> On Thu, 2016-07-14 at 10:27 -0700, Tai Nguyen wrote:
->>> This patch adds a driver for the SoC-wide (AKA uncore) PMU hardware
->>> found in APM X-Gene SoCs.
->>
->> trivia:
->>
->>> diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
->> []
->>> +struct xgene_pmu_dev_ctx {
->>> +     char *name;
->>> +     struct list_head next;
->>> +     struct xgene_pmu_dev *pmu_dev;
->>> +     struct hw_pmu_info inf;
->>> +};
->>
->> Probably better to use something like
->>         char    name[20];
->> as the kasprintf can fail and this doesn't
->> seem to be freed anywhere.
->
-> Okay. I'll fix it shortly.
->
-
-I take it back.
-I refer many other drivers using kasprintf and they do the same way I do.
-Can you please check it again?
+Good catch!  I'll fix that up in v2 (and add a "Fixes:" referencing
+the original patch).
 
 Thanks,
--- 
-Tai
+Jon
+
+> --
+> Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
