@@ -1,99 +1,123 @@
-From: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [Xen-devel] [PATCH v4] xen/arm: Add a clock property
-Date: Thu, 14 Jul 2016 11:14:42 +0100
-Message-ID: <57876612.3030407@arm.com>
-References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
- <146836236759.73491.11707389619985827497@resonance>
- <c320f820-8749-f4a4-435e-ddd9379655b5@de.bosch.com>
- <alpine.DEB.2.10.1607131941200.26575@sstabellini-ThinkPad-X260>
- <57868EDE.6060406@gmail.com>
- <146844380895.73491.4867379517577413421@resonance>
- <7df784ab-d0c0-939b-393e-214535c4b191@de.bosch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7df784ab-d0c0-939b-393e-214535c4b191-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH] net: phy: micrel: Add KSZ8041FTL fiber mode support
+Date: Thu, 14 Jul 2016 12:18:48 +0200
+Message-ID: <1468491528-17515-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dirk,
+We can't detect the FXEN (fiber mode) bootstrap pin, so configure
+it via a boolean device tree property "fxen". If it is enabled,
+auto-negotiation is not supported. The only available modes are
+100base-fx (full duplex and half duplex).
 
-On 14/07/16 07:31, Dirk Behme wrote:
-> On 13.07.2016 23:03, Michael Turquette wrote:
->> Quoting Dirk Behme (2016-07-13 11:56:30)
->>> On 13.07.2016 20:43, Stefano Stabellini wrote:
->>>> On Wed, 13 Jul 2016, Dirk Behme wrote:
->>>>> On 13.07.2016 00:26, Michael Turquette wrote:
->>>>>> Quoting Dirk Behme (2016-07-12 00:46:45)
->>>>>>> Clocks described by this property are reserved for use by Xen,
->>>>>>> and the OS
->>>>>>> must not alter their state any way, such as disabling or gating a
->>>>>>> clock,
->>>>>>> or modifying its rate. Ensuring this may impose constraints on
->>>>>>> parent
->>>>>>> clocks or other resources used by the clock tree.
->>>>>>
->>>>>> Note that clk_prepare_enable will not prevent the rate from changing
->>>>>> (clk_set_rate) or a parent from changing (clk_set_parent). The
->>>>>> only way
->>>>>> to do this currently would be to set the following flags on the
->>>>>> effected
->>>>>> clocks:
->>>>>>
->>>>>>     CLK_SET_RATE_GATE
->>>>>>     CLK_SET_PARENT_GATE
->>>>>
->>>>>
->>>>>
->>>>> Regarding setting flags, I think we already talked about that. I
->>>>> think the
->>>>> conclusion was that in our case its not possible to manipulate the
->>>>> flags in
->>>>> the OS as this isn't intended to be done in cases like ours.
->>>>> Therefore no API
->>>>> is exported for this.
->>>>>
->>>>> I.e. if we need to set these flags, we have to do that in Xen where
->>>>> we add the
->>>>> clocks to the hypervisor node in the device tree. And not in the
->>>>> kernel patch
->>>>> discussed here.
->>>>
->>>> These are internal Linux flags, aren't they?
->>>
->>>
->>> I've been under the impression that you can set clock "flags" via the
->>> device tree. Seems I need to re-check that ;)
->>
->> Right, you cannot set flags from the device tree. Also, setting these
->> flags is done by the clock provider driver, not a consumer. Xen is the
->> consumer.
->
->
-> Ok, thanks, then I think we can forget about using flags for the issue
-> we are discussing here.
->
-> Best regards
->
-> Dirk
->
-> P.S.: Would it be an option to merge the v4 patch we are discussing
-> here, then? From the discussion until here, it sounds to me that it's
-> the best option we have at the moment. Maybe improving it in the future,
-> then.
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+I didn't see a way to reliably detect whether the PHY is set to fiber
+mode in the datasheet [1], so this patch adds a device tree property
+to enforce fiber mode (disable auto-negotiation, set speed to 100).
 
-I think it is a good start, although I would like to see some rationale 
-in the code and commit message about the behavior of the Linux with 
-those clocks after this patch because it does not match the "contract".
+[1] http://ww1.microchip.com/downloads/en/DeviceDoc/ksz8041tl-ftl-mll.pdf
+---
+ .../devicetree/bindings/net/micrel-ksz8041.txt     | 24 ++++++++++++++++
+ drivers/net/phy/micrel.c                           | 32 ++++++++++++++++++++--
+ include/linux/micrel_phy.h                         |  1 +
+ 3 files changed, 55 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/micrel-ksz8041.txt
 
-Regards,
-
+diff --git a/Documentation/devicetree/bindings/net/micrel-ksz8041.txt b/Documentation/devicetree/bindings/net/micrel-ksz8041.txt
+new file mode 100644
+index 0000000..4bce38d2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/micrel-ksz8041.txt
+@@ -0,0 +1,24 @@
++Micrel KSZ8041 Gigabit Ethernet PHY
++
++The KSZ8041FTL variant supports fiber mode, enabled by the FXEN boot
++strapping pin. It can't be determined from the PHY registers whether
++the PHY is in fiber mode, so a boolean device tree property can be
++used to describe this.
++
++Optional properties:
++ - fxen : KSZ8041FTL is strapped to fiber mode. Auto-negotiation is disabled
++          and the PHY can only work in 100base-fx (full and half duplex) modes.
++
++Examples:
++
++	mdio {
++		phy0: ethernet-phy@0 {
++			reg = <0>;
++			fxen;
++		};
++	};
++	ethernet@70000 {
++		status = "okay";
++		phy = <&phy0>;
++		phy-mode = "rgmii-id";
++	};
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 5a8fefc..4ecd929 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -311,6 +311,34 @@ static int kszphy_config_init(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++static int ksz8041_config_init(struct phy_device *phydev)
++{
++	/* Limit supported and advertised modes in fiber mode */
++	if (of_property_read_bool(phydev->mdio.dev.of_node, "fxen")) {
++		phydev->dev_flags |= MICREL_PHY_FXEN;
++		phydev->supported &= SUPPORTED_FIBRE |
++				     SUPPORTED_100baseT_Full |
++				     SUPPORTED_100baseT_Half;
++		phydev->advertising &= ADVERTISED_FIBRE |
++				       ADVERTISED_100baseT_Full |
++				       ADVERTISED_100baseT_Half;
++		phydev->autoneg = AUTONEG_DISABLE;
++	}
++
++	return kszphy_config_init(phydev);
++}
++
++static int ksz8041_config_aneg(struct phy_device *phydev)
++{
++	/* Skip auto-negotiation in fiber mode */
++	if (phydev->dev_flags & MICREL_PHY_FXEN) {
++		phydev->speed = SPEED_100;
++		return 0;
++	}
++
++	return genphy_config_aneg(phydev);
++}
++
+ static int ksz9021_load_values_from_of(struct phy_device *phydev,
+ 				       const struct device_node *of_node,
+ 				       u16 reg,
+@@ -788,8 +816,8 @@ static struct phy_driver ksphy_driver[] = {
+ 	.flags		= PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
+ 	.driver_data	= &ksz8041_type,
+ 	.probe		= kszphy_probe,
+-	.config_init	= kszphy_config_init,
+-	.config_aneg	= genphy_config_aneg,
++	.config_init	= ksz8041_config_init,
++	.config_aneg	= ksz8041_config_aneg,
+ 	.read_status	= genphy_read_status,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+ 	.config_intr	= kszphy_config_intr,
+diff --git a/include/linux/micrel_phy.h b/include/linux/micrel_phy.h
+index 2e5b194..257173e 100644
+--- a/include/linux/micrel_phy.h
++++ b/include/linux/micrel_phy.h
+@@ -37,6 +37,7 @@
+ 
+ /* struct phy_device dev_flags definitions */
+ #define MICREL_PHY_50MHZ_CLK	0x00000001
++#define MICREL_PHY_FXEN		0x00000002
+ 
+ #define MICREL_KSZ9021_EXTREG_CTRL	0xB
+ #define MICREL_KSZ9021_EXTREG_DATA_WRITE	0xC
 -- 
-Julien Grall
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.8.1
