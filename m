@@ -1,187 +1,77 @@
-From: Dirk Behme <dirk.behme@gmail.com>
-Subject: Re: [Xen-devel] [PATCH v4] xen/arm: Add a clock property
-Date: Thu, 14 Jul 2016 18:30:03 +0200
-Message-ID: <5787BE0B.8060504@gmail.com>
-References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
- <146836236759.73491.11707389619985827497@resonance>
- <c320f820-8749-f4a4-435e-ddd9379655b5@de.bosch.com>
- <alpine.DEB.2.10.1607131941200.26575@sstabellini-ThinkPad-X260>
- <57868EDE.6060406@gmail.com>
- <146844380895.73491.4867379517577413421@resonance>
- <7df784ab-d0c0-939b-393e-214535c4b191@de.bosch.com>
- <alpine.DEB.2.10.1607141132000.26575@sstabellini-ThinkPad-X260>
- <86951b96-0a3e-79b1-1a2f-88dfeba9b76b@de.bosch.com>
- <alpine.DEB.2.10.1607141647350.22290@sstabellini-ThinkPad-X260>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.10.1607141647350.22290@sstabellini-ThinkPad-X260>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Julien Grall <julien.grall@arm.com>, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "spi: s3c64xx: restore removed comments" to the spi tree
+Date: Thu, 14 Jul 2016 17:32:47 +0100
+Message-ID: <E1bNjZ9-0001jr-4G@debutante>
+References: <1468306444-18512-1-git-send-email-andi.shyti@samsung.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468306444-18512-1-git-send-email-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14.07.2016 17:55, Stefano Stabellini wrote:
-> On Thu, 14 Jul 2016, Dirk Behme wrote:
->> On 14.07.2016 12:38, Stefano Stabellini wrote:
->>> On Thu, 14 Jul 2016, Dirk Behme wrote:
->>>> On 13.07.2016 23:03, Michael Turquette wrote:
->>>>> Quoting Dirk Behme (2016-07-13 11:56:30)
->>>>>> On 13.07.2016 20:43, Stefano Stabellini wrote:
->>>>>>> On Wed, 13 Jul 2016, Dirk Behme wrote:
->>>>>>>> On 13.07.2016 00:26, Michael Turquette wrote:
->>>>>>>>> Quoting Dirk Behme (2016-07-12 00:46:45)
->>>>>>>>>> Clocks described by this property are reserved for use by Xen,
->>>>>>>>>> and
->>>>>>>>>> the OS
->>>>>>>>>> must not alter their state any way, such as disabling or
->>>>>>>>>> gating a
->>>>>>>>>> clock,
->>>>>>>>>> or modifying its rate. Ensuring this may impose constraints on
->>>>>>>>>> parent
->>>>>>>>>> clocks or other resources used by the clock tree.
->>>>>>>>>
->>>>>>>>> Note that clk_prepare_enable will not prevent the rate from
->>>>>>>>> changing
->>>>>>>>> (clk_set_rate) or a parent from changing (clk_set_parent). The
->>>>>>>>> only
->>>>>>>>> way
->>>>>>>>> to do this currently would be to set the following flags on the
->>>>>>>>> effected
->>>>>>>>> clocks:
->>>>>>>>>
->>>>>>>>>      CLK_SET_RATE_GATE
->>>>>>>>>      CLK_SET_PARENT_GATE
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> Regarding setting flags, I think we already talked about that. I
->>>>>>>> think
->>>>>>>> the
->>>>>>>> conclusion was that in our case its not possible to manipulate the
->>>>>>>> flags in
->>>>>>>> the OS as this isn't intended to be done in cases like ours.
->>>>>>>> Therefore
->>>>>>>> no API
->>>>>>>> is exported for this.
->>>>>>>>
->>>>>>>> I.e. if we need to set these flags, we have to do that in Xen
->>>>>>>> where we
->>>>>>>> add the
->>>>>>>> clocks to the hypervisor node in the device tree. And not in the
->>>>>>>> kernel patch
->>>>>>>> discussed here.
->>>>>>>
->>>>>>> These are internal Linux flags, aren't they?
->>>>>>
->>>>>>
->>>>>> I've been under the impression that you can set clock "flags" via the
->>>>>> device tree. Seems I need to re-check that ;)
->>>>>
->>>>> Right, you cannot set flags from the device tree. Also, setting these
->>>>> flags is done by the clock provider driver, not a consumer. Xen is the
->>>>> consumer.
->>>>
->>>>
->>>> Ok, thanks, then I think we can forget about using flags for the issue we
->>>> are
->>>> discussing here.
->>>>
->>>> Best regards
->>>>
->>>> Dirk
->>>>
->>>> P.S.: Would it be an option to merge the v4 patch we are discussing here,
->>>> then? From the discussion until here, it sounds to me that it's the best
->>>> option we have at the moment. Maybe improving it in the future, then.
->>>
->>> It might be a step in the right direction, but it doesn't really prevent
->>> clk_set_rate from changing properties of a clock owned by Xen.  This
->>> patch is incomplete.
->>
->>
->> Let me ask then: Do we have a practical example where it's not sufficient
->> practically?
->>
->> To my understanding, Xen people have been happy with the "clk_ignore_unused"
->> workaround since ~2 years, now [1]. And I think the "clk_ignore_unused"
->> workaround does mainly the same like the patch discussed here. It doesn't care
->> regarding clk_set_rate from changing properties, too?
->
-> Let me premise that I appreciate what you are trying to achieve with
-> this patch and I don't want to feature-creep it.
->
-> However we are defining a new Device Tree binding,
+The patch
 
+   spi: s3c64xx: restore removed comments
 
-I don't think so.
+has been applied to the spi tree at
 
-We are just using the existing one
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/clock-bindings.txt#n66
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-, pick it from other device tree nodes (e.g. serial, timer etc) and 
-add it to the hypervisor node. And then use this existing one with the 
-existing well defined clock API.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> one which will have
-> to be supported for a long time by both Xen and Linux, so at the very
-> least we need to have the full picture. We need to understand if the
-> binding if sufficient
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
 
-Even if it's not sufficient, you can't change it.
+>From 0dbe70a1feb411d17fbcf8e73d61e6c7f33fda72 Mon Sep 17 00:00:00 2001
+From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Date: Tue, 12 Jul 2016 19:02:15 +0900
+Subject: [PATCH] spi: s3c64xx: restore removed comments
 
+Patch a9e93e8 has erroneously removed some comments which are
+important to understand why the bus frequency is multiplied by
+two during the spi transfer.
 
-> or if we need something different to solve the
-> problem completely.
+Reword the previous comment to a more appropriate message.
 
+Suggested-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ drivers/spi/spi-s3c64xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-You might need anything additionally. E.g. an extension of the Linux 
-kernel clock API to be able to modify the flags was proposed.
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index a1e84686c70c..3c09e94cf827 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -642,6 +642,7 @@ static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
+ 	writel(val, regs + S3C64XX_SPI_MODE_CFG);
+ 
+ 	if (sdd->port_conf->clk_from_cmu) {
++		/* The src_clk clock is divided internally by 2 */
+ 		clk_set_rate(sdd->src_clk, sdd->cur_speed * 2);
+ 	} else {
+ 		/* Configure Clock */
+-- 
+2.8.1
 
-Best regards
-
-Dirk
-
-P.S.: I still would be interested if we do have a practical example 
-where it's not sufficient practically?
-
-
-> Once we understand that, I am happy to accept a partial implementation
-> in Linux, as long as it is a step in the right direction. Does it make
-> sense?
->
->
->
->> While I agree that the patch theoretically incomplete, if nobody has a real
->> world example I would think that from practical point of view it's sufficient
->> in a first step.
->>
->> If this is the case, I'd propose to fix the practical issue in a first step
->> with a patch (this one) which is sufficient to fix the issues the Xen users
->> have. And update the code for theoretical future issues in a second step.
->>
->> Best regards
->>
->> Dirk
->>
->> [1] http://bugs.xenproject.org/xen/bug/45
->>
->>
->>> We need to understand at least what it would take
->>> to have a complete solution.
->>>
->>> Michael, do you have any suggestions on how it would be possible to set
->>> CLK_SET_RATE_GATE and CLK_SET_PARENT_GATE for those clocks in a proper
->>> way?
->>>
->>> Like you wrote, I would imagine it needs to be done by the clock
->>> provider driver. Maybe to do that, it would be easier to have a new
->>> device tree property on the clock node, rather than listing phandle and
->>> clock-specifier pairs under the Xen node?
->>
->
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
