@@ -1,54 +1,73 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCH 10/10] ARM: dts: Add Arria10 USB EDAC devicetree entry
-Date: Thu, 14 Jul 2016 11:06:48 -0500
-Message-ID: <1468512408-5156-11-git-send-email-tthayer@opensource.altera.com>
-References: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ASoC: atmel-i2s: add driver for the new Atmel I2S
+ controller
+Date: Thu, 14 Jul 2016 17:20:59 +0100
+Message-ID: <20160714162059.GB30372@sirena.org.uk>
+References: <cover.1468405019.git.cyrille.pitchen@atmel.com>
+ <ca944501da6c2bb6240f4a56e8d2ba5221373408.1468405019.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qcHopEYAB45HaUaB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ca944501da6c2bb6240f4a56e8d2ba5221373408.1468405019.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add the device tree entries needed to support the Altera USB
-FIFO buffer EDAC on the Arria10 chip.
+--qcHopEYAB45HaUaB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
----
- arch/arm/boot/dts/socfpga_arria10.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
+On Wed, Jul 13, 2016 at 12:25:39PM +0200, Cyrille Pitchen wrote:
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index a506ec0..bd548ab 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -652,6 +652,14 @@
- 				interrupts = <10 IRQ_TYPE_LEVEL_HIGH>,
- 					     <42 IRQ_TYPE_LEVEL_HIGH>;
- 			};
-+
-+			usb0-ecc@ff8c8800 {
-+				compatible = "altr,socfpga-usb-ecc";
-+				reg = <0xff8c8800 0x400>;
-+				altr,ecc-parent = <&usb0>;
-+				interrupts = <2 IRQ_TYPE_LEVEL_HIGH>,
-+					     <34 IRQ_TYPE_LEVEL_HIGH>;
-+			};
- 		};
- 
- 		rst: rstmgr@ffd05000 {
--- 
-1.7.9.5
+A few small things but otherwise this looks good:
+
+> +	switch (params_channels(params)) {
+> +	case 1:
+> +		mr |= is_playback ? ATMEL_I2SC_MR_TXMONO : ATMEL_I2SC_MR_RXMONO;
+
+Please write normal if statements, it makes things easier to read.
+
+> +		break;
+> +	case 2:
+> +		break;
+> +	default:
+> +		dev_err(dev->dev, "unsupported number of audio channels\n");
+> +		break;
+> +	}
+
+Why don't we return an error if we don't support the requested number of
+channels?
+
+> +	dev->gclk = devm_clk_get(&pdev->dev, "gclk");
+> +	if (IS_ERR(dev->aclk) && IS_ERR(dev->gclk)) {
+> +		/* Master Mode not supported */
+> +		dev->aclk = NULL;
+> +		dev->gclk = NULL;
+
+This won't handle probe deferral properly, it'll just ignore the clocks
+if we get -EPROBE_DEFER.  The driver should special case that at least.
+
+--qcHopEYAB45HaUaB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXh7vqAAoJECTWi3JdVIfQPhsH/jdMog1xqf1sed8sRo+uUxR+
+9o8FtNAtJOFrWoUa/VJghiegqbxwvQ/mBrqY3I5fd1B/c4Vj43k7sEkXccusgy9r
+19fKm9EmHshJdgdtKENNL0foBetRHUk+ujZ7cF7Uo0qkuV1C2GXfZD1Y5wT6TfZ3
+0JonAXVXp8ezlMZ7zugm3cRHQLCA0SykfrUSHG4J40yC641CPh1tbbnF/+5pVK4/
+RdmFqEP1nJKvsx7EtZsaPm3LYt8FkFDtcwRIJiXG4jeNyvMqky0NWx9a5Jj9Gs8p
+Qc9Xr+oHK/A6GuSAnch4bNuZabTi13W4hqj2DL+4dTUGfXa1kNUijKqp9M6TwQ8=
+=epbI
+-----END PGP SIGNATURE-----
+
+--qcHopEYAB45HaUaB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
