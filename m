@@ -1,224 +1,56 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH V2 0/1] usb: add HCD providers
-Date: Fri, 15 Jul 2016 14:22:09 +0800
-Message-ID: <20160715062209.GC817@shlinux2>
-References: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
- <1468413734-9569-1-git-send-email-zajec5@gmail.com>
- <87lh15isi7.fsf@linux.intel.com>
- <CACna6rxGN5evQhRpNORUP4RP3-pMa292pQW=4=VWLLnzJyhJJw@mail.gmail.com>
- <87inw9ir4k.fsf@linux.intel.com>
- <CACna6rxscQAE_hrM7Rnsntp5QZjL2kD0+mbuXgfo6kPQZ=UDJw@mail.gmail.com>
- <20160714094836.GB28730@shlinux2>
- <CACna6ryja8L+ORAzOtiGgUFTQ6OGcieJX4YO+=AQV0KptZftgQ@mail.gmail.com>
- <20160715022824.GA817@shlinux2>
- <CACna6rzGSB0UVEhV2qvT0TDBpyH8=XgeGx9D4Pn1giO+dF9HsA@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] dt: bindings: Add a generic ethernet device binding
+Date: Fri, 15 Jul 2016 08:40:00 +0200
+Message-ID: <47a052a1-cc8b-0f75-e44a-450c4a0ac075@redhat.com>
+References: <1468405204-5845-1-git-send-email-hdegoede@redhat.com>
+ <20160714.161707.2089949241813985527.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACna6rzGSB0UVEhV2qvT0TDBpyH8=XgeGx9D4Pn1giO+dF9HsA@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160714.161707.2089949241813985527.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 15, 2016 at 07:48:11AM +0200, Rafa=C5=82 Mi=C5=82ecki wrote=
-:
-> >> > Below I supply another thought, please check if it is feasible.
-> >> > In below design, you don't need to change any usb codes.
-> >> >
-> >> > dts:
-> >> >
-> >> > led_1 {
-> >> >         led_gpio_1;
-> >> >         usb_port =3D &ohci_port0, &ehci_port1;
-> >> > }
-> >> >
-> >> > led_2 {
-> >> >         led_gpio_2;
-> >> >         usb_port =3D &xhci_port0, &xhci_port1;
-> >> > }
-> >> >
-> >> > ohci@1000 {
-> >> >         compatible =3D "generic-ohci";
-> >> >         reg =3D <0x00001000 0x1000>;
-> >> >         interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> >> >
-> >> >         ohci_port0: port@0 {
-> >> >                 reg =3D <0>;
-> >> >         };
-> >> >
-> >> >         ohci_port1: port@1 {
-> >> >                 reg =3D <1>;
-> >> >         };
-> >> > };
-> >> >
-> >> > ehci@2000 {
-> >> >         compatible =3D "generic-ehci";
-> >> >         reg =3D <0x00002000 0x1000>;
-> >> >         interrupts =3D <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> >> >
-> >> >         ehci_port0: port@0 {
-> >> >                 reg =3D <0>;
-> >> >         };
-> >> >
-> >> >         ehci_port1: port@1 {
-> >> >                 reg =3D <1>;
-> >> >         };
-> >> > };
-> >> >
-> >> > xhci@3000 {
-> >> >         compatible =3D "generic-xhci";
-> >> >         reg =3D <0x00003000 0x1000>;
-> >> >         interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> >> >
-> >> >         /* for xhci, port 0 - [N-1] is USB3, N - [M-1] is USB2/1=
-=2E
-> >> >          * The port 0 and port N is the same physical port
-> >> >          */
-> >> >         xhci_port0: port@0 {
-> >> >                 reg =3D <0>;
-> >> >         };
-> >> >
-> >> >         xhci_port1: port@1 {
-> >> >                 reg =3D <1>;
-> >> >         };
-> >> >
-> >> > };
-> >> >
-> >> > At code, compare the usb_device's device_node at usbport_trig_no=
-tify
-> >> > if it is at led_1's usb device list, light on it.
-> >>
-> >> This is quite interesting idea, thanks!
-> >>
-> >> So I got following checking code:
-> >>
-> >> count =3D of_count_phandle_with_args(np, "usb-ports", NULL);
-> >> for (i =3D 0; i < count; i++) {
-> >>     of_parse_phandle_with_args(np, "usb-ports", NULL, i, &args);
-> >>     of_property_read_u32(args.np, "reg", &port);
-> >>     if (args.np->parent =3D=3D usb_dev->bus->controller->of_node &=
-&
-> >>         port =3D=3D usb_dev->portnum) {
-> >>             of_node_put(args.np);
-> >>             return true;
-> >>     }
-> >>     of_node_put(args.np);
-> >> }
-> >> return false;
-> >
-> > No, compares the USB port directly.
-> >
-> > count =3D of_count_phandle_with_args(np, "usb-ports", NULL);
-> > for (i =3D 0; i < count; i++) {
-> >     of_parse_phandle_with_args(np, "usb-ports", NULL, i, &args);
-> >     if (args.np =3D=3D usb_dev->dev.of_node)
-> >             of_node_put(args.np);
-> >             return true;
-> >     }
-> >     of_node_put(args.np);
-> > }
-> > return false;
->=20
-> If we mean to use usb_dev->dev.of_node I *need* to modify USB
-> subsystem, since this pointer is never being set by the current code.
->=20
-> [   71.410505] usb 1-1: new high-speed USB device number 2 using ehci=
--platform
-> [   71.564928] [usbport_trig_notify] usb_dev:c6ac1000 &usb_dev->dev:c=
-6ac1068
-> [   71.579874] [usbport_trig_notify] dev_name(&usb_dev->dev):1-1
-> [   71.586580] [usbport_trig_notify] usb_dev->dev.of_node:  (null)
->=20
-> Or am I missing something?
->=20
+Hi,
 
-You may need below patches:
+On 15-07-16 01:17, David Miller wrote:
+> From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Date: Wed, 13 Jul 2016 12:20:04 +0200
+>
+>> On some boards (android tablets) different batches use different sdio
+>> wifi modules. This is not a problem since sdio is a discoverable bus,
+>> so we only need to describe and activate the mmc controller in dt and
+>> then the kernel will automatically load the right driver.
+>>
+>> But sometimes it is useful to specify certain ethernet properties for
+>> these "unknown" sdio devices, specifically we want the boot-loader
+>> to be able to set "local-mac-address" as some of these sdio wifi
+>> modules come without an eeprom / without a factory programmed mac
+>> address.
+>>
+>> Since the exact device is unknown (differs per batch) we cannot use
+>> a wifi-chip specific compatible. This commit adds a new
+>> "generic,ethernet" binding for use in dt-nodes describing such an
+>> unknown ethernet device.
+>>
+>> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>
+> Precedence exists for a "system ethernet address" as far back as the
+> original sparc device tree implementation, so please just specify it
+> that way rather than trying to force having to make an alias or
+> reference to it from a specific device.
 
-commit 69bec725985324e79b1c47ea287815ac4ddb0521
-Author: Peter Chen <peter.chen@freescale.com>
-Date:   Fri Feb 19 17:26:15 2016 +0800
+Some boards where this is applicable have both a wired and a wireless
+ethernet, so one global setting will not work.
 
-    USB: core: let USB device know device node
+Regards,
 
-commit 7222c832254a75dcd67d683df75753d4a4e125bb
-Author: Nicolai Stange <nicstange@gmail.com>
-Date:   Thu Mar 17 23:53:02 2016 +0100
-
-    usb/core: usb_alloc_dev(): fix setting of ->portnum
-
->=20
-> >> This works, but I see 3 more problems:
-> >>
-> >> 1) How to access list of available USB devices during activation?
-> >
-> > You mean during LED activation? eg your usbport_trig_activate?
-> > Why do you need it?
->=20
-> Yes, I mean usbport_trig_activate. If user plugs in USB device and
-> *then* activates this trigger, we want to set a proper initial state.
-> We can't only depend on USB_DEVICE_ADD.
->=20
-
-Oh, I see, I asked it before.
-
-Either you need to register USB notifier before activation
-Or you need to implement something like usb_node_to_dev
-eg: like usb_for_each_dev. If device's state is USB_STATE_CONFIGURED
-this USB device is available.
-
->=20
-> >> 2) What about support for non-DT platforms in usbport driver? Shou=
-ld I
-> >> still allow specifying ports manually? Are you OK with that?
-> >
-> > I am afraid I still don't know how to do it for non-DT platforms.
-> > You can show your design.
->=20
-> Please take a look at
-> [PATCH] leds: trigger: Introduce an USB port trigger
-> https://lkml.org/lkml/2016/7/11/305
->=20
-> Basically my idea was to support:
-> echo usbport > trigger
-> echo 4-1 > new_port
-> echo 2-1 > new_port
->=20
-
-I know your patch, how you plan to support non-DT platforms before?
-
->=20
-> >> 3) What about devices with internal hubs? Should we describe their=
- USB
-> >> ports in DT as well? Any idea how to do this?
-> >
-> > Well, the HUB must be hard-wired on board for this LED trigger case=
-=2E
-> > So, you can described USB topology well at dts. Please note: the
-> > USB port phandle at LED node is the physical connector on board whi=
-ch
-> > the user can plug in USB device, it may be 2nd or more levels from =
-the
-> > controller.
-> >
-> > Below is the example for how to describe 3 levels USB devices, the
-> > USB ethernet port (axis) is one of the ports at internal HUB (genes=
-ys).
-> >
-> > http://www.spinics.net/lists/linux-usb/msg143698.html
->=20
-> Thanks for this example. I'm only afraid there isn't a way to say wha=
-t
-> port "ethernet: asix@1" is attached to.
-
-Why? You know your hardware design, you should know the topology, eg
-This physical port is from ehci port, and which port number for its
-internal hub port number. If not, how we describe USB devices on
-dts.
-
---=20
-
-Best Regards,
-Peter Chen
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
