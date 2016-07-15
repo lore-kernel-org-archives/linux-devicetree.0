@@ -1,87 +1,61 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 2/2] ARM: realview: Extend PBX family memory description
-Date: Fri, 15 Jul 2016 13:19:13 +0100
-Message-ID: <0acef10ce4429e372ec8c35300c6ec6d48aca7e1.1468583959.git.robin.murphy@arm.com>
-References: <dbf8749c4af9aa5ffb85e961b7ae09ffeefa7f2a.1468583959.git.robin.murphy@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <dbf8749c4af9aa5ffb85e961b7ae09ffeefa7f2a.1468583959.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/4] qcom: ipq4019: Add ASoC driver modules
+Date: Fri, 15 Jul 2016 13:52:26 +0100
+Message-ID: <20160715125226.GJ30372@sirena.org.uk>
+References: <1468566426-19598-1-git-send-email-njaigane@codeaurora.org>
+ <1468566426-19598-5-git-send-email-njaigane@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="72k7VsmfIboquFwl"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468566426-19598-5-git-send-email-njaigane@codeaurora.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: njaigane@codeaurora.org
+Cc: linux-arm-msm@vger.kernel.org, linux@qca.qualcomm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, twp@codeaurora.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, plai@codeaurora.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, bjorn.andersson@linaro.org, varada@codeaurora.org, pradeepb@codeaurora.org, snlakshm@codeaurora.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, bselvara@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-All three platforms sharing the later RealView Platform Baseboard memory
-map - PBX-A9, PB-A8 and PB11MPCore, provide 512MB of DDR SDRAM on the
-baseboard, of which the boot alias at 0x0 maps the first 256MB. Expand
-the size of the default memory node to refelect that, and describe the
-full memory regions in each board's DTS, but leave those commented by
-default to avoid breaking existing bootloaders.
 
-Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm/boot/dts/arm-realview-pba8.dts   | 8 ++++++++
- arch/arm/boot/dts/arm-realview-pbx-a9.dts | 9 +++++++++
- arch/arm/boot/dts/arm-realview-pbx.dtsi   | 4 ++--
- 3 files changed, 19 insertions(+), 2 deletions(-)
+--72k7VsmfIboquFwl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/arm-realview-pba8.dts b/arch/arm/boot/dts/arm-realview-pba8.dts
-index d3238c252b59..9f6c92b84f9f 100644
---- a/arch/arm/boot/dts/arm-realview-pba8.dts
-+++ b/arch/arm/boot/dts/arm-realview-pba8.dts
-@@ -40,6 +40,14 @@
- 		};
- 	};
- 
-+	/*
-+	 * Using the full 512MB of RAM will require bootloader
-+	 * changes to not load the kernel to the alias at 0x0.
-+	 */
-+	memory {
-+		/*reg = <0x70000000 0x20000000>; /* 512 MiB baseboard DDR */
-+	};
-+
- 	pmu: pmu@0 {
- 		compatible = "arm,cortex-a8-pmu";
- 		interrupt-parent = <&intc>;
-diff --git a/arch/arm/boot/dts/arm-realview-pbx-a9.dts b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
-index 90d00b407f85..9fef9188660a 100644
---- a/arch/arm/boot/dts/arm-realview-pbx-a9.dts
-+++ b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
-@@ -60,6 +60,15 @@
- 		};
- 	};
- 
-+	/*
-+	 * There is 1GB of RAM total, but using all of it will require
-+	 * bootloader changes to not load the kernel to the alias at 0x0.
-+	 */
-+	memory {
-+		/*reg = <0x20000000 0x20000000>, /* 512 MiB daughterboard DDR2 */
-+		/*      <0x70000000 0x20000000>; /* 512 MiB baseboard DDR */
-+	};
-+
- 	L2: l2-cache {
- 		compatible = "arm,pl310-cache";
- 		reg = <0x1f002000 0x1000>;
-diff --git a/arch/arm/boot/dts/arm-realview-pbx.dtsi b/arch/arm/boot/dts/arm-realview-pbx.dtsi
-index aeb49c4bd773..8477f667d27c 100644
---- a/arch/arm/boot/dts/arm-realview-pbx.dtsi
-+++ b/arch/arm/boot/dts/arm-realview-pbx.dtsi
-@@ -38,8 +38,8 @@
- 	};
- 
- 	memory {
--		/* 128 MiB memory @ 0x0 */
--		reg = <0x00000000 0x08000000>;
-+		/* 256 MiB alias of baseboard DDR @ 0x0 */
-+		reg = <0x00000000 0x10000000>;
- 	};
- 
- 	/* The voltage to the MMC card is hardwired at 3.3V */
--- 
-2.8.1.dirty
+On Fri, Jul 15, 2016 at 12:37:06PM +0530, njaigane@codeaurora.org wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  sound/soc/qcom/Kconfig                     |  47 ++
+>  sound/soc/qcom/Makefile                    |   1 +
+>  sound/soc/qcom/ipq4019/Makefile            |  16 +
+>  sound/soc/qcom/ipq4019/ipq4019-adss.c      | 407 ++++++++++++++
+>  sound/soc/qcom/ipq4019/ipq4019-adss.h      | 432 +++++++++++++++
+>  sound/soc/qcom/ipq4019/ipq4019-codec.c     | 475 +++++++++++++++++
+>  sound/soc/qcom/ipq4019/ipq4019-codec.h     |  91 ++++
+>  sound/soc/qcom/ipq4019/ipq4019-cpu-dai.c   | 687 ++++++++++++++++++++++++
+>  sound/soc/qcom/ipq4019/ipq4019-mbox.c      | 825 +++++++++++++++++++++++++++++
+>  sound/soc/qcom/ipq4019/ipq4019-mbox.h      | 146 +++++
+>  sound/soc/qcom/ipq4019/ipq4019-pcm-i2s.c   | 609 +++++++++++++++++++++
+>  sound/soc/qcom/ipq4019/ipq4019-pcm-spdif.c | 664 +++++++++++++++++++++++
+>  sound/soc/qcom/ipq4019/ipq4019-pcm-tdm.c   | 609 +++++++++++++++++++++
+>  sound/soc/qcom/ipq4019/ipq4019-pcm.h       |  37 ++
+>  sound/soc/qcom/ipq4019/ipq4019-stereo.c    | 313 +++++++++++
+>  sound/soc/qcom/ipq4019/ipq4019.c           | 121 +++++
+
+This is *far* too big to be a single patch.  Please at the very least
+split this up into one patch per driver, look at the git history of
+other drivers for examples of splitting things up.
+
+--72k7VsmfIboquFwl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXiNyKAAoJECTWi3JdVIfQMYkH/0ki4MdD67FXcwTsarosZpd5
+71++4YiUIZBWKq7M1/CDhSggI3Eycdik4cMzazRma7VwCloFmSkQwkV7V+Yu4A2x
+cIK+5TI03ATEP1WRVq8dzlCTiH/KCmpNsCtyMzyTUwUhoEKZc/dvqVFEQdoWAfCq
+Fra9AXMCnJ/LVbvzqLGLLMGRTWgBWPYik9H+HQLw9frdC4+nXW5nc0gvDMt0gtTn
+cbsy493NL4ziMGhJMJIePEp3gGbMob83EOCqrqFrO1DUXy/rNPLzqt11aprWHHWr
+aIDlYMrHvC72K0UX6M7ZrBx3pPAO2Hbvp41+d9hx8xHtTKQ55oGpn/9+4SZArqM=
+=2Aie
+-----END PGP SIGNATURE-----
+
+--72k7VsmfIboquFwl--
