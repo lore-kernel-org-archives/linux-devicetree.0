@@ -1,111 +1,61 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: Re: [PATCH 1/2] Bluetooth: Add LED triggers for HCI frames tx and rx
-Date: Fri, 15 Jul 2016 20:08:43 +0800
-Message-ID: <CAFGCpxxbmgmbadE5oGctOzu33hhoiOf29DeEqZWCFYAiVBFLdA@mail.gmail.com>
-References: <1466657923-5776-1-git-send-email-guodong.xu@linaro.org>
- <D2545F6D-7100-4B59-A19D-7CF878902BAA@holtmann.org> <CAFGCpxwuOH83hdPc-c0DV5A_cKMp-0rjxg+3tMwOPTukHGd6vA@mail.gmail.com>
- <3C106ED5-5F2C-4EAC-8E60-D915D2AD027A@holtmann.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <3C106ED5-5F2C-4EAC-8E60-D915D2AD027A@holtmann.org>
-Sender: netdev-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, "David S. Miller" <davem@davemloft.net>, Xu Wei <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/2] ARM: realview: Fix PBX-A9 cache description
+Date: Fri, 15 Jul 2016 13:19:12 +0100
+Message-ID: <dbf8749c4af9aa5ffb85e961b7ae09ffeefa7f2a.1468583959.git.robin.murphy@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14 July 2016 at 17:42, Marcel Holtmann <marcel@holtmann.org> wrote:
-> Hi Guodong,
->
->>>> Two LED triggers are defined: tx_led and rx_led. Upon frames
->>>> available in HCI core layer, for tx or for rx, the combined LED
->>>> can blink.
->>>>
->>>> Verified on HiKey, 96boards. It uses hi6220 SoC and TI WL1835 combo
->>>> chip.
->>>>
->>>> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
->>>> ---
->>>> include/net/bluetooth/hci_core.h |  1 +
->>>> net/bluetooth/hci_core.c         |  3 +++
->>>> net/bluetooth/leds.c             | 15 +++++++++++++++
->>>> net/bluetooth/leds.h             |  2 ++
->>>> 4 files changed, 21 insertions(+)
->>>>
->>>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
->>>> index dc71473..37b8dd9 100644
->>>> --- a/include/net/bluetooth/hci_core.h
->>>> +++ b/include/net/bluetooth/hci_core.h
->>>> @@ -398,6 +398,7 @@ struct hci_dev {
->>>>      bdaddr_t                rpa;
->>>>
->>>>      struct led_trigger      *power_led;
->>>> +     struct led_trigger      *tx_led, *rx_led;
->>>>
->>>>      int (*open)(struct hci_dev *hdev);
->>>>      int (*close)(struct hci_dev *hdev);
->>>> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
->>>> index 45a9fc6..c6e1210 100644
->>>> --- a/net/bluetooth/hci_core.c
->>>> +++ b/net/bluetooth/hci_core.c
->>>> @@ -3248,6 +3248,7 @@ int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
->>>>      skb_queue_tail(&hdev->rx_q, skb);
->>>>      queue_work(hdev->workqueue, &hdev->rx_work);
->>>>
->>>> +     hci_leds_blink_oneshot(hdev->rx_led);
->>>>      return 0;
->>>> }
->>>> EXPORT_SYMBOL(hci_recv_frame);
->>>> @@ -3325,6 +3326,8 @@ static void hci_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
->>>>              BT_ERR("%s sending frame failed (%d)", hdev->name, err);
->>>>              kfree_skb(skb);
->>>>      }
->>>> +
->>>> +     hci_leds_blink_oneshot(hdev->tx_led);
->>>> }
->>>
->>> so I am not convinced that this is the right way of doing TX/RX activity leds. This would have them purely based on HCI traffic and this would include control frames.
->>>
->>
->> Hi, Marcel
->>
->> +       if (hci_skb_pkt_type(skb) == HCI_ACLDATA_PKT ||
->> +           hci_skb_pkt_type(skb) == HCI_SCODATA_PKT)
->> +               hci_leds_blink_oneshot(hdev->rx_led);
->> +
->>
->> By adding pkt_type checks, we can limit LED blinks only at ACL/SCO
->> DATA_PKT. Similar checks can be added for tx_led too.
->>
->> Does this look good to you? If you agree, I can send v2 to include this change.
->
-> we are not going to keep comparing packet types over and over again. The code is already doing that. So functions like hci_sched_acl and hci_acldata_packet are already present in the code.
->
->>> I think that we want activity leds for actual radio activity. Meaning that when we have an active connection and ACL packets are exchanged or when we are scanning.
->>>
->>
->> Radio is controlled in Bluetooth module side, not Host. So I'm afraid
->> actual radio activity cannot be captured in its exact form in Host
->> side. The purpose of this patch is not for radio, it is for
->> incoming/outgoing data. For example, it can give user a blinking
->> indicator on RX frames after a Bluetooth mouse is connected. Another
->> example, it can blink at bluetooth streamed audio (TX).
->
-> So radio activity is caused by RX/TX meaning ACL/SCO packets for sure. There is also other radio activity caused by scanning, inquiry, create connection etc. And the question is if this should be there as well.
->
+Clearly QEMU is very permissive in how its PL310 model may be set up,
+but the real hardware turns out to be far more particular about things
+actually being correct. Fix up the DT description so that the real
+thing actually boots:
 
-I wouldn't suggest to cover scanning, inquiry, etc. Scanning, for
-example, Host sends a scan command to Bluetooth module (in an
-asynchronous way). After a given interval, Host receives inquiry
-results. Over this period, at host side, we don't know what kind of
-radio activity is happening in BT module side.
+- The arm,data-latency and arm,tag-latency properties need 3 cells to
+  be valid, otherwise we end up retaining the default 8-cycle latencies
+  which leads pretty quickly to lockup.
+- The arm,dirty-latency property is only relevant to L210/L220, so get
+  rid of it.
+- The cache geometry override also leads to lockup and/or general
+  misbehaviour. Irritatingly, the manual doesn't state the actual PL310
+  configuration, but based on the boardfile code and poking registers
+  from the Boot Monitor, it would seem to be 8 sets of 16KB ways.
 
-Let's say this patch provide LED indicators to only data packets
-activity (ACL and SCO). Can we?
+With that, we can successfully boot to enjoy the fun of mismatched FPUs...
 
--Guodong
+Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/boot/dts/arm-realview-pbx-a9.dts | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-> Regards
->
-> Marcel
->
+diff --git a/arch/arm/boot/dts/arm-realview-pbx-a9.dts b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
+index db808f92dd79..90d00b407f85 100644
+--- a/arch/arm/boot/dts/arm-realview-pbx-a9.dts
++++ b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
+@@ -70,13 +70,12 @@
+ 		 * associativity as these may be erroneously set
+ 		 * up by boot loader(s).
+ 		 */
+-		cache-size = <1048576>; // 1MB
+-		cache-sets = <4096>;
++		cache-size = <131072>; // 128KB
++		cache-sets = <512>;
+ 		cache-line-size = <32>;
+ 		arm,parity-disable;
+-		arm,tag-latency = <1>;
+-		arm,data-latency = <1 1>;
+-		arm,dirty-latency = <1>;
++		arm,tag-latency = <1 1 1>;
++		arm,data-latency = <1 1 1>;
+ 	};
+ 
+ 	scu: scu@1f000000 {
+-- 
+2.8.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
