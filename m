@@ -1,20 +1,20 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v2 06/14] ARM: sun8i: clk: Add clk-factor
  rate application method
-Date: Fri, 15 Jul 2016 10:19:54 +0200
-Message-ID: <20160715081954.GQ4761@lukather>
+Date: Fri, 15 Jul 2016 10:53:56 +0200
+Message-ID: <20160715085356.GR4761@lukather>
 References: <20160625034511.7966-1-megous@megous.com>
  <20160625034511.7966-7-megous@megous.com>
  <20160630204001.GC5485@lukather>
- <64d0c1e2-d818-0806-7c92-c10603b4f6f5@megous.com>
+ <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dUqh8vgUBVXHzm9w"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBC7NUK6AKGQEQ3R7QSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="8Bx+wEju+vH9ym24"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDHNUK6AKGQEWQ4LAKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <64d0c1e2-d818-0806-7c92-c10603b4f6f5-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <0b71ed7e-98c9-109e-85e6-ceb95131d88a-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -26,43 +26,156 @@ Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uu
 List-Id: devicetree@vger.kernel.org
 
 
---dUqh8vgUBVXHzm9w
+--8Bx+wEju+vH9ym24
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 01, 2016 at 02:53:52AM +0200, Ond=C5=99ej Jirman wrote:
-> On 30.6.2016 22:40, Maxime Ripard wrote:
-> > Hi,
+On Fri, Jul 01, 2016 at 02:50:57AM +0200, Ond=C5=99ej Jirman wrote:
+> >>  /**
+> >> + * sun8i_h3_apply_pll1_factors() - applies n, k, m, p factors to the
+> >> + * register using an algorithm that tries to reserve the PLL lock
+> >> + */
+> >> +
+> >> +static void sun8i_h3_apply_pll1_factors(struct clk_factors *factors, =
+struct factors_request *req)
+> >> +{
+> >> +	const struct clk_factors_config *config =3D factors->config;
+> >> +	u32 reg;
+> >> +
+> >> +	/* Fetch the register value */
+> >> +	reg =3D readl(factors->reg);
+> >> +
+> >> +	if (FACTOR_GET(config->pshift, config->pwidth, reg) < req->p) {
+> >> +		reg =3D FACTOR_SET(config->pshift, config->pwidth, reg, req->p);
+> >> +
+> >> +		writel(reg, factors->reg);
+> >> +		__delay(2000);
+> >> +	}
 > >=20
-> > On Sat, Jun 25, 2016 at 05:45:03AM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> >> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> >>
-> >> PLL1 on H3 requires special factors application algorithm,
-> >> when the rate is changed. This algorithm was extracted
-> >> from the arisc code that handles frequency scaling
-> >> in the BSP kernel.
-> >>
-> >> This commit adds optional apply function to
-> >> struct factors_data, that can implement non-trivial
-> >> factors application method, when necessary.
-> >>
-> >> Also struct clk_factors_config is extended with position
-> >> of the PLL lock flag.
-> >=20
-> > Have you tested the current implementation, and found that it was not
-> > working, or did you duplicate the arisc code directly?
+> > So there was some doubts about the fact that P was being used, or at
+> > least that it was useful.
 >=20
-> Also of note is that similar code probably doesn't crash in u-boot,
-> because there, before changing the PLL1 clock, the cpu is switched to
-> 24MHz osc, so it is not overclocked, even if factors align in such a way
-> that you'd get the behavior I described in the other email.
+> p is necessary to reduce frequencies below 288 MHz according to the
+> datasheet.
 
-That's also something that we can do.
+Yes, but you could reach those frequencies without P, too, and it's
+not part of any OPP provided by Allwinner.
 
-See Meson's clk-cpu clock notifiers for example.
+> >> +	if (FACTOR_GET(config->mshift, config->mwidth, reg) < req->m) {
+> >> +		reg =3D FACTOR_SET(config->mshift, config->mwidth, reg, req->m);
+> >> +
+> >> +		writel(reg, factors->reg);
+> >> +		__delay(2000);
+> >> +	}
+> >> +
+> >> +	reg =3D FACTOR_SET(config->nshift, config->nwidth, reg, req->n);
+> >> +	reg =3D FACTOR_SET(config->kshift, config->kwidth, reg, req->k);
+> >> +
+> >> +	writel(reg, factors->reg);
+> >> +	__delay(20);
+> >> +
+> >> +	while (!(readl(factors->reg) & (1 << config->lock)));
+> >=20
+> > So, they are applying the dividers first, and then applying the
+> > multipliers, and then wait for the PLL to stabilize.
+>=20
+> Not exactly, first we are increasing dividers if the new dividers are
+> higher that that what's already set. This ensures that because
+> application of dividers is immediate by the design of the PLL, the
+> application of multipliers isn't. So the VCO would still run at the same
+> frequency for a while gradually rising to a new value for example,
+> while the dividers would be reduced immediately. Leading to crash.
+>=20
+> PLL
+> --------------------------
+> PRE DIV(f0) -> VCO(f1) -> POST DIV(f2)
+>    P             K,N           M
+>=20
+> Example: (we set all factors at once, reducing dividers and multipliers
+> at the same time at 0ms - this should lead to no change in the output
+> frequency, but...)
+>=20
+> -1ms: f0 =3D 24MHz, f1 =3D 2GHz,   f2 =3D 1GHz
+>  0ms: f0 =3D 24MHz, f1 =3D 2GHz,   f2 =3D 2GHz       - boom
+>  1ms: f0 =3D 24MHz, f1 =3D 1.5GHz, f2 =3D 1.5GHz
+>  2ms: f0 =3D 24MHz, f1 =3D 1GHz,   f2 =3D 1GHz
+>=20
+> The current code crashes exactly at boom, you don't get any more
+> instructions to execute.
+>=20
+> See.
+>=20
+> So this patch first increases dividers (only if necessary), changes
+> multipliers and waits for change to happen (takes around 2000 cycles),
+> and then decreases dividers (only if necessary).
+>=20
+> So we get:
+>=20
+> -1ms: f0 =3D 24MHz, f1 =3D 2GHz,   f2 =3D 1GHz
+>  0ms: f0 =3D 24MHz, f1 =3D 2GHz,   f2 =3D 1GHz   - no boom, multiplier
+>                                              reduced
+>  1ms: f0 =3D 24MHz, f1 =3D 1.5GHz, f2 =3D 0.75GHz
+> 1.9ms: f0 =3D 24MHz, f1 =3D 1GHz,   f2 =3D 0.5GHz - we got PLL sync
+>  2ms: f0 =3D 24MHz, f1 =3D 1GHz,   f2 =3D 1GHz   - and here we reduce div=
+ider
+> at last
+
+Awesome explanation, thanks!
+
+So I guess it really all boils down to the fact that the CPU is
+clocked way outside of it's operating frequency while the PLL
+stabilizes, right?
+
+If so, then yes, trying to switch to the 24MHz oscillator before
+applying the factors, and then switching back when the PLL is stable
+would be a nice solution.
+
+I just checked, and all the SoCs we've had so far have that
+possibility, so if it works, for now, I'd like to stick to that.
+
+> >> +
+> >> +	if (FACTOR_GET(config->mshift, config->mwidth, reg) > req->m) {
+> >> +		reg =3D FACTOR_SET(config->mshift, config->mwidth, reg, req->m);
+> >> +
+> >> +		writel(reg, factors->reg);
+> >> +		__delay(2000);
+> >> +	}
+> >> +
+> >> +	if (FACTOR_GET(config->pshift, config->pwidth, reg) > req->p) {
+> >> +		reg =3D FACTOR_SET(config->pshift, config->pwidth, reg, req->p);
+> >> +
+> >> +		writel(reg, factors->reg);
+> >> +		__delay(2000);
+> >> +	}
+> >=20
+> > However, this is kind of weird, why would you need to re-apply the
+> > dividers? Nothing really changes. Have you tried without that part?
+>=20
+> See above, we either increase before PLL change, or reduce dividers
+> after the change. Nothing is re-applied.
+>=20
+> > Since this is really specific, I guess you could simply make the
+> > clk_ops for the nkmp clocks public, and just re-implement set_rate
+> > using that logic.
+>=20
+> I would argue that this may be necessary for other PLL clocks too, if
+> you can get out of bounds output frequency, by changing the dividers too
+> early or too late. So perhaps this code should be generalized for other
+> PLL clocks too, instead.
+
+We can scale down the problem a bit. The only PLL we modify are the
+CPU, audio and video ones.
+
+The CPU should definitely be addressed, but what would be the outcome
+of an out of bounds audio pll for example? Is it just taking more time
+to stabilize, or would it hurt the system?
+
+In the former case, then we can just wait. In the latter, we of course
+need to come up with a solution.
 
 Maxime
+
 
 --=20
 Maxime Ripard, Free Electrons
@@ -76,25 +189,25 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---dUqh8vgUBVXHzm9w
+--8Bx+wEju+vH9ym24
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXiJypAAoJEBx+YmzsjxAgSs0P/0G2WFzLS1PHJsg6b9XWjgTE
-K9fr+5ri3JGAInOPUK5pHfSS9kUnuEFkimxQ3uY6Kj6vncgCRC3bbBijaj8hEb2A
-l48gDzezU7cbSLhqIb5xUEJEXFHTRkLiq56vy39ctBNQN/Nx3CuQ0nny9FbIBN8i
-VDEabw1YhDdKiYlrgo1perkd23U2V+IRqrufPXRmK8kIRIJxZ5O5eP0FMAoTAQEg
-b3Ugd67K7561jaieYrQkIEe9sIjo7bFqyCJLIQeySgEUbNP+JvOjEzun5X0L6wxb
-BUL7VN+x6Ew7GbZQzEzRA0QEr2mNqJnpqKNdjmDUZ/LGtRbtg0aymVmmHy+g5VTs
-E2A8lFKtA7GnavxmxhjWmPltg352+xCQ7IHQjAhUyEuk1Iqcb5dBdJK0/YlcyyMG
-2vgvpy0kIX2PeE44ncdKB6xJu4YFbrTUrxeCGXQgwvsrAnIVr4AOvh4PB0rxwVFe
-+rCrmgB5DLhGvw4jRqSqvdd4bM2kfY9dxh7BT34tW5HfB3pHu+m3J1nV1UV4X1tx
-PAd75nA/gvG4hRqpIcQkaTTuOJ0FgUqBXD3zT9VFP77NEFgCr/rJjUYlYCY9J+zY
-Mr4UA3jPk/G1mOdZ6xa6LNh6TWQ3SdmNakTQBB8y0ssilg4DCHt9OIq3+asyEUuP
-Qg53ZBgMnBD46c67ntAD
-=k0t/
+iQIcBAEBAgAGBQJXiKSkAAoJEBx+YmzsjxAgNoMQAI+kuGYhyCePtrLg7hMHyr2/
+O8v1bXk3i5qnrzwMRVWu5UuwGzNcDFbKYOxG8xYDpT0jJpypUbcbt5xSEngv5yhT
+7LiNzGH8/3iTWSxKKiayTHHaqieSf/Hhbh8o1hwRuTt6LPxaoeEDZumcO6jN9GYD
+SDCi+voqGNkzzbeNLoXKv6tm4hN0XHsg2oJwkjmxP3RuIaz4PYDCVg844X6ypeNJ
+9Owq/4KYSOJ5VWbUzjLf3QDTONv5oa/dXoL1mM1AI/VbHY+haNBpHSqtTrztqiDL
+IA0z98HnsGxREQT8itiHhFAkB2qS1fn1IBV6xkl+SKbh1dRs0K2AcueQJTZnzx75
+aEN9Ff2+JN4aowPN5a+DBcp8krlPf6THE2jrrdQp5XncFmVIkTiufgzJK2ITUCvq
+E2S3axawqo2OhKvTxVkR0PV1EcTmmtFK9VUdHLffF4jUTbfZ6dTF9kt+/S+6Oju8
+kN0Xo8ann0RqOBXVeEFUvAB92Kb54HAOMmFqaEgZ2YGJ+tkfP/phBS7hMIbWuVhT
+fZ9xSSTrHz/iCn/sTtqj9b1CPkej7fi3eoFVUdsiMb5S/A3OD11ncSlTi2eP8Ap/
+yk2kjT86v4Zm0Q+Uh+33jthNkFrKBK4cYhyKl6V0Tf39gC6tUJ1pkCIPPXzw0Qeq
+cC0fYvdx6PmTFVO46x+b
+=D1Me
 -----END PGP SIGNATURE-----
 
---dUqh8vgUBVXHzm9w--
+--8Bx+wEju+vH9ym24--
