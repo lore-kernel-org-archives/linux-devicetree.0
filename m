@@ -1,78 +1,59 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
-Date: Fri, 15 Jul 2016 15:45:51 +0000
-Message-ID: <20160715154551.GF31509@io.lakedaemon.net>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org>
- <20160714135426.GC31509@io.lakedaemon.net>
- <5788718E.7080708@iommu.org>
- <16178876.fFBuoBSjbd@wuerfel>
- <CAKT61h8EkOOkDHou65Uc7NNomJ6Nowvw8o6JnWxNyc0S_=x_JA@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: fix erroneous address in dts
+Date: Fri, 15 Jul 2016 10:01:15 -0600
+Message-ID: <578908CB.7040802@wwwdotorg.org>
+References: <1468514937-23250-1-git-send-email-ralf@ramses-pyramidenbau.de>
+ <20160714220218.GB4205@mithrandir.ba.sec>
+ <8a8ccb29-ba73-f29f-2b57-5c1d91e13bf7@ramses-pyramidenbau.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKT61h8EkOOkDHou65Uc7NNomJ6Nowvw8o6JnWxNyc0S_=x_JA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wan ZongShun <mcuos.com@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Wan Zongshun <vw@iommu.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, p.zabel@pengutronix.de
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8a8ccb29-ba73-f29f-2b57-5c1d91e13bf7-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 15, 2016 at 05:44:50PM +0800, Wan ZongShun wrote:
-> 2016-07-15 15:00 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> > On Friday, July 15, 2016 1:15:58 PM CEST Wan Zongshun wrote:
-> >>
-> >> Actually, I have two choice to implement this function:
-> >>
-> >> option1:
-> >>
-> >> void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
-> >> {
-> >>         u32 hwirq;
-> >>
-> >>         (void)readl(aic_base + REG_AIC_IPER);
-> >>         hwirq = readl(aic_base + REG_AIC_ISNR);
-> >>
-> >>         handle_IRQ((irq_find_mapping(aic_domain, hwirq)), regs);
-> >> }
-> >
-> > (side note: I think you want handle_domain_irq())
-> >
-> >> option2:
-> >>
-> >> void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
-> >> {
-> >>         u32 hwirq;
-> >>
-> >>         hwirq = readl(aic_base + REG_AIC_IPER);
-> >>         hwirq <<= 2;
-> >>
-> >>         handle_IRQ((irq_find_mapping(aic_domain, hwirq)), regs);
-> >> }
-> >>
-> >> Though the option2 do shift for hwirq, but it seems better than do io
-> >> operation by readl,so I prefer to option2, agree?
-> >
-> > That will only return an irq number that is a multiple of four, which
-> > seems wrong since the numbers are not that. Did you mean to write
-> >
-> >         hwirq = ilog2(hwirq);   ?
-> 
-> Sorry, my fault, I mean hwirq >>= 2, bit[7:2] indicates which irq is triggering.
-> so I have to do right shift 2 for IPER value.
+On 07/15/2016 03:37 AM, Ralf Ramsauer wrote:
+> On 07/15/2016 12:02 AM, Thierry Reding wrote:
+>> On Thu, Jul 14, 2016 at 06:48:57PM +0200, Ralf Ramsauer wrote:
+>>> c90bb7b enabled the high speed UARTs of the Jetson TK1. The address
+>>> specification inside the dts is wrong. Fix it and use the correct
+>>> address.
+>>>
+>>> Fixes: c90bb7b9b9 ("ARM: tegra: Add high speed UARTs to Jetson TK1 device tree")
+>>> Signed-off-by: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/tegra124-jetson-tk1.dts | 4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> These addresses are correct. The 0, prefix was dropped from the unit
+>> address in commit b5896f67ab3c ("ARM: tegra: Remove commas from unit
+>> addresses on Tegra124").
+>>
+>> What's the problem that you're seeing? What's not working for you?
+ >
+> I cannot find b5896f67ab3c neither in swarren's tree nor in linux
+> upstream. But there's d0bc5aaf890 in swarren's linux-tegra tree that
+> matches your described changes and was committed on 1st of July. But
+> this patch is not upstream yet, while the other patch is.
 
-Ok, this makes a lot more sense now. :)
+The fix is in linux-next, and will be in mainline soon I expect.
 
-> > That assumes that REG_AIC_IPER contains a 32-bit value with one single
-> > bit set to indicate which IRQ was triggered.
-> >
-> > If the difference is only in performance, you could try measuring which
-> > of the two ends up being faster.
-> 
-> It seems hard to measure. I think Do IO operation should be slower
-> than shift 2. :)
+My github linux-tegra.git isn't relevant since it's just my own personal 
+dev branch, but for reference, the commit is there since it's based on 
+linux-next.
 
-Agreed.
+> Have a look at mainline tegra124-jetson-tk1.dts, there the addresses are
+> erroneous as they still use the 0, annotation. And I just realised, that
+> somehow, upstream patch c90bb7b slightly differs from my initial patch
+> [1] on the mailing list.
 
-thx,
-
-Jason.
+Your patch should probably be CC: stable so that existing kernel 
+versions get fixed. That said, I'd argue that since the original patch 
+never actually had any effect since it applied to the wrong node, the 
+best fix for stable kernels is simply to revert it rather than fixing 
+it, to avoid the potential for behaviour changes and regressions. 
+Starting with kernel 4.8 (I think), that patch will begin to have actual 
+effect.
