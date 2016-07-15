@@ -1,130 +1,485 @@
-From: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
-Subject: Re: [PATCH v10 2/4] CMDQ: Mediatek CMDQ driver
-Date: Thu, 14 Jul 2016 19:38:25 -0400
-Message-ID: <CAP=VYLqPhZLYFmsWE45kRdfbjUTzMT+eGNVZnGjK8VD7+fQgBA@mail.gmail.com>
-References: <1468495733-12178-1-git-send-email-hs.liao@mediatek.com> <1468495733-12178-3-git-send-email-hs.liao@mediatek.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add basic support for orion-r68
+Date: Fri, 15 Jul 2016 09:00:13 +0800
+Message-ID: <b6aa3694-1126-3152-5e1f-72368813fdf6@rock-chips.com>
+References: <1468499302-16508-1-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468495733-12178-3-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mon
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1468499302-16508-1-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, heiko@sntech.de, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: shawn.lin@rock-chips.com, devicetree@vger.kernel.org, mbrugger@suse.com, amstan@chromium.org, linux-rockchip@lists.infradead.org, chauveau.julien@gmail.com, briannorris@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, olof@lixom.net, sudeep.holla@arm.com, zyw@rock-chips.com, romain.perier@gmail.com, jay.xu@rock-chips.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, wxt@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2016 at 7:28 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> CMDQ is used to help write registers with critical time limitation,
-> such as updating display configuration during the vblank. It controls
-> Global Command Engine (GCE) hardware to achieve this requirement.
-> Currently, CMDQ only supports display related hardwares, but we expect
-> it can be extended to other hardwares for future requirements.
+Hi Matthias,
+
+Just some comment for mmc stuff. :)
+
+=E5=9C=A8 2016/7/14 20:28, Matthias Brugger =E5=86=99=E9=81=93:
+> This patch adds basic support for the Tronsmart orion r86 set-top-box=
+=2E
 >
-> Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 > ---
->  drivers/soc/mediatek/Kconfig    |  11 +
->  drivers/soc/mediatek/Makefile   |   1 +
->  drivers/soc/mediatek/mtk-cmdq.c | 948 ++++++++++++++++++++++++++++++++++++++++
->  include/soc/mediatek/cmdq.h     | 179 ++++++++
->  4 files changed, 1139 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
->  create mode 100644 include/soc/mediatek/cmdq.h
+> Changes since v1:
+> - change memory node to 2GB
+> - change compatible and file name
+> - add uart4
+> - add second led
 >
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index 0a4ea80..50869e4 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -1,6 +1,17 @@
->  #
->  # MediaTek SoC drivers
->  #
-> +config MTK_CMDQ
-> +       bool "MediaTek CMDQ Support"
-> +       depends on ARM64 && ( ARCH_MEDIATEK || COMPILE_TEST )
-> +       select MAILBOX
-> +       select MTK_INFRACFG
-> +       help
-> +         Say yes here to add support for the MediaTek Command Queue (CMDQ)
-> +         driver. The CMDQ is used to help read/write registers with critical
-> +         time limitation, such as updating display configuration during the
-> +         vblank.
+>  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>  arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+>  .../boot/dts/rockchip/rk3368-orion-r68-meta.dts    | 382 +++++++++++=
+++++++++++
+>  3 files changed, 387 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-orion-r68-met=
+a.dts
+>
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Doc=
+umentation/devicetree/bindings/arm/rockchip.txt
+> index 715d960..1d5c65e0 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -110,3 +110,7 @@ Rockchip platforms device tree bindings
+>  - Rockchip RK3399 evb:
+>      Required root node properties:
+>        - compatible =3D "rockchip,rk3399-evb", "rockchip,rk3399";
 > +
->  config MTK_INFRACFG
->         bool "MediaTek INFRACFG Support"
->         depends on ARCH_MEDIATEK || COMPILE_TEST
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index 12998b0..f7397ef 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -1,3 +1,4 @@
-> +obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq.o
->  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
->  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-> diff --git a/drivers/soc/mediatek/mtk-cmdq.c b/drivers/soc/mediatek/mtk-cmdq.c
+> +- Tronsmart Orion R68 Meta
+> +    Required root node properties:
+> +      - compatible =3D "tronsmart,orion-r68-meta", "rockchip,rk3368"=
+;
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/=
+dts/rockchip/Makefile
+> index 7037a16..87669f6 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -1,5 +1,6 @@
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3368-evb-act8846.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3368-geekbox.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3368-orion-r68-meta.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3368-r88.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3399-evb.dtb
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts b=
+/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
 > new file mode 100644
-> index 0000000..d032603
+> index 0000000..8c8671f
 > --- /dev/null
-> +++ b/drivers/soc/mediatek/mtk-cmdq.c
-> @@ -0,0 +1,948 @@
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368-orion-r68-meta.dts
+> @@ -0,0 +1,382 @@
 > +/*
-> + * Copyright (c) 2015 MediaTek Inc.
+> + * Copyright (c) 2016 Matthias Brugger <mbrugger@suse.com>
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dua=
+l
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
 > + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License a=
+s
+> + *     published by the Free Software Foundation; either version 2 o=
+f the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty o=
+f
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentatio=
+n
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom th=
+e
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall b=
+e
+> + *     included in all copies or substantial portions of the Softwar=
+e.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIN=
+D,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTI=
+ES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
 > + */
 > +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/completion.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/errno.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kthread.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-
-Please don't use module.h and MODULE_* stuff in a driver that has
-a bool Kconfig.  Either make it tristate if that has a sensible use case
-or get rid of the modular stuff.
-
-Thanks,
-Paul.
---
-
-> +#include <linux/mutex.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/suspend.h>
-> +#include <linux/timer.h>
-> +#include <soc/mediatek/cmdq.h>
+> +/dts-v1/;
+> +#include "rk3368.dtsi"
 > +
-> +#define CMDQ_THR_MAX_COUNT             3 /* main, sub, general(misc) */
-> +#define CMDQ_INST_SIZE                 8 /* instruction is 64-bit */
-> +#define CMDQ_TIMEOUT_MS                        1000
-> +#define CMDQ_IRQ_MASK                  0xffff
-> +#define CMDQ_NUM_CMD(t)                        (t->cmd_buf_size / CMDQ_INST_SIZE)
+> +/ {
+> +	model =3D "Rockchip Orion R68";
+> +	compatible =3D "tronsmart,orion-r68-meta", "rockchip,rk3368";
 > +
-> +#define CMDQ_CURR_IRQ_STATUS           0x10
-> +#define CMDQ_THR_SLOT_CYCLES           0x30
+> +	chosen {
+> +		stdout-path =3D "serial2:115200n8";
+> +	};
 > +
-> +#define CMDQ_THR_BASE                  0x100
-> +#define CMDQ_THR_SIZE                  0x80
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	memory {
+> +		device_type =3D "memory";
+> +		reg =3D <0x0 0x0 0x0 0x80000000>;
+> +	};
+> +
+> +	emmc_pwrseq: emmc-pwrseq {
+> +		compatible =3D "mmc-pwrseq-emmc";
+> +		pinctrl-0 =3D <&emmc_reset>;
+> +		pinctrl-names =3D "default";
+> +		reset-gpios =3D <&gpio2 3 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	ext_gmac: external-gmac-clock {
+> +		compatible =3D "fixed-clock";
+> +		#clock-cells =3D <0>;
+> +		clock-frequency =3D <125000000>;
+> +		clock-output-names =3D "ext_gmac";
+> +	};
+> +
+> +	keys: gpio-keys {
+> +		compatible =3D "gpio-keys";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pwr_key>;
+> +
+> +		button@0 {
+> +			gpio-key,wakeup =3D <1>;
+> +			gpios =3D <&gpio0 5 GPIO_ACTIVE_HIGH>;
+> +			label =3D "GPIO Power";
+> +			linux,code =3D <116>;
+> +		};
+> +	};
+> +
+> +	leds: gpio-leds {
+> +		compatible =3D "gpio-leds";
+> +
+> +		red {
+> +			gpios =3D <&gpio3 29 GPIO_ACTIVE_HIGH>;
+> +			label =3D "orion:red:led";
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&led_ctl>;
+> +			default-state =3D "on";
+> +		};
+> +
+> +		blue {
+> +			gpios =3D <&gpio0 12 GPIO_ACTIVE_HIGH>;
+> +			label =3D "orion:blue:led";
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&stby_pwren>;
+> +			default-state =3D "off";
+> +		};
+> +	};
+> +
+> +	vcc_18: vcc18-regulator {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vcc_18";
+> +		regulator-min-microvolt =3D <1800000>;
+> +		regulator-max-microvolt =3D <1800000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply =3D <&vcc_sys>;
+> +	};
+> +
+> +	/* supplies both host and otg */
+> +	vcc_host: vcc-host-regulator {
+> +		compatible =3D "regulator-fixed";
+> +		gpio =3D <&gpio0 4 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&host_vbus_drv>;
+> +		regulator-name =3D "vcc_host";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply =3D <&vcc_sys>;
+> +	};
+> +
+> +	vccio_sd: vcc-io-sd-regulator {
+> +		regulator-name=3D "vccio_sd";
+> +		gpio =3D <&gpio0 9 GPIO_ACTIVE_LOW>;
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+
+so, I guess your r68 board won't support sd 3.0?
+
+> +	};
+> +
+> +	vcc_sd: vcc-sd-regulator {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vcc_sd";
+> +		gpio =3D <&gpio3 11 GPIO_ACTIVE_LOW>;
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply =3D <&vcc_io>;
+> +	};
+> +
+> +	vcc_io: vcc-io-regulator {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vcc_io";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply =3D <&vcc_sys>;
+> +	};
+> +
+> +	vcc_lan: vcc-lan-regulator {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vcc_lan";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply =3D <&vcc_io>;
+> +	};
+> +
+> +	vcc_sys: vcc-sys-regulator {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vcc_sys";
+> +		regulator-min-microvolt =3D <5000000>;
+> +		regulator-max-microvolt =3D <5000000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	vccio_wl: vccio-wl-regulator {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vccio_wl";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply =3D <&vcc_io>;
+> +	};
+> +
+> +	vdd_10: vdd-10-regulator {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "vdd_10";
+> +		regulator-min-microvolt =3D <1000000>;
+> +		regulator-max-microvolt =3D <1000000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply =3D <&vcc_sys>;
+> +	};
+> +};
+> +
+> +&emmc {
+> +	bus-width =3D <8>;
+> +	cap-mmc-highspeed;
+> +	disable-wp;
+> +	mmc-pwrseq =3D <&emmc_pwrseq>;
+> +	non-removable;
+> +	num-slots =3D <1>;
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&emmc_clk &emmc_cmd &emmc_bus8>;
+> +	status =3D "okay";
+> +};
+> +
+> +&gmac {
+> +	assigned-clocks =3D <&cru SCLK_MAC>;
+> +	assigned-clock-parents =3D <&ext_gmac>;
+> +	phy-supply =3D <&vcc_lan>;
+> +	phy-mode =3D "rgmii";
+> +	clock_in_out =3D "input";
+> +	snps,reset-gpio =3D <&gpio3 12 0>;
+> +	snps,reset-active-low;
+> +	snps,reset-delays-us =3D <0 10000 1000000>;
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&rgmii_pins>;
+> +	tx_delay =3D <0x30>;
+> +	rx_delay =3D <0x10>;
+> +	status =3D "ok";
+> +};
+> +
+> +&i2c0 {
+> +	status =3D "okay";
+> +
+> +	vdd_cpu: syr827@40 {
+> +		compatible =3D "silergy,syr827";
+> +		reg =3D <0x40>;
+> +		fcs,suspend-voltage-selector =3D <1>;
+> +		regulator-name =3D "vdd_cpu";
+> +		regulator-enable-ramp-delay =3D <300>;
+> +		regulator-min-microvolt =3D <712500>;
+> +		regulator-max-microvolt =3D <1500000>;
+> +		regulator-ramp-delay =3D <8000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply =3D <&vcc_sys>;
+> +	};
+> +
+> +	hym8563: hym8563@51 {
+> +		compatible =3D "haoyu,hym8563";
+> +		reg =3D <0x51>;
+> +		#clock-cells =3D <0>;
+> +		clock-frequency =3D <32768>;
+> +		clock-output-names =3D "xin32k";
+> +		/* rtc_int is not connected */
+> +	};
+> +};
+> +
+> +&pinctrl {
+> +	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
+> +		bias-disable;
+> +		drive-strength =3D <8>;
+> +	};
+> +
+> +	pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
+> +		bias-pull-up;
+> +		drive-strength =3D <8>;
+> +	};
+> +
+> +	emmc {
+> +		emmc_bus8: emmc-bus8 {
+> +			rockchip,pins =3D <1 18 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 19 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 20 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 21 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 22 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 23 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 24 RK_FUNC_2 &pcfg_pull_up_drv_8ma>,
+> +					<1 25 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		emmc-clk {
+> +			rockchip,pins =3D <2 4 RK_FUNC_2 &pcfg_pull_none_drv_8ma>;
+> +		};
+> +
+> +		emmc-cmd {
+> +			rockchip,pins =3D <1 26 RK_FUNC_2 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		emmc_reset: emmc-reset {
+> +			rockchip,pins =3D <2 3 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	keys {
+> +		pwr_key: pwr-key {
+> +			rockchip,pins =3D <0 5 RK_FUNC_GPIO &pcfg_pull_down>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		stby_pwren: stby-pwren {
+> +			rockchip,pins =3D <0 12 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		led_ctl: led-ctl {
+> +			rockchip,pins =3D <3 29 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	sdmmc {
+> +		sdmmc_clk: sdmmc-clk {
+> +			rockchip,pins =3D <2 9 RK_FUNC_1 &pcfg_pull_none_drv_8ma>;
+> +		};
+> +
+> +		sdmmc_cmd: sdmmc-cmd {
+> +			rockchip,pins =3D <2 10 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		sdmmc_cd: sdmmc-cd {
+> +			rockchip,pins =3D <2 11 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		sdmmc_bus1: sdmmc-bus1 {
+> +			rockchip,pins =3D <2 5 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +
+> +		sdmmc_bus4: sdmmc-bus4 {
+> +			rockchip,pins =3D <2 5 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
+> +					<2 6 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
+> +					<2 7 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
+> +					<2 8 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+> +		};
+> +	};
+> +
+> +	usb {
+> +		host_vbus_drv: host-vbus-drv {
+> +			rockchip,pins =3D <0 4 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +};
+> +
+> +&saradc {
+> +	vref-supply =3D <&vcc_18>;
+> +	status =3D "okay";
+> +};
+> +
+> +&sdmmc {
+> +	clock-frequency =3D <50000000>;
+> +	clock-freq-min-max =3D <400000 50000000>;
+> +	cap-sd-highspeed;
+> +	supports-sd;
+
+This's not a upstream property.
+
+> +	broken-cd;
+
+sdmmc controller of rk3368 isn't broken. Could you remove it=EF=BC=9F
+
+
+> +	card-detect-delay =3D <200>;
+> +
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
+> +	bus-width =3D <4>;
+> +	num-slots =3D <1>;
+> +	ignore-pm-notify;
+
+ignore-pm-notify is from AOSP but not upstream mmc. You should remove
+it.
+
+> +	keep-power-in-suspend;
+> +
+> +	vmmc-supply =3D <&vcc_sd>;
+> +	vqmmc-supply =3D <&vccio_sd>;
+> +	status =3D "okay";
+> +};
+> +
+> +&uart2 {
+> +	status =3D "okay";
+> +};
+> +
+> +&uart4 {
+> +	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart4_xfer>;
+> +};
+> +
+> +&usb_host0_ehci {
+> +	status =3D "okay";
+> +};
+> +
+> +&usb_otg {
+> +	status =3D "okay";
+> +};
+> +
+> +&wdt {
+> +	status =3D "okay";
+> +};
+>
+
+
+--=20
+Best Regards
+Shawn Lin
