@@ -1,66 +1,70 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH v2] ARM: dts: exynos: Properly select eMMC HighSpeed mode
- on Odroid XU
-Date: Fri, 15 Jul 2016 14:31:00 +0530
-Message-ID: <5788A64C.4090901@samsung.com>
-References: <1468570369-14355-1-git-send-email-k.kozlowski@samsung.com>
+From: Dongpo Li <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v1 0/3] Add Hisilicon MDIO bus driver and FEMAC driver
+Date: Fri, 15 Jul 2016 17:02:52 +0800
+Message-ID: <5788A6BC.5020603@hisilicon.com>
+References: <1468571195-59763-1-git-send-email-lidongpo@hisilicon.com>
+ <20917223.X0KrqBAbxT@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1468570369-14355-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20917223.X0KrqBAbxT@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, benjamin.chenhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
+On 2016/7/15 16:41, Arnd Bergmann wrote:
+> On Friday, July 15, 2016 4:26:32 PM CEST Dongpo Li wrote:
+>> This patch set adds a Hisilicon MDIO bus driver and
+>> a Fast Ethernet MAC(FEMAC) driver.
+>> We also abstract a general interface "of_phy_get_and_connect"
+>> for PHY connect. User will have no bother with getting
+>> "phy-mode" and "phy-handle" any more.
+>>
+>> Changes in v1:
+>> - Pass private data structure instead of struct mii_bus
+>>   in MDIO read and write operation.
+>> - Return the error which devm_clk_get() gives when MDIO probe.
+>> - Leave the clock unprepared and disabled on error when MDIO probe.
+>> - Abstract a general interface "of_phy_get_and_connect" for PHY connect.
+>> - Remove the "_reset" suffixes in "reset-names" property.
+>> - Enable tx per-packet interrupt when tx fifo full.
+>> - Remove pointless compatible and add SoC specific compatible.
+>> - Declare only one clock in MAC dts documentation.
+>> - Add standard unit suffixes for "phy-reset-delays".
+>> - Use a smaller NAPI poll weight 16 for our Fast Ethernet MAC.
+>> - Use phy_ethtool_{get|set}_link_ksettings for ethtool ops.
+>> - Use phydev from struct net_device in MAC driver.
+>>
+> 
+> Looks all good to me now,
+> 
+> Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> 
+> One comment on the submission format: we normally count the initial
+> submission as "v1", so after [PATCH 0/3], the following version is
+> [PATCH v2 0/3], not [PATCH v1 0/3].
+> 
+> No need to re-send for this now, and if you end up having to make
+> other changes, just continue with "v2" for this driver, just follow
+> the normal scheme if you send another driver.
+> 
+Okay, many thanks for your friendly reminder.   :)
 
-On 07/15/2016 01:42 PM, Krzysztof Kozlowski wrote:
-> Exynos5410 supports eMMC version 4.41 so HS200 is the top mode which
-> should be configured.  This is reflected in usage of
-> "samsung,exynos5250-dw-mshc" compatible.  However Odroid XU DTS
-> contained also property "mmc-hs400-1_8v" which is parsed by MMC core
-> therefore resulting in mixed configuration.  MMC core set HS400 but
-> dwmmc_exynos driver did not configure the data strobe for HS400 DDR
-> mode.
->
-> Removal of HS400 properties fixes semi-random mmc errors during boot:
->    mmc_host mmc0: Bus speed (slot 0) = 400000000Hz (slot req 200000000Hz, actual 200000000HZ div = 1)
->    mmc0: mmc_select_hs400 failed, error -84
->    mmc0: error -84 whilst initialising MMC card
->
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->
-Looks good, thanks.
+> 	Arnd
+> 
+> .
+> 
 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+    Regards,
+    Dongpo
 
-> ---
->
-> Changes since v1:
-> 1. Remove also samsung,read-strobe-delay, suggested by Alim Akhtar.
-> ---
->   arch/arm/boot/dts/exynos5410-odroidxu.dts | 3 ---
->   1 file changed, 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-> index d9499310a301..f6d135245a4b 100644
-> --- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
-> +++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-> @@ -447,14 +447,11 @@
->   	samsung,dw-mshc-ciu-div = <3>;
->   	samsung,dw-mshc-sdr-timing = <0 4>;
->   	samsung,dw-mshc-ddr-timing = <0 2>;
-> -	samsung,dw-mshc-hs400-timing = <0 2>;
-> -	samsung,read-strobe-delay = <90>;
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8 &sd0_cd>;
->   	bus-width = <8>;
->   	cap-mmc-highspeed;
->   	mmc-hs200-1_8v;
-> -	mmc-hs400-1_8v;
->   	vmmc-supply = <&ldo20_reg>;
->   	vqmmc-supply = <&ldo11_reg>;
->   };
->
+.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
