@@ -1,74 +1,55 @@
-From: Tai Tri Nguyen <ttnguyen@apm.com>
-Subject: Re: [PATCH v9 3/4] perf: xgene: Add APM X-Gene SoC Performance
- Monitoring Unit driver
-Date: Fri, 15 Jul 2016 10:31:09 -0700
-Message-ID: <CACgAJHyaoEJqyeXNsy2HbfxQo2m-Ljm61nDKOtL-Vqbv=NVhKA@mail.gmail.com>
-References: <1468517266-1642-1-git-send-email-ttnguyen@apm.com>
- <1468517266-1642-4-git-send-email-ttnguyen@apm.com> <1468518428.8745.43.camel@perches.com>
- <CACgAJHwzWG_6iWG4OcL3v5QcUF892DwBcJxayqbH4f2kd7=kQQ@mail.gmail.com>
- <CACgAJHw7UMFKY=j8UBKUi=hNHfyzVoNMr_A5qOahhbgM+14KBQ@mail.gmail.com> <20160715094541.GE4655@leverpostej>
+From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] tpm: devicetree: document properties
+	for cr50
+Date: Fri, 15 Jul 2016 10:31:07 -0700
+Message-ID: <20160715173107.GD109276@apronin>
+References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
+	<1468549218-19215-2-git-send-email-apronin@chromium.org>
+	<CABXOdTcVcZ10c6uShN2AXUZfOuK=FESeo73Assi0sziMZJ_+Fw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160715094541.GE4655@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Joe Perches <joe@perches.com>, Will Deacon <will.deacon@arm.com>, catalin.marinas@arm.com, Paul Gortmaker <paul.gortmaker@windriver.com>, Duc Dang <dhdang@apm.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CABXOdTcVcZ10c6uShN2AXUZfOuK=FESeo73Assi0sziMZJ_+Fw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark and Joe,
-
-On Fri, Jul 15, 2016 at 2:45 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Thu, Jul 14, 2016 at 11:05:48AM -0700, Tai Tri Nguyen wrote:
->> Hi Joe,
->>
->> On Thu, Jul 14, 2016 at 10:54 AM, Tai Tri Nguyen <ttnguyen@apm.com> wrote:
->> > Hi Joe,
->> >
->> > On Thu, Jul 14, 2016 at 10:47 AM, Joe Perches <joe@perches.com> wrote:
->> >> On Thu, 2016-07-14 at 10:27 -0700, Tai Nguyen wrote:
->> >>> This patch adds a driver for the SoC-wide (AKA uncore) PMU hardware
->> >>> found in APM X-Gene SoCs.
->> >>
->> >> trivia:
->> >>
->> >>> diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
->> >> []
->> >>> +struct xgene_pmu_dev_ctx {
->> >>> +     char *name;
->> >>> +     struct list_head next;
->> >>> +     struct xgene_pmu_dev *pmu_dev;
->> >>> +     struct hw_pmu_info inf;
->> >>> +};
->> >>
->> >> Probably better to use something like
->> >>         char    name[20];
->> >> as the kasprintf can fail and this doesn't
->> >> seem to be freed anywhere.
->> >
->> > Okay. I'll fix it shortly.
->> >
->>
->> I take it back.
->> I refer many other drivers using kasprintf and they do the same way I do.
->> Can you please check it again?
->
-> Joe is correct that you allocate a string with kasprintf, and this never
-> gets freed, even if the driver is removed. Thus, memory may be leaked.
->
-> If other drivers do the same, they are similarly wrong.
->
-> Even if this is a rare case, it's not good practice to leave allocations
-> unbalanced. So please fix this.
->
-> If you don't want to change the struct, another option is to use
-> devm_kasprintf. However, I suspect with all the accounting data
-> structures that will take up more space.
+On Thu, Jul 14, 2016 at 09:05:53PM -0700, Guenter Roeck wrote:
+> On Thu, Jul 14, 2016 at 7:20 PM, Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> > +
+> > +Required properties:
+> > +- compatible: Should be "google,cr50_spi".
+> 
+> google,cr50, maybe ? The "_spi" seems redundant.
 >
 
-Thanks, I will change to use devm_kasprintf because I don't want to
-change the struct.
+I believe "_spi" is warranted. It's the driver that handles the SPI
+interface for Cr50 specifically.
+But if the same firmware ever talks through a different interface (say,
+I2C), this driver will not be compatible.
 
-Regards,
--- 
-Tai
+> Also, I agree with comments from others - the term cr50 really needs
+> an explanation (Google thinks that it is a motor bike, a scanner, or a
+> coffee roaster).
+> 
+
+Yes, will add a better description of what it is. My original one was
+too brief and imprecise at the same time.
+
+
+------------------------------------------------------------------------------
+What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
+patterns at an interface-level. Reveals which users, apps, and protocols are 
+consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
+J-Flow, sFlow and other flows. Make informed decisions using capacity planning
+reports.http://sdm.link/zohodev2dev
