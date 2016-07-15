@@ -1,76 +1,224 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: ARM: dts: exynos: Properly select eMMC HighSpeed mode
-Date: Fri, 15 Jul 2016 09:36:30 +0200
-Message-ID: <5788927E.2050803@samsung.com>
-References: <1468500458-7142-1-git-send-email-k.kozlowski@samsung.com>
- <578857FD.7030601@samsung.com>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [Xen-devel] [PATCH v4] xen/arm: Add a clock property
+Date: Fri, 15 Jul 2016 09:53:09 +0200
+Message-ID: <2bc46969-544d-3e07-a7f6-83895703d11a@de.bosch.com>
+References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
+ <146836236759.73491.11707389619985827497@resonance>
+ <c320f820-8749-f4a4-435e-ddd9379655b5@de.bosch.com>
+ <alpine.DEB.2.10.1607131941200.26575@sstabellini-ThinkPad-X260>
+ <57868EDE.6060406@gmail.com>
+ <146844380895.73491.4867379517577413421@resonance>
+ <7df784ab-d0c0-939b-393e-214535c4b191@de.bosch.com>
+ <alpine.DEB.2.10.1607141132000.26575@sstabellini-ThinkPad-X260>
+ <86951b96-0a3e-79b1-1a2f-88dfeba9b76b@de.bosch.com>
+ <alpine.DEB.2.10.1607141647350.22290@sstabellini-ThinkPad-X260>
+ <5787BE0B.8060504@gmail.com> <5787C88A.8030103@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <578857FD.7030601@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <5787C88A.8030103@arm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Julien Grall <julien.grall@arm.com>
+Cc: Dirk Behme <dirk.behme@gmail.com>, Stefano Stabellini <sstabellini@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2016 05:26 AM, Alim Akhtar wrote:
-> Hi Krzysztof,
-> 
-> On 07/14/2016 06:17 PM, Krzysztof Kozlowski wrote:
->> Exynos5410 supports eMMC version 4.41 so HS200 is the top mode which
->> should be configured.  This is reflected in usage of
->> "samsung,exynos5250-dw-mshc" compatible.  However DTS contained also
->> property "mmc-hs400-1_8v" which is parsed by MMC core therefore
->> resulting in mixed configuration.  MMC core set HS400 but dwmmc_exynos
->> driver did not configure the data strobe for HS400 DDR mode.
+On 14.07.2016 19:14, Julien Grall wrote:
+> Hello,
+>
+> On 14/07/16 17:30, Dirk Behme wrote:
+>> On 14.07.2016 17:55, Stefano Stabellini wrote:
+>>> On Thu, 14 Jul 2016, Dirk Behme wrote:
+>>>> On 14.07.2016 12:38, Stefano Stabellini wrote:
+>>>>> On Thu, 14 Jul 2016, Dirk Behme wrote:
+>>>>>> On 13.07.2016 23:03, Michael Turquette wrote:
+>>>>>>> Quoting Dirk Behme (2016-07-13 11:56:30)
+>>>>>>>> On 13.07.2016 20:43, Stefano Stabellini wrote:
+>>>>>>>>> On Wed, 13 Jul 2016, Dirk Behme wrote:
+>>>>>>>>>> On 13.07.2016 00:26, Michael Turquette wrote:
+>>>>>>>>>>> Quoting Dirk Behme (2016-07-12 00:46:45)
+>>>>>>>>>>>> Clocks described by this property are reserved for use by Xen,
+>>>>>>>>>>>> and
+>>>>>>>>>>>> the OS
+>>>>>>>>>>>> must not alter their state any way, such as disabling or
+>>>>>>>>>>>> gating a
+>>>>>>>>>>>> clock,
+>>>>>>>>>>>> or modifying its rate. Ensuring this may impose constraints on
+>>>>>>>>>>>> parent
+>>>>>>>>>>>> clocks or other resources used by the clock tree.
+>>>>>>>>>>>
+>>>>>>>>>>> Note that clk_prepare_enable will not prevent the rate from
+>>>>>>>>>>> changing
+>>>>>>>>>>> (clk_set_rate) or a parent from changing (clk_set_parent). The
+>>>>>>>>>>> only
+>>>>>>>>>>> way
+>>>>>>>>>>> to do this currently would be to set the following flags on the
+>>>>>>>>>>> effected
+>>>>>>>>>>> clocks:
+>>>>>>>>>>>
+>>>>>>>>>>>      CLK_SET_RATE_GATE
+>>>>>>>>>>>      CLK_SET_PARENT_GATE
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Regarding setting flags, I think we already talked about that. I
+>>>>>>>>>> think
+>>>>>>>>>> the
+>>>>>>>>>> conclusion was that in our case its not possible to manipulate
+>>>>>>>>>> the
+>>>>>>>>>> flags in
+>>>>>>>>>> the OS as this isn't intended to be done in cases like ours.
+>>>>>>>>>> Therefore
+>>>>>>>>>> no API
+>>>>>>>>>> is exported for this.
+>>>>>>>>>>
+>>>>>>>>>> I.e. if we need to set these flags, we have to do that in Xen
+>>>>>>>>>> where we
+>>>>>>>>>> add the
+>>>>>>>>>> clocks to the hypervisor node in the device tree. And not in the
+>>>>>>>>>> kernel patch
+>>>>>>>>>> discussed here.
+>>>>>>>>>
+>>>>>>>>> These are internal Linux flags, aren't they?
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> I've been under the impression that you can set clock "flags" via
+>>>>>>>> the
+>>>>>>>> device tree. Seems I need to re-check that ;)
+>>>>>>>
+>>>>>>> Right, you cannot set flags from the device tree. Also, setting
+>>>>>>> these
+>>>>>>> flags is done by the clock provider driver, not a consumer. Xen is
+>>>>>>> the
+>>>>>>> consumer.
+>>>>>>
+>>>>>>
+>>>>>> Ok, thanks, then I think we can forget about using flags for the
+>>>>>> issue we
+>>>>>> are
+>>>>>> discussing here.
+>>>>>>
+>>>>>> Best regards
+>>>>>>
+>>>>>> Dirk
+>>>>>>
+>>>>>> P.S.: Would it be an option to merge the v4 patch we are discussing
+>>>>>> here,
+>>>>>> then? From the discussion until here, it sounds to me that it's the
+>>>>>> best
+>>>>>> option we have at the moment. Maybe improving it in the future, then.
+>>>>>
+>>>>> It might be a step in the right direction, but it doesn't really
+>>>>> prevent
+>>>>> clk_set_rate from changing properties of a clock owned by Xen.  This
+>>>>> patch is incomplete.
+>>>>
+>>>>
+>>>> Let me ask then: Do we have a practical example where it's not
+>>>> sufficient
+>>>> practically?
+>>>>
+>>>> To my understanding, Xen people have been happy with the
+>>>> "clk_ignore_unused"
+>>>> workaround since ~2 years, now [1]. And I think the "clk_ignore_unused"
+>>>> workaround does mainly the same like the patch discussed here. It
+>>>> doesn't care
+>>>> regarding clk_set_rate from changing properties, too?
+>>>
+>>> Let me premise that I appreciate what you are trying to achieve with
+>>> this patch and I don't want to feature-creep it.
+>>>
+>>> However we are defining a new Device Tree binding,
 >>
->> Removal of HS400 properties fixes semi-random mmc errors during boot:
->>    mmc_host mmc0: Bus speed (slot 0) = 400000000Hz (slot req
->> 200000000Hz, actual 200000000HZ div = 1)
->>    mmc0: mmc_select_hs400 failed, error -84
->>    mmc0: error -84 whilst initialising MMC card
 >>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos5410-odroidxu.dts | 2 --
->>   1 file changed, 2 deletions(-)
+>> I don't think so.
 >>
->> diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts
->> b/arch/arm/boot/dts/exynos5410-odroidxu.dts
->> index d9499310a301..7536164438ca 100644
->> --- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
->> +++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
->> @@ -447,14 +447,12 @@
->>       samsung,dw-mshc-ciu-div = <3>;
->>       samsung,dw-mshc-sdr-timing = <0 4>;
->>       samsung,dw-mshc-ddr-timing = <0 2>;
->> -    samsung,dw-mshc-hs400-timing = <0 2>;
-> not sure but can we use /delete-property/ option for this removable?
-
-No need for this. This property is set only here - in Odroid XU DTS.
-
->>       samsung,read-strobe-delay = <90>;
-> this also need to be removed.
-
-Ah, right, thanks!
-
->>       pinctrl-names = "default";
->>       pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8
->> &sd0_cd>;
->>       bus-width = <8>;
->>       cap-mmc-highspeed;
->>       mmc-hs200-1_8v;
->> -    mmc-hs400-1_8v;
-> same as above if possible use /delete-property/
-
-Same, no need because this does not come from other DTS/DTSI.
-
->>       vmmc-supply = <&ldo20_reg>;
->>       vqmmc-supply = <&ldo11_reg>;
->>   };
+>> We are just using the existing one
 >>
-> 
+>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/clock-bindings.txt#n66
+>>
+>>
+>>
+>> , pick it from other device tree nodes (e.g. serial, timer etc) and add
+>> it to the hypervisor node. And then use this existing one with the
+>> existing well defined clock API.
+>>
+>>
+>>> one which will have
+>>> to be supported for a long time by both Xen and Linux, so at the very
+>>> least we need to have the full picture. We need to understand if the
+>>> binding if sufficient
+>>
+>>
+>> Even if it's not sufficient, you can't change it.
+>
+> I think you misunderstood Stefano's comment. Whilst the clock bindings
+> is set in stone, the binding you are adding in this patch is not yet
+> fixed.
 
-Best regards,
-Krzysztof
+
+It has to be
+
+a) identical what we pick from UART, timer, etc
+
+b) compatible to the kernel's clock API
+
+No?
+
+With these two requirements I have some difficulties to imagine how it 
+could be different to the clock binding from clock-bindings.txt?
+
+
+
+> There is no requirement to follow what was defined in
+> clock-bindings.txt. I agree it would be convenient, but as mentioned by
+> Stefano this will need to be supported for a long time by Xen, Linux,
+> and any other consumer (i.e BSD kernels).
+
+
+Sounds like an additional argument for clock-bindings.txt ;)
+
+
+> So we have to be careful on
+> how it has been defined.
+>
+> I would wait the answer of Michael on Stefano's question before taking
+> any decision here.
+
+
+Fine with me :)
+
+
+Best regards
+
+Dirk
+
+
+>>> or if we need something different to solve the
+>>> problem completely.
+>>
+>>
+>> You might need anything additionally. E.g. an extension of the Linux
+>> kernel clock API to be able to modify the flags was proposed.
+>
+> The Linux kernel is not the only consumer of the device tree bindings.
+> This is also used by other OS such as FreeBSD where you might already be
+> able (I have not actually checked) to forbid a user to change the clock
+> rate.
+>
+>>
+>> Best regards
+>>
+>> Dirk
+>>
+>> P.S.: I still would be interested if we do have a practical example
+>> where it's not sufficient practically?
+>
+> Very easy. What does prevent a driver to change the clock rate? Nothing
+> but the flags mentioned by Michael. There are already drivers which
+> modify the clock rate, thankfully those clocks are not shared with the
+> UART for now.
+>
+> But we cannot rule out that it will not be possible in the future. Think
+> about a clock that would be used by another guest (I know it is still
+> theoretical as we have not yet solved the problem).
