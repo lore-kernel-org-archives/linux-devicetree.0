@@ -1,70 +1,39 @@
-From: Dongpo Li <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v1 0/3] Add Hisilicon MDIO bus driver and FEMAC driver
-Date: Fri, 15 Jul 2016 17:02:52 +0800
-Message-ID: <5788A6BC.5020603@hisilicon.com>
-References: <1468571195-59763-1-git-send-email-lidongpo@hisilicon.com>
- <20917223.X0KrqBAbxT@wuerfel>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V1] regulator: da9210: addition of device tree support
+Date: Fri, 15 Jul 2016 09:17:39 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB70173DAB217@SW-EX-MBX02.diasemi.com>
+References: <20160713154433.496843FAD9@swsrvapps-01.diasemi.com>
+ <20160714154821.GA30372@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20917223.X0KrqBAbxT@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, benjamin.chenhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160714154821.GA30372@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 14 July 2016 16:48, Mark Brown wrote:
 
-On 2016/7/15 16:41, Arnd Bergmann wrote:
-> On Friday, July 15, 2016 4:26:32 PM CEST Dongpo Li wrote:
->> This patch set adds a Hisilicon MDIO bus driver and
->> a Fast Ethernet MAC(FEMAC) driver.
->> We also abstract a general interface "of_phy_get_and_connect"
->> for PHY connect. User will have no bother with getting
->> "phy-mode" and "phy-handle" any more.
->>
->> Changes in v1:
->> - Pass private data structure instead of struct mii_bus
->>   in MDIO read and write operation.
->> - Return the error which devm_clk_get() gives when MDIO probe.
->> - Leave the clock unprepared and disabled on error when MDIO probe.
->> - Abstract a general interface "of_phy_get_and_connect" for PHY connect.
->> - Remove the "_reset" suffixes in "reset-names" property.
->> - Enable tx per-packet interrupt when tx fifo full.
->> - Remove pointless compatible and add SoC specific compatible.
->> - Declare only one clock in MAC dts documentation.
->> - Add standard unit suffixes for "phy-reset-delays".
->> - Use a smaller NAPI poll weight 16 for our Fast Ethernet MAC.
->> - Use phy_ethtool_{get|set}_link_ksettings for ethtool ops.
->> - Use phydev from struct net_device in MAC driver.
->>
+> To: Steve Twiss
+> Cc: DEVICETREE; LINUXKERNEL; Liam Girdwood; Mark Rutland; Rob Herring;
+> Support Opensource
+> Subject: Re: [PATCH V1] regulator: da9210: addition of device tree support
 > 
-> Looks all good to me now,
+> On Wed, Jul 13, 2016 at 04:41:19PM +0100, Steve Twiss wrote:
 > 
-> Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > Two files are modified, the driver source file and the binding document.
+> > Updates for the regulator source file include an .of_match_table entry, node
+> > match checking in the probe() function for a compatible da9210 string, and
+> > a new "BUCK" regulator entry. The binding documentation changes have been
+> > made to reflect these updates.
 > 
-> One comment on the submission format: we normally count the initial
-> submission as "v1", so after [PATCH 0/3], the following version is
-> [PATCH v2 0/3], not [PATCH v1 0/3].
-> 
-> No need to re-send for this now, and if you end up having to make
-> other changes, just continue with "v2" for this driver, just follow
-> the normal scheme if you send another driver.
-> 
-Okay, many thanks for your friendly reminder.   :)
+> If the device only has one regulator and no other functionality I'd
+> expect the properties to just be in the top level node for the device -
+> no need to go fiddling around with a subnode to hold another subnode to
+> hold all the properties.
 
-> 	Arnd
-> 
-> .
-> 
-
-    Regards,
-    Dongpo
-
-.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Agreed.
+I will revert those changes to the device tree and re-submit V2.
