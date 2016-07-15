@@ -1,57 +1,84 @@
-From: Shuah Khan <shuahkh@osg.samsung.com>
-Subject: Re: [PATCH] media: Doc add missing documentation for
- samsung,exynos4212-jpeg
-Date: Fri, 15 Jul 2016 16:09:26 -0600
-Message-ID: <57895F16.7010101@osg.samsung.com>
-References: <1468526499-8840-1-git-send-email-shuahkh@osg.samsung.com>
- <578890BA.8040101@samsung.com> <57889B73.4090607@samsung.com>
- <57889C23.3050106@samsung.com> <57889EAB.30502@samsung.com>
- <57889FD5.9070302@samsung.com> <5788AA5E.3070301@samsung.com>
- <5788AD39.1010108@samsung.com> <5788AEE4.8080606@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5788AEE4.8080606@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kgene@kernel.org, mchehab@osg.samsung.com, andrzej.p@samsung.com, hans.verkuil@cisco.com, javier@osg.samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Shuah Khan <shuahkh@osg.samsung.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v4 2/4] mfd: cros_ec: add EC_PWM function definitions
+Date: Fri, 15 Jul 2016 16:28:42 -0700
+Message-ID: <1468625324-41229-3-git-send-email-briannorris@chromium.org>
+References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>
+Cc: linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof and Jacek,
+The EC_CMD_PWM_{GET,SET}_DUTY commands allow us to control a PWM that is
+attached to the EC, rather than the main host SoC. The API provides
+functionality-based (e.g., keyboard light, backlight) or index-based
+addressing of the PWM(s). Duty cycles are represented by a 16-bit value,
+where 0 maps to 0% duty cycle and U16_MAX maps to 100%. The period
+cannot be controlled.
 
-Thanks for the review.
+This command set is more generic than, e.g.,
+EC_CMD_PWM_{GET,SET}_KEYBOARD_BACKLIGHT and could possibly used to
+replace it on future products.
 
-On 07/15/2016 03:37 AM, Jacek Anaszewski wrote:
-> On 07/15/2016 11:30 AM, Krzysztof Kozlowski wrote:
->> On 07/15/2016 11:18 AM, Jacek Anaszewski wrote:
->>> On 07/15/2016 10:33 AM, Krzysztof Kozlowski wrote:
->>>> On 07/15/2016 10:28 AM, Jacek Anaszewski wrote:
->>>>> On 07/15/2016 10:17 AM, Krzysztof Kozlowski wrote:
->>>>>> On 07/15/2016 10:14 AM, Jacek Anaszewski wrote:
->>>>>>>> However if these compatibles are exactly equal then
->>>>>>>> only one should be preferred. It makes everything easier. Second
->>>>>>>> can be
->>>>>>>> still documented e.g. as deprecated.
->>>>>>>
->>>>>>> Still, both of them are present in the driver. Shouldn't it be
->>>>>>> reflected
->>>>>>> in the documentation?
->>>>>>
->>>>>> Right, it is a good practice, so how about:
->>>>>>
->>>>>>      - compatible    : should be one of:
->>>>>>              "samsung,s5pv210-jpeg", "samsung,exynos3250-jpeg",
->>>>>>              "samsung,exynos4210-jpeg", "samsung,exynos5420-jpeg",
->>>>>>              "samsung,exynos5433-jpeg";
->>>>>>
->>>>>>              Deprecated: "samsung,exynos4212-jpeg"
->>>>>>
->>>>>> (or any other formatting)
->>>>>> plus update to DTS changing it to 4210?
+Let's update the command header to include the definitions.
 
-I am sending the v2 doc patch that adds samsung,exynos4212-jpeg as
-deprecated to begin with.
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+---
+v4:
+ * no change
 
-thanks,
--- Shuah
+v3:
+ * convert from 65535 to 0xffff
+
+v2:
+ * no changes
+---
+ include/linux/mfd/cros_ec_commands.h | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
+index 13b630c10d4c..7e7a8d4b4551 100644
+--- a/include/linux/mfd/cros_ec_commands.h
++++ b/include/linux/mfd/cros_ec_commands.h
+@@ -949,6 +949,37 @@ struct ec_params_pwm_set_fan_duty {
+ 	uint32_t percent;
+ } __packed;
+ 
++#define EC_CMD_PWM_SET_DUTY 0x25
++/* 16 bit duty cycle, 0xffff = 100% */
++#define EC_PWM_MAX_DUTY 0xffff
++
++enum ec_pwm_type {
++	/* All types, indexed by board-specific enum pwm_channel */
++	EC_PWM_TYPE_GENERIC = 0,
++	/* Keyboard backlight */
++	EC_PWM_TYPE_KB_LIGHT,
++	/* Display backlight */
++	EC_PWM_TYPE_DISPLAY_LIGHT,
++	EC_PWM_TYPE_COUNT,
++};
++
++struct ec_params_pwm_set_duty {
++	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY = 100% */
++	uint8_t pwm_type;  /* ec_pwm_type */
++	uint8_t index;     /* Type-specific index, or 0 if unique */
++} __packed;
++
++#define EC_CMD_PWM_GET_DUTY 0x26
++
++struct ec_params_pwm_get_duty {
++	uint8_t pwm_type;  /* ec_pwm_type */
++	uint8_t index;     /* Type-specific index, or 0 if unique */
++} __packed;
++
++struct ec_response_pwm_get_duty {
++	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY = 100% */
++} __packed;
++
+ /*****************************************************************************/
+ /*
+  * Lightbar commands. This looks worse than it is. Since we only use one HOST
+-- 
+2.8.0.rc3.226.g39d4020
