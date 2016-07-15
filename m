@@ -1,151 +1,115 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: Re: [PATCH v12] mtd: spi-nor: add hisilicon spi-nor flash controller
- driver
-Date: Fri, 15 Jul 2016 09:26:29 +0800
-Message-ID: <57883BC5.7060600@hisilicon.com>
-References: <1467100099-6172-1-git-send-email-xuejiancheng@hisilicon.com>
- <20160714011331.GE54628@google.com>
+From: Horng-Shyang Liao <hs.liao@mediatek.com>
+Subject: Re: [PATCH v10 2/4] CMDQ: Mediatek CMDQ driver
+Date: Fri, 15 Jul 2016 09:39:55 +0800
+Message-ID: <1468546795.31101.2.camel@mtksdaap41>
+References: <1468495733-12178-1-git-send-email-hs.liao@mediatek.com>
+	 <1468495733-12178-3-git-send-email-hs.liao@mediatek.com>
+	 <CAP=VYLqPhZLYFmsWE45kRdfbjUTzMT+eGNVZnGjK8VD7+fQgBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160714011331.GE54628@google.com>
+In-Reply-To: <CAP=VYLqPhZLYFmsWE45kRdfbjUTzMT+eGNVZnGjK8VD7+fQgBA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, jteki@openedev.com, cyrille.pitchen@atmel.com, robh+dt@kernel.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, linshunquan1@hisilicon.com, Binquan Peng <pengbinquan@hisilicon.com>
+To: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@media>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Hi Paul,
 
-On 2016/7/14 9:13, Brian Norris wrote:
-> On Tue, Jun 28, 2016 at 03:48:19PM +0800, Jiancheng Xue wrote:
->> Add hisilicon spi-nor flash controller driver
->>
->> Signed-off-by: Binquan Peng <pengbinquan@hisilicon.com>
->> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
->> Reviewed-by: Jagan Teki <jteki@openedev.com>
->> Reviewed-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
->> ---
->> change log
->> v12:
->> 1)Made SPI_HISI_SFC depend on HAS_DMA to fix the kbuild test robot error.
->> 2)Added "Reviewed-by Cyrille Pitchen <cyrille.pitchen@atmel.com>" and 
->> "Reviewed-by: Jagan Teki <jteki@openedev.com>" in the commit message.
->> v11:
->> Fixed issues pointed by Brian Norris and Cyrille Pitchen.
->> 1)Changed hisi_spi_nor_read_reg()/write_reg() to configure registers
->> without sniffing the opcodes.
->> 2)Deleted hisi_spi_nor_erase() and used default implementation instead.
->> 3)Changed hisi_spi_nor_dma_transfer() to return a integer type value
->> instead of nothing.
->> 4)Simplified hisi_spi_nor_read()/write() as Brian suggested.
->>
->> v10:
->> Fixed issues pointed by Marek Vasut.
->> 1)Droped the underscores in the argument names of some macros' definition.
->> 2)Changed some varibles to correct type.
->> 3)Rewrote hisi_spi_nor_read/write for readability.
->> 4)Added new functions hisi_spi_nor_register/unregister_all
->> 5)Changed to dynamically allocation for spi_nor embeded in hifmc_host.
->> Fixed issues pointed by Brian Norris.
->> 1)Replaced some headers with more accurate ones.
->> v9:
->> Fixed issues pointed by Jagan Teki.
->> v8:
->> Fixed issues pointed by Ezequiel Garcia and Brian Norris.
->> Moved dts binding file to mtd directory.
->> Changed the compatible string more specific.
->> v7:
->> Rebased to v4.5-rc3.
->> Fixed issues pointed by Ezequiel Garcia.
->> v6:
->> Based on v4.5-rc2
->> Fixed issues pointed by Ezequiel Garcia.
->> v5:
->> Fixed a compile error.
->> v4:
->> Rebased to v4.5-rc1
->> v3:
->> Added a compatible string "hisilicon,hi3519-sfc".
->> v2:
->> Fixed some compiling warings.
->>  .../bindings/mtd/hisilicon,fmc-spi-nor.txt         |  24 +
->>  drivers/mtd/spi-nor/Kconfig                        |   7 +
->>  drivers/mtd/spi-nor/Makefile                       |   1 +
->>  drivers/mtd/spi-nor/hisi-sfc.c                     | 489 +++++++++++++++++++++
->>  4 files changed, 521 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
->>  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
+On Thu, 2016-07-14 at 19:38 -0400, Paul Gortmaker wrote:
+> On Thu, Jul 14, 2016 at 7:28 AM, HS Liao <hs.liao@mediatek.com> wrote:
+> > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
+> > CMDQ is used to help write registers with critical time limitation,
+> > such as updating display configuration during the vblank. It controls
+> > Global Command Engine (GCE) hardware to achieve this requirement.
+> > Currently, CMDQ only supports display related hardwares, but we expect
+> > it can be extended to other hardwares for future requirements.
+> >
+> > Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> > Signed-off-by: CK Hu <ck.hu@mediatek.com>
+> > ---
+> >  drivers/soc/mediatek/Kconfig    |  11 +
+> >  drivers/soc/mediatek/Makefile   |   1 +
+> >  drivers/soc/mediatek/mtk-cmdq.c | 948 ++++++++++++++++++++++++++++++++++++++++
+> >  include/soc/mediatek/cmdq.h     | 179 ++++++++
+> >  4 files changed, 1139 insertions(+)
+> >  create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
+> >  create mode 100644 include/soc/mediatek/cmdq.h
+> >
+> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> > index 0a4ea80..50869e4 100644
+> > --- a/drivers/soc/mediatek/Kconfig
+> > +++ b/drivers/soc/mediatek/Kconfig
+> > @@ -1,6 +1,17 @@
+> >  #
+> >  # MediaTek SoC drivers
+> >  #
+> > +config MTK_CMDQ
+> > +       bool "MediaTek CMDQ Support"
+> > +       depends on ARM64 && ( ARCH_MEDIATEK || COMPILE_TEST )
+> > +       select MAILBOX
+> > +       select MTK_INFRACFG
+> > +       help
+> > +         Say yes here to add support for the MediaTek Command Queue (CMDQ)
+> > +         driver. The CMDQ is used to help read/write registers with critical
+> > +         time limitation, such as updating display configuration during the
+> > +         vblank.
+> > +
+> >  config MTK_INFRACFG
+> >         bool "MediaTek INFRACFG Support"
+> >         depends on ARCH_MEDIATEK || COMPILE_TEST
+> > diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
+> > index 12998b0..f7397ef 100644
+> > --- a/drivers/soc/mediatek/Makefile
+> > +++ b/drivers/soc/mediatek/Makefile
+> > @@ -1,3 +1,4 @@
+> > +obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq.o
+> >  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
+> >  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
+> >  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
+> > diff --git a/drivers/soc/mediatek/mtk-cmdq.c b/drivers/soc/mediatek/mtk-cmdq.c
+> > new file mode 100644
+> > index 0000000..d032603
+> > --- /dev/null
+> > +++ b/drivers/soc/mediatek/mtk-cmdq.c
+> > @@ -0,0 +1,948 @@
+> > +/*
+> > + * Copyright (c) 2015 MediaTek Inc.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/bitops.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/completion.h>
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/kthread.h>
+> > +#include <linux/mailbox_client.h>
+> > +#include <linux/mailbox_controller.h>
+> > +#include <linux/module.h>
 > 
-> Pushed to l2-mtd.git, with the following diff due to API changes. Please
-> review to be sure it looks OK to you.
-> 
+> Please don't use module.h and MODULE_* stuff in a driver that has
+> a bool Kconfig.  Either make it tristate if that has a sensible use case
+> or get rid of the modular stuff.
 
-The changes are OK to me. Thanks!
+Will remove it.
 
-> Also, please base changes on l2-mtd.git or linux-next.git in the future.
-> 
+> Thanks,
+> Paul.
+> --
 
-The l2-mtd.git can't be accessed through http protocol now. The git protocol
-is forbidden in our office.
-
-I will generate patch based on linux-next.git.
-
-Regards,
-Jiancheng
-
-> Regards,
-> Brian
-> 
-> diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/hisi-sfc.c
-> index 44664c3fc5ff..20378b0d55e9 100644
-> --- a/drivers/mtd/spi-nor/hisi-sfc.c
-> +++ b/drivers/mtd/spi-nor/hisi-sfc.c
-> @@ -269,8 +269,8 @@ static int hisi_spi_nor_dma_transfer(struct spi_nor *nor, loff_t start_off,
->  	return wait_op_finish(host);
->  }
->  
-> -static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
-> -		size_t *retlen, u_char *read_buf)
-> +static ssize_t hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
-> +		u_char *read_buf)
->  {
->  	struct hifmc_priv *priv = nor->priv;
->  	struct hifmc_host *host = priv->host;
-> @@ -287,14 +287,13 @@ static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
->  			return ret;
->  		}
->  		memcpy(read_buf + offset, host->buffer, trans);
-> -		*retlen += trans;
->  	}
->  
-> -	return 0;
-> +	return len;
->  }
->  
-> -static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
-> -			size_t len, size_t *retlen, const u_char *write_buf)
-> +static ssize_t hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
-> +			size_t len, const u_char *write_buf)
->  {
->  	struct hifmc_priv *priv = nor->priv;
->  	struct hifmc_host *host = priv->host;
-> @@ -309,10 +308,11 @@ static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
->  			to + offset, host->dma_buffer, trans, FMC_OP_WRITE);
->  		if (ret) {
->  			dev_warn(nor->dev, "DMA write timeout\n");
-> -			return;
-> +			return ret;
->  		}
-> -		*retlen += len;
->  	}
-> +
-> +	return len;
->  }
->  
->  /**
-> 
-> .
-> 
+Thanks,
+HS
