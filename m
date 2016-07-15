@@ -1,224 +1,72 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [Xen-devel] [PATCH v4] xen/arm: Add a clock property
-Date: Fri, 15 Jul 2016 09:53:09 +0200
-Message-ID: <2bc46969-544d-3e07-a7f6-83895703d11a@de.bosch.com>
-References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
- <146836236759.73491.11707389619985827497@resonance>
- <c320f820-8749-f4a4-435e-ddd9379655b5@de.bosch.com>
- <alpine.DEB.2.10.1607131941200.26575@sstabellini-ThinkPad-X260>
- <57868EDE.6060406@gmail.com>
- <146844380895.73491.4867379517577413421@resonance>
- <7df784ab-d0c0-939b-393e-214535c4b191@de.bosch.com>
- <alpine.DEB.2.10.1607141132000.26575@sstabellini-ThinkPad-X260>
- <86951b96-0a3e-79b1-1a2f-88dfeba9b76b@de.bosch.com>
- <alpine.DEB.2.10.1607141647350.22290@sstabellini-ThinkPad-X260>
- <5787BE0B.8060504@gmail.com> <5787C88A.8030103@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <5787C88A.8030103@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Julien Grall <julien.grall@arm.com>
-Cc: Dirk Behme <dirk.behme@gmail.com>, Stefano Stabellini <sstabellini@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v3 1/2] drivers: led: is31fl319x: 1/3/6/9-channel light effect led driver
+Date: Fri, 15 Jul 2016 10:08:33 +0200
+Message-ID: <71F3BE12-FFC9-4771-BF48-ABAC3ACEF4AD@goldelico.com>
+References: <cover.1468007377.git.hns@goldelico.com> <524f16ecba240bacf57924f43ec38404cfdcde8f.1468007377.git.hns@goldelico.com> <57854FB0.1080605@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57854FB0.1080605@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, David Rivshin <drivshin@allworx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 14.07.2016 19:14, Julien Grall wrote:
-> Hello,
->
-> On 14/07/16 17:30, Dirk Behme wrote:
->> On 14.07.2016 17:55, Stefano Stabellini wrote:
->>> On Thu, 14 Jul 2016, Dirk Behme wrote:
->>>> On 14.07.2016 12:38, Stefano Stabellini wrote:
->>>>> On Thu, 14 Jul 2016, Dirk Behme wrote:
->>>>>> On 13.07.2016 23:03, Michael Turquette wrote:
->>>>>>> Quoting Dirk Behme (2016-07-13 11:56:30)
->>>>>>>> On 13.07.2016 20:43, Stefano Stabellini wrote:
->>>>>>>>> On Wed, 13 Jul 2016, Dirk Behme wrote:
->>>>>>>>>> On 13.07.2016 00:26, Michael Turquette wrote:
->>>>>>>>>>> Quoting Dirk Behme (2016-07-12 00:46:45)
->>>>>>>>>>>> Clocks described by this property are reserved for use by Xen,
->>>>>>>>>>>> and
->>>>>>>>>>>> the OS
->>>>>>>>>>>> must not alter their state any way, such as disabling or
->>>>>>>>>>>> gating a
->>>>>>>>>>>> clock,
->>>>>>>>>>>> or modifying its rate. Ensuring this may impose constraints on
->>>>>>>>>>>> parent
->>>>>>>>>>>> clocks or other resources used by the clock tree.
->>>>>>>>>>>
->>>>>>>>>>> Note that clk_prepare_enable will not prevent the rate from
->>>>>>>>>>> changing
->>>>>>>>>>> (clk_set_rate) or a parent from changing (clk_set_parent). The
->>>>>>>>>>> only
->>>>>>>>>>> way
->>>>>>>>>>> to do this currently would be to set the following flags on the
->>>>>>>>>>> effected
->>>>>>>>>>> clocks:
->>>>>>>>>>>
->>>>>>>>>>>      CLK_SET_RATE_GATE
->>>>>>>>>>>      CLK_SET_PARENT_GATE
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Regarding setting flags, I think we already talked about that. I
->>>>>>>>>> think
->>>>>>>>>> the
->>>>>>>>>> conclusion was that in our case its not possible to manipulate
->>>>>>>>>> the
->>>>>>>>>> flags in
->>>>>>>>>> the OS as this isn't intended to be done in cases like ours.
->>>>>>>>>> Therefore
->>>>>>>>>> no API
->>>>>>>>>> is exported for this.
->>>>>>>>>>
->>>>>>>>>> I.e. if we need to set these flags, we have to do that in Xen
->>>>>>>>>> where we
->>>>>>>>>> add the
->>>>>>>>>> clocks to the hypervisor node in the device tree. And not in the
->>>>>>>>>> kernel patch
->>>>>>>>>> discussed here.
->>>>>>>>>
->>>>>>>>> These are internal Linux flags, aren't they?
->>>>>>>>
->>>>>>>>
->>>>>>>> I've been under the impression that you can set clock "flags" via
->>>>>>>> the
->>>>>>>> device tree. Seems I need to re-check that ;)
->>>>>>>
->>>>>>> Right, you cannot set flags from the device tree. Also, setting
->>>>>>> these
->>>>>>> flags is done by the clock provider driver, not a consumer. Xen is
->>>>>>> the
->>>>>>> consumer.
->>>>>>
->>>>>>
->>>>>> Ok, thanks, then I think we can forget about using flags for the
->>>>>> issue we
->>>>>> are
->>>>>> discussing here.
->>>>>>
->>>>>> Best regards
->>>>>>
->>>>>> Dirk
->>>>>>
->>>>>> P.S.: Would it be an option to merge the v4 patch we are discussing
->>>>>> here,
->>>>>> then? From the discussion until here, it sounds to me that it's the
->>>>>> best
->>>>>> option we have at the moment. Maybe improving it in the future, then.
->>>>>
->>>>> It might be a step in the right direction, but it doesn't really
->>>>> prevent
->>>>> clk_set_rate from changing properties of a clock owned by Xen.  This
->>>>> patch is incomplete.
->>>>
->>>>
->>>> Let me ask then: Do we have a practical example where it's not
->>>> sufficient
->>>> practically?
->>>>
->>>> To my understanding, Xen people have been happy with the
->>>> "clk_ignore_unused"
->>>> workaround since ~2 years, now [1]. And I think the "clk_ignore_unused"
->>>> workaround does mainly the same like the patch discussed here. It
->>>> doesn't care
->>>> regarding clk_set_rate from changing properties, too?
->>>
->>> Let me premise that I appreciate what you are trying to achieve with
->>> this patch and I don't want to feature-creep it.
->>>
->>> However we are defining a new Device Tree binding,
->>
->>
->> I don't think so.
->>
->> We are just using the existing one
->>
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/clock-bindings.txt#n66
->>
->>
->>
->> , pick it from other device tree nodes (e.g. serial, timer etc) and add
->> it to the hypervisor node. And then use this existing one with the
->> existing well defined clock API.
->>
->>
->>> one which will have
->>> to be supported for a long time by both Xen and Linux, so at the very
->>> least we need to have the full picture. We need to understand if the
->>> binding if sufficient
->>
->>
->> Even if it's not sufficient, you can't change it.
->
-> I think you misunderstood Stefano's comment. Whilst the clock bindings
-> is set in stone, the binding you are adding in this patch is not yet
-> fixed.
+Hi Jacek,
 
+> Am 12.07.2016 um 22:14 schrieb Jacek Anaszewski <jacek.anaszewski@gmail.com>:
+> 
+>> 
+>> +
+>> +/*
+>> + * regmap is used as a cache of chip's register space,
+>> + * to avoid reading back brightness values from chip,
+>> + * which is known to hang.
+>> + */
+>> +struct is31fl319x_chip {
+>> +	struct i2c_client       *client;
+>> +	struct regmap           *regmap;
+>> +	struct mutex            lock;
+>> +	u32                     audio_gain_db;
+>> +
+>> +	struct is31fl319x_led {
+>> +		struct is31fl319x_chip  *chip;
+>> +		struct led_classdev     cdev;
+>> +		u32                     max_microamp;
+>> +		bool                    configured;
+>> +	} leds[NUM_LEDS];
+>> +};
+>> +
+>> +static const struct i2c_device_id is31fl319x_id[] = {
+>> +	{ "is31fl3190", 1 },
+>> +	{ "is31fl3191", 1 },
+>> +	{ "is31fl3193", 3 },
+>> +	{ "is31fl3196", 6 },
+>> +	{ "is31fl3199", 9 },
+>> +	{ "sn3199", 9 },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, is31fl319x_id);
+> 
+> This is redundant - you have this info in of_is31fl319x_leds_match,
+> and you can obtain it with of_match_device().
+> Please compare drivers/leds/leds-is31fl32xx.c.
 
-It has to be
+we have tried like is31fl32xx.c but it does not automatically load the driver
+if compiled as module (like all other I2C clients do). Reason seems to
+be that there is no i2c information in modalias database any more.
 
-a) identical what we pick from UART, timer, etc
+So perhaps the i31fl32 approach is also incomplete. Has it been tested
+with loadable modules?
 
-b) compatible to the kernel's clock API
+And, there is a bug/typo in the fl32 driver:
 
-No?
+http://lxr.free-electrons.com/source/drivers/leds/leds-is31fl32xx.c#L425
 
-With these two requirements I have some difficulties to imagine how it 
-could be different to the clock binding from clock-bindings.txt?
+static const struct i2c_device_id is31fl31xx_id[] = {
 
+s/fl31/fl32/ is31fl32xx.c
 
-
-> There is no requirement to follow what was defined in
-> clock-bindings.txt. I agree it would be convenient, but as mentioned by
-> Stefano this will need to be supported for a long time by Xen, Linux,
-> and any other consumer (i.e BSD kernels).
-
-
-Sounds like an additional argument for clock-bindings.txt ;)
-
-
-> So we have to be careful on
-> how it has been defined.
->
-> I would wait the answer of Michael on Stefano's question before taking
-> any decision here.
-
-
-Fine with me :)
-
-
-Best regards
-
-Dirk
-
-
->>> or if we need something different to solve the
->>> problem completely.
->>
->>
->> You might need anything additionally. E.g. an extension of the Linux
->> kernel clock API to be able to modify the flags was proposed.
->
-> The Linux kernel is not the only consumer of the device tree bindings.
-> This is also used by other OS such as FreeBSD where you might already be
-> able (I have not actually checked) to forbid a user to change the clock
-> rate.
->
->>
->> Best regards
->>
->> Dirk
->>
->> P.S.: I still would be interested if we do have a practical example
->> where it's not sufficient practically?
->
-> Very easy. What does prevent a driver to change the clock rate? Nothing
-> but the flags mentioned by Michael. There are already drivers which
-> modify the clock rate, thankfully those clocks are not shared with the
-> UART for now.
->
-> But we cannot rule out that it will not be possible in the future. Think
-> about a clock that would be used by another guest (I know it is still
-> theoretical as we have not yet solved the problem).
+BR and thanks,
+Nikolaus
