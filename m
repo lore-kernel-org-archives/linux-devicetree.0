@@ -1,68 +1,87 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v9 3/4] perf: xgene: Add APM X-Gene SoC Performance
- Monitoring Unit driver
-Date: Fri, 15 Jul 2016 10:45:42 +0100
-Message-ID: <20160715094541.GE4655@leverpostej>
-References: <1468517266-1642-1-git-send-email-ttnguyen@apm.com>
- <1468517266-1642-4-git-send-email-ttnguyen@apm.com>
- <1468518428.8745.43.camel@perches.com>
- <CACgAJHwzWG_6iWG4OcL3v5QcUF892DwBcJxayqbH4f2kd7=kQQ@mail.gmail.com>
- <CACgAJHw7UMFKY=j8UBKUi=hNHfyzVoNMr_A5qOahhbgM+14KBQ@mail.gmail.com>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: [PATCH v4 0/8] MT2701 DRM support
+Date: Fri, 15 Jul 2016 18:07:46 +0800
+Message-ID: <1468577274-6178-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACgAJHw7UMFKY=j8UBKUi=hNHfyzVoNMr_A5qOahhbgM+14KBQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tai Tri Nguyen <ttnguyen@apm.com>
-Cc: Joe Perches <joe@perches.com>, Will Deacon <will.deacon@arm.com>, catalin.marinas@arm.com, Paul Gortmaker <paul.gortmaker@windriver.com>, Duc Dang <dhdang@apm.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
+To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, YT Shen <yt.shen@mediatek.com>, CK Hu <ck.hu@mediatek.com>, Mao Huang <littlecvr@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, emil.l.velikov@gmail.com, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2016 at 11:05:48AM -0700, Tai Tri Nguyen wrote:
-> Hi Joe,
-> 
-> On Thu, Jul 14, 2016 at 10:54 AM, Tai Tri Nguyen <ttnguyen@apm.com> wrote:
-> > Hi Joe,
-> >
-> > On Thu, Jul 14, 2016 at 10:47 AM, Joe Perches <joe@perches.com> wrote:
-> >> On Thu, 2016-07-14 at 10:27 -0700, Tai Nguyen wrote:
-> >>> This patch adds a driver for the SoC-wide (AKA uncore) PMU hardware
-> >>> found in APM X-Gene SoCs.
-> >>
-> >> trivia:
-> >>
-> >>> diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
-> >> []
-> >>> +struct xgene_pmu_dev_ctx {
-> >>> +     char *name;
-> >>> +     struct list_head next;
-> >>> +     struct xgene_pmu_dev *pmu_dev;
-> >>> +     struct hw_pmu_info inf;
-> >>> +};
-> >>
-> >> Probably better to use something like
-> >>         char    name[20];
-> >> as the kasprintf can fail and this doesn't
-> >> seem to be freed anywhere.
-> >
-> > Okay. I'll fix it shortly.
-> >
-> 
-> I take it back.
-> I refer many other drivers using kasprintf and they do the same way I do.
-> Can you please check it again?
+This is MT2701 DRM support PATCH v4, based on 4.7-rc1.
+We add DSI interrupt control, transfer function for MIPI DSI panel support.
+Most codes are the same, except some register changed.
 
-Joe is correct that you allocate a string with kasprintf, and this never
-gets freed, even if the driver is removed. Thus, memory may be leaked.
+For example:
+ - DISP_OVL address offset changed, color format definition changed.
+ - DISP_RDMA fifo size changed.
+ - DISP_COLOR offset changed.
 
-If other drivers do the same, they are similarly wrong.
+We add a new component DDP_COMPONENT_BLS, and the settings are updated.
+And we have shadow register support in MT2701.
 
-Even if this is a rare case, it's not good practice to leave allocations
-unbalanced. So please fix this.
+Changes since v3:
+- Add DSI support for MIPI DSI panels
+- Update BLS binding to PWM nodes
+- Remove ufoe device nodes
+- Remove redundant parentheses
+- Remove global variable initialization
 
-If you don't want to change the struct, another option is to use
-devm_kasprintf. However, I suspect with all the accounting data
-structures that will take up more space.
+Changes since v2:
+- Rename mtk_ddp_mux_sel to mtk_ddp_sout_sel
+- Update mt2701_mtk_ddp_ext components
+- Changed to prefix naming
+- Reorder the patch series
+- Use of_device_get_match_data() to get driver private data
+- Use iopoll macros to implement mtk_disp_mutex_acquire()
+- Removed empty device tree nodes
+
+Changes since v1:
+- Removed BLS bindings and codes, which belong to pwm driver
+- Moved mtk_disp_mutex_acquire() just before mtk_crtc_ddp_config()
+- Split patch into smaller parts
+- Added const keyword to constant structure
+- Removed codes for special memory align
+
+The PATCH depends on the following patch:
+https://patchwork.kernel.org/patch/8832441/ ("dt-bindings: ARM: Mediatek: Document bindings for MT2701"),
+https://patchwork.kernel.org/patch/9140487/ ("dt-bindings: pwm: Add MediaTek display PWM bindings"),
+https://patchwork.kernel.org/patch/9137919/ ("dt-bindings: mediatek: add descriptions for mediatek mt2701 iommu and smi"),
+https://patchwork.kernel.org/patch/9137923/ ("iommu/mediatek: move the common struct into header file"),
+https://patchwork.kernel.org/patch/9137921/ ("memory/mediatek: add support for mt2701"),
+https://patchwork.kernel.org/patch/9137927/ ("iommu/mediatek: add support for mtk iommu generation one HW"),
+https://patchwork.kernel.org/patch/9137931/ ("ARM: dts: mt2701: add iommu/smi dtsi node for mt2701"),
 
 Thanks,
-Mark.
+yt.shen
+
+YT Shen (5):
+  drm/mediatek: rename macros, add chip prefix
+  drm/mediatek: add *driver_data for different hardware settings
+  drm/mediatek: add shadow register support
+  drm/mediatek: add support for Mediatek SoC MT2701
+  arm: dts: mt2701: Add display subsystem related nodes for MT2701
+
+shaoming chen (3):
+  drm/mediatek: add dsi interrupt control
+  drm/mediatek: add dsi transfer function
+  drm/mediatek: add mipi panel support
+
+ arch/arm/boot/dts/mt2701.dtsi               |  100 +++++
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |   32 +-
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |   17 +-
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c     |   75 ++--
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c      |  134 ++++--
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h      |    2 +
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |   34 +-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |   14 +
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c      |   56 ++-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h      |    9 +
+ drivers/gpu/drm/mediatek/mtk_dsi.c          |  619 ++++++++++++++++++++++++---
+ drivers/gpu/drm/mediatek/mtk_mipi_tx.c      |   82 ++--
+ 12 files changed, 1009 insertions(+), 165 deletions(-)
+
+-- 
+1.7.9.5
