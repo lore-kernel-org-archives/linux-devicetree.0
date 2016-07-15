@@ -1,122 +1,118 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: [v10, 3/7] soc: fsl: add GUTS driver for QorIQ platforms
-Date: Fri, 15 Jul 2016 12:43:41 -0400
-Message-ID: <CAP=VYLqsV_M=8CM47k4kzdULCp_y0yP9t8Sq9=jFp6W593QJgw@mail.gmail.com>
-References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com> <1462417950-46796-4-git-send-email-yangbo.lu@nxp.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 7/8] uio: bind uio_dmem_genirq via OF
+Date: Fri, 15 Jul 2016 17:52:39 +0100
+Message-ID: <20160715165239.GG19840@leverpostej>
+References: <1468573443-4670-1-git-send-email-anup.patel@broadcom.com>
+ <1468573443-4670-8-git-send-email-anup.patel@broadcom.com>
+ <20160715132835.GC19840@leverpostej>
+ <CAALAos9KVS3SveQzGWGhcdxZNPapWnmTwZe+4y2g3LNGP3muDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1462417950-46796-4-git-send-email-yangbo.lu@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: Yangbo Lu <yangbo.lu@nxp.com>
-Cc: linux-mmc@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org, netdev <netdev@vger.kernel.org>, ulf.hansson@linaro.org, Scott Wood <oss@buserror.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Qiang Zhao <qiang.zhao@nxp.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, leoyang.li@nxp.com, xiaobo.xie@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAALAos9KVS3SveQzGWGhcdxZNPapWnmTwZe+4y2g3LNGP3muDA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>, Rob Herring <robh+dt@kernel.org>
+Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, Scott Branden <sbranden@broadcom.com>, linux-doc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Ankit Jindal <thatsjindal@gmail.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Jan Viktorin <viktorin@rehivetech.com>, Device Tree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 4, 2016 at 11:12 PM, Yangbo Lu <yangbo.lu@nxp.com> wrote:
-> The global utilities block controls power management, I/O device
-> enabling, power-onreset(POR) configuration monitoring, alternate
-> function selection for multiplexed signals,and clock control.
->
-> This patch adds GUTS driver to manage and access global utilities
-> block.
->
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-> Acked-by: Scott Wood <oss@buserror.net>
-> ---
-> Changes for v4:
->         - Added this patch
-> Changes for v5:
->         - Modified copyright info
->         - Changed MODULE_LICENSE to GPL
->         - Changed EXPORT_SYMBOL_GPL to EXPORT_SYMBOL
->         - Made FSL_GUTS user-invisible
->         - Added a complete compatible list for GUTS
->         - Stored guts info in file-scope variable
->         - Added mfspr() getting SVR
->         - Redefined GUTS APIs
->         - Called fsl_guts_init rather than using platform driver
->         - Removed useless parentheses
->         - Removed useless 'extern' key words
-> Changes for v6:
->         - Made guts thread safe in fsl_guts_init
-> Changes for v7:
->         - Removed 'ifdef' for function declaration in guts.h
-> Changes for v8:
->         - Fixes lines longer than 80 characters checkpatch issue
->         - Added 'Acked-by: Scott Wood'
-> Changes for v9:
->         - None
-> Changes for v10:
->         - None
-> ---
->  drivers/soc/Kconfig      |   2 +-
->  drivers/soc/fsl/Kconfig  |   8 +++
->  drivers/soc/fsl/Makefile |   1 +
->  drivers/soc/fsl/guts.c   | 119 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/fsl/guts.h | 126 +++++++++++++++++++++++++++++------------------
->  5 files changed, 207 insertions(+), 49 deletions(-)
->  create mode 100644 drivers/soc/fsl/Kconfig
->  create mode 100644 drivers/soc/fsl/guts.c
->
-> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-> index cb58ef0..7106463 100644
-> --- a/drivers/soc/Kconfig
-> +++ b/drivers/soc/Kconfig
-> @@ -2,7 +2,7 @@ menu "SOC (System On Chip) specific Drivers"
->
->  source "drivers/soc/bcm/Kconfig"
->  source "drivers/soc/brcmstb/Kconfig"
-> -source "drivers/soc/fsl/qe/Kconfig"
-> +source "drivers/soc/fsl/Kconfig"
->  source "drivers/soc/mediatek/Kconfig"
->  source "drivers/soc/qcom/Kconfig"
->  source "drivers/soc/rockchip/Kconfig"
-> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-> new file mode 100644
-> index 0000000..b313759
-> --- /dev/null
-> +++ b/drivers/soc/fsl/Kconfig
-> @@ -0,0 +1,8 @@
-> +#
-> +# Freescale SOC drivers
-> +#
-> +
-> +source "drivers/soc/fsl/qe/Kconfig"
-> +
-> +config FSL_GUTS
-> +       bool
-> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
-> index 203307f..02afb7f 100644
-> --- a/drivers/soc/fsl/Makefile
-> +++ b/drivers/soc/fsl/Makefile
-> @@ -4,3 +4,4 @@
->
->  obj-$(CONFIG_QUICC_ENGINE)             += qe/
->  obj-$(CONFIG_CPM)                      += qe/
-> +obj-$(CONFIG_FSL_GUTS)                 += guts.o
-> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
-> new file mode 100644
-> index 0000000..fa155e6
-> --- /dev/null
-> +++ b/drivers/soc/fsl/guts.c
-> @@ -0,0 +1,119 @@
-> +/*
-> + * Freescale QorIQ Platforms GUTS Driver
-> + *
-> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/module.h>
+On Fri, Jul 15, 2016 at 09:57:28PM +0530, Anup Patel wrote:
+> On Fri, Jul 15, 2016 at 6:58 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Fri, Jul 15, 2016 at 02:34:02PM +0530, Anup Patel wrote:
+> >> +static char uio_of_dma_bits_prop[128] = "uio,dma-bits";
+> >> +static char uio_of_dmem_count_prop[128] = "uio,number-of-dynamic-regions";
+> >> +static char uio_of_dmem_sizes_prop[128] = "uio,dynamic-regions-sizes";
+> >
+> > What are these proeprties? What is a "dynamic region" in hardware terms?
+> 
+> "Dynamic region" is DMAble memory alloced using dma_alloc_xxx() APIs
+> for the device.
+> 
+> For DMA-capable devices accessed from user-space, we need DMAble
+> memory available to user-space. Sometime such devices are also
+> cache-coherent (or IO-coherent) so in such case user-space will need
+> cacheable DMAble memory.
+> 
+> Number of "Dynamic regions" required by UIO dmem device depends
+> on the type of HW device hence we describe number of "Dynamic regions"
+> and size of "Dynamic regions" via DT attributes.
 
-Seems there was lots of discussion on this.  If it does end up being
-resent, it would be nice to get the module.h and other modular stuff
-gone since it is a bool Kconfig.
+So this is something akin to the number of DMA channels a device might
+use.
+
+Either that's implicit knowledge of the device (if fixed), which doesn't
+need to be in the DT, or a real property that should be described
+explicitly in the device binding, that has nothing to do with UIO.
+
+In general, a device which you might want to use with UIO may not
+require such properties, so this is imposing a requirement on DTBs
+purely for the sake of userspace software.
+
+> > Why must they be in the DT, and why are the *property names* arbitrarily
+> > overridable as module parameters? What exactly do you expect there to be
+> > in a DT?
+> 
+> They must be in DT for platform devices created using DT probing. The
+> number of "Dynamic regions" required by UIO device will depend on the
+> nature of device. We cannot have same number and sizes of "Dynamic
+> regions" for different UIO dmem devices.
+
+If the devices are so different, they should not be handled by the same
+driver that has no knowledge of those differences. Platform VFIO has the
+same problem, and requires device-specific reset drivers.
+
+> The UIO dmem driver is a generic driver and not specific to any type of
+> HW. In fact, UIO dmem driver is generic enough to access variety of
+> platform devices from user-space using UIO framework.
+> 
+> Based on this Rob had previously suggested to not have any (or enforce
+> any) DT bindings for UIO dmem driver.
+> 
+> Refer, https://lkml.org/lkml/2016/5/18/457
+
+I don't follow. Here Rob stated:
+
+  DT describes h/w. UIO is not a h/w block, so this does not belong in DT. A
+  UIO vs. kernel driver is purely a kernel decision which shouldn't
+  require a DT change.
+
+  The properties should be part of match data for a compatible string that
+  needs them set. Or if they can be defined in a way that is actually a
+  property of the h/w, then it would be acceptible. You'd still need to
+  define compatible strings that the properties apply to.
+
+Above, you have come up with a default set of property names which you
+go looking for, and you expect a class of property, even if you don't
+expect specific names. That constitutes a binding, and a poorly-defined
+one at that.
+
+Per my reading, Rob's point in https://lkml.org/lkml/2016/5/23/539 was
+that providing the *values* as module parameters was fine, not providing
+the *property names*.
+
+> Link to original Jan's patchset is https://lkml.org/lkml/2016/5/17/141
+> 
+> We had two options:
+> 1) Get details of "Dynamic regions" via module parameter but this
+> would mean using same number and sizes of "Dynamic regions" for
+> all UIO dmem devices.
+> 2) Pass names of DT attributes used by UIO dmem driver as
+> module parameters.
+> 
+> > DT bindings need documentation, but there was none as part of this series.
+> >
+> > I do not think this makes sense from a DT perspective.
+> 
+> As explained above, we are not fixing DT compatible string and
+> DT attributes names for UIO dmem driver instead we pass all
+> these as module parameters (preferable via kernel args or at
+> time of module insertion). Due to this we don't require DT bindings
+> document.
+
+If you're looking for properties in the DT, you're assuming a binding of
+some sort, regardless of whether you expect particular names.
+
+To be clear, NAK to this as it stands.
 
 Thanks,
-Paul.
+Mark.
