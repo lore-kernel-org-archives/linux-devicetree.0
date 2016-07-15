@@ -1,57 +1,78 @@
-From: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
-Subject: Re: iommu/rockchip: Fix bugs and enable on ARM64
-Date: Fri, 15 Jul 2016 17:32:02 +0200
-Message-ID: <575f6cd7-6e03-e701-78ed-ea2fe9f7573c@suse.com>
-References: <1466734413-7453-1-git-send-email-zhengsq@rock-chips.com>
- <20160627125751.GN11432@8bytes.org> <577EFB86.1060502@rock-chips.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
+Date: Fri, 15 Jul 2016 15:45:51 +0000
+Message-ID: <20160715154551.GF31509@io.lakedaemon.net>
+References: <1468135649-19980-1-git-send-email-vw@iommu.org>
+ <20160714135426.GC31509@io.lakedaemon.net>
+ <5788718E.7080708@iommu.org>
+ <16178876.fFBuoBSjbd@wuerfel>
+ <CAKT61h8EkOOkDHou65Uc7NNomJ6Nowvw8o6JnWxNyc0S_=x_JA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <577EFB86.1060502-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKT61h8EkOOkDHou65Uc7NNomJ6Nowvw8o6JnWxNyc0S_=x_JA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wan ZongShun <mcuos.com@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Wan Zongshun <vw@iommu.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 15, 2016 at 05:44:50PM +0800, Wan ZongShun wrote:
+> 2016-07-15 15:00 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> > On Friday, July 15, 2016 1:15:58 PM CEST Wan Zongshun wrote:
+> >>
+> >> Actually, I have two choice to implement this function:
+> >>
+> >> option1:
+> >>
+> >> void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
+> >> {
+> >>         u32 hwirq;
+> >>
+> >>         (void)readl(aic_base + REG_AIC_IPER);
+> >>         hwirq = readl(aic_base + REG_AIC_ISNR);
+> >>
+> >>         handle_IRQ((irq_find_mapping(aic_domain, hwirq)), regs);
+> >> }
+> >
+> > (side note: I think you want handle_domain_irq())
+> >
+> >> option2:
+> >>
+> >> void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
+> >> {
+> >>         u32 hwirq;
+> >>
+> >>         hwirq = readl(aic_base + REG_AIC_IPER);
+> >>         hwirq <<= 2;
+> >>
+> >>         handle_IRQ((irq_find_mapping(aic_domain, hwirq)), regs);
+> >> }
+> >>
+> >> Though the option2 do shift for hwirq, but it seems better than do io
+> >> operation by readl,so I prefer to option2, agree?
+> >
+> > That will only return an irq number that is a multiple of four, which
+> > seems wrong since the numbers are not that. Did you mean to write
+> >
+> >         hwirq = ilog2(hwirq);   ?
+> 
+> Sorry, my fault, I mean hwirq >>= 2, bit[7:2] indicates which irq is triggering.
+> so I have to do right shift 2 for IPER value.
 
+Ok, this makes a lot more sense now. :)
 
-On 08/07/16 03:01, Mark yao wrote:
-> On 2016=E5=B9=B406=E6=9C=8827=E6=97=A5 20:57, Joerg Roedel wrote:
->> On Fri, Jun 24, 2016 at 10:13:25AM +0800, Shunqian Zheng wrote:
->>>   drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 100 +++++++------
->>>   drivers/gpu/drm/rockchip/rockchip_drm_drv.h |   3 +
->>>   drivers/gpu/drm/rockchip/rockchip_drm_gem.c | 221
->>> ++++++++++++++++++++++++++--
->>>   drivers/gpu/drm/rockchip/rockchip_drm_gem.h |   9 ++
->>>   drivers/iommu/Kconfig                       |   2 +-
->>>   drivers/iommu/rockchip-iommu.c              | 181
->>> +++++++++++++++++------
->>>   6 files changed, 413 insertions(+), 103 deletions(-)
->> Applied the IOMMU patches, thanks.
->>
->>
->>     Joerg
->>
->>
->>
->>
->
-> Hi Joerg
->
-> The drm rockchip patches are dependent on iommu/rockchip patches, can
-> you also apply these patches together? So that can avoid compile prob=
-lem.
->
+> > That assumes that REG_AIC_IPER contains a 32-bit value with one single
+> > bit set to indicate which IRQ was triggered.
+> >
+> > If the difference is only in performance, you could try measuring which
+> > of the two ends up being faster.
+> 
+> It seems hard to measure. I think Do IO operation should be slower
+> than shift 2. :)
 
-While at it. I don't see patch 8 (iommu/Kconfig) in linux-next.
-I suppose you forgot to pick that one.
+Agreed.
 
-Regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thx,
+
+Jason.
