@@ -1,38 +1,110 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: [PATCH 1/1] arm64: dts: Add PWM DT node for NS2
-Date: Fri, 15 Jul 2016 04:28:26 -0400
-Message-ID: <1468571306-20976-1-git-send-email-yendapally.reddy@broadcom.com>
+From: Dongpo Li <lidongpo@hisilicon.com>
+Subject: [PATCH v1 2/3] of_mdio: Abstract a general interface for phy connect
+Date: Fri, 15 Jul 2016 16:26:34 +0800
+Message-ID: <1468571195-59763-3-git-send-email-lidongpo@hisilicon.com>
+References: <1468571195-59763-1-git-send-email-lidongpo@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1468571195-59763-1-git-send-email-lidongpo@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+To: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, davem@davemloft.net, arnd@arndb.de, andrew@lunn.ch
+Cc: xuejiancheng@hisilicon.com, benjamin.chenhao@hisilicon.com, howell.yang@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dongpo Li <lidongpo@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree entry for PWM support for Broadcom Northstar 2 SoC.
+Abstract a general interface "of_phy_get_and_connect"
+for PHY connect. User will have no bother with getting
+"phy-mode" and "phy-handle" any more.
 
-Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
+Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
 ---
- arch/arm64/boot/dts/broadcom/ns2.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/of/of_mdio.c    | 36 ++++++++++++++++++++++++++++++++++++
+ include/linux/of_mdio.h | 10 ++++++++++
+ 2 files changed, 46 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index ec68ec1..9c2857c 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -263,6 +263,14 @@
- 				      IRQ_TYPE_LEVEL_HIGH)>;
- 		};
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index e051e1b..1e93f0a 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -19,6 +19,7 @@
+ #include <linux/of_gpio.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_mdio.h>
++#include <linux/of_net.h>
+ #include <linux/module.h>
  
-+		pwm: pwm@66010000 {
-+			compatible = "brcm,iproc-pwm";
-+			reg = <0x66010000 0x28>;
-+			clocks = <&osc>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
+ MODULE_AUTHOR("Grant Likely <grant.likely@secretlab.ca>");
+@@ -332,6 +333,41 @@ struct phy_device *of_phy_connect(struct net_device *dev,
+ EXPORT_SYMBOL(of_phy_connect);
+ 
+ /**
++ * of_phy_get_and_connect
++ * - Get phy node and connect to the phy described in the device tree
++ * @dev: pointer to net_device claiming the phy
++ * @np: Pointer to device tree node for the net_device claiming the phy
++ * @hndlr: Link state callback for the network device
++ *
++ * If successful, returns a pointer to the phy_device with the embedded
++ * struct device refcount incremented by one, or NULL on failure. The
++ * refcount must be dropped by calling phy_disconnect() or phy_detach().
++ */
++struct phy_device *of_phy_get_and_connect(struct net_device *dev,
++					  struct device_node *np,
++					  void (*hndlr)(struct net_device *))
++{
++	phy_interface_t iface;
++	struct device_node *phy_np;
++	struct phy_device *phy;
 +
- 		timer0: timer@66030000 {
- 			compatible = "arm,sp804", "arm,primecell";
- 			reg = <0x66030000 0x1000>;
++	iface = of_get_phy_mode(np);
++	if (iface < 0)
++		return NULL;
++
++	phy_np = of_parse_phandle(np, "phy-handle", 0);
++	if (!phy_np)
++		return NULL;
++
++	phy = of_phy_connect(dev, phy_np, hndlr, 0, iface);
++
++	of_node_put(phy_np);
++
++	return phy;
++}
++EXPORT_SYMBOL(of_phy_get_and_connect);
++
++/**
+  * of_phy_attach - Attach to a PHY without starting the state machine
+  * @dev: pointer to net_device claiming the phy
+  * @phy_np: Node pointer for the PHY
+diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+index 8f2237e..6c4d7a6 100644
+--- a/include/linux/of_mdio.h
++++ b/include/linux/of_mdio.h
+@@ -19,6 +19,9 @@ extern struct phy_device *of_phy_connect(struct net_device *dev,
+ 					 struct device_node *phy_np,
+ 					 void (*hndlr)(struct net_device *),
+ 					 u32 flags, phy_interface_t iface);
++extern struct phy_device *
++of_phy_get_and_connect(struct net_device *dev, struct device_node *np,
++		       void (*hndlr)(struct net_device *));
+ struct phy_device *of_phy_attach(struct net_device *dev,
+ 				 struct device_node *phy_np, u32 flags,
+ 				 phy_interface_t iface);
+@@ -50,6 +53,13 @@ static inline struct phy_device *of_phy_connect(struct net_device *dev,
+ 	return NULL;
+ }
+ 
++static inline struct phy_device *
++of_phy_get_and_connect(struct net_device *dev, struct device_node *np,
++		       void (*hndlr)(struct net_device *))
++{
++	return NULL;
++}
++
+ static inline struct phy_device *of_phy_attach(struct net_device *dev,
+ 					       struct device_node *phy_np,
+ 					       u32 flags, phy_interface_t iface)
 -- 
-2.1.0
+2.8.2
