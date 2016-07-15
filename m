@@ -1,62 +1,41 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH 3/4] qcom: ipq4019: ASoC tlmm/pinctrl support
-Date: Fri, 15 Jul 2016 15:23:13 -0500
-Message-ID: <20160715202313.GA3509@hector.attlocal.net>
-References: <1468566426-19598-1-git-send-email-njaigane@codeaurora.org>
- <1468566426-19598-4-git-send-email-njaigane@codeaurora.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] dt: bindings: Add a generic ethernet device binding
+Date: Fri, 15 Jul 2016 22:42:54 +0200
+Message-ID: <1788846.r3134d1VMR@wuerfel>
+References: <1468405204-5845-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468566426-19598-4-git-send-email-njaigane@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: njaigane@codeaurora.org
-Cc: linux-arm-msm@vger.kernel.org, linux@qca.qualcomm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, twp@codeaurora.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, plai@codeaurora.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, bjorn.andersson@linaro.org, varada@codeaurora.org, pradeepb@codeaurora.org, snlakshm@codeaurora.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, bselvara@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468405204-5845-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 15, 2016 at 12:37:05PM +0530, njaigane@codeaurora.org wrote:
-> From: Jaiganesh Narayanan <njaigane@codeaurora.org>
-> 
-> This patch adds the tlmm/pinctrl support for IPQ4019 ASoC.
-> 
-> Signed-off-by: Jaiganesh Narayanan <njaigane@codeaurora.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-ipq4019.c | 116 +++++++++++++++++++++++++--------
->  1 file changed, 88 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-> index b68ae42..bc22597 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
->   *
->   * This program is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License version 2 and
-> @@ -283,6 +283,18 @@ enum ipq4019_functions {
->  	qca_mux_blsp_uart0,
->  	qca_mux_blsp_spi1,
->  	qca_mux_blsp_spi0,
-> +	qca_mux_i2s_rx_mclk,
-> +	qca_mux_i2s_rx_bclk,
-> +	qca_mux_i2s_rx_fsync,
-> +	qca_mux_i2s_rxd,
-> +	qca_mux_i2s_tx_mclk,
-> +	qca_mux_i2s_tx_bclk,
-> +	qca_mux_i2s_tx_fsync,
-> +	qca_mux_i2s_txd1,
-> +	qca_mux_i2s_txd2,
-> +	qca_mux_i2s_txd3,
-> +	qca_mux_i2s_spdif_out,
-> +	qca_mux_i2s_spdif_in,
+On Wednesday, July 13, 2016 12:20:04 PM CEST Hans de Goede wrote:
+> +&mmc1 {
+> +       non-removable;
+> +       status = "okay";
+> +
+> +       sdio_wifi: sdio_wifi@1 {
+> +               compatible = "generic,ethernet"
+> +               reg = <1>;
+> +       };
+> +};
 
-You'll also need to add all of these to the
-Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+For discoverable buses, we normally use a compatible property that
+reflects the device ID on that bus, e.g. on PCI we have "pci1A2B:3C4D",
+and I think that makes more sense than having to come up with strings
+for sdio devices.
 
-I was also going to suggest just using qca_i2s and having a single function, but
-it seems like there is at least 1 pin that supports more than one i2s mode.
+In fact, Linux completely ignores the compatible strings on those
+buses (pci, usb, sdio, ...), so I think we can just do the same thing
+using no compatible string at all.
 
-Regards,
-Andy
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
