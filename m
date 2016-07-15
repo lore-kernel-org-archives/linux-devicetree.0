@@ -1,91 +1,73 @@
-From: =?big5?B?Sm9obm55IENodWFuZyiy+KjOwE0p?= <johnny.chuang-9cfG7bMpBgR9nmWX13WWKA@public.gmane.org>
-Subject: RE: [PATCH v1] Add support for the ektf2127 touchscreencontroller
-Date: Fri, 15 Jul 2016 11:27:12 +0800
-Message-ID: <009e01d1de48$c696fad0$53c4f070$@emc.com.tw>
-References: <1467624545-3455-1-git-send-email-siebren.vroegindeweij@gmail.com> <1467624545-3455-2-git-send-email-siebren.vroegindeweij@gmail.com> <20160713215018.GA1799@dtor-ws> <009e01d1ddb8$4b51ad60$e1f50820$@emc.com.tw>
+From: Guenter Roeck <groeck@google.com>
+Subject: Re: [PATCH 1/2] tpm: devicetree: document properties for cr50
+Date: Thu, 14 Jul 2016 21:05:53 -0700
+Message-ID: <CABXOdTcVcZ10c6uShN2AXUZfOuK=FESeo73Assi0sziMZJ_+Fw@mail.gmail.com>
+References: <1468549218-19215-1-git-send-email-apronin@chromium.org> <1468549218-19215-2-git-send-email-apronin@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=big5
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <009e01d1ddb8$4b51ad60$e1f50820$@emc.com.tw>
-Content-Language: zh-tw
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?big5?B?J7n5sVK6YSc=?= <kt.liao-9cfG7bMpBgR9nmWX13WWKA@public.gmane.org>, 'Dmitry Torokhov' <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Siebren Vroegindeweij' <siebren.vroegindeweij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'James Chen' <james.chen-9cfG7bMpBgR9nmWX13WWKA@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'devicetree' <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Hans de Goede' <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, 'Michel Verlaan' <michel.verl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Siebren Vroegindeweij' <siebren.vroegindeweij-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1468549218-19215-2-git-send-email-apronin@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Pronin <apronin@chromium.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Peter Huewe <peterhuewe@gmx.de>, Marcel Selhorst <tpmdd@selhorst.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, tpmdd-devel@lists.sourceforge.net, linux-kernel <linux-kernel@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>, smbarber@chromium.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+On Thu, Jul 14, 2016 at 7:20 PM, Andrey Pronin <apronin@chromium.org> wrote:
+> Add TPM2.0-compatible interface to Cr50. Document its properties
+> in devicetree.
+>
+> Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> ---
+>  .../devicetree/bindings/security/tpm/cr50_spi.txt  | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+>
+> diff --git a/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+> new file mode 100644
+> index 0000000..1b05e51
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+> @@ -0,0 +1,30 @@
+> +* Cr50 Chip on SPI.
+> +
+> +TCG PTP FIFO Compliant Interface to Cr50 on SPI bus.
+> +
+> +Required properties:
+> +- compatible: Should be "google,cr50_spi".
 
-We suggest a separate driver for eKTF2127.
+google,cr50, maybe ? The "_spi" seems redundant.
 
-Many thanks,
-Johnny
------Original Message-----
-=46rom: =B9=F9=B1R=BAa [mailto:kt.liao-9cfG7bMpBgR9nmWX13WWKA@public.gmane.org]=20
-Sent: Thursday, July 14, 2016 6:13 PM
-To: 'Dmitry Torokhov'; 'Siebren Vroegindeweij'; 'Johnny Chuang(=B2=F8=A8=
-=CE=C0M)';
-'James Chen'
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; 'devicetree'; 'Hans de Goede'; 'Michel
-Verlaan'; 'Siebren Vroegindeweij'
-Subject: RE: [PATCH v1] Add support for the ektf2127 touchscreencontrol=
-ler
+Also, I agree with comments from others - the term cr50 really needs
+an explanation (Google thinks that it is a motor bike, a scanner, or a
+coffee roaster).
 
------Original Message-----
-=46rom: Dmitry Torokhov [mailto:dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
-Sent: Thursday, July 14, 2016 5:50 AM
-To: Siebren Vroegindeweij; KT Liao
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree; Hans de Goede; Michel Verl=
-aan;
-Siebren Vroegindeweij; KT Liao
-Subject: Re: [PATCH v1] Add support for the ektf2127 touchscreencontrol=
-ler
+Thanks,
+Guenter
 
-On Mon, Jul 04, 2016 at 11:29:05AM +0200, Siebren Vroegindeweij wrote:
-> From: Siebren Vroegindeweij <siebren.vroegindeweij-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
->=20
-> The ELAN eKTF2127 driver is written for the ELAN series of=20
-> touchscreencontrollers. This version is especially written for the
-> eKTF2127 controller. The driver communicates to the controller over i=
-2c.
-> The additional screen specifications can be read from the devicetree =
-file.
-> The driver has also the ability to read the screen height and width=20
-> from the controller. When the screen is pressed, a interrupt is gener=
-ated.
-> The interrupt wil be handled by a function that request a data string=
-=20
-> from the controller. This string is then modified so that the right=20
-> number of touches and their x and y coordinates are available and=20
-> given to userspace through the input subsystem.
-
-Adding KT. Can eKTF2127 be driven with [modified] elants_i2c driver or =
-we
-are better off with separate driver.
-
-Hi Johnny,
-Please check Dmitry's touchscreen issue.
-=2E..
-
-> + *
-> + * This program is free software; you can redistribute it and/or=20
-> + modify
-> + * it under the terms of the GNU General Public License as published=
-=20
-> + by
-> + * the Free Software Foundation; either version 3 of the License, or
-> + * (at your option) any later version.
-
-Gpl V2 or later for kernel please, we won't take v3.
-
-Thanks.
-
---
-Dmitry
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- spi-max-frequency: Maximum SPI frequency.
+> +
+> +Optional properties:
+> +- access-delay-msec: Required delay between subsequent transactions on SPI.
+> +- sleep-delay-msec: Time after the last SPI activity, after which the chip
+> +  may go to sleep.
+> +- wake-start-delay-msec: Time after initiating wake up before the chip is
+> +  ready to accept commands over SPI.
+> +
+> +Example:
+> +
+> +&spi0 {
+> +        status = "okay";
+> +
+> +        cr50@0 {
+> +                compatible = "google,cr50_spi";
+> +                reg = <0>;
+> +                spi-max-frequency = <800000>;
+> +
+> +                access-delay-msec = <2>;
+> +                sleep-delay-msec = <1000>;
+> +                wake-start-delay-msec = <60>;
+> +        };
+> +};
+> --
+> 2.6.6
+>
