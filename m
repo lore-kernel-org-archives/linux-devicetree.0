@@ -1,161 +1,51 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [v10, 3/7] soc: fsl: add GUTS driver for QorIQ platforms
-Date: Fri, 15 Jul 2016 14:12:57 -0500
-Message-ID: <1468609977.25630.5.camel@buserror.net>
-References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com>
-	 <1462417950-46796-4-git-send-email-yangbo.lu@nxp.com>
-	 <CAP=VYLqsV_M=8CM47k4kzdULCp_y0yP9t8Sq9=jFp6W593QJgw@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] qcom: ipq4019: ASoC tlmm/pinctrl support
+Date: Fri, 15 Jul 2016 12:15:15 -0700
+Message-ID: <20160715191515.GC13516@tuxbot>
+References: <1468566426-19598-1-git-send-email-njaigane@codeaurora.org>
+ <1468566426-19598-4-git-send-email-njaigane@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAP=VYLqsV_M=8CM47k4kzdULCp_y0yP9t8Sq9=jFp6W593QJgw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>, Yangbo Lu <yangbo.lu@nxp.com>
-Cc: linux-mmc@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org, netdev <netdev@vger.kernel.org>, ulf.hansson@linaro.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Qiang Zhao <qiang.zhao@nxp.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, leoyang.li@nxp.com, xiaobo.xie@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1468566426-19598-4-git-send-email-njaigane-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: njaigane-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, twp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pradeepb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, snlakshm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, bselvara-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-07-15 at 12:43 -0400, Paul Gortmaker wrote:
-> On Wed, May 4, 2016 at 11:12 PM, Yangbo Lu <yangbo.lu@nxp.com> wrote:
-> >=20
-> > The global utilities block controls power management, I/O device
-> > enabling, power-onreset(POR) configuration monitoring, alternate
-> > function selection for multiplexed signals,and clock control.
-> >=20
-> > This patch adds GUTS driver to manage and access global utilities
-> > block.
-> >=20
-> > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-> > Acked-by: Scott Wood <oss@buserror.net>
-> > ---
-> > Changes for v4:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Added this patch
-> > Changes for v5:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Modified copyrigh=
-t info
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Changed MODULE_LI=
-CENSE to GPL
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Changed EXPORT_SY=
-MBOL_GPL to EXPORT_SYMBOL
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Made FSL_GUTS use=
-r-invisible
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Added a complete =
-compatible list for GUTS
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Stored guts info =
-in file-scope variable
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Added mfspr() get=
-ting SVR
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Redefined GUTS AP=
-Is
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Called fsl_guts_i=
-nit rather than using platform driver
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Removed useless p=
-arentheses
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Removed useless '=
-extern' key words
-> > Changes for v6:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Made guts thread =
-safe in fsl_guts_init
-> > Changes for v7:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Removed 'ifdef' f=
-or function declaration in guts.h
-> > Changes for v8:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Fixes lines longe=
-r than 80 characters checkpatch issue
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- Added 'Acked-by: =
-Scott Wood'
-> > Changes for v9:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- None
-> > Changes for v10:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- None
-> > ---
-> > =C2=A0drivers/soc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=
-=C2=A0=C2=A02 +-
-> > =C2=A0drivers/soc/fsl/Kconfig=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A08 +++
-> > =C2=A0drivers/soc/fsl/Makefile |=C2=A0=C2=A0=C2=A01 +
-> > =C2=A0drivers/soc/fsl/guts.c=C2=A0=C2=A0=C2=A0| 119
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> > =C2=A0include/linux/fsl/guts.h | 126 +++++++++++++++++++++++++++++-=
-------------
-> > -----
-> > =C2=A05 files changed, 207 insertions(+), 49 deletions(-)
-> > =C2=A0create mode 100644 drivers/soc/fsl/Kconfig
-> > =C2=A0create mode 100644 drivers/soc/fsl/guts.c
-> >=20
-> > diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-> > index cb58ef0..7106463 100644
-> > --- a/drivers/soc/Kconfig
-> > +++ b/drivers/soc/Kconfig
-> > @@ -2,7 +2,7 @@ menu "SOC (System On Chip) specific Drivers"
-> >=20
-> > =C2=A0source "drivers/soc/bcm/Kconfig"
-> > =C2=A0source "drivers/soc/brcmstb/Kconfig"
-> > -source "drivers/soc/fsl/qe/Kconfig"
-> > +source "drivers/soc/fsl/Kconfig"
-> > =C2=A0source "drivers/soc/mediatek/Kconfig"
-> > =C2=A0source "drivers/soc/qcom/Kconfig"
-> > =C2=A0source "drivers/soc/rockchip/Kconfig"
-> > diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-> > new file mode 100644
-> > index 0000000..b313759
-> > --- /dev/null
-> > +++ b/drivers/soc/fsl/Kconfig
-> > @@ -0,0 +1,8 @@
-> > +#
-> > +# Freescale SOC drivers
-> > +#
-> > +
-> > +source "drivers/soc/fsl/qe/Kconfig"
-> > +
-> > +config FSL_GUTS
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool
-> > diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
-> > index 203307f..02afb7f 100644
-> > --- a/drivers/soc/fsl/Makefile
-> > +++ b/drivers/soc/fsl/Makefile
-> > @@ -4,3 +4,4 @@
-> >=20
-> > =C2=A0obj-$(CONFIG_QUICC_ENGINE)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0+=3D qe/
-> > =C2=A0obj-$(CONFIG_CPM)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0+=3D qe/
-> > +obj-$(CONFIG_FSL_GUTS)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0+=3D guts.o
-> > diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
-> > new file mode 100644
-> > index 0000000..fa155e6
-> > --- /dev/null
-> > +++ b/drivers/soc/fsl/guts.c
-> > @@ -0,0 +1,119 @@
-> > +/*
-> > + * Freescale QorIQ Platforms GUTS Driver
-> > + *
-> > + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> > + *
-> > + * This program is free software; you can redistribute it and/or m=
-odify
-> > + * it under the terms of the GNU General Public License as publish=
-ed by
-> > + * the Free Software Foundation; either version 2 of the License, =
-or
-> > + * (at your option) any later version.
-> > + */
-> > +
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> Seems there was lots of discussion on this.=C2=A0=C2=A0If it does end=
- up being
-> resent, it would be nice to get the module.h and other modular stuff
-> gone since it is a bool Kconfig.
+On Fri 15 Jul 00:07 PDT 2016, njaigane-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
 
-I plan to resend just the GUTS driver portion and send it through the P=
-PC
-tree.
+> From: Jaiganesh Narayanan <njaigane-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> This patch adds the tlmm/pinctrl support for IPQ4019 ASoC.
+> 
+> Signed-off-by: Jaiganesh Narayanan <njaigane-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-ipq4019.c | 116 +++++++++++++++++++++++++--------
+>  1 file changed, 88 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+[..]
+> +	qca_mux_i2s_rx_mclk,
+> +	qca_mux_i2s_rx_bclk,
+> +	qca_mux_i2s_rx_fsync,
+> +	qca_mux_i2s_rxd,
+> +	qca_mux_i2s_tx_mclk,
+> +	qca_mux_i2s_tx_bclk,
+> +	qca_mux_i2s_tx_fsync,
+> +	qca_mux_i2s_txd1,
+> +	qca_mux_i2s_txd2,
+> +	qca_mux_i2s_txd3,
+> +	qca_mux_i2s_spdif_out,
+> +	qca_mux_i2s_spdif_in,
 
-I don't see any modular stuff in there besides the linux/module.h inclu=
-de.
+I would recommend reducing this to "i2s_rx", "i2s_tx", "spdif_rx"
+and "spdif_tx", as this will make the dts cleaner.
 
--Scott
-
-
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
