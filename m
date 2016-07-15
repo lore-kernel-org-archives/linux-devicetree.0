@@ -1,102 +1,63 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 6/8] iommu/arm-smmu: Implement of_xlate() for SMMUv3
-Date: Fri, 15 Jul 2016 14:55:06 +0100
-Message-ID: <20160715135506.GA4687@red-moon>
-References: <cover.1467388950.git.robin.murphy@arm.com>
-	<925b054b1e96dc83c0b1dc9607785d0346187366.1467388950.git.robin.murphy@arm.com>
+From: Michal Suchanek <hramrach@gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 06/14] ARM: sun8i: clk: Add
+ clk-factor rate application method
+Date: Fri, 15 Jul 2016 16:22:31 +0200
+Message-ID: <CAOMqctTds7adsfvehfv8wcxbb0NOpEQE5wRff6NwfPOUa3SbRw@mail.gmail.com>
+References: <20160625034511.7966-1-megous@megous.com> <20160625034511.7966-7-megous@megous.com>
+ <20160630204001.GC5485@lukather> <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
+ <20160715085356.GR4761@lukather> <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
+ <20160715152756.db7375a7109fed18c2fbf43a@free.fr> <98fd2ab2-9b1d-1494-5867-7701780fd471@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <925b054b1e96dc83c0b1dc9607785d0346187366.1467388950.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <98fd2ab2-9b1d-1494-5867-7701780fd471@megous.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: megous@megous.com
+Cc: Jean-Francois Moine <moinejf@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dev <dev@linux-sunxi.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 01, 2016 at 05:50:15PM +0100, Robin Murphy wrote:
+Hello,
 
-[...]
+On 15 July 2016 at 15:48, Ond=C5=99ej Jirman <megous@megous.com> wrote:
+>
+>
+> On 15.7.2016 15:27, Jean-Francois Moine wrote:
+>> On Fri, 15 Jul 2016 12:38:54 +0200
+>> Ond=C5=99ej Jirman <megous@megous.com> wrote:
+>>
+>>>> If so, then yes, trying to switch to the 24MHz oscillator before
+>>>> applying the factors, and then switching back when the PLL is stab=
+le
+>>>> would be a nice solution.
+>>>>
+>>>> I just checked, and all the SoCs we've had so far have that
+>>>> possibility, so if it works, for now, I'd like to stick to that.
+>>>
+>>> It would need to be tested. U-boot does the change only once, while=
+ the
+>>> kernel would be doing it all the time and between various frequenci=
+es
+>>> and PLL settings. So the issues may show up with this solution too.
+>>
+>> I don't think this is a good idea: the CPU clock may be changed at a=
+ny
+>> time with the CPUFreq governor. I don't see the system moving from
+>> 1008MHz to 24MHz and then to 1200MHz when some computation is needed=
+!
+>
+> PLL lock time is around 10-20us, I'd guess based on the number of loo=
+ps
+> in the PLL lock wait loop. So unless you'll be switching frequencies
+> many times per second, this should be barely noticeable.
+>
+> But I'd like a different solution too.
 
-> +static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
-> +{
-> +	int ret;
-> +
-> +	/* We only support PCI, for now */
-> +	if (!dev_is_pci(dev))
-> +		return -ENODEV;
+Do you have a patch to test this?
 
-Given that a) the check above is removed in a later patch and b)
-code below does not depend on SMMU v3, I think the aim should
-be to make this a core function (ie I am asking this since I will
-need it in IORT based translation and I do not want to add yet another
-*_xlate hook to iommu_op), iommu_fwspec_xlate() ?
+=46or me changing CPU frequency on Orange Pi One always locks up the
+system. I keep running it on the u-boot setup 1.08GHz at 1.1V
 
-What I will do with my next RFC is move the iommu_fwspec out of
-OF_IOMMU code in a separate compilation unit and we will take the
-discussion from there.
+Thanks
 
-[...]
-
-> +
-> +	ret = iommu_fwspec_init(dev, args->np);
-> +	if (!ret)
-> +		ret = iommu_fwspec_add_ids(dev, &args->args[0], 1);
-> +
-> +	return ret;
-> +}
-> +
->  static struct iommu_ops arm_smmu_ops = {
->  	.capable		= arm_smmu_capable,
->  	.domain_alloc		= arm_smmu_domain_alloc,
-> @@ -1947,6 +1894,7 @@ static struct iommu_ops arm_smmu_ops = {
->  	.device_group		= pci_device_group,
->  	.domain_get_attr	= arm_smmu_domain_get_attr,
->  	.domain_set_attr	= arm_smmu_domain_set_attr,
-> +	.of_xlate		= arm_smmu_of_xlate,
->  	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
->  };
->  
-> @@ -2697,6 +2645,22 @@ static void __exit arm_smmu_exit(void)
->  subsys_initcall(arm_smmu_init);
->  module_exit(arm_smmu_exit);
->  
-> +static int __init arm_smmu_of_init(struct device_node *np)
-> +{
-> +	static bool registered;
-> +
-> +	if (!registered)
-> +		registered = !arm_smmu_init();
-
-We also need a static variable in arm_smmu_init() to make sure
-we do not try to execute it multiple times :( (here and
-subsys_initcall).
-
-Thanks,
-Lorenzo
-
-> +
-> +	if (!of_platform_device_create(np, NULL, platform_bus_type.dev_root))
-> +		return -ENODEV;
-> +
-> +	of_iommu_set_ops(np, &arm_smmu_ops);
-> +
-> +	return 0;
-> +}
-> +IOMMU_OF_DECLARE(arm_smmuv3, "arm,smmu-v3", arm_smmu_of_init);
-> +
->  MODULE_DESCRIPTION("IOMMU API for ARM architected SMMUv3 implementations");
->  MODULE_AUTHOR("Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>");
->  MODULE_LICENSE("GPL v2");
-> -- 
-> 2.8.1.dirty
-> 
+Michal
