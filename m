@@ -1,139 +1,122 @@
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v2 06/14] ARM: sun8i: clk: Add
- clk-factor rate application method
-Date: Fri, 15 Jul 2016 18:33:45 +0200
-Message-ID: <abf2f8c1-adb6-ed75-5958-324bb4b4e1e1@megous.com>
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-7-megous@megous.com> <20160630204001.GC5485@lukather>
- <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
- <20160715085356.GR4761@lukather>
- <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
- <20160715152756.db7375a7109fed18c2fbf43a@free.fr>
- <98fd2ab2-9b1d-1494-5867-7701780fd471@megous.com>
- <CAOMqctTds7adsfvehfv8wcxbb0NOpEQE5wRff6NwfPOUa3SbRw@mail.gmail.com>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: [v10, 3/7] soc: fsl: add GUTS driver for QorIQ platforms
+Date: Fri, 15 Jul 2016 12:43:41 -0400
+Message-ID: <CAP=VYLqsV_M=8CM47k4kzdULCp_y0yP9t8Sq9=jFp6W593QJgw@mail.gmail.com>
+References: <1462417950-46796-1-git-send-email-yangbo.lu@nxp.com> <1462417950-46796-4-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="8eiaxBXtsaAOLXs3L1xAubBMgpbM2sR3S"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAOMqctTds7adsfvehfv8wcxbb0NOpEQE5wRff6NwfPOUa3SbRw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dev <dev@linux-sunxi.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1462417950-46796-4-git-send-email-yangbo.lu@nxp.com>
+Sender: netdev-owner@vger.kernel.org
+To: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: linux-mmc@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org, netdev <netdev@vger.kernel.org>, ulf.hansson@linaro.org, Scott Wood <oss@buserror.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Qiang Zhao <qiang.zhao@nxp.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, leoyang.li@nxp.com, xiaobo.xie@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---8eiaxBXtsaAOLXs3L1xAubBMgpbM2sR3S
-Content-Type: multipart/mixed; boundary="VuPPGqKFPLfjbSB8uahQGnO86mAhiKvwg"
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: Jean-Francois Moine <moinejf@free.fr>,
- Maxime Ripard <maxime.ripard@free-electrons.com>,
- Mark Rutland <mark.rutland@arm.com>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, dev <dev@linux-sunxi.org>,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>, open list
- <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?=
- <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>,
- Rob Herring <robh+dt@kernel.org>,
- "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Message-ID: <abf2f8c1-adb6-ed75-5958-324bb4b4e1e1@megous.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v2 06/14] ARM: sun8i: clk: Add
- clk-factor rate application method
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-7-megous@megous.com> <20160630204001.GC5485@lukather>
- <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
- <20160715085356.GR4761@lukather>
- <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
- <20160715152756.db7375a7109fed18c2fbf43a@free.fr>
- <98fd2ab2-9b1d-1494-5867-7701780fd471@megous.com>
- <CAOMqctTds7adsfvehfv8wcxbb0NOpEQE5wRff6NwfPOUa3SbRw@mail.gmail.com>
-In-Reply-To: <CAOMqctTds7adsfvehfv8wcxbb0NOpEQE5wRff6NwfPOUa3SbRw@mail.gmail.com>
+On Wed, May 4, 2016 at 11:12 PM, Yangbo Lu <yangbo.lu@nxp.com> wrote:
+> The global utilities block controls power management, I/O device
+> enabling, power-onreset(POR) configuration monitoring, alternate
+> function selection for multiplexed signals,and clock control.
+>
+> This patch adds GUTS driver to manage and access global utilities
+> block.
+>
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> Acked-by: Scott Wood <oss@buserror.net>
+> ---
+> Changes for v4:
+>         - Added this patch
+> Changes for v5:
+>         - Modified copyright info
+>         - Changed MODULE_LICENSE to GPL
+>         - Changed EXPORT_SYMBOL_GPL to EXPORT_SYMBOL
+>         - Made FSL_GUTS user-invisible
+>         - Added a complete compatible list for GUTS
+>         - Stored guts info in file-scope variable
+>         - Added mfspr() getting SVR
+>         - Redefined GUTS APIs
+>         - Called fsl_guts_init rather than using platform driver
+>         - Removed useless parentheses
+>         - Removed useless 'extern' key words
+> Changes for v6:
+>         - Made guts thread safe in fsl_guts_init
+> Changes for v7:
+>         - Removed 'ifdef' for function declaration in guts.h
+> Changes for v8:
+>         - Fixes lines longer than 80 characters checkpatch issue
+>         - Added 'Acked-by: Scott Wood'
+> Changes for v9:
+>         - None
+> Changes for v10:
+>         - None
+> ---
+>  drivers/soc/Kconfig      |   2 +-
+>  drivers/soc/fsl/Kconfig  |   8 +++
+>  drivers/soc/fsl/Makefile |   1 +
+>  drivers/soc/fsl/guts.c   | 119 ++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/fsl/guts.h | 126 +++++++++++++++++++++++++++++------------------
+>  5 files changed, 207 insertions(+), 49 deletions(-)
+>  create mode 100644 drivers/soc/fsl/Kconfig
+>  create mode 100644 drivers/soc/fsl/guts.c
+>
+> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> index cb58ef0..7106463 100644
+> --- a/drivers/soc/Kconfig
+> +++ b/drivers/soc/Kconfig
+> @@ -2,7 +2,7 @@ menu "SOC (System On Chip) specific Drivers"
+>
+>  source "drivers/soc/bcm/Kconfig"
+>  source "drivers/soc/brcmstb/Kconfig"
+> -source "drivers/soc/fsl/qe/Kconfig"
+> +source "drivers/soc/fsl/Kconfig"
+>  source "drivers/soc/mediatek/Kconfig"
+>  source "drivers/soc/qcom/Kconfig"
+>  source "drivers/soc/rockchip/Kconfig"
+> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+> new file mode 100644
+> index 0000000..b313759
+> --- /dev/null
+> +++ b/drivers/soc/fsl/Kconfig
+> @@ -0,0 +1,8 @@
+> +#
+> +# Freescale SOC drivers
+> +#
+> +
+> +source "drivers/soc/fsl/qe/Kconfig"
+> +
+> +config FSL_GUTS
+> +       bool
+> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
+> index 203307f..02afb7f 100644
+> --- a/drivers/soc/fsl/Makefile
+> +++ b/drivers/soc/fsl/Makefile
+> @@ -4,3 +4,4 @@
+>
+>  obj-$(CONFIG_QUICC_ENGINE)             += qe/
+>  obj-$(CONFIG_CPM)                      += qe/
+> +obj-$(CONFIG_FSL_GUTS)                 += guts.o
+> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
+> new file mode 100644
+> index 0000000..fa155e6
+> --- /dev/null
+> +++ b/drivers/soc/fsl/guts.c
+> @@ -0,0 +1,119 @@
+> +/*
+> + * Freescale QorIQ Platforms GUTS Driver
+> + *
+> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/module.h>
 
---VuPPGqKFPLfjbSB8uahQGnO86mAhiKvwg
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Seems there was lots of discussion on this.  If it does end up being
+resent, it would be nice to get the module.h and other modular stuff
+gone since it is a bool Kconfig.
 
-On 15.7.2016 16:22, Michal Suchanek wrote:
-> Hello,
->=20
-> On 15 July 2016 at 15:48, Ond=C5=99ej Jirman <megous@megous.com> wrote:=
-
->>
->>
->> On 15.7.2016 15:27, Jean-Francois Moine wrote:
->>> On Fri, 15 Jul 2016 12:38:54 +0200
->>> Ond=C5=99ej Jirman <megous@megous.com> wrote:
->>>
->>>>> If so, then yes, trying to switch to the 24MHz oscillator before
->>>>> applying the factors, and then switching back when the PLL is stabl=
-e
->>>>> would be a nice solution.
->>>>>
->>>>> I just checked, and all the SoCs we've had so far have that
->>>>> possibility, so if it works, for now, I'd like to stick to that.
->>>>
->>>> It would need to be tested. U-boot does the change only once, while =
-the
->>>> kernel would be doing it all the time and between various frequencie=
-s
->>>> and PLL settings. So the issues may show up with this solution too.
->>>
->>> I don't think this is a good idea: the CPU clock may be changed at an=
-y
->>> time with the CPUFreq governor. I don't see the system moving from
->>> 1008MHz to 24MHz and then to 1200MHz when some computation is needed!=
-
->>
->> PLL lock time is around 10-20us, I'd guess based on the number of loop=
-s
->> in the PLL lock wait loop. So unless you'll be switching frequencies
->> many times per second, this should be barely noticeable.
->>
->> But I'd like a different solution too.
->=20
-> Do you have a patch to test this?
->=20
-> For me changing CPU frequency on Orange Pi One always locks up the
-> system. I keep running it on the u-boot setup 1.08GHz at 1.1V
-
-Not anymore. But it's quite simple to hack it into the
-drivers/clk/sunxi/clk-factors.c:clk_factors_set_rate()
-
-You can look at u-boot arch/arm/mach-sunxi/clock_sun6i.c:clock_set_pll1
-for how to change the CPU clock source.
-
-> Thanks
->=20
-> Michal
->=20
-
-
---VuPPGqKFPLfjbSB8uahQGnO86mAhiKvwg--
-
---8eiaxBXtsaAOLXs3L1xAubBMgpbM2sR3S
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXiRBpAAoJEG5kJsZ3z+/xf0EP+wS3+x5tMUjvfb/ww2f866XE
-AK6MoGIpHI9Me3dYOApYmV4I/qIWtozptSipVLsLTLodH+oU5+L6ZhJwo1tWtrVw
-QlMC7viV8YckK5AqKtANm/EQ3+P61OxP9Mm+bsxOrXMTRMu5jY/p6B+wqvTvRJjT
-MWLPClv07/8fAprQOJZ0q38rnFjwkh29/GCovgFAXv5HOabCYlQbQ80WvodJjm7h
-Rox30zenhto2OimqRPk8SDL7BXsrktgP6CQeCLk7z3Qz14DKoOZubaJ+l6xHMKq4
-fQnILntaZe6rmYQhpJi+iAsBU6PjXBRJXlYrXPUCcTwLG6i3wpDTlVQZCzf2m6E/
-nPMztImPXtpKSvgRPlCwK0ygxbT1cehotcW/jODWLWkEag4gQR1atIEB1UYA5xwH
-i0FaULxjtSW/SsTs488BvVnJ/FPT67kq2s+TlWsEMGQf6SgA6/26sM3vFaFq9K8O
-tL9Vm/axiWL05AACOKjH7wlbr6Md938eLAQjR8T9DoNpahj/F/ispBW7VbgiRbU+
-Sl2u98cCyneUkSVR+PiNa++/nqbgYTZzaO2XzqqqJECjBOXhynbQVcCE99uquUv8
-v197fovaRPPu7Mx4gqvs/sWyWnHscQ54IcwEgdeQYnbw0JKdSvN9Iix15ZD2lwAK
-KVWVpeptc/5LOyKjJSrS
-=+sdE
------END PGP SIGNATURE-----
-
---8eiaxBXtsaAOLXs3L1xAubBMgpbM2sR3S--
+Thanks,
+Paul.
