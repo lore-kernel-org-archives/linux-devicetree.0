@@ -1,110 +1,139 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH 7/8] uio: bind uio_dmem_genirq via OF
-Date: Fri, 15 Jul 2016 21:57:28 +0530
-Message-ID: <CAALAos9KVS3SveQzGWGhcdxZNPapWnmTwZe+4y2g3LNGP3muDA@mail.gmail.com>
-References: <1468573443-4670-1-git-send-email-anup.patel@broadcom.com>
- <1468573443-4670-8-git-send-email-anup.patel@broadcom.com> <20160715132835.GC19840@leverpostej>
+From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 06/14] ARM: sun8i: clk: Add
+ clk-factor rate application method
+Date: Fri, 15 Jul 2016 18:33:45 +0200
+Message-ID: <abf2f8c1-adb6-ed75-5958-324bb4b4e1e1@megous.com>
+References: <20160625034511.7966-1-megous@megous.com>
+ <20160625034511.7966-7-megous@megous.com> <20160630204001.GC5485@lukather>
+ <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
+ <20160715085356.GR4761@lukather>
+ <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
+ <20160715152756.db7375a7109fed18c2fbf43a@free.fr>
+ <98fd2ab2-9b1d-1494-5867-7701780fd471@megous.com>
+ <CAOMqctTds7adsfvehfv8wcxbb0NOpEQE5wRff6NwfPOUa3SbRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160715132835.GC19840@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, Scott Branden <sbranden@broadcom.com>, linux-doc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Ankit Jindal <thatsjindal@gmail.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Jan Viktorin <viktorin@rehivetech.com>, Device Tree <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="8eiaxBXtsaAOLXs3L1xAubBMgpbM2sR3S"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAOMqctTds7adsfvehfv8wcxbb0NOpEQE5wRff6NwfPOUa3SbRw@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dev <dev@linux-sunxi.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 15, 2016 at 6:58 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> [adding devicetree list]
->
-> On Fri, Jul 15, 2016 at 02:34:02PM +0530, Anup Patel wrote:
->> From: Jan Viktorin <viktorin@rehivetech.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--8eiaxBXtsaAOLXs3L1xAubBMgpbM2sR3S
+Content-Type: multipart/mixed; boundary="VuPPGqKFPLfjbSB8uahQGnO86mAhiKvwg"
+From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>,
+ Maxime Ripard <maxime.ripard@free-electrons.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, dev <dev@linux-sunxi.org>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@codeaurora.org>, open list
+ <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?=
+ <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Message-ID: <abf2f8c1-adb6-ed75-5958-324bb4b4e1e1@megous.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 06/14] ARM: sun8i: clk: Add
+ clk-factor rate application method
+References: <20160625034511.7966-1-megous@megous.com>
+ <20160625034511.7966-7-megous@megous.com> <20160630204001.GC5485@lukather>
+ <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
+ <20160715085356.GR4761@lukather>
+ <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
+ <20160715152756.db7375a7109fed18c2fbf43a@free.fr>
+ <98fd2ab2-9b1d-1494-5867-7701780fd471@megous.com>
+ <CAOMqctTds7adsfvehfv8wcxbb0NOpEQE5wRff6NwfPOUa3SbRw@mail.gmail.com>
+In-Reply-To: <CAOMqctTds7adsfvehfv8wcxbb0NOpEQE5wRff6NwfPOUa3SbRw@mail.gmail.com>
+
+--VuPPGqKFPLfjbSB8uahQGnO86mAhiKvwg
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On 15.7.2016 16:22, Michal Suchanek wrote:
+> Hello,
+>=20
+> On 15 July 2016 at 15:48, Ond=C5=99ej Jirman <megous@megous.com> wrote:=
+
 >>
->> The uio_dmem_genirq works in a similar ways as uio_pdrv_genirq now.
 >>
->> It accepts the of_id module parameter to specify UIO compatible
->> string as module parameter. There are few other module parameters
->> to specify DT property name for number bits in DMA mask and details
->> about dynamic regions.
+>> On 15.7.2016 15:27, Jean-Francois Moine wrote:
+>>> On Fri, 15 Jul 2016 12:38:54 +0200
+>>> Ond=C5=99ej Jirman <megous@megous.com> wrote:
+>>>
+>>>>> If so, then yes, trying to switch to the 24MHz oscillator before
+>>>>> applying the factors, and then switching back when the PLL is stabl=
+e
+>>>>> would be a nice solution.
+>>>>>
+>>>>> I just checked, and all the SoCs we've had so far have that
+>>>>> possibility, so if it works, for now, I'd like to stick to that.
+>>>>
+>>>> It would need to be tested. U-boot does the change only once, while =
+the
+>>>> kernel would be doing it all the time and between various frequencie=
+s
+>>>> and PLL settings. So the issues may show up with this solution too.
+>>>
+>>> I don't think this is a good idea: the CPU clock may be changed at an=
+y
+>>> time with the CPUFreq governor. I don't see the system moving from
+>>> 1008MHz to 24MHz and then to 1200MHz when some computation is needed!=
+
 >>
->> Following are the newly added module parameters:
->> 1) of_id: The UIO compatible string to be used for DT probing
->> 2) of_dma_bits_prot: This is name of OF property which will be
->> used to specify number of DMA mask bits in UIO DT node.
->> 3) of_dmem_count_prop: This is name of OF property which will be
->> used to specify number of dynamic regions in UIO DT node.
->> 4) of_dmem_sizes_prop: This is name of OF property which will be
->> used to specify sizes of each dynamic regions in UIO DT node.
+>> PLL lock time is around 10-20us, I'd guess based on the number of loop=
+s
+>> in the PLL lock wait loop. So unless you'll be switching frequencies
+>> many times per second, this should be barely noticeable.
 >>
->> Signed-off-by: Jan Viktorin <viktorin@rehivetech.com>
->> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
->> ---
->>  drivers/uio/uio_dmem_genirq.c | 113 +++++++++++++++++++++++++++++++++---------
->>  1 file changed, 89 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
->> index a4d6d81..0a0cc19 100644
->> --- a/drivers/uio/uio_dmem_genirq.c
->> +++ b/drivers/uio/uio_dmem_genirq.c
->> @@ -144,46 +144,107 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
->>       return 0;
->>  }
->>
->> +static char uio_of_dma_bits_prop[128] = "uio,dma-bits";
->> +static char uio_of_dmem_count_prop[128] = "uio,number-of-dynamic-regions";
->> +static char uio_of_dmem_sizes_prop[128] = "uio,dynamic-regions-sizes";
->
-> What are these proeprties? What is a "dynamic region" in hardware terms?
+>> But I'd like a different solution too.
+>=20
+> Do you have a patch to test this?
+>=20
+> For me changing CPU frequency on Orange Pi One always locks up the
+> system. I keep running it on the u-boot setup 1.08GHz at 1.1V
 
-"Dynamic region" is DMAble memory alloced using dma_alloc_xxx() APIs
-for the device.
+Not anymore. But it's quite simple to hack it into the
+drivers/clk/sunxi/clk-factors.c:clk_factors_set_rate()
 
-For DMA-capable devices accessed from user-space, we need DMAble
-memory available to user-space. Sometime such devices are also
-cache-coherent (or IO-coherent) so in such case user-space will need
-cacheable DMAble memory.
+You can look at u-boot arch/arm/mach-sunxi/clock_sun6i.c:clock_set_pll1
+for how to change the CPU clock source.
 
-Number of "Dynamic regions" required by UIO dmem device depends
-on the type of HW device hence we describe number of "Dynamic regions"
-and size of "Dynamic regions" via DT attributes.
+> Thanks
+>=20
+> Michal
+>=20
 
->
-> Why must they be in the DT, and why are the *property names* arbitrarily
-> overridable as module parameters? What exactly do you expect there to be
-> in a DT?
 
-They must be in DT for platform devices created using DT probing. The
-number of "Dynamic regions" required by UIO device will depend on the
-nature of device. We cannot have same number and sizes of "Dynamic
-regions" for different UIO dmem devices.
+--VuPPGqKFPLfjbSB8uahQGnO86mAhiKvwg--
 
-The UIO dmem driver is a generic driver and not specific to any type of
-HW. In fact, UIO dmem driver is generic enough to access variety of
-platform devices from user-space using UIO framework.
+--8eiaxBXtsaAOLXs3L1xAubBMgpbM2sR3S
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Based on this Rob had previously suggested to not have any (or enforce
-any) DT bindings for UIO dmem driver.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Refer, https://lkml.org/lkml/2016/5/18/457
-Link to original Jan's patchset is https://lkml.org/lkml/2016/5/17/141
+iQIcBAEBCAAGBQJXiRBpAAoJEG5kJsZ3z+/xf0EP+wS3+x5tMUjvfb/ww2f866XE
+AK6MoGIpHI9Me3dYOApYmV4I/qIWtozptSipVLsLTLodH+oU5+L6ZhJwo1tWtrVw
+QlMC7viV8YckK5AqKtANm/EQ3+P61OxP9Mm+bsxOrXMTRMu5jY/p6B+wqvTvRJjT
+MWLPClv07/8fAprQOJZ0q38rnFjwkh29/GCovgFAXv5HOabCYlQbQ80WvodJjm7h
+Rox30zenhto2OimqRPk8SDL7BXsrktgP6CQeCLk7z3Qz14DKoOZubaJ+l6xHMKq4
+fQnILntaZe6rmYQhpJi+iAsBU6PjXBRJXlYrXPUCcTwLG6i3wpDTlVQZCzf2m6E/
+nPMztImPXtpKSvgRPlCwK0ygxbT1cehotcW/jODWLWkEag4gQR1atIEB1UYA5xwH
+i0FaULxjtSW/SsTs488BvVnJ/FPT67kq2s+TlWsEMGQf6SgA6/26sM3vFaFq9K8O
+tL9Vm/axiWL05AACOKjH7wlbr6Md938eLAQjR8T9DoNpahj/F/ispBW7VbgiRbU+
+Sl2u98cCyneUkSVR+PiNa++/nqbgYTZzaO2XzqqqJECjBOXhynbQVcCE99uquUv8
+v197fovaRPPu7Mx4gqvs/sWyWnHscQ54IcwEgdeQYnbw0JKdSvN9Iix15ZD2lwAK
+KVWVpeptc/5LOyKjJSrS
+=+sdE
+-----END PGP SIGNATURE-----
 
-We had two options:
-1) Get details of "Dynamic regions" via module parameter but this
-would mean using same number and sizes of "Dynamic regions" for
-all UIO dmem devices.
-2) Pass names of DT attributes used by UIO dmem driver as
-module parameters.
-
->
-> DT bindings need documentation, but there was none as part of this series.
->
-> I do not think this makes sense from a DT perspective.
->
-
-As explained above, we are not fixing DT compatible string and
-DT attributes names for UIO dmem driver instead we pass all
-these as module parameters (preferable via kernel args or at
-time of module insertion). Due to this we don't require DT bindings
-document.
-
-Regards,
-Anup
+--8eiaxBXtsaAOLXs3L1xAubBMgpbM2sR3S--
