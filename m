@@ -1,152 +1,102 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: [PATCH V2] regulator: da9210: addition of device tree support
-Date: Fri, 15 Jul 2016 10:29:41 +0100
-Message-ID: <20160715093617.498003FBD7@swsrvapps-01.diasemi.com>
+From: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: fix erroneous address in dts
+Date: Fri, 15 Jul 2016 11:37:30 +0200
+Message-ID: <8a8ccb29-ba73-f29f-2b57-5c1d91e13bf7@ramses-pyramidenbau.de>
+References: <1468514937-23250-1-git-send-email-ralf@ramses-pyramidenbau.de>
+ <20160714220218.GB4205@mithrandir.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: DEVICETREE <devicetree@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Support Opensource <support.opensource@diasemi.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="eePsHBHt3tWownKvTdhXCrscJnk5MlnKN"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160714220218.GB4205-+E7KM1FDEuO2P7RxrfNFTMXXUOn6P5/W@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--eePsHBHt3tWownKvTdhXCrscJnk5MlnKN
+Content-Type: multipart/mixed; boundary="mxlXKMc93qqdwB06cT6Tv0KBIqkrsVH09"
+From: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>,
+ Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Message-ID: <8a8ccb29-ba73-f29f-2b57-5c1d91e13bf7-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: fix erroneous address in dts
+References: <1468514937-23250-1-git-send-email-ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+ <20160714220218.GB4205-+E7KM1FDEuO2P7RxrfNFTMXXUOn6P5/W@public.gmane.org>
+In-Reply-To: <20160714220218.GB4205-+E7KM1FDEuO2P7RxrfNFTMXXUOn6P5/W@public.gmane.org>
 
-Addition of device tree support for DA9210.
-Two files are modified, the driver source file and the binding document.
+--mxlXKMc93qqdwB06cT6Tv0KBIqkrsVH09
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Updates for the regulator source file include an .of_match_table entry and
-node match checking in the probe() function for a compatible da9210 string.
+On 07/15/2016 12:02 AM, Thierry Reding wrote:
+> On Thu, Jul 14, 2016 at 06:48:57PM +0200, Ralf Ramsauer wrote:
+>> c90bb7b enabled the high speed UARTs of the Jetson TK1. The address
+>> specification inside the dts is wrong. Fix it and use the correct
+>> address.
+>>
+>> Fixes: c90bb7b9b9 ("ARM: tegra: Add high speed UARTs to Jetson TK1 dev=
+ice tree")
+>> Signed-off-by: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/tegra124-jetson-tk1.dts | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> These addresses are correct. The 0, prefix was dropped from the unit
+> address in commit b5896f67ab3c ("ARM: tegra: Remove commas from unit
+> addresses on Tegra124").
+>=20
+> What's the problem that you're seeing? What's not working for you?
+I cannot find b5896f67ab3c neither in swarren's tree nor in linux
+upstream. But there's d0bc5aaf890 in swarren's linux-tegra tree that
+matches your described changes and was committed on 1st of July. But
+this patch is not upstream yet, while the other patch is.
 
-Minor binding documentation changes have been made to the title and the
-example.
+Have a look at mainline tegra124-jetson-tk1.dts, there the addresses are
+erroneous as they still use the 0, annotation. And I just realised, that
+somehow, upstream patch c90bb7b slightly differs from my initial patch
+[1] on the mailing list.
 
-Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+  Ralf
 
----
-Checks performed with linux-next/v4.7-rc7/scripts/checkpatch.pl
- da9210-regulator.c        total: 0 errors, 0 warnings, 293 lines checked
- da9210.txt                total: 0 errors, 0 warnings, 29 lines checked
+[1] http://permalink.gmane.org/gmane.linux.ports.tegra/24779
+>=20
+> Thierry
+>=20
 
-This patch applies against linux-next and v4.7-rc7
-
-Change history from PATCH V1 to V2:
- - Removed .regulators_node and .of_match device tree entries from
-   the driver regulator_desc;
- - Reverted the device tree properties back to the top level node;
- - Removed the need to extensively alter the binding document;
-
-Hi All,
-
-After Mark Brown's review I have reverted most of the device tree
-changes and therefore most of the binding document updates.
-
-An itemised list of the changes in this patch V2 are:
-
-@ Mark/Liam,
-
-Changes for regulator code: da9210-regulator.c
-- Include header file clean-up.
-- Addition of MODULE_DEVICE_TABLE() list and .of_match_table entry into
-  struct i2c_driver, device tree match checking inside the probe() function 
-
-@ Rob/Mark,
-
-Changes for binding document: da9210.txt
-- Title change to more accurately describe the Dialog part
-- More verbose example 
-
-Regards,
-Steve
+--=20
+Ralf Ramsauer
+PGP: 0x8F10049B
 
 
- .../devicetree/bindings/regulator/da9210.txt        | 12 ++++++++----
- drivers/regulator/da9210-regulator.c                | 21 +++++++++++++++++++--
- 2 files changed, 27 insertions(+), 6 deletions(-)
+--mxlXKMc93qqdwB06cT6Tv0KBIqkrsVH09--
 
-diff --git a/Documentation/devicetree/bindings/regulator/da9210.txt b/Documentation/devicetree/bindings/regulator/da9210.txt
-index 7aa9b1f..58065ca 100644
---- a/Documentation/devicetree/bindings/regulator/da9210.txt
-+++ b/Documentation/devicetree/bindings/regulator/da9210.txt
-@@ -1,4 +1,4 @@
--* Dialog Semiconductor DA9210 Voltage Regulator
-+* Dialog Semiconductor DA9210 Multi-phase 12A DCDC BUCK Converter
- 
- Required properties:
- 
-@@ -18,8 +18,12 @@ Example:
- 		compatible = "dlg,da9210";
- 		reg = <0x68>;
- 
--		regulator-min-microvolt = <900000>;
--		regulator-max-microvolt = <1000000>;
-+		interrupt-parent = <...>;
-+		interrupts = <...>;
-+
-+		regulator-min-microvolt = <300000>;
-+		regulator-max-microvolt = <1570000>;
-+		regulator-min-microamp = <1600000>;
-+		regulator-max-microamp = <4600000>;
- 		regulator-boot-on;
--		regulator-always-on;
- 	};
-diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-regulator.c
-index 01c0e37..d0496d6 100644
---- a/drivers/regulator/da9210-regulator.c
-+++ b/drivers/regulator/da9210-regulator.c
-@@ -21,12 +21,11 @@
- #include <linux/err.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
--#include <linux/slab.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
-+#include <linux/of_device.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/regmap.h>
- 
-@@ -179,6 +178,13 @@ error_i2c:
- /*
-  * I2C driver interface functions
-  */
-+
-+static const struct of_device_id da9210_dt_ids[] = {
-+	{ .compatible = "dlg,da9210", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, da9210_dt_ids);
-+
- static int da9210_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
-@@ -188,6 +194,16 @@ static int da9210_i2c_probe(struct i2c_client *i2c,
- 	struct regulator_dev *rdev = NULL;
- 	struct regulator_config config = { };
- 	int error;
-+	const struct of_device_id *match;
-+
-+	if (i2c->dev.of_node && !pdata) {
-+		match = of_match_device(of_match_ptr(da9210_dt_ids),
-+						&i2c->dev);
-+		if (!match) {
-+			dev_err(&i2c->dev, "Error: No device match found\n");
-+			return -ENODEV;
-+		}
-+	}
- 
- 	chip = devm_kzalloc(&i2c->dev, sizeof(struct da9210), GFP_KERNEL);
- 	if (!chip)
-@@ -264,6 +280,7 @@ MODULE_DEVICE_TABLE(i2c, da9210_i2c_id);
- static struct i2c_driver da9210_regulator_driver = {
- 	.driver = {
- 		.name = "da9210",
-+		.of_match_table = of_match_ptr(da9210_dt_ids),
- 	},
- 	.probe = da9210_i2c_probe,
- 	.id_table = da9210_i2c_id,
--- 
-end-of-patch for PATCH V2
+--eePsHBHt3tWownKvTdhXCrscJnk5MlnKN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXiK7fAAoJEPovtFKPEASbn2UP/1hA5FDoOgFMqOAzr1fTlD6a
+aHGTt4FJIinlzTkaCN2BysXZqYNC8ivimBw2X5lxtbCHF+JQKO9Bye1w8wyU6dy3
+dXaL0mknh/5TyBHlpGUJrKMTuwqp8yfn5mf+5LFBgiWeXxySbZnLybI9dJ2Fg21t
+MA8vEqwHJ37eZXWkIal0O8dLbF3DaQfWtC0TVeVWoL6IeVZmVRe8V9HnYEyySJH3
+4zjYiamJW9OcF5gz+QZcsQJNs8jwMwCYUdYp2OrZNFvcX3AImjPdd1tksZbyBZCO
+9zR7JhjGmF26/kYh85+T2L2WCrhEygsFsv25t6k+LtaqDhsFipPMjMfgDCR5YMW+
+vCJAMGElBghCSHZIsRZQxf9geQ/1QIzwosvfjdR++W7Bfa9QEIlfjjfOWO+Wva6m
+R4Iw9h4cwf5uRh9SOtK38L9zs+76Cp5QxpmKw+iYUECagTF+nz28sl4ckpzOl8Us
+u/ZnZR2W7LvL8YkbY9caKXirTS7JxvpTS3IHUN+QnRkjrphchP61b4hllBq9wjC1
+vwo27zVQjWJgUEwecLnaDP0dR5OanaogPXMDr5b5r5DOOp0/woe4o7P74Fww5Ygr
+ilnXhxa3fmJcamQWbQTQIpha3EGyIsSIS28VPUUP4j6agl8a7jC3XPBUobXttxnv
+dLNIyQhXaMDiJNf3QeUd
+=N7R0
+-----END PGP SIGNATURE-----
+
+--eePsHBHt3tWownKvTdhXCrscJnk5MlnKN--
