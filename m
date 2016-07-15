@@ -1,115 +1,78 @@
-From: Horng-Shyang Liao <hs.liao@mediatek.com>
-Subject: Re: [PATCH v10 2/4] CMDQ: Mediatek CMDQ driver
-Date: Fri, 15 Jul 2016 09:39:55 +0800
-Message-ID: <1468546795.31101.2.camel@mtksdaap41>
-References: <1468495733-12178-1-git-send-email-hs.liao@mediatek.com>
-	 <1468495733-12178-3-git-send-email-hs.liao@mediatek.com>
-	 <CAP=VYLqPhZLYFmsWE45kRdfbjUTzMT+eGNVZnGjK8VD7+fQgBA@mail.gmail.com>
+From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 1/2] tpm: devicetree: document properties for
+	cr50
+Date: Thu, 14 Jul 2016 19:20:17 -0700
+Message-ID: <1468549218-19215-2-git-send-email-apronin@chromium.org>
+References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP=VYLqPhZLYFmsWE45kRdfbjUTzMT+eGNVZnGjK8VD7+fQgBA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@media>
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1468549218-19215-1-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: =?UTF-8?q?=C2=A0=C2=A0=C2=A0Mark=20Rutland?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, =?UTF-8?q?=C2=A0=C2=A0=C2=A0Pawel=20Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?=C2=A0=C2=A0=C2=A0Ian=20Campbell?= <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?=C2=A0=C2=A0=C2=A0Rob=20Herring?= <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, =?UTF-8?q?=C2=A0=C2=A0=C2=A0Kumar=20Gala?= <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Add TPM2.0-compatible interface to Cr50. Document its properties
+in devicetree.
 
-On Thu, 2016-07-14 at 19:38 -0400, Paul Gortmaker wrote:
-> On Thu, Jul 14, 2016 at 7:28 AM, HS Liao <hs.liao@mediatek.com> wrote:
-> > This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> > CMDQ is used to help write registers with critical time limitation,
-> > such as updating display configuration during the vblank. It controls
-> > Global Command Engine (GCE) hardware to achieve this requirement.
-> > Currently, CMDQ only supports display related hardwares, but we expect
-> > it can be extended to other hardwares for future requirements.
-> >
-> > Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> > Signed-off-by: CK Hu <ck.hu@mediatek.com>
-> > ---
-> >  drivers/soc/mediatek/Kconfig    |  11 +
-> >  drivers/soc/mediatek/Makefile   |   1 +
-> >  drivers/soc/mediatek/mtk-cmdq.c | 948 ++++++++++++++++++++++++++++++++++++++++
-> >  include/soc/mediatek/cmdq.h     | 179 ++++++++
-> >  4 files changed, 1139 insertions(+)
-> >  create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
-> >  create mode 100644 include/soc/mediatek/cmdq.h
-> >
-> > diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> > index 0a4ea80..50869e4 100644
-> > --- a/drivers/soc/mediatek/Kconfig
-> > +++ b/drivers/soc/mediatek/Kconfig
-> > @@ -1,6 +1,17 @@
-> >  #
-> >  # MediaTek SoC drivers
-> >  #
-> > +config MTK_CMDQ
-> > +       bool "MediaTek CMDQ Support"
-> > +       depends on ARM64 && ( ARCH_MEDIATEK || COMPILE_TEST )
-> > +       select MAILBOX
-> > +       select MTK_INFRACFG
-> > +       help
-> > +         Say yes here to add support for the MediaTek Command Queue (CMDQ)
-> > +         driver. The CMDQ is used to help read/write registers with critical
-> > +         time limitation, such as updating display configuration during the
-> > +         vblank.
-> > +
-> >  config MTK_INFRACFG
-> >         bool "MediaTek INFRACFG Support"
-> >         depends on ARCH_MEDIATEK || COMPILE_TEST
-> > diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> > index 12998b0..f7397ef 100644
-> > --- a/drivers/soc/mediatek/Makefile
-> > +++ b/drivers/soc/mediatek/Makefile
-> > @@ -1,3 +1,4 @@
-> > +obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq.o
-> >  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
-> >  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
-> >  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-> > diff --git a/drivers/soc/mediatek/mtk-cmdq.c b/drivers/soc/mediatek/mtk-cmdq.c
-> > new file mode 100644
-> > index 0000000..d032603
-> > --- /dev/null
-> > +++ b/drivers/soc/mediatek/mtk-cmdq.c
-> > @@ -0,0 +1,948 @@
-> > +/*
-> > + * Copyright (c) 2015 MediaTek Inc.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +
-> > +#include <linux/bitops.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/completion.h>
-> > +#include <linux/dma-mapping.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/iopoll.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/kthread.h>
-> > +#include <linux/mailbox_client.h>
-> > +#include <linux/mailbox_controller.h>
-> > +#include <linux/module.h>
-> 
-> Please don't use module.h and MODULE_* stuff in a driver that has
-> a bool Kconfig.  Either make it tristate if that has a sensible use case
-> or get rid of the modular stuff.
+Signed-off-by: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ .../devicetree/bindings/security/tpm/cr50_spi.txt  | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
 
-Will remove it.
+diff --git a/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+new file mode 100644
+index 0000000..1b05e51
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+@@ -0,0 +1,30 @@
++* Cr50 Chip on SPI.
++
++TCG PTP FIFO Compliant Interface to Cr50 on SPI bus.
++
++Required properties:
++- compatible: Should be "google,cr50_spi".
++- spi-max-frequency: Maximum SPI frequency.
++
++Optional properties:
++- access-delay-msec: Required delay between subsequent transactions on SPI.
++- sleep-delay-msec: Time after the last SPI activity, after which the chip
++  may go to sleep.
++- wake-start-delay-msec: Time after initiating wake up before the chip is
++  ready to accept commands over SPI.
++
++Example:
++
++&spi0 {
++        status = "okay";
++
++        cr50@0 {
++                compatible = "google,cr50_spi";
++                reg = <0>;
++                spi-max-frequency = <800000>;
++
++                access-delay-msec = <2>;
++                sleep-delay-msec = <1000>;
++                wake-start-delay-msec = <60>;
++        };
++};
+-- 
+2.6.6
 
-> Thanks,
-> Paul.
-> --
 
-Thanks,
-HS
+------------------------------------------------------------------------------
+What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
+patterns at an interface-level. Reveals which users, apps, and protocols are 
+consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
+J-Flow, sFlow and other flows. Make informed decisions using capacity planning
+reports.http://sdm.link/zohodev2dev
