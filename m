@@ -1,282 +1,185 @@
-From: Wan Zongshun <vw@iommu.org>
-Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
-Date: Fri, 15 Jul 2016 13:15:58 +0800
-Message-ID: <5788718E.7080708@iommu.org>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org>
- <1468135649-19980-3-git-send-email-vw@iommu.org>
- <20160713200906.GB31509@io.lakedaemon.net> <578708D5.6050009@iommu.org>
- <20160714135426.GC31509@io.lakedaemon.net>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 4/4] ASoC: samsung: Add machine driver for Exynos5433
+ based TM2 board
+Date: Fri, 15 Jul 2016 14:18:19 +0900
+Message-ID: <5788721B.7010602@samsung.com>
+References: <CGME20160705171538epcas1p14f034567982b67aad091c50e5adcec9c@epcas1p1.samsung.com>
+ <1467738877-31555-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160714135426.GC31509@io.lakedaemon.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, robh@kernel.org, p.zabel@pengutronix.de, Wan Zongshun <mcuos.com@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1467738877-31555-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, broonie@kernel.org
+Cc: robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, ideal.song@samsung.com, inki.dae@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylwester,
 
+[snip]
+> +static int tm2_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct snd_soc_card *card = &tm2_card;
+> +	struct tm2_machine_priv *priv;
+> +	struct device_node *cpu_dai_node, *codec_dai_node;
+> +	int ret, i;
+> +
+> +	if (!dev->of_node) {
+> +		dev_err(dev, "DT node is missing\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	snd_soc_card_set_drvdata(card, priv);
+> +	card->dev = dev;
+> +
+> +	priv->gpio_mic_bias = devm_gpiod_get(dev, "mic-bias",
+> +						GPIOF_OUT_INIT_LOW);
+> +	if (IS_ERR(priv->gpio_mic_bias)) {
+> +		dev_err(dev, "Failed to get mic bias gpio\n");
+> +		return PTR_ERR(priv->gpio_mic_bias);
+> +	}
+> +
+> +	ret = snd_soc_of_parse_card_name(card, "model");
+> +	if (ret < 0) {
+> +		dev_err(dev, "Card name is not specified\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = snd_soc_of_parse_audio_routing(card, "samsung,audio-routing");
+> +	if (ret < 0) {
+> +		dev_err(dev, "Audio routing is not specified or invalid\n");
+> +		return ret;
+> +	}
+> +
+> +	card->aux_dev[0].codec_of_node = of_parse_phandle(dev->of_node,
+> +							"audio-amplifier", 0);
+> +	if (!card->aux_dev[0].codec_of_node) {
+> +		dev_err(dev, "audio-amplifier property invalid or missing\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	cpu_dai_node = of_parse_phandle(dev->of_node, "i2s-controller", 0);
+> +	if (!cpu_dai_node) {
+> +		dev_err(dev, "i2s-controllers property invalid or missing\n");
+> +		ret = -EINVAL;
+> +		goto err_put_amp;
+> +	}
+> +
+> +	codec_dai_node = of_parse_phandle(dev->of_node, "audio-codec", 0);
+> +	if (!codec_dai_node) {
+> +		dev_err(dev, "audio-codec property invalid or missing\n");
+> +		ret = -EINVAL;
+> +		goto err_put_cpu_dai;
+> +	}
+> +
+> +	for (i = 0; i < card->num_links; i++) {
+> +		card->dai_link[i].cpu_dai_name = NULL;
+> +		card->dai_link[i].cpu_name = NULL;
+> +		card->dai_link[i].platform_name = NULL;
+> +		card->dai_link[i].codec_of_node = codec_dai_node;
+> +		card->dai_link[i].cpu_of_node = cpu_dai_node;
+> +		card->dai_link[i].platform_of_node = cpu_dai_node;
+> +	}
+> +
+> +	priv->codec_mclk1 = of_clk_get_by_name(codec_dai_node, "mclk1");
+> +	if (IS_ERR(priv->codec_mclk1)) {
+> +		dev_err(dev, "Failed to get mclk1 clock\n");
+> +		ret = PTR_ERR(priv->codec_mclk1);
+> +		goto err_put_codec_dai;
+> +	}
 
-On 2016=E5=B9=B407=E6=9C=8814=E6=97=A5 21:54, Jason Cooper wrote:
-> Hi Wan Zongshun,
->
-> On Thu, Jul 14, 2016 at 11:36:53AM +0800, Wan Zongshun wrote:
->> On 2016=E5=B9=B407=E6=9C=8814=E6=97=A5 04:09, Jason Cooper wrote:
->>> On Sun, Jul 10, 2016 at 03:27:22PM +0800, Wan Zongshun wrote:
->>>> This patch is to add irqchip driver support for nuc900 plat,
->>>> current this driver only supports nuc970 SoC.
->>>>
->>>> Signed-off-by: Wan Zongshun <mcuos.com@gmail.com>
->>>> ---
->>>>   arch/arm/mach-w90x900/include/mach/irqs.h |   5 +
->>>>   drivers/irqchip/Makefile                  |   1 +
->>>>   drivers/irqchip/irq-nuc900.c              | 150 ++++++++++++++++=
-++++++++++++++
->>>>   3 files changed, 156 insertions(+)
->>>>   create mode 100644 drivers/irqchip/irq-nuc900.c
->>>>
->>>> diff --git a/arch/arm/mach-w90x900/include/mach/irqs.h b/arch/arm/=
-mach-w90x900/include/mach/irqs.h
->>>> index 9d5cba3..3b035c6 100644
->>>> --- a/arch/arm/mach-w90x900/include/mach/irqs.h
->>>> +++ b/arch/arm/mach-w90x900/include/mach/irqs.h
->>>> @@ -59,7 +59,12 @@
->>>>   #define IRQ_KPI		W90X900_IRQ(29)
->>>>   #define IRQ_P2SGROUP	W90X900_IRQ(30)
->>>>   #define IRQ_ADC		W90X900_IRQ(31)
->>>> +
->>>> +#if !defined(CONFIG_SOC_NUC900)
->>>>   #define NR_IRQS		(IRQ_ADC+1)
->>>> +#else
->>>> +#define NR_IRQS		62
->>>> +#endif
->>>
->>> Arnd already covered this...
->>>
->>>>
->>>>   /*for irq group*/
->>>>
->>>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->>>> index 38853a1..9ccd5af8a 100644
->>>> --- a/drivers/irqchip/Makefile
->>>> +++ b/drivers/irqchip/Makefile
->>>> @@ -69,3 +69,4 @@ obj-$(CONFIG_PIC32_EVIC)		+=3D irq-pic32-evic.o
->>>>   obj-$(CONFIG_MVEBU_ODMI)		+=3D irq-mvebu-odmi.o
->>>>   obj-$(CONFIG_LS_SCFG_MSI)		+=3D irq-ls-scfg-msi.o
->>>>   obj-$(CONFIG_EZNPS_GIC)			+=3D irq-eznps.o
->>>> +obj-$(CONFIG_SOC_NUC970)		+=3D irq-nuc900.o
->>>> diff --git a/drivers/irqchip/irq-nuc900.c b/drivers/irqchip/irq-nu=
-c900.c
->>>> new file mode 100644
->>>> index 0000000..c4b2e39
->>>> --- /dev/null
->>>> +++ b/drivers/irqchip/irq-nuc900.c
->>>> @@ -0,0 +1,150 @@
->>>> +/*
->>>> + * Copyright 2016 Wan Zongshun <mcuos.com@gmail.com>
->>>> + *
->>>> + * The code contained herein is licensed under the GNU General Pu=
-blic
->>>> + * License. You may obtain a copy of the GNU General Public Licen=
-se
->>>> + * Version 2 or later at the following locations:
->>>> + *
->>>> + * http://www.opensource.org/licenses/gpl-license.html
->>>> + * http://www.gnu.org/copyleft/gpl.html
->>>> + */
->>>> +
->>>> +#include <linux/module.h>
->>>> +#include <linux/init.h>
->>>> +#include <linux/irq.h>
->>>> +#include <linux/irqchip.h>
->>>> +#include <linux/irqdomain.h>
->>>> +#include <linux/io.h>
->>>> +#include <linux/ioport.h>
->>>> +#include <linux/of_address.h>
->>>> +#include <linux/of_irq.h>
->>>> +
->>>> +#include <asm/exception.h>
->>>> +#include <asm/hardirq.h>
->>>> +
->>>> +#define	REG_AIC_SCR1	0x00
->>>> +#define	REG_AIC_SCR2	0x04
->>>> +#define	REG_AIC_SCR3	0x08
->>>> +#define	REG_AIC_SCR4	0x0C
->>>> +#define	REG_AIC_SCR5	0x10
->>>> +#define	REG_AIC_SCR6	0x14
->>>> +#define	REG_AIC_SCR7	0x18
->>>> +#define	REG_AIC_SCR8	0x1C
->>>> +#define	REG_AIC_SCR9	0x20
->>>> +#define	REG_AIC_SCR10	0x24
->>>> +#define	REG_AIC_SCR11	0x28
->>>> +#define	REG_AIC_SCR12	0x2C
->>>> +#define	REG_AIC_SCR13	0x30
->>>> +#define	REG_AIC_SCR14	0x34
->>>> +#define	REG_AIC_SCR15	0x38
->>>> +#define	REG_AIC_IRSR	0x100
->>>> +#define	REG_AIC_IRSRH	0x104
->>>> +#define	REG_AIC_IASR	0x108
->>>> +#define	REG_AIC_IASRH	0x10C
->>>> +#define	REG_AIC_ISR	0x110
->>>> +#define	REG_AIC_ISRH	0x114
->>>> +#define	REG_AIC_IPER	0x118
->>>> +#define	REG_AIC_ISNR	0x120
->>>> +#define	REG_AIC_OISR	0x124
->>>> +#define	REG_AIC_IMR	0x128
->>>> +#define	REG_AIC_IMRH	0x12C
->>>> +#define	REG_AIC_MECR	0x130
->>>> +#define	REG_AIC_MECRH	0x134
->>>> +#define	REG_AIC_MDCR	0x138
->>>> +#define	REG_AIC_MDCRH	0x13C
->>>> +#define	REG_AIC_SSCR	0x140
->>>> +#define	REG_AIC_SSCRH	0x144
->>>> +#define	REG_AIC_SCCR	0x148
->>>> +#define	REG_AIC_SCCRH	0x14C
->>>> +#define	REG_AIC_EOSCR	0x150
->>>
->>> Please remove unused defines.
->>
->> Okay.
->>
->>>
->>>> +
->>>> +static void __iomem *aic_base;
->>>> +static struct irq_domain *aic_domain;
->>>> +
->>>> +static void nuc900_irq_mask(struct irq_data *d)
->>>> +{
->>>> +	if (d->irq < 32)
->>>> +		writel(1 << (d->irq), aic_base + REG_AIC_MDCR);
->>>> +	else
->>>> +		writel(1 << (d->irq - 32), aic_base + REG_AIC_MDCRH);
->>>> +}
->>>> +
->>>> +static void nuc900_irq_ack(struct irq_data *d)
->>>> +{
->>>> +	writel(0x01, aic_base + REG_AIC_EOSCR);
->>>> +}
->>>> +
->>>> +static void nuc900_irq_unmask(struct irq_data *d)
->>>> +{
->>>> +	if (d->irq < 32)
->>>> +		writel(1 << (d->irq), aic_base + REG_AIC_MECR);
->>>> +	else
->>>> +		writel(1 << (d->irq - 32), aic_base + REG_AIC_MECRH);
->>>> +}
->>>> +
->>>> +static struct irq_chip nuc900_irq_chip =3D {
->>>> +	.irq_ack	=3D nuc900_irq_ack,
->>>> +	.irq_mask	=3D nuc900_irq_mask,
->>>> +	.irq_unmask	=3D nuc900_irq_unmask,
->>>> +};
->>>> +
->>>> +void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
->>>> +{
->>>> +	u32 hwirq;
->>>> +
->>>> +	hwirq =3D readl(aic_base + REG_AIC_IPER);
->>>> +	hwirq =3D readl(aic_base + REG_AIC_ISNR);
->>>> +	if (!hwirq)
->>>> +		writel(0x01, aic_base + REG_AIC_EOSCR);
->>>
->>> Could you explain what's going on here?
->>
->> AIC_IPER, When the AIC generates the interrupt, VECTOR represents
->> the interrupt channel number that is active, enabled, and has the
->> highest priority.
->>
->> The value of VECTOR is copied to the register AIC_ISNR thereafter by
->> the AIC. This register was restored a value 0 after it was read by
->> the
->> interrupt handler.
->
-> So, iiuc, the first readl() of AIC_IPER kicks the AIC to copy the val=
-ue
-> of VECTOR into AIC_ISNR?  Then we can read it?
->
-> If so, please add a comment above the code explaining that.
->
->> So I must read two registers for one irq number, after read IPER,
->> the ISNR(bit0:5) will be updated. ISNR value has no need do offset,
->> it is better than read IPER(bit2:7).
->
-> But you aren't using the value from the first readl(...AIC_IPER)?  Yo=
-u
-> overwrite hwirq with the value from the second readl(...AIC_ISNR)
-> ...
->
-> The first part of your explaination makes sense, but this part isn't
-> clear to me.
+I think that you better to use the devm_clk_get() instead of of_clk_get_by_name()
+because you don't need to handle the clk_put() when error happen and remove the this driver.
 
-Actually, I have two choice to implement this function:
+	priv->codec_mclk1 = devm_clk_get(dev, "mclk1");
 
-option1:
+> +
+> +	/* mclk2 is optional */
+> +	priv->codec_mclk2 = of_clk_get_by_name(codec_dai_node, "mclk2");
+> +	if (IS_ERR(priv->codec_mclk2))
+> +		dev_info(dev, "Not using mclk2 clock\n");
 
-void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
-{
-	u32 hwirq;
+	priv->codec_mclk2 = devm_clk_get(dev, "mclk2");
 
-	(void)readl(aic_base + REG_AIC_IPER);
-	hwirq =3D readl(aic_base + REG_AIC_ISNR);
+> +
+> +	ret = devm_snd_soc_register_component(dev, &tm2_component,
+> +				tm2_ext_dai, ARRAY_SIZE(tm2_ext_dai));
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to register component: %d\n", ret);
+> +		goto err_put_mclk;
+> +	}
+> +
+> +	ret = devm_snd_soc_register_card(dev, card);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to register card: %d\n", ret);
+> +		goto err_put_mclk;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_put_mclk:
+> +	clk_put(priv->codec_mclk1);
+> +	if (!IS_ERR(priv->codec_mclk2))
+> +		clk_put(priv->codec_mclk2);
 
-	handle_IRQ((irq_find_mapping(aic_domain, hwirq)), regs);
-}
+If using the devm_clk_get(), clk_put() is not needed
 
-option2:
+> +err_put_codec_dai:
+> +	of_node_put(codec_dai_node);
+> +err_put_cpu_dai:
+> +	of_node_put(cpu_dai_node);
+> +err_put_amp:
+> +	of_node_put(card->aux_dev[0].codec_of_node);
+> +	return ret;
+> +}
+> +
+> +static int tm2_remove(struct platform_device *pdev)
+> +{
+> +	struct snd_soc_card *card = &tm2_card;
+> +	struct tm2_machine_priv *priv = snd_soc_card_get_drvdata(card);
+> +
+> +	clk_put(priv->codec_mclk1);
+> +	if (!IS_ERR(priv->codec_mclk2))
+> +		clk_put(priv->codec_mclk2);
 
-void __exception_irq_entry aic_handle_irq(struct pt_regs *regs)
-{
-	u32 hwirq;
+ditto.
 
-	hwirq =3D readl(aic_base + REG_AIC_IPER);
-	hwirq <<=3D 2;
+> +
+> +	of_node_put(card->dai_link[0].codec_of_node);
+> +	of_node_put(card->dai_link[0].cpu_of_node);
+> +	of_node_put(card->aux_dev[0].codec_of_node);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id tm2_of_match[] = {
+> +	{ .compatible = "samsung,tm2-audio" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, tm2_of_match);
+> +
+> +static struct platform_driver tm2_driver = {
+> +	.driver = {
+> +		.name		= "tm2-audio",
+> +		.pm		= &snd_soc_pm_ops,
+> +		.of_match_table	= tm2_of_match,
+> +	},
+> +	.probe	= tm2_probe,
+> +	.remove	= tm2_remove,
+> +};
+> +
+> +module_platform_driver(tm2_driver);
+> +
+> +MODULE_AUTHOR("Inha Song <ideal.song@samsung.com>");
+> +MODULE_DESCRIPTION("ALSA SoC Exynos TM2 Audio Support");
+> +MODULE_LICENSE("GPL v2");
+> 
 
-	handle_IRQ((irq_find_mapping(aic_domain, hwirq)), regs);
-}
-
-Though the option2 do shift for hwirq, but it seems better than do io=20
-operation by readl,so I prefer to option2, agree?
-
->
->
->> =E2=80=9Cwritel(0x01, aic_base + REG_AIC_EOSCR);=E2=80=9D=E3=80=80se=
-ems not necessary here,
->> since irqchip has the ack interface. I will remove it.
->
-> Ok, thanks.
->
->> This AIC_EOSCR register is used by the interrupt service routine to
->> indicate that it is completely served. Thus, the
->> interrupt handler can write any value to this register to indicate
->> the end of its interrupt service.
->
-> A short comment in the ack routine would be helpful.
->
->
->>>> +IRQCHIP_DECLARE(nuc900, "nuvoton,nuc900-aic", aic_of_init);
->>>
->>> afaict, there is no 'nuc900', that's a family.  If so, this compati=
-ble
->>> needs to be 'nuvoton,nuc970-aic'.
->>>
->>
->> IRQCHIP_DECLARE(nuvoton, "nuvoton,nuc900-aic", aic_of_init);, change
->> nuc900 to nuvoton, ok?
->
-> No, I was only talking about the second argument.  The compatible
-> string.  For devicetree, it needs to refer to a specific model number=
-=2E
-> I suspect 'nuc900' is equivalent to saying 'nuc9xx'.  Meaning it refe=
-rs
-> to a family of devices.  The compatible string needs to refer
-> specifically to the first model that the binding is compatible with. =
- In
-> this case, I presume that would be 'nuvoton,nuc970-aic'.
->
-> thx,
->
-> Jason.
->
->
+Thanks,
+Chanwoo Choi
