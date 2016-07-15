@@ -1,142 +1,72 @@
-From: Tai Nguyen <ttnguyen@apm.com>
-Subject: [PATCH v10 2/4] Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
-Date: Fri, 15 Jul 2016 10:38:03 -0700
-Message-ID: <1468604285-15090-3-git-send-email-ttnguyen@apm.com>
-References: <1468604285-15090-1-git-send-email-ttnguyen@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468604285-15090-1-git-send-email-ttnguyen@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com, joe@perches.com, paul.gortmaker@windriver.com
-Cc: dhdang@apm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, Tai Nguyen <ttnguyen@apm.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: realview: Fix PBX-A9 cache description
+Date: Fri, 15 Jul 2016 18:45:32 +0100
+Message-ID: <5789213C.4060306@arm.com>
+References: <dbf8749c4af9aa5ffb85e961b7ae09ffeefa7f2a.1468583959.git.robin.murphy@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <dbf8749c4af9aa5ffb85e961b7ae09ffeefa7f2a.1468583959.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Driver providing perf backend for the SoC-wide PMU hardware found
-in APM X-Gene SoCs.
+On 15/07/16 13:19, Robin Murphy wrote:
+> Clearly QEMU is very permissive in how its PL310 model may be set up,
+> but the real hardware turns out to be far more particular about things
+> actually being correct. Fix up the DT description so that the real
+> thing actually boots:
+> 
+> - The arm,data-latency and arm,tag-latency properties need 3 cells to
+>   be valid, otherwise we end up retaining the default 8-cycle latencies
+>   which leads pretty quickly to lockup.
+> - The arm,dirty-latency property is only relevant to L210/L220, so get
+>   rid of it.
+> - The cache geometry override also leads to lockup and/or general
+>   misbehaviour. Irritatingly, the manual doesn't state the actual PL310
+>   configuration, but based on the boardfile code and poking registers
+>   from the Boot Monitor, it would seem to be 8 sets of 16KB ways.
 
-Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/perf/apm-xgene-pmu.txt     | 112 +++++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+FWIW, after an afternoon of bothering people I've tracked down the
+original spec for the test chip, and can confirm that the configuration
+is indeed 8x16KB with parity disabled.
 
-diff --git a/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-new file mode 100644
-index 0000000..afb11cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
-@@ -0,0 +1,112 @@
-+* APM X-Gene SoC PMU bindings
-+
-+This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
-+The following PMU devices are supported:
-+
-+  L3C			- L3 cache controller
-+  IOB			- IO bridge
-+  MCB			- Memory controller bridge
-+  MC			- Memory controller
-+
-+The following section describes the SoC PMU DT node binding.
-+
-+Required properties:
-+- compatible		: Shall be "apm,xgene-pmu" for revision 1 or
-+                          "apm,xgene-pmu-v2" for revision 2.
-+- regmap-csw		: Regmap of the CPU switch fabric (CSW) resource.
-+- regmap-mcba		: Regmap of the MCB-A (memory bridge) resource.
-+- regmap-mcbb		: Regmap of the MCB-B (memory bridge) resource.
-+- reg			: First resource shall be the CPU bus PMU resource.
-+- interrupts            : Interrupt-specifier for PMU IRQ.
-+
-+Required properties for L3C subnode:
-+- compatible		: Shall be "apm,xgene-pmu-l3c".
-+- reg			: First resource shall be the L3C PMU resource.
-+
-+Required properties for IOB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-iob".
-+- reg			: First resource shall be the IOB PMU resource.
-+
-+Required properties for MCB subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mcb".
-+- reg			: First resource shall be the MCB PMU resource.
-+- enable-bit-index	: The bit indicates if the according MCB is enabled.
-+
-+Required properties for MC subnode:
-+- compatible		: Shall be "apm,xgene-pmu-mc".
-+- reg			: First resource shall be the MC PMU resource.
-+- enable-bit-index	: The bit indicates if the according MC is enabled.
-+
-+Example:
-+	csw: csw@7e200000 {
-+		compatible = "apm,xgene-csw", "syscon";
-+		reg = <0x0 0x7e200000 0x0 0x1000>;
-+	};
-+
-+	mcba: mcba@7e700000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e700000 0x0 0x1000>;
-+	};
-+
-+	mcbb: mcbb@7e720000 {
-+		compatible = "apm,xgene-mcb", "syscon";
-+		reg = <0x0 0x7e720000 0x0 0x1000>;
-+	};
-+
-+	pmu: pmu@78810000 {
-+		compatible = "apm,xgene-pmu-v2";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		regmap-csw = <&csw>;
-+		regmap-mcba = <&mcba>;
-+		regmap-mcbb = <&mcbb>;
-+		reg = <0x0 0x78810000 0x0 0x1000>;
-+		interrupts = <0x0 0x22 0x4>;
-+
-+		pmul3c@7e610000 {
-+			compatible = "apm,xgene-pmu-l3c";
-+			reg = <0x0 0x7e610000 0x0 0x1000>;
-+		};
-+
-+		pmuiob@7e940000 {
-+			compatible = "apm,xgene-pmu-iob";
-+			reg = <0x0 0x7e940000 0x0 0x1000>;
-+		};
-+
-+		pmucmcb@7e710000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e710000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmcb@7e730000 {
-+			compatible = "apm,xgene-pmu-mcb";
-+			reg = <0x0 0x7e730000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e810000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e810000 0x0 0x1000>;
-+			enable-bit-index = <0>;
-+		};
-+
-+		pmucmc@7e850000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e850000 0x0 0x1000>;
-+			enable-bit-index = <1>;
-+		};
-+
-+		pmucmc@7e890000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e890000 0x0 0x1000>;
-+			enable-bit-index = <2>;
-+		};
-+
-+		pmucmc@7e8d0000 {
-+			compatible = "apm,xgene-pmu-mc";
-+			reg = <0x0 0x7e8d0000 0x0 0x1000>;
-+			enable-bit-index = <3>;
-+		};
-+	};
--- 
-1.9.1
+Robin.
+
+> With that, we can successfully boot to enjoy the fun of mismatched FPUs...
+> 
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/arm-realview-pbx-a9.dts | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/arm-realview-pbx-a9.dts b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
+> index db808f92dd79..90d00b407f85 100644
+> --- a/arch/arm/boot/dts/arm-realview-pbx-a9.dts
+> +++ b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
+> @@ -70,13 +70,12 @@
+>  		 * associativity as these may be erroneously set
+>  		 * up by boot loader(s).
+>  		 */
+> -		cache-size = <1048576>; // 1MB
+> -		cache-sets = <4096>;
+> +		cache-size = <131072>; // 128KB
+> +		cache-sets = <512>;
+>  		cache-line-size = <32>;
+>  		arm,parity-disable;
+> -		arm,tag-latency = <1>;
+> -		arm,data-latency = <1 1>;
+> -		arm,dirty-latency = <1>;
+> +		arm,tag-latency = <1 1 1>;
+> +		arm,data-latency = <1 1 1>;
+>  	};
+>  
+>  	scu: scu@1f000000 {
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
