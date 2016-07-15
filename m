@@ -1,55 +1,106 @@
-From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] tpm: devicetree: document properties
-	for cr50
-Date: Fri, 15 Jul 2016 10:31:07 -0700
-Message-ID: <20160715173107.GD109276@apronin>
-References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
-	<1468549218-19215-2-git-send-email-apronin@chromium.org>
-	<CABXOdTcVcZ10c6uShN2AXUZfOuK=FESeo73Assi0sziMZJ_+Fw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CABXOdTcVcZ10c6uShN2AXUZfOuK=FESeo73Assi0sziMZJ_+Fw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Tai Nguyen <ttnguyen@apm.com>
+Subject: [PATCH v10 0/4] perf: Add APM X-Gene SoC Performance Monitoring Unit driver
+Date: Fri, 15 Jul 2016 10:38:01 -0700
+Message-ID: <1468604285-15090-1-git-send-email-ttnguyen@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com, joe@perches.com, paul.gortmaker@windriver.com
+Cc: dhdang@apm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, Tai Nguyen <ttnguyen@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2016 at 09:05:53PM -0700, Guenter Roeck wrote:
-> On Thu, Jul 14, 2016 at 7:20 PM, Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> > +
-> > +Required properties:
-> > +- compatible: Should be "google,cr50_spi".
-> 
-> google,cr50, maybe ? The "_spi" seems redundant.
->
+In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
+are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
+memory controller bridges and memory. These PMU devices are loosely
+architected to follow the same model as the PMU for ARM cores.
 
-I believe "_spi" is warranted. It's the driver that handles the SPI
-interface for Cr50 specifically.
-But if the same firmware ever talks through a different interface (say,
-I2C), this driver will not be compatible.
+Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
+---
 
-> Also, I agree with comments from others - the term cr50 really needs
-> an explanation (Google thinks that it is a motor bike, a scanner, or a
-> coffee roaster).
-> 
+v10:
+ * Use devm_kasprintf instead of kasprintf which may cause memory leaked.
 
-Yes, will add a better description of what it is. My original one was
-too brief and imprecise at the same time.
+v9:
+ * Add commmit messages to the patches.
 
+v8:
+ * MAINTAINERS: Fix section header in one line
+ * Change module_platform_driver to builtin_platform_driver
+   Get rid of the use of module.h and its no-ops macros
 
-------------------------------------------------------------------------------
-What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
-patterns at an interface-level. Reveals which users, apps, and protocols are 
-consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
-J-Flow, sFlow and other flows. Make informed decisions using capacity planning
-reports.http://sdm.link/zohodev2dev
+v7:
+ * Remove const from the definition of xgene_pmu_cpumask_attrs
+ * Validate the event group as a whole, disallow creating groups containing
+   mixed PMUs
+ * Implement pmu::pmu_enable() and pmu::pmu_disable() to let the perf core
+   starts and stops the counters properly
+ * Using list_for_each_entry() instead of list_for_each_entry_safe() to iterate
+   over the list of pmu sub-devices
+ * Fix resource leak issue in case of registering perf devices fails
+ * Pass on returned error if acpi_walk_namespace() fails
+ * Remove unused xgene_pmu_data::data
+ * Move enable interrupt after probing pmu sub-devices
+
+v6:
+ * Add IRQF_NOBALANCING and IRQF_NO_THREAD flags to the PMU overflow interrupt
+   Exclude the interrupt from irq balancing and prevent the context from being
+   threaded
+
+v5:
+ * Remove hw_perf_event::extra_reg field use
+   Change GET_CNTR to use hw_perf_event::idx
+   Change GET_AGENTID/GET_AGEN1ID to use hw_perf_event::config_base
+ * Use compound literal structure defines for format and event attribute groups
+   to statically define them at compile time
+ * Bitwise invert the meaning of agent mask in config1 field.
+ * Fix update pmu_counter_event pointer before starting event
+ * Add reset of pmu_dev->pmu_counter_event to NULL in xgene_perf_del
+ * Use exactly half of max period to fix the overflow counter issue and account
+   for the possiblity of extreme interrupt latency
+ * Use spin lock instead of interrupt masking in overflow interrupt handler
+ * Remove unnecessary update of hw_perf_event::period_left
+
+v4:
+ * Alphabetically sorting header files
+ * Remove dynamic allocation for PMU format and event attribute groups
+   Create shared constant attribute groups per each class
+ * Remove perf_sample_data as this perf driver doesn't support sampling
+ * Consistently use the PCP_PMU_V{1,2} defines
+ * Set affinity to make sure the overflow interrupt is handled by the
+   same assigned CPU
+
+v3:
+ * Remove index property use in PMU device sub nodes
+
+v2:
+ * Use bitmask for event asignned counter mask pmu_dev->cntr_assign_mask
+ * Remove unnecessary spinlocks in perf add/del operations
+ * Remove unnecessary condition checks
+ * Enforce CPU assignment to one CPU for perf operarations
+ * Set the task_ctx_nr to perf_invalid_context for perf driver
+ * Remove irrelevant pt_rregs
+ * Change perf sysfs attributes to be fixed instead of dynamic
+ * Fix checking for an ACPI companion device instead of EFI enable
+ * Add documentation for config/config1 fields format and perf tool example
+
+---
+
+Tai Nguyen (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC PMU driver
+  Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
+  perf: xgene: Add APM X-Gene SoC Performance Monitoring Unit driver
+  arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
+
+ .../devicetree/bindings/perf/apm-xgene-pmu.txt     |  112 ++
+ Documentation/perf/xgene-pmu.txt                   |   48 +
+ MAINTAINERS                                        |    7 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   58 +
+ drivers/perf/Kconfig                               |    7 +
+ drivers/perf/Makefile                              |    1 +
+ drivers/perf/xgene_pmu.c                           | 1398 ++++++++++++++++++++
+ 7 files changed, 1631 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+ create mode 100644 Documentation/perf/xgene-pmu.txt
+ create mode 100644 drivers/perf/xgene_pmu.c
+
+-- 
+1.9.1
