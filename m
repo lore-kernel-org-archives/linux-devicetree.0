@@ -1,59 +1,31 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: fix erroneous address in dts
-Date: Fri, 15 Jul 2016 10:01:15 -0600
-Message-ID: <578908CB.7040802@wwwdotorg.org>
-References: <1468514937-23250-1-git-send-email-ralf@ramses-pyramidenbau.de>
- <20160714220218.GB4205@mithrandir.ba.sec>
- <8a8ccb29-ba73-f29f-2b57-5c1d91e13bf7@ramses-pyramidenbau.de>
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: iommu/rockchip: Fix bugs and enable on ARM64
+Date: Fri, 15 Jul 2016 18:16:51 +0200
+Message-ID: <20160715161651.GS12639@8bytes.org>
+References: <1466734413-7453-1-git-send-email-zhengsq@rock-chips.com>
+ <20160627125751.GN11432@8bytes.org>
+ <577EFB86.1060502@rock-chips.com>
+ <575f6cd7-6e03-e701-78ed-ea2fe9f7573c@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8a8ccb29-ba73-f29f-2b57-5c1d91e13bf7-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <575f6cd7-6e03-e701-78ed-ea2fe9f7573c@suse.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <mbrugger@suse.com>
+Cc: Mark yao <mark.yao@rock-chips.com>, Shunqian Zheng <zhengsq@rock-chips.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, linux-rockchip@lists.infradead.org, airlied@linux.ie, linux@armlinux.org.uk, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, tfiga@google.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, xxm@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2016 03:37 AM, Ralf Ramsauer wrote:
-> On 07/15/2016 12:02 AM, Thierry Reding wrote:
->> On Thu, Jul 14, 2016 at 06:48:57PM +0200, Ralf Ramsauer wrote:
->>> c90bb7b enabled the high speed UARTs of the Jetson TK1. The address
->>> specification inside the dts is wrong. Fix it and use the correct
->>> address.
->>>
->>> Fixes: c90bb7b9b9 ("ARM: tegra: Add high speed UARTs to Jetson TK1 device tree")
->>> Signed-off-by: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
->>> ---
->>>   arch/arm/boot/dts/tegra124-jetson-tk1.dts | 4 ++--
->>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> These addresses are correct. The 0, prefix was dropped from the unit
->> address in commit b5896f67ab3c ("ARM: tegra: Remove commas from unit
->> addresses on Tegra124").
->>
->> What's the problem that you're seeing? What's not working for you?
- >
-> I cannot find b5896f67ab3c neither in swarren's tree nor in linux
-> upstream. But there's d0bc5aaf890 in swarren's linux-tegra tree that
-> matches your described changes and was committed on 1st of July. But
-> this patch is not upstream yet, while the other patch is.
+On Fri, Jul 15, 2016 at 05:32:02PM +0200, Matthias Brugger wrote:
+> >The drm rockchip patches are dependent on iommu/rockchip patches, can
+> >you also apply these patches together? So that can avoid compile problem.
+> >
+> 
+> While at it. I don't see patch 8 (iommu/Kconfig) in linux-next.
+> I suppose you forgot to pick that one.
 
-The fix is in linux-next, and will be in mainline soon I expect.
+I picked it up first, but it causes compile errors, so I removed it for
+now.
 
-My github linux-tegra.git isn't relevant since it's just my own personal 
-dev branch, but for reference, the commit is there since it's based on 
-linux-next.
 
-> Have a look at mainline tegra124-jetson-tk1.dts, there the addresses are
-> erroneous as they still use the 0, annotation. And I just realised, that
-> somehow, upstream patch c90bb7b slightly differs from my initial patch
-> [1] on the mailing list.
-
-Your patch should probably be CC: stable so that existing kernel 
-versions get fixed. That said, I'd argue that since the original patch 
-never actually had any effect since it applied to the wrong node, the 
-best fix for stable kernels is simply to revert it rather than fixing 
-it, to avoid the potential for behaviour changes and regressions. 
-Starting with kernel 4.8 (I think), that patch will begin to have actual 
-effect.
+	Joerg
