@@ -1,151 +1,111 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: da9210: addition of device tree support" to the regulator tree
-Date: Fri, 15 Jul 2016 12:56:50 +0100
-Message-ID: <E1bO1je-0006uV-Db@debutante>
-References: <20160715093617.498003FBD7@swsrvapps-01.diasemi.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160715093617.498003FBD7-GMeof6ifPvyPZR/jWPPeGKXmvbD0mHlG@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH 1/2] Bluetooth: Add LED triggers for HCI frames tx and rx
+Date: Fri, 15 Jul 2016 20:08:43 +0800
+Message-ID: <CAFGCpxxbmgmbadE5oGctOzu33hhoiOf29DeEqZWCFYAiVBFLdA@mail.gmail.com>
+References: <1466657923-5776-1-git-send-email-guodong.xu@linaro.org>
+ <D2545F6D-7100-4B59-A19D-7CF878902BAA@holtmann.org> <CAFGCpxwuOH83hdPc-c0DV5A_cKMp-0rjxg+3tMwOPTukHGd6vA@mail.gmail.com>
+ <3C106ED5-5F2C-4EAC-8E60-D915D2AD027A@holtmann.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <3C106ED5-5F2C-4EAC-8E60-D915D2AD027A@holtmann.org>
+Sender: netdev-owner@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, "David S. Miller" <davem@davemloft.net>, Xu Wei <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 14 July 2016 at 17:42, Marcel Holtmann <marcel@holtmann.org> wrote:
+> Hi Guodong,
+>
+>>>> Two LED triggers are defined: tx_led and rx_led. Upon frames
+>>>> available in HCI core layer, for tx or for rx, the combined LED
+>>>> can blink.
+>>>>
+>>>> Verified on HiKey, 96boards. It uses hi6220 SoC and TI WL1835 combo
+>>>> chip.
+>>>>
+>>>> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+>>>> ---
+>>>> include/net/bluetooth/hci_core.h |  1 +
+>>>> net/bluetooth/hci_core.c         |  3 +++
+>>>> net/bluetooth/leds.c             | 15 +++++++++++++++
+>>>> net/bluetooth/leds.h             |  2 ++
+>>>> 4 files changed, 21 insertions(+)
+>>>>
+>>>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+>>>> index dc71473..37b8dd9 100644
+>>>> --- a/include/net/bluetooth/hci_core.h
+>>>> +++ b/include/net/bluetooth/hci_core.h
+>>>> @@ -398,6 +398,7 @@ struct hci_dev {
+>>>>      bdaddr_t                rpa;
+>>>>
+>>>>      struct led_trigger      *power_led;
+>>>> +     struct led_trigger      *tx_led, *rx_led;
+>>>>
+>>>>      int (*open)(struct hci_dev *hdev);
+>>>>      int (*close)(struct hci_dev *hdev);
+>>>> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+>>>> index 45a9fc6..c6e1210 100644
+>>>> --- a/net/bluetooth/hci_core.c
+>>>> +++ b/net/bluetooth/hci_core.c
+>>>> @@ -3248,6 +3248,7 @@ int hci_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
+>>>>      skb_queue_tail(&hdev->rx_q, skb);
+>>>>      queue_work(hdev->workqueue, &hdev->rx_work);
+>>>>
+>>>> +     hci_leds_blink_oneshot(hdev->rx_led);
+>>>>      return 0;
+>>>> }
+>>>> EXPORT_SYMBOL(hci_recv_frame);
+>>>> @@ -3325,6 +3326,8 @@ static void hci_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
+>>>>              BT_ERR("%s sending frame failed (%d)", hdev->name, err);
+>>>>              kfree_skb(skb);
+>>>>      }
+>>>> +
+>>>> +     hci_leds_blink_oneshot(hdev->tx_led);
+>>>> }
+>>>
+>>> so I am not convinced that this is the right way of doing TX/RX activity leds. This would have them purely based on HCI traffic and this would include control frames.
+>>>
+>>
+>> Hi, Marcel
+>>
+>> +       if (hci_skb_pkt_type(skb) == HCI_ACLDATA_PKT ||
+>> +           hci_skb_pkt_type(skb) == HCI_SCODATA_PKT)
+>> +               hci_leds_blink_oneshot(hdev->rx_led);
+>> +
+>>
+>> By adding pkt_type checks, we can limit LED blinks only at ACL/SCO
+>> DATA_PKT. Similar checks can be added for tx_led too.
+>>
+>> Does this look good to you? If you agree, I can send v2 to include this change.
+>
+> we are not going to keep comparing packet types over and over again. The code is already doing that. So functions like hci_sched_acl and hci_acldata_packet are already present in the code.
+>
+>>> I think that we want activity leds for actual radio activity. Meaning that when we have an active connection and ACL packets are exchanged or when we are scanning.
+>>>
+>>
+>> Radio is controlled in Bluetooth module side, not Host. So I'm afraid
+>> actual radio activity cannot be captured in its exact form in Host
+>> side. The purpose of this patch is not for radio, it is for
+>> incoming/outgoing data. For example, it can give user a blinking
+>> indicator on RX frames after a Bluetooth mouse is connected. Another
+>> example, it can blink at bluetooth streamed audio (TX).
+>
+> So radio activity is caused by RX/TX meaning ACL/SCO packets for sure. There is also other radio activity caused by scanning, inquiry, create connection etc. And the question is if this should be there as well.
+>
 
-   regulator: da9210: addition of device tree support
+I wouldn't suggest to cover scanning, inquiry, etc. Scanning, for
+example, Host sends a scan command to Bluetooth module (in an
+asynchronous way). After a given interval, Host receives inquiry
+results. Over this period, at host side, we don't know what kind of
+radio activity is happening in BT module side.
 
-has been applied to the regulator tree at
+Let's say this patch provide LED indicators to only data packets
+activity (ACL and SCO). Can we?
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+-Guodong
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 2d0cf04ce166581c617f8943a116587a730f40b6 Mon Sep 17 00:00:00 2001
-From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Date: Fri, 15 Jul 2016 10:29:41 +0100
-Subject: [PATCH] regulator: da9210: addition of device tree support
-
-Addition of device tree support for DA9210.
-Two files are modified, the driver source file and the binding document.
-
-Updates for the regulator source file include an .of_match_table entry and
-node match checking in the probe() function for a compatible da9210 string.
-
-Minor binding documentation changes have been made to the title and the
-example.
-
-Tested-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/regulator/da9210.txt        | 12 ++++++++----
- drivers/regulator/da9210-regulator.c                | 21 +++++++++++++++++++--
- 2 files changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/da9210.txt b/Documentation/devicetree/bindings/regulator/da9210.txt
-index 7aa9b1fa6b21..58065ca9e3b4 100644
---- a/Documentation/devicetree/bindings/regulator/da9210.txt
-+++ b/Documentation/devicetree/bindings/regulator/da9210.txt
-@@ -1,4 +1,4 @@
--* Dialog Semiconductor DA9210 Voltage Regulator
-+* Dialog Semiconductor DA9210 Multi-phase 12A DCDC BUCK Converter
- 
- Required properties:
- 
-@@ -18,8 +18,12 @@ Example:
- 		compatible = "dlg,da9210";
- 		reg = <0x68>;
- 
--		regulator-min-microvolt = <900000>;
--		regulator-max-microvolt = <1000000>;
-+		interrupt-parent = <...>;
-+		interrupts = <...>;
-+
-+		regulator-min-microvolt = <300000>;
-+		regulator-max-microvolt = <1570000>;
-+		regulator-min-microamp = <1600000>;
-+		regulator-max-microamp = <4600000>;
- 		regulator-boot-on;
--		regulator-always-on;
- 	};
-diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-regulator.c
-index 01c0e3709b66..d0496d6b0934 100644
---- a/drivers/regulator/da9210-regulator.c
-+++ b/drivers/regulator/da9210-regulator.c
-@@ -21,12 +21,11 @@
- #include <linux/err.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
--#include <linux/slab.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
-+#include <linux/of_device.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/regmap.h>
- 
-@@ -179,6 +178,13 @@ error_i2c:
- /*
-  * I2C driver interface functions
-  */
-+
-+static const struct of_device_id da9210_dt_ids[] = {
-+	{ .compatible = "dlg,da9210", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, da9210_dt_ids);
-+
- static int da9210_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
-@@ -188,6 +194,16 @@ static int da9210_i2c_probe(struct i2c_client *i2c,
- 	struct regulator_dev *rdev = NULL;
- 	struct regulator_config config = { };
- 	int error;
-+	const struct of_device_id *match;
-+
-+	if (i2c->dev.of_node && !pdata) {
-+		match = of_match_device(of_match_ptr(da9210_dt_ids),
-+						&i2c->dev);
-+		if (!match) {
-+			dev_err(&i2c->dev, "Error: No device match found\n");
-+			return -ENODEV;
-+		}
-+	}
- 
- 	chip = devm_kzalloc(&i2c->dev, sizeof(struct da9210), GFP_KERNEL);
- 	if (!chip)
-@@ -264,6 +280,7 @@ MODULE_DEVICE_TABLE(i2c, da9210_i2c_id);
- static struct i2c_driver da9210_regulator_driver = {
- 	.driver = {
- 		.name = "da9210",
-+		.of_match_table = of_match_ptr(da9210_dt_ids),
- 	},
- 	.probe = da9210_i2c_probe,
- 	.id_table = da9210_i2c_id,
--- 
-2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regards
+>
+> Marcel
+>
