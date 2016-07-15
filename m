@@ -1,56 +1,51 @@
-From: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH 1/1] ARM: dts: sunxi: Add a olinuxino-lime2-emmc
-Date: Fri, 15 Jul 2016 01:39:24 -0700 (PDT)
-Message-ID: <78b34fdb-bb6e-4043-8f5b-93bc551513c7@googlegroups.com>
-References: <1461827998-12192-1-git-send-email-oliver@schinagl.nl>
- <CAGb2v66E2TuN3+tYaAbniV3q67waDZOfqKAW14VJz6xZFomZ=Q@mail.gmail.com>
- <57285162.2000704@schinagl.nl>
- <CAGb2v66r9m7qVW6BszeT2wqs0KyEr4x5ivTJYqu2Fes=R9-Ltw@mail.gmail.com>
- <CANCTEQgjiuQXcaw=3Dr5kUsTPc3nsDQf2odwzs4nHvrkREAqrg@mail.gmail.com>
- <5729F07C.3080308@schinagl.nl>
- <948be370-4401-43cb-862e-d4376755a75d@googlegroups.com>
- <5729F6D6.8030100@schinagl.nl>
- <4704fa35-9a2a-4e6e-8fd4-f4778405c598@googlegroups.com>
- <572A0052.9060202@schinagl.nl>
- <2e745ef7-ddc0-40fc-b867-414543690276@googlegroups.com>
- <572A10B3.2020803@schinagl.nl>
- <4375220a-f939-4ed0-a6d7-2cf887b07509@googlegroups.com>
- <9fe7ebb6-6d74-4b73-b6d6-93b79650cdb6@googlegroups.com>
- <9745a80b-5444-43f7-b772-68684c96c9e5@googlegroups.com>
- <57322C8D.5060806@schinagl.nl>
- <8afbe753-4e74-4b30-ad7e-a12027d28264@googlegroups.com>
- <57323CAB.7090202@schinagl.nl>
- <f959ee5c-fa63-48f6-9819-4822c055b928@googlegroups.com>
- <6bfa242e-c0ce-4dc5-9144-b3f16d8fb75c@googlegroups.com>
- <5732EB34.6070203@schinagl.nl>
-Reply-To: Stefan.Mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 0/3] Add Hisilicon MDIO bus driver and FEMAC driver
+Date: Fri, 15 Jul 2016 10:41:07 +0200
+Message-ID: <20917223.X0KrqBAbxT@wuerfel>
+References: <1468571195-59763-1-git-send-email-lidongpo@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_1514_1626797473.1468571964373"
-Return-path: <linux-sunxi+bncBCSP3JM3Y4JBBPGCUK6AKGQEFYL2M2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <5732EB34.6070203-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: christo.radev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslav.kolev-1W28NRE8jL9DPfheJLI6IQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, tsvetan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1468571195-59763-1-git-send-email-lidongpo@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dongpo Li <lidongpo@hisilicon.com>
+Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, davem@davemloft.net, andrew@lunn.ch, xuejiancheng@hisilicon.com, benjamin.chenhao@hisilicon.com, howell.yang@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_1514_1626797473.1468571964373
-Content-Type: text/plain; charset=UTF-8
+On Friday, July 15, 2016 4:26:32 PM CEST Dongpo Li wrote:
+> This patch set adds a Hisilicon MDIO bus driver and
+> a Fast Ethernet MAC(FEMAC) driver.
+> We also abstract a general interface "of_phy_get_and_connect"
+> for PHY connect. User will have no bother with getting
+> "phy-mode" and "phy-handle" any more.
+> 
+> Changes in v1:
+> - Pass private data structure instead of struct mii_bus
+>   in MDIO read and write operation.
+> - Return the error which devm_clk_get() gives when MDIO probe.
+> - Leave the clock unprepared and disabled on error when MDIO probe.
+> - Abstract a general interface "of_phy_get_and_connect" for PHY connect.
+> - Remove the "_reset" suffixes in "reset-names" property.
+> - Enable tx per-packet interrupt when tx fifo full.
+> - Remove pointless compatible and add SoC specific compatible.
+> - Declare only one clock in MAC dts documentation.
+> - Add standard unit suffixes for "phy-reset-delays".
+> - Use a smaller NAPI poll weight 16 for our Fast Ethernet MAC.
+> - Use phy_ethtool_{get|set}_link_ksettings for ethtool ops.
+> - Use phydev from struct net_device in MAC driver.
+> 
 
-Hi Olliver,
+Looks all good to me now,
 
-Why are you using nRST signal?
-What I mean is this pin is inactive on this eMMC chip. To use the signal 
-byte 162 of ECSD registers should be written.
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-On my board, this "reset" signal causes eMMC not to work.
+One comment on the submission format: we normally count the initial
+submission as "v1", so after [PATCH 0/3], the following version is
+[PATCH v2 0/3], not [PATCH v1 0/3].
 
-Best regards,
-Stefan Mavrodiev
-------=_Part_1514_1626797473.1468571964373--
+No need to re-send for this now, and if you end up having to make
+other changes, just continue with "v2" for this driver, just follow
+the normal scheme if you send another driver.
+
+	Arnd
