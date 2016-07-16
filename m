@@ -1,26 +1,29 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt: bindings: Make compatible optional for mmc function nodes
-Date: Sat, 16 Jul 2016 17:01:00 -0500
-Message-ID: <CAL_JsqJvkFkgOJrku1qS9jfW5TvL6OvJozKGnc8KAytN7q3kEw@mail.gmail.com>
-References: <1468700175-31836-1-git-send-email-hdegoede@redhat.com> <CAL_JsqJX1a=TFgYUT+rAZfhZkFRfwer_VRuSEAJdD=dPYoP62w@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] Documentation: Add sbs-manager device tree node
+ documentation
+Date: Sat, 16 Jul 2016 17:05:02 -0500
+Message-ID: <20160716220502.GA19340@rob-hp-laptop>
+References: <1bIiDr-0004G1-0P>
+ <1468349295-4935-1-git-send-email-karl-heinz@schneider-inet.de>
+ <1468349295-4935-2-git-send-email-karl-heinz@schneider-inet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJX1a=TFgYUT+rAZfhZkFRfwer_VRuSEAJdD=dPYoP62w@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468349295-4935-2-git-send-email-karl-heinz@schneider-inet.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 16, 2016 at 3:38 PM, Rob Herring <robh+dt@kernel.org> wrote:
-> On Sat, Jul 16, 2016 at 3:16 PM, Hans de Goede <hdegoede@redhat.com> wrote:
->> mmc/sdio is an enumerable bus, so usually the os can find out which
->> device is attached without needing a compatible.
->
-> Usually, yes, but always, no. Having it doesn't hurt either, so this
-> is a NAK for me.
+On Tue, Jul 12, 2016 at 08:48:14PM +0200, Karl-Heinz Schneider wrote:
+> This patch adds device tree documentation for the sbs-manager
+> 
+> Reviewed-by: Phil Reid <preid@electromag.com.au>
+> Signed-off-by: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+> ---
+>  .../devicetree/bindings/power/sbs,sbs-manager.txt  | 52 ++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
 
-Having now read the generic ethernet device binding thread, I think
-the reasoning is okay, but please put those reasons here.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
