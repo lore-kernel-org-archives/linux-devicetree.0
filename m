@@ -1,37 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5] wlcore: spi: add wl18xx support
-Date: Sat, 16 Jul 2016 08:42:27 -0500
-Message-ID: <20160716134227.GA327@rob-hp-laptop>
-References: <8665E2433BC68541A24DFFCA87B70F5B36156367@DFRE01.ent.ti.com>
+Subject: Re: [PATCH V2 1/3] dt-bindings: pwm: Add MediaTek display PWM
+ bindings
+Date: Sat, 16 Jul 2016 08:44:04 -0500
+Message-ID: <20160716134404.GA2143@rob-hp-laptop>
+References: <1468225089-28576-1-git-send-email-weiqing.kong@mediatek.com>
+ <1468225089-28576-2-git-send-email-weiqing.kong@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B36156367@DFRE01.ent.ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Reizer, Eyal" <eyalr@ti.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+In-Reply-To: <1468225089-28576-2-git-send-email-weiqing.kong@mediatek.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Weiqing Kong <weiqing.kong@mediatek.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 10, 2016 at 08:32:40AM +0000, Reizer, Eyal wrote:
-> Add support for using with both wl12xx and wl18xx.
+On Mon, Jul 11, 2016 at 04:18:07PM +0800, Weiqing Kong wrote:
+> Add MT2701 compatible string.
 > 
-> - all wilink family needs special init command for entering wspi mode.
->   extra clock cycles should be sent after the spi init command while the
->   cs pin is high.
-> - Use inverted chip select for sending a dummy 4 bytes command that
->   completes the init stage.
-> 
-> Signed-off-by: Eyal Reizer <eyalr@ti.com>
+> Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
 > ---
-> v1->v2:update device tree bindings configuration
-> v2->v3:revert from manual gpio manipulation. use inverted chip select instead
-> for sending the extra init cycle which, achieves the same hardware purpose.
-> update device tree bindings docucmentation accordingly
-> v3->v4: Remove redundant data form binding documentation and fix chip select
-> number mismatch in wl1271 example
-> v4->v5: Rebase on top of head of wireless-drivers-next
+>  Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Please add acks when reposting.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
