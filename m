@@ -1,67 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/5] phy: DT binding documentation for qoriq usb 2.0
- phy
-Date: Fri, 15 Jul 2016 19:35:03 -0500
-Message-ID: <20160716003503.GA6930@rob-hp-laptop>
-References: <1468038656-10345-1-git-send-email-rajesh.bhagat@nxp.com>
- <1468038656-10345-5-git-send-email-rajesh.bhagat@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468038656-10345-5-git-send-email-rajesh.bhagat@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajesh Bhagat <rajesh.bhagat@nxp.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Peter.Chen@nxp.com, gregkh@linuxfoundation.org, kishon@ti.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 5/6] arm64: dts: qcom: msm8916: Add Hexagon SMD edge
+Date: Fri, 15 Jul 2016 17:42:15 -0700
+Message-ID: <1468629736-7644-5-git-send-email-bjorn.andersson@linaro.org>
+References: <1468629736-7644-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468629736-7644-1-git-send-email-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 09, 2016 at 10:00:55AM +0530, Rajesh Bhagat wrote:
-> Describes the qoriq usb 2.0 phy driver binding, currently used
-> for LS1021A and LS1012A platform.
-> 
-> Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
-> ---
-> Changes in v2:
->  - Adds DT binding documentation for qoriq usb 2.0 phy
->  - Changed the compatible string to fsl,qoriq-usb2-phy
-> 
->  .../devicetree/bindings/phy/qoriq-usb2-phy.txt     | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qoriq-usb2-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qoriq-usb2-phy.txt b/Documentation/devicetree/bindings/phy/qoriq-usb2-phy.txt
-> new file mode 100644
-> index 0000000..f043855
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qoriq-usb2-phy.txt
-> @@ -0,0 +1,22 @@
-> +QorIQ SoC USB 2.0 PHY
-> +
-> +Required properties:
-> + - compatible: should be "fsl,qoriq-usb2-phy",
-> +   Wherever applicable, the version of the USB PHY should
-> +   also be mentioned (for eg. fsl,qoriq-usb2-phy-vX.Y).
-> +   where, X = Phy vendor(Legacy = 1, NXP = 2) and Y = PHY version
+Add the Hexagon SMD edge so that SMD channels provided by the Hexagon
+is recognized.
 
-What does Legacy mean? FSL?
+Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Use SoC specific compatible strings.
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 64f85f82602c..85ec5c932975 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -667,6 +667,14 @@
+ 				};
+ 			};
+ 		};
++
++		hexagon {
++			interrupts = <0 25 IRQ_TYPE_EDGE_RISING>;
++			qcom,ipc = <&apcs 8 12>;
++
++			qcom,smd-edge = <0>;
++			qcom,remote-pid = <1>;
++		};
+ 	};
+ 
+ 	hexagon-smp2p {
+-- 
+2.5.0
 
-> + - reg : Address and length of the usb phy control register set.
-> + - phy_type : For multi port host USB controllers, should be one of
-> +   "ulpi", or "serial". For dual role USB controllers, should be
-> +   one of "ulpi", "utmi", "utmi_wide", or "serial".
-> +
-> +The main purpose of this PHY driver is to enable the USB PHY reference clock
-> +gate on the QorIQ SOC for USB2 PHY OR implement errata workaround in
-> +future. Otherwise it is just an NOP PHY driver.
-> +
-> +usbphy0: usbphy@8600000 {
-> +        compatible = "fsl,qoriq-usb2-phy" "fsl,qoriq-usb2-phy-vX.Y";
-
-most specific first.
-
-> +        reg = <0x0 0x8600000 0x0 0x1000>;
-> +        #phy-cells = <0>;
-> +        phy_type = "ulpi";
-> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
