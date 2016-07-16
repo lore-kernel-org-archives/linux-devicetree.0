@@ -1,14 +1,11 @@
-From: Jamie Lentin <jm@lentin.co.uk>
-Subject: [PATCH v0 10/10] arm: orion5x: Configure Netgear WNR854T network port
- LEDs
-Date: Sat, 16 Jul 2016 15:29:08 +0100
-Message-ID: <1468679348-10522-11-git-send-email-jm@lentin.co.uk>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] clk: zynq: avoid retrieving clock names from DT property
+Date: Sun, 17 Jul 2016 00:15:23 +0900
+Message-ID: <1468682123-1434-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,103 +15,109 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, Jamie Lentin <jm@lentin.co.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, soren.brinkmann@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-The default bootloader leaves the LEDs orange, and the 88E1121R driver
-applies it's own inappropriate configuration. Configure as per manual,
-i.e. orange = 100 / green = 1000 / blink = activity
+The "clock-output-names" property is useful for generic clock
+providers such as fixed-clock, fixed-factor-clock, etc.
 
-Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
+On the other hand, it should not be used for really SoC-specific
+clock providers like this one.  As you see in "enum zynq_clk" in
+this driver, it is written as if it already knows all the clock
+names.  Besides, this is instantiated only once, so no clock name
+conflict would happen even if the clock names are hard-coded in the
+driver.
+
+The device tree (arch/arm/boot/dts/zynq-7000.dtsi) will be fixed
+later.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- arch/arm/boot/dts/orion5x-netgear-wnr854t.dts | 45 +++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
 
-diff --git a/arch/arm/boot/dts/orion5x-netgear-wnr854t.dts b/arch/arm/boot/dts/orion5x-netgear-wnr854t.dts
-index a8e89d8..635b396 100644
---- a/arch/arm/boot/dts/orion5x-netgear-wnr854t.dts
-+++ b/arch/arm/boot/dts/orion5x-netgear-wnr854t.dts
-@@ -81,16 +81,19 @@
- 			port@0 {
- 				reg = <0>;
- 				label = "lan3";
-+				phy-handle = <&lan3phy>;
- 			};
+This patch was tested on Zynq Zedboard.
+
+
+ .../devicetree/bindings/clock/zynq-7000.txt         | 13 -------------
+ drivers/clk/zynq/clkc.c                             | 21 ++++++++++++---------
+ 2 files changed, 12 insertions(+), 22 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/zynq-7000.txt b/Documentation/devicetree/bindings/clock/zynq-7000.txt
+index d93746c..562ff3f 100644
+--- a/Documentation/devicetree/bindings/clock/zynq-7000.txt
++++ b/Documentation/devicetree/bindings/clock/zynq-7000.txt
+@@ -17,8 +17,6 @@ Required properties:
+  - reg : SLCR offset and size taken via syscon < 0x100 0x100 >
+  - ps-clk-frequency : Frequency of the oscillator providing ps_clk in HZ
+ 		      (usually 33 MHz oscillators are used for Zynq platforms)
+- - clock-output-names : List of strings used to name the clock outputs. Shall be
+-			a list of the outputs given below.
  
- 			port@1 {
- 				reg = <1>;
- 				label = "lan4";
-+				phy-handle = <&lan4phy>;
- 			};
+ Optional properties:
+  - clocks : as described in the clock bindings
+@@ -93,17 +91,6 @@ Example:
+ 		compatible = "xlnx,ps7-clkc";
+ 		ps-clk-frequency = <33333333>;
+ 		reg = <0x100 0x100>;
+-		clock-output-names = "armpll", "ddrpll", "iopll", "cpu_6or4x",
+-				"cpu_3or2x", "cpu_2x", "cpu_1x", "ddr2x", "ddr3x",
+-				"dci", "lqspi", "smc", "pcap", "gem0", "gem1",
+-				"fclk0", "fclk1", "fclk2", "fclk3", "can0", "can1",
+-				"sdio0", "sdio1", "uart0", "uart1", "spi0", "spi1",
+-				"dma", "usb0_aper", "usb1_aper", "gem0_aper",
+-				"gem1_aper", "sdio0_aper", "sdio1_aper",
+-				"spi0_aper", "spi1_aper", "can0_aper", "can1_aper",
+-				"i2c0_aper", "i2c1_aper", "uart0_aper", "uart1_aper",
+-				"gpio_aper", "lqspi_aper", "smc_aper", "swdt",
+-				"dbg_trc", "dbg_apb";
+ 		# optional props
+ 		clocks = <&clkc 16>, <&clk_foo>;
+ 		clock-names = "gem1_emio_clk", "can_mio_clk_23";
+diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
+index 88a2cab..c5a3ed3 100644
+--- a/drivers/clk/zynq/clkc.c
++++ b/drivers/clk/zynq/clkc.c
+@@ -68,6 +68,18 @@ enum zynq_clk {
+ 	i2c0_aper, i2c1_aper, uart0_aper, uart1_aper, gpio_aper, lqspi_aper,
+ 	smc_aper, swdt, dbg_trc, dbg_apb, clk_max};
  
- 			port@2 {
- 				reg = <2>;
- 				label = "wan";
-+				phy-handle = <&wanphy>;
- 			};
- 
- 			port@3 {
-@@ -101,11 +104,13 @@
- 			port@5 {
- 				reg = <5>;
- 				label = "lan1";
-+				phy-handle = <&lan1phy>;
- 			};
- 
- 			port@7 {
- 				reg = <7>;
- 				label = "lan2";
-+				phy-handle = <&lan2phy>;
- 			};
- 		};
- 	};
-@@ -148,6 +153,46 @@
- 
- &mdio {
- 	status = "okay";
++static const char * const clk_output_name[] = {
++	"armpll", "ddrpll", "iopll",
++	"cpu_6or4x", "cpu_3or2x", "cpu_2x", "cpu_1x",
++	"ddr2x", "ddr3x", "dci",
++	"lqspi", "smc", "pcap", "gem0", "gem1", "fclk0", "fclk1", "fclk2", "fclk3", "can0", "can1",
++	"sdio0", "sdio1", "uart0", "uart1", "spi0", "spi1", "dma",
++	"usb0_aper", "usb1_aper", "gem0_aper", "gem1_aper",
++	"sdio0_aper", "sdio1_aper", "spi0_aper", "spi1_aper", "can0_aper", "can1_aper",
++	"i2c0_aper", "i2c1_aper", "uart0_aper", "uart1_aper", "gpio_aper", "lqspi_aper",
++	"smc_aper", "swdt", "dbg_trc", "dbg_apb"
++};
 +
-+	lan3phy: ethernet-phy@0 {
-+		/* Marvell 88E1121R (port 1) */
-+		compatible = "ethernet-phy-id0141.0cb0",
-+			     "ethernet-phy-ieee802.3-c22";
-+		reg = <0>;
-+		marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
-+	};
-+
-+	lan4phy: ethernet-phy@1 {
-+		/* Marvell 88E1121R (port 2) */
-+		compatible = "ethernet-phy-id0141.0cb0",
-+			     "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+		marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
-+	};
-+
-+	wanphy: ethernet-phy@2 {
-+		/* Marvell 88E1121R (port 1) */
-+		compatible = "ethernet-phy-id0141.0cb0",
-+			     "ethernet-phy-ieee802.3-c22";
-+		reg = <2>;
-+		marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
-+	};
-+
-+	lan1phy: ethernet-phy@5 {
-+		/* Marvell 88E1112 */
-+		compatible = "ethernet-phy-id0141.0cb0",
-+			     "ethernet-phy-ieee802.3-c22";
-+		reg = <5>;
-+		marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
-+	};
-+
-+	lan2phy: ethernet-phy@7 {
-+		/* Marvell 88E1112 */
-+		compatible = "ethernet-phy-id0141.0cb0",
-+			     "ethernet-phy-ieee802.3-c22";
-+		reg = <7>;
-+		marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
-+	};
- };
+ static struct clk *ps_clk;
+ static struct clk *clks[clk_max];
+ static struct clk_onecell_data clk_data;
+@@ -231,7 +243,6 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	struct clk *clk;
+ 	char *clk_name;
+ 	unsigned int fclk_enable = 0;
+-	const char *clk_output_name[clk_max];
+ 	const char *cpu_parents[4];
+ 	const char *periph_parents[4];
+ 	const char *swdt_ext_clk_mux_parents[2];
+@@ -240,14 +251,6 @@ static void __init zynq_clk_setup(struct device_node *np)
  
- &eth {
+ 	pr_info("Zynq clock init\n");
+ 
+-	/* get clock output names from DT */
+-	for (i = 0; i < clk_max; i++) {
+-		if (of_property_read_string_index(np, "clock-output-names",
+-				  i, &clk_output_name[i])) {
+-			pr_err("%s: clock output name not in DT\n", __func__);
+-			BUG();
+-		}
+-	}
+ 	cpu_parents[0] = clk_output_name[armpll];
+ 	cpu_parents[1] = clk_output_name[armpll];
+ 	cpu_parents[2] = clk_output_name[ddrpll];
 -- 
-2.8.1
+1.9.1
