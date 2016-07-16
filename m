@@ -1,32 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] Documentation: mmc: add description for new
- no-sd* and no-mmc
-Date: Sat, 16 Jul 2016 17:49:55 -0500
-Message-ID: <20160716224955.GA26627@rob-hp-laptop>
-References: <1468484764-32353-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v7 2/5] usb: dwc3: add dis_u2_freeclk_exists_quirk
+Date: Sat, 16 Jul 2016 17:51:08 -0500
+Message-ID: <20160716225107.GA27074@rob-hp-laptop>
+References: <1468486762-21960-1-git-send-email-william.wu@rock-chips.com>
+ <1468486762-21960-3-git-send-email-william.wu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1468484764-32353-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1468486762-21960-3-git-send-email-william.wu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: William Wu <william.wu@rock-chips.com>
+Cc: gregkh@linuxfoundation.org, balbi@kernel.org, heiko@sntech.de, linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2016 at 04:26:03PM +0800, Shawn Lin wrote:
-> This patch adds description for no-sd, no-sdio, no-mmc. We expose
-> these to DT as some of the controllers are unable to deal with
-> special cmd type due to hw limitation.
+On Thu, Jul 14, 2016 at 04:59:19PM +0800, William Wu wrote:
+> Add a quirk to clear the GUSB2PHYCFG.U2_FREECLK_EXISTS bit,
+> which specifies whether the USB2.0 PHY provides a free-running
+> PHY clock, which is active when the clock control input is active.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> 
+> Signed-off-by: William Wu <william.wu@rock-chips.com>
 > ---
+> Changes in v7:
+> - None
+> 
+> Changes in v6:
+> - use '-' instead of '_' in dts (Rob Herring)
+> 
+> Changes in v5:
+> - None
+> 
+> Changes in v4:
+> - rebase on top of balbi testing/next, remove pdata (balbi)
+> 
+> Changes in v3:
+> - None
 > 
 > Changes in v2:
-> - amend the description of these properties and the commit msg
+> - None
 > 
->  Documentation/devicetree/bindings/mmc/mmc.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
+>  drivers/usb/dwc3/core.c                        | 5 +++++
+>  drivers/usb/dwc3/core.h                        | 5 +++++
+>  3 files changed, 13 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
