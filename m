@@ -1,24 +1,132 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] Bindings documentation for ISSI is31fl319x driver
-Date: Fri, 15 Jul 2016 19:18:09 -0500
-Message-ID: <20160716001809.GA27884@rob-hp-laptop>
-References: <cover.1468007377.git.hns@goldelico.com>
- <44b0cd33fc831d55dd7d012c4d4554ed9e2d70f4.1468007377.git.hns@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: [RCF 3/3] ARM: imx6q-evi: ads ads1118 support
+Date: Fri, 15 Jul 2016 17:18:23 -0700
+Message-ID: <582a9226dab419d27ea90e21c723856e4669a81c.1468626668.git.stillcompiling@gmail.com>
+References: <cover.1468626668.git.stillcompiling@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <44b0cd33fc831d55dd7d012c4d4554ed9e2d70f4.1468007377.git.hns@goldelico.com>
+In-Reply-To: <cover.1468626668.git.stillcompiling@gmail.com>
+In-Reply-To: <cover.1468626668.git.stillcompiling@gmail.com>
+References: <cover.1468626668.git.stillcompiling@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
+Cc: Joshua Clayton <stillcompiling@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 08, 2016 at 09:49:38PM +0200, H. Nikolaus Schaller wrote:
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  .../devicetree/bindings/leds/is31fl319x.txt        | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/is31fl319x.txt
+add support to imx6q-evi for the 3 ADS1118 temperature/adc units,
+ now that is has has a kernel driver
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
+---
+ arch/arm/boot/dts/imx6q-evi.dts | 90 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
+index 4fa5601..7e175bf 100644
+--- a/arch/arm/boot/dts/imx6q-evi.dts
++++ b/arch/arm/boot/dts/imx6q-evi.dts
+@@ -105,6 +105,66 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi3 &pinctrl_ecspi3cs>;
+ 	status = "okay";
++
++	temp1: adc@0 {
++		compatible = "ti,ads1118";
++		spi-max-frequency = <500000>;
++		spi-cpha;
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		ti,tempsensor;
++		cpu-v@0 {
++			reg = <0>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++		cpld@1 {
++			reg = <1>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++		vocm@2 {
++			reg = <2>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++		fpga@3 {
++			reg = <3>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++	};
++
++	adc2: adc@1 {
++		compatible = "ti,ads1118";
++		spi-max-frequency = <500000>;
++		spi-cpha;
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		ti,tempsensor;
++		signal@0 {
++			reg = <0>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++		signal@1 {
++			reg = <1>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++		probedrive@2 {
++			reg = <2>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++		probedrive@3 {
++			reg = <3>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++	};
+ };
+ 
+ &ecspi5 {
+@@ -126,6 +186,36 @@
+ 		reg = <1>;
+ 	};
+ 
++	temp0: temp@2 {
++		compatible = "ti,ads1118";
++		spi-max-frequency = <500000>;
++		spi-cpha;
++		reg = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		ti,tempsensor;
++		analog-x@0 {
++			reg = <0>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++		analog-y@1 {
++			reg = <1>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++		main-12v@2 {
++			reg = <2>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++		battbox@3 {
++			reg = <3>;
++			ti,fullscale = <6144000>;
++			ti,datarate = <860>;
++		};
++	};
++
+ 	pb_rtc: rtc@3 {
+ 		compatible = "nxp,rtc-pcf2123";
+ 		spi-max-frequency = <2450000>;
+-- 
+2.7.4
