@@ -1,66 +1,92 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] dt: bindings: Add a generic ethernet device binding
-Date: Sat, 16 Jul 2016 12:18:40 +0200
-Message-ID: <289d5b2e-6232-2c91-f11d-774265e05125@redhat.com>
-References: <1468405204-5845-1-git-send-email-hdegoede@redhat.com>
- <1788846.r3134d1VMR@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1788846.r3134d1VMR@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+Subject: [PATCH 3/4] ARM: dts: sun4i: Remove sample clocks from mmc host nodes
+Date: Sat, 16 Jul 2016 12:46:03 +0200
+Message-ID: <1468665964-27142-4-git-send-email-hdegoede@redhat.com>
+References: <1468665964-27142-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1468665964-27142-1-git-send-email-hdegoede@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+It turns out the A10 does not have mmc sample clocks (the bits for
+this in the register always read back 0, not listed in the datasheet),
+so remove the sample clocks from the mmc host nodes.
 
-On 15-07-16 22:42, Arnd Bergmann wrote:
-> On Wednesday, July 13, 2016 12:20:04 PM CEST Hans de Goede wrote:
->> +&mmc1 {
->> +       non-removable;
->> +       status = "okay";
->> +
->> +       sdio_wifi: sdio_wifi@1 {
->> +               compatible = "generic,ethernet"
->> +               reg = <1>;
->> +       };
->> +};
->
-> For discoverable buses, we normally use a compatible property that
-> reflects the device ID on that bus, e.g. on PCI we have "pci1A2B:3C4D"
-> and I think that makes more sense than having to come up with strings
-> for sdio devices.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi | 32 ++++++++------------------------
+ 1 file changed, 8 insertions(+), 24 deletions(-)
 
-2 things:
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 7e7dfc2..f6bf851 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -783,13 +783,9 @@
+ 			compatible = "allwinner,sun4i-a10-mmc";
+ 			reg = <0x01c0f000 0x1000>;
+ 			clocks = <&ahb_gates 8>,
+-				 <&mmc0_clk 0>,
+-				 <&mmc0_clk 1>,
+-				 <&mmc0_clk 2>;
++				 <&mmc0_clk 0>;
+ 			clock-names = "ahb",
+-				      "mmc",
+-				      "output",
+-				      "sample";
++				      "mmc";
+ 			interrupts = <32>;
+ 			status = "disabled";
+ 			#address-cells = <1>;
+@@ -800,13 +796,9 @@
+ 			compatible = "allwinner,sun4i-a10-mmc";
+ 			reg = <0x01c10000 0x1000>;
+ 			clocks = <&ahb_gates 9>,
+-				 <&mmc1_clk 0>,
+-				 <&mmc1_clk 1>,
+-				 <&mmc1_clk 2>;
++				 <&mmc1_clk 0>;
+ 			clock-names = "ahb",
+-				      "mmc",
+-				      "output",
+-				      "sample";
++				      "mmc";
+ 			interrupts = <33>;
+ 			status = "disabled";
+ 			#address-cells = <1>;
+@@ -817,13 +809,9 @@
+ 			compatible = "allwinner,sun4i-a10-mmc";
+ 			reg = <0x01c11000 0x1000>;
+ 			clocks = <&ahb_gates 10>,
+-				 <&mmc2_clk 0>,
+-				 <&mmc2_clk 1>,
+-				 <&mmc2_clk 2>;
++				 <&mmc2_clk 0>;
+ 			clock-names = "ahb",
+-				      "mmc",
+-				      "output",
+-				      "sample";
++				      "mmc";
+ 			interrupts = <34>;
+ 			status = "disabled";
+ 			#address-cells = <1>;
+@@ -834,13 +822,9 @@
+ 			compatible = "allwinner,sun4i-a10-mmc";
+ 			reg = <0x01c12000 0x1000>;
+ 			clocks = <&ahb_gates 11>,
+-				 <&mmc3_clk 0>,
+-				 <&mmc3_clk 1>,
+-				 <&mmc3_clk 2>;
++				 <&mmc3_clk 0>;
+ 			clock-names = "ahb",
+-				      "mmc",
+-				      "output",
+-				      "sample";
++				      "mmc";
+ 			interrupts = <35>;
+ 			status = "disabled";
+ 			#address-cells = <1>;
+-- 
+2.7.4
 
-1) The problem here is that different batches of the same board
-(cheap chinese tablet) have different sdio wifi modules, so we
-actually cannot specify a vendor / product id as in your example.
-
-2) In some cases we do want an actual compatible because some devices
-have some oob (out-of-band) going with e.g. gpio-s which cannot be
-handled by mmc-pwrseq.
-
-> In fact, Linux completely ignores the compatible strings on those
-> buses (pci, usb, sdio, ...),
-
-You're mostly right, but at least the brcmfmac driver looks for a
-compatible in the mmc-host child node describing its sdio function
-to see if it should check for oob irq information there.
-
-> so I think we can just do the same thing
-> using no compatible string at all.
-
-I'm all for not using any compatible string at all, actually I submitted
-a patch for a sunxi dt file which did that and Maxime pointed out that
-the compatible is listed as Required in:
-Documentation/devicetree/bindings/mmc/mmc-card.txt
-
-If we can agree to make it optional, then I'll happily submit a patch
-with that change and Maxime can take my sunxi dts patch as is :)
-
-Regards,
-
-Hans
