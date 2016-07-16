@@ -1,43 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] pinctrl: qcom: Add generic ssbi and spmi GPIO/MPP
- bindings
-Date: Sat, 16 Jul 2016 14:25:22 -0500
-Message-ID: <20160716192522.GA8272@rob-hp-laptop>
-References: <20160711190109.16758-1-sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] Documentation: dtb: xgene: Add hwmon dts binding
+ documentation
+Date: Sat, 16 Jul 2016 14:28:49 -0500
+Message-ID: <20160716192849.GA12635@rob-hp-laptop>
+References: <1468283416-12780-1-git-send-email-hotran@apm.com>
+ <1468283416-12780-2-git-send-email-hotran@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160711190109.16758-1-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1468283416-12780-2-git-send-email-hotran@apm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Hoan Tran <hotran@apm.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Duc Dang <dhdang@apm.com>, lho@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 11, 2016 at 12:01:09PM -0700, Stephen Boyd wrote:
-> The drivers don't really need to know which PMIC they're for, so
-> make a generic binding for them. This alleviates us from updating
-> the drivers every time a new PMIC comes out. It's still
-> recommended that we update the binding with new PMIC models and
-> always specify the specific model for the MPPs and gpios before
-> the generic compatible string in devicetree, but this at least
-> cuts down on adding more and more compatible strings to the
-> drivers until we actually need them.
+On Mon, Jul 11, 2016 at 05:30:14PM -0700, Hoan Tran wrote:
+> This patch adds the APM X-Gene hwmon device tree node documentation.
 > 
-> Cc: <devicetree@vger.kernel.org>
-> Acked-by: "Ivan T. Ivanov" <iivanov.xz@gmail.com>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Hoan Tran <hotran@apm.com>
 > ---
-> 
-> This seems to been missed 6 months ago when sent as an RFC. The dts
-> side changes have already been made and Rob H said it "Seems okay to
-> me".
-> 
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 5 ++++-
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  | 5 ++++-
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 1 +
->  drivers/pinctrl/qcom/pinctrl-spmi-mpp.c                      | 1 +
->  4 files changed, 10 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/hwmon/apm-xgene-hwmon.txt          | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/apm-xgene-hwmon.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
