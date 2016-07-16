@@ -1,73 +1,37 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/4] mmc: sunxi: Make sample clocks optional
-Date: Sat, 16 Jul 2016 12:46:02 +0200
-Message-ID: <1468665964-27142-3-git-send-email-hdegoede@redhat.com>
-References: <1468665964-27142-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1468665964-27142-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5] wlcore: spi: add wl18xx support
+Date: Sat, 16 Jul 2016 08:42:27 -0500
+Message-ID: <20160716134227.GA327@rob-hp-laptop>
+References: <8665E2433BC68541A24DFFCA87B70F5B36156367@DFRE01.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B36156367@DFRE01.ent.ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Reizer, Eyal" <eyalr@ti.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-It turns out that sun4i (A10) and sun5i (A13 & co) do not have sample
-clocks, so make them optional.
+On Sun, Jul 10, 2016 at 08:32:40AM +0000, Reizer, Eyal wrote:
+> Add support for using with both wl12xx and wl18xx.
+> 
+> - all wilink family needs special init command for entering wspi mode.
+>   extra clock cycles should be sent after the spi init command while the
+>   cs pin is high.
+> - Use inverted chip select for sending a dummy 4 bytes command that
+>   completes the init stage.
+> 
+> Signed-off-by: Eyal Reizer <eyalr@ti.com>
+> ---
+> v1->v2:update device tree bindings configuration
+> v2->v3:revert from manual gpio manipulation. use inverted chip select instead
+> for sending the extra init cycle which, achieves the same hardware purpose.
+> update device tree bindings docucmentation accordingly
+> v3->v4: Remove redundant data form binding documentation and fix chip select
+> number mismatch in wl1271 example
+> v4->v5: Rebase on top of head of wireless-drivers-next
 
-Since these do not have sample clocks, they cannot (reliably) do
-DDR rates, so only set MMC_CAP_1_8V_DDR when we do have sample clks.
+Please add acks when reposting.
 
-Note this patch only changes the devm_clk_get error checking and sets
-the clocks to NULL if they don't exists. All the clk_foo calls accept
-a NULL clk and will return success when called with a NULL clk, so this
-is all that is necessary.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/mmc/host/sunxi-mmc.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
-index 71a480b..4552ee0 100644
---- a/drivers/mmc/host/sunxi-mmc.c
-+++ b/drivers/mmc/host/sunxi-mmc.c
-@@ -1016,14 +1016,20 @@ static int sunxi_mmc_resource_request(struct sunxi_mmc_host *host,
- 
- 	host->clk_output = devm_clk_get(&pdev->dev, "output");
- 	if (IS_ERR(host->clk_output)) {
--		dev_err(&pdev->dev, "Could not get output clock\n");
--		return PTR_ERR(host->clk_output);
-+		if (PTR_ERR(host->clk_output) != -ENOENT) {
-+			dev_err(&pdev->dev, "Could not get output clock\n");
-+			return PTR_ERR(host->clk_output);
-+		}
-+		host->clk_output = NULL;
- 	}
- 
- 	host->clk_sample = devm_clk_get(&pdev->dev, "sample");
- 	if (IS_ERR(host->clk_sample)) {
--		dev_err(&pdev->dev, "Could not get sample clock\n");
--		return PTR_ERR(host->clk_sample);
-+		if (PTR_ERR(host->clk_sample) != -ENOENT) {
-+			dev_err(&pdev->dev, "Could not get sample clock\n");
-+			return PTR_ERR(host->clk_sample);
-+		}
-+		host->clk_sample = NULL;
- 	}
- 
- 	host->reset = devm_reset_control_get_optional(&pdev->dev, "ahb");
-@@ -1126,9 +1132,11 @@ static int sunxi_mmc_probe(struct platform_device *pdev)
- 	mmc->f_min		=   400000;
- 	mmc->f_max		= 52000000;
- 	mmc->caps	       |= MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED |
--				  MMC_CAP_1_8V_DDR |
- 				  MMC_CAP_ERASE | MMC_CAP_SDIO_IRQ;
- 
-+	if (host->clk_output && host->clk_sample)
-+		mmc->caps      |= MMC_CAP_1_8V_DDR;
-+
- 	ret = mmc_of_parse(mmc);
- 	if (ret)
- 		goto error_free_dma;
--- 
-2.7.4
-
+Rob
