@@ -1,113 +1,31 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 1/6] arm64: dts: qcom: msm8916: Add smsm and smp2p nodes
-Date: Fri, 15 Jul 2016 17:42:11 -0700
-Message-ID: <1468629736-7644-1-git-send-email-bjorn.andersson@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] pinctrl: qcom: update DT bindings with ebi2 groups
+Date: Fri, 15 Jul 2016 19:11:35 -0500
+Message-ID: <20160716001135.GA26027@rob-hp-laptop>
+References: <1467999672-14259-1-git-send-email-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1467999672-14259-1-git-send-email-linus.walleij@linaro.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: spjoshi@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the smsm and smp2p nodes for the hexagon and wcnss
-cores.
+On Fri, Jul 08, 2016 at 07:41:12PM +0200, Linus Walleij wrote:
+> This adds the ebi2 and ebi2cs groups to the MSM8660 pin control
+> documentation document.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: Bj=F6rn Andersson <bjorn.andersson@linaro.org>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt |=
+ 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 82 +++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 11bdc24cfc74..6148ea05b50a 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -657,6 +657,88 @@
- 			};
- 		};
- 	};
-+
-+	hexagon-smp2p {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <435>, <428>;
-+
-+		interrupts = <0 27 IRQ_TYPE_EDGE_RISING>;
-+
-+		qcom,ipc = <&apcs 8 14>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <1>;
-+
-+		hexagon_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		hexagon_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
-+	wcnss-smp2p {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <451>, <431>;
-+
-+		interrupts = <0 143 IRQ_TYPE_EDGE_RISING>;
-+
-+		qcom,ipc = <&apcs 8 18>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <4>;
-+
-+		wcnss_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		wcnss_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
-+	smsm {
-+		compatible = "qcom,smsm";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		qcom,ipc-1 = <&apcs 0 13>;
-+		qcom,ipc-6 = <&apcs 0 19>;
-+
-+		apps_smsm: apps@0 {
-+			reg = <0>;
-+
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		hexagon_smsm: hexagon@1 {
-+			reg = <1>;
-+			interrupts = <0 26 IRQ_TYPE_EDGE_RISING>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		wcnss_smsm: wcnss@6 {
-+			reg = <6>;
-+			interrupts = <0 144 IRQ_TYPE_EDGE_RISING>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
- };
- 
- #include "msm8916-pins.dtsi"
--- 
-2.5.0
+Acked-by: Rob Herring <robh@kernel.org>
