@@ -1,102 +1,88 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v0 03/10] arm: orion5x: Add clk support for mv88f5181
-Date: Sat, 16 Jul 2016 20:34:43 +0300
-Message-ID: <ed490090-c127-3f4f-d923-2d04918d00cb@cogentembedded.com>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
- <1468679348-10522-4-git-send-email-jm@lentin.co.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6] input: touchscreen: Add generic driver for Silead
+ touchscreens
+Date: Sat, 16 Jul 2016 12:56:05 -0500
+Message-ID: <20160716175605.GA4873@rob-hp-laptop>
+References: <1468252304-22850-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468679348-10522-4-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468252304-22850-1-git-send-email-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Wessel Blokzijl <wesselb94@gmail.com>, Siebren Vroegindeweij <siebren.vroegindeweij@gmail.com>, Robert Dolca <robert.dolca@intel.com>, Daniel Jansen <djaniboe@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 7/16/2016 5:29 PM, Jamie Lentin wrote:
-
-> Referring to values in the u-boot port, add support for the mv88f5181
->
-> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-
-[...]
-> diff --git a/drivers/clk/mvebu/orion.c b/drivers/clk/mvebu/orion.c
-> index fd12956..a6e5bee 100644
-> --- a/drivers/clk/mvebu/orion.c
-> +++ b/drivers/clk/mvebu/orion.c
-> @@ -21,6 +21,76 @@ static const struct coreclk_ratio orion_coreclk_ratios[] __initconst = {
->  };
->
->  /*
-> + * Orion 5181
-> + */
+On Mon, Jul 11, 2016 at 05:51:44PM +0200, Hans de Goede wrote:
+> From: Robert Dolca <robert.dolca@intel.com>
+> 
+> This driver adds support for Silead touchscreens. It has been tested
+> with GSL1680 and GSL3680 touch panels.
+> 
+> It supports ACPI and device tree enumeration. Screen resolution,
+> the maximum number of fingers supported and firmware name are
+> configurable.
+> 
+> Signed-off-by: Robert Dolca <robert.dolca@intel.com>
+> Signed-off-by: Daniel Jansen <djaniboe@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v6:
+> -Default to 5 fingers if max-fingers is not specified
+> -Improve devicetree binding doc: improve wake-gpios description, use
+>  "See touchscreen.txt" where applicable
+> ---
+>  .../bindings/input/touchscreen/silead_gsl1680.txt  |  36 ++
+>  drivers/input/touchscreen/Kconfig                  |  13 +
+>  drivers/input/touchscreen/Makefile                 |   1 +
+>  drivers/input/touchscreen/silead.c                 | 652 +++++++++++++++++++++
+>  4 files changed, 702 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>  create mode 100644 drivers/input/touchscreen/silead.c
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+> new file mode 100644
+> index 0000000..1e58d37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+> @@ -0,0 +1,36 @@
+> +* GSL 1680 touchscreen controller
 > +
-> +#define SAR_MV88F5181_TCLK_FREQ      8
-> +#define SAR_MV88F5181_TCLK_FREQ_MASK 0x3
+> +Required properties:
+> +- compatible		  : "silead,gsl1680"
+> +- reg			  : I2C slave address of the chip (0x40)
+> +- interrupt-parent	  : a phandle pointing to the interrupt controller
+> +			    serving the interrupt for this chip
+> +- interrupts		  : interrupt specification for the gsl1680 interrupt
+> +- power-gpios		  : Specification for the pin connected to the gsl1680's
+> +			    shutdown input. This needs to be driven high to take the
+> +			    gsl1680 out of its low power state
+> +- touchscreen-size-x	  : See touchscreen.txt
+> +- touchscreen-size-y	  : See touchscreen.txt
+> +- touchscreen-max-fingers : maximum number of fingers the touchscreen can detect
+
+If you name it like a standard property, then it should be documented in 
+touchscreen.txt.
+
+> +Optional properties:
+> +- touchscreen-inverted-x  : See touchscreen.txt
+> +- touchscreen-inverted-y  : See touchscreen.txt
+> +- touchscreen-swapped-x-y : See touchscreen.txt
 > +
-> +static u32 __init mv88f5181_get_tclk_freq(void __iomem *sar)
-> +{
-> +	u32 opt = (readl(sar) >> SAR_MV88F5181_TCLK_FREQ) &
-> +		SAR_MV88F5181_TCLK_FREQ_MASK;
-> +	if (opt == 0)
-> +		return 133333333;
-> +	else if (opt == 1)
-> +		return 150000000;
-> +	else if (opt == 2)
-> +		return 166666667;
-
-    Do you know about the *switch* statement? :-)
-
-> +	else
-> +		return 0;
-> +}
+> +Example:
 > +
-> +#define SAR_MV88F5181_CPU_FREQ       4
-> +#define SAR_MV88F5181_CPU_FREQ_MASK  0xf
-> +
-> +static u32 __init mv88f5181_get_cpu_freq(void __iomem *sar)
-> +{
-> +	u32 opt = (readl(sar) >> SAR_MV88F5181_CPU_FREQ) &
-> +		SAR_MV88F5181_CPU_FREQ_MASK;
-> +	if (opt == 0)
-> +		return 333333333;
-> +	else if (opt == 1 || opt == 2)
-> +		return 400000000;
-> +	else if (opt == 3)
-> +		return 500000000;
-
-    Asks to be a *switch* as well...
-
-> +	else
-> +		return 0;
-> +}
-> +
-> +static void __init mv88f5181_get_clk_ratio(void __iomem *sar, int id,
-> +					   int *mult, int *div)
-> +{
-> +	u32 opt = (readl(sar) >> SAR_MV88F5181_CPU_FREQ) &
-> +		SAR_MV88F5181_CPU_FREQ_MASK;
-> +	if (opt == 0 || opt == 1) {
-> +		*mult = 1;
-> +		*div  = 2;
-> +	} else if (opt == 2 || opt == 3) {
-> +		*mult = 1;
-> +		*div  = 3;
-> +	} else {
-> +		*mult = 0;
-> +		*div  = 1;
-> +	}
-
-     This one too...
-
-[...]
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +i2c@00000000 {
+> +	gsl1680: touchscreen@40 {
+> +		compatible = "silead,gsl1680";
+> +		reg = <0x40>;
+> +		interrupt-parent = <&pio>;
+> +		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>;
+> +		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>;
+> +		touchscreen-size-x = <480>;
+> +		touchscreen-size-y = <800>;
+> +		touchscreen-max-fingers = <5>;
+> +		touchscreen-inverted-x;
+> +		touchscreen-swapped-x-y;
+> +	};
+> +};
