@@ -1,30 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] Documentation: DT: Add entry for QorIQ LS1046A-RDB
- board
-Date: Fri, 15 Jul 2016 19:08:41 -0500
-Message-ID: <20160716000841.GA24257@rob-hp-laptop>
-References: <1467972944-12293-1-git-send-email-shh.xie@gmail.com>
- <1467972944-12293-3-git-send-email-shh.xie@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/5] phy: DT binding documentation for qoriq usb 2.0
+ phy
+Date: Fri, 15 Jul 2016 19:35:03 -0500
+Message-ID: <20160716003503.GA6930@rob-hp-laptop>
+References: <1468038656-10345-1-git-send-email-rajesh.bhagat@nxp.com>
+ <1468038656-10345-5-git-send-email-rajesh.bhagat@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1467972944-12293-3-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1468038656-10345-5-git-send-email-rajesh.bhagat@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Peter.Chen@nxp.com, gregkh@linuxfoundation.org, kishon@ti.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 08, 2016 at 06:15:41PM +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+On Sat, Jul 09, 2016 at 10:00:55AM +0530, Rajesh Bhagat wrote:
+> Describes the qoriq usb 2.0 phy driver binding, currently used
+> for LS1021A and LS1012A platform.
 > 
-> Signed-off-by: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> Changes in v2:
+>  - Adds DT binding documentation for qoriq usb 2.0 phy
+>  - Changed the compatible string to fsl,qoriq-usb2-phy
+> 
+>  .../devicetree/bindings/phy/qoriq-usb2-phy.txt     | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qoriq-usb2-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qoriq-usb2-phy.txt b/Documentation/devicetree/bindings/phy/qoriq-usb2-phy.txt
+> new file mode 100644
+> index 0000000..f043855
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qoriq-usb2-phy.txt
+> @@ -0,0 +1,22 @@
+> +QorIQ SoC USB 2.0 PHY
+> +
+> +Required properties:
+> + - compatible: should be "fsl,qoriq-usb2-phy",
+> +   Wherever applicable, the version of the USB PHY should
+> +   also be mentioned (for eg. fsl,qoriq-usb2-phy-vX.Y).
+> +   where, X = Phy vendor(Legacy = 1, NXP = 2) and Y = PHY version
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What does Legacy mean? FSL?
+
+Use SoC specific compatible strings.
+
+> + - reg : Address and length of the usb phy control register set.
+> + - phy_type : For multi port host USB controllers, should be one of
+> +   "ulpi", or "serial". For dual role USB controllers, should be
+> +   one of "ulpi", "utmi", "utmi_wide", or "serial".
+> +
+> +The main purpose of this PHY driver is to enable the USB PHY reference clock
+> +gate on the QorIQ SOC for USB2 PHY OR implement errata workaround in
+> +future. Otherwise it is just an NOP PHY driver.
+> +
+> +usbphy0: usbphy@8600000 {
+> +        compatible = "fsl,qoriq-usb2-phy" "fsl,qoriq-usb2-phy-vX.Y";
+
+most specific first.
+
+> +        reg = <0x0 0x8600000 0x0 0x1000>;
+> +        #phy-cells = <0>;
+> +        phy_type = "ulpi";
+> +};
