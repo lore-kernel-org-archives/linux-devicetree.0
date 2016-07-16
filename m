@@ -1,32 +1,32 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/8] Input: synaptics-rmi4: Add dribble and palm
- gesture parameters to device tree
-Date: Sat, 16 Jul 2016 17:49:04 -0500
-Message-ID: <20160716224904.GA24920@rob-hp-laptop>
-References: <1468476522-8032-1-git-send-email-aduggan@synaptics.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] Documentation: mmc: add description for new
+ no-sd* and no-mmc
+Date: Sat, 16 Jul 2016 17:49:55 -0500
+Message-ID: <20160716224955.GA26627@rob-hp-laptop>
+References: <1468484764-32353-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1468476522-8032-1-git-send-email-aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Vincent Huang <vincent.huang-8LB1SX4YFO85ffrT631h+Q@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1468484764-32353-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 13, 2016 at 11:08:42PM -0700, Andrew Duggan wrote:
-> Signed-off-by: Andrew Duggan <aduggan-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>
-> ---
-> This version includes Nick's suggestion of adding force to the device tree
-> parameters so make it obvious that these parameters overwrite the
-> default values set in the firware config.
+On Thu, Jul 14, 2016 at 04:26:03PM +0800, Shawn Lin wrote:
+> This patch adds description for no-sd, no-sdio, no-mmc. We expose
+> these to DT as some of the controllers are unable to deal with
+> special cmd type due to hw limitation.
 > 
->  .../devicetree/bindings/input/rmi4/rmi_2d_sensor.txt        | 10 ++++++++++
->  drivers/input/rmi4/rmi_2d_sensor.c                          | 13 +++++++++++++
->  2 files changed, 23 insertions(+)
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - amend the description of these properties and the commit msg
+> 
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
