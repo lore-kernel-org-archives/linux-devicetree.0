@@ -1,64 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] i2c: hibvt: add Hisilicon BVT I2C controller driver
-Date: Sat, 16 Jul 2016 15:15:55 -0500
-Message-ID: <20160716201555.GA6559@rob-hp-laptop>
-References: <1468316448-15256-1-git-send-email-wenpan@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468316448-15256-1-git-send-email-wenpan@hisilicon.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Pan Wen <wenpan@hisilicon.com>
-Cc: wsa@the-dreams.de, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] dt: bindings: Make compatible optional for mmc function nodes
+Date: Sat, 16 Jul 2016 22:16:15 +0200
+Message-ID: <1468700175-31836-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 12, 2016 at 05:40:48PM +0800, Pan Wen wrote:
-> add Hisilicon BVT I2C controller driver support.
-> 
-> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
-> ---
-> change log
-> v2:
-> 1)Fixed a compile error.
-> 2)Dropped the clock-names property.
->  .../devicetree/bindings/i2c/i2c-hibvt.txt          |  23 +
->  drivers/i2c/busses/Kconfig                         |  10 +
->  drivers/i2c/busses/Makefile                        |   1 +
->  drivers/i2c/busses/i2c-hibvt.c                     | 736 +++++++++++++++++++++
->  4 files changed, 770 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
->  create mode 100644 drivers/i2c/busses/i2c-hibvt.c
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
-> new file mode 100644
-> index 0000000..9b88afe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
-> @@ -0,0 +1,23 @@
-> +Hisilicon BVT I2C master controller
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,hibvt-i2c".
+mmc/sdio is an enumerable bus, so usually the os can find out which
+device is attached without needing a compatible.
 
-Needs a SoC specific compatible string.
+Sometimes it is desirable to have a mmc function node, without having
+to make up an otherwise unused compatible for the node, so make
+the compatible properties optional.
 
-> +- reg: physical base address of the controller and length of memory mapped.
-> +     region.
-> +- interrupts: interrupt number to the cpu.
-> +- clocks: phandles to input clocks.
-> +
-> +Optional properties:
-> +- clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000.
-> +
-> +Other properties:
-> +see Documentation/devicetree/bindings/i2c/i2c.txt.
-> +
-> +Examples:
-> +i2c_bus0: i2c@12110000 {
-> +	compatible = "hisilicon,hibvt-i2c";
-> +	reg = <0x12110000 0x100>;
-> +	interrupts = <20>;
-> +	clocks = <&crg_ctrl HI3516CV300_APB_CLK>;
-> +	clock-frequency = <100000>;
-> +};
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/mmc.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index ed23b9b..a96c338 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -98,11 +98,13 @@ Required host node properties when using function subnodes:
+ - #size-cells: should be zero.
+ 
+ Required function subnode properties:
+-- compatible: name of SDIO function following generic names recommended practice
+ - reg: Must contain the SDIO function number of the function this subnode
+        describes. A value of 0 denotes the memory SD function, values from
+        1 to 7 denote the SDIO functions.
+ 
++Optional function subnode properties:
++- compatible: name of SDIO function following generic names recommended practice
++
+ 
+ Examples
+ --------
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
