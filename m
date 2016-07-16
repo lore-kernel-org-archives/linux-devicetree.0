@@ -1,35 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 4/6] drm/rockchip: dw_hdmi: add RK3399 HDMI support
-Date: Sat, 16 Jul 2016 08:47:18 -0500
-Message-ID: <20160716134718.GA3267@rob-hp-laptop>
-References: <1468235079-29152-1-git-send-email-ykk@rock-chips.com>
- <1468235146-29575-1-git-send-email-ykk@rock-chips.com>
+From: Jamie Lentin <jm@lentin.co.uk>
+Subject: [PATCH v0 01/10] arm: orion5x: Add required properties for orion-wdt
+ to DT node
+Date: Sat, 16 Jul 2016 15:28:59 +0100
+Message-ID: <1468679348-10522-2-git-send-email-jm@lentin.co.uk>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1468235146-29575-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xhc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org, Jamie Lentin <jm@lentin.co.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 11, 2016 at 07:05:46PM +0800, Yakir Yang wrote:
-> RK3399 and RK3288 shared the same HDMI IP controller, only some light
-> difference with GRF configure.
-> 
-> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  .../devicetree/bindings/display/bridge/dw_hdmi.txt |  1 +
->  .../bindings/display/rockchip/dw_hdmi-rockchip.txt |  3 +-
+orion-wdt refuses to start without these properties defined, so lift
+definitions out of kirkwood/dove.dtsi
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
+---
+ arch/arm/boot/dts/orion5x.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->  drivers/gpu/drm/bridge/dw-hdmi.c                   |  2 +-
->  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 45 ++++++++++++++++++----
->  include/drm/bridge/dw_hdmi.h                       |  6 +++
->  5 files changed, 48 insertions(+), 9 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/orion5x.dtsi b/arch/arm/boot/dts/orion5x.dtsi
+index e1b6d2a..fbccfbb 100644
+--- a/arch/arm/boot/dts/orion5x.dtsi
++++ b/arch/arm/boot/dts/orion5x.dtsi
+@@ -144,9 +144,10 @@
+ 
+ 			wdt: wdt@20300 {
+ 				compatible = "marvell,orion-wdt";
+-				reg = <0x20300 0x28>;
++				reg = <0x20300 0x28>, <0x20108 0x4>;
+ 				interrupt-parent = <&bridge_intc>;
+ 				interrupts = <3>;
++				clocks = <&core_clk 0>;
+ 				status = "okay";
+ 			};
+ 
+-- 
+2.8.1
