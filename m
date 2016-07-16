@@ -1,29 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] Documentation: Add sbs-manager device tree node
- documentation
-Date: Sat, 16 Jul 2016 17:05:02 -0500
-Message-ID: <20160716220502.GA19340@rob-hp-laptop>
-References: <1bIiDr-0004G1-0P>
- <1468349295-4935-1-git-send-email-karl-heinz@schneider-inet.de>
- <1468349295-4935-2-git-send-email-karl-heinz@schneider-inet.de>
+Subject: Re: [PATCH 1/2] ARM: socfpga: add bindings doc for arria10 fpga
+ manager
+Date: Sat, 16 Jul 2016 17:06:42 -0500
+Message-ID: <20160716220642.GA2852@rob-hp-laptop>
+References: <20160712190709.5964-1-atull@opensource.altera.com>
+ <20160712190709.5964-2-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1468349295-4935-2-git-send-email-karl-heinz@schneider-inet.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>
+In-Reply-To: <20160712190709.5964-2-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 12, 2016 at 08:48:14PM +0200, Karl-Heinz Schneider wrote:
-> This patch adds device tree documentation for the sbs-manager
+On Tue, Jul 12, 2016 at 02:07:08PM -0500, Alan Tull wrote:
+> Add a device tree bindings document for the SoCFPGA Arria10
+> FPGA Manager driver.
 > 
-> Reviewed-by: Phil Reid <preid@electromag.com.au>
-> Signed-off-by: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
 > ---
->  .../devicetree/bindings/power/sbs,sbs-manager.txt  | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+>  .../bindings/fpga/altera-socfpga-a10-fpga-mgr.txt     | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
