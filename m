@@ -1,30 +1,40 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/5] Documentation: DT: Add entry for QorIQ LS1046A-QDS
- board
-Date: Fri, 15 Jul 2016 19:09:54 -0500
-Message-ID: <20160716000954.GA25500@rob-hp-laptop>
-References: <1467972944-12293-1-git-send-email-shh.xie@gmail.com>
- <1467972944-12293-5-git-send-email-shh.xie@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467972944-12293-5-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: [RCF 0/3] hwmon: add driver for TI ADS1118
+Date: Fri, 15 Jul 2016 17:18:20 -0700
+Message-ID: <cover.1468626668.git.stillcompiling@gmail.com>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
+Cc: Joshua Clayton <stillcompiling@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 08, 2016 at 06:15:43PM +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
-> 
-> Signed-off-by: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+This is a new driver for the TI ADS1118 and ADS1018.
+It works, and is somewhat based on the work that went into
+ads1015, except for the sysfs code, which I hope is more
+correct and up to date.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The main reason this is an RFC, rather than a submission
+is that I pulled several new dts properies out of the
+air, and I would like any thoughts on these in particular.
+The code is tested only against ads1118.
+
+If anyone has an ads1018, I'd love to get testing from you
+as well.
+
+Joshua Clayton (3):
+  hwmon: Add ads1118 driver
+  hwmon: Document bindings for ads1118 adc driver
+  ARM: imx6q-evi: ads ads1118 support
+
+ .../devicetree/bindings/hwmon/ads1118.txt          |  81 ++++
+ arch/arm/boot/dts/imx6q-evi.dts                    |  90 ++++
+ drivers/hwmon/Kconfig                              |  11 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/ads1118.c                            | 516 +++++++++++++++++++++
+ 5 files changed, 699 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ads1118.txt
+ create mode 100644 drivers/hwmon/ads1118.c
+
+-- 
+2.7.4
+
