@@ -1,61 +1,70 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/6] binding-doc: usb: usb-device: add optional
- properties for power sequence
-Date: Sat, 16 Jul 2016 17:31:59 -0500
-Message-ID: <20160716223158.GB8984@rob-hp-laptop>
-References: <1468375610-18625-1-git-send-email-peter.chen@nxp.com>
- <1468375610-18625-4-git-send-email-peter.chen@nxp.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: tc358767: add DT documentation
+Date: Sat, 16 Jul 2016 17:34:38 -0500
+Message-ID: <20160716223438.GA17525@rob-hp-laptop>
+References: <1468393631-12042-1-git-send-email-p.zabel@pengutronix.de>
+ <1468393631-12042-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1468375610-18625-4-git-send-email-peter.chen@nxp.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, shawnguo@kernel.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com
+In-Reply-To: <1468393631-12042-2-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, dri-devel@lists.freedesktop.org, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 13, 2016 at 10:06:47AM +0800, Peter Chen wrote:
-> Add optional properties for power sequence.
-> 
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  Documentation/devicetree/bindings/usb/usb-device.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> index 1c35e7b..0ccaadf 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> @@ -13,6 +13,10 @@ Required properties:
->  - reg: the port number which this device is connecting to, the range
->    is 1-31.
->  
-> +Optional properties:
-> +power sequence properties, see
-> +Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt for detail
-> +
->  Example:
->  
->  &usb1 {
-> @@ -24,5 +28,10 @@ Example:
->  	hub: genesys@1 {
->  		compatible = "usb5e3,608";
->  		reg = <1>;
-> +
-> +		power-sequence;
-> +		clocks = <&clks IMX6SX_CLK_CKO>;
-> +		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
-> +		reset-duration-us = <10>;
-
-These belong in the binding doc for the hub.
-
->  	};
->  }
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBKdWwgMTMsIDIwMTYgYXQgMDk6MDc6MTBBTSArMDIwMCwgUGhpbGlwcCBaYWJlbCB3
+cm90ZToKPiBBZGQgRFQgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUgVG9zaGliYSBUQzM1
+ODc2NyBlRFAgYnJpZGdlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFiZWwgPHAuemFi
+ZWxAcGVuZ3V0cm9uaXguZGU+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
+b3NoaWJhLHRjMzU4NzY3LnR4dCAgIHwgNTEgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZp
+bGUgY2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3
+NjcudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS90b3NoaWJhLHRjMzU4NzY3LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJhLHRjMzU4NzY3LnR4dAo+IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uMDVhZGEyOAo+IC0tLSAvZGV2L251
+bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
+Z2UvdG9zaGliYSx0YzM1ODc2Ny50eHQKPiBAQCAtMCwwICsxLDUxIEBACj4gK1Rvc2hpYmEgVEMz
+NTg3NjcgZURQIGJyaWRnZSBiaW5kaW5ncwo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiAr
+IC0gY29tcGF0aWJsZTogInRvc2hpYmEsdGMzNTg3NjciCj4gKyAtIHJlZzogaTJjIGFkZHJlc3Mg
+b2YgdGhlIGJyaWRnZSwgMHg2OCBvciAweDBmLCBkZXBlbmRpbmcgb24gYm9vdHN0cmFwIHBpbnMK
+PiArIC0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAicmVmIgo+ICsgLSBjbG9ja3M6IE9GIGRldmlj
+ZS10cmVlIGNsb2NrIHNwZWNpZmljYXRpb24gZm9yIHJlZmNsayBpbnB1dC4gVGhlIHJlZmVyZW5j
+ZQo+ICsgICBjbG9jayByYXRlIG11c3QgYmUgMTMgTUh6LCAxOS4yIE1IeiwgMjYgTUh6LCBvciAz
+OC40IE1Iei4KPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKyAtIHNodXRkb3duLWdwaW9z
+OiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIFNEIHBpbgo+ICsgICAgICAg
+ICAgICAgICAgICAgKGFjdGl2ZSBoaWdoIHNodXRkb3duIGlucHV0KQo+ICsgLSByZXNldC1ncGlv
+czogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBSU1RYIHBpbgo+ICsgICAg
+ICAgICAgICAgICAgKGFjdGl2ZSBsb3cgc3lzdGVtIHJlc2V0KQo+ICsgLSBwb3J0czogdGhlIHBv
+cnRzIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJmYWNlIHBvcnQgbm9kZXMgdG8gY29ubmVj
+dAo+ICsgICB0byBhIERQSS9EU0kgc291cmNlIGFuZCB0byBhbiBlRFAvRFAgc2luayBhY2NvcmRp
+bmcgdG8gWzFdWzJdOgo+ICsgICAgLSBwb3J0QDA6IERTSSBpbnB1dCBwb3J0Cj4gKyAgICAtIHBv
+cnRAMTogRFBJIGlucHV0IHBvcnQKPiArICAgIC0gcG9ydEAyOiBlRFAvRFAgb3V0cHV0IHBvcnQK
+PiArCj4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAo+
+ICtbMl06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRl
+cmZhY2VzLnR4dAo+ICsKPiArRXhhbXBsZToKPiArCWVkcC1icmlkZ2VANjggewo+ICsJCWNvbXBh
+dGlibGUgPSAidG9zaGliYSx0YzM1ODc2NyI7Cj4gKwkJcmVnID0gPDB4Njg+Owo+ICsJCXNodXRk
+b3duLWdwaW9zID0gPCZncGlvMyAyMyBHUElPX0FDVElWRV9ISUdIPjsKPiArCQlyZXNldC1ncGlv
+cyA9IDwmZ3BpbzMgMjQgR1BJT19BQ1RJVkVfTE9XPjsKPiArCQljbG9jay1uYW1lcyA9ICJyZWYi
+Owo+ICsJCWNsb2NrcyA9IDwmZWRwX3JlZmNsaz47Cj4gKwo+ICsJCXBvcnRzIHsKCllvdSBhcmUg
+bWlzc2luZyAjc2l6ZS1jZWxscyBhbmQgI2FkZHJlc3MtY2VsbHMgaGVyZSwgb3RoZXJ3aXNlOgoK
+QWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cgo+ICsJCQlwb3J0QDEgewo+
+ICsJCQkJcmVnID0gPDE+Owo+ICsKPiArCQkJCWJyaWRnZV9pbjogZW5kcG9pbnQgewo+ICsJCQkJ
+CXJlbW90ZS1lbmRwb2ludCA9IDwmZHBpX291dD47Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsKPiAr
+CQkJcG9ydEAyIHsKPiArCQkJCXJlZyA9IDwyPjsKPiArCj4gKwkJCQlicmlkZ2Vfb3V0OiBlbmRw
+b2ludCB7Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbj47Cj4gKwkJCQl9Owo+
+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICsKPiAtLSAKPiAyLjguMQo+IApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
