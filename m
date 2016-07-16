@@ -1,111 +1,30 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: [RCF 2/3] hwmon: Document bindings for ads1118 adc driver
-Date: Fri, 15 Jul 2016 17:18:22 -0700
-Message-ID: <49eddbb75c677db62701e229330f0f5c35983130.1468626668.git.stillcompiling@gmail.com>
-References: <cover.1468626668.git.stillcompiling@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1468626668.git.stillcompiling@gmail.com>
-In-Reply-To: <cover.1468626668.git.stillcompiling@gmail.com>
-References: <cover.1468626668.git.stillcompiling@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
-Cc: Joshua Clayton <stillcompiling@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/5] Documentation: DT: Add entry for QorIQ LS1046A-QDS
+ board
+Date: Fri, 15 Jul 2016 19:09:54 -0500
+Message-ID: <20160716000954.GA25500@rob-hp-laptop>
+References: <1467972944-12293-1-git-send-email-shh.xie@gmail.com>
+ <1467972944-12293-5-git-send-email-shh.xie@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467972944-12293-5-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ads1118 is a 4 input 16 bit adc with a buit-in temperature gauge
+On Fri, Jul 08, 2016 at 06:15:43PM +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+> 
+> Signed-off-by: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
----
- .../devicetree/bindings/hwmon/ads1118.txt          | 81 ++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/ads1118.txt
-
-diff --git a/Documentation/devicetree/bindings/hwmon/ads1118.txt b/Documentation/devicetree/bindings/hwmon/ads1118.txt
-new file mode 100644
-index 0000000..41c66dc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/ads1118.txt
-@@ -0,0 +1,81 @@
-+ADS1118 (SPI)
-+
-+The ADS1118 is 16-bit analog to digital converter with 4 inputs and a
-+temperature sensor.
-+The ADS1018 is a 12-bit version of the chip.
-+
-+The inputs can be single ended or differential pair combinations.
-+
-+Each channel, 0 - 4 may be configured as a single ended adc input.
-+Channel 0 may be configured differentially with channel 1.
-+Channels 0, 1, or 2 may be configured differentially with channel 3.
-+
-+To set up a differential pair, the lower channel should be have
-+the ti,differential-endpoint property set to the higher channel in the pair.
-+
-+Each channel can be configured individually:
-+ - fullscale voltage range values are +/- microvolts
-+    6144000, 4096000, 2048000, 1024000, 512000, or 256000
-+
-+ - data_rate in samples per second
-+    - for the ads1018:
-+      128, 250, 490, 920, 1600, 2400, or 3300
-+    - for the ads1118:
-+      8, 16, 32, 64, 128, 250, or 860
-+
-+The sensor contains an internal pullup register to keep the data output
-+high when not in use. This may be disabled, but is enabled by default.
-+
-+1) The /ads1118 node
-+
-+  Required properties:
-+
-+   - compatible : must be "ti,ads1018" or "ti,ads1118"
-+   - spi-cpha : spi phase set to 1 (spi polarity is 0)
-+   - reg : the spi chipselect address
-+   - #address-cells : must be <1>
-+   - #size-cells : must be <0>
-+
-+  Optional properties:
-+
-+   - ti,tempsensor: enable the temperature sensor
-+   - ti,pullup-disable: disable the internal pullup resistor
-+
-+  The node contains child nodes for each channel that the platform uses.
-+
-+2) channel nodes
-+
-+  Required properties:
-+
-+   - reg : the channel number (0, 1, 2, or 3)
-+
-+  Optional properties:
-+
-+   - ti,differential-endpoint: differential second endpoint.
-+   - ti,fullscale: fullscale range in +/- microvolts
-+   - ti,datarate : the converter data rate in samples / second
-+
-+  Example ADS1118 node:
-+
-+	ads1118@0 {
-+		compatible = "ti,ads1118";
-+		spi-max-frequency = <2450000>;
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		ti,tempsensor;
-+		voltage0@0 {
-+			reg = <0>;
-+			ti,fullscale = <6144000>;
-+			ti,datarate = <860>;
-+			ti,differential-endpoint = <1>;
-+		};
-+		voltage1@3 {
-+			reg = <3>;
-+			ti,fullscale = <6144000>;
-+			ti,datarate = <475>;
-+		};
-+	};
-+
-+For the above example, The temperature sensor is enabled as well as
-+channels 0 and 1 in differential mode, and channel 3 single ended.
--- 
-2.7.4
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
