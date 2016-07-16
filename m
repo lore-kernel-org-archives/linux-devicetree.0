@@ -1,26 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/3] dt-bindings: pwm: Add MediaTek display PWM
- bindings
-Date: Sat, 16 Jul 2016 08:44:04 -0500
-Message-ID: <20160716134404.GA2143@rob-hp-laptop>
-References: <1468225089-28576-1-git-send-email-weiqing.kong@mediatek.com>
- <1468225089-28576-2-git-send-email-weiqing.kong@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 4/6] drm/rockchip: dw_hdmi: add RK3399 HDMI support
+Date: Sat, 16 Jul 2016 08:47:18 -0500
+Message-ID: <20160716134718.GA3267@rob-hp-laptop>
+References: <1468235079-29152-1-git-send-email-ykk@rock-chips.com>
+ <1468235146-29575-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1468225089-28576-2-git-send-email-weiqing.kong@mediatek.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Weiqing Kong <weiqing.kong@mediatek.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, erin.lo@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, yh.huang@mediatek.com, yt.shen@mediatek.com
+In-Reply-To: <1468235146-29575-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xhc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 11, 2016 at 04:18:07PM +0800, Weiqing Kong wrote:
-> Add MT2701 compatible string.
+On Mon, Jul 11, 2016 at 07:05:46PM +0800, Yakir Yang wrote:
+> RK3399 and RK3288 shared the same HDMI IP controller, only some light
+> difference with GRF configure.
 > 
-> Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
+> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/display/bridge/dw_hdmi.txt |  1 +
+>  .../bindings/display/rockchip/dw_hdmi-rockchip.txt |  3 +-
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/gpu/drm/bridge/dw-hdmi.c                   |  2 +-
+>  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 45 ++++++++++++++++++----
+>  include/drm/bridge/dw_hdmi.h                       |  6 +++
+>  5 files changed, 48 insertions(+), 9 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
