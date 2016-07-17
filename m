@@ -1,75 +1,97 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: tc358767: add DT documentation
-Date: Sun, 17 Jul 2016 13:55:25 +0530
-Message-ID: <578B40F5.6070309@codeaurora.org>
-References: <1468393631-12042-1-git-send-email-p.zabel@pengutronix.de>
- <1468393631-12042-2-git-send-email-p.zabel@pengutronix.de>
- <20160716223438.GA17525@rob-hp-laptop>
+From: Jamie Lentin <jm@lentin.co.uk>
+Subject: Re: [PATCH v0 06/10] arm: orion5x: Add DT-based support for Netgear
+ WNR854T
+Date: Sun, 17 Jul 2016 10:39:01 +0100 (BST)
+Message-ID: <alpine.DEB.2.11.1607170959090.19980@marmot.wormnet.eu>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+ <1468679348-10522-7-git-send-email-jm@lentin.co.uk>
+ <4290281.AD5Bhg23o6@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160716223438.GA17525@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, dri-devel@lists.freedesktop.org, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4290281.AD5Bhg23o6@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiA3LzE3LzIwMTYgNDowNCBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gV2VkLCBKdWwg
-MTMsIDIwMTYgYXQgMDk6MDc6MTBBTSArMDIwMCwgUGhpbGlwcCBaYWJlbCB3cm90ZToKPj4gQWRk
-IERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIFRvc2hpYmEgVEMzNTg3NjcgZURQIGJy
-aWRnZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRy
-b25peC5kZT4KPj4gLS0tCj4+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEs
-dGMzNTg3NjcudHh0ICAgfCA1MSArKysrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNo
-YW5nZWQsIDUxIGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3Njcu
-dHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2UvdG9zaGliYSx0YzM1ODc2Ny50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdG9zaGliYSx0YzM1ODc2Ny50eHQKPj4gbmV3
-IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uMDVhZGEyOAo+PiAtLS0gL2Rldi9u
-dWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS90b3NoaWJhLHRjMzU4NzY3LnR4dAo+PiBAQCAtMCwwICsxLDUxIEBACj4+ICtUb3NoaWJh
-IFRDMzU4NzY3IGVEUCBicmlkZ2UgYmluZGluZ3MKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGll
-czoKPj4gKyAtIGNvbXBhdGlibGU6ICJ0b3NoaWJhLHRjMzU4NzY3Igo+PiArIC0gcmVnOiBpMmMg
-YWRkcmVzcyBvZiB0aGUgYnJpZGdlLCAweDY4IG9yIDB4MGYsIGRlcGVuZGluZyBvbiBib290c3Ry
-YXAgcGlucwo+PiArIC0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAicmVmIgo+PiArIC0gY2xvY2tz
-OiBPRiBkZXZpY2UtdHJlZSBjbG9jayBzcGVjaWZpY2F0aW9uIGZvciByZWZjbGsgaW5wdXQuIFRo
-ZSByZWZlcmVuY2UKPj4gKyAgIGNsb2NrIHJhdGUgbXVzdCBiZSAxMyBNSHosIDE5LjIgTUh6LCAy
-NiBNSHosIG9yIDM4LjQgTUh6Lgo+PiArCj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiArIC0g
-c2h1dGRvd24tZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3IgU0Qg
-cGluCj4+ICsgICAgICAgICAgICAgICAgICAgKGFjdGl2ZSBoaWdoIHNodXRkb3duIGlucHV0KQo+
-PiArIC0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8gc3BlY2lmaWNhdGlvbiBmb3Ig
-UlNUWCBwaW4KPj4gKyAgICAgICAgICAgICAgICAoYWN0aXZlIGxvdyBzeXN0ZW0gcmVzZXQpCj4+
-ICsgLSBwb3J0czogdGhlIHBvcnRzIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJmYWNlIHBv
-cnQgbm9kZXMgdG8gY29ubmVjdAo+PiArICAgdG8gYSBEUEkvRFNJIHNvdXJjZSBhbmQgdG8gYW4g
-ZURQL0RQIHNpbmsgYWNjb3JkaW5nIHRvIFsxXVsyXToKPj4gKyAgICAtIHBvcnRAMDogRFNJIGlu
-cHV0IHBvcnQKPj4gKyAgICAtIHBvcnRAMTogRFBJIGlucHV0IHBvcnQKPj4gKyAgICAtIHBvcnRA
-MjogZURQL0RQIG91dHB1dCBwb3J0Cj4+ICsKPj4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAo+PiArWzJdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKPj4gKwo+PiArRXhhbXBsZToKPj4g
-KwllZHAtYnJpZGdlQDY4IHsKPj4gKwkJY29tcGF0aWJsZSA9ICJ0b3NoaWJhLHRjMzU4NzY3IjsK
-Pj4gKwkJcmVnID0gPDB4Njg+Owo+PiArCQlzaHV0ZG93bi1ncGlvcyA9IDwmZ3BpbzMgMjMgR1BJ
-T19BQ1RJVkVfSElHSD47Cj4+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvMyAyNCBHUElPX0FDVElW
-RV9MT1c+Owo+PiArCQljbG9jay1uYW1lcyA9ICJyZWYiOwo+PiArCQljbG9ja3MgPSA8JmVkcF9y
-ZWZjbGs+Owo+PiArCj4+ICsJCXBvcnRzIHsKPgo+IFlvdSBhcmUgbWlzc2luZyAjc2l6ZS1jZWxs
-cyBhbmQgI2FkZHJlc3MtY2VsbHMgaGVyZSwgb3RoZXJ3aXNlOgo+Cj4gQWNrZWQtYnk6IFJvYiBI
-ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+CgpUaGFua3MsIEknbGwgZml4IGl0IHVwIGJlZm9yZSBz
-ZW5kaW5nIGEgcHVsbCByZXF1ZXN0LgoKQXJjaGl0Cgo+Cj4+ICsJCQlwb3J0QDEgewo+PiArCQkJ
-CXJlZyA9IDwxPjsKPj4gKwo+PiArCQkJCWJyaWRnZV9pbjogZW5kcG9pbnQgewo+PiArCQkJCQly
-ZW1vdGUtZW5kcG9pbnQgPSA8JmRwaV9vdXQ+Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiArCj4+
-ICsJCQlwb3J0QDIgewo+PiArCQkJCXJlZyA9IDwyPjsKPj4gKwo+PiArCQkJCWJyaWRnZV9vdXQ6
-IGVuZHBvaW50IHsKPj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbj47Cj4+ICsJ
-CQkJfTsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+ICsJfTsKPj4gKwo+PiAtLQo+PiAyLjguMQo+PgoK
-LS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUg
-QXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Sat, 16 Jul 2016, Arnd Bergmann wrote:
+
+> On Saturday, July 16, 2016 3:29:04 PM CEST Jamie Lentin wrote:
+>> +
+>> +#define WNR854T_PCI_SLOT0_OFFS	7
+>> +#define WNR854T_PCI_SLOT0_IRQ_PIN	4
+>> +
+>> +static void __init wnr854t_pci_preinit(void)
+>> +{
+>> +	int pin;
+>> +
+>> +	/*
+>> +	 * Configure PCI GPIO IRQ pins
+>> +	 */
+>> +	pin = WNR854T_PCI_SLOT0_IRQ_PIN;
+>> +	if (gpio_request(pin, "PCI Int") == 0) {
+>> +		if (gpio_direction_input(pin) == 0) {
+>> +			irq_set_irq_type(gpio_to_irq(pin), IRQ_TYPE_LEVEL_LOW);
+>> +		} else {
+>> +			pr_err("wnr854t_pci_preinit failed to set_irq_type pin %d\n",
+>> +				pin);
+>> +			gpio_free(pin);
+>> +		}
+>> +	} else {
+>> +		pr_err("wnr854t_pci_preinit failed to request gpio %d\n", pin);
+>> +	}
+>> +}
+>> +
+>> +static int __init wnr854t_pci_map_irq(const struct pci_dev *dev, u8 slot,
+>> +	u8 pin)
+>> +{
+>> +	int irq;
+>> +
+>> +	/*
+>> +	 * Check for devices with hard-wired IRQs.
+>> +	 */
+>> +	irq = orion5x_pci_map_irq(dev, slot, pin);
+>> +	if (irq != -1)
+>> +		return irq;
+>> +
+>> +	/*
+>> +	 * PCI IRQs are connected via GPIOs
+>> +	 */
+>> +	switch (slot - WNR854T_PCI_SLOT0_OFFS) {
+>> +	case 0:
+>> +		return gpio_to_irq(WNR854T_PCI_SLOT0_IRQ_PIN);
+>> +	default:
+>> +		return -1;
+>> +	}
+>> +}
+>
+> The other patches all appear good to me, but I find this one suspicious.
+>
+> Why are you not using the device tree for probing PCI? Is there anything
+> missing in drivers/pci/host/pci-mvebu.c, or do you just need help
+> describing it in DT?
+
+Unlike the other SoC's supported by pci-mvebu.c, orion5x has one PCI port 
+as well as a PCIe port. Given no other orion5x boards seem to use 
+pci-mvebu, I'm assuming there's work to be done before the PCI port can be 
+used via. pci-mvebu.c
+
+This is something I can look into if there aren't patches out there, but 
+wanted to get the rest into a reasonable state first.
+
+>
+> 	Arnd
+>
+
+-- 
+Jamie Lentin
