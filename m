@@ -1,66 +1,60 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] dt: bindings: Add a generic ethernet device binding
-Date: Sat, 16 Jul 2016 18:02:45 -0700 (PDT)
-Message-ID: <20160716.180245.1523267216987842392.davem@davemloft.net>
-References: <47a052a1-cc8b-0f75-e44a-450c4a0ac075@redhat.com>
-	<20160715.105158.2028840258568316933.davem@davemloft.net>
-	<888927c4-0987-ccfb-e2de-d03f6d4ab319@redhat.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <888927c4-0987-ccfb-e2de-d03f6d4ab319@redhat.com>
-Sender: netdev-owner@vger.kernel.org
-To: hdegoede@redhat.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Scott Wood <oss@buserror.net>
+Subject: [PATCH v11 5/5] powerpc/fsl-pci: Use fsl_guts_get_svr()
+Date: Sat, 16 Jul 2016 21:50:22 -0500
+Message-ID: <1468723822-30457-6-git-send-email-oss@buserror.net>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1468723822-30457-1-git-send-email-oss@buserror.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Yangbo Lu <yangbo.lu@nxp.com>, linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Scott Wood <oss@buserror.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
-Date: Sat, 16 Jul 2016 12:12:37 +0200
+Establish an initial user of fsl_guts_get_svr(), so that the code gets
+some test coverage until users outside arch/powerpc can get converted.
 
-> Hi,
-> 
-> On 15-07-16 19:51, David Miller wrote:
->> From: Hans de Goede <hdegoede@redhat.com>
->> Date: Fri, 15 Jul 2016 08:40:00 +0200
->>
->>> Hi,
->>>
->>> On 15-07-16 01:17, David Miller wrote:
->>>> From: Hans de Goede <hdegoede@redhat.com>
->>>> Date: Wed, 13 Jul 2016 12:20:04 +0200
->>>>
->>>>> On some boards (android tablets) different batches use different sdio
->>>>> wifi modules. This is not a problem since sdio is a discoverable bus,
->>>>> so we only need to describe and activate the mmc controller in dt and
->>>>> then the kernel will automatically load the right driver.
->>>>>
->>>>> But sometimes it is useful to specify certain ethernet properties for
->>>>> these "unknown" sdio devices, specifically we want the boot-loader
->>>>> to be able to set "local-mac-address" as some of these sdio wifi
->>>>> modules come without an eeprom / without a factory programmed mac
->>>>> address.
->>>>>
->>>>> Since the exact device is unknown (differs per batch) we cannot use
->>>>> a wifi-chip specific compatible. This commit adds a new
->>>>> "generic,ethernet" binding for use in dt-nodes describing such an
->>>>> unknown ethernet device.
->>>>>
->>>>> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
->>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>
->>>> Precedence exists for a "system ethernet address" as far back as the
->>>> original sparc device tree implementation, so please just specify it
->>>> that way rather than trying to force having to make an alias or
->>>> reference to it from a specific device.
->>>
->>> Some boards where this is applicable have both a wired and a wireless
->>> ethernet, so one global setting will not work.
->>
->> Then call it "eth:local-mac-address" and "wifi:local-mac-address"
-> 
-> Until we get a board with 2 ethernet interfaces, really the alias
-> thing
-> is working fine here, that is not the problem.
+Signed-off-by: Scott Wood <oss@buserror.net>
+---
+ arch/powerpc/Kconfig          | 1 +
+ arch/powerpc/sysdev/fsl_pci.c | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-Fair enough.
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index fcfe533..765df81 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -777,6 +777,7 @@ config FSL_PCI
+  	bool
+ 	select PPC_INDIRECT_PCI
+ 	select PCI_QUIRKS
++	select FSL_GUTS
+ 
+ config FSL_PMC
+ 	bool
+diff --git a/arch/powerpc/sysdev/fsl_pci.c b/arch/powerpc/sysdev/fsl_pci.c
+index 0fd1895..9ba570cf 100644
+--- a/arch/powerpc/sysdev/fsl_pci.c
++++ b/arch/powerpc/sysdev/fsl_pci.c
+@@ -22,6 +22,7 @@
+ #include <linux/delay.h>
+ #include <linux/string.h>
+ #include <linux/fsl/edac.h>
++#include <linux/fsl/guts.h>
+ #include <linux/fsl/svr.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+@@ -529,7 +530,10 @@ int fsl_add_bridge(struct platform_device *pdev, int is_primary)
+ 	struct device_node *dev;
+ 	struct ccsr_pci __iomem *pci;
+ 	u16 temp;
+-	u32 svr = mfspr(SPRN_SVR);
++	u32 svr;
++
++	fsl_guts_init();
++	svr = fsl_guts_get_svr();
+ 
+ 	dev = pdev->dev.of_node;
+ 
+-- 
+2.7.4
+
