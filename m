@@ -1,60 +1,31 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: Document Renesas R-Car FCP power-domains usage
-Date: Sun, 17 Jul 2016 19:31:12 +0300
-Message-ID: <5049690.gmjd5cAaeQ@avalon>
-References: <1467305430-25660-1-git-send-email-kieran@bingham.xyz> <1467305430-25660-3-git-send-email-kieran@bingham.xyz>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] ARM: dts: msm8974-hammerhead: Add regulator nodes for hammerhead
+Date: Sun, 17 Jul 2016 21:21:48 +0200
+Message-ID: <2913371.W2mXA8xjNE@wuerfel>
+References: <20160717105208.9596-1-bshah@kde.org> <20160717105208.9596-3-bshah@kde.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1467305430-25660-3-git-send-email-kieran@bingham.xyz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kieran Bingham <kieran@ksquared.org.uk>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160717105208.9596-3-bshah@kde.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bhushan Shah <bshah@kde.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
-
-Thank you for the patch.
-
-On Thursday 30 Jun 2016 17:50:29 Kieran Bingham wrote:
-> The power domain must be specified to bring the device out of module
-> standby. Document this in the bindings provided, so that new additions
-> are not missed.
-> 
-> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  Documentation/devicetree/bindings/media/renesas,fcp.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> b/Documentation/devicetree/bindings/media/renesas,fcp.txt index
-> 271dcfdb5a76..5be21b6411ba 100644
-> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
-> @@ -23,6 +23,10 @@ are paired with. These DT bindings currently support the
-> FCPV and FCPF. - reg: the register base and size for the device registers
->   - clocks: Reference to the functional clock
-> 
-> +Optional properties:
-> + - power-domains : power-domain property defined with a power domain
-> specifier
-> +                            to respective power domain.
+On Sunday, July 17, 2016 4:22:07 PM CEST Bhushan Shah wrote:
 > +
-> 
->  Device node example
->  -------------------
-> @@ -31,4 +35,5 @@ Device node example
->  		compatible = "renesas,r8a7795-fcpv", "renesas,fcpv";
->  		reg = <0 0xfea2f000 0 0x200>;
->  		clocks = <&cpg CPG_MOD 602>;
-> +		power-domains = <&sysc R8A7795_PD_A3VP>;
->  	};
+> +       smd {
+> +               rpm {
+> +                       rpm_requests {
+> +                               pm8841-regulators {
+> +                                       s1 {
+> +                                               regulator-min-microvolt = <675000>;
+> +                                               regulator-max-microvolt = <1050000>;
+> +                                       };
 
--- 
-Regards,
+Maybe add a label at either the rpm_requests or the pm8841-regulators
+node so you can add properties in the leaf nodes withoutout having to
+specify the whole path?
 
-Laurent Pinchart
+	Arnd
