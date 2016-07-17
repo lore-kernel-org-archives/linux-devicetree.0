@@ -1,58 +1,25 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: socfpga: add bindings doc for arria10 fpga manager
-Date: Sun, 17 Jul 2016 13:40:44 -0700
-Message-ID: <CAAtXAHdFKOoYa0tWrO8=COZXAFN5rNM2-w6sR3H9cMCpT5uqxw@mail.gmail.com>
-References: <20160712190709.5964-1-atull@opensource.altera.com> <20160712190709.5964-2-atull@opensource.altera.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v0 05/10] arm: orion5x: Add DT include for mv88f5181
+Date: Sun, 17 Jul 2016 15:41:45 -0500
+Message-ID: <20160717204145.GA17994@rob-hp-laptop>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+ <1468679348-10522-6-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160712190709.5964-2-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468679348-10522-6-git-send-email-jm@lentin.co.uk>
+Sender: netdev-owner@vger.kernel.org
+To: Jamie Lentin <jm@lentin.co.uk>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-By: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-
-On Tue, Jul 12, 2016 at 12:07 PM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> Add a device tree bindings document for the SoCFPGA Arria10
-> FPGA Manager driver.
->
-> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Sat, Jul 16, 2016 at 03:29:03PM +0100, Jamie Lentin wrote:
+> Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
 > ---
->  .../bindings/fpga/altera-socfpga-a10-fpga-mgr.txt     | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
->
-> diff --git a/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
-> new file mode 100644
-> index 0000000..2fd8e7a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
-> @@ -0,0 +1,19 @@
-> +Altera SOCFPGA Arria10 FPGA Manager
-> +
-> +Required properties:
-> +- compatible : should contain "altr,socfpga-a10-fpga-mgr"
-> +- reg        : base address and size for memory mapped io.
-> +               - The first index is for FPGA manager register access.
-> +               - The second index is for writing FPGA configuration data.
-> +- resets     : Phandle and reset specifier for the device's reset.
-> +- clocks     : Clocks used by the device.
-> +
-> +Example:
-> +
-> +       fpga_mgr: fpga-mgr@ffd03000 {
-> +               compatible = "altr,socfpga-a10-fpga-mgr";
-> +               reg = <0xffd03000 0x100
-> +                      0xffcfe400 0x20>;
-> +               clocks = <&l4_mp_clk>;
-> +               resets = <&rst FPGAMGR_RESET>;
-> +       };
-> --
-> 2.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  .../bindings/arm/marvell/marvell,orion5x.txt       |  1 +
+>  arch/arm/boot/dts/orion5x-mv88f5181.dtsi           | 35 ++++++++++++++++++++++
+>  2 files changed, 36 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/orion5x-mv88f5181.dtsi
+
+Acked-by: Rob Herring <robh@kernel.org>
