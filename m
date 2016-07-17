@@ -1,40 +1,60 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH] clk: zynq: avoid retrieving clock names from DT property
-Date: Sun, 17 Jul 2016 09:11:10 -0700
-Message-ID: <20160717161110.GY3847@xsjsorenbubuntu>
-References: <1468682123-1434-1-git-send-email-yamada.masahiro@socionext.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: Document Renesas R-Car FCP power-domains usage
+Date: Sun, 17 Jul 2016 19:31:12 +0300
+Message-ID: <5049690.gmjd5cAaeQ@avalon>
+References: <1467305430-25660-1-git-send-email-kieran@bingham.xyz> <1467305430-25660-3-git-send-email-kieran@bingham.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468682123-1434-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1467305430-25660-3-git-send-email-kieran@bingham.xyz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-clk@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Kieran Bingham <kieran@ksquared.org.uk>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2016-07-17 at 00:15:23 +0900, Masahiro Yamada wrote:
-> The "clock-output-names" property is useful for generic clock
-> providers such as fixed-clock, fixed-factor-clock, etc.
->=20
-> On the other hand, it should not be used for really SoC-specific
-> clock providers like this one.  As you see in "enum zynq_clk" in
-> this driver, it is written as if it already knows all the clock
-> names.  Besides, this is instantiated only once, so no clock name
-> conflict would happen even if the clock names are hard-coded in the
-> driver.
->=20
-> The device tree (arch/arm/boot/dts/zynq-7000.dtsi) will be fixed
-> later.
->=20
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Hi Kieran,
 
-IIRC, this was the only way to allow circular clock routing. E.g. there
-are use-cases that route an FCLK back into the PS to use it as input fo=
-r
-the GEM. With the introduction of deferred probing this might all be
-possible now but it would be good to verify that this kind of circular
-clock routing still works with this change.
+Thank you for the patch.
 
-	S=C3=B6ren
+On Thursday 30 Jun 2016 17:50:29 Kieran Bingham wrote:
+> The power domain must be specified to bring the device out of module
+> standby. Document this in the bindings provided, so that new additions
+> are not missed.
+> 
+> Signed-off-by: Kieran Bingham <kieran@bingham.xyz>
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  Documentation/devicetree/bindings/media/renesas,fcp.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> b/Documentation/devicetree/bindings/media/renesas,fcp.txt index
+> 271dcfdb5a76..5be21b6411ba 100644
+> --- a/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.txt
+> @@ -23,6 +23,10 @@ are paired with. These DT bindings currently support the
+> FCPV and FCPF. - reg: the register base and size for the device registers
+>   - clocks: Reference to the functional clock
+> 
+> +Optional properties:
+> + - power-domains : power-domain property defined with a power domain
+> specifier
+> +                            to respective power domain.
+> +
+> 
+>  Device node example
+>  -------------------
+> @@ -31,4 +35,5 @@ Device node example
+>  		compatible = "renesas,r8a7795-fcpv", "renesas,fcpv";
+>  		reg = <0 0xfea2f000 0 0x200>;
+>  		clocks = <&cpg CPG_MOD 602>;
+> +		power-domains = <&sysc R8A7795_PD_A3VP>;
+>  	};
+
+-- 
+Regards,
+
+Laurent Pinchart
