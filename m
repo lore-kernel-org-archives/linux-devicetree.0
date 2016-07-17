@@ -1,54 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7] input: touchscreen: Add generic driver for Silead
- touchscreens
-Date: Sun, 17 Jul 2016 15:54:34 -0500
-Message-ID: <20160717205434.GA25217@rob-hp-laptop>
-References: <1468699818-31660-1-git-send-email-hdegoede@redhat.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: add rk3288-firefly-reload
+Date: Sun, 17 Jul 2016 16:01:34 -0500
+Message-ID: <20160717210134.GA25977@rob-hp-laptop>
+References: <5614243.tqTyZoc945@phil>
+ <1468769937-23387-1-git-send-email-ayaka@soulik.info>
+ <1468769937-23387-2-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1468699818-31660-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Daniel Jansen <djaniboe@gmail.com>, Wessel Blokzijl <wesselb94@gmail.com>, Siebren Vroegindeweij <siebren.vroegindeweij@gmail.com>, Robert Dolca <robert.dolca@intel.com>
+In-Reply-To: <1468769937-23387-2-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, =linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 16, 2016 at 10:10:18PM +0200, Hans de Goede wrote:
-> From: Robert Dolca <robert.dolca@intel.com>
+On Sun, Jul 17, 2016 at 11:38:57PM +0800, Randy Li wrote:
+> The Firefly RK3288 Reload is a combination Firefly rk3288 core board
+> with the Reload baseboard. Add a dtsi for the Firefly rk3288 core
+> which can be included into the dts for the various baseboards
+> in the future and dts for Reload base board.
 > 
-> This driver adds support for Silead touchscreens. It has been tested
-> with GSL1680 and GSL3680 touch panels.
+> Currently supported are serial console, wired networking, eMMC and
+> SD storage, SPFIF, IR receiver, LEDs, SDIO wifi and USB. But only
+> the OTG could work on the host mode now, the other USB host can't
+> work now, additional patches are required.
 > 
-> It supports ACPI and device tree enumeration. Screen resolution,
-> the maximum number of fingers supported and firmware name are
-> configurable.
-> 
-> Signed-off-by: Robert Dolca <robert.dolca@intel.com>
-> Signed-off-by: Daniel Jansen <djaniboe@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 > ---
-> Changes in v7:
-> -Various style fixes
-> -use only fw_name instead of both fw_name and custom_fw_name
-> -use gpiod_get_optional for power gpio
-> -cleanup touch data parsing
-> -use new touchscreen_parse_properties() / touchscreen_set_mt_pos()
->  instead of diy axis invertion / swapping code
-> -Move touchscreen-max-fingers documentation to bindings/touchscreen.txt
-> Changes in v6:
-> -Default to 5 fingers if max-fingers is not specified
-> -Improve devicetree binding doc: improve wake-gpios description, use
->  "See touchscreen.txt" where applicable
-> ---
->  .../bindings/input/touchscreen/silead_gsl1680.txt  |  36 ++
->  .../bindings/input/touchscreen/touchscreen.txt     |   2 +
+>  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi  | 304 ++++++++++++++++++++
+>  arch/arm/boot/dts/rk3288-firefly-reload.dts        | 320 +++++++++++++++++++++
+>  4 files changed, 629 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+>  create mode 100644 arch/arm/boot/dts/rk3288-firefly-reload.dts
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/input/touchscreen/Kconfig                  |  13 +
->  drivers/input/touchscreen/Makefile                 |   1 +
->  drivers/input/touchscreen/silead.c                 | 572 +++++++++++++++++++++
->  5 files changed, 624 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
->  create mode 100644 drivers/input/touchscreen/silead.c
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
