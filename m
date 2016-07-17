@@ -1,42 +1,54 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] clk: zynq: avoid retrieving clock names from DT property
-Date: Sun, 17 Jul 2016 15:53:35 -0500
-Message-ID: <20160717205335.GA24048@rob-hp-laptop>
-References: <1468682123-1434-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v7] input: touchscreen: Add generic driver for Silead
+ touchscreens
+Date: Sun, 17 Jul 2016 15:54:34 -0500
+Message-ID: <20160717205434.GA25217@rob-hp-laptop>
+References: <1468699818-31660-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1468682123-1434-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-clk@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, soren.brinkmann@xilinx.com
+In-Reply-To: <1468699818-31660-1-git-send-email-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Daniel Jansen <djaniboe@gmail.com>, Wessel Blokzijl <wesselb94@gmail.com>, Siebren Vroegindeweij <siebren.vroegindeweij@gmail.com>, Robert Dolca <robert.dolca@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 17, 2016 at 12:15:23AM +0900, Masahiro Yamada wrote:
-> The "clock-output-names" property is useful for generic clock
-> providers such as fixed-clock, fixed-factor-clock, etc.
+On Sat, Jul 16, 2016 at 10:10:18PM +0200, Hans de Goede wrote:
+> From: Robert Dolca <robert.dolca@intel.com>
 > 
-> On the other hand, it should not be used for really SoC-specific
-> clock providers like this one.  As you see in "enum zynq_clk" in
-> this driver, it is written as if it already knows all the clock
-> names.  Besides, this is instantiated only once, so no clock name
-> conflict would happen even if the clock names are hard-coded in the
-> driver.
+> This driver adds support for Silead touchscreens. It has been tested
+> with GSL1680 and GSL3680 touch panels.
 > 
-> The device tree (arch/arm/boot/dts/zynq-7000.dtsi) will be fixed
-> later.
-
-This should be done now so dts files and docs are in sync.
-
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> It supports ACPI and device tree enumeration. Screen resolution,
+> the maximum number of fingers supported and firmware name are
+> configurable.
+> 
+> Signed-off-by: Robert Dolca <robert.dolca@intel.com>
+> Signed-off-by: Daniel Jansen <djaniboe@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
-> 
-> This patch was tested on Zynq Zedboard.
-> 
-> 
->  .../devicetree/bindings/clock/zynq-7000.txt         | 13 -------------
->  drivers/clk/zynq/clkc.c                             | 21 ++++++++++++---------
->  2 files changed, 12 insertions(+), 22 deletions(-)
+> Changes in v7:
+> -Various style fixes
+> -use only fw_name instead of both fw_name and custom_fw_name
+> -use gpiod_get_optional for power gpio
+> -cleanup touch data parsing
+> -use new touchscreen_parse_properties() / touchscreen_set_mt_pos()
+>  instead of diy axis invertion / swapping code
+> -Move touchscreen-max-fingers documentation to bindings/touchscreen.txt
+> Changes in v6:
+> -Default to 5 fingers if max-fingers is not specified
+> -Improve devicetree binding doc: improve wake-gpios description, use
+>  "See touchscreen.txt" where applicable
+> ---
+>  .../bindings/input/touchscreen/silead_gsl1680.txt  |  36 ++
+>  .../bindings/input/touchscreen/touchscreen.txt     |   2 +
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/input/touchscreen/Kconfig                  |  13 +
+>  drivers/input/touchscreen/Makefile                 |   1 +
+>  drivers/input/touchscreen/silead.c                 | 572 +++++++++++++++++++++
+>  5 files changed, 624 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>  create mode 100644 drivers/input/touchscreen/silead.c
