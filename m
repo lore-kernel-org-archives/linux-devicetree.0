@@ -1,101 +1,76 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/5] usb: dwc3: make usb2 phy utmi interface configurable in DT
-Date: Sun, 17 Jul 2016 12:28:22 +0200
-Message-ID: <1738306.cydkc9Pb90@diego>
-References: <1468486762-21960-1-git-send-email-william.wu@rock-chips.com> <1468486762-21960-4-git-send-email-william.wu@rock-chips.com> <20160716225715.GA27724@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160716225715.GA27724@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Bhushan Shah <bshah@kde.org>
+Subject: [PATCH 1/3] ARM: dts: qcom: Add initial DTS for LG Nexus 5 Phone
+Date: Sun, 17 Jul 2016 16:22:06 +0530
+Message-ID: <20160717105208.9596-2-bshah@kde.org>
+References: <20160717105208.9596-1-bshah@kde.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160717105208.9596-1-bshah@kde.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+Cc: Bhushan Shah <bshah@kde.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 16. Juli 2016, 17:57:15 schrieb Rob Herring:
-> On Thu, Jul 14, 2016 at 04:59:20PM +0800, William Wu wrote:
-> > Add snps,phyif-utmi-width devicetree property to configure
-> > the UTMI+ PHY with an 8- or 16-bit interface. UTMI+ PHY
-> > interface is a hardware property, and it's platform dependent.
-> > Normally,the PHYIF can be configured during coreconsultant.
-> 
->            ^
-> space
-> 
-> > But for some specific USB cores(e.g. rk3399 SoC DWC3), the
-> > default PHYIF configuration value is fault, so we need to
-> > reconfigure it by software.
-> > 
-> > And refer to the DWC3 databook, the GUSB2PHYCFG.USBTRDTIM
-> > must be set to the corresponding value according to the
-> > UTMI+ PHY interface.
-> > 
-> > Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > ---
-> > Changes in v7:
-> > - remove quirk and use only one property to configure utmi (Heiko, Rob
-> > Herring)
-> > 
-> > Changes in v6:
-> > - use '-' instead of '_' in dts (Rob Herring)
-> > 
-> > Changes in v5:
-> > - None
-> > 
-> > Changes in v4:
-> > - rebase on top of balbi testing/next, remove pdata (balbi)
-> > 
-> > Changes in v3:
-> > - None
-> > 
-> > Changes in v2:
-> > - add a quirk for phyif_utmi (balbi)
-> > 
-> >  Documentation/devicetree/bindings/usb/dwc3.txt |  3 +++
-> >  drivers/usb/dwc3/core.c                        | 25
-> >  +++++++++++++++++++++++++ drivers/usb/dwc3/core.h                       
-> >  | 10 ++++++++++
-> >  3 files changed, 38 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > b/Documentation/devicetree/bindings/usb/dwc3.txt index 020b0e9..00cc541
-> > 100644
-> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > 
-> > @@ -47,6 +47,9 @@ Optional properties:
-> >   - snps,hird-threshold: HIRD threshold
-> >   - snps,hsphy_interface: High-Speed PHY interface selection between
-> >   "utmi" for>   
-> >     UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has value
-> >     3.
-> > 
-> > + - snps,phyif-utmi-width: the value to configure the core to support a
-> > UTMI+ PHY +			with an 8- or 16-bit interface. Value 8 select 8-bit
-> > +			interface, value 16 select 16-bit interface.
-> 
-> Is 'phy_type = "utmi_wide"' not the same as 16-bit width?
-> 
-> Again, I think this should be common.
+This DTS file have support LG Nexus 5 (codenamed hammerhead).
+Initial version have support for just serial console over headphone
+jack.
 
-after knowing that I need to look for that "utmi_wide", I think I'd agree.
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-msm@vger.kernel.org
+Signed-off-by: Bhushan Shah <bshah@kde.org>
+---
+ arch/arm/boot/dts/Makefile                         |  1 +
+ .../dts/qcom-msm8974-lge-nexus5-hammerhead.dts     | 25 ++++++++++++++++++++++
+ 2 files changed, 26 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
 
-I found mention of that in usb/ci-hdrc-usb2.txt and usb/fsl-usb.txt and from
-the coresponding code, I can see that they really mean the 16bit interface,
-the Rockchip TRM as well as the spec [0] seems to call it UTMI+ but really
-looks the same as utmi_wide.
-
-Interestingly, there is already generic code in drivers/usb/phy/of.c so that 
-property should probably move to devicetree/bindings/usb/generic.txt
-as well.
-
-
-Heiko
-
-[0] http://cache.nxp.com/files/corporate/doc/support_info/UTMI-PLUS-SPECIFICATION.pdf
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 414b427..13947ec 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -584,6 +584,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-ipq8064-ap148.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb \
++	qcom-msm8974-lge-nexus5-hammerhead.dtb \
+ 	qcom-msm8974-sony-xperia-honami.dtb
+ dtb-$(CONFIG_ARCH_REALVIEW) += \
+ 	arm-realview-pb1176.dtb \
+diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+new file mode 100644
+index 0000000..88d494f
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+@@ -0,0 +1,25 @@
++#include "qcom-msm8974.dtsi"
++#include "qcom-pm8841.dtsi"
++#include "qcom-pm8941.dtsi"
++
++/ {
++	model = "LGE MSM 8974 HAMMERHEAD";
++	compatible = "qcom,msm8974";
++	qcom,msm-id = <126 150 0x20002 0xB>;
++
++	aliases {
++		serial0 = &blsp1_uart1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&soc {
++
++	serial@f991d000 {
++		status = "ok";
++	};
++
++};
+-- 
+2.9.0
