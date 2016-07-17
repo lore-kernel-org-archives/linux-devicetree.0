@@ -1,97 +1,101 @@
-From: Jamie Lentin <jm@lentin.co.uk>
-Subject: Re: [PATCH v0 06/10] arm: orion5x: Add DT-based support for Netgear
- WNR854T
-Date: Sun, 17 Jul 2016 10:39:01 +0100 (BST)
-Message-ID: <alpine.DEB.2.11.1607170959090.19980@marmot.wormnet.eu>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
- <1468679348-10522-7-git-send-email-jm@lentin.co.uk>
- <4290281.AD5Bhg23o6@wuerfel>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] usb: dwc3: make usb2 phy utmi interface configurable in DT
+Date: Sun, 17 Jul 2016 12:28:22 +0200
+Message-ID: <1738306.cydkc9Pb90@diego>
+References: <1468486762-21960-1-git-send-email-william.wu@rock-chips.com> <1468486762-21960-4-git-send-email-william.wu@rock-chips.com> <20160716225715.GA27724@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4290281.AD5Bhg23o6@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160716225715.GA27724@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 16 Jul 2016, Arnd Bergmann wrote:
+Am Samstag, 16. Juli 2016, 17:57:15 schrieb Rob Herring:
+> On Thu, Jul 14, 2016 at 04:59:20PM +0800, William Wu wrote:
+> > Add snps,phyif-utmi-width devicetree property to configure
+> > the UTMI+ PHY with an 8- or 16-bit interface. UTMI+ PHY
+> > interface is a hardware property, and it's platform dependent.
+> > Normally,the PHYIF can be configured during coreconsultant.
+> 
+>            ^
+> space
+> 
+> > But for some specific USB cores(e.g. rk3399 SoC DWC3), the
+> > default PHYIF configuration value is fault, so we need to
+> > reconfigure it by software.
+> > 
+> > And refer to the DWC3 databook, the GUSB2PHYCFG.USBTRDTIM
+> > must be set to the corresponding value according to the
+> > UTMI+ PHY interface.
+> > 
+> > Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > ---
+> > Changes in v7:
+> > - remove quirk and use only one property to configure utmi (Heiko, Rob
+> > Herring)
+> > 
+> > Changes in v6:
+> > - use '-' instead of '_' in dts (Rob Herring)
+> > 
+> > Changes in v5:
+> > - None
+> > 
+> > Changes in v4:
+> > - rebase on top of balbi testing/next, remove pdata (balbi)
+> > 
+> > Changes in v3:
+> > - None
+> > 
+> > Changes in v2:
+> > - add a quirk for phyif_utmi (balbi)
+> > 
+> >  Documentation/devicetree/bindings/usb/dwc3.txt |  3 +++
+> >  drivers/usb/dwc3/core.c                        | 25
+> >  +++++++++++++++++++++++++ drivers/usb/dwc3/core.h                       
+> >  | 10 ++++++++++
+> >  3 files changed, 38 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > b/Documentation/devicetree/bindings/usb/dwc3.txt index 020b0e9..00cc541
+> > 100644
+> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > 
+> > @@ -47,6 +47,9 @@ Optional properties:
+> >   - snps,hird-threshold: HIRD threshold
+> >   - snps,hsphy_interface: High-Speed PHY interface selection between
+> >   "utmi" for>   
+> >     UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has value
+> >     3.
+> > 
+> > + - snps,phyif-utmi-width: the value to configure the core to support a
+> > UTMI+ PHY +			with an 8- or 16-bit interface. Value 8 select 8-bit
+> > +			interface, value 16 select 16-bit interface.
+> 
+> Is 'phy_type = "utmi_wide"' not the same as 16-bit width?
+> 
+> Again, I think this should be common.
 
-> On Saturday, July 16, 2016 3:29:04 PM CEST Jamie Lentin wrote:
->> +
->> +#define WNR854T_PCI_SLOT0_OFFS	7
->> +#define WNR854T_PCI_SLOT0_IRQ_PIN	4
->> +
->> +static void __init wnr854t_pci_preinit(void)
->> +{
->> +	int pin;
->> +
->> +	/*
->> +	 * Configure PCI GPIO IRQ pins
->> +	 */
->> +	pin = WNR854T_PCI_SLOT0_IRQ_PIN;
->> +	if (gpio_request(pin, "PCI Int") == 0) {
->> +		if (gpio_direction_input(pin) == 0) {
->> +			irq_set_irq_type(gpio_to_irq(pin), IRQ_TYPE_LEVEL_LOW);
->> +		} else {
->> +			pr_err("wnr854t_pci_preinit failed to set_irq_type pin %d\n",
->> +				pin);
->> +			gpio_free(pin);
->> +		}
->> +	} else {
->> +		pr_err("wnr854t_pci_preinit failed to request gpio %d\n", pin);
->> +	}
->> +}
->> +
->> +static int __init wnr854t_pci_map_irq(const struct pci_dev *dev, u8 slot,
->> +	u8 pin)
->> +{
->> +	int irq;
->> +
->> +	/*
->> +	 * Check for devices with hard-wired IRQs.
->> +	 */
->> +	irq = orion5x_pci_map_irq(dev, slot, pin);
->> +	if (irq != -1)
->> +		return irq;
->> +
->> +	/*
->> +	 * PCI IRQs are connected via GPIOs
->> +	 */
->> +	switch (slot - WNR854T_PCI_SLOT0_OFFS) {
->> +	case 0:
->> +		return gpio_to_irq(WNR854T_PCI_SLOT0_IRQ_PIN);
->> +	default:
->> +		return -1;
->> +	}
->> +}
->
-> The other patches all appear good to me, but I find this one suspicious.
->
-> Why are you not using the device tree for probing PCI? Is there anything
-> missing in drivers/pci/host/pci-mvebu.c, or do you just need help
-> describing it in DT?
+after knowing that I need to look for that "utmi_wide", I think I'd agree.
 
-Unlike the other SoC's supported by pci-mvebu.c, orion5x has one PCI port 
-as well as a PCIe port. Given no other orion5x boards seem to use 
-pci-mvebu, I'm assuming there's work to be done before the PCI port can be 
-used via. pci-mvebu.c
+I found mention of that in usb/ci-hdrc-usb2.txt and usb/fsl-usb.txt and from
+the coresponding code, I can see that they really mean the 16bit interface,
+the Rockchip TRM as well as the spec [0] seems to call it UTMI+ but really
+looks the same as utmi_wide.
 
-This is something I can look into if there aren't patches out there, but 
-wanted to get the rest into a reasonable state first.
+Interestingly, there is already generic code in drivers/usb/phy/of.c so that 
+property should probably move to devicetree/bindings/usb/generic.txt
+as well.
 
->
-> 	Arnd
->
 
--- 
-Jamie Lentin
+Heiko
+
+[0] http://cache.nxp.com/files/corporate/doc/support_info/UTMI-PLUS-SPECIFICATION.pdf
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
