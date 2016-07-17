@@ -1,52 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio: document how to order GPIO controllers
-Date: Sun, 17 Jul 2016 17:03:09 -0500
-Message-ID: <20160717220309.GA22711@rob-hp-laptop>
-References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20160705140546.GA10601@rob-hp-laptop>
- <20160705180447.GP16643@pengutronix.de>
- <CACRpkdbH+KRXbxFdfyAE44fBNctK4cWV+KRLwQBTzSGLvLMEDg@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7792: add SDHI support
+Date: Mon, 18 Jul 2016 07:58:45 +0900
+Message-ID: <20160717225842.GA25133@verge.net.au>
+References: <2441635.ESeLhIjWEX@wasted.cogentembedded.com>
+ <8030361.FnpbGzHVP8@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbH+KRXbxFdfyAE44fBNctK4cWV+KRLwQBTzSGLvLMEDg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <8030361.FnpbGzHVP8@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 06, 2016 at 11:34:37AM +0200, Linus Walleij wrote:
-> On Tue, Jul 5, 2016 at 8:04 PM, Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > [Rob]:
->=20
-> >> Like SPI and I2C, I'm against further abuse of aliases for this pu=
-rpose
-> >> [1].
->=20
-> So what about the usecase for serial ports, where we use this
-> to make sure the console come out where we want it? Is that
-> also considered abuse or legitimate use? Note: I'm not trying to be
-> snarky, I'm trying to understand what is the right and wrong use
-> of alias. I'm confused about it right now :(
+On Wed, Jul 13, 2016 at 12:11:12AM +0300, Sergei Shtylyov wrote:
+> Define the generic R8A7792 part of the SDHI0 device node.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  arch/arm/boot/dts/r8a7792.dtsi |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7792.dtsi
+> @@ -435,6 +435,18 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		sdhi0: sd@ee100000 {
+> +			compatible = "renesas,sdhi-r8a7792";
+> +			reg = <0 0xee100000 0 0x200>;
 
-I guess it comes down to how ingrained the usage of any numbering is.=20
-=46or consoles, it was pretty important to maintain numbering and no=20
-alternative. But now with stdout-path that is less important. Perhaps i=
-f=20
-you have inittab with tty devices, then it is still needed.
+I do not have the documentation available to check, however, I wonder if
+as per 66f47ed0e86d ("ARM: shmobile: r8a7790: tidyup SDHI register size on
+DTSI") the register size should be 0x328.
 
-So I guess I would summarize the requirement to be only cases needing t=
-o=20
-maintain numbering for existing userspace. The only users really caring=
-=20
-about this have been on N900.
+It also looks like register the DTS for the r8a7794 needs updating along
+the same lines.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +			interrupts = <0 165 IRQ_TYPE_LEVEL_HIGH>;
+> +			dmas = <&dmac0 0xcd>, <&dmac0 0xce>,
+> +			       <&dmac1 0xcd>, <&dmac1 0xce>;
+> +			dma-names = "tx", "rx", "tx", "rx";
+> +			clocks = <&mstp3_clks R8A7792_CLK_SDHI0>;
+> +			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
+> +			status = "disabled";
+> +		};
+> +
+>  		jpu: jpeg-codec@fe980000 {
+>  			compatible = "renesas,jpu-r8a7792",
+>  				     "renesas,rcar-gen2-jpu";
+> 
