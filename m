@@ -1,85 +1,62 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4 0/4] pwm: add support for ChromeOS EC PWM
-Date: Mon, 18 Jul 2016 11:10:29 +0200
-Message-ID: <20160718091029.GA32259@ulmo.ba.sec>
-References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
- <20160718084928.GA17074@dell>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160718084928.GA17074@dell>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Brian Norris <briannorris@chromium.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/8] Cache-coherent DMA access using UIO
+Date: Mon, 18 Jul 2016 14:44:12 +0530
+Message-ID: <1468833260-5305-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
+Cc: Ankit Jindal <thatsjindal-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Viktorin <viktorin-MQpMGdXoZmMqDJ6do+/SaQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The goal of this patchset is to improve UIO framework and UIO dmem
+driver to allow cache-coherent DMA accesses from user-space.
 
---SUOF0GtieIMvvwua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset is based on two previous patchsets:
+1) [PATCH v5 0/6] UIO driver for APM X-Gene QMTM
+(Refer, http://www.spinics.net/lists/devicetree/msg58244.html)
+2) [PATCH 0/4] Fix and extend uio_dmem_genirq
+(Refer, https://lkml.org/lkml/2016/5/17/141)
 
-On Mon, Jul 18, 2016 at 09:49:28AM +0100, Lee Jones wrote:
-> On Fri, 15 Jul 2016, Brian Norris wrote:
-> > This is the 4th (and final?) version of my series to support the new Ch=
-romeOS
-> > EC PWM API, so we can control, e.g., a PWM backlight when its PWM is at=
-tached
-> > to the EC. It uses Boris's latest "atomic" hooks for the PWM API (i.e.,=
- the
-> > ->apply() callback), which were recently merged.
-> >=20
-> > Pulled and adapted the cros_ec_cmd_xfer_status() helper from this patch=
-, with
-> > some minor modifications:
-> >=20
-> > https://lkml.org/lkml/2016/4/12/342
-> >=20
-> > Note that after some style bikeshedding, I proposed to put off rewritin=
-g the
-> > entire cros_ec_commands.h header at the moment, due to the shared natur=
-e of
-> > this file. Follow up here:
-> >=20
-> > https://bugs.chromium.org/p/chromium/issues/detail?id=3D621123
-> >=20
-> > As this touches MFD (sort of), drivers/platform/chrome/, and drivers/pw=
-m/, I'm
-> > still not sure who it should all go through: Lee, Thierry, or Olof?
->=20
-> I usually take this type of submission through the MFD tree, although
-> it's too late in the day to make it into v4.8.
->=20
-> Which Acks are you missing?
+We have adopted only patch0-3 of patchset1 which was abandoned
+long time back. We have taken care of last few unaddressed comments
+on these patches.
 
-I'm willing to take this through the PWM tree if you're okay with the
-MFD changes. I can put the MFD changes into a separate branch and you
-could pull that in if you needed to resolve any dependencies, which I
-think would be quite unlikely if you've already closed your tree.
+The patchset2 is quite recent has been adopted entirely. We have
+taken care review comments on these patches too.
 
-Thierry
+This patchset is based on v4.7-rc7 tag and it is available in uio-v2
+branch of https://github.com/Broadcom/arm64-linux.git
 
---SUOF0GtieIMvvwua
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since v1:
+ - Make patch5 as first patch1 and mark it for linux-stable
+ - Get UIO dmem dynamic region details as module parameter instead
+   of getting it from DT node
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Ankit Jindal (3):
+  uio: code style cleanup
+  uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
+  Documentation: Update documentation for UIO_MEM_PHYS_CACHE and
+    UIO_MEM_DEVICE
 
-iQIcBAABCAAGBQJXjJ0CAAoJEN0jrNd/PrOhYaEQAKMnQwoVT5HnT22oLX6ls4HL
-n3wgye7zuxRRAR/fY4aVVJgYUdLVEBHgS4Ty48DBUqw8xtjLVYXDs2QaEpiTLkR5
-odwV+NdVFcalv+x8WuR1E+npa2x7Y+yY6q2vzIK06ndM4nK/cRvI01apAHSfBdBK
-qQI6Pq/cd4KDWCBLBDF55ndvhb5XM1UUOIZCcV6+se/hJ2a/9IeXJqCkblbAAesk
-iEuyRCy5yvL3h6tBWybFYQDy4wO5YUsRiynNQnIFJ4/OWx8TM/ZiGr7blnrfmzOt
-xJ0hpknTDC10Yhg8QXwQ5ZeT0SV4yONNJwEpxItfK0tkBeT4Mvc3Z+7hbdlI/f2k
-HznWdBPvEjqet5uEfk+DZ10zRqZ9ANiT04an7y46DhQ+OBXdWc7xey0vdKeEhKd5
-VEtedul6lAdHHnpA3E2ZN55XahbwFLnXGyemMiQgiudaVPtw20Ccfvyv6qwWWy2/
-C36F4lR576Pd63gi8DEJt/FyXolKbHHBwIAzxR7urLcHwXFtNMWmpxC8sX7mVWte
-Wjp4FCuQITuaQzZ2Jnvv8IhyxGdpzczyoB0B1RvacgE1la+c0JfxvnKtPJG2mhOj
-PcKfjgWc6S5IUbwb9rqMDqRchfIZ302STgeWcmVWbUZjTTLoVuFSuHsVEJEsvrgV
-h+B4j56a3PbcBXG4KsHg
-=qoRx
------END PGP SIGNATURE-----
+Anup Patel (2):
+  uio: Add new UIO_MEM_DEVICE type for mem regions
+  uio: Use new memtypes in uio_dmem_genirq
 
---SUOF0GtieIMvvwua--
+Jan Viktorin (3):
+  uio: fix dmem_region_start computation
+  uio: UIO_IRQ_NONE is a valid option for uioinfo->irq
+  uio: bind uio_dmem_genirq via OF
+
+ Documentation/DocBook/uio-howto.tmpl |   6 +-
+ drivers/uio/uio.c                    |  32 ++++--
+ drivers/uio/uio_dmem_genirq.c        | 190 +++++++++++++++++++++++++++--------
+ include/linux/uio_driver.h           |  10 +-
+ 4 files changed, 182 insertions(+), 56 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
