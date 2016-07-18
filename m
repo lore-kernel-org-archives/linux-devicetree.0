@@ -1,97 +1,263 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4 0/4] pwm: add support for ChromeOS EC PWM
-Date: Mon, 18 Jul 2016 16:04:00 +0200
-Message-ID: <20160718140400.GA22297@ulmo.ba.sec>
-References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
- <20160718084928.GA17074@dell>
- <20160718091029.GA32259@ulmo.ba.sec>
- <20160718132426.GB17074@dell>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: DT connectors, thoughts
+Date: Tue, 19 Jul 2016 00:20:37 +1000
+Message-ID: <20160718142037.GS16769@voom.fritz.box>
+References: <577ACE0D.9050700@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WVXkb2QE2eH0aWe4"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160718132426.GB17074@dell>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Brian Norris <briannorris@chromium.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+In-Reply-To: <577ACE0D.9050700@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, stephen.boyd@linaro.org, broonie@kernel.org, grant.likely@secretlab.ca, Mark Rutland <mark.rutland@arm.com>, mporter@konsulko.com, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, marex@denx.de, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
 
---M9NhX3UHpAaciwkO
+--WVXkb2QE2eH0aWe4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 18, 2016 at 02:24:26PM +0100, Lee Jones wrote:
-> On Mon, 18 Jul 2016, Thierry Reding wrote:
->=20
-> > On Mon, Jul 18, 2016 at 09:49:28AM +0100, Lee Jones wrote:
-> > > On Fri, 15 Jul 2016, Brian Norris wrote:
-> > > > This is the 4th (and final?) version of my series to support the ne=
-w ChromeOS
-> > > > EC PWM API, so we can control, e.g., a PWM backlight when its PWM i=
-s attached
-> > > > to the EC. It uses Boris's latest "atomic" hooks for the PWM API (i=
-=2Ee., the
-> > > > ->apply() callback), which were recently merged.
-> > > >=20
-> > > > Pulled and adapted the cros_ec_cmd_xfer_status() helper from this p=
-atch, with
-> > > > some minor modifications:
-> > > >=20
-> > > > https://lkml.org/lkml/2016/4/12/342
-> > > >=20
-> > > > Note that after some style bikeshedding, I proposed to put off rewr=
-iting the
-> > > > entire cros_ec_commands.h header at the moment, due to the shared n=
-ature of
-> > > > this file. Follow up here:
-> > > >=20
-> > > > https://bugs.chromium.org/p/chromium/issues/detail?id=3D621123
-> > > >=20
-> > > > As this touches MFD (sort of), drivers/platform/chrome/, and driver=
-s/pwm/, I'm
-> > > > still not sure who it should all go through: Lee, Thierry, or Olof?
-> > >=20
-> > > I usually take this type of submission through the MFD tree, although
-> > > it's too late in the day to make it into v4.8.
-> > >=20
-> > > Which Acks are you missing?
-> >=20
-> > I'm willing to take this through the PWM tree if you're okay with the
-> > MFD changes. I can put the MFD changes into a separate branch and you
-> > could pull that in if you needed to resolve any dependencies, which I
-> > think would be quite unlikely if you've already closed your tree.
->=20
-> Are you saying that you're willing to take these straight into the
-> merge-window, with no soak in -next?
+Hi,
 
-There's still a bit of time to let it soak in -next, but I'm not overly
-concerned given that this is purely additions of code, so there can't be
-any regressions.
+Here's some of my thoughts on how a connector format for the DT could
+be done.  Sorry it's taken longer than I hoped - I've been pretty
+swamped in my day job.
 
-Thierry
+This is pretty early thoughts, but gives an outline of the approach I
+prefer.
 
---M9NhX3UHpAaciwkO
+So.. start with an example of a board DT including a widget socket,
+which contains pins for an MMIO bus, an i2c bus and 2 interrupt lines.
+
+/dts-v1/;
+
+/ {
+	compatible =3D "foo,oldboard";
+	ranges;
+	soc@... {
+		ranges;
+		mmio: mmio-bus@... {
+			#address-cells =3D <2>;
+			#size-cells =3D <2>;
+			ranges;
+		};
+		i2c: i2c@... {
+		};
+		intc: intc@... {
+			#interrupt-cells =3D <2>;
+		};
+	};
+
+	connectors {
+		widget1 {
+			compatible =3D "foo,widget-socket";
+			w1_irqs: irqs {
+				interrupt-controller;
+				#address-cells =3D <0>;
+				#interrupt-cells =3D <1>;
+				interrupt-map-mask =3D <0xffffffff>;
+				interrupt-map =3D <
+					0 &intc 7 0
+					1 &intc 8 0
+				>;
+			};
+			aliases =3D {
+				i2c =3D &i2c;
+				intc =3D &w1_irqs;
+				mmio =3D &mmio;
+			};
+		};
+	};
+};
+
+Note that the symbols are local to the connector, and explicitly
+listed, rather than including all labels in the tree.  This is to
+enforce (or at the very least encourage) plugins to only access those
+parts of the base tree.
+
+Note also the use of an interrupt nexus node contained within the
+connector to control which irqs the socketed device can use.  I think
+this needs some work to properly handle unit addresses, but hope
+that's enough to give the rough idea.
+
+So, what does the thing that goes in the socket look like?  I'm
+thinking some new dts syntax like this:
+
+/dts-v1/;
+
+/plugin/ foo,widget-socket {
+	compatible =3D "foo,whirligig-widget";
+};
+
+&i2c {
+	whirligig-controller@... {
+		...
+		interrupt-parent =3D <&widget-irqs>;
+		interrupts =3D <0>;
+	};
+};
+
+Use of the /plugin/ keyword is rather different from existing
+practice, so we may want a new one instead.
+
+The idea is that this would be compiled to something like:
+
+/dts-v1/;
+
+/ {
+	socket-type =3D "foo,widget-socket";
+	compatible =3D "foo,whirligig-widget";
+
+	fragment@0 {
+		target-alias =3D "i2c";
+		__overlay__ {
+			whirligig-controller@... {
+				...
+				interrupt-parent =3D <0xffffffff>;
+				interrupts =3D <0>;
+			};
+		};
+	};
+	__phandle_fixups__ {
+		/* These are (path, property, offset) tuples) */
+		widget-irqs =3D
+			"/fragment@0/__overlay__/whirligig-controller@...",
+			"interrupt-parent", <0>;
+	};
+};
+
+
+Suppose then there's a new version of the board.  This extends the
+widget socket in a backwards compatible way, but there are now two
+interchangeable sockets, and they're wired up to different irqs and
+i2c lines on the baseboard:
+
+/dts-v1/;
+
+/ {
+	compatible =3D "foo,newboard";
+	ranges;
+	soc@... {
+		ranges;=09
+		mmio: mmio-bus@... {
+			#address-cells =3D <2>;
+			#size-cells =3D <2>;
+			ranges;
+		};
+		i2c0: i2c@... {
+		};
+		i2c1: i2c@... {
+		};
+		intc: intc@... {
+		};
+	};
+
+	connectors {
+		widget1 {
+			compatible =3D "foo,widget-socket-v2", "foo,widget-socket";
+			w1_irqs: irqs {
+				interrupt-controller;
+				#address-cells =3D <0>;
+				#interrupt-cells =3D <1>;
+				interrupt-map-mask =3D <0xffffffff>;
+				interrupt-map =3D <
+					0 &intc 17 0
+					1 &intc 8 0
+				>;
+			};
+			aliases =3D {
+				i2c =3D &i2c0;
+				intc =3D &w1_irqs;
+				mmio =3D &mmio;
+			};
+		};
+		widget2 {
+			compatible =3D "foo,widget-socket-v2", "foo,widget-socket";
+			w2_irqs: irqs {
+				interrupt-controller;
+				#address-cells =3D <0>;
+				#interrupt-cells =3D <1>;
+				interrupt-map-mask =3D <0xffffffff>;
+				interrupt-map =3D <
+					0 &intc 9 0
+					1 &intc 10 0
+				>;
+			};
+			aliases =3D {
+				i2c =3D &i2c1;
+				widget-irqs =3D &w2_irqs;
+				mmio =3D &mmio;
+			};
+		};
+	};
+};
+
+
+A socketed device could also have it's own connectors - the contrived
+example below has a little 256 byte mmio space (maybe some sort of LPC
+thingy?):
+
+
+/dts-v1/;
+
+/plugin/ foo,widget-socket-v2 {
+	compatible =3D "foo,superduper-widget};
+
+	connectors {
+		compatible =3D "foo,super-socket";
+		aliases {
+			superbus =3D &superbus;
+		};=09
+	};
+};
+
+&mmio {
+	superbus: super-bridge@100000000 {
+		#address-cells =3D <1>;
+		#size-cells =3D <1>;
+		ranges =3D <0x0  0xabcd0000 0x12345600  0x100>;
+	};
+};
+
+&i2c {
+	super-controller@... {
+		...
+	};
+	duper-controller@... {
+	};
+};
+
+Thoughts?
+
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--WVXkb2QE2eH0aWe4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQIcBAABCAAGBQJXjOHKAAoJEN0jrNd/PrOh/FsQAJLxtyAFP0FO62ym2VIsEJk1
-pEdGmnx+X52SXkDs2jCvNBGdLarQs2MJFT/+yTLqp4HbW2LQcRBakLgk9zbCSwMw
-4llZgbxVLcxE6d7X9HIS1UEmmVE4+sv3DJChNDABSWfpr3twkMFGxRGTZzJoluUn
-Xr/g3tnYqIZ4EqqGfx9NcvTqdgSnF+pnKtltV6LnEP6x+H+XYRXUKoPC5KX0uiYR
-5sRo2iRHaYxQxyL+ttBOcIVce5S6nHnLT81zJaHinGjQUt6lYhloiMq4sbpfHg7n
-Wca6Gt5jMkjIoIbJn2cWkibA4IKNKJ7JkZftl6c8WISsM4VDS3WiWlOig6iAyiOE
-2oZdSwOcvjumUz7bDsPAK1+nIRUlQDw6ydo8kunLShH2o93YeolH9b8/PSk0sf3m
-xzWOwIw+M8phZfVcrKDd+lhJZYJKzUtThJL9aeypdXiW9ikreFZHHsOUSR2zcwrP
-wNnr8aHdP8TNMHViw1f37VHaj+T6OnCm7C2eqigWnnChDCIss+2Z/j5CYLVhJy8f
-rFcZT/bkSY2mzacChZj1T0GHdMX7ThrC4Y40z7wyE+UCo/dSFXCFSMABpzv4Ayp/
-QlIY3rSB5m1edA+ZldettfyL7tDY8ICURcMgqnOQv4VGElplBn+AOm4NKI1R7tNu
-SXbEd3VzEI7pJRrCS88m
-=fs+M
+iQIcBAEBAgAGBQJXjOW1AAoJEGw4ysog2bOS/nkP/2BkWMNiRsid7BTqhPoAL6Pj
+wPUl1SgeTxUgeos05gsn52atl5RrdilJ1P7c5DGXnguISmi+/rA2g8WCxRTR/bae
+NZ2SdSakwYXfquwJ4/6q9LtraCNNr5W0t+e8CMynRCgWUKmDW6Uw8k+aOcHt77pF
+vKDug+bXQKHGmmUBoVOjczXFZYrD9HUvlTRUYETYFEagIfqOqzgN/OvxlQVPTsvP
+lbDHpTGcIAFLJ+nvAh4JpMO83PGFwlt+yqmpwbAtm5Pvp2a3u2/fMB+6SsF+AmeI
+mBHwRc7LrRuSVHZvEgoDURd+00zBpfcr363YKAI4KXQfjJinjKdO8AgkASF8uTni
+mJHiNizQcEfbT4s985WRq6J/FKBRnt+MvB5ubdC3VD9OB7XkZwrpUsHFgVDVsfg2
+RCLFWYHTgfniz46FQ4UPrJALAhWR33CMFKwYup6I5IxxBSnzwZoRJ+po0zgBX5XA
+TM48iH3NccIexrzdzgjKwVLn2/XE8RA8M0R7j6fhomfVk71lFRi8AMp2xsltbZm1
++a8OPCDPXbF8BCFLiIhBgaZbd/WGSvscSwnXsg9e9Z4UxkbKleTJq8oTLYYVm7zf
+1iSMrOqwiISqdlQfC6oaEw+Snu7ixDvrcuhKy2Lp1mV3cSrvcyiQKrLV+dRlr1LI
+4S2cu5CjbtlzIWCLIt2f
+=cY8a
 -----END PGP SIGNATURE-----
 
---M9NhX3UHpAaciwkO--
+--WVXkb2QE2eH0aWe4--
