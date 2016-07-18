@@ -1,68 +1,139 @@
-From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
- dt property
-Date: Mon, 18 Jul 2016 09:51:14 +0200
-Message-ID: <44803976-7e34-991f-5ee0-0a548f6cefc6@broadcom.com>
-References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
- <3354017.XSBSmHHtrQ@wuerfel>
- <bb1beb8d-652d-aa97-e24b-e3e27397dd2e@broadcom.com>
- <3996482.D5xdKXDiGl@wuerfel> <20160717214502.GA11498@rob-hp-laptop>
-Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 3/8] drm/mediatek: add shadow register support
+Date: Mon, 18 Jul 2016 10:36:32 +0200
+Message-ID: <1468830992.2994.6.camel@pengutronix.de>
+References: <1468577274-6178-1-git-send-email-yt.shen@mediatek.com>
+ <1468577274-6178-4-git-send-email-yt.shen@mediatek.com>
+ <1468823575.30644.33.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRYNGWEWYDBB6EUWK6AKGQERH6MOFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160717214502.GA11498@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1468823575.30644.33.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mao Huang <littlecvr@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17-7-2016 23:45, Rob Herring wrote:
-> On Thu, Jul 07, 2016 at 10:46:28AM +0200, Arnd Bergmann wrote:
->> On Wednesday, July 6, 2016 9:19:41 PM CEST Arend Van Spriel wrote:
->>> On 6-7-2016 15:42, Arnd Bergmann wrote:
->>>> On Wednesday, July 6, 2016 10:08:55 AM CEST Arend Van Spriel wrote:
->>>>> On Tue, Jul 5, 2016 at 3:43 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>>> All existing uses of the model property in arch/arm/boot/dts and most of
->>>> the ones in arch/powerpc/boot/dts are against the intended usage in
->>>> one way or another, but adding different kind of incorrect usage won't
->>>> improve that.
->>>>
->>>> The only way I can see the model property being used correctly would
->>>> be to have it match the first entry in the compatible property, but
->>>> that is completely redundant, so we tend to omit it, except for the
->>>> root node in which it is required. For the root node however, the
->>>> historic practice that has crept in on ARM is to put something completely
->>>> different in there, which is a human-readable description of the
->>>> machine rather than something we can use as a unique indentifier.
->>>>
->>>> I'd just consider the "model" property burned, and not use it for anything
->>>> that doesn't already use it, just like we handle "device_type": a few
->>>> things require it, nothing else should use it.
->>>
->>> If that is the agreed approach in devicetree arena I am fine with it. I
->>> have been unaware of this and just looked at the suggestion from Jonas
->>> seeing a solution to the problem at hand.
->>
->> I don't think it has been discussed or decided before as the question
->> has not come up, so for now this is my personal view. Maybe one of
->> the devicetree maintainers can comment on this.
-> 
-> Back from vacation and getting caught up.
-> 
-> I agree with Arnd here. In my view model is the OEM branding on the 
-> device, compatible is the h/w. If you have different firmware related 
-> files, that goes beyond OEM branding.
-
-Thanks, Rob
-
-We are talking about hardware variants here. So using the model property
-is off the table.
-
-Regards,
-Arend
+SGkgQ0ssIFlULAoKQW0gTW9udGFnLCBkZW4gMTguMDcuMjAxNiwgMTQ6MzIgKzA4MDAgc2Nocmll
+YiBDSyBIdToKPiBIaSwgWVQ6Cj4gCj4gT25lIGNvbW1lbnQgaW5saW5lLgo+IAo+IAo+IE9uIEZy
+aSwgMjAxNi0wNy0xNSBhdCAxODowNyArMDgwMCwgWVQgU2hlbiB3cm90ZToKPiA+IFdlIG5lZWQg
+dG8gYWNxdWlyZSBtdXRleCBiZWZvcmUgdXNpbmcgdGhlIHJlc291cmNlcywKPiA+IGFuZCBuZWVk
+IHRvIHJlbGVhc2UgaXQgYWZ0ZXIgZmluaXNoZWQuCj4gPiBTbyB3ZSBkb24ndCBuZWVkIHRvIHdy
+aXRlIHJlZ2lzdGVycyBpbiB0aGUgYmxhbmtpbmcgcGVyaW9kLgo+ID4gCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBZVCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNvbT4KPiA+IC0tLQo+ID4gIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyB8ICAgNzUgKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLS0tLS0tLQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5j
+ICB8ICAgMjIgKysrKysrKysrCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZGRwLmggIHwgICAgMiArCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2
+LmggIHwgICAgMSArCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCA3MSBpbnNlcnRpb25zKCspLCAyOSBk
+ZWxldGlvbnMoLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMu
+Ywo+ID4gaW5kZXggMjRhYTNiYS4uODBkOTY0MSAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYwo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fY3J0Yy5jCj4gPiBAQCAtMzE1LDYgKzMxNSw0MiBAQCBzdGF0aWMgdm9p
+ZCBtdGtfY3J0Y19kZHBfaHdfZmluaShzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykKPiA+
+ICAJcG1fcnVudGltZV9wdXQoZHJtLT5kZXYpOwo+ID4gIH0KPiA+ICAKPiA+ICtzdGF0aWMgdm9p
+ZCBtdGtfY3J0Y19kZHBfY29uZmlnKHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKPiA+ICt7Cj4gPiAr
+CXN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjID0gdG9fbXRrX2NydGMoY3J0Yyk7Cj4gPiAr
+CXN0cnVjdCBtdGtfY3J0Y19zdGF0ZSAqc3RhdGUgPSB0b19tdGtfY3J0Y19zdGF0ZShtdGtfY3J0
+Yy0+YmFzZS5zdGF0ZSk7Cj4gPiArCXN0cnVjdCBtdGtfZGRwX2NvbXAgKm92bCA9IG10a19jcnRj
+LT5kZHBfY29tcFswXTsKPiA+ICsJdW5zaWduZWQgaW50IGk7Cj4gPiArCj4gPiArCS8qCj4gPiAr
+CSAqIFRPRE86IGluc3RlYWQgb2YgdXBkYXRpbmcgdGhlIHJlZ2lzdGVycyBoZXJlLCB3ZSBzaG91
+bGQgcHJlcGFyZQo+ID4gKwkgKiB3b3JraW5nIHJlZ2lzdGVycyBpbiBhdG9taWNfY29tbWl0IGFu
+ZCBsZXQgdGhlIGhhcmR3YXJlIGNvbW1hbmQKPiA+ICsJICogcXVldWUgdXBkYXRlIG1vZHVsZSBy
+ZWdpc3RlcnMgb24gdmJsYW5rLgo+ID4gKwkgKi8KPiA+ICsJaWYgKHN0YXRlLT5wZW5kaW5nX2Nv
+bmZpZykgewo+ID4gKwkJbXRrX2RkcF9jb21wX2NvbmZpZyhvdmwsIHN0YXRlLT5wZW5kaW5nX3dp
+ZHRoLAo+ID4gKwkJCQkgICAgc3RhdGUtPnBlbmRpbmdfaGVpZ2h0LAo+ID4gKwkJCQkgICAgc3Rh
+dGUtPnBlbmRpbmdfdnJlZnJlc2gpOwo+ID4gKwo+ID4gKwkJc3RhdGUtPnBlbmRpbmdfY29uZmln
+ID0gZmFsc2U7Cj4gPiArCX0KPiA+ICsKPiA+ICsJaWYgKG10a19jcnRjLT5wZW5kaW5nX3BsYW5l
+cykgewo+ID4gKwkJZm9yIChpID0gMDsgaSA8IE9WTF9MQVlFUl9OUjsgaSsrKSB7Cj4gPiArCQkJ
+c3RydWN0IGRybV9wbGFuZSAqcGxhbmUgPSAmbXRrX2NydGMtPnBsYW5lc1tpXS5iYXNlOwo+ID4g
+KwkJCXN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnBsYW5lX3N0YXRlOwo+ID4gKwo+ID4gKwkJCXBs
+YW5lX3N0YXRlID0gdG9fbXRrX3BsYW5lX3N0YXRlKHBsYW5lLT5zdGF0ZSk7Cj4gPiArCj4gPiAr
+CQkJaWYgKHBsYW5lX3N0YXRlLT5wZW5kaW5nLmNvbmZpZykgewo+ID4gKwkJCQltdGtfZGRwX2Nv
+bXBfbGF5ZXJfY29uZmlnKG92bCwgaSwgcGxhbmVfc3RhdGUpOwo+ID4gKwkJCQlwbGFuZV9zdGF0
+ZS0+cGVuZGluZy5jb25maWcgPSBmYWxzZTsKPiA+ICsJCQl9Cj4gPiArCQl9Cj4gPiArCQltdGtf
+Y3J0Yy0+cGVuZGluZ19wbGFuZXMgPSBmYWxzZTsKPiA+ICsJfQo+ID4gK30KPiA+ICsKPiA+ICBz
+dGF0aWMgdm9pZCBtdGtfZHJtX2NydGNfZW5hYmxlKHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKPiA+
+ICB7Cj4gPiAgCXN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjID0gdG9fbXRrX2NydGMoY3J0
+Yyk7Cj4gPiBAQCAtMzkxLDYgKzQyNyw3IEBAIHN0YXRpYyB2b2lkIG10a19kcm1fY3J0Y19hdG9t
+aWNfZmx1c2goc3RydWN0IGRybV9jcnRjICpjcnRjLAo+ID4gIAkJCQkgICAgICBzdHJ1Y3QgZHJt
+X2NydGNfc3RhdGUgKm9sZF9jcnRjX3N0YXRlKQo+ID4gIHsKPiA+ICAJc3RydWN0IG10a19kcm1f
+Y3J0YyAqbXRrX2NydGMgPSB0b19tdGtfY3J0YyhjcnRjKTsKPiA+ICsJc3RydWN0IG10a19kcm1f
+cHJpdmF0ZSAqcHJpdiA9IGNydGMtPmRldi0+ZGV2X3ByaXZhdGU7Cj4gPiAgCXVuc2lnbmVkIGlu
+dCBwZW5kaW5nX3BsYW5lcyA9IDA7Cj4gPiAgCWludCBpOwo+ID4gIAo+ID4gQEAgLTQwOSw2ICs0
+NDYsMTIgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRjX2F0b21pY19mbHVzaChzdHJ1Y3QgZHJt
+X2NydGMgKmNydGMsCj4gPiAgCX0KPiA+ICAJaWYgKHBlbmRpbmdfcGxhbmVzKQo+ID4gIAkJbXRr
+X2NydGMtPnBlbmRpbmdfcGxhbmVzID0gdHJ1ZTsKPiA+ICsKPiA+ICsJaWYgKHByaXYtPmRhdGEt
+PnNoYWRvd19yZWdpc3Rlcikgewo+ID4gKwkJbXRrX2Rpc3BfbXV0ZXhfYWNxdWlyZShtdGtfY3J0
+Yy0+bXV0ZXgpOwo+ID4gKwkJbXRrX2NydGNfZGRwX2NvbmZpZyhjcnRjKTsKPiA+ICsJCW10a19k
+aXNwX211dGV4X3JlbGVhc2UobXRrX2NydGMtPm11dGV4KTsKPiA+ICsJfQo+ID4gIH0KPiA+ICAK
+PiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9jcnRjX2Z1bmNzIG10a19jcnRjX2Z1bmNzID0g
+ewo+ID4gQEAgLTQ1MywzNiArNDk2LDEwIEBAIGVycl9jbGVhbnVwX2NydGM6Cj4gPiAgdm9pZCBt
+dGtfY3J0Y19kZHBfaXJxKHN0cnVjdCBkcm1fY3J0YyAqY3J0Yywgc3RydWN0IG10a19kZHBfY29t
+cCAqb3ZsKQo+ID4gIHsKPiA+ICAJc3RydWN0IG10a19kcm1fY3J0YyAqbXRrX2NydGMgPSB0b19t
+dGtfY3J0YyhjcnRjKTsKPiA+IC0Jc3RydWN0IG10a19jcnRjX3N0YXRlICpzdGF0ZSA9IHRvX210
+a19jcnRjX3N0YXRlKG10a19jcnRjLT5iYXNlLnN0YXRlKTsKPiA+IC0JdW5zaWduZWQgaW50IGk7
+Cj4gPiArCXN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgKnByaXYgPSBjcnRjLT5kZXYtPmRldl9wcml2
+YXRlOwo+ID4gIAo+ID4gLQkvKgo+ID4gLQkgKiBUT0RPOiBpbnN0ZWFkIG9mIHVwZGF0aW5nIHRo
+ZSByZWdpc3RlcnMgaGVyZSwgd2Ugc2hvdWxkIHByZXBhcmUKPiA+IC0JICogd29ya2luZyByZWdp
+c3RlcnMgaW4gYXRvbWljX2NvbW1pdCBhbmQgbGV0IHRoZSBoYXJkd2FyZSBjb21tYW5kCj4gPiAt
+CSAqIHF1ZXVlIHVwZGF0ZSBtb2R1bGUgcmVnaXN0ZXJzIG9uIHZibGFuay4KPiA+IC0JICovCj4g
+PiAtCWlmIChzdGF0ZS0+cGVuZGluZ19jb25maWcpIHsKPiA+IC0JCW10a19kZHBfY29tcF9jb25m
+aWcob3ZsLCBzdGF0ZS0+cGVuZGluZ193aWR0aCwKPiA+IC0JCQkJICAgIHN0YXRlLT5wZW5kaW5n
+X2hlaWdodCwKPiA+IC0JCQkJICAgIHN0YXRlLT5wZW5kaW5nX3ZyZWZyZXNoKTsKPiA+IC0KPiA+
+IC0JCXN0YXRlLT5wZW5kaW5nX2NvbmZpZyA9IGZhbHNlOwo+ID4gLQl9Cj4gPiAtCj4gPiAtCWlm
+IChtdGtfY3J0Yy0+cGVuZGluZ19wbGFuZXMpIHsKPiA+IC0JCWZvciAoaSA9IDA7IGkgPCBPVkxf
+TEFZRVJfTlI7IGkrKykgewo+ID4gLQkJCXN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gJm10a19j
+cnRjLT5wbGFuZXNbaV0uYmFzZTsKPiA+IC0JCQlzdHJ1Y3QgbXRrX3BsYW5lX3N0YXRlICpwbGFu
+ZV9zdGF0ZTsKPiA+IC0KPiA+IC0JCQlwbGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShw
+bGFuZS0+c3RhdGUpOwo+ID4gLQo+ID4gLQkJCWlmIChwbGFuZV9zdGF0ZS0+cGVuZGluZy5jb25m
+aWcpIHsKPiA+IC0JCQkJbXRrX2RkcF9jb21wX2xheWVyX2NvbmZpZyhvdmwsIGksIHBsYW5lX3N0
+YXRlKTsKPiA+IC0JCQkJcGxhbmVfc3RhdGUtPnBlbmRpbmcuY29uZmlnID0gZmFsc2U7Cj4gPiAt
+CQkJfQo+ID4gLQkJfQo+ID4gLQkJbXRrX2NydGMtPnBlbmRpbmdfcGxhbmVzID0gZmFsc2U7Cj4g
+PiAtCX0KPiA+ICsJaWYgKCFwcml2LT5kYXRhLT5zaGFkb3dfcmVnaXN0ZXIpCj4gPiArCQltdGtf
+Y3J0Y19kZHBfY29uZmlnKGNydGMpOwo+ID4gIAo+ID4gIAltdGtfZHJtX2ZpbmlzaF9wYWdlX2Zs
+aXAobXRrX2NydGMpOwo+ID4gIH0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cC5jCj4gPiBpbmRleCA4MDMwNzY5Li5mYTUzODA2IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gPiBAQCAtMTIsNiArMTIsNyBAQAo+ID4gICAqLwo+ID4g
+IAo+ID4gICNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvaW9wb2xs
+Lmg+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ID4gICNpbmNsdWRlIDxsaW51eC9v
+Zl9kZXZpY2UuaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gPiBA
+QCAtMzIsNiArMzMsNyBAQAo+ID4gICNkZWZpbmUgRElTUF9SRUdfQ09ORklHX01NU1lTX0NHX0NP
+TjAJCTB4MTAwCj4gPiAgCj4gPiAgI2RlZmluZSBESVNQX1JFR19NVVRFWF9FTihuKQkoMHgyMCAr
+IDB4MjAgKiAobikpCj4gPiArI2RlZmluZSBESVNQX1JFR19NVVRFWChuKQkoMHgyNCArIDB4MjAg
+KiAobikpCj4gPiAgI2RlZmluZSBESVNQX1JFR19NVVRFWF9SU1QobikJKDB4MjggKyAweDIwICog
+KG4pKQo+ID4gICNkZWZpbmUgRElTUF9SRUdfTVVURVhfTU9EKG4pCSgweDJjICsgMHgyMCAqIChu
+KSkKPiA+ICAjZGVmaW5lIERJU1BfUkVHX01VVEVYX1NPRihuKQkoMHgzMCArIDB4MjAgKiAobikp
+Cj4gPiBAQCAtMzAwLDYgKzMwMiwyNiBAQCB2b2lkIG10a19kaXNwX211dGV4X2Rpc2FibGUoc3Ry
+dWN0IG10a19kaXNwX211dGV4ICptdXRleCkKPiA+ICAJd3JpdGVsKDAsIGRkcC0+cmVncyArIERJ
+U1BfUkVHX01VVEVYX0VOKG11dGV4LT5pZCkpOwo+ID4gIH0KPiA+ICAKPiA+ICt2b2lkIG10a19k
+aXNwX211dGV4X2FjcXVpcmUoc3RydWN0IG10a19kaXNwX211dGV4ICptdXRleCkKPiA+ICt7Cj4g
+PiArCXN0cnVjdCBtdGtfZGRwICpkZHAgPSBjb250YWluZXJfb2YobXV0ZXgsIHN0cnVjdCBtdGtf
+ZGRwLAo+ID4gKwkJCQkJICAgbXV0ZXhbbXV0ZXgtPmlkXSk7Cj4gPiArCXUzMiB0bXA7Cj4gPiAr
+Cj4gPiArCXdyaXRlbCgxLCBkZHAtPnJlZ3MgKyBESVNQX1JFR19NVVRFWF9FTihtdXRleC0+aWQp
+KTsKPiA+ICsJd3JpdGVsKDEsIGRkcC0+cmVncyArIERJU1BfUkVHX01VVEVYKG11dGV4LT5pZCkp
+Owo+ID4gKwlyZWFkbF9wb2xsX3RpbWVvdXRfYXRvbWljKGRkcC0+cmVncyArIERJU1BfUkVHX01V
+VEVYKG11dGV4LT5pZCksIHRtcCwKPiA+ICsJCQkJICB0bXAgJiAweDIsIDEsIDEwMDAwKTsKClBs
+ZWFzZSBhZGQgYSBkZXNjcmlwdGl2ZSAjZGVmaW5lIGZvciB0aGUgMHgyIGJpdCBvZiB0aGUgRElT
+UF9SRUdfTVVURVgKcmVnaXN0ZXJzLgoKPiBOb3RoaW5nIHRvIGRvIHdpdGggdGltZW91dD8gSSB0
+aGluayBpdCBzaG91bGQgcHJpbnQgZXJyb3IgbWVzc2FnZSBoZXJlCj4gb3IgcmVzZXQgSFcgdG8g
+cmVjb3ZlciBpdC4KCkkgYXNzdW1lIHRoYXQgaWYgbXRrX2Rpc3BfbXV0ZXhfYWNxdWlyZSBpcyBj
+YWxsZWQgd2hpbGUgdGhlIGhhcmR3YXJlIGhhcwp0aGUgbXV0ZXggKGR1cmluZyB0aGUgc2hhZG93
+IHJlZ2lzdGVyIHVwZGF0ZSksIHRoaXMgc2hvdWxkIHdhaXQgdW50aWwKdGhlIHVwZGF0ZSBpcyBj
+b21wbGV0ZSwgc2luY2UgaXQgY2FuJ3QgYmFjayBvdXQgZnJvbSB0cnlpbmcgdG8gYWNxdWlyZQp0
+aGUgbG9jay4gSXMgdGhhdCB0aGUgY2FzZT8KCnJlZ2FyZHMKUGhpbGlwcAoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
