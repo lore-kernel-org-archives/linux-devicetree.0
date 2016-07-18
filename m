@@ -1,72 +1,75 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 01/10] Documentation: dt-bindings: mailbox: tegra: Add
- binding for HSP mailbox
-Date: Mon, 18 Jul 2016 17:13:17 -0600
-Message-ID: <578D628D.60802@wwwdotorg.org>
-References: <20160705090431.5852-1-josephl@nvidia.com>
- <20160705090431.5852-2-josephl@nvidia.com>
- <20160707181356.GA6864@kickseed.nvidia.com> <577EA0D6.9020308@wwwdotorg.org>
- <20160711141407.GA25042@rob-hp-laptop> <5783C468.2030708@wwwdotorg.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: dt_to_config, use full path for dtx_diff
+Date: Mon, 18 Jul 2016 16:12:57 -0700
+Message-ID: <578D6279.9020004@gmail.com>
+References: <576DD6B9.2040303@gmail.com>
+ <CAL_JsqKUFR4uX24rV3hoYCEEZ-osDvycM12v1ome3-R3jNORZw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5783C468.2030708-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKUFR4uX24rV3hoYCEEZ-osDvycM12v1ome3-R3jNORZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2016 10:08 AM, Stephen Warren wrote:
-> On 07/11/2016 08:14 AM, Rob Herring wrote:
->> On Thu, Jul 07, 2016 at 12:35:02PM -0600, Stephen Warren wrote:
->>> On 07/07/2016 12:13 PM, Sivaram Nair wrote:
->>>> On Tue, Jul 05, 2016 at 05:04:22PM +0800, Joseph Lo wrote:
->>>>> Add DT binding for the Hardware Synchronization Primitives (HSP). The
->>>>> HSP is designed for the processors to share resources and communicate
->>>>> together. It provides a set of hardware synchronization primitives for
->>>>> interprocessor communication. So the interprocessor communication
->>>>> (IPC)
->>>>> protocols can use hardware synchronization primitive, when operating
->>>>> between two processors not in an SMP relationship.
->>>
->>>>> diff --git a/include/dt-bindings/mailbox/tegra186-hsp.h
->>>>> b/include/dt-bindings/mailbox/tegra186-hsp.h
->>>
->>>>> +#define HSP_MBOX_TYPE_DB 0x0
->>>>> +#define HSP_MBOX_TYPE_SM 0x1
->>>>> +#define HSP_MBOX_TYPE_SS 0x2
->>>>> +#define HSP_MBOX_TYPE_AS 0x3
->>>>> +
->>>>> +#define HSP_DB_MASTER_CCPLEX 17
->>>>> +#define HSP_DB_MASTER_BPMP 19
->>>>> +
->>>>> +#define HSP_MBOX_ID(type, ID) \
->>>>> +        (HSP_MBOX_TYPE_##type << 16 | ID)
->>>>
->>>> It will be nicer if you avoid the macro glue magic '##' for 'type'. I
->>>> would also suggest to use braces around 'type' and 'ID'.
->>>
->>> This technique been used without issue in quite a few other places
->>> without
->>> issue, and has the benefit of simplifying the text wherever the macro is
->>> used. What issue do you foresee?
+On 07/18/16 15:18, Rob Herring wrote:
+> On Fri, Jun 24, 2016 at 7:56 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
 >>
->> I'm not a fan of using the macros to begin with and less so anything
->> more complex than a single constant value. I'd rather see 2 cells here
->> with the first being the id and the 2nd being the type.
+>> Do not require dtx_diff to be in $PATH.
 >>
->> An issue with token pasting is grepping for DB, SM, etc. in kernel tree
->> is probably noisy. Not such a big deal here, but a major PIA when you
->> have more complex sets of includes.
->
-> Is that a NAK or simply a suggestion? Having a single cell makes DT
-> parsing a bit simpler, since pretty much every SW stack provides a
-> default "one-cell" of_xlate implementation, whereas >1 cell means custom
-> code for of_xlate.
+>> dt_to_config already needs to be run from the root directory of a kernel
+>> tree so use scripts/dtc/dtx_diff instead of dtx_diff.
+> 
+> Okay, now I get a bit further. I get this message even if I set my
+> .config file on the command line:
+> 
+> grep: ./.config: No such file or directory
 
-I didn't see a response to this. Joseph, let's just use two cells 
-instead. I'm rather desperately waiting for this binding to be complete 
-so I can finalize the U-Boot code that uses it, and it sounds like 
-changing to two cells will get an ack faster. Can you post an updated 
-version of this series today/ASAP to get things moving? Thanks.
+All of the following work for me:
+
+  scripts/dtc/dt_to_config --config .config arch/arm/boot/dts/highbank.dts
+
+  scripts/dtc/dt_to_config --config=.config arch/arm/boot/dts/highbank.dts
+
+  scripts/dtc/dt_to_config --config ./.config arch/arm/boot/dts/highbank.dts
+
+  scripts/dtc/dt_to_config --config=./.config arch/arm/boot/dts/highbank.dts
+
+What is the exact command line you are using?
+
+Just to confirm, you are in the root directory of the kernel source tree
+and your .config is in the same directory (since you specified "./.config").
+
+> 
+> The config format still doesn't make sense to me. I'm running this on
+> highbank.dts, and I get mostly options that are not relevant to
+> highbank.
+
+Yes.  dt_to_config is not smart enough to know that you want to configure
+a highbank, so it offers you all of the choices that match the highbank
+compatibles, even for other boards.  This is the same result that you
+would get if you were searching manually, but dt_to_config gives you
+those extraneous results much faster than if you were searching manually.
+
+I did some proof of concept code to provide scores for the results, to
+select which entries are likely to be correct and which are likely to
+be wrong, but I did not want to add that complexity to the first version
+of dt_to_config -- it is complex enough already.
+
+I now have some slides that provide more examples of using dt_to_config at 
+
+   http://elinux.org/images/5/50/Dt_debugging_part_2.pdf
+
+You can skip forward to slide 27, then skim to slide 35, then it starts
+talking in more detail about using dt_to_config.
+
+I'm in Tokyo this week, so I may be somewhat slow responding.
+
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
