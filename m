@@ -1,68 +1,83 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 0/4] pwm: add support for ChromeOS EC PWM
-Date: Mon, 18 Jul 2016 14:24:26 +0100
-Message-ID: <20160718132426.GB17074@dell>
-References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
- <20160718084928.GA17074@dell>
- <20160718091029.GA32259@ulmo.ba.sec>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] libfdt: Add fdt_setprop_inplace_namelen_partial
+Date: Mon, 18 Jul 2016 15:45:58 +0200
+Message-ID: <20160718134558.GI4199@lukather>
+References: <20160711195623.12840-1-maxime.ripard@free-electrons.com>
+ <20160711195623.12840-6-maxime.ripard@free-electrons.com>
+ <20160712114520.GB16355@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mXDO3udm/xYWQeMQ"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160718091029.GA32259@ulmo.ba.sec>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Brian Norris <briannorris@chromium.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+In-Reply-To: <20160712114520.GB16355-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Jul 2016, Thierry Reding wrote:
 
-> On Mon, Jul 18, 2016 at 09:49:28AM +0100, Lee Jones wrote:
-> > On Fri, 15 Jul 2016, Brian Norris wrote:
-> > > This is the 4th (and final?) version of my series to support the =
-new ChromeOS
-> > > EC PWM API, so we can control, e.g., a PWM backlight when its PWM=
- is attached
-> > > to the EC. It uses Boris's latest "atomic" hooks for the PWM API =
-(i.e., the
-> > > ->apply() callback), which were recently merged.
-> > >=20
-> > > Pulled and adapted the cros_ec_cmd_xfer_status() helper from this=
- patch, with
-> > > some minor modifications:
-> > >=20
-> > > https://lkml.org/lkml/2016/4/12/342
-> > >=20
-> > > Note that after some style bikeshedding, I proposed to put off re=
-writing the
-> > > entire cros_ec_commands.h header at the moment, due to the shared=
- nature of
-> > > this file. Follow up here:
-> > >=20
-> > > https://bugs.chromium.org/p/chromium/issues/detail?id=3D621123
-> > >=20
-> > > As this touches MFD (sort of), drivers/platform/chrome/, and driv=
-ers/pwm/, I'm
-> > > still not sure who it should all go through: Lee, Thierry, or Olo=
-f?
+--mXDO3udm/xYWQeMQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi David,
+
+On Tue, Jul 12, 2016 at 09:45:20PM +1000, David Gibson wrote:
+> On Mon, Jul 11, 2016 at 09:56:22PM +0200, Maxime Ripard wrote:
+> > Add a function to modify inplace only a portion of a property..
 > >=20
-> > I usually take this type of submission through the MFD tree, althou=
-gh
-> > it's too late in the day to make it into v4.8.
+> > This is especially useful when the property is an array of values, and =
+you
+> > want to update one of them without changing the DT size.
 > >=20
-> > Which Acks are you missing?
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 >=20
-> I'm willing to take this through the PWM tree if you're okay with the
-> MFD changes. I can put the MFD changes into a separate branch and you
-> could pull that in if you needed to resolve any dependencies, which I
-> think would be quite unlikely if you've already closed your tree.
+> Reviewed-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+>=20
+> Now it just needs some testcases..
 
-Are you saying that you're willing to take these straight into the
-merge-window, with no soak in -next?
+Since fdt_setprop_inplace relies on it now, it already has some test
+coverage.
+
+However, I tried to add some testcases for this to the test_tree1, but
+it was generating a lot of errors because it seems that not all tests
+are run from test_tree1.dts and generated by some other mean I
+couldn't identify. Could you point me to the right direction?
+
+Thanks,
+Maxime
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--mXDO3udm/xYWQeMQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXjN2WAAoJEBx+YmzsjxAghX4QAIiZ4W53Sx9wH74LwrBaQjMJ
+JOe2F1+RpRL0Y/yqnfvcj/YoqXfJLoewlqRhzFAsqFTwrpk0b/MI6oovbryxjgIl
+gZkVpwqi9rGlhW0gKDmewsqK7KvkgFFdI2niwqlhbb2vVyfuF0UaMiCNRBNVBH/8
+jXVZ08btKhU5jtvfT5OwETNxvkNA+MbgGYDE0T1kbSlJC2ItU8rxj3ax/Kpc6uyz
+asr1HVF4FU1U/qpGNGlcBUKhBGZmYo+okfeTKvH5ZQvuox3HujYjxJCaomI6FTJj
+V0Wxme2OrJOUdSQ+cHnUoJdgd6EZMwMVnKMDF506y1+IA4IbLO/qxq3U3a6GahL2
+AINo4i1we0E4AKoq29kKeSgNjF8wWATCPy3ekGUB6EgFUCyovzD4m0GvXdbdA51G
+c5MeCGdBsVnf5keCTl61AyUUadNMBVi3l583r+OSZzledPSvp2CxoeAP79PmFE3X
+xJt2LHgO658NY0HaBGsXI+6k3dPvOJVdTczMOYbyqAipz7GUhLresmFR/RDod+oh
+kfPQ2SA7Z4HAeJpTgji4BZbjHmscgpC+4zl9vAdIlesLGMEk7kj/QRFJMpDaBFvr
+mZk+2Hf2z9pqV1Vi8syu730cjQYplrzWiUOC1i0OLd52ZhP3mkky+u5GvRb+OVx1
+sFqIIJj65AHIYDGb8SKL
+=046q
+-----END PGP SIGNATURE-----
+
+--mXDO3udm/xYWQeMQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
