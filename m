@@ -1,65 +1,68 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: msm8974-hammerhead: Add regulator nodes for hammerhead
-Date: Mon, 18 Jul 2016 09:44:33 +0200
-Message-ID: <1957086.XgnIUz2uOJ@wuerfel>
-References: <20160717105208.9596-1-bshah@kde.org> <20160718033425.GB1966@archbox> <CAOCOHw5MNN9QAea1gJobpEHpn1S0=CTA3mEHzd+dVhv-GShYdg@mail.gmail.com>
+From: "'Arend Van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] brcmfmac: Add brcm,nvram_file_name
+ dt property
+Date: Mon, 18 Jul 2016 09:51:14 +0200
+Message-ID: <44803976-7e34-991f-5ee0-0a548f6cefc6@broadcom.com>
+References: <1467209074-15634-1-git-send-email-hdegoede@redhat.com>
+ <3354017.XSBSmHHtrQ@wuerfel>
+ <bb1beb8d-652d-aa97-e24b-e3e27397dd2e@broadcom.com>
+ <3996482.D5xdKXDiGl@wuerfel> <20160717214502.GA11498@rob-hp-laptop>
+Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOCOHw5MNN9QAea1gJobpEHpn1S0=CTA3mEHzd+dVhv-GShYdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bhushan Shah <bshah-RoXCvvDuEio@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRYNGWEWYDBB6EUWK6AKGQERH6MOFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160717214502.GA11498@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, "John W . Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday, July 17, 2016 8:44:01 PM CEST Bjorn Andersson wrote:
-> On Sun, Jul 17, 2016 at 8:34 PM, Bhushan Shah <bshah-RoXCvvDuEio@public.gmane.org> wrote:
-> > On Sun, Jul 17, 2016 at 09:21:48PM +0200, Arnd Bergmann wrote:
-> >> On Sunday, July 17, 2016 4:22:07 PM CEST Bhushan Shah wrote:
-> >> > +
-> >> > +       smd {
-> >> > +               rpm {
-> >> > +                       rpm_requests {
-> >> > +                               pm8841-regulators {
-> >> > +                                       s1 {
-> >> > +                                               regulator-min-microvolt = <675000>;
-> >> > +                                               regulator-max-microvolt = <1050000>;
-> >> > +                                       };
-> >>
-> >> Maybe add a label at either the rpm_requests or the pm8841-regulators
-> >> node so you can add properties in the leaf nodes withoutout having to
-> >> specify the whole path?
-> >
-> > Sure, I will adjust patch.
+On 17-7-2016 23:45, Rob Herring wrote:
+> On Thu, Jul 07, 2016 at 10:46:28AM +0200, Arnd Bergmann wrote:
+>> On Wednesday, July 6, 2016 9:19:41 PM CEST Arend Van Spriel wrote:
+>>> On 6-7-2016 15:42, Arnd Bergmann wrote:
+>>>> On Wednesday, July 6, 2016 10:08:55 AM CEST Arend Van Spriel wrote:
+>>>>> On Tue, Jul 5, 2016 at 3:43 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>>> All existing uses of the model property in arch/arm/boot/dts and most of
+>>>> the ones in arch/powerpc/boot/dts are against the intended usage in
+>>>> one way or another, but adding different kind of incorrect usage won't
+>>>> improve that.
+>>>>
+>>>> The only way I can see the model property being used correctly would
+>>>> be to have it match the first entry in the compatible property, but
+>>>> that is completely redundant, so we tend to omit it, except for the
+>>>> root node in which it is required. For the root node however, the
+>>>> historic practice that has crept in on ARM is to put something completely
+>>>> different in there, which is a human-readable description of the
+>>>> machine rather than something we can use as a unique indentifier.
+>>>>
+>>>> I'd just consider the "model" property burned, and not use it for anything
+>>>> that doesn't already use it, just like we handle "device_type": a few
+>>>> things require it, nothing else should use it.
+>>>
+>>> If that is the agreed approach in devicetree arena I am fine with it. I
+>>> have been unaware of this and just looked at the suggestion from Jonas
+>>> seeing a solution to the problem at hand.
+>>
+>> I don't think it has been discussed or decided before as the question
+>> has not come up, so for now this is my personal view. Maybe one of
+>> the devicetree maintainers can comment on this.
 > 
-> Please don't. After running into several cases where this would end us
-> up in having a multitude of nodes each describing just a snippet of
-> each level we decided not to do so in the general case for the
-> Qualcomm boards.
+> Back from vacation and getting caught up.
 > 
-> There are a few where we apparently ended up doing so anyways, but for
-> all other cases of regulators we express the full tree in the dts, so
-> please follow that so we don't mix the styles too much.
+> I agree with Arnd here. In my view model is the OEM branding on the 
+> device, compatible is the h/w. If you have different firmware related 
+> files, that goes beyond OEM branding.
 
-Ok, then how about this instead:
+Thanks, Rob
 
-/smd/rpm/rpm_requests/pm8841-regulators {
-	s1 {
-		regulator-min-microvolt = <675000>;
-		regulator-max-microvolt = <1050000>;
-	};
+We are talking about hardware variants here. So using the model property
+is off the table.
 
-	...
-};
-
-That avoids the ridiculous intendation level but uses no labels.
-
-	Arnd
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Arend
