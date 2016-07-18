@@ -1,56 +1,64 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver
-Date: Mon, 18 Jul 2016 10:00:54 -0700
-Message-ID: <20160718170054.GG76613@google.com>
-References: <1465000774-7762-1-git-send-email-marex@denx.de>
- <20160607140057.GA20256@rob-hp-laptop>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH/RFC 2/6] spi: core: Add support for registering SPI slave
+ controllers
+Date: Mon, 18 Jul 2016 18:02:33 +0100
+Message-ID: <20160718170233.GU30372@sirena.org.uk>
+References: <1466602929-4191-1-git-send-email-geert+renesas@glider.be>
+ <1466602929-4191-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uUozbLrG2OP+gMtx"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160607140057.GA20256@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1466602929-4191-3-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 07, 2016 at 09:00:57AM -0500, Rob Herring wrote:
-> On Sat, Jun 04, 2016 at 02:39:33AM +0200, Marek Vasut wrote:
-> > From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > 
-> > Add binding document for the Cadence QSPI controller.
-> > 
-> > Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> > Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-> > Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > ---
-> > V2: Add cdns prefix to driver-specific bindings.
-> > V3: Use existing property "is-decoded-cs" instead of creating a
-> >     duplicate, "ext-decoder". Timing parameters are in nanoseconds,
-> >     not master reference clocks. Remove bus-num completely.
-> > V4: Add new properties fifo-width and trigger-address
-> > V7: - Prefix all of the Cadence-specific properties with cdns prefix,
-> >       those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
-> >       "cdns,fifo-width", "cdns,trigger-address".
-> >     - Drop bogus properties which were not used and were incorrect.
-> > V8: Align lines to 80 chars.
-> > ---
-> >  .../devicetree/bindings/mtd/cadence-quadspi.txt    | 56 ++++++++++++++++++++++
-> >  1 file changed, 56 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Applied to l2-mtd.git
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--uUozbLrG2OP+gMtx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 22, 2016 at 03:42:05PM +0200, Geert Uytterhoeven wrote:
+> Add support for registering SPI slave controllers using the existing SPI
+> master framework:
+>   - SPI slave controllers must set the SPI_MASTER_IS_SLAVE flag in
+>     spi_master.flags,
+>   - The "cs-gpios" property is ignored,
+>   - The bus is described in DT as having a single slave node, "reg" and
+>     "spi-max-frequency" properties are ignored.
+>=20
+> From the point of view of an SPI slave protocol handler, an SPI slave
+> controller looks exactly like an ordinary SPI master controller.
+
+I think this needs a *bit* more fleshing out around cancellation of
+transfers, the inability to remove any of the modules due to them being
+blocked in SPI calls.  Probably just an API call that allows us to
+inject a timeout/cancellation but I think it does need to be there and
+used before we start getting bad practice propagating around.
+
+I'm also wondering about supporting varible length transfers but that's
+going to be rather controller specific I fear and I'm not sure there's
+much demand.
+
+Otherwise the basic idea looks OK.
+
+--uUozbLrG2OP+gMtx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXjQuoAAoJECTWi3JdVIfQyBUIAIY3+xCkGmBQI4DeFSF3pEng
+h3h5G8oSxRlKd/NxWlpVsFq7ZB92U5pimpKLTHoRVgvAj2a0SZcGmcryqYPfgpDT
+tgoECSRAL1aZJ4Jk5wTxSJMBug8sQZiLWQsg4r02GVyKEkCc93B4QrqB9xN7ceCq
+z5z5xTmDSIjqwt4N8OwNkFRfW4E20cvtUHjk9K7jPq90NJHqB3//gSdbSVpZ87Nz
+W+dqAos5mf+uF2ebi8TzOu6hoCePAEAgrcBRR5SF4vtgmTEAnvkDlgLbuO7B8GmB
+EK4ZzZnDif9u949TsjT6TSFA9a4j7f1DUSkl0Wz8r62O23FG0+m7sHELQf2Cw7Q=
+=tfa9
+-----END PGP SIGNATURE-----
+
+--uUozbLrG2OP+gMtx--
