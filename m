@@ -1,71 +1,42 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/3] ARM: dts: qcom: Add initial DTS for LG Nexus 5 Phone
-Date: Mon, 18 Jul 2016 10:19:07 -0700
-Message-ID: <20160718171907.GF13516@tuxbot>
-References: <20160717105208.9596-1-bshah@kde.org>
- <20160717105208.9596-2-bshah@kde.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160717105208.9596-2-bshah@kde.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bhushan Shah <bshah@kde.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: [PATCH v4 0/2] Additional iProc GPIO support
+Date: Mon, 18 Jul 2016 10:20:16 -0700
+Message-ID: <1468862418-31477-1-git-send-email-ray.jui@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun 17 Jul 03:52 PDT 2016, Bhushan Shah wrote:
+Add support to the iProc GPIO driver for the NSP and Stingray iProc based SoCs.
+The integration in NSP has drive strength pinconf feature disabled and the
+integration in Stingray has all pinconf related features disabled and handled
+by a different IP block
 
-[..]
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> new file mode 100644
-> index 0000000..88d494f
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> @@ -0,0 +1,25 @@
-> +#include "qcom-msm8974.dtsi"
-> +#include "qcom-pm8841.dtsi"
-> +#include "qcom-pm8941.dtsi"
-> +
-> +/ {
-> +	model = "LGE MSM 8974 HAMMERHEAD";
-> +	compatible = "qcom,msm8974";
+GITHUB repo: https://github.com/Broadcom/cygnus-linux.git
+branch: iproc-gpio-v4
 
-We should have a "lg,hammerhead" here as well, prior to "qcom,msm8974".
-Preferably some sort of "product family" definition, if we know of any
-to reduce the risk of conflicts with any other hammerheads from LGE.
+Changes from v3:
+ - Changed SoC specific compatible string name to have format of <soc>-<block>,
+i.e., brcm,iproc-nsp-gpio and brcm,iproc-stingray-gpio, per suggestion from Rob
 
-> +	qcom,msm-id = <126 150 0x20002 0xB>;
+Changes from v2:
+ - Rebased to v4.7-rc1
+ - Changed to use SoC specific compatible string to handle SoC specific
+changes in both NSP and Stingray
 
-We've decided against defining qcom,msm-id in the dts files, so please
-drop this.
+Changes from v1:
+ - Changed to use compatible strings "brcm,iproc-gpio-v2" and
+"brcm,iproc-gpio-v3" to deal with differences among various iProc based SoCs
+ - Removed DT header "include/dt-bindings/pinctrl/brcm,iproc-gpio.h"
 
-Instead use dtbTool from git://codeaurora.org/quic/kernel/skales which
-should inject the correct information based on the compatible.
+Ray Jui (2):
+  dt-bindings: Update iProc GPIO bindings
+  pinctrl: iproc: Add NSP and Stingray GPIO support
 
-> +
-> +	aliases {
-> +		serial0 = &blsp1_uart1;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&soc {
-> +
+ .../bindings/pinctrl/brcm,iproc-gpio.txt           |  18 +++-
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           | 118 +++++++++++++++++++--
+ 2 files changed, 127 insertions(+), 9 deletions(-)
 
-As you're dropping msm-id, please also drop this empty line.
-
-> +	serial@f991d000 {
-> +		status = "ok";
-> +	};
-> +
-
-Dito.
-
-> +};
-
-Regards,
-Bjorn
+-- 
+2.1.4
