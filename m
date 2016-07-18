@@ -1,65 +1,53 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v0 06/10] arm: orion5x: Add DT-based support for Netgear
- WNR854T
-Date: Mon, 18 Jul 2016 11:44:24 +0200
-Message-ID: <20160718114424.14a28889@free-electrons.com>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
-	<4290281.AD5Bhg23o6@wuerfel>
-	<alpine.DEB.2.11.1607170959090.19980@marmot.wormnet.eu>
-	<6404488.GyOP57DJrV@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <6404488.GyOP57DJrV@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jamie Lentin <jm@lentin.co.uk>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+Subject: [RESEND PATCH] ARM: tegra: fix erroneous address in dts
+Date: Mon, 18 Jul 2016 11:46:48 +0200
+Message-ID: <1468835208-13426-1-git-send-email-ralf@ramses-pyramidenbau.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+c90bb7b enabled the high speed UARTs of the Jetson TK1. Due to a merge
+quirk, wrong addresses were introduced. Fix it and use the correct
+addresses.
 
-On Sun, 17 Jul 2016 22:41:35 +0200, Arnd Bergmann wrote:
+Thierry let me know, that there is another patch (b5896f67ab3c in
+linux-next) in preparation which removes all the '0,' prefixes of unit
+addresses on Tegra124 and is planned to go upstream in 4.8, so
+this patch will get reverted then.
 
-> I would assume that the PCIe port should work out of the box with the driver
+But for the moment, this patch is necessary to fix current misbehaviour.
 
-Unfortunately, no. The PCIe on Orion5x requires a workaround for
-reading/writing the PCI configuration space. Instead of doing MMIO
-accesses to PCIE_CONF_ADDR_OFF / PCIE_CONF_DATA_OFF, you must map a
-MBus window, which provides a memory-mapped view of the PCI
-configuration space.
+Fixes: c90bb7b9b9 ("ARM: tegra: Add high speed UARTs to Jetson TK1 device tree")
+Signed-off-by: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+Acked-by: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Definitely not impossible to implement, but the driver doesn't work
-as-is.
-
-> We also don't seem to need any MBUS window setup for the I/O and
-> memory spaces, which greatly simplifies the driver compared to the
-> pci-mvebu one, it would be a fairly straightforward implementation
-> based on pci-host-generic.c (which unfortunately just got way
-> more complicated and might need to go on a diet).
-
-MBus windows are needed. See:
-
-        mvebu_mbus_add_window_remap_by_id(ORION_MBUS_PCI_IO_TARGET,
-                                          ORION_MBUS_PCI_IO_ATTR,
-                                          ORION5X_PCI_IO_PHYS_BASE,
-                                          ORION5X_PCI_IO_SIZE,
-                                          ORION5X_PCI_IO_BUS_BASE);
-        mvebu_mbus_add_window_by_id(ORION_MBUS_PCI_MEM_TARGET,
-                                    ORION_MBUS_PCI_MEM_ATTR,
-                                    ORION5X_PCI_MEM_PHYS_BASE,
-                                    ORION5X_PCI_MEM_SIZE);
-
-in orion5x_setup_wins().
-
-Note that we already have some Orion5x converted to DT, and that use
-PCI: board-rd88f5182.c is an example. So we could very well take Jamie
-patches as-is, and move later to a DT-representation for PCI/PCIe.
-
-Best regards,
-
-Thomas
+diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+index 941f362..f4d8125 100644
+--- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
++++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+@@ -1386,7 +1386,7 @@
+ 	 *   Pin 41: BR_UART1_TXD
+ 	 *   Pin 44: BR_UART1_RXD
+ 	 */
+-	serial@70006000 {
++	serial@0,70006000 {
+ 		compatible = "nvidia,tegra124-hsuart", "nvidia,tegra30-hsuart";
+ 		status = "okay";
+ 	};
+@@ -1398,7 +1398,7 @@
+ 	 *   Pin 71: UART2_CTS_L
+ 	 *   Pin 74: UART2_RTS_L
+ 	 */
+-	serial@70006040 {
++	serial@0,70006040 {
+ 		compatible = "nvidia,tegra124-hsuart", "nvidia,tegra30-hsuart";
+ 		status = "okay";
+ 	};
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+2.7.3
