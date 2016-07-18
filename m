@@ -1,58 +1,51 @@
 From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v3 2/7] bindings: spi-samsung: document the clocks and the
- clock-name property
-Date: Mon, 18 Jul 2016 12:30:07 +0200
-Message-ID: <578CAFAF.9060704@samsung.com>
-References: <1468317736-18841-1-git-send-email-andi.shyti@samsung.com>
- <1468317736-18841-3-git-send-email-andi.shyti@samsung.com>
- <20160716203044.GA13087@rob-hp-laptop>
+Subject: Re: [PATCH v4 4/4] ASoC: samsung: Add machine driver for Exynos5433
+ based TM2 board
+Date: Mon, 18 Jul 2016 12:41:37 +0200
+Message-ID: <578CB261.60507@samsung.com>
+References: <CGME20160705171538epcas1p14f034567982b67aad091c50e5adcec9c@epcas1p1.samsung.com>
+ <1467738877-31555-1-git-send-email-s.nawrocki@samsung.com>
+ <5788721B.7010602@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-reply-to: <20160716203044.GA13087@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Andi Shyti <andi.shyti@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5788721B.7010602@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: broonie@kernel.org, robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, ideal.song@samsung.com, inki.dae@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/16/2016 10:30 PM, Rob Herring wrote:
->> diff --git a/Documentation/devicetree/bindings/spi/spi-samsung.txt 
->> b/Documentation/devicetree/bindings/spi/spi-samsung.txt
->> > index 57d5539..f45c6eb 100644
->> > --- a/Documentation/devicetree/bindings/spi/spi-samsung.txt
->> > +++ b/Documentation/devicetree/bindings/spi/spi-samsung.txt
->> > @@ -24,6 +24,15 @@ Required SoC Specific Properties:
->> >  - dma-names: Names for the dma channels. There must be at least one channel
->> >    named "tx" for transmit and named "rx" for receive.
->> >  
->> > +- clocks: specifies the clock IDs provided to the SPI controller; they are
->> > +  required for interacting with the controller itself, for synchronizing the bus
->> > +  and as I/O clock (the latter is required by exynos5433 and exynos7).
->> > +
->> > +- clock-names: string names of the clocks in the 'clocks' property; for all the
->> > +  the devices the names must be "spi", "spi_busclkN" (where N is determined by
->> > +  "samsung,spi-src-clk"), while Exynos5433 should specify a third clock
->
-> This sounds like you are describing the configuration of the clocks, not 
-> the connections. The binding here should list clocks for all possible 
-> vaules of N as those are all the input clocks to the block.
+Hi Chanwoo,
+
+On 07/15/2016 07:18 AM, Chanwoo Choi wrote:
+>> +static int tm2_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+
+>> +	codec_dai_node = of_parse_phandle(dev->of_node, "audio-codec", 0);
+>> +	if (!codec_dai_node) {
+>> +		dev_err(dev, "audio-codec property invalid or missing\n");
+>> +		ret = -EINVAL;
+>> +		goto err_put_cpu_dai;
+>> +	}
+
+>> +	priv->codec_mclk1 = of_clk_get_by_name(codec_dai_node, "mclk1");
+>> +	if (IS_ERR(priv->codec_mclk1)) {
+>> +		dev_err(dev, "Failed to get mclk1 clock\n");
+>> +		ret = PTR_ERR(priv->codec_mclk1);
+>> +		goto err_put_codec_dai;
+>> +	}
 > 
->> > +  "spi_ioclk" for the I/O clock.
+> I think that you better to use the devm_clk_get() instead of of_clk_get_by_name()
+> because you don't need to handle the clk_put() when error happen and remove the 
+> this driver.
+> 
+> 	priv->codec_mclk1 = devm_clk_get(dev, "mclk1");
 
-I agree we should list all possible spi_busclkN, I must admit  I might
-have introduced some confusion by suggesting wording for clock-names 
-similar to the above while discussing those things internally.  Afterwards 
-I came to a similar conclusion all possible input clocks should be listed
-These will differ depending  on the compatible.  I checked in documentation 
-of most of related SoCs and for "samsung,s3c6410-spi" or older compatibles 
-possible N is 0..2 (PCLK, USBCLK, PLL clock), for "samsung,s5pv210-spi" 
-and newer possible N is 0 (SCLK_SPI).  
-
-It's important to have all the input clocks listed so we have a list 
-of parent clocks to the SPI controller's internal clocks, should we 
-ever decide to model them with the clk API.
+The clocks are from the CODEC DT node, for which we don't have struct
+device pointer here, that's why I used of_clk_get_by_name().
 
 --
-Thanks, 
+Thanks,
 Sylwester
