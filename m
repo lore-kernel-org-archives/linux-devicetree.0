@@ -1,43 +1,70 @@
-From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: add rk3288-firefly-reload
-Date: Mon, 18 Jul 2016 23:32:31 +0800
-Message-ID: <1468855952-2006-1-git-send-email-ayaka@soulik.info>
-References: <1549971.ctkvOGm2xW@diego>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add DT binding for Tegra186 BPMP I2C
+Date: Mon, 18 Jul 2016 10:16:27 -0600
+Message-ID: <578D00DB.4080307@wwwdotorg.org>
+References: <20160707193711.5891-1-swarren@wwwdotorg.org>
+ <20160716210728.GA22144@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1549971.ctkvOGm2xW@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160716210728.GA22144@rob-hp-laptop>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko:
+On 07/16/2016 03:07 PM, Rob Herring wrote:
+> On Thu, Jul 07, 2016 at 01:37:11PM -0600, Stephen Warren wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> In Tegra186, the BPMP (Boot and Power Management Processor) owns certain
+>> HW devices, such as the I2C controller for the power management I2C bus.
+>> Software running on other CPUs must perform IPC to the BPMP in order to
+>> execute transactions on that I2C bus. This binding describes an I2C bus
+>> that is accessed in such a fashion.
+>>
+>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   .../bindings/i2c/nvidia,tegra186-bpmp-i2c.txt      | 35 ++++++++++++++++++++++
+>>   1 file changed, 35 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
+>> new file mode 100644
+>> index 000000000000..eb9f70723ab7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
+>> @@ -0,0 +1,35 @@
+>> +NVIDIA Tegra186 BPMP I2C controller
+>> +
+>> +In Tegra186, the BPMP (Boot and Power Management Processor) owns certain HW
+>> +devices, such as the I2C controller for the power management I2C bus. Software
+>> +running on other CPUs must perform IPC to the BPMP in order to execute
+>> +transactions on that I2C bus. This binding describes an I2C bus that is
+>> +accessed in such a fashion.
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +    Array of strings.
+>> +    One of:
+>> +    - "nvidia,tegra186-bpmp-i2c".
+>> +- address-cells: Address cells for I2C device address.
+>> +    Single-cell integer.
+>> +    Must be <1>.
+>> +- size-cells:
+>> +    Single-cell integer.
+>> +    Must be <0>.
+>> +- nvidia,bpmp:
+>> +    The phandle to the BPMP device.
+>
+> Any reason to not make this a sub-node of the BPMP device?
 
-I use GPLv2 because of it looks more shorter, anyway I am back to allow
-X11 now. The modification request of io-domain have been included.
+That would be possible too.
 
-Thank you for reviewing.
-
-Randy Li (1):
-  ARM: dts: add rk3288-firefly-reload
-
- Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi  | 339 ++++++++++++++++++++
- arch/arm/boot/dts/rk3288-firefly-reload.dts        | 356 +++++++++++++++++++++
- 4 files changed, 700 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
- create mode 100644 arch/arm/boot/dts/rk3288-firefly-reload.dts
-
--- 
-2.7.4
+My thought process was along the lines of: The system has an I2C bus, 
+which deserves a DT node. That fact seemed more important than the 
+access mechanism; the fact it's accessed via BPMP rather than direct 
+register access felt a bit more like an implementation detail. Still, I 
+suppose we could flip it around and store the node underneath the BPMP 
+if you want; let me know.
