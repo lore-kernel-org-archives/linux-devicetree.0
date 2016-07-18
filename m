@@ -1,291 +1,80 @@
-From: John Crispin <john@phrozen.org>
-Subject: Re: [PATCH V9 1/2] regulator: Add document for MT6323 regulator
-Date: Mon, 18 Jul 2016 14:12:37 +0200
-Message-ID: <4cbdd86e-86ee-9a26-777e-340423863c66@phrozen.org>
-References: <1468843741-59637-1-git-send-email-john@phrozen.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH/RFC 4/6] spi: slave: Add SPI slave handler reporting boot
+ up time
+Date: Mon, 18 Jul 2016 13:14:27 +0100
+Message-ID: <20160718121427.GS30372@sirena.org.uk>
+References: <1466602929-4191-1-git-send-email-geert+renesas@glider.be>
+ <1466602929-4191-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468843741-59637-1-git-send-email-john@phrozen.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, John Crispin <blogic@openwrt.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GFHULmA0mO3kKGOo"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1466602929-4191-5-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hisashi Nakamura <hisashi.nakamura.ak-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ignore this one please, my script used the wrong SoB line will send V10
-in a sec ... sorry for the noise
 
-On 18/07/2016 14:09, John Crispin wrote:
-> From: John Crispin <blogic@openwrt.org>
-> 
-> Signed-off-by: John Crispin <blogic@openwrt.org>
-> Cc: devicetree@vger.kernel.org
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes in V9
-> * drop compatible string from devicetree
-> 
-> Changes in V7
-> * remove another compatible string
-> * small wording changes
-> 
-> Changes in V6
-> * remove the compatible string
-> 
-> Changes in V5
-> * regulator vs regulators
-> 
-> Changes in V4
-> * regulator is a subnode and not a property
-> 
->  .../bindings/regulator/mt6323-regulator.txt        |  239 ++++++++++++++++++++
->  1 file changed, 239 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-> new file mode 100644
-> index 0000000..9fd95e7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-> @@ -0,0 +1,239 @@
-> +Mediatek MT6323 Regulator Driver
+--GFHULmA0mO3kKGOo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 22, 2016 at 03:42:07PM +0200, Geert Uytterhoeven wrote:
+> Add an SPI slave handler responding with the time of reception of the
+> last SPI message.
+>=20
+> This can be used by an external microcontroller as a dead man's switch.
+
+The subject says boot up time, this says time of reception of the last
+message.  Which is it?
+
+> +static int spi_slave_time_send(struct spi_device *spi)
+> +{
+> +	__be32 msg[2];
+> +	u32 rem_ns;
+> +	u64 ts;
 > +
-> +All voltage regulators are defined as subnodes of the regulators node. A list
-> +of regulators provided by this controller are defined as subnodes of the
-> +PMIC's node. Each regulator is named according to its regulator type,
-> +buck_<name> and ldo_<name>. The definition for each of these nodes is defined
-> +using the standard binding for regulators at
-> +Documentation/devicetree/bindings/regulator/regulator.txt.
+> +	ts =3D local_clock();
+> +	rem_ns =3D do_div(ts, 1000000000) / 1000;
 > +
-> +The valid names for regulators are::
-> +BUCK:
-> +  buck_vproc, buck_vsys, buck_vpa
-> +LDO:
-> +  ldo_vtcxo, ldo_vcn28, ldo_vcn33_bt, ldo_vcn33_wifi, ldo_va, ldo_vcama,
-> +  ldo_vio28, ldo_vusb, ldo_vmc, ldo_vmch, ldo_vemc3v3, ldo_vgp1, ldo_vgp2,
-> +  ldo_vgp3, ldo_vcn18, ldo_vsim1, ldo_vsim2, ldo_vrtc, ldo_vcamaf, ldo_vibr,
-> +  ldo_vrf18, ldo_vm, ldo_vio18, ldo_vcamd, ldo_vcamio
+> +	msg[0] =3D cpu_to_be32(ts);
+> +	msg[1] =3D cpu_to_be32(rem_ns);
 > +
-> +Example:
+> +	return spi_write(spi, &msg, sizeof(msg));
+> +}
+
+Looks like uptime which is a third thing.
+
+> +static int spi_slave_time_remove(struct spi_device *spi)
+> +{
+> +	struct spi_slave_time_priv *priv =3D spi_get_drvdata(spi);
 > +
-> +	pmic: mt6323 {
-> +		compatible = "mediatek,mt6323";
-> +
-> +		mt6323regulator: regulators {
-> +			mt6323_vproc_reg: buck_vproc{
-> +				regulator-name = "vproc";
-> +				regulator-min-microvolt = < 700000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-ramp-delay = <12500>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vsys_reg: buck_vsys{
-> +				regulator-name = "vsys";
-> +				regulator-min-microvolt = <1400000>;
-> +				regulator-max-microvolt = <2987500>;
-> +				regulator-ramp-delay = <25000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vpa_reg: buck_vpa{
-> +				regulator-name = "vpa";
-> +				regulator-min-microvolt = < 500000>;
-> +				regulator-max-microvolt = <3650000>;
-> +			};
-> +
-> +			mt6323_vtcxo_reg: ldo_vtcxo{
-> +				regulator-name = "vtcxo";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <90>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vcn28_reg: ldo_vcn28{
-> +				regulator-name = "vcn28";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <185>;
-> +			};
-> +
-> +			mt6323_vcn33_bt_reg: ldo_vcn33_bt{
-> +				regulator-name = "vcn33_bt";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3600000>;
-> +				regulator-enable-ramp-delay = <185>;
-> +			};
-> +
-> +			mt6323_vcn33_wifi_reg: ldo_vcn33_wifi{
-> +				regulator-name = "vcn33_wifi";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3600000>;
-> +				regulator-enable-ramp-delay = <185>;
-> +			};
-> +
-> +			mt6323_va_reg: ldo_va{
-> +				regulator-name = "va";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vcama_reg: ldo_vcama{
-> +				regulator-name = "vcama";
-> +				regulator-min-microvolt = <1500000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +
-> +			mt6323_vio28_reg: ldo_vio28{
-> +				regulator-name = "vio28";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vusb_reg: ldo_vusb{
-> +				regulator-name = "vusb";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vmc_reg: ldo_vmc{
-> +				regulator-name = "vmc";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <36>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vmch_reg: ldo_vmch{
-> +				regulator-name = "vmch";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <36>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vemc3v3_reg: ldo_vemc3v3{
-> +				regulator-name = "vemc3v3";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <36>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vgp1_reg: ldo_vgp1{
-> +				regulator-name = "vgp1";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +
-> +			mt6323_vgp2_reg: ldo_vgp2{
-> +				regulator-name = "vgp2";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +
-> +			mt6323_vgp3_reg: ldo_vgp3{
-> +				regulator-name = "vgp3";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +
-> +			mt6323_vcn18_reg: ldo_vcn18{
-> +				regulator-name = "vcn18";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +
-> +			mt6323_vsim1_reg: ldo_vsim1{
-> +				regulator-name = "vsim1";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +
-> +			mt6323_vsim2_reg: ldo_vsim2{
-> +				regulator-name = "vsim2";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +
-> +			mt6323_vrtc_reg: ldo_vrtc{
-> +				regulator-name = "vrtc";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vcamaf_reg: ldo_vcamaf{
-> +				regulator-name = "vcamaf";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +
-> +			mt6323_vibr_reg: ldo_vibr{
-> +				regulator-name = "vibr";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <36>;
-> +			};
-> +
-> +			mt6323_vrf18_reg: ldo_vrf18{
-> +				regulator-name = "vrf18";
-> +				regulator-min-microvolt = <1825000>;
-> +				regulator-max-microvolt = <1825000>;
-> +				regulator-enable-ramp-delay = <187>;
-> +			};
-> +
-> +			mt6323_vm_reg: ldo_vm{
-> +				regulator-name = "vm";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vio18_reg: ldo_vio18{
-> +				regulator-name = "vio18";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			mt6323_vcamd_reg: ldo_vcamd{
-> +				regulator-name = "vcamd";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +
-> +			mt6323_vcamio_reg: ldo_vcamio{
-> +				regulator-name = "vcamio";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-enable-ramp-delay = <216>;
-> +			};
-> +		};
-> +	};
-> 
+> +	/* FIXME Doesn't work, as spi_write() is blocked on a completion */
+> +	kthread_stop(priv->thread);
+
+spi_async()?  Still no cancellation on the actual operation but it
+pushes it more inside the framework.
+
+--GFHULmA0mO3kKGOo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXjMgiAAoJECTWi3JdVIfQxN8H/iTfhmcWrE0RQpPOF9FQ4WLA
+45W5GkH13mncePGwfWt4pHlpWfCSRp6E0c2gYKJqd+QA7OZOBihaLJEpLY0Fc8pJ
+5qv0bYjCIb8fQcqrmUYo4KkzkgchEqIZ+OlHmTAgWPyOiiDS/doGxPzgjQK3W8XO
+EJijsscQXazBrgEjGlqpiJ6U/jRXi/qELJ8UUlfqYV7QdCHV2IUl2yaRghgOQNMf
+3uQ59kL9E4tzWLZywxpwkL5HOHL16dAZRphxs//IYgWE/a6KHxKuN3e7kcuDGiwZ
+KoTankimBu9HW4v7/8IGxwCg6RywDVRkl4seau7QwFTpyrlTeRwY75og0ixB+1I=
+=tjIp
+-----END PGP SIGNATURE-----
+
+--GFHULmA0mO3kKGOo--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
