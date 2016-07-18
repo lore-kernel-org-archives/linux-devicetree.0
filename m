@@ -1,85 +1,32 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add DT binding for Tegra186 BPMP I2C
-Date: Mon, 18 Jul 2016 16:00:38 -0500
-Message-ID: <CAL_JsqKuV+nMCBChBGAHzVWBPEbtDB3T=nOukR9159izEz6maQ@mail.gmail.com>
-References: <20160707193711.5891-1-swarren@wwwdotorg.org> <20160716210728.GA22144@rob-hp-laptop>
- <578D00DB.4080307@wwwdotorg.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/10] of: irq: make of_msi_configure accessible from modules
+Date: Mon, 18 Jul 2016 16:24:21 -0500
+Message-ID: <CAL_Jsq+zLb0RcEdykDZXZpkgjjrDWa+-Bd0LTth3kB4H5X9pOQ@mail.gmail.com>
+References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org> <1468867177-15007-4-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <578D00DB.4080307-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468867177-15007-4-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 18, 2016 at 11:16 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 07/16/2016 03:07 PM, Rob Herring wrote:
->>
->> On Thu, Jul 07, 2016 at 01:37:11PM -0600, Stephen Warren wrote:
->>>
->>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> In Tegra186, the BPMP (Boot and Power Management Processor) owns certain
->>> HW devices, such as the I2C controller for the power management I2C bus.
->>> Software running on other CPUs must perform IPC to the BPMP in order to
->>> execute transactions on that I2C bus. This binding describes an I2C bus
->>> that is accessed in such a fashion.
->>>
->>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>   .../bindings/i2c/nvidia,tegra186-bpmp-i2c.txt      | 35
->>> ++++++++++++++++++++++
->>>   1 file changed, 35 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
->>> b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
->>> new file mode 100644
->>> index 000000000000..eb9f70723ab7
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
->>> @@ -0,0 +1,35 @@
->>> +NVIDIA Tegra186 BPMP I2C controller
->>> +
->>> +In Tegra186, the BPMP (Boot and Power Management Processor) owns certain
->>> HW
->>> +devices, such as the I2C controller for the power management I2C bus.
->>> Software
->>> +running on other CPUs must perform IPC to the BPMP in order to execute
->>> +transactions on that I2C bus. This binding describes an I2C bus that is
->>> +accessed in such a fashion.
->>> +
->>> +Required properties:
->>> +- compatible:
->>> +    Array of strings.
->>> +    One of:
->>> +    - "nvidia,tegra186-bpmp-i2c".
->>> +- address-cells: Address cells for I2C device address.
->>> +    Single-cell integer.
->>> +    Must be <1>.
->>> +- size-cells:
->>> +    Single-cell integer.
->>> +    Must be <0>.
->>> +- nvidia,bpmp:
->>> +    The phandle to the BPMP device.
->>
->>
->> Any reason to not make this a sub-node of the BPMP device?
+On Mon, Jul 18, 2016 at 1:39 PM, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> The of_msi_configure routine is only accessible by the built-in
+> kernel drivers. Export this function so that modules can use it
+> too.
 >
+> This function is useful for configuring MSI on child device tree
+> nodes on hierarchical objects.
 >
-> That would be possible too.
->
-> My thought process was along the lines of: The system has an I2C bus, which
-> deserves a DT node. That fact seemed more important than the access
-> mechanism; the fact it's accessed via BPMP rather than direct register
-> access felt a bit more like an implementation detail. Still, I suppose we
-> could flip it around and store the node underneath the BPMP if you want; let
-> me know.
+> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/of/irq.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-I prefer to utilize the hierarchy unless there are reasons it can't be
-which doesn't seem to be the case here.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
