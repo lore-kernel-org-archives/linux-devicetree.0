@@ -1,72 +1,53 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 1/2] dt-bindings: tc358767: add DT documentation
-Date: Mon, 18 Jul 2016 10:36:50 +0200
-Message-ID: <1468831010.2994.7.camel@pengutronix.de>
-References: <1468393631-12042-1-git-send-email-p.zabel@pengutronix.de>
- <1468393631-12042-2-git-send-email-p.zabel@pengutronix.de>
- <20160716223438.GA17525@rob-hp-laptop> <578B40F5.6070309@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 0/4] pwm: add support for ChromeOS EC PWM
+Date: Mon, 18 Jul 2016 09:49:28 +0100
+Message-ID: <20160718084928.GA17074@dell>
+References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <578B40F5.6070309@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrey Gusakov <andrey.gusakov@cogentembedded.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Chris Healy <Chris.Healy@zii.aero>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gU29ubnRhZywgZGVuIDE3LjA3LjIwMTYsIDEzOjU1ICswNTMwIHNjaHJpZWIgQXJjaGl0IFRh
-bmVqYToKPiAKPiBPbiA3LzE3LzIwMTYgNDowNCBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiBP
-biBXZWQsIEp1bCAxMywgMjAxNiBhdCAwOTowNzoxMEFNICswMjAwLCBQaGlsaXBwIFphYmVsIHdy
-b3RlOgo+ID4+IEFkZCBEVCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHRoZSBUb3NoaWJhIFRD
-MzU4NzY3IGVEUCBicmlkZ2UuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFphYmVs
-IDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgo+ID4+IC0tLQo+ID4+ICAgLi4uL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3Rvc2hpYmEsdGMzNTg3NjcudHh0ICAgfCA1MSArKysrKysrKysrKysrKysr
-KysrKysrCj4gPj4gICAxIGZpbGUgY2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygrKQo+ID4+ICAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2JyaWRnZS90b3NoaWJhLHRjMzU4NzY3LnR4dAo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90b3NoaWJhLHRjMzU4
-NzY3LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRn
-ZS90b3NoaWJhLHRjMzU4NzY3LnR4dAo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4gaW5k
-ZXggMDAwMDAwMC4uMDVhZGEyOAo+ID4+IC0tLSAvZGV2L251bGwKPiA+PiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdG9zaGliYSx0YzM1ODc2
-Ny50eHQKPiA+PiBAQCAtMCwwICsxLDUxIEBACj4gPj4gK1Rvc2hpYmEgVEMzNTg3NjcgZURQIGJy
-aWRnZSBiaW5kaW5ncwo+ID4+ICsKPiA+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiArIC0g
-Y29tcGF0aWJsZTogInRvc2hpYmEsdGMzNTg3NjciCj4gPj4gKyAtIHJlZzogaTJjIGFkZHJlc3Mg
-b2YgdGhlIGJyaWRnZSwgMHg2OCBvciAweDBmLCBkZXBlbmRpbmcgb24gYm9vdHN0cmFwIHBpbnMK
-PiA+PiArIC0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAicmVmIgo+ID4+ICsgLSBjbG9ja3M6IE9G
-IGRldmljZS10cmVlIGNsb2NrIHNwZWNpZmljYXRpb24gZm9yIHJlZmNsayBpbnB1dC4gVGhlIHJl
-ZmVyZW5jZQo+ID4+ICsgICBjbG9jayByYXRlIG11c3QgYmUgMTMgTUh6LCAxOS4yIE1IeiwgMjYg
-TUh6LCBvciAzOC40IE1Iei4KPiA+PiArCj4gPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPj4g
-KyAtIHNodXRkb3duLWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9y
-IFNEIHBpbgo+ID4+ICsgICAgICAgICAgICAgICAgICAgKGFjdGl2ZSBoaWdoIHNodXRkb3duIGlu
-cHV0KQo+ID4+ICsgLSByZXNldC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0
-aW9uIGZvciBSU1RYIHBpbgo+ID4+ICsgICAgICAgICAgICAgICAgKGFjdGl2ZSBsb3cgc3lzdGVt
-IHJlc2V0KQo+ID4+ICsgLSBwb3J0czogdGhlIHBvcnRzIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8g
-aW50ZXJmYWNlIHBvcnQgbm9kZXMgdG8gY29ubmVjdAo+ID4+ICsgICB0byBhIERQSS9EU0kgc291
-cmNlIGFuZCB0byBhbiBlRFAvRFAgc2luayBhY2NvcmRpbmcgdG8gWzFdWzJdOgo+ID4+ICsgICAg
-LSBwb3J0QDA6IERTSSBpbnB1dCBwb3J0Cj4gPj4gKyAgICAtIHBvcnRAMTogRFBJIGlucHV0IHBv
-cnQKPiA+PiArICAgIC0gcG9ydEAyOiBlRFAvRFAgb3V0cHV0IHBvcnQKPiA+PiArCj4gPj4gK1sx
-XTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAo+ID4+ICtbMl06
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2Vz
-LnR4dAo+ID4+ICsKPiA+PiArRXhhbXBsZToKPiA+PiArCWVkcC1icmlkZ2VANjggewo+ID4+ICsJ
-CWNvbXBhdGlibGUgPSAidG9zaGliYSx0YzM1ODc2NyI7Cj4gPj4gKwkJcmVnID0gPDB4Njg+Owo+
-ID4+ICsJCXNodXRkb3duLWdwaW9zID0gPCZncGlvMyAyMyBHUElPX0FDVElWRV9ISUdIPjsKPiA+
-PiArCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzMgMjQgR1BJT19BQ1RJVkVfTE9XPjsKPiA+PiArCQlj
-bG9jay1uYW1lcyA9ICJyZWYiOwo+ID4+ICsJCWNsb2NrcyA9IDwmZWRwX3JlZmNsaz47Cj4gPj4g
-Kwo+ID4+ICsJCXBvcnRzIHsKPiA+Cj4gPiBZb3UgYXJlIG1pc3NpbmcgI3NpemUtY2VsbHMgYW5k
-ICNhZGRyZXNzLWNlbGxzIGhlcmUsIG90aGVyd2lzZToKPiA+Cj4gPiBBY2tlZC1ieTogUm9iIEhl
-cnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiAKPiBUaGFua3MsIEknbGwgZml4IGl0IHVwIGJlZm9y
-ZSBzZW5kaW5nIGEgcHVsbCByZXF1ZXN0LgoKVGhhbmsgeW91IGZvciB0aGUgZml4dXAuCgpyZWdh
-cmRzClBoaWxpcHAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+On Fri, 15 Jul 2016, Brian Norris wrote:
+> This is the 4th (and final?) version of my series to support the new =
+ChromeOS
+> EC PWM API, so we can control, e.g., a PWM backlight when its PWM is =
+attached
+> to the EC. It uses Boris's latest "atomic" hooks for the PWM API (i.e=
+=2E, the
+> ->apply() callback), which were recently merged.
+>=20
+> Pulled and adapted the cros_ec_cmd_xfer_status() helper from this pat=
+ch, with
+> some minor modifications:
+>=20
+> https://lkml.org/lkml/2016/4/12/342
+>=20
+> Note that after some style bikeshedding, I proposed to put off rewrit=
+ing the
+> entire cros_ec_commands.h header at the moment, due to the shared nat=
+ure of
+> this file. Follow up here:
+>=20
+> https://bugs.chromium.org/p/chromium/issues/detail?id=3D621123
+>=20
+> As this touches MFD (sort of), drivers/platform/chrome/, and drivers/=
+pwm/, I'm
+> still not sure who it should all go through: Lee, Thierry, or Olof?
+
+I usually take this type of submission through the MFD tree, although
+it's too late in the day to make it into v4.8.
+
+Which Acks are you missing?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
