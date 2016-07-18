@@ -1,51 +1,137 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: running "make dtbs" for test builds
-Date: Mon, 18 Jul 2016 14:49:52 +0200
-Message-ID: <1887216.FoLArqn3oq@wuerfel>
-References: <8924490.SntxSU2FOC@wuerfel> <20160718122947.GA29820@wfg-t540p.sh.intel.com>
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: Re: [RCF 2/3] hwmon: Document bindings for ads1118 adc driver
+Date: Mon, 18 Jul 2016 05:51:41 -0700
+Message-ID: <1556647.eUdYm2AU5L@diplodocus>
+References: <cover.1468626668.git.stillcompiling@gmail.com> <49eddbb75c677db62701e229330f0f5c35983130.1468626668.git.stillcompiling@gmail.com> <20160717203425.GA10236@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160718122947.GA29820-q6ZYBFIlbFFi0tQiZxhdj1DQ4js95KgL@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fengguang Wu <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20160717203425.GA10236@rob-hp-laptop>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 18, 2016 8:29:47 PM CEST Fengguang Wu wrote:
-> >- setting CONFIG_OF_ALL_DTBS will catch all files, not just the
-> >  ones that are built by default for the set of configurations you
-> >  have. It's possible to simply override this on the command line,
-> >  using "make CONFIG_OF_ALL_DTBS=y", it doesn't actually have to
-> >  be part of the configuration. The result is independent of the
-> >  actual configuration, so it should be enough to do this once
-> >  per architecture and source revision.
-> >
-> >Is this something you can add?
+On Sunday, July 17, 2016 03:34:25 PM Rob Herring wrote:
+> On Fri, Jul 15, 2016 at 05:18:22PM -0700, Joshua Clayton wrote:
+> > ads1118 is a 4 input 16 bit adc with a buit-in temperature gauge
+> > 
+> > Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
+> > ---
+> >  .../devicetree/bindings/hwmon/ads1118.txt          | 81 ++++++++++++++++++++++
+> >  1 file changed, 81 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/hwmon/ads1118.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/hwmon/ads1118.txt b/Documentation/devicetree/bindings/hwmon/ads1118.txt
+> > new file mode 100644
+> > index 0000000..41c66dc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hwmon/ads1118.txt
+> > @@ -0,0 +1,81 @@
+> > +ADS1118 (SPI)
+> > +
+> > +The ADS1118 is 16-bit analog to digital converter with 4 inputs and a
+> > +temperature sensor.
+> > +The ADS1018 is a 12-bit version of the chip.
+> > +
+> > +The inputs can be single ended or differential pair combinations.
+> > +
+> > +Each channel, 0 - 4 may be configured as a single ended adc input.
+> > +Channel 0 may be configured differentially with channel 1.
+> > +Channels 0, 1, or 2 may be configured differentially with channel 3.
+> > +
+> > +To set up a differential pair, the lower channel should be have
+> > +the ti,differential-endpoint property set to the higher channel in the pair.
+> > +
+> > +Each channel can be configured individually:
+> > + - fullscale voltage range values are +/- microvolts
+> > +    6144000, 4096000, 2048000, 1024000, 512000, or 256000
+> > +
+> > + - data_rate in samples per second
+> > +    - for the ads1018:
+> > +      128, 250, 490, 920, 1600, 2400, or 3300
+> > +    - for the ads1118:
+> > +      8, 16, 32, 64, 128, 250, or 860
 > 
-> Do you mean to simply change the main "make" command line to
+> Would be better if these are documented with the property itself.
 > 
->         make ARCH=xxx CONFIG_OF_ALL_DTBS=y
+> > +
+> > +The sensor contains an internal pullup register to keep the data output
+> > +high when not in use. This may be disabled, but is enabled by default.
+> > +
+> > +1) The /ads1118 node
+> > +
+> > +  Required properties:
+> > +
+> > +   - compatible : must be "ti,ads1018" or "ti,ads1118"
+> > +   - spi-cpha : spi phase set to 1 (spi polarity is 0)
+> > +   - reg : the spi chipselect address
+> > +   - #address-cells : must be <1>
+> > +   - #size-cells : must be <0>
+> > +
+> > +  Optional properties:
+> > +
+> > +   - ti,tempsensor: enable the temperature sensor
+> > +   - ti,pullup-disable: disable the internal pullup resistor
 > 
-> Which looks safe even for ARCHs that do not support it.
+> Explicitly state these are boolean.
 > 
-> The arch/.../Makefile that actually use it are:
+> > +
+> > +  The node contains child nodes for each channel that the platform uses.
+> > +
+> > +2) channel nodes
+> > +
+> > +  Required properties:
+> > +
+> > +   - reg : the channel number (0, 1, 2, or 3)
+> > +
+> > +  Optional properties:
+> > +
+> > +   - ti,differential-endpoint: differential second endpoint.
 > 
->         arch/arc/boot/dts/Makefile
->         arch/arm/boot/dts/Makefile
->         arch/arm64/boot/dts/Makefile
->         arch/h8300/boot/dts/Makefile
->         arch/metag/boot/dts/Makefile
->         arch/mips/boot/dts/Makefile
->         arch/xtensa/boot/dts/Makefile
+> Type?
+Hmm. the type is numeric input "channel number". 1, 3 or "none" are
+the only valid choices
+> 
+> > +   - ti,fullscale: fullscale range in +/- microvolts
+> 
+> Add standard unit suffix.
+Will do
+> 
+> > +   - ti,datarate : the converter data rate in samples / second
+> 
+> Perhaps "-hz" here?
+OK
+> 
+> > +
+> > +  Example ADS1118 node:
+> > +
+> > +	ads1118@0 {
+> > +		compatible = "ti,ads1118";
+> > +		spi-max-frequency = <2450000>;
+> > +		reg = <0>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		ti,tempsensor;
+> > +		voltage0@0 {
+> 
+> Perhaps channel@0. Either way, drop the first 0.
+Ah, thanks. I'll go with channel@0
+> 
+> > +			reg = <0>;
+> > +			ti,fullscale = <6144000>;
+> > +			ti,datarate = <860>;
+> > +			ti,differential-endpoint = <1>;
+> > +		};
+> > +		voltage1@3 {
+> > +			reg = <3>;
+> > +			ti,fullscale = <6144000>;
+> > +			ti,datarate = <475>;
+> > +		};
+> > +	};
+> > +
+> > +For the above example, The temperature sensor is enabled as well as
+> > +channels 0 and 1 in differential mode, and channel 3 single ended.
 > 
 
-Sounds good, thanks!
-
-	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
