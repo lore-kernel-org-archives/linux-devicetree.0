@@ -1,316 +1,85 @@
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 02/10] mailbox: tegra-hsp: Add HSP(Hardware
- Synchronization Primitives) driver
-Date: Mon, 18 Jul 2016 16:58:12 +0800
-Message-ID: <578C9A24.7090205@nvidia.com>
-References: <20160705090431.5852-1-josephl@nvidia.com>
- <20160705090431.5852-3-josephl@nvidia.com>
- <CAAVeFuK1nY2M3vU9j-D5TJwZCEj+sXRDy=W4XMTqSdsveTTQww@mail.gmail.com>
- <577CCA0A.4000203@nvidia.com>
- <CAAVeFuLHmYVt870UKPwhdqxi+dJWCskbswwKdVVntDJYkA5YTw@mail.gmail.com>
- <577DF8A7.4070209@nvidia.com> <20160707213313.GB9897@kickseed.nvidia.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v4 0/4] pwm: add support for ChromeOS EC PWM
+Date: Mon, 18 Jul 2016 11:10:29 +0200
+Message-ID: <20160718091029.GA32259@ulmo.ba.sec>
+References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
+ <20160718084928.GA17074@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160707213313.GB9897-5el8CFYymRZDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160718084928.GA17074@dell>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Brian Norris <briannorris@chromium.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/2016 05:33 AM, Sivaram Nair wrote:
-> On Thu, Jul 07, 2016 at 02:37:27PM +0800, Joseph Lo wrote:
->> On 07/06/2016 08:23 PM, Alexandre Courbot wrote:
->>> On Wed, Jul 6, 2016 at 6:06 PM, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>> On 07/06/2016 03:05 PM, Alexandre Courbot wrote:
->>>>>
->>>>> On Tue, Jul 5, 2016 at 6:04 PM, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>>>>
->>>>>> The Tegra HSP mailbox driver implements the signaling doorbell-based
->>>>>> interprocessor communication (IPC) for remote processors currently. The
->>>>>> HSP HW modules support some different features for that, which are
->>>>>> shared mailboxes, shared semaphores, arbitrated semaphores, and
->>>>>> doorbells. And there are multiple HSP HW instances on the chip. So the
->>>>>> driver is extendable to support more features for different IPC
->>>>>> requirement.
->>>>>>
->>>>>> The driver of remote processor can use it as a mailbox client and deal
->>>>>> with the IPC protocol to synchronize the data communications.
->>>>>>
->>>>>> Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>> ---
->>>>>> Changes in V2:
->>>>>> - Update the driver to support the binding changes in V2
->>>>>> - it's extendable to support multiple HSP sub-modules on the same HSP HW
->>>>>> block
->>>>>>     now.
->>>>>> ---
->>>>>>    drivers/mailbox/Kconfig     |   9 +
->>>>>>    drivers/mailbox/Makefile    |   2 +
->>>>>>    drivers/mailbox/tegra-hsp.c | 418
->>>>>> ++++++++++++++++++++++++++++++++++++++++++++
->>>>>>    3 files changed, 429 insertions(+)
->>>>>>    create mode 100644 drivers/mailbox/tegra-hsp.c
->>>>>>
->>>>>> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
->>>>>> index 5305923752d2..fe584cb54720 100644
->>>>>> --- a/drivers/mailbox/Kconfig
->>>>>> +++ b/drivers/mailbox/Kconfig
->>>>>> @@ -114,6 +114,15 @@ config MAILBOX_TEST
->>>>>>             Test client to help with testing new Controller driver
->>>>>>             implementations.
->>>>>>
->>>>>> +config TEGRA_HSP_MBOX
->>>>>> +       bool "Tegra HSP(Hardware Synchronization Primitives) Driver"
->>>>>
->>>>>
->>>>> Space missing before the opening parenthesis (same in the patch title
->>>>> btw).
->>>>
->>>> Okay.
->>>>>
->>>>>
->>>>>> +       depends on ARCH_TEGRA_186_SOC
->>>>>> +       help
->>>>>> +         The Tegra HSP driver is used for the interprocessor
->>>>>> communication
->>>>>> +         between different remote processors and host processors on
->>>>>> Tegra186
->>>>>> +         and later SoCs. Say Y here if you want to have this support.
->>>>>> +         If unsure say N.
->>>>>
->>>>>
->>>>> Since this option is selected automatically by ARCH_TEGRA_186_SOC, you
->>>>> should probably drop the last 2 sentences.
->>>>
->>>> Okay.
->>>>
->>>>>
->>>>>> +
->>>>>>    config XGENE_SLIMPRO_MBOX
->>>>>>           tristate "APM SoC X-Gene SLIMpro Mailbox Controller"
->>>>>>           depends on ARCH_XGENE
->>>>>> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
->>>>>> index 0be3e742bb7d..26d8f91c7fea 100644
->>>>>> --- a/drivers/mailbox/Makefile
->>>>>> +++ b/drivers/mailbox/Makefile
->>>>>> @@ -25,3 +25,5 @@ obj-$(CONFIG_TI_MESSAGE_MANAGER) += ti-msgmgr.o
->>>>>>    obj-$(CONFIG_XGENE_SLIMPRO_MBOX) += mailbox-xgene-slimpro.o
->>>>>>
->>>>>>    obj-$(CONFIG_HI6220_MBOX)      += hi6220-mailbox.o
->>>>>> +
->>>>>> +obj-${CONFIG_TEGRA_HSP_MBOX}   += tegra-hsp.o
->>>>>> diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
->>>>>> new file mode 100644
->>>>>> index 000000000000..93c3ef58f29f
->>>>>> --- /dev/null
->>>>>> +++ b/drivers/mailbox/tegra-hsp.c
->>>>>> @@ -0,0 +1,418 @@
->>>>>> +/*
->>>>>> + * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
->>>>>> + *
->>>>>> + * This program is free software; you can redistribute it and/or modify
->>>>>> it
->>>>>> + * under the terms and conditions of the GNU General Public License,
->>>>>> + * version 2, as published by the Free Software Foundation.
->>>>>> + *
->>>>>> + * This program is distributed in the hope it will be useful, but
->>>>>> WITHOUT
->>>>>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->>>>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
->>>>>> for
->>>>>> + * more details.
->>>>>> + */
->>>>>> +
->>>>>> +#include <linux/interrupt.h>
->>>>>> +#include <linux/io.h>
->>>>>> +#include <linux/mailbox_controller.h>
->>>>>> +#include <linux/of.h>
->>>>>> +#include <linux/of_device.h>
->>>>>> +#include <linux/platform_device.h>
->>>>>> +#include <dt-bindings/mailbox/tegra186-hsp.h>
->>>>>> +
->>>>>> +#define HSP_INT_DIMENSIONING   0x380
->>>>>> +#define HSP_nSM_OFFSET         0
->>>>>> +#define HSP_nSS_OFFSET         4
->>>>>> +#define HSP_nAS_OFFSET         8
->>>>>> +#define HSP_nDB_OFFSET         12
->>>>>> +#define HSP_nSI_OFFSET         16
->>>>>
->>>>>
->>>>> Would be nice to have comments to understand what SM, SS, AS, etc.
->>>>> stand for (Shared Mailboxes, Shared Semaphores, Arbitrated Semaphores
->>>>> but you need to look at the patch description to understand that). A
->>>>> top-of-file comment explaning the necessary concepts to read this code
->>>>> would do the trick.
->>>>
->>>> Yes, will fix that.
->>>>>
->>>>>
->>>>>> +#define HSP_nINT_MASK          0xf
->>>>>> +
->>>>>> +#define HSP_DB_REG_TRIGGER     0x0
->>>>>> +#define HSP_DB_REG_ENABLE      0x4
->>>>>> +#define HSP_DB_REG_RAW         0x8
->>>>>> +#define HSP_DB_REG_PENDING     0xc
->>>>>> +
->>>>>> +#define HSP_DB_CCPLEX          1
->>>>>> +#define HSP_DB_BPMP            3
->>>>>
->>>>>
->>>>> Maybe turn this into enum and use that type for
->>>>> tegra_hsp_db_chan::db_id? Also have MAX_NUM_HSP_DB here, since it is
->>>>> related to these values?
->>>>
->>>> Okay.
->>>>
->>>>>
->>>>>> +
->>>>>> +#define MAX_NUM_HSP_CHAN 32
->>>>>> +#define MAX_NUM_HSP_DB 7
->>>>>> +
->>>>>> +#define hsp_db_offset(i, d) \
->>>>>> +       (d->base + ((1 + (d->nr_sm >> 1) + d->nr_ss + d->nr_as) << 16) +
->>>>>> \
->>>>>> +       (i) * 0x100)
->>>>>> +
->>>>>> +struct tegra_hsp_db_chan {
->>>>>> +       int master_id;
->>>>>> +       int db_id;
->>>>>> +};
->>>>>> +
->>>>>> +struct tegra_hsp_mbox_chan {
->>>>>> +       int type;
->>>>>> +       union {
->>>>>> +               struct tegra_hsp_db_chan db_chan;
->>>>>> +       };
->>>>>> +};
->>>>>> +
->>>>>> +struct tegra_hsp_mbox {
->>>>>> +       struct mbox_controller *mbox;
->>>>>> +       void __iomem *base;
->>>>>> +       void __iomem *db_base[MAX_NUM_HSP_DB];
->>>>>> +       int db_irq;
->>>>>> +       int nr_sm;
->>>>>> +       int nr_as;
->>>>>> +       int nr_ss;
->>>>>> +       int nr_db;
->>>>>> +       int nr_si;
->>>>>> +       spinlock_t lock;
->>>>>> +};
->>>>>> +
->>>>>> +static inline u32 hsp_readl(void __iomem *base, int reg)
->>>>>> +{
->>>>>> +       return readl(base + reg);
->>>>>> +}
->>>>>> +
->>>>>> +static inline void hsp_writel(void __iomem *base, int reg, u32 val)
->>>>>> +{
->>>>>> +       writel(val, base + reg);
->>>>>> +       readl(base + reg);
->>>>>> +}
->>>>>> +
->>>>>> +static int hsp_db_can_ring(void __iomem *db_base)
->>>>>> +{
->>>>>> +       u32 reg;
->>>>>> +
->>>>>> +       reg = hsp_readl(db_base, HSP_DB_REG_ENABLE);
->>>>>> +
->>>>>> +       return !!(reg & BIT(HSP_DB_MASTER_CCPLEX));
->>>>>> +}
->>>>>> +
->>>>>> +static irqreturn_t hsp_db_irq(int irq, void *p)
->>>>>> +{
->>>>>> +       struct tegra_hsp_mbox *hsp_mbox = p;
->>>>>> +       ulong val;
->>>>>> +       int master_id;
->>>>>> +
->>>>>> +       val = (ulong)hsp_readl(hsp_mbox->db_base[HSP_DB_CCPLEX],
->>>>>> +                              HSP_DB_REG_PENDING);
->>>>>> +       hsp_writel(hsp_mbox->db_base[HSP_DB_CCPLEX], HSP_DB_REG_PENDING,
->>>>>> val);
->>>>>> +
->>>>>> +       spin_lock(&hsp_mbox->lock);
->>>>>> +       for_each_set_bit(master_id, &val, MAX_NUM_HSP_CHAN) {
->>>>>> +               struct mbox_chan *chan;
->>>>>> +               struct tegra_hsp_mbox_chan *mchan;
->>>>>> +               int i;
->>>>>> +
->>>>>> +               for (i = 0; i < MAX_NUM_HSP_CHAN; i++) {
->>>>>
->>>>>
->>>>> I wonder if this could not be optimized. You are doing a double loop
->>>>> on MAX_NUM_HSP_CHAN to look for an identical master_id. Since it seems
->>>>> like the same master_id cannot be used twice (considering that the
->>>>> inner loop only processes the first match), couldn't you just select
->>>>> the free channel in of_hsp_mbox_xlate() by doing
->>>>> &mbox->chans[master_id] (and returning an error if it is already
->>>>> used), then simply getting chan as &hsp_mbox->mbox->chans[master_id]
->>>>> instead of having the inner loop below? That would remove the need for
->>>>> the second loop.
->>>>
->>>>
->>>> That was exactly what I did in the V1, which only supported one HSP
->>>> sub-module per HSP HW block. So we can just use the master_id as the mbox
->>>> channel ID.
->>>>
->>>> Meanwhile, the V2 is purposed to support multiple HSP sub-modules to be
->>>> running on the same HSP HW block. The "ID" between different modules could
->>>> be conflict. So I dropped the mechanism that used the master_id as the mbox
->>>> channel ID.
->>>>
->>>> Instead, the channel is allocated at the time, when the client is bound to
->>>> one of the HSP sub-modules. And we store the "ID" information into the
->>>> private mbox channel data, which can help us to figure out which mbox
->>>> channel should response to the interrupt.
->>>>
->>>> In the doorbell case, because all the DB clients are shared the same DB IRQ
->>>> at the CPU side. So in the ISR, we need to figure out the IRQ source, which
->>>> is the master_id that the IRQ came from. This is the outer loop. The inner
->>>> loop, we figure out which channel should response to by checking the type
->>>> and ID.
->>>>
->>>> And I think it should be pretty quick, because we only check the set bit
->>> >from the pending register. And finding the matching channel.
->>>
->>> Yeah, I am not worried about the CPU time (although in interrupt
->>> context, we always should), but rather about whether the code could be
->>> simplified.
->>>
->>> Ah, I think I get it. You want to be able to receive interrupts from
->>> the same master, but not necessarily for the doorbell function.
->>> Because of this you cannot use master_id as the index for the channel.
->>> Am I understanding correctly?
->>
->> Yes, the DB clients trigger the IRQ through the same master
->> (HSP_DB_CCPLEX) with it's master_id. We (CPU) can check the ID to
->> know who is requesting the HSP mbox service. Each ID is unique under
->> the DB module.
->>
->> But the ID could be conflict when the HSP mbox driver are working
->> with multiple HSP sub-function under the same HSP HW block. So we
->> can't just match the ID to the HSP mbox channel ID.
->
-> Joseph, can you think about any other sub-function that uses the same
-> master ids (& those that does not have their own irqs)? I wonder if we
-> are over-engineering this. I think the hsp_db_startup() and
-> hsp_db_shutdown() does not support sharing masters - _startup() by one
-> followed by _shutdown() from another will mask the interrupt. If there
-> is infact other potential sub-functions, I would imagine this will
-> translate to other values of the tegra_hsp_mbox_chan.type than
-> HSP_MBOX_TYPE_DB? If yes, then you should be able to remove need of this
-> inner loop by having per-sub-function mboxes or by combining 'type' and
-> 'master_id' to make single index value?
->
 
-I will try to refactor the driver to fix the inner loop issue by 
-separating the mbox channel with different HSP modules. And hook 
-different sub channels for different masters.
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
--Joseph
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Jul 18, 2016 at 09:49:28AM +0100, Lee Jones wrote:
+> On Fri, 15 Jul 2016, Brian Norris wrote:
+> > This is the 4th (and final?) version of my series to support the new Ch=
+romeOS
+> > EC PWM API, so we can control, e.g., a PWM backlight when its PWM is at=
+tached
+> > to the EC. It uses Boris's latest "atomic" hooks for the PWM API (i.e.,=
+ the
+> > ->apply() callback), which were recently merged.
+> >=20
+> > Pulled and adapted the cros_ec_cmd_xfer_status() helper from this patch=
+, with
+> > some minor modifications:
+> >=20
+> > https://lkml.org/lkml/2016/4/12/342
+> >=20
+> > Note that after some style bikeshedding, I proposed to put off rewritin=
+g the
+> > entire cros_ec_commands.h header at the moment, due to the shared natur=
+e of
+> > this file. Follow up here:
+> >=20
+> > https://bugs.chromium.org/p/chromium/issues/detail?id=3D621123
+> >=20
+> > As this touches MFD (sort of), drivers/platform/chrome/, and drivers/pw=
+m/, I'm
+> > still not sure who it should all go through: Lee, Thierry, or Olof?
+>=20
+> I usually take this type of submission through the MFD tree, although
+> it's too late in the day to make it into v4.8.
+>=20
+> Which Acks are you missing?
+
+I'm willing to take this through the PWM tree if you're okay with the
+MFD changes. I can put the MFD changes into a separate branch and you
+could pull that in if you needed to resolve any dependencies, which I
+think would be quite unlikely if you've already closed your tree.
+
+Thierry
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXjJ0CAAoJEN0jrNd/PrOhYaEQAKMnQwoVT5HnT22oLX6ls4HL
+n3wgye7zuxRRAR/fY4aVVJgYUdLVEBHgS4Ty48DBUqw8xtjLVYXDs2QaEpiTLkR5
+odwV+NdVFcalv+x8WuR1E+npa2x7Y+yY6q2vzIK06ndM4nK/cRvI01apAHSfBdBK
+qQI6Pq/cd4KDWCBLBDF55ndvhb5XM1UUOIZCcV6+se/hJ2a/9IeXJqCkblbAAesk
+iEuyRCy5yvL3h6tBWybFYQDy4wO5YUsRiynNQnIFJ4/OWx8TM/ZiGr7blnrfmzOt
+xJ0hpknTDC10Yhg8QXwQ5ZeT0SV4yONNJwEpxItfK0tkBeT4Mvc3Z+7hbdlI/f2k
+HznWdBPvEjqet5uEfk+DZ10zRqZ9ANiT04an7y46DhQ+OBXdWc7xey0vdKeEhKd5
+VEtedul6lAdHHnpA3E2ZN55XahbwFLnXGyemMiQgiudaVPtw20Ccfvyv6qwWWy2/
+C36F4lR576Pd63gi8DEJt/FyXolKbHHBwIAzxR7urLcHwXFtNMWmpxC8sX7mVWte
+Wjp4FCuQITuaQzZ2Jnvv8IhyxGdpzczyoB0B1RvacgE1la+c0JfxvnKtPJG2mhOj
+PcKfjgWc6S5IUbwb9rqMDqRchfIZ302STgeWcmVWbUZjTTLoVuFSuHsVEJEsvrgV
+h+B4j56a3PbcBXG4KsHg
+=qoRx
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
