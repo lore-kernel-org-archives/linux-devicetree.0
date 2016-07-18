@@ -1,41 +1,79 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: Re: [PATCH v7 2/2] phy: rockchip-inno-usb2: add a new driver for
- Rockchip usb2phy
-Date: Mon, 18 Jul 2016 18:02:28 +0800
-Message-ID: <901bc2d0-34ac-4c18-8fd2-491b10a43579@rock-chips.com>
-References: <1466505005-86122-1-git-send-email-frank.wang@rock-chips.com>
- <1466505005-86122-3-git-send-email-frank.wang@rock-chips.com>
- <3635389.HlLpm27c0G@phil>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v0 06/10] arm: orion5x: Add DT-based support for Netgear
+ WNR854T
+Date: Mon, 18 Jul 2016 12:06:26 +0200
+Message-ID: <1792384.6N9lHjmBFc@wuerfel>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+ <6404488.GyOP57DJrV@wuerfel> <20160718114424.14a28889@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3635389.HlLpm27c0G@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com, daniel.meng@rock-chips.com, frank.wang@rock-chips.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160718114424.14a28889@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, Jamie Lentin <jm@lentin.co.uk>, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Monday, July 18, 2016 11:44:24 AM CEST Thomas Petazzoni wrote:
+> 
+> On Sun, 17 Jul 2016 22:41:35 +0200, Arnd Bergmann wrote:
+> 
+> > I would assume that the PCIe port should work out of the box with the driver
+> 
+> Unfortunately, no. The PCIe on Orion5x requires a workaround for
+> reading/writing the PCI configuration space. Instead of doing MMIO
+> accesses to PCIE_CONF_ADDR_OFF / PCIE_CONF_DATA_OFF, you must map a
+> MBus window, which provides a memory-mapped view of the PCI
+> configuration space.
+> 
+> Definitely not impossible to implement, but the driver doesn't work
+> as-is.
 
-On 2016/6/25 3:58, Heiko Stuebner wrote:
-> Am Dienstag, 21. Juni 2016, 18:30:05 schrieb Frank Wang:
->> The newer SoCs (rk3366, rk3399) take a different usb-phy IP block
->> than rk3288 and before, and most of phy-related registers are also
->> different from the past, so a new phy driver is required necessarily.
->>
->> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
->> Suggested-by: Heiko Stuebner <heiko@sntech.de>
->> Suggested-by: Guenter Roeck <linux@roeck-us.net>
->> Suggested-by: Doug Anderson <dianders@chromium.org>
-> still looks nice, so still
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
->
->
+Ok.
 
-Currently, we have already prepared compatible for rk3399, however, I 
-found these series of patch had not merged in, so shall I reopen it or 
-commit a new one?
+> > We also don't seem to need any MBUS window setup for the I/O and
+> > memory spaces, which greatly simplifies the driver compared to the
+> > pci-mvebu one, it would be a fairly straightforward implementation
+> > based on pci-host-generic.c (which unfortunately just got way
+> > more complicated and might need to go on a diet).
+> 
+> MBus windows are needed. See:
+> 
+>         mvebu_mbus_add_window_remap_by_id(ORION_MBUS_PCI_IO_TARGET,
+>                                           ORION_MBUS_PCI_IO_ATTR,
+>                                           ORION5X_PCI_IO_PHYS_BASE,
+>                                           ORION5X_PCI_IO_SIZE,
+>                                           ORION5X_PCI_IO_BUS_BASE);
+>         mvebu_mbus_add_window_by_id(ORION_MBUS_PCI_MEM_TARGET,
+>                                     ORION_MBUS_PCI_MEM_ATTR,
+>                                     ORION5X_PCI_MEM_PHYS_BASE,
+>                                     ORION5X_PCI_MEM_SIZE);
+> 
+> in orion5x_setup_wins().
 
-BR.
-Frank
+Ok, I was just looking at the wrong file, as they are set up from
+common.c, not pci.c.
+
+> Note that we already have some Orion5x converted to DT, and that use
+> PCI: board-rd88f5182.c is an example. So we could very well take Jamie
+> patches as-is, and move later to a DT-representation for PCI/PCIe.
+
+Ah, I thought all the DT users were moved to mach-mvebu. I agree
+this new patch isn't introducing anything we don't already have then,
+so we can just take it, but the conversion will not be nice when
+we do that.
+
+I was also hoping that we could get to the point where pci_common_init()
+is only used for legacy machines without DT and without multiplatform,
+it seems I missed a couple of users here.
+
+	Arnd
