@@ -1,52 +1,107 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH 02/10] Documentation: DT: qcom_hidma: correct spelling mistakes
-Date: Mon, 18 Jul 2016 14:39:29 -0400
-Message-ID: <1468867177-15007-3-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH 08/10] dmaengine: qcom_hidma: bring out interrupt cause
+Date: Mon, 18 Jul 2016 14:39:35 -0400
+Message-ID: <1468867177-15007-9-git-send-email-okaya@codeaurora.org>
 References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: Mark Rutland <mark.rutland@arm.com>, arnd@arndb.de, eric.auger@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, agross@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Cc: eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix the spelling mistakes and extra and statements in the sentences.
+Bring out the interrupt cause to the top level so that MSI interrupts
+can be hooked at a later stage.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/qcom/hidma_ll.c | 60 ++++++++++++++++++++-------------------------
+ 1 file changed, 27 insertions(+), 33 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-index 45ce75b..314562b 100644
---- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-@@ -5,13 +5,13 @@ memcpy and memset capabilities. It has been designed for virtualized
- environments.
+diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+index 2753210..eb78952 100644
+--- a/drivers/dma/qcom/hidma_ll.c
++++ b/drivers/dma/qcom/hidma_ll.c
+@@ -403,12 +403,18 @@ static void hidma_ll_abort(unsigned long arg)
+  * requests traditionally to the destination, this concept does not apply
+  * here for this HW.
+  */
+-irqreturn_t hidma_ll_inthandler(int chirq, void *arg)
++static void hidma_ll_int_handler_internal(struct hidma_lldev *lldev, int cause)
+ {
+-	struct hidma_lldev *lldev = arg;
+-	u32 status;
+-	u32 enable;
+-	u32 cause;
++	if (cause & HIDMA_ERR_INT_MASK) {
++		dev_err(lldev->dev, "error 0x%x, resetting...\n",
++				cause);
++
++		/* Clear out pending interrupts */
++		writel(cause, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
++
++		tasklet_schedule(&lldev->rst_task);
++		return;
++	}
  
- Each HIDMA HW instance consists of multiple DMA channels. These channels
--share the same bandwidth. The bandwidth utilization can be parititioned
-+share the same bandwidth. The bandwidth utilization can be partitioned
- among channels based on the priority and weight assignments.
+ 	/*
+ 	 * Fine tuned for this HW...
+@@ -418,40 +424,28 @@ irqreturn_t hidma_ll_inthandler(int chirq, void *arg)
+ 	 * interrupt delivery guarantees. Do not copy this code blindly and
+ 	 * expect that to work.
+ 	 */
+-	status = readl_relaxed(lldev->evca + HIDMA_EVCA_IRQ_STAT_REG);
+-	enable = readl_relaxed(lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
+-	cause = status & enable;
+-
+-	while (cause) {
+-		if (cause & HIDMA_ERR_INT_MASK) {
+-			dev_err(lldev->dev, "error 0x%x, resetting...\n",
+-					cause);
+-
+-			/* Clear out pending interrupts */
+-			writel(cause, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
+-
+-			tasklet_schedule(&lldev->rst_task);
+-			goto out;
+-		}
+-
++	while (atomic_read(&lldev->pending_tre_count)) {
+ 		/*
+ 		 * Try to consume as many EVREs as possible.
+ 		 */
+-		hidma_handle_tre_completion(lldev);
++		hidma_handle_tre_completion(lldev, 0, 0);
++	}
  
- There are only two priority levels and 15 weigh assignments possible.
+-		/* We consumed TREs or there are pending TREs or EVREs. */
+-		writel_relaxed(cause, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
++	/* We consumed TREs or there are pending TREs or EVREs. */
++	writel_relaxed(cause, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
++}
  
- Other parameters here determine how much of the system bus this HIDMA
--instance can use like maximum read/write request and and number of bytes to
-+instance can use like maximum read/write request and number of bytes to
- read/write in a single burst.
+-		/*
+-		 * Another interrupt might have arrived while we are
+-		 * processing this one. Read the new cause.
+-		 */
+-		status = readl_relaxed(lldev->evca + HIDMA_EVCA_IRQ_STAT_REG);
+-		enable = readl_relaxed(lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
+-		cause = status & enable;
+-	}
++irqreturn_t hidma_ll_inthandler(int chirq, void *arg)
++{
++	struct hidma_lldev *lldev = arg;
++	u32 status;
++	u32 enable;
++	u32 cause;
  
- Main node required properties:
+-out:
++	status = readl_relaxed(lldev->evca + HIDMA_EVCA_IRQ_STAT_REG);
++	enable = readl_relaxed(lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
++	cause = status & enable;
++	hidma_ll_int_handler_internal(lldev, cause);
+ 	return IRQ_HANDLED;
+ }
+ 
 -- 
 1.8.2.1
