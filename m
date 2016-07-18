@@ -1,62 +1,45 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 0/8] Cache-coherent DMA access using UIO
-Date: Mon, 18 Jul 2016 14:44:12 +0530
-Message-ID: <1468833260-5305-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
-Cc: Ankit Jindal <thatsjindal-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Viktorin <viktorin-MQpMGdXoZmMqDJ6do+/SaQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: [PATCH v2 1/8] uio: fix dmem_region_start computation
+Date: Mon, 18 Jul 2016 14:44:13 +0530
+Message-ID: <1468833260-5305-2-git-send-email-anup.patel@broadcom.com>
+References: <1468833260-5305-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1468833260-5305-1-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Ankit Jindal <thatsjindal@gmail.com>, Jan Viktorin <viktorin@rehivetech.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>, linux-stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The goal of this patchset is to improve UIO framework and UIO dmem
-driver to allow cache-coherent DMA accesses from user-space.
+From: Jan Viktorin <viktorin@rehivetech.com>
 
-This patchset is based on two previous patchsets:
-1) [PATCH v5 0/6] UIO driver for APM X-Gene QMTM
-(Refer, http://www.spinics.net/lists/devicetree/msg58244.html)
-2) [PATCH 0/4] Fix and extend uio_dmem_genirq
-(Refer, https://lkml.org/lkml/2016/5/17/141)
+The variable i contains a total number of resources (including
+IORESOURCE_IRQ). However, we want the dmem_region_start to point
+after the last resource of type IORESOURCE_MEM. The original behaviour
+leads (very likely) to skipping several UIO mapping regions and makes
+them useless. Fix this by computing dmem_region_start from the uiomem
+which points to the last used UIO mapping.
 
-We have adopted only patch0-3 of patchset1 which was abandoned
-long time back. We have taken care of last few unaddressed comments
-on these patches.
+Fixes: 0a0c3b5a24bd ("Add new uio device for dynamic memory allocation")
 
-The patchset2 is quite recent has been adopted entirely. We have
-taken care review comments on these patches too.
+Signed-off-by: Jan Viktorin <viktorin@rehivetech.com>
+Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+Cc: linux-stable <stable@vger.kernel.org>
+---
+ drivers/uio/uio_dmem_genirq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patchset is based on v4.7-rc7 tag and it is available in uio-v2
-branch of https://github.com/Broadcom/arm64-linux.git
-
-Changes since v1:
- - Make patch5 as first patch1 and mark it for linux-stable
- - Get UIO dmem dynamic region details as module parameter instead
-   of getting it from DT node
-
-Ankit Jindal (3):
-  uio: code style cleanup
-  uio: Add new UIO_MEM_PHYS_CACHE type for mem regions
-  Documentation: Update documentation for UIO_MEM_PHYS_CACHE and
-    UIO_MEM_DEVICE
-
-Anup Patel (2):
-  uio: Add new UIO_MEM_DEVICE type for mem regions
-  uio: Use new memtypes in uio_dmem_genirq
-
-Jan Viktorin (3):
-  uio: fix dmem_region_start computation
-  uio: UIO_IRQ_NONE is a valid option for uioinfo->irq
-  uio: bind uio_dmem_genirq via OF
-
- Documentation/DocBook/uio-howto.tmpl |   6 +-
- drivers/uio/uio.c                    |  32 ++++--
- drivers/uio/uio_dmem_genirq.c        | 190 +++++++++++++++++++++++++++--------
- include/linux/uio_driver.h           |  10 +-
- 4 files changed, 182 insertions(+), 56 deletions(-)
-
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index 915facb..e1134a4 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -229,7 +229,7 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
+ 		++uiomem;
+ 	}
+ 
+-	priv->dmem_region_start = i;
++	priv->dmem_region_start = uiomem - &uioinfo->mem[0];
+ 	priv->num_dmem_regions = pdata->num_dynamic_regions;
+ 
+ 	for (i = 0; i < pdata->num_dynamic_regions; ++i) {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
