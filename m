@@ -1,75 +1,132 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: dt_to_config, use full path for dtx_diff
-Date: Mon, 18 Jul 2016 16:12:57 -0700
-Message-ID: <578D6279.9020004@gmail.com>
-References: <576DD6B9.2040303@gmail.com>
- <CAL_JsqKUFR4uX24rV3hoYCEEZ-osDvycM12v1ome3-R3jNORZw@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add DT binding for Tegra186 BPMP I2C
+Date: Mon, 18 Jul 2016 17:31:38 -0600
+Message-ID: <578D66DA.5030307@wwwdotorg.org>
+References: <20160707193711.5891-1-swarren@wwwdotorg.org>
+ <20160716210728.GA22144@rob-hp-laptop> <578D00DB.4080307@wwwdotorg.org>
+ <CAL_JsqKuV+nMCBChBGAHzVWBPEbtDB3T=nOukR9159izEz6maQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKUFR4uX24rV3hoYCEEZ-osDvycM12v1ome3-R3jNORZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKuV+nMCBChBGAHzVWBPEbtDB3T=nOukR9159izEz6maQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/16 15:18, Rob Herring wrote:
-> On Fri, Jun 24, 2016 at 7:56 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+On 07/18/2016 03:00 PM, Rob Herring wrote:
+> On Mon, Jul 18, 2016 at 11:16 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 07/16/2016 03:07 PM, Rob Herring wrote:
+>>>
+>>> On Thu, Jul 07, 2016 at 01:37:11PM -0600, Stephen Warren wrote:
+>>>>
+>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> In Tegra186, the BPMP (Boot and Power Management Processor) owns certain
+>>>> HW devices, such as the I2C controller for the power management I2C bus.
+>>>> Software running on other CPUs must perform IPC to the BPMP in order to
+>>>> execute transactions on that I2C bus. This binding describes an I2C bus
+>>>> that is accessed in such a fashion.
+>>>>
+>>>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>    .../bindings/i2c/nvidia,tegra186-bpmp-i2c.txt      | 35
+>>>> ++++++++++++++++++++++
+>>>>    1 file changed, 35 insertions(+)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
+>>>> b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
+>>>> new file mode 100644
+>>>> index 000000000000..eb9f70723ab7
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
+>>>> @@ -0,0 +1,35 @@
+>>>> +NVIDIA Tegra186 BPMP I2C controller
+>>>> +
+>>>> +In Tegra186, the BPMP (Boot and Power Management Processor) owns certain
+>>>> HW
+>>>> +devices, such as the I2C controller for the power management I2C bus.
+>>>> Software
+>>>> +running on other CPUs must perform IPC to the BPMP in order to execute
+>>>> +transactions on that I2C bus. This binding describes an I2C bus that is
+>>>> +accessed in such a fashion.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:
+>>>> +    Array of strings.
+>>>> +    One of:
+>>>> +    - "nvidia,tegra186-bpmp-i2c".
+>>>> +- address-cells: Address cells for I2C device address.
+>>>> +    Single-cell integer.
+>>>> +    Must be <1>.
+>>>> +- size-cells:
+>>>> +    Single-cell integer.
+>>>> +    Must be <0>.
+>>>> +- nvidia,bpmp:
+>>>> +    The phandle to the BPMP device.
+>>>
+>>>
+>>> Any reason to not make this a sub-node of the BPMP device?
 >>
->> Do not require dtx_diff to be in $PATH.
 >>
->> dt_to_config already needs to be run from the root directory of a kernel
->> tree so use scripts/dtc/dtx_diff instead of dtx_diff.
-> 
-> Okay, now I get a bit further. I get this message even if I set my
-> .config file on the command line:
-> 
-> grep: ./.config: No such file or directory
+>> That would be possible too.
+>>
+>> My thought process was along the lines of: The system has an I2C bus, which
+>> deserves a DT node. That fact seemed more important than the access
+>> mechanism; the fact it's accessed via BPMP rather than direct register
+>> access felt a bit more like an implementation detail. Still, I suppose we
+>> could flip it around and store the node underneath the BPMP if you want; let
+>> me know.
+>
+> I prefer to utilize the hierarchy unless there are reasons it can't be
+> which doesn't seem to be the case here.
 
-All of the following work for me:
+OK, how does the following look? If it seems OK, I'll write up the 
+binding changes:
 
-  scripts/dtc/dt_to_config --config .config arch/arm/boot/dts/highbank.dts
+> 	bpmp: bpmp {
+> 		compatible = "nvidia,tegra186-bpmp";
+...
+> 		#clock-cells = <1>;
+> 		#power-domain-cells = <1>;
+> 		#reset-cells = <1>;
+>
+> 		sub-devices {
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+// There actually aren't any registers, so perhaps those two aren't
+// needed. Perhaps those two properties should be dropped?
+>
+> 			bpmp-i2c {
+> 				compatible = "nvidia,tegra186-bpmp-i2c";
+> 				nvidia,bpmp-bus-id = <5>;
+> 				#address-cells = <1>;
+> 				#size-cells = <0>;
+> 				status = "disabled";
+> 			};
+> 		};
+> 	};
 
-  scripts/dtc/dt_to_config --config=.config arch/arm/boot/dts/highbank.dts
+Rationale:
 
-  scripts/dtc/dt_to_config --config ./.config arch/arm/boot/dts/highbank.dts
+There may be more than 1 I2C bus, so we need a structure that can house 
+n of them.
 
-  scripts/dtc/dt_to_config --config=./.config arch/arm/boot/dts/highbank.dts
+It's plausible the BPMP could support other sub-device-types in the 
+future that each need their own node, so it's useful to have a scheme 
+that supports arbitrary sub-devices, each using compatible values to 
+define what they are.
 
-What is the exact command line you are using?
+We house the sub-devices in an explicit "sub-devices" node, rather than 
+directly as children of the top-level bpmp node, so that the BPMP can 
+separate any sub-nodes it uses for its own top-level configuration from 
+sub-nodes that represent child-/sub-devices. This keeps things clean, 
+and allows additions to the bpmp binding without complicating how 
+sub-devices are enumerated. This is rather like the recent optinonal 
+i2c-bus child node of I2C controllers.
 
-Just to confirm, you are in the root directory of the kernel source tree
-and your .config is in the same directory (since you specified "./.config").
-
-> 
-> The config format still doesn't make sense to me. I'm running this on
-> highbank.dts, and I get mostly options that are not relevant to
-> highbank.
-
-Yes.  dt_to_config is not smart enough to know that you want to configure
-a highbank, so it offers you all of the choices that match the highbank
-compatibles, even for other boards.  This is the same result that you
-would get if you were searching manually, but dt_to_config gives you
-those extraneous results much faster than if you were searching manually.
-
-I did some proof of concept code to provide scores for the results, to
-select which entries are likely to be correct and which are likely to
-be wrong, but I did not want to add that complexity to the first version
-of dt_to_config -- it is complex enough already.
-
-I now have some slides that provide more examples of using dt_to_config at 
-
-   http://elinux.org/images/5/50/Dt_debugging_part_2.pdf
-
-You can skip forward to slide 27, then skim to slide 35, then it starts
-talking in more detail about using dt_to_config.
-
-I'm in Tokyo this week, so I may be somewhat slow responding.
-
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sound good?
