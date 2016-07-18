@@ -1,88 +1,41 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH 09/10] dmaengine: qcom_hidma: add a common API to setup the interrupt
-Date: Mon, 18 Jul 2016 14:39:36 -0400
-Message-ID: <1468867177-15007-10-git-send-email-okaya@codeaurora.org>
-References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] pwm: add support for ChromeOS EC PWM
+Date: Mon, 18 Jul 2016 11:45:33 -0700
+Message-ID: <20160718184532.GA131404@google.com>
+References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
+ <20160718084928.GA17074@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160718084928.GA17074@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Enric Balletbo <enric.balletbo-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Randall Spangler <rspangler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Nematbakhsh <shawnn-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Todd Broch <tbroch-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gwendal Grignou <gwendal-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Introducing the hidma_ll_setup_irq function to set up the interrupt
-type externally from the OS interface.
+On Mon, Jul 18, 2016 at 09:49:28AM +0100, Lee Jones wrote:
+> On Fri, 15 Jul 2016, Brian Norris wrote:
+> > As this touches MFD (sort of), drivers/platform/chrome/, and drivers/pwm/, I'm
+> > still not sure who it should all go through: Lee, Thierry, or Olof?
+> 
+> I usually take this type of submission through the MFD tree, although
+> it's too late in the day to make it into v4.8.
+> 
+> Which Acks are you missing?
 
-Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
----
- drivers/dma/qcom/hidma.h    |  2 ++
- drivers/dma/qcom/hidma_ll.c | 27 +++++++++++++++++++++++----
- 2 files changed, 25 insertions(+), 4 deletions(-)
+I think I was only missing Thierry's. If he's planning to take it
+through his tree, then that's fine. It's also fine if it waits for 4.9,
+if that helps, although I agree it has practically zero chances of
+regressions.
 
-diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
-index 03c20f6..3f28f39 100644
---- a/drivers/dma/qcom/hidma.h
-+++ b/drivers/dma/qcom/hidma.h
-@@ -49,6 +49,7 @@ struct hidma_tre {
- };
- 
- struct hidma_lldev {
-+	bool msi_support;		/* flag indicating MSI support    */
- 	bool initialized;		/* initialized flag               */
- 	u8 trch_state;			/* trch_state of the device	  */
- 	u8 evch_state;			/* evch_state of the device	  */
-@@ -146,6 +147,7 @@ int hidma_ll_disable(struct hidma_lldev *lldev);
- int hidma_ll_enable(struct hidma_lldev *llhndl);
- void hidma_ll_set_transfer_params(struct hidma_lldev *llhndl, u32 tre_ch,
- 	dma_addr_t src, dma_addr_t dest, u32 len, u32 flags);
-+void hidma_ll_setup_irq(struct hidma_lldev *lldev, bool msi);
- int hidma_ll_setup(struct hidma_lldev *lldev);
- struct hidma_lldev *hidma_ll_init(struct device *dev, u32 max_channels,
- 			void __iomem *trca, void __iomem *evca,
-diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-index eb78952..c3d3252 100644
---- a/drivers/dma/qcom/hidma_ll.c
-+++ b/drivers/dma/qcom/hidma_ll.c
-@@ -669,17 +669,36 @@ int hidma_ll_setup(struct hidma_lldev *lldev)
- 	writel(HIDMA_EVRE_SIZE * nr_tres,
- 			lldev->evca + HIDMA_EVCA_RING_LEN_REG);
- 
--	/* support IRQ only for now */
-+	/* configure interrupts */
-+	hidma_ll_setup_irq(lldev, lldev->msi_support);
-+
-+	rc = hidma_ll_enable(lldev);
-+	if (rc)
-+		return rc;
-+
-+	return rc;
-+}
-+
-+void hidma_ll_setup_irq(struct hidma_lldev *lldev, bool msi)
-+{
-+	u32 val;
-+
-+	lldev->msi_support = msi;
-+
-+	/* disable interrupts again after reset */
-+	writel(0, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
-+	writel(0, lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
-+
-+	/* support IRQ by default */
- 	val = readl(lldev->evca + HIDMA_EVCA_INTCTRL_REG);
- 	val &= ~0xF;
--	val |= 0x1;
-+	if (!lldev->msi_support)
-+		val = val | 0x1;
- 	writel(val, lldev->evca + HIDMA_EVCA_INTCTRL_REG);
- 
- 	/* clear all pending interrupts and enable them */
- 	writel(ENABLE_IRQS, lldev->evca + HIDMA_EVCA_IRQ_CLR_REG);
- 	writel(ENABLE_IRQS, lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
--
--	return hidma_ll_enable(lldev);
- }
- 
- struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
--- 
-1.8.2.1
+But most importantly, I think various parties would like patch 1, so if
+it doesn't make 4.8-rc1, then it's probably important it makes it into a
+branch others can pull from if necessary.
+
+Regards,
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
