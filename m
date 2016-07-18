@@ -1,263 +1,651 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: DT connectors, thoughts
-Date: Tue, 19 Jul 2016 00:20:37 +1000
-Message-ID: <20160718142037.GS16769@voom.fritz.box>
-References: <577ACE0D.9050700@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WVXkb2QE2eH0aWe4"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <577ACE0D.9050700@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, stephen.boyd@linaro.org, broonie@kernel.org, grant.likely@secretlab.ca, Mark Rutland <mark.rutland@arm.com>, mporter@konsulko.com, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, marex@denx.de, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, panto@antoniou-consulting.com
+From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] iio: adc: add ADC12130/ADC12132/ADC12138 ADC driver
+Date: Tue, 19 Jul 2016 00:00:29 +0900
+Message-ID: <1468854029-22153-1-git-send-email-akinobu.mita@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds Texas Instruments' ADC12130/ADC12132/ADC12138 12-bit plus
+sign ADC driver.  I have tested with the ADC12138.  The ADC12130 and
+ADC12132 are not tested but these are similar to ADC12138 except that
+the mode programming instruction is a bit different.
 
---WVXkb2QE2eH0aWe4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+---
+ .../devicetree/bindings/iio/adc/ti-adc12138.txt    |  32 ++
+ drivers/iio/adc/Kconfig                            |  12 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/ti-adc12138.c                      | 541 +++++++++++++++++++++
+ 4 files changed, 586 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+ create mode 100644 drivers/iio/adc/ti-adc12138.c
 
-Hi,
-
-Here's some of my thoughts on how a connector format for the DT could
-be done.  Sorry it's taken longer than I hoped - I've been pretty
-swamped in my day job.
-
-This is pretty early thoughts, but gives an outline of the approach I
-prefer.
-
-So.. start with an example of a board DT including a widget socket,
-which contains pins for an MMIO bus, an i2c bus and 2 interrupt lines.
-
-/dts-v1/;
-
-/ {
-	compatible =3D "foo,oldboard";
-	ranges;
-	soc@... {
-		ranges;
-		mmio: mmio-bus@... {
-			#address-cells =3D <2>;
-			#size-cells =3D <2>;
-			ranges;
-		};
-		i2c: i2c@... {
-		};
-		intc: intc@... {
-			#interrupt-cells =3D <2>;
-		};
-	};
-
-	connectors {
-		widget1 {
-			compatible =3D "foo,widget-socket";
-			w1_irqs: irqs {
-				interrupt-controller;
-				#address-cells =3D <0>;
-				#interrupt-cells =3D <1>;
-				interrupt-map-mask =3D <0xffffffff>;
-				interrupt-map =3D <
-					0 &intc 7 0
-					1 &intc 8 0
-				>;
-			};
-			aliases =3D {
-				i2c =3D &i2c;
-				intc =3D &w1_irqs;
-				mmio =3D &mmio;
-			};
-		};
-	};
-};
-
-Note that the symbols are local to the connector, and explicitly
-listed, rather than including all labels in the tree.  This is to
-enforce (or at the very least encourage) plugins to only access those
-parts of the base tree.
-
-Note also the use of an interrupt nexus node contained within the
-connector to control which irqs the socketed device can use.  I think
-this needs some work to properly handle unit addresses, but hope
-that's enough to give the rough idea.
-
-So, what does the thing that goes in the socket look like?  I'm
-thinking some new dts syntax like this:
-
-/dts-v1/;
-
-/plugin/ foo,widget-socket {
-	compatible =3D "foo,whirligig-widget";
-};
-
-&i2c {
-	whirligig-controller@... {
-		...
-		interrupt-parent =3D <&widget-irqs>;
-		interrupts =3D <0>;
-	};
-};
-
-Use of the /plugin/ keyword is rather different from existing
-practice, so we may want a new one instead.
-
-The idea is that this would be compiled to something like:
-
-/dts-v1/;
-
-/ {
-	socket-type =3D "foo,widget-socket";
-	compatible =3D "foo,whirligig-widget";
-
-	fragment@0 {
-		target-alias =3D "i2c";
-		__overlay__ {
-			whirligig-controller@... {
-				...
-				interrupt-parent =3D <0xffffffff>;
-				interrupts =3D <0>;
-			};
-		};
-	};
-	__phandle_fixups__ {
-		/* These are (path, property, offset) tuples) */
-		widget-irqs =3D
-			"/fragment@0/__overlay__/whirligig-controller@...",
-			"interrupt-parent", <0>;
-	};
-};
-
-
-Suppose then there's a new version of the board.  This extends the
-widget socket in a backwards compatible way, but there are now two
-interchangeable sockets, and they're wired up to different irqs and
-i2c lines on the baseboard:
-
-/dts-v1/;
-
-/ {
-	compatible =3D "foo,newboard";
-	ranges;
-	soc@... {
-		ranges;=09
-		mmio: mmio-bus@... {
-			#address-cells =3D <2>;
-			#size-cells =3D <2>;
-			ranges;
-		};
-		i2c0: i2c@... {
-		};
-		i2c1: i2c@... {
-		};
-		intc: intc@... {
-		};
-	};
-
-	connectors {
-		widget1 {
-			compatible =3D "foo,widget-socket-v2", "foo,widget-socket";
-			w1_irqs: irqs {
-				interrupt-controller;
-				#address-cells =3D <0>;
-				#interrupt-cells =3D <1>;
-				interrupt-map-mask =3D <0xffffffff>;
-				interrupt-map =3D <
-					0 &intc 17 0
-					1 &intc 8 0
-				>;
-			};
-			aliases =3D {
-				i2c =3D &i2c0;
-				intc =3D &w1_irqs;
-				mmio =3D &mmio;
-			};
-		};
-		widget2 {
-			compatible =3D "foo,widget-socket-v2", "foo,widget-socket";
-			w2_irqs: irqs {
-				interrupt-controller;
-				#address-cells =3D <0>;
-				#interrupt-cells =3D <1>;
-				interrupt-map-mask =3D <0xffffffff>;
-				interrupt-map =3D <
-					0 &intc 9 0
-					1 &intc 10 0
-				>;
-			};
-			aliases =3D {
-				i2c =3D &i2c1;
-				widget-irqs =3D &w2_irqs;
-				mmio =3D &mmio;
-			};
-		};
-	};
-};
-
-
-A socketed device could also have it's own connectors - the contrived
-example below has a little 256 byte mmio space (maybe some sort of LPC
-thingy?):
-
-
-/dts-v1/;
-
-/plugin/ foo,widget-socket-v2 {
-	compatible =3D "foo,superduper-widget};
-
-	connectors {
-		compatible =3D "foo,super-socket";
-		aliases {
-			superbus =3D &superbus;
-		};=09
-	};
-};
-
-&mmio {
-	superbus: super-bridge@100000000 {
-		#address-cells =3D <1>;
-		#size-cells =3D <1>;
-		ranges =3D <0x0  0xabcd0000 0x12345600  0x100>;
-	};
-};
-
-&i2c {
-	super-controller@... {
-		...
-	};
-	duper-controller@... {
-	};
-};
-
-Thoughts?
-
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---WVXkb2QE2eH0aWe4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXjOW1AAoJEGw4ysog2bOS/nkP/2BkWMNiRsid7BTqhPoAL6Pj
-wPUl1SgeTxUgeos05gsn52atl5RrdilJ1P7c5DGXnguISmi+/rA2g8WCxRTR/bae
-NZ2SdSakwYXfquwJ4/6q9LtraCNNr5W0t+e8CMynRCgWUKmDW6Uw8k+aOcHt77pF
-vKDug+bXQKHGmmUBoVOjczXFZYrD9HUvlTRUYETYFEagIfqOqzgN/OvxlQVPTsvP
-lbDHpTGcIAFLJ+nvAh4JpMO83PGFwlt+yqmpwbAtm5Pvp2a3u2/fMB+6SsF+AmeI
-mBHwRc7LrRuSVHZvEgoDURd+00zBpfcr363YKAI4KXQfjJinjKdO8AgkASF8uTni
-mJHiNizQcEfbT4s985WRq6J/FKBRnt+MvB5ubdC3VD9OB7XkZwrpUsHFgVDVsfg2
-RCLFWYHTgfniz46FQ4UPrJALAhWR33CMFKwYup6I5IxxBSnzwZoRJ+po0zgBX5XA
-TM48iH3NccIexrzdzgjKwVLn2/XE8RA8M0R7j6fhomfVk71lFRi8AMp2xsltbZm1
-+a8OPCDPXbF8BCFLiIhBgaZbd/WGSvscSwnXsg9e9Z4UxkbKleTJq8oTLYYVm7zf
-1iSMrOqwiISqdlQfC6oaEw+Snu7ixDvrcuhKy2Lp1mV3cSrvcyiQKrLV+dRlr1LI
-4S2cu5CjbtlzIWCLIt2f
-=cY8a
------END PGP SIGNATURE-----
-
---WVXkb2QE2eH0aWe4--
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+new file mode 100644
+index 0000000..3a11d2a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+@@ -0,0 +1,32 @@
++* Texas Instruments' ADC12130/ADC12132/ADC12138
++
++Required properties:
++ - compatible: Should be one of
++	* "ti,adc12130"
++	* "ti,adc12132"
++	* "ti,adc12138"
++ - reg: SPI chip select number for the device
++ - interrupts: Should contain interrupt for EOC (end of conversion)
++ - clocks: phandle to conversion clock input
++ - spi-max-frequency: Definision as per
++	Documentation/devicetree/bindings/spi/spi-bus.txt
++ - vref-p-supply: The regulator supply for positive analog voltage reference
++
++Optional properties:
++ - vref-n-supply: The regulator supply for negative analog voltage reference
++	If not specified, this is assumed to be analog ground.
++ - acquisition-time: The number of conversion clock periods for the S/H's
++	acquisition time.  Should be one of 6, 10, 18, 34.  If not specified,
++	default value of 10 is used.
++
++Example:
++adc@0 {
++	compatible = "ti,adc12138";
++	reg = <0>;
++	interrupts = <28 IRQ_TYPE_EDGE_RISING>;
++	interrupt-parent = <&gpio1>;
++	clocks = <&cclk>;
++	vref-p-supply = <&ldo4_reg>;
++	spi-max-frequency = <5000000>;
++	acquisition-time = <6>;
++};
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index fa0ff29..0783291 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -414,6 +414,18 @@ config TI_ADC0832
+ 	  This driver can also be built as a module. If so, the module will be
+ 	  called ti-adc0832.
+ 
++config TI_ADC12138
++	tristate "Texas Instruments ADC12130/ADC12132/ADC12138"
++	depends on SPI
++	select IIO_BUFFER
++	select IIO_TRIGGERED_BUFFER
++	help
++	  If you say yes here you get support for Texas Instruments ADC12130,
++	  ADC12132and ADC12138 chips.
++
++	  This driver can also be built as a module. If so, the module will be
++	  called ti-adc12138.
++
+ config TI_ADC128S052
+ 	tristate "Texas Instruments ADC128S052/ADC122S021/ADC124S021"
+ 	depends on SPI
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index 599714b..3ae4ae3 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -40,6 +40,7 @@ obj-$(CONFIG_QCOM_SPMI_VADC) += qcom-spmi-vadc.o
+ obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
+ obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
+ obj-$(CONFIG_TI_ADC0832) += ti-adc0832.o
++obj-$(CONFIG_TI_ADC12138) += ti-adc12138.o
+ obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+ obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
+ obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
+diff --git a/drivers/iio/adc/ti-adc12138.c b/drivers/iio/adc/ti-adc12138.c
+new file mode 100644
+index 0000000..e7bd986
+--- /dev/null
++++ b/drivers/iio/adc/ti-adc12138.c
+@@ -0,0 +1,541 @@
++/*
++ * ADC12130/ADC12132/ADC12138 12-bit plus sign ADC driver
++ *
++ * Copyright (c) 2016 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is subject to the terms and conditions of version 2 of
++ * the GNU General Public License.  See the file COPYING in the main
++ * directory of this archive for more details.
++ *
++ * Datasheet: http://www.ti.com/lit/ds/symlink/adc12138.pdf
++ */
++
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/completion.h>
++#include <linux/clk.h>
++#include <linux/spi/spi.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/buffer.h>
++#include <linux/iio/trigger.h>
++#include <linux/iio/triggered_buffer.h>
++#include <linux/iio/trigger_consumer.h>
++#include <linux/regulator/consumer.h>
++
++#define ADC12138_MODE_AUTO_CAL			0x08
++#define ADC12138_MODE_READ_STATUS		0x0c
++#define ADC12138_MODE_ACQUISITION_TIME_6	0x0e
++#define ADC12138_MODE_ACQUISITION_TIME_10	0x4e
++#define ADC12138_MODE_ACQUISITION_TIME_18	0x8e
++#define ADC12138_MODE_ACQUISITION_TIME_34	0xce
++
++#define ADC12138_STATUS_CAL			BIT(6)
++
++enum {
++	adc12130,
++	adc12132,
++	adc12138,
++};
++
++struct adc12138 {
++	struct spi_device *spi;
++	unsigned int id;
++	/* conversion clock */
++	struct clk *cclk;
++	/* positive analog voltage reference */
++	struct regulator *vref_p;
++	/* negative analog voltage reference */
++	struct regulator *vref_n;
++	struct mutex lock;
++	struct completion complete;
++	unsigned int acquisition_time;
++
++	u8 tx_buf[2] ____cacheline_aligned;
++	u8 rx_buf[2];
++};
++
++#define ADC12138_VOLTAGE_CHANNEL(chan)					\
++	{								\
++		.type = IIO_VOLTAGE,					\
++		.indexed = 1,						\
++		.channel = chan,					\
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
++		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE)	\
++					| BIT(IIO_CHAN_INFO_OFFSET),	\
++		.scan_index = chan,					\
++		.scan_type = {						\
++			.sign = 's',					\
++			.realbits = 13,					\
++			.storagebits = 16,				\
++			.shift = 3,					\
++			.endianness = IIO_BE,				\
++		},							\
++	}
++
++#define ADC12138_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si_offset)		\
++	{								\
++		.type = IIO_VOLTAGE,					\
++		.indexed = 1,						\
++		.channel = (chan1),					\
++		.channel2 = (chan2),					\
++		.differential = 1,					\
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
++		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE)	\
++					| BIT(IIO_CHAN_INFO_OFFSET),	\
++		.scan_index = (chan1) + (si_offset),			\
++		.scan_type = {						\
++			.sign = 's',					\
++			.realbits = 13,					\
++			.storagebits = 16,				\
++			.shift = 3,					\
++			.endianness = IIO_BE,				\
++		},							\
++	}
++
++static const struct iio_chan_spec adc12132_channels[] = {
++	ADC12138_VOLTAGE_CHANNEL(0),
++	ADC12138_VOLTAGE_CHANNEL(1),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(0, 1, 2),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(1, 0, 2),
++	IIO_CHAN_SOFT_TIMESTAMP(4),
++};
++
++static const struct iio_chan_spec adc12138_channels[] = {
++	ADC12138_VOLTAGE_CHANNEL(0),
++	ADC12138_VOLTAGE_CHANNEL(1),
++	ADC12138_VOLTAGE_CHANNEL(2),
++	ADC12138_VOLTAGE_CHANNEL(3),
++	ADC12138_VOLTAGE_CHANNEL(4),
++	ADC12138_VOLTAGE_CHANNEL(5),
++	ADC12138_VOLTAGE_CHANNEL(6),
++	ADC12138_VOLTAGE_CHANNEL(7),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(0, 1, 8),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(1, 0, 8),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(2, 3, 8),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(3, 2, 8),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(4, 5, 8),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(5, 4, 8),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(6, 7, 8),
++	ADC12138_VOLTAGE_CHANNEL_DIFF(7, 6, 8),
++	IIO_CHAN_SOFT_TIMESTAMP(16),
++};
++
++static int adc12138_mode_programming(struct adc12138 *adc, u8 mode,
++				     void *rx_buf, int len)
++{
++	struct spi_transfer xfer = {
++		.tx_buf = adc->tx_buf,
++		.rx_buf = adc->rx_buf,
++		.len = len,
++	};
++	int ret;
++
++	/* Skip disused bits for ADC12130 and ADC12132 */
++	if (adc->id != adc12138)
++		mode = (mode & 0xc0) | ((mode & 0x0f) << 2);
++
++	adc->tx_buf[0] = mode;
++
++	ret = spi_sync_transfer(adc->spi, &xfer, 1);
++	if (ret)
++		return ret;
++
++	memcpy(rx_buf, adc->rx_buf, len);
++
++	return 0;
++}
++
++static int adc12138_read_status(struct adc12138 *adc)
++{
++	u8 rx_buf[2];
++	int ret;
++
++	ret = adc12138_mode_programming(adc, ADC12138_MODE_READ_STATUS,
++					rx_buf, 2);
++	if (ret)
++		return ret;
++
++	return (rx_buf[0] << 1) | (rx_buf[1] >> 7);
++}
++
++static int __adc12138_start_conv(struct adc12138 *adc,
++				 struct iio_chan_spec const *channel,
++				 void *data, int len)
++
++{
++	const u8 ch_to_mux[] = { 0, 4, 1, 5, 2, 6, 3, 7 };
++	u8 mode = (ch_to_mux[channel->channel] << 4) |
++		  (channel->differential ? 0 : 0x80);
++
++	return adc12138_mode_programming(adc, mode, data, len);
++}
++
++static int adc12138_start_conv(struct adc12138 *adc,
++			       struct iio_chan_spec const *channel)
++{
++	u8 trash;
++
++	return __adc12138_start_conv(adc, channel, &trash, 1);
++}
++
++static int adc12138_start_and_read_conv(struct adc12138 *adc,
++					struct iio_chan_spec const *channel,
++					__be16 *data)
++{
++	return __adc12138_start_conv(adc, channel, data, 2);
++}
++
++static int adc12138_read_conv_data(struct adc12138 *adc, __be16 *value)
++{
++	/* Issue a read status instruction and read previous conversion data */
++	return adc12138_mode_programming(adc, ADC12138_MODE_READ_STATUS,
++					 value, sizeof(*value));
++}
++
++static int adc12138_wait_eoc(struct adc12138 *adc, unsigned long timeout)
++{
++	if (!wait_for_completion_timeout(&adc->complete, timeout))
++		return -ETIMEDOUT;
++
++	return 0;
++}
++
++static int adc12138_adc_conversion(struct adc12138 *adc,
++				   struct iio_chan_spec const *channel,
++				   __be16 *value)
++{
++	int ret;
++
++	reinit_completion(&adc->complete);
++
++	ret = adc12138_start_conv(adc, channel);
++	if (ret)
++		return ret;
++
++	ret = adc12138_wait_eoc(adc, msecs_to_jiffies(100));
++	if (ret)
++		return ret;
++
++	return adc12138_read_conv_data(adc, value);
++}
++
++static int adc12138_read_raw(struct iio_dev *iio,
++			     struct iio_chan_spec const *channel, int *value,
++			     int *shift, long mask)
++{
++	struct adc12138 *adc = iio_priv(iio);
++	int ret;
++	__be16 data;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		mutex_lock(&adc->lock);
++		ret = adc12138_adc_conversion(adc, channel, &data);
++		mutex_unlock(&adc->lock);
++		if (ret)
++			return ret;
++
++		*value = sign_extend32(be16_to_cpu(data) >> 3, 12);
++
++		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_SCALE:
++		ret = regulator_get_voltage(adc->vref_p);
++		if (ret < 0)
++			return ret;
++		*value = ret;
++
++		if (!IS_ERR(adc->vref_n)) {
++			ret = regulator_get_voltage(adc->vref_n);
++			if (ret < 0)
++				return ret;
++			*value -= ret;
++		}
++
++		/* convert regulator output voltage to mV */
++		*value /= 1000;
++		*shift = channel->scan_type.realbits - 1;
++
++		return IIO_VAL_FRACTIONAL_LOG2;
++	case IIO_CHAN_INFO_OFFSET:
++		if (!IS_ERR(adc->vref_n)) {
++			*value = regulator_get_voltage(adc->vref_n);
++			if (*value < 0)
++				return *value;
++		} else {
++			*value = 0;
++		}
++
++		/* convert regulator output voltage to mV */
++		*value /= 1000;
++
++		return IIO_VAL_INT;
++	}
++
++	return -EINVAL;
++}
++
++static const struct iio_info adc12138_info = {
++	.read_raw = adc12138_read_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static int adc12138_init(struct adc12138 *adc)
++{
++	int ret;
++	int status;
++	u8 mode;
++	u8 trash;
++
++	reinit_completion(&adc->complete);
++
++	ret = adc12138_mode_programming(adc, ADC12138_MODE_AUTO_CAL, &trash, 1);
++	if (ret)
++		return ret;
++
++	/* data output at this time has no significance */
++	status = adc12138_read_status(adc);
++	if (status < 0)
++		return status;
++
++	adc12138_wait_eoc(adc, msecs_to_jiffies(100));
++
++	status = adc12138_read_status(adc);
++	if (status & ADC12138_STATUS_CAL) {
++		dev_warn(&adc->spi->dev,
++			"Auto Cal sequence is still in progress: %#x\n",
++			status);
++		return -EIO;
++	}
++
++	switch (adc->acquisition_time) {
++	case 6:
++		mode = ADC12138_MODE_ACQUISITION_TIME_6;
++		break;
++	case 10:
++		mode = ADC12138_MODE_ACQUISITION_TIME_10;
++		break;
++	case 18:
++		mode = ADC12138_MODE_ACQUISITION_TIME_18;
++		break;
++	case 34:
++		mode = ADC12138_MODE_ACQUISITION_TIME_34;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return adc12138_mode_programming(adc, mode, &trash, 1);
++}
++
++static irqreturn_t adc12138_trigger_handler(int irq, void *p)
++{
++	struct iio_poll_func *pf = p;
++	struct iio_dev *indio_dev = pf->indio_dev;
++	struct adc12138 *adc = iio_priv(indio_dev);
++	__be16 data[20] = { };
++	__be16 trash;
++	int ret;
++	int scan_index;
++	int i = 0;
++
++	mutex_lock(&adc->lock);
++
++	for_each_set_bit(scan_index, indio_dev->active_scan_mask,
++			 indio_dev->masklength) {
++		const struct iio_chan_spec *scan_chan =
++				&indio_dev->channels[scan_index];
++
++		reinit_completion(&adc->complete);
++
++		ret = adc12138_start_and_read_conv(adc, scan_chan,
++						   i ? &data[i - 1] : &trash);
++		if (ret) {
++			dev_warn(&adc->spi->dev,
++				 "failed to start conversion\n");
++			goto out;
++		}
++
++		ret = adc12138_wait_eoc(adc, msecs_to_jiffies(100));
++		if (ret) {
++			dev_warn(&adc->spi->dev, "wait eoc timeout\n");
++			goto out;
++		}
++
++		i++;
++	}
++
++	if (i) {
++		ret = adc12138_read_conv_data(adc, &data[i - 1]);
++		if (ret) {
++			dev_warn(&adc->spi->dev,
++				 "failed to get conversion data\n");
++			goto out;
++		}
++	}
++
++	iio_push_to_buffers_with_timestamp(indio_dev, data, iio_get_time_ns());
++out:
++	mutex_unlock(&adc->lock);
++
++	iio_trigger_notify_done(indio_dev->trig);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t adc12138_eoc_handler(int irq, void *p)
++{
++	struct iio_dev *indio_dev = p;
++	struct adc12138 *adc = iio_priv(indio_dev);
++
++	complete(&adc->complete);
++
++	return IRQ_HANDLED;
++}
++
++static int adc12138_probe(struct spi_device *spi)
++{
++	struct iio_dev *indio_dev;
++	struct adc12138 *adc;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	adc = iio_priv(indio_dev);
++	adc->spi = spi;
++	adc->id = spi_get_device_id(spi)->driver_data;
++	mutex_init(&adc->lock);
++	init_completion(&adc->complete);
++
++	indio_dev->name = spi_get_device_id(spi)->name;
++	indio_dev->dev.parent = &spi->dev;
++	indio_dev->info = &adc12138_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++
++	switch (adc->id) {
++	case adc12130:
++	case adc12132:
++		indio_dev->channels = adc12132_channels;
++		indio_dev->num_channels = ARRAY_SIZE(adc12132_channels);
++		break;
++	case adc12138:
++		indio_dev->channels = adc12138_channels;
++		indio_dev->num_channels = ARRAY_SIZE(adc12138_channels);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = of_property_read_u32(spi->dev.of_node, "acquisition-time",
++				   &adc->acquisition_time);
++	if (ret)
++		adc->acquisition_time = 10;
++
++	adc->cclk = devm_clk_get(&spi->dev, NULL);
++	if (IS_ERR(adc->cclk))
++		return PTR_ERR(adc->cclk);
++
++	adc->vref_p = devm_regulator_get(&spi->dev, "vref-p");
++	if (IS_ERR(adc->vref_p))
++		return PTR_ERR(adc->vref_p);
++
++	adc->vref_n = devm_regulator_get_optional(&spi->dev, "vref-n");
++
++	ret = devm_request_irq(&spi->dev, spi->irq, adc12138_eoc_handler,
++			       IRQF_TRIGGER_RISING, indio_dev->name, indio_dev);
++	if (ret)
++		return ret;
++
++	ret = clk_prepare_enable(adc->cclk);
++	if (ret)
++		return ret;
++
++	ret = regulator_enable(adc->vref_p);
++	if (ret)
++		goto error1;
++
++	if (!IS_ERR(adc->vref_n)) {
++		ret = regulator_enable(adc->vref_n);
++		if (ret)
++			goto error2;
++	}
++
++	ret = adc12138_init(adc);
++	if (ret)
++		goto error3;
++
++	spi_set_drvdata(spi, indio_dev);
++
++	ret = iio_triggered_buffer_setup(indio_dev, NULL,
++					 adc12138_trigger_handler, NULL);
++	if (ret)
++		goto error3;
++
++	ret = iio_device_register(indio_dev);
++	if (ret)
++		goto error4;
++
++	return 0;
++error4:
++	iio_triggered_buffer_cleanup(indio_dev);
++error3:
++	if (!IS_ERR(adc->vref_n))
++		regulator_disable(adc->vref_n);
++error2:
++	regulator_disable(adc->vref_p);
++error1:
++	clk_disable_unprepare(adc->cclk);
++
++	return ret;
++}
++
++static int adc12138_remove(struct spi_device *spi)
++{
++	struct iio_dev *indio_dev = spi_get_drvdata(spi);
++	struct adc12138 *adc = iio_priv(indio_dev);
++
++	iio_device_unregister(indio_dev);
++	iio_triggered_buffer_cleanup(indio_dev);
++	if (!IS_ERR(adc->vref_n))
++		regulator_disable(adc->vref_n);
++	regulator_disable(adc->vref_p);
++	clk_disable_unprepare(adc->cclk);
++
++	return 0;
++}
++
++#ifdef CONFIG_OF
++
++static const struct of_device_id adc12138_dt_ids[] = {
++	{ .compatible = "ti,adc12130", },
++	{ .compatible = "ti,adc12132", },
++	{ .compatible = "ti,adc12138", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, adc12138_dt_ids);
++
++#endif
++
++static const struct spi_device_id adc12138_id[] = {
++	{ "adc12130", adc12130 },
++	{ "adc12132", adc12132 },
++	{ "adc12138", adc12138 },
++	{}
++};
++MODULE_DEVICE_TABLE(spi, adc12138_id);
++
++static struct spi_driver adc12138_driver = {
++	.driver = {
++		.name = "adc12138",
++		.of_match_table = of_match_ptr(adc12138_dt_ids),
++	},
++	.probe = adc12138_probe,
++	.remove = adc12138_remove,
++	.id_table = adc12138_id,
++};
++module_spi_driver(adc12138_driver);
++
++MODULE_AUTHOR("Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
++MODULE_DESCRIPTION("ADC12130/ADC12132/ADC12138 driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
