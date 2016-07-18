@@ -1,97 +1,65 @@
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 03/10] Documentation: dt-bindings: firmware: tegra: add
- bindings of the BPMP
-Date: Mon, 18 Jul 2016 15:44:44 +0800
-Message-ID: <578C88EC.10706@nvidia.com>
-References: <20160705090431.5852-1-josephl@nvidia.com>
- <20160705090431.5852-4-josephl@nvidia.com>
- <20160711142238.GA30600@rob-hp-laptop> <5783C3DE.3080708@wwwdotorg.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: msm8974-hammerhead: Add regulator nodes for hammerhead
+Date: Mon, 18 Jul 2016 09:44:33 +0200
+Message-ID: <1957086.XgnIUz2uOJ@wuerfel>
+References: <20160717105208.9596-1-bshah@kde.org> <20160718033425.GB1966@archbox> <CAOCOHw5MNN9QAea1gJobpEHpn1S0=CTA3mEHzd+dVhv-GShYdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5783C3DE.3080708-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOCOHw5MNN9QAea1gJobpEHpn1S0=CTA3mEHzd+dVhv-GShYdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bhushan Shah <bshah-RoXCvvDuEio@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Sunday, July 17, 2016 8:44:01 PM CEST Bjorn Andersson wrote:
+> On Sun, Jul 17, 2016 at 8:34 PM, Bhushan Shah <bshah-RoXCvvDuEio@public.gmane.org> wrote:
+> > On Sun, Jul 17, 2016 at 09:21:48PM +0200, Arnd Bergmann wrote:
+> >> On Sunday, July 17, 2016 4:22:07 PM CEST Bhushan Shah wrote:
+> >> > +
+> >> > +       smd {
+> >> > +               rpm {
+> >> > +                       rpm_requests {
+> >> > +                               pm8841-regulators {
+> >> > +                                       s1 {
+> >> > +                                               regulator-min-microvolt = <675000>;
+> >> > +                                               regulator-max-microvolt = <1050000>;
+> >> > +                                       };
+> >>
+> >> Maybe add a label at either the rpm_requests or the pm8841-regulators
+> >> node so you can add properties in the leaf nodes withoutout having to
+> >> specify the whole path?
+> >
+> > Sure, I will adjust patch.
+> 
+> Please don't. After running into several cases where this would end us
+> up in having a multitude of nodes each describing just a snippet of
+> each level we decided not to do so in the general case for the
+> Qualcomm boards.
+> 
+> There are a few where we apparently ended up doing so anyways, but for
+> all other cases of regulators we express the full tree in the dts, so
+> please follow that so we don't mix the styles too much.
 
-Thanks for your reviewing.
+Ok, then how about this instead:
 
-On 07/12/2016 12:05 AM, Stephen Warren wrote:
-> On 07/11/2016 08:22 AM, Rob Herring wrote:
->> On Tue, Jul 05, 2016 at 05:04:24PM +0800, Joseph Lo wrote:
->>> The BPMP is a specific processor in Tegra chip, which is designed for
->>> booting process handling and offloading the power management, clock
->>> management, and reset control tasks from the CPU. The binding document
->>> defines the resources that would be used by the BPMP firmware driver,
->>> which can create the interprocessor communication (IPC) between the CPU
->>> and BPMP.
->
->>> diff --git
->>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->
->>> +NVIDIA Tegra Boot and Power Management Processor (BPMP)
->>> +
->>> +The BPMP is a specific processor in Tegra chip, which is designed for
->>> +booting process handling and offloading the power management, clock
->>> +management, and reset control tasks from the CPU. The binding document
->>> +defines the resources that would be used by the BPMP firmware driver,
->>> +which can create the interprocessor communication (IPC) between the CPU
->>> +and BPMP.
->>> +
->>> +Required properties:
->>> +- name : Should be bpmp
->>> +- compatible
->>> +    Array of strings
->>> +    One of:
->>> +    - "nvidia,tegra186-bpmp"
->>> +- mboxes : The phandle of mailbox controller and the mailbox specifier.
->>> +- shmem : List of the phandle of the TX and RX shared memory area that
->>> +      the IPC between CPU and BPMP is based on.
->>
->> I think you can use memory-region here.
->
-> Isn't memory-region intended for references into the /reserved-memory
-> node. If so, that isn't appropriate in this case since this property
-> typically points at on-chip SRAM that isn't included in the OS's view of
-> "system RAM".
-Agree with that.
+/smd/rpm/rpm_requests/pm8841-regulators {
+	s1 {
+		regulator-min-microvolt = <675000>;
+		regulator-max-microvolt = <1050000>;
+	};
 
->
-> Or, should /reserved-memory be used even for (e.g. non-DRAM) memory
-> regions that aren't represented by the /memory/reg property?
->
+	...
+};
 
-For shmem, I follow the same concept of the binding for arm,scpi 
-(.../arm/arm,scpi.txt) that is currently using in mainline. Do you think 
-that is more appropriate here?
+That avoids the ridiculous intendation level but uses no labels.
+
+	Arnd
 
 
->>> diff --git a/include/dt-bindings/clock/tegra186-clock.h
->>> b/include/dt-bindings/clock/tegra186-clock.h
->
->>> +/** @file */
->>> +
->>> +#ifndef _MACH_T186_CLK_T186_H
->>> +#define _MACH_T186_CLK_T186_H
->>> +
->>> +/**
->>> + * @defgroup clock_ids Clock Identifiers
->>
->> Aren't these doxygen markup? Does that work with docbook? If not,
->> remove.
->
-> These headers are part of the BPMP FW release. It's preferable not to
-> edit them when incorporating them into the Linux kernel (or any other SW
-> stack) to simplify integration of any updated versions of the header, by
-> removing the need to edit the file when doing so. Given that, do you
-> still object?
 
-How do you think of this, Rob?
-
-Thanks,
--Joseph
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
