@@ -1,131 +1,36 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 7/8] uio: bind uio_dmem_genirq via OF
-Date: Mon, 18 Jul 2016 08:47:15 +0530
-Message-ID: <CAALAos-VGQDwV_xGWRw6N5pkQ-tNOhjf1=gndmDYZL1-aW4vLg@mail.gmail.com>
-References: <1468573443-4670-1-git-send-email-anup.patel@broadcom.com>
- <1468573443-4670-8-git-send-email-anup.patel@broadcom.com>
- <20160715132835.GC19840@leverpostej> <CAALAos9KVS3SveQzGWGhcdxZNPapWnmTwZe+4y2g3LNGP3muDA@mail.gmail.com>
- <20160715165239.GG19840@leverpostej>
+From: Bhushan Shah <bshah@kde.org>
+Subject: Re: [PATCH 2/3] ARM: dts: msm8974-hammerhead: Add regulator nodes
+ for hammerhead
+Date: Mon, 18 Jul 2016 09:04:27 +0530
+Message-ID: <20160718033425.GB1966@archbox>
+References: <20160717105208.9596-1-bshah@kde.org>
+ <20160717105208.9596-3-bshah@kde.org>
+ <2913371.W2mXA8xjNE@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160715165239.GG19840@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ankit Jindal <thatsjindal-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jan Viktorin <viktorin-MQpMGdXoZmMqDJ6do+/SaQ@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2913371.W2mXA8xjNE@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 15, 2016 at 10:22 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Fri, Jul 15, 2016 at 09:57:28PM +0530, Anup Patel wrote:
->> On Fri, Jul 15, 2016 at 6:58 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Fri, Jul 15, 2016 at 02:34:02PM +0530, Anup Patel wrote:
->> >> +static char uio_of_dma_bits_prop[128] = "uio,dma-bits";
->> >> +static char uio_of_dmem_count_prop[128] = "uio,number-of-dynamic-regions";
->> >> +static char uio_of_dmem_sizes_prop[128] = "uio,dynamic-regions-sizes";
->> >
->> > What are these proeprties? What is a "dynamic region" in hardware terms?
->>
->> "Dynamic region" is DMAble memory alloced using dma_alloc_xxx() APIs
->> for the device.
->>
->> For DMA-capable devices accessed from user-space, we need DMAble
->> memory available to user-space. Sometime such devices are also
->> cache-coherent (or IO-coherent) so in such case user-space will need
->> cacheable DMAble memory.
->>
->> Number of "Dynamic regions" required by UIO dmem device depends
->> on the type of HW device hence we describe number of "Dynamic regions"
->> and size of "Dynamic regions" via DT attributes.
->
-> So this is something akin to the number of DMA channels a device might
-> use.
->
-> Either that's implicit knowledge of the device (if fixed), which doesn't
-> need to be in the DT, or a real property that should be described
-> explicitly in the device binding, that has nothing to do with UIO.
->
-> In general, a device which you might want to use with UIO may not
-> require such properties, so this is imposing a requirement on DTBs
-> purely for the sake of userspace software.
->
->> > Why must they be in the DT, and why are the *property names* arbitrarily
->> > overridable as module parameters? What exactly do you expect there to be
->> > in a DT?
->>
->> They must be in DT for platform devices created using DT probing. The
->> number of "Dynamic regions" required by UIO device will depend on the
->> nature of device. We cannot have same number and sizes of "Dynamic
->> regions" for different UIO dmem devices.
->
-> If the devices are so different, they should not be handled by the same
-> driver that has no knowledge of those differences. Platform VFIO has the
-> same problem, and requires device-specific reset drivers.
->
->> The UIO dmem driver is a generic driver and not specific to any type of
->> HW. In fact, UIO dmem driver is generic enough to access variety of
->> platform devices from user-space using UIO framework.
->>
->> Based on this Rob had previously suggested to not have any (or enforce
->> any) DT bindings for UIO dmem driver.
->>
->> Refer, https://lkml.org/lkml/2016/5/18/457
->
-> I don't follow. Here Rob stated:
->
->   DT describes h/w. UIO is not a h/w block, so this does not belong in DT. A
->   UIO vs. kernel driver is purely a kernel decision which shouldn't
->   require a DT change.
->
->   The properties should be part of match data for a compatible string that
->   needs them set. Or if they can be defined in a way that is actually a
->   property of the h/w, then it would be acceptible. You'd still need to
->   define compatible strings that the properties apply to.
->
-> Above, you have come up with a default set of property names which you
-> go looking for, and you expect a class of property, even if you don't
-> expect specific names. That constitutes a binding, and a poorly-defined
-> one at that.
->
-> Per my reading, Rob's point in https://lkml.org/lkml/2016/5/23/539 was
-> that providing the *values* as module parameters was fine, not providing
-> the *property names*.
->
->> Link to original Jan's patchset is https://lkml.org/lkml/2016/5/17/141
->>
->> We had two options:
->> 1) Get details of "Dynamic regions" via module parameter but this
->> would mean using same number and sizes of "Dynamic regions" for
->> all UIO dmem devices.
->> 2) Pass names of DT attributes used by UIO dmem driver as
->> module parameters.
->>
->> > DT bindings need documentation, but there was none as part of this series.
->> >
->> > I do not think this makes sense from a DT perspective.
->>
->> As explained above, we are not fixing DT compatible string and
->> DT attributes names for UIO dmem driver instead we pass all
->> these as module parameters (preferable via kernel args or at
->> time of module insertion). Due to this we don't require DT bindings
->> document.
->
-> If you're looking for properties in the DT, you're assuming a binding of
-> some sort, regardless of whether you expect particular names.
->
-> To be clear, NAK to this as it stands.
+On Sun, Jul 17, 2016 at 09:21:48PM +0200, Arnd Bergmann wrote:
+> On Sunday, July 17, 2016 4:22:07 PM CEST Bhushan Shah wrote:
+> > +
+> > +       smd {
+> > +               rpm {
+> > +                       rpm_requests {
+> > +                               pm8841-regulators {
+> > +                                       s1 {
+> > +                                               regulator-min-microvolt = <675000>;
+> > +                                               regulator-max-microvolt = <1050000>;
+> > +                                       };
+> 
+> Maybe add a label at either the rpm_requests or the pm8841-regulators
+> node so you can add properties in the leaf nodes withoutout having to
+> specify the whole path?
 
-I think if we are not enforcing any DT bindings by passing compatible
-and property names as module parameters then we don't need any
-DT bindings document. We can certainly remove default property
-names and enforce UIO dmem users to always pass this as module
-parameters.
-
-Anyways, you have already NAKed this so I will just get all dynamic
-region info from module parameters only.
-
-Regards,
-Anup
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure, I will adjust patch.
+> 	Arnd
