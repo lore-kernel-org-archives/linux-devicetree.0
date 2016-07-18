@@ -1,142 +1,52 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH 07/10] dmaengine: qcom_hidma: eliminate processed variables
-Date: Mon, 18 Jul 2016 14:39:34 -0400
-Message-ID: <1468867177-15007-8-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH 02/10] Documentation: DT: qcom_hidma: correct spelling mistakes
+Date: Mon, 18 Jul 2016 14:39:29 -0400
+Message-ID: <1468867177-15007-3-git-send-email-okaya@codeaurora.org>
 References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, arnd@arndb.de, eric.auger@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, agross@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of tracking the read/write pointers in SW, track the
-current state by reading from HW directly. This is an attempt
-to eliminate potential race conditions.
+Fix the spelling mistakes and extra and statements in the sentences.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- drivers/dma/qcom/hidma.h     |  5 +++--
- drivers/dma/qcom/hidma_dbg.c |  6 ++++--
- drivers/dma/qcom/hidma_ll.c  | 29 +++++++----------------------
- 3 files changed, 14 insertions(+), 26 deletions(-)
+ Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
-index 158bf1f..03c20f6 100644
---- a/drivers/dma/qcom/hidma.h
-+++ b/drivers/dma/qcom/hidma.h
-@@ -28,6 +28,9 @@
- #define HIDMA_TRE_DEST_LOW_IDX		4
- #define HIDMA_TRE_DEST_HI_IDX		5
+diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+index 45ce75b..314562b 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+@@ -5,13 +5,13 @@ memcpy and memset capabilities. It has been designed for virtualized
+ environments.
  
-+#define HIDMA_EVCA_READ_PTR_REG                0x018
-+#define HIDMA_TRCA_READ_PTR_REG                0x018
-+
- struct hidma_tre {
- 	atomic_t allocated;		/* if this channel is allocated	    */
- 	bool queued;			/* flag whether this is pending     */
-@@ -63,12 +66,10 @@ struct hidma_lldev {
- 	void *tre_ring;			/* TRE ring			  */
- 	dma_addr_t tre_dma;		/* TRE ring to be shared with HW  */
- 	u32 tre_ring_size;		/* Byte size of the ring	  */
--	u32 tre_processed_off;		/* last processed TRE		  */
+ Each HIDMA HW instance consists of multiple DMA channels. These channels
+-share the same bandwidth. The bandwidth utilization can be parititioned
++share the same bandwidth. The bandwidth utilization can be partitioned
+ among channels based on the priority and weight assignments.
  
- 	void *evre_ring;		/* EVRE ring			   */
- 	dma_addr_t evre_dma;		/* EVRE ring to be shared with HW  */
- 	u32 evre_ring_size;		/* Byte size of the ring	   */
--	u32 evre_processed_off;		/* last processed EVRE		   */
+ There are only two priority levels and 15 weigh assignments possible.
  
- 	u32 tre_write_offset;           /* TRE write location              */
- 	struct tasklet_struct task;	/* task delivering notifications   */
-diff --git a/drivers/dma/qcom/hidma_dbg.c b/drivers/dma/qcom/hidma_dbg.c
-index 87db285..d741b9d 100644
---- a/drivers/dma/qcom/hidma_dbg.c
-+++ b/drivers/dma/qcom/hidma_dbg.c
-@@ -73,14 +73,16 @@ static void hidma_ll_devstats(struct seq_file *s, void *llhndl)
- 	seq_printf(s, "tre_ring=%p\n", lldev->tre_ring);
- 	seq_printf(s, "tre_ring_handle=%pap\n", &lldev->tre_dma);
- 	seq_printf(s, "tre_ring_size = 0x%x\n", lldev->tre_ring_size);
--	seq_printf(s, "tre_processed_off = 0x%x\n", lldev->tre_processed_off);
-+	seq_printf(s, "tre_processed_off = 0x%x\n",
-+			readl(lldev->trca + HIDMA_TRCA_READ_PTR_REG));
- 	seq_printf(s, "pending_tre_count=%d\n",
- 			atomic_read(&lldev->pending_tre_count));
- 	seq_printf(s, "evca=%p\n", lldev->evca);
- 	seq_printf(s, "evre_ring=%p\n", lldev->evre_ring);
- 	seq_printf(s, "evre_ring_handle=%pap\n", &lldev->evre_dma);
- 	seq_printf(s, "evre_ring_size = 0x%x\n", lldev->evre_ring_size);
--	seq_printf(s, "evre_processed_off = 0x%x\n", lldev->evre_processed_off);
-+	seq_printf(s, "evre_processed_off = 0x%x\n",
-+			readl(lldev->evca + HIDMA_EVCA_READ_PTR_REG));
- 	seq_printf(s, "tre_write_offset = 0x%x\n", lldev->tre_write_offset);
- }
+ Other parameters here determine how much of the system bus this HIDMA
+-instance can use like maximum read/write request and and number of bytes to
++instance can use like maximum read/write request and number of bytes to
+ read/write in a single burst.
  
-diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-index a71f0c7..2753210 100644
---- a/drivers/dma/qcom/hidma_ll.c
-+++ b/drivers/dma/qcom/hidma_ll.c
-@@ -245,13 +245,13 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev, u8 err_info,
- 				       u8 err_code)
- {
- 	u32 evre_ring_size = lldev->evre_ring_size;
--	u32 tre_ring_size = lldev->tre_ring_size;
-+	u32 evre_write_off;
- 	u32 tre_iterator, evre_iterator;
- 	u32 num_completed = 0;
- 
- 	evre_write_off = readl_relaxed(lldev->evca + HIDMA_EVCA_WRITE_PTR_REG);
--	tre_iterator = lldev->tre_processed_off;
--	evre_iterator = lldev->evre_processed_off;
-+	evre_iterator = readl_relaxed(lldev->evca + HIDMA_EVCA_READ_PTR_REG);
-+	tre_iterator = (evre_iterator / HIDMA_EVRE_SIZE) * HIDMA_TRE_SIZE;
- 
- 	if ((evre_write_off > evre_ring_size) ||
- 	    (evre_write_off % HIDMA_EVRE_SIZE)) {
-@@ -280,10 +280,10 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev, u8 err_info,
- 					 err_code))
- 			break;
- 
--		HIDMA_INCREMENT_ITERATOR(tre_iterator, HIDMA_TRE_SIZE,
--					 tre_ring_size);
- 		HIDMA_INCREMENT_ITERATOR(evre_iterator, HIDMA_EVRE_SIZE,
- 					 evre_ring_size);
-+		tre_iterator = (evre_iterator / HIDMA_EVRE_SIZE) *
-+					HIDMA_TRE_SIZE;
- 
- 		/*
- 		 * Read the new event descriptor written by the HW.
-@@ -295,21 +295,8 @@ static int hidma_handle_tre_completion(struct hidma_lldev *lldev, u8 err_info,
- 		num_completed++;
- 	}
- 
--	if (num_completed) {
--		u32 evre_read_off = (lldev->evre_processed_off +
--				     HIDMA_EVRE_SIZE * num_completed);
--		u32 tre_read_off = (lldev->tre_processed_off +
--				    HIDMA_TRE_SIZE * num_completed);
--
--		evre_read_off = evre_read_off % evre_ring_size;
--		tre_read_off = tre_read_off % tre_ring_size;
--
--		writel(evre_read_off, lldev->evca + HIDMA_EVCA_DOORBELL_REG);
--
--		/* record the last processed tre offset */
--		lldev->tre_processed_off = tre_read_off;
--		lldev->evre_processed_off = evre_read_off;
--	}
-+	if (num_completed)
-+		writel(evre_iterator, lldev->evca + HIDMA_EVCA_DOORBELL_REG);
- 
- 	return num_completed;
- }
-@@ -654,8 +641,6 @@ int hidma_ll_setup(struct hidma_lldev *lldev)
- 	u32 nr_tres = lldev->nr_tres;
- 
- 	atomic_set(&lldev->pending_tre_count, 0);
--	lldev->tre_processed_off = 0;
--	lldev->evre_processed_off = 0;
- 	lldev->tre_write_offset = 0;
- 
- 	/* disable interrupts */
+ Main node required properties:
 -- 
 1.8.2.1
