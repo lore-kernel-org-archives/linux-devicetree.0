@@ -1,71 +1,52 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] of: fix reference counting in of_graph_get_endpoint_by_regs
-Date: Mon, 18 Jul 2016 07:59:17 -0500
-Message-ID: <CAL_JsqKXPKnVksW6siC4tEwhYuhKkKWWAp1ib_ZhnJU+Kiz+_Q@mail.gmail.com>
-References: <1467799896-18573-1-git-send-email-l.stach@pengutronix.de>
+From: Fengguang Wu <lkp@intel.com>
+Subject: Re: running "make dtbs" for test builds
+Date: Mon, 18 Jul 2016 21:00:39 +0800
+Message-ID: <20160718130039.GA31368@wfg-t540p.sh.intel.com>
+References: <8924490.SntxSU2FOC@wuerfel>
+ <20160718124122.GA30497@wfg-t540p.sh.intel.com>
+ <1725840.UfqkDuJ4HB@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1467799896-18573-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1725840.UfqkDuJ4HB@wuerfel>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 6, 2016 at 5:11 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> The called of_graph_get_next_endpoint() already decrements the refcount
-> of the prev node, so it is wrong to do it again in the calling function.
+On Mon, Jul 18, 2016 at 02:52:32PM +0200, Arnd Bergmann wrote:
+>On Monday, July 18, 2016 8:41:22 PM CEST Fengguang Wu wrote:
+>> Hi Arnd,
+>>
+>> On Mon, Jul 18, 2016 at 02:01:17PM +0200, Arnd Bergmann wrote:
+>> >Hi Fengguang,
+>> >
+>> >I've recently run into a number of cases in which I pulled a branch that
+>> >was building fine with "make vmlinux", but that failed for "make dtbs",
+>> >and I wonder if this is something that could be checked by the kbuild
+>> >test robot so we catch it earlier.
+>>
+>> We initially run "make" without vmlinux, however during bisect more
+>> specific make targets will be used to speed it up. To do that it's
+>> necessary to know the regex patterns of "make dtbs" error messages,
+>> so that they can be correctly bisected.
+>>
+>> Can you give some "make dtbs" error messages or patterns?
+>>
 >
-> Use the for_each_endpoint_of_node() helper to interate through the
-> endpoint OF nodes, which already does the right thing and simplifies
-> the code a bit.
+>A typical error looks like
 >
-> Fixes: 8ccd0d0ca041
-> (of: add helper for getting endpoint node of specific identifiers)
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Reported-by: David Jander <david-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> v2: Switch over to use for_each_endpoint_of_node() helper as requested
->     by Rob Herring.
-> ---
->  drivers/of/base.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
+>Error: arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts:252.1-18 Label or path usb_power_supply not found
+>FATAL ERROR: Syntax error parsing input tree
+>scripts/Makefile.lib:312: recipe for target 'arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dtb' failed
+>make[3]: *** [arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dtb] Error 1
 >
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index ebf84e3b56d5..c60d47c8c863 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -2306,11 +2306,9 @@ struct device_node *of_graph_get_endpoint_by_regs(
->         const struct device_node *parent, int port_reg, int reg)
->  {
->         struct of_endpoint endpoint;
-> -       struct device_node *node, *prev_node = NULL;
-> +       struct device_node *node = NULL;
->
-> -       while (1) {
-> -               node = of_graph_get_next_endpoint(parent, prev_node);
-> -               of_node_put(prev_node);
-> +       for_each_endpoint_of_node(parent, node) {
->                 if (!node)
->                         break;
+>There should be almost 100% correlation between seeing "arch/${ARCH}/boot/dts/"
+>in stderr and having a problem in the "make dtbs" stage.
 
-These 2 lines are no longer needed.
+Got it, thank you for the tips!
 
->
-> @@ -2318,8 +2316,6 @@ struct device_node *of_graph_get_endpoint_by_regs(
->                 if (((port_reg == -1) || (endpoint.port == port_reg)) &&
->                         ((reg == -1) || (endpoint.id == reg)))
->                         return node;
-> -
-> -               prev_node = node;
->         }
->
->         return NULL;
-> --
-> 2.8.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Fengguang
+
