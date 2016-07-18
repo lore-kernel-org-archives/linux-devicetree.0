@@ -1,58 +1,90 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5] wlcore: spi: add wl18xx support
-Date: Mon, 18 Jul 2016 20:04:19 +0300
-Message-ID: <87vb02x4h8.fsf@kamboji.qca.qualcomm.com>
-References: <8665E2433BC68541A24DFFCA87B70F5B36156367@DFRE01.ent.ti.com>
-	<8665E2433BC68541A24DFFCA87B70F5B3615D8AA@DFRE01.ent.ti.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/3] ARM: dts: msm8974-hammerhead: Add regulator nodes
+ for hammerhead
+Date: Mon, 18 Jul 2016 10:11:55 -0700
+Message-ID: <20160718171155.GE13516@tuxbot>
+References: <20160717105208.9596-1-bshah@kde.org>
+ <20160718033425.GB1966@archbox>
+ <CAOCOHw5MNN9QAea1gJobpEHpn1S0=CTA3mEHzd+dVhv-GShYdg@mail.gmail.com>
+ <1957086.XgnIUz2uOJ@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B3615D8AA-1tpBd5JUCm6IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-	(Eyal Reizer's message of "Sun, 17 Jul 2016 06:36:11 +0000")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev@vger.kernel.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi@vger.kernel.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1957086.XgnIUz2uOJ@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bhushan Shah <bshah@kde.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-"Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org> writes:
+On Mon 18 Jul 00:44 PDT 2016, Arnd Bergmann wrote:
 
-> Add support for using with both wl12xx and wl18xx.
->
-> - all wilink family needs special init command for entering wspi mode.
->   extra clock cycles should be sent after the spi init command while the
->   cs pin is high.
-> - Use inverted chip select for sending a dummy 4 bytes command that
->   completes the init stage.
->
-> Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> v1->v2:update device tree bindings configuration
-> v2->v3:revert from manual gpio manipulation. use inverted chip select 
-> instead for sending the extra init cycle which, achieves the same hardware 
-> purpose.
-> update device tree bindings docucmentation accordingly
-> v3->v4: Remove redundant data form binding documentation and fix chip 
-> select number mismatch in wl1271 example
-> v4->v5: Rebase on top of head of wireless-drivers-next
+> On Sunday, July 17, 2016 8:44:01 PM CEST Bjorn Andersson wrote:
+> > On Sun, Jul 17, 2016 at 8:34 PM, Bhushan Shah <bshah@kde.org> wrote:
+> > > On Sun, Jul 17, 2016 at 09:21:48PM +0200, Arnd Bergmann wrote:
+> > >> On Sunday, July 17, 2016 4:22:07 PM CEST Bhushan Shah wrote:
+> > >> > +
+> > >> > +       smd {
+> > >> > +               rpm {
+> > >> > +                       rpm_requests {
+> > >> > +                               pm8841-regulators {
+> > >> > +                                       s1 {
+> > >> > +                                               regulator-min-microvolt = <675000>;
+> > >> > +                                               regulator-max-microvolt = <1050000>;
+> > >> > +                                       };
+> > >>
+> > >> Maybe add a label at either the rpm_requests or the pm8841-regulators
+> > >> node so you can add properties in the leaf nodes withoutout having to
+> > >> specify the whole path?
+> > >
+> > > Sure, I will adjust patch.
+> > 
+> > Please don't. After running into several cases where this would end us
+> > up in having a multitude of nodes each describing just a snippet of
+> > each level we decided not to do so in the general case for the
+> > Qualcomm boards.
+> > 
+> > There are a few where we apparently ended up doing so anyways, but for
+> > all other cases of regulators we express the full tree in the dts, so
+> > please follow that so we don't mix the styles too much.
+> 
+> Ok, then how about this instead:
+> 
+> /smd/rpm/rpm_requests/pm8841-regulators {
 
-You now sent me two patches with v5 which is just confusing. To make the
-life of maintainers easier ALWAYS increase the revision number, no
-matter how small the change is.
+The problem I have with this is that in the dtsi we have properties and
+other nodes under each one of these, hence we end up with completely
+different overall structure depending on if I look in the dtsi or the
+dts.
 
-But the "latter" v5 is corrupted somehow in patchwork:
+The problem I have with it in the dts is that we have properties and
+nodes under "smd" and "rpm_requests". So siblings are no longer grouped
+together.
 
-https://patchwork.kernel.org/patch/9233597/
 
-The "former" v5 again looks ok:
+I have a hard time finding my way through flattened trees, often spread out
+over multiple files, that I need to puzzle together in my head. Perhaps
+there are better ways to keep this comprehensible, without maintaining
+the structure.
 
-https://patchwork.kernel.org/patch/9222403/
+> 	s1 {
+> 		regulator-min-microvolt = <675000>;
+> 		regulator-max-microvolt = <1050000>;
+> 	};
+> 
+> 	...
+> };
+> 
+> That avoids the ridiculous intendation level but uses no labels.
+> 
 
-I can't immeaditely see why that happened, but please resend.
+I do share your dislike of the indentation level.
 
--- 
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+I do have a few other concerns about style and scalability in other
+places. How about we follow how I've done this in the other files for
+now (i.e.  keep the structure of the patch as is) and sit down at LAS16
+to discuss what to do about this?
+
+Regards,
+Bjorn
