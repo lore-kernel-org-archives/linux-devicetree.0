@@ -1,51 +1,38 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v4 4/4] ASoC: samsung: Add machine driver for Exynos5433
- based TM2 board
-Date: Mon, 18 Jul 2016 12:41:37 +0200
-Message-ID: <578CB261.60507@samsung.com>
-References: <CGME20160705171538epcas1p14f034567982b67aad091c50e5adcec9c@epcas1p1.samsung.com>
- <1467738877-31555-1-git-send-email-s.nawrocki@samsung.com>
- <5788721B.7010602@samsung.com>
+From: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 1/4] doc: usb: usbmisc-imx: add imx7d compatible string
+Date: Mon, 18 Jul 2016 19:15:44 +0800
+Message-ID: <1468840547-17899-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5788721B.7010602@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: broonie@kernel.org, robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, ideal.song@samsung.com, inki.dae@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: peter.chen-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Add compatible string for imx7d-usbmisc.
 
-On 07/15/2016 07:18 AM, Chanwoo Choi wrote:
->> +static int tm2_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
+Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/usbmisc-imx.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
->> +	codec_dai_node = of_parse_phandle(dev->of_node, "audio-codec", 0);
->> +	if (!codec_dai_node) {
->> +		dev_err(dev, "audio-codec property invalid or missing\n");
->> +		ret = -EINVAL;
->> +		goto err_put_cpu_dai;
->> +	}
-
->> +	priv->codec_mclk1 = of_clk_get_by_name(codec_dai_node, "mclk1");
->> +	if (IS_ERR(priv->codec_mclk1)) {
->> +		dev_err(dev, "Failed to get mclk1 clock\n");
->> +		ret = PTR_ERR(priv->codec_mclk1);
->> +		goto err_put_codec_dai;
->> +	}
-> 
-> I think that you better to use the devm_clk_get() instead of of_clk_get_by_name()
-> because you don't need to handle the clk_put() when error happen and remove the 
-> this driver.
-> 
-> 	priv->codec_mclk1 = devm_clk_get(dev, "mclk1");
-
-The clocks are from the CODEC DT node, for which we don't have struct
-device pointer here, that's why I used of_clk_get_by_name().
+diff --git a/Documentation/devicetree/bindings/usb/usbmisc-imx.txt b/Documentation/devicetree/bindings/usb/usbmisc-imx.txt
+index 3539d4e..f1e27fa 100644
+--- a/Documentation/devicetree/bindings/usb/usbmisc-imx.txt
++++ b/Documentation/devicetree/bindings/usb/usbmisc-imx.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 	"fsl,imx6q-usbmisc" for imx6q
+ 	"fsl,vf610-usbmisc" for Vybrid vf610
+ 	"fsl,imx6sx-usbmisc" for imx6sx
++	"fsl,imx7d-usbmisc" for imx7d
+ - reg: Should contain registers location and length
+ 
+ Examples:
+-- 
+1.9.1
 
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
