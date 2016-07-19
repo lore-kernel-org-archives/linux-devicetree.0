@@ -1,13 +1,16 @@
 From: Bhushan Shah <bshah@kde.org>
-Subject: [Patch v2 4/5] ARM: dts: msm8974-hammerhead: Add regulator nodes for hammerhead
-Date: Tue, 19 Jul 2016 10:34:13 +0530
-Message-ID: <20160719050414.31704-5-bshah@kde.org>
+Subject: [Patch v2 5/5] ARM: dts: msm8974-hammerhead: Introduce gpio-keys nodes
+Date: Tue, 19 Jul 2016 10:34:14 +0530
+Message-ID: <20160719050414.31704-6-bshah@kde.org>
 References: <20160719050414.31704-1-bshah@kde.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <20160719050414.31704-1-bshah@kde.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 Cc: Bhushan Shah <bshah@kde.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
+
+This introduces the gpio-keys node for keys of hammerhead and pinctrl
+state associated with it.
 
 Cc: Andy Gross <andy.gross@linaro.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -19,239 +22,62 @@ Cc: linux-arm-msm@vger.kernel.org
 Cc: linux-soc@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Bhushan Shah <bshah@kde.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../dts/qcom-msm8974-lge-nexus5-hammerhead.dts     | 212 +++++++++++++++++++++
- 1 file changed, 212 insertions(+)
+ .../dts/qcom-msm8974-lge-nexus5-hammerhead.dts     | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index 68f3a8a..066a8dc 100644
+index 066a8dc..68f071f 100644
 --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
 +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -1,6 +1,8 @@
- #include "qcom-msm8974.dtsi"
+@@ -2,6 +2,7 @@
  #include "qcom-pm8841.dtsi"
  #include "qcom-pm8941.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
  
  / {
- 	model = "LGE MSM 8974 HAMMERHEAD";
-@@ -13,6 +15,216 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
+@@ -232,4 +233,39 @@
+ 		status = "ok";
  	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		input-name = "gpio-keys";
 +
-+	smd {
-+		rpm {
-+			rpm_requests {
-+				pm8841-regulators {
-+					s1 {
-+						regulator-min-microvolt = <675000>;
-+						regulator-max-microvolt = <1050000>;
-+					};
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_keys_pin_a>;
 +
-+					s2 {
-+						regulator-min-microvolt = <500000>;
-+						regulator-max-microvolt = <1050000>;
-+					};
++		volume-up {
++			label = "volume_up";
++			gpios = <&pm8941_gpios 2 GPIO_ACTIVE_LOW>;
++			linux,input-type = <1>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
 +
-+					s3 {
-+						regulator-min-microvolt = <1050000>;
-+						regulator-max-microvolt = <1050000>;
-+					};
++		volume-down {
++			label = "volume_down";
++			gpios = <&pm8941_gpios 3 GPIO_ACTIVE_LOW>;
++			linux,input-type = <1>;
++			linux,code = <KEY_VOLUMEDOWN>;
++		};
++	};
++};
 +
-+					s4 {
-+						regulator-min-microvolt = <815000>;
-+						regulator-max-microvolt = <900000>;
-+					};
-+				};
++&spmi_bus {
++	pm8941@0 {
++		gpios@c000 {
++			gpio_keys_pin_a: gpio-keys-active {
++				pins = "gpio2", "gpio3";
++				function = "normal";
 +
-+				pm8941-regulators {
-+					vdd_l1_l3-supply = <&pm8941_s1>;
-+					vdd_l2_lvs1_2_3-supply = <&pm8941_s3>;
-+					vdd_l4_l11-supply = <&pm8941_s1>;
-+					vdd_l5_l7-supply = <&pm8941_s2>;
-+					vdd_l6_l12_l14_l15-supply = <&pm8941_s2>;
-+					vdd_l8_l16_l18_l19-supply = <&vph_pwr_reg>;
-+					vdd_l9_l10_l17_l22-supply = <&vreg_boost>;
-+					vdd_l13_l20_l23_l24-supply = <&vreg_boost>;
-+					vdd_l21-supply = <&vreg_boost>;
-+
-+					s1 {
-+						regulator-min-microvolt = <1300000>;
-+						regulator-max-microvolt = <1300000>;
-+
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					s2 {
-+						regulator-min-microvolt = <2150000>;
-+						regulator-max-microvolt = <2150000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					s3 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					l1 {
-+						regulator-min-microvolt = <1225000>;
-+						regulator-max-microvolt = <1225000>;
-+
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					l2 {
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <1200000>;
-+					};
-+
-+					l3 {
-+						regulator-min-microvolt = <1225000>;
-+						regulator-max-microvolt = <1225000>;
-+					};
-+
-+					l4 {
-+						regulator-min-microvolt = <1225000>;
-+						regulator-max-microvolt = <1225000>;
-+					};
-+
-+					l5 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l6 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					l7 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					l8 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l9 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <2950000>;
-+					};
-+
-+					l10 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <2950000>;
-+					};
-+
-+					l11 {
-+						regulator-min-microvolt = <1300000>;
-+						regulator-max-microvolt = <1300000>;
-+					};
-+
-+					l12 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					l13 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <2950000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					l14 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l15 {
-+						regulator-min-microvolt = <2050000>;
-+						regulator-max-microvolt = <2050000>;
-+					};
-+
-+					l16 {
-+						regulator-min-microvolt = <2700000>;
-+						regulator-max-microvolt = <2700000>;
-+					};
-+
-+					l17 {
-+						regulator-min-microvolt = <2850000>;
-+						regulator-max-microvolt = <2850000>;
-+					};
-+
-+					l18 {
-+						regulator-min-microvolt = <2850000>;
-+						regulator-max-microvolt = <2850000>;
-+					};
-+
-+					l19 {
-+						regulator-min-microvolt = <3000000>;
-+						regulator-max-microvolt = <3300000>;
-+					};
-+
-+					l20 {
-+						regulator-min-microvolt = <2950000>;
-+						regulator-max-microvolt = <2950000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					l21 {
-+						regulator-min-microvolt = <2950000>;
-+						regulator-max-microvolt = <2950000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					l22 {
-+						regulator-min-microvolt = <3000000>;
-+						regulator-max-microvolt = <3300000>;
-+					};
-+
-+					l23 {
-+						regulator-min-microvolt = <3000000>;
-+						regulator-max-microvolt = <3000000>;
-+					};
-+
-+					l24 {
-+						regulator-min-microvolt = <3075000>;
-+						regulator-max-microvolt = <3075000>;
-+
-+						regulator-boot-on;
-+					};
-+				};
++				bias-pull-up;
++				power-source = <PM8941_GPIO_S3>;
 +			};
 +		};
 +	};
-+
-+	vreg_boost {
-+		gpio = <&pm8941_gpios 21 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&boost_bypass_n_pin>;
-+	};
-+
  };
- 
- &soc {
 -- 
 2.9.0
