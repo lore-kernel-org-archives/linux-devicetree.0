@@ -1,559 +1,325 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v6 1/2] led: is31fl319x: 1/3/6/9-channel light effect led driver
-Date: Tue, 19 Jul 2016 14:34:53 +0200
-Message-ID: <2E346265-FDE4-4E50-8BD3-C78E7BFF5E83@goldelico.com>
-References: <cover.1468928850.git.hns@goldelico.com> <09d1282609edd89f291fc44b52b2c538a2ee57a1.1468928850.git.hns@goldelico.com> <578E1D21.5040007@samsung.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <578E1D21.5040007@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, drivshin.allworx@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: [PATCH v6 1/8] Documentation: arm: define DT cpu capacity-dmips-mhz bindings
+Date: Tue, 19 Jul 2016 13:40:41 +0100
+Message-ID: <1468932048-31635-2-git-send-email-juri.lelli@arm.com>
+References: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, juri.lelli@arm.com, broonie@kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+ARM systems may be configured to have cpus with different power/performance
+characteristics within the same chip. In this case, additional information
+has to be made available to the kernel (the scheduler in particular) for it
+to be aware of such differences and take decisions accordingly.
 
-> Am 19.07.2016 um 14:29 schrieb Jacek Anaszewski <j.anaszewski@samsung.com>:
-> 
-> Tweaked the tabulation of macro values a bit more and applied
+Therefore, this patch aims at standardizing cpu capacities device tree
+bindings for ARM platforms. Bindings define cpu capacity-dmips-mhz
+parameter, to allow operating systems to retrieve such information from
+the device tree and initialize related kernel structures, paving the way
+for common code in the kernel to deal with heterogeneity.
 
-thanks!
-I think you better know how you want to have them exactly (checkpatch didn't complain).
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Paul Walmsley <paul@pwsan.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+---
 
-> the patches to the for-4.9 branch of linux-leds.git.
+Changes from v1:
+ - removed section regarding capacity-scale
+ - added information regarding normalization
 
-Fine!
+Changes from v4:
+ - binding changed to capacity-dmips-mhz
+ - sections and changelod updated accordingly
 
-> 
-> Thanks,
-> Jacek Anaszewski
+Changes from v5:
+ - addressed Mark and Vincent comments
+---
+ .../devicetree/bindings/arm/cpu-capacity.txt       | 236 +++++++++++++++++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     |  10 +
+ 2 files changed, 246 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-capacity.txt
 
-BR and thanks as well,
-Nikolaus
+diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+new file mode 100644
+index 000000000000..7809fbe0cdb7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+@@ -0,0 +1,236 @@
++==========================================
++ARM CPUs capacity bindings
++==========================================
++
++==========================================
++1 - Introduction
++==========================================
++
++ARM systems may be configured to have cpus with different power/performance
++characteristics within the same chip. In this case, additional information has
++to be made available to the kernel for it to be aware of such differences and
++take decisions accordingly.
++
++==========================================
++2 - CPU capacity definition
++==========================================
++
++CPU capacity is a number that provides the scheduler information about CPUs
++heterogeneity. Such heterogeneity can come from micro-architectural differences
++(e.g., ARM big.LITTLE systems) or maximum frequency at which CPUs can run
++(e.g., SMP systems with multiple frequency domains). Heterogeneity in this
++context is about differing performance characteristics; this binding tries to
++capture a first-order approximation of the relative performance of CPUs.
++
++CPU capacities are obtained by running a suitable benchmark. This binding makes
++no guarantees on the validity or suitability of any particular benchmark, the
++final capacity should, however, be:
++
++* A "single-threaded" or CPU affine benchmark
++* Divided by the running frequency of the CPU executing the benchmark
++* Not subject to dynamic frequency scaling of the CPU
++
++For the time being we however advise usage of the Dhrystone benchmark. What
++above thus becomes:
++
++CPU capacities are obtained by running the Dhrystone benchmark on each CPU at
++max frequency (with caches enabled). The obtained DMIPS score is then divided
++by the frequency (in MHz) at which the benchmark has been run, so that
++DMIPS/MHz are obtained.  Such values are then normalized w.r.t. the highest
++score obtained in the system.
++
++==========================================
++3 - capacity-dmips-mhz
++==========================================
++
++capacity-dmips-mhz is an optional cpu node [1] property: u32 value
++representing CPU capacity expressed in normalized DMIPS/MHz. At boot time, the
++maximum frequency available to the cpu is then used to calculate the capacity
++value internally used by the kernel.
++
++capacity-dmips-mhz property is all-or-nothing: if it is specified for a cpu
++node, it has to be specified for every other cpu nodes, or the system will
++fall back to the default capacity value for every CPU. If cpufreq is not
++available, final capacities are calculated by directly using capacity-dmips-
++mhz values (normalized w.r.t. the highest value found while parsing the DT).
++
++===========================================
++4 - Examples
++===========================================
++
++Example 1 (ARM 64-bit, 6-cpu system, two clusters):
++capacities-dmips-mhz are scaled w.r.t. 1024 (cpu@0 and cpu@1)
++supposing cluster0@max-freq=1100 and custer1@max-freq=850,
++final capacities are 1024 for cluster0 and 446 for cluster1
++
++cpus {
++	#address-cells = <2>;
++	#size-cells = <0>;
++
++	cpu-map {
++		cluster0 {
++			core0 {
++				cpu = <&A57_0>;
++			};
++			core1 {
++				cpu = <&A57_1>;
++			};
++		};
++
++		cluster1 {
++			core0 {
++				cpu = <&A53_0>;
++			};
++			core1 {
++				cpu = <&A53_1>;
++			};
++			core2 {
++				cpu = <&A53_2>;
++			};
++			core3 {
++				cpu = <&A53_3>;
++			};
++		};
++	};
++
++	idle-states {
++		entry-method = "arm,psci";
++
++		CPU_SLEEP_0: cpu-sleep-0 {
++			compatible = "arm,idle-state";
++			arm,psci-suspend-param = <0x0010000>;
++			local-timer-stop;
++			entry-latency-us = <100>;
++			exit-latency-us = <250>;
++			min-residency-us = <150>;
++		};
++
++		CLUSTER_SLEEP_0: cluster-sleep-0 {
++			compatible = "arm,idle-state";
++			arm,psci-suspend-param = <0x1010000>;
++			local-timer-stop;
++			entry-latency-us = <800>;
++			exit-latency-us = <700>;
++			min-residency-us = <2500>;
++		};
++	};
++
++	A57_0: cpu@0 {
++		compatible = "arm,cortex-a57","arm,armv8";
++		reg = <0x0 0x0>;
++		device_type = "cpu";
++		enable-method = "psci";
++		next-level-cache = <&A57_L2>;
++		clocks = <&scpi_dvfs 0>;
++		cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		capacity-dmips-mhz = <1024>;
++	};
++
++	A57_1: cpu@1 {
++		compatible = "arm,cortex-a57","arm,armv8";
++		reg = <0x0 0x1>;
++		device_type = "cpu";
++		enable-method = "psci";
++		next-level-cache = <&A57_L2>;
++		clocks = <&scpi_dvfs 0>;
++		cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		capacity-dmips-mhz = <1024>;
++	};
++
++	A53_0: cpu@100 {
++		compatible = "arm,cortex-a53","arm,armv8";
++		reg = <0x0 0x100>;
++		device_type = "cpu";
++		enable-method = "psci";
++		next-level-cache = <&A53_L2>;
++		clocks = <&scpi_dvfs 1>;
++		cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		capacity-dmips-mhz = <578>;
++	};
++
++	A53_1: cpu@101 {
++		compatible = "arm,cortex-a53","arm,armv8";
++		reg = <0x0 0x101>;
++		device_type = "cpu";
++		enable-method = "psci";
++		next-level-cache = <&A53_L2>;
++		clocks = <&scpi_dvfs 1>;
++		cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		capacity-dmips-mhz = <578>;
++	};
++
++	A53_2: cpu@102 {
++		compatible = "arm,cortex-a53","arm,armv8";
++		reg = <0x0 0x102>;
++		device_type = "cpu";
++		enable-method = "psci";
++		next-level-cache = <&A53_L2>;
++		clocks = <&scpi_dvfs 1>;
++		cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		capacity-dmips-mhz = <578>;
++	};
++
++	A53_3: cpu@103 {
++		compatible = "arm,cortex-a53","arm,armv8";
++		reg = <0x0 0x103>;
++		device_type = "cpu";
++		enable-method = "psci";
++		next-level-cache = <&A53_L2>;
++		clocks = <&scpi_dvfs 1>;
++		cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		capacity-dmips-mhz = <578>;
++	};
++
++	A57_L2: l2-cache0 {
++		compatible = "cache";
++	};
++
++	A53_L2: l2-cache1 {
++		compatible = "cache";
++	};
++};
++
++Example 2 (ARM 32-bit, 4-cpu system, two clusters,
++	   cpus 0,1@1GHz, cpus 2,3@500MHz):
++capacities-dmips-mhz are scaled w.r.t. 2 (cpu@0 and cpu@1), this means that first
++cpu@0 and cpu@1 are twice fast than cpu@2 and cpu@3 (at the same frequency)
++
++cpus {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	cpu0: cpu@0 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a15";
++		reg = <0>;
++		capacity-dmips-mhz = <2>;
++	};
++
++	cpu1: cpu@1 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a15";
++		reg = <1>;
++		capacity-dmips-mhz = <2>;
++	};
++
++	cpu2: cpu@2 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a15";
++		reg = <0x100>;
++		capacity-dmips-mhz = <1>;
++	};
++
++	cpu3: cpu@3 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a15";
++		reg = <0x101>;
++		capacity-dmips-mhz = <1>;
++	};
++};
++
++===========================================
++5 - References
++===========================================
++
++[1] ARM Linux Kernel documentation - CPUs bindings
++    Documentation/devicetree/bindings/arm/cpus.txt
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 3f0cbbb8395f..d79442d6fdf8 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -238,6 +238,14 @@ nodes to be present and contain the properties described below.
+ 			# List of phandles to idle state nodes supported
+ 			  by this cpu [3].
+ 
++	- capacity-dmips-mhz
++		Usage: Optional
++		Value type: <u32>
++		Definition:
++			# u32 value representing CPU capacity [3] in
++			  DMIPS/MHz, relative to highest capacity-dmips-mhz
++			  in the system.
++
+ 	- rockchip,pmu
+ 		Usage: optional for systems that have an "enable-method"
+ 		       property value of "rockchip,rk3066-smp"
+@@ -461,3 +469,5 @@ cpus {
+ [2] arm/msm/qcom,kpss-acc.txt
+ [3] ARM Linux kernel documentation - idle states bindings
+     Documentation/devicetree/bindings/arm/idle-states.txt
++[3] ARM Linux kernel documentation - cpu capacity bindings
++    Documentation/devicetree/bindings/arm/cpu-capacity.txt
+-- 
+2.7.0
 
-> 
-> On 07/19/2016 01:47 PM, H. Nikolaus Schaller wrote:
->> This is a driver for the Integrated Silicon Solution Inc. LED driver
->> chips series IS31FL319x. They can drive 1, 3, 6  or up to 9
->> LEDs.
->> 
->> Each LED is individually controllable in brightness (through pwm)
->> in 256 steps so that RGB LEDs can show any of ca. 16 Mio colors.
->> 
->> The maximum current of the LEDs can be programmed and limited to
->> 5 .. 40mA through a device tree property.
->> 
->> The chip is connected through I2C and can have one of 4 addresses
->> in the range 0x64 .. 0x67 depending on how the AD pin is connected. The
->> address is defined by the reg property as usual.
->> 
->> The chip also has a shutdown input which could be connected to a GPIO,
->> but this driver uses software shutdown if all LEDs are inactivated.
->> 
->> The chip also has breathing and audio features which are not fully
->> supported by this driver.
->> 
->> Tested-on: OMAP5 based Pyra handheld prototype.
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> Signed-off-by: Andrey Utkin <andrey_utkin@fastmail.com>
->> ---
->>  drivers/leds/Kconfig           |  12 ++
->>  drivers/leds/Makefile          |   1 +
->>  drivers/leds/leds-is31fl319x.c | 450 +++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 463 insertions(+)
->>  create mode 100644 drivers/leds/leds-is31fl319x.c
->> 
->> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->> index 5ae2834..6439a7d 100644
->> --- a/drivers/leds/Kconfig
->> +++ b/drivers/leds/Kconfig
->> @@ -570,6 +570,18 @@ config LEDS_SEAD3
->>  	  This driver can also be built as a module. If so the module
->>  	  will be called leds-sead3.
->> 
->> +config LEDS_IS31FL319X
->> +	tristate "LED Support for ISSI IS31FL319x I2C LED controller family"
->> +	depends on LEDS_CLASS && I2C && OF
->> +	select REGMAP_I2C
->> +	help
->> +	  This option enables support for LEDs connected to ISSI IS31FL319x
->> +	  fancy LED driver chips accessed via the I2C bus.
->> +	  Driver supports individual PWM brightness control for each channel.
->> +
->> +	  This driver can also be built as a module. If so the module will be
->> +	  called leds-is31fl319x.
->> +
->>  config LEDS_IS31FL32XX
->>  	tristate "LED support for ISSI IS31FL32XX I2C LED controller family"
->>  	depends on LEDS_CLASS && I2C && OF
->> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
->> index cb2013d..b6ce9f9 100644
->> --- a/drivers/leds/Makefile
->> +++ b/drivers/leds/Makefile
->> @@ -66,6 +66,7 @@ obj-$(CONFIG_LEDS_MENF21BMC)		+= leds-menf21bmc.o
->>  obj-$(CONFIG_LEDS_KTD2692)		+= leds-ktd2692.o
->>  obj-$(CONFIG_LEDS_POWERNV)		+= leds-powernv.o
->>  obj-$(CONFIG_LEDS_SEAD3)		+= leds-sead3.o
->> +obj-$(CONFIG_LEDS_IS31FL319X)		+= leds-is31fl319x.o
->>  obj-$(CONFIG_LEDS_IS31FL32XX)		+= leds-is31fl32xx.o
->> 
->>  # LED SPI Drivers
->> diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
->> new file mode 100644
->> index 0000000..dbdcfdd
->> --- /dev/null
->> +++ b/drivers/leds/leds-is31fl319x.c
->> @@ -0,0 +1,450 @@
->> +/*
->> + * Copyright 2015-16 Golden Delicious Computers
->> + *
->> + * Author: Nikolaus Schaller <hns@goldelico.com>
->> + *
->> + * This file is subject to the terms and conditions of version 2 of
->> + * the GNU General Public License.  See the file COPYING in the main
->> + * directory of this archive for more details.
->> + *
->> + * LED driver for the IS31FL319{0,1,3,6,9} to drive 1, 3, 6 or 9 light
->> + * effect LEDs.
->> + *
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/i2c.h>
->> +#include <linux/leds.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/slab.h>
->> +
->> +/* register numbers */
->> +#define IS31FL319X_SHUTDOWN     0x00
->> +#define IS31FL319X_CTRL1        0x01
->> +#define IS31FL319X_CTRL2        0x02
->> +#define IS31FL319X_CONFIG1      0x03
->> +#define IS31FL319X_CONFIG2      0x04
->> +#define IS31FL319X_RAMP_MODE    0x05
->> +#define IS31FL319X_BREATH_MASK  0x06
->> +#define IS31FL319X_PWM(channel) (0x07 + channel)
->> +#define IS31FL319X_DATA_UPDATE  0x10
->> +#define IS31FL319X_T0(channel)  (0x11 + channel)
->> +#define IS31FL319X_T123_1       0x1a
->> +#define IS31FL319X_T123_2       0x1b
->> +#define IS31FL319X_T123_3       0x1c
->> +#define IS31FL319X_T4(channel)  (0x1d + channel)
->> +#define IS31FL319X_TIME_UPDATE  0x26
->> +#define IS31FL319X_RESET        0xff
->> +
->> +#define IS31FL319X_REG_CNT      (IS31FL319X_RESET + 1)
->> +
->> +#define IS31FL319X_MAX_LEDS 9
->> +
->> +/* CS (Current Setting) in CONFIG2 register */
->> +#define IS31FL319X_CONFIG2_CS_SHIFT    4
->> +#define IS31FL319X_CONFIG2_CS_MASK     0x7
->> +#define IS31FL319X_CONFIG2_CS_STEP_REF 12
->> +
->> +#define IS31FL319X_CURRENT_MIN     ((u32)5000)
->> +#define IS31FL319X_CURRENT_MAX     ((u32)40000)
->> +#define IS31FL319X_CURRENT_STEP    ((u32)5000)
->> +#define IS31FL319X_CURRENT_DEFAULT ((u32)20000)
->> +
->> +/* Audio gain in CONFIG2 register */
->> +#define IS31FL319X_AUDIO_GAIN_DB_MAX  ((u32)21)
->> +#define IS31FL319X_AUDIO_GAIN_DB_STEP ((u32)3)
->> +
->> +/*
->> + * regmap is used as a cache of chip's register space,
->> + * to avoid reading back brightness values from chip,
->> + * which is known to hang.
->> + */
->> +struct is31fl319x_chip {
->> +	const struct is31fl319x_chipdef *cdef;
->> +	struct i2c_client               *client;
->> +	struct regmap                   *regmap;
->> +	struct mutex                    lock;
->> +	u32                             audio_gain_db;
->> +
->> +	struct is31fl319x_led {
->> +		struct is31fl319x_chip  *chip;
->> +		struct led_classdev     cdev;
->> +		u32                     max_microamp;
->> +		bool                    configured;
->> +	} leds[IS31FL319X_MAX_LEDS];
->> +};
->> +
->> +struct is31fl319x_chipdef {
->> +	int num_leds;
->> +};
->> +
->> +static const struct is31fl319x_chipdef is31fl3190_cdef = {
->> +	.num_leds = 1,
->> +};
->> +
->> +static const struct is31fl319x_chipdef is31fl3193_cdef = {
->> +	.num_leds = 3,
->> +};
->> +
->> +static const struct is31fl319x_chipdef is31fl3196_cdef = {
->> +	.num_leds = 6,
->> +};
->> +
->> +static const struct is31fl319x_chipdef is31fl3199_cdef = {
->> +	.num_leds = 9,
->> +};
->> +
->> +static const struct of_device_id of_is31fl319x_match[] = {
->> +	{ .compatible = "issi,is31fl3190", .data = &is31fl3190_cdef, },
->> +	{ .compatible = "issi,is31fl3191", .data = &is31fl3190_cdef, },
->> +	{ .compatible = "issi,is31fl3193", .data = &is31fl3193_cdef, },
->> +	{ .compatible = "issi,is31fl3196", .data = &is31fl3196_cdef, },
->> +	{ .compatible = "issi,is31fl3199", .data = &is31fl3199_cdef, },
->> +	{ .compatible = "si-en,sn3199",    .data = &is31fl3199_cdef, },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, of_is31fl319x_match);
->> +
->> +static int is31fl319x_brightness_set(struct led_classdev *cdev,
->> +				     enum led_brightness brightness)
->> +{
->> +	struct is31fl319x_led *led = container_of(cdev, struct is31fl319x_led,
->> +						  cdev);
->> +	struct is31fl319x_chip *is31 = led->chip;
->> +	int chan = led - is31->leds;
->> +	int ret;
->> +	int i;
->> +	u8 ctrl1 = 0, ctrl2 = 0;
->> +
->> +	dev_dbg(&is31->client->dev, "%s %d: %d\n", __func__, chan, brightness);
->> +
->> +	mutex_lock(&is31->lock);
->> +
->> +	/* update PWM register */
->> +	ret = regmap_write(is31->regmap, IS31FL319X_PWM(chan), brightness);
->> +	if (ret < 0)
->> +		goto out;
->> +
->> +	/* read current brightness of all PWM channels */
->> +	for (i = 0; i < is31->cdef->num_leds; i++) {
->> +		unsigned int pwm_value;
->> +		bool on;
->> +
->> +		/*
->> +		 * since neither cdev nor the chip can provide
->> +		 * the current setting, we read from the regmap cache
->> +		 */
->> +
->> +		ret = regmap_read(is31->regmap, IS31FL319X_PWM(i), &pwm_value);
->> +		dev_dbg(&is31->client->dev, "%s read %d: ret=%d: %d\n",
->> +			__func__, i, ret, pwm_value);
->> +		on = ret >= 0 && pwm_value > LED_OFF;
->> +
->> +		if (i < 3)
->> +			ctrl1 |= on << i;       /* 0..2 => bit 0..2 */
->> +		else if (i < 6)
->> +			ctrl1 |= on << (i + 1); /* 3..5 => bit 4..6 */
->> +		else
->> +			ctrl2 |= on << (i - 6); /* 6..8 => bit 0..2 */
->> +	}
->> +
->> +	if (ctrl1 > 0 || ctrl2 > 0) {
->> +		dev_dbg(&is31->client->dev, "power up %02x %02x\n",
->> +			ctrl1, ctrl2);
->> +		regmap_write(is31->regmap, IS31FL319X_CTRL1, ctrl1);
->> +		regmap_write(is31->regmap, IS31FL319X_CTRL2, ctrl2);
->> +		/* update PWMs */
->> +		regmap_write(is31->regmap, IS31FL319X_DATA_UPDATE, 0x00);
->> +		/* enable chip from shut down */
->> +		ret = regmap_write(is31->regmap, IS31FL319X_SHUTDOWN, 0x01);
->> +	} else {
->> +		dev_dbg(&is31->client->dev, "power down\n");
->> +		/* shut down (no need to clear CTRL1/2) */
->> +		ret = regmap_write(is31->regmap, IS31FL319X_SHUTDOWN, 0x00);
->> +	}
->> +
->> +out:
->> +	mutex_unlock(&is31->lock);
->> +
->> +	return ret;
->> +}
->> +
->> +static int is31fl319x_parse_child_dt(const struct device *dev,
->> +				     const struct device_node *child,
->> +				     struct is31fl319x_led *led)
->> +{
->> +	struct led_classdev *cdev = &led->cdev;
->> +	int ret;
->> +
->> +	if (of_property_read_string(child, "label", &cdev->name))
->> +		cdev->name = child->name;
->> +
->> +	ret = of_property_read_string(child, "linux,default-trigger",
->> +				      &cdev->default_trigger);
->> +	if (ret < 0 && ret != -EINVAL) /* is optional */
->> +		return ret;
->> +
->> +	led->max_microamp = IS31FL319X_CURRENT_DEFAULT;
->> +	ret = of_property_read_u32(child, "led-max-microamp",
->> +				   &led->max_microamp);
->> +	if (!ret) {
->> +		if (led->max_microamp < IS31FL319X_CURRENT_MIN)
->> +			return -EINVAL;	/* not supported */
->> +		led->max_microamp = min(led->max_microamp,
->> +					  IS31FL319X_CURRENT_MAX);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int is31fl319x_parse_dt(struct device *dev,
->> +			       struct is31fl319x_chip *is31)
->> +{
->> +	struct device_node *np = dev->of_node, *child;
->> +	const struct of_device_id *of_dev_id;
->> +	int count;
->> +	int ret;
->> +
->> +	if (!np)
->> +		return -ENODEV;
->> +
->> +	of_dev_id = of_match_device(of_is31fl319x_match, dev);
->> +	if (!of_dev_id) {
->> +		dev_err(dev, "Failed to match device with supported chips\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	is31->cdef = of_dev_id->data;
->> +
->> +	count = of_get_child_count(np);
->> +
->> +	dev_dbg(dev, "probe %s with %d leds defined in DT\n",
->> +		of_dev_id->compatible, count);
->> +
->> +	if (!count || count > is31->cdef->num_leds) {
->> +		dev_err(dev, "Number of leds defined must be between 1 and %u\n",
->> +			is31->cdef->num_leds);
->> +		return -ENODEV;
->> +	}
->> +
->> +	for_each_child_of_node(np, child) {
->> +		struct is31fl319x_led *led;
->> +		u32 reg;
->> +
->> +		ret = of_property_read_u32(child, "reg", &reg);
->> +		if (ret) {
->> +			dev_err(dev, "Failed to read led 'reg' property\n");
->> +			goto put_child_node;
->> +		}
->> +
->> +		if (reg < 1 || reg > is31->cdef->num_leds) {
->> +			dev_err(dev, "invalid led reg %u\n", reg);
->> +			ret = -EINVAL;
->> +			goto put_child_node;
->> +		}
->> +
->> +		led = &is31->leds[reg - 1];
->> +
->> +		if (led->configured) {
->> +			dev_err(dev, "led %u is already configured\n", reg);
->> +			ret = -EINVAL;
->> +			goto put_child_node;
->> +		}
->> +
->> +		ret = is31fl319x_parse_child_dt(dev, child, led);
->> +		if (ret) {
->> +			dev_err(dev, "led %u DT parsing failed\n", reg);
->> +			goto put_child_node;
->> +		}
->> +
->> +		led->configured = true;
->> +	}
->> +
->> +	is31->audio_gain_db = 0;
->> +	ret = of_property_read_u32(np, "audio-gain-db", &is31->audio_gain_db);
->> +	if (!ret)
->> +		is31->audio_gain_db = min(is31->audio_gain_db,
->> +					  IS31FL319X_AUDIO_GAIN_DB_MAX);
->> +
->> +	return 0;
->> +
->> +put_child_node:
->> +	of_node_put(child);
->> +	return ret;
->> +}
->> +
->> +static bool is31fl319x_readable_reg(struct device *dev, unsigned int reg)
->> +{ /* we have no readable registers */
->> +	return false;
->> +}
->> +
->> +static bool is31fl319x_volatile_reg(struct device *dev, unsigned int reg)
->> +{ /* volatile registers are not cached */
->> +	switch (reg) {
->> +	case IS31FL319X_DATA_UPDATE:
->> +	case IS31FL319X_TIME_UPDATE:
->> +	case IS31FL319X_RESET:
->> +		return true; /* always write-through */
->> +	default:
->> +		return false;
->> +	}
->> +}
->> +
->> +static const struct reg_default is31fl319x_reg_defaults[] = {
->> +	{ IS31FL319X_CONFIG1, 0x00},
->> +	{ IS31FL319X_CONFIG2, 0x00},
->> +	{ IS31FL319X_PWM(0), 0x00},
->> +	{ IS31FL319X_PWM(1), 0x00},
->> +	{ IS31FL319X_PWM(2), 0x00},
->> +	{ IS31FL319X_PWM(3), 0x00},
->> +	{ IS31FL319X_PWM(4), 0x00},
->> +	{ IS31FL319X_PWM(5), 0x00},
->> +	{ IS31FL319X_PWM(6), 0x00},
->> +	{ IS31FL319X_PWM(7), 0x00},
->> +	{ IS31FL319X_PWM(8), 0x00},
->> +};
->> +
->> +static struct regmap_config regmap_config = {
->> +	.reg_bits = 8,
->> +	.val_bits = 8,
->> +	.max_register = IS31FL319X_REG_CNT,
->> +	.cache_type = REGCACHE_FLAT,
->> +	.readable_reg = is31fl319x_readable_reg,
->> +	.volatile_reg = is31fl319x_volatile_reg,
->> +	.reg_defaults = is31fl319x_reg_defaults,
->> +	.num_reg_defaults = ARRAY_SIZE(is31fl319x_reg_defaults),
->> +};
->> +
->> +static inline int is31fl319x_microamp_to_cs(struct device *dev, u32 microamp)
->> +{ /* round down to nearest supported value (range check done by caller) */
->> +	u32 step = microamp / IS31FL319X_CURRENT_STEP;
->> +
->> +	return ((IS31FL319X_CONFIG2_CS_STEP_REF - step) &
->> +		IS31FL319X_CONFIG2_CS_MASK) <<
->> +		IS31FL319X_CONFIG2_CS_SHIFT; /* CS encoding */
->> +}
->> +
->> +static inline int is31fl319x_db_to_gain(u32 dezibel)
->> +{ /* round down to nearest supported value (range check done by caller) */
->> +	return dezibel / IS31FL319X_AUDIO_GAIN_DB_STEP;
->> +}
->> +
->> +static int is31fl319x_probe(struct i2c_client *client,
->> +			    const struct i2c_device_id *id)
->> +{
->> +	struct is31fl319x_chip *is31;
->> +	struct device *dev = &client->dev;
->> +	struct i2c_adapter *adapter = to_i2c_adapter(dev->parent);
->> +	int err;
->> +	int i = 0;
->> +	u32 aggregated_led_microamp = IS31FL319X_CURRENT_MAX;
->> +
->> +	if (!i2c_check_functionality(adapter, I2C_FUNC_I2C))
->> +		return -EIO;
->> +
->> +	is31 = devm_kzalloc(&client->dev, sizeof(*is31), GFP_KERNEL);
->> +	if (!is31)
->> +		return -ENOMEM;
->> +
->> +	mutex_init(&is31->lock);
->> +
->> +	err = is31fl319x_parse_dt(&client->dev, is31);
->> +	if (err)
->> +		goto free_mutex;
->> +
->> +	is31->client = client;
->> +	is31->regmap = devm_regmap_init_i2c(client, &regmap_config);
->> +	if (IS_ERR(is31->regmap)) {
->> +		dev_err(&client->dev, "failed to allocate register map\n");
->> +		err = PTR_ERR(is31->regmap);
->> +		goto free_mutex;
->> +	}
->> +
->> +	i2c_set_clientdata(client, is31);
->> +
->> +	/* check for write-reply from chip (we can't read any registers) */
->> +	err = regmap_write(is31->regmap, IS31FL319X_RESET, 0x00);
->> +	if (err < 0) {
->> +		dev_err(&client->dev, "no response from chip write: err = %d\n",
->> +			err);
->> +		err = -EIO; /* does not answer */
->> +		goto free_mutex;
->> +	}
->> +
->> +	/*
->> +	 * Kernel conventions require per-LED led-max-microamp property.
->> +	 * But the chip does not allow to limit individual LEDs.
->> +	 * So we take minimum from all subnodes for safety of hardware.
->> +	 */
->> +	for (i = 0; i < is31->cdef->num_leds; i++)
->> +		if (is31->leds[i].configured &&
->> +		    is31->leds[i].max_microamp < aggregated_led_microamp)
->> +			aggregated_led_microamp = is31->leds[i].max_microamp;
->> +
->> +	regmap_write(is31->regmap, IS31FL319X_CONFIG2,
->> +		     is31fl319x_microamp_to_cs(dev, aggregated_led_microamp) |
->> +		     is31fl319x_db_to_gain(is31->audio_gain_db));
->> +
->> +	for (i = 0; i < is31->cdef->num_leds; i++) {
->> +		struct is31fl319x_led *led = &is31->leds[i];
->> +
->> +		if (!led->configured)
->> +			continue;
->> +
->> +		led->chip = is31;
->> +		led->cdev.brightness_set_blocking = is31fl319x_brightness_set;
->> +
->> +		err = devm_led_classdev_register(&client->dev, &led->cdev);
->> +		if (err < 0)
->> +			goto free_mutex;
->> +	}
->> +
->> +	return 0;
->> +
->> +free_mutex:
->> +	mutex_destroy(&is31->lock);
->> +	return err;
->> +}
->> +
->> +static int is31fl319x_remove(struct i2c_client *client)
->> +{
->> +	struct is31fl319x_chip *is31 = i2c_get_clientdata(client);
->> +
->> +	mutex_destroy(&is31->lock);
->> +	return 0;
->> +}
->> +
->> +/*
->> + * i2c-core (and modalias) requires that id_table be properly filled,
->> + * even though it is not used for DeviceTree based instantiation.
->> + */
->> +static const struct i2c_device_id is31fl319x_id[] = {
->> +	{ "is31fl3190" },
->> +	{ "is31fl3191" },
->> +	{ "is31fl3193" },
->> +	{ "is31fl3196" },
->> +	{ "is31fl3199" },
->> +	{ "sn3199" },
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(i2c, is31fl319x_id);
->> +
->> +static struct i2c_driver is31fl319x_driver = {
->> +	.driver   = {
->> +		.name           = "leds-is31fl319x",
->> +		.of_match_table = of_match_ptr(of_is31fl319x_match),
->> +	},
->> +	.probe    = is31fl319x_probe,
->> +	.remove   = is31fl319x_remove,
->> +	.id_table = is31fl319x_id,
->> +};
->> +
->> +module_i2c_driver(is31fl319x_driver);
->> +
->> +MODULE_AUTHOR("H. Nikolaus Schaller <hns@goldelico.com>");
->> +MODULE_AUTHOR("Andrey Utkin <andrey_utkin@fastmail.com>");
->> +MODULE_DESCRIPTION("IS31FL319X LED driver");
->> +MODULE_LICENSE("GPL v2");
->> 
