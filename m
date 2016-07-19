@@ -1,73 +1,76 @@
-From: Jin Guojun <kid.jin@hisilicon.com>
-Subject: [PATCH 1/2] Support SD UHS for hikey-mainline-rebase
-Date: Tue, 19 Jul 2016 15:51:52 +0800
-Message-ID: <1468914713-63347-1-git-send-email-kid.jin@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, adrian.hunter@intel.com, jh80.chung@samsung.com, wsa+renesas@sang-engineering.com, arnd@arndb.de, rmk+kernel@arm.linux.org.uk, shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linuxarm@huawei.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, kid.jin@hisilicon.com
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v4 0/2] driver: leds: is31fl319x dimmable LED driver
+Date: Tue, 19 Jul 2016 10:03:30 +0200
+Message-ID: <cover.1468915411.git.hns@goldelico.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, drivshin.allworx@gmail.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: j00226943 <j00226943@notesmail.huawei.com>
+Changes V4 (mostly fixed by Andrey Utkin):
+* Fix struct is31fl319x_driver alignment
+* Rework chip matching as suggested by Jacek Anaszewski
+* Enhance macro-constants names
+* Traverse cdef.num_leds, not MAX_LEDS
+* Fix some checkpatch --strict notices
+* Fixup for MAX_LEDS -> cdef->num_leds
+* Fix lots of review notices
+    - macrodef for bits shift
+     - drop dev_err() on parse_dt() fail (thus inside parse_dt() every
+       failure must give a proper message)
+     - of_node_put() where needed
+     - rework is31fl319x_microamp_to_cs()
+     - destroy mutex properly
+* remove note that it is based on tca6507 driver (has deviated completely) (fixed by hns)
+* reject if any led current < current_min (fixed by hns)
+* simplify helper function is31fl319x_microamp_to_cs and round down (fixed by hns)
+* Drop extra empty line in Documentation/devicetree/bindings/leds/is31fl319x.txt
+* remove led-max-microamps global property in bindings documentation (fixed by hns)
 
-Two more changes:
+2016-07-08 21:49:42: Changes V3 (mostly done by Andrey Utkin):
+* general coding style improvements
+* added a mutex to properly serialize multiple calls to set_backlight
+* use regmap defaults (suggested by Jacek Anaszewski)
+* improve DT parsing (suggested by Jacek Anaszewski)
+* define dependency on REGMAP_I2C
+* minor code improvements
 
-Before we send cmd,we need to set CMD bit29 to
-1 so that CMD and DATA sent to card through the HOLD Register,
-This is the explication in synosys host:To meet the relatively
-high Input Hold Time requirement for SDR12, SDR25, and other MMC
-speed modes, you should program bit[29]use_hold_Reg of the CMD
-register to 1'b1; the output data is then registered again in the
-cclk_in_drv domain by using the Hold Register as shown in Path B
-of Figure 10-8. However, for the higher speed modes of SDR104, SDR50
-and DDR50, you can meet the much smaller Input Hold Time requirement
-of 0.8ns by bypassing the Hold Register (Path A in Figure 10-8,
-programming CMD.use_hold_reg = 1'b0) and then adding delay elements
-on the output path as indicated
+2016-07-06 12:02:47: Changes V2:
+* suggested by David Rivshin
+	* add more "compatible" strings for other chip variants/brands
+	* renumber output <reg> values to expect a range of 1..9
+	* fixes for typos and DT example, Kconfig message
+	* fix location in Makefile and Kconfig
+	* remove some dead/not implemented code
+	* use of_property_read_string for better error handling
+	* coding style improvements
+	* use devm_led_classdev_register and simplify error path
+* suggested by Jacek Anaszewski
+	* fix more typos & writing style
+	* separate bindings document into a second patch
+	* max current property renamed and define uA instead of mA
+	* debugging message improvements
+	* remove platform data and header file completely and therefore require DT
+	* use regmap to handle caching and locking + i2c serialization
+* suggested by Rob Herring
+	* bindings documentation style improvements
 
-We have no tuning function in our drivers,so we must do the
-Function piling when we init UHS card.
+V1: 2016-04-18 20:43:18:
+This patch adds a driver for the is31fl3196/99 dimmable dual/triple rgb
+controller chips from ISSI.
 
-Signed-off-by: Jin Guojun <kid.jin@hisilicon.com>
----
- drivers/mmc/host/dw_mmc-k3.c | 6 ++++++
- drivers/mmc/host/dw_mmc.c    | 2 ++
- 2 files changed, 8 insertions(+)
+H. Nikolaus Schaller (2):
+  led: is31fl319x: 1/3/6/9-channel light effect led driver
+  Bindings documentation for ISSI is31fl319x driver
 
-diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
-index 63c2e2e..2cbfcc7 100644
---- a/drivers/mmc/host/dw_mmc-k3.c
-+++ b/drivers/mmc/host/dw_mmc-k3.c
-@@ -125,10 +125,16 @@ static void dw_mci_hi6220_set_ios(struct dw_mci *host, struct mmc_ios *ios)
- 	host->bus_hz = clk_get_rate(host->biu_clk);
- }
- 
-+static void dw_mci_hi6220_prepare_command(struct dw_mci *host, u32 *cmdr)
-+{
-+	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
-+}
-+
- static const struct dw_mci_drv_data hi6220_data = {
- 	.switch_voltage		= dw_mci_hi6220_switch_voltage,
- 	.set_ios		= dw_mci_hi6220_set_ios,
- 	.parse_dt		= dw_mci_hi6220_parse_dt,
-+	.prepare_command        = dw_mci_hi6220_prepare_command,
- };
- 
- static const struct of_device_id dw_mci_k3_match[] = {
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 9dd1bd3..047e116 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -1564,6 +1564,8 @@ static int dw_mci_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 
- 	if (drv_data && drv_data->execute_tuning)
- 		err = drv_data->execute_tuning(slot, opcode);
-+	else
-+		err = 0;
- 	return err;
- }
- 
+ .../devicetree/bindings/leds/is31fl319x.txt        |  56 +++
+ drivers/leds/Kconfig                               |  12 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-is31fl319x.c                     | 442 +++++++++++++++++++++
+ 4 files changed, 511 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/is31fl319x.txt
+ create mode 100644 drivers/leds/leds-is31fl319x.c
+
 -- 
-1.8.3.2
+2.7.3
