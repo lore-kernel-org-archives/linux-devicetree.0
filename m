@@ -1,67 +1,130 @@
-From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: socfpga: add bindings doc for arria10 fpga
- manager
-Date: Tue, 19 Jul 2016 06:45:18 -0700
-Message-ID: <alpine.DEB.2.10.1607190644580.2795@atull-730U3E-740U3E>
-References: <20160712190709.5964-1-atull@opensource.altera.com> <20160712190709.5964-2-atull@opensource.altera.com> <CAAtXAHdFKOoYa0tWrO8=COZXAFN5rNM2-w6sR3H9cMCpT5uqxw@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2] drivers/perf: arm-pmu: Handle per-interrupt affinity
+ mask
+Date: Tue, 19 Jul 2016 14:46:40 +0100
+Message-ID: <578E2F40.1000309@arm.com>
+References: <1467815627-4061-1-git-send-email-marc.zyngier@arm.com>
+ <CAMuHMdXU6C=jFD16Jj3NFNawiY0YEpQDZSbL+T4bLgUOG3nTUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAtXAHdFKOoYa0tWrO8=COZXAFN5rNM2-w6sR3H9cMCpT5uqxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXU6C=jFD16Jj3NFNawiY0YEpQDZSbL+T4bLgUOG3nTUQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Heiko Stuebner <heiko@sntech.de>, cf@rock-chips.com, huangtao@rock-chips.com, Xu Jianqun <jay.xu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 17 Jul 2016, Moritz Fischer wrote:
+Hi Geert,
 
-> Acked-By: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-
-Thanks Moritz!
-
-Alan
-
+On 19/07/16 14:25, Geert Uytterhoeven wrote:
+> Hi Marc, Catalin, Will,
 > 
-> On Tue, Jul 12, 2016 at 12:07 PM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> > Add a device tree bindings document for the SoCFPGA Arria10
-> > FPGA Manager driver.
-> >
-> > Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > ---
-> >  .../bindings/fpga/altera-socfpga-a10-fpga-mgr.txt     | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
-> > new file mode 100644
-> > index 0000000..2fd8e7a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
-> > @@ -0,0 +1,19 @@
-> > +Altera SOCFPGA Arria10 FPGA Manager
-> > +
-> > +Required properties:
-> > +- compatible : should contain "altr,socfpga-a10-fpga-mgr"
-> > +- reg        : base address and size for memory mapped io.
-> > +               - The first index is for FPGA manager register access.
-> > +               - The second index is for writing FPGA configuration data.
-> > +- resets     : Phandle and reset specifier for the device's reset.
-> > +- clocks     : Clocks used by the device.
-> > +
-> > +Example:
-> > +
-> > +       fpga_mgr: fpga-mgr@ffd03000 {
-> > +               compatible = "altr,socfpga-a10-fpga-mgr";
-> > +               reg = <0xffd03000 0x100
-> > +                      0xffcfe400 0x20>;
-> > +               clocks = <&l4_mp_clk>;
-> > +               resets = <&rst FPGAMGR_RESET>;
-> > +       };
-> > --
-> > 2.9.1
-> >
+> On Wed, Jul 6, 2016 at 4:33 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+>> On a big-little system, PMUs can be wired to CPUs using per CPU
+>> interrups (PPI). In this case, it is important to make sure that
+>> the enable/disable do happen on the right set of CPUs.
+>>
+>> So instead of relying on the interrupt-affinity property, we can
+>> use the actual percpu affinity that DT exposes as part of the
+>> interrupt specifier. The DT binding is also updated to reflect
+>> the fact that the interrupt-affinity property shouldn't be used
+>> in that case.
+>>
+>> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+>> ---
+>> * From v1:
+>>   - propagate the error if irq_get_percpu_devid_partition fails
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This patch, which is commit 19a469a58720ea96 in arm64/for-next/core, broke
+> the PMU on r8a7740/armadillo800eva:
+> 
+>     -hw perfevents: enabled with armv7_cortex_a9 PMU driver, 7
+> counters available
+>     +hw perfevents: /pmu: failed to probe PMU!
+>     +hw perfevents: /pmu: failed to register PMU devices!
+>     +armv7-pmu: probe of pmu failed with error -22
+> 
+> This is a single-core Cortex A9.
+> 
+>>  Documentation/devicetree/bindings/arm/pmu.txt |  4 +++-
+>>  drivers/perf/arm_pmu.c                        | 27 ++++++++++++++++++++++-----
+>>  2 files changed, 25 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+>> index 74d5417..61c8b46 100644
+>> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+>> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+>> @@ -39,7 +39,9 @@ Optional properties:
+>>                         When using a PPI, specifies a list of phandles to CPU
+>>                        nodes corresponding to the set of CPUs which have
+>>                        a PMU of this type signalling the PPI listed in the
+>> -                      interrupts property.
+>> +                      interrupts property, unless this is already specified
+>> +                      by the PPI interrupt specifier itself (in which case
+>> +                      the interrupt-affinity property shouldn't be present).
+>>
+>>                         This property should be present when there is more than
+>>                        a single SPI.
+> 
+> On a single core, there's only a single SPI, hence there's no need for an
+> "interrupt-affinity" property.
+> 
+>> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+>> index 140436a..8e4d7f5 100644
+>> --- a/drivers/perf/arm_pmu.c
+>> +++ b/drivers/perf/arm_pmu.c
+>> @@ -961,9 +964,23 @@ static int of_pmu_irq_cfg(struct arm_pmu *pmu)
+>>                 i++;
+>>         } while (1);
+>>
+>> -       /* If we didn't manage to parse anything, claim to support all CPUs */
+>> -       if (cpumask_weight(&pmu->supported_cpus) == 0)
+>> -               cpumask_setall(&pmu->supported_cpus);
+>> +       /* If we didn't manage to parse anything, try the interrupt affinity */
+>> +       if (cpumask_weight(&pmu->supported_cpus) == 0) {
+>> +               if (!using_spi) {
+> 
+> However, using_spi is never set to true in the absence of that property,
+> causing the wrong branch to be taken...
+> 
+>> +                       /* If using PPIs, check the affinity of the partition */
+>> +                       int ret, irq;
+>> +
+>> +                       irq = platform_get_irq(pdev, 0);
+>> +                       ret = irq_get_percpu_devid_partition(irq, &pmu->supported_cpus);
+> 
+> ... and ret to become -22 here.
+
+Thanks for the thorough analysis. Could you please give the following
+patchlet a go:
+
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index 2513365..9275e08 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -958,11 +958,12 @@ static int of_pmu_irq_cfg(struct arm_pmu *pmu)
+ 
+ 	/* If we didn't manage to parse anything, try the interrupt affinity */
+ 	if (cpumask_weight(&pmu->supported_cpus) == 0) {
+-		if (!using_spi) {
++		int irq = platform_get_irq(pdev, 0);
++
++		if (irq_is_percpu(irq)) {
+ 			/* If using PPIs, check the affinity of the partition */
+-			int ret, irq;
++			int ret;
+ 
+-			irq = platform_get_irq(pdev, 0);
+ 			ret = irq_get_percpu_devid_partition(irq, &pmu->supported_cpus);
+ 			if (ret) {
+ 				kfree(irqs);
+
+
+and let me know if that helps?
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
