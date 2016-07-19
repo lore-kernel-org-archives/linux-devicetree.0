@@ -1,64 +1,58 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: dt_to_config, use full path for dtx_diff
-Date: Mon, 18 Jul 2016 21:15:16 -0700
-Message-ID: <CA+rpMbLeYdrC3RVBN2Yku+uAAwM23ABct+rH5_eZ3QonxjuFfw@mail.gmail.com>
-References: <576DD6B9.2040303@gmail.com> <CAL_JsqKUFR4uX24rV3hoYCEEZ-osDvycM12v1ome3-R3jNORZw@mail.gmail.com>
- <578D6279.9020004@gmail.com> <CAL_JsqJO98NsoG2RSSa7osZEzaiC8RrYigiwt_nJBCtUU1a8HA@mail.gmail.com>
- <CA+rpMbKm8+S5yrbjAMg7K2J8ThBZhyyQ-iJ8_6+osxHUGqKwtQ@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 2/2] power: Adds support for Smart Battery System
+ Manager
+Date: Tue, 19 Jul 2016 06:17:29 +0200
+Message-ID: <20160719041729.GC1640@katana>
+References: <1bIiDr-0004G1-0P>
+ <1468349295-4935-1-git-send-email-karl-heinz@schneider-inet.de>
+ <1468349295-4935-3-git-send-email-karl-heinz@schneider-inet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+rpMbKm8+S5yrbjAMg7K2J8ThBZhyyQ-iJ8_6+osxHUGqKwtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GPJrCs/72TxItFYR"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468349295-4935-3-git-send-email-karl-heinz@schneider-inet.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 18, 2016 at 8:00 PM, Gaurav Minocha
-<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Jul 18, 2016 at 7:40 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, Jul 18, 2016 at 6:12 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On 07/18/16 15:18, Rob Herring wrote:
->>>> On Fri, Jun 24, 2016 at 7:56 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
->>>>>
->>>>> Do not require dtx_diff to be in $PATH.
->>>>>
->>>>> dt_to_config already needs to be run from the root directory of a kernel
->>>>> tree so use scripts/dtc/dtx_diff instead of dtx_diff.
->>>>
->>>> Okay, now I get a bit further. I get this message even if I set my
->>>> .config file on the command line:
->>>>
->>>> grep: ./.config: No such file or directory
->>>
->>> All of the following work for me:
->>>
->>>   scripts/dtc/dt_to_config --config .config arch/arm/boot/dts/highbank.dts
->>>
->>>   scripts/dtc/dt_to_config --config=.config arch/arm/boot/dts/highbank.dts
->>>
->>>   scripts/dtc/dt_to_config --config ./.config arch/arm/boot/dts/highbank.dts
->>>
->>>   scripts/dtc/dt_to_config --config=./.config arch/arm/boot/dts/highbank.dts
->>>
->>> What is the exact command line you are using?
->>
->> scripts/dtc/dt_to_config -c .build-arm/.config --config-format
->> arch/arm/boot/dts/highbank.dts
->>
-> Above command works for me.
->
-My bad, cleaned my local repo. Now, I can see this error. Will get back!
 
->>>
->>> Just to confirm, you are in the root directory of the kernel source tree
->>> and your .config is in the same directory (since you specified "./.config").
->>
->> I'm in the root, but .config is not.
->>
->> Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--GPJrCs/72TxItFYR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> +	data->muxc = i2c_mux_alloc(adapter, dev, SBSM_MAX_BATS, 0,
+> +				   I2C_MUX_LOCKED, &sbsm_select, NULL);
+> +	if (!data->muxc) {
+> +		dev_err(dev, "failed to alloc i2c mux\n");
+
+Don't print errors on ENOMEM.
+
+Other than that, looks good to me, yet Peter has more insight to
+i2c-muxes these days.
+
+
+--GPJrCs/72TxItFYR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXjanZAAoJEBQN5MwUoCm2GIYQAKSkSVgD9XZRQ9tPpAuqkWpY
+32tKIbgXaBX3ZCj2VIftzI9U7S7EgipDl9D2ikVUOOf+WVWmtSbp4nKhA1S8TQlv
+0vQo2w7WdB0a51fOrl/aMh+bkrKdPKK8iXPP75uY5j2P0GVXhEJau9x/Sm47SNur
+jL0GTbahD8QR+dgbpTFT4GYGyxK9uPXcLuRRtM2xYFJ1acw7gvMBqUHTkhKS6sjV
+xah6NGxN0n7imil/FF3OC/I1/+hq9Y95OILCiQCD8GpsSCy8v3XWEcXeQof+5Bgx
+m2WhWW2fOTrtFY1+QVc/9XLgC85AEYSfndGQ3B/9UT3T4hGma7+IBCkeGL7Mf/nr
+ESbV/8YGcOBUf084VuCjgBiWdC9BNQttF7hkHN9PjSGeJDu+BVBzC0spy8eotFby
+G59HxYWLk8gcvuKDQCwXJZTlRCuizLd1KcNCnIhQHrGQ5vqTrYS6lD4j9a9xNM8n
+owWgmazfEiS5xMCWNcoGWWa2+3dc4iGlQGlx1Da7NnA4FipFbjcUWwjFTuPztAWw
+NenSieMlOeXM5PBkUPnE9C9iXav/sPTf2MsdhLzJrCaSoXnDHCU39tWPivGVSISU
+2Lw5wEsBeuUga17vxXe4kptLRhFX3jqZHbFk/9nz9cIfb+nIjoVYPHvsh9sQtBoZ
+GvWSWCSNM5pacXzscB/W
+=dzDV
+-----END PGP SIGNATURE-----
+
+--GPJrCs/72TxItFYR--
