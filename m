@@ -1,132 +1,144 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: add spiX aliases for rk3399
-Date: Tue, 19 Jul 2016 12:29:14 -0700
-Message-ID: <20160719192912.GA142821@google.com>
-References: <1468545873-134339-1-git-send-email-briannorris@chromium.org>
- <20160719063955.GE5368@pengutronix.de>
- <2679180.WfB7C6de5F@diego>
- <20160719192754.GA140860@google.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v4] Input: rotary_encoder - support binary encoding of states
+Date: Tue, 19 Jul 2016 21:38:39 +0200
+Message-ID: <1468957119-16458-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160719192754.GA140860-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2016 at 12:27:54PM -0700, Brian Norris wrote:
-> + Rob
-
-+ Rob for real
-
-> Hi,
->=20
-> On Tue, Jul 19, 2016 at 08:56:47PM +0200, Heiko Stuebner wrote:
-> > Am Dienstag, 19. Juli 2016, 08:39:55 schrieb Uwe Kleine-K=F6nig:
-> > > On Thu, Jul 14, 2016 at 06:24:33PM -0700, Brian Norris wrote:
-> > > > It's nicer to see this:
-> > > >     # ls -l /sys/bus/spi/devices/
-> > > >     total 0
-> > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi0.0 ->
-> > > >     ../../../devices/platform/ff1c0000.spi/spi_master/spi0/spi0=
-=2E0
-> > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi1.0 ->
-> > > >     ../../../devices/platform/ff1d0000.spi/spi_master/spi1/spi1=
-=2E0
-> > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi2.0 ->
-> > > >     ../../../devices/platform/ff1e0000.spi/spi_master/spi2/spi2=
-=2E0
-> > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi5.0 ->
-> > > >     ../../../devices/platform/ff200000.spi/spi_master/spi5/spi5=
-=2E0>=20
-> > > > than this:
-> > > >     # ls -l /sys/bus/spi/devices/
-> > > >     total 0
-> > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32763.0 ->
-> > > >     ../../../devices/platform/ff200000.spi/spi_master/spi32763/=
-spi32763.0
-> > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32764.0 ->
-> > > >     ../../../devices/platform/ff1e0000.spi/spi_master/spi32764/=
-spi32764.0
-> > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32765.0 ->
-> > > >     ../../../devices/platform/ff1d0000.spi/spi_master/spi32765/=
-spi32765.0
-> > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32766.0 ->
-> > > >     ../../../devices/platform/ff1c0000.spi/spi_master/spi32766/=
-spi32766.0>=20
-> > > > With the latter, it's much clearer which bus devices are on.
-> > > >=20
-> > > > Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > > > ---
-> > > >=20
-> > > >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > >=20
-> > > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > > > b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index
-> > > > 4c84229789ef..b04abbfd4898 100644
-> > > > --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > > > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > > > @@ -70,6 +70,12 @@
-> > > >=20
-> > > >  		serial2 =3D &uart2;
-> > > >  		serial3 =3D &uart3;
-> > > >  		serial4 =3D &uart4;
-> > > >=20
-> > > > +		spi0 =3D &spi0;
-> > > > +		spi1 =3D &spi1;
-> > > > +		spi2 =3D &spi2;
-> > > > +		spi3 =3D &spi3;
-> > > > +		spi4 =3D &spi4;
-> > > > +		spi5 =3D &spi5;
-> > >=20
-> > > Note that Rob Herring (with his dt-maintainer hat on) doesn't lik=
-e these
-> > > aliases.
-> > > See for example:
-> > > 	http://mid.gmane.org/20160705140546.GA10601@rob-hp-laptop
->=20
-> But why? I believe half the arguments in the linked thread were
-> Catch-22's -- there were no "mainline" users (which is a false target
-> IMO anyway, as Christer Weinigel mentioned somewhere in the thread Ro=
-b
-> linked), and so we couldn't accept more documentation (or users) for =
-the
-> feature. FWIW, my quick grep now shows there are currently 43 mainlin=
-e
-> users.
->=20
-> This feature is very useful. Some of the thread Rob pointed to argued
-> that the indexing isn't HW documentation; in this case, it most
-> certainly is. The RK3399 TRM explicitly has these SPI buses named SPI=
-0,
-> SPI1, SPI2, SPI3, SPI4, and SPI5, and schematics that I've seen use t=
-he
-> same terminology. It is therefore *much* nicer to have my device show=
- up
-> as 'spi2.0' (reflecting their correct HW name) rather than spi32764.0=
-=2E
-> Sometimes I can't even get as far as mounting sysfs to check what thi=
+It's not advisable to use this encoding, but to support existing device=
 s
-> maps to, but having spi2.0 in the kernel log can clearly tell me what
-> device is causing problems.
->=20
-> If Rob can support a better alternative solution, I'd be happy to
-> switch. But I don't understand why we can't use a useful (not just to
-> me, but presumably to at least 43 other independent users, and many
-> more out of tree), existing, and long-supported feature here.
->=20
-> > thanks for the heads up on this. I've dropped this patch again.
->=20
-> :(
->=20
-> Regards,
-> Brian
+add support for this to the driver.
+
+Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+---
+Notes:
+    Changes since (implicit) v1, sent with
+    Message-Id: 1458680914-4533-1-git-send-email-u.kleine-koenig <at> p=
+engutronix.de
+   =20
+     - switch format of dt properties to use strings
+   =20
+    Changes since v2, sent with
+    Message-Id: 1458806232-22403-1-git-send-email-u.kleine-koenig <at> =
+pengutronix.de
+   =20
+     - be more strict about parsing the encoding string
+   =20
+    Changes since v3, sent with
+    Message-Id: 1460055528-13814-1-git-send-email-u.kleine-koenig@pengu=
+tronix.de
+   =20
+     - use device_property_match_string to parse device tree as request=
+ed
+       by Rob Herring.
+
+ .../devicetree/bindings/input/rotary-encoder.txt   |  4 ++++
+ drivers/input/misc/rotary_encoder.c                | 23 ++++++++++++++=
++++++++-
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt=
+ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+index 6c9f0c8a846c..e85ce3dea480 100644
+--- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
++++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+@@ -20,6 +20,8 @@ Optional properties:
+   2: Half-period mode
+   4: Quarter-period mode
+ - wakeup-source: Boolean, rotary encoder can wake up the system.
++- rotary-encoder,encoding: String, the method used to encode steps.
++  Supported are "gray" (the default and more common) and "binary".
+=20
+ Deprecated properties:
+ - rotary-encoder,half-period: Makes the driver work on half-period mod=
+e.
+@@ -34,6 +36,7 @@ Example:
+ 			compatible =3D "rotary-encoder";
+ 			gpios =3D <&gpio 19 1>, <&gpio 20 0>; /* GPIO19 is inverted */
+ 			linux,axis =3D <0>; /* REL_X */
++			rotary-encoder,encoding =3D "gray";
+ 			rotary-encoder,relative-axis;
+ 		};
+=20
+@@ -42,5 +45,6 @@ Example:
+ 			gpios =3D <&gpio 21 0>, <&gpio 22 0>;
+ 			linux,axis =3D <1>; /* ABS_Y */
+ 			rotary-encoder,steps =3D <24>;
++			rotary-encoder,encoding =3D "binary";
+ 			rotary-encoder,rollover;
+ 		};
+diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/r=
+otary_encoder.c
+index c7fc8d4fb080..1588aecafff7 100644
+--- a/drivers/input/misc/rotary_encoder.c
++++ b/drivers/input/misc/rotary_encoder.c
+@@ -28,6 +28,11 @@
+=20
+ #define DRV_NAME "rotary-encoder"
+=20
++enum rotary_encoder_encoding {
++	ROTENC_GRAY,
++	ROTENC_BINARY,
++};
++
+ struct rotary_encoder {
+ 	struct input_dev *input;
+=20
+@@ -37,6 +42,7 @@ struct rotary_encoder {
+ 	u32 axis;
+ 	bool relative_axis;
+ 	bool rollover;
++	enum rotary_encoder_encoding encoding;
+=20
+ 	unsigned int pos;
+=20
+@@ -57,8 +63,9 @@ static unsigned int rotary_encoder_get_state(struct r=
+otary_encoder *encoder)
+=20
+ 	for (i =3D 0; i < encoder->gpios->ndescs; ++i) {
+ 		int val =3D gpiod_get_value_cansleep(encoder->gpios->desc[i]);
++
+ 		/* convert from gray encoding to normal */
+-		if (ret & 1)
++		if (encoder->encoding =3D=3D ROTENC_GRAY && ret & 1)
+ 			val =3D !val;
+=20
+ 		ret =3D ret << 1 | val;
+@@ -213,6 +220,20 @@ static int rotary_encoder_probe(struct platform_de=
+vice *pdev)
+ 	encoder->rollover =3D
+ 		device_property_read_bool(dev, "rotary-encoder,rollover");
+=20
++	if (!device_property_present(dev, "rotary-encoder,encoding") ||
++	    !device_property_match_string(dev, "rotary-encoder,encoding",
++					  "gray")) {
++		dev_info(dev, "gray");
++		encoder->encoding =3D ROTENC_GRAY;
++	} else if (!device_property_match_string(dev, "rotary-encoder,encodin=
+g",
++						 "binary")) {
++		dev_info(dev, "binary");
++		encoder->encoding =3D ROTENC_BINARY;
++	} else {
++		dev_err(dev, "unknown encoding setting\n");
++		return -EINVAL;
++	}
++
+ 	device_property_read_u32(dev, "linux,axis", &encoder->axis);
+ 	encoder->relative_axis =3D
+ 		device_property_read_bool(dev, "rotary-encoder,relative-axis");
+--=20
+2.8.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
