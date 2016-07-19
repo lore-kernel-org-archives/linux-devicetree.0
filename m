@@ -1,43 +1,63 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v7] wlcore: spi: add wl18xx support
-Date: Tue, 19 Jul 2016 10:22:18 +0300
-Message-ID: <87poqaum6t.fsf@kamboji.qca.qualcomm.com>
-References: <1468911482-32560-1-git-send-email-eyalr@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468911482-32560-1-git-send-email-eyalr-l0cyMroinI0@public.gmane.org> (Eyal Reizer's
-	message of "Tue, 19 Jul 2016 09:58:02 +0300")
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH v8 0/3] Add a new Rockchip usb2 phy driver
+Date: Tue, 19 Jul 2016 15:23:41 +0800
+Message-ID: <1468913024-23813-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com, daniel.meng@rock-chips.com, frank.wang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+The newer SoCs (rk3366, rk3399) of Rock-chip take a different usb-phy
+IP block than rk3288 and before, and most of phy-related registers are
+also different from the past, so a new phy driver is required necessarily.
 
-> From: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Add support for using with both wl12xx and wl18xx.
->
-> - all wilink family needs special init command for entering wspi mode.
->   extra clock cycles should be sent after the spi init command while the
->   cs pin is high.
-> - Use inverted chip select for sending a dummy 4 bytes command that
->   completes the init stage.
->
-> Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+These series patches add phy-rockchip-inno-usb2.c and the corresponding
+dt-bindings.
 
-This looks ok in patchwork:
+Changes in v8:
+ - Added support for rk3399 SoC.
+ - Prepare input clock of phy at probe time.
+ - Improved sm_work function to handle phy-port state more clearly.
 
-https://patchwork.kernel.org/patch/9235983/
+Changes in v7:
+ - Renamed functions *usb2phy_resume/*usb2phy_suspend to *usb2phy_power_on/usb2phy_power_off.
 
-Because you used ti.com in S-o-b I assume From should also use ti.com. I
-can fix that before I apply but please confirm that's really the case?
+Changes in v6:
+ - Changed '_' to '-' for otg-id and otg-bvalid property in devicetree bindings.
+ - Fixed the output clock would be disabled more than once while phy-port was going to suspend.
+ - Improved the driver to avoid the currently empty otg-port would cause null-pointer dereferences.
+
+Changes in v5:
+ - Added 'reg' property both in devicetree bindings and driver to match the different phy-blocks.
+
+Changes in v4:
+ - Used 'phy-supply' instead of 'vbus_*-supply'.
+
+Changes in v3:
+ - Supplemented some hardware-description into the devicetree bindings.
+ - Resolved the mapping defect between fixed value in driver and the property
+   in devicetree.
+ - Code cleanup.
+
+Changes in v2:
+ - Specified more hardware-description into the devicetree bindings.
+ - Optimized some process of driver.
+
+Frank Wang (3):
+  Documentation: bindings: add DT documentation for Rockchip USB2PHY
+  phy: rockchip-inno-usb2: add a new driver for Rockchip usb2phy
+  arm64: dts: rockchip: add usb2-phy support for rk3399
+
+ .../bindings/phy/phy-rockchip-inno-usb2.txt        |   64 ++
+ arch/arm64/boot/dts/rockchip/rk3399-evb.dts        |   19 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   47 +-
+ drivers/phy/Kconfig                                |    7 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-rockchip-inno-usb2.c               |  707 ++++++++++++++++++++
+ 6 files changed, 844 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+ create mode 100644 drivers/phy/phy-rockchip-inno-usb2.c
 
 -- 
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
