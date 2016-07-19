@@ -1,79 +1,41 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v6] input: touchscreen: Add generic driver for Silead
- touchscreens
-Date: Tue, 19 Jul 2016 11:44:25 -0700
-Message-ID: <20160719184425.GC19250@dtor-ws>
-References: <1468252304-22850-1-git-send-email-hdegoede@redhat.com>
- <20160716175605.GA4873@rob-hp-laptop>
+From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Subject: Re: [PATCH v3 2/2] power: Adds support for Smart Battery System
+ Manager
+Date: Tue, 19 Jul 2016 20:51:05 +0200
+Message-ID: <1468954265.3053.3.camel@amnesix>
+References: <1bIiDr-0004G1-0P>
+	 <1468349295-4935-1-git-send-email-karl-heinz@schneider-inet.de>
+	 <1468349295-4935-3-git-send-email-karl-heinz@schneider-inet.de>
+	 <20160719041729.GC1640@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160716175605.GA4873@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Wessel Blokzijl <wesselb94@gmail.com>, Siebren Vroegindeweij <siebren.vroegindeweij@gmail.com>, Robert Dolca <robert.dolca@intel.com>, Daniel Jansen <djaniboe@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160719041729.GC1640@katana>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 16, 2016 at 12:56:05PM -0500, Rob Herring wrote:
-> On Mon, Jul 11, 2016 at 05:51:44PM +0200, Hans de Goede wrote:
-> > From: Robert Dolca <robert.dolca@intel.com>
-> > 
-> > This driver adds support for Silead touchscreens. It has been tested
-> > with GSL1680 and GSL3680 touch panels.
-> > 
-> > It supports ACPI and device tree enumeration. Screen resolution,
-> > the maximum number of fingers supported and firmware name are
-> > configurable.
-> > 
-> > Signed-off-by: Robert Dolca <robert.dolca@intel.com>
-> > Signed-off-by: Daniel Jansen <djaniboe@gmail.com>
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> > Changes in v6:
-> > -Default to 5 fingers if max-fingers is not specified
-> > -Improve devicetree binding doc: improve wake-gpios description, use
-> >  "See touchscreen.txt" where applicable
-> > ---
-> >  .../bindings/input/touchscreen/silead_gsl1680.txt  |  36 ++
-> >  drivers/input/touchscreen/Kconfig                  |  13 +
-> >  drivers/input/touchscreen/Makefile                 |   1 +
-> >  drivers/input/touchscreen/silead.c                 | 652 +++++++++++++++++++++
-> >  4 files changed, 702 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> >  create mode 100644 drivers/input/touchscreen/silead.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> > new file mode 100644
-> > index 0000000..1e58d37
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> > @@ -0,0 +1,36 @@
-> > +* GSL 1680 touchscreen controller
-> > +
-> > +Required properties:
-> > +- compatible		  : "silead,gsl1680"
-> > +- reg			  : I2C slave address of the chip (0x40)
-> > +- interrupt-parent	  : a phandle pointing to the interrupt controller
-> > +			    serving the interrupt for this chip
-> > +- interrupts		  : interrupt specification for the gsl1680 interrupt
-> > +- power-gpios		  : Specification for the pin connected to the gsl1680's
-> > +			    shutdown input. This needs to be driven high to take the
-> > +			    gsl1680 out of its low power state
-> > +- touchscreen-size-x	  : See touchscreen.txt
-> > +- touchscreen-size-y	  : See touchscreen.txt
-> > +- touchscreen-max-fingers : maximum number of fingers the touchscreen can detect
+Hi Wolfram,
+
+Am Dienstag, den 19.07.2016, 06:17 +0200 schrieb Wolfram Sang:
+> > +	data->muxc = i2c_mux_alloc(adapter, dev, SBSM_MAX_BATS, 0,
+> > +				   I2C_MUX_LOCKED, &sbsm_select, NULL);
+> > +	if (!data->muxc) {
+> > +		dev_err(dev, "failed to alloc i2c mux\n");
 > 
-> If you name it like a standard property, then it should be documented in 
-> touchscreen.txt.
+> Don't print errors on ENOMEM.
 
-Actually this is very much Silead-specific wart, I'd rather we called it
-"max-fingers" or "silead,max-fingers" to illustrate that it is not at
-all a generic property.
+Will be fixed on next revision.
 
-Rob, will you be OK with it?
+> 
+> Other than that, looks good to me, yet Peter has more insight to
+> i2c-muxes these days.
+> 
+Tanks for review. 
 
-Thanks.
-
+Will wait another few days before sending a new revision, hence changes
+are rather small.
 -- 
-Dmitry
+Karl-Heinz
