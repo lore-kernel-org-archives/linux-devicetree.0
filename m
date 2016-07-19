@@ -1,134 +1,90 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: [PATCH v8 3/3] arm64: dts: rockchip: add usb2-phy support for rk3399
-Date: Tue, 19 Jul 2016 15:28:31 +0800
-Message-ID: <1468913311-23977-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com, daniel.meng@rock-chips.com, frank.wang@rock-chips.com
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 0/4] pwm: add support for ChromeOS EC PWM
+Date: Tue, 19 Jul 2016 08:37:17 +0100
+Message-ID: <20160719073717.GE17074@dell>
+References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
+ <20160718084928.GA17074@dell>
+ <20160718091029.GA32259@ulmo.ba.sec>
+ <20160718132426.GB17074@dell>
+ <20160718140400.GA22297@ulmo.ba.sec>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160718140400.GA22297@ulmo.ba.sec>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Brian Norris <briannorris@chromium.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts |   19 +++++++++++
- arch/arm64/boot/dts/rockchip/rk3399.dtsi    |   47 ++++++++++++++++++++++++++-
- 2 files changed, 65 insertions(+), 1 deletion(-)
+On Mon, 18 Jul 2016, Thierry Reding wrote:
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-index 1a3eb14..31d4828 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-@@ -69,6 +69,15 @@
- 		regulator-max-microvolt = <3300000>;
- 	};
- 
-+	vbus_host: vbus-host-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host_vbus_drv>;
-+		regulator-name = "vbus_host";
-+	};
-+
- 	vcc_phy: vcc-phy-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc_phy";
-@@ -93,6 +102,16 @@
- 	status = "okay";
- };
- 
-+&u2phy0_host {
-+	phy-supply = <&vbus_host>;
-+	status = "okay";
-+};
-+
-+&u2phy1_host {
-+	phy-supply = <&vbus_host>;
-+	status = "okay";
-+};
-+
- &usb_host0_ehci {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index d7f8e06..0383785 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -221,6 +221,8 @@
- 		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>;
- 		clock-names = "hclk_host0", "hclk_host0_arb";
-+		phys = <&u2phy0_host>;
-+		phy-names = "u2phy0";
- 		status = "disabled";
- 	};
- 
-@@ -239,6 +241,8 @@
- 		interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>;
- 		clock-names = "hclk_host1", "hclk_host1_arb";
-+		phys = <&u2phy1_host>;
-+		phy-names = "u2phy1";
- 		status = "disabled";
- 	};
- 
-@@ -481,8 +485,42 @@
- 	};
- 
- 	grf: syscon@ff770000 {
--		compatible = "rockchip,rk3399-grf", "syscon";
-+		compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
- 		reg = <0x0 0xff770000 0x0 0x10000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		u2phy0: usb2-phy@e450 {
-+			compatible = "rockchip,rk3399-usb2phy";
-+			reg = <0xe450 0x10>;
-+			clocks = <&cru SCLK_USB2PHY0_REF>;
-+			clock-names = "phyclk";
-+			#clock-cells = <0>;
-+			clock-output-names = "clk_usbphy0_480m";
-+
-+			u2phy0_host: host-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "linestate";
-+				status = "disabled";
-+			};
-+		};
-+
-+		u2phy1: usb2-phy@e460 {
-+			compatible = "rockchip,rk3399-usb2phy";
-+			reg = <0xe460 0x10>;
-+			clocks = <&cru SCLK_USB2PHY1_REF>;
-+			clock-names = "phyclk";
-+			#clock-cells = <0>;
-+			clock-output-names = "clk_usbphy1_480m";
-+
-+			u2phy1_host: host-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "linestate";
-+				status = "disabled";
-+			};
-+		};
- 	};
- 
- 	watchdog@ff840000 {
-@@ -1009,5 +1047,12 @@
- 					<1 14 RK_FUNC_1 &pcfg_pull_none>;
- 			};
- 		};
-+
-+		usb2 {
-+			host_vbus_drv: host-vbus-drv {
-+				rockchip,pins =
-+					<4 25 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+		};
- 	};
- };
--- 
-1.7.9.5
+> On Mon, Jul 18, 2016 at 02:24:26PM +0100, Lee Jones wrote:
+> > On Mon, 18 Jul 2016, Thierry Reding wrote:
+> >=20
+> > > On Mon, Jul 18, 2016 at 09:49:28AM +0100, Lee Jones wrote:
+> > > > On Fri, 15 Jul 2016, Brian Norris wrote:
+> > > > > This is the 4th (and final?) version of my series to support =
+the new ChromeOS
+> > > > > EC PWM API, so we can control, e.g., a PWM backlight when its=
+ PWM is attached
+> > > > > to the EC. It uses Boris's latest "atomic" hooks for the PWM =
+API (i.e., the
+> > > > > ->apply() callback), which were recently merged.
+> > > > >=20
+> > > > > Pulled and adapted the cros_ec_cmd_xfer_status() helper from =
+this patch, with
+> > > > > some minor modifications:
+> > > > >=20
+> > > > > https://lkml.org/lkml/2016/4/12/342
+> > > > >=20
+> > > > > Note that after some style bikeshedding, I proposed to put of=
+f rewriting the
+> > > > > entire cros_ec_commands.h header at the moment, due to the sh=
+ared nature of
+> > > > > this file. Follow up here:
+> > > > >=20
+> > > > > https://bugs.chromium.org/p/chromium/issues/detail?id=3D62112=
+3
+> > > > >=20
+> > > > > As this touches MFD (sort of), drivers/platform/chrome/, and =
+drivers/pwm/, I'm
+> > > > > still not sure who it should all go through: Lee, Thierry, or=
+ Olof?
+> > > >=20
+> > > > I usually take this type of submission through the MFD tree, al=
+though
+> > > > it's too late in the day to make it into v4.8.
+> > > >=20
+> > > > Which Acks are you missing?
+> > >=20
+> > > I'm willing to take this through the PWM tree if you're okay with=
+ the
+> > > MFD changes. I can put the MFD changes into a separate branch and=
+ you
+> > > could pull that in if you needed to resolve any dependencies, whi=
+ch I
+> > > think would be quite unlikely if you've already closed your tree.
+> >=20
+> > Are you saying that you're willing to take these straight into the
+> > merge-window, with no soak in -next?
+>=20
+> There's still a bit of time to let it soak in -next, but I'm not over=
+ly
+> concerned given that this is purely additions of code, so there can't=
+ be
+> any regressions.
+
+No problem my side then.  Apply away.
+
+Before doing so, can you see if there are any clashes with my
+mfd-for-next branch?  If conflicts occur, please construct an
+immutable tag I can pull from.  That way, I can base my branch on it
+and deal with the fallout myself.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
