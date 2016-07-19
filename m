@@ -1,150 +1,116 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: add spiX aliases for rk3399
-Date: Wed, 20 Jul 2016 00:18:40 +0200
-Message-ID: <1841177.NDa9D09EGz@diego>
-References: <1468545873-134339-1-git-send-email-briannorris@chromium.org> <20160719192754.GA140860@google.com> <20160719192912.GA142821@google.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific
+ power-saving options
+Date: Wed, 20 Jul 2016 00:47:28 +0200
+Message-ID: <20160719224728.GP7132@piout.net>
+References: <1465970379-14703-1-git-send-email-andrew.smirnov@gmail.com>
+ <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com>
+ <20160619142934.GA8522@rob-hp-laptop>
+ <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
+ <20160621204904.GA9779@rob-hp-laptop>
+ <20160621210739.GY5809@piout.net>
+ <CAHQ1cqGRqhOAqfJZEixkxAHZ4Y8dd-hD__T1ci0LS28Orphs3Q@mail.gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160719192912.GA142821@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBAW4XK6AKGQEOHKV3PY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAHQ1cqGRqhOAqfJZEixkxAHZ4Y8dd-hD__T1ci0LS28Orphs3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 19. Juli 2016, 12:29:14 schrieb Brian Norris:
-> On Tue, Jul 19, 2016 at 12:27:54PM -0700, Brian Norris wrote:
-> > + Rob
->=20
-> + Rob for real
->=20
-> > Hi,
-> >=20
-> > On Tue, Jul 19, 2016 at 08:56:47PM +0200, Heiko Stuebner wrote:
-> > > Am Dienstag, 19. Juli 2016, 08:39:55 schrieb Uwe Kleine-K=F6nig:
-> > > > On Thu, Jul 14, 2016 at 06:24:33PM -0700, Brian Norris wrote:
-> > > > > It's nicer to see this:
-> > > > >     # ls -l /sys/bus/spi/devices/
-> > > > >     total 0
-> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi0.0 ->
-> > > > >     ../../../devices/platform/ff1c0000.spi/spi_master/spi0/sp=
-i0.0
-> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi1.0 ->
-> > > > >     ../../../devices/platform/ff1d0000.spi/spi_master/spi1/sp=
-i1.0
-> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi2.0 ->
-> > > > >     ../../../devices/platform/ff1e0000.spi/spi_master/spi2/sp=
-i2.0
-> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi5.0 ->
-> > > > >     ../../../devices/platform/ff200000.spi/spi_master/spi5/sp=
-i5.0>
-> > > > >=20
-> > > > > than this:
-> > > > >     # ls -l /sys/bus/spi/devices/
-> > > > >     total 0
-> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32763.0 ->
-> > > > >     ../../../devices/platform/ff200000.spi/spi_master/spi3276=
-3/spi32
-> > > > >     763.0
-> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32764.0 ->
-> > > > >     ../../../devices/platform/ff1e0000.spi/spi_master/spi3276=
-4/spi32
-> > > > >     764.0
-> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32765.0 ->
-> > > > >     ../../../devices/platform/ff1d0000.spi/spi_master/spi3276=
-5/spi32
-> > > > >     765.0
-> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32766.0 ->
-> > > > >     ../../../devices/platform/ff1c0000.spi/spi_master/spi3276=
-6/spi32
-> > > > >     766.0>
-> > > > >=20
-> > > > > With the latter, it's much clearer which bus devices are on.
-> > > > >=20
-> > > > > Signed-off-by: Brian Norris <briannorris@chromium.org>
-> > > > > ---
-> > > > >=20
-> > > > >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++++
-> > > > >  1 file changed, 6 insertions(+)
-> > > > >=20
-> > > > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > > > > b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index
-> > > > > 4c84229789ef..b04abbfd4898 100644
-> > > > > --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > > > > @@ -70,6 +70,12 @@
-> > > > >=20
-> > > > >  		serial2 =3D &uart2;
-> > > > >  		serial3 =3D &uart3;
-> > > > >  		serial4 =3D &uart4;
-> > > > >=20
-> > > > > +		spi0 =3D &spi0;
-> > > > > +		spi1 =3D &spi1;
-> > > > > +		spi2 =3D &spi2;
-> > > > > +		spi3 =3D &spi3;
-> > > > > +		spi4 =3D &spi4;
-> > > > > +		spi5 =3D &spi5;
-> > > >=20
-> > > > Note that Rob Herring (with his dt-maintainer hat on) doesn't l=
-ike
-> > > > these
-> > > > aliases.
-> > > >=20
-> > > > See for example:
-> > > > 	http://mid.gmane.org/20160705140546.GA10601@rob-hp-laptop
-> >=20
-> > But why? I believe half the arguments in the linked thread were
-> > Catch-22's -- there were no "mainline" users (which is a false targ=
-et
-> > IMO anyway, as Christer Weinigel mentioned somewhere in the thread =
-Rob
-> > linked), and so we couldn't accept more documentation (or users) fo=
-r the
-> > feature. FWIW, my quick grep now shows there are currently 43 mainl=
-ine
-> > users.
-> >=20
-> > This feature is very useful. Some of the thread Rob pointed to argu=
-ed
-> > that the indexing isn't HW documentation; in this case, it most
-> > certainly is. The RK3399 TRM explicitly has these SPI buses named S=
-PI0,
-> > SPI1, SPI2, SPI3, SPI4, and SPI5, and schematics that I've seen use=
- the
-> > same terminology. It is therefore *much* nicer to have my device sh=
-ow up
-> > as 'spi2.0' (reflecting their correct HW name) rather than spi32764=
-=2E0.
-> > Sometimes I can't even get as far as mounting sysfs to check what t=
-his
-> > maps to, but having spi2.0 in the kernel log can clearly tell me wh=
-at
-> > device is causing problems.
-> >=20
-> > If Rob can support a better alternative solution, I'd be happy to
-> > switch. But I don't understand why we can't use a useful (not just =
-to
-> > me, but presumably to at least 43 other independent users, and many
-> > more out of tree), existing, and long-supported feature here.
+On 21/06/2016 at 19:34:56 -0700, Andrey Smirnov wrote :
+> On Tue, Jun 21, 2016 at 2:07 PM, Alexandre Belloni
+> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On 21/06/2016 at 15:49:04 -0500, Rob Herring wrote :
+> >> So wouldn't you want to set one mode while running and the lower power
+> >> mode while suspended? I'm trying to understand the frequency of changing
+> >> this. If it is always one setting for a board, then yes it belongs in
+> >> DT. If it is a user decision, then it probably shouldn't be in DT.
+> >>
+> >> Seeing as these are reused, I've probably already had this discussion...
+> >>
+> >
+> > I would agree with Rob here. It may be better to provide a sysfs
+> > interface to configure that particular behavior.
+> 
+> I don't see any value in doing that, could you give me a realistic
+> example of a scenario in which a user would want to spend some of
+> uptime with RTC oscillator fault detection/glitch filtering disabled
+> and then enable it?
+> 
 
-Personally, I don't have any real opinion on this but the argument soun=
-ds=20
-plausible to me (aka they are named with numbers in every manual, schem=
-atics)=20
-so it might be helpful to have that around - similar to i2c that is in =
-the=20
-dtsi already.
+Well, the issue is not being dynamic, it is differentiating between
+hardware description and user configuration. Configuration must not be in
+DT. And this choice is definitively not hardware related (as opposed to
+the trickle charging that depends on the battery that is used on the
+board).
 
-I think I remember Doug having a similar discussion around mmc-aliases =
-some=20
-time ago - that met opposition as well [0] - although I guess the numbe=
-ring=20
-was a bit more arbitary there.
+> > This is usually ok because the use case is:
+> >  - the RTC is not configured, time has never been set
+> >  - time is set for the first time
+> >  - the user can set the oscillator mode/detection/...
+> 
+> Unfortunately exposing that feature using sysfs gives you a leaky
+> abstraction and your userspace instead of using a generic RTC starts
+> using DS1341 RTC. So to accommodate for that a user would have to:
+> 
+> a) Write + integrate a userspace tool to set the mode (which IMHO is
+> decided upon once and doesn't change)
+> b) If a board design is new and there's a chance of moving this chip
+> to a different I2C bus, the code above would have to account for that
+> and not hardcore sysfs path
+> c) If board's BSP is intended to be used in multiple generations of a
+> product, not all of which would use DS1341, it would be necessary to
+> accommodate for that by either more code in the tool or an additional
+> BSP build configuration variant
+> 
 
-I guess we'll just see what Rob says.
+Well, it doesn't leak abstraction as long as all the RTC that are able
+to disable the oscillator failure detection use the same ABI.
 
+> >  - on subsequent reboots, the mode is kept alongside the time and date
+> >
+> 
+> This assumes that your bootloader leaves those mode bits alone.
+> 
 
-Heiko
+Well, if that is not the case, the bootloader as to be fixed anyway and
+silently changing the configuration back using DT is probably worse.
 
-[0] https://lkml.org/lkml/2016/4/29/610
+> > I would advise against trying to set a mode automatically in the driver
+> > because you may have unexpected power cuts and it may then let the RTC
+> > consume more power than what you really want.
+> >
+> 
+> I fell like I am not understanding you correctly.  Why would moving
+> configuration decision logic into userspace improve the situation in
+> case of unexpected power loss?
+> 
+
+I was reacting to Rob's idea to running in the lower power mode when
+suspend. I'm pretty sure this is not a good idea. I'd leave the whole
+policy to userspace.
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
