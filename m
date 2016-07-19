@@ -1,56 +1,219 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: dt_to_config, use full path for dtx_diff
-Date: Mon, 18 Jul 2016 21:40:16 -0500
-Message-ID: <CAL_JsqJO98NsoG2RSSa7osZEzaiC8RrYigiwt_nJBCtUU1a8HA@mail.gmail.com>
-References: <576DD6B9.2040303@gmail.com> <CAL_JsqKUFR4uX24rV3hoYCEEZ-osDvycM12v1ome3-R3jNORZw@mail.gmail.com>
- <578D6279.9020004@gmail.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] usb: chipidea: imx: set over current polarity per
+ dts setting
+Date: Tue, 19 Jul 2016 10:44:50 +0800
+Message-ID: <20160719024450.GB26038@shlinux2>
+References: <1468840547-17899-1-git-send-email-jun.li@nxp.com>
+ <1468840547-17899-4-git-send-email-jun.li@nxp.com>
+ <20160719015729.GA26038@shlinux2>
+ <AM4PR04MB21300689DA05A4D36F13607B89370@AM4PR04MB2130.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <578D6279.9020004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <AM4PR04MB21300689DA05A4D36F13607B89370-WOempg8NbQQzjTQnahXoOs9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 18, 2016 at 6:12 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 07/18/16 15:18, Rob Herring wrote:
->> On Fri, Jun 24, 2016 at 7:56 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> From: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
->>>
->>> Do not require dtx_diff to be in $PATH.
->>>
->>> dt_to_config already needs to be run from the root directory of a kernel
->>> tree so use scripts/dtc/dtx_diff instead of dtx_diff.
->>
->> Okay, now I get a bit further. I get this message even if I set my
->> .config file on the command line:
->>
->> grep: ./.config: No such file or directory
->
-> All of the following work for me:
->
->   scripts/dtc/dt_to_config --config .config arch/arm/boot/dts/highbank.dts
->
->   scripts/dtc/dt_to_config --config=.config arch/arm/boot/dts/highbank.dts
->
->   scripts/dtc/dt_to_config --config ./.config arch/arm/boot/dts/highbank.dts
->
->   scripts/dtc/dt_to_config --config=./.config arch/arm/boot/dts/highbank.dts
->
-> What is the exact command line you are using?
+On Tue, Jul 19, 2016 at 02:31:41AM +0000, Jun Li wrote:
+> Hi
+> 
+> > -----Original Message-----
+> > From: Peter Chen [mailto:hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+> > Sent: Tuesday, July 19, 2016 9:57 AM
+> > To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+> > Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> > shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Subject: Re: [PATCH 4/4] usb: chipidea: imx: set over current polarity per
+> > dts setting
+> > 
+> > On Mon, Jul 18, 2016 at 07:15:47PM +0800, Li Jun wrote:
+> > > With over-current-polarity property added, imx usb over current
+> > > polarity can be configed to be low or high active, since the default
+> > > setting value(0) is for active high, so keep this setting for those
+> > > legacy platforms without this property specified.
+> > >
+> > > Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> > > ---
+> > >  drivers/usb/chipidea/ci_hdrc_imx.c |  9 +++++++++
+> > > drivers/usb/chipidea/ci_hdrc_imx.h |  1 +
+> > > drivers/usb/chipidea/usbmisc_imx.c | 30 +++++++++++++++++++++++++-----
+> > >  3 files changed, 35 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c
+> > > b/drivers/usb/chipidea/ci_hdrc_imx.c
+> > > index dedc33e..61e712b 100644
+> > > --- a/drivers/usb/chipidea/ci_hdrc_imx.c
+> > > +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+> > > @@ -140,6 +140,15 @@ static struct imx_usbmisc_data
+> > *usbmisc_get_init_data(struct device *dev)
+> > >  	if (of_find_property(np, "disable-over-current", NULL))
+> > >  		data->disable_oc = 1;
+> > >
+> > > +	if (!of_property_read_u32(np, "over-current-polarity", &ret))
+> > > +		data->oc_polarity = ret ? 1 : 0;
+> > > +	else
+> > > +		/*
+> > > +		 * Keep the oc polarity setting of legacy
+> > > +		 * platforms unchanged.
+> > > +		 */
+> > > +		data->oc_polarity = 1;
+> > 
+> > We may can't ensure that, since there are lots of i.mx platforms, eg from
+> > imx27 to imx7.
+> > 
+> > If the user does not assign oc polarity at DT, we need to read it from
+> > register.
+> 
+> I suppose old platforms (other than i.mx6&7) should set either
+> "over-current-polarity" or "disable-over-current" if want to use
+> "data->oc_polarity".
+>  
 
-scripts/dtc/dt_to_config -c .build-arm/.config --config-format
-arch/arm/boot/dts/highbank.dts
+The user may use old dtb and the latest kernel, so the introduced
+DT property should not affect old dtb platforms.
 
->
-> Just to confirm, you are in the root directory of the kernel source tree
-> and your .config is in the same directory (since you specified "./.config").
+> Do you mean read the register value before set "data->oc_polarity" here?
 
-I'm in the root, but .config is not.
+yes, if there is a dts property, read it from DT; else, read it from the register.
 
-Rob
+if (!of_property_read_u32(np, "over-current-polarity", &ret))
+	data->oc_polarity = ret ? 1 : 0;
+else
+	/*
+	 * Keep the oc polarity setting of legacy
+	 * platforms unchanged.
+	 */
+	data->oc_polarity = readl(oc_polarity);
+
+Then, when you set register for oc polarity, you can depend on the
+flag.
+	reg = readl(usbmisc->base + data->index * 4);
+	value = data->oc_polarity ? MX6_BM_OVER_CUR_POLARITY : 0;
+	writel(reg | value, usbmisc->base + data->index * 4);
+	
+
+> Even with that, as I still can't ensure all i.mx platforms have the same
+> mapping:
+> 0 <--> active high.
+> 1 <--> active low.
+> How should I set "data->oc_polarity" accordingly?
+
+Just keep current register value unchanging if there is no dts property.
+
+Peter
+
+> Li Jun
+> > 
+> > Peter
+> > > +
+> > >  	if (of_find_property(np, "external-vbus-divider", NULL))
+> > >  		data->evdo = 1;
+> > >
+> > > diff --git a/drivers/usb/chipidea/ci_hdrc_imx.h
+> > > b/drivers/usb/chipidea/ci_hdrc_imx.h
+> > > index 635717e..409aa5ca8 100644
+> > > --- a/drivers/usb/chipidea/ci_hdrc_imx.h
+> > > +++ b/drivers/usb/chipidea/ci_hdrc_imx.h
+> > > @@ -17,6 +17,7 @@ struct imx_usbmisc_data {
+> > >  	int index;
+> > >
+> > >  	unsigned int disable_oc:1; /* over current detect disabled */
+> > > +	unsigned int oc_polarity:1; /* over current polarity if oc enabled
+> > > +*/
+> > >  	unsigned int evdo:1; /* set external vbus divider option */  };
+> > >
+> > > diff --git a/drivers/usb/chipidea/usbmisc_imx.c
+> > > b/drivers/usb/chipidea/usbmisc_imx.c
+> > > index ab8b027..193dbe4 100644
+> > > --- a/drivers/usb/chipidea/usbmisc_imx.c
+> > > +++ b/drivers/usb/chipidea/usbmisc_imx.c
+> > > @@ -56,6 +56,7 @@
+> > >
+> > >  #define MX6_BM_NON_BURST_SETTING	BIT(1)
+> > >  #define MX6_BM_OVER_CUR_DIS		BIT(7)
+> > > +#define MX6_BM_OVER_CUR_POLARITY	BIT(8)
+> > >  #define MX6_BM_WAKEUP_ENABLE		BIT(10)
+> > >  #define MX6_BM_ID_WAKEUP		BIT(16)
+> > >  #define MX6_BM_VBUS_WAKEUP		BIT(17)
+> > > @@ -266,11 +267,18 @@ static int usbmisc_imx6q_init(struct
+> > > imx_usbmisc_data *data)
+> > >
+> > >  	spin_lock_irqsave(&usbmisc->lock, flags);
+> > >
+> > > +	reg = readl(usbmisc->base + data->index * 4);
+> > >  	if (data->disable_oc) {
+> > > -		reg = readl(usbmisc->base + data->index * 4);
+> > > -		writel(reg | MX6_BM_OVER_CUR_DIS,
+> > > -			usbmisc->base + data->index * 4);
+> > > +		reg |= MX6_BM_OVER_CUR_DIS;
+> > > +	} else if (data->oc_polarity == 1) {
+> > > +		/* High active */
+> > > +		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
+> > > +	} else {
+> > > +		/* Low active */
+> > > +		reg &= ~MX6_BM_OVER_CUR_DIS;
+> > > +		reg |= MX6_BM_OVER_CUR_POLARITY;
+> > >  	}
+> > > +	writel(reg, usbmisc->base + data->index * 4);
+> > >
+> > >  	/* SoC non-burst setting */
+> > >  	reg = readl(usbmisc->base + data->index * 4); @@ -365,10 +373,18 @@
+> > > static int usbmisc_imx7d_init(struct imx_usbmisc_data *data)
+> > >  		return -EINVAL;
+> > >
+> > >  	spin_lock_irqsave(&usbmisc->lock, flags);
+> > > +	reg = readl(usbmisc->base);
+> > >  	if (data->disable_oc) {
+> > > -		reg = readl(usbmisc->base);
+> > > -		writel(reg | MX6_BM_OVER_CUR_DIS, usbmisc->base);
+> > > +		reg |= MX6_BM_OVER_CUR_DIS;
+> > > +	} else if (data->oc_polarity == 1) {
+> > > +		/* High active */
+> > > +		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
+> > > +	} else {
+> > > +		/* Low active */
+> > > +		reg &= ~MX6_BM_OVER_CUR_DIS;
+> > > +		reg |= MX6_BM_OVER_CUR_POLARITY;
+> > >  	}
+> > > +	writel(reg, usbmisc->base);
+> > >
+> > >  	reg = readl(usbmisc->base + MX7D_USBNC_USB_CTRL2);
+> > >  	reg &= ~MX7D_USB_VBUS_WAKEUP_SOURCE_MASK;
+> > > @@ -492,6 +508,10 @@ static const struct of_device_id
+> > usbmisc_imx_dt_ids[] = {
+> > >  		.compatible = "fsl,imx6ul-usbmisc",
+> > >  		.data = &imx6sx_usbmisc_ops,
+> > >  	},
+> > > +	{
+> > > +		.compatible = "fsl,imx7d-usbmisc",
+> > > +		.data = &imx7d_usbmisc_ops,
+> > > +	},
+> > >  	{ /* sentinel */ }
+> > >  };
+> > >  MODULE_DEVICE_TABLE(of, usbmisc_imx_dt_ids);
+> > > --
+> > > 1.9.1
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> > --
+> > 
+> > Best Regards,
+> > Peter Chen
+
+-- 
+
+Best Regards,
+Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
