@@ -1,57 +1,67 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 3/6] dt-bindings: clock: add DT binding for the TBG clocks on Armada 3700
-Date: Tue, 19 Jul 2016 15:42:19 +0200
-Message-ID: <1468935742-11218-4-git-send-email-gregory.clement@free-electrons.com>
-References: <1468935742-11218-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468935742-11218-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Terry Zhou <bjzhou@marvell.com>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: socfpga: add bindings doc for arria10 fpga
+ manager
+Date: Tue, 19 Jul 2016 06:45:18 -0700
+Message-ID: <alpine.DEB.2.10.1607190644580.2795@atull-730U3E-740U3E>
+References: <20160712190709.5964-1-atull@opensource.altera.com> <20160712190709.5964-2-atull@opensource.altera.com> <CAAtXAHdFKOoYa0tWrO8=COZXAFN5rNM2-w6sR3H9cMCpT5uqxw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAtXAHdFKOoYa0tWrO8=COZXAFN5rNM2-w6sR3H9cMCpT5uqxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the DT binding documentation for the Time Base Generator
-clock used in the Marvell Armada 3700 SoCs.
+On Sun, 17 Jul 2016, Moritz Fischer wrote:
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../bindings/clock/armada3700-tbg-clock.txt        | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/armada3700-tbg-clock.txt
+> Acked-By: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/clock/armada3700-tbg-clock.txt b/Documentation/devicetree/bindings/clock/armada3700-tbg-clock.txt
-new file mode 100644
-index 000000000000..0ba1d83ff363
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/armada3700-tbg-clock.txt
-@@ -0,0 +1,27 @@
-+* Time Base Generator Clock bindings for Marvell Armada 37xx SoCs
-+
-+Marvell Armada 37xx SoCs provde Time Base Generator clocks which are
-+used as parent clocks for the peripheral clocks.
-+
-+The TBG clock consumer should specify the desired clock by having the
-+clock ID in its "clocks" phandle cell.
-+
-+The following is a list of provided IDs and clock names on Armada 3700:
-+ 0 = TBG A P
-+ 1 = TBG B P
-+ 2 = TBG A S
-+ 3 = TBG B S
-+
-+Required properties:
-+- compatible : shall be "marvell,armada-3700-tbg-clock"
-+- reg : must be the register address of North Bridge PLL register
-+- #clock-cells : from common clock binding; shall be set to 1
-+
-+Example:
-+
-+tbg: tbg@13200 {
-+	compatible = "marvell,armada-3700-tbg-clock";
-+	reg = <0x13200 0x1000>;
-+	clocks = <&xtalclk>;
-+	#clock-cells = <1>;
-+};
--- 
-2.5.0
+Thanks Moritz!
+
+Alan
+
+> 
+> On Tue, Jul 12, 2016 at 12:07 PM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+> > Add a device tree bindings document for the SoCFPGA Arria10
+> > FPGA Manager driver.
+> >
+> > Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > ---
+> >  .../bindings/fpga/altera-socfpga-a10-fpga-mgr.txt     | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
+> > new file mode 100644
+> > index 0000000..2fd8e7a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/altera-socfpga-a10-fpga-mgr.txt
+> > @@ -0,0 +1,19 @@
+> > +Altera SOCFPGA Arria10 FPGA Manager
+> > +
+> > +Required properties:
+> > +- compatible : should contain "altr,socfpga-a10-fpga-mgr"
+> > +- reg        : base address and size for memory mapped io.
+> > +               - The first index is for FPGA manager register access.
+> > +               - The second index is for writing FPGA configuration data.
+> > +- resets     : Phandle and reset specifier for the device's reset.
+> > +- clocks     : Clocks used by the device.
+> > +
+> > +Example:
+> > +
+> > +       fpga_mgr: fpga-mgr@ffd03000 {
+> > +               compatible = "altr,socfpga-a10-fpga-mgr";
+> > +               reg = <0xffd03000 0x100
+> > +                      0xffcfe400 0x20>;
+> > +               clocks = <&l4_mp_clk>;
+> > +               resets = <&rst FPGAMGR_RESET>;
+> > +       };
+> > --
+> > 2.9.1
+> >
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
