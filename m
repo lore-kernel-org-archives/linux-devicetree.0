@@ -1,78 +1,115 @@
-From: Bhushan Shah <bshah@kde.org>
-Subject: [Patch v2 1/5] ARM: dts: qcom: Add initial DTS for LG Nexus 5 Phone
-Date: Tue, 19 Jul 2016 10:34:10 +0530
-Message-ID: <20160719050414.31704-2-bshah@kde.org>
+From: Bhushan Shah <bshah-RoXCvvDuEio@public.gmane.org>
+Subject: [Patch v2 2/5] ARM: dts: msm8974: Move vreg_boost node from the honami to msm8974
+Date: Tue, 19 Jul 2016 10:34:11 +0530
+Message-ID: <20160719050414.31704-3-bshah@kde.org>
 References: <20160719050414.31704-1-bshah@kde.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160719050414.31704-1-bshah@kde.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-Cc: Bhushan Shah <bshah@kde.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160719050414.31704-1-bshah-RoXCvvDuEio@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bhushan Shah <bshah-RoXCvvDuEio@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This DTS file have support LG Nexus 5 (codenamed hammerhead).
-Initial version have support for just serial console over headphone
-jack.
+vreg_boost is Qualcomm platform specific and is also used in hammerhead
+device.
 
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: David Brown <david.brown@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-arm-msm@vger.kernel.org
-Signed-off-by: Bhushan Shah <bshah@kde.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Bhushan Shah <bshah-RoXCvvDuEio@public.gmane.org>
 ---
-Changes in v2
-    - Removed qcom,msm-id
-    - Added "lge,hammerhead" in the compatible
+ arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 18 ++----------------
+ arch/arm/boot/dts/qcom-msm8974.dtsi                   | 11 +++++++++++
+ arch/arm/boot/dts/qcom-pm8941.dtsi                    |  6 ++++++
+ 3 files changed, 19 insertions(+), 16 deletions(-)
 
- arch/arm/boot/dts/Makefile                         |  1 +
- .../dts/qcom-msm8974-lge-nexus5-hammerhead.dts     | 23 ++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 414b427..13947ec 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -584,6 +584,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-ipq8064-ap148.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb \
-+	qcom-msm8974-lge-nexus5-hammerhead.dtb \
- 	qcom-msm8974-sony-xperia-honami.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pb1176.dtb \
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-new file mode 100644
-index 0000000..68f3a8a
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -0,0 +1,23 @@
-+#include "qcom-msm8974.dtsi"
-+#include "qcom-pm8841.dtsi"
-+#include "qcom-pm8941.dtsi"
-+
-+/ {
-+	model = "LGE MSM 8974 HAMMERHEAD";
-+	compatible = "lge,hammerhead", "qcom,msm8974";
-+
-+	aliases {
-+		serial0 = &blsp1_uart1;
+diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+index a0398b6..8e33fc3 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+@@ -258,22 +258,13 @@
+ 		};
+ 	};
+ 
+-	vreg_boost: vreg-boost {
+-		compatible = "regulator-fixed";
+-
+-		regulator-name = "vreg-boost";
+-		regulator-min-microvolt = <3150000>;
+-		regulator-max-microvolt = <3150000>;
+-
+-		regulator-always-on;
+-		regulator-boot-on;
+-
++	vreg_boost {
+ 		gpio = <&pm8941_gpios 21 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&boost_bypass_n_pin>;
+-     };
 +	};
+ };
+ 
+ &soc {
+@@ -383,11 +374,6 @@
+ 		};
+ 
+ 		gpios@c000 {
+-			boost_bypass_n_pin: boost-bypass {
+-				pins = "gpio21";
+-				function = "normal";
+-			};
+-
+ 			gpio_keys_pin_a: gpio-keys-active {
+ 				pins = "gpio2", "gpio3", "gpio4", "gpio5";
+ 				function = "normal";
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index dc2ce00..570028c 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -604,4 +604,15 @@
+ 			};
+ 		};
+ 	};
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
++	vreg_boost: vreg-boost {
++		compatible = "regulator-fixed";
++
++		regulator-name = "vreg-boost";
++		regulator-min-microvolt = <3150000>;
++		regulator-max-microvolt = <3150000>;
++
++		regulator-always-on;
++		regulator-boot-on;
 +	};
-+};
+ };
+diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
+index d95edb6..ae8e5cc 100644
+--- a/arch/arm/boot/dts/qcom-pm8941.dtsi
++++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
+@@ -88,6 +88,12 @@
+ 				     <0 0xe1 0 IRQ_TYPE_NONE>,
+ 				     <0 0xe2 0 IRQ_TYPE_NONE>,
+ 				     <0 0xe3 0 IRQ_TYPE_NONE>;
 +
-+&soc {
-+	serial@f991d000 {
-+		status = "ok";
-+	};
++			boost_bypass_n_pin: boost-bypass {
++				pins = "gpio21";
++				function = "normal";
++			};
 +
-+};
+ 		};
+ 
+ 		pm8941_mpps: mpps@a000 {
 -- 
 2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
