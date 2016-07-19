@@ -1,424 +1,340 @@
-From: Hongtao Jia <hongtao.jia@nxp.com>
-Subject: RE: [PATCH V2 7/7] thermal: qoriq: Add thermal management support
-Date: Tue, 19 Jul 2016 06:54:11 +0000
-Message-ID: <AM4PR0401MB18432B70EEB53C04594821DEEB370@AM4PR0401MB1843.eurprd04.prod.outlook.com>
-References: <1467256118-41754-1-git-send-email-hongtao.jia@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467256118-41754-1-git-send-email-hongtao.jia@nxp.com>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "edubezval@gmail.com" <edubezval@gmail.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, Scott Wood <scott.wood@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+From: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7] wlcore: spi: add wl18xx support
+Date: Tue, 19 Jul 2016 09:58:02 +0300
+Message-ID: <1468911482-32560-1-git-send-email-eyalr@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+From: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Any comments on this patch?
+Add support for using with both wl12xx and wl18xx.
 
-Thanks.
--Hongtao.
+- all wilink family needs special init command for entering wspi mode.
+  extra clock cycles should be sent after the spi init command while the
+  cs pin is high.
+- Use inverted chip select for sending a dummy 4 bytes command that
+  completes the init stage.
 
-> -----Original Message-----
-> From: Jia Hongtao [mailto:hongtao.jia@nxp.com]
-> Sent: Thursday, June 30, 2016 11:09 AM
-> To: edubezval@gmail.com; rui.zhang@intel.com; robh+dt@kernel.org;
-> galak@codeaurora.org; Scott Wood <scott.wood@nxp.com>;
-> shawnguo@kernel.org
-> Cc: linux-pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-arm-
-> kernel@lists.infradead.org; Hongtao Jia <hongtao.jia@nxp.com>
-> Subject: [PATCH V2 7/7] thermal: qoriq: Add thermal management support
-> 
-> This driver add thermal management support by enabling TMU (Thermal
-> Monitoring Unit) on QorIQ platform.
-> 
-> It's based on thermal of framework:
-> - Trip points defined in device tree.
-> - Cpufreq as cooling device registered in qoriq cpufreq driver.
-> 
-> Signed-off-by: Jia Hongtao <hongtao.jia@nxp.com>
-> ---
-> Changes of V2:
-> * Add HAS_IOMEM dependency to fix build error on UM
-> 
->  drivers/thermal/Kconfig         |  10 ++
->  drivers/thermal/Makefile        |   1 +
->  drivers/thermal/qoriq_thermal.c | 328
-> ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 339 insertions(+)
->  create mode 100644 drivers/thermal/qoriq_thermal.c
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig index
-> 2d702ca..56ef30d 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -195,6 +195,16 @@ config IMX_THERMAL
->  	  cpufreq is used as the cooling device to throttle CPUs when the
->  	  passive trip is crossed.
-> 
-> +config QORIQ_THERMAL
-> +	tristate "QorIQ Thermal Monitoring Unit"
-> +	depends on THERMAL_OF
-> +	depends on HAS_IOMEM
-> +	help
-> +	  Support for Thermal Monitoring Unit (TMU) found on QorIQ platforms.
-> +	  It supports one critical trip point and one passive trip point. The
-> +	  cpufreq is used as the cooling device to throttle CPUs when the
-> +	  passive trip is crossed.
-> +
->  config SPEAR_THERMAL
->  	tristate "SPEAr thermal sensor driver"
->  	depends on PLAT_SPEAR || COMPILE_TEST
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile index
-> 10b07c1..6662232 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -37,6 +37,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+= db8500_thermal.o
->  obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
->  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
->  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
-> +obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
->  obj-$(CONFIG_DB8500_CPUFREQ_COOLING)	+= db8500_cpufreq_cooling.o
->  obj-$(CONFIG_INTEL_POWERCLAMP)	+= intel_powerclamp.o
->  obj-$(CONFIG_X86_PKG_TEMP_THERMAL)	+= x86_pkg_temp_thermal.o
-> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c new
-> file mode 100644 index 0000000..644ba52
-> --- /dev/null
-> +++ b/drivers/thermal/qoriq_thermal.c
-> @@ -0,0 +1,328 @@
-> +/*
-> + * Copyright 2016 Freescale Semiconductor, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> +it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but
-> +WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-> +or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
-> +License for
-> + * more details.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/thermal.h>
-> +
-> +#include "thermal_core.h"
-> +
-> +#define SITES_MAX	16
-> +
-> +/*
-> + * QorIQ TMU Registers
-> + */
-> +struct qoriq_tmu_site_regs {
-> +	u32 tritsr;		/* Immediate Temperature Site Register */
-> +	u32 tratsr;		/* Average Temperature Site Register */
-> +	u8 res0[0x8];
-> +};
-> +
-> +struct qoriq_tmu_regs {
-> +	u32 tmr;		/* Mode Register */
-> +#define TMR_DISABLE	0x0
-> +#define TMR_ME		0x80000000
-> +#define TMR_ALPF	0x0c000000
-> +	u32 tsr;		/* Status Register */
-> +	u32 tmtmir;		/* Temperature measurement interval Register */
-> +#define TMTMIR_DEFAULT	0x0000000f
-> +	u8 res0[0x14];
-> +	u32 tier;		/* Interrupt Enable Register */
-> +#define TIER_DISABLE	0x0
-> +	u32 tidr;		/* Interrupt Detect Register */
-> +	u32 tiscr;		/* Interrupt Site Capture Register */
-> +	u32 ticscr;		/* Interrupt Critical Site Capture Register */
-> +	u8 res1[0x10];
-> +	u32 tmhtcrh;		/* High Temperature Capture Register */
-> +	u32 tmhtcrl;		/* Low Temperature Capture Register */
-> +	u8 res2[0x8];
-> +	u32 tmhtitr;		/* High Temperature Immediate Threshold */
-> +	u32 tmhtatr;		/* High Temperature Average Threshold */
-> +	u32 tmhtactr;	/* High Temperature Average Crit Threshold */
-> +	u8 res3[0x24];
-> +	u32 ttcfgr;		/* Temperature Configuration Register */
-> +	u32 tscfgr;		/* Sensor Configuration Register */
-> +	u8 res4[0x78];
-> +	struct qoriq_tmu_site_regs site[SITES_MAX];
-> +	u8 res5[0x9f8];
-> +	u32 ipbrr0;		/* IP Block Revision Register 0 */
-> +	u32 ipbrr1;		/* IP Block Revision Register 1 */
-> +	u8 res6[0x310];
-> +	u32 ttr0cr;		/* Temperature Range 0 Control Register */
-> +	u32 ttr1cr;		/* Temperature Range 1 Control Register */
-> +	u32 ttr2cr;		/* Temperature Range 2 Control Register */
-> +	u32 ttr3cr;		/* Temperature Range 3 Control Register */
-> +};
-> +
-> +/*
-> + * Thermal zone data
-> + */
-> +struct qoriq_tmu_data {
-> +	struct thermal_zone_device *tz;
-> +	struct qoriq_tmu_regs __iomem *regs;
-> +	int sensor_id;
-> +	bool little_endian;
-> +};
-> +
-> +static void tmu_write(struct qoriq_tmu_data *p, u32 val, void __iomem
-> +*addr) {
-> +	if (p->little_endian)
-> +		iowrite32(val, addr);
-> +	else
-> +		iowrite32be(val, addr);
-> +}
-> +
-> +static u32 tmu_read(struct qoriq_tmu_data *p, void __iomem *addr) {
-> +	if (p->little_endian)
-> +		return ioread32(addr);
-> +	else
-> +		return ioread32be(addr);
-> +}
-> +
-> +static int tmu_get_temp(void *p, int *temp) {
-> +	u32 val;
-> +	struct qoriq_tmu_data *data = p;
-> +
-> +	val = tmu_read(data, &data->regs->site[data->sensor_id].tritsr);
-> +	*temp = (val & 0xff) * 1000;
-> +
-> +	return 0;
-> +}
-> +
-> +static int qoriq_tmu_get_sensor_id(void) {
-> +	int ret, id;
-> +	struct of_phandle_args sensor_specs;
-> +	struct device_node *np, *sensor_np;
-> +
-> +	np = of_find_node_by_name(NULL, "thermal-zones");
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	sensor_np = of_get_next_child(np, NULL);
-> +	ret = of_parse_phandle_with_args(sensor_np, "thermal-sensors",
-> +			"#thermal-sensor-cells",
-> +			0, &sensor_specs);
-> +	if (ret) {
-> +		of_node_put(np);
-> +		of_node_put(sensor_np);
-> +		return ret;
-> +	}
-> +
-> +	if (sensor_specs.args_count >= 1) {
-> +		id = sensor_specs.args[0];
-> +		WARN(sensor_specs.args_count > 1,
-> +				"%s: too many cells in sensor specifier %d\n",
-> +				sensor_specs.np->name,
-> sensor_specs.args_count);
-> +	} else {
-> +		id = 0;
-> +	}
-> +
-> +	of_node_put(np);
-> +	of_node_put(sensor_np);
-> +
-> +	return id;
-> +}
-> +
-> +static int qoriq_tmu_calibration(struct platform_device *pdev) {
-> +	int i, val, len;
-> +	u32 range[4];
-> +	const u32 *calibration;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
-> +
-> +	if (of_property_read_u32_array(np, "fsl,tmu-range", range, 4)) {
-> +		dev_err(&pdev->dev, "missing calibration range.\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Init temperature range registers */
-> +	tmu_write(data, range[0], &data->regs->ttr0cr);
-> +	tmu_write(data, range[1], &data->regs->ttr1cr);
-> +	tmu_write(data, range[2], &data->regs->ttr2cr);
-> +	tmu_write(data, range[3], &data->regs->ttr3cr);
-> +
-> +	calibration = of_get_property(np, "fsl,tmu-calibration", &len);
-> +	if (calibration == NULL || len % 8) {
-> +		dev_err(&pdev->dev, "invalid calibration data.\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	for (i = 0; i < len; i += 8, calibration += 2) {
-> +		val = of_read_number(calibration, 1);
-> +		tmu_write(data, val, &data->regs->ttcfgr);
-> +		val = of_read_number(calibration + 1, 1);
-> +		tmu_write(data, val, &data->regs->tscfgr);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void qoriq_tmu_init_device(struct qoriq_tmu_data *data) {
-> +	/* Disable interrupt, using polling instead */
-> +	tmu_write(data, TIER_DISABLE, &data->regs->tier);
-> +
-> +	/* Set update_interval */
-> +	tmu_write(data, TMTMIR_DEFAULT, &data->regs->tmtmir);
-> +
-> +	/* Disable monitoring */
-> +	tmu_write(data, TMR_DISABLE, &data->regs->tmr); }
-> +
-> +static struct thermal_zone_of_device_ops tmu_tz_ops = {
-> +	.get_temp = tmu_get_temp,
-> +};
-> +
-> +static int qoriq_tmu_probe(struct platform_device *pdev) {
-> +	int ret;
-> +	const struct thermal_trip *trip;
-> +	struct qoriq_tmu_data *data;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	u32 site = 0;
-> +
-> +	if (!np) {
-> +		dev_err(&pdev->dev, "Device OF-Node is NULL");
-> +		return -ENODEV;
-> +	}
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(struct qoriq_tmu_data),
-> +			    GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	data->little_endian = of_property_read_bool(np, "little-endian");
-> +
-> +	data->sensor_id = qoriq_tmu_get_sensor_id();
-> +	if (data->sensor_id < 0) {
-> +		dev_err(&pdev->dev, "Failed to get sensor id\n");
-> +		ret = -ENODEV;
-> +		goto err_iomap;
-> +	}
-> +
-> +	data->regs = of_iomap(np, 0);
-> +	if (!data->regs) {
-> +		dev_err(&pdev->dev, "Failed to get memory region\n");
-> +		ret = -ENODEV;
-> +		goto err_iomap;
-> +	}
-> +
-> +	qoriq_tmu_init_device(data);	/* TMU initialization */
-> +
-> +	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
-> +	if (ret < 0)
-> +		goto err_tmu;
-> +
-> +	data->tz = thermal_zone_of_sensor_register(&pdev->dev, data->sensor_id,
-> +				data, &tmu_tz_ops);
-> +	if (IS_ERR(data->tz)) {
-> +		ret = PTR_ERR(data->tz);
-> +		dev_err(&pdev->dev,
-> +			"Failed to register thermal zone device %d\n", ret);
-> +		goto err_tmu;
-> +	}
-> +
-> +	trip = of_thermal_get_trip_points(data->tz);
-> +
-> +	/* Enable monitoring */
-> +	site |= 0x1 << (15 - data->sensor_id);
-> +	tmu_write(data, site | TMR_ME | TMR_ALPF, &data->regs->tmr);
-> +
-> +	return 0;
-> +
-> +err_tmu:
-> +	iounmap(data->regs);
-> +
-> +err_iomap:
-> +	platform_set_drvdata(pdev, NULL);
-> +
-> +	return ret;
-> +}
-> +
-> +static int qoriq_tmu_remove(struct platform_device *pdev) {
-> +	struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
-> +
-> +	thermal_zone_of_sensor_unregister(&pdev->dev, data->tz);
-> +
-> +	/* Disable monitoring */
-> +	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
-> +
-> +	iounmap(data->regs);
-> +	platform_set_drvdata(pdev, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int qoriq_tmu_suspend(struct device *dev) {
-> +	u32 tmr;
-> +	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
-> +
-> +	/* Disable monitoring */
-> +	tmr = tmu_read(data, &data->regs->tmr);
-> +	tmr &= ~TMR_ME;
-> +	tmu_write(data, tmr, &data->regs->tmr);
-> +
-> +	return 0;
-> +}
-> +
-> +static int qoriq_tmu_resume(struct device *dev) {
-> +	u32 tmr;
-> +	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
-> +
-> +	/* Enable monitoring */
-> +	tmr = tmu_read(data, &data->regs->tmr);
-> +	tmr |= TMR_ME;
-> +	tmu_write(data, tmr, &data->regs->tmr);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(qoriq_tmu_pm_ops,
-> +			 qoriq_tmu_suspend, qoriq_tmu_resume);
-> +
-> +static const struct of_device_id qoriq_tmu_match[] = {
-> +	{ .compatible = "fsl,qoriq-tmu", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, qoriq_tmu_match);
-> +
-> +static struct platform_driver qoriq_tmu = {
-> +	.driver	= {
-> +		.name		= "qoriq_thermal",
-> +		.pm		= &qoriq_tmu_pm_ops,
-> +		.of_match_table	= qoriq_tmu_match,
-> +	},
-> +	.probe	= qoriq_tmu_probe,
-> +	.remove	= qoriq_tmu_remove,
-> +};
-> +module_platform_driver(qoriq_tmu);
-> +
-> +MODULE_AUTHOR("Jia Hongtao <hongtao.jia@nxp.com>");
-> +MODULE_DESCRIPTION("QorIQ Thermal Monitoring Unit driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.1.0.27.g96db324
+Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+v1->v2:update device tree bindings configuration
+v2->v3:revert from manual gpio manipulation. use inverted chip select instead
+for sending the extra init cycle which, achieves the same hardware purpose.
+update device tree bindings docucmentation accordingly
+v3->v4: Remove redundant data form binding documentation and fix chip select
+number mismatch in wl1271 example
+v4->v5: Rebase on top of head of wireless-drivers-next
+v5->v6: Add ACKs
+v6->v7: Mail format issues
+ .../bindings/net/wireless/ti,wlcore,spi.txt        |  41 +++++--
+ drivers/net/wireless/ti/wlcore/spi.c               | 123 ++++++++++++++++++---
+ 2 files changed, 137 insertions(+), 27 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+index 9180724..8f9ced0 100644
+--- a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
++++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+@@ -1,19 +1,30 @@
+-* Texas Instruments wl1271 wireless lan controller
++* Texas Instruments wl12xx/wl18xx wireless lan controller
+ 
+-The wl1271 chip can be connected via SPI or via SDIO. This
++The wl12xx/wl18xx chips can be connected via SPI or via SDIO. This
+ document describes the binding for the SPI connected chip.
+ 
+ Required properties:
+-- compatible :          Should be "ti,wl1271"
++- compatible :          Should be one of the following:
++    * "ti,wl1271"
++    * "ti,wl1273"
++    * "ti,wl1281"
++    * "ti,wl1283"
++    * "ti,wl1801"
++    * "ti,wl1805"
++    * "ti,wl1807"
++    * "ti,wl1831"
++    * "ti,wl1835"
++    * "ti,wl1837"
+ - reg :                 Chip select address of device
+ - spi-max-frequency :   Maximum SPI clocking speed of device in Hz
+-- ref-clock-frequency : Reference clock frequency
+ - interrupt-parent, interrupts :
+                         Should contain parameters for 1 interrupt line.
+                         Interrupt parameters: parent, line number, type.
+-- vwlan-supply :        Point the node of the regulator that powers/enable the wl1271 chip
++- vwlan-supply :        Point the node of the regulator that powers/enable the
++                        wl12xx/wl18xx chip
+ 
+ Optional properties:
++- ref-clock-frequency : Reference clock frequency (should be set for wl12xx)
+ - clock-xtal :          boolean, clock is generated from XTAL
+ 
+ - Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -21,16 +32,28 @@ Optional properties:
+ 
+ Examples:
+ 
++For wl12xx family:
+ &spi1 {
+-	wl1271@1 {
++	wlcore: wlcore@1 {
+ 		compatible = "ti,wl1271";
+-
+ 		reg = <1>;
+ 		spi-max-frequency = <48000000>;
+-		clock-xtal;
+-		ref-clock-frequency = <38400000>;
+ 		interrupt-parent = <&gpio3>;
+ 		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+ 		vwlan-supply = <&vwlan_fixed>;
++		clock-xtal;
++		ref-clock-frequency = <38400000>;
++	};
++};
++
++For wl18xx family:
++&spi0 {
++	wlcore: wlcore@0 {
++		compatible = "ti,wl1835";
++		reg = <0>;
++		spi-max-frequency = <48000000>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <27 IRQ_TYPE_EDGE_RISING>;
++		vwlan-supply = <&vwlan_fixed>;
+ 	};
+ };
+diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
+index cea9443..73fbcf1 100644
+--- a/drivers/net/wireless/ti/wlcore/spi.c
++++ b/drivers/net/wireless/ti/wlcore/spi.c
+@@ -70,16 +70,30 @@
+ #define WSPI_MAX_CHUNK_SIZE    4092
+ 
+ /*
+- * only support SPI for 12xx - this code should be reworked when 18xx
+- * support is introduced
++ * wl18xx driver aggregation buffer size is (13 * PAGE_SIZE) compared to
++ * (4 * PAGE_SIZE) for wl12xx, so use the larger buffer needed for wl18xx
+  */
+-#define SPI_AGGR_BUFFER_SIZE (4 * PAGE_SIZE)
++#define SPI_AGGR_BUFFER_SIZE (13 * PAGE_SIZE)
+ 
+ /* Maximum number of SPI write chunks */
+ #define WSPI_MAX_NUM_OF_CHUNKS \
+ 	((SPI_AGGR_BUFFER_SIZE / WSPI_MAX_CHUNK_SIZE) + 1)
+ 
+ 
++struct wilink_familiy_data {
++	char name[8];
++};
++
++const struct wilink_familiy_data *wilink_data;
++
++static const struct wilink_familiy_data wl18xx_data = {
++	.name = "wl18xx",
++};
++
++static const struct wilink_familiy_data wl12xx_data = {
++	.name = "wl12xx",
++};
++
+ struct wl12xx_spi_glue {
+ 	struct device *dev;
+ 	struct platform_device *core;
+@@ -119,6 +133,7 @@ static void wl12xx_spi_init(struct device *child)
+ 	struct wl12xx_spi_glue *glue = dev_get_drvdata(child->parent);
+ 	struct spi_transfer t;
+ 	struct spi_message m;
++	struct spi_device *spi = to_spi_device(glue->dev);
+ 	u8 *cmd = kzalloc(WSPI_INIT_CMD_LEN, GFP_KERNEL);
+ 
+ 	if (!cmd) {
+@@ -151,6 +166,7 @@ static void wl12xx_spi_init(struct device *child)
+ 		cmd[6] |= WSPI_INIT_CMD_EN_FIXEDBUSY;
+ 
+ 	cmd[7] = crc7_be(0, cmd+2, WSPI_INIT_CMD_CRC_LEN) | WSPI_INIT_CMD_END;
++
+ 	/*
+ 	 * The above is the logical order; it must actually be stored
+ 	 * in the buffer byte-swapped.
+@@ -163,6 +179,28 @@ static void wl12xx_spi_init(struct device *child)
+ 	spi_message_add_tail(&t, &m);
+ 
+ 	spi_sync(to_spi_device(glue->dev), &m);
++
++	/* Send extra clocks with inverted CS (high). this is required
++	 * by the wilink family in order to successfully enter WSPI mode.
++	 */
++	spi->mode ^= SPI_CS_HIGH;
++	memset(&m, 0, sizeof(m));
++	spi_message_init(&m);
++
++	cmd[0] = 0xff;
++	cmd[1] = 0xff;
++	cmd[2] = 0xff;
++	cmd[3] = 0xff;
++	__swab32s((u32 *)cmd);
++
++	t.tx_buf = cmd;
++	t.len = 4;
++	spi_message_add_tail(&t, &m);
++
++	spi_sync(to_spi_device(glue->dev), &m);
++
++	/* Restore chip select configration to normal */
++	spi->mode ^= SPI_CS_HIGH;
+ 	kfree(cmd);
+ }
+ 
+@@ -270,22 +308,25 @@ static int __must_check wl12xx_spi_raw_read(struct device *child, int addr,
+ 	return 0;
+ }
+ 
+-static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
+-					     void *buf, size_t len, bool fixed)
++static int __wl12xx_spi_raw_write(struct device *child, int addr,
++				  void *buf, size_t len, bool fixed)
+ {
+ 	struct wl12xx_spi_glue *glue = dev_get_drvdata(child->parent);
+-	/* SPI write buffers - 2 for each chunk */
+-	struct spi_transfer t[2 * WSPI_MAX_NUM_OF_CHUNKS];
++	struct spi_transfer *t;
+ 	struct spi_message m;
+ 	u32 commands[WSPI_MAX_NUM_OF_CHUNKS]; /* 1 command per chunk */
+ 	u32 *cmd;
+ 	u32 chunk_len;
+ 	int i;
+ 
++	/* SPI write buffers - 2 for each chunk */
++	t = kzalloc(sizeof(*t) * 2 * WSPI_MAX_NUM_OF_CHUNKS, GFP_KERNEL);
++	if (!t)
++		return -ENOMEM;
++
+ 	WARN_ON(len > SPI_AGGR_BUFFER_SIZE);
+ 
+ 	spi_message_init(&m);
+-	memset(t, 0, sizeof(t));
+ 
+ 	cmd = &commands[0];
+ 	i = 0;
+@@ -318,9 +359,26 @@ static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
+ 
+ 	spi_sync(to_spi_device(glue->dev), &m);
+ 
++	kfree(t);
+ 	return 0;
+ }
+ 
++static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
++					     void *buf, size_t len, bool fixed)
++{
++	int ret;
++
++	/* The ELP wakeup write may fail the first time due to internal
++	 * hardware latency. It is safer to send the wakeup command twice to
++	 * avoid unexpected failures.
++	 */
++	if (addr == HW_ACCESS_ELP_CTRL_REG)
++		ret = __wl12xx_spi_raw_write(child, addr, buf, len, fixed);
++	ret = __wl12xx_spi_raw_write(child, addr, buf, len, fixed);
++
++	return ret;
++}
++
+ /**
+  * wl12xx_spi_set_power - power on/off the wl12xx unit
+  * @child: wl12xx device handle.
+@@ -349,17 +407,38 @@ static int wl12xx_spi_set_power(struct device *child, bool enable)
+ 	return ret;
+ }
+ 
++/**
++ * wl12xx_spi_set_block_size
++ *
++ * This function is not needed for spi mode, but need to be present.
++ * Without it defined the wlcore fallback to use the wrong packet
++ * allignment on tx.
++ */
++static void wl12xx_spi_set_block_size(struct device *child,
++				      unsigned int blksz)
++{
++}
++
+ static struct wl1271_if_operations spi_ops = {
+ 	.read		= wl12xx_spi_raw_read,
+ 	.write		= wl12xx_spi_raw_write,
+ 	.reset		= wl12xx_spi_reset,
+ 	.init		= wl12xx_spi_init,
+ 	.power		= wl12xx_spi_set_power,
+-	.set_block_size = NULL,
++	.set_block_size = wl12xx_spi_set_block_size,
+ };
+ 
+ static const struct of_device_id wlcore_spi_of_match_table[] = {
+-	{ .compatible = "ti,wl1271" },
++	{ .compatible = "ti,wl1271", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1273", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1281", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1283", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1801", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1805", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1807", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1831", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1835", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1837", .data = &wl18xx_data},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, wlcore_spi_of_match_table);
+@@ -376,17 +455,24 @@ static int wlcore_probe_of(struct spi_device *spi, struct wl12xx_spi_glue *glue,
+ {
+ 	struct device_node *dt_node = spi->dev.of_node;
+ 	int ret;
++	const struct of_device_id *of_id;
++
++	of_id = of_match_node(wlcore_spi_of_match_table, dt_node);
++	if (!of_id)
++		return -ENODEV;
++
++	wilink_data = of_id->data;
++	dev_info(&spi->dev, "selected chip familiy is %s\n",
++		 wilink_data->name);
+ 
+ 	if (of_find_property(dt_node, "clock-xtal", NULL))
+ 		pdev_data->ref_clock_xtal = true;
+ 
+-	ret = of_property_read_u32(dt_node, "ref-clock-frequency",
+-				   &pdev_data->ref_clock_freq);
+-	if (ret) {
+-		dev_err(glue->dev,
+-			"can't get reference clock frequency (%d)\n", ret);
+-		return ret;
+-	}
++	/* optional clock frequency params */
++	of_property_read_u32(dt_node, "ref-clock-frequency",
++			     &pdev_data->ref_clock_freq);
++	of_property_read_u32(dt_node, "tcxo-clock-frequency",
++			     &pdev_data->tcxo_clock_freq);
+ 
+ 	return 0;
+ }
+@@ -437,7 +523,8 @@ static int wl1271_probe(struct spi_device *spi)
+ 		return ret;
+ 	}
+ 
+-	glue->core = platform_device_alloc("wl12xx", PLATFORM_DEVID_AUTO);
++	glue->core = platform_device_alloc(wilink_data->name,
++					   PLATFORM_DEVID_AUTO);
+ 	if (!glue->core) {
+ 		dev_err(glue->dev, "can't allocate platform_device\n");
+ 		return -ENOMEM;
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
