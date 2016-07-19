@@ -1,40 +1,36 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [v7] wlcore: spi: add wl18xx support
-Date: Tue, 19 Jul 2016 18:16:36 +0000 (UTC)
-Message-ID: <20160719181636.B13A660239@smtp.codeaurora.org>
-References: <1468911482-32560-1-git-send-email-eyalr@ti.com>
+From: "Steven J. Hill" <Steven.Hill@caviumnetworks.com>
+Subject: Re: [PATCH V8 2/2] mmc: OCTEON: Add host driver for OCTEON MMC
+ controller.
+Date: Tue, 19 Jul 2016 13:31:02 -0500
+Message-ID: <578E71E6.2020700@caviumnetworks.com>
+References: <57853474.9050108@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468911482-32560-1-git-send-email-eyalr-l0cyMroinI0@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <57853474.9050108@cavium.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
-> 
-> Add support for using with both wl12xx and wl18xx.
-> 
-> - all wilink family needs special init command for entering wspi mode.
->   extra clock cycles should be sent after the spi init command while the
->   cs pin is high.
-> - Use inverted chip select for sending a dummy 4 bytes command that
->   completes the init stage.
-> 
-> Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On 07/12/2016 01:18 PM, Steven J. Hill wrote:
+> The OCTEON MMC controller is currently found on cn61XX and cn71XX
+> devices. Device parameters are configured from device tree data.
+> eMMC, MMC and SD devices are supported. Tested on Rhino labs UTM8
+> and Cavium CN7130 board.
+>
+> Signed-off-by: Steven J. Hill <steven.hill@cavium.com>
+> Acked-by: David Daney <david.daney@cavium.com>
+>
+Has anyone reviewed the driver or have any comments? Thanks.
 
-Thanks, 1 patch applied to wireless-drivers-next.git:
-
-01efe65aba65 wlcore: spi: add wl18xx support
-
--- 
-Sent by pwcli
-https://patchwork.kernel.org/patch/9235983/
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Steve
