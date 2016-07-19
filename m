@@ -1,82 +1,112 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: add spiX aliases for rk3399
-Date: Tue, 19 Jul 2016 20:56:47 +0200
-Message-ID: <2679180.WfB7C6de5F@diego>
-References: <1468545873-134339-1-git-send-email-briannorris@chromium.org> <20160719063955.GE5368@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160719063955.GE5368@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Brian Norris <briannorris@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH 1/3] dt-bindings: add power domains to Tegra BPMP firmware
+Date: Tue, 19 Jul 2016 13:14:40 -0600
+Message-ID: <20160719191442.15439-1-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Am Dienstag, 19. Juli 2016, 08:39:55 schrieb Uwe Kleine-K=F6nig:
-> On Thu, Jul 14, 2016 at 06:24:33PM -0700, Brian Norris wrote:
-> > It's nicer to see this:
-> >     # ls -l /sys/bus/spi/devices/
-> >     total 0
-> >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi0.0 ->
-> >     ../../../devices/platform/ff1c0000.spi/spi_master/spi0/spi0.0
-> >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi1.0 ->
-> >     ../../../devices/platform/ff1d0000.spi/spi_master/spi1/spi1.0
-> >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi2.0 ->
-> >     ../../../devices/platform/ff1e0000.spi/spi_master/spi2/spi2.0
-> >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi5.0 ->
-> >     ../../../devices/platform/ff200000.spi/spi_master/spi5/spi5.0>=20
-> > than this:
-> >     # ls -l /sys/bus/spi/devices/
-> >     total 0
-> >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32763.0 ->
-> >     ../../../devices/platform/ff200000.spi/spi_master/spi32763/spi3=
-2763.0
-> >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32764.0 ->
-> >     ../../../devices/platform/ff1e0000.spi/spi_master/spi32764/spi3=
-2764.0
-> >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32765.0 ->
-> >     ../../../devices/platform/ff1d0000.spi/spi_master/spi32765/spi3=
-2765.0
-> >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32766.0 ->
-> >     ../../../devices/platform/ff1c0000.spi/spi_master/spi32766/spi3=
-2766.0>=20
-> > With the latter, it's much clearer which bus devices are on.
-> >=20
-> > Signed-off-by: Brian Norris <briannorris@chromium.org>
-> > ---
-> >=20
-> >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >=20
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index
-> > 4c84229789ef..b04abbfd4898 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > @@ -70,6 +70,12 @@
-> >=20
-> >  		serial2 =3D &uart2;
-> >  		serial3 =3D &uart3;
-> >  		serial4 =3D &uart4;
-> >=20
-> > +		spi0 =3D &spi0;
-> > +		spi1 =3D &spi1;
-> > +		spi2 =3D &spi2;
-> > +		spi3 =3D &spi3;
-> > +		spi4 =3D &spi4;
-> > +		spi5 =3D &spi5;
->=20
-> Note that Rob Herring (with his dt-maintainer hat on) doesn't like th=
-ese
-> aliases.
-> See for example:
-> 	http://mid.gmane.org/20160705140546.GA10601@rob-hp-laptop
+The Tegra186 BPMP is also a provider of power domains. Enhance the device
+tree binding to describe this.
 
-thanks for the heads up on this. I've dropped this patch again.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+These patches all build on top of Joseph Lo's baseline BPMP binding patches[1]
+and enhance them to represent a few more features of the firmware.
 
+[1] https://lkml.org/lkml/2016/7/19/280
+"[PATCH V3 01/10] Documentation: dt-bindings: mailbox: tegra: Add binding for HSP mailbox"
 
-Thanks
-Heiko
+ .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 10 ++++--
+ include/dt-bindings/power/tegra186-powergate.h     | 39 ++++++++++++++++++++++
+ 2 files changed, 46 insertions(+), 3 deletions(-)
+ create mode 100644 include/dt-bindings/power/tegra186-powergate.h
+
+diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+index 23782c84d093..9a3864f56955 100644
+--- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
++++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+@@ -17,6 +17,7 @@ Required properties:
+ - shmem : List of the phandle of the TX and RX shared memory area that
+ 	  the IPC between CPU and BPMP is based on.
+ - #clock-cells : Should be 1.
++- #power-domain-cells : Should be 1.
+ - #reset-cells : Should be 1.
+ 
+ This node is a mailbox consumer. See the following files for details of
+@@ -26,12 +27,14 @@ provider(s):
+ - .../mailbox/mailbox.txt
+ - .../mailbox/nvidia,tegra186-hsp.txt
+ 
+-This node is a clock and reset provider. See the following files for
+-general documentation of those features, and the specifiers implemented
+-by this node:
++This node is a clock, power domain, and reset provider. See the following
++files for general documentation of those features, and the specifiers
++implemented by this node:
+ 
+ - .../clock/clock-bindings.txt
+ - <dt-bindings/clock/tegra186-clock.h>
++- ../power/power_domain.txt
++- <dt-bindings/power/tegra186-powergate.h>
+ - .../reset/reset.txt
+ - <dt-bindings/reset/tegra186-reset.h>
+ 
+@@ -73,5 +76,6 @@ bpmp {
+ 	mboxes = <&hsp_top0 HSP_MBOX_TYPE_DB HSP_DB_MASTER_BPMP>;
+ 	shmem = <&cpu_bpmp_tx &cpu_bpmp_rx>;
+ 	#clock-cells = <1>;
++	#power-domain-cells = <1>;
+ 	#reset-cells = <1>;
+ };
+diff --git a/include/dt-bindings/power/tegra186-powergate.h b/include/dt-bindings/power/tegra186-powergate.h
+new file mode 100644
+index 000000000000..388d6e228dc8
+--- /dev/null
++++ b/include/dt-bindings/power/tegra186-powergate.h
+@@ -0,0 +1,39 @@
++/*
++ * Copyright (c) 2015-2016, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef _DT_BINDINGS_POWER_TEGRA186_POWERGATE_H
++#define _DT_BINDINGS_POWER_TEGRA186_POWERGATE_H
++
++#define TEGRA186_POWER_DOMAIN_AUD	0
++#define TEGRA186_POWER_DOMAIN_DFD	1
++#define TEGRA186_POWER_DOMAIN_DISP	2
++#define TEGRA186_POWER_DOMAIN_DISPB	3
++#define TEGRA186_POWER_DOMAIN_DISPC	4
++#define TEGRA186_POWER_DOMAIN_ISPA	5
++#define TEGRA186_POWER_DOMAIN_NVDEC	6
++#define TEGRA186_POWER_DOMAIN_NVJPG	7
++#define TEGRA186_POWER_DOMAIN_MPE	8
++#define TEGRA186_POWER_DOMAIN_PCX	9
++#define TEGRA186_POWER_DOMAIN_SAX	10
++#define TEGRA186_POWER_DOMAIN_VE	11
++#define TEGRA186_POWER_DOMAIN_VIC	12
++#define TEGRA186_POWER_DOMAIN_XUSBA	13
++#define TEGRA186_POWER_DOMAIN_XUSBB	14
++#define TEGRA186_POWER_DOMAIN_XUSBC	15
++#define TEGRA186_POWER_DOMAIN_GPU	43
++#define TEGRA186_POWER_DOMAIN_MAX	44
++
++#endif
+-- 
+2.9.2
