@@ -1,127 +1,92 @@
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V3 01/10] Documentation: dt-bindings: mailbox: tegra: Add binding for HSP mailbox
-Date: Tue, 19 Jul 2016 17:17:22 +0800
-Message-ID: <20160719091723.30919-1-josephl@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH v5 2/2] Bindings documentation for ISSI is31fl319x driver
+Date: Tue, 19 Jul 2016 11:40:05 +0200
+Message-ID: <d7598fd1396f37a501b5d4c2d4997e268d81c525.1468921204.git.hns@goldelico.com>
+References: <cover.1468921204.git.hns@goldelico.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1468921204.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <cover.1468921204.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+References: <cover.1468921204.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, drivshin.allworx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, Andrey Utkin <andrey_utkin-97jfqw80gc5Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding for the Hardware Synchronization Primitives (HSP). The
-HSP is designed for the processors to share resources and communicate
-together. It provides a set of hardware synchronization primitives for
-interprocessor communication. So the interprocessor communication (IPC)
-protocols can use hardware synchronization primitive, when operating
-between two processors not in an SMP relationship.
-
-Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 ---
-Sorry. Please allow me just update the binding patches of this series.
-Want to make sure the binding is acceptable first.
-Thanks.
+ .../devicetree/bindings/leds/is31fl319x.txt        | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/is31fl319x.txt
 
-Changes in V3:
-- use two cells for mboxes property
-Changes in V2:
-- revise the compatible string, interrupt-names, interrupts, and #mbox-cells
-  properties
-- remove "nvidia,hsp-function" property
-- fix the header file name
-- the binding supports the concept of multiple HSP sub-modules on one HSP HW
-  block now.
----
- .../bindings/mailbox/nvidia,tegra186-hsp.txt       | 52 ++++++++++++++++++++++
- include/dt-bindings/mailbox/tegra186-hsp.h         | 20 +++++++++
- 2 files changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
- create mode 100644 include/dt-bindings/mailbox/tegra186-hsp.h
-
-diff --git a/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+diff --git a/Documentation/devicetree/bindings/leds/is31fl319x.txt b/Documentation/devicetree/bindings/leds/is31fl319x.txt
 new file mode 100644
-index 000000000000..a9152380642d
+index 0000000..03287c0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
-@@ -0,0 +1,52 @@
-+NVIDIA Tegra Hardware Synchronization Primitives (HSP)
-+
-+The HSP modules are used for the processors to share resources and communicate
-+together. It provides a set of hardware synchronization primitives for
-+interprocessor communication. So the interprocessor communication (IPC)
-+protocols can use hardware synchronization primitives, when operating between
-+two processors not in an SMP relationship.
-+
-+The features that HSP supported are shared mailboxes, shared semaphores,
-+arbitrated semaphores and doorbells.
++++ b/Documentation/devicetree/bindings/leds/is31fl319x.txt
+@@ -0,0 +1,59 @@
++LEDs connected to is31fl319x LED controller chip
 +
 +Required properties:
-+- name : Should be hsp
-+- compatible
-+    Array of strings.
-+    one of:
-+    - "nvidia,tegra186-hsp"
-+- reg : Offset and length of the register set for the device.
-+- interrupt-names
-+    Array of strings.
-+    Contains a list of names for the interrupts described by the interrupt
-+    property. May contain the following entries, in any order:
-+    - "doorbell"
-+    Users of this binding MUST look up entries in the interrupt property
-+    by name, using this interrupt-names property to do so.
-+- interrupts
-+    Array of interrupt specifiers.
-+    Must contain one entry per entry in the interrupt-names property,
-+    in a matching order.
-+- #mbox-cells : Should be 2.
++- compatible : Should be any of
++	"issi,is31fl3190"
++	"issi,is31fl3191"
++	"issi,is31fl3193"
++	"issi,is31fl3196"
++	"issi,is31fl3199"
++	"si-en,sn3199".
++- #address-cells: Must be 1.
++- #size-cells: Must be 0.
++- reg: 0x64, 0x65, 0x66, 0x67.
 +
-+The mbox specifier of the "mboxes" property in the client node should
-+contain two data. The first one should be the HSP type and the second
-+one should be the ID that the client is going to use. Those information
-+can be found in the following file.
++Optional properties:
++- audio-gain-db : audio gain selection for external analog modulation input.
++	Valid values: 0 - 21, step by 3 (rounded down)
++	Default: 0
 +
-+- <dt-bindings/mailbox/tegra186-hsp.h>.
++Each led is represented as a sub-node of the issi,is31fl319x device.
++There can be less leds subnodes than the chip can support but not more.
 +
-+Example:
++Required led sub-node properties:
++- reg : number of LED line
++	Valid values: 1 - number of leds supported by the chip variant.
 +
-+hsp_top0: hsp@3c00000 {
-+	compatible = "nvidia,tegra186-hsp";
-+	reg = <0x0 0x03c00000 0x0 0xa0000>;
-+	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-names = "doorbell";
-+	#mbox-cells = <2>;
++Optional led sub-node properties:
++- label : see Documentation/devicetree/bindings/leds/common.txt.
++- linux,default-trigger :
++	see Documentation/devicetree/bindings/leds/common.txt.
++- led-max-microamp : (optional)
++	Valid values: 5000 - 40000, step by 5000 (rounded down)
++	Default: 20000 (20 mA)
++	Note: a driver will take the lowest of all led limits since the
++	chip has a single global setting. The lowest value will be chosen
++	due to the PWM specificity, where lower brightness is achieved
++	by reducing the dury-cycle of pulses and not the current, which
++	will always have its peak value equal to led-max-microamp.
++
++Examples:
++
++fancy_leds: leds@65 {
++	compatible = "issi,is31fl3196";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x65>;
++
++	red_aux: led@1 {
++		label = "red:aux";
++		reg = <1>;
++		led-max-microamp = <10000>;
++	};
++
++	green_power: led@5 {
++		label = "green:power";
++		reg = <5>;
++		linux,default-trigger = "default-on";
++	};
 +};
-+
-+client {
-+	...
-+	mboxes = <&hsp_top0 HSP_MBOX_TYPE_DB HSP_DB_MASTER_XXX>;
-+};
-diff --git a/include/dt-bindings/mailbox/tegra186-hsp.h b/include/dt-bindings/mailbox/tegra186-hsp.h
-new file mode 100644
-index 000000000000..d1c1432707cd
---- /dev/null
-+++ b/include/dt-bindings/mailbox/tegra186-hsp.h
-@@ -0,0 +1,20 @@
-+/*
-+ * This header provides constants for binding nvidia,tegra186-hsp.
-+ *
-+ * The number with HSP_DB_MASTER prefix indicates the bit that is
-+ * associated with a master ID in the doorbell registers.
-+ */
-+
-+
-+#ifndef _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
-+#define _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
-+
-+#define HSP_MBOX_TYPE_DB 0x0
-+#define HSP_MBOX_TYPE_SM 0x1
-+#define HSP_MBOX_TYPE_SS 0x2
-+#define HSP_MBOX_TYPE_AS 0x3
-+
-+#define HSP_DB_MASTER_CCPLEX 17
-+#define HSP_DB_MASTER_BPMP 19
-+
-+#endif	/* _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H */
 -- 
-2.9.2
+2.7.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
