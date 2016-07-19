@@ -1,180 +1,87 @@
-From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC 6/6] bus: Add support for Tegra NOR controller
-Date: Tue, 19 Jul 2016 15:36:37 +0200
-Message-ID: <1468935397-11926-7-git-send-email-mirza.krak@gmail.com>
-References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468935397-11926-1-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 0/6]  Add clock support for Armada 37xx SoCs
+Date: Tue, 19 Jul 2016 15:42:16 +0200
+Message-ID: <1468935742-11218-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Romain Perier <romain.perier@free-electrons.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Terry Zhou <bjzhou@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi,
 
-The NOR bus can be used to connect high-speed devices such as NOR flash,
-FPGAs, DSPs, CAN chips, Wi-Fi chips etc.
+this is the third version of the series adding clock support for the
+Armada 37xx SoCs.
 
-Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/bus/Kconfig     |   7 +++
- drivers/bus/Makefile    |   1 +
- drivers/bus/tegra-nor.c | 118 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 126 insertions(+)
- create mode 100644 drivers/bus/tegra-nor.c
+The main change is the use of static data for the peripheral clocks
+when possible, it lead to a use of many macro to define all the needed
+variables.
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 3b205e2..b74be7d8 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -145,6 +145,13 @@ config TEGRA_ACONNECT
- 	  Driver for the Tegra ACONNECT bus which is used to interface with
- 	  the devices inside the Audio Processing Engine (APE) for Tegra210.
+The design of the drivers is as close as possible as the hardware is,
+with some clocks made of several layers: muxing, divider and gating.
 
-+config TEGRA_NOR
-+	tristate "Nvidia Tegra NOR flash bus driver a.k.a GMI/SNOR"
-+		depends on ARCH_TEGRA_2x_SOC || ARCH_TEGRA_3x_SOC
-+		depends on OF
-+		help
-+			Driver for NOR flash bus found on Tegra30/20 SOC`s.
-+
- config UNIPHIER_SYSTEM_BUS
- 	tristate "UniPhier System Bus driver"
- 	depends on ARCH_UNIPHIER && OF
-diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-index ac84cc4..46d0129 100644
---- a/drivers/bus/Makefile
-+++ b/drivers/bus/Makefile
-@@ -18,5 +18,6 @@ obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
- obj-$(CONFIG_SUNXI_RSB)		+= sunxi-rsb.o
- obj-$(CONFIG_SIMPLE_PM_BUS)	+= simple-pm-bus.o
- obj-$(CONFIG_TEGRA_ACONNECT)	+= tegra-aconnect.o
-+obj-$(CONFIG_TEGRA_NOR)		+= tegra-nor.o
- obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)	+= uniphier-system-bus.o
- obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o
-diff --git a/drivers/bus/tegra-nor.c b/drivers/bus/tegra-nor.c
-new file mode 100644
-index 0000000..1e48113
---- /dev/null
-+++ b/drivers/bus/tegra-nor.c
-@@ -0,0 +1,118 @@
-+/*
-+ * Driver for Nvidia NOR Flash bus a.k.a SNOR/GMI.
-+ *
-+ * Copyright (C) 2016 Host Mobility AB. All rights reserved.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+
-+#define TEGRA_NOR_TIMING_REG_COUNT	2
-+
-+#define TEGRA_NOR_CONFIG			0x00
-+#define TEGRA_NOR_STATUS			0x04
-+#define TEGRA_NOR_ADDR_PTR			0x08
-+#define TEGRA_NOR_AHB_ADDR_PTR		0x0c
-+#define TEGRA_NOR_TIMING0			0x10
-+#define TEGRA_NOR_TIMING1			0x14
-+#define TEGRA_NOR_MIO_CONFIG		0x18
-+#define TEGRA_NOR_MIO_TIMING		0x1c
-+#define TEGRA_NOR_DMA_CONFIG		0x20
-+#define TEGRA_NOR_CS_MUX_CONFIG		0x24
-+
-+#define TEGRA_NOR_CONFIG_GO				BIT(31)
-+
-+static const struct of_device_id nor_id_table[] = {
-+	/* Tegra30 */
-+	{ .compatible = "nvidia,tegra30-nor", .data = NULL, },
-+	/* Tegra20 */
-+	{ .compatible = "nvidia,tegra20-nor", .data = NULL, },
-+
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, nor_id_table);
-+
-+
-+static int __init nor_parse_dt(struct platform_device *pdev,
-+				void __iomem *base)
-+{
-+	struct device_node *of_node = pdev->dev.of_node;
-+	u32 config, timing[TEGRA_NOR_TIMING_REG_COUNT];
-+	int ret;
-+
-+	ret = of_property_read_u32_array(of_node, "nvidia,cs-timing",
-+					 timing, TEGRA_NOR_TIMING_REG_COUNT);
-+	if (!ret) {
-+		writel(timing[0], base + TEGRA_NOR_TIMING0);
-+		writel(timing[1], base + TEGRA_NOR_TIMING1);
-+	}
-+
-+	ret = of_property_read_u32(of_node, "nvidia,config", &config);
-+	if (ret)
-+		return ret;
-+
-+	config |= TEGRA_NOR_CONFIG_GO;
-+	writel(config, base + TEGRA_NOR_CONFIG);
-+
-+	if (of_get_child_count(of_node))
-+		ret = of_platform_populate(of_node,
-+				   of_default_bus_match_table,
-+				   NULL, &pdev->dev);
-+
-+	return ret;
-+}
-+
-+static int __init nor_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct clk *clk;
-+	void __iomem *base;
-+	int ret;
-+
-+	/* get the resource */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	/* get the clock */
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret)
-+		return ret;
-+
-+	/* parse the device node */
-+	ret = nor_parse_dt(pdev, base);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s fail to create devices.\n",
-+			pdev->dev.of_node->full_name);
-+		clk_disable_unprepare(clk);
-+		return ret;
-+	}
-+
-+	dev_info(&pdev->dev, "Driver registered.\n");
-+	return 0;
-+}
-+
-+static struct platform_driver nor_driver = {
-+	.driver = {
-+		.name		= "tegra-nor",
-+		.of_match_table	= nor_id_table,
-+	},
-+};
-+module_platform_driver_probe(nor_driver, nor_probe);
-+
-+MODULE_AUTHOR("Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org");
-+MODULE_DESCRIPTION("NVIDIA Tegra NOR Bus Driver");
-+MODULE_LICENSE("GPL");
---
-2.1.4
+The device tree binding was written in a way that even if we discover
+some change inside the clocks, the binding should not be
+affected. Especially, there are some holes in the clocks, but we
+should be able to add them seamless.
+
+The full series is available on the branch Armada-3700-Clocks-v3 at
+git@github.com:MISL-EBU-System-SW/mainline-public.git
+
+Thanks,
+
+Changelog:
+
+v2 -> v3
+
+- used marvell,armada-3700-gpio instead of marvell,mvebu-gpio-3700 in
+  the binding as pointed by Thomas,
+- removed the unnecessary include of clk.h in the 3 drivers, suggested
+  by Mike Turquette
+- removed the modular reference in the 3 drivers, suggested by Paul
+  Gortmaker
+- used static data for the peripheral driver when possible, suggested
+  by Mike Turquette
+
+v1 -> v2
+
+- Move to clk_hw based registration for the 3 clock driver as
+  requested by Stephen Boyd
+- Fixed typo noticed by Stephen Boyd
+- Added const and static when they were missing: suggested by Stephen
+  Boyd
+- Allocated the driver variable during probe instead of using a global
+  one as requested by Stephen Boyd
+- Managed the failure of the of_clk_add_hw_provider call
+- Added the Acked-by from Rob Herring on the dt binding patchs
+
+
+
+Gregory CLEMENT (6):
+  dt-bindings: clock: add DT binding for the Xtal clock on Armada 3700
+  clk: mvebu: Add the xtal clock for Armada 3700 SoC
+  dt-bindings: clock: add DT binding for the TBG clocks on Armada 3700
+  clk: mvebu Add the time base generator clocks for Armada 3700
+  dt-bindings: clock: add DT binding for the peripheral clocks on Armada
+    3700
+  clk: mvebu: Add the peripheral clock driver for Armada 3700
+
+ .../bindings/clock/armada3700-periph-clock.txt     |  70 ++++
+ .../bindings/clock/armada3700-tbg-clock.txt        |  27 ++
+ .../bindings/clock/armada3700-xtal-clock.txt       |  28 ++
+ drivers/clk/mvebu/Kconfig                          |   3 +
+ drivers/clk/mvebu/Makefile                         |   3 +
+ drivers/clk/mvebu/armada-37xx-periph.c             | 449 +++++++++++++++++++++
+ drivers/clk/mvebu/armada-37xx-tbg.c                | 158 ++++++++
+ drivers/clk/mvebu/armada-37xx-xtal.c               |  91 +++++
+ 8 files changed, 829 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/armada3700-tbg-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/armada3700-xtal-clock.txt
+ create mode 100644 drivers/clk/mvebu/armada-37xx-periph.c
+ create mode 100644 drivers/clk/mvebu/armada-37xx-tbg.c
+ create mode 100644 drivers/clk/mvebu/armada-37xx-xtal.c
+
+-- 
+2.5.0
+
