@@ -1,90 +1,46 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 0/4] pwm: add support for ChromeOS EC PWM
-Date: Tue, 19 Jul 2016 08:37:17 +0100
-Message-ID: <20160719073717.GE17074@dell>
-References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
- <20160718084928.GA17074@dell>
- <20160718091029.GA32259@ulmo.ba.sec>
- <20160718132426.GB17074@dell>
- <20160718140400.GA22297@ulmo.ba.sec>
+From: Jin Guojun <kid.jin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH 2/2] Enable SD UHS mode for hikey-mainline-rebase
+Date: Tue, 19 Jul 2016 15:51:53 +0800
+Message-ID: <1468914713-63347-2-git-send-email-kid.jin@hisilicon.com>
+References: <1468914713-63347-1-git-send-email-kid.jin@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160718140400.GA22297@ulmo.ba.sec>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Brian Norris <briannorris@chromium.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468914713-63347-1-git-send-email-kid.jin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kid.jin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Jul 2016, Thierry Reding wrote:
+From: j00226943 <j00226943-YePjYCeDBwpZmURYYhsjV1aTQe2KTcn/@public.gmane.org>
 
-> On Mon, Jul 18, 2016 at 02:24:26PM +0100, Lee Jones wrote:
-> > On Mon, 18 Jul 2016, Thierry Reding wrote:
-> >=20
-> > > On Mon, Jul 18, 2016 at 09:49:28AM +0100, Lee Jones wrote:
-> > > > On Fri, 15 Jul 2016, Brian Norris wrote:
-> > > > > This is the 4th (and final?) version of my series to support =
-the new ChromeOS
-> > > > > EC PWM API, so we can control, e.g., a PWM backlight when its=
- PWM is attached
-> > > > > to the EC. It uses Boris's latest "atomic" hooks for the PWM =
-API (i.e., the
-> > > > > ->apply() callback), which were recently merged.
-> > > > >=20
-> > > > > Pulled and adapted the cros_ec_cmd_xfer_status() helper from =
-this patch, with
-> > > > > some minor modifications:
-> > > > >=20
-> > > > > https://lkml.org/lkml/2016/4/12/342
-> > > > >=20
-> > > > > Note that after some style bikeshedding, I proposed to put of=
-f rewriting the
-> > > > > entire cros_ec_commands.h header at the moment, due to the sh=
-ared nature of
-> > > > > this file. Follow up here:
-> > > > >=20
-> > > > > https://bugs.chromium.org/p/chromium/issues/detail?id=3D62112=
-3
-> > > > >=20
-> > > > > As this touches MFD (sort of), drivers/platform/chrome/, and =
-drivers/pwm/, I'm
-> > > > > still not sure who it should all go through: Lee, Thierry, or=
- Olof?
-> > > >=20
-> > > > I usually take this type of submission through the MFD tree, al=
-though
-> > > > it's too late in the day to make it into v4.8.
-> > > >=20
-> > > > Which Acks are you missing?
-> > >=20
-> > > I'm willing to take this through the PWM tree if you're okay with=
- the
-> > > MFD changes. I can put the MFD changes into a separate branch and=
- you
-> > > could pull that in if you needed to resolve any dependencies, whi=
-ch I
-> > > think would be quite unlikely if you've already closed your tree.
-> >=20
-> > Are you saying that you're willing to take these straight into the
-> > merge-window, with no soak in -next?
->=20
-> There's still a bit of time to let it soak in -next, but I'm not over=
-ly
-> concerned given that this is purely additions of code, so there can't=
- be
-> any regressions.
+One more changes:
 
-No problem my side then.  Apply away.
+Enable SDR12 SDR25 SDR50 SDR104 in DTS to support UHS for SD Card
 
-Before doing so, can you see if there are any clashes with my
-mfd-for-next branch?  If conflicts occur, please construct an
-immutable tag I can pull from.  That way, I can base my branch on it
-and deal with the fallout myself.
+Signed-off-by: Jin Guojun <kid.jin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 189d215..33f204f 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -761,6 +761,10 @@
+ 			card-detect-delay = <200>;
+ 			hisilicon,peripheral-syscon = <&ao_ctrl>;
+ 			cap-sd-highspeed;
++			sd-uhs-sdr12;
++			sd-uhs-sdr25;
++			sd-uhs-sdr50;
++			sd-uhs-sdr104;
+ 			reg = <0x0 0xf723e000 0x0 0x1000>;
+ 			interrupts = <0x0 0x49 0x4>;
+ 			#address-cells = <0x1>;
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
