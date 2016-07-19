@@ -1,7 +1,7 @@
 From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] scripts/dtc: dtx_diff, before grep check .config file exists
-Date: Tue, 19 Jul 2016 08:42:05 -0700
-Message-ID: <1468942925-5025-1-git-send-email-gaurav.minocha.os@gmail.com>
+Subject: [PATCH] scripts/dtc: dtx_diff, redirects stderror to /dev/null
+Date: Tue, 19 Jul 2016 08:54:08 -0700
+Message-ID: <1468943648-5778-1-git-send-email-gaurav.minocha.os@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -11,7 +11,7 @@ List-Id: devicetree@vger.kernel.org
 scripts/dtc/dtx_diff searches CONFIG_DTC=y in .config,
 but it doesn't checks whether the file exists or not.
 
-So, this patch adds a check for .config file.
+So, this patch redirects the error in grep to /dev/null
 
 Tested script with and without .config file.
 
