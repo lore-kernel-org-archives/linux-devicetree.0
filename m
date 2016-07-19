@@ -1,99 +1,49 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v4 2/2] Bindings documentation for ISSI is31fl319x driver
-Date: Tue, 19 Jul 2016 10:52:56 +0200
-Message-ID: <578DEA68.4050200@samsung.com>
-References: <cover.1468915411.git.hns@goldelico.com>
- <c180cc66afdc0d0b40eb4cecaf15fe319875dcee.1468915412.git.hns@goldelico.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 0/4] mmc: sunxi: Make sample clocks optional
+Date: Tue, 19 Jul 2016 16:59:58 +0800
+Message-ID: <262161468918798@web25j.yandex.ru>
+References: <1468665964-27142-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <c180cc66afdc0d0b40eb4cecaf15fe319875dcee.1468915412.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, drivshin.allworx@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1468665964-27142-1-git-send-email-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nikolaus,
 
-On 07/19/2016 10:03 AM, H. Nikolaus Schaller wrote:
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->   .../devicetree/bindings/leds/is31fl319x.txt        | 56 ++++++++++++++++++++++
->   1 file changed, 56 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/is31fl319x.txt
+
+16.07.2016, 18:50, "Hans de Goede" <hdegoede@redhat.com>:
+> Hi All,
 >
-> diff --git a/Documentation/devicetree/bindings/leds/is31fl319x.txt b/Documentation/devicetree/bindings/leds/is31fl319x.txt
-> new file mode 100644
-> index 0000000..c42c89c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/is31fl319x.txt
-> @@ -0,0 +1,56 @@
-> +LEDs connected to is31fl319x LED controller chip
-> +
-> +Required properties:
-> +- compatible : Should be any of
-> +	"issi,is31fl3190"
-> +	"issi,is31fl3191"
-> +	"issi,is31fl3193"
-> +	"issi,is31fl3196"
-> +	"issi,is31fl3199"
-> +	"si-en,sn3199".
-> +- #address-cells: Must be 1.
-> +- #size-cells: Must be 0.
-> +- reg: 0x64, 0x65, 0x66, 0x67.
-> +
-> +Optional properties:
-> +- audio-gain-db : audio gain selection for external analog modulation input.
-> +	Valid values: 0 - 21, step by 3 (rounded down)
-> +	Default: 0
-> +
-> +Each led is represented as a sub-node of the issi,is31fl319x device.
-> +There can be less leds subnodes than the chip can support but not more.
-> +
-> +Required led sub-node properties:
-> +- reg : number of LED line
-> +	Valid values: 1 - number of leds supported by the chip variant.
-> +
-> +Optional led sub-node properties:
-> +- label : see Documentation/devicetree/bindings/leds/common.txt.
-> +- linux,default-trigger :
-> +	see Documentation/devicetree/bindings/leds/common.txt.
-> +- led-max-microamp : (optional)
-> +	Valid values: 5000 - 40000, step by 5000 (rounded down)
-> +	Default: 20000 (20 mA)
-> +	Note: a driver will take the lowest of all led limits since the
-> +	chip has a single global setting.
-
-I'd mention here that the lowest value will be chosen due to the
-PWM specificity, where lower brightness is achieved by reducing
-the frequency of pulses and not the current, which will always
-have its peak value equal to led-max-microamp.
-
-> +
-> +Examples:
-> +
-> +fancy_leds: leds@65 {
-> +	compatible = "issi,is31fl3196";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x65>;
-> +
-> +	red_aux: led@1 {
-> +		label = "red:aux";
-> +		reg = <1>;
-> +		led-max-microamp = <10000>;
-> +	};
-> +
-> +	green_power: led@5 {
-> +		label = "green:power";
-> +		reg = <5>;
-> +		linux,default-trigger = "default-on";
-> +	};
-> +};
+> It turns out that sun4i / sun5i do not have sample clocks at all,
+> so make them optional. Also remove the DDR capability when there
+> are no sample clocks because DDR modes do not work reliably without
+> them (observed on an UTOO P66 tablet with eMMC).
 >
+> Ulf, can you please merge the first 2 patches, patches 3-4 should
+> be merged through Maxime's sunxi/dts tree, but not before the first
+> 2 have hit linux-next.
+>
+> Regards,
+>
+> Hans
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
+Interesting...
 
--- 
-Best regards,
-Jacek Anaszewski
+A64 have also no external sample/output clock... (The sample/output clock is integrated into MMC IP core now)
