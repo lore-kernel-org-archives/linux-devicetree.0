@@ -1,69 +1,119 @@
-From: "R, Vignesh" <vigneshr@ti.com>
-Subject: Re: [RFC PATCH 1/2] Input: rotary-encoder- Add support for absolute
- encoder
-Date: Tue, 19 Jul 2016 18:34:40 +0530
-Message-ID: <70fe4260-ffec-e069-25c6-bcc93ccbfb0a@ti.com>
-References: <1463648641-6931-1-git-send-email-vigneshr@ti.com>
- <1463648641-6931-2-git-send-email-vigneshr@ti.com>
- <20160520163404.GC14951@dtor-ws> <5742CB03.8010805@ti.com>
- <574565ED.3060205@ti.com> <576283AF.9090107@ti.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2] drivers/perf: arm-pmu: Handle per-interrupt affinity mask
+Date: Tue, 19 Jul 2016 15:25:30 +0200
+Message-ID: <CAMuHMdXU6C=jFD16Jj3NFNawiY0YEpQDZSbL+T4bLgUOG3nTUQ@mail.gmail.com>
+References: <1467815627-4061-1-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <576283AF.9090107@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jonathan Corbet <corbet@lwn.net>, Johan Hovold <johan@kernel.org>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Masanari Iida <standby24x7@gmail.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, S Twiss <stwiss.opensource@diasemi.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Moritz Fischer <moritz.fischer@ettus.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Timo Teras <timo.teras@iki.fi>, Guido Martinez <guido@vanguardiasur.com.ar>, Clifton Barnes <clifton.a.barnes@gmail.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kern>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467815627-4061-1-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dmitry,
+Hi Marc, Catalin, Will,
 
-On 6/16/2016 4:17 PM, Vignesh R wrote:
-[...]
->>> On 5/20/2016 10:04 PM, Dmitry Torokhov wrote:
->>>> On Thu, May 19, 2016 at 02:34:00PM +0530, Vignesh R wrote:
->>>>> There are rotary-encoders where GPIO lines reflect the actual position
->>>>> of the rotary encoder dial. For example, if dial points to 9, then four
->>>>> GPIO lines connected to the rotary encoder will read HLLH(1001b = 9).
->>>>> Add support for such rotary-encoder.
->>>>> The driver relies on rotary-encoder,absolute-encoder DT property to
->>>>> detect such encoders.
->>>>> Since, GPIO IRQs are not necessary to work with
->>>>> such encoders, optional polling mode support is added using
->>>>> input_poll_dev skeleton. This is can be used by enabling
->>>>> CONFIG_INPUT_GPIO_ROTARY_ENCODER_POLL_MODE_SUPPORT.
->>>>
->>>> Does this really belong to a rotary encoder and not a new driver that
->>>> simply translates gpio-encoded value into ABS* event?
->>>>
->>>
->>> Currently rotary encoder driver only supports incremental/step counting
->>> rotary devices. However, the device that is there on am335x-ice is an
->>> absolute encoder but, IMO, nevertheless a kind of rotary encoder. The
->>> only difference is that there is no need to count steps and the absolute
->>> position value is always available as binary encoded state of connected
->>> GPIOs.
->>> The hardware on am335x-ice is a mechanical rotary encoder switch
->>> connected over 4 GPIOs. It is same as binary encoder described at [1]
->>> (except there are 4 GPIO lines), so this lead me to add support in
->>> rotary-encoder.
->>>
->>> [1]https://en.wikipedia.org/wiki/Rotary_encoder#Standard_binary_encoding
->>>
->>
->> Could you please comment on how would you like to support above
->> described encoder: As a new driver or with existing driver with new
->> compatible/mode setting via DT or as suggest by Uwe in another reply?
->> IMHO, supporting using existing driver with new mode/compatible string
->> looks a better option as the hardware is a kind of rotary-encoder.
->>
+On Wed, Jul 6, 2016 at 4:33 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> On a big-little system, PMUs can be wired to CPUs using per CPU
+> interrups (PPI). In this case, it is important to make sure that
+> the enable/disable do happen on the right set of CPUs.
+>
+> So instead of relying on the interrupt-affinity property, we can
+> use the actual percpu affinity that DT exposes as part of the
+> interrupt specifier. The DT binding is also updated to reflect
+> the fact that the interrupt-affinity property shouldn't be used
+> in that case.
+>
+> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> ---
+> * From v1:
+>   - propagate the error if irq_get_percpu_devid_partition fails
 
-Could you please suggest the right solution here? Do you think new
-driver is need to support above described absolute encoder h/w? It would
-be great to have your input now, so that I can work on the new set of
-patches and submit them for v4.9 merge window as soon as v4.8 merge
-window closes?
+This patch, which is commit 19a469a58720ea96 in arm64/for-next/core, broke
+the PMU on r8a7740/armadillo800eva:
 
-Regards
-Vignesh
+    -hw perfevents: enabled with armv7_cortex_a9 PMU driver, 7
+counters available
+    +hw perfevents: /pmu: failed to probe PMU!
+    +hw perfevents: /pmu: failed to register PMU devices!
+    +armv7-pmu: probe of pmu failed with error -22
+
+This is a single-core Cortex A9.
+
+>  Documentation/devicetree/bindings/arm/pmu.txt |  4 +++-
+>  drivers/perf/arm_pmu.c                        | 27 ++++++++++++++++++++++-----
+>  2 files changed, 25 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+> index 74d5417..61c8b46 100644
+> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+> @@ -39,7 +39,9 @@ Optional properties:
+>                         When using a PPI, specifies a list of phandles to CPU
+>                        nodes corresponding to the set of CPUs which have
+>                        a PMU of this type signalling the PPI listed in the
+> -                      interrupts property.
+> +                      interrupts property, unless this is already specified
+> +                      by the PPI interrupt specifier itself (in which case
+> +                      the interrupt-affinity property shouldn't be present).
+>
+>                         This property should be present when there is more than
+>                        a single SPI.
+
+On a single core, there's only a single SPI, hence there's no need for an
+"interrupt-affinity" property.
+
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 140436a..8e4d7f5 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -961,9 +964,23 @@ static int of_pmu_irq_cfg(struct arm_pmu *pmu)
+>                 i++;
+>         } while (1);
+>
+> -       /* If we didn't manage to parse anything, claim to support all CPUs */
+> -       if (cpumask_weight(&pmu->supported_cpus) == 0)
+> -               cpumask_setall(&pmu->supported_cpus);
+> +       /* If we didn't manage to parse anything, try the interrupt affinity */
+> +       if (cpumask_weight(&pmu->supported_cpus) == 0) {
+> +               if (!using_spi) {
+
+However, using_spi is never set to true in the absence of that property,
+causing the wrong branch to be taken...
+
+> +                       /* If using PPIs, check the affinity of the partition */
+> +                       int ret, irq;
+> +
+> +                       irq = platform_get_irq(pdev, 0);
+> +                       ret = irq_get_percpu_devid_partition(irq, &pmu->supported_cpus);
+
+... and ret to become -22 here.
+
+> +                       if (ret) {
+> +                               kfree(irqs);
+> +                               return ret;
+> +                       }
+> +               } else {
+> +                       /* Otherwise default to all CPUs */
+> +                       cpumask_setall(&pmu->supported_cpus);
+> +               }
+> +       }
+>
+>         /* If we matched up the IRQ affinities, use them to route the SPIs */
+>         if (using_spi && i == pdev->num_resources)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
