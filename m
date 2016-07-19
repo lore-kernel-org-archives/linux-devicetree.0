@@ -1,98 +1,45 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 1/2] Support SD UHS for hikey-mainline-rebase
-Date: Tue, 19 Jul 2016 17:13:01 +0900
-Message-ID: <578DE10D.3020401@samsung.com>
-References: <CGME20160719075706epcas1p169dc5e5e0f7179f71f92a56e57e373c4@epcas1p1.samsung.com>
- <1468914713-63347-1-git-send-email-kid.jin@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1468914713-63347-1-git-send-email-kid.jin@hisilicon.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jin Guojun <kid.jin@hisilicon.com>, ulf.hansson@linaro.org, Adrian Hunter <adrian.hunter@intel.com>, arnd@arndb.de, rmk+kernel@arm.linux.org.uk, shawn.lin@rock-chips.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linuxarm@huawei.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, CPGS <cpgs@samsung.com>
+From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] scripts/dtc: dtx_diff, before grep check .config file exists
+Date: Tue, 19 Jul 2016 01:33:03 -0700
+Message-ID: <1468917183-6801-1-git-send-email-gaurav.minocha.os@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+scripts/dtc/dtx_diff searches CONFIG_DTC=y in .config,
+but it doesn't checks whether the file exists or not.
 
-Removed the unnecessary CC'd.
+So, this patch adds a check for .config file.
 
-On 07/19/2016 04:51 PM, Jin Guojun wrote:
-> From: j00226943 <j00226943@notesmail.huawei.com>
+Tested script with and without .config file.
 
-What is j00226943?
+>/scripts/dtc/dtx_diff test.dts
 
-When you send the patch for dw_mmc controller, plz use the prefix "mmc: dw_mmc: ".
+Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ scripts/dtc/dtx_diff | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> Two more changes:
-> 
-> Before we send cmd,we need to set CMD bit29 to
-> 1 so that CMD and DATA sent to card through the HOLD Register,
-> This is the explication in synosys host:To meet the relatively
-> high Input Hold Time requirement for SDR12, SDR25, and other MMC
-> speed modes, you should program bit[29]use_hold_Reg of the CMD
-> register to 1'b1; the output data is then registered again in the
-> cclk_in_drv domain by using the Hold Register as shown in Path B
-> of Figure 10-8. However, for the higher speed modes of SDR104, SDR50
-> and DDR50, you can meet the much smaller Input Hold Time requirement
-> of 0.8ns by bypassing the Hold Register (Path A in Figure 10-8,
-> programming CMD.use_hold_reg = 1'b0) and then adding delay elements
-> on the output path as indicated
-> 
-> We have no tuning function in our drivers,so we must do the
-> Function piling when we init UHS card.
+diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
+index 959ab26..1c76dcd 100755
+--- a/scripts/dtc/dtx_diff
++++ b/scripts/dtc/dtx_diff
+@@ -266,7 +266,8 @@ DTC="${__KBUILD_OUTPUT}/scripts/dtc/dtc"
+ 
+ if [ ! -x ${DTC} ] ; then
+ 	__DTC="dtc"
+-	if grep -q "^CONFIG_DTC=y" ${__KBUILD_OUTPUT}/.config ; then
++	if [ -f "${__KBUILD_OUTPUT}/.config" ] && \
++		grep -q "^CONFIG_DTC=y" ${__KBUILD_OUTPUT}/.config ; then
+ 		make_command='
+          make scripts'
+ 	else
+-- 
+2.1.4
 
-Sorry..this patch is NACK.
-SDMMC_CMD_USE_HOLD_REG is already used by default in dw_mmc.c
-Which kernel version did you use?
-
-> 
-> Signed-off-by: Jin Guojun <kid.jin@hisilicon.com>
-> ---
->  drivers/mmc/host/dw_mmc-k3.c | 6 ++++++
->  drivers/mmc/host/dw_mmc.c    | 2 ++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/dw_mmc-k3.c b/drivers/mmc/host/dw_mmc-k3.c
-> index 63c2e2e..2cbfcc7 100644
-> --- a/drivers/mmc/host/dw_mmc-k3.c
-> +++ b/drivers/mmc/host/dw_mmc-k3.c
-> @@ -125,10 +125,16 @@ static void dw_mci_hi6220_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->  	host->bus_hz = clk_get_rate(host->biu_clk);
->  }
->  
-> +static void dw_mci_hi6220_prepare_command(struct dw_mci *host, u32 *cmdr)
-> +{
-> +	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
-> +}
-> +
->  static const struct dw_mci_drv_data hi6220_data = {
->  	.switch_voltage		= dw_mci_hi6220_switch_voltage,
->  	.set_ios		= dw_mci_hi6220_set_ios,
->  	.parse_dt		= dw_mci_hi6220_parse_dt,
-> +	.prepare_command        = dw_mci_hi6220_prepare_command,
->  };
-
-There is no "prepare_command" hooks.
-
-Best Regards,
-Jaehoon Chung
-
->  
->  static const struct of_device_id dw_mci_k3_match[] = {
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index 9dd1bd3..047e116 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -1564,6 +1564,8 @@ static int dw_mci_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  
->  	if (drv_data && drv_data->execute_tuning)
->  		err = drv_data->execute_tuning(slot, opcode);
-> +	else
-> +		err = 0;
->  	return err;
->  }
->  
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
