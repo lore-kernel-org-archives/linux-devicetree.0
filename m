@@ -1,56 +1,62 @@
-From: Duc Dang <dhdang@apm.com>
-Subject: Re: [PATCH v8 0/4] perf: Add APM X-Gene SoC Performance Monitoring
- Unit driver
-Date: Tue, 19 Jul 2016 13:22:09 -0700
-Message-ID: <CADaLNDnqs+jRTfQTXV5VaKbWbQ4dZMGGQAgWXVqWhX8AZZrWgw@mail.gmail.com>
-References: <1468263944-10634-1-git-send-email-ttnguyen@apm.com>
- <20160714131602.GJ29455@arm.com> <CACgAJHyBt4TCoDjm0XGyX8usD_Wt_-7_JA918Wr4oF567wY_EA@mail.gmail.com>
- <CADaLNDnNVC48Ce1A+KU2WMULkY+skKVSm1GpaoQ6HvAEmscD=A@mail.gmail.com>
+From: SF Markus Elfring <elfring@users.sourceforge.net>
+Subject: [PATCH] of: Delete an unnecessary check before the function call
+ "of_node_put"
+Date: Tue, 19 Jul 2016 22:52:12 +0200
+Message-ID: <8db62ad3-2e8a-327e-30a8-594f628cd8be@users.sourceforge.net>
+References: <5307CAA2.8060406@users.sourceforge.net>
+ <alpine.DEB.2.02.1402212321410.2043@localhost6.localdomain6>
+ <530A086E.8010901@users.sourceforge.net>
+ <alpine.DEB.2.02.1402231635510.1985@localhost6.localdomain6>
+ <530A72AA.3000601@users.sourceforge.net>
+ <alpine.DEB.2.02.1402240658210.2090@localhost6.localdomain6>
+ <530B5FB6.6010207@users.sourceforge.net>
+ <alpine.DEB.2.10.1402241710370.2074@hadrien>
+ <530C5E18.1020800@users.sourceforge.net>
+ <alpine.DEB.2.10.1402251014170.2080@hadrien>
+ <530CD2C4.4050903@users.sourceforge.net>
+ <alpine.DEB.2.10.1402251840450.7035@hadrien>
+ <530CF8FF.8080600@users.sourceforge.net>
+ <alpine.DEB.2.02.1402252117150.2047@localhost6.localdomain6>
+ <530DD06F.4090703@users.sourceforge.net>
+ <alpine.DEB.2.02.1402262129250.2221@localhost6.localdomain6>
+ <5317A59D.4@users.sourceforge.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADaLNDnNVC48Ce1A+KU2WMULkY+skKVSm1GpaoQ6HvAEmscD=A@mail.gmail.com>
+In-Reply-To: <5317A59D.4@users.sourceforge.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tai Tri Nguyen <ttnguyen@apm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Joe Perches <joe@perches.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, LKML <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+To: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2016 at 10:37 AM, Duc Dang <dhdang@apm.com> wrote:
-> On Thu, Jul 14, 2016 at 10:28 AM, Tai Tri Nguyen <ttnguyen@apm.com> wrote:
->>
->> Hi Will,
->>
->> On Thu, Jul 14, 2016 at 6:16 AM, Will Deacon <will.deacon@arm.com> wrote:
->> > On Mon, Jul 11, 2016 at 12:05:40PM -0700, Tai Nguyen wrote:
->> >> In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
->> >> are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
->> >> memory controller bridges and memory. These PMU devices are loosely
->> >> architected to follow the same model as the PMU for ARM cores.
->> >
->> > You might want to add commit messages to patches 1,2 and 4, but then you
->> > can route this via the arm-soc tree.
->> >
->> > Will
->>
->> I will add the commit messages to these patches 1, 2 and 4 and rout
->> this via arm-soc tree.
->> CC: Duc (dhdang@apm.com)
->
-> I will pull patch 1, 2 and 4 into xgene-next tree and send pull
-> request to Arnd and Olof.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 19 Jul 2016 22:42:22 +0200
 
-Hi Will,
+The of_node_put() function tests whether its argument is NULL
+and then returns immediately.
+Thus the test around the call is not needed.
 
-Do you plan to merge this series (Tai posted v10) into 4.8 or you want
-to wait until 4.9? Please let know so that I can plan my pull request
-to Arnd/Olof accordingly to include patch 1, 2, and 4.
+This issue was detected by using the Coccinelle software.
 
-Regards,
-Duc Dang.
->
->>
->> Thanks,
->> --
->> Tai
-> Regards,
-> Duc Dang.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+---
+ drivers/of/base.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index a4b6087..2601167 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1609,8 +1609,7 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
+ 	 */
+ 
+  err:
+-	if (it.node)
+-		of_node_put(it.node);
++	of_node_put(it.node);
+ 	return rc;
+ }
+ 
+-- 
+2.9.2
