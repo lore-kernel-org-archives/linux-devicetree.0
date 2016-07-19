@@ -1,45 +1,150 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH 03/10] of: irq: make of_msi_configure accessible from
- modules
-Date: Tue, 19 Jul 2016 17:40:02 -0400
-Message-ID: <0fcc2c31-bd94-4a64-0456-9a35b692d2d8@codeaurora.org>
-References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
- <1468867177-15007-4-git-send-email-okaya@codeaurora.org>
- <CAL_Jsq+zLb0RcEdykDZXZpkgjjrDWa+-Bd0LTth3kB4H5X9pOQ@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: add spiX aliases for rk3399
+Date: Wed, 20 Jul 2016 00:18:40 +0200
+Message-ID: <1841177.NDa9D09EGz@diego>
+References: <1468545873-134339-1-git-send-email-briannorris@chromium.org> <20160719192754.GA140860@google.com> <20160719192912.GA142821@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+zLb0RcEdykDZXZpkgjjrDWa+-Bd0LTth3kB4H5X9pOQ@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: dmaengine@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christopher Covington <cov@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, "jcm@redhat.com" <jcm@redhat.com>, Eric Auger <eric.auger@linaro.org>, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160719192912.GA142821@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/18/2016 5:24 PM, Rob Herring wrote:
-> On Mon, Jul 18, 2016 at 1:39 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
->> The of_msi_configure routine is only accessible by the built-in
->> kernel drivers. Export this function so that modules can use it
->> too.
->>
->> This function is useful for configuring MSI on child device tree
->> nodes on hierarchical objects.
->>
->> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
->> ---
->>  drivers/of/irq.c | 1 +
->>  1 file changed, 1 insertion(+)
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> --
-> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Am Dienstag, 19. Juli 2016, 12:29:14 schrieb Brian Norris:
+> On Tue, Jul 19, 2016 at 12:27:54PM -0700, Brian Norris wrote:
+> > + Rob
+>=20
+> + Rob for real
+>=20
+> > Hi,
+> >=20
+> > On Tue, Jul 19, 2016 at 08:56:47PM +0200, Heiko Stuebner wrote:
+> > > Am Dienstag, 19. Juli 2016, 08:39:55 schrieb Uwe Kleine-K=F6nig:
+> > > > On Thu, Jul 14, 2016 at 06:24:33PM -0700, Brian Norris wrote:
+> > > > > It's nicer to see this:
+> > > > >     # ls -l /sys/bus/spi/devices/
+> > > > >     total 0
+> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi0.0 ->
+> > > > >     ../../../devices/platform/ff1c0000.spi/spi_master/spi0/sp=
+i0.0
+> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi1.0 ->
+> > > > >     ../../../devices/platform/ff1d0000.spi/spi_master/spi1/sp=
+i1.0
+> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi2.0 ->
+> > > > >     ../../../devices/platform/ff1e0000.spi/spi_master/spi2/sp=
+i2.0
+> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi5.0 ->
+> > > > >     ../../../devices/platform/ff200000.spi/spi_master/spi5/sp=
+i5.0>
+> > > > >=20
+> > > > > than this:
+> > > > >     # ls -l /sys/bus/spi/devices/
+> > > > >     total 0
+> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32763.0 ->
+> > > > >     ../../../devices/platform/ff200000.spi/spi_master/spi3276=
+3/spi32
+> > > > >     763.0
+> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32764.0 ->
+> > > > >     ../../../devices/platform/ff1e0000.spi/spi_master/spi3276=
+4/spi32
+> > > > >     764.0
+> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32765.0 ->
+> > > > >     ../../../devices/platform/ff1d0000.spi/spi_master/spi3276=
+5/spi32
+> > > > >     765.0
+> > > > >     lrwxrwxrwx 1 root root 0 Dec 31  1969 spi32766.0 ->
+> > > > >     ../../../devices/platform/ff1c0000.spi/spi_master/spi3276=
+6/spi32
+> > > > >     766.0>
+> > > > >=20
+> > > > > With the latter, it's much clearer which bus devices are on.
+> > > > >=20
+> > > > > Signed-off-by: Brian Norris <briannorris@chromium.org>
+> > > > > ---
+> > > > >=20
+> > > > >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++++
+> > > > >  1 file changed, 6 insertions(+)
+> > > > >=20
+> > > > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > > > b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index
+> > > > > 4c84229789ef..b04abbfd4898 100644
+> > > > > --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > > > @@ -70,6 +70,12 @@
+> > > > >=20
+> > > > >  		serial2 =3D &uart2;
+> > > > >  		serial3 =3D &uart3;
+> > > > >  		serial4 =3D &uart4;
+> > > > >=20
+> > > > > +		spi0 =3D &spi0;
+> > > > > +		spi1 =3D &spi1;
+> > > > > +		spi2 =3D &spi2;
+> > > > > +		spi3 =3D &spi3;
+> > > > > +		spi4 =3D &spi4;
+> > > > > +		spi5 =3D &spi5;
+> > > >=20
+> > > > Note that Rob Herring (with his dt-maintainer hat on) doesn't l=
+ike
+> > > > these
+> > > > aliases.
+> > > >=20
+> > > > See for example:
+> > > > 	http://mid.gmane.org/20160705140546.GA10601@rob-hp-laptop
+> >=20
+> > But why? I believe half the arguments in the linked thread were
+> > Catch-22's -- there were no "mainline" users (which is a false targ=
+et
+> > IMO anyway, as Christer Weinigel mentioned somewhere in the thread =
+Rob
+> > linked), and so we couldn't accept more documentation (or users) fo=
+r the
+> > feature. FWIW, my quick grep now shows there are currently 43 mainl=
+ine
+> > users.
+> >=20
+> > This feature is very useful. Some of the thread Rob pointed to argu=
+ed
+> > that the indexing isn't HW documentation; in this case, it most
+> > certainly is. The RK3399 TRM explicitly has these SPI buses named S=
+PI0,
+> > SPI1, SPI2, SPI3, SPI4, and SPI5, and schematics that I've seen use=
+ the
+> > same terminology. It is therefore *much* nicer to have my device sh=
+ow up
+> > as 'spi2.0' (reflecting their correct HW name) rather than spi32764=
+=2E0.
+> > Sometimes I can't even get as far as mounting sysfs to check what t=
+his
+> > maps to, but having spi2.0 in the kernel log can clearly tell me wh=
+at
+> > device is causing problems.
+> >=20
+> > If Rob can support a better alternative solution, I'd be happy to
+> > switch. But I don't understand why we can't use a useful (not just =
+to
+> > me, but presumably to at least 43 other independent users, and many
+> > more out of tree), existing, and long-supported feature here.
 
-Thanks Rob
+Personally, I don't have any real opinion on this but the argument soun=
+ds=20
+plausible to me (aka they are named with numbers in every manual, schem=
+atics)=20
+so it might be helpful to have that around - similar to i2c that is in =
+the=20
+dtsi already.
 
--- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+I think I remember Doug having a similar discussion around mmc-aliases =
+some=20
+time ago - that met opposition as well [0] - although I guess the numbe=
+ring=20
+was a bit more arbitary there.
+
+I guess we'll just see what Rob says.
+
+
+Heiko
+
+[0] https://lkml.org/lkml/2016/4/29/610
