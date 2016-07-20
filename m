@@ -1,63 +1,32 @@
-From: Duc Dang <dhdang@apm.com>
-Subject: Re: [PATCH v8 0/4] perf: Add APM X-Gene SoC Performance Monitoring
- Unit driver
-Date: Wed, 20 Jul 2016 11:04:42 -0700
-Message-ID: <CADaLND=5Wu6+2G2E1K28BejGenRi89yODACdwhZJVr-Ee+um6w@mail.gmail.com>
-References: <1468263944-10634-1-git-send-email-ttnguyen@apm.com>
- <20160714131602.GJ29455@arm.com> <CACgAJHyBt4TCoDjm0XGyX8usD_Wt_-7_JA918Wr4oF567wY_EA@mail.gmail.com>
- <CADaLNDnNVC48Ce1A+KU2WMULkY+skKVSm1GpaoQ6HvAEmscD=A@mail.gmail.com>
- <CADaLNDnqs+jRTfQTXV5VaKbWbQ4dZMGGQAgWXVqWhX8AZZrWgw@mail.gmail.com> <20160720101553.GA20508@arm.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] wlcore: spi: fix build warning caused by redundant variable
+Date: Wed, 20 Jul 2016 21:27:53 +0300
+Message-ID: <87wpkgqi52.fsf@kamboji.qca.qualcomm.com>
+References: <1468999637-31006-1-git-send-email-eyalr@ti.com>
+	<8665E2433BC68541A24DFFCA87B70F5B36161A64@DFRE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160720101553.GA20508@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Tai Tri Nguyen <ttnguyen@apm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Joe Perches <joe@perches.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, LKML <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B36161A64-1tpBd5JUCm6IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+	(Eyal Reizer's message of "Wed, 20 Jul 2016 07:30:20 +0000")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev@vger.kernel.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi@vger.kernel.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 3:15 AM, Will Deacon <will.deacon@arm.com> wrote:
-> On Tue, Jul 19, 2016 at 01:22:09PM -0700, Duc Dang wrote:
->> On Thu, Jul 14, 2016 at 10:37 AM, Duc Dang <dhdang@apm.com> wrote:
->> > On Thu, Jul 14, 2016 at 10:28 AM, Tai Tri Nguyen <ttnguyen@apm.com> wrote:
->> >> On Thu, Jul 14, 2016 at 6:16 AM, Will Deacon <will.deacon@arm.com> wrote:
->> >> > On Mon, Jul 11, 2016 at 12:05:40PM -0700, Tai Nguyen wrote:
->> >> >> In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
->> >> >> are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
->> >> >> memory controller bridges and memory. These PMU devices are loosely
->> >> >> architected to follow the same model as the PMU for ARM cores.
->> >> >
->> >> > You might want to add commit messages to patches 1,2 and 4, but then you
->> >> > can route this via the arm-soc tree.
->> >> >
->> >> > Will
->> >>
->> >> I will add the commit messages to these patches 1, 2 and 4 and rout
->> >> this via arm-soc tree.
->> >> CC: Duc (dhdang@apm.com)
->> >
->> > I will pull patch 1, 2 and 4 into xgene-next tree and send pull
->> > request to Arnd and Olof.
->>
->> Hi Will,
->>
->> Do you plan to merge this series (Tai posted v10) into 4.8 or you want
->> to wait until 4.9? Please let know so that I can plan my pull request
->> to Arnd/Olof accordingly to include patch 1, 2, and 4.
+"Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org> writes:
+
+> The ret variable is unused in wlcore_probe_of()
+> Remove it for fixing build warning.
 >
-> I was hoping that the whole series would go via arm-soc. Mark reviewed
-> the PMU driver code, so that should be sufficient.
+> Fixes: 01efe65aba65 ("wlcore: spi: add wl18xx support")
+> Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
 
-Thanks, Will.
+Applied to wireless-drivers-next, thanks.
 
-Hi Arnd, Olof,
-
-Can you please help merge v10 of this series into your arm-soc tree? I
-can merge this series into xgene-next and send a pull request to you
-too, but the pull request will only contain this series as I don't
-have more dts changes at this time.
-
-Regards,
-Duc Dang.
->
-> Will
+-- 
+Kalle Valo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
