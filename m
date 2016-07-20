@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 5/6] libfdt: Add fdt_setprop_inplace_namelen_partial
-Date: Wed, 20 Jul 2016 16:20:43 +0200
-Message-ID: <20160720142044.27527-6-maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 2/6] libfdt: Add iterator over properties
+Date: Wed, 20 Jul 2016 16:20:40 +0200
+Message-ID: <20160720142044.27527-3-maxime.ripard@free-electrons.com>
 References: <20160720142044.27527-1-maxime.ripard@free-electrons.com>
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20160720142044.27527-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,101 +10,230 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a function to modify inplace only a portion of a property..
+Implement a macro based on fdt_first_property_offset and
+fdt_next_property_offset that provides a convenience to iterate over all
+the properties of a given node.
 
-This is especially useful when the property is an array of values, and you
-want to update one of them without changing the DT size.
-
-Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Reviewed-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- libfdt/fdt_wip.c | 29 +++++++++++++++++++++++++----
- libfdt/libfdt.h  | 21 +++++++++++++++++++++
- 2 files changed, 46 insertions(+), 4 deletions(-)
+ libfdt/libfdt.h            | 26 +++++++++++++
+ tests/.gitignore           |  1 +
+ tests/Makefile.tests       |  1 +
+ tests/property_iterate.c   | 97 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/property_iterate.dts | 24 ++++++++++++
+ tests/run_tests.sh         |  3 ++
+ 6 files changed, 152 insertions(+)
+ create mode 100644 tests/property_iterate.c
+ create mode 100644 tests/property_iterate.dts
 
-diff --git a/libfdt/fdt_wip.c b/libfdt/fdt_wip.c
-index c5bbb68d3273..fd53e0b67416 100644
---- a/libfdt/fdt_wip.c
-+++ b/libfdt/fdt_wip.c
-@@ -55,21 +55,42 @@
- 
- #include "libfdt_internal.h"
- 
-+int fdt_setprop_inplace_namelen_partial(void *fdt, int nodeoffset,
-+					const char *name, int namelen,
-+					uint32_t index, const void *val,
-+					int len)
-+{
-+	void *propval;
-+	int proplen;
-+
-+	propval = fdt_getprop_namelen_w(fdt, nodeoffset, name, namelen,
-+					&proplen);
-+	if (!propval)
-+		return proplen;
-+
-+	if (proplen < (len + index))
-+		return -FDT_ERR_NOSPACE;
-+
-+	memcpy((unsigned char *)propval + index, val, len);
-+	return 0;
-+}
-+
- int fdt_setprop_inplace(void *fdt, int nodeoffset, const char *name,
- 			const void *val, int len)
- {
--	void *propval;
-+	const void *propval;
- 	int proplen;
- 
--	propval = fdt_getprop_w(fdt, nodeoffset, name, &proplen);
-+	propval = fdt_getprop(fdt, nodeoffset, name, &proplen);
- 	if (! propval)
- 		return proplen;
- 
- 	if (proplen != len)
- 		return -FDT_ERR_NOSPACE;
- 
--	memcpy(propval, val, len);
--	return 0;
-+	return fdt_setprop_inplace_namelen_partial(fdt, nodeoffset, name,
-+						   strlen(name), 0,
-+						   val, len);
- }
- 
- static void _fdt_nop_region(void *start, int len)
 diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index e504467a6249..177fe68febce 100644
+index 70ec39c7104c..cb2f080c81d4 100644
 --- a/libfdt/libfdt.h
 +++ b/libfdt/libfdt.h
-@@ -1077,6 +1077,27 @@ int fdt_size_cells(const void *fdt, int nodeoffset);
- /* Write-in-place functions                                           */
- /**********************************************************************/
+@@ -457,6 +457,32 @@ int fdt_first_property_offset(const void *fdt, int nodeoffset);
+  */
+ int fdt_next_property_offset(const void *fdt, int offset);
  
 +/**
-+ * fdt_setprop_inplace_namelen_partial - change a property's value,
-+ *                                       but not its size
-+ * @fdt: pointer to the device tree blob
-+ * @nodeoffset: offset of the node whose property to change
-+ * @name: name of the property to change
-+ * @namelen: number of characters of name to consider
-+ * @index: index of the property to change in the array
-+ * @val: pointer to data to replace the property value with
-+ * @len: length of the property value
++ * fdt_for_each_property - iterate over all properties of a node
++ * @property_offset:	property offset (int)
++ * @fdt:		FDT blob (const void *)
++ * @node:		node offset (int)
 + *
-+ * Identical to fdt_setprop_inplace(), but modifies the given property
-+ * starting from the given index, and using only the first characters
-+ * of the name. It is useful when you want to manipulate only one value of
-+ * an array and you have a string that doesn't end with \0.
++ * This is actually a wrapper around a for loop and would be used like so:
++ *
++ *	fdt_for_each_property(property, fdt, node) {
++ *		if ((property < 0) && (property != -FDT_ERR_NOT_FOUND)) {
++ *			Error handling
++ *		}
++ *
++ *		Use property
++ *		...
++ *	}
++ *
++ * Note that this is implemented as a macro and property is used as
++ * iterator in the loop. The node variable can be constant or even a
++ * literal.
 + */
-+int fdt_setprop_inplace_namelen_partial(void *fdt, int nodeoffset,
-+					const char *name, int namelen,
-+					uint32_t index, const void *val,
-+					int len);
++#define fdt_for_each_property_offset(property, fdt, node)	\
++	for (property = fdt_first_property_offset(fdt, node);	\
++	     property >= 0;					\
++	     property = fdt_next_property_offset(fdt, property))
 +
  /**
-  * fdt_setprop_inplace - change a property's value, but not its size
+  * fdt_get_property_by_offset - retrieve the property at a given offset
   * @fdt: pointer to the device tree blob
+diff --git a/tests/.gitignore b/tests/.gitignore
+index e4532da30bf5..fa4616ba28c2 100644
+--- a/tests/.gitignore
++++ b/tests/.gitignore
+@@ -40,6 +40,7 @@ tmp.*
+ /path_offset
+ /path_offset_aliases
+ /phandle_format
++/property_iterate
+ /propname_escapes
+ /references
+ /root_node
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index f7c3a4b00ead..196518c83eda 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -23,6 +23,7 @@ LIB_TESTS_L = get_mem_rsv \
+ 	add_subnode_with_nops path_offset_aliases \
+ 	utilfdt_test \
+ 	integer-expressions \
++	property_iterate \
+ 	subnode_iterate
+ LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
+ 
+diff --git a/tests/property_iterate.c b/tests/property_iterate.c
+new file mode 100644
+index 000000000000..0f3959cb8c22
+--- /dev/null
++++ b/tests/property_iterate.c
+@@ -0,0 +1,97 @@
++/*
++ * libfdt - Flat Device Tree manipulation
++ *	Tests that fdt_next_subnode() works as expected
++ *
++ * Copyright (C) 2013 Google, Inc
++ *
++ * Copyright (C) 2007 David Gibson, IBM Corporation.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#include <stdlib.h>
++#include <stdio.h>
++#include <string.h>
++#include <stdint.h>
++
++#include <libfdt.h>
++
++#include "tests.h"
++#include "testdata.h"
++
++static void test_node(void *fdt, int parent_offset)
++{
++	fdt32_t properties;
++	const fdt32_t *prop;
++	int offset, property;
++	int count;
++	int len;
++
++	/*
++	 * This property indicates the number of properties in our
++	 * test node to expect
++	 */
++	prop = fdt_getprop(fdt, parent_offset, "test-properties", &len);
++	if (!prop || len != sizeof(fdt32_t)) {
++		FAIL("Missing/invalid test-properties property at '%s'",
++		     fdt_get_name(fdt, parent_offset, NULL));
++	}
++	properties = cpu_to_fdt32(*prop);
++
++	count = 0;
++	offset = fdt_first_subnode(fdt, parent_offset);
++	if (offset < 0)
++		FAIL("Missing test node\n");
++
++	fdt_for_each_property_offset(property, fdt, offset)
++		count++;
++
++	if (count != properties) {
++		FAIL("Node '%s': Expected %d properties, got %d\n",
++		     fdt_get_name(fdt, parent_offset, NULL), properties,
++		     count);
++	}
++}
++
++static void check_fdt_next_subnode(void *fdt)
++{
++	int offset;
++	int count = 0;
++
++	fdt_for_each_subnode(offset, fdt, 0) {
++		test_node(fdt, offset);
++		count++;
++	}
++
++	if (count != 2)
++		FAIL("Expected %d tests, got %d\n", 2, count);
++}
++
++int main(int argc, char *argv[])
++{
++	void *fdt;
++
++	test_init(argc, argv);
++	if (argc != 2)
++		CONFIG("Usage: %s <dtb file>", argv[0]);
++
++	fdt = load_blob(argv[1]);
++	if (!fdt)
++		FAIL("No device tree available");
++
++	check_fdt_next_subnode(fdt);
++
++	PASS();
++}
+diff --git a/tests/property_iterate.dts b/tests/property_iterate.dts
+new file mode 100644
+index 000000000000..2ed677e7e6ea
+--- /dev/null
++++ b/tests/property_iterate.dts
+@@ -0,0 +1,24 @@
++/dts-v1/;
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	test1 {
++		test-properties = <3>;
++
++		test {
++			linux,phandle = <0x1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++
++	test2 {
++		test-properties = <0>;
++
++		test {
++		};
++	};
++};
++
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index 7eb9b3d33108..6a2662b2abaf 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -269,6 +269,9 @@ libfdt_tests () {
+     run_dtc_test -I dts -O dtb -o subnode_iterate.dtb subnode_iterate.dts
+     run_test subnode_iterate subnode_iterate.dtb
+ 
++    run_dtc_test -I dts -O dtb -o property_iterate.dtb property_iterate.dts
++    run_test property_iterate property_iterate.dtb
++
+     # Tests for behaviour on various sorts of corrupted trees
+     run_test truncated_property
+ 
 -- 
 2.9.0
