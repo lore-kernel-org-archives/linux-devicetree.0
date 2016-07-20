@@ -1,45 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 3/10] Documentation: dt-bindings: firmware: tegra: add
- bindings of the BPMP
-Date: Tue, 19 Jul 2016 20:22:31 -0500
-Message-ID: <20160720012231.GA8522@rob-hp-laptop>
-References: <20160719091723.30919-1-josephl@nvidia.com>
- <20160719091723.30919-2-josephl@nvidia.com>
+Subject: Re: [PATCH v6 2/2] Bindings documentation for ISSI is31fl319x driver
+Date: Tue, 19 Jul 2016 20:24:57 -0500
+Message-ID: <20160720012457.GA10971@rob-hp-laptop>
+References: <cover.1468928850.git.hns@goldelico.com>
+ <403335d22f6a8e131bc44077f97e499970e61245.1468928850.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160719091723.30919-2-josephl@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joseph Lo <josephl@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Matthew Longnecker <MLongnecker@nvidia.com>, devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sivaram Nair <sivaramn@nvidia.com>
+In-Reply-To: <403335d22f6a8e131bc44077f97e499970e61245.1468928850.git.hns@goldelico.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, drivshin.allworx@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, kernel@pyra-handheld.com, marek@goldelico.com, letux-kernel@openphoenux.org, Andrey Utkin <andrey_utkin@fastmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2016 at 05:17:23PM +0800, Joseph Lo wrote:
-> The BPMP is a specific processor in Tegra chip, which is designed for
-> booting process handling and offloading the power management, clock
-> management, and reset control tasks from the CPU. The binding document
-> defines the resources that would be used by the BPMP firmware driver,
-> which can create the interprocessor communication (IPC) between the CPU
-> and BPMP.
+On Tue, Jul 19, 2016 at 01:47:31PM +0200, H. Nikolaus Schaller wrote:
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../devicetree/bindings/leds/is31fl319x.txt        | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/is31fl319x.txt
 > 
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> ---
-> Changes in V3:
-> - s/mmio-ram/mmio-sram/
-> - revise the file path of the reference binding documents and header files
->   for more generic viem in different SW projects
-> Changes in V2:
-> - update the message that the BPMP is clock and reset control provider
-> - add tegra186-clock.h and tegra186-reset.h header files
-> - revise the description of the required properties
-> ---
->  .../bindings/firmware/nvidia,tegra186-bpmp.txt     |  77 ++
->  include/dt-bindings/clock/tegra186-clock.h         | 940 +++++++++++++++++++++
->  include/dt-bindings/reset/tegra186-reset.h         | 217 +++++
->  3 files changed, 1234 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->  create mode 100644 include/dt-bindings/clock/tegra186-clock.h
->  create mode 100644 include/dt-bindings/reset/tegra186-reset.h
+> diff --git a/Documentation/devicetree/bindings/leds/is31fl319x.txt b/Documentation/devicetree/bindings/leds/is31fl319x.txt
+> new file mode 100644
+> index 0000000..03287c0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/is31fl319x.txt
+> @@ -0,0 +1,59 @@
+> +LEDs connected to is31fl319x LED controller chip
+> +
+> +Required properties:
+> +- compatible : Should be any of
+> +	"issi,is31fl3190"
+> +	"issi,is31fl3191"
+> +	"issi,is31fl3193"
+> +	"issi,is31fl3196"
+> +	"issi,is31fl3199"
+> +	"si-en,sn3199".
+> +- #address-cells: Must be 1.
+> +- #size-cells: Must be 0.
+> +- reg: 0x64, 0x65, 0x66, 0x67.
+
+This is an OR or AND? OR it seems. With that,
 
 Acked-by: Rob Herring <robh@kernel.org>
