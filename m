@@ -1,56 +1,106 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] Input: rotary_encoder - support binary encoding of
- states
-Date: Wed, 20 Jul 2016 08:19:38 -0500
-Message-ID: <20160720131938.GA4165@rob-hp-laptop>
-References: <1468957119-16458-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Julien Grall <julien.grall@arm.com>
+Subject: Re: [PATCH v4] xen/arm: Add a clock property
+Date: Wed, 20 Jul 2016 14:21:45 +0100
+Message-ID: <457c61fd-4a64-b050-cd87-845b7e22ec39@arm.com>
+References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
+ <CAMuHMdU9yP2SMYa5ssrQSu1vwSN2gM4mD-EVYSGr2Pqf=jmCgw@mail.gmail.com>
+ <cc28ef7e-dce3-fe5f-ab80-b662244bcbd0@arm.com>
+ <CAMuHMdWeJjcuBHjnjppc5Ys5Ew8VssXzg=dLpLPCOQaBnUo_7Q@mail.gmail.com>
+ <04d9dbfb-196d-a775-7fbb-526aba8085f4@arm.com>
+ <CAMuHMdWdqdT4jnae8h9tDDzzh8ZAbJJwiMW-scPBNVwmjYSiWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468957119-16458-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWdqdT4jnae8h9tDDzzh8ZAbJJwiMW-scPBNVwmjYSiWQ@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, xen-devel@lists.xenproject.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stefano Stabellini <sstabellini@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2016 at 09:38:39PM +0200, Uwe Kleine-K=F6nig wrote:
-> It's not advisable to use this encoding, but to support existing devi=
-ces
-> add support for this to the driver.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> Notes:
->     Changes since (implicit) v1, sent with
->     Message-Id: 1458680914-4533-1-git-send-email-u.kleine-koenig <at>=
- pengutronix.de
->    =20
->      - switch format of dt properties to use strings
->    =20
->     Changes since v2, sent with
->     Message-Id: 1458806232-22403-1-git-send-email-u.kleine-koenig <at=
-> pengutronix.de
->    =20
->      - be more strict about parsing the encoding string
->    =20
->     Changes since v3, sent with
->     Message-Id: 1460055528-13814-1-git-send-email-u.kleine-koenig@pen=
-gutronix.de
->    =20
->      - use device_property_match_string to parse device tree as reque=
-sted
->        by Rob Herring.
->=20
->  .../devicetree/bindings/input/rotary-encoder.txt   |  4 ++++
->  drivers/input/misc/rotary_encoder.c                | 23 ++++++++++++=
-+++++++++-
->  2 files changed, 26 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 20/07/2016 13:46, Geert Uytterhoeven wrote:
+> Hi Julien,
+
+Hello Geert,
+
+> On Wed, Jul 20, 2016 at 2:10 PM, Julien Grall <julien.grall@arm.com> wrote:
+>> On 20/07/16 12:49, Geert Uytterhoeven wrote:
+>>> On Wed, Jul 20, 2016 at 1:01 PM, Julien Grall <julien.grall@arm.com>
+>>> wrote:
+>>>> On 20/07/16 10:43, Geert Uytterhoeven wrote:
+>>>>> On Tue, Jul 12, 2016 at 9:46 AM, Dirk Behme <dirk.behme@de.bosch.com>
+>>>>> wrote:
+>>>>>> Clocks described by this property are reserved for use by Xen, and the
+>>>>>> OS
+>>>>>> must not alter their state any way, such as disabling or gating a
+>>>>>> clock,
+>>>>>> or modifying its rate. Ensuring this may impose constraints on parent
+>>>>>> clocks or other resources used by the clock tree.
+>>>>>>
+>>>>>> This property is used to proxy clocks for devices Xen has taken
+>>>>>> ownership
+>>>>>> of, such as UARTs, for which the associated clock controller(s) remain
+>>>>>> under the control of Dom0.
+>>>>>
+>>>>> I'm not familiar with using XEN at all, but I'm a bit puzzled...
+>>>>>
+>>>>> Can't you just add a clocks property to the (virtual) serial device node
+>>>>> in DT?
+>>>>> Then the (virtual) serial device driver can get and enable the clock?
+>>>>
+>>>> There is no DT node for the Xen console (hvc). The UART used by Xen will
+>>>> be
+>>>> completely removed from the Device tree.
+>>>
+>>> Why is it removed?
+>>
+>> Because the device is used exclusively by Xen and DOM0 should not touch it
+>> at all (IRQs and MMIOs are not mapped).
+>
+> IMHO then it's Xen's responsability to make sure not to disable the clock(s).
+
+Xen does not disable the clock(s). The problem is Linux thinks the clock 
+is not used and therefore will disable the clock.
+
+Actually Xen does not have any knowledge how to handle clocks (i.e 
+setting rate, enabling/disabling). I would recommend you to read the 
+binding description in the patch and not the implementation which is 
+IHMO misleading.
+
+>
+> Who removes the device node from the DT? If Xen, can't it just remember
+> which clocks were present in removed device nodes?
+
+Xen is removing the node from the DT. Not removing the node will not 
+change the problem. Linux is disabling the clock because there is no 
+driver which used those clocks.
+
+As the clock subsystem will disable any unused clocks (from Linux point 
+of view), the UART will get disabled and the console will be lost.
+
+What we want to achieve with this patch is to let Linux knows that this 
+clock is in use by someone else (hypervisor or guest) and:
+     * If the clock is not shared: don't disable it
+     * If the clock is shared: don't change the rate
+
+>
+> What to do on SoCs where the serial device is part of a power area (e.g.
+> Renesas SH/R-Mobile)? Who will make sure it is not powered down?
+
+I don't have any knowledge on the Renesas SH/R-Mobile. However, we 
+expect some cooperation between DOM0 and Xen to handle the power.
+
+For instance managing the clocks in Xen would require to implement clock 
+driver for each SOC because it does not seem to have a generic way to do it.
+
+Given that Linux already knows a lot about the clock, we want to hand 
+over the clock control to the hardware domain (i.e dom0). This means 
+that we have to find a way to cooperate with it to keep enable clocks 
+that we care about.
+
+Regards,
+
+-- 
+Julien Grall
