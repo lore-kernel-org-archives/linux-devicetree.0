@@ -1,106 +1,76 @@
-From: Julien Grall <julien.grall@arm.com>
-Subject: Re: [PATCH v4] xen/arm: Add a clock property
-Date: Wed, 20 Jul 2016 14:21:45 +0100
-Message-ID: <457c61fd-4a64-b050-cd87-845b7e22ec39@arm.com>
-References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
- <CAMuHMdU9yP2SMYa5ssrQSu1vwSN2gM4mD-EVYSGr2Pqf=jmCgw@mail.gmail.com>
- <cc28ef7e-dce3-fe5f-ab80-b662244bcbd0@arm.com>
- <CAMuHMdWeJjcuBHjnjppc5Ys5Ew8VssXzg=dLpLPCOQaBnUo_7Q@mail.gmail.com>
- <04d9dbfb-196d-a775-7fbb-526aba8085f4@arm.com>
- <CAMuHMdWdqdT4jnae8h9tDDzzh8ZAbJJwiMW-scPBNVwmjYSiWQ@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7792: add SDHI support
+Date: Wed, 20 Jul 2016 16:40:14 +0300
+Message-ID: <e6246060-fa54-37c1-949d-b93da109dbb9@cogentembedded.com>
+References: <2441635.ESeLhIjWEX@wasted.cogentembedded.com>
+ <8030361.FnpbGzHVP8@wasted.cogentembedded.com>
+ <20160717225842.GA25133@verge.net.au>
+ <cece2545-52f9-7ddb-36d2-df364a272092@cogentembedded.com>
+ <CAMuHMdUUZ=gopWOir9PMiDgJ8o+CMp+qG=FLhGg_gHrMYzwgFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWdqdT4jnae8h9tDDzzh8ZAbJJwiMW-scPBNVwmjYSiWQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUUZ=gopWOir9PMiDgJ8o+CMp+qG=FLhGg_gHrMYzwgFg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, xen-devel@lists.xenproject.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stefano Stabellini <sstabellini@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 07/20/2016 11:07 AM, Geert Uytterhoeven wrote:
 
-
-On 20/07/2016 13:46, Geert Uytterhoeven wrote:
-> Hi Julien,
-
-Hello Geert,
-
-> On Wed, Jul 20, 2016 at 2:10 PM, Julien Grall <julien.grall@arm.com> wrote:
->> On 20/07/16 12:49, Geert Uytterhoeven wrote:
->>> On Wed, Jul 20, 2016 at 1:01 PM, Julien Grall <julien.grall@arm.com>
->>> wrote:
->>>> On 20/07/16 10:43, Geert Uytterhoeven wrote:
->>>>> On Tue, Jul 12, 2016 at 9:46 AM, Dirk Behme <dirk.behme@de.bosch.com>
->>>>> wrote:
->>>>>> Clocks described by this property are reserved for use by Xen, and the
->>>>>> OS
->>>>>> must not alter their state any way, such as disabling or gating a
->>>>>> clock,
->>>>>> or modifying its rate. Ensuring this may impose constraints on parent
->>>>>> clocks or other resources used by the clock tree.
->>>>>>
->>>>>> This property is used to proxy clocks for devices Xen has taken
->>>>>> ownership
->>>>>> of, such as UARTs, for which the associated clock controller(s) remain
->>>>>> under the control of Dom0.
->>>>>
->>>>> I'm not familiar with using XEN at all, but I'm a bit puzzled...
->>>>>
->>>>> Can't you just add a clocks property to the (virtual) serial device node
->>>>> in DT?
->>>>> Then the (virtual) serial device driver can get and enable the clock?
+>>>> --- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
+>>>> +++ renesas/arch/arm/boot/dts/r8a7792.dtsi
+>>>> @@ -435,6 +435,18 @@
+>>>>                         status = "disabled";
+>>>>                 };
 >>>>
->>>> There is no DT node for the Xen console (hvc). The UART used by Xen will
->>>> be
->>>> completely removed from the Device tree.
+>>>> +               sdhi0: sd@ee100000 {
+>>>> +                       compatible = "renesas,sdhi-r8a7792";
+>>>> +                       reg = <0 0xee100000 0 0x200>;
 >>>
->>> Why is it removed?
+>>>
+>>> I do not have the documentation available to check,
 >>
->> Because the device is used exclusively by Xen and DOM0 should not touch it
->> at all (IRQs and MMIOs are not mapped).
+>>    Me nether. The SDHI .zip only includes the manual for E2, H2, and M2.
+>>
+>>> however, I wonder if
+>>> as per 66f47ed0e86d ("ARM: shmobile: r8a7790: tidyup SDHI register size on
+>>> DTSI") the register size should be 0x328.
+>>
+>>    I just don't know...
 >
-> IMHO then it's Xen's responsability to make sure not to disable the clock(s).
-
-Xen does not disable the clock(s). The problem is Linux thinks the clock 
-is not used and therefore will disable the clock.
-
-Actually Xen does not have any knowledge how to handle clocks (i.e 
-setting rate, enabling/disabling). I would recommend you to read the 
-binding description in the patch and not the implementation which is 
-IHMO misleading.
-
+>>>> +                       interrupts = <0 165 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +                       dmas = <&dmac0 0xcd>, <&dmac0 0xce>,
+>>>> +                              <&dmac1 0xcd>, <&dmac1 0xce>;
+>>>> +                       dma-names = "tx", "rx", "tx", "rx";
+>>>> +                       clocks = <&mstp3_clks R8A7792_CLK_SDHI0>;
+>>>> +                       power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
+>>>> +                       status = "disabled";
+>>>> +               };
+>>>> +
+>>>>                 jpu: jpeg-codec@fe980000 {
+>>>>                         compatible = "renesas,jpu-r8a7792",
+>>>>                                      "renesas,rcar-gen2-jpu";
+>>
+>>    I also wonder whether whether a single per-SoC SDHI "compatible" is
+>> valid. The registers and their offsets seem to differ b/w SDHI0 and the
+>> other SDHI cores...
 >
-> Who removes the device node from the DT? If Xen, can't it just remember
-> which clocks were present in removed device nodes?
-
-Xen is removing the node from the DT. Not removing the node will not 
-change the problem. Linux is disabling the clock because there is no 
-driver which used those clocks.
-
-As the clock subsystem will disable any unused clocks (from Linux point 
-of view), the UART will get disabled and the console will be lost.
-
-What we want to achieve with this patch is to let Linux knows that this 
-clock is in use by someone else (hypervisor or guest) and:
-     * If the clock is not shared: don't disable it
-     * If the clock is shared: don't change the rate
-
+> There's version register.
 >
-> What to do on SoCs where the serial device is part of a power area (e.g.
-> Renesas SH/R-Mobile)? Who will make sure it is not powered down?
+> BTW, given SDHI on V2H doesn't support SDR50/SDR104, unlike the instances
+> on other R-Car Gen2 SoCs, can you please tell us the version value, as read
+> from CTL_VERSION in sh_mobile_sdhi_sdbuf_width()?
 
-I don't have any knowledge on the Renesas SH/R-Mobile. However, we 
-expect some cooperation between DOM0 and Xen to handle the power.
+    It's 0xCB0D, the same as on other SoCs.
 
-For instance managing the clocks in Xen would require to implement clock 
-driver for each SOC because it does not seem to have a generic way to do it.
+> Thanks!
 
-Given that Linux already knows a lot about the clock, we want to hand 
-over the clock control to the hardware domain (i.e dom0). This means 
-that we have to find a way to cooperate with it to keep enable clocks 
-that we care about.
+    Not at all. :-)
 
-Regards,
+> Gr{oetje,eeting}s,
+>
+>                         Geert
 
--- 
-Julien Grall
+MBR, Sergei
