@@ -1,403 +1,649 @@
-From: zhiyong tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] iio: adc: mt2701: Add Mediatek auxadc driver for
- mt2701.
-Date: Wed, 20 Jul 2016 14:24:31 +0800
-Message-ID: <1468995871.419.37.camel@mhfsdcap03>
-References: <1468219197-9572-1-git-send-email-zhiyong.tao@mediatek.com>
-	 <1468219197-9572-3-git-send-email-zhiyong.tao@mediatek.com>
-	 <82fa5ffa-52be-e1ec-83dd-dd92b3f3ef5d@kernel.org>
-	 <1468994558.419.30.camel@mhfsdcap03>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v4 7/8] drm/mediatek: add mipi panel support
+Date: Wed, 20 Jul 2016 14:27:56 +0800
+Message-ID: <1468996076.11841.43.camel@mtksdaap41>
+References: <1468577274-6178-1-git-send-email-yt.shen@mediatek.com>
+	 <1468577274-6178-8-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468994558.419.30.camel@mhfsdcap03>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1468577274-6178-8-git-send-email-yt.shen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: YT Shen <yt.shen@mediatek.com>
+Cc: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Mao Huang <littlecvr@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, emil.l.velikov@gmail.com, thierry.reding@gmail.com, shaoming chen <shaoming.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-07-20 at 14:02 +0800, zhiyong tao wrote:
-> On Mon, 2016-07-18 at 18:12 +0100, Jonathan Cameron wrote:
-> > On 11/07/16 07:39, Zhiyong Tao wrote:
-> > > Add Mediatek auxadc driver based on iio.
-> > > It will register a device in iio and support iio.
-> > > So thermal can read auxadc channel to sample data by iio device.
-> > > It is tested successfully on mt2701 platform.
-> > > Mt8173 and mt6577 platforms are not tested.
-> > > But the expectation is compatible.
-> > > 
-> > > Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Looks good to me.  Couple of really minor points / questions inline...
-> > 
-> > Just one thing to confirm... (you probably already answered this!)
-> > What are the units of the voltage channels?
-> > 
-> > Jonathan
-> 
-> The units of the voltage channels are mv. 
-> 
-> > > ---
-> > >  drivers/iio/adc/Kconfig         |   13 ++
-> > >  drivers/iio/adc/Makefile        |    1 +
-> > >  drivers/iio/adc/mt6577_auxadc.c |  294 +++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 308 insertions(+)
-> > >  create mode 100644 drivers/iio/adc/mt6577_auxadc.c
-> > > 
-> > > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> > > index 25378c5..14929fc 100644
-> > > --- a/drivers/iio/adc/Kconfig
-> > > +++ b/drivers/iio/adc/Kconfig
-> > > @@ -305,6 +305,19 @@ config MCP3422
-> > >  	  This driver can also be built as a module. If so, the module will be
-> > >  	  called mcp3422.
-> > >  
-> > > +config MEDIATEK_MT6577_AUXADC
-> > > +        tristate "MediaTek AUXADC driver"
-> > > +        depends on ARCH_MEDIATEK || COMPILE_TEST
-> > > +        depends on HAS_IOMEM
-> > > +        help
-> > > +          Say yes here to enable support for MediaTek mt65xx AUXADC.
-> > > +
-> > > +          The driver supports immediate mode operation to read from one of sixteen
-> > > +          channels (external or internal).
-> > > +
-> > > +          This driver can also be built as a module. If so, the module will be
-> > > +          called mt6577_auxadc.
-> > > +
-> > >  config MEN_Z188_ADC
-> > >  	tristate "MEN 16z188 ADC IP Core support"
-> > >  	depends on MCB
-> > > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> > > index 38638d4..8306347 100644
-> > > --- a/drivers/iio/adc/Makefile
-> > > +++ b/drivers/iio/adc/Makefile
-> > > @@ -30,6 +30,7 @@ obj-$(CONFIG_MAX1027) += max1027.o
-> > >  obj-$(CONFIG_MAX1363) += max1363.o
-> > >  obj-$(CONFIG_MCP320X) += mcp320x.o
-> > >  obj-$(CONFIG_MCP3422) += mcp3422.o
-> > > +obj-$(CONFIG_MEDIATEK_MT6577_AUXADC) += mt6577_auxadc.o
-> > >  obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
-> > >  obj-$(CONFIG_MXS_LRADC) += mxs-lradc.o
-> > >  obj-$(CONFIG_NAU7802) += nau7802.o
-> > > diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
-> > > new file mode 100644
-> > > index 0000000..c7cc901
-> > > --- /dev/null
-> > > +++ b/drivers/iio/adc/mt6577_auxadc.c
-> > > @@ -0,0 +1,294 @@
-> > > +/*
-> > > + * Copyright (c) 2016 MediaTek Inc.
-> > > + * Author: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > + *
-> > > + * This program is free software; you can redistribute it and/or modify
-> > > + * it under the terms of the GNU General Public License version 2 as
-> > > + * published by the Free Software Foundation.
-> > > + *
-> > > + * This program is distributed in the hope that it will be useful,
-> > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > > + * GNU General Public License for more details.
-> > > + */
-> > > +
-> > > +#include <linux/clk.h>
-> > > +#include <linux/delay.h>
-> > > +#include <linux/err.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_device.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/iopoll.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/iio/iio.h>
-> > > +
-> > > +/* Register definitions */
-> > > +#define MT6577_AUXADC_CON0                    0x00
-> > > +#define MT6577_AUXADC_CON1                    0x04
-> > > +#define MT6577_AUXADC_CON2                    0x10
-> > > +#define MT6577_AUXADC_STA                     BIT(0)
-> > > +
-> > > +#define MT6577_AUXADC_DAT0                    0x14
-> > > +#define MT6577_AUXADC_RDY0                    BIT(12)
-> > > +
-> > > +#define MT6577_AUXADC_MISC                    0x94
-> > > +#define MT6577_AUXADC_PDN_EN                  BIT(14)
-> > > +
-> > > +#define MT6577_AUXADC_DAT_MASK                0xfff
-> > > +#define MT6577_AUXADC_SLEEP_US                1000
-> > > +#define MT6577_AUXADC_TIMEOUT_US              10000
-> > > +#define MT6577_AUXADC_POWER_READY_MS          1
-> > > +#define MT6577_AUXADC_SAMPLE_READY_US         25
-> > > +
-> > > +struct mt6577_auxadc_device {
-> > > +	void __iomem *reg_base;
-> > > +	struct clk *adc_clk;
-> > > +	struct mutex lock;
-> > > +};
-> > > +
-> > > +#define MT6577_AUXADC_CHANNEL(idx) {				    \
-> > > +		.type = IIO_VOLTAGE,				    \
-> > > +		.indexed = 1,					    \
-> > > +		.channel = (idx),				    \
-> > > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED), \
-> > > +}
-> > > +
-> > > +static const struct iio_chan_spec mt6577_auxadc_iio_channels[] = {
-> > > +	MT6577_AUXADC_CHANNEL(0),
-> > > +	MT6577_AUXADC_CHANNEL(1),
-> > > +	MT6577_AUXADC_CHANNEL(2),
-> > > +	MT6577_AUXADC_CHANNEL(3),
-> > > +	MT6577_AUXADC_CHANNEL(4),
-> > > +	MT6577_AUXADC_CHANNEL(5),
-> > > +	MT6577_AUXADC_CHANNEL(6),
-> > > +	MT6577_AUXADC_CHANNEL(7),
-> > > +	MT6577_AUXADC_CHANNEL(8),
-> > > +	MT6577_AUXADC_CHANNEL(9),
-> > > +	MT6577_AUXADC_CHANNEL(10),
-> > > +	MT6577_AUXADC_CHANNEL(11),
-> > > +	MT6577_AUXADC_CHANNEL(12),
-> > > +	MT6577_AUXADC_CHANNEL(13),
-> > > +	MT6577_AUXADC_CHANNEL(14),
-> > > +	MT6577_AUXADC_CHANNEL(15),
-> > > +};
-> > > +
-> > > +static int mt6577_auxadc_read(struct iio_dev *indio_dev,
-> > > +			      struct iio_chan_spec const *chan)
-> > > +{
-> > > +	u32 rawdata, val;
-> > > +	void __iomem *reg_channel;
-> > > +	int ret;
-> > > +	struct mt6577_auxadc_device *adc_dev = iio_priv(indio_dev);
-> > > +
-> > > +	reg_channel = adc_dev->reg_base + MT6577_AUXADC_DAT0 +
-> > > +		      chan->channel * 0x04;
-> > > +
-> > > +	mutex_lock(&adc_dev->lock);
-> > > +
-> > > +	val = readl(adc_dev->reg_base + MT6577_AUXADC_CON1);
-> > > +	val &= ~(1 << chan->channel);
-> > > +	writel(val, adc_dev->reg_base + MT6577_AUXADC_CON1);
-> > > +
-> > > +	/* read channel and make sure old ready bit == 0 */
-> > > +	ret = readl_poll_timeout(reg_channel, val,
-> > > +				 ((val & MT6577_AUXADC_RDY0) == 0),
-> > > +				 MT6577_AUXADC_SLEEP_US,
-> > > +				 MT6577_AUXADC_TIMEOUT_US);
-> > > +	if (ret < 0) {
-> > > +		dev_err(indio_dev->dev.parent,
-> > > +			"wait for channel[%d] ready bit clear time out\n",
-> > > +			chan->channel);
-> > > +
-> > > +		mutex_unlock(&adc_dev->lock);
-> > > +
-> > > +		return -ETIMEDOUT;
-> > > +	}
-> > > +
-> > > +	/* set bit to trigger sample */
-> > > +	val = readl(adc_dev->reg_base + MT6577_AUXADC_CON1);
-> > > +	val |= 1 << chan->channel;
-> > > +	writel(val, adc_dev->reg_base + MT6577_AUXADC_CON1);
-> > > +
-> > > +	/* we must delay here for hardware sample channel data */
-> > > +	udelay(MT6577_AUXADC_SAMPLE_READY_US);
-> > > +
-> > > +	/* check MTK_AUXADC_CON2 if auxadc is idle */
-> > > +	ret = readl_poll_timeout(adc_dev->reg_base + MT6577_AUXADC_CON2, val,
-> > > +				 ((val & MT6577_AUXADC_STA) == 0),
-> > > +				 MT6577_AUXADC_SLEEP_US,
-> > > +				 MT6577_AUXADC_TIMEOUT_US);
-> > > +	if (ret < 0) {
-> > > +		dev_err(indio_dev->dev.parent,
-> > > +			"wait for auxadc idle time out\n");
-> > > +
-> > > +		mutex_unlock(&adc_dev->lock);
-> > > +
-> > > +		return -ETIMEDOUT;
-> > > +	}
-> > > +
-> > > +	/* read channel and make sure ready bit == 1 */
-> > > +	ret = readl_poll_timeout(reg_channel, val,
-> > > +				 ((val & MT6577_AUXADC_RDY0) != 0),
-> > > +				 MT6577_AUXADC_SLEEP_US,
-> > > +				 MT6577_AUXADC_TIMEOUT_US);
-> > > +	if (ret < 0) {
-> > > +		dev_err(indio_dev->dev.parent,
-> > > +			"wait for channel[%d] data ready time out\n",
-> > > +			chan->channel);
-> > > +
-> > > +		mutex_unlock(&adc_dev->lock);
-> > > +
-> > > +		return -ETIMEDOUT;
-> > > +	}
-> > > +
-> > > +	/* read data */
-> > > +	rawdata = readl(reg_channel) & MT6577_AUXADC_DAT_MASK;
-> > > +
-> > > +	mutex_unlock(&adc_dev->lock);
-> > > +
-> > > +	return rawdata;
-> > > +}
-> > > +
-> > > +static int mt6577_auxadc_read_raw(struct iio_dev *indio_dev,
-> > > +				  struct iio_chan_spec const *chan,
-> > > +				  int *val,
-> > > +				  int *val2,
-> > > +				  long info)
-> > > +{
-> > > +	switch (info) {
-> > > +	case IIO_CHAN_INFO_PROCESSED:
-> > > +		*val = mt6577_auxadc_read(indio_dev, chan);
-> > > +		if (*val < 0) {
-> > > +			dev_err(indio_dev->dev.parent,
-> > > +				"failed to sample data on channel[%d]\n",
-> > > +				chan->channel);
-> > > +			return *val;
-> > > +		}
-> > > +		return IIO_VAL_INT;
-> > > +
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}
-> > > +}
-> > > +
-> > > +static const struct iio_info mt6577_auxadc_info = {
-> > > +	.driver_module = THIS_MODULE,
-> > > +	.read_raw = &mt6577_auxadc_read_raw,
-> > > +};
-> > > +
-> > > +static int mt6577_auxadc_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct mt6577_auxadc_device *adc_dev;
-> > > +	unsigned long adc_clk_rate;
-> > > +	struct resource *res;
-> > > +	struct iio_dev *indio_dev;
-> > > +	int ret;
-> > > +	u32 val;
-> > > +
-> > > +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc_dev));
-> > > +	if (!indio_dev)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	adc_dev = iio_priv(indio_dev);
-> > > +	indio_dev->dev.parent = &pdev->dev;
-> > > +	indio_dev->name = dev_name(&pdev->dev);
-> > > +	indio_dev->info = &mt6577_auxadc_info;
-> > > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > > +	indio_dev->channels = mt6577_auxadc_iio_channels;
-> > > +	indio_dev->num_channels = ARRAY_SIZE(mt6577_auxadc_iio_channels);
-> > > +
-> > > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
-> > > +	if (IS_ERR(adc_dev->reg_base)) {
-> > > +		dev_err(&pdev->dev, "failed to get auxadc base address.\n");
-> > > +		return PTR_ERR(adc_dev->reg_base);
-> > > +	}
-> > > +
-> > > +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "main");
-> > > +	if (IS_ERR(adc_dev->adc_clk)) {
-> > > +		dev_err(&pdev->dev, "failed to get auxadc clock\n");
-> > > +		return PTR_ERR(adc_dev->adc_clk);
-> > > +	}
-> > > +
-> > > +	ret = clk_prepare_enable(adc_dev->adc_clk);
-> > > +	if (ret) {
-> > > +		dev_err(&pdev->dev, "failed to enable auxadc clock\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
-> > > +	if (!adc_clk_rate) {
-> > > +		dev_err(&pdev->dev, "null clock rate!\n");
-> > > +		goto err_disable_clk;
-> > > +	}
-> > > +
-> > > +	mutex_init(&adc_dev->lock);
-> > > +
-> > > +	val = readl(adc_dev->reg_base + MT6577_AUXADC_MISC);
-> > > +	val |= MT6577_AUXADC_PDN_EN;
-> > > +	writel(val, adc_dev->reg_base + MT6577_AUXADC_MISC);
-> > > +	mdelay(MT6577_AUXADC_POWER_READY_MS);
-> > > +
-> > > +	val = readl(adc_dev->reg_base + MT6577_AUXADC_MISC);
-> > > +	if ((val & MT6577_AUXADC_PDN_EN) == 0) {
-> > That's a high level of paranoia... Any reason to believe this might fail?
-> 
-> Someone reviews the code and gives a suggestion to power off chenck.
-> If auxadc clk is off in the case, we can not write MT6577_AUXADC_PDN_EN
-> in MT6577_AUXADC_MISC. So it may cause to enable auxadc power failed.
-> 
+Hi, YT:
 
-sorry, I have searched the previous versions.
-I found that I  misunderstand the intention.
-The power on failed checked will be removed in the next version.
+Some comments inline.
 
-> > > +		dev_err(&pdev->dev, "failed to enable auxadc power!\n");
-> > > +		goto err_disable_clk;
-> > > +	}
-> > > +
-> > > +	platform_set_drvdata(pdev, indio_dev);
-> > > +
-> > > +	ret = iio_device_register(indio_dev);
-> > > +	if (ret < 0) {
-> > I'd have slightly preferred that this error unwind block was also
-> > moved to on a goto.  Makes it easier to review as the error block then
-> > matches remove (with expected differences!)  Really small point however.
+On Fri, 2016-07-15 at 18:07 +0800, YT Shen wrote:
+> From: shaoming chen <shaoming.chen@mediatek.com>
 > 
-> I will update this in next version.
+> add dsi and mipi tx driver for mipi panel support
 > 
-> > 
-> > > +		dev_err(&pdev->dev, "failed to register iio device!\n");
-> > > +		val = readl(adc_dev->reg_base + MT6577_AUXADC_MISC);
-> > > +		val &= ~MT6577_AUXADC_PDN_EN;
-> > > +		writel(val, adc_dev->reg_base + MT6577_AUXADC_MISC);
-> > > +		goto err_disable_clk;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +
-> > > +err_disable_clk:
-> > > +	clk_disable_unprepare(adc_dev->adc_clk);
-> > > +	return -EINVAL;
-> > > +}
-> > > +
-> > > +static int mt6577_auxadc_remove(struct platform_device *pdev)
-> > > +{
-> > > +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> > > +	struct mt6577_auxadc_device *adc_dev = iio_priv(indio_dev);
-> > > +	u32 val;
-> > > +
-> > > +	iio_device_unregister(indio_dev);
-> > > +
-> > > +	val = readl(adc_dev->reg_base + MT6577_AUXADC_MISC);
-> > > +	val &= ~MT6577_AUXADC_PDN_EN;
-> > > +	writel(val, adc_dev->reg_base + MT6577_AUXADC_MISC);
-> > > +
-> > > +	clk_disable_unprepare(adc_dev->adc_clk);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct of_device_id mt6577_auxadc_of_match[] = {
-> > > +	{ .compatible = "mediatek,mt2701-auxadc", },
-> > > +	{ .compatible = "mediatek,mt8173-auxadc", },
-> > > +	{ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, mt6577_auxadc_of_match);
-> > > +
-> > > +static struct platform_driver mt6577_auxadc_driver = {
-> > > +	.driver = {
-> > > +		.name   = "mt6577-auxadc",
-> > > +		.of_match_table = mt6577_auxadc_of_match,
-> > > +	},
-> > > +	.probe	= mt6577_auxadc_probe,
-> > > +	.remove	= mt6577_auxadc_remove,
-> > > +};
-> > > +module_platform_driver(mt6577_auxadc_driver);
-> > > +
-> > > +MODULE_AUTHOR("Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
-> > > +MODULE_DESCRIPTION("MTK AUXADC Device Driver");
-> > > +MODULE_LICENSE("GPL v2");
-> > > 
-> > 
+> Signed-off-by: shaoming chen <shaoming.chen@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dsi.c     |  169 ++++++++++++++++++++++----------
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.c |   82 +++++++++++-----
+>  2 files changed, 173 insertions(+), 78 deletions(-)
 > 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 1f99894..4eae63c 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -29,9 +29,6 @@
+>  
+>  #include "mtk_drm_ddp_comp.h"
+>  
+> -#define DSI_VIDEO_FIFO_DEPTH	(1920 / 4)
+> -#define DSI_HOST_FIFO_DEPTH	64
+> -
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  #define DSI_START		0x00
+>  
+>  #define DSI_INTEN		0x08
+> @@ -55,7 +52,7 @@
+>  #define MIX_MODE			BIT(17)
+>  
+>  #define DSI_TXRX_CTRL		0x18
+> -#define VC_NUM				(2 << 0)
+> +#define VC_NUM				BIT(1)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  #define LANE_NUM			(0xf << 2)
+>  #define DIS_EOT				BIT(6)
+>  #define NULL_EN				BIT(7)
+> @@ -94,6 +91,8 @@
+>  #define DSI_RACK		0x84
+>  #define RACK			BIT(0)
+>  
+> +#define DSI_MEM_CONTI		0x90
+> +
+>  #define DSI_PHY_LCCON		0x104
+>  #define LC_HS_TX_EN			BIT(0)
+>  #define LC_ULPM_EN			BIT(1)
+> @@ -126,6 +125,10 @@
+>  #define CLK_HS_POST			(0xff << 8)
+>  #define CLK_HS_EXIT			(0xff << 16)
+>  
+> +#define DSI_VM_CMD_CON		0x130
+> +#define VM_CMD_EN		BIT(0)
+> +#define TS_VFP_EN		BIT(5)
+
+The bitwise definition should add one more tab to align other bitwise
+definition in this file.
+
+> +
+>  #define DSI_CMDQ0		0x180
+>  
+>  #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
+> @@ -239,11 +242,11 @@ static void mtk_dsi_mask(struct mtk_dsi *dsi, u32 offset, u32 mask, u32 data)
+>  	writel((temp & ~mask) | (data & mask), dsi->regs + offset);
+>  }
+>  
+> -static void dsi_phy_timconfig(struct mtk_dsi *dsi)
+> +static void mtk_dsi_phy_timconfig(struct mtk_dsi *dsi)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+>  	u32 timcon0, timcon1, timcon2, timcon3;
+> -	unsigned int ui, cycle_time;
+> -	unsigned int lpx;
+> +	u32 ui, cycle_time;
+> +	u32 lpx;
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  
+>  	ui = 1000 / dsi->data_rate + 0x01;
+>  	cycle_time = 8000 / dsi->data_rate + 0x01;
+> @@ -273,7 +276,7 @@ static void mtk_dsi_disable(struct mtk_dsi *dsi)
+>  	mtk_dsi_mask(dsi, DSI_CON_CTRL, DSI_EN, 0);
+>  }
+>  
+> -static void mtk_dsi_reset(struct mtk_dsi *dsi)
+> +static void mtk_dsi_reset_engine(struct mtk_dsi *dsi)
+>  {
+>  	mtk_dsi_mask(dsi, DSI_CON_CTRL, DSI_RESET, DSI_RESET);
+>  	mtk_dsi_mask(dsi, DSI_CON_CTRL, DSI_RESET, 0);
+> @@ -293,7 +296,9 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>  	 * mipi_ratio is mipi clk coefficient for balance the pixel clk in mipi.
+>  	 * we set mipi_ratio is 1.05.
+>  	 */
+> -	dsi->data_rate = dsi->vm.pixelclock * 3 * 21 / (1 * 1000 * 10);
+> +	dsi->data_rate = dsi->vm.pixelclock * 12 * 21;
+> +	dsi->data_rate /= (dsi->lanes * 1000 * 10);
+> +	dev_info(dev, "set mipitx's data rate: %dMHz\n", dsi->data_rate);
+>  
+>  	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate * 1000000);
+>  	if (ret < 0) {
+> @@ -315,10 +320,6 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>  		goto err_disable_engine_clk;
+>  	}
+>  
+> -	mtk_dsi_enable(dsi);
+> -	mtk_dsi_reset(dsi);
+> -	dsi_phy_timconfig(dsi);
+> -
+>  	return 0;
+>  
+>  err_disable_engine_clk:
+> @@ -330,33 +331,33 @@ err_refcount:
+>  	return ret;
+>  }
+>  
+> -static void dsi_clk_ulp_mode_enter(struct mtk_dsi *dsi)
+> +static void mtk_dsi_clk_ulp_mode_enter(struct mtk_dsi *dsi)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+>  	mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_HS_TX_EN, 0);
+> -	mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_ULPM_EN, 0);
+> +	mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_ULPM_EN, LC_ULPM_EN);
+>  }
+>  
+> -static void dsi_clk_ulp_mode_leave(struct mtk_dsi *dsi)
+> +static void mtk_dsi_clk_ulp_mode_leave(struct mtk_dsi *dsi)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+>  	mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_ULPM_EN, 0);
+>  	mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_WAKEUP_EN, LC_WAKEUP_EN);
+>  	mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_WAKEUP_EN, 0);
+>  }
+>  
+> -static void dsi_lane0_ulp_mode_enter(struct mtk_dsi *dsi)
+> +static void mtk_dsi_lane0_ulp_mode_enter(struct mtk_dsi *dsi)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+>  	mtk_dsi_mask(dsi, DSI_PHY_LD0CON, LD0_HS_TX_EN, 0);
+> -	mtk_dsi_mask(dsi, DSI_PHY_LD0CON, LD0_ULPM_EN, 0);
+> +	mtk_dsi_mask(dsi, DSI_PHY_LD0CON, LD0_ULPM_EN, LD0_ULPM_EN);
+>  }
+>  
+> -static void dsi_lane0_ulp_mode_leave(struct mtk_dsi *dsi)
+> +static void mtk_dsi_lane0_ulp_mode_leave(struct mtk_dsi *dsi)
+>  {
+>  	mtk_dsi_mask(dsi, DSI_PHY_LD0CON, LD0_ULPM_EN, 0);
+>  	mtk_dsi_mask(dsi, DSI_PHY_LD0CON, LD0_WAKEUP_EN, LD0_WAKEUP_EN);
+>  	mtk_dsi_mask(dsi, DSI_PHY_LD0CON, LD0_WAKEUP_EN, 0);
+>  }
+>  
+> -static bool dsi_clk_hs_state(struct mtk_dsi *dsi)
+> +static bool mtk_dsi_clk_hs_state(struct mtk_dsi *dsi)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+>  	u32 tmp_reg1;
+>  
+> @@ -364,15 +365,15 @@ static bool dsi_clk_hs_state(struct mtk_dsi *dsi)
+>  	return ((tmp_reg1 & LC_HS_TX_EN) == 1) ? true : false;
+>  }
+>  
+> -static void dsi_clk_hs_mode(struct mtk_dsi *dsi, bool enter)
+> +static void mtk_dsi_clk_hs_mode(struct mtk_dsi *dsi, bool enter)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+> -	if (enter && !dsi_clk_hs_state(dsi))
+> +	if (enter && !mtk_dsi_clk_hs_state(dsi))
+>  		mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_HS_TX_EN, LC_HS_TX_EN);
+> -	else if (!enter && dsi_clk_hs_state(dsi))
+> +	else if (!enter && mtk_dsi_clk_hs_state(dsi))
+>  		mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_HS_TX_EN, 0);
+>  }
+>  
+> -static void dsi_set_mode(struct mtk_dsi *dsi)
+> +static void mtk_dsi_set_mode(struct mtk_dsi *dsi)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+>  	u32 vid_mode = CMD_MODE;
+>  
+> @@ -382,12 +383,22 @@ static void dsi_set_mode(struct mtk_dsi *dsi)
+>  		if ((dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) &&
+>  		    !(dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE))
+>  			vid_mode = BURST_MODE;
+> +		else
+> +			vid_mode = SYNC_EVENT_MODE;
+>  	}
+>  
+>  	writel(vid_mode, dsi->regs + DSI_MODE_CTRL);
+>  }
+>  
+> -static void dsi_ps_control_vact(struct mtk_dsi *dsi)
+> +static void mtk_dsi_set_vm_cmd(struct mtk_dsi *dsi)
+> +{
+> +	writel(0x3c, dsi->regs + DSI_MEM_CONTI);
+> +
+> +	mtk_dsi_mask(dsi, DSI_VM_CMD_CON, VM_CMD_EN, VM_CMD_EN);
+> +	mtk_dsi_mask(dsi, DSI_VM_CMD_CON, TS_VFP_EN, TS_VFP_EN);
+> +}
+> +
+> +static void mtk_dsi_ps_control_vact(struct mtk_dsi *dsi)
+>  {
+>  	struct videomode *vm = &dsi->vm;
+>  	u32 dsi_buf_bpp, ps_wc;
+> @@ -421,7 +432,7 @@ static void dsi_ps_control_vact(struct mtk_dsi *dsi)
+>  	writel(ps_wc, dsi->regs + DSI_HSTX_CKL_WC);
+>  }
+>  
+> -static void dsi_rxtx_control(struct mtk_dsi *dsi)
+> +static void mtk_dsi_rxtx_control(struct mtk_dsi *dsi)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+>  	u32 tmp_reg;
+>  
+> @@ -443,12 +454,15 @@ static void dsi_rxtx_control(struct mtk_dsi *dsi)
+>  		break;
+>  	}
+>  
+> +	tmp_reg |= (dsi->mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS) << 6;
+> +	tmp_reg |= (dsi->mode_flags & MIPI_DSI_MODE_EOT_PACKET) >> 3;
+> +
+>  	writel(tmp_reg, dsi->regs + DSI_TXRX_CTRL);
+>  }
+>  
+> -static void dsi_ps_control(struct mtk_dsi *dsi)
+> +static void mtk_dsi_ps_control(struct mtk_dsi *dsi)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+> -	unsigned int dsi_tmp_buf_bpp;
+> +	u32 dsi_tmp_buf_bpp;
+>  	u32 tmp_reg;
+>  
+>  	switch (dsi->format) {
+> @@ -478,12 +492,12 @@ static void dsi_ps_control(struct mtk_dsi *dsi)
+>  	writel(tmp_reg, dsi->regs + DSI_PSCTRL);
+>  }
+>  
+> -static void dsi_config_vdo_timing(struct mtk_dsi *dsi)
+> +static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  {
+> -	unsigned int horizontal_sync_active_byte;
+> -	unsigned int horizontal_backporch_byte;
+> -	unsigned int horizontal_frontporch_byte;
+> -	unsigned int dsi_tmp_buf_bpp;
+> +	u32 horizontal_sync_active_byte;
+> +	u32 horizontal_backporch_byte;
+> +	u32 horizontal_frontporch_byte;
+> +	u32 dsi_tmp_buf_bpp;
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  
+>  	struct videomode *vm = &dsi->vm;
+>  
+> @@ -512,7 +526,7 @@ static void dsi_config_vdo_timing(struct mtk_dsi *dsi)
+>  	writel(horizontal_backporch_byte, dsi->regs + DSI_HBP_WC);
+>  	writel(horizontal_frontporch_byte, dsi->regs + DSI_HFP_WC);
+>  
+> -	dsi_ps_control(dsi);
+> +	mtk_dsi_ps_control(dsi);
+>  }
+>  
+>  static void mtk_dsi_start(struct mtk_dsi *dsi)
+> @@ -521,6 +535,19 @@ static void mtk_dsi_start(struct mtk_dsi *dsi)
+>  	writel(1, dsi->regs + DSI_START);
+>  }
+>  
+> +static void mtk_dsi_stop(struct mtk_dsi *dsi)
+> +{
+> +	writel(0, dsi->regs + DSI_START);
+> +}
+> +
+> +static void mtk_dsi_set_cmd_mode(struct mtk_dsi *dsi)
+> +{
+> +	u32 tmp_reg1;
+> +
+> +	tmp_reg1 = CMD_MODE;
+> +	writel(tmp_reg1, dsi->regs + DSI_MODE_CTRL);
+> +}
+> +
+>  static void mtk_dsi_set_interrupt_enable(struct mtk_dsi *dsi)
+>  {
+>  	u32 inten = DSI_INT_ALL_BITS;
+> @@ -609,6 +636,21 @@ static s32 mtk_dsi_wait_for_irq_timeout(struct mtk_dsi *dsi, u32 irq_bit,
+>  	return -1;
+>  }
+>  
+> +static void mtk_dsi_switch_to_cmd_mode(struct mtk_dsi *dsi)
+> +{
+> +	s32 ret = 0;
+> +
+> +	mtk_dsi_set_cmd_mode(dsi);
+> +
+> +	ret = mtk_dsi_wait_for_irq_timeout(dsi, DSI_INT_VM_DONE_FLAG, 500);
+> +	if (ret != 0) {
+> +		dev_info(dsi->dev, "dsi wait engine idle timeout\n");
+> +
+> +		mtk_dsi_enable(dsi);
+> +		mtk_dsi_reset_engine(dsi);
+> +	}
+> +}
+> +
+>  static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+>  {
+>  	if (WARN_ON(dsi->refcount == 0))
+> @@ -617,8 +659,19 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+>  	if (--dsi->refcount != 0)
+>  		return;
+>  
+> -	dsi_lane0_ulp_mode_enter(dsi);
+> -	dsi_clk_ulp_mode_enter(dsi);
+> +	mtk_dsi_switch_to_cmd_mode(dsi);
+> +
+> +	if (dsi->panel) {
+> +		if (drm_panel_unprepare(dsi->panel)) {
+> +			DRM_ERROR("failed to unprepare the panel\n");
+> +			return;
+> +		}
+> +	}
+> +
+> +	mtk_dsi_reset_engine(dsi);
+> +
+> +	mtk_dsi_lane0_ulp_mode_enter(dsi);
+> +	mtk_dsi_clk_ulp_mode_enter(dsi);
+>  
+>  	mtk_dsi_disable(dsi);
+>  
+> @@ -635,32 +688,40 @@ static void mtk_output_dsi_enable(struct mtk_dsi *dsi)
+>  	if (dsi->enabled)
+>  		return;
+>  
+> -	if (dsi->panel) {
+> -		if (drm_panel_prepare(dsi->panel)) {
+> -			DRM_ERROR("failed to setup the panel\n");
+> -			return;
+> -		}
+> -	}
+> -
+>  	ret = mtk_dsi_poweron(dsi);
+>  	if (ret < 0) {
+>  		DRM_ERROR("failed to power on dsi\n");
+>  		return;
+>  	}
+>  
+> -	dsi_rxtx_control(dsi);
+> +	usleep_range(20000, 21000);
+>  
+> -	dsi_clk_ulp_mode_leave(dsi);
+> -	dsi_lane0_ulp_mode_leave(dsi);
+> -	dsi_clk_hs_mode(dsi, 0);
+> -	dsi_set_mode(dsi);
+> -
+> -	dsi_ps_control_vact(dsi);
+> -	dsi_config_vdo_timing(dsi);
+> +	mtk_dsi_rxtx_control(dsi);
+> +	mtk_dsi_phy_timconfig(dsi);
+> +	mtk_dsi_ps_control_vact(dsi);
+> +	mtk_dsi_set_vm_cmd(dsi);
+> +	mtk_dsi_config_vdo_timing(dsi);
+>  	mtk_dsi_set_interrupt_enable(dsi);
+>  
+> -	dsi_set_mode(dsi);
+> -	dsi_clk_hs_mode(dsi, 1);
+> +	mtk_dsi_enable(dsi);
+> +	mtk_dsi_clk_ulp_mode_leave(dsi);
+> +	mtk_dsi_lane0_ulp_mode_leave(dsi);
+> +	mtk_dsi_clk_hs_mode(dsi, 0);
+> +
+> +	if (dsi->panel) {
+> +		if (drm_panel_prepare(dsi->panel)) {
+> +			DRM_ERROR("failed to prepare the panel\n");
+> +			return;
+> +		}
+> +
+> +		if (drm_panel_enable(dsi->panel)) {
+> +			DRM_ERROR("failed to enable the panel\n");
+> +			return;
+> +		}
+> +	}
+> +
+> +	mtk_dsi_set_mode(dsi);
+> +	mtk_dsi_clk_hs_mode(dsi, 1);
+>  
+>  	mtk_dsi_start(dsi);
+>  
+> @@ -679,6 +740,7 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+>  		}
+>  	}
+>  
+> +	mtk_dsi_stop(dsi);
+>  	mtk_dsi_poweroff(dsi);
+>  
+>  	dsi->enabled = false;
+> @@ -1351,6 +1413,7 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id mtk_dsi_of_match[] = {
+> +	{ .compatible = "mediatek,mt2701-dsi" },
+
+This is not related to 'mipi panel support'. So move this modification
+to another patch.
+
+>  	{ .compatible = "mediatek,mt8173-dsi" },
+>  	{ },
+>  };
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> index cf8f38d..3bffc40 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/phy/phy.h>
+>  
+> @@ -87,6 +88,9 @@
+>  
+>  #define MIPITX_DSI_PLL_CON2	0x58
+>  
+> +#define MIPITX_DSI_PLL_TOP	0x64
+> +#define RG_DSI_MPPLL_PRESERVE		(0xff << 8)
+> +
+>  #define MIPITX_DSI_PLL_PWR	0x68
+>  #define RG_DSI_MPPLL_SDM_PWR_ON		BIT(0)
+>  #define RG_DSI_MPPLL_SDM_ISO_EN		BIT(1)
+> @@ -123,10 +127,32 @@
+>  #define SW_LNT2_HSTX_PRE_OE		BIT(24)
+>  #define SW_LNT2_HSTX_OE			BIT(25)
+>  
+> +struct mtk_mipitx_data {
+> +	const u32 data;
+> +};
+> +
+> +static const struct mtk_mipitx_data mt2701_mipitx_data = {
+> +	.data = (3 << 8)
+> +};
+> +
+> +static const struct mtk_mipitx_data mt8173_mipitx_data = {
+> +	.data = (0 << 8)
+> +};
+> +
+> +static const struct of_device_id mtk_mipi_tx_match[] = {
+> +	{ .compatible = "mediatek,mt2701-mipi-tx",
+> +	  .data = &mt2701_mipitx_data },
+> +	{ .compatible = "mediatek,mt8173-mipi-tx",
+> +	  .data = &mt8173_mipitx_data },
+> +	{},
+> +};
+
+This looks more like 'mt2701 support' rather than 'mipi panel support'.
+So move this modification to another patch.
+
+> +
+>  struct mtk_mipi_tx {
+>  	struct device *dev;
+>  	void __iomem *regs;
+> -	unsigned int data_rate;
+> +	u32 data_rate;
+> +	const struct mtk_mipitx_data *driver_data;
+> +
+>  	struct clk_hw pll_hw;
+>  	struct clk *pll;
+>  };
+> @@ -163,12 +189,14 @@ static void mtk_mipi_tx_update_bits(struct mtk_mipi_tx *mipi_tx, u32 offset,
+>  static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
+>  {
+>  	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
+> -	unsigned int txdiv, txdiv0, txdiv1;
+> +	u8 txdiv, txdiv0, txdiv1;
+>  	u64 pcw;
+>  
+>  	dev_dbg(mipi_tx->dev, "prepare: %u Hz\n", mipi_tx->data_rate);
+>  
+> -	if (mipi_tx->data_rate >= 500000000) {
+> +	if (mipi_tx->data_rate > 1250000000) {
+> +		return -EINVAL;
+> +	} else if (mipi_tx->data_rate >= 500000000) {
+>  		txdiv = 1;
+>  		txdiv0 = 0;
+>  		txdiv1 = 0;
+> @@ -192,6 +220,10 @@ static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
+>  		return -EINVAL;
+>  	}
+>  
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_TOP_CON,
+> +				RG_DSI_LNT_IMP_CAL_CODE | RG_DSI_LNT_HS_BIAS_EN,
+> +				(8 << 4) | RG_DSI_LNT_HS_BIAS_EN);
+> +
+>  	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_BG_CON,
+>  				RG_DSI_VOUT_MSK |
+>  				RG_DSI_BG_CKEN | RG_DSI_BG_CORE_EN,
+> @@ -201,24 +233,18 @@ static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
+>  
+>  	usleep_range(30, 100);
+>  
+> -	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_TOP_CON,
+> -				RG_DSI_LNT_IMP_CAL_CODE | RG_DSI_LNT_HS_BIAS_EN,
+> -				(8 << 4) | RG_DSI_LNT_HS_BIAS_EN);
+> -
+> -	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_CON,
+> -			     RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_CON,
+> +				RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN,
+> +				RG_DSI_CKG_LDOOUT_EN | RG_DSI_LDOCORE_EN);
+>  
+>  	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
+>  				RG_DSI_MPPLL_SDM_PWR_ON |
+>  				RG_DSI_MPPLL_SDM_ISO_EN,
+>  				RG_DSI_MPPLL_SDM_PWR_ON);
+>  
+> -	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
+> -			       RG_DSI_MPPLL_PLL_EN);
+> -
+>  	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
+> -				RG_DSI_MPPLL_TXDIV0 | RG_DSI_MPPLL_TXDIV1 |
+> -				RG_DSI_MPPLL_PREDIV,
+> +				RG_DSI_MPPLL_PREDIV | RG_DSI_MPPLL_TXDIV0 |
+> +				RG_DSI_MPPLL_TXDIV1 | RG_DSI_MPPLL_POSDIV,
+>  				(txdiv0 << 3) | (txdiv1 << 5));
+>  
+>  	/*
+> @@ -233,15 +259,21 @@ static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
+>  		      26000000);
+>  	writel(pcw, mipi_tx->regs + MIPITX_DSI_PLL_CON2);
+>  
+> -	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
+> -			     RG_DSI_MPPLL_SDM_FRA_EN);
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
+> +				RG_DSI_MPPLL_SDM_FRA_EN,
+> +				RG_DSI_MPPLL_SDM_FRA_EN);
+>  
+> -	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_PLL_CON0, RG_DSI_MPPLL_PLL_EN);
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
+> +				RG_DSI_MPPLL_PLL_EN, RG_DSI_MPPLL_PLL_EN);
+>  
+>  	usleep_range(20, 100);
+>  
+>  	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
+> -			       RG_DSI_MPPLL_SDM_SSC_EN);
+> +					RG_DSI_MPPLL_SDM_SSC_EN);
+> +
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
+> +				RG_DSI_MPPLL_PRESERVE,
+> +				mipi_tx->driver_data->data);
+>  
+>  	return 0;
+>  }
+> @@ -255,6 +287,10 @@ static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
+>  	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
+>  			       RG_DSI_MPPLL_PLL_EN);
+>  
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
+> +				RG_DSI_MPPLL_PRESERVE,
+> +				mipi_tx->driver_data->data);
+> +
+>  	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
+>  				RG_DSI_MPPLL_SDM_ISO_EN |
+>  				RG_DSI_MPPLL_SDM_PWR_ON,
+> @@ -310,7 +346,7 @@ static const struct clk_ops mtk_mipi_tx_pll_ops = {
+>  static int mtk_mipi_tx_power_on_signal(struct phy *phy)
+>  {
+>  	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
+> -	unsigned int reg;
+> +	u32 reg;
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  
+>  	for (reg = MIPITX_DSI_CLOCK_LANE;
+>  	     reg <= MIPITX_DSI_DATA_LANE3; reg += 4)
+> @@ -341,7 +377,7 @@ static int mtk_mipi_tx_power_on(struct phy *phy)
+>  static void mtk_mipi_tx_power_off_signal(struct phy *phy)
+>  {
+>  	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
+> -	unsigned int reg;
+> +	u32 reg;
+
+I think this should be moved to a 'cleaning up and refine' patch.
+
+>  
+>  	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_DSI_TOP_CON,
+>  			     RG_DSI_PAD_TIE_LOW_EN);
+> @@ -391,6 +427,7 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+>  	if (!mipi_tx)
+>  		return -ENOMEM;
+>  
+> +	mipi_tx->driver_data = of_device_get_match_data(dev);
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	mipi_tx->regs = devm_ioremap_resource(dev, mem);
+>  	if (IS_ERR(mipi_tx->regs)) {
+> @@ -448,11 +485,6 @@ static int mtk_mipi_tx_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static const struct of_device_id mtk_mipi_tx_match[] = {
+> -	{ .compatible = "mediatek,mt8173-mipi-tx", },
+> -	{},
+> -};
+> -
+>  struct platform_driver mtk_mipi_tx_driver = {
+>  	.probe = mtk_mipi_tx_probe,
+>  	.remove = mtk_mipi_tx_remove,
+
+Regards,
+CK
