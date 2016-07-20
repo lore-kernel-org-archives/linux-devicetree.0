@@ -1,75 +1,35 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4] xen/arm: Add a clock property
-Date: Wed, 20 Jul 2016 14:46:43 +0200
-Message-ID: <CAMuHMdWdqdT4jnae8h9tDDzzh8ZAbJJwiMW-scPBNVwmjYSiWQ@mail.gmail.com>
-References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
- <CAMuHMdU9yP2SMYa5ssrQSu1vwSN2gM4mD-EVYSGr2Pqf=jmCgw@mail.gmail.com>
- <cc28ef7e-dce3-fe5f-ab80-b662244bcbd0@arm.com> <CAMuHMdWeJjcuBHjnjppc5Ys5Ew8VssXzg=dLpLPCOQaBnUo_7Q@mail.gmail.com>
- <04d9dbfb-196d-a775-7fbb-526aba8085f4@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: add power domains to Tegra BPMP firmware
+Date: Wed, 20 Jul 2016 07:46:56 -0500
+Message-ID: <20160720124656.GA18773@rob-hp-laptop>
+References: <20160719191442.15439-1-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <04d9dbfb-196d-a775-7fbb-526aba8085f4-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
-Cc: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160719191442.15439-1-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Julien,
+On Tue, Jul 19, 2016 at 01:14:40PM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> The Tegra186 BPMP is also a provider of power domains. Enhance the device
+> tree binding to describe this.
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> These patches all build on top of Joseph Lo's baseline BPMP binding patches[1]
+> and enhance them to represent a few more features of the firmware.
+> 
+> [1] https://lkml.org/lkml/2016/7/19/280
+> "[PATCH V3 01/10] Documentation: dt-bindings: mailbox: tegra: Add binding for HSP mailbox"
+> 
+>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 10 ++++--
+>  include/dt-bindings/power/tegra186-powergate.h     | 39 ++++++++++++++++++++++
+>  2 files changed, 46 insertions(+), 3 deletions(-)
+>  create mode 100644 include/dt-bindings/power/tegra186-powergate.h
 
-On Wed, Jul 20, 2016 at 2:10 PM, Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 20/07/16 12:49, Geert Uytterhoeven wrote:
->> On Wed, Jul 20, 2016 at 1:01 PM, Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
->> wrote:
->>> On 20/07/16 10:43, Geert Uytterhoeven wrote:
->>>> On Tue, Jul 12, 2016 at 9:46 AM, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
->>>> wrote:
->>>>> Clocks described by this property are reserved for use by Xen, and the
->>>>> OS
->>>>> must not alter their state any way, such as disabling or gating a
->>>>> clock,
->>>>> or modifying its rate. Ensuring this may impose constraints on parent
->>>>> clocks or other resources used by the clock tree.
->>>>>
->>>>> This property is used to proxy clocks for devices Xen has taken
->>>>> ownership
->>>>> of, such as UARTs, for which the associated clock controller(s) remain
->>>>> under the control of Dom0.
->>>>
->>>> I'm not familiar with using XEN at all, but I'm a bit puzzled...
->>>>
->>>> Can't you just add a clocks property to the (virtual) serial device node
->>>> in DT?
->>>> Then the (virtual) serial device driver can get and enable the clock?
->>>
->>> There is no DT node for the Xen console (hvc). The UART used by Xen will
->>> be
->>> completely removed from the Device tree.
->>
->> Why is it removed?
->
-> Because the device is used exclusively by Xen and DOM0 should not touch it
-> at all (IRQs and MMIOs are not mapped).
-
-IMHO then it's Xen's responsability to make sure not to disable the clock(s).
-
-Who removes the device node from the DT? If Xen, can't it just remember
-which clocks were present in removed device nodes?
-
-What to do on SoCs where the serial device is part of a power area (e.g.
-Renesas SH/R-Mobile)? Who will make sure it is not powered down?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
