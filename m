@@ -1,41 +1,64 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] ethernet: add sun8i-emac driver
-Date: Wed, 20 Jul 2016 11:56:12 +0200
-Message-ID: <4697175.RMdFEWr9V5@wuerfel>
-References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com> <1469001800-11615-2-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 0/7] drm: Add Support for Passive RGB to VGA bridges
+Date: Wed, 20 Jul 2016 11:58:50 +0200
+Message-ID: <20160720095857.12297-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBSEVXW6AKGQEDG4YYMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1469001800-11615-2-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 20, 2016 10:03:16 AM CEST LABBE Corentin wrote:
-> +
-> +       /* Benched on OPIPC with 100M, setting more than 256 does not give any
-> +        * perf boost
-> +        */
-> +       priv->nbdesc_rx = 128;
-> +       priv->nbdesc_tx = 256;
-> +
-> 
-
-256 tx descriptors can introduce a significant latency. Can you add
-support for BQL (netdev_sent_queue/netdev_completed_queue) to limit
-the queue size to the minimum?
-
-I also noticed that your tx_lock() prevents you from concurrently
-running sun8i_emac_complete_xmit() and sun8i_emac_xmit(). Is that
-necessary? I'd think that you can find a way to make them work
-concurrently.
-
-	Arnd
+SGksCgpUaGlzIHNlcmllIGlzIGFib3V0IGFkZGluZyBzdXBwb3J0IGZvciB0aGUgUkdCIHRvIFZH
+QSBicmlkZ2UgZm91bmQgaW4KdGhlIEExMy1PbGludXhpbm8gYW5kIHRoZSBDSElQIFZHQSBhZGFw
+dGVyLgoKQm90aCB0aGVzZSBib2FyZHMgcmVseSBvbiBhbiBlbnRpcmVseSBwYXNzaXZlIGJyaWRn
+ZSBtYWRlIG91dCBvZgpyZXNpdG9yIGxhZGRlcnMgdGhhdCBkbyBub3QgcmVxdWlyZSBhbnkgaW5p
+dGlhbGlzYXRpb24uIFRoZSBvbmx5IHRoaW5nCm5lZWRlZCBpcyB0byBnZXQgdGhlIHRpbWluZ3Mg
+ZnJvbSB0aGUgc2NyZWVuIGlmIGF2YWlsYWJsZSAoYW5kIGlmIG5vdCwKZmFsbCBiYWNrIG9uIFhH
+QSBzdGFuZGFyZHMpLCBzZXQgdXAgdGhlIGRpc3BsYXkgcGlwZWxpbmUgdG8gb3V0cHV0IG9uCnRo
+ZSBSR0IgYnVzIHdpdGggdGhlIHByb3BlciB0aW1pbmdzLCBhbmQgeW91J3JlIGRvbmUuCgpUaGlz
+IHNlcmllIGFsc28gZml4ZXMgYSBidW5jaCBvZiBidWdzIHVuY292ZXJlZCB3aGVuIHRyeWluZyB0
+bwppbmNyZWFzZSB0aGUgcmVzb2x1dGlvbiwgYW5kIGhlbmNlIHRoZSBwaXhlbCBjbG9jaywgb2Yg
+b3VyCnBpcGVsaW5lLiBJdCBhbHNvIGZpeGVzIGEgZmV3IGJ1Z3MgaW4gdGhlIERSTSBkcml2ZXIg
+aXRzZWxmIHRoYXQgd2VudAp1bm5vdGljZWQgYmVmb3JlLgoKTGV0IG1lIGtub3cgd2hhdCB5b3Ug
+dGhpbmssCk1heGltZQoKQ2hhbmdlcyBmcm9tIHYxOgogIC0gU3dpdGNoIHRvIHVzaW5nIGEgdmdh
+LWNvbm5lY3RvcgogIC0gVXNlIGRybV9lbmNvZGVyIGJyaWRnZSBwb2ludGVyIGluc3RlYWQgb2Yg
+ZG9pbmcgb3VyIG93bgogIC0gUmVwb3J0IHRoZSBjb25uZWN0b3Igc3RhdHVzIGFzIHVua25vd24g
+aW5zdGVhZCBvZiBjb25uZWN0ZWQgYnkKICAgIGRlZmF1bHQsIGFuZCBhcyBjb25uZWN0ZWQgb25s
+eSBpZiB3ZSBjYW4gcmV0cmlldmUgdGhlIEVESUQuCiAgLSBTd2l0Y2ggdG8gb2ZfaTJjX2dldF9h
+ZGFwdGVyIGJ5IG5vZGUsIGFuZCBwdXQgdGhlIHJlZmVyZW5jZSB3aGVuIGRvbmUKICAtIFJlYmFz
+ZWQgb24gbGludXgtbmV4dAoKTWF4aW1lIFJpcGFyZCAoNyk6CiAgZHJtL3N1bjRpOiBTdG9yZSBU
+Q09OJ3MgZGV2aWNlIHN0cnVjdHVyZSBwb2ludGVyCiAgZHJtL3N1bjRpOiBNb3ZlIHBhbmVsIHJl
+dHJpZXZhbCBpbiBSR0IgY29ubmVjdG9yCiAgZHJtL3N1bjRpOiBBZGQgYnJpZGdlIHN1cHBvcnQK
+ICBkcm0vYnJpZGdlOiBBZGQgUkdCIHRvIFZHQSBicmlkZ2Ugc3VwcG9ydAogIEFSTTogc3VuNWk6
+IGExMy1vbGludXhpbm86IEVuYWJsZSBWR0EgYnJpZGdlCiAgQVJNOiBtdWx0aV92NzogZW5hYmxl
+IFZHQSBicmlkZ2UKICBBUk06IHN1bnhpOiBFbmFibGUgVkdBIGJyaWRnZQoKIC4uLi9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS9kdW1iLXZnYS50eHQgICAgICAgICAgIHwgIDU0ICsrKysrCiBhcmNo
+L2FybS9ib290L2R0cy9zdW41aS1hMTMtb2xpbnV4aW5vLmR0cyAgICAgICAgICB8ICA2MCArKysr
+KysKIGFyY2gvYXJtL2NvbmZpZ3MvbXVsdGlfdjdfZGVmY29uZmlnICAgICAgICAgICAgICAgIHwg
+ICAxICsKIGFyY2gvYXJtL2NvbmZpZ3Mvc3VueGlfZGVmY29uZmlnICAgICAgICAgICAgICAgICAg
+IHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAgICAg
+ICAgIHwgICA2ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EuYyAgICAgICAg
+ICAgICAgICAgIHwgMjMyICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3N1
+bjRpL3N1bjRpX2Rydi5jICAgICAgICAgICAgICAgICAgfCAgIDQgKy0KIGRyaXZlcnMvZ3B1L2Ry
+bS9zdW40aS9zdW40aV9yZ2IuYyAgICAgICAgICAgICAgICAgIHwgIDY0ICsrKystLQogZHJpdmVy
+cy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyAgICAgICAgICAgICAgICAgfCAgNTIgKysrKy0K
+IGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmggICAgICAgICAgICAgICAgIHwgICA0
+ICsKIDExIGZpbGVzIGNoYW5nZWQsIDQ1MSBpbnNlcnRpb25zKCspLCAyOCBkZWxldGlvbnMoLSkK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9icmlkZ2UvZHVtYi12Z2EudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS9kdW1iLXZnYS5jCgotLSAKMi45LjAKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
