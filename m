@@ -1,108 +1,61 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] drm/bridge: Add RGB to VGA bridge support
-Date: Wed, 20 Jul 2016 14:34:09 -0500
-Message-ID: <20160720193409.GA17313@rob-hp-laptop>
-References: <20160720095857.12297-1-maxime.ripard@free-electrons.com>
- <20160720095857.12297-5-maxime.ripard@free-electrons.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH] ARM: bcm2835: dt: Add Raspberry Pi Zero
+Date: Wed, 20 Jul 2016 12:36:16 -0700
+Message-ID: <878tww6r0v.fsf@eliezer.anholt.net>
+References: <1454571546-25481-1-git-send-email-lkundrak@v3.sk> <27632472.326220.2e5ba31c-16b8-46a6-a38b-8aa5236ec996.open-xchange@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160720095857.12297-5-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <27632472.326220.2e5ba31c-16b8-46a6-a38b-8aa5236ec996.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 11:58:54AM +0200, Maxime Ripard wrote:
-> Some boards have an entirely passive RGB to VGA bridge, based on either
-> DACs or resistor ladders.
-> 
-> Those might or might not have an i2c bus routed to the VGA connector in
-> order to access the screen EDIDs.
-> 
-> Add a bridge that doesn't do anything but expose the modes available on the
-> screen, either based on the EDIDs if available, or based on the XGA
-> standards.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../bindings/display/bridge/dumb-vga.txt           |  54 +++++
->  drivers/gpu/drm/bridge/Kconfig                     |   6 +
->  drivers/gpu/drm/bridge/Makefile                    |   1 +
->  drivers/gpu/drm/bridge/dumb-vga.c                  | 232 +++++++++++++++++++++
->  4 files changed, 293 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/dumb-vga.txt
->  create mode 100644 drivers/gpu/drm/bridge/dumb-vga.c
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/dumb-vga.txt b/Documentation/devicetree/bindings/display/bridge/dumb-vga.txt
-> new file mode 100644
-> index 000000000000..0056ffa2b31d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/dumb-vga.txt
-> @@ -0,0 +1,54 @@
-> +Passive RGB to VGA bridge
-> +-------------------------
-> +
-> +This binding is aimed for entirely passive RGB to VGA bridges that do not
-> +require any configuration.
-> +
-> +Required properties:
-> +
-> +- compatible: Must be "dumb-vga-bridge"
-> +
-> +Required nodes:
-> +
-> +This device has two video ports. Their connections are modeled using the OF
-> +graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> +
-> +- Video port 0 for RGB input
-> +- Video port 1 for VGA output
-> +
-> +
-> +Example
-> +-------
-> +
-> +bridge {
-> +	compatible = "dumb-vga-bridge";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			vga_bridge_in: endpoint@0 {
-> +				reg = <0>;
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Don't need a unit address here.
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-> +				remote-endpoint = <&tcon0_out_vga>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +
-> +			vga_bridge_out: endpoint@0 {
-> +				reg = <0>;
+> Hi Lubomir,
+>
+>> Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org> hat am 4. Februar 2016 um 08:39 geschrie=
+ben:
+>>=20
+>>=20
+>> Notable difference from the other Raspberry Pi boards is the lack of PWR=
+ LED.
+>>=20
+>> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
+>
+> do you have any plans to submit a V2 of this patch or should i take over?
 
-Ditto.
+It's been a while, so I'd love if you picked it up and resubmitted with
+the LED changes.
 
-> +				remote-endpoint = <&vga_con_in>;
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Would be good to show the connector node in the example too.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-With those changes,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+iQIcBAEBCgAGBQJXj9KwAAoJELXWKTbR/J7oixIP/R/ZT+4rnXZizpj2ut5VexvY
+TimAyidH6YlMEzqc4Ki9u6kgM4Rj34Tpa7c1O8iu5mkLVTg5mbZaTMFZbJ9lWmcO
+2ENSQYQfCTdNLYW90adKv0D2UBH91NU4gaRNueesY/f6MZ99d56K9K+5dl/m/6dG
+7ktW42vpoEWKw6KUXRASIYD4zR/9btwwAa8MP+Y3usiuiTvAwkSI9Z62rqRR7eMh
+rLVrNLkK5PMbh99hdxDGP33XA9yl6eWSv83kSPtd2LVi7tu3sAkSXNexfFftJCAG
+2Nm5Tg6ThL5wR8GkE0xLZwPSHj2brQzeDIoxbfB37yz7XrSQpBL5TzKPRtHmz4yN
+12gXUnMehZA+y7DhIyBZWgcQhajZq6XIyeEJO17rXjnV7XlUJdDvmsBwNJ9nvj+i
+UDSVabMsgXunn+hPqA4TUUkqmlVB7+hwJPUX9OC/WuPQaAYNToGUW6COHFnyV4Lo
+r6OAnRym08Z6dSao3NJjmUnFBQUnxI+3aBXrkweWLi8TGsfSita0An3C9HEjVvu0
+aei5nn7shgtSIhK8oCKaCW5XiymfkXFBn6EF4pfX6fGs/0+HJOX/wXsvBniWd0Y6
+ifDOAW/sYQkQ82tNrOQHGTvXH16SAHhkzRAKRZKCjnDBSwCj8d6cYMbWfwytBN1s
+NgAr7c1/V1OowPr0TN4J
+=7sxn
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
