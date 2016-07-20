@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 4/4] ARM: sun5i: chip: Add status LED
-Date: Wed, 20 Jul 2016 16:11:39 +0200
-Message-ID: <20160720141139.25098-5-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 3/4] ARM: dt: axp209: Add AXP209 GPIO driver
+Date: Wed, 20 Jul 2016 16:11:38 +0200
+Message-ID: <20160720141139.25098-4-maxime.ripard@free-electrons.com>
 References: <20160720141139.25098-1-maxime.ripard@free-electrons.com>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <20160720141139.25098-1-maxime.ripard@free-electrons.com>
@@ -10,35 +10,31 @@ To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.co
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The CHIP has a status LED connected to one of the AXP GPIOs. Add the
-gpio-leds node to be able to use the proper LED framework to control it.
+Add the AXP209 GPIO node to our AXP209 DTSI so that boards can use it.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/sun5i-r8-chip.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/axp209.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun5i-r8-chip.dts b/arch/arm/boot/dts/sun5i-r8-chip.dts
-index f694482bdeb6..b68a12374b35 100644
---- a/arch/arm/boot/dts/sun5i-r8-chip.dts
-+++ b/arch/arm/boot/dts/sun5i-r8-chip.dts
-@@ -64,6 +64,16 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		status {
-+			label = "chip:white:status";
-+			gpios = <&axp_gpio 2 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
- };
+diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
+index afbe89c01df5..675bb0f30825 100644
+--- a/arch/arm/boot/dts/axp209.dtsi
++++ b/arch/arm/boot/dts/axp209.dtsi
+@@ -53,6 +53,12 @@
+ 	interrupt-controller;
+ 	#interrupt-cells = <1>;
  
- &be0 {
++	axp_gpio: gpio {
++		compatible = "x-powers,axp209-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
+ 	regulators {
+ 		/* Default work frequency for buck regulators */
+ 		x-powers,dcdc-freq = <1500>;
 -- 
 2.9.0
 
