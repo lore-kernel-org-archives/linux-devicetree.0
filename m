@@ -1,51 +1,43 @@
-From: "Reizer, Eyal" <eyalr@ti.com>
-Subject: RE: [PATCHv8] wlcore: spi: add wl18xx support
-Date: Wed, 20 Jul 2016 07:04:45 +0000
-Message-ID: <8665E2433BC68541A24DFFCA87B70F5B36161A17@DFRE01.ent.ti.com>
-References: <1468994768-23609-1-git-send-email-eyalr@ti.com>
-	<8665E2433BC68541A24DFFCA87B70F5B36161990@DFRE01.ent.ti.com>
- <871t2ovll6.fsf@kamboji.qca.qualcomm.com>
+From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] wlcore: spi: fix build warning caused by redundant variable
+Date: Wed, 20 Jul 2016 07:30:20 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B36161A64@DFRE01.ent.ti.com>
+References: <1468999637-31006-1-git-send-email-eyalr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <871t2ovll6.fsf@kamboji.qca.qualcomm.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468999637-31006-1-git-send-email-eyalr-l0cyMroinI0@public.gmane.org>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> 
-> > Add support for using with both wl12xx and wl18xx.
-> >
-> > - all wilink family needs special init command for entering wspi mode.
-> >   extra clock cycles should be sent after the spi init command while the
-> >   cs pin is high.
-> > - Use inverted chip select for sending a dummy 4 bytes command that
-> >   completes the init stage.
-> >
-> > Signed-off-by: Eyal Reizer <eyalr@ti.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> > v1->v2:update device tree bindings configuration
-> > v2->v3:revert from manual gpio manipulation. use inverted chip select
-> instead
-> > for sending the extra init cycle which, achieves the same hardware purpose.
-> > update device tree bindings docucmentation accordingly
-> > v3->v4: Remove redundant data form binding documentation and fix chip
-> select
-> > number mismatch in wl1271 example
-> > v4->v5: Rebase on top of head of wireless-drivers-next
-> > v5->v6: Add ACKs
-> > v6->v7: Mail format issues
-> > v7->v8: Remove redundant varaible from wlcore_probe_of
-> 
-> I have already applied this patch, it's too late to send a new version.
-> Now you need to send a new patch, on top of wireless-drivers-next, which
-> removes the redundant variable.
-> 
-Understood. Will submit shortly
+The ret variable is unused in wlcore_probe_of()
+Remove it for fixing build warning.
 
-Best Regards,
-Eyal
+Fixes: 01efe65aba65 ("wlcore: spi: add wl18xx support")
+Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+---
+ drivers/net/wireless/ti/wlcore/spi.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
+index 73fbcf1..6d24040 100644
+--- a/drivers/net/wireless/ti/wlcore/spi.c
++++ b/drivers/net/wireless/ti/wlcore/spi.c
+@@ -454,7 +454,6 @@ static int wlcore_probe_of(struct spi_device *spi, struct wl12xx_spi_glue *glue,
+ 			   struct wlcore_platdev_data *pdev_data)
+ {
+ 	struct device_node *dt_node = spi->dev.of_node;
+-	int ret;
+ 	const struct of_device_id *of_id;
+ 
+ 	of_id = of_match_node(wlcore_spi_of_match_table, dt_node);
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
