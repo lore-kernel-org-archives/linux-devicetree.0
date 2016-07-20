@@ -1,32 +1,51 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] wlcore: spi: fix build warning caused by redundant variable
-Date: Wed, 20 Jul 2016 21:27:53 +0300
-Message-ID: <87wpkgqi52.fsf@kamboji.qca.qualcomm.com>
-References: <1468999637-31006-1-git-send-email-eyalr@ti.com>
-	<8665E2433BC68541A24DFFCA87B70F5B36161A64@DFRE01.ent.ti.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Wed, 20 Jul 2016 13:31:48 -0500
+Message-ID: <1469039508.25630.17.camel@buserror.net>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net>
+	 <1468723822-30457-5-git-send-email-oss@buserror.net>
+	 <4016699.uYaV8nWfqC@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B36161A64-1tpBd5JUCm6IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-	(Eyal Reizer's message of "Wed, 20 Jul 2016 07:30:20 +0000")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev@vger.kernel.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi@vger.kernel.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4016699.uYaV8nWfqC@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linuxppc-dev@lists.ozlabs.org, Yangbo Lu <yangbo.lu@nxp.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-"Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org> writes:
+On Wed, 2016-07-20 at 13:24 +0200, Arnd Bergmann wrote:
+> On Saturday, July 16, 2016 9:50:21 PM CEST Scott Wood wrote:
+> >=20
+> > From: yangbo lu <yangbo.lu@nxp.com>
+> >=20
+> > Move mpc85xx.h to include/linux/fsl and rename it to svr.h as a com=
+mon
+> > header file.=C2=A0=C2=A0This SVR numberspace is used on some ARM ch=
+ips as well as
+> > PPC, and even to check for a PPC SVR multi-arch drivers would other=
+wise
+> > need to ifdef the header inclusion and all references to the SVR sy=
+mbols.
+> >=20
+> > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> > Acked-by: Wolfram Sang <wsa@the-dreams.de>
+> > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+> > Acked-by: Joerg Roedel <jroedel@suse.de>
+> > [scottwood: update description]
+> > Signed-off-by: Scott Wood <oss@buserror.net>
+> >=20
+> As discussed before, please don't introduce yet another vendor specif=
+ic
+> way to match a SoC ID from a device driver.
+>=20
+> I've posted a patch for an extension to the soc_device infrastructure
+> to allow comparing the running SoC to a table of devices, use that
+> instead.
 
-> The ret variable is unused in wlcore_probe_of()
-> Remove it for fixing build warning.
->
-> Fixes: 01efe65aba65 ("wlcore: spi: add wl18xx support")
-> Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+As I asked before, in which relevant maintainership capacity are you NA=
+CKing
+this?
 
-Applied to wireless-drivers-next, thanks.
-
--- 
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Scott
