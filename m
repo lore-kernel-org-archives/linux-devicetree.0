@@ -1,76 +1,59 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific
- power-saving options
-Date: Wed, 20 Jul 2016 09:11:28 -0700
-Message-ID: <CAHQ1cqFjpu8i8HOZt3FgE8pRhD1x1iwP3NhRFec7aj=xH9Z50g@mail.gmail.com>
-References: <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com>
- <20160619142934.GA8522@rob-hp-laptop> <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
- <20160621204904.GA9779@rob-hp-laptop> <20160621210739.GY5809@piout.net>
- <CAHQ1cqGRqhOAqfJZEixkxAHZ4Y8dd-hD__T1ci0LS28Orphs3Q@mail.gmail.com>
- <20160719224728.GP7132@piout.net> <CAHQ1cqF+Z5sKhtxgFiTGJdaOtkQRtQmXU=DzG0qxnDDwfAMp_g@mail.gmail.com>
- <20160720090220.GQ7132@piout.net> <CAHQ1cqEoN7PEQApHBo-FOqumtLJWoURHOPZfrzL=6h2p4S0Fdg@mail.gmail.com>
- <20160720153836.GS7132@piout.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH 09/10] ARM: dts: Add Arria10 DMA EDAC devicetree entry
+Date: Wed, 20 Jul 2016 11:05:29 -0500
+Message-ID: <578FA149.8020407@opensource.altera.com>
+References: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
+ <1468512408-5156-10-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDKOBWPM5ABRBMWFX26AKGQELUFQJCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160720153836.GS7132-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1468512408-5156-10-git-send-email-tthayer@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 8:38 AM, Alexandre Belloni
-<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On 20/07/2016 at 07:36:55 -0700, Andrey Smirnov wrote :
->> On Wed, Jul 20, 2016 at 2:02 AM, Alexandre Belloni
->> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On 19/07/2016 at 16:56:56 -0700, Andrey Smirnov wrote :
->> >> >> I don't see any value in doing that, could you give me a realistic
->> >> >> example of a scenario in which a user would want to spend some of
->> >> >> uptime with RTC oscillator fault detection/glitch filtering disabled
->> >> >> and then enable it?
->> >> >>
->> >> >
->> >> > Well, the issue is not being dynamic, it is differentiating between
->> >> > hardware description and user configuration. Configuration must not be in
->> >> > DT.
->> >>
->> >> Why? And I don't mean in a generic sense, but in this particular case.
->> >> What is gained by not having this bit of configuration, whose only
->> >> consumer is the driver, in the device tree file?
->> >>
->> >
->> > Because configuration doesn't belong to DT. DT is about hardware
->> > description, not configuration.
->>
->> That doesn't really answer my question. You just re-iterating some
->> maxim without explaining what is the point behind applying it.
->>
->
-> Well, that is from the device tree specification and how the device tree
-> maintainers want it...
+On 07/14/2016 11:06 AM, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> Add the device tree entries needed to support the Altera DMA
+> FIFO buffer EDAC on the Arria10 chip.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+>  arch/arm/boot/dts/socfpga_arria10.dtsi |    8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+> index 228f663..a506ec0 100644
+> --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+> @@ -644,6 +644,14 @@
+>  				interrupts = <5 IRQ_TYPE_LEVEL_HIGH>,
+>  					     <37 IRQ_TYPE_LEVEL_HIGH>;
+>  			};
+> +
+> +			dma-ecc@ff8c8000 {
+> +				compatible = "altr,socfpga-dma-ecc";
+> +				reg = <0xff8c8000 0x400>;
+> +				altr,ecc-parent = <&pdma>;
+> +				interrupts = <10 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <42 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+>  		};
+>  
+>  		rst: rstmgr@ffd05000 {
+> 
 
-And yet, we have whole subsystems such as "nvmem" and I am sure plenty
-of other smaller examples where that maxim is being applied very lax
-if at all. So it seems people can and do make compromises regarding
-the "no configuration in DT" rule if pros of doing so outweighs the
-cons.
+Acked-by: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-Andrey
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Dinh
