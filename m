@@ -1,85 +1,180 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] ARM: bcm2835: dt: Add Raspberry Pi Zero
-Date: Wed, 20 Jul 2016 14:30:34 -0700
-Message-ID: <87a8hct2th.fsf@eliezer.anholt.net>
-References: <1454571546-25481-1-git-send-email-lkundrak@v3.sk> <27632472.326220.2e5ba31c-16b8-46a6-a38b-8aa5236ec996.open-xchange@email.1und1.de> <878tww6r0v.fsf@eliezer.anholt.net> <182687649.301236.37df541a-c292-4f81-b3d7-fcea47416b49.open-xchange@email.1und1.de>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 3/3] arm64: dts: rockchip: add usb2-phy support for rk3399
+Date: Wed, 20 Jul 2016 14:33:25 -0700
+Message-ID: <CAD=FV=Wc0RdgpfzWhEVsrQhj5Pjf4RF3a81mZKaZfpZS41ce5g@mail.gmail.com>
+References: <1468913311-23977-1-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <182687649.301236.37df541a-c292-4f81-b3d7-fcea47416b49.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
-Cc: noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468913311-23977-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?5ZC06Imv5bOw?= <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+On Tue, Jul 19, 2016 at 12:28 AM, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
 
-> Hi Eric,
+You need a patch description here, even for simple patches.  All you
+have now is a subject.
+
+
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-evb.dts |   19 +++++++++++
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi    |   47 ++++++++++++++++++++++++++-
+
+Personally I'd prefer to see EVB in a separate patch.
+
+
+>  2 files changed, 65 insertions(+), 1 deletion(-)
 >
->> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> hat am 20. Juli 2016 um 21:36 geschrieben:
->>=20
->>=20
->> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
->>=20
->> > Hi Lubomir,
->> >
->> >> Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org> hat am 4. Februar 2016 um 08:39
->> >> geschrieben:
->> >>=20
->> >>=20
->> >> Notable difference from the other Raspberry Pi boards is the lack of =
-PWR
->> >> LED.
->> >>=20
->> >> Signed-off-by: Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>
->> >
->> > do you have any plans to submit a V2 of this patch or should i take ov=
-er?
->>=20
->> It's been a while, so I'd love if you picked it up and resubmitted with
->> the LED changes.
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> index 1a3eb14..31d4828 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+> @@ -69,6 +69,15 @@
+>                 regulator-max-microvolt = <3300000>;
+>         };
 >
-> i also want to take care of those dwc2 warnings, which might need some
-> additional DT settings:
+> +       vbus_host: vbus-host-regulator {
+> +               compatible = "regulator-fixed";
+> +               enable-active-high;
+> +               gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&host_vbus_drv>;
+> +               regulator-name = "vbus_host";
+> +       };
+> +
+
+To match my schematics, this would probably be "vcc5v0_host".
+Technically there are two regulators but since they are the same
+voltage and enabled by the same GPIO it seems like modeling it as one
+regulator is fine.
+
+If you really wanted to model things you could also include the input
+supply (VCC5V0_SYS).  Not sure how much you care to model in EVB.
+
+
+>         vcc_phy: vcc-phy-regulator {
+>                 compatible = "regulator-fixed";
+>                 regulator-name = "vcc_phy";
+> @@ -93,6 +102,16 @@
+>         status = "okay";
+>  };
 >
-> dwc2 20980000.usb: 256 invalid for host_nperio_tx_fifo_size. Check HW
-> configuration.
-> dwc2 20980000.usb: 512 invalid for host_perio_tx_fifo_size. Check HW
-> configuration.
-> dwc2 20980000.usb: Specified GNPTXFDEP=3D1024 > 32
+> +&u2phy0_host {
+> +       phy-supply = <&vbus_host>;
+> +       status = "okay";
+> +};
+> +
+> +&u2phy1_host {
+> +       phy-supply = <&vbus_host>;
+> +       status = "okay";
+> +};
+> +
+
+Technically "u2" sorts alphabetically before "uart".
+
+
+>  &usb_host0_ehci {
+>         status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index d7f8e06..0383785 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -221,6 +221,8 @@
+>                 interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+>                 clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>;
+>                 clock-names = "hclk_host0", "hclk_host0_arb";
+> +               phys = <&u2phy0_host>;
+> +               phy-names = "u2phy0";
+
+This is wrong.  From
+"Documentation/devicetree/bindings/usb/usb-ehci.txt" phy-names should
+be "usb".
+
+>                 status = "disabled";
+>         };
 >
-> What LED change do you expect?
+> @@ -239,6 +241,8 @@
+>                 interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+>                 clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>;
+>                 clock-names = "hclk_host1", "hclk_host1_arb";
+> +               phys = <&u2phy1_host>;
+> +               phy-names = "u2phy1";
 
-Sorry, misremembering the thread. I think it was just the bindings
-documentation change that was needed.
+This is wrong.  From
+"Documentation/devicetree/bindings/usb/usb-ehci.txt" phy-names should
+be "usb".
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+>                 status = "disabled";
+>         };
+>
+> @@ -481,8 +485,42 @@
+>         };
+>
+>         grf: syscon@ff770000 {
+> -               compatible = "rockchip,rk3399-grf", "syscon";
+> +               compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+>                 reg = <0x0 0xff770000 0x0 0x10000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +
+> +               u2phy0: usb2-phy@e450 {
+> +                       compatible = "rockchip,rk3399-usb2phy";
+> +                       reg = <0xe450 0x10>;
+> +                       clocks = <&cru SCLK_USB2PHY0_REF>;
+> +                       clock-names = "phyclk";
+> +                       #clock-cells = <0>;
+> +                       clock-output-names = "clk_usbphy0_480m";
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Any reason why there isn't a 'status = "disabled";' here?
 
-iQIcBAEBCgAGBQJXj+16AAoJELXWKTbR/J7oEDwP/3bXTrhs/fMRv7SJSBacbR2v
-InW8isIKCzGiqYtdTXYG0+x4QyiluBALOKLumWIy+6pvJ2Wp8GO+qBFI/CiGoyNm
-vVFa1SoKlFj0yxDHYLChnszXQKf3mQFxR3yquydsg7Pp7PmSDvQF8JVBX/YIpeCV
-1J1IKsemPGsQFBaEMWzW8bKN4zDoWDWG60XM+66px4et7+N6Bf0u/g/hX9CkQtN7
-wXq20z7jxaohdlX5HlSc3CfQJKv0G11X02F6iEtJLY54otNvxQT9nJdSTh8iWigD
-DpIj8OaJYY3nGp5N/U1QnNqqegZw4g5pPwZRr3Alc2XMMcxpzILyk6BUnsfzGbu9
-7EEQ/1RtCmfRgq9Zpc9LTA//ULqRprFh1mHznA+D4zMoCEkl0buCfUwclmqCT/2W
-TEcMjqaajVyNScP5Xju41j5GsUHG1VA6OZ/eRTWe5Mg1t8OFwNlzP6K9p/o+Z58M
-ODuKcw219SqvX7UAP2yXMYtPm86l2QRBsYsKmtb99dmMzKdKQ2s/tHgJMEU1rIZp
-yGqN/hiOYr9dMwbdpZPi89PtMW5XHAuj9oyngxmXiPuWipaubyiwB7Olb33vs3Eu
-HsgCwle1W6laM29UpJZdNaa1VpX8jpAX2qfJoreY0xjETRBLRePXJcFkjdvvAp0j
-2qWbRvU98RsPLuB/Pkpq
-=Qe+g
------END PGP SIGNATURE-----
---=-=-=--
+
+> +                       u2phy0_host: host-port {
+> +                               #phy-cells = <0>;
+> +                               interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+> +                               interrupt-names = "linestate";
+> +                               status = "disabled";
+> +                       };
+> +               };
+> +
+> +               u2phy1: usb2-phy@e460 {
+> +                       compatible = "rockchip,rk3399-usb2phy";
+> +                       reg = <0xe460 0x10>;
+> +                       clocks = <&cru SCLK_USB2PHY1_REF>;
+> +                       clock-names = "phyclk";
+> +                       #clock-cells = <0>;
+> +                       clock-output-names = "clk_usbphy1_480m";
+> +
+> +                       u2phy1_host: host-port {
+> +                               #phy-cells = <0>;
+> +                               interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> +                               interrupt-names = "linestate";
+> +                               status = "disabled";
+> +                       };
+> +               };
+>         };
+>
+>         watchdog@ff840000 {
+> @@ -1009,5 +1047,12 @@
+>                                         <1 14 RK_FUNC_1 &pcfg_pull_none>;
+>                         };
+>                 };
+> +
+> +               usb2 {
+> +                       host_vbus_drv: host-vbus-drv {
+> +                               rockchip,pins =
+> +                                       <4 25 RK_FUNC_GPIO &pcfg_pull_none>;
+> +                       };
+> +               };
+
+Are you certain this belongs in rk3399.dtsi?  It seems like it should
+be in the EVB file.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
