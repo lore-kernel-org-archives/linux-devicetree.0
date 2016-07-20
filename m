@@ -1,48 +1,54 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] tpm: devicetree: document
-	properties for cr50
-Date: Wed, 20 Jul 2016 13:54:22 -0600
-Message-ID: <20160720195422.GA30947@obsidianresearch.com>
-References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
-	<cover.1468985673.git.apronin@chromium.org>
-	<5274cc806888a709c639e701dad894543885b2c9.1468985673.git.apronin@chromium.org>
-	<20160720190303.GA5620@rob-hp-laptop>
-	<20160720194912.GA61154@apronin>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Wed, 20 Jul 2016 22:35:20 +0200
+Message-ID: <5282323.HEP6x2M0Nh@wuerfel>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net> <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160720194912.GA61154@apronin>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1469039508.25630.17.camel@buserror.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Scott Wood <oss@buserror.net>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 12:49:12PM -0700, Andrey Pronin wrote:
+On Wednesday, July 20, 2016 1:31:48 PM CEST Scott Wood wrote:
+> On Wed, 2016-07-20 at 13:24 +0200, Arnd Bergmann wrote:
+> > On Saturday, July 16, 2016 9:50:21 PM CEST Scott Wood wrote:
+> > > 
+> > > From: yangbo lu <yangbo.lu@nxp.com>
+> > > 
+> > > Move mpc85xx.h to include/linux/fsl and rename it to svr.h as a common
+> > > header file.  This SVR numberspace is used on some ARM chips as well as
+> > > PPC, and even to check for a PPC SVR multi-arch drivers would otherwise
+> > > need to ifdef the header inclusion and all references to the SVR symbols.
+> > > 
+> > > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> > > Acked-by: Wolfram Sang <wsa@the-dreams.de>
+> > > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+> > > Acked-by: Joerg Roedel <jroedel@suse.de>
+> > > [scottwood: update description]
+> > > Signed-off-by: Scott Wood <oss@buserror.net>
+> > > 
+> > As discussed before, please don't introduce yet another vendor specific
+> > way to match a SoC ID from a device driver.
+> > 
+> > I've posted a patch for an extension to the soc_device infrastructure
+> > to allow comparing the running SoC to a table of devices, use that
+> > instead.
+> 
+> As I asked before, in which relevant maintainership capacity are you NACKing
+> this?
 
-> Sorry, I just updated this patch description in v2 to indicate why they are not
-> hard-coded, but didn't answer explicitly. As the firmware changes, a different
-> revision of it can have a different time before it sleeps in its configuration,
-> or the time it takes it to startup may be different. Thus, there's a way to
-> set it here w/o changing the driver.
+I don't know why that's important, but I suggested the creation of
+drivers/soc/ as a place to have a more general place for platform
+specific drivers as part of being maintainer for arm-soc, and
+almost all changes to drivers/soc go through our tree.
 
-This sort of stuff should be read out of the firmware, not DT..
+Olof does about half the merges, but I do the majority of the reviews
+for drivers/soc patches. See also
 
-Why has Google created such a non-standard TPM firmware???
+git log --graph --format="%an %s" --merges drivers/soc/ 
 
-Jason
-
-------------------------------------------------------------------------------
-What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
-patterns at an interface-level. Reveals which users, apps, and protocols are 
-consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
-J-Flow, sFlow and other flows. Make informed decisions using capacity planning
-reports.http://sdm.link/zohodev2dev
+	Arnd
