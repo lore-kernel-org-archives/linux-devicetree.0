@@ -1,86 +1,72 @@
-From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 1/2] tpm: devicetree: document properties
-	for cr50
-Date: Tue, 19 Jul 2016 20:41:24 -0700
-Message-ID: <5274cc806888a709c639e701dad894543885b2c9.1468985673.git.apronin@chromium.org>
-References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
-	<cover.1468985673.git.apronin@chromium.org>
+From: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] arm64: dts: mt8173: add tvdpll and vencpll clocks for 4K support
+Date: Wed, 20 Jul 2016 12:06:11 +0800
+Message-ID: <1468987571-39104-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <cover.1468985673.git.apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <cover.1468985673.git.apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-References: <1468549218-19215-1-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-	<cover.1468985673.git.apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Junzhi Zhao <junzhi.zhao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-firmware. Several timing-related properties that may differ from
-one firmware version to another are added to devicetree.
-Document these properties.
+From: Junzhi Zhao <junzhi.zhao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Signed-off-by: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+When the resolution is set to 4k*2k, the hdmi
+pixel clock will be 250MHz, however, the correct
+pixel clock should be 297MHz. Fix this error by
+adding the correct tvdpll clocks.
+If MT8173 can support 4K, the vencpll clock should
+be 800MHz. Add the vencpll clocks to support 4K.
+
+Signed-off-by: Junzhi Zhao <junzhi.zhao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/security/tpm/cr50_spi.txt  | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
-new file mode 100644
-index 0000000..f212b6b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
-@@ -0,0 +1,32 @@
-+* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
-+
-+H1 Secure Microcontroller running Cr50 firmware provides several
-+functions, including TPM-like functionality. It communicates over
-+SPI using the FIFO protocol described in the PTP Spec, section 6.
-+
-+Required properties:
-+- compatible: Should be "google,cr50".
-+- spi-max-frequency: Maximum SPI frequency.
-+
-+Optional properties:
-+- access-delay-ms: Required delay between subsequent transactions on SPI.
-+- sleep-delay-ms: Time after the last SPI activity, after which the chip
-+  may go to sleep.
-+- wake-start-delay-ms: Time after initiating wake up before the chip is
-+  ready to accept commands over SPI.
-+
-+Example:
-+
-+&spi0 {
-+        status = "okay";
-+
-+        cr50@0 {
-+                compatible = "google,cr50";
-+                reg = <0>;
-+                spi-max-frequency = <800000>;
-+
-+                access-delay-ms = <2>;
-+                sleep-delay-ms = <1000>;
-+                wake-start-delay-ms = <60>;
-+        };
-+};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 78529e4..e79bacf 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -690,6 +690,8 @@
+ 			compatible = "mediatek,mt8173-mmsys", "syscon";
+ 			reg = <0 0x14000000 0 0x1000>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++			clocks = <&topckgen CLK_TOP_VENCPLL>;
++			clock-names = "vencpll";
+ 			#clock-cells = <1>;
+ 		};
+ 
+@@ -857,10 +859,22 @@
+ 			reg = <0 0x1401d000 0 0x1000>;
+ 			interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+-			clocks = <&mmsys CLK_MM_DPI_PIXEL>,
++			clocks = <&topckgen CLK_TOP_TVDPLL_D2>,
++				 <&topckgen CLK_TOP_TVDPLL_D4>,
++				 <&topckgen CLK_TOP_TVDPLL_D8>,
++				 <&topckgen CLK_TOP_TVDPLL_D16>,
++				 <&topckgen CLK_TOP_DPI0_SEL>,
++				 <&mmsys CLK_MM_DPI_PIXEL>,
+ 				 <&mmsys CLK_MM_DPI_ENGINE>,
+ 				 <&apmixedsys CLK_APMIXED_TVDPLL>;
+-			clock-names = "pixel", "engine", "pll";
++			clock-names = "tvdpll_d2",
++				      "tvdpll_d4",
++				      "tvdpll_d8",
++				      "tvdpll_d16",
++				      "tvdpll_mux",
++				      "pixel",
++				      "engine",
++				      "pll";
+ 			status = "disabled";
+ 		};
+ 
 -- 
-2.6.6
+1.7.9.5
 
-
-------------------------------------------------------------------------------
-What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
-patterns at an interface-level. Reveals which users, apps, and protocols are 
-consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
-J-Flow, sFlow and other flows. Make informed decisions using capacity planning
-reports.http://sdm.link/zohodev2dev
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
