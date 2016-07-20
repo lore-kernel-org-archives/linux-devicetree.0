@@ -1,49 +1,48 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 2/4] drivers/clocksource/moxart: Refactor enable/disable
-Date: Wed, 20 Jul 2016 18:22:39 +1000
-Message-ID: <1469002959.8568.102.camel@kernel.crashing.org>
-References: <1462797169-14512-1-git-send-email-joel@jms.id.au>
-	 <1462797169-14512-3-git-send-email-joel@jms.id.au>
-	 <CACPK8XfJ2e1kr-WftidvqsoYew7LqPiNo0sw7opgh8UH=3q_3A@mail.gmail.com>
-	 <20160510130414.GE14952@linaro.org>
-	 <CACPK8XdK35p9rxr8et58omvQExjdri20yCq91LGocnPRYpGLQQ@mail.gmail.com>
-	 <20160720081400.GA2705@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4] xen/arm: Add a clock property
+Date: Wed, 20 Jul 2016 11:43:03 +0200
+Message-ID: <CAMuHMdU9yP2SMYa5ssrQSu1vwSN2gM4mD-EVYSGr2Pqf=jmCgw@mail.gmail.com>
+References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160720081400.GA2705-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Julien Grall <julien.grall@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, xen-devel@lists.xenproject.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stefano Stabellini <sstabellini@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-07-20 at 10:14 +0200, Daniel Lezcano wrote:
->=20
-> actually I forgot to include your patchset which is no longer applyin=
-g=C2=A0
-> correctly and the conflicts are not trivials (easy but not trivial). =
-It is a=C2=A0
-> bit late to ask for a last minute pull. Sorry for that.
->=20
-> Please respin and resend your patchset, I will include it in my tree=C2=
-=A0
-> immediately so that won't happen again. The patch 1/4 is no longer ne=
-eded.
->=20
-> If there is a really urgent need of this series, please let us know a=
-nd=C2=A0
-> Thomas can take a decision accordingly.
+Hi Dirk,
 
-I think all the other bits to have basic support for the Aspeed SoC are
-in except this one, so it would be nice for this to make the merge
-window...
+On Tue, Jul 12, 2016 at 9:46 AM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
+> Clocks described by this property are reserved for use by Xen, and the OS
+> must not alter their state any way, such as disabling or gating a clock,
+> or modifying its rate. Ensuring this may impose constraints on parent
+> clocks or other resources used by the clock tree.
+>
+> This property is used to proxy clocks for devices Xen has taken ownership
+> of, such as UARTs, for which the associated clock controller(s) remain
+> under the control of Dom0.
 
-Cheers,
-Ben.
+I'm not familiar with using XEN at all, but I'm a bit puzzled...
+
+Can't you just add a clocks property to the (virtual) serial device node in DT?
+Then the (virtual) serial device driver can get and enable the clock?
+
+Alternatively, you can add a (virtual) clock controller, and power-domains
+and clock properties to all affected devices (I assume there can be others,
+besides virtual UARTs?), and let it be handled by Runtime PM, without the
+(virtual) device drivers having to care about clocks at all.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
