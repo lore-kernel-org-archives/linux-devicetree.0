@@ -1,32 +1,51 @@
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC PATCH] iommu: create direct_mapping after device attached
-Date: Wed, 20 Jul 2016 16:01:27 +0200
-Message-ID: <20160720140127.GA3030@8bytes.org>
-References: <1469018961-16367-1-git-send-email-honghui.zhang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1469018961-16367-1-git-send-email-honghui.zhang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: treding@nvidia.com, mark.rutland@arm.com, matthias.bgg@gmail.com, robh@kernel.org, robin.murphy@arm.com, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pebolle@tiscali.nl, kendrick.hsu@mediatek.com, arnd@arndb.de, srv_heupstream@mediatek.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, tfiga@google.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, djkurtz@google.com, kernel@pengutronix.de, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, erin.lo@mediatek.com
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 0/4] Add AXP209 GPIO driver
+Date: Wed, 20 Jul 2016 16:11:35 +0200
+Message-ID: <20160720141139.25098-1-maxime.ripard@free-electrons.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 08:49:21PM +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
-> 
-> For mtk iommu, the domain_finalize was called in device attatch, the mtk
-> iommu iopgt ops was allocated and initialized in domain_finalize, the
-> iommu_group_create_direct_mappings would call the map interface to
-> implement the map. If it's earlier than device attach, there would be NULL
-> dereference. Move the iommu_group_create_direct_mappings call after device
-> attached.
+Hi,
 
-No, this would open a race window where the device is attached, but
-doesn't have its unity-mappings in place. You should re-organize the mtk
-driver instead, so that it works in this order too.
+The axp209 PMIC used in combination to some Allwinner SoCs has a bunch
+of GPIOs accessible. Some boards use these to control their backlight
+or a few LEDs.
 
+There's supposed to be 4 of them, but the fourth one has a different
+configuration register scheme, and I couldn't find any board that was
+using this GPIO. It will be probably be supported eventually, but
+until then, we support only the first 3 GPIOs.
 
+Let me know what you think,
+Maxime
 
-	Joerg
+Changes from v1:
+  - Use gpiochip_add_data and gpiochip_get_data
+  - Drop unneeded headers
+  - Make sure gpio_get returns 0 or 1
+  - Made sure it compiles
+  - Rebased on linux-next
+
+Maxime Ripard (4):
+  gpio: Add AXP209 GPIO driver
+  mfd: axp20x: Add AXP209 GPIO driver to the mfd
+  ARM: dt: axp209: Add AXP209 GPIO driver
+  ARM: sun5i: chip: Add status LED
+
+ .../devicetree/bindings/gpio/gpio-axp209.txt       |  30 ++++
+ arch/arm/boot/dts/axp209.dtsi                      |   6 +
+ arch/arm/boot/dts/sun5i-r8-chip.dts                |  10 ++
+ drivers/gpio/Kconfig                               |   6 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-axp209.c                         | 162 +++++++++++++++++++++
+ drivers/mfd/axp20x.c                               |   3 +
+ 7 files changed, 218 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
+ create mode 100644 drivers/gpio/gpio-axp209.c
+
+-- 
+2.9.0
+
