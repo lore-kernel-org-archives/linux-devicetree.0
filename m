@@ -1,43 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 07/12] syscon: dt-bindings: Add documentation for Aspeed
- system control units
-Date: Wed, 20 Jul 2016 14:09:01 -0500
-Message-ID: <20160720190901.GA11147@rob-hp-laptop>
-References: <1468994313-13538-1-git-send-email-andrew@aj.id.au>
- <1468994313-13538-8-git-send-email-andrew@aj.id.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] doc: usb: ci-hdrc-usb2: add property
+ over-current-active-high
+Date: Wed, 20 Jul 2016 14:10:08 -0500
+Message-ID: <20160720191007.GA12271@rob-hp-laptop>
+References: <1469001762-15015-1-git-send-email-jun.li@nxp.com>
+ <1469001762-15015-2-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1468994313-13538-8-git-send-email-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>
+In-Reply-To: <1469001762-15015-2-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+Cc: peter.chen-3arQi8VN3Tc@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 03:28:28PM +0930, Andrew Jeffery wrote:
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  Documentation/devicetree/bindings/mfd/aspeed-scu.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+On Wed, Jul 20, 2016 at 04:02:41PM +0800, Li Jun wrote:
+> Adding over-current-active-high to indicate the over current flag
+> is high active as typically we use active low for over current
+> polarity.
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-> new file mode 100644
-> index 000000000000..4df798799101
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-> @@ -0,0 +1,16 @@
-> +The Aspeed System Control Unit manages the global behaviour of the SoC,
-> +configuring elements such as clocks, pinmux, and reset.
-> +
-> +Required properties:
-> +- compatible:	One of:
-> +		"aspeed,g4-scu", "syscon", "simple-mfd"
-> +		"aspeed,g5-scu", "syscon", "simple-mfd"
+> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-These (and the pinctrl probably) really need SoC specific compatible 
-strings. You can keep these as fallbacks though. These are the parts of 
-SoCs that really vary chip to chip.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
