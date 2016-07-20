@@ -1,82 +1,97 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner sun8i-emac
-Date: Wed, 20 Jul 2016 14:15:33 -0500
-Message-ID: <20160720191533.GA12875@rob-hp-laptop>
-References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com>
- <1469001800-11615-4-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 3/6] dt/bindings: Add bindings for Tegra20/30 NOR bus driver
+Date: Wed, 20 Jul 2016 21:28:05 +0200
+Message-ID: <CALw8SCXFexogJn3BwrZm63yEL0rtTpYsYYb0O9D_ibhginVLqw@mail.gmail.com>
+References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
+ <1468935397-11926-4-git-send-email-mirza.krak@gmail.com> <20160720124408.GA19113@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBVU3X66AKGQEB3LACZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1469001800-11615-4-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160720124408.GA19113@rob-hp-laptop>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 10:03:18AM +0200, LABBE Corentin wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> Allwinner sun8i-emac driver.
-> 
-> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../bindings/net/allwinner,sun8i-emac.txt          | 65 ++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> new file mode 100644
-> index 0000000..4bf4e53
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> @@ -0,0 +1,65 @@
-> +* Allwinner sun8i EMAC ethernet controller
-> +
-> +Required properties:
-> +- compatible: "allwinner,sun8i-a83t-emac", "allwinner,sun8i-h3-emac",
-> +		or "allwinner,sun50i-a64-emac"
+2016-07-20 14:44 GMT+02:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Tue, Jul 19, 2016 at 03:36:34PM +0200, Mirza Krak wrote:
+>> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Document the devicetree bindings for NOR bus driver found on Tegra20=
+ and
+>> Tegra30 SOCs
+>>
+>> Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/bus/nvidia,tegra20-nor.txt | 73 +++++++++++=
++++++++++++
+>>  1 file changed, 73 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,teg=
+ra20-nor.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra20-no=
+r.txt b/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
+>> new file mode 100644
+>> index 0000000..9ee4a66
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
+>> @@ -0,0 +1,73 @@
+>> +Device tree bindings for NVIDIA Tegra20/30 NOR Bus
+>> +
+>> +The NOR controller supports a number of memory types, including syn=
+chronous NOR,
+>> +asynchronous NOR, and other flash memories with similar interfaces,=
+ such as
+>> +MuxOneNAND. One could also connect high speed devices like FPGAs, D=
+SPs,
+>> +CAN chips, Wi-Fi chips etc.
+>> +
+>> +The actual devices are instantiated from the child nodes of a NOR n=
+ode.
+>> +
+>> +Required properties:
+>> +
+>> + - compatible: should be "nvidia,tegra20-nor", "nvidia,tegra30-nor"
+>> + - reg: Should contain NOR controller registers location and length=
+=2E
+>> + - clocks: Must contain one entry, for the module clock.
+>> +   See ../clocks/clock-bindings.txt for details.
+>> + - resets : Must contain an entry for each entry in reset-names.
+>> +   See ../reset/reset.txt for details.
+>> + - reset-names : Must include the following entries:
+>> +  - nor
+>> + - #address-cells: Must be set to 2 to allow memory address transla=
+tion
+>> + - #size-cells:      Must be set to 1 to allow CS address passing
+>> + - ranges: Must be set up to reflect the memory layout with four in=
+teger
+>> +             values for each chip-select line in use.
+>> + - nvidia,config: This property represents the SNOR_CONFIG_0 regist=
+er.
+>> +
+>> +Note that the NOR controller does not have any internal chip-select=
+ address
+>> +decoding and if you want to access multiple devices external chip-s=
+elect
+>> +decoding must be provided.
+>
+> Then what are the 2 chip selects in ranges?
+>
+> Rob
 
-List one per line.
+Those two chip selects are actually a representation of a external
+decoding logic based on what we use on our board. Even though it the
+NOR controller only supports one single chip select I wanted to give
+an example on how one could create more chip-selects with an external
+logic and what it would look like in the device tree representation.
 
-> +- reg: address and length of the register sets for the device.
-> +- reg-names: should be "emac" and "syscon", matching the register sets
-> +- interrupts: interrupt for the device
-> +- clocks: A phandle to the reference clock for this device
-> +- clock-names: should be "ahb"
-> +- resets: A phandle to the reset control for this device
-> +- reset-names: should be "ahb"
-> +- phy-mode: See ethernet.txt
-> +- phy or phy-handle: See ethernet.txt
-> +- #address-cells: shall be 1
-> +- #size-cells: shall be 0
-> +
-> +"allwinner,sun8i-h3-emac" also requires:
-> +- clocks: an extra phandle to the reference clock for the EPHY
-> +- clock-names: an extra "ephy" entry matching the clocks property
-> +- resets: an extra phandle to the reset control for the EPHY
-> +- resets-names: an extra "ephy" entry matching the resets property
-> +
-> +See ethernet.txt in the same directory for generic bindings for ethernet
-> +controllers.
-> +
-> +The device node referenced by "phy" or "phy-handle" should be a child node
-> +of this node. See phy.txt for the generic PHY bindings.
-> +
-> +Optional properties:
-> +- phy-supply: phandle to a regulator if the PHY needs one
-> +- phy-io-supply: phandle to a regulator if the PHY needs a another one for I/O.
-> +		 This is sometimes found with RGMII PHYs, which use a second
-> +		 regulator for the lower I/O voltage.
+I realize that the bindings should include above explanation or
+something similar.
 
-I previously said these should go in the phy node, and you said you 
-would remove them.
+--=20
+Med V=C3=A4nliga H=C3=A4lsningar / Best Regards
 
-Rob
+Mirza Krak
+mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mobile: +46730280622
