@@ -1,74 +1,76 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH v4] xen/arm: Add a clock property
-Date: Wed, 20 Jul 2016 14:53:44 +0200
-Message-ID: <847d3d22-985d-cbe9-3cd9-7c85080fae37@de.bosch.com>
-References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
- <CAMuHMdU9yP2SMYa5ssrQSu1vwSN2gM4mD-EVYSGr2Pqf=jmCgw@mail.gmail.com>
- <cc28ef7e-dce3-fe5f-ab80-b662244bcbd0@arm.com>
- <CAMuHMdWeJjcuBHjnjppc5Ys5Ew8VssXzg=dLpLPCOQaBnUo_7Q@mail.gmail.com>
- <04d9dbfb-196d-a775-7fbb-526aba8085f4@arm.com>
- <CAMuHMdWdqdT4jnae8h9tDDzzh8ZAbJJwiMW-scPBNVwmjYSiWQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
+Date: Wed, 20 Jul 2016 08:16:22 -0500
+Message-ID: <20160720131622.GA20276@rob-hp-laptop>
+References: <20160719191442.15439-1-swarren@wwwdotorg.org>
+ <20160719191442.15439-2-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWdqdT4jnae8h9tDDzzh8ZAbJJwiMW-scPBNVwmjYSiWQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Julien Grall <julien.grall@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, xen-devel@lists.xenproject.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stefano Stabellini <sstabellini@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160719191442.15439-2-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20.07.2016 14:46, Geert Uytterhoeven wrote:
-> Hi Julien,
->
-> On Wed, Jul 20, 2016 at 2:10 PM, Julien Grall <julien.grall@arm.com> wrote:
->> On 20/07/16 12:49, Geert Uytterhoeven wrote:
->>> On Wed, Jul 20, 2016 at 1:01 PM, Julien Grall <julien.grall@arm.com>
->>> wrote:
->>>> On 20/07/16 10:43, Geert Uytterhoeven wrote:
->>>>> On Tue, Jul 12, 2016 at 9:46 AM, Dirk Behme <dirk.behme@de.bosch.com>
->>>>> wrote:
->>>>>> Clocks described by this property are reserved for use by Xen, and the
->>>>>> OS
->>>>>> must not alter their state any way, such as disabling or gating a
->>>>>> clock,
->>>>>> or modifying its rate. Ensuring this may impose constraints on parent
->>>>>> clocks or other resources used by the clock tree.
->>>>>>
->>>>>> This property is used to proxy clocks for devices Xen has taken
->>>>>> ownership
->>>>>> of, such as UARTs, for which the associated clock controller(s) remain
->>>>>> under the control of Dom0.
->>>>>
->>>>> I'm not familiar with using XEN at all, but I'm a bit puzzled...
->>>>>
->>>>> Can't you just add a clocks property to the (virtual) serial device node
->>>>> in DT?
->>>>> Then the (virtual) serial device driver can get and enable the clock?
->>>>
->>>> There is no DT node for the Xen console (hvc). The UART used by Xen will
->>>> be
->>>> completely removed from the Device tree.
->>>
->>> Why is it removed?
->>
->> Because the device is used exclusively by Xen and DOM0 should not touch it
->> at all (IRQs and MMIOs are not mapped).
->
-> IMHO then it's Xen's responsability to make sure not to disable the clock(s).
->
-> Who removes the device node from the DT? If Xen, can't it just remember
-> which clocks were present in removed device nodes?
+On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> The BPMP implements some services which must be represented by separate
+> nodes. For example, it can provide access to certain I2C controllers, and
+> the I2C bindings represent each I2C controller as a device tree node.
+> Update the binding to describe how the BPMP supports this.
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+> index 9a3864f56955..142d363406f6 100644
+> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+> @@ -38,6 +38,24 @@ implemented by this node:
+>  - .../reset/reset.txt
+>  - <dt-bindings/reset/tegra186-reset.h>
+>  
+> +The BPMP implements some services which must be represented by separate nodes.
+> +For example, it can provide access to certain I2C controllers, and the I2C
+> +bindings represent each I2C controller as a device tree node. Such nodes should
+> +be nested directly inside the main BPMP node.
+> +
+> +Software can determine whether a child node of the BPMP node represents a device
+> +by checking for a compatible property. Any node with a compatible property
+> +represents a device that can be instantiated. Nodes without a compatible
+> +property may be used to provide configuration information regarding the BPMP
+> +itself, although no such configuration nodes are currently defined by this
+> +binding.
+> +
+> +The BPMP firmware defines no single global name-/numbering-space for such
+> +services. Put another way, the numbering scheme for I2C buses is distinct from
+> +the numbering scheme for any other service the BPMP may provide (e.g. a future
+> +hypothetical SPI bus service). As such, child device nodes will have no reg
+> +property, and the BPMP node will have no #address-cells or #size-cells property.
+> +
+>  The shared memory bindings for BPMP
+>  -----------------------------------
+>  
+> @@ -78,4 +96,9 @@ bpmp {
+>  	#clock-cells = <1>;
+>  	#power-domain-cells = <1>;
+>  	#reset-cells = <1>;
+> +
+> +	bpmp-i2c {
 
+Just 'i2c' here. With that:
 
-Yes, we are trying this with "moving" the clocks of the removed nodes to 
-the Xen hypervisor node:
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-https://lists.xen.org/archives/html/xen-devel/2016-06/msg02605.html
-
-The question discussed here is how to deal with these clocks properly in 
-Linux, then.
-
-Best regards
-
-Dirk
+> +		compatible = "...";
+> +		...
+> +	};
+>  };
+> -- 
+> 2.9.2
+> 
