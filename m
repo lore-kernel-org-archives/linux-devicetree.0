@@ -1,118 +1,49 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific power-saving
- options
-Date: Wed, 20 Jul 2016 11:02:20 +0200
-Message-ID: <20160720090220.GQ7132@piout.net>
-References: <1465970379-14703-1-git-send-email-andrew.smirnov@gmail.com>
- <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com>
- <20160619142934.GA8522@rob-hp-laptop>
- <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
- <20160621204904.GA9779@rob-hp-laptop>
- <20160621210739.GY5809@piout.net>
- <CAHQ1cqGRqhOAqfJZEixkxAHZ4Y8dd-hD__T1ci0LS28Orphs3Q@mail.gmail.com>
- <20160719224728.GP7132@piout.net>
- <CAHQ1cqF+Z5sKhtxgFiTGJdaOtkQRtQmXU=DzG0qxnDDwfAMp_g@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 2/4] drivers/clocksource/moxart: Refactor enable/disable
+Date: Wed, 20 Jul 2016 18:22:39 +1000
+Message-ID: <1469002959.8568.102.camel@kernel.crashing.org>
+References: <1462797169-14512-1-git-send-email-joel@jms.id.au>
+	 <1462797169-14512-3-git-send-email-joel@jms.id.au>
+	 <CACPK8XfJ2e1kr-WftidvqsoYew7LqPiNo0sw7opgh8UH=3q_3A@mail.gmail.com>
+	 <20160510130414.GE14952@linaro.org>
+	 <CACPK8XdK35p9rxr8et58omvQExjdri20yCq91LGocnPRYpGLQQ@mail.gmail.com>
+	 <20160720081400.GA2705@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHQ1cqF+Z5sKhtxgFiTGJdaOtkQRtQmXU=DzG0qxnDDwfAMp_g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, rtc-linux@googlegroups.com, Alessandro Zummo <a.zummo@towertech.it>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160720081400.GA2705-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/07/2016 at 16:56:56 -0700, Andrey Smirnov wrote :
-> >> I don't see any value in doing that, could you give me a realistic
-> >> example of a scenario in which a user would want to spend some of
-> >> uptime with RTC oscillator fault detection/glitch filtering disabled
-> >> and then enable it?
-> >>
-> >
-> > Well, the issue is not being dynamic, it is differentiating between
-> > hardware description and user configuration. Configuration must not be in
-> > DT.
-> 
-> Why? And I don't mean in a generic sense, but in this particular case.
-> What is gained by not having this bit of configuration, whose only
-> consumer is the driver, in the device tree file?
-> 
+On Wed, 2016-07-20 at 10:14 +0200, Daniel Lezcano wrote:
+>=20
+> actually I forgot to include your patchset which is no longer applyin=
+g=C2=A0
+> correctly and the conflicts are not trivials (easy but not trivial). =
+It is a=C2=A0
+> bit late to ask for a last minute pull. Sorry for that.
+>=20
+> Please respin and resend your patchset, I will include it in my tree=C2=
+=A0
+> immediately so that won't happen again. The patch 1/4 is no longer ne=
+eded.
+>=20
+> If there is a really urgent need of this series, please let us know a=
+nd=C2=A0
+> Thomas can take a decision accordingly.
 
-Because configuration doesn't belong to DT. DT is about hardware
-description, not configuration.
+I think all the other bits to have basic support for the Aspeed SoC are
+in except this one, so it would be nice for this to make the merge
+window...
 
+Cheers,
+Ben.
 
-> > And this choice is definitively not hardware related (as opposed to
-> > the trickle charging that depends on the battery that is used on the
-> > board).
-> 
-> There's most certainly plenty of precedents of non hardware-related in
-> device tree, first two that come to mind are "chosen" node and
-> "local-mac-address" property and, granted, those might be
-> exceptions/legacy bindings that are just there to stay, but even if
-> you look at RTC subsystem rtc-cmos.txt, atmel,at91sam-rtc.txt and
-> possibly rtc-st-lpc.txt are providing bindings that are not exactly
-> hardware related.
->
-> Rtc-cmos.txt is especially noticeable example since it literally does
-> what I am trying to do -- allows the user to specify initial values to
-> certain registers that would be initialized by the driver.
-> 
-
-Well, the RTC subsystem has been left unmaintained for a while and it is
-not because we made mistakes in the past that we have to make them
-again.
-
-rtc-st-lpc is only hardware related. The mode it is used in is board
-dependant. And I have a plan to change how the gpbr register is
-allocated for the at91 RTT. I agree that rtc-cmos is an example of what
-not to do.
-
-> > Well, it doesn't leak abstraction as long as all the RTC that are able
-> > to disable the oscillator failure detection use the same ABI.
-> 
-> Correct me if I am wrong, but no such, at least semi-standardized, ABI
-> exist as of today, correct? If that is so, then what you are saying is
-> that the abstraction doesn't leak as long as you put it inside of a
-> new abstraction that doesn't leak. I am not arguing that it is
-> impossible to create a new one that would allow to hide hardware
-> differences, I am positive it is, what I am arguing is that to do so
-> is a lot of work for as far as I can see for no gain.
-> 
-
-You are correct, that ABI doesn't exist and I'm asking to create it.
-That is how kernel development happens.
-
-> >
-> >> >  - on subsequent reboots, the mode is kept alongside the time and date
-> >> >
-> >>
-> >> This assumes that your bootloader leaves those mode bits alone.
-> >>
-> >
-> > Well, if that is not the case, the bootloader as to be fixed anyway and
-> > silently changing the configuration back using DT is probably worse.
-> >
-> 
-> How so? Consider the following two scenarios with assumption that the
-> bootloader is broken:
-> 
->   - Bits set wrong by bootloader, then corrected by kernel, device is
-> powered off RTC consumes expected amount of current
-> 
->   - Bits set wrong by bootloader, kernel does nothing, device is
-> powered off RTC consumes more than anticipated and we drain the power
-> storage device and loose time.
-> 
-> What do you you think former is worse than latter?
-> 
-
-Whether is is done in the kernel or in userspace doesn't change much
-to that use case.
-
-
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
