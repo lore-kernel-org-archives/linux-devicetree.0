@@ -1,28 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: Update iProc GPIO bindings
-Date: Tue, 19 Jul 2016 20:14:04 -0500
-Message-ID: <20160720011404.GA5332@rob-hp-laptop>
-References: <1468862418-31477-1-git-send-email-ray.jui@broadcom.com>
- <1468862418-31477-2-git-send-email-ray.jui@broadcom.com>
+Subject: Re: [PATCH 02/10] Documentation: DT: qcom_hidma: correct spelling
+ mistakes
+Date: Tue, 19 Jul 2016 20:16:05 -0500
+Message-ID: <20160720011605.GA7022@rob-hp-laptop>
+References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
+ <1468867177-15007-3-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1468862418-31477-2-git-send-email-ray.jui@broadcom.com>
+In-Reply-To: <1468867177-15007-3-git-send-email-okaya@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 18, 2016 at 10:20:17AM -0700, Ray Jui wrote:
-> Update the iProc GPIO binding document to add new compatible strings
-> "brcm,iproc-nsp-gpio" and "brcm,iproc-stingray-gpio" to support the
-> iProc based GPIO controller used in the NSP and Stingray SoCs,
-> respectively
+On Mon, Jul 18, 2016 at 02:39:29PM -0400, Sinan Kaya wrote:
+> Fix the spelling mistakes and extra and statements in the sentences.
 > 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 > ---
->  .../devicetree/bindings/pinctrl/brcm,iproc-gpio.txt    | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
