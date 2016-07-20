@@ -1,96 +1,86 @@
-From: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc2: optionally assert phy "full reset" when
- waking up
-Date: Wed, 20 Jul 2016 10:54:33 +0800
-Message-ID: <0c61cf90-6fea-19ce-ce74-91648cb2d921@rock-chips.com>
-References: <1446236275-12698-2-git-send-email-dianders@chromium.org>
- <1468929933-6971-1-git-send-email-randy.li@rock-chips.com>
- <20160720013614.GA12210@rob-hp-laptop>
+From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 1/2] tpm: devicetree: document properties
+	for cr50
+Date: Tue, 19 Jul 2016 20:41:24 -0700
+Message-ID: <5274cc806888a709c639e701dad894543885b2c9.1468985673.git.apronin@chromium.org>
+References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
+	<cover.1468985673.git.apronin@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160720013614.GA12210@rob-hp-laptop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <cover.1468985673.git.apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <cover.1468985673.git.apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+References: <1468549218-19215-1-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+	<cover.1468985673.git.apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thank you for reviewing, if you agree with my opinion, I would implement 
-a new version as soon as  possible.
+Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
+firmware. Several timing-related properties that may differ from
+one firmware version to another are added to devicetree.
+Document these properties.
 
+Signed-off-by: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ .../devicetree/bindings/security/tpm/cr50_spi.txt  | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
 
-On 07/20/2016 09:36 AM, Rob Herring wrote:
-> On Tue, Jul 19, 2016 at 08:05:33PM +0800, Randy Li wrote:
->> From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>
->> On the rk3288 USB host-only port (the one that's not the OTG-enabled
->> port) the PHY can get into a bad state when a wakeup is asserted (not
->> just a wakeup from full system suspend but also a wakeup from
->> autosuspend). The problem is caused by a design fault in IC, Rockchip
->> have confirmed it and fix this problem in the future IC model.
->>
->> We can get the PHY out of its bad state by asserting its "port reset",
->> but unfortunately that seems to assert a reset onto the USB bus so it
->> could confuse things if we don't actually deenumerate / reenumerate the
->> device.
->>
->> We can also get the PHY out of its bad state by fully resetting it using
->> the reset from the CRU (clock reset unit), which does a more full
->> reset.  The CRU-based reset appears to actually cause devices on the bus
->> to be removed and reinserted, which fixes the problem (albeit in a hacky
->> way).
->>
->> It's unfortunate that we need to do a full re-enumeration of devices at
->> wakeup time, but this is better than alternative of letting the bus get
->> wedged.
->>
->> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Reviewed-by: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/usb/dwc2.txt |  7 +++++++
->>   drivers/usb/dwc2/core.h                        |  5 +++++
->>   drivers/usb/dwc2/core_intr.c                   | 14 ++++++++++++++
->>   drivers/usb/dwc2/platform.c                    | 13 +++++++++++++
->>   4 files changed, 39 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->> index 20a68bf..40c63ae 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->> @@ -20,6 +20,13 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
->>   Optional properties:
->>   - phys: phy provider specifier
->>   - phy-names: shall be "usb2-phy"
->> +- snps,need-phy-full-reset-on-wake: if present indicates that we need to reset
-> Bikeshedding, but 'snps,full-phy-reset-on-wake' is slightly shorter.
->
-> However, this isn't really even needed. It should be implied by the SoC
-> specific compatible string.
-I would.
->
->> +  the PHY when we detect a wakeup due to a hardware errata.  If present you
->> +  must specify a "phy-full-reset" reset.
->> +
->> +Resets:
->> +- phy-full-reset (optional): Fully resets the PHY (Only used by rk3288 Soc).
-> This property belows in the phy node as that is where the reset is
-> attached to and why is it not using the standard binding "resets"?
-Because the struct phy_ops doesn't have something like reset method. It 
-is impossible to make a phy reset now. Also maybe it is not need to 
-define a reset at dts, just implied do that reset that in code(as the 
-way to reset is always same and only used by rk3288).
->
-> Rob
->
-
+diff --git a/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+new file mode 100644
+index 0000000..f212b6b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+@@ -0,0 +1,32 @@
++* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
++
++H1 Secure Microcontroller running Cr50 firmware provides several
++functions, including TPM-like functionality. It communicates over
++SPI using the FIFO protocol described in the PTP Spec, section 6.
++
++Required properties:
++- compatible: Should be "google,cr50".
++- spi-max-frequency: Maximum SPI frequency.
++
++Optional properties:
++- access-delay-ms: Required delay between subsequent transactions on SPI.
++- sleep-delay-ms: Time after the last SPI activity, after which the chip
++  may go to sleep.
++- wake-start-delay-ms: Time after initiating wake up before the chip is
++  ready to accept commands over SPI.
++
++Example:
++
++&spi0 {
++        status = "okay";
++
++        cr50@0 {
++                compatible = "google,cr50";
++                reg = <0>;
++                spi-max-frequency = <800000>;
++
++                access-delay-ms = <2>;
++                sleep-delay-ms = <1000>;
++                wake-start-delay-ms = <60>;
++        };
++};
 -- 
-Randy Li
-The third produce department
+2.6.6
 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------------------------------------------------------------------
+What NetFlow Analyzer can do for you? Monitors network bandwidth and traffic
+patterns at an interface-level. Reveals which users, apps, and protocols are 
+consuming the most bandwidth. Provides multi-vendor support for NetFlow, 
+J-Flow, sFlow and other flows. Make informed decisions using capacity planning
+reports.http://sdm.link/zohodev2dev
