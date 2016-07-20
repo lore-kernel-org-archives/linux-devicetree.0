@@ -1,82 +1,103 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] tpm: devicetree: document properties for cr50
-Date: Wed, 20 Jul 2016 14:03:03 -0500
-Message-ID: <20160720190303.GA5620@rob-hp-laptop>
-References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
- <cover.1468985673.git.apronin@chromium.org>
- <5274cc806888a709c639e701dad894543885b2c9.1468985673.git.apronin@chromium.org>
+Subject: Re: [PATCH 01/12] pinctrl: dt-bindings: Add documentation for Aspeed
+ pin controllers
+Date: Wed, 20 Jul 2016 14:05:19 -0500
+Message-ID: <20160720190519.GA9190@rob-hp-laptop>
+References: <1468994313-13538-1-git-send-email-andrew@aj.id.au>
+ <1468994313-13538-2-git-send-email-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5274cc806888a709c639e701dad894543885b2c9.1468985673.git.apronin@chromium.org>
+In-Reply-To: <1468994313-13538-2-git-send-email-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Pronin <apronin@chromium.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Peter Huewe <peterhuewe@gmx.de>, Marcel Selhorst <tpmdd@selhorst.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, tpmdd-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, Christophe Ricard <christophe.ricard@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2016 at 08:41:24PM -0700, Andrey Pronin wrote:
-> Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-> firmware. Several timing-related properties that may differ from
-> one firmware version to another are added to devicetree.
-> Document these properties.
+On Wed, Jul 20, 2016 at 03:28:22PM +0930, Andrew Jeffery wrote:
+> Outline expectations on the pin controller's relationship with the
+> System Control Unit (SCU) IP through syscon, and document the compatible
+> strings for 4th and 5th generation Aspeed SoC pin controllers.
 > 
-> Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
->  .../devicetree/bindings/security/tpm/cr50_spi.txt  | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+>  .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 45 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
 > new file mode 100644
-> index 0000000..f212b6b
+> index 000000000000..5aac6a0a2e89
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
-> @@ -0,0 +1,32 @@
-> +* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> @@ -0,0 +1,45 @@
+> +Aspeed Pin Controllers
+> +----------------------
 > +
-> +H1 Secure Microcontroller running Cr50 firmware provides several
-> +functions, including TPM-like functionality. It communicates over
-> +SPI using the FIFO protocol described in the PTP Spec, section 6.
+> +The Aspeed SoCs vary in functionality inside a generation but have a common mux
+> +device register layout.
 > +
 > +Required properties:
-> +- compatible: Should be "google,cr50".
-> +- spi-max-frequency: Maximum SPI frequency.
+> +- compatible: should be one of the following:
+> +	"aspeed,g4-pinctrl";
+> +	"aspeed,g5-pinctrl"
 > +
-> +Optional properties:
-> +- access-delay-ms: Required delay between subsequent transactions on SPI.
-
-As I mentioned, there may be common properties. It doesn't seem you 
-looked, so I did:
-
-- spi-rx-delay-us  - (optional) Microsecond delay after a read transfer.
-- spi-tx-delay-us  - (optional) Microsecond delay after a write transfer.
-
-Seems to me setting one or both of these should work for you.
-
-> +- sleep-delay-ms: Time after the last SPI activity, after which the chip
-> +  may go to sleep.
-> +- wake-start-delay-ms: Time after initiating wake up before the chip is
-> +  ready to accept commands over SPI.
-
-I also asked why these 2 can't be hard-coded in the driver?
-
+> +The pin controller node should be a child of a syscon node with the required
+> +property:
+> +- compatible: "syscon", "simple-mfd"
 > +
-> +Example:
+> +Refer to the the bindings described in
+> +Documentation/devicetree/bindings/mfd/syscon.txt
 > +
-> +&spi0 {
-> +        status = "okay";
+> +Subnode format:
 > +
-> +        cr50@0 {
-> +                compatible = "google,cr50";
-> +                reg = <0>;
-> +                spi-max-frequency = <800000>;
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices.
 > +
-> +                access-delay-ms = <2>;
-> +                sleep-delay-ms = <1000>;
-> +                wake-start-delay-ms = <60>;
-> +        };
+> +The required properties of child nodes are (as defined in pinctrl-bindings):
+> +- function
+> +- groups
+> +
+> +Each function has only one associated pin group. Each group is named by its
+> +function.
+> +
+> +Examples:
+> +
+> +syscon: scu@1e6e2000 {
+> +	compatible = "syscon", "simple-mfd";
+> +	reg = <0x1e6e2000 0x1a8>;
+> +
+> +	pinctrl: pinctrl@1e6e2000 {
+> +		compatible = "aspeed,g4-pinctrl";
+> +
+> +		pinctrl_i2c3_default: i2c3_default {
+> +			function = "I2C3";
+> +			groups = "I2C3";
+
+All these strings need to be documented.
+
+> +		};
+> +	};
 > +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1209323b7e43..b5f2d3576d3a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1003,6 +1003,7 @@ S:	Maintained
+>  F:	arch/arm/mach-aspeed/
+>  F:	arch/arm/boot/dts/aspeed-*
+>  F:	drivers/*/*aspeed*
+> +F:	Documentation/devicetree/bindings/*/*aspeed*
+>  
+>  ARM/ATMEL AT91RM9200, AT91SAM9 AND SAMA5 SOC SUPPORT
+>  M:	Nicolas Ferre <nicolas.ferre@atmel.com>
 > -- 
-> 2.6.6
+> 2.7.4
 > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
