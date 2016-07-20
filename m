@@ -1,64 +1,52 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 0/7] drm: Add Support for Passive RGB to VGA bridges
-Date: Wed, 20 Jul 2016 11:58:50 +0200
-Message-ID: <20160720095857.12297-1-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 1/7] drm/sun4i: Store TCON's device structure pointer
+Date: Wed, 20 Jul 2016 11:58:51 +0200
+Message-ID: <20160720095857.12297-2-maxime.ripard@free-electrons.com>
+References: <20160720095857.12297-1-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160720095857.12297-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpUaGlzIHNlcmllIGlzIGFib3V0IGFkZGluZyBzdXBwb3J0IGZvciB0aGUgUkdCIHRvIFZH
-QSBicmlkZ2UgZm91bmQgaW4KdGhlIEExMy1PbGludXhpbm8gYW5kIHRoZSBDSElQIFZHQSBhZGFw
-dGVyLgoKQm90aCB0aGVzZSBib2FyZHMgcmVseSBvbiBhbiBlbnRpcmVseSBwYXNzaXZlIGJyaWRn
-ZSBtYWRlIG91dCBvZgpyZXNpdG9yIGxhZGRlcnMgdGhhdCBkbyBub3QgcmVxdWlyZSBhbnkgaW5p
-dGlhbGlzYXRpb24uIFRoZSBvbmx5IHRoaW5nCm5lZWRlZCBpcyB0byBnZXQgdGhlIHRpbWluZ3Mg
-ZnJvbSB0aGUgc2NyZWVuIGlmIGF2YWlsYWJsZSAoYW5kIGlmIG5vdCwKZmFsbCBiYWNrIG9uIFhH
-QSBzdGFuZGFyZHMpLCBzZXQgdXAgdGhlIGRpc3BsYXkgcGlwZWxpbmUgdG8gb3V0cHV0IG9uCnRo
-ZSBSR0IgYnVzIHdpdGggdGhlIHByb3BlciB0aW1pbmdzLCBhbmQgeW91J3JlIGRvbmUuCgpUaGlz
-IHNlcmllIGFsc28gZml4ZXMgYSBidW5jaCBvZiBidWdzIHVuY292ZXJlZCB3aGVuIHRyeWluZyB0
-bwppbmNyZWFzZSB0aGUgcmVzb2x1dGlvbiwgYW5kIGhlbmNlIHRoZSBwaXhlbCBjbG9jaywgb2Yg
-b3VyCnBpcGVsaW5lLiBJdCBhbHNvIGZpeGVzIGEgZmV3IGJ1Z3MgaW4gdGhlIERSTSBkcml2ZXIg
-aXRzZWxmIHRoYXQgd2VudAp1bm5vdGljZWQgYmVmb3JlLgoKTGV0IG1lIGtub3cgd2hhdCB5b3Ug
-dGhpbmssCk1heGltZQoKQ2hhbmdlcyBmcm9tIHYxOgogIC0gU3dpdGNoIHRvIHVzaW5nIGEgdmdh
-LWNvbm5lY3RvcgogIC0gVXNlIGRybV9lbmNvZGVyIGJyaWRnZSBwb2ludGVyIGluc3RlYWQgb2Yg
-ZG9pbmcgb3VyIG93bgogIC0gUmVwb3J0IHRoZSBjb25uZWN0b3Igc3RhdHVzIGFzIHVua25vd24g
-aW5zdGVhZCBvZiBjb25uZWN0ZWQgYnkKICAgIGRlZmF1bHQsIGFuZCBhcyBjb25uZWN0ZWQgb25s
-eSBpZiB3ZSBjYW4gcmV0cmlldmUgdGhlIEVESUQuCiAgLSBTd2l0Y2ggdG8gb2ZfaTJjX2dldF9h
-ZGFwdGVyIGJ5IG5vZGUsIGFuZCBwdXQgdGhlIHJlZmVyZW5jZSB3aGVuIGRvbmUKICAtIFJlYmFz
-ZWQgb24gbGludXgtbmV4dAoKTWF4aW1lIFJpcGFyZCAoNyk6CiAgZHJtL3N1bjRpOiBTdG9yZSBU
-Q09OJ3MgZGV2aWNlIHN0cnVjdHVyZSBwb2ludGVyCiAgZHJtL3N1bjRpOiBNb3ZlIHBhbmVsIHJl
-dHJpZXZhbCBpbiBSR0IgY29ubmVjdG9yCiAgZHJtL3N1bjRpOiBBZGQgYnJpZGdlIHN1cHBvcnQK
-ICBkcm0vYnJpZGdlOiBBZGQgUkdCIHRvIFZHQSBicmlkZ2Ugc3VwcG9ydAogIEFSTTogc3VuNWk6
-IGExMy1vbGludXhpbm86IEVuYWJsZSBWR0EgYnJpZGdlCiAgQVJNOiBtdWx0aV92NzogZW5hYmxl
-IFZHQSBicmlkZ2UKICBBUk06IHN1bnhpOiBFbmFibGUgVkdBIGJyaWRnZQoKIC4uLi9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS9kdW1iLXZnYS50eHQgICAgICAgICAgIHwgIDU0ICsrKysrCiBhcmNo
-L2FybS9ib290L2R0cy9zdW41aS1hMTMtb2xpbnV4aW5vLmR0cyAgICAgICAgICB8ICA2MCArKysr
-KysKIGFyY2gvYXJtL2NvbmZpZ3MvbXVsdGlfdjdfZGVmY29uZmlnICAgICAgICAgICAgICAgIHwg
-ICAxICsKIGFyY2gvYXJtL2NvbmZpZ3Mvc3VueGlfZGVmY29uZmlnICAgICAgICAgICAgICAgICAg
-IHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAgICAg
-ICAgIHwgICA2ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAg
-ICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EuYyAgICAgICAg
-ICAgICAgICAgIHwgMjMyICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3N1
-bjRpL3N1bjRpX2Rydi5jICAgICAgICAgICAgICAgICAgfCAgIDQgKy0KIGRyaXZlcnMvZ3B1L2Ry
-bS9zdW40aS9zdW40aV9yZ2IuYyAgICAgICAgICAgICAgICAgIHwgIDY0ICsrKystLQogZHJpdmVy
-cy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyAgICAgICAgICAgICAgICAgfCAgNTIgKysrKy0K
-IGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmggICAgICAgICAgICAgICAgIHwgICA0
-ICsKIDExIGZpbGVzIGNoYW5nZWQsIDQ1MSBpbnNlcnRpb25zKCspLCAyOCBkZWxldGlvbnMoLSkK
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2UvZHVtYi12Z2EudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL2JyaWRnZS9kdW1iLXZnYS5jCgotLSAKMi45LjAKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+We will need to access TCON's struct device from outside of TCON's driver
+bind function. Store it in our private structure.
+
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 1 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.h | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 652385f09735..af136dfc206e 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -446,6 +446,7 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 	dev_set_drvdata(dev, tcon);
+ 	drv->tcon = tcon;
+ 	tcon->drm = drm;
++	tcon->dev = dev;
+ 
+ 	if (of_device_is_compatible(dev->of_node, "allwinner,sun5i-a13-tcon"))
+ 		tcon->has_mux = true;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index 0e0b11db401b..230550b720f1 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -143,6 +143,7 @@
+ #define SUN4I_TCON_MAX_CHANNELS		2
+ 
+ struct sun4i_tcon {
++	struct device			*dev;
+ 	struct drm_device		*drm;
+ 	struct regmap			*regs;
+ 
+-- 
+2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
