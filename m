@@ -1,83 +1,76 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
-Date: Wed, 20 Jul 2016 09:57:43 -0600
-Message-ID: <578F9F77.9010203@wwwdotorg.org>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org>
- <20160719191442.15439-2-swarren@wwwdotorg.org>
- <20160720131622.GA20276@rob-hp-laptop>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific
+ power-saving options
+Date: Wed, 20 Jul 2016 09:11:28 -0700
+Message-ID: <CAHQ1cqFjpu8i8HOZt3FgE8pRhD1x1iwP3NhRFec7aj=xH9Z50g@mail.gmail.com>
+References: <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com>
+ <20160619142934.GA8522@rob-hp-laptop> <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
+ <20160621204904.GA9779@rob-hp-laptop> <20160621210739.GY5809@piout.net>
+ <CAHQ1cqGRqhOAqfJZEixkxAHZ4Y8dd-hD__T1ci0LS28Orphs3Q@mail.gmail.com>
+ <20160719224728.GP7132@piout.net> <CAHQ1cqF+Z5sKhtxgFiTGJdaOtkQRtQmXU=DzG0qxnDDwfAMp_g@mail.gmail.com>
+ <20160720090220.GQ7132@piout.net> <CAHQ1cqEoN7PEQApHBo-FOqumtLJWoURHOPZfrzL=6h2p4S0Fdg@mail.gmail.com>
+ <20160720153836.GS7132@piout.net>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160720131622.GA20276@rob-hp-laptop>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDKOBWPM5ABRBMWFX26AKGQELUFQJCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160720153836.GS7132-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/20/2016 07:16 AM, Rob Herring wrote:
-> On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
->> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Wed, Jul 20, 2016 at 8:38 AM, Alexandre Belloni
+<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On 20/07/2016 at 07:36:55 -0700, Andrey Smirnov wrote :
+>> On Wed, Jul 20, 2016 at 2:02 AM, Alexandre Belloni
+>> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > On 19/07/2016 at 16:56:56 -0700, Andrey Smirnov wrote :
+>> >> >> I don't see any value in doing that, could you give me a realistic
+>> >> >> example of a scenario in which a user would want to spend some of
+>> >> >> uptime with RTC oscillator fault detection/glitch filtering disabled
+>> >> >> and then enable it?
+>> >> >>
+>> >> >
+>> >> > Well, the issue is not being dynamic, it is differentiating between
+>> >> > hardware description and user configuration. Configuration must not be in
+>> >> > DT.
+>> >>
+>> >> Why? And I don't mean in a generic sense, but in this particular case.
+>> >> What is gained by not having this bit of configuration, whose only
+>> >> consumer is the driver, in the device tree file?
+>> >>
+>> >
+>> > Because configuration doesn't belong to DT. DT is about hardware
+>> > description, not configuration.
 >>
->> The BPMP implements some services which must be represented by separate
->> nodes. For example, it can provide access to certain I2C controllers, and
->> the I2C bindings represent each I2C controller as a device tree node.
->> Update the binding to describe how the BPMP supports this.
+>> That doesn't really answer my question. You just re-iterating some
+>> maxim without explaining what is the point behind applying it.
 >>
->> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>   .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23 ++++++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->> index 9a3864f56955..142d363406f6 100644
->> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->> @@ -38,6 +38,24 @@ implemented by this node:
->>   - .../reset/reset.txt
->>   - <dt-bindings/reset/tegra186-reset.h>
->>
->> +The BPMP implements some services which must be represented by separate nodes.
->> +For example, it can provide access to certain I2C controllers, and the I2C
->> +bindings represent each I2C controller as a device tree node. Such nodes should
->> +be nested directly inside the main BPMP node.
->> +
->> +Software can determine whether a child node of the BPMP node represents a device
->> +by checking for a compatible property. Any node with a compatible property
->> +represents a device that can be instantiated. Nodes without a compatible
->> +property may be used to provide configuration information regarding the BPMP
->> +itself, although no such configuration nodes are currently defined by this
->> +binding.
->> +
->> +The BPMP firmware defines no single global name-/numbering-space for such
->> +services. Put another way, the numbering scheme for I2C buses is distinct from
->> +the numbering scheme for any other service the BPMP may provide (e.g. a future
->> +hypothetical SPI bus service). As such, child device nodes will have no reg
->> +property, and the BPMP node will have no #address-cells or #size-cells property.
->> +
->>   The shared memory bindings for BPMP
->>   -----------------------------------
->>
->> @@ -78,4 +96,9 @@ bpmp {
->>   	#clock-cells = <1>;
->>   	#power-domain-cells = <1>;
->>   	#reset-cells = <1>;
->> +
->> +	bpmp-i2c {
 >
-> Just 'i2c' here. With that:
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Well, that is from the device tree specification and how the device tree
+> maintainers want it...
 
-What if we have multiple BPMP I2C buses? The node names need to be 
-unique, and there's no concept of register number so we can't use a unit 
-address to do that.
+And yet, we have whole subsystems such as "nvmem" and I am sure plenty
+of other smaller examples where that maxim is being applied very lax
+if at all. So it seems people can and do make compromises regarding
+the "no configuration in DT" rule if pros of doing so outweighs the
+cons.
 
-I guess we could go for plain "i2c" for now and defer the more general 
-naming discussion until some later point if/when we actually instantiate 
-multiple buses, but I would like to confirm we can solve the problem 
-if/when that time comes.
+Andrey
 
-(As an aside, "pwr-i2c" might be a better name for the current bus, when 
-the time comes, since any/all I2C nodes inside the BPMP would be BPMP 
-I2C buses).
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
