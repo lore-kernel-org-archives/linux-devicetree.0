@@ -1,59 +1,63 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH 10/10] ARM: dts: Add Arria10 USB EDAC devicetree entry
-Date: Wed, 20 Jul 2016 11:05:51 -0500
-Message-ID: <578FA15F.7000105@opensource.altera.com>
-References: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
- <1468512408-5156-11-git-send-email-tthayer@opensource.altera.com>
+From: Duc Dang <dhdang@apm.com>
+Subject: Re: [PATCH v8 0/4] perf: Add APM X-Gene SoC Performance Monitoring
+ Unit driver
+Date: Wed, 20 Jul 2016 11:04:42 -0700
+Message-ID: <CADaLND=5Wu6+2G2E1K28BejGenRi89yODACdwhZJVr-Ee+um6w@mail.gmail.com>
+References: <1468263944-10634-1-git-send-email-ttnguyen@apm.com>
+ <20160714131602.GJ29455@arm.com> <CACgAJHyBt4TCoDjm0XGyX8usD_Wt_-7_JA918Wr4oF567wY_EA@mail.gmail.com>
+ <CADaLNDnNVC48Ce1A+KU2WMULkY+skKVSm1GpaoQ6HvAEmscD=A@mail.gmail.com>
+ <CADaLNDnqs+jRTfQTXV5VaKbWbQ4dZMGGQAgWXVqWhX8AZZrWgw@mail.gmail.com> <20160720101553.GA20508@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1468512408-5156-11-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160720101553.GA20508@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Tai Tri Nguyen <ttnguyen@apm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Joe Perches <joe@perches.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, LKML <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2016 11:06 AM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> Add the device tree entries needed to support the Altera USB
-> FIFO buffer EDAC on the Arria10 chip.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
->  arch/arm/boot/dts/socfpga_arria10.dtsi |    8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-> index a506ec0..bd548ab 100644
-> --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-> +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-> @@ -652,6 +652,14 @@
->  				interrupts = <10 IRQ_TYPE_LEVEL_HIGH>,
->  					     <42 IRQ_TYPE_LEVEL_HIGH>;
->  			};
-> +
-> +			usb0-ecc@ff8c8800 {
-> +				compatible = "altr,socfpga-usb-ecc";
-> +				reg = <0xff8c8800 0x400>;
-> +				altr,ecc-parent = <&usb0>;
-> +				interrupts = <2 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <34 IRQ_TYPE_LEVEL_HIGH>;
-> +			};
->  		};
->  
->  		rst: rstmgr@ffd05000 {
-> 
+On Wed, Jul 20, 2016 at 3:15 AM, Will Deacon <will.deacon@arm.com> wrote:
+> On Tue, Jul 19, 2016 at 01:22:09PM -0700, Duc Dang wrote:
+>> On Thu, Jul 14, 2016 at 10:37 AM, Duc Dang <dhdang@apm.com> wrote:
+>> > On Thu, Jul 14, 2016 at 10:28 AM, Tai Tri Nguyen <ttnguyen@apm.com> wrote:
+>> >> On Thu, Jul 14, 2016 at 6:16 AM, Will Deacon <will.deacon@arm.com> wrote:
+>> >> > On Mon, Jul 11, 2016 at 12:05:40PM -0700, Tai Nguyen wrote:
+>> >> >> In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
+>> >> >> are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
+>> >> >> memory controller bridges and memory. These PMU devices are loosely
+>> >> >> architected to follow the same model as the PMU for ARM cores.
+>> >> >
+>> >> > You might want to add commit messages to patches 1,2 and 4, but then you
+>> >> > can route this via the arm-soc tree.
+>> >> >
+>> >> > Will
+>> >>
+>> >> I will add the commit messages to these patches 1, 2 and 4 and rout
+>> >> this via arm-soc tree.
+>> >> CC: Duc (dhdang@apm.com)
+>> >
+>> > I will pull patch 1, 2 and 4 into xgene-next tree and send pull
+>> > request to Arnd and Olof.
+>>
+>> Hi Will,
+>>
+>> Do you plan to merge this series (Tai posted v10) into 4.8 or you want
+>> to wait until 4.9? Please let know so that I can plan my pull request
+>> to Arnd/Olof accordingly to include patch 1, 2, and 4.
+>
+> I was hoping that the whole series would go via arm-soc. Mark reviewed
+> the PMU driver code, so that should be sufficient.
 
-Acked-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+Thanks, Will.
 
-Dinh
+Hi Arnd, Olof,
+
+Can you please help merge v10 of this series into your arm-soc tree? I
+can merge this series into xgene-next and send a pull request to you
+too, but the pull request will only contain this series as I don't
+have more dts changes at this time.
+
+Regards,
+Duc Dang.
+>
+> Will
