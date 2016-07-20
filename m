@@ -1,92 +1,345 @@
-From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 4/8] drm/mediatek: add support for Mediatek SoC MT2701
-Date: Wed, 20 Jul 2016 14:53:19 +0800
-Message-ID: <1468997599.11841.49.camel@mtksdaap41>
-References: <1468577274-6178-1-git-send-email-yt.shen@mediatek.com>
-	 <1468577274-6178-5-git-send-email-yt.shen@mediatek.com>
+From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCHv8] wlcore: spi: add wl18xx support
+Date: Wed, 20 Jul 2016 06:58:12 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B36161990@DFRE01.ent.ti.com>
+References: <1468994768-23609-1-git-send-email-eyalr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468577274-6178-5-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mao Huang <littlecvr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, YT:
+Add support for using with both wl12xx and wl18xx.
 
-Some comments inline.
+- all wilink family needs special init command for entering wspi mode.
+  extra clock cycles should be sent after the spi init command while the
+  cs pin is high.
+- Use inverted chip select for sending a dummy 4 bytes command that
+  completes the init stage.
 
-On Fri, 2016-07-15 at 18:07 +0800, YT Shen wrote:
-> This patch add support for the Mediatek MT2701 DISP subsystem.
-> There is only one OVL engine in MT2701.
-> 
-> Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |    6 ++++
->  drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |    6 ++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c      |   41 +++++++++++++++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |    7 +++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |    1 +
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c      |   31 ++++++++++++++++++++
->  6 files changed, 92 insertions(+)
-> 
+Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+v1->v2:update device tree bindings configuration
+v2->v3:revert from manual gpio manipulation. use inverted chip select instead
+for sending the extra init cycle which, achieves the same hardware purpose.
+update device tree bindings docucmentation accordingly
+v3->v4: Remove redundant data form binding documentation and fix chip select
+number mismatch in wl1271 example
+v4->v5: Rebase on top of head of wireless-drivers-next
+v5->v6: Add ACKs
+v6->v7: Mail format issues
+v7->v8: Remove redundant varaible from wlcore_probe_of
+ .../bindings/net/wireless/ti,wlcore,spi.txt        |  41 +++++--
+ drivers/net/wireless/ti/wlcore/spi.c               | 124 +++++++++++++++++----
+ 2 files changed, 137 insertions(+), 28 deletions(-)
 
-[snip...]
-
->  
->  static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
-> +	{ .compatible = "mediatek,mt2701-disp-ovl",   .data = (void *)MTK_DISP_OVL },
->  	{ .compatible = "mediatek,mt8173-disp-ovl",   .data = (void *)MTK_DISP_OVL },
-> +	{ .compatible = "mediatek,mt2701-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
->  	{ .compatible = "mediatek,mt8173-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
-> +	{ .compatible = "mediatek,mt2701-disp-wdma",  .data = (void *)MTK_DISP_WDMA },
-
-Is WDMA different from MT8173 to MT2701. If they are the same, you need
-not to add compatible of 'mediatek,mt2701-disp-wdma' because use
-'mediatek,mt8173-disp-wdma' is enough.
-
->  	{ .compatible = "mediatek,mt8173-disp-wdma",  .data = (void *)MTK_DISP_WDMA },
-> +	{ .compatible = "mediatek,mt2701-disp-color", .data = (void *)MTK_DISP_COLOR },
->  	{ .compatible = "mediatek,mt8173-disp-color", .data = (void *)MTK_DISP_COLOR },
->  	{ .compatible = "mediatek,mt8173-disp-aal",   .data = (void *)MTK_DISP_AAL},
->  	{ .compatible = "mediatek,mt8173-disp-gamma", .data = (void *)MTK_DISP_GAMMA, },
->  	{ .compatible = "mediatek,mt8173-disp-ufoe",  .data = (void *)MTK_DISP_UFOE },
-> +	{ .compatible = "mediatek,mt2701-dsi",	      .data = (void *)MTK_DSI },
->  	{ .compatible = "mediatek,mt8173-dsi",        .data = (void *)MTK_DSI },
-> +	{ .compatible = "mediatek,mt2701-dpi",	      .data = (void *)MTK_DPI },
-
-Is DPI different from MT8173 to MT2701. If they are the same, you need
-not to add compatible of 'mediatek,mt2701-dpi' because use
-'mediatek,mt8173-dpi' is enough.
-
->  	{ .compatible = "mediatek,mt8173-dpi",        .data = (void *)MTK_DPI },
-> +	{ .compatible = "mediatek,mt2701-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
->  	{ .compatible = "mediatek,mt8173-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
-> +	{ .compatible = "mediatek,mt2701-disp-pwm",   .data = (void *)MTK_DISP_PWM },
-
-Is pwm different from MT8173 to MT2701. If they are the same, you need
-not to add compatible of 'mediatek,mt2701-disp-pwm' because use
-'mediatek,mt8173-disp-pwm' is enough.
-
->  	{ .compatible = "mediatek,mt8173-disp-pwm",   .data = (void *)MTK_DISP_PWM },
->  	{ .compatible = "mediatek,mt8173-disp-od",    .data = (void *)MTK_DISP_OD },
->  	{ }
-> @@ -514,6 +543,8 @@ static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
->  			 mtk_drm_sys_resume);
->  
->  static const struct of_device_id mtk_drm_of_ids[] = {
-> +	{ .compatible = "mediatek,mt2701-mmsys",
-> +	  .data = &mt2701_mmsys_driver_data},
->  	{ .compatible = "mediatek,mt8173-mmsys",
->  	  .data = &mt8173_mmsys_driver_data},
->  	{ }
-
-Regards,
-CK
+diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+index 9180724..8f9ced0 100644
+--- a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
++++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+@@ -1,19 +1,30 @@
+-* Texas Instruments wl1271 wireless lan controller
++* Texas Instruments wl12xx/wl18xx wireless lan controller
+ 
+-The wl1271 chip can be connected via SPI or via SDIO. This
++The wl12xx/wl18xx chips can be connected via SPI or via SDIO. This
+ document describes the binding for the SPI connected chip.
+ 
+ Required properties:
+-- compatible :          Should be "ti,wl1271"
++- compatible :          Should be one of the following:
++    * "ti,wl1271"
++    * "ti,wl1273"
++    * "ti,wl1281"
++    * "ti,wl1283"
++    * "ti,wl1801"
++    * "ti,wl1805"
++    * "ti,wl1807"
++    * "ti,wl1831"
++    * "ti,wl1835"
++    * "ti,wl1837"
+ - reg :                 Chip select address of device
+ - spi-max-frequency :   Maximum SPI clocking speed of device in Hz
+-- ref-clock-frequency : Reference clock frequency
+ - interrupt-parent, interrupts :
+                         Should contain parameters for 1 interrupt line.
+                         Interrupt parameters: parent, line number, type.
+-- vwlan-supply :        Point the node of the regulator that powers/enable the wl1271 chip
++- vwlan-supply :        Point the node of the regulator that powers/enable the
++                        wl12xx/wl18xx chip
+ 
+ Optional properties:
++- ref-clock-frequency : Reference clock frequency (should be set for wl12xx)
+ - clock-xtal :          boolean, clock is generated from XTAL
+ 
+ - Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -21,16 +32,28 @@ Optional properties:
+ 
+ Examples:
+ 
++For wl12xx family:
+ &spi1 {
+-	wl1271@1 {
++	wlcore: wlcore@1 {
+ 		compatible = "ti,wl1271";
+-
+ 		reg = <1>;
+ 		spi-max-frequency = <48000000>;
+-		clock-xtal;
+-		ref-clock-frequency = <38400000>;
+ 		interrupt-parent = <&gpio3>;
+ 		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+ 		vwlan-supply = <&vwlan_fixed>;
++		clock-xtal;
++		ref-clock-frequency = <38400000>;
++	};
++};
++
++For wl18xx family:
++&spi0 {
++	wlcore: wlcore@0 {
++		compatible = "ti,wl1835";
++		reg = <0>;
++		spi-max-frequency = <48000000>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <27 IRQ_TYPE_EDGE_RISING>;
++		vwlan-supply = <&vwlan_fixed>;
+ 	};
+ };
+diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
+index cea9443..6d24040 100644
+--- a/drivers/net/wireless/ti/wlcore/spi.c
++++ b/drivers/net/wireless/ti/wlcore/spi.c
+@@ -70,16 +70,30 @@
+ #define WSPI_MAX_CHUNK_SIZE    4092
+ 
+ /*
+- * only support SPI for 12xx - this code should be reworked when 18xx
+- * support is introduced
++ * wl18xx driver aggregation buffer size is (13 * PAGE_SIZE) compared to
++ * (4 * PAGE_SIZE) for wl12xx, so use the larger buffer needed for wl18xx
+  */
+-#define SPI_AGGR_BUFFER_SIZE (4 * PAGE_SIZE)
++#define SPI_AGGR_BUFFER_SIZE (13 * PAGE_SIZE)
+ 
+ /* Maximum number of SPI write chunks */
+ #define WSPI_MAX_NUM_OF_CHUNKS \
+ 	((SPI_AGGR_BUFFER_SIZE / WSPI_MAX_CHUNK_SIZE) + 1)
+ 
+ 
++struct wilink_familiy_data {
++	char name[8];
++};
++
++const struct wilink_familiy_data *wilink_data;
++
++static const struct wilink_familiy_data wl18xx_data = {
++	.name = "wl18xx",
++};
++
++static const struct wilink_familiy_data wl12xx_data = {
++	.name = "wl12xx",
++};
++
+ struct wl12xx_spi_glue {
+ 	struct device *dev;
+ 	struct platform_device *core;
+@@ -119,6 +133,7 @@ static void wl12xx_spi_init(struct device *child)
+ 	struct wl12xx_spi_glue *glue = dev_get_drvdata(child->parent);
+ 	struct spi_transfer t;
+ 	struct spi_message m;
++	struct spi_device *spi = to_spi_device(glue->dev);
+ 	u8 *cmd = kzalloc(WSPI_INIT_CMD_LEN, GFP_KERNEL);
+ 
+ 	if (!cmd) {
+@@ -151,6 +166,7 @@ static void wl12xx_spi_init(struct device *child)
+ 		cmd[6] |= WSPI_INIT_CMD_EN_FIXEDBUSY;
+ 
+ 	cmd[7] = crc7_be(0, cmd+2, WSPI_INIT_CMD_CRC_LEN) | WSPI_INIT_CMD_END;
++
+ 	/*
+ 	 * The above is the logical order; it must actually be stored
+ 	 * in the buffer byte-swapped.
+@@ -163,6 +179,28 @@ static void wl12xx_spi_init(struct device *child)
+ 	spi_message_add_tail(&t, &m);
+ 
+ 	spi_sync(to_spi_device(glue->dev), &m);
++
++	/* Send extra clocks with inverted CS (high). this is required
++	 * by the wilink family in order to successfully enter WSPI mode.
++	 */
++	spi->mode ^= SPI_CS_HIGH;
++	memset(&m, 0, sizeof(m));
++	spi_message_init(&m);
++
++	cmd[0] = 0xff;
++	cmd[1] = 0xff;
++	cmd[2] = 0xff;
++	cmd[3] = 0xff;
++	__swab32s((u32 *)cmd);
++
++	t.tx_buf = cmd;
++	t.len = 4;
++	spi_message_add_tail(&t, &m);
++
++	spi_sync(to_spi_device(glue->dev), &m);
++
++	/* Restore chip select configration to normal */
++	spi->mode ^= SPI_CS_HIGH;
+ 	kfree(cmd);
+ }
+ 
+@@ -270,22 +308,25 @@ static int __must_check wl12xx_spi_raw_read(struct device *child, int addr,
+ 	return 0;
+ }
+ 
+-static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
+-					     void *buf, size_t len, bool fixed)
++static int __wl12xx_spi_raw_write(struct device *child, int addr,
++				  void *buf, size_t len, bool fixed)
+ {
+ 	struct wl12xx_spi_glue *glue = dev_get_drvdata(child->parent);
+-	/* SPI write buffers - 2 for each chunk */
+-	struct spi_transfer t[2 * WSPI_MAX_NUM_OF_CHUNKS];
++	struct spi_transfer *t;
+ 	struct spi_message m;
+ 	u32 commands[WSPI_MAX_NUM_OF_CHUNKS]; /* 1 command per chunk */
+ 	u32 *cmd;
+ 	u32 chunk_len;
+ 	int i;
+ 
++	/* SPI write buffers - 2 for each chunk */
++	t = kzalloc(sizeof(*t) * 2 * WSPI_MAX_NUM_OF_CHUNKS, GFP_KERNEL);
++	if (!t)
++		return -ENOMEM;
++
+ 	WARN_ON(len > SPI_AGGR_BUFFER_SIZE);
+ 
+ 	spi_message_init(&m);
+-	memset(t, 0, sizeof(t));
+ 
+ 	cmd = &commands[0];
+ 	i = 0;
+@@ -318,9 +359,26 @@ static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
+ 
+ 	spi_sync(to_spi_device(glue->dev), &m);
+ 
++	kfree(t);
+ 	return 0;
+ }
+ 
++static int __must_check wl12xx_spi_raw_write(struct device *child, int addr,
++					     void *buf, size_t len, bool fixed)
++{
++	int ret;
++
++	/* The ELP wakeup write may fail the first time due to internal
++	 * hardware latency. It is safer to send the wakeup command twice to
++	 * avoid unexpected failures.
++	 */
++	if (addr == HW_ACCESS_ELP_CTRL_REG)
++		ret = __wl12xx_spi_raw_write(child, addr, buf, len, fixed);
++	ret = __wl12xx_spi_raw_write(child, addr, buf, len, fixed);
++
++	return ret;
++}
++
+ /**
+  * wl12xx_spi_set_power - power on/off the wl12xx unit
+  * @child: wl12xx device handle.
+@@ -349,17 +407,38 @@ static int wl12xx_spi_set_power(struct device *child, bool enable)
+ 	return ret;
+ }
+ 
++/**
++ * wl12xx_spi_set_block_size
++ *
++ * This function is not needed for spi mode, but need to be present.
++ * Without it defined the wlcore fallback to use the wrong packet
++ * allignment on tx.
++ */
++static void wl12xx_spi_set_block_size(struct device *child,
++				      unsigned int blksz)
++{
++}
++
+ static struct wl1271_if_operations spi_ops = {
+ 	.read		= wl12xx_spi_raw_read,
+ 	.write		= wl12xx_spi_raw_write,
+ 	.reset		= wl12xx_spi_reset,
+ 	.init		= wl12xx_spi_init,
+ 	.power		= wl12xx_spi_set_power,
+-	.set_block_size = NULL,
++	.set_block_size = wl12xx_spi_set_block_size,
+ };
+ 
+ static const struct of_device_id wlcore_spi_of_match_table[] = {
+-	{ .compatible = "ti,wl1271" },
++	{ .compatible = "ti,wl1271", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1273", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1281", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1283", .data = &wl12xx_data},
++	{ .compatible = "ti,wl1801", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1805", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1807", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1831", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1835", .data = &wl18xx_data},
++	{ .compatible = "ti,wl1837", .data = &wl18xx_data},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, wlcore_spi_of_match_table);
+@@ -375,18 +454,24 @@ static int wlcore_probe_of(struct spi_device *spi, struct wl12xx_spi_glue *glue,
+ 			   struct wlcore_platdev_data *pdev_data)
+ {
+ 	struct device_node *dt_node = spi->dev.of_node;
+-	int ret;
++	const struct of_device_id *of_id;
++
++	of_id = of_match_node(wlcore_spi_of_match_table, dt_node);
++	if (!of_id)
++		return -ENODEV;
++
++	wilink_data = of_id->data;
++	dev_info(&spi->dev, "selected chip familiy is %s\n",
++		 wilink_data->name);
+ 
+ 	if (of_find_property(dt_node, "clock-xtal", NULL))
+ 		pdev_data->ref_clock_xtal = true;
+ 
+-	ret = of_property_read_u32(dt_node, "ref-clock-frequency",
+-				   &pdev_data->ref_clock_freq);
+-	if (ret) {
+-		dev_err(glue->dev,
+-			"can't get reference clock frequency (%d)\n", ret);
+-		return ret;
+-	}
++	/* optional clock frequency params */
++	of_property_read_u32(dt_node, "ref-clock-frequency",
++			     &pdev_data->ref_clock_freq);
++	of_property_read_u32(dt_node, "tcxo-clock-frequency",
++			     &pdev_data->tcxo_clock_freq);
+ 
+ 	return 0;
+ }
+@@ -437,7 +522,8 @@ static int wl1271_probe(struct spi_device *spi)
+ 		return ret;
+ 	}
+ 
+-	glue->core = platform_device_alloc("wl12xx", PLATFORM_DEVID_AUTO);
++	glue->core = platform_device_alloc(wilink_data->name,
++					   PLATFORM_DEVID_AUTO);
+ 	if (!glue->core) {
+ 		dev_err(glue->dev, "can't allocate platform_device\n");
+ 		return -ENOMEM;
+-- 
+2.7.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
