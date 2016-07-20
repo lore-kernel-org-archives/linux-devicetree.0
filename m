@@ -1,57 +1,75 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [net-next PATCH 1/3] net: phy: dp83867: Add documentation for
- optional impedance control
-Date: Wed, 20 Jul 2016 10:33:39 -0500
-Message-ID: <578F99D3.9090601@ti.com>
-References: <20160720145614.13132-1-mugunthanvnm@ti.com>
- <20160720145614.13132-2-mugunthanvnm@ti.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 03/13] RTC: ds1307: Add DS1341 specific
+ power-saving options
+Date: Wed, 20 Jul 2016 17:38:36 +0200
+Message-ID: <20160720153836.GS7132@piout.net>
+References: <1465970379-14703-4-git-send-email-andrew.smirnov@gmail.com>
+ <20160619142934.GA8522@rob-hp-laptop>
+ <CAHQ1cqFfFpLmMMr9itinha9rotG7Btr9UmWbO2_0VWxX_HeG1g@mail.gmail.com>
+ <20160621204904.GA9779@rob-hp-laptop>
+ <20160621210739.GY5809@piout.net>
+ <CAHQ1cqGRqhOAqfJZEixkxAHZ4Y8dd-hD__T1ci0LS28Orphs3Q@mail.gmail.com>
+ <20160719224728.GP7132@piout.net>
+ <CAHQ1cqF+Z5sKhtxgFiTGJdaOtkQRtQmXU=DzG0qxnDDwfAMp_g@mail.gmail.com>
+ <20160720090220.GQ7132@piout.net>
+ <CAHQ1cqEoN7PEQApHBo-FOqumtLJWoURHOPZfrzL=6h2p4S0Fdg@mail.gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160720145614.13132-2-mugunthanvnm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Sekhar Nori <nsekhar@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBB5WX26AKGQEJAUDONI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAHQ1cqEoN7PEQApHBo-FOqumtLJWoURHOPZfrzL=6h2p4S0Fdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/20/2016 09:56 AM, Mugunthan V N wrote:
-> Add documention of ti,impedance-control which can be used to
-> correct MAC impedance mismatch using phy extended registers.
->
-> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-> ---
->   Documentation/devicetree/bindings/net/ti,dp83867.txt | 7 +++++++
->   1 file changed, 7 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> index 5d21141..531ea3c5 100644
-> --- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> +++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> @@ -9,6 +9,13 @@ Required properties:
->   	- ti,fifo-depth - Transmitt FIFO depth- see dt-bindings/net/ti-dp83867.h
->   		for applicable values
->
-> +Optional property:
-> +	- ti,impedance-control - MAC Interface Impedance control to vary the
-> +				 output impedance with an approximate range
-> +				 from 35-70 ohms in 32 steps. Value range can
-> +				 be 0x0 to 0x1f. Lowest impedance value is
-> +				 0x1f and highest impedance being 0x0.
-> +
+On 20/07/2016 at 07:36:55 -0700, Andrey Smirnov wrote :
+> On Wed, Jul 20, 2016 at 2:02 AM, Alexandre Belloni
+> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On 19/07/2016 at 16:56:56 -0700, Andrey Smirnov wrote :
+> >> >> I don't see any value in doing that, could you give me a realistic
+> >> >> example of a scenario in which a user would want to spend some of
+> >> >> uptime with RTC oscillator fault detection/glitch filtering disabled
+> >> >> and then enable it?
+> >> >>
+> >> >
+> >> > Well, the issue is not being dynamic, it is differentiating between
+> >> > hardware description and user configuration. Configuration must not be in
+> >> > DT.
+> >>
+> >> Why? And I don't mean in a generic sense, but in this particular case.
+> >> What is gained by not having this bit of configuration, whose only
+> >> consumer is the driver, in the device tree file?
+> >>
+> >
+> > Because configuration doesn't belong to DT. DT is about hardware
+> > description, not configuration.
+> 
+> That doesn't really answer my question. You just re-iterating some
+> maxim without explaining what is the point behind applying it.
+> 
 
-Should'nt you be using the impedance values of 35 to 70 as the valid 
-values here? that would be the hardware description, and the values to 
-program corresponding to those are 0x00 to 0x1f. Right?
-
-Rob: is'nt that the right way to do it?
-
->   Default child nodes are standard Ethernet PHY device
->   nodes as described in Documentation/devicetree/bindings/net/phy.txt
->
->
-
+Well, that is from the device tree specification and how the device tree
+maintainers want it...
 
 -- 
-Regards,
-Nishanth Menon
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
