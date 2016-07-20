@@ -1,103 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/12] pinctrl: dt-bindings: Add documentation for Aspeed
- pin controllers
-Date: Wed, 20 Jul 2016 14:05:19 -0500
-Message-ID: <20160720190519.GA9190@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 05/12] gpio: dt-bindings: Add documentation for Aspeed
+ GPIO controllers
+Date: Wed, 20 Jul 2016 14:06:48 -0500
+Message-ID: <20160720190648.GA10361@rob-hp-laptop>
 References: <1468994313-13538-1-git-send-email-andrew@aj.id.au>
- <1468994313-13538-2-git-send-email-andrew@aj.id.au>
+ <1468994313-13538-6-git-send-email-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1468994313-13538-2-git-send-email-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>
+In-Reply-To: <1468994313-13538-6-git-send-email-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 03:28:22PM +0930, Andrew Jeffery wrote:
-> Outline expectations on the pin controller's relationship with the
-> System Control Unit (SCU) IP through syscon, and document the compatible
-> strings for 4th and 5th generation Aspeed SoC pin controllers.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+On Wed, Jul 20, 2016 at 03:28:26PM +0930, Andrew Jeffery wrote:
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 > ---
->  .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 45 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-> new file mode 100644
-> index 000000000000..5aac6a0a2e89
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-> @@ -0,0 +1,45 @@
-> +Aspeed Pin Controllers
-> +----------------------
-> +
-> +The Aspeed SoCs vary in functionality inside a generation but have a common mux
-> +device register layout.
-> +
-> +Required properties:
-> +- compatible: should be one of the following:
-> +	"aspeed,g4-pinctrl";
-> +	"aspeed,g5-pinctrl"
-> +
-> +The pin controller node should be a child of a syscon node with the required
-> +property:
-> +- compatible: "syscon", "simple-mfd"
-> +
-> +Refer to the the bindings described in
-> +Documentation/devicetree/bindings/mfd/syscon.txt
-> +
-> +Subnode format:
-> +
-> +Please refer to pinctrl-bindings.txt in this directory for details of the
-> +common pinctrl bindings used by client devices.
-> +
-> +The required properties of child nodes are (as defined in pinctrl-bindings):
-> +- function
-> +- groups
-> +
-> +Each function has only one associated pin group. Each group is named by its
-> +function.
-> +
-> +Examples:
-> +
-> +syscon: scu@1e6e2000 {
-> +	compatible = "syscon", "simple-mfd";
-> +	reg = <0x1e6e2000 0x1a8>;
-> +
-> +	pinctrl: pinctrl@1e6e2000 {
-> +		compatible = "aspeed,g4-pinctrl";
-> +
-> +		pinctrl_i2c3_default: i2c3_default {
-> +			function = "I2C3";
-> +			groups = "I2C3";
+>  .../devicetree/bindings/gpio/gpio-aspeed.txt       | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
 
-All these strings need to be documented.
-
-> +		};
-> +	};
-> +};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1209323b7e43..b5f2d3576d3a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1003,6 +1003,7 @@ S:	Maintained
->  F:	arch/arm/mach-aspeed/
->  F:	arch/arm/boot/dts/aspeed-*
->  F:	drivers/*/*aspeed*
-> +F:	Documentation/devicetree/bindings/*/*aspeed*
->  
->  ARM/ATMEL AT91RM9200, AT91SAM9 AND SAMA5 SOC SUPPORT
->  M:	Nicolas Ferre <nicolas.ferre@atmel.com>
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
