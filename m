@@ -1,79 +1,93 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: r8a7792: add SDHI support
-Date: Wed, 20 Jul 2016 10:07:39 +0200
-Message-ID: <CAMuHMdUUZ=gopWOir9PMiDgJ8o+CMp+qG=FLhGg_gHrMYzwgFg@mail.gmail.com>
-References: <2441635.ESeLhIjWEX@wasted.cogentembedded.com> <8030361.FnpbGzHVP8@wasted.cogentembedded.com>
- <20160717225842.GA25133@verge.net.au> <cece2545-52f9-7ddb-36d2-df364a272092@cogentembedded.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH V2] leds: trigger: Introduce an USB port trigger
+Date: Wed, 20 Jul 2016 10:08:08 +0200
+Message-ID: <20160720080808.GB11581@amd>
+References: <1468239883-22695-1-git-send-email-zajec5@gmail.com>
+ <1468617060-29830-1-git-send-email-zajec5@gmail.com>
+ <20160718023126.GB31293@shlinux2>
+ <CACna6rxii6hkX6rOTbYXn90AoanP1UMKyCZrUjQ08w0eid4aDA@mail.gmail.com>
+ <20160718054010.GE31293@shlinux2>
+ <CACna6rxuiXS=cBkN4b9mzSBfcMdqpENyUmQ973p7yR1S=WotWA@mail.gmail.com>
+ <20160718055345.GF31293@shlinux2>
+ <CACna6rzcbZRpAshvmeG0_DJeQh1Tvnde4nTkAHMAWinK0cgqpQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cece2545-52f9-7ddb-36d2-df364a272092-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACna6rzcbZRpAshvmeG0_DJeQh1Tvnde4nTkAHMAWinK0cgqpQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Peter Chen <hzpeterchen@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Sakari Ailus <sakari.ailus@linux.intel.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Boris Brezillon <boris.brezillon@free-electrons.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On Mon 2016-07-18 08:55:52, Rafa=C5=82 Mi=C5=82ecki wrote:
+> On 18 July 2016 at 07:53, Peter Chen <hzpeterchen@gmail.com> wrote:
+> > On Mon, Jul 18, 2016 at 07:57:34AM +0200, Rafa=C5=82 Mi=C5=82ecki w=
+rote:
+> >> On 18 July 2016 at 07:40, Peter Chen <hzpeterchen@gmail.com> wrote=
+:
+> >> > On Mon, Jul 18, 2016 at 06:44:49AM +0200, Rafa=C5=82 Mi=C5=82eck=
+i wrote:
+> >> >> On 18 July 2016 at 04:31, Peter Chen <hzpeterchen@gmail.com> wr=
+ote:
+> >> >> > On Fri, Jul 15, 2016 at 11:10:45PM +0200, Rafa=C5=82 Mi=C5=82=
+ecki wrote:
+> >> >> >> +
+> >> >> >> +usbport trigger:
+> >> >> >> +- usb-ports : List of USB ports that usbport should observe=
+d for turning on a
+> >> >> >> +           given LED.
+> >> >> >> +
+> >> >> >
+> >> >> > %s/should/should be
+> >> >>
+> >> >> Thanks.
+> >> >>
+> >> >>
+> >> >> >> diff --git a/drivers/leds/trigger/ledtrig-usbport.c b/driver=
+s/leds/trigger/ledtrig-usbport.c
+> >> >> >> new file mode 100644
+> >> >> >> index 0000000..97b064c
+> >> >> >> --- /dev/null
+> >> >> >> +++ b/drivers/leds/trigger/ledtrig-usbport.c
+> >> >> >> @@ -0,0 +1,206 @@
+> >> >> >> +/*
+> >> >> >> + * USB port LED trigger
+> >> >> >> + *
+> >> >> >> + * Copyright (C) 2016 Rafa=C5=82 Mi=C5=82ecki <rafal.mileck=
+i@gmail.com>
+> >> >> >> + *
+> >> >> >> + * This program is free software; you can redistribute it a=
+nd/or modify
+> >> >> >> + * it under the terms of the GNU General Public License as =
+published by
+> >> >> >> + * the Free Software Foundation; either version 2 of the Li=
+cense, or (at
+> >> >> >> + * your option) any later version.
+> >> >> >> + */
+> >> >> >
+> >
+> > In your COPYRIGHT, it says "or any later version". But afaik, It sh=
+ould
+> > not be on GPL v3.
+>=20
+> If one picks my code, modifies it, relicenses it using GPL v3, we
+> can't include it anymore. It's the same story as with BSD systems and
+> their BSD licenses. If one picks e.g. BSD 3-clause licensed code,
+> makes it GPL, releases it (e.g. by putting in Linux), BSD can't use i=
+t
+> anymore.
+>=20
+> Still, this license is GPL v2 compatible and as is it can be included
+> in the Linux.
 
-On Mon, Jul 18, 2016 at 9:12 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
->>> --- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
->>> +++ renesas/arch/arm/boot/dts/r8a7792.dtsi
->>> @@ -435,6 +435,18 @@
->>>                         status = "disabled";
->>>                 };
->>>
->>> +               sdhi0: sd@ee100000 {
->>> +                       compatible = "renesas,sdhi-r8a7792";
->>> +                       reg = <0 0xee100000 0 0x200>;
->>
->>
->> I do not have the documentation available to check,
->
->    Me nether. The SDHI .zip only includes the manual for E2, H2, and M2.
->
->> however, I wonder if
->> as per 66f47ed0e86d ("ARM: shmobile: r8a7790: tidyup SDHI register size on
->> DTSI") the register size should be 0x328.
->
->    I just don't know...
+Anything GPLv2 compatible is fair game for the kernel. GPLv2+ is very
+common for the kernel.
 
->>> +                       interrupts = <0 165 IRQ_TYPE_LEVEL_HIGH>;
->>> +                       dmas = <&dmac0 0xcd>, <&dmac0 0xce>,
->>> +                              <&dmac1 0xcd>, <&dmac1 0xce>;
->>> +                       dma-names = "tx", "rx", "tx", "rx";
->>> +                       clocks = <&mstp3_clks R8A7792_CLK_SDHI0>;
->>> +                       power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
->>> +                       status = "disabled";
->>> +               };
->>> +
->>>                 jpu: jpeg-codec@fe980000 {
->>>                         compatible = "renesas,jpu-r8a7792",
->>>                                      "renesas,rcar-gen2-jpu";
->
->    I also wonder whether whether a single per-SoC SDHI "compatible" is
-> valid. The registers and their offsets seem to differ b/w SDHI0 and the
-> other SDHI cores...
-
-There's version register.
-
-BTW, given SDHI on V2H doesn't support SDR50/SDR104, unlike the instances
-on other R-Car Gen2 SoCs, can you please tell us the version value, as read
-from CTL_VERSION in sh_mobile_sdhi_sdbuf_width()?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
