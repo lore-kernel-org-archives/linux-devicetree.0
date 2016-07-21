@@ -1,91 +1,124 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [RFC 3/6] dt/bindings: Add bindings for Tegra20/30 NOR bus driver
-Date: Thu, 21 Jul 2016 11:26:09 +0100
-Message-ID: <1f280c99-156f-59d3-308f-b4c8ff0f8f7c@nvidia.com>
-References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
- <1468935397-11926-4-git-send-email-mirza.krak@gmail.com>
- <20160720124408.GA19113@rob-hp-laptop>
- <CALw8SCXFexogJn3BwrZm63yEL0rtTpYsYYb0O9D_ibhginVLqw@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4 4/4] ASoC: samsung: Add machine driver for Exynos5433
+ based TM2 board
+Date: Thu, 21 Jul 2016 19:28:32 +0900
+Message-ID: <5790A3D0.4070500@samsung.com>
+References: <CGME20160705171538epcas1p14f034567982b67aad091c50e5adcec9c@epcas1p1.samsung.com>
+ <1467738877-31555-1-git-send-email-s.nawrocki@samsung.com>
+ <5788721B.7010602@samsung.com> <578CB261.60507@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CALw8SCXFexogJn3BwrZm63yEL0rtTpYsYYb0O9D_ibhginVLqw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mirza Krak <mirza.krak@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <578CB261.60507@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: broonie@kernel.org, robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, ideal.song@samsung.com, inki.dae@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylwester,
 
-On 20/07/16 20:28, Mirza Krak wrote:
-> 2016-07-20 14:44 GMT+02:00 Rob Herring <robh@kernel.org>:
->> On Tue, Jul 19, 2016 at 03:36:34PM +0200, Mirza Krak wrote:
->>> From: Mirza Krak <mirza.krak@gmail.com>
->>>
->>> Document the devicetree bindings for NOR bus driver found on Tegra20 and
->>> Tegra30 SOCs
->>>
->>> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
->>> ---
->>>  .../devicetree/bindings/bus/nvidia,tegra20-nor.txt | 73 ++++++++++++++++++++++
->>>  1 file changed, 73 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt b/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
->>> new file mode 100644
->>> index 0000000..9ee4a66
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
->>> @@ -0,0 +1,73 @@
->>> +Device tree bindings for NVIDIA Tegra20/30 NOR Bus
->>> +
->>> +The NOR controller supports a number of memory types, including synchronous NOR,
->>> +asynchronous NOR, and other flash memories with similar interfaces, such as
->>> +MuxOneNAND. One could also connect high speed devices like FPGAs, DSPs,
->>> +CAN chips, Wi-Fi chips etc.
->>> +
->>> +The actual devices are instantiated from the child nodes of a NOR node.
->>> +
->>> +Required properties:
->>> +
->>> + - compatible: should be "nvidia,tegra20-nor", "nvidia,tegra30-nor"
->>> + - reg: Should contain NOR controller registers location and length.
->>> + - clocks: Must contain one entry, for the module clock.
->>> +   See ../clocks/clock-bindings.txt for details.
->>> + - resets : Must contain an entry for each entry in reset-names.
->>> +   See ../reset/reset.txt for details.
->>> + - reset-names : Must include the following entries:
->>> +  - nor
->>> + - #address-cells: Must be set to 2 to allow memory address translation
->>> + - #size-cells:      Must be set to 1 to allow CS address passing
->>> + - ranges: Must be set up to reflect the memory layout with four integer
->>> +             values for each chip-select line in use.
->>> + - nvidia,config: This property represents the SNOR_CONFIG_0 register.
->>> +
->>> +Note that the NOR controller does not have any internal chip-select address
->>> +decoding and if you want to access multiple devices external chip-select
->>> +decoding must be provided.
+On 2016=EB=85=84 07=EC=9B=94 18=EC=9D=BC 19:41, Sylwester Nawrocki wrot=
+e:
+> Hi Chanwoo,
+>=20
+> On 07/15/2016 07:18 AM, Chanwoo Choi wrote:
+>>> +static int tm2_probe(struct platform_device *pdev)
+>>> +{
+>>> +	struct device *dev =3D &pdev->dev;
+>=20
+>>> +	codec_dai_node =3D of_parse_phandle(dev->of_node, "audio-codec", =
+0);
+>>> +	if (!codec_dai_node) {
+>>> +		dev_err(dev, "audio-codec property invalid or missing\n");
+>>> +		ret =3D -EINVAL;
+>>> +		goto err_put_cpu_dai;
+>>> +	}
+>=20
+>>> +	priv->codec_mclk1 =3D of_clk_get_by_name(codec_dai_node, "mclk1")=
+;
+>>> +	if (IS_ERR(priv->codec_mclk1)) {
+>>> +		dev_err(dev, "Failed to get mclk1 clock\n");
+>>> +		ret =3D PTR_ERR(priv->codec_mclk1);
+>>> +		goto err_put_codec_dai;
+>>> +	}
 >>
->> Then what are the 2 chip selects in ranges?
+>> I think that you better to use the devm_clk_get() instead of of_clk_=
+get_by_name()
+>> because you don't need to handle the clk_put() when error happen and=
+ remove the=20
+>> this driver.
 >>
->> Rob
-> 
-> Those two chip selects are actually a representation of a external
-> decoding logic based on what we use on our board. Even though it the
-> NOR controller only supports one single chip select I wanted to give
-> an example on how one could create more chip-selects with an external
-> logic and what it would look like in the device tree representation.
+>> 	priv->codec_mclk1 =3D devm_clk_get(dev, "mclk1");
+>=20
+> The clocks are from the CODEC DT node, for which we don't have struct
+> device pointer here, that's why I used of_clk_get_by_name().
 
-Technically, the GMI/SNOR controller supports 8 chip-selects, however,
-unlike some devices, it appears that software has to select the active
-chip-select. Although this sounds odd, I believe that the idea is that
-in order to support devices greater than 256MB (external address space
-for available NOR/async devices) you can use the chip-selects to page
-through memory greater than this 256MB range. At least that it my
-(limited) understanding!
+When I test it, I can get the clock pointer by devm_clk_get() as follow=
+ing:
 
-Cheers
-Jon
+diff --git a/sound/soc/samsung/tm2_wm5110.c b/sound/soc/samsung/tm2_wm5=
+110.c
+index 9728b3c5927f..5de4fc554aec 100644
+--- a/sound/soc/samsung/tm2_wm5110.c
++++ b/sound/soc/samsung/tm2_wm5110.c
+@@ -500,7 +500,7 @@ static int tm2_probe(struct platform_device *pdev)
+                card->dai_link[i].platform_of_node =3D cpu_dai_node;
+        }
 
--- 
-nvpublic
+-       priv->codec_mclk1 =3D of_clk_get_by_name(codec_dai_node, "mclk1=
+");
++       priv->codec_mclk1 =3D devm_clk_get(dev, "mclk1");
+        if (IS_ERR(priv->codec_mclk1)) {
+                dev_err(dev, "Failed to get mclk1 clock\n");
+                ret =3D PTR_ERR(priv->codec_mclk1);
+@@ -508,7 +508,7 @@ static int tm2_probe(struct platform_device *pdev)
+        }
+
+        /* mclk2 is optional */
+-       priv->codec_mclk2 =3D of_clk_get_by_name(codec_dai_node, "mclk2=
+");
++       priv->codec_mclk2 =3D devm_clk_get(dev, "mclk2");
+        if (IS_ERR(priv->codec_mclk2))
+                dev_info(dev, "Not using mclk2 clock\n");
+
+@@ -516,21 +516,17 @@ static int tm2_probe(struct platform_device *pdev=
+)
+                                tm2_ext_dai, ARRAY_SIZE(tm2_ext_dai));
+        if (ret < 0) {
+                dev_err(dev, "Failed to register component: %d\n", ret)=
+;
+-               goto err_put_mclk;
++               goto err_put_codec_dai;
+        }
+
+        ret =3D devm_snd_soc_register_card(dev, card);
+        if (ret < 0) {
+                dev_err(dev, "Failed to register card: %d\n", ret);
+-               goto err_put_mclk;
++               goto err_put_codec_dai;
+        }
+
+        return 0;
+
+-err_put_mclk:
+-       clk_put(priv->codec_mclk1);
+-       if (!IS_ERR(priv->codec_mclk2))
+-               clk_put(priv->codec_mclk2);
+ err_put_codec_dai:
+        of_node_put(codec_dai_node);
+ err_put_cpu_dai:
+@@ -543,11 +539,6 @@ err_put_amp:
+ static int tm2_remove(struct platform_device *pdev)
+ {
+        struct snd_soc_card *card =3D &tm2_card;
+-       struct tm2_machine_priv *priv =3D snd_soc_card_get_drvdata(card=
+);
+-
+-       clk_put(priv->codec_mclk1);
+-       if (!IS_ERR(priv->codec_mclk2))
+-               clk_put(priv->codec_mclk2);
+
+
+Regards,
+Chanwoo Choi
