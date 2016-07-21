@@ -1,279 +1,45 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH v2 2/3] drivers/clocksource/moxart: Use struct to hold state
-Date: Thu, 21 Jul 2016 23:13:52 +0930
-Message-ID: <1469108633-7940-3-git-send-email-joel@jms.id.au>
-References: <1469108633-7940-1-git-send-email-joel@jms.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469108633-7940-1-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+From: Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH V8 2/2] mmc: OCTEON: Add host driver for OCTEON MMC
+ controller.
+Date: Thu, 21 Jul 2016 15:46:04 +0200
+Message-ID: <20160721134603.GA25689@linux-mips.org>
+References: <57853474.9050108@cavium.com>
+ <578E71E6.2020700@caviumnetworks.com>
+ <CAPDyKFqb-7LLM0XPtVWj1qHib991E2dHt+6W0UPgbXnukGkmXA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqb-7LLM0XPtVWj1qHib991E2dHt+6W0UPgbXnukGkmXA@mail.gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Steven J. Hill" <Steven.Hill@caviumnetworks.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a struct moxart_timer to hold the driver state, including the
-irqaction and struct clock_event_device.
+On Tue, Jul 19, 2016 at 11:19:43PM +0200, Ulf Hansson wrote:
 
-Most importantly this holds values for enabling and disabling the timer,
-so future support can be added for devices that use different bits for
-enable/disable.
+> > Has anyone reviewed the driver or have any comments? Thanks.
+> 
+> Sorry I need more time, been partly out of office lately.
+> I intend to review this prior rc1 is out, but no promises.
+> 
+> Kind regards
+> Uffe
 
-In preparation for future hardware support we add a MOXART prefix to the
-existing values.
+Ulf,
 
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
----
- drivers/clocksource/moxart_timer.c | 147 ++++++++++++++++++++++---------------
- 1 file changed, 86 insertions(+), 61 deletions(-)
+if you decide to accept this patch, could you also push the bindings
+patch ("[V8,1/2] mmc: OCTEON: Add DT bindings for OCTEON MMC controller.")
+upstream?  I think they should be merged together.
 
-diff --git a/drivers/clocksource/moxart_timer.c b/drivers/clocksource/moxart_timer.c
-index a3aaa5658a49..cb0b34786a8e 100644
---- a/drivers/clocksource/moxart_timer.c
-+++ b/drivers/clocksource/moxart_timer.c
-@@ -21,6 +21,7 @@
- #include <linux/io.h>
- #include <linux/clocksource.h>
- #include <linux/bitops.h>
-+#include <linux/slab.h>
- 
- #define TIMER1_BASE		0x00
- #define TIMER2_BASE		0x10
-@@ -36,36 +37,51 @@
- #define TIMER_INTR_MASK		0x38
- 
- /*
-- * TIMER_CR flags:
-+ * Moxart TIMER_CR flags:
-  *
-- * TIMEREG_CR_*_CLOCK	0: PCLK, 1: EXT1CLK
-- * TIMEREG_CR_*_INT	overflow interrupt enable bit
-+ * MOXART_CR_*_CLOCK	0: PCLK, 1: EXT1CLK
-+ * MOXART_CR_*_INT	overflow interrupt enable bit
-  */
--#define TIMEREG_CR_1_ENABLE	BIT(0)
--#define TIMEREG_CR_1_CLOCK	BIT(1)
--#define TIMEREG_CR_1_INT	BIT(2)
--#define TIMEREG_CR_2_ENABLE	BIT(3)
--#define TIMEREG_CR_2_CLOCK	BIT(4)
--#define TIMEREG_CR_2_INT	BIT(5)
--#define TIMEREG_CR_3_ENABLE	BIT(6)
--#define TIMEREG_CR_3_CLOCK	BIT(7)
--#define TIMEREG_CR_3_INT	BIT(8)
--#define TIMEREG_CR_COUNT_UP	BIT(9)
--
--#define TIMER1_ENABLE		(TIMEREG_CR_2_ENABLE | TIMEREG_CR_1_ENABLE)
--#define TIMER1_DISABLE		(TIMEREG_CR_2_ENABLE)
--
--static void __iomem *base;
--static unsigned int clock_count_per_tick;
-+#define MOXART_CR_1_ENABLE	BIT(0)
-+#define MOXART_CR_1_CLOCK	BIT(1)
-+#define MOXART_CR_1_INT	BIT(2)
-+#define MOXART_CR_2_ENABLE	BIT(3)
-+#define MOXART_CR_2_CLOCK	BIT(4)
-+#define MOXART_CR_2_INT	BIT(5)
-+#define MOXART_CR_3_ENABLE	BIT(6)
-+#define MOXART_CR_3_CLOCK	BIT(7)
-+#define MOXART_CR_3_INT	BIT(8)
-+#define MOXART_CR_COUNT_UP	BIT(9)
-+
-+#define MOXART_TIMER1_ENABLE	(MOXART_CR_2_ENABLE | MOXART_CR_1_ENABLE)
-+#define MOXART_TIMER1_DISABLE	(MOXART_CR_2_ENABLE)
-+
-+struct moxart_timer {
-+	void __iomem *base;
-+	unsigned int t1_disable_val;
-+	unsigned int t1_enable_val;
-+	unsigned int count_per_tick;
-+	struct clock_event_device clkevt;
-+	struct irqaction act;
-+};
-+
-+static inline struct moxart_timer *to_moxart(struct clock_event_device *evt)
-+{
-+	return container_of(evt, struct moxart_timer, clkevt);
-+}
- 
- static inline void moxart_disable(struct clock_event_device *evt)
- {
--	writel(TIMER1_DISABLE, base + TIMER_CR);
-+	struct moxart_timer *timer = to_moxart(evt);
-+
-+	writel(timer->t1_disable_val, timer->base + TIMER_CR);
- }
- 
- static inline void moxart_enable(struct clock_event_device *evt)
- {
--	writel(TIMER1_ENABLE, base + TIMER_CR);
-+	struct moxart_timer *timer = to_moxart(evt);
-+
-+	writel(timer->t1_enable_val, timer->base + TIMER_CR);
- }
- 
- static int moxart_shutdown(struct clock_event_device *evt)
-@@ -77,13 +93,17 @@ static int moxart_shutdown(struct clock_event_device *evt)
- static int moxart_set_oneshot(struct clock_event_device *evt)
- {
- 	moxart_disable(evt);
--	writel(~0, base + TIMER1_BASE + REG_LOAD);
-+	writel(~0, to_moxart(evt)->base + TIMER1_BASE + REG_LOAD);
- 	return 0;
- }
- 
- static int moxart_set_periodic(struct clock_event_device *evt)
- {
--	writel(clock_count_per_tick, base + TIMER1_BASE + REG_LOAD);
-+	struct moxart_timer *timer = to_moxart(evt);
-+
-+	moxart_disable(evt);
-+	writel(timer->count_per_tick, timer->base + TIMER1_BASE + REG_LOAD);
-+	writel(0, timer->base + TIMER1_BASE + REG_MATCH1);
- 	moxart_enable(evt);
- 	return 0;
- }
-@@ -91,30 +111,19 @@ static int moxart_set_periodic(struct clock_event_device *evt)
- static int moxart_clkevt_next_event(unsigned long cycles,
- 				    struct clock_event_device *evt)
- {
-+	struct moxart_timer *timer = to_moxart(evt);
- 	u32 u;
- 
- 	moxart_disable(evt);
- 
--	u = readl(base + TIMER1_BASE + REG_COUNT) - cycles;
--	writel(u, base + TIMER1_BASE + REG_MATCH1);
-+	u = readl(timer->base + TIMER1_BASE + REG_COUNT) - cycles;
-+	writel(u, timer->base + TIMER1_BASE + REG_MATCH1);
- 
- 	moxart_enable(evt);
- 
- 	return 0;
- }
- 
--static struct clock_event_device moxart_clockevent = {
--	.name			= "moxart_timer",
--	.rating			= 200,
--	.features		= CLOCK_EVT_FEAT_PERIODIC |
--				  CLOCK_EVT_FEAT_ONESHOT,
--	.set_state_shutdown	= moxart_shutdown,
--	.set_state_periodic	= moxart_set_periodic,
--	.set_state_oneshot	= moxart_set_oneshot,
--	.tick_resume		= moxart_set_oneshot,
--	.set_next_event		= moxart_clkevt_next_event,
--};
--
- static irqreturn_t moxart_timer_interrupt(int irq, void *dev_id)
- {
- 	struct clock_event_device *evt = dev_id;
-@@ -122,21 +131,19 @@ static irqreturn_t moxart_timer_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction moxart_timer_irq = {
--	.name		= "moxart-timer",
--	.flags		= IRQF_TIMER,
--	.handler	= moxart_timer_interrupt,
--	.dev_id		= &moxart_clockevent,
--};
--
- static int __init moxart_timer_init(struct device_node *node)
- {
- 	int ret, irq;
- 	unsigned long pclk;
- 	struct clk *clk;
-+	struct moxart_timer *timer;
- 
--	base = of_iomap(node, 0);
--	if (!base) {
-+	timer = kzalloc(sizeof(*timer), GFP_KERNEL);
-+	if (!timer)
-+		return -ENOMEM;
-+
-+	timer->base = of_iomap(node, 0);
-+	if (!timer->base) {
- 		pr_err("%s: of_iomap failed\n", node->full_name);
- 		return -ENXIO;
- 	}
-@@ -147,12 +154,6 @@ static int __init moxart_timer_init(struct device_node *node)
- 		return -EINVAL;
- 	}
- 
--	ret = setup_irq(irq, &moxart_timer_irq);
--	if (ret) {
--		pr_err("%s: setup_irq failed\n", node->full_name);
--		return ret;
--	}
--
- 	clk = of_clk_get(node, 0);
- 	if (IS_ERR(clk))  {
- 		pr_err("%s: of_clk_get failed\n", node->full_name);
-@@ -161,7 +162,31 @@ static int __init moxart_timer_init(struct device_node *node)
- 
- 	pclk = clk_get_rate(clk);
- 
--	ret = clocksource_mmio_init(base + TIMER2_BASE + REG_COUNT,
-+	if (of_device_is_compatible(node, "moxa,moxart-timer")) {
-+		timer->t1_enable_val = MOXART_TIMER1_ENABLE;
-+		timer->t1_disable_val = MOXART_TIMER1_DISABLE;
-+	} else
-+		panic("%s: unknown platform\n", node->full_name);
-+
-+	timer->count_per_tick = DIV_ROUND_CLOSEST(pclk, HZ);
-+
-+	timer->clkevt.name = node->name;
-+	timer->clkevt.rating = 200;
-+	timer->clkevt.features = CLOCK_EVT_FEAT_PERIODIC |
-+					CLOCK_EVT_FEAT_ONESHOT;
-+	timer->clkevt.set_state_shutdown = moxart_shutdown;
-+	timer->clkevt.set_state_periodic = moxart_set_periodic;
-+	timer->clkevt.set_state_oneshot = moxart_set_oneshot;
-+	timer->clkevt.tick_resume = moxart_set_oneshot;
-+	timer->clkevt.set_next_event = moxart_clkevt_next_event;
-+	timer->clkevt.cpumask = cpumask_of(0);
-+	timer->clkevt.irq = irq;
-+	timer->act.name = node->name;
-+	timer->act.flags = IRQF_TIMER;
-+	timer->act.handler = moxart_timer_interrupt;
-+	timer->act.dev_id = &timer->clkevt;
-+
-+	ret = clocksource_mmio_init(timer->base + TIMER2_BASE + REG_COUNT,
- 				    "moxart_timer", pclk, 200, 32,
- 				    clocksource_mmio_readl_down);
- 	if (ret) {
-@@ -169,13 +194,14 @@ static int __init moxart_timer_init(struct device_node *node)
- 		return ret;
- 	}
- 
--	clock_count_per_tick = DIV_ROUND_CLOSEST(pclk, HZ);
--
--	writel(~0, base + TIMER2_BASE + REG_LOAD);
--	writel(TIMEREG_CR_2_ENABLE, base + TIMER_CR);
-+	ret = setup_irq(irq, &timer->act);
-+	if (ret) {
-+		pr_err("%s: setup_irq failed\n", node->full_name);
-+		return ret;
-+	}
- 
--	moxart_clockevent.cpumask = cpumask_of(0);
--	moxart_clockevent.irq = irq;
-+	writel(~0, timer->base + TIMER2_BASE + REG_LOAD);
-+	writel(timer->t1_disable_val, timer->base + TIMER_CR);
- 
- 	/*
- 	 * documentation is not publicly available:
-@@ -183,8 +209,7 @@ static int __init moxart_timer_init(struct device_node *node)
- 	 * max_delta 0xfffffffe should be ok because count
- 	 * register size is u32
- 	 */
--	clockevents_config_and_register(&moxart_clockevent, pclk,
--					0x4, 0xfffffffe);
-+	clockevents_config_and_register(&timer->clkevt, pclk, 0x4, 0xfffffffe);
- 
- 	return 0;
- }
--- 
-2.8.1
+Thanks,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  Ralf
