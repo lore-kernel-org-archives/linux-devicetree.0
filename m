@@ -1,50 +1,82 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v4 4/4] ASoC: samsung: Add machine driver
- for Exynos5433 based TM2 board
-Date: Thu, 21 Jul 2016 17:12:16 +0200
-Message-ID: <5790E650.609@samsung.com>
-References: <CGME20160705171538epcas1p14f034567982b67aad091c50e5adcec9c@epcas1p1.samsung.com>
- <1467738877-31555-1-git-send-email-s.nawrocki@samsung.com>
- <5788721B.7010602@samsung.com> <578CB261.60507@samsung.com>
- <5790A3D0.4070500@samsung.com>
+From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Thu, 21 Jul 2016 11:45:26 -0500
+Message-ID: <1469119526.25630.42.camel@buserror.net>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net>
+	 <1468723822-30457-5-git-send-email-oss@buserror.net>
+	 <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
+	 <146909676646.16700.8383344640490662952@concordia>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-reply-to: <5790A3D0.4070500@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: robh@kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-kernel@vger.kernel.org, inki.dae@samsung.com, devicetree@vger.kernel.org, broonie@kernel.org, ideal.song@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <146909676646.16700.8383344640490662952@concordia>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/2016 12:28 PM, Chanwoo Choi wrote:
-> When I test it, I can get the clock pointer by devm_clk_get() as following:
-> 
-> diff --git a/sound/soc/samsung/tm2_wm5110.c b/sound/soc/samsung/tm2_wm5110.c
-> index 9728b3c5927f..5de4fc554aec 100644
-> --- a/sound/soc/samsung/tm2_wm5110.c
-> +++ b/sound/soc/samsung/tm2_wm5110.c
-> @@ -500,7 +500,7 @@ static int tm2_probe(struct platform_device *pdev)
->                 card->dai_link[i].platform_of_node = cpu_dai_node;
->         }
-> 
-> -       priv->codec_mclk1 = of_clk_get_by_name(codec_dai_node, "mclk1");
-> +       priv->codec_mclk1 = devm_clk_get(dev, "mclk1");
+On Thu, 2016-07-21 at 20:26 +1000, Michael Ellerman wrote:
+> Quoting Scott Wood (2016-07-21 04:31:48)
+> >=20
+> > On Wed, 2016-07-20 at 13:24 +0200, Arnd Bergmann wrote:
+> > >=20
+> > > On Saturday, July 16, 2016 9:50:21 PM CEST Scott Wood wrote:
+> > > >=20
+> > > >=20
+> > > > From: yangbo lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+> > > >=20
+> > > > Move mpc85xx.h to include/linux/fsl and rename it to svr.h as a=
+ common
+> > > > header file.=C2=A0=C2=A0This SVR numberspace is used on some AR=
+M chips as well
+> > > > as
+> > > > PPC, and even to check for a PPC SVR multi-arch drivers would
+> > > > otherwise
+> > > > need to ifdef the header inclusion and all references to the SV=
+R
+> > > > symbols.
+> > > >=20
+> > > > Signed-off-by: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+> > > > Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> > > > Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > > > Acked-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+> > > > [scottwood: update description]
+> > > > Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+> > > >=20
+> > > As discussed before, please don't introduce yet another vendor sp=
+ecific
+> > > way to match a SoC ID from a device driver.
+> > >=20
+> > > I've posted a patch for an extension to the soc_device infrastruc=
+ture
+> > > to allow comparing the running SoC to a table of devices, use tha=
+t
+> > > instead.
+> > As I asked before, in which relevant maintainership capacity are yo=
+u
+> > NACKing
+> > this?
+> I'll nack the powerpc part until you guys can agree.
 
-I guess you have and old dts where clock/clock-names are in the sound
-node.  Instead the clock/clock-names properties should be specified
-in the CODEC's node, the related binding's documentation can be found
-in Documentation/devicetree/bindings/mfd/arizona.txt. Also please see
-patch 3/4, there is no clock properties in the sound card's DT binding.
+OK, I've pulled these patches out.
+
+=46or the MMC issue I suggest using ifdef CONFIG_PPC and mfspr(SPRN_SVR=
+) like
+the clock driver does[1] and we can revisit the issue if/when we need t=
+o do
+something similar on an ARM chip.
+
+-Scott
+
+[1] One of the issues with Arnd's approach is that it wouldn't have wor=
+ked for
+early things like the clock driver, and he didn't seem to mind using if=
+def and
+mfspr() there.
 
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
