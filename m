@@ -1,60 +1,65 @@
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH 18/18] ARM: mvebu: a395-gp: add support for the Armada 395 GP Board
-Date: Thu, 21 Jul 2016 14:44:15 +0200
-Message-ID: <1469105055-25181-20-git-send-email-jaz@semihalf.com>
+From: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 17/18] ARM: mvebu: a390-db: add support for the Armada 390 DB board
+Date: Thu, 21 Jul 2016 14:44:14 +0200
+Message-ID: <1469105055-25181-19-git-send-email-jaz@semihalf.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469105055-25181-1-git-send-email-jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds description for the following features for this board:
+This commit adds description for following features for this board:
 
 - Serial port
-- PCIe interfaces
+- I2C buses
+- 16MB SPI-NOR
 - USB2.0
 - USB3.0
-- SDIO
-- 1024 MiB NAND-FLASH
-- SATA
-- I2C buses
+- PCIe interfaces
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+Signed-off-by: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-395-gp.dts | 147 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 147 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-395-gp.dts
+ arch/arm/boot/dts/armada-390-db.dts | 164 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 164 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-390-db.dts
 
-diff --git a/arch/arm/boot/dts/armada-395-gp.dts b/arch/arm/boot/dts/armada-395-gp.dts
+diff --git a/arch/arm/boot/dts/armada-390-db.dts b/arch/arm/boot/dts/armada-390-db.dts
 new file mode 100644
-index 0000000..eb53306
+index 0000000..964038f
 --- /dev/null
-+++ b/arch/arm/boot/dts/armada-395-gp.dts
-@@ -0,0 +1,147 @@
++++ b/arch/arm/boot/dts/armada-390-db.dts
+@@ -0,0 +1,164 @@
 +/*
-+ * Device Tree file for Marvell Armada 395 GP board
++ * Device Tree file for Marvell Armada 390 Development Board
++ * (DB-88F6920)
 + *
 + * Copyright (C) 2016 Marvell
 + *
-+ * Grzegorz Jaszczyk <jaz@semihalf.com>
++ * Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 + *
 + * This file is dual-licensed: you can use it either under the terms
 + * of the GPL or the X11 license, at your option. Note that this dual
 + * licensing only applies to this file, and not this project as a
 + * whole.
 + *
-+ *  a) This file is licensed under the terms of the GNU General Public
-+ *     License version 2.  This program is licensed "as is" without
-+ *     any warranty of any kind, whether express or implied.
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
 + *
-+ * Or, alternatively,
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
 + *
 + *  b) Permission is hereby granted, free of charge, to any person
 + *     obtaining a copy of this software and associated documentation
 + *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
++ *     restriction, including without limitation the rights to use
 + *     copy, modify, merge, publish, distribute, sublicense, and/or
 + *     sell copies of the Software, and to permit persons to whom the
 + *     Software is furnished to do so, subject to the following
@@ -63,23 +68,22 @@ index 0000000..eb53306
 + *     The above copyright notice and this permission notice shall be
 + *     included in all copies or substantial portions of the Software.
 + *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
 + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 + *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
 +/dts-v1/;
-+#include "armada-395.dtsi"
++#include "armada-390.dtsi"
 +
 +/ {
-+	model = "Marvell Armada 395 GP Board";
-+	compatible = "marvell,a395-gp", "marvell,armada395",
-+		     "marvell,armada390";
++	model = "Marvell Armada 390 Development Board";
++	compatible = "marvell,a390-db", "marvell,armada390";
 +
 +	chosen {
 +		stdout-path = "serial0:115200n8";
@@ -87,7 +91,7 @@ index 0000000..eb53306
 +
 +	memory {
 +		device_type = "memory";
-+		reg = <0x00000000 0x40000000>; /* 1 GB */
++		reg = <0x00000000 0x80000000>; /* 2 GB */
 +	};
 +
 +	soc {
@@ -95,6 +99,36 @@ index 0000000..eb53306
 +			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
 +
 +		internal-regs {
++			spi@10680 {
++				status = "okay";
++				pinctrl-0 = <&spi1_pins>;
++				pinctrl-names = "default";
++
++				spi-flash@1 {
++					#address-cells = <1>;
++					#size-cells = <1>;
++					compatible = "n25q128a13",
++						     "jedec,spi-nor";
++					reg = <0>; /* Chip select 0 */
++					spi-max-frequency = <108000000>;
++
++					partitions {
++						compatible = "fixed-partitions";
++						#address-cells = <1>;
++						#size-cells = <1>;
++
++						partition@0 {
++							label = "U-Boot";
++							reg = <0 0x400000>;
++						};
++						partition@400000 {
++							label = "Filesystem";
++							reg = <0x400000 0xc00000>;
++						};
++					};
++				};
++			};
++
 +			i2c@11000 {
 +				status = "okay";
 +				clock-frequency = <100000>;
@@ -108,10 +142,6 @@ index 0000000..eb53306
 +				status = "okay";
 +			};
 +
-+			sata@a8000 {
-+				status = "okay";
-+			};
-+
 +			flash@d0000 {
 +				status = "okay";
 +				pinctrl-0 = <&nand_pins>;
@@ -120,7 +150,7 @@ index 0000000..eb53306
 +				marvell,nand-keep-config;
 +				marvell,nand-enable-arbiter;
 +				nand-on-flash-bbt;
-+				nand-ecc-strength = <4>;
++				nand-ecc-strength = <8>;
 +				nand-ecc-step-size = <512>;
 +
 +				partitions {
@@ -130,33 +160,20 @@ index 0000000..eb53306
 +
 +					partition@0 {
 +						label = "U-Boot";
-+						reg = <0x00000000 0x00600000>;
-+						read-only;
++						reg = <0 0x800000>;
 +					};
-+
 +					partition@800000 {
-+						label = "uImage";
-+						reg = <0x00600000 0x00400000>;
-+						read-only;
++						label = "Linux";
++						reg = <0x800000 0x800000>;
 +					};
-+
 +					partition@1000000 {
-+						label = "Root";
-+						reg = <0x00a00000 0x3f600000>;
++						label = "Filesystem";
++						reg = <0x1000000 0x3f000000>;
 +					};
 +				};
 +			};
 +
-+			sdhci@d8000 {
-+				clock-frequency = <200000000>;
-+				broken-cd;
-+				wp-inverted;
-+				bus-width = <8>;
-+				status = "okay";
-+				no-1-8-v;
-+			};
-+
-+			usb3@f0000 {
++			usb3@f8000 {
 +				status = "okay";
 +			};
 +		};
@@ -164,17 +181,15 @@ index 0000000..eb53306
 +		pcie-controller {
 +			status = "okay";
 +
-+			/*
-+			 * The two PCIe units are accessible through
-+			 * mini PCIe slot on the board.
-+			 */
-+			pcie@2,0 {
-+				/* Port 1, Lane 0 */
++			pcie@1,0 {
 +				status = "okay";
 +			};
 +
-+			pcie@4,0 {
-+				/* Port 3, Lane 0 */
++			pcie@2,0 {
++				status = "okay";
++			};
++
++			pcie@3,0 {
 +				status = "okay";
 +			};
 +		};
@@ -182,3 +197,8 @@ index 0000000..eb53306
 +};
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
