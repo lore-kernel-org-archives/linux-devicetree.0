@@ -1,116 +1,61 @@
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH 14/18] ARM: mvebu: add support for the Armada 395 SoC family
-Date: Thu, 21 Jul 2016 14:44:11 +0200
-Message-ID: <1469105055-25181-16-git-send-email-jaz@semihalf.com>
+From: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 12/18] ARM: mvebu: a39x: add missing nodes describing USB2.0 and USB3.0
+Date: Thu, 21 Jul 2016 14:44:09 +0200
+Message-ID: <1469105055-25181-14-git-send-email-jaz@semihalf.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469105055-25181-1-git-send-email-jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Beside interfaces described in the armada-39x.dtsi, the Armada 395 SoC
-family supports: 2 x SATA3 (2 ports in one unit) and the USB3.0
+The whole Armada 39x SoC family of processors has one USB2.0 and one
+USB3.0 which all can be supported with existing drivers.
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+Signed-off-by: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/arm/marvell/armada-39x.txt |  2 +-
- arch/arm/boot/dts/armada-395.dtsi                  | 76 ++++++++++++++++++++++
- 2 files changed, 77 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/armada-395.dtsi
+ arch/arm/boot/dts/armada-39x.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt b/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt
-index 53d4ff9..f066801 100644
---- a/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt
-@@ -17,4 +17,4 @@ compatible: must contain "marvell,armada398"
+diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
+index 0749878..1225cd8 100644
+--- a/arch/arm/boot/dts/armada-39x.dtsi
++++ b/arch/arm/boot/dts/armada-39x.dtsi
+@@ -381,6 +381,14 @@
+ 				reg = <0x22000 0x1000>;
+ 			};
  
- Example:
- 
--compatible = "marvell,a398-db", "marvell,armada398", "marvell,armada390";
-+compatible = "marvell,a398-db", "marvell,armada398", "marvell,armada395", "marvell,armada390";
-diff --git a/arch/arm/boot/dts/armada-395.dtsi b/arch/arm/boot/dts/armada-395.dtsi
-new file mode 100644
-index 0000000..ab5dc49
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-395.dtsi
-@@ -0,0 +1,76 @@
-+/*
-+ * Device Tree Include file for Marvell Armada 395 SoC.
-+ *
-+ * Copyright (C) 2016 Marvell
-+ *
-+ * Grzegorz Jaszczyk <jaz@semihalf.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "armada-39x.dtsi"
-+
-+/ {
-+	compatible = "marvell,armada395", "marvell,armada390";
-+
-+	soc {
-+		internal-regs {
-+			pinctrl@18000 {
-+				compatible = "marvell,mv88f6925-pinctrl";
-+				reg = <0x18000 0x20>;
-+			};
-+
-+			sata@a8000 {
-+				compatible = "marvell,armada-380-ahci";
-+				reg = <0xa8000 0x2000>;
-+				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 15>;
++			usb@58000 {
++				compatible = "marvell,orion-ehci";
++				reg = <0x58000 0x500>;
++				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 18>;
 +				status = "disabled";
 +			};
 +
-+			usb3@f0000 {
+ 			xor@60800 {
+ 				compatible = "marvell,armada-380-xor", "marvell,orion-xor";
+ 				reg = <0x60800 0x100
+@@ -457,6 +465,14 @@
+ 				reg = <0xe4078 0x4>, <0xe4074 0x4>;
+ 				status = "okay";
+ 			};
++
++			usb3@f8000 {
 +				compatible = "marvell,armada-380-xhci";
-+				reg = <0xf0000 0x4000>,<0xf4000 0x4000>;
-+				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 9>;
++				reg = <0xf8000 0x4000>,<0xfc000 0x4000>;
++				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 10>;
 +				status = "disabled";
 +			};
-+		};
-+	};
-+};
+ 		};
+ 
+ 		pcie-controller {
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
