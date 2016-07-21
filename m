@@ -1,82 +1,99 @@
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
-Date: Thu, 21 Jul 2016 11:45:26 -0500
-Message-ID: <1469119526.25630.42.camel@buserror.net>
-References: <1468723822-30457-1-git-send-email-oss@buserror.net>
-	 <1468723822-30457-5-git-send-email-oss@buserror.net>
-	 <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
-	 <146909676646.16700.8383344640490662952@concordia>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] arm64: renesas: h3ulcb: initial device tree
+Date: Thu, 21 Jul 2016 18:14:58 +0100
+Message-ID: <20160721171458.GH20559@leverpostej>
+References: <1469103962-20378-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1469104067-20451-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <146909676646.16700.8383344640490662952@concordia>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1469104067-20451-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-07-21 at 20:26 +1000, Michael Ellerman wrote:
-> Quoting Scott Wood (2016-07-21 04:31:48)
-> >=20
-> > On Wed, 2016-07-20 at 13:24 +0200, Arnd Bergmann wrote:
-> > >=20
-> > > On Saturday, July 16, 2016 9:50:21 PM CEST Scott Wood wrote:
-> > > >=20
-> > > >=20
-> > > > From: yangbo lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-> > > >=20
-> > > > Move mpc85xx.h to include/linux/fsl and rename it to svr.h as a=
- common
-> > > > header file.=C2=A0=C2=A0This SVR numberspace is used on some AR=
-M chips as well
-> > > > as
-> > > > PPC, and even to check for a PPC SVR multi-arch drivers would
-> > > > otherwise
-> > > > need to ifdef the header inclusion and all references to the SV=
-R
-> > > > symbols.
-> > > >=20
-> > > > Signed-off-by: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-> > > > Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-> > > > Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > > > Acked-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-> > > > [scottwood: update description]
-> > > > Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-> > > >=20
-> > > As discussed before, please don't introduce yet another vendor sp=
-ecific
-> > > way to match a SoC ID from a device driver.
-> > >=20
-> > > I've posted a patch for an extension to the soc_device infrastruc=
-ture
-> > > to allow comparing the running SoC to a table of devices, use tha=
-t
-> > > instead.
-> > As I asked before, in which relevant maintainership capacity are yo=
-u
-> > NACKing
-> > this?
-> I'll nack the powerpc part until you guys can agree.
+On Thu, Jul 21, 2016 at 03:27:47PM +0300, Vladimir Barinov wrote:
+> Add the initial device tree for the R8A7795 SoC based H3ULCB low cost
+> board.
+> 
+> This commit supports the following peripherals:
+> - SCIF (console), Ethernet, SD, USB Host, Audio, GPIO LEDs
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> ---
+>  arch/arm64/boot/dts/renesas/Makefile           |   2 +-
+>  arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts | 326 +++++++++++++++++++++++++
+>  2 files changed, 327 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+> index 17139f7..eb72830 100644
+> --- a/arch/arm64/boot/dts/renesas/Makefile
+> +++ b/arch/arm64/boot/dts/renesas/Makefile
+> @@ -1,4 +1,4 @@
+> -dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb
+> +dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
+>  dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb
+>  
+>  always		:= $(dtb-y)
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+> new file mode 100644
+> index 0000000..e4400fb
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+> @@ -0,0 +1,326 @@
+> +/*
+> + * Device Tree Source for the H3ULCB board
+> + *
+> + * Copyright (C) 2016 Renesas Electronics Corp.
+> + * Copyright (C) 2016 Cogent Embedded, Inc.
+> + *
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2.  This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
+> + */
+> +
+> +/*
+> + * SSI-AK4613
+> + *
+> + * This command is required when Playback/Capture
+> + *
+> + *	amixer set "DVC Out" 10%
+> + *	amixer set "DVC In" 10%
+> + */
 
-OK, I've pulled these patches out.
+I don't think this comment belongs here. It has nothing to do with the
+DT as such.
 
-=46or the MMC issue I suggest using ifdef CONFIG_PPC and mfspr(SPRN_SVR=
-) like
-the clock driver does[1] and we can revisit the issue if/when we need t=
-o do
-something similar on an ARM chip.
+Why is this necessary? Is this a bug?
 
--Scott
+> +
+> +/dts-v1/;
+> +#include "r8a7795.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model = "Renesas H3ULCB board based on r8a7795";
+> +	compatible = "renesas,h3ulcb", "renesas,r8a7795";
+> +
+> +	aliases {
+> +		serial0 = &scif2;
+> +		ethernet0 = &avb;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
 
-[1] One of the issues with Arnd's approach is that it wouldn't have wor=
-ked for
-early things like the clock driver, and he didn't seem to mind using if=
-def and
-mfspr() there.
+Please get rid of the bootargs property.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+While they may be useful for you specifically, they're usecase
+dependent, and you should have your bootloader fill these in instead.
+
+We shouldn't need to have any bootargs for thte in-kernel dts files.
+
+Otherwise this looks fine to me.
+
+Thanks,
+Mark.
