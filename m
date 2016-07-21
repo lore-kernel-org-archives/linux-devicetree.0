@@ -1,113 +1,127 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner sun8i-emac
-Date: Thu, 21 Jul 2016 09:55:19 +0200
-Message-ID: <20160721075519.GC5993@lukather>
-References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com>
- <1469001800-11615-4-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] usb: chipidea: imx: set over current polarity per
+ dts setting
+Date: Thu, 21 Jul 2016 16:16:14 +0800
+Message-ID: <20160721081614.GA32427@shlinux2>
+References: <1469001762-15015-1-git-send-email-jun.li@nxp.com>
+ <1469001762-15015-3-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4X7YG6AKGQEEWDSUHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1469001800-11615-4-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1469001762-15015-3-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+Cc: peter.chen-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---jy6Sn24JjFx/iggw
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi,
-
-On Wed, Jul 20, 2016 at 10:03:18AM +0200, LABBE Corentin wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> Allwinner sun8i-emac driver.
+On Wed, Jul 20, 2016 at 04:02:42PM +0800, Li Jun wrote:
+> imx usb over current polarity is low active by default, with
+> over-current-active-high property added, user can config it to be high
+> active. Meanwhile keep this setting unchanged for existing platforms
+> so new platform must set the right value for active low by its usbmisc
+> init function if over current is enabled.
 > 
-> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
 > ---
->  .../bindings/net/allwinner,sun8i-emac.txt          | 65 ++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+>  drivers/usb/chipidea/ci_hdrc_imx.c |  3 +++
+>  drivers/usb/chipidea/ci_hdrc_imx.h |  1 +
+>  drivers/usb/chipidea/usbmisc_imx.c | 22 +++++++++++++++++-----
+>  3 files changed, 21 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> new file mode 100644
-> index 0000000..4bf4e53
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> @@ -0,0 +1,65 @@
-> +* Allwinner sun8i EMAC ethernet controller
+> diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
+> index dedc33e..0991794 100644
+> --- a/drivers/usb/chipidea/ci_hdrc_imx.c
+> +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+> @@ -140,6 +140,9 @@ static struct imx_usbmisc_data *usbmisc_get_init_data(struct device *dev)
+>  	if (of_find_property(np, "disable-over-current", NULL))
+>  		data->disable_oc = 1;
+>  
+> +	if (of_find_property(np, "over-current-active-high", NULL))
+> +		data->oc_polarity = 1;
 > +
-> +Required properties:
-> +- compatible: "allwinner,sun8i-a83t-emac", "allwinner,sun8i-h3-emac",
-> +		or "allwinner,sun50i-a64-emac"
-> +- reg: address and length of the register sets for the device.
-> +- reg-names: should be "emac" and "syscon", matching the register sets
+>  	if (of_find_property(np, "external-vbus-divider", NULL))
+>  		data->evdo = 1;
+>  
+> diff --git a/drivers/usb/chipidea/ci_hdrc_imx.h b/drivers/usb/chipidea/ci_hdrc_imx.h
+> index 635717e..409aa5ca8 100644
+> --- a/drivers/usb/chipidea/ci_hdrc_imx.h
+> +++ b/drivers/usb/chipidea/ci_hdrc_imx.h
+> @@ -17,6 +17,7 @@ struct imx_usbmisc_data {
+>  	int index;
+>  
+>  	unsigned int disable_oc:1; /* over current detect disabled */
+> +	unsigned int oc_polarity:1; /* over current polarity if oc enabled */
+>  	unsigned int evdo:1; /* set external vbus divider option */
+>  };
+>  
+> diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+> index ab8b027..20d02a5 100644
+> --- a/drivers/usb/chipidea/usbmisc_imx.c
+> +++ b/drivers/usb/chipidea/usbmisc_imx.c
+> @@ -56,6 +56,7 @@
+>  
+>  #define MX6_BM_NON_BURST_SETTING	BIT(1)
+>  #define MX6_BM_OVER_CUR_DIS		BIT(7)
+> +#define MX6_BM_OVER_CUR_POLARITY	BIT(8)
+>  #define MX6_BM_WAKEUP_ENABLE		BIT(10)
+>  #define MX6_BM_ID_WAKEUP		BIT(16)
+>  #define MX6_BM_VBUS_WAKEUP		BIT(17)
+> @@ -266,11 +267,14 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data *data)
+>  
+>  	spin_lock_irqsave(&usbmisc->lock, flags);
+>  
+> +	reg = readl(usbmisc->base + data->index * 4);
+>  	if (data->disable_oc) {
+> -		reg = readl(usbmisc->base + data->index * 4);
+> -		writel(reg | MX6_BM_OVER_CUR_DIS,
+> -			usbmisc->base + data->index * 4);
+> +		reg |= MX6_BM_OVER_CUR_DIS;
+> +	} else if (data->oc_polarity == 1) {
+> +		/* High active */
+> +		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
+>  	}
+> +	writel(reg, usbmisc->base + data->index * 4);
+>  
+>  	/* SoC non-burst setting */
+>  	reg = readl(usbmisc->base + data->index * 4);
+> @@ -365,10 +369,14 @@ static int usbmisc_imx7d_init(struct imx_usbmisc_data *data)
+>  		return -EINVAL;
+>  
+>  	spin_lock_irqsave(&usbmisc->lock, flags);
+> +	reg = readl(usbmisc->base);
+>  	if (data->disable_oc) {
+> -		reg = readl(usbmisc->base);
+> -		writel(reg | MX6_BM_OVER_CUR_DIS, usbmisc->base);
+> +		reg |= MX6_BM_OVER_CUR_DIS;
+> +	} else if (data->oc_polarity == 1) {
+> +		/* High active */
+> +		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
+>  	}
+> +	writel(reg, usbmisc->base);
+>  
+>  	reg = readl(usbmisc->base + MX7D_USBNC_USB_CTRL2);
+>  	reg &= ~MX7D_USB_VBUS_WAKEUP_SOURCE_MASK;
+> @@ -492,6 +500,10 @@ static const struct of_device_id usbmisc_imx_dt_ids[] = {
+>  		.compatible = "fsl,imx6ul-usbmisc",
+>  		.data = &imx6sx_usbmisc_ops,
+>  	},
+> +	{
+> +		.compatible = "fsl,imx7d-usbmisc",
+> +		.data = &imx7d_usbmisc_ops,
+> +	},
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, usbmisc_imx_dt_ids);
+> -- 
 
-Blindly mapping a register of some other device on the SoC doesn't
-look very reasonable.
-
-> +- interrupts: interrupt for the device
-> +- clocks: A phandle to the reference clock for this device
-> +- clock-names: should be "ahb"
-> +- resets: A phandle to the reset control for this device
-> +- reset-names: should be "ahb"
-> +- phy-mode: See ethernet.txt
-> +- phy or phy-handle: See ethernet.txt
-> +- #address-cells: shall be 1
-> +- #size-cells: shall be 0
-> +
-> +"allwinner,sun8i-h3-emac" also requires:
-> +- clocks: an extra phandle to the reference clock for the EPHY
-> +- clock-names: an extra "ephy" entry matching the clocks property
-> +- resets: an extra phandle to the reset control for the EPHY
-> +- resets-names: an extra "ephy" entry matching the resets property
-
-Shouldn't that be attached to the phy itself?
-
-> +See ethernet.txt in the same directory for generic bindings for ethernet
-> +controllers.
-> +
-> +The device node referenced by "phy" or "phy-handle" should be a child node
-> +of this node. See phy.txt for the generic PHY bindings.
-> +
-> +Optional properties:
-> +- phy-supply: phandle to a regulator if the PHY needs one
-> +- phy-io-supply: phandle to a regulator if the PHY needs a another one for I/O.
-> +		 This is sometimes found with RGMII PHYs, which use a second
-> +		 regulator for the lower I/O voltage.
-> +- allwinner,tx-delay: The setting of the TX clock delay chain
-> +- allwinner,rx-delay: The setting of the RX clock delay chain
-
-In which unit? What is the default value?
-
-> +
-> +The TX/RX clock delay chain settings are board specific.
-> +
-> +Optional properties for "allwinner,sun8i-h3-emac":
-> +- allwinner,use-internal-phy: Use the H3 SoC's internal E(thernet) PHY
-
-Can't that be derived from the presence of the phy property?
-
-> +- allwinner,leds-active-low: EPHY LEDs are active low
-
-That also seems PHY related. Overall, I feel like we really need a phy
-node for the internal phy.
-
-Maxime
+This one is ok, I will queue it
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---jy6Sn24JjFx/iggw--
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
