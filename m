@@ -1,292 +1,212 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] libfdt: Add iterator over properties
-Date: Thu, 21 Jul 2016 12:01:25 +1000
-Message-ID: <20160721020125.GC31439@voom.fritz.box>
-References: <20160720142044.27527-1-maxime.ripard@free-electrons.com>
- <20160720142044.27527-3-maxime.ripard@free-electrons.com>
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v8 3/3] arm64: dts: rockchip: add usb2-phy support for
+ rk3399
+Date: Thu, 21 Jul 2016 10:49:53 +0800
+Message-ID: <d01e6b5c-8e7a-bcba-477b-cfe3a9088964@rock-chips.com>
+References: <1468913311-23977-1-git-send-email-frank.wang@rock-chips.com>
+ <CAD=FV=Wc0RdgpfzWhEVsrQhj5Pjf4RF3a81mZKaZfpZS41ce5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JgQwtEuHJzHdouWu"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160720142044.27527-3-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=Wc0RdgpfzWhEVsrQhj5Pjf4RF3a81mZKaZfpZS41ce5g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?5ZC06Imv5bOw?= <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Doug,
 
---JgQwtEuHJzHdouWu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2016/7/21 5:33, Doug Anderson wrote:
+> Hi,
+>
+> On Tue, Jul 19, 2016 at 12:28 AM, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>
+> You need a patch description here, even for simple patches.  All you
+> have now is a subject.
+>
 
-On Wed, Jul 20, 2016 at 04:20:40PM +0200, Maxime Ripard wrote:
-> Implement a macro based on fdt_first_property_offset and
-> fdt_next_property_offset that provides a convenience to iterate over all
-> the properties of a given node.
->=20
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  libfdt/libfdt.h            | 26 +++++++++++++
->  tests/.gitignore           |  1 +
->  tests/Makefile.tests       |  1 +
->  tests/property_iterate.c   | 97 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  tests/property_iterate.dts | 24 ++++++++++++
->  tests/run_tests.sh         |  3 ++
->  6 files changed, 152 insertions(+)
->  create mode 100644 tests/property_iterate.c
->  create mode 100644 tests/property_iterate.dts
->=20
-> diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-> index 70ec39c7104c..cb2f080c81d4 100644
-> --- a/libfdt/libfdt.h
-> +++ b/libfdt/libfdt.h
-> @@ -457,6 +457,32 @@ int fdt_first_property_offset(const void *fdt, int n=
-odeoffset);
->   */
->  int fdt_next_property_offset(const void *fdt, int offset);
-> =20
-> +/**
-> + * fdt_for_each_property - iterate over all properties of a node
+OK, I will describe it next version.
 
-Name here doesn't match the actual macro name.
+>> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/rk3399-evb.dts |   19 +++++++++++
+>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi    |   47 ++++++++++++++++++++++++++-
+> Personally I'd prefer to see EVB in a separate patch.
+>
 
-> + * @property_offset:	property offset (int)
+Yep, I would like to separate them :-) .
 
-Note (int, lvalue).
+>>   2 files changed, 65 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>> index 1a3eb14..31d4828 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>> @@ -69,6 +69,15 @@
+>>                  regulator-max-microvolt = <3300000>;
+>>          };
+>>
+>> +       vbus_host: vbus-host-regulator {
+>> +               compatible = "regulator-fixed";
+>> +               enable-active-high;
+>> +               gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&host_vbus_drv>;
+>> +               regulator-name = "vbus_host";
+>> +       };
+>> +
+> To match my schematics, this would probably be "vcc5v0_host".
+> Technically there are two regulators but since they are the same
+> voltage and enabled by the same GPIO it seems like modeling it as one
+> regulator is fine.
 
-> + * @fdt:		FDT blob (const void *)
-> + * @node:		node offset (int)
-> + *
-> + * This is actually a wrapper around a for loop and would be used like s=
-o:
-> + *
-> + *	fdt_for_each_property(property, fdt, node) {
-> + *		if ((property < 0) && (property !=3D -FDT_ERR_NOT_FOUND)) {
-> + *			Error handling
-> + *		}
+Yep, you are right, I will rename it.
 
-Error handling needs to go after the for block.
+> If you really wanted to model things you could also include the input
+> supply (VCC5V0_SYS).  Not sure how much you care to model in EVB.
+>
 
-> + *
-> + *		Use property
-> + *		...
-> + *	}
-> + *
-> + * Note that this is implemented as a macro and property is used as
-> + * iterator in the loop. The node variable can be constant or even a
-> + * literal.
-> + */
-> +#define fdt_for_each_property_offset(property, fdt, node)	\
-> +	for (property =3D fdt_first_property_offset(fdt, node);	\
-> +	     property >=3D 0;					\
-> +	     property =3D fdt_next_property_offset(fdt, property))
-> +
->  /**
->   * fdt_get_property_by_offset - retrieve the property at a given offset
->   * @fdt: pointer to the device tree blob
-> diff --git a/tests/.gitignore b/tests/.gitignore
-> index e4532da30bf5..fa4616ba28c2 100644
-> --- a/tests/.gitignore
-> +++ b/tests/.gitignore
-> @@ -40,6 +40,7 @@ tmp.*
->  /path_offset
->  /path_offset_aliases
->  /phandle_format
-> +/property_iterate
->  /propname_escapes
->  /references
->  /root_node
-> diff --git a/tests/Makefile.tests b/tests/Makefile.tests
-> index f7c3a4b00ead..196518c83eda 100644
-> --- a/tests/Makefile.tests
-> +++ b/tests/Makefile.tests
-> @@ -23,6 +23,7 @@ LIB_TESTS_L =3D get_mem_rsv \
->  	add_subnode_with_nops path_offset_aliases \
->  	utilfdt_test \
->  	integer-expressions \
-> +	property_iterate \
->  	subnode_iterate
->  LIB_TESTS =3D $(LIB_TESTS_L:%=3D$(TESTS_PREFIX)%)
-> =20
-> diff --git a/tests/property_iterate.c b/tests/property_iterate.c
-> new file mode 100644
-> index 000000000000..0f3959cb8c22
-> --- /dev/null
-> +++ b/tests/property_iterate.c
-> @@ -0,0 +1,97 @@
-> +/*
-> + * libfdt - Flat Device Tree manipulation
-> + *	Tests that fdt_next_subnode() works as expected
-> + *
-> + * Copyright (C) 2013 Google, Inc
-> + *
-> + * Copyright (C) 2007 David Gibson, IBM Corporation.
-> + *
-> + * This library is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU Lesser General Public License
-> + * as published by the Free Software Foundation; either version 2.1 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This library is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + * Lesser General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU Lesser General Public
-> + * License along with this library; if not, write to the Free Software
-> + * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 =
-USA
-> + */
-> +
-> +#include <stdlib.h>
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <stdint.h>
-> +
-> +#include <libfdt.h>
-> +
-> +#include "tests.h"
-> +#include "testdata.h"
-> +
-> +static void test_node(void *fdt, int parent_offset)
-> +{
-> +	fdt32_t properties;
-> +	const fdt32_t *prop;
-> +	int offset, property;
-> +	int count;
-> +	int len;
-> +
-> +	/*
-> +	 * This property indicates the number of properties in our
-> +	 * test node to expect
-> +	 */
-> +	prop =3D fdt_getprop(fdt, parent_offset, "test-properties", &len);
-> +	if (!prop || len !=3D sizeof(fdt32_t)) {
-> +		FAIL("Missing/invalid test-properties property at '%s'",
-> +		     fdt_get_name(fdt, parent_offset, NULL));
-> +	}
-> +	properties =3D cpu_to_fdt32(*prop);
-> +
-> +	count =3D 0;
-> +	offset =3D fdt_first_subnode(fdt, parent_offset);
-> +	if (offset < 0)
-> +		FAIL("Missing test node\n");
-> +
-> +	fdt_for_each_property_offset(property, fdt, offset)
-> +		count++;
-> +
-> +	if (count !=3D properties) {
-> +		FAIL("Node '%s': Expected %d properties, got %d\n",
-> +		     fdt_get_name(fdt, parent_offset, NULL), properties,
-> +		     count);
-> +	}
-> +}
-> +
-> +static void check_fdt_next_subnode(void *fdt)
-> +{
-> +	int offset;
-> +	int count =3D 0;
-> +
-> +	fdt_for_each_subnode(offset, fdt, 0) {
-> +		test_node(fdt, offset);
-> +		count++;
-> +	}
-> +
-> +	if (count !=3D 2)
-> +		FAIL("Expected %d tests, got %d\n", 2, count);
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	void *fdt;
-> +
-> +	test_init(argc, argv);
-> +	if (argc !=3D 2)
-> +		CONFIG("Usage: %s <dtb file>", argv[0]);
-> +
-> +	fdt =3D load_blob(argv[1]);
-> +	if (!fdt)
-> +		FAIL("No device tree available");
-> +
-> +	check_fdt_next_subnode(fdt);
-> +
-> +	PASS();
-> +}
-> diff --git a/tests/property_iterate.dts b/tests/property_iterate.dts
-> new file mode 100644
-> index 000000000000..2ed677e7e6ea
-> --- /dev/null
-> +++ b/tests/property_iterate.dts
-> @@ -0,0 +1,24 @@
-> +/dts-v1/;
-> +
-> +/ {
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +
-> +	test1 {
-> +		test-properties =3D <3>;
-> +
-> +		test {
-> +			linux,phandle =3D <0x1>;
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +		};
-> +	};
-> +
-> +	test2 {
-> +		test-properties =3D <0>;
-> +
-> +		test {
-> +		};
-> +	};
-> +};
-> +
-> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-> index 7eb9b3d33108..6a2662b2abaf 100755
-> --- a/tests/run_tests.sh
-> +++ b/tests/run_tests.sh
-> @@ -269,6 +269,9 @@ libfdt_tests () {
->      run_dtc_test -I dts -O dtb -o subnode_iterate.dtb subnode_iterate.dts
->      run_test subnode_iterate subnode_iterate.dtb
-> =20
-> +    run_dtc_test -I dts -O dtb -o property_iterate.dtb property_iterate.=
-dts
-> +    run_test property_iterate property_iterate.dtb
-> +
->      # Tests for behaviour on various sorts of corrupted trees
->      run_test truncated_property
-> =20
+Actually, from 
+"Documentation/devicetree/bindings/regulator/fixed-regulator.txt" show, 
+input supply name is just optional property, and it seems that only do 
+assign "vin" value for input_supply (the second member of struct 
+fixed_voltage_config) if "vin-supply" is specified.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+So is input supply name  (VCC5V0_SYS) required here? Would you like to 
+give more comments please?
 
---JgQwtEuHJzHdouWu
-Content-Type: application/pgp-signature; name="signature.asc"
+>>          vcc_phy: vcc-phy-regulator {
+>>                  compatible = "regulator-fixed";
+>>                  regulator-name = "vcc_phy";
+>> @@ -93,6 +102,16 @@
+>>          status = "okay";
+>>   };
+>>
+>> +&u2phy0_host {
+>> +       phy-supply = <&vbus_host>;
+>> +       status = "okay";
+>> +};
+>> +
+>> +&u2phy1_host {
+>> +       phy-supply = <&vbus_host>;
+>> +       status = "okay";
+>> +};
+>> +
+> Technically "u2" sorts alphabetically before "uart".
+>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Well, It will be sorted next version.
 
-iQIcBAEBAgAGBQJXkCz1AAoJEGw4ysog2bOSV1gQAL+1r92MBYb0OZK05JTSElgt
-UG1QFFQLICY/jyC02F6IBPftfkoOiCpvlpunoX33WdkhhBF7tARpgDux8nkAGYcM
-vWcCZz9U4sUhnv/EXsMGvl5o0sA8TLfNU2f0/aNd4lVIrwtKEwXCtRn29yCJDWW0
-udyVy5FFyajsHXkqOlvlnlDiIP2ioBptd0jaqnHfW9n23rxtN4cHV+/V9dafvfyo
-IwdThb7HfOJtymF8fx3euLDc5vJ41U0fe9943D+Yo3NFLXzyLqdEJKsGDD1JZQK4
-bsf9xERtE404xjHOIkRyqgcEO32rHPW92nb1rp1cwG0H4wjz1q/JE+hiUa34gzWb
-5OiTKLfh+adt2wm400r9msvJn/aYwLiJTGNgG/yFYizL9E45EHQ8mgP6rsuURV9C
-83cQFEGcDugpFWjd63T7vqnWQ2tmztsCe6oCfQyJChqWqImrVHYxSyceebCvI6xw
-4cOO+A6mSh9MIFVuSg7U7FlMRgYsATvM+yhskeIyifUXY7qdthMoq3YG6fx9doIw
-eXoQI7AjhWH9Kj6hrqqQRcRFhXAndiNrb/Rb8dBu90XZUE1Q0zDFrwmtz6tRz6BI
-9k/HzfFTCLcOXqpv88cjbaVtn9RH9J6v236f6b4To9rAOA2b3B1SOtn0WKN0AxtC
-Q0EuLY4Pk/Qx1DlVcuV/
-=3MOq
------END PGP SIGNATURE-----
+>>   &usb_host0_ehci {
+>>          status = "okay";
+>>   };
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> index d7f8e06..0383785 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> @@ -221,6 +221,8 @@
+>>                  interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+>>                  clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>;
+>>                  clock-names = "hclk_host0", "hclk_host0_arb";
+>> +               phys = <&u2phy0_host>;
+>> +               phy-names = "u2phy0";
+> This is wrong.  From
+> "Documentation/devicetree/bindings/usb/usb-ehci.txt" phy-names should
+> be "usb".
 
---JgQwtEuHJzHdouWu--
+done.
+
+>>                  status = "disabled";
+>>          };
+>>
+>> @@ -239,6 +241,8 @@
+>>                  interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+>>                  clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>;
+>>                  clock-names = "hclk_host1", "hclk_host1_arb";
+>> +               phys = <&u2phy1_host>;
+>> +               phy-names = "u2phy1";
+> This is wrong.  From
+> "Documentation/devicetree/bindings/usb/usb-ehci.txt" phy-names should
+> be "usb".
+
+done
+
+>>                  status = "disabled";
+>>          };
+>>
+>> @@ -481,8 +485,42 @@
+>>          };
+>>
+>>          grf: syscon@ff770000 {
+>> -               compatible = "rockchip,rk3399-grf", "syscon";
+>> +               compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+>>                  reg = <0x0 0xff770000 0x0 0x10000>;
+>> +               #address-cells = <1>;
+>> +               #size-cells = <1>;
+>> +
+>> +               u2phy0: usb2-phy@e450 {
+>> +                       compatible = "rockchip,rk3399-usb2phy";
+>> +                       reg = <0xe450 0x10>;
+>> +                       clocks = <&cru SCLK_USB2PHY0_REF>;
+>> +                       clock-names = "phyclk";
+>> +                       #clock-cells = <0>;
+>> +                       clock-output-names = "clk_usbphy0_480m";
+> Any reason why there isn't a 'status = "disabled";' here?
+>
+
+Refer to some explains from Heiko in another mail which sent at 6:07 AM 
+on 21th July,  anyway, I will add ' status = "disabled" ' property next 
+version.
+
+>> +                       u2phy0_host: host-port {
+>> +                               #phy-cells = <0>;
+>> +                               interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+>> +                               interrupt-names = "linestate";
+>> +                               status = "disabled";
+>> +                       };
+>> +               };
+>> +
+>> +               u2phy1: usb2-phy@e460 {
+>> +                       compatible = "rockchip,rk3399-usb2phy";
+>> +                       reg = <0xe460 0x10>;
+>> +                       clocks = <&cru SCLK_USB2PHY1_REF>;
+>> +                       clock-names = "phyclk";
+>> +                       #clock-cells = <0>;
+>> +                       clock-output-names = "clk_usbphy1_480m";
+>> +
+>> +                       u2phy1_host: host-port {
+>> +                               #phy-cells = <0>;
+>> +                               interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+>> +                               interrupt-names = "linestate";
+>> +                               status = "disabled";
+>> +                       };
+>> +               };
+>>          };
+>>
+>>          watchdog@ff840000 {
+>> @@ -1009,5 +1047,12 @@
+>>                                          <1 14 RK_FUNC_1 &pcfg_pull_none>;
+>>                          };
+>>                  };
+>> +
+>> +               usb2 {
+>> +                       host_vbus_drv: host-vbus-drv {
+>> +                               rockchip,pins =
+>> +                                       <4 25 RK_FUNC_GPIO &pcfg_pull_none>;
+>> +                       };
+>> +               };
+> Are you certain this belongs in rk3399.dtsi?  It seems like it should
+> be in the EVB file.
+>
+
+All right, It will be moved to EVB file next version.
+
+BR.
+Frank
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
