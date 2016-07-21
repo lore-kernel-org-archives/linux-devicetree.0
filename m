@@ -1,33 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] ARM: DRA7: select PCI_DOMAINS config
-Date: Thu, 21 Jul 2016 14:04:33 +0200
-Message-ID: <8047226.VhgpLo8JQu@wuerfel>
-References: <1469102276-14777-1-git-send-email-kishon@ti.com> <1469102276-14777-3-git-send-email-kishon@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/4] mfd: Add Samsung Exynos Low Power Audio Subsystem
+ driver
+Date: Thu, 21 Jul 2016 13:11:27 +0100
+Message-ID: <20160721121127.GD14925@dell>
+References: <1467738804-31460-1-git-send-email-s.nawrocki@samsung.com>
+ <578F9495.9090502@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469102276-14777-3-git-send-email-kishon@ti.com>
+Content-Disposition: inline
+In-Reply-To: <578F9495.9090502@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: broonie@kernel.org, robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, ideal.song@samsung.com, inki.dae@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Beomho Seo <beomho.seo@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 21, 2016 5:27:56 PM CEST Kishon Vijay Abraham I wrote:
-> diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-> index 1a648e9..8e6e2c0 100644
-> --- a/arch/arm/mach-omap2/Kconfig
-> +++ b/arch/arm/mach-omap2/Kconfig
-> @@ -86,6 +86,7 @@ config SOC_DRA7XX
->         select OMAP_INTERCONNECT_BARRIER
->         select PM_OPP if PM
->         select ZONE_DMA if ARM_LPAE
-> +       select PCI_DOMAINS if PCI
->  
->  config ARCH_OMAP2PLUS
->         bool
-> 
+On Wed, 20 Jul 2016, Sylwester Nawrocki wrote:
 
-Should we just set this unconditionally for ARCH_MULTIPLATFORM maybe?
+> On 07/05/2016 07:13 PM, Sylwester Nawrocki wrote:
+> > This patch adds common driver for the Top block of the Samsung Exyn=
+os
+> > SoC Low Power Audio Subsystem. This is a minimal driver which prepa=
+res
+> > resources for IP blocks like I2S, audio DMA and UART and exposes a =
+regmap
+> > for the Top block registers. Also system power ops are added to ens=
+ure
+> > the Audio Subsystem is operational after system suspend/resume cycl=
+e.
+> >=20
+> > Signed-off-by: Inha Song <ideal.song@samsung.com>
+> > Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > ---
+>=20
+> Lee, is this patch good enough for your tree? Are you going to have
+> any review comments ?
 
-	Arnd
+Please don't sent contentless pings.  If you think the patch has been
+dropped (it hasn't) then just send a [RESEND] patch.
+
+The merge window is about to open.  I will not be taking any patches
+for the next couple of weeks.  Your patch is marked as to-review in my
+Inbox, so please bear with me and I'll get around to it.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
