@@ -1,67 +1,113 @@
-From: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 1/3] dt-bindings: auxadc: Add binding document for Mediatek auxadc.
-Date: Thu, 21 Jul 2016 15:17:27 +0800
-Message-ID: <1469085449-22679-2-git-send-email-zhiyong.tao@mediatek.com>
-References: <1469085449-22679-1-git-send-email-zhiyong.tao@mediatek.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] ARM: sun8i: dt: Add DT bindings
+ documentation for Allwinner sun8i-emac
+Date: Thu, 21 Jul 2016 09:55:19 +0200
+Message-ID: <20160721075519.GC5993@lukather>
+References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1469001800-11615-4-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469085449-22679-1-git-send-email-zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4X7YG6AKGQEEWDSUHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1469001800-11615-4-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The commit adds the device tree binding documentation for the mediatek
-auxadc found on Mediatek MT2701.
-Thermal gets auxadc sample data by iio device.
-So the commit changes auxadc device tree binding documentation from
-/soc/mediatek/auxadc.txt to /iio/adc/mt6577_auxadc.txt.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- .../auxadc.txt => iio/adc/mt6577_auxadc.txt}       |   18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
- rename Documentation/devicetree/bindings/{soc/mediatek/auxadc.txt => iio/adc/mt6577_auxadc.txt} (46%)
+--jy6Sn24JjFx/iggw
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-similarity index 46%
-rename from Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
-rename to Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-index bdb7829..68c45cb 100644
---- a/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-@@ -1,4 +1,4 @@
--MediaTek AUXADC
-+* Mediatek AUXADC - Analog to Digital Converter on Mediatek mobile soc (mt65xx/mt81xx/mt27xx)
- ===============
- 
- The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
-@@ -10,12 +10,20 @@ Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
- for the Thermal Controller which holds a phandle to the AUXADC.
- 
- Required properties:
--- compatible: Must be "mediatek,mt8173-auxadc"
--- reg: Address range of the AUXADC unit
-+  - compatible: Should be one of:
-+    - "mediatek,mt2701-auxadc": For MT2701 family of SoCs
-+    - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
-+  - reg: Address range of the AUXADC unit.
-+  - clocks: Should contain a clock specifier for each entry in clock-names
-+  - clock-names: Should contain "main".
-+  - #io-channel-cells: Should be 1, see ../iio-bindings.txt
- 
- Example:
- 
--auxadc: auxadc@11001000 {
--	compatible = "mediatek,mt8173-auxadc";
-+auxadc: adc@11001000 {
-+	compatible = "mediatek,mt2701-auxadc";
- 	reg = <0 0x11001000 0 0x1000>;
-+	clocks = <&pericfg CLK_PERI_AUXADC>;
-+	clock-names = "main";
-+	#io-channel-cells = <1>;
- };
+Hi,
+
+On Wed, Jul 20, 2016 at 10:03:18AM +0200, LABBE Corentin wrote:
+> This patch adds documentation for Device-Tree bindings for the
+> Allwinner sun8i-emac driver.
+> 
+> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../bindings/net/allwinner,sun8i-emac.txt          | 65 ++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+> new file mode 100644
+> index 0000000..4bf4e53
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+> @@ -0,0 +1,65 @@
+> +* Allwinner sun8i EMAC ethernet controller
+> +
+> +Required properties:
+> +- compatible: "allwinner,sun8i-a83t-emac", "allwinner,sun8i-h3-emac",
+> +		or "allwinner,sun50i-a64-emac"
+> +- reg: address and length of the register sets for the device.
+> +- reg-names: should be "emac" and "syscon", matching the register sets
+
+Blindly mapping a register of some other device on the SoC doesn't
+look very reasonable.
+
+> +- interrupts: interrupt for the device
+> +- clocks: A phandle to the reference clock for this device
+> +- clock-names: should be "ahb"
+> +- resets: A phandle to the reset control for this device
+> +- reset-names: should be "ahb"
+> +- phy-mode: See ethernet.txt
+> +- phy or phy-handle: See ethernet.txt
+> +- #address-cells: shall be 1
+> +- #size-cells: shall be 0
+> +
+> +"allwinner,sun8i-h3-emac" also requires:
+> +- clocks: an extra phandle to the reference clock for the EPHY
+> +- clock-names: an extra "ephy" entry matching the clocks property
+> +- resets: an extra phandle to the reset control for the EPHY
+> +- resets-names: an extra "ephy" entry matching the resets property
+
+Shouldn't that be attached to the phy itself?
+
+> +See ethernet.txt in the same directory for generic bindings for ethernet
+> +controllers.
+> +
+> +The device node referenced by "phy" or "phy-handle" should be a child node
+> +of this node. See phy.txt for the generic PHY bindings.
+> +
+> +Optional properties:
+> +- phy-supply: phandle to a regulator if the PHY needs one
+> +- phy-io-supply: phandle to a regulator if the PHY needs a another one for I/O.
+> +		 This is sometimes found with RGMII PHYs, which use a second
+> +		 regulator for the lower I/O voltage.
+> +- allwinner,tx-delay: The setting of the TX clock delay chain
+> +- allwinner,rx-delay: The setting of the RX clock delay chain
+
+In which unit? What is the default value?
+
+> +
+> +The TX/RX clock delay chain settings are board specific.
+> +
+> +Optional properties for "allwinner,sun8i-h3-emac":
+> +- allwinner,use-internal-phy: Use the H3 SoC's internal E(thernet) PHY
+
+Can't that be derived from the presence of the phy property?
+
+> +- allwinner,leds-active-low: EPHY LEDs are active low
+
+That also seems PHY related. Overall, I feel like we really need a phy
+node for the internal phy.
+
+Maxime
+
 -- 
-1.7.9.5
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--jy6Sn24JjFx/iggw--
