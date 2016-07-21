@@ -1,252 +1,224 @@
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>
-Subject: Re: [PATCH v2 06/14] ARM: sun8i: clk: Add clk-factor rate application
- method
-Date: Thu, 21 Jul 2016 11:52:15 +0200
-Message-ID: <c46d1af5-9410-402a-7144-48b396ef6da7@megous.com>
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-7-megous@megous.com> <20160630204001.GC5485@lukather>
- <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
- <20160715085356.GR4761@lukather>
- <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
- <20160721094852.GI5993@lukather>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 4/7] drm/bridge: Add RGB to VGA bridge support
+Date: Thu, 21 Jul 2016 15:23:18 +0530
+Message-ID: <57909B8E.7030105@codeaurora.org>
+References: <20160720095857.12297-1-maxime.ripard@free-electrons.com>
+ <20160720095857.12297-5-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="XeDsBnWmvvKSRXMo8Ha5KRR6BRHhkeU0r"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160721094852.GI5993@lukather>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: dev@linux-sunxi.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160720095857.12297-5-maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---XeDsBnWmvvKSRXMo8Ha5KRR6BRHhkeU0r
-Content-Type: multipart/mixed; boundary="wvbBQToQOt3eA67n26UaGSJJwX34bv2Si"
-From: =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: dev@linux-sunxi.org, linux-arm-kernel@lists.infradead.org,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>,
- =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>,
- "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Message-ID: <c46d1af5-9410-402a-7144-48b396ef6da7@megous.com>
-Subject: Re: [PATCH v2 06/14] ARM: sun8i: clk: Add clk-factor rate application
- method
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-7-megous@megous.com> <20160630204001.GC5485@lukather>
- <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
- <20160715085356.GR4761@lukather>
- <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
- <20160721094852.GI5993@lukather>
-In-Reply-To: <20160721094852.GI5993@lukather>
-
---wvbBQToQOt3eA67n26UaGSJJwX34bv2Si
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-
-
-On 21.7.2016 11:48, Maxime Ripard wrote:
-> On Fri, Jul 15, 2016 at 12:38:54PM +0200, Ond=C5=99ej Jirman wrote:
->> On 15.7.2016 10:53, Maxime Ripard wrote:
->>> On Fri, Jul 01, 2016 at 02:50:57AM +0200, Ond=C5=99ej Jirman wrote:
->>>>>>  /**
->>>>>> + * sun8i_h3_apply_pll1_factors() - applies n, k, m, p factors to =
-the
->>>>>> + * register using an algorithm that tries to reserve the PLL lock=
-
->>>>>> + */
->>>>>> +
->>>>>> +static void sun8i_h3_apply_pll1_factors(struct clk_factors *facto=
-rs, struct factors_request *req)
->>>>>> +{
->>>>>> +	const struct clk_factors_config *config =3D factors->config;
->>>>>> +	u32 reg;
->>>>>> +
->>>>>> +	/* Fetch the register value */
->>>>>> +	reg =3D readl(factors->reg);
->>>>>> +
->>>>>> +	if (FACTOR_GET(config->pshift, config->pwidth, reg) < req->p) {
->>>>>> +		reg =3D FACTOR_SET(config->pshift, config->pwidth, reg, req->p)=
-;
->>>>>> +
->>>>>> +		writel(reg, factors->reg);
->>>>>> +		__delay(2000);
->>>>>> +	}
->>>>>
->>>>> So there was some doubts about the fact that P was being used, or a=
-t
->>>>> least that it was useful.
->>>>
->>>> p is necessary to reduce frequencies below 288 MHz according to the
->>>> datasheet.
->>>
->>> Yes, but you could reach those frequencies without P, too, and it's
->>> not part of any OPP provided by Allwinner.
->>
->> The arisc firmware for H3 contains table of factors for frequences fro=
-m
->> 0 to 2GHz and, P is used below 240MHz. M is never used, BTW. (other
->> datasheets specify M as for testing use only, whatever that means - no=
-t
->> H3, but it seems it's the same PLL block)
->=20
-> Interesting. Which SoCs in particular?
->=20
->>>>>> +	if (FACTOR_GET(config->mshift, config->mwidth, reg) < req->m) {
->>>>>> +		reg =3D FACTOR_SET(config->mshift, config->mwidth, reg, req->m)=
-;
->>>>>> +
->>>>>> +		writel(reg, factors->reg);
->>>>>> +		__delay(2000);
->>>>>> +	}
->>>>>> +
->>>>>> +	reg =3D FACTOR_SET(config->nshift, config->nwidth, reg, req->n);=
-
->>>>>> +	reg =3D FACTOR_SET(config->kshift, config->kwidth, reg, req->k);=
-
->>>>>> +
->>>>>> +	writel(reg, factors->reg);
->>>>>> +	__delay(20);
->>>>>> +
->>>>>> +	while (!(readl(factors->reg) & (1 << config->lock)));
->>>>>
->>>>> So, they are applying the dividers first, and then applying the
->>>>> multipliers, and then wait for the PLL to stabilize.
->>>>
->>>> Not exactly, first we are increasing dividers if the new dividers ar=
-e
->>>> higher that that what's already set. This ensures that because
->>>> application of dividers is immediate by the design of the PLL, the
->>>> application of multipliers isn't. So the VCO would still run at the =
-same
->>>> frequency for a while gradually rising to a new value for example,
->>>> while the dividers would be reduced immediately. Leading to crash.
->>>>
->>>> PLL
->>>> --------------------------
->>>> PRE DIV(f0) -> VCO(f1) -> POST DIV(f2)
->>>>    P             K,N           M
->>>>
->>>> Example: (we set all factors at once, reducing dividers and multipli=
-ers
->>>> at the same time at 0ms - this should lead to no change in the outpu=
-t
->>>> frequency, but...)
->>>>
->>>> -1ms: f0 =3D 24MHz, f1 =3D 2GHz,   f2 =3D 1GHz
->>>>  0ms: f0 =3D 24MHz, f1 =3D 2GHz,   f2 =3D 2GHz       - boom
->>>>  1ms: f0 =3D 24MHz, f1 =3D 1.5GHz, f2 =3D 1.5GHz
->>>>  2ms: f0 =3D 24MHz, f1 =3D 1GHz,   f2 =3D 1GHz
->>>>
->>>> The current code crashes exactly at boom, you don't get any more
->>>> instructions to execute.
->>>>
->>>> See.
->>>>
->>>> So this patch first increases dividers (only if necessary), changes
->>>> multipliers and waits for change to happen (takes around 2000 cycles=
-),
->>>> and then decreases dividers (only if necessary).
->>>>
->>>> So we get:
->>>>
->>>> -1ms: f0 =3D 24MHz, f1 =3D 2GHz,   f2 =3D 1GHz
->>>>  0ms: f0 =3D 24MHz, f1 =3D 2GHz,   f2 =3D 1GHz   - no boom, multipli=
-er
->>>>                                              reduced
->>>>  1ms: f0 =3D 24MHz, f1 =3D 1.5GHz, f2 =3D 0.75GHz
->>>> 1.9ms: f0 =3D 24MHz, f1 =3D 1GHz,   f2 =3D 0.5GHz - we got PLL sync
->>>>  2ms: f0 =3D 24MHz, f1 =3D 1GHz,   f2 =3D 1GHz   - and here we reduc=
-e divider
->>>> at last
->>>
->>> Awesome explanation, thanks!
->>>
->>> So I guess it really all boils down to the fact that the CPU is
->>> clocked way outside of it's operating frequency while the PLL
->>> stabilizes, right?
->>
->> It may be, depending on the factors before and after change. I haven't=
-
->> tested what factors the mainline kernel calculates for each frequency.=
-
->> The arisc never uses M, and only uses P at frequencies that would not
->> allow for this behavior.
->>
->> I created a test program for arisc that runs a loop on the main CPU
->> using msgbox to send pings to the arisc CPU, and the vary the PLL1
->> randomly from the arisc, and haven't been able to lockup the main CPU
->> yet with either method.
->>
->> There's also AXI clock, that depends on PLL1. Arisc firmware uses the
->> same method to change it while changing CPUX clock. If the clock would=
-
->> rise above certain frequency, AXI divider is increased before the PLL1=
-
->> change. If it would fall below certain frequency it is decreased after=
-
->> the PLL1 change.
->=20
-> If we ever need to change that, we can always rely on a clock notifier
-> to adjust the divider before the change happen (and support all the
-> scenarios, like the clock change has been aborted).
->=20
->>> If so, then yes, trying to switch to the 24MHz oscillator before
->>> applying the factors, and then switching back when the PLL is stable
->>> would be a nice solution.
->>>
->>> I just checked, and all the SoCs we've had so far have that
->>> possibility, so if it works, for now, I'd like to stick to that.
->>
->> It would need to be tested. U-boot does the change only once, while th=
-e
->> kernel would be doing it all the time and between various frequencies
->> and PLL settings. So the issues may show up with this solution too.
->=20
-> That would have the benefit of being quite easy to document, not be a
-> huge amount of code and it would work on all the CPUs PLLs we have so
-> far, so still, a pretty big win. If it doesn't, of course, we don't
-> really have the choice.
-
-It's probably more code though. It has to access different register from
-the one that is already defined in dts, which would add a lot of code
-and require dts changes. The original patch I sent is simpler than that.
-
-regards,
-  Ondrej
-
-> Maxime
->=20
-
-
---wvbBQToQOt3eA67n26UaGSJJwX34bv2Si--
-
---XeDsBnWmvvKSRXMo8Ha5KRR6BRHhkeU0r
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXkJtPAAoJEG5kJsZ3z+/xHgIP/Ak1CYPAXrFGYqQEXqigHCox
-hZ5cKRwDlE3pG8eVnwIh6CY/AB/2AMweoXk3WYunVtCcSjkTLDBndDjUyj9J1rMP
-e2m8ulPnPMdivX+6iPGY9Fo5mDuPsS63U+A6sAH5gen0RX7YGG/Oh9SSWvrXF4j1
-fKX+HzUWEaCMdlux3PsZ1hgvdubfp2rYurr7iCbbn+1dGHlrUgMfj1qYkNExhmRz
-nP3YGyMqrCWc0YYXeeXVLytG4uo5F7Y1RrH+3Dz3jz9gB8YmkhDxF7y7CJSzeTRL
-xJhT/v3WAWdDABg/bHF/wo40VlRyowT2VlpjqhzQ4LEuEtSe7otKF2+df3eY3isg
-L9VE+jBoJEcnwlAfpNkTFDFN+5B7oqD5u845CLy0a7ffVDVzad6wcF0eTvtW2+tB
-L7rrIVapYl4iYeTA8/XWfGIM8I+XbPFcDS45nLWZ1mi6LfTkGYuq9DUaOWtlXvFU
-c5nXjksqhscAKLOfT1cchZmDCpuByBW8y5PqBbBBc8rivZabu0Bky8zow0OSgKAo
-xWhN0v7vRiFLf08fpgDuoiot2R1sk8GAjhyhnkIZK16sP3FgNgTnfh2ZrseyQJg1
-4e3gw10jCFMDdpoJTMDOK3LW7VV8mmixRA8STjVbvzQ8A8kkYahv7Pok11QZsrxH
-JYuRbZwRcgHeglHgY8wY
-=/gti
------END PGP SIGNATURE-----
-
---XeDsBnWmvvKSRXMo8Ha5KRR6BRHhkeU0r--
+SGksCgpPbiAwNy8yMC8yMDE2IDAzOjI4IFBNLCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+IFNvbWUg
+Ym9hcmRzIGhhdmUgYW4gZW50aXJlbHkgcGFzc2l2ZSBSR0IgdG8gVkdBIGJyaWRnZSwgYmFzZWQg
+b24gZWl0aGVyCj4gREFDcyBvciByZXNpc3RvciBsYWRkZXJzLgo+Cj4gVGhvc2UgbWlnaHQgb3Ig
+bWlnaHQgbm90IGhhdmUgYW4gaTJjIGJ1cyByb3V0ZWQgdG8gdGhlIFZHQSBjb25uZWN0b3IgaW4K
+PiBvcmRlciB0byBhY2Nlc3MgdGhlIHNjcmVlbiBFRElEcy4KPgo+IEFkZCBhIGJyaWRnZSB0aGF0
+IGRvZXNuJ3QgZG8gYW55dGhpbmcgYnV0IGV4cG9zZSB0aGUgbW9kZXMgYXZhaWxhYmxlIG9uIHRo
+ZQo+IHNjcmVlbiwgZWl0aGVyIGJhc2VkIG9uIHRoZSBFRElEcyBpZiBhdmFpbGFibGUsIG9yIGJh
+c2VkIG9uIHRoZSBYR0EKPiBzdGFuZGFyZHMuCgpPdXIgZXZlbnR1YWwgYWltIGlzIHRvIHNlcGFy
+YXRlIG91dCB0aGUgY29ubmVjdG9ycyBmcm9tIHRoZSBicmlkZ2UKZHJpdmVycyB3aGVyZXZlciBw
+b3NzaWJsZS4gSW4gdGhlIGZ1dHVyZSwgYSBLTVMgZHJpdmVyIHVzaW5nIHRoZQpicmlkZ2Ugd291
+bGQgYmUgcmVzcG9uc2libGUgZm9yIGVzdGFibGlzaGluZyB0aGUgbGlua3MgYmV0d2Vlbgp0aGUg
+YnJpZGdlIGFuZCBlbmNvZGVyLCBhbmQgdGhlIGVuY29kZXIgYW5kIGNvbm5lY3Rvci4KCklmIGlu
+IHRoZSBmdXR1cmUgd2UgcmVtb3ZlIHRoZSBjb25uZWN0b3IgcGllY2VzIGZyb20gdGhpcyBkcml2
+ZXIKdG8gY3JlYXRlIGEgc2VwYXJhdGUgZ2VuZXJpYyBWR0EgY29ubmVjdG9yIGRyaXZlciwgd2Un
+bGwgZW5kIHVwCndpdGggYSBicmlkZ2UgZHJpdmVyIHdob3NlIG1haW4gZnVuY3Rpb25hbGl0eSBp
+cyB0byBjb252ZXJ0IFJHQgpzaWduYWxzIHRvIFZHQS4gVGhlIEVESUQgcGFydHMgd291bGQgbW92
+ZSB0byB0aGUgVkdBIGNvbm5lY3Rvcgpkcml2ZXIuIEluIHlvdXIgcGxhdGZvcm0ncyBjYXNlLCB0
+aGVyZSBpcyBubyBzb2Z0d2FyZSBuZWVkZWQKdG8gdHJhbnNsYXRlIFJHQiB0byBWR0EsIGJ1dCBt
+YXliZSBpbiB0aGUgZnV0dXJlLCB3ZSBtaWdodCBuZWVkCnRvIGFkZCBhbiBvcHRpb25hbCByZWd1
+bGF0b3IgaW4gdGhlIGRyaXZlciB0byBzdXBwb3J0IGFub3RoZXIKcGxhdGZvcm0uIFRoZXJlZm9y
+ZSwgdGhlIGJyaWRnZSBkcml2ZXIgd291bGQgc3RpbGwgYmUgaGFuZHkgdG8KaGF2ZS4KCktlZXBp
+bmcgdGhpcyBpbiBjb25zaWRlcmF0aW9uLCBJIHRoaW5rIHRoaXMgZHJpdmVyIChhbmQgdGhlIERU
+CmJpbmRpbmcpIHNob3VsZCBiZSBjYWxsZWQgImR1bWItcmdiLXRvLXZnYS1icmlkZ2UiLCBvcgoi
+cmdiLXRvLXZnYS1icmlkZ2UiIHNpbmNlIHRoYXQncyB3aGF0IHRoZSBicmlkZ2UgSFcgcHJpbWFy
+aWx5CmRvZXMuCgpUaGFua3MsCkFyY2hpdAoKPgo+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBh
+cmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IC0tLQo+ICAgLi4uL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLnR4dCAgICAgICAgICAgfCAgNTQgKysrKysKPiAg
+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICA2
+ICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAg
+IHwgICAxICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EuYyAgICAgICAgICAg
+ICAgICAgIHwgMjMyICsrKysrKysrKysrKysrKysrKysrKwo+ICAgNCBmaWxlcyBjaGFuZ2VkLCAy
+OTMgaW5zZXJ0aW9ucygrKQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kdW1iLXZnYS50eHQKPiAgIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLmMKPgo+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHVt
+Yi12Z2EudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL2R1bWItdmdhLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAw
+MDAwLi4wMDU2ZmZhMmIzMWQKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLnR4dAo+IEBAIC0wLDAg
+KzEsNTQgQEAKPiArUGFzc2l2ZSBSR0IgdG8gVkdBIGJyaWRnZQo+ICstLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgYWltZWQgZm9yIGVudGlyZWx5IHBhc3Np
+dmUgUkdCIHRvIFZHQSBicmlkZ2VzIHRoYXQgZG8gbm90Cj4gK3JlcXVpcmUgYW55IGNvbmZpZ3Vy
+YXRpb24uCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBjb21wYXRpYmxlOiBN
+dXN0IGJlICJkdW1iLXZnYS1icmlkZ2UiCj4gKwo+ICtSZXF1aXJlZCBub2RlczoKPiArCj4gK1Ro
+aXMgZGV2aWNlIGhhcyB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFyZSBtb2Rl
+bGVkIHVzaW5nIHRoZSBPRgo+ICtncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPiArCj4gKy0gVmlkZW8gcG9ydCAw
+IGZvciBSR0IgaW5wdXQKPiArLSBWaWRlbyBwb3J0IDEgZm9yIFZHQSBvdXRwdXQKPiArCj4gKwo+
+ICtFeGFtcGxlCj4gKy0tLS0tLS0KPiArCj4gK2JyaWRnZSB7Cj4gKwljb21wYXRpYmxlID0gImR1
+bWItdmdhLWJyaWRnZSI7Cj4gKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCSNzaXplLWNlbGxz
+ID0gPDA+Owo+ICsKPiArCXBvcnRzIHsKPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkj
+c2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJcG9ydEAwIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMg
+PSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQlyZWcgPSA8MD47Cj4gKwo+ICsJ
+CQl2Z2FfYnJpZGdlX2luOiBlbmRwb2ludEAwIHsKPiArCQkJCXJlZyA9IDwwPjsKPiArCQkJCXJl
+bW90ZS1lbmRwb2ludCA9IDwmdGNvbjBfb3V0X3ZnYT47Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4g
+KwkJcG9ydEAxIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxz
+ID0gPDA+Owo+ICsJCQlyZWcgPSA8MT47Cj4gKwo+ICsJCQl2Z2FfYnJpZGdlX291dDogZW5kcG9p
+bnRAMCB7Cj4gKwkJCQlyZWcgPSA8MD47Cj4gKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9j
+b25faW4+Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICt9Owo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25m
+aWcKPiBpbmRleCBhMTQxOTIxNDQ1ZjQuLjRhNjU2MDcxNDM5NyAxMDA2NDQKPiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L0tjb25maWcKPiBAQCAtMTcsNiArMTcsMTIgQEAgY29uZmlnIERSTV9BTkFMT0dJWF9BTlg3OFhY
+Cj4gICAJICB0aGUgSERNSSBvdXRwdXQgb2YgYW4gYXBwbGljYXRpb24gcHJvY2Vzc29yIHRvIE15
+RFAKPiAgIAkgIG9yIERpc3BsYXlQb3J0Lgo+Cj4gK2NvbmZpZyBEUk1fRFVNQl9WR0EKPiArCXRy
+aXN0YXRlICJEdW1iIFJHQiB0byBWR0EgQnJpZGdlIHN1cHBvcnQiCj4gKwlzZWxlY3QgRFJNX0tN
+U19IRUxQRVIKPiArCWhlbHAKPiArCSAgU3VwcG9ydCBmb3IgcGFzc2l2ZSBSR0IgdG8gVkdBIGJy
+aWRnZXMKPiArCj4gICBjb25maWcgRFJNX0RXX0hETUkKPiAgIAl0cmlzdGF0ZQo+ICAgCXNlbGVj
+dCBEUk1fS01TX0hFTFBFUgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01h
+a2VmaWxlIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZQo+IGluZGV4IGJmZWM5Zjhj
+YjlkMi4uNDEzZDc4MzgyOGJiIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+TWFrZWZpbGUKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlCj4gQEAgLTEs
+NiArMSw3IEBACj4gICBjY2ZsYWdzLXkgOj0gLUlpbmNsdWRlL2RybQo+Cj4gICBvYmotJChDT05G
+SUdfRFJNX0FOQUxPR0lYX0FOWDc4WFgpICs9IGFuYWxvZ2l4LWFueDc4eHgubwo+ICtvYmotJChD
+T05GSUdfRFJNX0RVTUJfVkdBKSArPSBkdW1iLXZnYS5vCj4gICBvYmotJChDT05GSUdfRFJNX0RX
+X0hETUkpICs9IGR3LWhkbWkubwo+ICAgb2JqLSQoQ09ORklHX0RSTV9EV19IRE1JX0FIQl9BVURJ
+TykgKz0gZHctaGRtaS1haGItYXVkaW8ubwo+ICAgb2JqLSQoQ09ORklHX0RSTV9OWFBfUFROMzQ2
+MCkgKz0gbnhwLXB0bjM0NjAubwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L2R1bWItdmdhLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLmMKPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYzE5N2JlNTkxZmI2Cj4gLS0tIC9k
+ZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EuYwo+IEBAIC0w
+LDAgKzEsMjMyIEBACj4gKwo+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4gKyNpbmNsdWRl
+IDxsaW51eC9vZl9ncmFwaC5oPgo+ICsKPiArI2luY2x1ZGUgPGRybS9kcm1QLmg+Cj4gKyNpbmNs
+dWRlIDxkcm0vZHJtX2F0b21pY19oZWxwZXIuaD4KPiArI2luY2x1ZGUgPGRybS9kcm1fY3J0Yy5o
+Pgo+ICsjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBlci5oPgo+ICsKPiArc3RydWN0IGR1bWJf
+dmdhIHsKPiArCXN0cnVjdCBkcm1fYnJpZGdlCWJyaWRnZTsKPiArCXN0cnVjdCBkcm1fY29ubmVj
+dG9yCWNvbm5lY3RvcjsKPiArCj4gKwlzdHJ1Y3QgaTJjX2FkYXB0ZXIJKmRkYzsKPiArfTsKPiAr
+Cj4gK3N0YXRpYyBpbmxpbmUgc3RydWN0IGR1bWJfdmdhICoKPiArZHJtX2JyaWRnZV90b19kdW1i
+X3ZnYShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4gKwlyZXR1cm4gY29udGFpbmVy
+X29mKGJyaWRnZSwgc3RydWN0IGR1bWJfdmdhLCBicmlkZ2UpOwo+ICt9Cj4gKwo+ICtzdGF0aWMg
+aW5saW5lIHN0cnVjdCBkdW1iX3ZnYSAqCj4gK2RybV9jb25uZWN0b3JfdG9fZHVtYl92Z2Eoc3Ry
+dWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiArewo+ICsJcmV0dXJuIGNvbnRhaW5lcl9v
+Zihjb25uZWN0b3IsIHN0cnVjdCBkdW1iX3ZnYSwgY29ubmVjdG9yKTsKPiArfQo+ICsKPiArc3Rh
+dGljIGludCBkdW1iX3ZnYV9nZXRfbW9kZXMoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
+cikKPiArewo+ICsJc3RydWN0IGR1bWJfdmdhICp2Z2EgPSBkcm1fY29ubmVjdG9yX3RvX2R1bWJf
+dmdhKGNvbm5lY3Rvcik7Cj4gKwlzdHJ1Y3QgZWRpZCAqZWRpZDsKPiArCWludCByZXQ7Cj4gKwo+
+ICsJaWYgKElTX0VSUih2Z2EtPmRkYykpCj4gKwkJZ290byBmYWxsYmFjazsKPiArCj4gKwllZGlk
+ID0gZHJtX2dldF9lZGlkKGNvbm5lY3RvciwgdmdhLT5kZGMpOwo+ICsJaWYgKCFlZGlkKSB7Cj4g
+KwkJRFJNX0lORk8oIkVESUQgcmVhZG91dCBmYWlsZWQsIGZhbGxpbmcgYmFjayB0byBzdGFuZGFy
+ZCBtb2Rlc1xuIik7Cj4gKwkJZ290byBmYWxsYmFjazsKPiArCX0KPiArCj4gKwlkcm1fbW9kZV9j
+b25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9yLCBlZGlkKTsKPiArCXJldHVy
+biBkcm1fYWRkX2VkaWRfbW9kZXMoY29ubmVjdG9yLCBlZGlkKTsKPiArCj4gK2ZhbGxiYWNrOgo+
+ICsJLyoKPiArCSAqIEluIGNhc2Ugd2UgY2Fubm90IHJldHJpZXZlIHRoZSBFRElEcyAoYnJva2Vu
+IG9yIG1pc3NpbmcgaTJjCj4gKwkgKiBidXMpLCBmYWxsYmFjayBvbiB0aGUgWEdBIHN0YW5kYXJk
+cwo+ICsJICovCj4gKwlyZXQgPSBkcm1fYWRkX21vZGVzX25vZWRpZChjb25uZWN0b3IsIDE5MjAs
+IDEyMDApOwo+ICsKPiArCS8qIEFuZCBwcmVmZXIgYSBtb2RlIHByZXR0eSBtdWNoIGFueW9uZSBj
+YW4gaGFuZGxlICovCj4gKwlkcm1fc2V0X3ByZWZlcnJlZF9tb2RlKGNvbm5lY3RvciwgMTAyNCwg
+NzY4KTsKPiArCj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMgc3RydWN0IGRybV9l
+bmNvZGVyICoKPiArZHVtYl92Z2FfYmVzdF9lbmNvZGVyKHN0cnVjdCBkcm1fY29ubmVjdG9yICpj
+b25uZWN0b3IpCj4gK3sKPiArCXN0cnVjdCBkdW1iX3ZnYSAqdmdhID0gZHJtX2Nvbm5lY3Rvcl90
+b19kdW1iX3ZnYShjb25uZWN0b3IpOwo+ICsKPiArCXJldHVybiB2Z2EtPmJyaWRnZS5lbmNvZGVy
+Owo+ICt9Cj4gKwo+ICtzdGF0aWMgc3RydWN0IGRybV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzIGR1
+bWJfdmdhX2Nvbl9oZWxwZXJfZnVuY3MgPSB7Cj4gKwkuZ2V0X21vZGVzCT0gZHVtYl92Z2FfZ2V0
+X21vZGVzLAo+ICsJLmJlc3RfZW5jb2Rlcgk9IGR1bWJfdmdhX2Jlc3RfZW5jb2RlciwKPiArfTsK
+PiArCj4gK3N0YXRpYyBlbnVtIGRybV9jb25uZWN0b3Jfc3RhdHVzCj4gK2R1bWJfdmdhX2Nvbm5l
+Y3Rvcl9kZXRlY3Qoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwgYm9vbCBmb3JjZSkK
+PiArewo+ICsJc3RydWN0IGR1bWJfdmdhICp2Z2EgPSBkcm1fY29ubmVjdG9yX3RvX2R1bWJfdmdh
+KGNvbm5lY3Rvcik7Cj4gKwo+ICsJLyoKPiArCSAqIEV2ZW4gaWYgd2UgaGF2ZSBhbiBJMkMgYnVz
+LCB3ZSBjYW4ndCBhc3N1bWUgdGhhdCB0aGUgY2FibGUKPiArCSAqIGlzIGRpc2Nvbm5lY3RlZCBp
+ZiBkcm1fcHJvYmVfZGRjLiBTb21lIGNhYmxlcyBkb24ndCB3aXJlCj4gKwkgKiB0aGUgRERDIHBp
+bnMsIG9yIHRoZSBJMkMgYnVzIG1pZ2h0IGJlIGRpc2Z1bmN0aW9uYWwuCj4gKwkgKi8KPiArCWlm
+ICghSVNfRVJSKHZnYS0+ZGRjKSAmJiBkcm1fcHJvYmVfZGRjKHZnYS0+ZGRjKSkKPiArCQlyZXR1
+cm4gY29ubmVjdG9yX3N0YXR1c19jb25uZWN0ZWQ7Cj4gKwo+ICsJcmV0dXJuIGNvbm5lY3Rvcl9z
+dGF0dXNfdW5rbm93bjsKPiArfQo+ICsKPiArc3RhdGljIHZvaWQKPiArZHVtYl92Z2FfY29ubmVj
+dG9yX2Rlc3Ryb3koc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiArewo+ICsJZHJt
+X2Nvbm5lY3Rvcl9jbGVhbnVwKGNvbm5lY3Rvcik7Cj4gK30KPiArCj4gK3N0YXRpYyBzdHJ1Y3Qg
+ZHJtX2Nvbm5lY3Rvcl9mdW5jcyBkdW1iX3ZnYV9jb25fZnVuY3MgPSB7Cj4gKwkuZHBtcwkJCT0g
+ZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9yX2RwbXMsCj4gKwkuZGV0ZWN0CQkJPSBkdW1iX3Zn
+YV9jb25uZWN0b3JfZGV0ZWN0LAo+ICsJLmZpbGxfbW9kZXMJCT0gZHJtX2hlbHBlcl9wcm9iZV9z
+aW5nbGVfY29ubmVjdG9yX21vZGVzLAo+ICsJLmRlc3Ryb3kJCT0gZHVtYl92Z2FfY29ubmVjdG9y
+X2Rlc3Ryb3ksCj4gKwkucmVzZXQJCQk9IGRybV9hdG9taWNfaGVscGVyX2Nvbm5lY3Rvcl9yZXNl
+dCwKPiArCS5hdG9taWNfZHVwbGljYXRlX3N0YXRlCT0gZHJtX2F0b21pY19oZWxwZXJfY29ubmVj
+dG9yX2R1cGxpY2F0ZV9zdGF0ZSwKPiArCS5hdG9taWNfZGVzdHJveV9zdGF0ZQk9IGRybV9hdG9t
+aWNfaGVscGVyX2Nvbm5lY3Rvcl9kZXN0cm95X3N0YXRlLAo+ICt9Owo+ICsKPiArc3RhdGljIGlu
+dCBkdW1iX3ZnYV9hdHRhY2goc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKPiArewo+ICsJc3Ry
+dWN0IGR1bWJfdmdhICp2Z2EgPSBkcm1fYnJpZGdlX3RvX2R1bWJfdmdhKGJyaWRnZSk7Cj4gKwlp
+bnQgcmV0Owo+ICsKPiArCWlmICghYnJpZGdlLT5lbmNvZGVyKSB7Cj4gKwkJRFJNX0VSUk9SKCJN
+aXNzaW5nIGVuY29kZXJcbiIpOwo+ICsJCXJldHVybiAtRU5PREVWOwo+ICsJfQo+ICsKPiArCWRy
+bV9jb25uZWN0b3JfaGVscGVyX2FkZCgmdmdhLT5jb25uZWN0b3IsCj4gKwkJCQkgJmR1bWJfdmdh
+X2Nvbl9oZWxwZXJfZnVuY3MpOwo+ICsJcmV0ID0gZHJtX2Nvbm5lY3Rvcl9pbml0KGJyaWRnZS0+
+ZGV2LCAmdmdhLT5jb25uZWN0b3IsCj4gKwkJCQkgJmR1bWJfdmdhX2Nvbl9mdW5jcywgRFJNX01P
+REVfQ09OTkVDVE9SX1ZHQSk7Cj4gKwlpZiAocmV0KSB7Cj4gKwkJRFJNX0VSUk9SKCJGYWlsZWQg
+dG8gaW5pdGlhbGl6ZSBjb25uZWN0b3JcbiIpOwo+ICsJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+
+ICsJZHJtX21vZGVfY29ubmVjdG9yX2F0dGFjaF9lbmNvZGVyKCZ2Z2EtPmNvbm5lY3RvciwKPiAr
+CQkJCQkgIGJyaWRnZS0+ZW5jb2Rlcik7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3N0
+YXRpYyB2b2lkIGR1bWJfdmdhX25vcChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKSB7fTsKPiAr
+Cj4gK3N0YXRpYyBzdHJ1Y3QgZHJtX2JyaWRnZV9mdW5jcyBkdW1iX3ZnYV9icmlkZ2VfZnVuY3Mg
+PSB7Cj4gKwkuYXR0YWNoCQk9IGR1bWJfdmdhX2F0dGFjaCwKPiArCS5lbmFibGUJCT0gZHVtYl92
+Z2Ffbm9wLAo+ICsJLmRpc2FibGUJPSBkdW1iX3ZnYV9ub3AsCj4gKwkucHJlX2VuYWJsZQk9IGR1
+bWJfdmdhX25vcCwKPiArCS5wb3N0X2Rpc2FibGUJPSBkdW1iX3ZnYV9ub3AsCgpXZSBkb24ndCBu
+ZWVkIHRvIGluc3RhbGwgbm9wcyBoZXJlLCB0aGUgZHJtIGJyaWRnZSBjb3JlIHNraXBzCmNhbGxp
+bmcgdGhlIG9wIGlmIGl0IGNhbid0IGZpbmQgaXQuCgo+ICt9Owo+ICsKPiArc3RhdGljIHN0cnVj
+dCBpMmNfYWRhcHRlciAqZHVtYl92Z2FfcmV0cmlldmVfZGRjKHN0cnVjdCBkZXZpY2UgKmRldikK
+PiArewo+ICsJc3RydWN0IGRldmljZV9ub2RlICplbmRfbm9kZSwgKnBoYW5kbGUsICpyZW1vdGU7
+Cj4gKwlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmRkYzsKPiArCj4gKwllbmRfbm9kZSA9IG9mX2dyYXBo
+X2dldF9lbmRwb2ludF9ieV9yZWdzKGRldi0+b2Zfbm9kZSwgMSwgLTEpOwo+ICsJaWYgKCFlbmRf
+bm9kZSkgewo+ICsJCWRldl9lcnIoZGV2LCAiTWlzc2luZyBjb25uZWN0b3IgZW5kcG9pbnRcbiIp
+Owo+ICsJCXJldHVybiBFUlJfUFRSKC1FTk9ERVYpOwo+ICsJfQo+ICsKPiArCXJlbW90ZSA9IG9m
+X2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZW5kX25vZGUpOwo+ICsJb2Zfbm9kZV9wdXQo
+ZW5kX25vZGUpOwo+ICsJaWYgKCFyZW1vdGUpIHsKPiArCQlkZXZfZXJyKGRldiwgIkVuYWJsZSB0
+byBwYXJzZSByZW1vdGUgbm9kZVxuIik7Cj4gKwkJcmV0dXJuIEVSUl9QVFIoLUVJTlZBTCk7Cj4g
+Kwl9Cj4gKwo+ICsJcGhhbmRsZSA9IG9mX3BhcnNlX3BoYW5kbGUocmVtb3RlLCAiZGRjLWkyYy1i
+dXMiLCAwKTsKPiArCW9mX25vZGVfcHV0KHJlbW90ZSk7Cj4gKwlpZiAoIXBoYW5kbGUpCj4gKwkJ
+cmV0dXJuIEVSUl9QVFIoLUVOT0RFVik7Cj4gKwo+ICsJZGRjID0gb2ZfZ2V0X2kyY19hZGFwdGVy
+X2J5X25vZGUocGhhbmRsZSk7Cj4gKwlvZl9ub2RlX3B1dChwaGFuZGxlKTsKPiArCWlmICghZGRj
+KQo+ICsJCXJldHVybiBFUlJfUFRSKC1FUFJPQkVfREVGRVIpOwo+ICsKPiArCXJldHVybiBkZGM7
+Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgZHVtYl92Z2FfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikKPiArewo+ICsJc3RydWN0IGR1bWJfdmdhICp2Z2E7Cj4gKwlpbnQgcmV0Owo+
+ICsKPiArCXZnYSA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKnZnYSksIEdGUF9L
+RVJORUwpOwo+ICsJaWYgKCF2Z2EpCj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gKwlwbGF0Zm9ybV9z
+ZXRfZHJ2ZGF0YShwZGV2LCB2Z2EpOwo+ICsKPiArCXZnYS0+ZGRjID0gZHVtYl92Z2FfcmV0cmll
+dmVfZGRjKCZwZGV2LT5kZXYpOwo+ICsJaWYgKElTX0VSUih2Z2EtPmRkYykpIHsKPiArCQlpZiAo
+UFRSX0VSUih2Z2EtPmRkYykgPT0gLUVOT0RFVikgewo+ICsJCQlkZXZfaW5mbygmcGRldi0+ZGV2
+LAo+ICsJCQkJICJObyBpMmMgYnVzIHNwZWNpZmllZC4uLiBEaXNhYmxpbmcgRURJRCByZWFkb3V0
+XG4iKTsKPiArCQl9IGVsc2Ugewo+ICsJCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJDb3VsZG4ndCBy
+ZXRyaWV2ZSBpMmMgYnVzXG4iKTsKPiArCQkJcmV0dXJuIFBUUl9FUlIodmdhLT5kZGMpOwo+ICsJ
+CX0KPiArCX0KPiArCj4gKwl2Z2EtPmJyaWRnZS5mdW5jcyA9ICZkdW1iX3ZnYV9icmlkZ2VfZnVu
+Y3M7Cj4gKwl2Z2EtPmJyaWRnZS5vZl9ub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4gKwo+ICsJ
+cmV0ID0gZHJtX2JyaWRnZV9hZGQoJnZnYS0+YnJpZGdlKTsKPiArCWlmIChyZXQgJiYgIUlTX0VS
+Uih2Z2EtPmRkYykpCj4gKwkJaTJjX3B1dF9hZGFwdGVyKHZnYS0+ZGRjKTsKPiArCj4gKwlyZXR1
+cm4gcmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGR1bWJfdmdhX3JlbW92ZShzdHJ1Y3QgcGxh
+dGZvcm1fZGV2aWNlICpwZGV2KQo+ICt7Cj4gKwlzdHJ1Y3QgZHVtYl92Z2EgKnZnYSA9IHBsYXRm
+b3JtX2dldF9kcnZkYXRhKHBkZXYpOwo+ICsKPiArCWRybV9icmlkZ2VfcmVtb3ZlKCZ2Z2EtPmJy
+aWRnZSk7Cj4gKwo+ICsJaWYgKCFJU19FUlIodmdhLT5kZGMpKQo+ICsJCWkyY19wdXRfYWRhcHRl
+cih2Z2EtPmRkYyk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGR1bWJfdmdhX21hdGNoW10gPSB7Cj4gKwl7IC5jb21wYXRpYmxl
+ID0gImR1bWItdmdhLWJyaWRnZSIgfSwKPiArCXt9LAo+ICt9Owo+ICtNT0RVTEVfREVWSUNFX1RB
+QkxFKG9mLCBkdW1iX3ZnYV9tYXRjaCk7Cj4gKwo+ICtzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGR1
+bWJfdmdhX2RyaXZlciA9IHsKPiArCS5wcm9iZQk9IGR1bWJfdmdhX3Byb2JlLAo+ICsJLnJlbW92
+ZQk9IGR1bWJfdmdhX3JlbW92ZSwKPiArCS5kcml2ZXIJCT0gewo+ICsJCS5uYW1lCQk9ICJkdW1i
+LXZnYS1icmlkZ2UiLAo+ICsJCS5vZl9tYXRjaF90YWJsZQk9IGR1bWJfdmdhX21hdGNoLAo+ICsJ
+fSwKPiArfTsKPiArbW9kdWxlX3BsYXRmb3JtX2RyaXZlcihkdW1iX3ZnYV9kcml2ZXIpOwo+ICsK
+PiArTU9EVUxFX0FVVEhPUigiTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0
+cm9ucy5jb20+Iik7Cj4gK01PRFVMRV9ERVNDUklQVElPTigiRHVtYiBSR0IgdG8gVkdBIGJyaWRn
+ZSBkcml2ZXIiKTsKPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOwo+CgotLSAKUXVhbGNvbW0gSW5u
+b3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEg
+TGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
