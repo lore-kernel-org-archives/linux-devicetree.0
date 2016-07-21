@@ -1,77 +1,118 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] tpm: devicetree: document properties for cr50
-Date: Thu, 21 Jul 2016 16:03:12 -0500
-Message-ID: <20160721210312.GA10605@rob-hp-laptop>
-References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
- <cover.1468985673.git.apronin@chromium.org>
- <5274cc806888a709c639e701dad894543885b2c9.1468985673.git.apronin@chromium.org>
- <20160720190303.GA5620@rob-hp-laptop>
- <20160720194912.GA61154@apronin>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [net-next PATCH 1/3] net: phy: dp83867: Add documentation for
+ optional impedance control
+Date: Thu, 21 Jul 2016 16:14:29 -0500
+Message-ID: <20160721211429.GA17696@rob-hp-laptop>
+References: <20160720145614.13132-1-mugunthanvnm@ti.com>
+ <20160720145614.13132-2-mugunthanvnm@ti.com>
+ <578F99D3.9090601@ti.com>
+ <57906A2C.7010201@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160720194912.GA61154@apronin>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, Marcel Selhorst <tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <57906A2C.7010201@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>, netdev@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 12:49:12PM -0700, Andrey Pronin wrote:
-> On Wed, Jul 20, 2016 at 02:03:03PM -0500, Rob Herring wrote:
-> > On Tue, Jul 19, 2016 at 08:41:24PM -0700, Andrey Pronin wrote:
+On Thu, Jul 21, 2016 at 11:52:36AM +0530, Sekhar Nori wrote:
+> Nishanth,
 > 
-> Hi Rob,
-> 
-> > As I mentioned, there may be common properties. It doesn't seem you 
-> > looked, so I did:
+> On Wednesday 20 July 2016 09:03 PM, Nishanth Menon wrote:
+> > On 07/20/2016 09:56 AM, Mugunthan V N wrote:
+> >> Add documention of ti,impedance-control which can be used to
+> >> correct MAC impedance mismatch using phy extended registers.
+> >>
+> >> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/net/ti,dp83867.txt | 7 +++++++
+> >>   1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt
+> >> b/Documentation/devicetree/bindings/net/ti,dp83867.txt
+> >> index 5d21141..531ea3c5 100644
+> >> --- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
+> >> +++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
+> >> @@ -9,6 +9,13 @@ Required properties:
+> >>       - ti,fifo-depth - Transmitt FIFO depth- see
+> >> dt-bindings/net/ti-dp83867.h
+> >>           for applicable values
+> >>
+> >> +Optional property:
+> >> +    - ti,impedance-control - MAC Interface Impedance control to vary the
+> >> +                 output impedance with an approximate range
+> >> +                 from 35-70 ohms in 32 steps. Value range can
+> >> +                 be 0x0 to 0x1f. Lowest impedance value is
+> >> +                 0x1f and highest impedance being 0x0.
+> >> +
 > > 
-> > - spi-rx-delay-us  - (optional) Microsecond delay after a read transfer.
-> > - spi-tx-delay-us  - (optional) Microsecond delay after a write transfer.
+> > Should'nt you be using the impedance values of 35 to 70 as the valid
+> > values here? that would be the hardware description, and the values to
+> > program corresponding to those are 0x00 to 0x1f. Right?
 > > 
-> > Seems to me setting one or both of these should work for you.
-> >
-> 
-> Yes, good catch, my fault I didn't see those.
-> But they are not exactly what I mean and need. I don't need delay after
-> each read or write transfer. What is needed is a guaranteed time
-> between transfers.
-> 
-> So, if the next transaction doesn't come withing the next X ms (or us),
-> we don't waste time on inserting a delays after this transaction at all.
-> Following the description and always inserting a delay must work well
-> for short microseconds-long delays. For longer milliseconds-long delays
-> a different strategy of checking the time when the previous transaction
-> was and only delaying if it was not too long ago is better.
+> > Rob: is'nt that the right way to do it?
 
-I'd guess that the intent is the same for all. A simple delay is 
-just much easier to implement. I would think implementing the more 
-sophisticated algorithm would work for all users. Perhaps with some 
-threshold for a simple delay.
+Normally, yes that is preferred. I don't have an issue with it here if 
+that is what makes sense.
 
-> Thus, I won't be able to re-use these properties anyways based on their
-> current description in bindings/spi/spi-bus.txt.
+> Agree that that is usually the right way to do it. I believe this case
+> is bit peculiar though. Here is the extract from the datasheet[1] about
+> how the register in question works.
 > 
-> > > +- sleep-delay-ms: Time after the last SPI activity, after which the chip
-> > > +  may go to sleep.
-> > > +- wake-start-delay-ms: Time after initiating wake up before the chip is
-> > > +  ready to accept commands over SPI.
-> > 
-> > I also asked why these 2 can't be hard-coded in the driver?
-> >
+> "
+> Output impedance approximate range from 35-70 ohms in 32 steps.
+> Lowest being 11110 and highest being 00000. Range and Step size
+> will vary with process.
 > 
-> Sorry, I just updated this patch description in v2 to indicate why they are not
-> hard-coded, but didn't answer explicitly. As the firmware changes, a different
-> revision of it can have a different time before it sleeps in its configuration,
-> or the time it takes it to startup may be different. Thus, there's a way to
-> set it here w/o changing the driver.
+> Default is set to 50 ohms by trim. But the default register value can
+> vary by process. Non default values of MAC I/O impedance can be
+> used based on trace impedance. Mismatch between device and
+> trace impedance can cause voltage overshoot and undershoot.
+> "
+> 
+> So clearly, there is no easy correspondence that the hardware guarantees
+> between output impedance ohmage and the register value programmed. Only
+> couple of things are guaranteed.
+> 
+> 1) Programming a value of 0 gives approximately 35 ohms
+> 2) Programming a value of 0x1F gives approximately 70 ohms
+> 3) Default value of the register gives 50 ohms (the default value could
+> vary by device).
+> 4) Programming a value in between will give some ohmage in the
+> approximate range 35-70 (curve is unknown).
+> 
+> Given this, I am not sure how one can convert a given user supplied ohms
+> values to a reasonable register value. Clearly, the register is supposed
+> to be programmed by experimentation, not calculation.
 
-The firmware and DT may not be updated in sync especially if you are 
-loading the firmware from the rootfs. Are you doing DT and firmware 
-updates without changing the kernel?
+So your are going to change from a known value tuned for the individual 
+Si (50ohm) to the same value for all chips (at least for a given board). 
+Or does this get set by firmware at boot? If not, seems like you would 
+want to specify a delta from the default register value in this case.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> That said, we could take another approach. At least for the current
+> issue we are trying to address, we only need to configure the register
+> to max value. And given the nature of the register, I am pretty sure
+> that is what most people will end up doing.
+
+How does the max value get determined? Possibly it should just be set in 
+the kernel.
+ 
+> So, may be we have two properties:
+> 
+> ti,max-output-impedance
+> ti,min-output-imepdance
+
+Just define max if that's all you currently need.
+
+> which configure the impedance to maximum and minimum values
+> respectively. If, in future, someone needs to configure a value in
+> between, he can introduce a more granular property which when then
+> override whatever else is specified.
+> 
+> Regards,
+> Sekhar
+> 
+> [1] http://www.ti.com/lit/ds/symlink/dp83867ir.pdf
