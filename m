@@ -1,122 +1,33 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: [PATCH 06/12] gpio: Add Aspeed driver
-Date: Thu, 21 Jul 2016 16:12:44 -0400
-Message-ID: <CAP=VYLrJfRmKOoDWTpBrD5+iPdX6J9r609FzZ0CkzDd7vGBWyw@mail.gmail.com>
-References: <1468994313-13538-1-git-send-email-andrew@aj.id.au> <1468994313-13538-7-git-send-email-andrew@aj.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468994313-13538-7-git-send-email-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Alistair Popple <alistair@popple.id.au>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] Add driver for Domintech DMARD06 accelerometer
+Date: Thu, 21 Jul 2016 23:32:20 +0300
+Message-ID: <1469133140-14722-1-git-send-email-mamlinav@gmail.com>
+References: <1468846092-18914-1-git-send-email-mamlinav@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1468846092-18914-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 1:58 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
-> From: Joel Stanley <joel@jms.id.au>
->
-> The Aspeed SoCs contain GPIOs grouped by letter, where each letter group
-> contains 8 pins. The GPIO letter groups are then banked in sets of four
-> in the register layout.
->
-> The implementation exposes multiple banks through the one driver, and
-> requests and releases pins via the pinctrl subsystem. The hardware
-> supports generation of interrupts with per-pin triggers, and exposes this
-> capability through an irqchip and devicetree.
->
-> A number of supported features are not yet implemented: Configuration of
-> interrupt direction (ARM or LPC), debouncing, and provides WDT reset
-> tolerance for output ports.
->
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> Signed-off-by: Alistair Popple <alistair@popple.id.au>
-> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  arch/arm/mach-aspeed/Kconfig |   4 +
->  drivers/gpio/Kconfig         |   8 +-
->  drivers/gpio/Makefile        |   1 +
->  drivers/gpio/gpio-aspeed.c   | 456 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 468 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpio/gpio-aspeed.c
->
-> diff --git a/arch/arm/mach-aspeed/Kconfig b/arch/arm/mach-aspeed/Kconfig
-> index 25a0ae01429e..a52de9d3adfb 100644
-> --- a/arch/arm/mach-aspeed/Kconfig
-> +++ b/arch/arm/mach-aspeed/Kconfig
-> @@ -6,6 +6,10 @@ menuconfig ARCH_ASPEED
->         select ASPEED_WATCHDOG
->         select MOXART_TIMER
->         select PINCTRL
-> +       select GPIOLIB
-> +       select GPIO_ASPEED
-> +       select GPIO_SYSFS
-> +
->         help
->           Say Y here if you want to run your kernel on an ASpeed BMC SoC.
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 536112fd2466..2c21b5db09cd 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -137,6 +137,13 @@ config GPIO_ATH79
->           Select this option to enable GPIO driver for
->           Atheros AR71XX/AR724X/AR913X SoC devices.
->
-> +config GPIO_ASPEED
-> +       bool "Aspeed GPIO support"
+This patch series adds driver for Domintech DMARD06 low-g tri-axial
+digital accelerometer and vendor prefix for Domintech Co., Ltd.
 
-Since this is a bool Kconfig...
+Changes since v1:
+ - Rewrite driver to iio subsystem
 
-> +       depends on (ARCH_ASPEED || COMPILE_TEST) && OF
-> +       select GENERIC_IRQ_CHIP
-> +       help
-> +         Say Y here to support Aspeed AST2400 and AST2500 GPIO controllers.
-> +
+Aleksei Mamlin (2):
+  devicetree: bindings: Add vendor prefix for Domintech Co., Ltd.
+  iio: accel: Add support for Domintech DMARD06 accelerometer
 
-[...]
+ .../devicetree/bindings/iio/accel/dmard06.txt      |  17 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/accel/Kconfig                          |  11 ++
+ drivers/iio/accel/Makefile                         |   1 +
+ drivers/iio/accel/dmard06.c                        | 219 +++++++++++++++++++++
+ 5 files changed, 249 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/dmard06.txt
+ create mode 100644 drivers/iio/accel/dmard06.c
 
- > diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-> new file mode 100644
-> index 000000000000..7885adc1332a
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-aspeed.c
-> @@ -0,0 +1,456 @@
-> +/*
-> + * Copyright 2015 IBM Corp
-> + *
-> + * Joel Stanley <joel@jms.id.au>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-
-...can you please get rid of module.h and all the MODULE_<xyz>
-stuff and use the built in registration?   Alternatively change it to
-a tristate if there is a valid use case for it to be modular.
-
-Thanks.
-Paul.
---
-
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/pinctrl/consumer.h>
-> +
-> +struct aspeed_gpio {
-> +       struct gpio_chip chip;
-> +       spinlock_t lock;
-> +       void __iomem *base;
-> +       int irq;
-> +       struct irq_chip irq_chip;
-> +       struct irq_domain *irq_domain;
-> +};
-> +
+-- 
+2.7.3
