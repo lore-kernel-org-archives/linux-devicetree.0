@@ -1,89 +1,78 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: realview: Fix PBX-A9 cache description
-Date: Thu, 21 Jul 2016 16:00:07 +0100
-Message-ID: <20160721150006.GE20559@leverpostej>
-References: <dbf8749c4af9aa5ffb85e961b7ae09ffeefa7f2a.1468583959.git.robin.murphy@arm.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC 6/6] bus: Add support for Tegra NOR controller
+Date: Thu, 21 Jul 2016 16:12:05 +0100
+Message-ID: <222d4179-a72f-56d1-246b-ab66af3057d9@nvidia.com>
+References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
+ <1468935397-11926-7-git-send-email-mirza.krak@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <dbf8749c4af9aa5ffb85e961b7ae09ffeefa7f2a.1468583959.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1468935397-11926-7-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 15, 2016 at 01:19:12PM +0100, Robin Murphy wrote:
-> Clearly QEMU is very permissive in how its PL310 model may be set up,
-> but the real hardware turns out to be far more particular about things
-> actually being correct. Fix up the DT description so that the real
-> thing actually boots:
+
+On 19/07/16 14:36, Mirza Krak wrote:
+> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> - The arm,data-latency and arm,tag-latency properties need 3 cells to
->   be valid, otherwise we end up retaining the default 8-cycle latencies
->   which leads pretty quickly to lockup.
-> - The arm,dirty-latency property is only relevant to L210/L220, so get
->   rid of it.
-> - The cache geometry override also leads to lockup and/or general
->   misbehaviour. Irritatingly, the manual doesn't state the actual PL310
->   configuration, but based on the boardfile code and poking registers
->   from the Boot Monitor, it would seem to be 8 sets of 16KB ways.
+> The NOR bus can be used to connect high-speed devices such as NOR flash,
+> FPGAs, DSPs, CAN chips, Wi-Fi chips etc.
 > 
-> With that, we can successfully boot to enjoy the fun of mismatched FPUs...
-> 
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-
-Prior to this patch, v4.7-rc6 would lock up immediately after:
-
-[    0.000000] L2C OF: override cache size: 1048576 bytes (1024KB)
-[    0.000000] L2C OF: override line size: 32 bytes
-[    0.000000] L2C OF: override way size: 131072 bytes (128KB)
-[    0.000000] L2C OF: override associativity: 8
-[    0.000000] L2C: DT/platform modifies aux control register: 0x02020000 -> 0x02080000
-[    0.000000] L2C: DT/platform tries to modify or specify cache size
-[    0.000000] L2C-310 errata 588369 769419 enabled
-[    0.000000] L2C-310 full line of zeros enabled for Cortex-A9
-[    0.000000] L2C-310 cache controller enabled, 8 ways, 1024 kB
-
-With this patch, I make it all the way to userspace. I have a Debian Wheezy
-armel image which seems happy on the board so far.
-
-So FWIW:
-
-Tested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Thanks,
-Mark.
-
+> Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/arm-realview-pbx-a9.dts | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/arm-realview-pbx-a9.dts b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
-> index db808f92dd79..90d00b407f85 100644
-> --- a/arch/arm/boot/dts/arm-realview-pbx-a9.dts
-> +++ b/arch/arm/boot/dts/arm-realview-pbx-a9.dts
-> @@ -70,13 +70,12 @@
->  		 * associativity as these may be erroneously set
->  		 * up by boot loader(s).
->  		 */
-> -		cache-size = <1048576>; // 1MB
-> -		cache-sets = <4096>;
-> +		cache-size = <131072>; // 128KB
-> +		cache-sets = <512>;
->  		cache-line-size = <32>;
->  		arm,parity-disable;
-> -		arm,tag-latency = <1>;
-> -		arm,data-latency = <1 1>;
-> -		arm,dirty-latency = <1>;
-> +		arm,tag-latency = <1 1 1>;
-> +		arm,data-latency = <1 1 1>;
->  	};
->  
->  	scu: scu@1f000000 {
-> -- 
-> 2.8.1.dirty
-> 
+>  drivers/bus/Kconfig     |   7 +++
+>  drivers/bus/Makefile    |   1 +
+>  drivers/bus/tegra-nor.c | 118 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 126 insertions(+)
+>  create mode 100644 drivers/bus/tegra-nor.c
+
+...
+
+> +static int __init nor_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	/* get the resource */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	/* get the clock */
+> +	clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	ret = clk_prepare_enable(clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* parse the device node */
+> +	ret = nor_parse_dt(pdev, base);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "%s fail to create devices.\n",
+> +			pdev->dev.of_node->full_name);
+> +		clk_disable_unprepare(clk);
+> +		return ret;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "Driver registered.\n");
+> +	return 0;
+> +}
+
+The reset is defined in the binding, but never used. Should we make sure
+the reset is de-asserted in the probe?
+
+Jon
+
+-- 
+nvpublic
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
