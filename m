@@ -1,28 +1,48 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: bindings: Add vendor prefix for
- Domintech Co., Ltd.
-Date: Thu, 21 Jul 2016 17:16:58 -0500
-Message-ID: <20160721221658.GA24738@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] iio: accel: Add support for Domintech DMARD06
+ accelerometer
+Date: Thu, 21 Jul 2016 17:19:59 -0500
+Message-ID: <20160721221959.GA25742@rob-hp-laptop>
 References: <1469133140-14722-1-git-send-email-mamlinav@gmail.com>
- <1469133178-14765-1-git-send-email-mamlinav@gmail.com>
+ <1469133191-14812-1-git-send-email-mamlinav@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1469133178-14765-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1469133191-14812-1-git-send-email-mamlinav@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aleksei Mamlin <mamlinav@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 21, 2016 at 11:32:58PM +0300, Aleksei Mamlin wrote:
-> Add vendor-prefix for Domintech Co., Ltd.
+On Thu, Jul 21, 2016 at 11:33:11PM +0300, Aleksei Mamlin wrote:
+> This patch add support for Domintech DMARD06 accelerometer.
 > 
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Domintech DMARD06 is a low-g tri-axial digital accelerometer for
+> cost-sensitive consumer application.
+> 
+> Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/iio/accel/dmard06.txt      |  17 ++
+>  drivers/iio/accel/Kconfig                          |  11 ++
+>  drivers/iio/accel/Makefile                         |   1 +
+>  drivers/iio/accel/dmard06.c                        | 219 +++++++++++++++++++++
+>  4 files changed, 248 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/dmard06.txt
+>  create mode 100644 drivers/iio/accel/dmard06.c
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/dmard06.txt b/Documentation/devicetree/bindings/iio/accel/dmard06.txt
+> new file mode 100644
+> index 0000000..cc2231a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/dmard06.txt
+> @@ -0,0 +1,17 @@
+> +Device tree bindings for Domintech DMARD06 acceletometer
+> +
+> +Required properties:
+> + - compatible		: Should be "domintech,dmard06"
+> + - reg			: I2C address of the chip. Should be 0x1c
 
-Please add acks when posting new versions.
+No interrupt? If not, for the binding:
 
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
