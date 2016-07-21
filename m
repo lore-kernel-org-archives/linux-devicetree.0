@@ -1,39 +1,33 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH] clk: mvebu: armada-39x: add clk description for
- supported interfaces
-Date: Thu, 21 Jul 2016 13:50:44 +0200
-Message-ID: <20160721135044.5f573741@free-electrons.com>
-References: <1469098090-17836-1-git-send-email-jaz@semihalf.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 0/2] dra7: add support for two PCIe ports
+Date: Thu, 21 Jul 2016 17:27:54 +0530
+Message-ID: <1469102276-14777-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1469098090-17836-1-git-send-email-jaz@semihalf.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Grzegorz Jaszczyk <jaz@semihalf.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, gregory.clement@free-electrons.com, mw@semihalf.com, alior@marvell.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, kishon@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This series adds patches to support 2 PCIe ports simultaneously
+on dra7 based boards.
+None of the supported boards exposes 2 PCIe ports. However these are
+mandatory changes that would be required in order to support
+2 PCIe ports.
 
-On Thu, 21 Jul 2016 12:48:10 +0200, Grzegorz Jaszczyk wrote:
-> Both SATA and second USB3.0 interface are supported in Armada-39x SoC
-> family. Add necessary clk description, so both xhci and sata drivers
-> can be correctly initialized.
-> 
-> The binding documentation has also been updated accordingly.
-> 
-> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+This series has been tested to see if there are regressions with 1
+PCIe port. Though testing of 2 PCIe ports is not done
+while sending this patch series, it has been verified in
+few of the customer boards.
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Kishon Vijay Abraham I (2):
+  ARM: dts: DRA7: Add "linux,pci-domain" property for pci dt nodes
+  ARM: DRA7: select PCI_DOMAINS config
 
-(I verified in the datasheet that those bits indeed control the usb3h1
-and sata0 clocks).
+ arch/arm/boot/dts/dra7.dtsi |    2 ++
+ arch/arm/mach-omap2/Kconfig |    1 +
+ 2 files changed, 3 insertions(+)
 
-Thanks!
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+1.7.9.5
