@@ -1,71 +1,40 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH 08/18] ARM: mvebu: a39x: enable PMU,
- CA9 MPcore SoC Controller and Coherency fabric
-Date: Thu, 21 Jul 2016 14:44:04 +0200
-Message-ID: <1469105055-25181-9-git-send-email-jaz@semihalf.com>
+Subject: [PATCH 13/18] ARM: mvebu: a39x: enable rtc for all Armada-39x SoCs
+Date: Thu, 21 Jul 2016 14:44:10 +0200
+Message-ID: <1469105055-25181-15-git-send-email-jaz@semihalf.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-This commit enables:
-- CA9's Performance Monitor Unit
-- CA9 MPcore SoC Controller
-- Coherency fabric
-on Armada 39x, basing on the Armada 38x (which has the same CA9 CPU).
+Despite that FS states that rtc is present only in A395 and A398 and not in
+A390, the rtc is working with A390.
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-Reviewed-by: Lior Amsalem <alior@marvell.com>
 ---
- arch/arm/boot/dts/armada-39x.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/boot/dts/armada-39x.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-index cb66f20..8a22c02 100644
+index 1225cd8..5bed8b9 100644
 --- a/arch/arm/boot/dts/armada-39x.dtsi
 +++ b/arch/arm/boot/dts/armada-39x.dtsi
-@@ -78,6 +78,11 @@
- 		};
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a9-pmu";
-+		interrupts-extended = <&mpic 3>;
-+	};
-+
- 	soc {
- 		compatible = "marvell,armada390-mbus", "marvell,armadaxp-mbus",
- 			     "simple-bus";
-@@ -322,6 +327,16 @@
- 				reg = <0x20800 0x10>;
+@@ -429,6 +429,13 @@
+ 				};
  			};
  
-+			mpcore-soc-ctrl@20d20 {
-+				compatible = "marvell,armada-380-mpcore-soc-ctrl";
-+				reg = <0x20d20 0x6c>;
++			rtc@a3800 {
++				compatible = "marvell,armada-380-rtc";
++				reg = <0xa3800 0x20>, <0x184a0 0x0c>;
++				reg-names = "rtc", "rtc-soc";
++				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
 +			};
 +
-+			coherency-fabric@21010 {
-+				compatible = "marvell,armada-380-coherency-fabric";
-+				reg = <0x21010 0x1c>;
-+			};
-+
- 			pmsu@22000 {
- 				compatible = "marvell,armada-390-pmsu",
- 					     "marvell,armada-380-pmsu";
+ 			flash@d0000 {
+ 				compatible = "marvell,armada370-nand";
+ 				reg = <0xd0000 0x54>;
 -- 
 1.8.3.1
