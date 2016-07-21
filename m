@@ -1,36 +1,48 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
-Date: Thu, 21 Jul 2016 20:34:12 +0200
-Message-ID: <3917663.1nRrfqKY9D@wuerfel>
-References: <1468723822-30457-1-git-send-email-oss@buserror.net> <146909676646.16700.8383344640490662952@concordia> <1469119526.25630.42.camel@buserror.net>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
+Date: Thu, 21 Jul 2016 18:45:34 +0000
+Message-ID: <20160721184534.GI5814@io.lakedaemon.net>
+References: <1468135649-19980-1-git-send-email-vw@iommu.org>
+ <16178876.fFBuoBSjbd@wuerfel>
+ <CAKT61h8EkOOkDHou65Uc7NNomJ6Nowvw8o6JnWxNyc0S_=x_JA@mail.gmail.com>
+ <1885052.EkH2ZADWZS@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469119526.25630.42.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1885052.EkH2ZADWZS@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Wan ZongShun <mcuos.com@gmail.com>, Wan Zongshun <vw@iommu.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 21, 2016 11:45:26 AM CEST Scott Wood wrote:
+Wan ZongShun,
+
+On Fri, Jul 15, 2016 at 12:02:55PM +0200, Arnd Bergmann wrote:
+> On Friday, July 15, 2016 5:44:50 PM CEST Wan ZongShun wrote:
+> > 2016-07-15 15:00 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> > > On Friday, July 15, 2016 1:15:58 PM CEST Wan Zongshun wrote:
+...
+> > > That assumes that REG_AIC_IPER contains a 32-bit value with one single
+> > > bit set to indicate which IRQ was triggered.
+> > >
+> > > If the difference is only in performance, you could try measuring which
+> > > of the two ends up being faster.
+> > 
+> > It seems hard to measure. I think Do IO operation should be slower
+> > than shift 2. 
 > 
-> For the MMC issue I suggest using ifdef CONFIG_PPC and mfspr(SPRN_SVR) like
-> the clock driver does[1] and we can revisit the issue if/when we need to do
-> something similar on an ARM chip.
+> It depends on how fast that particular I/O path is. A lot of readl()
+> operations are awfully slow, but the hardware design for the interrupt
+> controller may in fact have optimized this to be reasonably fast.
+> 
+> Another option would be to avoid the shift and just use the raw value
+> of the REG_AIC_IPER register as the hwirq, with a custom map()
+> callback that turns shifts the number read from the DT two bits
+> so it matches the register value.
 
-That sounds ok to me. having an mfspr check isn't nice but does the
-job to work around existing bindings. For future chips, we can hopefully
-find a way to identify most quirks early enough that the DT binding
-can describe them using distinct compatible strings or other properties,
-if necessary with the help of the boot loader.
+Good idea.  Are the two lsb bits constant or do they need to be masked?
 
-Some other folks on MIPS were interested in having the soc_device
-matching infrastructure and contacted me off-list, but they can of
-course take the patch I sent and work from that.
+thx,
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason.
