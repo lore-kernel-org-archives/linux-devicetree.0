@@ -1,45 +1,45 @@
-From: Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH V8 2/2] mmc: OCTEON: Add host driver for OCTEON MMC
- controller.
-Date: Thu, 21 Jul 2016 15:46:04 +0200
-Message-ID: <20160721134603.GA25689@linux-mips.org>
-References: <57853474.9050108@cavium.com>
- <578E71E6.2020700@caviumnetworks.com>
- <CAPDyKFqb-7LLM0XPtVWj1qHib991E2dHt+6W0UPgbXnukGkmXA@mail.gmail.com>
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
+Subject: Re: [PATCH 03/18] ARM: mvebu: enable E1000E in mvebu_v7_defconfig
+Date: Thu, 21 Jul 2016 15:52:29 +0200
+Message-ID: <CAH76GKM1Ls0aHaT7SZch6y7xz+ywY_9RyzR55PnXXEsdGvnUxA@mail.gmail.com>
+References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
+ <1469105055-25181-4-git-send-email-jaz@semihalf.com> <20160721124408.GO1041@n2100.armlinux.org.uk>
+ <20160721144647.78fce4a8@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqb-7LLM0XPtVWj1qHib991E2dHt+6W0UPgbXnukGkmXA@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Steven J. Hill" <Steven.Hill@caviumnetworks.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160721144647.78fce4a8@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, Jason Cooper <jason@lakedaemon.net>, andrew@lunn.ch, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, Lior Amsalem <alior@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2016 at 11:19:43PM +0200, Ulf Hansson wrote:
+Hi Russel, Thmoas
 
-> > Has anyone reviewed the driver or have any comments? Thanks.
-> 
-> Sorry I need more time, been partly out of office lately.
-> I intend to review this prior rc1 is out, but no promises.
-> 
-> Kind regards
-> Uffe
+2016-07-21 14:46 GMT+02:00 Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com>:
+> Hello,
+>
+> On Thu, 21 Jul 2016 13:44:09 +0100, Russell King - ARM Linux wrote:
+>> On Thu, Jul 21, 2016 at 02:43:59PM +0200, Grzegorz Jaszczyk wrote:
+>> > Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+>>
+>> Why?  It's not like this is an on-soc device, but most likely a PCIe card.
+>> Should we build-in all PCIe drivers?
+>
+> I agree.
+>
+>> I think it makes more sense to have this as a module rather than built-in.
+>
+> I would prefer to not have it all in the defconfig. I'd hate to have
+> a defconfig that builds tons of random modules "just because".
 
-Ulf,
+Both Semihalf and Marvel ISL teams use E1000E NICs with Marvell boards
+for development/testing purpose, so we always have to enable it
+manually - that's the reason why I wanted to have it enabled by
+default.
+Nevertheless it is indeed not part of the SoC and I understand your
+arguments. I will drop it in the next patch-set version
 
-if you decide to accept this patch, could you also push the bindings
-patch ("[V8,1/2] mmc: OCTEON: Add DT bindings for OCTEON MMC controller.")
-upstream?  I think they should be merged together.
-
-Thanks,
-
-  Ralf
+Thank you,
+Grzegorz
