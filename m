@@ -1,7 +1,7 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH 11/18] ARM: mvebu: a39x: add missing nodes describing GPIO's
-Date: Thu, 21 Jul 2016 14:44:08 +0200
-Message-ID: <1469105055-25181-13-git-send-email-jaz@semihalf.com>
+Subject: [PATCH 07/18] ARM: mvebu: a39x: update the SDHCI node on Armada 39x
+Date: Thu, 21 Jul 2016 14:44:03 +0200
+Message-ID: <1469105055-25181-8-git-send-email-jaz@semihalf.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
@@ -10,61 +10,35 @@ To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@l
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-The whole Armada 39x SoC family of processors has GPIO's which all can be
-supported with existing driver.
+Commit 1140011ee9d9 ("mmc: sdhci-pxav3: Modify clock settings
+for the SDR50 and DDR50 modes") has extended the Device Tree
+binding used to describe PXAv3 SDHCI controllers in order to be
+able to use the SDR50 and DDR50 modes.
+
+This commit updates the Device Tree description of the Armada
+39x SDHCI controller in other to take advantage of this
+functionality.
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 ---
- arch/arm/boot/dts/armada-39x.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm/boot/dts/armada-39x.dtsi | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-index 5e01438..0749878 100644
+index dc6efd3..cb66f20 100644
 --- a/arch/arm/boot/dts/armada-39x.dtsi
 +++ b/arch/arm/boot/dts/armada-39x.dtsi
-@@ -55,6 +55,8 @@
- 	compatible = "marvell,armada390";
+@@ -380,7 +380,10 @@
  
- 	aliases {
-+		gpio0 = &gpio0;
-+		gpio1 = &gpio1;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-@@ -274,6 +276,34 @@
- 				};
- 			};
- 
-+			gpio0: gpio@18100 {
-+				compatible = "marvell,orion-gpio";
-+				reg = <0x18100 0x40>;
-+				ngpios = <32>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			gpio1: gpio@18140 {
-+				compatible = "marvell,orion-gpio";
-+				reg = <0x18140 0x40>;
-+				ngpios = <28>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
- 			system-controller@18200 {
- 				compatible = "marvell,armada-390-system-controller",
- 					     "marvell,armada-370-xp-system-controller";
+ 			sdhci@d8000 {
+ 				compatible = "marvell,armada-380-sdhci";
+-				reg = <0xd8000 0x1000>, <0xdc000 0x100>;
++				reg-names = "sdhci", "mbus", "conf-sdio3";
++				reg = <0xd8000 0x1000>,
++					<0xdc000 0x100>,
++					<0x18454 0x4>;
+ 				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&gateclk 17>;
+ 				mrvl,clk-delay-cycles = <0x1F>;
 -- 
 1.8.3.1
