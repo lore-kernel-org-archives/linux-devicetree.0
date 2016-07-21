@@ -1,48 +1,92 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v2 02/10] irqchip: add irqchip driver for nuc900
-Date: Thu, 21 Jul 2016 18:45:34 +0000
-Message-ID: <20160721184534.GI5814@io.lakedaemon.net>
-References: <1468135649-19980-1-git-send-email-vw@iommu.org>
- <16178876.fFBuoBSjbd@wuerfel>
- <CAKT61h8EkOOkDHou65Uc7NNomJ6Nowvw8o6JnWxNyc0S_=x_JA@mail.gmail.com>
- <1885052.EkH2ZADWZS@wuerfel>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: DT connectors, thoughts
+Date: Thu, 21 Jul 2016 14:09:18 -0500
+Message-ID: <CAL_JsqLc0N8o2Nc_dEcZChJqWyN3UtZEgzLd=j6dR=1y3xOvdA@mail.gmail.com>
+References: <577ACE0D.9050700@gmail.com> <20160718142037.GS16769@voom.fritz.box>
+ <442C02A9-582D-4FD8-8F05-7A6FCD5B6BCA@konsulko.com> <20160721134208.GD12120@voom.fritz.box>
+ <A1018E27-B604-4DD5-ADBA-95EF76F6DDAC@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1885052.EkH2ZADWZS@wuerfel>
+In-Reply-To: <A1018E27-B604-4DD5-ADBA-95EF76F6DDAC@konsulko.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Wan ZongShun <mcuos.com@gmail.com>, Wan Zongshun <vw@iommu.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, p.zabel@pengutronix.de
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Frank Rowand <frowand.list@gmail.com>, Stephen Boyd <stephen.boyd@linaro.org>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Wan ZongShun,
+On Thu, Jul 21, 2016 at 9:14 AM, Pantelis Antoniou
+<pantelis.antoniou@konsulko.com> wrote:
+> Hi David,
+>
+>> On Jul 21, 2016, at 16:42 , David Gibson <david@gibson.dropbear.id.a=
+u> wrote:
+>>
+>> On Wed, Jul 20, 2016 at 11:59:44PM +0300, Pantelis Antoniou wrote:
+>>> Hi David,
+>>>
+>>> Spent some time looking at this, and it looks like it=E2=80=99s goi=
+ng to the right direction.
+>>>
+>>> Comments inline.
+>>>
+>>>> On Jul 18, 2016, at 17:20 , David Gibson <david@gibson.dropbear.id=
+=2Eau> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> Here's some of my thoughts on how a connector format for the DT co=
+uld
+>>>> be done.  Sorry it's taken longer than I hoped - I've been pretty
+>>>> swamped in my day job.
+>>>>
+>>>> This is pretty early thoughts, but gives an outline of the approac=
+h I
+>>>> prefer.
 
-On Fri, Jul 15, 2016 at 12:02:55PM +0200, Arnd Bergmann wrote:
-> On Friday, July 15, 2016 5:44:50 PM CEST Wan ZongShun wrote:
-> > 2016-07-15 15:00 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> > > On Friday, July 15, 2016 1:15:58 PM CEST Wan Zongshun wrote:
-...
-> > > That assumes that REG_AIC_IPER contains a 32-bit value with one single
-> > > bit set to indicate which IRQ was triggered.
-> > >
-> > > If the difference is only in performance, you could try measuring which
-> > > of the two ends up being faster.
-> > 
-> > It seems hard to measure. I think Do IO operation should be slower
-> > than shift 2. 
-> 
-> It depends on how fast that particular I/O path is. A lot of readl()
-> operations are awfully slow, but the hardware design for the interrupt
-> controller may in fact have optimized this to be reasonably fast.
-> 
-> Another option would be to avoid the shift and just use the raw value
-> of the REG_AIC_IPER register as the hwirq, with a custom map()
-> callback that turns shifts the number read from the DT two bits
-> so it matches the register value.
+[...]
 
-Good idea.  Are the two lsb bits constant or do they need to be masked?
+>>>>             i2c: i2c@... {
+>>>>             };
+>>>>             intc: intc@... {
+>>>>                     #interrupt-cells =3D <2>;
+>>>>             };
+>>>>     };
+>>>>
+>>>>     connectors {
+>>>>             widget1 {
+>>>>                     compatible =3D "foo,widget-socket";
+>>>>                     w1_irqs: irqs {
+>>>>                             interrupt-controller;
+>>>>                             #address-cells =3D <0>;
+>>>>                             #interrupt-cells =3D <1>;
+>>>>                             interrupt-map-mask =3D <0xffffffff>;
+>>>>                             interrupt-map =3D <
+>>>>                                     0 &intc 7 0
+>>>>                                     1 &intc 8 0
+>>>>                             >;
+>>>>                     };
+>>>
+>>> This is fine. We need an interrupt controller node.
+>>
+>> Actually I think we only need an interrupt nexus, not an interrupt
+>> controller (in IEEE1275 terminology).  (An interrupt controller woul=
+d
+>> generally require it's own driver, to ack/mask irqs, whereas this ju=
+st
+>> demonstrates the routing to an existing interrupt controller).  Whic=
+h
+>> makes that example slightly incorrect (it shouldn't have the
+>> interrupt-controller property).
+>
+> Hmm, as far as I can tell we only have a concept of an interrupt cont=
+roller
+> in the kernel. An interrupt nexus is something new. We should get by =
+without
+> a driver but hacking the interrupt lookup path at DT.
 
-thx,
+Interrupt nexus is the interrupt-map property which is fully
+supported. I'd expect we'll end up with a gpio nexus (i.e. gpio-map)
+for connector gpios, too.
 
-Jason.
+Rob
