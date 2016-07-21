@@ -1,59 +1,38 @@
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH 08/18] ARM: mvebu: a39x: Enable PMU, CA9 MPcore SoC Controller and Coherency fabric
-Date: Thu, 21 Jul 2016 14:44:05 +0200
-Message-ID: <1469105055-25181-10-git-send-email-jaz@semihalf.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 03/18] ARM: mvebu: enable E1000E in mvebu_v7_defconfig
+Date: Thu, 21 Jul 2016 14:46:47 +0200
+Message-ID: <20160721144647.78fce4a8@free-electrons.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
+	<1469105055-25181-4-git-send-email-jaz@semihalf.com>
+	<20160721124408.GO1041@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
+In-Reply-To: <20160721124408.GO1041@n2100.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Grzegorz Jaszczyk <jaz@semihalf.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, gregory.clement@free-electrons.com, mw@semihalf.com, alior@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-This commit enables:
-- CA9's Performance Monitor Unit
-- CA9 MPcore SoC Controller
-- Coherency fabric
-on Armada 39x, basing on the Armada 38x (which has the same CA9 CPU).
+Hello,
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-Reviewed-by: Lior Amsalem <alior@marvell.com>
----
- arch/arm/boot/dts/armada-39x.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On Thu, 21 Jul 2016 13:44:09 +0100, Russell King - ARM Linux wrote:
+> On Thu, Jul 21, 2016 at 02:43:59PM +0200, Grzegorz Jaszczyk wrote:
+> > Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>  
+> 
+> Why?  It's not like this is an on-soc device, but most likely a PCIe card.
+> Should we build-in all PCIe drivers?
 
-diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-index cb66f20..8a22c02 100644
---- a/arch/arm/boot/dts/armada-39x.dtsi
-+++ b/arch/arm/boot/dts/armada-39x.dtsi
-@@ -78,6 +78,11 @@
- 		};
- 	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a9-pmu";
-+		interrupts-extended = <&mpic 3>;
-+	};
-+
- 	soc {
- 		compatible = "marvell,armada390-mbus", "marvell,armadaxp-mbus",
- 			     "simple-bus";
-@@ -322,6 +327,16 @@
- 				reg = <0x20800 0x10>;
- 			};
- 
-+			mpcore-soc-ctrl@20d20 {
-+				compatible = "marvell,armada-380-mpcore-soc-ctrl";
-+				reg = <0x20d20 0x6c>;
-+			};
-+
-+			coherency-fabric@21010 {
-+				compatible = "marvell,armada-380-coherency-fabric";
-+				reg = <0x21010 0x1c>;
-+			};
-+
- 			pmsu@22000 {
- 				compatible = "marvell,armada-390-pmsu",
- 					     "marvell,armada-380-pmsu";
+I agree.
+
+> I think it makes more sense to have this as a module rather than built-in.
+
+I would prefer to not have it all in the defconfig. I'd hate to have
+a defconfig that builds tons of random modules "just because".
+
+Thomas
 -- 
-1.8.3.1
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
