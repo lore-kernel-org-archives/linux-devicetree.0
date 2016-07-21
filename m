@@ -1,204 +1,71 @@
-From: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 17/18] ARM: mvebu: a390-db: add support for the Armada 390 DB board
-Date: Thu, 21 Jul 2016 14:44:14 +0200
-Message-ID: <1469105055-25181-19-git-send-email-jaz@semihalf.com>
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
+Subject: [PATCH 08/18] ARM: mvebu: a39x: enable PMU,
+ CA9 MPcore SoC Controller and Coherency fabric
+Date: Thu, 21 Jul 2016 14:44:04 +0200
+Message-ID: <1469105055-25181-9-git-send-email-jaz@semihalf.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469105055-25181-1-git-send-email-jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This commit adds description for following features for this board:
+This commit enables:
+- CA9's Performance Monitor Unit
+- CA9 MPcore SoC Controller
+- Coherency fabric
+on Armada 39x, basing on the Armada 38x (which has the same CA9 CPU).
 
-- Serial port
-- I2C buses
-- 16MB SPI-NOR
-- USB2.0
-- USB3.0
-- PCIe interfaces
-
-Signed-off-by: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+Reviewed-by: Lior Amsalem <alior@marvell.com>
 ---
- arch/arm/boot/dts/armada-390-db.dts | 164 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 164 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-390-db.dts
+ arch/arm/boot/dts/armada-39x.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-390-db.dts b/arch/arm/boot/dts/armada-390-db.dts
-new file mode 100644
-index 0000000..964038f
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-390-db.dts
-@@ -0,0 +1,164 @@
-+/*
-+ * Device Tree file for Marvell Armada 390 Development Board
-+ * (DB-88F6920)
-+ *
-+ * Copyright (C) 2016 Marvell
-+ *
-+ * Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "armada-390.dtsi"
-+
-+/ {
-+	model = "Marvell Armada 390 Development Board";
-+	compatible = "marvell,a390-db", "marvell,armada390";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
+diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
+index cb66f20..8a22c02 100644
+--- a/arch/arm/boot/dts/armada-39x.dtsi
++++ b/arch/arm/boot/dts/armada-39x.dtsi
+@@ -78,6 +78,11 @@
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a9-pmu";
++		interrupts-extended = <&mpic 3>;
 +	};
 +
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000>; /* 2 GB */
-+	};
-+
-+	soc {
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
-+
-+		internal-regs {
-+			spi@10680 {
-+				status = "okay";
-+				pinctrl-0 = <&spi1_pins>;
-+				pinctrl-names = "default";
-+
-+				spi-flash@1 {
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					compatible = "n25q128a13",
-+						     "jedec,spi-nor";
-+					reg = <0>; /* Chip select 0 */
-+					spi-max-frequency = <108000000>;
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						partition@0 {
-+							label = "U-Boot";
-+							reg = <0 0x400000>;
-+						};
-+						partition@400000 {
-+							label = "Filesystem";
-+							reg = <0x400000 0xc00000>;
-+						};
-+					};
-+				};
+ 	soc {
+ 		compatible = "marvell,armada390-mbus", "marvell,armadaxp-mbus",
+ 			     "simple-bus";
+@@ -322,6 +327,16 @@
+ 				reg = <0x20800 0x10>;
+ 			};
+ 
++			mpcore-soc-ctrl@20d20 {
++				compatible = "marvell,armada-380-mpcore-soc-ctrl";
++				reg = <0x20d20 0x6c>;
 +			};
 +
-+			i2c@11000 {
-+				status = "okay";
-+				clock-frequency = <100000>;
++			coherency-fabric@21010 {
++				compatible = "marvell,armada-380-coherency-fabric";
++				reg = <0x21010 0x1c>;
 +			};
 +
-+			serial@12000 {
-+				status = "okay";
-+			};
-+
-+			usb@58000 {
-+				status = "okay";
-+			};
-+
-+			flash@d0000 {
-+				status = "okay";
-+				pinctrl-0 = <&nand_pins>;
-+				pinctrl-names = "default";
-+				num-cs = <1>;
-+				marvell,nand-keep-config;
-+				marvell,nand-enable-arbiter;
-+				nand-on-flash-bbt;
-+				nand-ecc-strength = <8>;
-+				nand-ecc-step-size = <512>;
-+
-+				partitions {
-+					compatible = "fixed-partitions";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					partition@0 {
-+						label = "U-Boot";
-+						reg = <0 0x800000>;
-+					};
-+					partition@800000 {
-+						label = "Linux";
-+						reg = <0x800000 0x800000>;
-+					};
-+					partition@1000000 {
-+						label = "Filesystem";
-+						reg = <0x1000000 0x3f000000>;
-+					};
-+				};
-+			};
-+
-+			usb3@f8000 {
-+				status = "okay";
-+			};
-+		};
-+
-+		pcie-controller {
-+			status = "okay";
-+
-+			pcie@1,0 {
-+				status = "okay";
-+			};
-+
-+			pcie@2,0 {
-+				status = "okay";
-+			};
-+
-+			pcie@3,0 {
-+				status = "okay";
-+			};
-+		};
-+	};
-+};
+ 			pmsu@22000 {
+ 				compatible = "marvell,armada-390-pmsu",
+ 					     "marvell,armada-380-pmsu";
 -- 
 1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
