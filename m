@@ -1,7 +1,7 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH 07/18] ARM: mvebu: a39x: update the SDHCI node on Armada 39x
-Date: Thu, 21 Jul 2016 14:44:03 +0200
-Message-ID: <1469105055-25181-8-git-send-email-jaz@semihalf.com>
+Subject: [PATCH 14/18] ARM: mvebu: add support for the Armada 395 SoC family
+Date: Thu, 21 Jul 2016 14:44:11 +0200
+Message-ID: <1469105055-25181-16-git-send-email-jaz@semihalf.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
@@ -10,35 +10,107 @@ To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@l
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-Commit 1140011ee9d9 ("mmc: sdhci-pxav3: Modify clock settings
-for the SDR50 and DDR50 modes") has extended the Device Tree
-binding used to describe PXAv3 SDHCI controllers in order to be
-able to use the SDR50 and DDR50 modes.
-
-This commit updates the Device Tree description of the Armada
-39x SDHCI controller in other to take advantage of this
-functionality.
+Beside interfaces described in the armada-39x.dtsi, the Armada 395 SoC
+family supports: 2 x SATA3 (2 ports in one unit) and the USB3.0
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 ---
- arch/arm/boot/dts/armada-39x.dtsi | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/arm/marvell/armada-39x.txt |  2 +-
+ arch/arm/boot/dts/armada-395.dtsi                  | 76 ++++++++++++++++++++++
+ 2 files changed, 77 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/armada-395.dtsi
 
-diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-index dc6efd3..cb66f20 100644
---- a/arch/arm/boot/dts/armada-39x.dtsi
-+++ b/arch/arm/boot/dts/armada-39x.dtsi
-@@ -380,7 +380,10 @@
+diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt b/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt
+index 53d4ff9..f066801 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt
+@@ -17,4 +17,4 @@ compatible: must contain "marvell,armada398"
  
- 			sdhci@d8000 {
- 				compatible = "marvell,armada-380-sdhci";
--				reg = <0xd8000 0x1000>, <0xdc000 0x100>;
-+				reg-names = "sdhci", "mbus", "conf-sdio3";
-+				reg = <0xd8000 0x1000>,
-+					<0xdc000 0x100>,
-+					<0x18454 0x4>;
- 				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&gateclk 17>;
- 				mrvl,clk-delay-cycles = <0x1F>;
+ Example:
+ 
+-compatible = "marvell,a398-db", "marvell,armada398", "marvell,armada390";
++compatible = "marvell,a398-db", "marvell,armada398", "marvell,armada395", "marvell,armada390";
+diff --git a/arch/arm/boot/dts/armada-395.dtsi b/arch/arm/boot/dts/armada-395.dtsi
+new file mode 100644
+index 0000000..ab5dc49
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-395.dtsi
+@@ -0,0 +1,76 @@
++/*
++ * Device Tree Include file for Marvell Armada 395 SoC.
++ *
++ * Copyright (C) 2016 Marvell
++ *
++ * Grzegorz Jaszczyk <jaz@semihalf.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "armada-39x.dtsi"
++
++/ {
++	compatible = "marvell,armada395", "marvell,armada390";
++
++	soc {
++		internal-regs {
++			pinctrl@18000 {
++				compatible = "marvell,mv88f6925-pinctrl";
++				reg = <0x18000 0x20>;
++			};
++
++			sata@a8000 {
++				compatible = "marvell,armada-380-ahci";
++				reg = <0xa8000 0x2000>;
++				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 15>;
++				status = "disabled";
++			};
++
++			usb3@f0000 {
++				compatible = "marvell,armada-380-xhci";
++				reg = <0xf0000 0x4000>,<0xf4000 0x4000>;
++				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 9>;
++				status = "disabled";
++			};
++		};
++	};
++};
 -- 
 1.8.3.1
