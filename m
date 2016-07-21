@@ -1,127 +1,128 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] usb: chipidea: imx: set over current polarity per
- dts setting
-Date: Thu, 21 Jul 2016 16:16:14 +0800
-Message-ID: <20160721081614.GA32427@shlinux2>
-References: <1469001762-15015-1-git-send-email-jun.li@nxp.com>
- <1469001762-15015-3-git-send-email-jun.li@nxp.com>
+From: Songjun Wu <songjun.wu@microchip.com>
+Subject: [PATCH v6 2/2] [media] atmel-isc: DT binding for Image Sensor
+ Controller driver
+Date: Thu, 21 Jul 2016 16:14:58 +0800
+Message-ID: <1469088900-23935-3-git-send-email-songjun.wu@microchip.com>
+References: <1469088900-23935-1-git-send-email-songjun.wu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1469001762-15015-3-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-Cc: peter.chen-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1469088900-23935-1-git-send-email-songjun.wu@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.ferre@atmel.com, robh@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Songjun Wu <songjun.wu@microchip.com>, Rob Herring <robh+dt@kernel.org>, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 04:02:42PM +0800, Li Jun wrote:
-> imx usb over current polarity is low active by default, with
-> over-current-active-high property added, user can config it to be high
-> active. Meanwhile keep this setting unchanged for existing platforms
-> so new platform must set the right value for active low by its usbmisc
-> init function if over current is enabled.
-> 
-> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-> ---
->  drivers/usb/chipidea/ci_hdrc_imx.c |  3 +++
->  drivers/usb/chipidea/ci_hdrc_imx.h |  1 +
->  drivers/usb/chipidea/usbmisc_imx.c | 22 +++++++++++++++++-----
->  3 files changed, 21 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-> index dedc33e..0991794 100644
-> --- a/drivers/usb/chipidea/ci_hdrc_imx.c
-> +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-> @@ -140,6 +140,9 @@ static struct imx_usbmisc_data *usbmisc_get_init_data(struct device *dev)
->  	if (of_find_property(np, "disable-over-current", NULL))
->  		data->disable_oc = 1;
->  
-> +	if (of_find_property(np, "over-current-active-high", NULL))
-> +		data->oc_polarity = 1;
-> +
->  	if (of_find_property(np, "external-vbus-divider", NULL))
->  		data->evdo = 1;
->  
-> diff --git a/drivers/usb/chipidea/ci_hdrc_imx.h b/drivers/usb/chipidea/ci_hdrc_imx.h
-> index 635717e..409aa5ca8 100644
-> --- a/drivers/usb/chipidea/ci_hdrc_imx.h
-> +++ b/drivers/usb/chipidea/ci_hdrc_imx.h
-> @@ -17,6 +17,7 @@ struct imx_usbmisc_data {
->  	int index;
->  
->  	unsigned int disable_oc:1; /* over current detect disabled */
-> +	unsigned int oc_polarity:1; /* over current polarity if oc enabled */
->  	unsigned int evdo:1; /* set external vbus divider option */
->  };
->  
-> diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-> index ab8b027..20d02a5 100644
-> --- a/drivers/usb/chipidea/usbmisc_imx.c
-> +++ b/drivers/usb/chipidea/usbmisc_imx.c
-> @@ -56,6 +56,7 @@
->  
->  #define MX6_BM_NON_BURST_SETTING	BIT(1)
->  #define MX6_BM_OVER_CUR_DIS		BIT(7)
-> +#define MX6_BM_OVER_CUR_POLARITY	BIT(8)
->  #define MX6_BM_WAKEUP_ENABLE		BIT(10)
->  #define MX6_BM_ID_WAKEUP		BIT(16)
->  #define MX6_BM_VBUS_WAKEUP		BIT(17)
-> @@ -266,11 +267,14 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data *data)
->  
->  	spin_lock_irqsave(&usbmisc->lock, flags);
->  
-> +	reg = readl(usbmisc->base + data->index * 4);
->  	if (data->disable_oc) {
-> -		reg = readl(usbmisc->base + data->index * 4);
-> -		writel(reg | MX6_BM_OVER_CUR_DIS,
-> -			usbmisc->base + data->index * 4);
-> +		reg |= MX6_BM_OVER_CUR_DIS;
-> +	} else if (data->oc_polarity == 1) {
-> +		/* High active */
-> +		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
->  	}
-> +	writel(reg, usbmisc->base + data->index * 4);
->  
->  	/* SoC non-burst setting */
->  	reg = readl(usbmisc->base + data->index * 4);
-> @@ -365,10 +369,14 @@ static int usbmisc_imx7d_init(struct imx_usbmisc_data *data)
->  		return -EINVAL;
->  
->  	spin_lock_irqsave(&usbmisc->lock, flags);
-> +	reg = readl(usbmisc->base);
->  	if (data->disable_oc) {
-> -		reg = readl(usbmisc->base);
-> -		writel(reg | MX6_BM_OVER_CUR_DIS, usbmisc->base);
-> +		reg |= MX6_BM_OVER_CUR_DIS;
-> +	} else if (data->oc_polarity == 1) {
-> +		/* High active */
-> +		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
->  	}
-> +	writel(reg, usbmisc->base);
->  
->  	reg = readl(usbmisc->base + MX7D_USBNC_USB_CTRL2);
->  	reg &= ~MX7D_USB_VBUS_WAKEUP_SOURCE_MASK;
-> @@ -492,6 +500,10 @@ static const struct of_device_id usbmisc_imx_dt_ids[] = {
->  		.compatible = "fsl,imx6ul-usbmisc",
->  		.data = &imx6sx_usbmisc_ops,
->  	},
-> +	{
-> +		.compatible = "fsl,imx7d-usbmisc",
-> +		.data = &imx7d_usbmisc_ops,
-> +	},
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, usbmisc_imx_dt_ids);
-> -- 
+DT binding documentation for ISC driver.
 
-This one is ok, I will queue it
+Signed-off-by: Songjun Wu <songjun.wu@microchip.com>
+---
 
+Changes in v6:
+- Add "iscck" and "gck" to clock-names.
+
+Changes in v5:
+- Add clock-output-names.
+
+Changes in v4:
+- Remove the isc clock nodes.
+
+Changes in v3:
+- Remove the 'atmel,sensor-preferred'.
+- Modify the isc clock node according to the Rob's remarks.
+
+Changes in v2:
+- Remove the unit address of the endpoint.
+- Add the unit address to the clock node.
+- Avoid using underscores in node names.
+- Drop the "0x" in the unit address of the i2c node.
+- Modify the description of 'atmel,sensor-preferred'.
+- Add the description for the ISC internal clock.
+
+ .../devicetree/bindings/media/atmel-isc.txt        | 65 ++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+
+diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+new file mode 100644
+index 0000000..50ab60b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+@@ -0,0 +1,65 @@
++Atmel Image Sensor Controller (ISC)
++----------------------------------------------
++
++Required properties for ISC:
++- compatible
++	Must be "atmel,sama5d2-isc".
++- reg
++	Physical base address and length of the registers set for the device.
++- interrupts
++	Should contain IRQ line for the ISC.
++- clocks
++	List of clock specifiers, corresponding to entries in
++	the clock-names property;
++	Please refer to clock-bindings.txt.
++- clock-names
++	Required elements: "hclock", "iscck", "gck".
++- #clock-cells
++	Should be 0.
++- clock-output-names
++	Should be "isc-mck".
++- pinctrl-names, pinctrl-0
++	Please refer to pinctrl-bindings.txt.
++
++ISC supports a single port node with parallel bus. It should contain one
++'port' child node with child 'endpoint' node. Please refer to the bindings
++defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++isc: isc@f0008000 {
++	compatible = "atmel,sama5d2-isc";
++	reg = <0xf0008000 0x4000>;
++	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
++	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
++	clock-names = "hclock", "iscck", "gck";
++	#clock-cells = <0>;
++	clock-output-names = "isc-mck";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_isc_base &pinctrl_isc_data_8bit &pinctrl_isc_data_9_10 &pinctrl_isc_data_11_12>;
++
++	port {
++		isc_0: endpoint {
++			remote-endpoint = <&ov7740_0>;
++			hsync-active = <1>;
++			vsync-active = <0>;
++			pclk-sample = <1>;
++		};
++	};
++};
++
++i2c1: i2c@fc028000 {
++	ov7740: camera@21 {
++		compatible = "ovti,ov7740";
++		reg = <0x21>;
++		clocks = <&isc>;
++		clock-names = "xvclk";
++		assigned-clocks = <&isc>;
++		assigned-clock-rates = <24000000>;
++
++		port {
++			ov7740_0: endpoint {
++				remote-endpoint = <&isc_0>;
++			};
++		};
++	};
++};
+\ No newline at end of file
 -- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
