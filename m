@@ -1,24 +1,86 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 00/18] ARM: mvebu: misc Armada 38x/39x DT and v7
- defconfig improvements
-Date: Thu, 21 Jul 2016 15:43:45 +0200
-Message-ID: <20160721134345.GL11309@lunn.ch>
-References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grzegorz Jaszczyk <jaz@semihalf.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, alior@marvell.com
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH v2 1/3] drivers/clocksource/moxart: Refactor enable/disable
+Date: Thu, 21 Jul 2016 23:13:51 +0930
+Message-ID: <1469108633-7940-2-git-send-email-joel@jms.id.au>
+References: <1469108633-7940-1-git-send-email-joel@jms.id.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469108633-7940-1-git-send-email-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 21, 2016 at 02:43:56PM +0200, Grzegorz Jaszczyk wrote:
+This patch abstracts the enable and disable register writes into their
+own functions in preparation for future changes to use SoC specific
+values for the writes.
 
-Hi Grzegorz
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+---
+ drivers/clocksource/moxart_timer.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-Some of these patches are missing a commit log entry. Please add at
-least one line.
+diff --git a/drivers/clocksource/moxart_timer.c b/drivers/clocksource/moxart_timer.c
+index 841454417acd..a3aaa5658a49 100644
+--- a/drivers/clocksource/moxart_timer.c
++++ b/drivers/clocksource/moxart_timer.c
+@@ -58,15 +58,25 @@
+ static void __iomem *base;
+ static unsigned int clock_count_per_tick;
+ 
+-static int moxart_shutdown(struct clock_event_device *evt)
++static inline void moxart_disable(struct clock_event_device *evt)
+ {
+ 	writel(TIMER1_DISABLE, base + TIMER_CR);
++}
++
++static inline void moxart_enable(struct clock_event_device *evt)
++{
++	writel(TIMER1_ENABLE, base + TIMER_CR);
++}
++
++static int moxart_shutdown(struct clock_event_device *evt)
++{
++	moxart_disable(evt);
+ 	return 0;
+ }
+ 
+ static int moxart_set_oneshot(struct clock_event_device *evt)
+ {
+-	writel(TIMER1_DISABLE, base + TIMER_CR);
++	moxart_disable(evt);
+ 	writel(~0, base + TIMER1_BASE + REG_LOAD);
+ 	return 0;
+ }
+@@ -74,21 +84,21 @@ static int moxart_set_oneshot(struct clock_event_device *evt)
+ static int moxart_set_periodic(struct clock_event_device *evt)
+ {
+ 	writel(clock_count_per_tick, base + TIMER1_BASE + REG_LOAD);
+-	writel(TIMER1_ENABLE, base + TIMER_CR);
++	moxart_enable(evt);
+ 	return 0;
+ }
+ 
+ static int moxart_clkevt_next_event(unsigned long cycles,
+-				    struct clock_event_device *unused)
++				    struct clock_event_device *evt)
+ {
+ 	u32 u;
+ 
+-	writel(TIMER1_DISABLE, base + TIMER_CR);
++	moxart_disable(evt);
+ 
+ 	u = readl(base + TIMER1_BASE + REG_COUNT) - cycles;
+ 	writel(u, base + TIMER1_BASE + REG_MATCH1);
+ 
+-	writel(TIMER1_ENABLE, base + TIMER_CR);
++	moxart_enable(evt);
+ 
+ 	return 0;
+ }
+-- 
+2.8.1
 
-      Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
