@@ -1,30 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] clk: mvebu: armada-39x: add clk description for
- supported interfaces
-Date: Thu, 21 Jul 2016 17:08:01 -0500
-Message-ID: <20160721220801.GA19966@rob-hp-laptop>
-References: <1469098090-17836-1-git-send-email-jaz@semihalf.com>
+Subject: Re: [PATCH 2/2] dt: arm: shmobile: add H3ULCB board DT bindings
+Date: Thu, 21 Jul 2016 17:08:32 -0500
+Message-ID: <20160721220832.GA20634@rob-hp-laptop>
+References: <1469103962-20378-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1469104073-20490-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1469098090-17836-1-git-send-email-jaz@semihalf.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Grzegorz Jaszczyk <jaz@semihalf.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, alior@marvell.com
+In-Reply-To: <1469104073-20490-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 21, 2016 at 12:48:10PM +0200, Grzegorz Jaszczyk wrote:
-> Both SATA and second USB3.0 interface are supported in Armada-39x SoC
-> family. Add necessary clk description, so both xhci and sata drivers
-> can be correctly initialized.
+On Thu, Jul 21, 2016 at 03:27:53PM +0300, Vladimir Barinov wrote:
+> Add H3ULCB Device tree bindings Documentation, listing it as a supported
+> board.
 > 
-> The binding documentation has also been updated accordingly.
-> 
-> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 > ---
->  Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt | 2 ++
->  drivers/clk/mvebu/armada-39x.c                                | 2 ++
->  2 files changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
