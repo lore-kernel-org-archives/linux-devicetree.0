@@ -1,81 +1,55 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v3 5/6] usb: chipidea: let chipidea core device of_node
- equal's glue layer device of_node
-Date: Thu, 21 Jul 2016 18:12:39 +0800
-Message-ID: <20160721101239.GB22749@shlinux2>
-References: <1469007629-31757-1-git-send-email-peter.chen@nxp.com>
- <1469007629-31757-6-git-send-email-peter.chen@nxp.com>
- <20160721091438.GL1041@n2100.armlinux.org.uk>
- <20160721092012.GA22749@shlinux2>
- <20160721094128.GN1041@n2100.armlinux.org.uk>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Thu, 21 Jul 2016 20:26:06 +1000
+Message-ID: <146909676646.16700.8383344640490662952@concordia>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net>
+ <1468723822-30457-5-git-send-email-oss@buserror.net>
+ <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160721094128.GN1041@n2100.armlinux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, stephen.boyd@linaro.org, oscar@naiandei.net, arnd@arndb.de, pawel.moll@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, s.hauer@pengutronix.de, linux-usb@vger.kernel.org, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, stillcompiling@gmail.com, Peter Chen <peter.chen@freescale.com>, p.zabel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1469039508.25630.17.camel@buserror.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Scott Wood <oss@buserror.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 21, 2016 at 10:41:28AM +0100, Russell King - ARM Linux wrote:
-> On Thu, Jul 21, 2016 at 05:20:12PM +0800, Peter Chen wrote:
-> > On Thu, Jul 21, 2016 at 10:14:38AM +0100, Russell King - ARM Linux wrote:
-> > > On Wed, Jul 20, 2016 at 05:40:28PM +0800, Peter Chen wrote:
-> > > > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> > > > index 69426e6..0d05812 100644
-> > > > --- a/drivers/usb/chipidea/core.c
-> > > > +++ b/drivers/usb/chipidea/core.c
-> > > > @@ -914,6 +914,16 @@ static int ci_hdrc_probe(struct platform_device *pdev)
-> > > >  	if (!ci)
-> > > >  		return -ENOMEM;
-> > > >  
-> > > > +	/*
-> > > > +	 * At device tree, we have no device node for chipidea core,
-> > > > +	 * the glue layer's node is the parent node for host and udc
-> > > > +	 * device. But in related driver, the parent device is chipidea
-> > > > +	 * core. So, in order to let the common driver get parent's node,
-> > > > +	 * we let the core's device node equals glue layer's node.
-> > > > +	 */
-> > > > +	if (dev->parent && dev->parent->of_node)
-> > > > +		dev->of_node = dev->parent->of_node;
-> > > 
-> > > This is a dangerous thing to do.  You're changing the dev->of_node of
-> > > _this_ device, which means that _this_ driver will no longer match
-> > > the device if you remove and reinsert the driver module, or unbind
-> > > and try to re-bind the device to this driver.
-> > > 
-> > 
-> > Thanks for commenting it.
-> > 
-> > I have tested load/unload, it does not show any problems.
-> > 
-> > The chipidea core device is created by code at runtime, not by device node.
-> > And we have NO device node for this chipidea core device at dts.
-> 
-> Okay, so we still probably have the bind/unbind problem, where "dev"
-> can be matched by the driver which claimed "dev->parent".  Remember,
-> in an OF environment, driver matching is done by the compatible
-> property, which is accessed via dev->of_node.
-> 
-> Therefore, I would suggest that you NULL dev->of_node in the error
-> cleanup paths and in the remove function, so you don't have an
-> unbound device with a duplicated (but inappropriate) dev->of_node
-> pointer.
-> 
+Quoting Scott Wood (2016-07-21 04:31:48)
+> On Wed, 2016-07-20 at 13:24 +0200, Arnd Bergmann wrote:
+> > On Saturday, July 16, 2016 9:50:21 PM CEST Scott Wood wrote:
+> > >=20
+> > > From: yangbo lu <yangbo.lu@nxp.com>
+> > >=20
+> > > Move mpc85xx.h to include/linux/fsl and rename it to svr.h as a c=
+ommon
+> > > header file.=C2=A0=C2=A0This SVR numberspace is used on some ARM =
+chips as well as
+> > > PPC, and even to check for a PPC SVR multi-arch drivers would oth=
+erwise
+> > > need to ifdef the header inclusion and all references to the SVR =
+symbols.
+> > >=20
+> > > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> > > Acked-by: Wolfram Sang <wsa@the-dreams.de>
+> > > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+> > > Acked-by: Joerg Roedel <jroedel@suse.de>
+> > > [scottwood: update description]
+> > > Signed-off-by: Scott Wood <oss@buserror.net>
+> > >=20
+> > As discussed before, please don't introduce yet another vendor spec=
+ific
+> > way to match a SoC ID from a device driver.
+> >=20
+> > I've posted a patch for an extension to the soc_device infrastructu=
+re
+> > to allow comparing the running SoC to a table of devices, use that
+> > instead.
+>=20
+> As I asked before, in which relevant maintainership capacity are you =
+NACKing
+> this?
 
-Although it does no mismatch between driver and device due to the driver
-has no of_match_table, I find it has below re-request pinctrl error
-after re-bind, that's due to the parent device which has of_node
-and there is a pinctrl property in it.
+I'll nack the powerpc part until you guys can agree.
 
-imx6sx-pinctrl 20e0000.iomuxc: pin MX6SX_PAD_GPIO1_IO10 already requested by 2184000.usb;
-cannot claim for ci_hdrc.0
-
-After adding your suggestion, this error has gone, thanks.
-
-
--- 
-
-Best Regards,
-Peter Chen
+cheers
