@@ -1,86 +1,36 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: Re: [PATCH v5 10/11] Documentation: dtb: xgene: Add MDIO node
-Date: Thu, 21 Jul 2016 10:57:59 -0700
-Message-ID: <CAKh23F=jT=rjU_e9Xu82Jna5ntPR5zdt3VGEyXR4_w+6aQ6Cyg@mail.gmail.com>
-References: <1467932579-14320-1-git-send-email-isubramanian@apm.com>
- <1467932579-14320-11-git-send-email-isubramanian@apm.com> <20160713131010.GA15972@rob-hp-laptop>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Thu, 21 Jul 2016 20:34:12 +0200
+Message-ID: <3917663.1nRrfqKY9D@wuerfel>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net> <146909676646.16700.8383344640490662952@concordia> <1469119526.25630.42.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160713131010.GA15972@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469119526.25630.42.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 13, 2016 at 6:10 AM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Jul 07, 2016 at 04:02:58PM -0700, Iyappan Subramanian wrote:
->> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
->> Tested-by: Fushen Chen <fchen@apm.com>
->> Tested-by: Toan Le <toanle@apm.com>
->> Tested-by: Matthias Brugger <mbrugger@suse.com>
->> ---
->>  .../devicetree/bindings/net/apm-xgene-mdio.txt     | 37 ++++++++++++++++++++++
->>  1 file changed, 37 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-mdio.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/apm-xgene-mdio.txt b/Documentation/devicetree/bindings/net/apm-xgene-mdio.txt
->> new file mode 100644
->> index 0000000..0247e70
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/apm-xgene-mdio.txt
->> @@ -0,0 +1,37 @@
->> +APM X-Gene SoC MDIO node
->> +
->> +MDIO node is defined to describe on-chip MDIO controller.
->> +
->> +Required properties:
->> +     - compatible: Must be "apm,xgene-mdio-rgmii"
->> +     - #address-cells: Must be <1>.
->> +     - #size-cells: Must be <0>.
->> +     - reg: Address and length of the register set
->> +     - clocks: Reference to the clock entry
->> +
->> +For the phys on the mdio bus, there must be a node with the following fields:
->> +     - compatible: PHY identifier.  Please refer ./phy.txt for the format.
->> +     - reg: The ID number for the phy.
->> +
->> +Example:
->> +
->> +     mdio: mdio@0x17020000 {
->
-> Drop the '0x'
+On Thursday, July 21, 2016 11:45:26 AM CEST Scott Wood wrote:
+> 
+> For the MMC issue I suggest using ifdef CONFIG_PPC and mfspr(SPRN_SVR) like
+> the clock driver does[1] and we can revisit the issue if/when we need to do
+> something similar on an ARM chip.
 
-Thanks for the review.  Corrected and posted v6.
+That sounds ok to me. having an mfspr check isn't nice but does the
+job to work around existing bindings. For future chips, we can hopefully
+find a way to identify most quirks early enough that the DT binding
+can describe them using distinct compatible strings or other properties,
+if necessary with the help of the boot loader.
 
->
-> With that,
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
->> +             compatible = "apm,xgene-mdio-rgmii";
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +             reg = <0x0 0x17020000 0x0 0xd100>;
->> +             clocks = <&menetclk 0>;
->> +     };
->> +
->> +     /* Board-specific peripheral configurations */
->> +     &mdio {
->> +             menetphy: phy@3 {
->> +                     reg = <0x3>;
->> +             };
->> +             sgenet0phy: phy@4 {
->> +                     reg = <0x4>;
->> +             };
->> +             sgenet1phy: phy@5 {
->> +                     reg = <0x5>;
->> +             };
->> +     };
->> --
->> 1.9.1
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Some other folks on MIPS were interested in having the soc_device
+matching infrastructure and contacted me off-list, but they can of
+course take the patch I sent and work from that.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
