@@ -1,50 +1,45 @@
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH] clk: mvebu: armada-39x: add clk description for supported interfaces
-Date: Thu, 21 Jul 2016 12:48:10 +0200
-Message-ID: <1469098090-17836-1-git-send-email-jaz@semihalf.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/5] arm64: dts: r8a7795: Add HSUSB device node and enable channel 0 of USB2.0
+Date: Thu, 21 Jul 2016 19:46:56 +0900
+Message-ID: <1469098021-7692-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Both SATA and second USB3.0 interface are supported in Armada-39x SoC
-family. Add necessary clk description, so both xhci and sata drivers
-can be correctly initialized.
+This patch is based on the renesas.git / renesas-devel-20160718-v4.7-rc7 tag.
 
-The binding documentation has also been updated accordingly.
+Changes from v2:
+ - rebase on renesas.git / renesas-devel-20160718-v4.7-rc7.
+  - maybe the panic issue disappears on the tree. but, if still happens,
+    please try the following patch:
+    https://git.kernel.org/cgit/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=c14f8a4032efa73d9c4e155add47c19252b3bdf4
+ - remove the redundant instruction in patch 4.
+ - add a new patch that enables HSUSB driver as kernel module on the defconfig.
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
----
- Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt | 2 ++
- drivers/clk/mvebu/armada-39x.c                                | 2 ++
- 2 files changed, 4 insertions(+)
+Changes from v1:
+ - fix compatible string of hsusb in patch 1.
+ - fix patch 2 for "make dtbs W=1" warning.
 
-diff --git a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-index 660e649..cb8542d 100644
---- a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-@@ -86,6 +86,8 @@ ID	Clock		Peripheral
- 7	pex3		PCIe 3
- 8	pex0		PCIe 0
- 9	usb3h0		USB3 Host 0
-+10	usb3h1		USB3 Host 1
-+15	sata0		SATA 0
- 17	sdio		SDIO
- 22	xor0		XOR 0
- 28	xor1		XOR 1
-diff --git a/drivers/clk/mvebu/armada-39x.c b/drivers/clk/mvebu/armada-39x.c
-index efb974d..4fdfd32 100644
---- a/drivers/clk/mvebu/armada-39x.c
-+++ b/drivers/clk/mvebu/armada-39x.c
-@@ -142,6 +142,8 @@ static const struct clk_gating_soc_desc armada_39x_gating_desc[] __initconst = {
- 	{ "pex3", NULL, 7 },
- 	{ "pex0", NULL, 8 },
- 	{ "usb3h0", NULL, 9 },
-+	{ "usb3h1", NULL, 10 },
-+	{ "sata0", NULL, 15 },
- 	{ "sdio", NULL, 17 },
- 	{ "xor0", NULL, 22 },
- 	{ "xor1", NULL, 28 },
+Yoshihiro Shimoda (5):
+  arm64: dts: r8a7795: Add HSUSB device node
+  arm64: dts: salvator-x: enable usb2_phy of channel 0
+  arm64: dts: salvator-x: enable USB 2.0 Host channel 0
+  arm64: dts: salvator-x: enable HSUSB
+  arm64: defconfig: Add Renesas R-Car HSUSB driver support as module
+
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 36 ++++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 17 ++++++++++
+ arch/arm64/configs/defconfig                       |  2 ++
+ 3 files changed, 55 insertions(+)
+
 -- 
-1.8.3.1
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
