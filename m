@@ -1,52 +1,28 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/4] mfd: Add Samsung Exynos Low Power Audio Subsystem
- driver
-Date: Thu, 21 Jul 2016 13:11:27 +0100
-Message-ID: <20160721121127.GD14925@dell>
-References: <1467738804-31460-1-git-send-email-s.nawrocki@samsung.com>
- <578F9495.9090502@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <578F9495.9090502@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: broonie@kernel.org, robh@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, ideal.song@samsung.com, inki.dae@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Beomho Seo <beomho.seo@samsung.com>
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: [PATCH 0/2] arm64: renesas: add H3ULCB board
+Date: Thu, 21 Jul 2016 15:26:02 +0300
+Message-ID: <1469103962-20378-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Jul 2016, Sylwester Nawrocki wrote:
+Hello,
 
-> On 07/05/2016 07:13 PM, Sylwester Nawrocki wrote:
-> > This patch adds common driver for the Top block of the Samsung Exyn=
-os
-> > SoC Low Power Audio Subsystem. This is a minimal driver which prepa=
-res
-> > resources for IP blocks like I2S, audio DMA and UART and exposes a =
-regmap
-> > for the Top block registers. Also system power ops are added to ens=
-ure
-> > the Audio Subsystem is operational after system suspend/resume cycl=
-e.
-> >=20
-> > Signed-off-by: Inha Song <ideal.song@samsung.com>
-> > Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > ---
->=20
-> Lee, is this patch good enough for your tree? Are you going to have
-> any review comments ?
+This adds the folowing:
+- R8A7795 SoC based H3ULCB low cost board initial device tree
+- Document DT bindings
 
-Please don't sent contentless pings.  If you think the patch has been
-dropped (it hasn't) then just send a [RESEND] patch.
+Vladimir Barinov (2):
+[1/2] arm64: renesas: h3ulcb: initial device tree
+[2/2] dt: arm: shmobile: add H3ULCB board DT bindings
 
-The merge window is about to open.  I will not be taking any patches
-for the next couple of weeks.  Your patch is marked as to-review in my
-Inbox, so please bear with me and I'll get around to it.
+---
+This patchset is against the 'kernel/git/horms/renesas.git' repo.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+ arch/arm64/boot/dts/renesas/Makefile           |   2 +-
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts | 326 +++++++++++++++++++++++++
+ Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+ 3 files changed, 329 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
