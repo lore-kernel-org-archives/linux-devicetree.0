@@ -1,49 +1,132 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] usb: chipidea: let chipidea core device of_node
- equal's glue layer device of_node
-Date: Thu, 21 Jul 2016 10:14:38 +0100
-Message-ID: <20160721091438.GL1041@n2100.armlinux.org.uk>
-References: <1469007629-31757-1-git-send-email-peter.chen@nxp.com>
- <1469007629-31757-6-git-send-email-peter.chen@nxp.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH v2 1/4] dt-bindings: mfd: Add STM32F4 RCC numeric constants into DT include file
+Date: Thu, 21 Jul 2016 11:19:25 +0200
+Message-ID: <1469092768-17489-2-git-send-email-gabriel.fernandez@st.com>
+References: <1469092768-17489-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1469007629-31757-6-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469092768-17489-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, patrice.chotard@st.com, alexandre.torgue@st.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 05:40:28PM +0800, Peter Chen wrote:
-> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> index 69426e6..0d05812 100644
-> --- a/drivers/usb/chipidea/core.c
-> +++ b/drivers/usb/chipidea/core.c
-> @@ -914,6 +914,16 @@ static int ci_hdrc_probe(struct platform_device *pdev)
->  	if (!ci)
->  		return -ENOMEM;
->  
-> +	/*
-> +	 * At device tree, we have no device node for chipidea core,
-> +	 * the glue layer's node is the parent node for host and udc
-> +	 * device. But in related driver, the parent device is chipidea
-> +	 * core. So, in order to let the common driver get parent's node,
-> +	 * we let the core's device node equals glue layer's node.
-> +	 */
-> +	if (dev->parent && dev->parent->of_node)
-> +		dev->of_node = dev->parent->of_node;
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 
-This is a dangerous thing to do.  You're changing the dev->of_node of
-_this_ device, which means that _this_ driver will no longer match
-the device if you remove and reinsert the driver module, or unbind
-and try to re-bind the device to this driver.
+Ths patch lists STM32F4's RCC numeric constants.
+It will be used by clock and reset drivers, and DT bindings.
 
+Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+---
+ include/dt-bindings/mfd/stm32f4-rcc.h | 98 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 include/dt-bindings/mfd/stm32f4-rcc.h
+
+diff --git a/include/dt-bindings/mfd/stm32f4-rcc.h b/include/dt-bindings/mfd/stm32f4-rcc.h
+new file mode 100644
+index 0000000..e98942dc
+--- /dev/null
++++ b/include/dt-bindings/mfd/stm32f4-rcc.h
+@@ -0,0 +1,98 @@
++/*
++ * This header provides constants for the STM32F4 RCC IP
++ */
++
++#ifndef _DT_BINDINGS_MFD_STM32F4_RCC_H
++#define _DT_BINDINGS_MFD_STM32F4_RCC_H
++
++/* AHB1 */
++#define STM32F4_RCC_AHB1_GPIOA	0
++#define STM32F4_RCC_AHB1_GPIOB	1
++#define STM32F4_RCC_AHB1_GPIOC	2
++#define STM32F4_RCC_AHB1_GPIOD	3
++#define STM32F4_RCC_AHB1_GPIOE	4
++#define STM32F4_RCC_AHB1_GPIOF	5
++#define STM32F4_RCC_AHB1_GPIOG	6
++#define STM32F4_RCC_AHB1_GPIOH	7
++#define STM32F4_RCC_AHB1_GPIOI	8
++#define STM32F4_RCC_AHB1_GPIOJ	9
++#define STM32F4_RCC_AHB1_GPIOK	10
++#define STM32F4_RCC_AHB1_CRC	12
++#define STM32F4_RCC_AHB1_DMA1	21
++#define STM32F4_RCC_AHB1_DMA2	22
++#define STM32F4_RCC_AHB1_DMA2D	23
++#define STM32F4_RCC_AHB1_ETHMAC	25
++#define STM32F4_RCC_AHB1_OTGHS	29
++
++#define STM32F4_AHB1_RESET(bit) (STM32F4_RCC_AHB1_##bit + (0x10 * 8))
++#define STM32F4_AHB1_CLOCK(bit) (STM32F4_RCC_AHB1_##bit + (0x30 * 8))
++
++
++/* AHB2 */
++#define STM32F4_RCC_AHB2_DCMI	0
++#define STM32F4_RCC_AHB2_CRYP	4
++#define STM32F4_RCC_AHB2_HASH	5
++#define STM32F4_RCC_AHB2_RNG	6
++#define STM32F4_RCC_AHB2_OTGFS	7
++
++#define STM32F4_AHB2_RESET(bit)	(STM32F4_RCC_AHB2_##bit + (0x14 * 8))
++#define STM32F4_AHB2_CLOCK(bit)	(STM32F4_RCC_AHB2_##bit + (0x34 * 8))
++
++/* AHB3 */
++#define STM32F4_RCC_AHB3_FMC	0
++
++#define STM32F4_AHB3_RESET(bit)	(STM32F4_RCC_AHB3_##bit + (0x18 * 8))
++#define STM32F4_AHB3_CLOCK(bit)	(STM32F4_RCC_AHB3_##bit + (0x38 * 8))
++
++/* APB1 */
++#define STM32F4_RCC_APB1_TIM2	0
++#define STM32F4_RCC_APB1_TIM3	1
++#define STM32F4_RCC_APB1_TIM4	2
++#define STM32F4_RCC_APB1_TIM5	3
++#define STM32F4_RCC_APB1_TIM6	4
++#define STM32F4_RCC_APB1_TIM7	5
++#define STM32F4_RCC_APB1_TIM12	6
++#define STM32F4_RCC_APB1_TIM13	7
++#define STM32F4_RCC_APB1_TIM14	8
++#define STM32F4_RCC_APB1_WWDG	11
++#define STM32F4_RCC_APB1_SPI2	14
++#define STM32F4_RCC_APB1_SPI3	15
++#define STM32F4_RCC_APB1_UART2	17
++#define STM32F4_RCC_APB1_UART3	18
++#define STM32F4_RCC_APB1_UART4	19
++#define STM32F4_RCC_APB1_UART5	20
++#define STM32F4_RCC_APB1_I2C1	21
++#define STM32F4_RCC_APB1_I2C2	22
++#define STM32F4_RCC_APB1_I2C3	23
++#define STM32F4_RCC_APB1_CAN1	25
++#define STM32F4_RCC_APB1_CAN2	26
++#define STM32F4_RCC_APB1_PWR	28
++#define STM32F4_RCC_APB1_DAC	29
++#define STM32F4_RCC_APB1_UART7	30
++#define STM32F4_RCC_APB1_UART8	31
++
++#define STM32F4_APB1_RESET(bit)	(STM32F4_RCC_APB1_##bit + (0x20 * 8))
++#define STM32F4_APB1_CLOCK(bit)	(STM32F4_RCC_APB1_##bit + (0x40 * 8))
++
++/* APB2 */
++#define STM32F4_RCC_APB2_TIM1	0
++#define STM32F4_RCC_APB2_TIM8	1
++#define STM32F4_RCC_APB2_USART1	4
++#define STM32F4_RCC_APB2_USART6	5
++#define STM32F4_RCC_APB2_ADC	8
++#define STM32F4_RCC_APB2_SDIO	11
++#define STM32F4_RCC_APB2_SPI1	12
++#define STM32F4_RCC_APB2_SPI4	13
++#define STM32F4_RCC_APB2_SYSCFG	14
++#define STM32F4_RCC_APB2_TIM9	16
++#define STM32F4_RCC_APB2_TIM10	17
++#define STM32F4_RCC_APB2_TIM11	18
++#define STM32F4_RCC_APB2_SPI5	20
++#define STM32F4_RCC_APB2_SPI6	21
++#define STM32F4_RCC_APB2_SAI1	22
++#define STM32F4_RCC_APB2_LTDC	26
++
++#define STM32F4_APB2_RESET(bit)	(STM32F4_RCC_APB2_##bit + (0x24 * 8))
++#define STM32F4_APB2_CLOCK(bit)	(STM32F4_RCC_APB2_##bit + (0x44 * 8))
++
++#endif /* _DT_BINDINGS_MFD_STM32F4_RCC_H */
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
