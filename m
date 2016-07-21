@@ -1,55 +1,91 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
-Date: Thu, 21 Jul 2016 20:26:06 +1000
-Message-ID: <146909676646.16700.8383344640490662952@concordia>
-References: <1468723822-30457-1-git-send-email-oss@buserror.net>
- <1468723822-30457-5-git-send-email-oss@buserror.net>
- <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [RFC 3/6] dt/bindings: Add bindings for Tegra20/30 NOR bus driver
+Date: Thu, 21 Jul 2016 11:26:09 +0100
+Message-ID: <1f280c99-156f-59d3-308f-b4c8ff0f8f7c@nvidia.com>
+References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
+ <1468935397-11926-4-git-send-email-mirza.krak@gmail.com>
+ <20160720124408.GA19113@rob-hp-laptop>
+ <CALw8SCXFexogJn3BwrZm63yEL0rtTpYsYYb0O9D_ibhginVLqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1469039508.25630.17.camel@buserror.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CALw8SCXFexogJn3BwrZm63yEL0rtTpYsYYb0O9D_ibhginVLqw@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mirza Krak <mirza.krak@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Quoting Scott Wood (2016-07-21 04:31:48)
-> On Wed, 2016-07-20 at 13:24 +0200, Arnd Bergmann wrote:
-> > On Saturday, July 16, 2016 9:50:21 PM CEST Scott Wood wrote:
-> > >=20
-> > > From: yangbo lu <yangbo.lu@nxp.com>
-> > >=20
-> > > Move mpc85xx.h to include/linux/fsl and rename it to svr.h as a c=
-ommon
-> > > header file.=C2=A0=C2=A0This SVR numberspace is used on some ARM =
-chips as well as
-> > > PPC, and even to check for a PPC SVR multi-arch drivers would oth=
-erwise
-> > > need to ifdef the header inclusion and all references to the SVR =
-symbols.
-> > >=20
-> > > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-> > > Acked-by: Wolfram Sang <wsa@the-dreams.de>
-> > > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-> > > Acked-by: Joerg Roedel <jroedel@suse.de>
-> > > [scottwood: update description]
-> > > Signed-off-by: Scott Wood <oss@buserror.net>
-> > >=20
-> > As discussed before, please don't introduce yet another vendor spec=
-ific
-> > way to match a SoC ID from a device driver.
-> >=20
-> > I've posted a patch for an extension to the soc_device infrastructu=
-re
-> > to allow comparing the running SoC to a table of devices, use that
-> > instead.
->=20
-> As I asked before, in which relevant maintainership capacity are you =
-NACKing
-> this?
 
-I'll nack the powerpc part until you guys can agree.
+On 20/07/16 20:28, Mirza Krak wrote:
+> 2016-07-20 14:44 GMT+02:00 Rob Herring <robh@kernel.org>:
+>> On Tue, Jul 19, 2016 at 03:36:34PM +0200, Mirza Krak wrote:
+>>> From: Mirza Krak <mirza.krak@gmail.com>
+>>>
+>>> Document the devicetree bindings for NOR bus driver found on Tegra20 and
+>>> Tegra30 SOCs
+>>>
+>>> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
+>>> ---
+>>>  .../devicetree/bindings/bus/nvidia,tegra20-nor.txt | 73 ++++++++++++++++++++++
+>>>  1 file changed, 73 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt b/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
+>>> new file mode 100644
+>>> index 0000000..9ee4a66
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
+>>> @@ -0,0 +1,73 @@
+>>> +Device tree bindings for NVIDIA Tegra20/30 NOR Bus
+>>> +
+>>> +The NOR controller supports a number of memory types, including synchronous NOR,
+>>> +asynchronous NOR, and other flash memories with similar interfaces, such as
+>>> +MuxOneNAND. One could also connect high speed devices like FPGAs, DSPs,
+>>> +CAN chips, Wi-Fi chips etc.
+>>> +
+>>> +The actual devices are instantiated from the child nodes of a NOR node.
+>>> +
+>>> +Required properties:
+>>> +
+>>> + - compatible: should be "nvidia,tegra20-nor", "nvidia,tegra30-nor"
+>>> + - reg: Should contain NOR controller registers location and length.
+>>> + - clocks: Must contain one entry, for the module clock.
+>>> +   See ../clocks/clock-bindings.txt for details.
+>>> + - resets : Must contain an entry for each entry in reset-names.
+>>> +   See ../reset/reset.txt for details.
+>>> + - reset-names : Must include the following entries:
+>>> +  - nor
+>>> + - #address-cells: Must be set to 2 to allow memory address translation
+>>> + - #size-cells:      Must be set to 1 to allow CS address passing
+>>> + - ranges: Must be set up to reflect the memory layout with four integer
+>>> +             values for each chip-select line in use.
+>>> + - nvidia,config: This property represents the SNOR_CONFIG_0 register.
+>>> +
+>>> +Note that the NOR controller does not have any internal chip-select address
+>>> +decoding and if you want to access multiple devices external chip-select
+>>> +decoding must be provided.
+>>
+>> Then what are the 2 chip selects in ranges?
+>>
+>> Rob
+> 
+> Those two chip selects are actually a representation of a external
+> decoding logic based on what we use on our board. Even though it the
+> NOR controller only supports one single chip select I wanted to give
+> an example on how one could create more chip-selects with an external
+> logic and what it would look like in the device tree representation.
 
-cheers
+Technically, the GMI/SNOR controller supports 8 chip-selects, however,
+unlike some devices, it appears that software has to select the active
+chip-select. Although this sounds odd, I believe that the idea is that
+in order to support devices greater than 256MB (external address space
+for available NOR/async devices) you can use the chip-selects to page
+through memory greater than this 256MB range. At least that it my
+(limited) understanding!
+
+Cheers
+Jon
+
+-- 
+nvpublic
