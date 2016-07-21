@@ -1,99 +1,86 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] arm64: renesas: h3ulcb: initial device tree
-Date: Thu, 21 Jul 2016 18:14:58 +0100
-Message-ID: <20160721171458.GH20559@leverpostej>
-References: <1469103962-20378-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1469104067-20451-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: Re: [PATCH v5 10/11] Documentation: dtb: xgene: Add MDIO node
+Date: Thu, 21 Jul 2016 10:57:59 -0700
+Message-ID: <CAKh23F=jT=rjU_e9Xu82Jna5ntPR5zdt3VGEyXR4_w+6aQ6Cyg@mail.gmail.com>
+References: <1467932579-14320-1-git-send-email-isubramanian@apm.com>
+ <1467932579-14320-11-git-send-email-isubramanian@apm.com> <20160713131010.GA15972@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1469104067-20451-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160713131010.GA15972@rob-hp-laptop>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 21, 2016 at 03:27:47PM +0300, Vladimir Barinov wrote:
-> Add the initial device tree for the R8A7795 SoC based H3ULCB low cost
-> board.
-> 
-> This commit supports the following peripherals:
-> - SCIF (console), Ethernet, SD, USB Host, Audio, GPIO LEDs
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> ---
->  arch/arm64/boot/dts/renesas/Makefile           |   2 +-
->  arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts | 326 +++++++++++++++++++++++++
->  2 files changed, 327 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-> index 17139f7..eb72830 100644
-> --- a/arch/arm64/boot/dts/renesas/Makefile
-> +++ b/arch/arm64/boot/dts/renesas/Makefile
-> @@ -1,4 +1,4 @@
-> -dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb
-> +dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
->  dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb
->  
->  always		:= $(dtb-y)
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> new file mode 100644
-> index 0000000..e4400fb
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> @@ -0,0 +1,326 @@
-> +/*
-> + * Device Tree Source for the H3ULCB board
-> + *
-> + * Copyright (C) 2016 Renesas Electronics Corp.
-> + * Copyright (C) 2016 Cogent Embedded, Inc.
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
-> + */
-> +
-> +/*
-> + * SSI-AK4613
-> + *
-> + * This command is required when Playback/Capture
-> + *
-> + *	amixer set "DVC Out" 10%
-> + *	amixer set "DVC In" 10%
-> + */
+On Wed, Jul 13, 2016 at 6:10 AM, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Jul 07, 2016 at 04:02:58PM -0700, Iyappan Subramanian wrote:
+>> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+>> Tested-by: Fushen Chen <fchen@apm.com>
+>> Tested-by: Toan Le <toanle@apm.com>
+>> Tested-by: Matthias Brugger <mbrugger@suse.com>
+>> ---
+>>  .../devicetree/bindings/net/apm-xgene-mdio.txt     | 37 ++++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-mdio.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/apm-xgene-mdio.txt b/Documentation/devicetree/bindings/net/apm-xgene-mdio.txt
+>> new file mode 100644
+>> index 0000000..0247e70
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/apm-xgene-mdio.txt
+>> @@ -0,0 +1,37 @@
+>> +APM X-Gene SoC MDIO node
+>> +
+>> +MDIO node is defined to describe on-chip MDIO controller.
+>> +
+>> +Required properties:
+>> +     - compatible: Must be "apm,xgene-mdio-rgmii"
+>> +     - #address-cells: Must be <1>.
+>> +     - #size-cells: Must be <0>.
+>> +     - reg: Address and length of the register set
+>> +     - clocks: Reference to the clock entry
+>> +
+>> +For the phys on the mdio bus, there must be a node with the following fields:
+>> +     - compatible: PHY identifier.  Please refer ./phy.txt for the format.
+>> +     - reg: The ID number for the phy.
+>> +
+>> +Example:
+>> +
+>> +     mdio: mdio@0x17020000 {
+>
+> Drop the '0x'
 
-I don't think this comment belongs here. It has nothing to do with the
-DT as such.
+Thanks for the review.  Corrected and posted v6.
 
-Why is this necessary? Is this a bug?
-
-> +
-> +/dts-v1/;
-> +#include "r8a7795.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +	model = "Renesas H3ULCB board based on r8a7795";
-> +	compatible = "renesas,h3ulcb", "renesas,r8a7795";
-> +
-> +	aliases {
-> +		serial0 = &scif2;
-> +		ethernet0 = &avb;
-> +	};
-> +
-> +	chosen {
-> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
-
-Please get rid of the bootargs property.
-
-While they may be useful for you specifically, they're usecase
-dependent, and you should have your bootloader fill these in instead.
-
-We shouldn't need to have any bootargs for thte in-kernel dts files.
-
-Otherwise this looks fine to me.
-
-Thanks,
-Mark.
+>
+> With that,
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+>> +             compatible = "apm,xgene-mdio-rgmii";
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             reg = <0x0 0x17020000 0x0 0xd100>;
+>> +             clocks = <&menetclk 0>;
+>> +     };
+>> +
+>> +     /* Board-specific peripheral configurations */
+>> +     &mdio {
+>> +             menetphy: phy@3 {
+>> +                     reg = <0x3>;
+>> +             };
+>> +             sgenet0phy: phy@4 {
+>> +                     reg = <0x4>;
+>> +             };
+>> +             sgenet1phy: phy@5 {
+>> +                     reg = <0x5>;
+>> +             };
+>> +     };
+>> --
+>> 1.9.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
