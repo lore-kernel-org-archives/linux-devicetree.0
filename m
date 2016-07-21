@@ -1,193 +1,162 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 0/2] [media] atmel-isc: add driver for Atmel ISC
-Date: Thu, 21 Jul 2016 10:41:50 +0200
-Message-ID: <e0592f57-f679-fcde-7446-e3259ad9825b@xs4all.nl>
-References: <1469088900-23935-1-git-send-email-songjun.wu@microchip.com>
+From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
+Date: Thu, 21 Jul 2016 17:12:08 +0800
+Message-ID: <1469092328.30095.11.camel@mtksdaap41>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+	 <577D0576.2050706@xs4all.nl> <1467886612.21382.18.camel@mtksdaap41>
+	 <e2952cc2-3abd-894e-9481-b91a45cf7891@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469088900-23935-1-git-send-email-songjun.wu@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Songjun Wu <songjun.wu@microchip.com>, nicolas.ferre@atmel.com, robh@kernel.org
-Cc: laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Niklas_S=c3=83=c2=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Benoit Parrot <bparrot@ti.com>, linux-kernel@vger.kernel.org, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kamil Debski <kamil@wypas.org>, Tiffany Lin <tiffany.lin@mediatek.com>, Peter Griffin <peter.griffin@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, =?UTF-8?Q?Richard_R=c3=b6jfors?= <richard@puffinpack.se>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e2952cc2-3abd-894e-9481-b91a45cf7891-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Hans,
+
+On Fri, 2016-07-08 at 13:44 +0200, Hans Verkuil wrote:
+> On 07/07/2016 12:16 PM, tiffany lin wrote:
+> > Hi Hans,
+> > 
+> > 
+> > On Wed, 2016-07-06 at 15:19 +0200, Hans Verkuil wrote:
+> >> Hi Tiffany,
+> >>
+> >> I plan to review this patch series on Friday, but one obvious question is
+> >> what the reason for these failures is:
+> >>
+> >>> Input/Output configuration ioctls:
+> >>>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+> >>>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+> >>>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+> >>>         test VIDIOC_G/S_EDID: OK (Not Supported)
+> >>>
+> >>>         Control ioctls:
+> >>>                 test VIDIOC_QUERYCTRL/MENU: OK
+> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(357): g_ctrl returned an error (11)
+> >>>                 test VIDIOC_G/S_CTRL: FAIL
+> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(579): g_ext_ctrls returned an error (11)
+> >>>                 test VIDIOC_G/S/TRY_EXT_CTRLS: FAIL
+> > These fails are because VIDIOC_G_CTRL and VIDIOC_G_EXT_CTRLS return
+> > V4L2_CID_MIN_BUFFERS_FOR_CAPTURE only when dirver in MTK_STATE_HEADER
+> > state, or it will return EAGAIN.
+> > This could help user space get correct value, not default value that may
+> > changed base on media content.
+> 
+> OK, I really don't like this. I also looked what the s5p-mfc-dec driver does (the only other
+> driver currently implementing this), and that returns -EINVAL.
+> 
+> My proposal would be to change this. If this information isn't known yet, why not
+> just return 0 as the value? The doc would have to be updated and (preferably) also
+> the s5p-mfc-dec driver. I've added Samsung devs to the Cc list, let me know what you
+> think.
+> 
+We are ok with just return 0 as the value when header not parsed yet
+We will update decoder with this solution.
 
 
-On 07/21/2016 10:14 AM, Songjun Wu wrote:
-> The Image Sensor Controller driver includes two parts.
-> 1) Driver code to implement the ISC function.
-> 2) Device tree binding documentation, it describes how
->    to add the ISC in device tree.
+> > 
+> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(721): subscribe event for control 'User Controls' failed
+> >>>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+> > Driver do not support subscribe event for control 'User Controls' for
+> > now.
+> > Do we need to support this?
 > 
-> Test result with v4l-utils 1.10.1
+> I don't see why this would fail. It's OK to subscribe to such controls, although
+> you'll never get an event.
+> 
+After upgrade to latest v4l-utils,this test pass.
 
-Please compile from the v4l-utils repository. The version you used here is out-of-date.
-I continually add new tests, so always compile the latest version from the repo.
+> >>>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> >>>                 Standard Controls: 2 Private Controls: 0
+> >>>
+> >>>         Format ioctls:
+> >>>                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> >>>                 test VIDIOC_G/S_PARM: OK (Not Supported)
+> >>>                 test VIDIOC_G_FBUF: OK (Not Supported)
+> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-formats.cpp(405): expected EINVAL, but got 11 when getting format for buftype 9
+> >>>                 test VIDIOC_G_FMT: FAIL
+> > This is because vidioc_vdec_g_fmt only succeed when context is in
+> > MTK_STATE_HEADER state, or user space cannot get correct format data
+> > using this function.
+> 
+> Comparing this to s5p-mfc-dec I see that -EINVAL is returned in that case.
+> 
+> I am not opposed to using EAGAIN in s5p-mfc-dec as well. Marek, Kamil, what is
+> your opinion?
+> 
+> > 
+> >>>                 test VIDIOC_TRY_FMT: OK (Not Supported)
+> >>>                 test VIDIOC_S_FMT: OK (Not Supported)
+> >>>                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> >>>
+> >>>         Codec ioctls:
+> >>>                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+> >>>                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+> >>>                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> >>>
+> >>>         Buffer ioctls:
+> >>>                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(500): q.has_expbuf(node)
+> > Our OUTPUT and CAPTURE queue support both VB2_DMABUF and VB2_MMAP, user
+> > space can select which to use in runtime.
+> > So our driver default support v4l2_m2m_ioctl_expbuf functionality.
+> > In v4l2-compliance test, it will check v4l2_m2m_ioctl_expbuf only valid
+> > when node->valid_memorytype is V4L2_MEMORY_MMAP.
+> > So when go through node->valid_memorytype is V4L2_MEMORY_DMABUF, it
+> > fail.
+> 
+> valid_memorytype should have both MMAP and DMABUF flags.
+> 
+> But v4l-utils-1.6.0 is way too old to be certain it isn't some v4l2-compliance bug
+> that has since been fixed.
+After upgrade to latest v4l-utils, I still see this issue.
 
-Regards,
+test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+fail: v4l2-test-buffers.cpp(571): q.has_expbuf(node)
 
-	Hans
+best regards,
+Tiffany
 
-> Driver Info:
->         Driver name   : atmel_isc
->         Card type     : Atmel Image Sensor Controller
->         Bus info      : platform:atmel_isc f0008000.isc
->         Driver version: 4.7.0
->         Capabilities  : 0x84200001
->                 Video Capture
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps   : 0x04200001
->                 Video Capture
->                 Streaming
->                 Extended Pix Format
 > 
-> Compliance test for device /dev/video0 (not using libv4l2):
+> Regards,
 > 
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
+> 	Hans
 > 
-> Allow for multiple opens:
->         test second video open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
-> 
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 1 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Test input 0:
-> 
->         Control ioctls:
->                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
->                 test VIDIOC_QUERYCTRL: OK (Not Supported)
->                 test VIDIOC_G/S_CTRL: OK (Not Supported)
->                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
->                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
->                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->                 Standard Controls: 0 Private Controls: 0
-> 
->         Format ioctls:
->                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->                 test VIDIOC_G/S_PARM: OK
->                 test VIDIOC_G_FBUF: OK (Not Supported)
->                 test VIDIOC_G_FMT: OK
->                 test VIDIOC_TRY_FMT: OK
->                 test VIDIOC_S_FMT: OK
->                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                 test Cropping: OK (Not Supported)
->                 test Composing: OK (Not Supported)
->                 test Scaling: OK (Not Supported)
-> 
->         Codec ioctls:
->                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
->         Buffer ioctls:
->                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->                 test VIDIOC_EXPBUF: OK
-> 
-> Test input 0:
-> 
-> Stream using all formats:
->         test MMAP for Format BA81, Frame Size 640x480:
->                 Stride 640, Field None: OK
->         test MMAP for Format YUYV, Frame Size 640x480:
->                 Stride 1280, Field None: OK
-> 
-> Total: 44, Succeeded: 44, Failed: 0, Warnings: 0
-> 
-> Changes in v6:
-> - Add "iscck" and "gck" to clock-names.
-> 
-> Changes in v5:
-> - Modify the macro definition and the related code.
-> - Add clock-output-names.
-> 
-> Changes in v4:
-> - Modify the isc clock code since the dt is changed.
-> - Remove the isc clock nodes.
-> 
-> Changes in v3:
-> - Add pm runtime feature.
-> - Modify the isc clock code since the dt is changed.
-> - Remove the 'atmel,sensor-preferred'.
-> - Modify the isc clock node according to the Rob's remarks.
-> 
-> Changes in v2:
-> - Add "depends on COMMON_CLK" and "VIDEO_V4L2_SUBDEV_API"
->   in Kconfig file.
-> - Correct typos and coding style according to Laurent's remarks
-> - Delete the loop while in 'isc_clk_enable' function.
-> - Replace 'hsync_active', 'vsync_active' and 'pclk_sample'
->   with 'pfe_cfg0' in struct isc_subdev_entity.
-> - Add the code to support VIDIOC_CREATE_BUFS in
->   'isc_queue_setup' function.
-> - Invoke isc_config to configure register in
->   'isc_start_streaming' function.
-> - Add the struct completion 'comp' to synchronize with
->   the frame end interrupt in 'isc_stop_streaming' function.
-> - Check the return value of the clk_prepare_enable
->   in 'isc_open' function.
-> - Set the default format in 'isc_open' function.
-> - Add an exit condition in the loop while in 'isc_config'.
-> - Delete the hardware setup operation in 'isc_set_format'.
-> - Refuse format modification during streaming
->   in 'isc_s_fmt_vid_cap' function.
-> - Invoke v4l2_subdev_alloc_pad_config to allocate and
->   initialize the pad config in 'isc_async_complete' function.
-> - Remove the '.owner  = THIS_MODULE,' in atmel_isc_driver.
-> - Replace the module_platform_driver_probe() with
->   module_platform_driver().
-> - Remove the unit address of the endpoint.
-> - Add the unit address to the clock node.
-> - Avoid using underscores in node names.
-> - Drop the "0x" in the unit address of the i2c node.
-> - Modify the description of 'atmel,sensor-preferred'.
-> - Add the description for the ISC internal clock.
-> 
-> Songjun Wu (2):
->   [media] atmel-isc: add the Image Sensor Controller code
->   [media] atmel-isc: DT binding for Image Sensor Controller driver
-> 
->  .../devicetree/bindings/media/atmel-isc.txt        |   65 +
->  drivers/media/platform/Kconfig                     |    1 +
->  drivers/media/platform/Makefile                    |    2 +
->  drivers/media/platform/atmel/Kconfig               |    9 +
->  drivers/media/platform/atmel/Makefile              |    1 +
->  drivers/media/platform/atmel/atmel-isc-regs.h      |  165 +++
->  drivers/media/platform/atmel/atmel-isc.c           | 1554 ++++++++++++++++++++
->  7 files changed, 1797 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
->  create mode 100644 drivers/media/platform/atmel/Kconfig
->  create mode 100644 drivers/media/platform/atmel/Makefile
->  create mode 100644 drivers/media/platform/atmel/atmel-isc-regs.h
->  create mode 100644 drivers/media/platform/atmel/atmel-isc.c
-> 
+> > 
+> > 
+> > best regards,
+> > Tiffany
+> > 
+> > 
+> > 
+> >>>                 test VIDIOC_EXPBUF: FAIL
+> >>>
+> >>>
+> >>> Total: 38, Succeeded: 33, Failed: 5, Warnings: 0
+> >>
+> >> If it is due to a bug in v4l2-compliance, then let me know and I'll fix it. If not,
+> >> then it should be fixed in the driver.
+> >>
+> >> Frankly, it was the presence of these failures that made me think this patch series
+> >> wasn't final. Before a v4l2 driver can be accepted in the kernel, v4l2-compliance must pass.
+> >>
+> >> Regards,
+> >>
+> >> 	Hans
+> > 
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
