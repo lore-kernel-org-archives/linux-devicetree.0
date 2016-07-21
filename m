@@ -1,119 +1,266 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] libfdt: Add a subnodes iterator macro
-Date: Thu, 21 Jul 2016 11:59:35 +1000
-Message-ID: <20160721015934.GB31439@voom.fritz.box>
+Subject: Re: [PATCH v3 2/6] libfdt: Add iterator over properties
+Date: Thu, 21 Jul 2016 12:01:25 +1000
+Message-ID: <20160721020125.GC31439@voom.fritz.box>
 References: <20160720142044.27527-1-maxime.ripard@free-electrons.com>
- <20160720142044.27527-2-maxime.ripard@free-electrons.com>
+ <20160720142044.27527-3-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
+	protocol="application/pgp-signature"; boundary="JgQwtEuHJzHdouWu"
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160720142044.27527-2-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20160720142044.27527-3-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---xgyAXRrhYN0wYx8y
+--JgQwtEuHJzHdouWu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 20, 2016 at 04:20:39PM +0200, Maxime Ripard wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Wed, Jul 20, 2016 at 04:20:40PM +0200, Maxime Ripard wrote:
+> Implement a macro based on fdt_first_property_offset and
+> fdt_next_property_offset that provides a convenience to iterate over all
+> the properties of a given node.
 >=20
-> The fdt_for_each_subnode() iterator macro provided by this patch can be
-> used to iterate over a device tree node's subnodes. At each iteration a
-> loop variable will be set to the next subnode.
->=20
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-Some nits in the comment..
-
+> Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
->  libfdt/libfdt.h         | 27 +++++++++++++++++++++++++++
->  tests/subnode_iterate.c |  8 ++------
->  2 files changed, 29 insertions(+), 6 deletions(-)
+>  libfdt/libfdt.h            | 26 +++++++++++++
+>  tests/.gitignore           |  1 +
+>  tests/Makefile.tests       |  1 +
+>  tests/property_iterate.c   | 97 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  tests/property_iterate.dts | 24 ++++++++++++
+>  tests/run_tests.sh         |  3 ++
+>  6 files changed, 152 insertions(+)
+>  create mode 100644 tests/property_iterate.c
+>  create mode 100644 tests/property_iterate.dts
 >=20
 > diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-> index 36222fd4a6f4..70ec39c7104c 100644
+> index 70ec39c7104c..cb2f080c81d4 100644
 > --- a/libfdt/libfdt.h
 > +++ b/libfdt/libfdt.h
-> @@ -168,6 +168,33 @@ int fdt_first_subnode(const void *fdt, int offset);
+> @@ -457,6 +457,32 @@ int fdt_first_property_offset(const void *fdt, int n=
+odeoffset);
 >   */
->  int fdt_next_subnode(const void *fdt, int offset);
+>  int fdt_next_property_offset(const void *fdt, int offset);
 > =20
 > +/**
-> + * fdt_for_each_subnode - iterate over all subnodes of a parent
+> + * fdt_for_each_property - iterate over all properties of a node
 
-Parameter descriptions generally go first.
+Name here doesn't match the actual macro name.
 
+> + * @property_offset:	property offset (int)
+
+Note (int, lvalue).
+
+> + * @fdt:		FDT blob (const void *)
+> + * @node:		node offset (int)
 > + *
 > + * This is actually a wrapper around a for loop and would be used like s=
 o:
 > + *
-> + *	fdt_for_each_subnode(node, fdt, parent) {
-> + *		if ((node < 0) && (node !=3D -FDT_ERR_NOT_FOUND)) {
+> + *	fdt_for_each_property(property, fdt, node) {
+> + *		if ((property < 0) && (property !=3D -FDT_ERR_NOT_FOUND)) {
 > + *			Error handling
 > + *		}
 
-This error handling needs to go *after* the for block.
+Error handling needs to go after the for block.
 
 > + *
-> + *		Use node
+> + *		Use property
 > + *		...
 > + *	}
 > + *
-> + * Note that this is implemented as a macro and @node is used as
-> + * iterator in the loop. The parent variable be constant or even a
-                                               ^ insert "may"
-
+> + * Note that this is implemented as a macro and property is used as
+> + * iterator in the loop. The node variable can be constant or even a
 > + * literal.
-> + *
-> + * @node:	child node (int)
-
-Probably worth noting it as (int, lvalue).
-
-> + * @fdt:	FDT blob (const void *)
-> + * @parent:	parent node (int)
 > + */
-> +#define fdt_for_each_subnode(node, fdt, parent)		\
-> +	for (node =3D fdt_first_subnode(fdt, parent);	\
-> +	     node >=3D 0;					\
-> +	     node =3D fdt_next_subnode(fdt, node))
+> +#define fdt_for_each_property_offset(property, fdt, node)	\
+> +	for (property =3D fdt_first_property_offset(fdt, node);	\
+> +	     property >=3D 0;					\
+> +	     property =3D fdt_next_property_offset(fdt, property))
 > +
->  /**********************************************************************/
->  /* General functions                                                  */
->  /**********************************************************************/
-> diff --git a/tests/subnode_iterate.c b/tests/subnode_iterate.c
-> index b9f379d5963c..0fb5c901ebd7 100644
-> --- a/tests/subnode_iterate.c
-> +++ b/tests/subnode_iterate.c
-> @@ -48,9 +48,7 @@ static void test_node(void *fdt, int parent_offset)
->  	subnodes =3D cpu_to_fdt32(*prop);
+>  /**
+>   * fdt_get_property_by_offset - retrieve the property at a given offset
+>   * @fdt: pointer to the device tree blob
+> diff --git a/tests/.gitignore b/tests/.gitignore
+> index e4532da30bf5..fa4616ba28c2 100644
+> --- a/tests/.gitignore
+> +++ b/tests/.gitignore
+> @@ -40,6 +40,7 @@ tmp.*
+>  /path_offset
+>  /path_offset_aliases
+>  /phandle_format
+> +/property_iterate
+>  /propname_escapes
+>  /references
+>  /root_node
+> diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+> index f7c3a4b00ead..196518c83eda 100644
+> --- a/tests/Makefile.tests
+> +++ b/tests/Makefile.tests
+> @@ -23,6 +23,7 @@ LIB_TESTS_L =3D get_mem_rsv \
+>  	add_subnode_with_nops path_offset_aliases \
+>  	utilfdt_test \
+>  	integer-expressions \
+> +	property_iterate \
+>  	subnode_iterate
+>  LIB_TESTS =3D $(LIB_TESTS_L:%=3D$(TESTS_PREFIX)%)
 > =20
->  	count =3D 0;
-> -	for (offset =3D fdt_first_subnode(fdt, parent_offset);
-> -	     offset >=3D 0;
-> -	     offset =3D fdt_next_subnode(fdt, offset))
-> +	fdt_for_each_subnode(offset, fdt, parent_offset)
->  		count++;
-> =20
->  	if (count !=3D subnodes) {
-> @@ -65,9 +63,7 @@ static void check_fdt_next_subnode(void *fdt)
->  	int offset;
->  	int count =3D 0;
-> =20
-> -	for (offset =3D fdt_first_subnode(fdt, 0);
-> -	     offset >=3D 0;
-> -	     offset =3D fdt_next_subnode(fdt, offset)) {
+> diff --git a/tests/property_iterate.c b/tests/property_iterate.c
+> new file mode 100644
+> index 000000000000..0f3959cb8c22
+> --- /dev/null
+> +++ b/tests/property_iterate.c
+> @@ -0,0 +1,97 @@
+> +/*
+> + * libfdt - Flat Device Tree manipulation
+> + *	Tests that fdt_next_subnode() works as expected
+> + *
+> + * Copyright (C) 2013 Google, Inc
+> + *
+> + * Copyright (C) 2007 David Gibson, IBM Corporation.
+> + *
+> + * This library is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU Lesser General Public License
+> + * as published by the Free Software Foundation; either version 2.1 of
+> + * the License, or (at your option) any later version.
+> + *
+> + * This library is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> + * Lesser General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU Lesser General Public
+> + * License along with this library; if not, write to the Free Software
+> + * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 =
+USA
+> + */
+> +
+> +#include <stdlib.h>
+> +#include <stdio.h>
+> +#include <string.h>
+> +#include <stdint.h>
+> +
+> +#include <libfdt.h>
+> +
+> +#include "tests.h"
+> +#include "testdata.h"
+> +
+> +static void test_node(void *fdt, int parent_offset)
+> +{
+> +	fdt32_t properties;
+> +	const fdt32_t *prop;
+> +	int offset, property;
+> +	int count;
+> +	int len;
+> +
+> +	/*
+> +	 * This property indicates the number of properties in our
+> +	 * test node to expect
+> +	 */
+> +	prop =3D fdt_getprop(fdt, parent_offset, "test-properties", &len);
+> +	if (!prop || len !=3D sizeof(fdt32_t)) {
+> +		FAIL("Missing/invalid test-properties property at '%s'",
+> +		     fdt_get_name(fdt, parent_offset, NULL));
+> +	}
+> +	properties =3D cpu_to_fdt32(*prop);
+> +
+> +	count =3D 0;
+> +	offset =3D fdt_first_subnode(fdt, parent_offset);
+> +	if (offset < 0)
+> +		FAIL("Missing test node\n");
+> +
+> +	fdt_for_each_property_offset(property, fdt, offset)
+> +		count++;
+> +
+> +	if (count !=3D properties) {
+> +		FAIL("Node '%s': Expected %d properties, got %d\n",
+> +		     fdt_get_name(fdt, parent_offset, NULL), properties,
+> +		     count);
+> +	}
+> +}
+> +
+> +static void check_fdt_next_subnode(void *fdt)
+> +{
+> +	int offset;
+> +	int count =3D 0;
+> +
 > +	fdt_for_each_subnode(offset, fdt, 0) {
->  		test_node(fdt, offset);
->  		count++;
->  	}
+> +		test_node(fdt, offset);
+> +		count++;
+> +	}
+> +
+> +	if (count !=3D 2)
+> +		FAIL("Expected %d tests, got %d\n", 2, count);
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	void *fdt;
+> +
+> +	test_init(argc, argv);
+> +	if (argc !=3D 2)
+> +		CONFIG("Usage: %s <dtb file>", argv[0]);
+> +
+> +	fdt =3D load_blob(argv[1]);
+> +	if (!fdt)
+> +		FAIL("No device tree available");
+> +
+> +	check_fdt_next_subnode(fdt);
+> +
+> +	PASS();
+> +}
+> diff --git a/tests/property_iterate.dts b/tests/property_iterate.dts
+> new file mode 100644
+> index 000000000000..2ed677e7e6ea
+> --- /dev/null
+> +++ b/tests/property_iterate.dts
+> @@ -0,0 +1,24 @@
+> +/dts-v1/;
+> +
+> +/ {
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <0>;
+> +
+> +	test1 {
+> +		test-properties =3D <3>;
+> +
+> +		test {
+> +			linux,phandle =3D <0x1>;
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +		};
+> +	};
+> +
+> +	test2 {
+> +		test-properties =3D <0>;
+> +
+> +		test {
+> +		};
+> +	};
+> +};
+> +
+> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+> index 7eb9b3d33108..6a2662b2abaf 100755
+> --- a/tests/run_tests.sh
+> +++ b/tests/run_tests.sh
+> @@ -269,6 +269,9 @@ libfdt_tests () {
+>      run_dtc_test -I dts -O dtb -o subnode_iterate.dtb subnode_iterate.dts
+>      run_test subnode_iterate subnode_iterate.dtb
+> =20
+> +    run_dtc_test -I dts -O dtb -o property_iterate.dtb property_iterate.=
+dts
+> +    run_test property_iterate property_iterate.dtb
+> +
+>      # Tests for behaviour on various sorts of corrupted trees
+>      run_test truncated_property
+> =20
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -121,25 +268,25 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---xgyAXRrhYN0wYx8y
+--JgQwtEuHJzHdouWu
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXkCyGAAoJEGw4ysog2bOSiacP/3hZkIx7h5Ht7X4y8C6uCLYU
-bBcOX8FeMYj1Wn7pC46OMKQp1R094QS6Nq71c3KxAqWjx8oR1JiaNU6/0o/HbqvJ
-tqszUjJrQZYZEfu+l861mm4PePNFHxk676OFbz90U114Y0jB3QvLFYx+fTusDZ+S
-GQhj7yTayU4JTsje60Cu/8XZnd02LYNPUEq7fz//gktMo9AfebHjadmbbrJgs8Ge
-lYN1YGQkFFdCFqpN6WtTSa7FNjOLuRs90zEit6XufKnQvsLs/Qb2QAkINLUW6P/r
-ojyi4bZSZglXuXYtkydT6NWT++XGA5CTnfwMxRj65d5Z0QeqQliNWhKX+tCR0fgg
-Ya3D54PBf+Kfz4qrqC49v8Psm3bdD5jgkgIZBQVsLRctApr/jcrQKZiNDqz+kpI/
-9TVH+/fNylIsNf405Fm+1Ud3/zfi6LbzIo+p3NTZOWi5PjfkVH6Z9x+RiBrR1NKQ
-2tYIy92KXe+rrIzkqPUAhl5LNobSaHekkkkoJUo8nF3sfCpiUoGRWmahMCfrnG6A
-SnXEnlN8Xp2Ks8W5MGHXcRfBJLp29Lb7FYA/WvsVFxti6lfBThZKUrVbzN9eP3vp
-eWuB6tfXrWXgWUA3ucoZtKrRLkXa7OqJnJJ9fLWSy+ATOiKuib7vQV3oVOk5Yr7a
-k8RkJo/FzBHcJIUmSheq
-=21fk
+iQIcBAEBAgAGBQJXkCz1AAoJEGw4ysog2bOSV1gQAL+1r92MBYb0OZK05JTSElgt
+UG1QFFQLICY/jyC02F6IBPftfkoOiCpvlpunoX33WdkhhBF7tARpgDux8nkAGYcM
+vWcCZz9U4sUhnv/EXsMGvl5o0sA8TLfNU2f0/aNd4lVIrwtKEwXCtRn29yCJDWW0
+udyVy5FFyajsHXkqOlvlnlDiIP2ioBptd0jaqnHfW9n23rxtN4cHV+/V9dafvfyo
+IwdThb7HfOJtymF8fx3euLDc5vJ41U0fe9943D+Yo3NFLXzyLqdEJKsGDD1JZQK4
+bsf9xERtE404xjHOIkRyqgcEO32rHPW92nb1rp1cwG0H4wjz1q/JE+hiUa34gzWb
+5OiTKLfh+adt2wm400r9msvJn/aYwLiJTGNgG/yFYizL9E45EHQ8mgP6rsuURV9C
+83cQFEGcDugpFWjd63T7vqnWQ2tmztsCe6oCfQyJChqWqImrVHYxSyceebCvI6xw
+4cOO+A6mSh9MIFVuSg7U7FlMRgYsATvM+yhskeIyifUXY7qdthMoq3YG6fx9doIw
+eXoQI7AjhWH9Kj6hrqqQRcRFhXAndiNrb/Rb8dBu90XZUE1Q0zDFrwmtz6tRz6BI
+9k/HzfFTCLcOXqpv88cjbaVtn9RH9J6v236f6b4To9rAOA2b3B1SOtn0WKN0AxtC
+Q0EuLY4Pk/Qx1DlVcuV/
+=3MOq
 -----END PGP SIGNATURE-----
 
---xgyAXRrhYN0wYx8y--
+--JgQwtEuHJzHdouWu--
