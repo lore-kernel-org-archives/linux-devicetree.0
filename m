@@ -1,162 +1,49 @@
-From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
-Date: Thu, 21 Jul 2016 17:12:08 +0800
-Message-ID: <1469092328.30095.11.camel@mtksdaap41>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
-	 <577D0576.2050706@xs4all.nl> <1467886612.21382.18.camel@mtksdaap41>
-	 <e2952cc2-3abd-894e-9481-b91a45cf7891@xs4all.nl>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] usb: chipidea: let chipidea core device of_node
+ equal's glue layer device of_node
+Date: Thu, 21 Jul 2016 10:14:38 +0100
+Message-ID: <20160721091438.GL1041@n2100.armlinux.org.uk>
+References: <1469007629-31757-1-git-send-email-peter.chen@nxp.com>
+ <1469007629-31757-6-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e2952cc2-3abd-894e-9481-b91a45cf7891-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1469007629-31757-6-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Wed, Jul 20, 2016 at 05:40:28PM +0800, Peter Chen wrote:
+> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> index 69426e6..0d05812 100644
+> --- a/drivers/usb/chipidea/core.c
+> +++ b/drivers/usb/chipidea/core.c
+> @@ -914,6 +914,16 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+>  	if (!ci)
+>  		return -ENOMEM;
+>  
+> +	/*
+> +	 * At device tree, we have no device node for chipidea core,
+> +	 * the glue layer's node is the parent node for host and udc
+> +	 * device. But in related driver, the parent device is chipidea
+> +	 * core. So, in order to let the common driver get parent's node,
+> +	 * we let the core's device node equals glue layer's node.
+> +	 */
+> +	if (dev->parent && dev->parent->of_node)
+> +		dev->of_node = dev->parent->of_node;
 
-On Fri, 2016-07-08 at 13:44 +0200, Hans Verkuil wrote:
-> On 07/07/2016 12:16 PM, tiffany lin wrote:
-> > Hi Hans,
-> > 
-> > 
-> > On Wed, 2016-07-06 at 15:19 +0200, Hans Verkuil wrote:
-> >> Hi Tiffany,
-> >>
-> >> I plan to review this patch series on Friday, but one obvious question is
-> >> what the reason for these failures is:
-> >>
-> >>> Input/Output configuration ioctls:
-> >>>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> >>>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> >>>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> >>>         test VIDIOC_G/S_EDID: OK (Not Supported)
-> >>>
-> >>>         Control ioctls:
-> >>>                 test VIDIOC_QUERYCTRL/MENU: OK
-> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(357): g_ctrl returned an error (11)
-> >>>                 test VIDIOC_G/S_CTRL: FAIL
-> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(579): g_ext_ctrls returned an error (11)
-> >>>                 test VIDIOC_G/S/TRY_EXT_CTRLS: FAIL
-> > These fails are because VIDIOC_G_CTRL and VIDIOC_G_EXT_CTRLS return
-> > V4L2_CID_MIN_BUFFERS_FOR_CAPTURE only when dirver in MTK_STATE_HEADER
-> > state, or it will return EAGAIN.
-> > This could help user space get correct value, not default value that may
-> > changed base on media content.
-> 
-> OK, I really don't like this. I also looked what the s5p-mfc-dec driver does (the only other
-> driver currently implementing this), and that returns -EINVAL.
-> 
-> My proposal would be to change this. If this information isn't known yet, why not
-> just return 0 as the value? The doc would have to be updated and (preferably) also
-> the s5p-mfc-dec driver. I've added Samsung devs to the Cc list, let me know what you
-> think.
-> 
-We are ok with just return 0 as the value when header not parsed yet
-We will update decoder with this solution.
+This is a dangerous thing to do.  You're changing the dev->of_node of
+_this_ device, which means that _this_ driver will no longer match
+the device if you remove and reinsert the driver module, or unbind
+and try to re-bind the device to this driver.
 
-
-> > 
-> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(721): subscribe event for control 'User Controls' failed
-> >>>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
-> > Driver do not support subscribe event for control 'User Controls' for
-> > now.
-> > Do we need to support this?
-> 
-> I don't see why this would fail. It's OK to subscribe to such controls, although
-> you'll never get an event.
-> 
-After upgrade to latest v4l-utils,this test pass.
-
-> >>>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> >>>                 Standard Controls: 2 Private Controls: 0
-> >>>
-> >>>         Format ioctls:
-> >>>                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> >>>                 test VIDIOC_G/S_PARM: OK (Not Supported)
-> >>>                 test VIDIOC_G_FBUF: OK (Not Supported)
-> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-formats.cpp(405): expected EINVAL, but got 11 when getting format for buftype 9
-> >>>                 test VIDIOC_G_FMT: FAIL
-> > This is because vidioc_vdec_g_fmt only succeed when context is in
-> > MTK_STATE_HEADER state, or user space cannot get correct format data
-> > using this function.
-> 
-> Comparing this to s5p-mfc-dec I see that -EINVAL is returned in that case.
-> 
-> I am not opposed to using EAGAIN in s5p-mfc-dec as well. Marek, Kamil, what is
-> your opinion?
-> 
-> > 
-> >>>                 test VIDIOC_TRY_FMT: OK (Not Supported)
-> >>>                 test VIDIOC_S_FMT: OK (Not Supported)
-> >>>                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> >>>
-> >>>         Codec ioctls:
-> >>>                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> >>>                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> >>>                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> >>>
-> >>>         Buffer ioctls:
-> >>>                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> >>>                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(500): q.has_expbuf(node)
-> > Our OUTPUT and CAPTURE queue support both VB2_DMABUF and VB2_MMAP, user
-> > space can select which to use in runtime.
-> > So our driver default support v4l2_m2m_ioctl_expbuf functionality.
-> > In v4l2-compliance test, it will check v4l2_m2m_ioctl_expbuf only valid
-> > when node->valid_memorytype is V4L2_MEMORY_MMAP.
-> > So when go through node->valid_memorytype is V4L2_MEMORY_DMABUF, it
-> > fail.
-> 
-> valid_memorytype should have both MMAP and DMABUF flags.
-> 
-> But v4l-utils-1.6.0 is way too old to be certain it isn't some v4l2-compliance bug
-> that has since been fixed.
-After upgrade to latest v4l-utils, I still see this issue.
-
-test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-fail: v4l2-test-buffers.cpp(571): q.has_expbuf(node)
-
-best regards,
-Tiffany
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > 
-> > 
-> > best regards,
-> > Tiffany
-> > 
-> > 
-> > 
-> >>>                 test VIDIOC_EXPBUF: FAIL
-> >>>
-> >>>
-> >>> Total: 38, Succeeded: 33, Failed: 5, Warnings: 0
-> >>
-> >> If it is due to a bug in v4l2-compliance, then let me know and I'll fix it. If not,
-> >> then it should be fixed in the driver.
-> >>
-> >> Frankly, it was the presence of these failures that made me think this patch series
-> >> wasn't final. Before a v4l2 driver can be accepted in the kernel, v4l2-compliance must pass.
-> >>
-> >> Regards,
-> >>
-> >> 	Hans
-> > 
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
-
-
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
