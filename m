@@ -1,48 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] iio: accel: Add support for Domintech DMARD06
- accelerometer
-Date: Thu, 21 Jul 2016 17:19:59 -0500
-Message-ID: <20160721221959.GA25742@rob-hp-laptop>
-References: <1469133140-14722-1-git-send-email-mamlinav@gmail.com>
- <1469133191-14812-1-git-send-email-mamlinav@gmail.com>
+From: Hoan Tran <hotran@apm.com>
+Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
+Date: Thu, 21 Jul 2016 15:21:11 -0700
+Message-ID: <CAFHUOYzi48QkAp+Uw9yRSvcCrNPR5LKczDfb9r5t0fqZ0qVcFw@mail.gmail.com>
+References: <1469134557-26869-1-git-send-email-hotran@apm.com>
+ <1469134557-26869-3-git-send-email-hotran@apm.com> <20160721220935.GB19236@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1469133191-14812-1-git-send-email-mamlinav@gmail.com>
+In-Reply-To: <20160721220935.GB19236@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aleksei Mamlin <mamlinav@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Loc Ho <lho@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 21, 2016 at 11:33:11PM +0300, Aleksei Mamlin wrote:
-> This patch add support for Domintech DMARD06 accelerometer.
-> 
-> Domintech DMARD06 is a low-g tri-axial digital accelerometer for
-> cost-sensitive consumer application.
-> 
-> Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
-> ---
->  .../devicetree/bindings/iio/accel/dmard06.txt      |  17 ++
->  drivers/iio/accel/Kconfig                          |  11 ++
->  drivers/iio/accel/Makefile                         |   1 +
->  drivers/iio/accel/dmard06.c                        | 219 +++++++++++++++++++++
->  4 files changed, 248 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/dmard06.txt
->  create mode 100644 drivers/iio/accel/dmard06.c
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/dmard06.txt b/Documentation/devicetree/bindings/iio/accel/dmard06.txt
-> new file mode 100644
-> index 0000000..cc2231a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/dmard06.txt
-> @@ -0,0 +1,17 @@
-> +Device tree bindings for Domintech DMARD06 acceletometer
-> +
-> +Required properties:
-> + - compatible		: Should be "domintech,dmard06"
-> + - reg			: I2C address of the chip. Should be 0x1c
+Hi Guenter,
 
-No interrupt? If not, for the binding:
+On Thu, Jul 21, 2016 at 3:09 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> On Thu, Jul 21, 2016 at 01:55:56PM -0700, Hoan Tran wrote:
+>> This patch adds hardware temperature and power reading support for
+>> APM X-Gene SoC using the mailbox communication interface.
+>>
+>> Signed-off-by: Hoan Tran <hotran@apm.com>
+>> ---
+>
+> [ ... ]
+>
+>> +
+>> +     dev_info(&pdev->dev, "APM X-Gene SoC HW monitor driver registered\n");
+>> +
+>> +     return rc;
+>> +
+>
+> Nitpick: rc == 0 here, so return 0; is a better choice.
+> Otherwise looks good.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Yes, I'll fix it then send v4 shortly.
+
+>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>
+> Note that I can not apply the patch at this time due to its dependency.
+
+Thanks ! I'll let you know when Rafael applies that dependent patch
+into linux-next.
+
+Thanks
+Hoan
+
+>
+> Guenter
