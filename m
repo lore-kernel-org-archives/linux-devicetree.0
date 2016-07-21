@@ -1,29 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 11/12] Documentation: dtb: xgene: Add MDIO node
-Date: Thu, 21 Jul 2016 17:01:32 -0500
-Message-ID: <20160721220132.GA16264@rob-hp-laptop>
-References: <1469084370-16781-1-git-send-email-isubramanian@apm.com>
- <1469084370-16781-12-git-send-email-isubramanian@apm.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 1/3] Documentation: dtb: xgene: Add hwmon dts binding
+ documentation
+Date: Thu, 21 Jul 2016 15:02:01 -0700
+Message-ID: <20160721220201.GA19236@roeck-us.net>
+References: <1469134557-26869-1-git-send-email-hotran@apm.com>
+ <1469134557-26869-2-git-send-email-hotran@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1469084370-16781-12-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: Iyappan Subramanian <isubramanian@apm.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, linux@armlinux.org.uk
+In-Reply-To: <1469134557-26869-2-git-send-email-hotran@apm.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Hoan Tran <hotran@apm.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, lho@apm.com, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 11:59:29PM -0700, Iyappan Subramanian wrote:
-> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-> Tested-by: Fushen Chen <fchen@apm.com>
-> Tested-by: Toan Le <toanle@apm.com>
-> ---
->  .../devicetree/bindings/net/apm-xgene-mdio.txt     | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-mdio.txt
+On Thu, Jul 21, 2016 at 01:55:55PM -0700, Hoan Tran wrote:
+> This patch adds the APM X-Gene hwmon device tree node documentation.
+> 
+> Signed-off-by: Hoan Tran <hotran@apm.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Please add acks when posting new versions (but don't post new versions 
-just to add acks).
+Applied to hwmon-next.
 
-Rob
+Thanks,
+Guenter
