@@ -1,39 +1,64 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
-Date: Thu, 21 Jul 2016 15:09:35 -0700
-Message-ID: <20160721220935.GB19236@roeck-us.net>
+Subject: Re: [PATCH v3 3/3] arm64: dts: apm: Add X-Gene SoC hwmon to device
+ tree
+Date: Thu, 21 Jul 2016 15:09:53 -0700
+Message-ID: <20160721220953.GC19236@roeck-us.net>
 References: <1469134557-26869-1-git-send-email-hotran@apm.com>
- <1469134557-26869-3-git-send-email-hotran@apm.com>
+ <1469134557-26869-4-git-send-email-hotran@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1469134557-26869-3-git-send-email-hotran@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1469134557-26869-4-git-send-email-hotran@apm.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: Hoan Tran <hotran@apm.com>
 Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, lho@apm.com, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 21, 2016 at 01:55:56PM -0700, Hoan Tran wrote:
-> This patch adds hardware temperature and power reading support for
-> APM X-Gene SoC using the mailbox communication interface.
+On Thu, Jul 21, 2016 at 01:55:57PM -0700, Hoan Tran wrote:
+> This patch adds DT node to enable hwmon driver for APM X-Gene SoC.
 > 
 > Signed-off-by: Hoan Tran <hotran@apm.com>
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
-
-[ ... ]
-
+>  arch/arm64/boot/dts/apm/apm-shadowcat.dtsi | 5 +++++
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi     | 5 +++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+> index c569f76..a5935f5 100644
+> --- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+> +++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+> @@ -472,6 +472,11 @@
+>  			mboxes = <&mailbox 0>;
+>  		};
+>  
+> +		hwmonslimpro {
+> +			compatible = "apm,xgene-slimpro-hwmon";
+> +			mboxes = <&mailbox 7>;
+> +		};
 > +
-> +	dev_info(&pdev->dev, "APM X-Gene SoC HW monitor driver registered\n");
+>  		serial0: serial@10600000 {
+>  			device_type = "serial";
+>  			compatible = "ns16550";
+> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> index 5147d76..f8ea5b5 100644
+> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> @@ -716,6 +716,11 @@
+>  			mboxes = <&mailbox 0>;
+>  		};
+>  
+> +		hwmonslimpro {
+> +			compatible = "apm,xgene-slimpro-hwmon";
+> +			mboxes = <&mailbox 7>;
+> +		};
 > +
-> +	return rc;
-> +
-
-Nitpick: rc == 0 here, so return 0; is a better choice.
-Otherwise looks good.
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-Note that I can not apply the patch at this time due to its dependency.
-
-Guenter
+>  		serial0: serial@1c020000 {
+>  			status = "disabled";
+>  			device_type = "serial";
+> -- 
+> 1.9.1
+> 
