@@ -1,43 +1,184 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH 01/18] ARM: mvebu: enable MTD command line partition table in
- mvebu_v7_defconfig
-Date: Thu, 21 Jul 2016 14:43:57 +0200
-Message-ID: <1469105055-25181-2-git-send-email-jaz@semihalf.com>
+Subject: [PATCH 18/18] ARM: mvebu: a395-gp: add support for the Armada 395 GP Board
+Date: Thu, 21 Jul 2016 14:44:15 +0200
+Message-ID: <1469105055-25181-20-git-send-email-jaz@semihalf.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com
 List-Id: devicetree@vger.kernel.org
+
+This commit adds description for the following features for this board:
+
+- Serial port
+- PCIe interfaces
+- USB2.0
+- USB3.0
+- SDIO
+- 1024 MiB NAND-FLASH
+- SATA
+- I2C buses
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 ---
- arch/arm/configs/mvebu_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/armada-395-gp.dts | 147 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 147 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-395-gp.dts
 
-diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
-index 486a4ca..f43a7aa 100644
---- a/arch/arm/configs/mvebu_v7_defconfig
-+++ b/arch/arm/configs/mvebu_v7_defconfig
-@@ -48,6 +48,7 @@ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_MTD=y
-+CONFIG_MTD_CMDLINE_PARTS=y
- CONFIG_MTD_BLOCK=y
- CONFIG_MTD_CFI=y
- CONFIG_MTD_CFI_INTELEXT=y
+diff --git a/arch/arm/boot/dts/armada-395-gp.dts b/arch/arm/boot/dts/armada-395-gp.dts
+new file mode 100644
+index 0000000..eb53306
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-395-gp.dts
+@@ -0,0 +1,147 @@
++/*
++ * Device Tree file for Marvell Armada 395 GP board
++ *
++ * Copyright (C) 2016 Marvell
++ *
++ * Grzegorz Jaszczyk <jaz@semihalf.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is licensed under the terms of the GNU General Public
++ *     License version 2.  This program is licensed "as is" without
++ *     any warranty of any kind, whether express or implied.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "armada-395.dtsi"
++
++/ {
++	model = "Marvell Armada 395 GP Board";
++	compatible = "marvell,a395-gp", "marvell,armada395",
++		     "marvell,armada390";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x40000000>; /* 1 GB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
++
++		internal-regs {
++			i2c@11000 {
++				status = "okay";
++				clock-frequency = <100000>;
++			};
++
++			serial@12000 {
++				status = "okay";
++			};
++
++			usb@58000 {
++				status = "okay";
++			};
++
++			sata@a8000 {
++				status = "okay";
++			};
++
++			flash@d0000 {
++				status = "okay";
++				pinctrl-0 = <&nand_pins>;
++				pinctrl-names = "default";
++				num-cs = <1>;
++				marvell,nand-keep-config;
++				marvell,nand-enable-arbiter;
++				nand-on-flash-bbt;
++				nand-ecc-strength = <4>;
++				nand-ecc-step-size = <512>;
++
++				partitions {
++					compatible = "fixed-partitions";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					partition@0 {
++						label = "U-Boot";
++						reg = <0x00000000 0x00600000>;
++						read-only;
++					};
++
++					partition@800000 {
++						label = "uImage";
++						reg = <0x00600000 0x00400000>;
++						read-only;
++					};
++
++					partition@1000000 {
++						label = "Root";
++						reg = <0x00a00000 0x3f600000>;
++					};
++				};
++			};
++
++			sdhci@d8000 {
++				clock-frequency = <200000000>;
++				broken-cd;
++				wp-inverted;
++				bus-width = <8>;
++				status = "okay";
++				no-1-8-v;
++			};
++
++			usb3@f0000 {
++				status = "okay";
++			};
++		};
++
++		pcie-controller {
++			status = "okay";
++
++			/*
++			 * The two PCIe units are accessible through
++			 * mini PCIe slot on the board.
++			 */
++			pcie@2,0 {
++				/* Port 1, Lane 0 */
++				status = "okay";
++			};
++
++			pcie@4,0 {
++				/* Port 3, Lane 0 */
++				status = "okay";
++			};
++		};
++	};
++};
 -- 
 1.8.3.1
