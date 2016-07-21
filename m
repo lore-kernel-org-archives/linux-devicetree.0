@@ -1,79 +1,50 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC 6/6] bus: Add support for Tegra NOR controller
-Date: Thu, 21 Jul 2016 16:12:05 +0100
-Message-ID: <222d4179-a72f-56d1-246b-ab66af3057d9@nvidia.com>
-References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
- <1468935397-11926-7-git-send-email-mirza.krak@gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v4 4/4] ASoC: samsung: Add machine driver
+ for Exynos5433 based TM2 board
+Date: Thu, 21 Jul 2016 17:12:16 +0200
+Message-ID: <5790E650.609@samsung.com>
+References: <CGME20160705171538epcas1p14f034567982b67aad091c50e5adcec9c@epcas1p1.samsung.com>
+ <1467738877-31555-1-git-send-email-s.nawrocki@samsung.com>
+ <5788721B.7010602@samsung.com> <578CB261.60507@samsung.com>
+ <5790A3D0.4070500@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468935397-11926-7-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-reply-to: <5790A3D0.4070500@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: robh@kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-kernel@vger.kernel.org, inki.dae@samsung.com, devicetree@vger.kernel.org, broonie@kernel.org, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-
-On 19/07/16 14:36, Mirza Krak wrote:
-> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 07/21/2016 12:28 PM, Chanwoo Choi wrote:
+> When I test it, I can get the clock pointer by devm_clk_get() as following:
 > 
-> The NOR bus can be used to connect high-speed devices such as NOR flash,
-> FPGAs, DSPs, CAN chips, Wi-Fi chips etc.
+> diff --git a/sound/soc/samsung/tm2_wm5110.c b/sound/soc/samsung/tm2_wm5110.c
+> index 9728b3c5927f..5de4fc554aec 100644
+> --- a/sound/soc/samsung/tm2_wm5110.c
+> +++ b/sound/soc/samsung/tm2_wm5110.c
+> @@ -500,7 +500,7 @@ static int tm2_probe(struct platform_device *pdev)
+>                 card->dai_link[i].platform_of_node = cpu_dai_node;
+>         }
 > 
-> Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/bus/Kconfig     |   7 +++
->  drivers/bus/Makefile    |   1 +
->  drivers/bus/tegra-nor.c | 118 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 126 insertions(+)
->  create mode 100644 drivers/bus/tegra-nor.c
+> -       priv->codec_mclk1 = of_clk_get_by_name(codec_dai_node, "mclk1");
+> +       priv->codec_mclk1 = devm_clk_get(dev, "mclk1");
 
-...
+I guess you have and old dts where clock/clock-names are in the sound
+node.  Instead the clock/clock-names properties should be specified
+in the CODEC's node, the related binding's documentation can be found
+in Documentation/devicetree/bindings/mfd/arizona.txt. Also please see
+patch 3/4, there is no clock properties in the sound card's DT binding.
 
-> +static int __init nor_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	/* get the resource */
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	/* get the clock */
-> +	clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	ret = clk_prepare_enable(clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* parse the device node */
-> +	ret = nor_parse_dt(pdev, base);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s fail to create devices.\n",
-> +			pdev->dev.of_node->full_name);
-> +		clk_disable_unprepare(clk);
-> +		return ret;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "Driver registered.\n");
-> +	return 0;
-> +}
-
-The reset is defined in the binding, but never used. Should we make sure
-the reset is de-asserted in the probe?
-
-Jon
-
--- 
-nvpublic
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sylwester
