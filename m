@@ -1,7 +1,7 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH 03/18] ARM: mvebu: enable E1000E in mvebu_v7_defconfig
-Date: Thu, 21 Jul 2016 14:43:59 +0200
-Message-ID: <1469105055-25181-4-git-send-email-jaz@semihalf.com>
+Subject: [PATCH 05/18] ARM: mvebu: a385-db-ap: add default partition description for NAND
+Date: Thu, 21 Jul 2016 14:44:01 +0200
+Message-ID: <1469105055-25181-6-git-send-email-jaz@semihalf.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
@@ -12,20 +12,51 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 ---
- arch/arm/configs/mvebu_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/armada-385-db-ap.dts | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
-index f1a0e25..000a866 100644
---- a/arch/arm/configs/mvebu_v7_defconfig
-+++ b/arch/arm/configs/mvebu_v7_defconfig
-@@ -69,6 +69,7 @@ CONFIG_AHCI_MVEBU=y
- CONFIG_SATA_MV=y
- CONFIG_NETDEVICES=y
- CONFIG_NET_DSA_MV88E6XXX=y
-+CONFIG_E1000E=y
- CONFIG_MV643XX_ETH=y
- CONFIG_MVNETA=y
- CONFIG_MVPP2=y
+diff --git a/arch/arm/boot/dts/armada-385-db-ap.dts b/arch/arm/boot/dts/armada-385-db-ap.dts
+index a18f516..6648a3f 100644
+--- a/arch/arm/boot/dts/armada-385-db-ap.dts
++++ b/arch/arm/boot/dts/armada-385-db-ap.dts
+@@ -182,15 +182,35 @@
+ 
+ 			nfc: flash@d0000 {
+ 				status = "okay";
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-
+ 				num-cs = <1>;
+ 				nand-ecc-strength = <4>;
+ 				nand-ecc-step-size = <512>;
+ 				marvell,nand-keep-config;
+ 				marvell,nand-enable-arbiter;
+ 				nand-on-flash-bbt;
++
++				partitions {
++					compatible = "fixed-partitions";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					partition@0 {
++						label = "U-Boot";
++						reg = <0x00000000 0x00800000>;
++						read-only;
++					};
++
++					partition@800000 {
++						label = "uImage";
++						reg = <0x00800000 0x00400000>;
++						read-only;
++					};
++
++					partition@c00000 {
++						label = "Root";
++						reg = <0x00c00000 0x3f400000>;
++					};
++				};
+ 			};
+ 
+ 			usb3@f0000 {
 -- 
 1.8.3.1
