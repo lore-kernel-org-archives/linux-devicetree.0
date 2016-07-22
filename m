@@ -1,128 +1,90 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [net-next PATCH 1/3] net: phy: dp83867: Add documentation for
- optional impedance control
-Date: Fri, 22 Jul 2016 15:35:46 +0530
-Message-ID: <959bac39-ccd6-8338-a9f4-7f56f63b0478@ti.com>
-References: <20160720145614.13132-1-mugunthanvnm@ti.com>
- <20160720145614.13132-2-mugunthanvnm@ti.com> <578F99D3.9090601@ti.com>
- <57906A2C.7010201@ti.com> <20160721211429.GA17696@rob-hp-laptop>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: [RFC] regulator: da9052/53: da9052-i2c.txt binding document changes
+Date: Fri, 22 Jul 2016 10:35:55 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB70173DAC199@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160721211429.GA17696@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Sekhar Nori <nsekhar@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, netdev@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
+Cc: DEVICTREE <devicetree@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, "Ying-Chun Liu (PaulLiu" <paul.liu@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Shawn Guo <shawn.guo@linaro.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+Hi,
 
-On Friday 22 July 2016 02:44 AM, Rob Herring wrote:
-> On Thu, Jul 21, 2016 at 11:52:36AM +0530, Sekhar Nori wrote:
->> Nishanth,
->>
->> On Wednesday 20 July 2016 09:03 PM, Nishanth Menon wrote:
->>> On 07/20/2016 09:56 AM, Mugunthan V N wrote:
->>>> Add documention of ti,impedance-control which can be used to
->>>> correct MAC impedance mismatch using phy extended registers.
->>>>
->>>> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->>>> ---
->>>>   Documentation/devicetree/bindings/net/ti,dp83867.txt | 7 +++++++
->>>>   1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt
->>>> b/Documentation/devicetree/bindings/net/ti,dp83867.txt
->>>> index 5d21141..531ea3c5 100644
->>>> --- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
->>>> +++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
->>>> @@ -9,6 +9,13 @@ Required properties:
->>>>       - ti,fifo-depth - Transmitt FIFO depth- see
->>>> dt-bindings/net/ti-dp83867.h
->>>>           for applicable values
->>>>
->>>> +Optional property:
->>>> +    - ti,impedance-control - MAC Interface Impedance control to vary the
->>>> +                 output impedance with an approximate range
->>>> +                 from 35-70 ohms in 32 steps. Value range can
->>>> +                 be 0x0 to 0x1f. Lowest impedance value is
->>>> +                 0x1f and highest impedance being 0x0.
->>>> +
->>>
->>> Should'nt you be using the impedance values of 35 to 70 as the valid
->>> values here? that would be the hardware description, and the values to
->>> program corresponding to those are 0x00 to 0x1f. Right?
->>>
->>> Rob: is'nt that the right way to do it?
-> 
-> Normally, yes that is preferred. I don't have an issue with it here if 
-> that is what makes sense.
-> 
->> Agree that that is usually the right way to do it. I believe this case
->> is bit peculiar though. Here is the extract from the datasheet[1] about
->> how the register in question works.
->>
->> "
->> Output impedance approximate range from 35-70 ohms in 32 steps.
->> Lowest being 11110 and highest being 00000. Range and Step size
->> will vary with process.
->>
->> Default is set to 50 ohms by trim. But the default register value can
->> vary by process. Non default values of MAC I/O impedance can be
->> used based on trace impedance. Mismatch between device and
->> trace impedance can cause voltage overshoot and undershoot.
->> "
->>
->> So clearly, there is no easy correspondence that the hardware guarantees
->> between output impedance ohmage and the register value programmed. Only
->> couple of things are guaranteed.
->>
->> 1) Programming a value of 0 gives approximately 35 ohms
->> 2) Programming a value of 0x1F gives approximately 70 ohms
->> 3) Default value of the register gives 50 ohms (the default value could
->> vary by device).
->> 4) Programming a value in between will give some ohmage in the
->> approximate range 35-70 (curve is unknown).
+The binding file for DA9052/53 exists in the kernel and was originally
+submitted by Ying-Chun Liu from Linaro way back in 2012.
 
-Sekhar got it wrong, programming 0x1F provides the minimum impedance of
-35 ohms and 0x0 provides the maximum impedance of 70 ohms.
+Documentation/devicetree/bindings/mfd/da9052-i2c.txt 
+> git show 58d114b
 
->>
->> Given this, I am not sure how one can convert a given user supplied ohms
->> values to a reasonable register value. Clearly, the register is supposed
->> to be programmed by experimentation, not calculation.
-> 
-> So your are going to change from a known value tuned for the individual 
-> Si (50ohm) to the same value for all chips (at least for a given board). 
-> Or does this get set by firmware at boot? If not, seems like you would 
-> want to specify a delta from the default register value in this case.
+The patch adds support for the Dialog MFD and it lists the compatible strings
+"dlg,da9052", "dlg,da9053-aa", etc. in the driver code. But, it also lists
+some regulator binding names for the two chips DA9052 and DA9053. These
+regulator names are added to the binding document but not used in the driver,
+also they are named incorrectly compared to the datasheets and Linux driver,
+and are misleading and confusing.
 
-The delta will not be constant for each steps of the register content.
-So this approach cannot be taken.
++Sub-nodes:
++- regulators : Contain the regulator nodes. The DA9052/53 regulators are
++  bound using their names as listed below:
++
++    buck0     : regulator BUCK0
++    buck1     : regulator BUCK1
++    buck2     : regulator BUCK2
++    buck3     : regulator BUCK3
++    ldo4      : regulator LDO4
++    ldo5      : regulator LDO5
++    ldo6      : regulator LDO6
++    ldo7      : regulator LDO7
++    ldo8      : regulator LDO8
++    ldo9      : regulator LDO9
++    ldo10     : regulator LDO10
++    ldo11     : regulator LDO11
++    ldo12     : regulator LDO12
++    ldo13     : regulator LDO13
 
-> 
->> That said, we could take another approach. At least for the current
->> issue we are trying to address, we only need to configure the register
->> to max value. And given the nature of the register, I am pretty sure
->> that is what most people will end up doing.
-> 
-> How does the max value get determined? Possibly it should just be set in 
-> the kernel.
 
-Yes, the min/max value will be determined in the kernel and the DT will
-have either of the properties below.
+For example: 
+ - ldo10 in this binding list is LDO7 in the driver and in our datasheet
+ - ldo7  in this binding list is LDO4 in the driver and in our datasheet
 
->  
->> So, may be we have two properties:
->>
->> ti,max-output-impedance
->> ti,min-output-imepdance
-> 
-> Just define max if that's all you currently need.
+The main problem, and my request for comment is this:
 
-Currently we care about only the min-output-impedance (register content
-0x1f). Will respin the patch using ti,min-output-impedance.
+I understand these are supposed to be the definitive definitions, but they
+are at best, confusing. They are also not used. I would like to support the
+proper names for the regulators.
 
-Regards
-Mugunthan V N
+The easiest solution for me would be to delete the binding file and create a
+new one with the correct bindings. But I am guessing this is probably
+unacceptable? Is it?
+
+diff --git a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
+deleted file mode 100644
+index 1857f4a..0000000
+--- a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
++++ /dev/null
+@@ -1,60 +0,0 @@
+[... etc]
+
+If not acceptable to anybody but me, then, a second option might be to support
+two binding names at once, 'forget' the incorrect ones in the binding
+documents, and implement two names in the driver code and make it backwards
+compatible that way.
+
+Because the names are interchangeable between datasheets/code and bindings,
+ldo10 <-> ldo7 <-> ldo4, this is not quite possible, so I would need to rename
+the new bindings to be something like "ldo_7" instead of "ldo7".
+
+Are there any precedents for these sorts of change in the past?
+
+I would really like to use the "ldo7" naming convention style instead of the
+"ldo_7" (underscore style) because that matches up with our datasheets and the
+Linux driver code, and all of our other regulator drivers currently in the
+kernel, DA9062, D9063, etc. Therefore erasing the old regulator bindings would
+be the best option for me.
+
+Regards,
+Steve
