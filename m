@@ -1,46 +1,63 @@
-From: Andrew Duggan <aduggan@synaptics.com>
-Subject: Re: [PATCH v3 3/8] Input: synaptics-rmi4: Add dribble and palm
- gesture parameters to device tree
-Date: Fri, 22 Jul 2016 11:32:02 -0700
-Message-ID: <682368c2-5692-5905-7538-36ce2e3d262f@synaptics.com>
-References: <1468476522-8032-1-git-send-email-aduggan@synaptics.com>
- <20160722165239.GA5036@dtor-ws>
+From: Mirza Krak <mirza.krak@gmail.com>
+Subject: Re: [RFC 3/6] dt/bindings: Add bindings for Tegra20/30 NOR bus driver
+Date: Fri, 22 Jul 2016 21:07:02 +0200
+Message-ID: <CALw8SCXb29NM=BRnUBsnFFObe25fSFi2mzvhrb5CvvJVCcWRfA@mail.gmail.com>
+References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
+ <1468935397-11926-4-git-send-email-mirza.krak@gmail.com> <434561ec-510e-a3bf-c7b6-c961db299bd6@nvidia.com>
+ <CALw8SCU0cz6mbO=oudCZ4-=2PHVORNt3gwmg2bzNjyhJFnWS3g@mail.gmail.com> <8e9cdefd-68d1-b788-92fb-b74aae1713c8@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160722165239.GA5036@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Vincent Huang <vincent.huang@tw.synaptics.com>, Nick Dyer <nick@shmanahar.org>, Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <8e9cdefd-68d1-b788-92fb-b74aae1713c8@nvidia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 07/22/2016 09:52 AM, Dmitry Torokhov wrote:
-> On Wed, Jul 13, 2016 at 11:08:42PM -0700, Andrew Duggan wrote:
->> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
->> ---
->> This version includes Nick's suggestion of adding force to the device tree
->> parameters so make it obvious that these parameters overwrite the
->> default values set in the firware config.
-> Why do we want to support overwriting firmware behavior in DT instead of
-> flashing new firmware as needed by the product?
-
-If the firmware was configured incorrectly it might just be easier to 
-add a device tree entry. This would allow platform owners to make the 
-change without having to get Synaptics involved or have access to our 
-tools. Customers have also requested using the same module and firmware 
-across multiple platforms. Tracking which firmware is on which part 
-would create an additional support burden and not all platforms have an 
-automated way of checking and updating firmware versions in the event 
-that a system is build with a module which has the incorrect firmware.
-
-It is possible that neither of these cases will ever happen and the 
-bindings will never be used. I figured it was better to have the options 
-available if needed. But, if we want to avoid having tons of device tree 
-parameters which are never used then we can leave this patch out and I 
-can resubmit it if there is a platform which ends up needing them.
-
-Andrew
-
-> Thanks.
+2016-07-22 11:32 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
 >
+> On 21/07/16 21:10, Mirza Krak wrote:
+>> 2016-07-21 11:56 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
+>>>
+>>> I wonder if it is worth mentioning that the chip-select specified in the
+>>> "nvidia,config" prop should match that in the "ranges" prop unless you
+>>> have some external decoding logic to provide an external chip-select.
+>>> Which raises a question, what does the chip-select in the ranges
+>>> actually represent? I am not sure if there is a common practice here for
+>>> device tree when boards have external logic to provide additional
+>>> chip-selects. I am sure this is quite common.
+>>
+>> I do not understand why CS pin setting in nvidia,config need to match
+>> the "ranges" prop? Other then maybe cosmetics.
+>
+> Yes it would be cosmetic. That said, I even wonder if CS needs to be
+> exposed at all given that they all map to the same CPU address space.
+> Couldn't your binding for the CAN devices be as follows?
+>
+> nor@70009000 {
+>         ...
+>
+>         can@48000000 {
+>                 ...
+>         };
+>
+>         can@48040000 {
+>                 ...
+>         };
+> };
+
+This has also crossed my mind, maybe just get rid of the "ranges" prop
+and do like you have above. But then again I do not know what is
+preferred so I went with "ranges" prop initially.
+
+
+>
+> Problem is if you did have devices on different chip-selects then how
+> would these be handled? They could not point to the same physical
+> address. I am not sure if there is a way to do that in DT?
+
+Having trouble following your though here. We do not have "different"
+chip-selects?
+
+Best Regards
+Mirza
