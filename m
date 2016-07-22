@@ -1,90 +1,1139 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: [RFC] regulator: da9052/53: da9052-i2c.txt binding document changes
-Date: Fri, 22 Jul 2016 10:35:55 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB70173DAC199@SW-EX-MBX02.diasemi.com>
+From: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+Subject: [PATCH] [linux-devel]arm64: Add DTS support for FSL's LS1012A SoC
+Date: Fri, 22 Jul 2016 11:05:12 +0530
+Message-ID: <1469165712-4356-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
-Cc: DEVICTREE <devicetree@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, "Ying-Chun Liu (PaulLiu" <paul.liu@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Shawn Guo <shawn.guo@linaro.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, shawnguo@kernel.org
+Cc: Calvin Johnson <calvin.johnson@nxp.com>, Yunhui Cui <yunhui.cui@nxp.com>, Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>, Alison Wang <alison.wang@nxp.com>, stuart.yoder@nxp.com, oss@buserror.net, Makarand Pawagi <makarand.pawagi@nxp.com>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Jia Hongtao <hongtao.jia@nxp.com>, Anji J <anji.jagarlmudi@freescale.com>, Pratiyush Mohan Srivastava <pratiyush.srivastava@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The QorIQ LS1012A processor is a new Freescale' SoC optimized
+for battery-backed or USB-powered, integrates a single ARM
+Cortex-A53 core with a hardware packet forwarding engine
+and high-speed interfaces to deliver line-rate networking performance.
+LS1012AQDS, LS1012ARDB, LS1012AFRDM are a high-performance development platform
+using LS1012A SoC.
 
-The binding file for DA9052/53 exists in the kernel and was originally
-submitted by Ying-Chun Liu from Linaro way back in 2012.
+Add the device tree support for FSL LS1012A SoC.
+Following levels of DTSI/DTS files have been created for the LS1012A
+SoC family:
 
-Documentation/devicetree/bindings/mfd/da9052-i2c.txt 
-> git show 58d114b
+	- fsl-ls1012a.dtsi:
+		DTS-Include file for FSL LS1012A SoC.
 
-The patch adds support for the Dialog MFD and it lists the compatible strings
-"dlg,da9052", "dlg,da9053-aa", etc. in the driver code. But, it also lists
-some regulator binding names for the two chips DA9052 and DA9053. These
-regulator names are added to the binding document but not used in the driver,
-also they are named incorrectly compared to the datasheets and Linux driver,
-and are misleading and confusing.
+	- fsl-ls1012a-frdm.dts:
+		DTS file for FSL LS1012A FRDM board.
 
-+Sub-nodes:
-+- regulators : Contain the regulator nodes. The DA9052/53 regulators are
-+  bound using their names as listed below:
+	- fsl-ls1012a-qds.dts:
+		DTS file for FSL LS1012A QDS board.
+
+	- fsl-ls1012a-rdb.dts:
+		DTS file for FSL LS1012A RDB board.
+
+Add ls1012ardb, ls1012aqds and ls1012afrdm dtb in Makefile
+
+Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Signed-off-by: Calvin Johnson <calvin.johnson@nxp.com>
+Signed-off-by: Makarand Pawagi <makarand.pawagi@nxp.com>
+Signed-off-by: Pratiyush Mohan Srivastava <pratiyush.srivastava@nxp.com>
+Signed-off-by: Yunhui Cui <yunhui.cui@nxp.com>
+Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Signed-off-by: Alison Wang <alison.wang@nxp.com>
+Signed-off-by: Jia Hongtao <hongtao.jia@nxp.com>
+Signed-off-by: Anji J <anji.jagarlmudi@freescale.com>
+Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/Makefile             |   3 +
+ arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts | 186 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts  | 218 +++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts  | 115 +++++
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     | 512 +++++++++++++++++++++
+ 5 files changed, 1034 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 1b7783d..4aa3bee 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -3,6 +3,9 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frdm.dtb
+  
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+new file mode 100644
+index 0000000..5db6133
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+@@ -0,0 +1,186 @@
++/*
++ * Device Tree Include file for Freescale Layerscape-1012A family SoC.
++ *
++ * Copyright 2016, Freescale Semiconductor Inc.
 +
-+    buck0     : regulator BUCK0
-+    buck1     : regulator BUCK1
-+    buck2     : regulator BUCK2
-+    buck3     : regulator BUCK3
-+    ldo4      : regulator LDO4
-+    ldo5      : regulator LDO5
-+    ldo6      : regulator LDO6
-+    ldo7      : regulator LDO7
-+    ldo8      : regulator LDO8
-+    ldo9      : regulator LDO9
-+    ldo10     : regulator LDO10
-+    ldo11     : regulator LDO11
-+    ldo12     : regulator LDO12
-+    ldo13     : regulator LDO13
-
-
-For example: 
- - ldo10 in this binding list is LDO7 in the driver and in our datasheet
- - ldo7  in this binding list is LDO4 in the driver and in our datasheet
-
-The main problem, and my request for comment is this:
-
-I understand these are supposed to be the definitive definitions, but they
-are at best, confusing. They are also not used. I would like to support the
-proper names for the regulators.
-
-The easiest solution for me would be to delete the binding file and create a
-new one with the correct bindings. But I am guessing this is probably
-unacceptable? Is it?
-
-diff --git a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-deleted file mode 100644
-index 1857f4a..0000000
---- a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-+++ /dev/null
-@@ -1,60 +0,0 @@
-[... etc]
-
-If not acceptable to anybody but me, then, a second option might be to support
-two binding names at once, 'forget' the incorrect ones in the binding
-documents, and implement two names in the driver code and make it backwards
-compatible that way.
-
-Because the names are interchangeable between datasheets/code and bindings,
-ldo10 <-> ldo7 <-> ldo4, this is not quite possible, so I would need to rename
-the new bindings to be something like "ldo_7" instead of "ldo7".
-
-Are there any precedents for these sorts of change in the past?
-
-I would really like to use the "ldo7" naming convention style instead of the
-"ldo_7" (underscore style) because that matches up with our datasheets and the
-Linux driver code, and all of our other regulator drivers currently in the
-kernel, DA9062, D9063, etc. Therefore erasing the old regulator bindings would
-be the best option for me.
-
-Regards,
-Steve
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++/dts-v1/;
++
++#include "fsl-ls1012a.dtsi"
++
++/ {
++	model = "LS1012A FREEDOM Board";
++	compatible = "fsl,ls1012a-frdm", "fsl,ls1012a";
++
++	aliases {
++		crypto = &crypto;
++	};
++
++	sys_mclk: clock-mclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_1p8v: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "1P8V";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,widgets =
++			"Microphone", "Microphone Jack",
++			"Headphone", "Headphone Jack",
++			"Speaker", "Speaker Ext",
++			"Line", "Line In Jack";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"Microphone Jack", "Mic Bias",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT",
++			"Speaker Ext", "LINE_OUT";
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai2>;
++			frame-master;
++			bitclock-master;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&codec>;
++			frame-master;
++			bitclock-master;
++			system-clock-frequency = <25000000>;
++		};
++	};
++};
++
++&qspi {
++	num-cs = <2>;
++	bus-num = <0>;
++	status = "disabled";
++	fsl,ddr-sampling-point = <4>;
++
++	qflash0: s25fs512s@0 {
++		compatible = "spansion,m25p80";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <20000000>;
++		m25p,fast-read;
++		reg = <0>;
++	};
++};
++&ftm0 {
++	status = "disabled";
++};
++
++&i2c0 {
++	status = "okay";
++
++	codec: sgtl5000@a {
++		#sound-dai-cells = <0>;
++		compatible = "fsl,sgtl5000";
++		reg = <0xa>;
++		VDDA-supply = <&reg_1p8v>;
++		VDDIO-supply = <&reg_1p8v>;
++		clocks = <&sys_mclk 1>;
++	};
++};
++
++&duart0 {
++	status = "okay";
++};
++&pfe {
++	status = "disabled";
++	ethernet@0 {
++		compatible = "fsl,pfe-gemac-port";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <	0x0 >;	/* GEM_ID */
++		fsl,gemac-bus-id = <0x0>;	/* BUS_ID */
++		fsl,gemac-phy-id = <0x2>;	/* PHY_ID */
++		fsl,mdio-mux-val = <0x0>;
++		local-mac-address = [ 00 1A 2B 3C 4D 5E ];
++		phy-mode = "sgmii";
++		fsl,pfe-gemac-if-name = "eth0";
++		fsl,pfe-phy-if-flags = <0x0>;
++		fsl,pfe-gemac-mode = <0x1B00>; /* GEMAC_SW_CONF | GEMAC_SW_FULL_DUPLEX | GEMAC_SW_SPEED_1G */
++
++		mdio@0 {
++			reg = <0x1>; /* enabled/disabled */
++			fsl,mdio-phy-mask = <0xFFFFFFF9>;
++		};
++	};
++	ethernet@1 {
++		compatible = "fsl,pfe-gemac-port";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <	0x1 >;	/* GEM_ID */
++		fsl,gemac-bus-id = < 0x1 >;	/* BUS_ID */
++		fsl,gemac-phy-id = < 0x1 >;	/* PHY_ID */
++		fsl,mdio-mux-val = <0x0>;
++		local-mac-address = [ 00 AA BB CC DD EE ];
++		phy-mode = "sgmii";
++		fsl,pfe-gemac-if-name = "eth1";
++		fsl,pfe-phy-if-flags = <0x0>;
++		fsl,pfe-gemac-mode = <0x1B00>; /* GEMAC_SW_CONF | GEMAC_SW_FULL_DUPLEX | GEMAC_SW_SPEED_1G */
++		mdio@0 {
++			reg = <0x0>; /* enabled/disabled */
++			fsl,mdio-phy-mask = <0xFFFFFFF9>;
++		};
++
++	};
++
++};
++
++
++&esdhc0 {
++	status = "disabled";
++};
++
++&esdhc1 {
++	status = "disabled";
++};
++
++&sai2 {
++	status = "disabled";
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+new file mode 100644
+index 0000000..40c85b7
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+@@ -0,0 +1,218 @@
++/*
++ * Device Tree Include file for Freescale Layerscape-1012A family SoC.
++ *
++ * Copyright 2016, Freescale Semiconductor Inc.
++
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++/dts-v1/;
++
++#include "fsl-ls1012a.dtsi"
++
++/ {
++	model = "LS1012A QDS Board";
++	compatible = "fsl,ls1012a-qds", "fsl,ls1012a";
++
++	aliases {
++		crypto = &crypto;
++	};
++
++	sys_mclk: clock-mclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24576000>;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_3p3v: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "3P3V";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,widgets =
++			"Microphone", "Microphone Jack",
++			"Headphone", "Headphone Jack",
++			"Speaker", "Speaker Ext",
++			"Line", "Line In Jack";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"Microphone Jack", "Mic Bias",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT",
++			"Speaker Ext", "LINE_OUT";
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai2>;
++			frame-master;
++			bitclock-master;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&codec>;
++			frame-master;
++			bitclock-master;
++			system-clock-frequency = <24576000>;
++		};
++	};
++};
++
++&dspi0 {
++	bus-num = <0>;
++	status = "okay";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "n25q128a11", "jedec,spi-nor";  /* 16MB */
++		reg = <0>;
++		spi-max-frequency = <10000000>; /* input clock */
++	};
++
++	flash@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "sst,sst25wf040b", "jedec,spi-nor";  /* 512KB */
++		reg = <1>;
++		spi-max-frequency = <35000000>; /* input clock */
++	};
++
++	flash@2 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "eon,en25s64", "jedec,spi-nor";   /* 8MB */
++		reg = <2>;
++		spi-max-frequency = <35000000>; /* input clock */
++	};
++};
++
++&qspi {
++	num-cs = <2>;
++	bus-num = <0>;
++	status = "disabled";
++
++	qflash0: s25fs512s@0 {
++		compatible = "spansion,m25p80";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <20000000>;
++		m25p,fast-read;
++		reg = <0>;
++	};
++};
++&ftm0 {
++	status = "disabled";
++};
++
++&i2c0 {
++	status = "okay";
++	pca9547@77 {
++		compatible = "philips,pca9547";
++		reg = <0x77>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c@4 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x4>;
++
++			codec: sgtl5000@a {
++				#sound-dai-cells = <0>;
++				compatible = "fsl,sgtl5000";
++				reg = <0xa>;
++				VDDA-supply = <&reg_3p3v>;
++				VDDIO-supply = <&reg_3p3v>;
++				clocks = <&sys_mclk 1>;
++			};
++		};
++	};
++};
++
++&duart0 {
++	status = "okay";
++};
++&pfe {
++	status = "disabled";
++	ethernet@0 {
++		compatible = "fsl,pfe-gemac-port";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <	0x0 >;	/* GEM_ID */
++		fsl,gemac-bus-id = <0x0>;	/* BUS_ID */
++		fsl,gemac-phy-id = <0x1e>;	/* PHY_ID */
++		fsl,mdio-mux-val = <0x0>;
++		local-mac-address = [ 00 1A 2B 3C 4D 5E ];
++		phy-mode = "sgmii";
++		fsl,pfe-gemac-if-name = "eth0";
++		fsl,pfe-phy-if-flags = <0x0>;
++		fsl,pfe-gemac-mode = <0x1B00>; /* GEMAC_SW_CONF | GEMAC_SW_FULL_DUPLEX | GEMAC_SW_SPEED_1G */
++
++		mdio@0 {
++			reg = <0x1>; /* enabled/disabled */
++			fsl,mdio-phy-mask = <0xBFFFFFFD>;
++		};
++	};
++	ethernet@1 {
++		compatible = "fsl,pfe-gemac-port";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <	0x1 >;	/* GEM_ID */
++		fsl,gemac-bus-id = < 0x1 >;	/* BUS_ID */
++		fsl,gemac-phy-id = < 0x1 >;	/* PHY_ID */
++		fsl,mdio-mux-val = <0x0>;
++		local-mac-address = [ 00 AA BB CC DD EE ];
++		phy-mode = "rgmii";
++		fsl,pfe-gemac-if-name = "eth2";
++		fsl,pfe-phy-if-flags = <0x0>;
++		fsl,pfe-gemac-mode = <0x1B00>; /* GEMAC_SW_CONF | GEMAC_SW_FULL_DUPLEX | GEMAC_SW_SPEED_1G */
++		mdio@0 {
++			reg = <0x0>; /* enabled/disabled */
++			fsl,mdio-phy-mask = <0xBFFFFFFD>;
++		};
++
++	};
++
++};
++
++&sai2 {
++	status = "disabled";
++};
++
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+new file mode 100644
+index 0000000..eadcb63
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+@@ -0,0 +1,115 @@
++/*
++ * Device Tree Include file for Freescale Layerscape-1012A family SoC.
++ *
++ * Copyright 2016, Freescale Semiconductor Inc.
++
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++/dts-v1/;
++
++#include "fsl-ls1012a.dtsi"
++
++/ {
++	model = "LS1012A RDB Board";
++	compatible = "fsl,ls1012a-rdb", "fsl,ls1012a";
++
++	aliases {
++		crypto = &crypto;
++	};
++};
++
++&qspi {
++	num-cs = <2>;
++	bus-num = <0>;
++	status = "disabled";
++	fsl,ddr-sampling-point = <4>;
++
++	qflash0: s25fs512s@0 {
++		compatible = "spansion,m25p80";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <20000000>;
++		m25p,fast-read;
++		reg = <0>;
++	};
++};
++&ftm0 {
++	status = "disabled";
++};
++
++&i2c0 {
++	status = "okay";
++};
++
++&duart0 {
++	status = "okay";
++};
++&pfe {
++	status = "disabled";
++	ethernet@0 {
++		compatible = "fsl,pfe-gemac-port";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <	0x0 >;	/* GEM_ID */
++		fsl,gemac-bus-id = <0x0>;	/* BUS_ID */
++		fsl,gemac-phy-id = <0x2>;	/* PHY_ID */
++		fsl,mdio-mux-val = <0x0>;
++		local-mac-address = [ 00 1A 2B 3C 4D 5E ];
++		phy-mode = "sgmii";
++		fsl,pfe-gemac-if-name = "eth0";
++		fsl,pfe-phy-if-flags = <0x0>;
++		fsl,pfe-gemac-mode = <0x1B00>; /* GEMAC_SW_CONF | GEMAC_SW_FULL_DUPLEX | GEMAC_SW_SPEED_1G */
++
++		mdio@0 {
++			reg = <0x1>; /* enabled/disabled */
++			fsl,mdio-phy-mask = <0xFFFFFFF9>;
++		};
++	};
++	ethernet@1 {
++		compatible = "fsl,pfe-gemac-port";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <	0x1 >;	/* GEM_ID */
++		fsl,gemac-bus-id = < 0x1 >;	/* BUS_ID */
++		fsl,gemac-phy-id = < 0x1 >;	/* PHY_ID */
++		fsl,mdio-mux-val = <0x0>;
++		local-mac-address = [ 00 AA BB CC DD EE ];
++		phy-mode = "rgmii";
++		fsl,pfe-gemac-if-name = "eth2";
++		fsl,pfe-phy-if-flags = <0x0>;
++		fsl,pfe-gemac-mode = <0x1B00>; /* GEMAC_SW_CONF | GEMAC_SW_FULL_DUPLEX | GEMAC_SW_SPEED_1G */
++		mdio@0 {
++			reg = <0x0>; /* enabled/disabled */
++			fsl,mdio-phy-mask = <0xFFFFFFF9>;
++		};
++
++	};
++
++};
++
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+new file mode 100644
+index 0000000..c5fce10
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -0,0 +1,512 @@
++/*
++ * Device Tree Include file for Freescale Layerscape-1043A family SoC.
++ *
++ * Copyright 2016, Freescale Semiconductor
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/thermal/thermal.h>
++
++/ {
++	compatible = "fsl,ls1012a";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		/*
++		 * We expect the enable-method for cpu's to be "psci", but this
++		 * is dependent on the SoC FW, which will fill this in.
++		 *
++		 * Currently supported enable-method is psci v0.2
++		 */
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0 0x0>;
++			clocks = <&clockgen 1 0>;
++			#cooling-cells = <2>;
++		};
++
++	};
++
++
++	sysclk: sysclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <100000000>;
++		clock-output-names = "sysclk";
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <1 13 0x1>, /* Physical Secure PPI */
++			     <1 14 0x1>, /* Physical Non-Secure PPI */
++			     <1 11 0x1>, /* Virtual PPI */
++			     <1 10 0x1>; /* Hypervisor PPI */
++		arm,reread-timer;
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <0 106 0x4>;
++	};
++
++	gic: interrupt-controller@1400000 {
++		compatible = "arm,gic-400";
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		reg = <0x0 0x1401000 0 0x1000>, /* GICD */
++		      <0x0 0x1402000 0 0x2000>, /* GICC */
++		      <0x0 0x1404000 0 0x2000>, /* GICH */
++		      <0x0 0x1406000 0 0x2000>; /* GICV */
++		interrupts = <1 9 0xf08>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		clockgen: clocking@1ee1000 {
++			compatible = "fsl,ls1012a-clockgen","fsl,ls1043a-clockgen";
++			reg = <0x0 0x1ee1000 0x0 0x1000>;
++			#clock-cells = <2>;
++			clocks = <&sysclk>;
++		};
++
++		scfg: scfg@1570000 {
++			compatible = "fsl,ls1012a-scfg", "fsl,ls1043a-scfg", "syscon";
++			reg = <0x0 0x1570000 0x0 0x10000>;
++			big-endian;
++		};
++
++		crypto: crypto@1700000 {
++			compatible = "fsl,sec-v5.4", "fsl,sec-v5.0",
++				     "fsl,sec-v4.0";
++			fsl,sec-era = <8>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x00 0x1700000 0x100000>;
++			reg = <0x00 0x1700000 0x0 0x100000>;
++			interrupts = <0 75 0x4>;
++
++			sec_jr0: jr@10000 {
++				compatible = "fsl,sec-v5.4-job-ring",
++					     "fsl,sec-v5.0-job-ring",
++					     "fsl,sec-v4.0-job-ring";
++				reg	   = <0x10000 0x10000>;
++				interrupts = <0 71 0x4>;
++			};
++
++			sec_jr1: jr@20000 {
++				compatible = "fsl,sec-v5.4-job-ring",
++					     "fsl,sec-v5.0-job-ring",
++					     "fsl,sec-v4.0-job-ring";
++				reg	   = <0x20000 0x10000>;
++				interrupts = <0 72 0x4>;
++			};
++
++			sec_jr2: jr@30000 {
++				compatible = "fsl,sec-v5.4-job-ring",
++					     "fsl,sec-v5.0-job-ring",
++					     "fsl,sec-v4.0-job-ring";
++				reg	   = <0x30000 0x10000>;
++				interrupts = <0 73 0x4>;
++			};
++
++			sec_jr3: jr@40000 {
++				compatible = "fsl,sec-v5.4-job-ring",
++					     "fsl,sec-v5.0-job-ring",
++					     "fsl,sec-v4.0-job-ring";
++				reg	   = <0x40000 0x10000>;
++				interrupts = <0 74 0x4>;
++			};
++		};
++
++
++		dcfg: dcfg@1ee0000 {
++			compatible = "fsl,ls1012a-dcfg", "fsl,ls1043a-dcfg", "syscon";
++			reg = <0x0 0x1ee0000 0x0 0x10000>;
++		};
++
++		reset: reset@1EE00B0 {
++			compatible = "fsl,ls-reset";
++			reg = <0x0 0x1EE00B0 0x0 0x4>;
++			big-endian;
++		};
++
++		rcpm: rcpm@1ee2000 {
++			compatible = "fsl,ls1012a-rcpm", "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1";
++			reg = <0x0 0x1ee2000 0x0 0x10000>;
++		};
++
++                ftm0: ftm0@29d0000 {
++                        compatible = "fsl,ftm-alarm";
++                        reg = <0x0 0x29d0000 0x0 0x10000>;
++                        interrupts = <0 86 0x4>;
++                        big-endian;
++			rcpm-wakeup = <&rcpm 0x00020000 0x0>;
++                        status = "disabled";
++                };
++
++		esdhc0: esdhc@1560000 {
++			compatible = "fsl,ls1012a-esdhc0", "fsl,esdhc";
++			reg = <0x0 0x1560000 0x0 0x10000>;
++			interrupts = <0 62 0x4>;
++			clock-frequency = <0>;
++			voltage-ranges = <1800 1800 3300 3300>;
++			sdhci,auto-cmd12;
++			big-endian;
++			bus-width = <4>;
++		};
++
++		esdhc1: esdhc@1580000 {
++			compatible = "fsl,ls1012a-esdhc1", "fsl,esdhc";
++			reg = <0x0 0x1580000 0x0 0x10000>;
++			interrupts = <0 65 0x4>;
++			clock-frequency = <0>;
++			voltage-ranges = <1800 1800 3300 3300>;
++			sdhci,auto-cmd12;
++			big-endian;
++			bus-width = <4>;
++		};
++
++		dspi0: dspi@2100000 {
++			compatible = "fsl,ls1012a-dspi", "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2100000 0x0 0x10000>;
++			interrupts = <0 64 0x4>;
++			clock-names = "dspi";
++			clocks = <&clockgen 4 0>;
++			spi-num-chipselects = <5>;
++			big-endian;
++			status = "enabled";
++		};
++
++		qspi: quadspi@1550000 {
++			compatible =  "fsl,ls1012a-qspi", "fsl,ls1043a-qspi", "fsl,ls1021a-qspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x1550000 0x0 0x10000>,
++				<0x0 0x40000000 0x0 0x4000000>;
++			reg-names = "QuadSPI", "QuadSPI-memory";
++			interrupts = <0 99 0x4>;
++			clock-names = "qspi_en", "qspi";
++			clocks = <&clockgen 4 0>, <&clockgen 4 0>;
++			big-endian;
++			amba-base = <0x42000000>;
++		};
++
++		tmu: tmu@1f00000 {
++			compatible = "fsl,qoriq-tmu", "fsl,ls1012a-tmu";
++			reg = <0x0 0x1f00000 0x0 0x10000>;
++			interrupts = <0 33 0x4>;
++			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
++			fsl,tmu-calibration = <0x00000000 0x00000026
++					       0x00000001 0x0000002d
++					       0x00000002 0x00000032
++					       0x00000003 0x00000039
++					       0x00000004 0x0000003f
++					       0x00000005 0x00000046
++					       0x00000006 0x0000004d
++					       0x00000007 0x00000054
++					       0x00000008 0x0000005a
++					       0x00000009 0x00000061
++					       0x0000000a 0x0000006a
++					       0x0000000b 0x00000071
++
++					       0x00010000 0x00000025
++					       0x00010001 0x0000002c
++					       0x00010002 0x00000035
++					       0x00010003 0x0000003d
++					       0x00010004 0x00000045
++					       0x00010005 0x0000004e
++					       0x00010006 0x00000057
++					       0x00010007 0x00000061
++					       0x00010008 0x0000006b
++					       0x00010009 0x00000076
++
++					       0x00020000 0x00000029
++					       0x00020001 0x00000033
++					       0x00020002 0x0000003d
++					       0x00020003 0x00000049
++					       0x00020004 0x00000056
++					       0x00020005 0x00000061
++					       0x00020006 0x0000006d
++
++					       0x00030000 0x00000021
++					       0x00030001 0x0000002a
++					       0x00030002 0x0000003c
++					       0x00030003 0x0000004e>;
++			big-endian;
++			#thermal-sensor-cells = <1>;
++		};
++
++		thermal-zones {
++			cpu_thermal: cpu-thermal {
++				polling-delay-passive = <1000>;
++				polling-delay = <5000>;
++
++				thermal-sensors = <&tmu 0>;
++
++				trips {
++					cpu_alert: cpu-alert {
++						temperature = <85000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
++					cpu_crit: cpu-crit {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "critical";
++					};
++				};
++
++				cooling-maps {
++					map0 {
++						trip = <&cpu_alert>;
++						cooling-device =
++							<&cpu0 THERMAL_NO_LIMIT
++							THERMAL_NO_LIMIT>;
++					};
++				};
++			};
++		};
++
++		i2c0: i2c@2180000 {
++			compatible = "fsl,vf610-i2c";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2180000 0x0 0x10000>;
++			interrupts = <0 56 0x4>;
++			clock-names = "i2c";
++			clocks = <&clockgen 4 0>;
++			status = "disabled";
++		};
++
++		i2c1: i2c@2190000 {
++			compatible = "fsl,vf610-i2c";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2190000 0x0 0x10000>;
++			interrupts = <0 57 0x4>;
++			clock-names = "i2c";
++			clocks = <&clockgen 4 0>;
++			status = "disabled";
++		};
++
++
++		duart0: serial@21c0500 {
++			compatible = "fsl,ns16550", "ns16550a";
++			reg = <0x00 0x21c0500 0x0 0x100>;
++			interrupts = <0 54 0x4>;
++			clocks = <&clockgen 4 0>;
++		};
++
++		duart1: serial@21c0600 {
++			compatible = "fsl,ns16550", "ns16550a";
++			reg = <0x00 0x21c0600 0x0 0x100>;
++			interrupts = <0 54 0x4>;
++			clocks = <&clockgen 4 0>;
++		};
++
++		gpio0: gpio@2300000 {
++			compatible = "fsl,qoriq-gpio";
++			reg = <0x0 0x2300000 0x0 0x10000>;
++			interrupts = <0 66 0x4>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpio1: gpio@2310000 {
++			compatible = "fsl,qoriq-gpio";
++			reg = <0x0 0x2310000 0x0 0x10000>;
++			interrupts = <0 67 0x4>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		wdog0: wdog@2ad0000 {
++			compatible = "fsl,ls1012a-wdt", "fsl,ls1043a-wdt", "fsl,imx21-wdt";
++			reg = <0x0 0x2ad0000 0x0 0x10000>;
++			interrupts = <0 83 0x4>;
++			clocks = <&clockgen 4 0>;
++			clock-names = "wdog";
++			big-endian;
++		};
++
++		sai1: sai@2b50000 {
++			#sound-dai-cells = <0>;
++			compatible = "fsl,vf610-sai";
++			reg = <0x0 0x2b50000 0x0 0x10000>;
++			interrupts = <0 148 0x4>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>,
++				 <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "bus", "mclk1", "mclk2", "mclk3";
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 47>,
++			       <&edma0 1 46>;
++			status = "disabled";
++		};
++
++		sai2: sai@2b60000 {
++			#sound-dai-cells = <0>;
++			compatible = "fsl,vf610-sai";
++			reg = <0x0 0x2b60000 0x0 0x10000>;
++			interrupts = <0 149 0x4>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>,
++				 <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "bus", "mclk1", "mclk2", "mclk3";
++			dma-names = "tx", "rx";
++			dmas = <&edma0 1 45>,
++			       <&edma0 1 44>;
++			status = "disabled";
++		};
++
++		edma0: edma@2c00000 {
++			#dma-cells = <2>;
++			compatible = "fsl,vf610-edma";
++			reg = <0x0 0x2c00000 0x0 0x10000>,
++			      <0x0 0x2c10000 0x0 0x10000>,
++			      <0x0 0x2c20000 0x0 0x10000>;
++			interrupts = <0 103 0x4>,
++				     <0 103 0x4>;
++			interrupt-names = "edma-tx", "edma-err";
++			dma-channels = <32>;
++			big-endian;
++			clock-names = "dmamux0", "dmamux1";
++			clocks = <&clockgen 4 3>,
++				 <&clockgen 4 3>;
++		};
++
++		sata: sata@3200000 {
++			compatible = "fsl,ls1012a-ahci";
++			reg = <0x0 0x3200000 0x0 0x10000>;
++			interrupts = <0 69 0x4>;
++			clocks = <&clockgen 4 0>;
++		};
++
++		msi2: msi-controller2@1572000 {
++			compatible ="fsl,1s1012a-msi", "fsl,1s1021a-msi";
++			reg = <0x0 0x1572000 0x0 0x4>,
++			      <0x0 0x1572004 0x0 0x4>;
++			reg-names = "msiir", "msir";
++			msi-controller;
++			interrupts = <0 126 0x4>;
++		};
++
++		usb@8600000 {
++			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
++			reg = <0x0 0x8600000 0x0 0x1000>;
++			interrupts = <0 139 0x4>;
++			dr_mode = "host";
++			phy_type = "ulpi";
++			fsl,usb-erratum-a005697;
++		};
++
++		usb0: usb3@2f00000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x2f00000 0x0 0x10000>;
++			interrupts = <0 60 0x4>;
++			dr_mode = "host";
++			configure-gfladj;
++			snps,dis_rxdet_inp3_quirk;
++		};
++
++		pcie@3400000 {
++			compatible = "fsl,ls1012a-pcie", "fsl,ls1043a-pcie" ,"snps,dw-pcie";
++			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
++			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
++			reg-names = "regs", "config";
++			interrupts = <0 118 0x4>, /* controller interrupt */
++				     <0 117 0x4>; /* PME interrupt */
++			interrupt-names = "intr", "pme";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			num-lanes = <4>;
++			bus-range = <0x0 0xff>;
++			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
++				  0x82000000 0x0 0x40000000 0x40 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
++			msi-parent = <&msi2>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0000 0 0 1 &gic 0 110 0x4>,
++					<0000 0 0 2 &gic 0 111 0x4>,
++					<0000 0 0 3 &gic 0 112 0x4>,
++					<0000 0 0 4 &gic 0 113 0x4>;
++		};
++	};
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		pfe_reserved: packetbuffer@83400000 {
++			reg = <0 0x83400000 0 0xc00000>;
++		};
++	};
++
++	pfe: pfe@04000000 {
++		compatible = "fsl,pfe";
++		ranges = <0x0 0x00 0x04000000 0xc00000
++			  0x1 0x00 0x83400000 0xc00000>;
++		reg =   <0x0 0x90500000 0x0 0x10000>,	/* APB 64K */
++			<0x0 0x04000000 0x0 0xc00000>,	/* AXI 16M */
++			<0x0 0x83400000 0x0 0xc00000>,    /* PFE DDR 12M */
++			<0x0 0x10000000 0x0 0x2000>;	/* OCRAM 8K  */
++		fsl,pfe-num-interfaces = < 0x2 >;
++		interrupts = <0 172 0x4>;
++		#interrupt-names = "hifirq";
++		memory-region = <&pfe_reserved>;
++		fsl,pfe-scfg = <&scfg 0>;
++	};
++
++};
+-- 
+1.9.1
