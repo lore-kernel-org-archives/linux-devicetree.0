@@ -1,82 +1,47 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] arm64: renesas: h3ulcb: initial device tree
-Date: Fri, 22 Jul 2016 10:54:11 +0900
-Message-ID: <20160722015411.GG21943@verge.net.au>
-References: <1469103962-20378-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1469104067-20451-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <20160721171458.GH20559@leverpostej>
+From: Wan ZongShun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/6] irqchip: add irqchip driver for nuc900
+Date: Fri, 22 Jul 2016 10:37:10 +0800
+Message-ID: <CAKT61h9Ohimoc8FVDvR3KL6PNy3tk_Hxkp+fNdNUjvNoyJuApQ@mail.gmail.com>
+References: <1466851042-22239-1-git-send-email-vw@iommu.org>
+ <8706947.5rzUDVsB2F@wuerfel> <57806E9F.3020407@iommu.org> <7701071.Nr6sCmDkjL@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160721171458.GH20559@leverpostej>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7701071.Nr6sCmDkjL@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Wan Zongshun <vw-6ukY98dZOFrYtjvyW6yDsg@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+>
+>> but I will remove the Macros related to nuc970 and avoid nuc970
+>> interrupt using those Macro.
+>>
+>> But I still need hack this irqs.h like below, since here NR_IRQS defined
+>> and it is need for nuc970 irqchip driver.
+>>
+>> #if !defined(CONFIG_SOC_NUC900)
+>> #define NR_IRQS         (IRQ_ADC+1)
+>> #else
+>> #define NR_IRQS         62
+>> #endif
+>
+> Have you considered using CONFIG_SPARSE_IRQ? That would avoid the need
+> for setting NR_IRQS entirely, but may also require more work elsewhere.
 
-On Thu, Jul 21, 2016 at 06:14:58PM +0100, Mark Rutland wrote:
-> On Thu, Jul 21, 2016 at 03:27:47PM +0300, Vladimir Barinov wrote:
-> > Add the initial device tree for the R8A7795 SoC based H3ULCB low cost
-> > board.
-> > 
-> > This commit supports the following peripherals:
-> > - SCIF (console), Ethernet, SD, USB Host, Audio, GPIO LEDs
-> > 
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> > ---
-> >  arch/arm64/boot/dts/renesas/Makefile           |   2 +-
-> >  arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts | 326 +++++++++++++++++++++++++
-> >  2 files changed, 327 insertions(+), 1 deletion(-)
-> >  create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> > 
-> > diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-> > index 17139f7..eb72830 100644
-> > --- a/arch/arm64/boot/dts/renesas/Makefile
-> > +++ b/arch/arm64/boot/dts/renesas/Makefile
-> > @@ -1,4 +1,4 @@
-> > -dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb
-> > +dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
-> >  dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb
-> >  
-> >  always		:= $(dtb-y)
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> > new file mode 100644
-> > index 0000000..e4400fb
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> > @@ -0,0 +1,326 @@
-> > +/*
-> > + * Device Tree Source for the H3ULCB board
-> > + *
-> > + * Copyright (C) 2016 Renesas Electronics Corp.
-> > + * Copyright (C) 2016 Cogent Embedded, Inc.
-> > + *
-> > + * This file is licensed under the terms of the GNU General Public License
-> > + * version 2.  This program is licensed "as is" without any warranty of any
-> > + * kind, whether express or implied.
-> > + */
-> > +
-> > +/*
-> > + * SSI-AK4613
-> > + *
-> > + * This command is required when Playback/Capture
-> > + *
-> > + *	amixer set "DVC Out" 10%
-> > + *	amixer set "DVC In" 10%
-> > + */
-> 
-> I don't think this comment belongs here. It has nothing to do with the
-> DT as such.
-> 
-> Why is this necessary? Is this a bug?
+Sure, I will refer to your previous nuc900 series patches for SPARSE
+IRQ, now I am waiting for rc1 release, and will send v3 patches.
 
-For historical reasons the mixer settings required to get functional sound
-have been documented in DT files. The above is in keeping with that.
+>
+>         Arnd
 
-Personally I find this quite helpful but I think it would be at least as
-helpful documented on elinux.org or somewhere similar. So I would not
-object to it being omitted from here and consideration given to removing it
-from other Renesas DT files.
+
+
+-- 
+---
+Vincent Wan(Zongshun)
+www.mcuos.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
