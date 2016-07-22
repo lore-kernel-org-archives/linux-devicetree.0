@@ -1,27 +1,42 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] of: fdt: mark unflattened tree as detached
-Date: Fri, 22 Jul 2016 14:55:48 -0500
-Message-ID: <CAL_JsqJKL_E4aS6fWAmPLRWork=y1zUw58hdtz0pShB2zG_qzg@mail.gmail.com>
-References: <cover.1466971467.git.hramrach@gmail.com> <01da4c372750e6618638a0320e7ea2f656da3ae5.1466971467.git.hramrach@gmail.com>
- <CAL_JsqLiFYbcqj__B+WB7Q4=MCsr0NOwg4BpRqg1GH+=gadsVg@mail.gmail.com> <12088f6fd9a39fc28f6756ec4c1ba034b9a37f0b.1468879073.git.hramrach@gmail.com>
+Subject: Re: [PATCH v3] of: fix memory leak related to safe_name()
+Date: Fri, 22 Jul 2016 14:58:06 -0500
+Message-ID: <CAL_JsqJaWky61QA0qdKozyriYpZiR2poY+U-7a9Latr7z_FoSA@mail.gmail.com>
+References: <5762E732.1030908@gmail.com> <CA+7wUsziB9P24bXnSrLB_t-KOZ2CVj9p5xZYsCnr5DNZL8mg+w@mail.gmail.com>
+ <CAL_JsqK=h5EC4RR4xpn-JioAbdLfmQFNt8MJk=UF==WvDWy-wQ@mail.gmail.com> <CA+7wUsyXMPu05mz4Mi6ELF=PJGLp82DTMFOHTZmQ2OHX_TdjWw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <12088f6fd9a39fc28f6756ec4c1ba034b9a37f0b.1468879073.git.hramrach@gmail.com>
+In-Reply-To: <CA+7wUsyXMPu05mz4Mi6ELF=PJGLp82DTMFOHTZmQ2OHX_TdjWw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mathieu Malaterre <mathieu.malaterre@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 18, 2016 at 5:01 PM, Michal Suchanek <hramrach@gmail.com> wrote:
-> The tree returned from of_fdt_unflatten_tree cannot be attached to the
-> live tree because it is not marked as detached so mark it as such. The
-> dt resolver checks the flag and refuses to process the tree otherwise.
+On Wed, Jul 20, 2016 at 1:03 AM, Mathieu Malaterre
+<mathieu.malaterre@gmail.com> wrote:
+> On Fri, Jun 24, 2016 at 10:38 PM, Rob Herring <robh+dt@kernel.org> wrote:
+>> On Fri, Jun 17, 2016 at 2:51 AM, Mathieu Malaterre
+>> <mathieu.malaterre@gmail.com> wrote:
+>>> v3 tested here multiple times ! memleak is now gone.
+>>>
+>>> Tested-by: Mathieu Malaterre <mathieu.malaterre@gmail.com>
+>>>
+>>> Thanks
+>>>
+>>> On Thu, Jun 16, 2016 at 7:51 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>>>> From: Frank Rowand <frank.rowand@am.sony.com>
+>>>>
+>>>> Fix a memory leak resulting from memory allocation in safe_name().
+>>>> This patch fixes all call sites of safe_name().
+>>
+>> Applied, thanks.
+>>
+>> Rob
 >
-> Signed-off-by: Michal Suchanek <hramrach@gmail.com>
-> ---
->  - rebase on top of 4.7rc
+> Could this patch be considered for stable ?
 
-Applied, thanks.
+Yes, I tagged it for stable. I didn't send it for 4.7, so it won't go
+in until after 4.8-rc1 though.
 
 Rob
