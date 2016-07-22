@@ -1,34 +1,190 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/2] ARM: DRA7: select PCI_DOMAINS config
-Date: Fri, 22 Jul 2016 14:53:33 +0530
-Message-ID: <5791E615.3070904@ti.com>
-References: <1469102276-14777-1-git-send-email-kishon@ti.com>
- <1469102276-14777-3-git-send-email-kishon@ti.com>
- <8047226.VhgpLo8JQu@wuerfel> <20160722071644.GZ28140@atomide.com>
- <5791D8C7.5020303@ti.com>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [PATCH v2 3/4] drivers: reset: Add STM32 reset driver
+Date: Fri, 22 Jul 2016 11:24:07 +0200
+Message-ID: <7bb17181-e436-826d-7f2c-bd0ceaeca50b@st.com>
+References: <1469092768-17489-1-git-send-email-gabriel.fernandez@st.com>
+ <1469092768-17489-4-git-send-email-gabriel.fernandez@st.com>
+ <CAP=VYLq+Yp=dyMLY5zp8evNJ+jLkUgJ_s19gD1uC6KP8MmXPDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5791D8C7.5020303@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAP=VYLq+Yp=dyMLY5zp8evNJ+jLkUgJ_s19gD1uC6KP8MmXPDQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, patrice.chotard@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 July 2016 01:56 PM, Kishon Vijay Abraham I wrote:
+Hi Paul
 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 90542db..0cccb50 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -338,6 +338,7 @@ config ARCH_MULTIPLATFORM
->         select MULTI_IRQ_HANDLER
->         select SPARSE_IRQ
->         select USE_OF
-> +       select PCI_DOMAINS if PCI
 
-Keep the select list in sorted order.
+On 07/21/2016 09:48 PM, Paul Gortmaker wrote:
+> On Thu, Jul 21, 2016 at 5:19 AM,  <gabriel.fernandez@st.com> wrote:
+>> From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>
+>> The STM32 MCUs family IPs can be reset by accessing some registers
+>> from the RCC block.
+>>
+>> The list of available reset lines is documented in the DT bindings.
+>>
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>> ---
+>>   drivers/reset/Makefile      |   1 +
+>>   drivers/reset/reset-stm32.c | 113 ++++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 114 insertions(+)
+>>   create mode 100644 drivers/reset/reset-stm32.c
+>>
+>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>> index 5d65a93..64ebb0c 100644
+>> --- a/drivers/reset/Makefile
+>> +++ b/drivers/reset/Makefile
+>> @@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
+>>   obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
+>>   obj-$(CONFIG_MACH_PISTACHIO) += reset-pistachio.o
+>>   obj-$(CONFIG_ARCH_MESON) += reset-meson.o
+>> +obj-$(CONFIG_ARCH_STM32) += reset-stm32.o
+> In my tree, this Kconfig ARCH_STM32 is a bool, so...
+>
+>>   obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+>>   obj-$(CONFIG_ARCH_STI) += sti/
+>>   obj-$(CONFIG_ARCH_HISI) += hisilicon/
+>> diff --git a/drivers/reset/reset-stm32.c b/drivers/reset/reset-stm32.c
+>> new file mode 100644
+>> index 0000000..993af2a
+>> --- /dev/null
+>> +++ b/drivers/reset/reset-stm32.c
+>> @@ -0,0 +1,113 @@
+>> +/*
+>> + * Copyright (C) Maxime Coquelin 2015
+>> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>_
+>> + * License terms:  GNU General Public License (GPL), version 2
+>> + *
+>> + * Heavily based on sunxi driver from Maxime Ripard.
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+> ...we probably don't need module.h here or any of the other
+> MODULE_<blah> tags/macros either.  Use the builtin for the
+> register and all should be good.
+>
+> Thanks,
+> Paul.
+> --
+Ok i will sent a v3
 
-Regards,
-Sekhar
+Thanks for reviewing !
+
+
+BR
+Gabriel
+
+
+>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset-controller.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/types.h>
+>> +
+>> +struct stm32_reset_data {
+>> +       spinlock_t                      lock;
+>> +       void __iomem                    *membase;
+>> +       struct reset_controller_dev     rcdev;
+>> +};
+>> +
+>> +static int stm32_reset_assert(struct reset_controller_dev *rcdev,
+>> +                             unsigned long id)
+>> +{
+>> +       struct stm32_reset_data *data = container_of(rcdev,
+>> +                                                    struct stm32_reset_data,
+>> +                                                    rcdev);
+>> +       int bank = id / BITS_PER_LONG;
+>> +       int offset = id % BITS_PER_LONG;
+>> +       unsigned long flags;
+>> +       u32 reg;
+>> +
+>> +       spin_lock_irqsave(&data->lock, flags);
+>> +
+>> +       reg = readl(data->membase + (bank * 4));
+>> +       writel(reg | BIT(offset), data->membase + (bank * 4));
+>> +
+>> +       spin_unlock_irqrestore(&data->lock, flags);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int stm32_reset_deassert(struct reset_controller_dev *rcdev,
+>> +                               unsigned long id)
+>> +{
+>> +       struct stm32_reset_data *data = container_of(rcdev,
+>> +                                                    struct stm32_reset_data,
+>> +                                                    rcdev);
+>> +       int bank = id / BITS_PER_LONG;
+>> +       int offset = id % BITS_PER_LONG;
+>> +       unsigned long flags;
+>> +       u32 reg;
+>> +
+>> +       spin_lock_irqsave(&data->lock, flags);
+>> +
+>> +       reg = readl(data->membase + (bank * 4));
+>> +       writel(reg & ~BIT(offset), data->membase + (bank * 4));
+>> +
+>> +       spin_unlock_irqrestore(&data->lock, flags);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct reset_control_ops stm32_reset_ops = {
+>> +       .assert         = stm32_reset_assert,
+>> +       .deassert       = stm32_reset_deassert,
+>> +};
+>> +
+>> +static const struct of_device_id stm32_reset_dt_ids[] = {
+>> +        { .compatible = "st,stm32-rcc", },
+>> +        { /* sentinel */ },
+>> +};
+>> +
+>> +static int stm32_reset_probe(struct platform_device *pdev)
+>> +{
+>> +       struct stm32_reset_data *data;
+>> +       struct resource *res;
+>> +
+>> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+>> +       if (!data)
+>> +               return -ENOMEM;
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       data->membase = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(data->membase))
+>> +               return PTR_ERR(data->membase);
+>> +
+>> +       spin_lock_init(&data->lock);
+>> +
+>> +       data->rcdev.owner = THIS_MODULE;
+>> +       data->rcdev.nr_resets = resource_size(res) * 8;
+>> +       data->rcdev.ops = &stm32_reset_ops;
+>> +       data->rcdev.of_node = pdev->dev.of_node;
+>> +
+>> +       return devm_reset_controller_register(&pdev->dev, &data->rcdev);
+>> +}
+>> +
+>> +static struct platform_driver stm32_reset_driver = {
+>> +       .probe  = stm32_reset_probe,
+>> +       .driver = {
+>> +               .name           = "stm32-rcc-reset",
+>> +               .of_match_table = stm32_reset_dt_ids,
+>> +       },
+>> +};
+>> +module_platform_driver(stm32_reset_driver);
+>> +
+>> +MODULE_AUTHOR("Maxime Coquelin <maxime.coquelin@gmail.com>");
+>> +MODULE_DESCRIPTION("STM32 MCUs Reset Controller Driver");
+>> +MODULE_LICENSE("GPL");
+>> --
+>> 1.9.1
+>>
