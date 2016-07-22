@@ -1,58 +1,38 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] Add STM32 Reset Driver
-Date: Fri, 22 Jul 2016 14:36:00 +0200
-Message-ID: <1469190960.27223.15.camel@pengutronix.de>
-References: <1469180270-5446-1-git-send-email-gabriel.fernandez@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] ARM: DRA7: select PCI_DOMAINS config
+Date: Fri, 22 Jul 2016 15:29:26 +0200
+Message-ID: <5655227.Z3Bo3vTPGH@wuerfel>
+References: <1469102276-14777-1-git-send-email-kishon@ti.com> <20160722071644.GZ28140@atomide.com> <5791D8C7.5020303@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469180270-5446-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gabriel.fernandez-qxv4g6HH51o@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5791D8C7.5020303@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 22.07.2016, 11:37 +0200 schrieb
-gabriel.fernandez-qxv4g6HH51o@public.gmane.org:
-> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+On Friday, July 22, 2016 1:56:47 PM CEST Kishon Vijay Abraham I wrote:
 > 
-> v3:
->  - Use the builtin for the register
+> since it doesn't harm even if a platform has a single PCIe port, it should be
+> okay to set PCI_DOMAINS. I'll resend the following as a separate patch if it's
+> okay.
 > 
-> v2:
->  - switch to the non-relaxed variants
->  - describe dt-binfings in one place
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 90542db..0cccb50 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -338,6 +338,7 @@ config ARCH_MULTIPLATFORM
+>         select MULTI_IRQ_HANDLER
+>         select SPARSE_IRQ
+>         select USE_OF
+> +       select PCI_DOMAINS if PCI
 > 
-> The STM32 MCUs family IPs can be reset by accessing some registers
-> from the RCC block.
-> 
-> Gabriel Fernandez (1):
->   ARM: dts: stm32f429: add missing #reset-cells of rcc
-> 
-> Maxime Coquelin (3):
->   dt-bindings: mfd: Add STM32F4 RCC numeric constants into DT include
->     file
->   dt-bindings: Document the STM32 reset bindings
->   drivers: reset: Add STM32 reset driver
-> 
->  .../devicetree/bindings/clock/st,stm32-rcc.txt     |  42 ++++++--
->  .../devicetree/bindings/reset/st,stm32-rcc.txt     |   6 ++
->  arch/arm/boot/dts/stm32f429.dtsi                   |   1 +
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/reset-stm32.c                        | 108 +++++++++++++++++++++
->  include/dt-bindings/mfd/stm32f4-rcc.h              |  98 +++++++++++++++++++
->  6 files changed, 249 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
->  create mode 100644 drivers/reset/reset-stm32.c
->  create mode 100644 include/dt-bindings/mfd/stm32f4-rcc.h
 
-Thank you, I've applied all four patches.
+Sounds good, but please remove all other 'select PCI_DOMAINS if PCI'
+statements in arch/arm then in the same patch.
 
-regards
-Philipp
+I have checked that all of them are for ARCH_MULTIPLATFORM based machines.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
