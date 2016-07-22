@@ -1,165 +1,203 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: DT connectors, thoughts
-Date: Fri, 22 Jul 2016 14:16:06 +1000
-Message-ID: <20160722041606.GK15941@voom.fritz.box>
-References: <577ACE0D.9050700@gmail.com>
- <20160718142037.GS16769@voom.fritz.box>
- <442C02A9-582D-4FD8-8F05-7A6FCD5B6BCA@konsulko.com>
- <20160721134208.GD12120@voom.fritz.box>
- <A1018E27-B604-4DD5-ADBA-95EF76F6DDAC@konsulko.com>
- <CAL_JsqLc0N8o2Nc_dEcZChJqWyN3UtZEgzLd=j6dR=1y3xOvdA@mail.gmail.com>
- <2C63DCA2-385A-4EE3-A957-F1DBEF7929F8@konsulko.com>
+From: "Wu, Songjun" <Songjun.Wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH v6 0/2] [media] atmel-isc: add driver for Atmel ISC
+Date: Fri, 22 Jul 2016 13:21:09 +0800
+Message-ID: <4e2bb244-42ad-3d20-0325-0a35991fae58@microchip.com>
+References: <1469088900-23935-1-git-send-email-songjun.wu@microchip.com>
+ <e0592f57-f679-fcde-7446-e3259ad9825b@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pWJxWxNlJUNgDlXi"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2C63DCA2-385A-4EE3-A957-F1DBEF7929F8-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <e0592f57-f679-fcde-7446-e3259ad9825b-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, =?UTF-8?Q?Niklas_S=c3=83=c2=b6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kamil Debski <kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Richard_R=c3=b6jfors?= <richard-hy+oXTTr619xRVliYXHCzg@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Horman <horms+renesas@v>
 List-Id: devicetree@vger.kernel.org
 
 
---pWJxWxNlJUNgDlXi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 21, 2016 at 10:15:36PM +0300, Pantelis Antoniou wrote:
-> Hi Rob,
->=20
-> > On Jul 21, 2016, at 22:09 , Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >=20
-> > On Thu, Jul 21, 2016 at 9:14 AM, Pantelis Antoniou
-> > <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> >> Hi David,
-> >>=20
-> >>> On Jul 21, 2016, at 16:42 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org=
-> wrote:
-> >>>=20
-> >>> On Wed, Jul 20, 2016 at 11:59:44PM +0300, Pantelis Antoniou wrote:
-> >>>> Hi David,
-> >>>>=20
-> >>>> Spent some time looking at this, and it looks like it=E2=80=99s goin=
-g to the right direction.
-> >>>>=20
-> >>>> Comments inline.
-> >>>>=20
-> >>>>> On Jul 18, 2016, at 17:20 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6rL0yjEaa7Ru@public.gmane.org=
-au> wrote:
-> >>>>>=20
-> >>>>> Hi,
-> >>>>>=20
-> >>>>> Here's some of my thoughts on how a connector format for the DT cou=
-ld
-> >>>>> be done.  Sorry it's taken longer than I hoped - I've been pretty
-> >>>>> swamped in my day job.
-> >>>>>=20
-> >>>>> This is pretty early thoughts, but gives an outline of the approach=
- I
-> >>>>> prefer.
-> >=20
-> > [...]
-> >=20
-> >>>>>            i2c: i2c@... {
-> >>>>>            };
-> >>>>>            intc: intc@... {
-> >>>>>                    #interrupt-cells =3D <2>;
-> >>>>>            };
-> >>>>>    };
-> >>>>>=20
-> >>>>>    connectors {
-> >>>>>            widget1 {
-> >>>>>                    compatible =3D "foo,widget-socket";
-> >>>>>                    w1_irqs: irqs {
-> >>>>>                            interrupt-controller;
-> >>>>>                            #address-cells =3D <0>;
-> >>>>>                            #interrupt-cells =3D <1>;
-> >>>>>                            interrupt-map-mask =3D <0xffffffff>;
-> >>>>>                            interrupt-map =3D <
-> >>>>>                                    0 &intc 7 0
-> >>>>>                                    1 &intc 8 0
-> >>>>>> ;
-> >>>>>                    };
-> >>>>=20
-> >>>> This is fine. We need an interrupt controller node.
-> >>>=20
-> >>> Actually I think we only need an interrupt nexus, not an interrupt
-> >>> controller (in IEEE1275 terminology).  (An interrupt controller would
-> >>> generally require it's own driver, to ack/mask irqs, whereas this just
-> >>> demonstrates the routing to an existing interrupt controller).  Which
-> >>> makes that example slightly incorrect (it shouldn't have the
-> >>> interrupt-controller property).
-> >>=20
-> >> Hmm, as far as I can tell we only have a concept of an interrupt contr=
-oller
-> >> in the kernel. An interrupt nexus is something new. We should get by w=
-ithout
-> >> a driver but hacking the interrupt lookup path at DT.
-> >=20
-> > Interrupt nexus is the interrupt-map property which is fully
-> > supported. I'd expect we'll end up with a gpio nexus (i.e. gpio-map)
-> > for connector gpios, too.
-> >=20
->=20
-> Is interrupt-map enough to cover all our cases? On all the cases that I s=
-ee it
+On 7/21/2016 16:41, Hans Verkuil wrote:
+>
+>
+> On 07/21/2016 10:14 AM, Songjun Wu wrote:
+>> The Image Sensor Controller driver includes two parts.
+>> 1) Driver code to implement the ISC function.
+>> 2) Device tree binding documentation, it describes how
+>>    to add the ISC in device tree.
+>>
+>> Test result with v4l-utils 1.10.1
+>
+> Please compile from the v4l-utils repository. The version you used here is out-of-date.
+> I continually add new tests, so always compile the latest version from the repo.
+>
+OK, I will compile the latest version from the v4l-utils repository.
+Thank you.
 
-That's the most common use, but it's pretty general.  It basically
-maps (source irq desc, source unit address) tuples to (dest interrupt
-controller, dest irq desc) tuples.  The interrupt-map-mask lets us
-ignore some parts of that input.
-
-One of the weirder uses was in the DTs for the DMA controller used for
-the Ethernet on many PPC 4xx chips.  Those had multiple irqs, wired to
-different interrupt controllers on some SoCs, but the DT only allows
-to specify a single interrupt-parent for a device.  We worked around
-that by including an interrupt nexus in the node itself, which mapped
-a fake local irq number (just an index) to the right irqs and
-controllers.
-
-> Is the example above well defined? As far as I can tell interrupt-control=
-ler is not
-> needed.
-
-The 'interrupt-controller' property should not be there, that was an
-error on my part.  The rest should be ok.
-
-The plugin piece would need to specify the interrupt-parent as w1_irs
-on all its nodes, otherwise they'd just inherit from the parent bus
-for their fragment, which might have odd results.
-
-We should probably see if we can figure out a way to enforce that.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---pWJxWxNlJUNgDlXi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXkZ4GAAoJEGw4ysog2bOSz8oP/3Q6HNUo7uN37L99ZxdB3JNv
-FovLzlS7D2jhQlnyl8GQmXPXgUDVndGZxaPyJvcfEStdTay49SJ643nW0zVo4zWo
-tgw7elvqkvKv39eXNAQdeOtTv8WtlJTMnYy1JG+6I3x8U4/YhJ6g69bTCAnJ4C2O
-OtZX0P7vrxfL9KAg/Y7ASejHWlQAxFBzcfkRkVd711CD9+tWKybAlPWeifbCKIPw
-+SCDnmgLL8RpO94THnsa0XpW+3lSsybWpkCvCzDrppmu5mOkYqWvpBWBxsf9wbt/
-XMxpKi8gadEHHh7L6hTy87n96XSFJ37TZOZNiEVCunyIw4jMb8DvA0VzsW2pkEh2
-l7gmh66UYgtgMqo1BbyuxeVoN59l/xiGi5vjvs2tmo8x9OEgy35Jv8okxx19pD38
-0TXh8zOx/WQlVPXtV8V1AL5U6BPSZ8HJz0PFfE2JKAzN46F8LmzvA3PNyi4X13B/
-i1h5A+1IFCfRrANIPUrIP86DBHE/78/L8bsnIe+QoSTIDxkaONeE4rrlLkLUA67H
-ILtchl4c0Zj1kPrQwYulCmC64gcwzhbMxf7rLIfkox/6iuzefx0ASj4hgf55W0iT
-hrJwe7qlYFE2WQgB4zIduI5ARngUIX5QqIO1oJcM5fTa/5AkU0IVRmMLUnQ4EImd
-LEzN50DxdGFd5FOG50J+
-=yUYP
------END PGP SIGNATURE-----
-
---pWJxWxNlJUNgDlXi--
+> Regards,
+>
+> 	Hans
+>
+>> Driver Info:
+>>         Driver name   : atmel_isc
+>>         Card type     : Atmel Image Sensor Controller
+>>         Bus info      : platform:atmel_isc f0008000.isc
+>>         Driver version: 4.7.0
+>>         Capabilities  : 0x84200001
+>>                 Video Capture
+>>                 Streaming
+>>                 Extended Pix Format
+>>                 Device Capabilities
+>>         Device Caps   : 0x04200001
+>>                 Video Capture
+>>                 Streaming
+>>                 Extended Pix Format
+>>
+>> Compliance test for device /dev/video0 (not using libv4l2):
+>>
+>> Required ioctls:
+>>         test VIDIOC_QUERYCAP: OK
+>>
+>> Allow for multiple opens:
+>>         test second video open: OK
+>>         test VIDIOC_QUERYCAP: OK
+>>         test VIDIOC_G/S_PRIORITY: OK
+>>
+>> Debug ioctls:
+>>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>>         test VIDIOC_LOG_STATUS: OK (Not Supported)
+>>
+>> Input ioctls:
+>>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>>         test VIDIOC_G/S/ENUMINPUT: OK
+>>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>>         Inputs: 1 Audio Inputs: 0 Tuners: 0
+>>
+>> Output ioctls:
+>>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+>>
+>> Input/Output configuration ioctls:
+>>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>>         test VIDIOC_G/S_EDID: OK (Not Supported)
+>>
+>> Test input 0:
+>>
+>>         Control ioctls:
+>>                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+>>                 test VIDIOC_QUERYCTRL: OK (Not Supported)
+>>                 test VIDIOC_G/S_CTRL: OK (Not Supported)
+>>                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+>>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+>>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>>                 Standard Controls: 0 Private Controls: 0
+>>
+>>         Format ioctls:
+>>                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>>                 test VIDIOC_G/S_PARM: OK
+>>                 test VIDIOC_G_FBUF: OK (Not Supported)
+>>                 test VIDIOC_G_FMT: OK
+>>                 test VIDIOC_TRY_FMT: OK
+>>                 test VIDIOC_S_FMT: OK
+>>                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>>                 test Cropping: OK (Not Supported)
+>>                 test Composing: OK (Not Supported)
+>>                 test Scaling: OK (Not Supported)
+>>
+>>         Codec ioctls:
+>>                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>>                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>>                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+>>
+>>         Buffer ioctls:
+>>                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>>                 test VIDIOC_EXPBUF: OK
+>>
+>> Test input 0:
+>>
+>> Stream using all formats:
+>>         test MMAP for Format BA81, Frame Size 640x480:
+>>                 Stride 640, Field None: OK
+>>         test MMAP for Format YUYV, Frame Size 640x480:
+>>                 Stride 1280, Field None: OK
+>>
+>> Total: 44, Succeeded: 44, Failed: 0, Warnings: 0
+>>
+>> Changes in v6:
+>> - Add "iscck" and "gck" to clock-names.
+>>
+>> Changes in v5:
+>> - Modify the macro definition and the related code.
+>> - Add clock-output-names.
+>>
+>> Changes in v4:
+>> - Modify the isc clock code since the dt is changed.
+>> - Remove the isc clock nodes.
+>>
+>> Changes in v3:
+>> - Add pm runtime feature.
+>> - Modify the isc clock code since the dt is changed.
+>> - Remove the 'atmel,sensor-preferred'.
+>> - Modify the isc clock node according to the Rob's remarks.
+>>
+>> Changes in v2:
+>> - Add "depends on COMMON_CLK" and "VIDEO_V4L2_SUBDEV_API"
+>>   in Kconfig file.
+>> - Correct typos and coding style according to Laurent's remarks
+>> - Delete the loop while in 'isc_clk_enable' function.
+>> - Replace 'hsync_active', 'vsync_active' and 'pclk_sample'
+>>   with 'pfe_cfg0' in struct isc_subdev_entity.
+>> - Add the code to support VIDIOC_CREATE_BUFS in
+>>   'isc_queue_setup' function.
+>> - Invoke isc_config to configure register in
+>>   'isc_start_streaming' function.
+>> - Add the struct completion 'comp' to synchronize with
+>>   the frame end interrupt in 'isc_stop_streaming' function.
+>> - Check the return value of the clk_prepare_enable
+>>   in 'isc_open' function.
+>> - Set the default format in 'isc_open' function.
+>> - Add an exit condition in the loop while in 'isc_config'.
+>> - Delete the hardware setup operation in 'isc_set_format'.
+>> - Refuse format modification during streaming
+>>   in 'isc_s_fmt_vid_cap' function.
+>> - Invoke v4l2_subdev_alloc_pad_config to allocate and
+>>   initialize the pad config in 'isc_async_complete' function.
+>> - Remove the '.owner  = THIS_MODULE,' in atmel_isc_driver.
+>> - Replace the module_platform_driver_probe() with
+>>   module_platform_driver().
+>> - Remove the unit address of the endpoint.
+>> - Add the unit address to the clock node.
+>> - Avoid using underscores in node names.
+>> - Drop the "0x" in the unit address of the i2c node.
+>> - Modify the description of 'atmel,sensor-preferred'.
+>> - Add the description for the ISC internal clock.
+>>
+>> Songjun Wu (2):
+>>   [media] atmel-isc: add the Image Sensor Controller code
+>>   [media] atmel-isc: DT binding for Image Sensor Controller driver
+>>
+>>  .../devicetree/bindings/media/atmel-isc.txt        |   65 +
+>>  drivers/media/platform/Kconfig                     |    1 +
+>>  drivers/media/platform/Makefile                    |    2 +
+>>  drivers/media/platform/atmel/Kconfig               |    9 +
+>>  drivers/media/platform/atmel/Makefile              |    1 +
+>>  drivers/media/platform/atmel/atmel-isc-regs.h      |  165 +++
+>>  drivers/media/platform/atmel/atmel-isc.c           | 1554 ++++++++++++++++++++
+>>  7 files changed, 1797 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+>>  create mode 100644 drivers/media/platform/atmel/Kconfig
+>>  create mode 100644 drivers/media/platform/atmel/Makefile
+>>  create mode 100644 drivers/media/platform/atmel/atmel-isc-regs.h
+>>  create mode 100644 drivers/media/platform/atmel/atmel-isc.c
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
