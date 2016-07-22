@@ -1,352 +1,130 @@
-From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH] [linux-devel]arm64: Add DTS support for FSL's LS1012A SoC
-Date: Fri, 22 Jul 2016 15:32:56 +0000
-Message-ID: <VI1PR0401MB2638B8CD4975FFCADC489E398D0A0@VI1PR0401MB2638.eurprd04.prod.outlook.com>
-References: <1469165712-4356-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+Date: Fri, 22 Jul 2016 23:47:16 +0800
+Message-ID: <CAGb2v66tf1LcBs69ECW0Xa2OeN0C0NWVyvpC8=4DsVLjAnrO3Q@mail.gmail.com>
+References: <1468496825-4896-1-git-send-email-linux@rempel-privat.de> <CACRpkdZLG1Ffdiw3xkP4G0XBr=WDXg2Vbh2Xmgno1PTNhfZHfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469165712-4356-1-git-send-email-Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CACRpkdZLG1Ffdiw3xkP4G0XBr=WDXg2Vbh2Xmgno1PTNhfZHfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bhaskar U <bhaskar.upadhaya-3arQi8VN3Tc@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, Calvin Johnson <calvin.johnson-3arQi8VN3Tc@public.gmane.org>, Makarand Pawagi <makarand.pawagi-3arQi8VN3Tc@public.gmane.org>, Pratiyush Srivastava <pratiyush.srivastava-3arQi8VN3Tc@public.gmane.org>, Yunhui Cui <yunhui.cui-3arQi8VN3Tc@public.gmane.org>, Rajesh Bhagat <rajesh.bhagat-3arQi8VN3Tc@public.gmane.org>, Huan Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>, Hongtao Jia <hongtao.jia-3arQi8VN3Tc@public.gmane.org>, Anji J <anji.jagarlmudi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rajan Srivastava <rajan.srivastava-3arQi8VN3Tc@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, Oleksij Rempel <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-> -----Original Message-----
-> From: Bhaskar Upadhaya [mailto:Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org]
-> Sent: Friday, July 22, 2016 12:35 AM
-> To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-> Cc: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>; oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Bhaskar
-> U <bhaskar.upadhaya-3arQi8VN3Tc@public.gmane.org>; Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>; Calvin Johnson
-> <calvin.johnson-3arQi8VN3Tc@public.gmane.org>; Makarand Pawagi <makarand.pawagi-3arQi8VN3Tc@public.gmane.org>; Pratiyush Srivastava
-> <pratiyush.srivastava-3arQi8VN3Tc@public.gmane.org>; Yunhui Cui <yunhui.cui-3arQi8VN3Tc@public.gmane.org>; Rajesh Bhagat <rajesh.bhagat-3arQi8VN3Tc@public.gmane.org>;
-> Huan Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>; Hongtao Jia <hongtao.jia-3arQi8VN3Tc@public.gmane.org>; Anji J
-> <anji.jagarlmudi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Subject: [PATCH] [linux-devel]arm64: Add DTS support for FSL's LS1012A SoC
-> 
-> The QorIQ LS1012A processor is a new Freescale' SoC optimized
-> for battery-backed or USB-powered, integrates a single ARM
-> Cortex-A53 core with a hardware packet forwarding engine
-> and high-speed interfaces to deliver line-rate networking performance.
-> LS1012AQDS, LS1012ARDB, LS1012AFRDM are a high-performance development platform
-> using LS1012A SoC.
-
-A patch description should not read like a marketing brochure.  Delete the
-above text.
-
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts b/arch/arm64/boot/dts/freescale/fsl-
-> ls1012a-frdm.dts
-> new file mode 100644
-> index 0000000..5db6133
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
-> @@ -0,0 +1,186 @@
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1012A family SoC.
-
-Why are you calling this an "Include file" when it is not?
-
-> + * Copyright 2016, Freescale Semiconductor Inc.
-> +
-> + * Redistribution and use in source and binary forms, with or without
-> + * modification, are permitted provided that the following conditions are met:
-> + *     * Redistributions of source code must retain the above copyright
-> + *       notice, this list of conditions and the following disclaimer.
-> + *     * Redistributions in binary form must reproduce the above copyright
-> + *       notice, this list of conditions and the following disclaimer in the
-> + *       documentation and/or other materials provided with the distribution.
-> + *     * Neither the name of Freescale Semiconductor nor the
-> + *       names of its contributors may be used to endorse or promote products
-> + *       derived from this software without specific prior written permission.
-> + *
-> + *
-> + * ALTERNATIVELY, this software may be distributed under the terms of the
-> + * GNU General Public License ("GPL") as published by the Free Software
-> + * Foundation, either version 2 of that License or (at your option) any
-> + * later version.
-> + *
-> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-
-The above license text is not consistent with other NXP/Freescale dts
-files.
-
-> +/dts-v1/;
-> +
-> +#include "fsl-ls1012a.dtsi"
-> +
-> +/ {
-> +	model = "LS1012A FREEDOM Board";
-
-Why is FREEDOM all caps?  In the marketing information on this board
-it is simpley "Freedom".
-
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-
-> ls1012a-qds.dts
-> new file mode 100644
-> index 0000000..40c85b7
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
-> @@ -0,0 +1,218 @@
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1012A family SoC.
-
-This is not an include file.
-
-Also, make the license text consistent with other NXP/Freescale dts
-files.
-
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-
-> ls1012a-rdb.dts
-> new file mode 100644
-> index 0000000..eadcb63
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
-> @@ -0,0 +1,115 @@
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1012A family SoC.
-
-This is not an include file.
-
-Also, make the license text consistent with other NXP/Freescale dts
-files.
-
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-
-> ls1012a.dtsi
-> new file mode 100644
-> index 0000000..c5fce10
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> @@ -0,0 +1,512 @@
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1043A family SoC.
-
-This is not an LS1043A.
-
-> + * Copyright 2016, Freescale Semiconductor
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPLv2 or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
+On Fri, Jul 22, 2016 at 10:55 PM, Linus Walleij
+<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Jul 14, 2016 at 1:47 PM, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org> wrote:
 >
-> +#include <dt-bindings/thermal/thermal.h>
-> +
-> +/ {
-> +	compatible = "fsl,ls1012a";
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		/*
-> +		 * We expect the enable-method for cpu's to be "psci", but this
-> +		 * is dependent on the SoC FW, which will fill this in.
-> +		 *
-> +		 * Currently supported enable-method is psci v0.2
-> +		 */
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53";
-> +			reg = <0x0 0x0>;
-> +			clocks = <&clockgen 1 0>;
-> +			#cooling-cells = <2>;
-> +		};
-> +
-> +	};
-> +
-> +
-> +	sysclk: sysclk {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <100000000>;
-> +		clock-output-names = "sysclk";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <1 13 0x1>, /* Physical Secure PPI */
-> +			     <1 14 0x1>, /* Physical Non-Secure PPI */
-> +			     <1 11 0x1>, /* Virtual PPI */
-> +			     <1 10 0x1>; /* Hypervisor PPI */
-> +		arm,reread-timer;
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-> +		interrupts = <0 106 0x4>;
-> +	};
-> +
-> +	gic: interrupt-controller@1400000 {
-> +		compatible = "arm,gic-400";
-> +		#interrupt-cells = <3>;
-> +		interrupt-controller;
-> +		reg = <0x0 0x1401000 0 0x1000>, /* GICD */
-> +		      <0x0 0x1402000 0 0x2000>, /* GICC */
-> +		      <0x0 0x1404000 0 0x2000>, /* GICH */
-> +		      <0x0 0x1406000 0 0x2000>; /* GICV */
-> +		interrupts = <1 9 0xf08>;
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		clockgen: clocking@1ee1000 {
-> +			compatible = "fsl,ls1012a-clockgen","fsl,ls1043a-clockgen";
-> +			reg = <0x0 0x1ee1000 0x0 0x1000>;
-> +			#clock-cells = <2>;
-> +			clocks = <&sysclk>;
-> +		};
-> +
-> +		scfg: scfg@1570000 {
-> +			compatible = "fsl,ls1012a-scfg", "fsl,ls1043a-scfg", "syscon";
-> +			reg = <0x0 0x1570000 0x0 0x10000>;
-> +			big-endian;
-> +		};
-> +
-> +		crypto: crypto@1700000 {
-> +			compatible = "fsl,sec-v5.4", "fsl,sec-v5.0",
-> +				     "fsl,sec-v4.0";
-> +			fsl,sec-era = <8>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges = <0x0 0x00 0x1700000 0x100000>;
-> +			reg = <0x00 0x1700000 0x0 0x100000>;
-> +			interrupts = <0 75 0x4>;
-> +
-> +			sec_jr0: jr@10000 {
-> +				compatible = "fsl,sec-v5.4-job-ring",
-> +					     "fsl,sec-v5.0-job-ring",
-> +					     "fsl,sec-v4.0-job-ring";
-> +				reg	   = <0x10000 0x10000>;
-> +				interrupts = <0 71 0x4>;
-> +			};
-> +
-> +			sec_jr1: jr@20000 {
-> +				compatible = "fsl,sec-v5.4-job-ring",
-> +					     "fsl,sec-v5.0-job-ring",
-> +					     "fsl,sec-v4.0-job-ring";
-> +				reg	   = <0x20000 0x10000>;
-> +				interrupts = <0 72 0x4>;
-> +			};
-> +
-> +			sec_jr2: jr@30000 {
-> +				compatible = "fsl,sec-v5.4-job-ring",
-> +					     "fsl,sec-v5.0-job-ring",
-> +					     "fsl,sec-v4.0-job-ring";
-> +				reg	   = <0x30000 0x10000>;
-> +				interrupts = <0 73 0x4>;
-> +			};
-> +
-> +			sec_jr3: jr@40000 {
-> +				compatible = "fsl,sec-v5.4-job-ring",
-> +					     "fsl,sec-v5.0-job-ring",
-> +					     "fsl,sec-v4.0-job-ring";
-> +				reg	   = <0x40000 0x10000>;
-> +				interrupts = <0 74 0x4>;
-> +			};
-> +		};
-> +
-> +
-> +		dcfg: dcfg@1ee0000 {
-> +			compatible = "fsl,ls1012a-dcfg", "fsl,ls1043a-dcfg", "syscon";
-> +			reg = <0x0 0x1ee0000 0x0 0x10000>;
-> +		};
-> +
-> +		reset: reset@1EE00B0 {
-> +			compatible = "fsl,ls-reset";
-> +			reg = <0x0 0x1EE00B0 0x0 0x4>;
-> +			big-endian;
-> +		};
+>> This names the GPIO lines on the Banana Pi board in accordance with
+>> the A20_Banana_Pi v1.4 Specification.
+>>
+>> This will make these line names reflect through to userspace
+>> so that they can easily be identified and used with the new
+>> character device ABI.
+>>
+>> Some care has been taken to name all lines, not just those used
+>> by the external connectors, also lines that are muxed into some
+>> other function than GPIO: these are named "[FOO]" so that users
+>> can see with lsgpio what all lines are used for.
+>>
+>> Ps: most of the text was taken from Linux Wallej patch.
+>
+> LinuS
+>
+>>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+>
+> Nice usecase!
+>
+>> +       /*
+>> +        * Legend: proper name = the GPIO line is used as GPIO
+>> +        *         NC = not connected (not routed from the SoC)
+>> +        *         "[PER]" = pin is muxed for peripheral (not GPIO)
+>> +        *         "" = no idea, schematic doesn't say, could be
+>> +        *              unrouted (not connected to any external pin)
+>> +        *         LSEC = Low Speed External Connector
+>> +        *         HSEC = High Speed External Connector
 
-Where is the binding for the above node?  Other arm64 SoCs are using
-"syscon-reboot".  Can that be used?
+I don't see LSEC/HSEC used anywhere?
 
+>> +        */
+>
+> So maybe we should make this naming convention a suggested
+> standard. People seem to like it.
 
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		pfe_reserved: packetbuffer@83400000 {
-> +			reg = <0 0x83400000 0 0xc00000>;
-> +		};
-> +	};
-> +
-> +	pfe: pfe@04000000 {
-> +		compatible = "fsl,pfe";
-> +		ranges = <0x0 0x00 0x04000000 0xc00000
-> +			  0x1 0x00 0x83400000 0xc00000>;
-> +		reg =   <0x0 0x90500000 0x0 0x10000>,	/* APB 64K */
-> +			<0x0 0x04000000 0x0 0xc00000>,	/* AXI 16M */
-> +			<0x0 0x83400000 0x0 0xc00000>,    /* PFE DDR 12M */
-> +			<0x0 0x10000000 0x0 0x2000>;	/* OCRAM 8K  */
-> +		fsl,pfe-num-interfaces = < 0x2 >;
-> +		interrupts = <0 172 0x4>;
-> +		#interrupt-names = "hifirq";
-> +		memory-region = <&pfe_reserved>;
-> +		fsl,pfe-scfg = <&scfg 0>;
-> +	};
+One question about this whole thing: how extensively should we add
+the names? Only for exposed pins? Or every pin that's routed/used?
 
-I understand the PFE driver needs some memory, but I think
-the way you are doing it needs to be completely re-thought
-through.  Where is the magic 0x83400000 coming from?  Why
-does that address show up in 2 places-- both the pfe reg
-property and the reserved-memory node?
+>> +       gpio-line-names =
+>> +               /* PA */
+>> +               "[ERXD3]", "[ERXD2]", "[ERXD1]", "[ERXD0]", "[ETXD3]",
+>> +                       "[ETXD2]", "[ETXD1]", "[ETXD0]",
+>> +               "[ERXCK]", "[ERXERR]", "[ERXDV]", "[EMDC]", "[EMDIO]",
+>> +                       "[ETXEN]", "[ETXCK]", "[ECRS]",
+>> +               "[ECOL]", "[ETXERR]", "", "", "", "", "", "",
+>> +               "", "", "", "", "", "", "", "",
+>> +               /* PB */
+>> +               "[PMU-SCK]", "[PMU-SDA]", "", "", "", "NC", "NC", "NC",
+>> +               "NC", "[USB0-DRV]", "NC", "NC", "NC", "NC", "", "",
+>> +               "", "", "", "", "SCL", "SDA", "", "",
+>
+> Are these bit-banged SCL and SDA for doing I2C with
+> GPIO? Otherwise you probably want to name them "[SCL]" and "[SDA]"
 
-Stuart
+There's an actual I2C controller backing them.
+
+>
+>> +               "TXD0", "RXD0", "IO-1", "PH3", "[USB0-IDDET]", "PH5", "", "",
+>
+> Same here. You probably want "[TXD0]" etc unless you're bit-banging
+> the serial port. "IO-1" sounds like a real GPIO though and should
+> probably be named like that without [] and "PH3" what is that really?
+> A device-muxed pin or some kind of GPIO?
+
+PH3 is actually the pin name. The vendor uses "IO-7" and "IO-8" as function
+names for PH3 and PH5, but actually names them "NC":
+
+    http://www.bananapi.org/p/product.html
+
+>
+>> +               "", "", "[SD0-DET]", "", "", "", "", "",
+>> +               "NC", "", "", "", "IO-4", "IO-5", "NC", "[EMAC-PWR-EN]",
+>
+> So these seem correct too.
+>
+>> +               "[LED1]", "NC", "NC", "NC", "", "", "", "",
+>
+> "LED1" seems like the right name, if this is a GPIO used to drive
+> a LED.
+
+This is GPIO based.
+
+>
+>> +               "", "", "", "IO-GCLK", "NC", "NC", "NC", "NC",
+>
+> WHat is IO-GCLK? A real GPIO line used for toggling a clock?
+> Or a hardware clock signal? In the first case it it correctly named,
+> in the other case it should be "[IO-GCLK]".
+
+According to the schematics this is a PWM output.
+
+Regards
+ChenYu
+
+>
+>> +               "NC", "NC", "[SPI-CE0]", "[SPI-CLK]", "[SPI-MOSI]",
+>> +                       "[SPI-MISO]", "[SPI-CE1]", "NC",
+>> +               "IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
+>
+> Looks right.
+>
+> Yours,
+> Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
