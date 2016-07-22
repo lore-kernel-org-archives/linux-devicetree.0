@@ -1,65 +1,58 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH v1 0/2] Add Hisilicon Djtag driver
-Date: Fri, 22 Jul 2016 11:56:49 +0100
-Message-ID: <20160722105648.GD17584@leverpostej>
-References: <1469177332-72156-1-git-send-email-tanxiaojun@huawei.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] Add STM32 Reset Driver
+Date: Fri, 22 Jul 2016 14:36:00 +0200
+Message-ID: <1469190960.27223.15.camel@pengutronix.de>
+References: <1469180270-5446-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1469177332-72156-1-git-send-email-tanxiaojun@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tan Xiaojun <tanxiaojun@huawei.com>
-Cc: devicetree@vger.kernel.org, k.kozlowski@samsung.com, khilman@linaro.org, qiang.zhao@freescale.com, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, f.fainelli@gmail.com, alex.aring@gmail.com, xuwei5@hisilicon.com, linux-kernel@vger.kernel.org, gregory.clement@free-electrons.com, robh+dt@kernel.org, galak@codeaurora.org, rmk+kernel@arm.linux.org.uk, amitdanielk@gmail.com, geert+renesas@glider.be, treding@nvidia.com, linux-arm-kernel@lists.infradead.org, wxt@rock-chips.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469180270-5446-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gabriel.fernandez-qxv4g6HH51o@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, patrice.chotard-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Am Freitag, den 22.07.2016, 11:37 +0200 schrieb
+gabriel.fernandez-qxv4g6HH51o@public.gmane.org:
+> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+> 
+> v3:
+>  - Use the builtin for the register
+> 
+> v2:
+>  - switch to the non-relaxed variants
+>  - describe dt-binfings in one place
+> 
+> The STM32 MCUs family IPs can be reset by accessing some registers
+> from the RCC block.
+> 
+> Gabriel Fernandez (1):
+>   ARM: dts: stm32f429: add missing #reset-cells of rcc
+> 
+> Maxime Coquelin (3):
+>   dt-bindings: mfd: Add STM32F4 RCC numeric constants into DT include
+>     file
+>   dt-bindings: Document the STM32 reset bindings
+>   drivers: reset: Add STM32 reset driver
+> 
+>  .../devicetree/bindings/clock/st,stm32-rcc.txt     |  42 ++++++--
+>  .../devicetree/bindings/reset/st,stm32-rcc.txt     |   6 ++
+>  arch/arm/boot/dts/stm32f429.dtsi                   |   1 +
+>  drivers/reset/Makefile                             |   1 +
+>  drivers/reset/reset-stm32.c                        | 108 +++++++++++++++++++++
+>  include/dt-bindings/mfd/stm32f4-rcc.h              |  98 +++++++++++++++++++
+>  6 files changed, 249 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/reset/st,stm32-rcc.txt
+>  create mode 100644 drivers/reset/reset-stm32.c
+>  create mode 100644 include/dt-bindings/mfd/stm32f4-rcc.h
 
-I understand that some SoC/socket level PMU is accessed via these
-registers. It doesn't make sense to review either in isolation. Please
-put together a unified series, with both the djtag accessors and the
-PMU code.
+Thank you, I've applied all four patches.
 
-On it's own, it's *very* difficult to understand how this fits into the
-SoC, and how it is to be used.
+regards
+Philipp
 
-Thanks,
-Mark.
-
-On Fri, Jul 22, 2016 at 04:48:50PM +0800, Tan Xiaojun wrote:
-> 
-> Tan Xiaojun (2):
->   Documentation: arm64: Add Hisilicon HiP05/06/07 Sysctrl and Djtag dts
->     bindings
->   drivers: soc: Add support for Hisilicon Djtag driver
-> 
->  .../bindings/arm/hisilicon/hisilicon.txt           |   98 +++++
->  drivers/soc/Kconfig                                |    1 +
->  drivers/soc/Makefile                               |    1 +
->  drivers/soc/hisilicon/Kconfig                      |   12 +
->  drivers/soc/hisilicon/Makefile                     |    1 +
->  drivers/soc/hisilicon/djtag.c                      |  373 ++++++++++++++++++++
->  include/linux/soc/hisilicon/djtag.h                |   18 +
->  7 files changed, 504 insertions(+)
->  create mode 100644 drivers/soc/hisilicon/Kconfig
->  create mode 100644 drivers/soc/hisilicon/Makefile
->  create mode 100644 drivers/soc/hisilicon/djtag.c
->  create mode 100644 include/linux/soc/hisilicon/djtag.h
-> 
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
