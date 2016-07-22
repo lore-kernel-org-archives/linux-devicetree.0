@@ -1,51 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: document how to order GPIO controllers
-Date: Fri, 22 Jul 2016 16:34:58 +0200
-Message-ID: <CACRpkdYMrfRmmY=ABPj2zoA-kW0gkPRwzeC=U3XhKs1PGRe4vA@mail.gmail.com>
-References: <1467355333-8813-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20160705140546.GA10601@rob-hp-laptop> <20160705180447.GP16643@pengutronix.de>
- <CACRpkdbH+KRXbxFdfyAE44fBNctK4cWV+KRLwQBTzSGLvLMEDg@mail.gmail.com>
- <20160706102750.GH23470@localhost> <CACRpkdZhx3yTbtuj-ZTP+mtUSr4uxL4bHtu8jVZOoxrUy6=iYw@mail.gmail.com>
- <20160713131412.GO6442@localhost>
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: Re: [RCF 1/3] hwmon: Add ads1118 driver
+Date: Fri, 22 Jul 2016 07:39:22 -0700
+Message-ID: <5792301A.6030206@gmail.com>
+References: <cover.1468626668.git.stillcompiling@gmail.com>
+ <0294fbcb211e8f14f4e68fed4d9375cf23c6a70e.1468626668.git.stillcompiling@gmail.com>
+ <578990A1.6020300@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160713131412.GO6442@localhost>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <578990A1.6020300@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 13, 2016 at 3:14 PM, Johan Hovold <johan@kernel.org> wrote:
-> On Wed, Jul 06, 2016 at 02:34:39PM +0200, Linus Walleij wrote:
+Greetings Guenter,
 
->> For the purpose of picking a certain named GPIO line (see below)
->> knowing this number is unnecessary. To that mechanism all gpio
->> chips are equal and the instance number does not matter.
+Thank you for reviewing my submission.
+
+On 07/15/2016 06:40 PM, Guenter Roeck wrote:
+> On 07/15/2016 05:18 PM, Joshua Clayton wrote:
+>> Add new driver for Texas Instruments ADS1118 and and ADS1018.
+>> This driver works with ADS1018, because of code borrowed
+>> from asd1015, which is similar, but I can only test ADS1118
+>>
 >
-> My point was that with gpio line names (and possibly topological
-> information to resolve duplicates), the N number should not matter
-> anymore.
+> Browsing through the datasheet, I think this should probably be implemented
+> as iio driver (and iio already has a driver for ads1015).
+>
+> Jonathan, what do you think ?
+>
+> Thanks,
+> Guenter
+>
+No response from Jonathan as yet, but I am willing to rework the driver when I
+have some time. It might be weeks before I can start, though.
 
-Agreed. It doesn't, with the new ABI. Not for technical reasons, at all.
+I am not very familiar with the iio subsystem, (actually had never heard of it before
+receiving your response). Learning it might be beneficial, as it looks like a good fit
+for an in house driver, which I'd like to eventually upstream.
 
-> If one needs to look up a particular gpiochip based on some hardware
-> naming convention, why not associate a name with the chip instead of
-> trying to shoehorn the dynamic gpiochip range in there?
+If an hwmon driver is adequate, I have new patches that address kbuild and endianness
+issues in the first version.
 
-With the new ABI it is possible to set a "label" for the gpiochip, currently
-described as "a functional name for this GPIO chip, such as a product
-number" and it's certainly possible to manage this name carefully for
-a system to look up a certain chip.
 
-[About obtaining topological  information from sysfs]
-> And this may even be unavoidable with dynamic buses such as USB or
-> greybus, where you can have multiple devices associating the same name
-> with a pin. That's fine as long as the user-space interface allows for a
-> way to distinguish them (e.g. through topological information).
-
-This should work fine AFAICT. All the ABI and information is in place
-to deal with this.
-
-Yours,
-Linus Walleij
+~Joshua Clayton
