@@ -1,132 +1,152 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH v3 1/4] dt-bindings: mfd: Add STM32F4 RCC numeric constants into DT include file
-Date: Fri, 22 Jul 2016 11:37:47 +0200
-Message-ID: <1469180270-5446-2-git-send-email-gabriel.fernandez@st.com>
-References: <1469180270-5446-1-git-send-email-gabriel.fernandez@st.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [RFC 6/6] bus: Add support for Tegra NOR controller
+Date: Fri, 22 Jul 2016 10:38:56 +0100
+Message-ID: <dbbb5c9f-8c67-9d9f-171b-64cd18353411@nvidia.com>
+References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
+ <1468935397-11926-7-git-send-email-mirza.krak@gmail.com>
+ <f6df33eb-53ae-699b-9e1f-69eb7fed7da0@nvidia.com>
+ <CALw8SCVy4ud5_+gS3C8WeyTCV0m_4R2xjdEY4vCKEq_3-aFanw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469180270-5446-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, patrice.chotard@st.com, alexandre.torgue@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CALw8SCVy4ud5_+gS3C8WeyTCV0m_4R2xjdEY4vCKEq_3-aFanw@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mirza Krak <mirza.krak@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 
-Ths patch lists STM32F4's RCC numeric constants.
-It will be used by clock and reset drivers, and DT bindings.
+On 21/07/16 21:42, Mirza Krak wrote:
+> 2016-07-21 12:15 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
+>>
+>> On 19/07/16 14:36, Mirza Krak wrote:
+>>> From: Mirza Krak <mirza.krak@gmail.com>
+>>> +config TEGRA_NOR
+>>> +     tristate "Nvidia Tegra NOR flash bus driver a.k.a GMI/SNOR"
+>>> +             depends on ARCH_TEGRA_2x_SOC || ARCH_TEGRA_3x_SOC
+>>> +             depends on OF
+>>> +             help
+>>> +                     Driver for NOR flash bus found on Tegra30/20 SOC`s.
+>>
+>> It is actually present on all Tegra's and so I would drop the 30/20.
+> 
+> ACK.
+> 
+>>> +++ b/drivers/bus/tegra-nor.c
+>>> @@ -0,0 +1,118 @@
+>>> +/*
+>>> + * Driver for Nvidia NOR Flash bus a.k.a SNOR/GMI.
+>>> + *
+>>> + * Copyright (C) 2016 Host Mobility AB. All rights reserved.
+>>> + *
+>>> + * This file is licensed under the terms of the GNU General Public
+>>> + * License version 2. This program is licensed "as is" without any
+>>> + * warranty of any kind, whether express or implied.
+>>> + */
+>>> +
+>>> +#include <linux/clk.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/mfd/syscon.h>
+>>
+>> Is this needed?
+> 
+> It is not. ACK.
+> 
+>>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of_device.h>
+>>> +#include <linux/regmap.h>
+>>
+>> Or this?
+> 
+> It is not. ACK.
+> 
+>>
+>>> +
+>>> +#define TEGRA_NOR_TIMING_REG_COUNT   2
+>>> +
+>>> +#define TEGRA_NOR_CONFIG                     0x00
+>>> +#define TEGRA_NOR_STATUS                     0x04
+>>> +#define TEGRA_NOR_ADDR_PTR                   0x08
+>>> +#define TEGRA_NOR_AHB_ADDR_PTR               0x0c
+>>> +#define TEGRA_NOR_TIMING0                    0x10
+>>> +#define TEGRA_NOR_TIMING1                    0x14
+>>> +#define TEGRA_NOR_MIO_CONFIG         0x18
+>>> +#define TEGRA_NOR_MIO_TIMING         0x1c
+>>> +#define TEGRA_NOR_DMA_CONFIG         0x20
+>>> +#define TEGRA_NOR_CS_MUX_CONFIG              0x24
+>>
+>> Not all of these are used. It is good to define them and I wonder if we
+>> should add support for MIO while are at it :-)
+> 
+> We can come back to this once I have all SNOR stuff in order.
+> 
+>>
+>>> +
+>>> +#define TEGRA_NOR_CONFIG_GO                          BIT(31)
+>>> +
+>>> +static const struct of_device_id nor_id_table[] = {
+>>> +     /* Tegra30 */
+>>
+>> I don't think this comment is needed.
+> 
+> ACK.
+> 
+>>
+>>> +     { .compatible = "nvidia,tegra30-nor", .data = NULL, },
+>>
+>> You don't need to set data to NULL.
+> 
+> ACK.
+> 
+>>
+>>> +     /* Tegra20 */
+>>> +     { .compatible = "nvidia,tegra20-nor", .data = NULL, },
+>>
+>> Same here.
+> 
+> ACK
+> 
+>>> +static int __init nor_probe(struct platform_device *pdev)
+>>> +{
+>>
+>> I would drop the __init.
+> 
+> ACK.
+> 
+>>> +static struct platform_driver nor_driver = {
+>>> +     .driver = {
+>>> +             .name           = "tegra-nor",
+>>> +             .of_match_table = nor_id_table,
+>>> +     },
+>>> +};
+>>
+>> The driver should have a remove function given that we can build as a
+>> module.
+> 
+> At the moment I do not know what we would do in a remove function and
+> hence me not adding one.
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- include/dt-bindings/mfd/stm32f4-rcc.h | 98 +++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 include/dt-bindings/mfd/stm32f4-rcc.h
+Should just be the inverse of the probe (although there is no inverse
+for the parsing DT bit). If you don't wish to add a remove, that is
+fine, but make the driver a 'bool' and not 'tristate' in the Kconfig so
+it cannot be configured as a module.
 
-diff --git a/include/dt-bindings/mfd/stm32f4-rcc.h b/include/dt-bindings/mfd/stm32f4-rcc.h
-new file mode 100644
-index 0000000..e98942dc
---- /dev/null
-+++ b/include/dt-bindings/mfd/stm32f4-rcc.h
-@@ -0,0 +1,98 @@
-+/*
-+ * This header provides constants for the STM32F4 RCC IP
-+ */
-+
-+#ifndef _DT_BINDINGS_MFD_STM32F4_RCC_H
-+#define _DT_BINDINGS_MFD_STM32F4_RCC_H
-+
-+/* AHB1 */
-+#define STM32F4_RCC_AHB1_GPIOA	0
-+#define STM32F4_RCC_AHB1_GPIOB	1
-+#define STM32F4_RCC_AHB1_GPIOC	2
-+#define STM32F4_RCC_AHB1_GPIOD	3
-+#define STM32F4_RCC_AHB1_GPIOE	4
-+#define STM32F4_RCC_AHB1_GPIOF	5
-+#define STM32F4_RCC_AHB1_GPIOG	6
-+#define STM32F4_RCC_AHB1_GPIOH	7
-+#define STM32F4_RCC_AHB1_GPIOI	8
-+#define STM32F4_RCC_AHB1_GPIOJ	9
-+#define STM32F4_RCC_AHB1_GPIOK	10
-+#define STM32F4_RCC_AHB1_CRC	12
-+#define STM32F4_RCC_AHB1_DMA1	21
-+#define STM32F4_RCC_AHB1_DMA2	22
-+#define STM32F4_RCC_AHB1_DMA2D	23
-+#define STM32F4_RCC_AHB1_ETHMAC	25
-+#define STM32F4_RCC_AHB1_OTGHS	29
-+
-+#define STM32F4_AHB1_RESET(bit) (STM32F4_RCC_AHB1_##bit + (0x10 * 8))
-+#define STM32F4_AHB1_CLOCK(bit) (STM32F4_RCC_AHB1_##bit + (0x30 * 8))
-+
-+
-+/* AHB2 */
-+#define STM32F4_RCC_AHB2_DCMI	0
-+#define STM32F4_RCC_AHB2_CRYP	4
-+#define STM32F4_RCC_AHB2_HASH	5
-+#define STM32F4_RCC_AHB2_RNG	6
-+#define STM32F4_RCC_AHB2_OTGFS	7
-+
-+#define STM32F4_AHB2_RESET(bit)	(STM32F4_RCC_AHB2_##bit + (0x14 * 8))
-+#define STM32F4_AHB2_CLOCK(bit)	(STM32F4_RCC_AHB2_##bit + (0x34 * 8))
-+
-+/* AHB3 */
-+#define STM32F4_RCC_AHB3_FMC	0
-+
-+#define STM32F4_AHB3_RESET(bit)	(STM32F4_RCC_AHB3_##bit + (0x18 * 8))
-+#define STM32F4_AHB3_CLOCK(bit)	(STM32F4_RCC_AHB3_##bit + (0x38 * 8))
-+
-+/* APB1 */
-+#define STM32F4_RCC_APB1_TIM2	0
-+#define STM32F4_RCC_APB1_TIM3	1
-+#define STM32F4_RCC_APB1_TIM4	2
-+#define STM32F4_RCC_APB1_TIM5	3
-+#define STM32F4_RCC_APB1_TIM6	4
-+#define STM32F4_RCC_APB1_TIM7	5
-+#define STM32F4_RCC_APB1_TIM12	6
-+#define STM32F4_RCC_APB1_TIM13	7
-+#define STM32F4_RCC_APB1_TIM14	8
-+#define STM32F4_RCC_APB1_WWDG	11
-+#define STM32F4_RCC_APB1_SPI2	14
-+#define STM32F4_RCC_APB1_SPI3	15
-+#define STM32F4_RCC_APB1_UART2	17
-+#define STM32F4_RCC_APB1_UART3	18
-+#define STM32F4_RCC_APB1_UART4	19
-+#define STM32F4_RCC_APB1_UART5	20
-+#define STM32F4_RCC_APB1_I2C1	21
-+#define STM32F4_RCC_APB1_I2C2	22
-+#define STM32F4_RCC_APB1_I2C3	23
-+#define STM32F4_RCC_APB1_CAN1	25
-+#define STM32F4_RCC_APB1_CAN2	26
-+#define STM32F4_RCC_APB1_PWR	28
-+#define STM32F4_RCC_APB1_DAC	29
-+#define STM32F4_RCC_APB1_UART7	30
-+#define STM32F4_RCC_APB1_UART8	31
-+
-+#define STM32F4_APB1_RESET(bit)	(STM32F4_RCC_APB1_##bit + (0x20 * 8))
-+#define STM32F4_APB1_CLOCK(bit)	(STM32F4_RCC_APB1_##bit + (0x40 * 8))
-+
-+/* APB2 */
-+#define STM32F4_RCC_APB2_TIM1	0
-+#define STM32F4_RCC_APB2_TIM8	1
-+#define STM32F4_RCC_APB2_USART1	4
-+#define STM32F4_RCC_APB2_USART6	5
-+#define STM32F4_RCC_APB2_ADC	8
-+#define STM32F4_RCC_APB2_SDIO	11
-+#define STM32F4_RCC_APB2_SPI1	12
-+#define STM32F4_RCC_APB2_SPI4	13
-+#define STM32F4_RCC_APB2_SYSCFG	14
-+#define STM32F4_RCC_APB2_TIM9	16
-+#define STM32F4_RCC_APB2_TIM10	17
-+#define STM32F4_RCC_APB2_TIM11	18
-+#define STM32F4_RCC_APB2_SPI5	20
-+#define STM32F4_RCC_APB2_SPI6	21
-+#define STM32F4_RCC_APB2_SAI1	22
-+#define STM32F4_RCC_APB2_LTDC	26
-+
-+#define STM32F4_APB2_RESET(bit)	(STM32F4_RCC_APB2_##bit + (0x24 * 8))
-+#define STM32F4_APB2_CLOCK(bit)	(STM32F4_RCC_APB2_##bit + (0x44 * 8))
-+
-+#endif /* _DT_BINDINGS_MFD_STM32F4_RCC_H */
+>>
+>>> +module_platform_driver_probe(nor_driver, nor_probe);
+>>
+>> I would use "tegra_nor" namespace for all the structs, functions, etc.
+>> However, we may prefer to go with GMI and in which case tegra_gmi_probe,
+>> etc.
+> 
+> ACK. Who gets the last call on what we should call the driver? It
+> seems that we both think GMI is a better name, do we need a third? :).
+
+The patches would have to go via Thierry and so ultimately, Thierry.
+However, I can't imagine he would object to GMI ;-)
+
+Jon
+
 -- 
-1.9.1
+nvpublic
