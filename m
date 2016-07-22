@@ -1,42 +1,27 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3] of: fix memory leak related to safe_name()
-Date: Fri, 22 Jul 2016 14:58:06 -0500
-Message-ID: <CAL_JsqJaWky61QA0qdKozyriYpZiR2poY+U-7a9Latr7z_FoSA@mail.gmail.com>
-References: <5762E732.1030908@gmail.com> <CA+7wUsziB9P24bXnSrLB_t-KOZ2CVj9p5xZYsCnr5DNZL8mg+w@mail.gmail.com>
- <CAL_JsqK=h5EC4RR4xpn-JioAbdLfmQFNt8MJk=UF==WvDWy-wQ@mail.gmail.com> <CA+7wUsyXMPu05mz4Mi6ELF=PJGLp82DTMFOHTZmQ2OHX_TdjWw@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V2] ARM: BCM5301X: Specify PHY of USB 2.0 in DT
+Date: Fri, 22 Jul 2016 13:01:39 -0700
+Message-ID: <5483f72a-1840-cde3-5d10-0b23e3f77fc9@gmail.com>
+References: <1464808585-14996-1-git-send-email-zajec5@gmail.com>
+ <1464811627-12218-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+7wUsyXMPu05mz4Mi6ELF=PJGLp82DTMFOHTZmQ2OHX_TdjWw@mail.gmail.com>
+In-Reply-To: <1464811627-12218-1-git-send-email-zajec5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <mathieu.malaterre@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:BROADCOM BCM5301X ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 20, 2016 at 1:03 AM, Mathieu Malaterre
-<mathieu.malaterre@gmail.com> wrote:
-> On Fri, Jun 24, 2016 at 10:38 PM, Rob Herring <robh+dt@kernel.org> wrote:
->> On Fri, Jun 17, 2016 at 2:51 AM, Mathieu Malaterre
->> <mathieu.malaterre@gmail.com> wrote:
->>> v3 tested here multiple times ! memleak is now gone.
->>>
->>> Tested-by: Mathieu Malaterre <mathieu.malaterre@gmail.com>
->>>
->>> Thanks
->>>
->>> On Thu, Jun 16, 2016 at 7:51 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->>>> From: Frank Rowand <frank.rowand@am.sony.com>
->>>>
->>>> Fix a memory leak resulting from memory allocation in safe_name().
->>>> This patch fixes all call sites of safe_name().
->>
->> Applied, thanks.
->>
->> Rob
->
-> Could this patch be considered for stable ?
+On 06/01/2016 01:07 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
+> Driver for Northstar USB 2.0 PHY was added in 4.7-rc1 by:
+> commit d3feb4067335 ("phy: bcm-ns-usb2: new driver for USB 2.0 PHY on
+> Northstar").
+> It should be used to let EHCI platform driver init PHY.
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
 
-Yes, I tagged it for stable. I didn't send it for 4.7, so it won't go
-in until after 4.8-rc1 though.
-
-Rob
+Applied, thanks
+--=20
+=46lorian
