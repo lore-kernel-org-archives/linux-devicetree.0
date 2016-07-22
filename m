@@ -1,47 +1,27 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: Re: [RCF 1/3] hwmon: Add ads1118 driver
-Date: Fri, 22 Jul 2016 07:39:22 -0700
-Message-ID: <5792301A.6030206@gmail.com>
-References: <cover.1468626668.git.stillcompiling@gmail.com>
- <0294fbcb211e8f14f4e68fed4d9375cf23c6a70e.1468626668.git.stillcompiling@gmail.com>
- <578990A1.6020300@roeck-us.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: Update iProc GPIO bindings
+Date: Fri, 22 Jul 2016 16:46:14 +0200
+Message-ID: <CACRpkdZohemfZm_k+W7uZOxmRBJ1dMvcYox2hZdej4xrEuhdVw@mail.gmail.com>
+References: <1468862418-31477-1-git-send-email-ray.jui@broadcom.com> <1468862418-31477-2-git-send-email-ray.jui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <578990A1.6020300@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1468862418-31477-2-git-send-email-ray.jui@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Greetings Guenter,
+On Mon, Jul 18, 2016 at 7:20 PM, Ray Jui <ray.jui@broadcom.com> wrote:
 
-Thank you for reviewing my submission.
-
-On 07/15/2016 06:40 PM, Guenter Roeck wrote:
-> On 07/15/2016 05:18 PM, Joshua Clayton wrote:
->> Add new driver for Texas Instruments ADS1118 and and ADS1018.
->> This driver works with ADS1018, because of code borrowed
->> from asd1015, which is similar, but I can only test ADS1118
->>
+> Update the iProc GPIO binding document to add new compatible strings
+> "brcm,iproc-nsp-gpio" and "brcm,iproc-stingray-gpio" to support the
+> iProc based GPIO controller used in the NSP and Stingray SoCs,
+> respectively
 >
-> Browsing through the datasheet, I think this should probably be implemented
-> as iio driver (and iio already has a driver for ads1015).
->
-> Jonathan, what do you think ?
->
-> Thanks,
-> Guenter
->
-No response from Jonathan as yet, but I am willing to rework the driver when I
-have some time. It might be weeks before I can start, though.
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
 
-I am not very familiar with the iio subsystem, (actually had never heard of it before
-receiving your response). Learning it might be beneficial, as it looks like a good fit
-for an in house driver, which I'd like to eventually upstream.
+Patch applied with Rob's ACK.
 
-If an hwmon driver is adequate, I have new patches that address kbuild and endianness
-issues in the first version.
-
-
-~Joshua Clayton
+Yours,
+Linus Walleij
