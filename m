@@ -1,124 +1,126 @@
 From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [Xen-devel] [PATCH v4] xen/arm: Add a clock property
-Date: Thu, 21 Jul 2016 17:07:53 -0700
-Message-ID: <146914607316.8780.7961396342647226841@resonance>
+Subject: Re: [PATCH v4] xen/arm: Add a clock property
+Date: Thu, 21 Jul 2016 17:14:05 -0700
+Message-ID: <146914644542.8780.6400440784482743934@resonance>
 References: <1468309605-19522-1-git-send-email-dirk.behme@de.bosch.com>
- <146836236759.73491.11707389619985827497@resonance>
- <c320f820-8749-f4a4-435e-ddd9379655b5@de.bosch.com>
- <alpine.DEB.2.10.1607131941200.26575@sstabellini-ThinkPad-X260>
- <57868EDE.6060406@gmail.com>
- <146844380895.73491.4867379517577413421@resonance>
- <7df784ab-d0c0-939b-393e-214535c4b191@de.bosch.com>
- <alpine.DEB.2.10.1607141132000.26575@sstabellini-ThinkPad-X260>
+ <CAMuHMdU9yP2SMYa5ssrQSu1vwSN2gM4mD-EVYSGr2Pqf=jmCgw@mail.gmail.com>
+ <cc28ef7e-dce3-fe5f-ab80-b662244bcbd0@arm.com>
+ <CAMuHMdWeJjcuBHjnjppc5Ys5Ew8VssXzg=dLpLPCOQaBnUo_7Q@mail.gmail.com>
+ <04d9dbfb-196d-a775-7fbb-526aba8085f4@arm.com>
+ <CAMuHMdWdqdT4jnae8h9tDDzzh8ZAbJJwiMW-scPBNVwmjYSiWQ@mail.gmail.com>
+ <457c61fd-4a64-b050-cd87-845b7e22ec39@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.10.1607141132000.26575@sstabellini-ThinkPad-X260>
+In-Reply-To: <457c61fd-4a64-b050-cd87-845b7e22ec39@arm.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: Dirk Behme <dirk.behme@gmail.com>, Stefano Stabellini <sstabellini@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Julien Grall <julien.grall@arm.com>, xen-devel@lists.xenproject.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Julien Grall <julien.grall@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, xen-devel@lists.xenproject.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stefano Stabellini <sstabellini@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stefano Stabellini (2016-07-14 03:38:04)
-> On Thu, 14 Jul 2016, Dirk Behme wrote:
-> > On 13.07.2016 23:03, Michael Turquette wrote:
-> > > Quoting Dirk Behme (2016-07-13 11:56:30)
-> > > > On 13.07.2016 20:43, Stefano Stabellini wrote:
-> > > > > On Wed, 13 Jul 2016, Dirk Behme wrote:
-> > > > > > On 13.07.2016 00:26, Michael Turquette wrote:
-> > > > > > > Quoting Dirk Behme (2016-07-12 00:46:45)
-> > > > > > > > Clocks described by this property are reserved for use by Xen, and
-> > > > > > > > the OS
-> > > > > > > > must not alter their state any way, such as disabling or gating a
-> > > > > > > > clock,
-> > > > > > > > or modifying its rate. Ensuring this may impose constraints on
-> > > > > > > > parent
-> > > > > > > > clocks or other resources used by the clock tree.
-> > > > > > > 
-> > > > > > > Note that clk_prepare_enable will not prevent the rate from changing
-> > > > > > > (clk_set_rate) or a parent from changing (clk_set_parent). The only
-> > > > > > > way
-> > > > > > > to do this currently would be to set the following flags on the
-> > > > > > > effected
-> > > > > > > clocks:
-> > > > > > > 
-> > > > > > >     CLK_SET_RATE_GATE
-> > > > > > >     CLK_SET_PARENT_GATE
-> > > > > > 
-> > > > > > 
-> > > > > > 
-> > > > > > Regarding setting flags, I think we already talked about that. I think
-> > > > > > the
-> > > > > > conclusion was that in our case its not possible to manipulate the
-> > > > > > flags in
-> > > > > > the OS as this isn't intended to be done in cases like ours. Therefore
-> > > > > > no API
-> > > > > > is exported for this.
-> > > > > > 
-> > > > > > I.e. if we need to set these flags, we have to do that in Xen where we
-> > > > > > add the
-> > > > > > clocks to the hypervisor node in the device tree. And not in the
-> > > > > > kernel patch
-> > > > > > discussed here.
-> > > > > 
-> > > > > These are internal Linux flags, aren't they?
-> > > > 
-> > > > 
-> > > > I've been under the impression that you can set clock "flags" via the
-> > > > device tree. Seems I need to re-check that ;)
-> > > 
-> > > Right, you cannot set flags from the device tree. Also, setting these
-> > > flags is done by the clock provider driver, not a consumer. Xen is the
-> > > consumer.
-> > 
-> > 
-> > Ok, thanks, then I think we can forget about using flags for the issue we are
-> > discussing here.
-> > 
-> > Best regards
-> > 
-> > Dirk
-> > 
-> > P.S.: Would it be an option to merge the v4 patch we are discussing here,
-> > then? From the discussion until here, it sounds to me that it's the best
-> > option we have at the moment. Maybe improving it in the future, then.
+Quoting Julien Grall (2016-07-20 06:21:45)
 > 
-> It might be a step in the right direction, but it doesn't really prevent
-> clk_set_rate from changing properties of a clock owned by Xen.  This
-> patch is incomplete. We need to understand at least what it would take
-> to have a complete solution.
 > 
-> Michael, do you have any suggestions on how it would be possible to set
-> CLK_SET_RATE_GATE and CLK_SET_PARENT_GATE for those clocks in a proper
-> way?
-
-No, there is no way for a consumer to do that. The provider must do it.
-
+> On 20/07/2016 13:46, Geert Uytterhoeven wrote:
+> > Hi Julien,
 > 
-> Like you wrote, I would imagine it needs to be done by the clock
-> provider driver. Maybe to do that, it would be easier to have a new
-> device tree property on the clock node, rather than listing phandle and
-> clock-specifier pairs under the Xen node?
+> Hello Geert,
+> 
+> > On Wed, Jul 20, 2016 at 2:10 PM, Julien Grall <julien.grall@arm.com> wrote:
+> >> On 20/07/16 12:49, Geert Uytterhoeven wrote:
+> >>> On Wed, Jul 20, 2016 at 1:01 PM, Julien Grall <julien.grall@arm.com>
+> >>> wrote:
+> >>>> On 20/07/16 10:43, Geert Uytterhoeven wrote:
+> >>>>> On Tue, Jul 12, 2016 at 9:46 AM, Dirk Behme <dirk.behme@de.bosch.com>
+> >>>>> wrote:
+> >>>>>> Clocks described by this property are reserved for use by Xen, and the
+> >>>>>> OS
+> >>>>>> must not alter their state any way, such as disabling or gating a
+> >>>>>> clock,
+> >>>>>> or modifying its rate. Ensuring this may impose constraints on parent
+> >>>>>> clocks or other resources used by the clock tree.
+> >>>>>>
+> >>>>>> This property is used to proxy clocks for devices Xen has taken
+> >>>>>> ownership
+> >>>>>> of, such as UARTs, for which the associated clock controller(s) remain
+> >>>>>> under the control of Dom0.
+> >>>>>
+> >>>>> I'm not familiar with using XEN at all, but I'm a bit puzzled...
+> >>>>>
+> >>>>> Can't you just add a clocks property to the (virtual) serial device node
+> >>>>> in DT?
+> >>>>> Then the (virtual) serial device driver can get and enable the clock?
+> >>>>
+> >>>> There is no DT node for the Xen console (hvc). The UART used by Xen will
+> >>>> be
+> >>>> completely removed from the Device tree.
+> >>>
+> >>> Why is it removed?
+> >>
+> >> Because the device is used exclusively by Xen and DOM0 should not touch it
+> >> at all (IRQs and MMIOs are not mapped).
+> >
+> > IMHO then it's Xen's responsability to make sure not to disable the clock(s).
+> 
+> Xen does not disable the clock(s). The problem is Linux thinks the clock 
+> is not used and therefore will disable the clock.
+> 
+> Actually Xen does not have any knowledge how to handle clocks (i.e 
+> setting rate, enabling/disabling). I would recommend you to read the 
+> binding description in the patch and not the implementation which is 
+> IHMO misleading.
+> 
+> >
+> > Who removes the device node from the DT? If Xen, can't it just remember
+> > which clocks were present in removed device nodes?
+> 
+> Xen is removing the node from the DT. Not removing the node will not 
+> change the problem. Linux is disabling the clock because there is no 
+> driver which used those clocks.
+> 
+> As the clock subsystem will disable any unused clocks (from Linux point 
+> of view), the UART will get disabled and the console will be lost.
+> 
+> What we want to achieve with this patch is to let Linux knows that this 
+> clock is in use by someone else (hypervisor or guest) and:
+>      * If the clock is not shared: don't disable it
+>      * If the clock is shared: don't change the rate
 
-Upon further reflection, I think that your clock consumer can probably
-use clk_set_rate_range() to "lock" in a rate. This is good because it is
-exactly what a clock consumer should do:
+Thanks for the explanation above. It helped clarify things for me.
 
-1) get the clk
-2) enable the clk
-3) set the required rate for the clock
-4) set rate range constraints, or conversely,
-5) lock in an exact rate; set the min/max rate to the same value
+So, can you have some sort of dummy driver in Linux that claims the
+resources needed by Xen and calls the necessary Linux apis to insure
+that Xen's needs are satisfied? As I mentioned in my previous reply
+from a couple of minutes ago:
 
-The problem with this solution is that it requires the consumer to have
-knowledge of the rates that it wants for that clock, which I guess is
-something that Linux kernels in a Xen setup do not want/need?
+struct clk *clk = clk_get(xen_dev, ...);
+clk_prepare_enable(clk);
+clk_set_rate_range(...);
 
-Is it correct that you would prefer some sort of never_touch_this_clk()
-api?
+I'm not sure where the rate info should come from, but this represents a
+correct use of clk consumer apis.
 
 Regards,
 Mike
 
 > 
+> >
+> > What to do on SoCs where the serial device is part of a power area (e.g.
+> > Renesas SH/R-Mobile)? Who will make sure it is not powered down?
+> 
+> I don't have any knowledge on the Renesas SH/R-Mobile. However, we 
+> expect some cooperation between DOM0 and Xen to handle the power.
+> 
+> For instance managing the clocks in Xen would require to implement clock 
+> driver for each SOC because it does not seem to have a generic way to do it.
+> 
+> Given that Linux already knows a lot about the clock, we want to hand 
+> over the clock control to the hardware domain (i.e dom0). This means 
+> that we have to find a way to cooperate with it to keep enable clocks 
+> that we care about.
+> 
+> Regards,
+> 
+> -- 
+> Julien Grall
