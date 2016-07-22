@@ -1,123 +1,94 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v9 1/4] Documentation: bindings: add DT documentation for Rockchip USB2PHY
-Date: Fri, 22 Jul 2016 15:00:43 +0800
-Message-ID: <1469170846-15617-2-git-send-email-frank.wang@rock-chips.com>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH v9 3/4] arm64: dts: rockchip: add usb2-phy support for rk3399
+Date: Fri, 22 Jul 2016 15:00:45 +0800
+Message-ID: <1469170846-15617-4-git-send-email-frank.wang@rock-chips.com>
 References: <1469170846-15617-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469170846-15617-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469170846-15617-1-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, dianders@chromium.org, linux@roeck-us.net, groeck@chromium.org, jwerner@chromium.org, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-rockchip@lists.infradead.org, xzy.xu@rock-chips.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, william.wu@rock-chips.com, daniel.meng@rock-chips.com, frank.wang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Add usb2-phy nodes and specify phys phandle for ehci.
+
+Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
 ---
 
-Changes in v9: None
+Changes in v9:
+ - Move the usb gpio config to rk3399-evb.dts
+ - Fix ehci phy-names property.
 
-Changes in v8: None
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi |   42 +++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
-Changes in v7: None
-
-Changes in v6:
- - Changed '_' to '-' for otg-id and otg-bvalid property.
-
-Changes in v5:
- - Added 'reg' property to identify the different phy-blocks.
-
-Changes in v4:
- - Used 'phy-supply' instead of 'vbus_*-supply'.
-
-Changes in v3:
- - Added 'clocks' and 'clock-names' optional properties.
- - Specified 'otg-port' and 'host-port' as the sub-node name.
-
-Changes in v2:
- - Changed vbus_host optional property from gpio to regulator.
- - Specified vbus_otg-supply optional property.
- - Specified otg_id and otg_bvalid property.
-
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |   64 ++++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-new file mode 100644
-index 0000000..3c29c77
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-@@ -0,0 +1,64 @@
-+ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index d7f8e06..843d51c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -221,6 +221,8 @@
+ 		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_HOST0>, <&cru HCLK_HOST0_ARB>;
+ 		clock-names = "hclk_host0", "hclk_host0_arb";
++		phys = <&u2phy0_host>;
++		phy-names = "usb";
+ 		status = "disabled";
+ 	};
+ 
+@@ -239,6 +241,8 @@
+ 		interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_HOST1>, <&cru HCLK_HOST1_ARB>;
+ 		clock-names = "hclk_host1", "hclk_host1_arb";
++		phys = <&u2phy1_host>;
++		phy-names = "usb";
+ 		status = "disabled";
+ 	};
+ 
+@@ -481,8 +485,44 @@
+ 	};
+ 
+ 	grf: syscon@ff770000 {
+-		compatible = "rockchip,rk3399-grf", "syscon";
++		compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+ 		reg = <0x0 0xff770000 0x0 0x10000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
-+Required properties (phy (parent) node):
-+ - compatible : should be one of the listed compatibles:
-+	* "rockchip,rk3366-usb2phy"
-+	* "rockchip,rk3399-usb2phy"
-+ - reg : the address offset of grf for usb-phy configuration.
-+ - #clock-cells : should be 0.
-+ - clock-output-names : specify the 480m output clock name.
++		u2phy0: usb2-phy@e450 {
++			compatible = "rockchip,rk3399-usb2phy";
++			reg = <0xe450 0x10>;
++			clocks = <&cru SCLK_USB2PHY0_REF>;
++			clock-names = "phyclk";
++			#clock-cells = <0>;
++			clock-output-names = "clk_usbphy0_480m";
++			status = "disabled";
 +
-+Optional properties:
-+ - clocks : phandle + phy specifier pair, for the input clock of phy.
-+ - clock-names : input clock name of phy, must be "phyclk".
-+
-+Required nodes : a sub-node is required for each port the phy provides.
-+		 The sub-node name is used to identify host or otg port,
-+		 and shall be the following entries:
-+	* "otg-port" : the name of otg port.
-+	* "host-port" : the name of host port.
-+
-+Required properties (port (child) node):
-+ - #phy-cells : must be 0. See ./phy-bindings.txt for details.
-+ - interrupts : specify an interrupt for each entry in interrupt-names.
-+ - interrupt-names : a list which shall be the following entries:
-+	* "otg-id" : for the otg id interrupt.
-+	* "otg-bvalid" : for the otg vbus interrupt.
-+	* "linestate" : for the host/otg linestate interrupt.
-+
-+Optional properties:
-+ - phy-supply : phandle to a regulator that provides power to VBUS.
-+		See ./phy-bindings.txt for details.
-+
-+Example:
-+
-+grf: syscon@ff770000 {
-+	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+...
-+
-+	u2phy: usb2-phy@700 {
-+		compatible = "rockchip,rk3366-usb2phy";
-+		reg = <0x700 0x2c>;
-+		#clock-cells = <0>;
-+		clock-output-names = "sclk_otgphy0_480m";
-+
-+		u2phy_otg: otg-port {
-+			#phy-cells = <0>;
-+			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "otg-id", "otg-bvalid", "linestate";
-+			status = "okay";
++			u2phy0_host: host-port {
++				#phy-cells = <0>;
++				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "linestate";
++				status = "disabled";
++			};
 +		};
 +
-+		u2phy_host: host-port {
-+			#phy-cells = <0>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "linestate";
-+			status = "okay";
++		u2phy1: usb2-phy@e460 {
++			compatible = "rockchip,rk3399-usb2phy";
++			reg = <0xe460 0x10>;
++			clocks = <&cru SCLK_USB2PHY1_REF>;
++			clock-names = "phyclk";
++			#clock-cells = <0>;
++			clock-output-names = "clk_usbphy1_480m";
++			status = "disabled";
++
++			u2phy1_host: host-port {
++				#phy-cells = <0>;
++				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "linestate";
++				status = "disabled";
++			};
 +		};
-+	};
-+};
+ 	};
+ 
+ 	watchdog@ff840000 {
 -- 
 1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
