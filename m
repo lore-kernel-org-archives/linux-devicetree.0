@@ -1,107 +1,373 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: dts: r8a7792: add VIN support
-Date: Sat, 23 Jul 2016 22:17:42 +0300
-Message-ID: <2505176.7Q9RZuLBta@wasted.cogentembedded.com>
-References: <17288006.ERHB6654v5@wasted.cogentembedded.com>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: accel: Add support for Domintech DMARD06
+ accelerometer
+Date: Sun, 24 Jul 2016 00:49:08 +0300
+Message-ID: <20160724004908.ae42c96c2411c61a330ce22c@gmail.com>
+References: <1469133140-14722-1-git-send-email-mamlinav@gmail.com>
+	<1469133191-14812-1-git-send-email-mamlinav@gmail.com>
+	<alpine.DEB.2.02.1607220015530.6041@pmeerw.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <17288006.ERHB6654v5@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1607220015530.6041-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A7792 parts of the VIN[0-5] device nodes.
+On Fri, 22 Jul 2016 00:41:39 +0200 (CEST)
+Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org> wrote:
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> > This patch add support for Domintech DMARD06 accelerometer.
+> 
+> comments below
+>  
+> > Domintech DMARD06 is a low-g tri-axial digital accelerometer for
+> > cost-sensitive consumer application.
+> > 
+> > Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/iio/accel/dmard06.txt      |  17 ++
+> >  drivers/iio/accel/Kconfig                          |  11 ++
+> >  drivers/iio/accel/Makefile                         |   1 +
+> >  drivers/iio/accel/dmard06.c                        | 219 +++++++++++++++++++++
+> >  4 files changed, 248 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/dmard06.txt
+> >  create mode 100644 drivers/iio/accel/dmard06.c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/accel/dmard06.txt b/Documentation/devicetree/bindings/iio/accel/dmard06.txt
+> > new file mode 100644
+> > index 0000000..cc2231a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/accel/dmard06.txt
+> > @@ -0,0 +1,17 @@
+> > +Device tree bindings for Domintech DMARD06 acceletometer
+> 
+> typo: accelerometer
+> 
+> > +
+> > +Required properties:
+> > + - compatible		: Should be "domintech,dmard06"
+> > + - reg			: I2C address of the chip. Should be 0x1c
+> > +
+> > +Example:
+> > +	&i2c1 {
+> > +		/* ... */
+> > +
+> > +		accelerometer@1c {
+> > +			compatible = "domintech,dmard06";
+> > +			reg = <0x1c>;
+> > +		};
+> > +
+> > +		/* ... */
+> > +	};
+> > diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> > index e4a758c..abc8536 100644
+> > --- a/drivers/iio/accel/Kconfig
+> > +++ b/drivers/iio/accel/Kconfig
+> > @@ -40,6 +40,17 @@ config BMC150_ACCEL_SPI
+> >  	tristate
+> >  	select REGMAP_SPI
+> >  
+> > +config DMARD06
+> > +	tristate "Domintech DMARD06 Digital Accelerometer Driver"
+> > +	depends on OF || COMPILE_TEST
+> > +	depends on I2C
+> > +	help
+> > +	  Say yes here to build support for the Domintech DMARD06 low-g
+> > +	  tri-axial digital accelerometer connected via an I2C bus.
+> > +
+> > +	  To compile this driver as a module, choose M here: the
+> > +	  module will be called dmard06.
+> > +
+> >  config HID_SENSOR_ACCEL_3D
+> >  	depends on HID_SENSOR_HUB
+> >  	select IIO_BUFFER
+> > diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
+> > index 71b6794..a96b269 100644
+> > --- a/drivers/iio/accel/Makefile
+> > +++ b/drivers/iio/accel/Makefile
+> > @@ -7,6 +7,7 @@ obj-$(CONFIG_BMA180) += bma180.o
+> >  obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
+> >  obj-$(CONFIG_BMC150_ACCEL_I2C) += bmc150-accel-i2c.o
+> >  obj-$(CONFIG_BMC150_ACCEL_SPI) += bmc150-accel-spi.o
+> > +obj-$(CONFIG_DMARD06)	+= dmard06.o
+> >  obj-$(CONFIG_HID_SENSOR_ACCEL_3D) += hid-sensor-accel-3d.o
+> >  obj-$(CONFIG_KXCJK1013) += kxcjk-1013.o
+> >  obj-$(CONFIG_KXSD9)	+= kxsd9.o
+> > diff --git a/drivers/iio/accel/dmard06.c b/drivers/iio/accel/dmard06.c
+> > new file mode 100644
+> > index 0000000..433e430
+> > --- /dev/null
+> > +++ b/drivers/iio/accel/dmard06.c
+> > @@ -0,0 +1,219 @@
+> > +/*
+> > + * IIO driver for Domintech DMARD06 accelerometer
+> > + *
+> > + * Copyright (C) 2016 Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify it
+> > + * under the terms and conditions of the GNU General Public License,
+> > + * version 2, as published by the Free Software Foundation.
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/iio/iio.h>
+> > +
+> > +struct dmard06_data {
+> > +	struct i2c_client *client;
+> > +};
+> > +
+> > +#define DMARD06_DRV_NAME		"dmard06"
+> > +
+> > +/* Device data registers */
+> > +#define DMARD06_CHIP_ID_REG		0x0f
+> > +#define DMARD06_TOUT_REG		0x40
+> > +#define DMARD06_XOUT_REG		0x41
+> > +#define DMARD06_YOUT_REG		0x42
+> > +#define DMARD06_ZOUT_REG		0x43
+> > +
+> > +/* Device ID value */
+> > +#define DMARD06_CHIP_ID			0x06
+> > +
+> > +/* Device values */
+> > +#define DMARD06_AXIS_MAX_VAL		64
+> > +#define DMARD06_AXIS_SCALE_VAL		31250
+> > +#define DMARD06_TEMP_CENTER_VAL		25
+> > +
+> > +static int dmard06_i2c_read(struct i2c_client *client, u8 reg, u8 *buf)
+> > +{
+> > +	int error;
+> 
+> 'error' is a bit pessimistic, how about 'ret'? :-)
+> 
+> > +
+> 
+> can't use i2c_smbus_read_byte_data()?
+> 
 
----
- arch/arm/boot/dts/r8a7792.dtsi |   66 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+I'll use it in next patch version
 
-Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-@@ -25,6 +25,12 @@
- 		i2c3 = &i2c3;
- 		i2c4 = &i2c4;
- 		i2c5 = &i2c5;
-+		vin0 = &vin0;
-+		vin1 = &vin1;
-+		vin2 = &vin2;
-+		vin3 = &vin3;
-+		vin4 = &vin4;
-+		vin5 = &vin5;
- };
- 
- 	cpus {
-@@ -573,6 +579,66 @@
- 			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
- 			status = "disabled";
- 		};
-+
-+		vin0: video@e6ef0000 {
-+			compatible = "renesas,vin-r8a7792",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef0000 0 0x1000>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp8_clks R8A7792_CLK_VIN0>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
-+
-+		vin1: video@e6ef1000 {
-+			compatible = "renesas,vin-r8a7792",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef1000 0 0x1000>;
-+			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp8_clks R8A7792_CLK_VIN1>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
-+
-+		vin2: video@e6ef2000 {
-+			compatible = "renesas,vin-r8a7792",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef2000 0 0x1000>;
-+			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp8_clks R8A7792_CLK_VIN2>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
-+
-+		vin3: video@e6ef3000 {
-+			compatible = "renesas,vin-r8a7792",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef3000 0 0x1000>;
-+			interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp8_clks R8A7792_CLK_VIN3>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
-+
-+		vin4: video@e6ef4000 {
-+			compatible = "renesas,vin-r8a7792",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef4000 0 0x1000>;
-+			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp8_clks R8A7792_CLK_VIN4>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
-+
-+		vin5: video@e6ef5000 {
-+			compatible = "renesas,vin-r8a7792",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef5000 0 0x1000>;
-+			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp8_clks R8A7792_CLK_VIN5>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
- 
- 		/* Special CPG clocks */
- 		cpg_clocks: cpg_clocks@e6150000 {
+> 
+> > +	error = i2c_master_send(client, &reg, 1);
+> > +	if (unlikely(error < 0))
+> > +		return error;
+> > +
+> > +	error = i2c_master_recv(client, buf, 1);
+> > +	if (unlikely(error < 0))
+> > +		return error;
+> 
+> not sure if it is worth to annotate unlikely() here -- i2c is slooow
+> locking is needed if you really need two i2c_master calls
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +static int dmard06_read_chip_id(struct dmard06_data *dmard06)
+> > +{
+> > +	u8 buf;
+> > +	u8 chip_id;
+> > +	int error;
+> > +
+> > +	error = dmard06_i2c_read(dmard06->client, DMARD06_CHIP_ID_REG, &buf);
+> > +	if (error) {
+> > +		dev_err(&dmard06->client->dev, "Failed to read chip id: %d\n",
+> > +			error);
+> > +		return error;
+> > +	}
+> > +
+> > +	chip_id = (buf & 0x00ff);
+> 
+> why? buf is u8 anyways
+> 
+> > +	if (chip_id != DMARD06_CHIP_ID) {
+> > +		dev_err(&dmard06->client->dev, "Invalid chip id: %02x\n",
+> > +			chip_id);
+> > +		return -EINVAL;
+> 
+> often ENODEV is used for this case
+> 
+> > +	}
+> > +
+> > +	dev_info(&dmard06->client->dev, "Found DMARD%02x chip\n", chip_id);
+> 
+> we prefer silent probing of the driver, please don't clutter the log
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int dmard06_read_raw(struct iio_dev *indio_dev,
+> > +			    struct iio_chan_spec const *chan,
+> > +			    int *val, int *val2, long mask)
+> > +{
+> > +	struct dmard06_data *dmard06 = iio_priv(indio_dev);
+> > +	u8 buf;
+> > +	bool reversed;
+> > +	int error;
+> > +	int tmp;
+> > +
+> > +	switch (mask) {
+> > +	case IIO_CHAN_INFO_RAW:
+> > +		error = dmard06_i2c_read(dmard06->client, chan->address, &buf);
+> > +		if (error) {
+> > +			dev_err(&dmard06->client->dev,
+> > +				"Failed to read data %d\n", error);
+> > +			return error;
+> > +		}
+> > +
+> > +		reversed = (buf >> 7) & 1;
+> > +		tmp = (int)((buf & 0x7f) >> 1);
+> 
+> 
+> > +
+> > +		switch (chan->type) {
+> > +		case IIO_ACCEL:
+> 
+> wouldn't sign_extend32(buf >> 1, 6) do the job?
+> 
+
+You are right, this do the job for axis and temperature. Thanks
+
+> 
+> > +			*val = reversed ? (tmp - DMARD06_AXIS_MAX_VAL) : tmp;
+> > +			return IIO_VAL_INT;
+> > +		case IIO_TEMP:
+> > +			*val = reversed ? -tmp : tmp;
+> > +			return IIO_VAL_INT;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	case IIO_CHAN_INFO_OFFSET:
+> > +		switch (chan->type) {
+> > +		case IIO_TEMP:
+> > +			*val = DMARD06_TEMP_CENTER_VAL;
+> > +			return IIO_VAL_INT;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	case IIO_CHAN_INFO_SCALE:
+> > +		switch (chan->type) {
+> > +		case IIO_ACCEL:
+> > +			*val = 0;
+> > +			*val2 = DMARD06_AXIS_SCALE_VAL;
+> > +			return IIO_VAL_INT_PLUS_MICRO;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> > +static const struct iio_info dmard06_info = {
+> > +	.driver_module	= THIS_MODULE,
+> > +	.read_raw	= dmard06_read_raw,
+> > +};
+> > +
+> > +#define DMARD06_ACCEL_CHANNEL(_axis, reg) {			\
+> 
+> maybe rename reg to _reg
+> 
+> > +	.type = IIO_ACCEL,					\
+> > +	.address = reg,						\
+> > +	.channel2 = IIO_MOD_##_axis,				\
+> > +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> > +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> > +	.modified = 1,						\
+> > +}
+> > +
+> > +#define DMARD06_TEMP_CHANNEL(reg) {				\
+> > +	.type = IIO_TEMP,					\
+> > +	.address = reg,						\
+> > +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |		\
+> > +			      BIT(IIO_CHAN_INFO_OFFSET),	\
+> > +}
+> > +
+> > +static const struct iio_chan_spec dmard06_channels[] = {
+> > +	DMARD06_ACCEL_CHANNEL(X, DMARD06_XOUT_REG),
+> > +	DMARD06_ACCEL_CHANNEL(Y, DMARD06_YOUT_REG),
+> > +	DMARD06_ACCEL_CHANNEL(Z, DMARD06_ZOUT_REG),
+> > +	DMARD06_TEMP_CHANNEL(DMARD06_TOUT_REG),
+> > +};
+> > +
+> > +static int dmard06_probe(struct i2c_client *client,
+> > +			const struct i2c_device_id *id)
+> > +{
+> > +	int error;
+> > +	struct iio_dev *indio_dev;
+> > +	struct dmard06_data *dmard06;
+> > +
+> > +	dev_dbg(&client->dev, "I2C Address: 0x%02x\n", client->addr);
+> 
+> not needed
+> 
+> > +
+> > +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+> > +		dev_err(&client->dev, "I2C check functionality failed\n");
+> > +		return -ENXIO;
+> > +	}
+> > +
+> > +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*dmard06));
+> > +	if (!indio_dev) {
+> > +		dev_err(&client->dev, "Failed to allocate iio device\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	dmard06 = iio_priv(indio_dev);
+> > +	dmard06->client = client;
+> > +
+> > +	error = dmard06_read_chip_id(dmard06);
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	i2c_set_clientdata(client, indio_dev);
+> > +	indio_dev->dev.parent = &client->dev;
+> > +	indio_dev->name = DMARD06_DRV_NAME;
+> > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > +	indio_dev->channels = dmard06_channels;
+> > +	indio_dev->num_channels = ARRAY_SIZE(dmard06_channels);
+> > +	indio_dev->info = &dmard06_info;
+> > +
+> > +	return devm_iio_device_register(&client->dev, indio_dev);
+> > +}
+> > +
+> > +static const struct i2c_device_id dmard06_id[] = {
+> > +	{ "dmard06", 0 },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, dmard06_id);
+> > +
+> > +static const struct of_device_id dmard06_of_match[] = {
+> > +	{ .compatible = "domintech,dmard06" },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, dmard06_of_match);
+> > +
+> > +static struct i2c_driver dmard06_driver = {
+> > +	.probe = dmard06_probe,
+> > +	.id_table = dmard06_id,
+> > +	.driver = {
+> > +		.name = DMARD06_DRV_NAME,
+> > +		.of_match_table = of_match_ptr(dmard06_of_match),
+> > +	},
+> > +};
+> > +module_i2c_driver(dmard06_driver);
+> > +
+> > +MODULE_AUTHOR("Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> > +MODULE_DESCRIPTION("Domintech DMARD06 accelerometer driver");
+> > +MODULE_LICENSE("GPL v2");
+> > 
+> 
+> -- 
+> 
+> Peter Meerwald-Stadler
+> +43-664-2444418 (mobile)
+
+
+-- 
+Thanks and regards,
+Aleksei Mamlin
