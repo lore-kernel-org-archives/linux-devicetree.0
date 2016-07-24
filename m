@@ -1,57 +1,67 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 10/10] dmaengine: qcom_hidma: add MSI support for
- interrupts
-Date: Sun, 24 Jul 2016 12:12:56 +0530
-Message-ID: <20160724064256.GA9681@localhost>
-References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
- <1468867177-15007-11-git-send-email-okaya@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468867177-15007-11-git-send-email-okaya@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "timur@codeaurora.org" <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cov@codeaurora.org" <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, "eric.auger@linaro.org" <eric.auger@linaro.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Williams, Dan J" <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] iio: magn: DT bindings for AK8974
+Date: Sun, 24 Jul 2016 09:51:35 +0200
+Message-ID: <1469346695-15302-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2016 at 12:09:37AM +0530, Sinan Kaya wrote:
+This adds device tree bindings for the AK8974 magnetometer, similar
+to those for the AK8975.
 
-> @@ -567,6 +578,98 @@ static int hidma_create_sysfs_entry(struct hidma_dev *dev, char *name,
->         return device_create_file(dev->ddev.dev, attrs);
->  }
-> 
-> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v3->v4:
+- Add support for an optional mounting matrix
+ChangeLog v2->v3:
+- No changes, just reposting to keep together with the series
+ChangeLog v1->v2:
+- No changes, just reposting to keep together with the series
+---
+ .../bindings/iio/magnetometer/ak8974.txt           | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
 
-This can be true on machine with your older HW, so I would be bit more
-careful here..
-
-> +       if (rc)
-> +               dev_warn(&pdev->dev,
-> +                        "failed to request MSI irq, falling back to wired IRQ\n");
-> +       return rc;
-> +#else
-> +       return -EINVAL;
-
--EINVAL doesnt sound apt here..
-
-> +       struct acpi_device *adev = ACPI_COMPANION(dev);
-> +       const char *of_compat;
-> +       int ret;
-> +
-> +       if (!adev || acpi_disabled) {
-> +               ret = device_property_read_string(dev, "compatible",
-> +                                                 &of_compat);
-> +               if (ret)
-> +                       return false;
-> +
-> +               ret = strcmp(of_compat, "qcom,hidma-1.1");
-> +       } else {
-> +               ret = strcmp(acpi_device_hid(adev), "QCOM8062");
-
-Okay if you ahve a device ID then why do we need new binding? This device as
-you said implies the support for MSI interrupts.
-
-Thanks
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
+new file mode 100644
+index 000000000000..77d5aba1bd8c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
+@@ -0,0 +1,29 @@
++* Asahi Kasei AK8974 magnetometer sensor
++
++Required properties:
++
++- compatible : should be "asahi-kasei,ak8974"
++- reg : the I2C address of the magnetometer
++
++Optional properties:
++
++- avdd-supply: regulator supply for the analog voltage
++  (see regulator/regulator.txt)
++- dvdd-supply: regulator supply for the digital voltage
++  (see regulator/regulator.txt)
++- interrupts: data ready (DRDY) and interrupt (INT1) lines
++  from the chip, the DRDY interrupt must be placed first.
++  The interrupts can be triggered on rising or falling
++  edges alike.
++- mount-matrix: an optional 3x3 mounting rotation matrix
++
++Example:
++
++ak8974@0f {
++	compatible = "asahi-kasei,ak8974";
++	reg = <0x0f>;
++	avdd-supply = <&foo_reg>;
++	dvdd-supply = <&bar_reg>;
++	interrupts = <0 IRQ_TYPE_EDGE_RISING>,
++		     <1 IRQ_TYPE_EDGE_RISING>;
++};
 -- 
-~Vinod
+2.7.4
