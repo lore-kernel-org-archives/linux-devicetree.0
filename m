@@ -1,41 +1,57 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: hwmon: xgene: Add support for X-Gene hwmon driver
-Date: Sat, 23 Jul 2016 23:31:18 -0700
-Message-ID: <CAPw-ZTkXCe5ycO=e7FohbCbTXhMhqob8=a5gdOPezLMc0ubb=A@mail.gmail.com>
-References: <02814a96-c620-c4af-e278-40432f6f701f@riken.jp>
- <9D204F6B-7C99-4543-87BF-4D9FC3F6475C@apm.com> <71a96a29-78e3-f251-dd8f-583031461678@riken.jp>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 10/10] dmaengine: qcom_hidma: add MSI support for
+ interrupts
+Date: Sun, 24 Jul 2016 12:12:56 +0530
+Message-ID: <20160724064256.GA9681@localhost>
+References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
+ <1468867177-15007-11-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <71a96a29-78e3-f251-dd8f-583031461678@riken.jp>
-Sender: linux-doc-owner@vger.kernel.org
-To: Itaru Kitayama <itaru.kitayama@riken.jp>
-Cc: Hoan Tran <hotran@apm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468867177-15007-11-git-send-email-okaya@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "timur@codeaurora.org" <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cov@codeaurora.org" <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, "eric.auger@linaro.org" <eric.auger@linaro.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Williams, Dan J" <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Itaru,
+On Tue, Jul 19, 2016 at 12:09:37AM +0530, Sinan Kaya wrote:
 
-On Sat, Jul 23, 2016 at 10:04 PM, Itaru Kitayama
-<itaru.kitayama@riken.jp> wrote:
->
-> Hi Hoan,
->
-> I didn't mention in my previous post, though I think I'm using fairly recent version of Tianocore F/W, and I can confirm there's the PCCT table,
->
-> [    0.000000] ACPI: PCCT 0x00000047FA826000 000300 (v01 APM    XGENE 00000003      01000013)
->
-> is this still not enough? If that's the case, I'll talk to APM for
-> their latest development Tianocore version.
+> @@ -567,6 +578,98 @@ static int hidma_create_sysfs_entry(struct hidma_dev *dev, char *name,
+>         return device_create_file(dev->ddev.dev, attrs);
+>  }
+> 
+> +#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
 
-You will need the to be released FW version 3.06.xx or above. This new
-FW won't be official release until at least a few months. If you want
-to test this new firmware, we can get you an earlier image but there
-will be very limited support. Though, Hoan will support you when
-possible.
+This can be true on machine with your older HW, so I would be bit more
+careful here..
 
-> Also, if you or your folks can fold your patch set into APM's xgene-next
-> GitHub repo, that would help me to keep up with the development.
+> +       if (rc)
+> +               dev_warn(&pdev->dev,
+> +                        "failed to request MSI irq, falling back to wired IRQ\n");
+> +       return rc;
+> +#else
+> +       return -EINVAL;
 
-This can only get pull into xgene-next if it had accepted upstream.
+-EINVAL doesnt sound apt here..
 
--Loc
+> +       struct acpi_device *adev = ACPI_COMPANION(dev);
+> +       const char *of_compat;
+> +       int ret;
+> +
+> +       if (!adev || acpi_disabled) {
+> +               ret = device_property_read_string(dev, "compatible",
+> +                                                 &of_compat);
+> +               if (ret)
+> +                       return false;
+> +
+> +               ret = strcmp(of_compat, "qcom,hidma-1.1");
+> +       } else {
+> +               ret = strcmp(acpi_device_hid(adev), "QCOM8062");
+
+Okay if you ahve a device ID then why do we need new binding? This device as
+you said implies the support for MSI interrupts.
+
+Thanks
+-- 
+~Vinod
