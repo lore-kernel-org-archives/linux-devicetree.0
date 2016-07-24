@@ -1,53 +1,116 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH 04/10] dmaending: qcom_hidma: configure DMA and MSI for OF
-Date: Sun, 24 Jul 2016 10:40:19 -0400
-Message-ID: <3e69f5d5-ce06-8912-cf15-42546fd243af@codeaurora.org>
-References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
- <1468867177-15007-5-git-send-email-okaya@codeaurora.org>
- <20160724063312.GZ9681@localhost>
+From: "William.wu" <William.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] usb: dwc3: make usb2 phy utmi interface
+ configurable in DT
+Date: Mon, 25 Jul 2016 00:05:15 +0800
+Message-ID: <f9a11ec3-8a69-83d6-39c3-7c50439298d6@rock-chips.com>
+References: <1468486762-21960-1-git-send-email-william.wu@rock-chips.com>
+ <1468486762-21960-4-git-send-email-william.wu@rock-chips.com>
+ <20160716225715.GA27724@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160724063312.GZ9681@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "timur@codeaurora.org" <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cov@codeaurora.org" <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, "eric.auger@linaro.org" <eric.auger@linaro.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Williams, Dan J" <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160716225715.GA27724@rob-hp-laptop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/24/2016 2:33 AM, Vinod Koul wrote:
-> On Tue, Jul 19, 2016 at 12:09:31AM +0530, Sinan Kaya wrote:
->> Configure the DMA bindings for the device tree based firmware.
+Dear Rob,
+
+
+On 2016/7/17 6:57, Rob Herring wrote:
+> On Thu, Jul 14, 2016 at 04:59:20PM +0800, William Wu wrote:
+>> Add snps,phyif-utmi-width devicetree property to configure
+>> the UTMI+ PHY with an 8- or 16-bit interface. UTMI+ PHY
+>> interface is a hardware property, and it's platform dependent.
+>> Normally,the PHYIF can be configured during coreconsultant.
+>             ^
+> space
+I'll fix it next patch, thanks:-)
+>
+>> But for some specific USB cores(e.g. rk3399 SoC DWC3), the
+>> default PHYIF configuration value is fault, so we need to
+>> reconfigure it by software.
 >>
->> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>> And refer to the DWC3 databook, the GUSB2PHYCFG.USBTRDTIM
+>> must be set to the corresponding value according to the
+>> UTMI+ PHY interface.
+>>
+>> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >> ---
->>  drivers/dma/qcom/hidma_mgmt.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
+>> Changes in v7:
+>> - remove quirk and use only one property to configure utmi (Heiko, R=
+ob Herring)
 >>
->> diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
->> index c0e3653..fb30730 100644
->> --- a/drivers/dma/qcom/hidma_mgmt.c
->> +++ b/drivers/dma/qcom/hidma_mgmt.c
->> @@ -375,8 +375,10 @@ static int __init hidma_mgmt_of_populate_channels(struct device_node *np)
->>                         ret = -ENODEV;
->>                         goto out;
->>                 }
->> +               of_node_get(child);
->> +               new_pdev->dev.of_node = child;
->>                 of_dma_configure(&new_pdev->dev, child);
->> -
->> +               of_msi_configure(&new_pdev->dev, child);
-> 
-> How would this work on non MSI platforms?
-> 
+>> Changes in v6:
+>> - use '-' instead of '_' in dts (Rob Herring)
+>>
+>> Changes in v5:
+>> - None
+>>
+>> Changes in v4:
+>> - rebase on top of balbi testing/next, remove pdata (balbi)
+>>
+>> Changes in v3:
+>> - None
+>>
+>> Changes in v2:
+>> - add a quirk for phyif_utmi (balbi)
+>>
+>>   Documentation/devicetree/bindings/usb/dwc3.txt |  3 +++
+>>   drivers/usb/dwc3/core.c                        | 25 ++++++++++++++=
++++++++++++
+>>   drivers/usb/dwc3/core.h                        | 10 ++++++++++
+>>   3 files changed, 38 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Docume=
+ntation/devicetree/bindings/usb/dwc3.txt
+>> index 020b0e9..00cc541 100644
+>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> @@ -47,6 +47,9 @@ Optional properties:
+>>    - snps,hird-threshold: HIRD threshold
+>>    - snps,hsphy_interface: High-Speed PHY interface selection betwee=
+n "utmi" for
+>>      UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has=
+ value 3.
+>> + - snps,phyif-utmi-width: the value to configure the core to suppor=
+t a UTMI+ PHY
+>> +			with an 8- or 16-bit interface. Value 8 select 8-bit
+>> +			interface, value 16 select 16-bit interface.
+> Is 'phy_type =3D "utmi_wide"' not the same as 16-bit width?
+>
+> Again, I think this should be common.
+Yes=EF=BC=8C I agree with you. =E2=80=98phy_type =3D "utmi_wide" really=
+ means 16-bit UTMI=20
+width.
+Thanks very much for your rigorous check.
 
-The way it works is MSI on OF platforms relies on an optional msi-parent and msi-cells attribute
-present in the device tree firmware. 
+And according to Heiko's helpful suggestion=EF=BC=8CI double check the =
+kernel=20
+code and
+look over UTMI/UTMI+ spec=EF=BC=8CI confirm that there is already gener=
+ic code in
+drivers/usb/phy/of.c about utmi interface, 'phy_type =3D "utmi"' means=20
+8-bit interface,
+and 'phy_type =3D "utmi_wide"' means 16-bit interface.
 
-If these attributes do not exist, the function bails out. The function would create the MSI bindings
-only if the correct attributes are present. 
+So I think I don't need to add a new dts property=20
+'snps,phyif-utmi-width' here=EF=BC=8C
+but just use the=E2=80=98phy_type=E2=80=99 property to confirm UTMI+ in=
+terface for dwc3.
 
--- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+>
+> Rob
+>
+>
+>
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
