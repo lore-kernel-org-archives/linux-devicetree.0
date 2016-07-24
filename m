@@ -1,165 +1,140 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: document bindings for mounting matrixes
-Date: Sun, 24 Jul 2016 20:03:24 +0100
-Message-ID: <06168d06-b609-a0ec-945e-aa36a4dbe795@kernel.org>
-References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] iio: adc: add ADC12130/ADC12132/ADC12138 ADC driver
+Date: Sun, 24 Jul 2016 20:27:01 +0100
+Message-ID: <f7a04836-ebfe-4672-50eb-72255fdda5f3@kernel.org>
+References: <1469376532-6516-1-git-send-email-akinobu.mita@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469355434-17043-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1469376532-6516-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/07/16 11:17, Linus Walleij wrote:
-> The mounting matrix for sensors was introduced in
-> commit dfc57732ad38 ("iio:core: mounting matrix support")
+On 24/07/16 17:08, Akinobu Mita wrote:
+> This adds Texas Instruments' ADC12130/ADC12132/ADC12138 12-bit plus
+> sign ADC driver.  I have tested with the ADC12138.  The ADC12130 and
+> ADC12132 are not tested but these are similar to ADC12138 except that
+> the mode programming instruction is a bit different.
 > 
-> However the device tree bindings are very terse and since this is
-> a widely applicable property, we need a proper binding for it
-> that the other bindings can reference. This will also be useful
-> for other operating systems and sensor engineering at large.
-> 
-> I think all 3D sensors should support it, the current situation
-> is probably that the mounting information is confined in magic
-> userspace components rather than using the mounting matrix, which
-> is not good for portability and reuse.
-> 
-> Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Please help out to get this right, I think this could be confusing
-> to users unless documented properly. I think the doc has some rough
-> edges since I'm not the smartest in physics nor english at all times.
-Note that there is rather more substantial documentation in the
-sysfs abi docs.
+> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Hi Akinobu,
 
-Documentation/ABI/testing/sysfs-bus-iio
+I'm out of time this evening and it may be a while before I get
+a chance to look at this again.  So one quick comment in case you
+respin in the meantime.
 
-That's not to say we shouldn't have better docs for the
-binding, but rather that we should make sure they agree ;)
-
-I'll try and take a look through this later in the week.
+Otherwise from a quick read through looks good - but I'll want to
+take a closer look before applying it.
 
 Jonathan
-> ---
->  .../devicetree/bindings/iio/mount-matrix.txt       | 104 +++++++++++++++++++++
->  1 file changed, 104 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/mount-matrix.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/mount-matrix.txt b/Documentation/devicetree/bindings/iio/mount-matrix.txt
-> new file mode 100644
-> index 000000000000..3e72c92c5689
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/mount-matrix.txt
-> @@ -0,0 +1,104 @@
-> +Mounting matrix
+...
+> +static int adc12138_probe(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct adc12138 *adc;
+> +	int ret;
 > +
-> +The mounting matrix is a device tree property used to orient any IIO device
-> +that produce three-dimensional data.
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
 > +
-> +The typical usecase is that where a component has an internal representation
-> +of the (x,y,z) triplets, such as different registers to read these coordinates,
-> +and thus implying that the component should be mounted in a certain orientation
-> +relative to some specific point of reference.
+> +	adc = iio_priv(indio_dev);
+> +	adc->spi = spi;
+> +	adc->id = spi_get_device_id(spi)->driver_data;
+> +	mutex_init(&adc->lock);
+> +	init_completion(&adc->complete);
 > +
-> +For example a device with some kind of screen, where the user is supposed to
-> +interact with the environment using a accelerometer, gyroscope or magnetometer
-> +mounted on the same chassis as this screen, will likely take the screen as
-> +reference to (x,y,z) orientation, with (x,y) corresponding to these axes on the
-> +screen and (z) being depth, the axis perpendicular to the screen.
+> +	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->info = &adc12138_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
 > +
-> +The axes may also be flipped: for a screen you probably want (x) coordinates to
-> +go from negative on the left to positive on the right and (z) depth to be
-> +negative under the screen and positive in front of it, toward the face of the
-> +user.
+> +	switch (adc->id) {
+> +	case adc12130:
+> +	case adc12132:
+> +		indio_dev->channels = adc12132_channels;
+> +		indio_dev->num_channels = ARRAY_SIZE(adc12132_channels);
+> +		break;
+> +	case adc12138:
+> +		indio_dev->channels = adc12138_channels;
+> +		indio_dev->num_channels = ARRAY_SIZE(adc12138_channels);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
 > +
-> +Apart from flipping, a sensor can of course also be mounted in any angle along
-> +the axes relative to the point of reference. This means that the axes may be
-> +not only flipped, but tilted.
+> +	ret = of_property_read_u32(spi->dev.of_node, "acquisition-time",
+> +				   &adc->acquisition_time);
+> +	if (ret)
+> +		adc->acquisition_time = 10;
 > +
-> +Examples for some three-dimensional sensor types:
+> +	adc->cclk = devm_clk_get(&spi->dev, NULL);
+> +	if (IS_ERR(adc->cclk))
+> +		return PTR_ERR(adc->cclk);
 > +
-> +- Accelerometers have their frame of reference is toward the center of gravity,
-> +  usually to the core of the planet, and users would likely expect a value of
-> +  9.81N upwards along the (z) axis when the device is held with its screen
-> +  perpendicular to the planets surface and 0 on the other axes. A reading of
-> +  the (x,y,z) values will give the orientation of the device relative to the
-> +  center of the planet, i.e. relative to its surface at this point. Up and down
-> +  relative to the point of reference can thus be determined.
+> +	adc->vref_p = devm_regulator_get(&spi->dev, "vref-p");
+> +	if (IS_ERR(adc->vref_p))
+> +		return PTR_ERR(adc->vref_p);
 > +
-> +- Magnetometers (compasses) have their frame of reference relative to the
-> +  geomagnetic field. In a mounting matrix for a magnetometer sensor the main
-> +  hardware orientation is defined with respect to the local earth geomagnetic
-> +  reference frame where (y) is in the ground plane and positive towards
-> +  magnetic North, (x) is in the ground plane, perpendicular to the North axis
-> +  and positive towards the East and (z) is perpendicular to the ground plane
-> +  and positive upwards.
+> +	adc->vref_n = devm_regulator_get_optional(&spi->dev, "vref-n");
 > +
-> +- Gyroscopes detects the movement relative the device itself, and has no other
-> +  frame of reference than the mounting chassis itself. The angular momentum is
-> +  defined as orthogonal to the plane of rotation, so if you put the device on a
-> +  flat surface and spin it around the z axis (such as rotating a device lying
-> +  flat on a table), you should get a negative value along the (z) axis if
-> +  rotated clockwise, and a positive value if rotated counter-clockwise
-> +  according to the right-hand rule.
+> +	ret = devm_request_irq(&spi->dev, spi->irq, adc12138_eoc_handler,
+> +			       IRQF_TRIGGER_RISING, indio_dev->name, indio_dev);
+> +	if (ret)
+> +		return ret;
 > +
-> +So unless the sensor is ideally mounted, we need a means to indicate the
-> +relative orientation of any given sensor of this type.
+> +	ret = clk_prepare_enable(adc->cclk);
+> +	if (ret)
+> +		return ret;
 > +
-> +To achieve this, use the device tree property "mount-matrix" for the sensor.
-> +This supplies a 3x3 transformation matrix in the strict linear algebraic sense,
-> +to orient the senor axes relative to a desired point of reference. This means
-> +the resulting values from the sensor, after scaling to proper units, should be
-> +multiplied by this matrix to give the proper coordinates in three-dimensional
-> +space, relative to some relevant point of reference.
+> +	ret = regulator_enable(adc->vref_p);
+> +	if (ret)
+> +		goto error1;
 > +
-> +The mounting matrix has the layout:
+> +	if (!IS_ERR(adc->vref_n)) {
+> +		ret = regulator_enable(adc->vref_n);
+> +		if (ret)
+> +			goto error2;
+> +	}
 > +
-> + (x0, y0, z0)
-> + (x1, y1, z1)
-> + (x2, y2, z3)
+> +	ret = adc12138_init(adc);
+> +	if (ret)
+> +		goto error3;
 > +
-> +And it is represented as an array of strings containing the real values for
-> +producing the transformation matrix. The real values use a decimal point and
-> +a minus (-) to indicate a negative value.
+> +	spi_set_drvdata(spi, indio_dev);
 > +
-> +Examples:
+> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> +					 adc12138_trigger_handler, NULL);
+> +	if (ret)
+> +		goto error3;
 > +
-> +Identity matrix (nothing happens to the coordinates, which means the device was
-> +mechanically mounted in an ideal way and we need no transformation):
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret)
+> +		goto error4;
 > +
-> +mount-matrix = "1", "0", "0",
-> +               "0", "1", "0",
-> +               "0", "0", "1";
+> +	return 0;
+> +error4:
+I'm rather more in favour of error labels that tell you
+what needs unwinding as they result in a lot less churn
+an extra entry is needed in futre.
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +error3:
+> +	if (!IS_ERR(adc->vref_n))
+> +		regulator_disable(adc->vref_n);
+> +error2:
+> +	regulator_disable(adc->vref_p);
+> +error1:
+> +	clk_disable_unprepare(adc->cclk);
 > +
-> +Flipped X axis (negative values means positive):
+> +	return ret;
+> +}
 > +
-> +mount-matrix = "-1", "0", "0",
-> +               "0", "1", "0",
-> +               "0", "0", "1";
-> +
-> +X and Y flipped (X values are for Y and Y values are for X):
-> +
-> +mount-matrix = "0", "1", "0",
-> +               "1", "0", "0",
-> +               "0", "0", "1";
-> +
-> +Complex angular mounting with X and Z in a certain tilted orienation and
-> +Y flipped:
-> +
-> +mount-matrix = "-0.984807753012208",  /* x0 */
-> +               "0",                   /* y0 */
-> +               "-0.173648177666930",  /* z0 */
-> +               "0",                   /* x1 */
-> +               "-1",                  /* y1 */
-> +               "0",                   /* z1 */
-> +               "-0.173648177666930",  /* x2 */
-> +               "0",                   /* y2 */
-> +               "0.984807753012208";   /* z2 */
-> 
+..
