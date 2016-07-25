@@ -1,47 +1,70 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 14/18] ARM: mvebu: add support for the Armada 395 SoC
- family
-Date: Mon, 25 Jul 2016 15:50:50 +0200
-Message-ID: <20160725155050.3aee974e@free-electrons.com>
-References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-	<1469105055-25181-16-git-send-email-jaz@semihalf.com>
-	<20160721221605.GA21883@rob-hp-laptop>
-	<CAH76GKOidxFZ7R1pQZ2W9BRBCxEnLXNHQGrXbAUmouozBUj51Q@mail.gmail.com>
-	<CAL_JsqJeObuS8OWeErRA5MX-SrMtu_254A-LtP9-A=xdPO7p1Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJeObuS8OWeErRA5MX-SrMtu_254A-LtP9-A=xdPO7p1Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Grzegorz Jaszczyk <jaz@semihalf.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, Lior Amsalem <alior@marvell.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2 v5] iio: magn: DT bindings for AK8974
+Date: Mon, 25 Jul 2016 15:54:54 +0200
+Message-ID: <1469454895-13659-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This adds device tree bindings for the AK8974 magnetometer, similar
+to those for the AK8975.
 
-On Mon, 25 Jul 2016 08:47:23 -0500, Rob Herring wrote:
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v4->v5:
+- No changes, just resend.
+ChangeLog v3->v4:
+- Add support for an optional mounting matrix
+ChangeLog v2->v3:
+- No changes, just reposting to keep together with the series
+ChangeLog v1->v2:
+- No changes, just reposting to keep together with the series
+---
+ .../bindings/iio/magnetometer/ak8974.txt           | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
 
-> > I am not sure if I get your point. The Armada-398 extends the
-> > Armada-395 about 2 additional SATA ports (as you can see in commit
-> > "[PATCH 15/18] ARM: mvebu: a398: update the dtsi about missing
-> > interfaces"). In this example the a398-db board contains the Armada398
-> > SoC, so it is a better match and goes first.  
-> 
-> But your patch title is adding 395 support, but you are adding the
-> string to a 398 based board. It would make sense to have 395 here if
-> the OS already had support for 395 and you want to support the 398
-> without updating the OS. That doesn't seem to apply here.
-
-I think the argument of Grzegorz is that the 398 is functionally a
-strict superset of the 395, so that anything that applies to the 395
-will also apply to 398.
-
-Now, whether it is a good idea to consider them "compatible" in the DT
-sense, I'm not sure.
-
-Thomas
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
+new file mode 100644
+index 000000000000..77d5aba1bd8c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
+@@ -0,0 +1,29 @@
++* Asahi Kasei AK8974 magnetometer sensor
++
++Required properties:
++
++- compatible : should be "asahi-kasei,ak8974"
++- reg : the I2C address of the magnetometer
++
++Optional properties:
++
++- avdd-supply: regulator supply for the analog voltage
++  (see regulator/regulator.txt)
++- dvdd-supply: regulator supply for the digital voltage
++  (see regulator/regulator.txt)
++- interrupts: data ready (DRDY) and interrupt (INT1) lines
++  from the chip, the DRDY interrupt must be placed first.
++  The interrupts can be triggered on rising or falling
++  edges alike.
++- mount-matrix: an optional 3x3 mounting rotation matrix
++
++Example:
++
++ak8974@0f {
++	compatible = "asahi-kasei,ak8974";
++	reg = <0x0f>;
++	avdd-supply = <&foo_reg>;
++	dvdd-supply = <&bar_reg>;
++	interrupts = <0 IRQ_TYPE_EDGE_RISING>,
++		     <1 IRQ_TYPE_EDGE_RISING>;
++};
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+2.7.4
