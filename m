@@ -1,151 +1,175 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] hwmon: (ltc4151) Make shunt-resistor configurable
-Date: Sun, 24 Jul 2016 22:19:00 -0700
-Message-ID: <5795A144.2020300@roeck-us.net>
-References: <20160724202620.GA30245@makrotopia.org>
+From: fixed-term.Oleksij.Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
+Subject: Re: [PATCH] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+Date: Mon, 25 Jul 2016 07:27:16 +0200
+Message-ID: <5795A334.3000701@de.bosch.com>
+References: <1468496825-4896-1-git-send-email-linux@rempel-privat.de>
+ <CACRpkdZLG1Ffdiw3xkP4G0XBr=WDXg2Vbh2Xmgno1PTNhfZHfg@mail.gmail.com>
+ <CAGb2v66tf1LcBs69ECW0Xa2OeN0C0NWVyvpC8=4DsVLjAnrO3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20160724202620.GA30245@makrotopia.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Daniel Golle <daniel@makrotopia.org>, linux-hwmon@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Axel Lin <axel.lin@ingics.com>, =?UTF-8?Q?Per_Dal=c3=a9n?= <per.dalen@appeartv.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGb2v66tf1LcBs69ECW0Xa2OeN0C0NWVyvpC8=4DsVLjAnrO3Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Oleksij Rempel <linux@rempel-privat.de>
 List-Id: devicetree@vger.kernel.org
 
-On 07/24/2016 01:26 PM, Daniel Golle wrote:
-> Allow to specify the resistance of the attached shunt via DT by
-> adding the shunt-resistor property. Fall-back to the previous
-> default (1 mOhm) if unset.
->
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> ---
->   drivers/hwmon/ltc4151.c | 26 ++++++++++++++++++++++++--
->   1 file changed, 24 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/hwmon/ltc4151.c b/drivers/hwmon/ltc4151.c
-> index c86a184..f856e44 100644
-> --- a/drivers/hwmon/ltc4151.c
-> +++ b/drivers/hwmon/ltc4151.c
-> @@ -30,6 +30,8 @@
->
->   #include <linux/kernel.h>
->   #include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
 
-I don't immediately see why this include file would be necessary.
 
->   #include <linux/init.h>
->   #include <linux/err.h>
->   #include <linux/slab.h>
-> @@ -52,6 +54,7 @@ struct ltc4151_data {
->   	struct mutex update_lock;
->   	bool valid;
->   	unsigned long last_updated; /* in jiffies */
-> +	unsigned int shunt; /* in micro ohms */
->
->   	/* Registers */
->   	u8 regs[6];
-> @@ -111,9 +114,9 @@ static int ltc4151_get_value(struct ltc4151_data =
-*data, u8 reg)
->   	case LTC4151_SENSE_H:
->   		/*
->   		 * 20uV resolution. Convert to current as measured with
-> -		 * an 1 mOhm sense resistor, in mA.
-> +		 * a given sense resistor, in mA.
->   		 */
-> -		val =3D val * 20;
-> +		val =3D val * 20 * 1000 / data->shunt;
->   		break;
->   	case LTC4151_VIN_H:
->   		/* 25 mV per increment */
-> @@ -176,6 +179,7 @@ static int ltc4151_probe(struct i2c_client *clien=
-t,
->   	struct device *dev =3D &client->dev;
->   	struct ltc4151_data *data;
->   	struct device *hwmon_dev;
-> +	u32 shunt;
->
->   	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
->   		return -ENODEV;
-> @@ -184,6 +188,14 @@ static int ltc4151_probe(struct i2c_client *clie=
-nt,
->   	if (!data)
->   		return -ENOMEM;
->
-> +#ifdef CONFIG_OF
+On 22.07.2016 17:47, Chen-Yu Tsai wrote:
+> On Fri, Jul 22, 2016 at 10:55 PM, Linus Walleij
+> <linus.walleij@linaro.org> wrote:
+>> On Thu, Jul 14, 2016 at 1:47 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
+>>
+>>> This names the GPIO lines on the Banana Pi board in accordance with
+>>> the A20_Banana_Pi v1.4 Specification.
+>>>
+>>> This will make these line names reflect through to userspace
+>>> so that they can easily be identified and used with the new
+>>> character device ABI.
+>>>
+>>> Some care has been taken to name all lines, not just those used
+>>> by the external connectors, also lines that are muxed into some
+>>> other function than GPIO: these are named "[FOO]" so that users
+>>> can see with lsgpio what all lines are used for.
+>>>
+>>> Ps: most of the text was taken from Linux Wallej patch.
+>>
+>> LinuS
 
-#ifdef is unnecessary. Worse, it results in
+oops... :)
 
-drivers/hwmon/ltc4151.c: In function =91ltc4151_probe=92:
-drivers/hwmon/ltc4151.c:182:6: warning: unused variable =91shunt=92
+>>>
+>>> Cc: devicetree@vger.kernel.org
+>>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Cc: Chen-Yu Tsai <wens@csie.org>
+>>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+>>
+>> Nice usecase!
+>>
+>>> +       /*
+>>> +        * Legend: proper name = the GPIO line is used as GPIO
+>>> +        *         NC = not connected (not routed from the SoC)
+>>> +        *         "[PER]" = pin is muxed for peripheral (not GPIO)
+>>> +        *         "" = no idea, schematic doesn't say, could be
+>>> +        *              unrouted (not connected to any external pin)
+>>> +        *         LSEC = Low Speed External Connector
+>>> +        *         HSEC = High Speed External Connector
+> 
+> I don't see LSEC/HSEC used anywhere?
 
-if CONFIG_OF is not defined.
+ok, will remove it. Probably it will be better to have it in common
+place some where by the Docs?
 
-> +	if (!of_property_read_u32(client->dev.of_node, "shunt-resistor", &s=
-hunt)
-> +		&& shunt > 0 )
 
-checkpatch error
+>>> +        */
+>>
+>> So maybe we should make this naming convention a suggested
+>> standard. People seem to like it.
 
-> +		data->shunt =3D shunt;
+Why should i invent some thing new, some Docs with suggested names will
+be good.
 
-shunt =3D=3D 0 is silently accepted and replaced with 1000. This is qui=
-te unusual.
-Any reason ? If not, return -EINVAL might be more appropriate for shunt=
- =3D=3D 0.
+> One question about this whole thing: how extensively should we add
+> the names? Only for exposed pins? Or every pin that's routed/used?
 
-> +	else
-> +#endif
-> +		data->shunt =3D 1000; /* 1 mOhm if not set */
-> +
->   	data->client =3D client;
->   	mutex_init(&data->update_lock);
->
-> @@ -199,10 +211,20 @@ static const struct i2c_device_id ltc4151_id[] =
-=3D {
->   };
->   MODULE_DEVICE_TABLE(i2c, ltc4151_id);
->
-> +#ifdef CONFIG_OF
+Depends on HW. Even on production system i had cases where i need to
+jump in and use some random pin for debugging. So, hawing it in
+devicetree can help to reduce time later.
 
-#ifdef is unnecessary.
+But i would prefer to have some kind of merged names: Names provided by
+SoC descriptor (real pin names or locations) and names provided by board
+design.
 
-> +static const struct of_device_id ltc4151_match[] =3D {
-> +	{ .compatible =3D "lltc,ltc4151" },
+>>> +       gpio-line-names =
+>>> +               /* PA */
+>>> +               "[ERXD3]", "[ERXD2]", "[ERXD1]", "[ERXD0]", "[ETXD3]",
+>>> +                       "[ETXD2]", "[ETXD1]", "[ETXD0]",
+>>> +               "[ERXCK]", "[ERXERR]", "[ERXDV]", "[EMDC]", "[EMDIO]",
+>>> +                       "[ETXEN]", "[ETXCK]", "[ECRS]",
+>>> +               "[ECOL]", "[ETXERR]", "", "", "", "", "", "",
+>>> +               "", "", "", "", "", "", "", "",
+>>> +               /* PB */
+>>> +               "[PMU-SCK]", "[PMU-SDA]", "", "", "", "NC", "NC", "NC",
+>>> +               "NC", "[USB0-DRV]", "NC", "NC", "NC", "NC", "", "",
+>>> +               "", "", "", "", "SCL", "SDA", "", "",
+>>
+>> Are these bit-banged SCL and SDA for doing I2C with
+>> GPIO? Otherwise you probably want to name them "[SCL]" and "[SDA]"
+> 
+> There's an actual I2C controller backing them.
 
-This as well as the property need to be documented.
+Ok, i will fix it.
 
-> +	{},
-> +};
-> +#endif
-> +
->   /* This is the driver that will be inserted */
->   static struct i2c_driver ltc4151_driver =3D {
-> +	.class		=3D I2C_CLASS_HWMON,
+>>
+>>> +               "TXD0", "RXD0", "IO-1", "PH3", "[USB0-IDDET]", "PH5", "", "",
+>>
+>> Same here. You probably want "[TXD0]" etc unless you're bit-banging
+>> the serial port. "IO-1" sounds like a real GPIO though and should
+>> probably be named like that without [] and "PH3" what is that really?
+>> A device-muxed pin or some kind of GPIO?
+> 
+> PH3 is actually the pin name. The vendor uses "IO-7" and "IO-8" as function
+> names for PH3 and PH5, but actually names them "NC":
 
-This is an unrelated change, and appears to be quite pointless,
-since the driver does not have a detect function.
-Any reason for adding it ? If so, please explain, and submit
-as separate patch.
+Not in:
+https://linux-sunxi.org/images/9/9d/A20_Bananapi_Schematic.pdf
 
->   	.driver =3D {
->   		.name	=3D "ltc4151",
-> +		.owner  =3D THIS_MODULE,
+which was used for this patch.
 
-Is this now necessary again ? If so, please explain, and submit
-as separate patch.
+>     http://www.bananapi.org/p/product.html
+> 
+>>
+>>> +               "", "", "[SD0-DET]", "", "", "", "", "",
+>>> +               "NC", "", "", "", "IO-4", "IO-5", "NC", "[EMAC-PWR-EN]",
+>>
+>> So these seem correct too.
+>>
+>>> +               "[LED1]", "NC", "NC", "NC", "", "", "", "",
+>>
+>> "LED1" seems like the right name, if this is a GPIO used to drive
+>> a LED.
+> 
+> This is GPIO based.
 
-> +		.of_match_table =3D of_match_ptr(ltc4151_match),
->   	},
->   	.probe		=3D ltc4151_probe,
->   	.id_table	=3D ltc4151_id,
->
+This was not clear to me, marking GPIO pin as peripheral, at moment of
+writing and testing it was a allocated by led driver. Bit for example
+IO-GCLK was free to use for GPIO :).. so do [] actually make sense?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-hwmon" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>> +               "", "", "", "IO-GCLK", "NC", "NC", "NC", "NC",
+>>
+>> WHat is IO-GCLK? A real GPIO line used for toggling a clock?
+>> Or a hardware clock signal? In the first case it it correctly named,
+>> in the other case it should be "[IO-GCLK]".
+> 
+> According to the schematics this is a PWM output.
+
+there are two names:
+SoC name: PWM1
+Connector name: IO-GCLK
+
+Which should be used. IMO it was user friendly to use connector name.
+
+> Regards
+> ChenYu
+> 
+>>
+>>> +               "NC", "NC", "[SPI-CE0]", "[SPI-CLK]", "[SPI-MOSI]",
+>>> +                       "[SPI-MISO]", "[SPI-CE1]", "NC",
+>>> +               "IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
+>>
+>> Looks right.
+>>
+>> Yours,
+>> Linus Walleij
