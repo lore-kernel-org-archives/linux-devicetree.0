@@ -1,72 +1,50 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 2/4] mmc: sunxi: Make sample clocks optional
-Date: Mon, 25 Jul 2016 10:18:30 +0200
-Message-ID: <20160725081830.GF7419@lukather>
-References: <1468665964-27142-1-git-send-email-hdegoede@redhat.com>
- <1468665964-27142-3-git-send-email-hdegoede@redhat.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC 6/6] bus: Add support for Tegra NOR controller
+Date: Mon, 25 Jul 2016 09:19:12 +0100
+Message-ID: <7f558131-60c7-22e2-2b2e-93d4b405a2db@nvidia.com>
+References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
+ <1468935397-11926-7-git-send-email-mirza.krak@gmail.com>
+ <f6df33eb-53ae-699b-9e1f-69eb7fed7da0@nvidia.com>
+ <CALw8SCVy4ud5_+gS3C8WeyTCV0m_4R2xjdEY4vCKEq_3-aFanw@mail.gmail.com>
+ <dbbb5c9f-8c67-9d9f-171b-64cd18353411@nvidia.com>
+ <CALw8SCXCdVMKgemEyQ-MZbxdthkPCDVzi+3boqtXk1_XNjcz4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nYySOmuH/HDX6pKp"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468665964-27142-3-git-send-email-hdegoede@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALw8SCXCdVMKgemEyQ-MZbxdthkPCDVzi+3boqtXk1_XNjcz4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---nYySOmuH/HDX6pKp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 22/07/16 20:18, Mirza Krak wrote:
+> 2016-07-22 11:38 GMT+02:00 Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
+>>>> The driver should have a remove function given that we can build as a
+>>>> module.
+>>>
+>>> At the moment I do not know what we would do in a remove function and
+>>> hence me not adding one.
+>>
+>> Should just be the inverse of the probe (although there is no inverse
+>> for the parsing DT bit). If you don't wish to add a remove, that is
+>> fine, but make the driver a 'bool' and not 'tristate' in the Kconfig so
+>> it cannot be configured as a module.
+> 
+> I understand the concept of a remove function, but I use devm_ calls
+> for all resources. These should be handled by the device core on a
+> driver detach?
 
-On Sat, Jul 16, 2016 at 12:46:02PM +0200, Hans de Goede wrote:
-> It turns out that sun4i (A10) and sun5i (A13 & co) do not have sample
-> clocks, so make them optional.
->=20
-> Since these do not have sample clocks, they cannot (reliably) do
-> DDR rates, so only set MMC_CAP_1_8V_DDR when we do have sample clks.
->=20
-> Note this patch only changes the devm_clk_get error checking and sets
-> the clocks to NULL if they don't exists. All the clk_foo calls accept
-> a NULL clk and will return success when called with a NULL clk, so this
-> is all that is necessary.
+There is one clock that needs to be disabled in the remove.
 
-The clocks aren't really optional. They're not needed for the A10 /
-A13, and mandatory for the A20 and later.
+Cheers
+Jon
 
-Having a new compatible for the A20 that would require that clock and
-not require it for the A10/A13 anymore seems more appropriate.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---nYySOmuH/HDX6pKp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXlctWAAoJEBx+YmzsjxAgK3IP/iVNhu+yO/IZ/CTA8+87h+jL
-QpPQFocqMinmHROWnDZNmxbpEsq2tHEbiis4y2FC2nymlJrixzuhr3IhNFUSGJ4C
-ZeTKbHva9gDC9YL4IPtZZ5XR9hrPfs0OlSjGvRMlOghmyfmSHcLifih2SMf34hEu
-UzxYeoI7BkzWXrqKqohR9k8cO//DOrVecxkqzviA/RJgRu0tWB4LBvBI0mZhKgbI
-UQ8n/2nLzMHoWukga1bl60vULrNayu4fdpturVKvouXbFDUIQ026PH5kQbWQQXOE
-GXZpY2LCHWhQw5/qPVV9kF7poVits/JoF/cq7Wmt4nZZdwx4YH36yKwbqwUFHi1y
-4QMHktoTLhVaRAqviAlO1sYOycP7eCD5nE3lC/mEpR9e8NlyI17lHaiPIB3O/FMt
-STPrPG4LyXPrJHcdnbQCD7/TNODZ/XzBf+apYnX4uEJv9SE/kwLzp3DY1sE7ZbXo
-C6WNkTUVq7kgRMO4qxgl4fgfEFdt3cVOAU7bIBnYxNl0IWDdorQ4Vl7orn+nP6nw
-5pxABCyivf0Qee57voFXhZpaPUnYaz9cOB02uRirO0ztH0T7SZ8N79gRthnWdSKV
-u9f7+poxsCHRBIXzAwylLn3RJ8vzMkNgLE0MDPJpQXe01oXcUCaEUpiLRmFJdPKU
-NeLKBZnEQ+r57d1Fwx8d
-=QCB+
------END PGP SIGNATURE-----
-
---nYySOmuH/HDX6pKp--
+-- 
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
