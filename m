@@ -1,120 +1,209 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4 0/4] pwm: add support for ChromeOS EC PWM
-Date: Mon, 25 Jul 2016 16:29:31 +0200
-Message-ID: <20160725142931.GR21170@ulmo.ba.sec>
-References: <1468625324-41229-1-git-send-email-briannorris@chromium.org>
- <20160718084928.GA17074@dell>
- <20160718091029.GA32259@ulmo.ba.sec>
- <20160718132426.GB17074@dell>
- <20160718140400.GA22297@ulmo.ba.sec>
- <20160719073717.GE17074@dell>
+From: Mirza Krak <mirza.krak@gmail.com>
+Subject: Re: [RFC 3/6] dt/bindings: Add bindings for Tegra20/30 NOR bus driver
+Date: Mon, 25 Jul 2016 16:38:00 +0200
+Message-ID: <CALw8SCWouYF+CY7n67mFxyL2CFbY4k1oB7oySTU9WkSMqosFUA@mail.gmail.com>
+References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
+ <1468935397-11926-4-git-send-email-mirza.krak@gmail.com> <20160725113034.GD21170@ulmo.ba.sec>
+ <CALw8SCWEFVu__8Gyr5q995h+=oMQEz1VUNB=Ne7MRb0O-tZXqg@mail.gmail.com> <20160725141544.GN21170@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="b0op/nKJ9CeIhp9z"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160719073717.GE17074@dell>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Brian Norris <briannorris@chromium.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Brian Norris <computersforpeace@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Stephen Barber <smbarber@chromium.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Benson Leung <bleung@chromium.org>, Enric Balletbo <enric.balletbo@collabora.co.uk>, Randall Spangler <rspangler@chromium.org>, Shawn Nematbakhsh <shawnn@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Todd Broch <tbroch@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160725141544.GN21170@ulmo.ba.sec>
+Sender: linux-clk-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
+2016-07-25 16:15 GMT+02:00 Thierry Reding <thierry.reding@gmail.com>:
+> On Mon, Jul 25, 2016 at 03:16:28PM +0200, Mirza Krak wrote:
+>> 2016-07-25 13:30 GMT+02:00 Thierry Reding <thierry.reding@gmail.com>:
+> [...]
+>> > The above suggests that one of the CAN controllers gets mapped to an
+>> > address 0x48000000 and the other gets mapped to 0x48040000. But why do
+>> > we even need a chip-select at all in that case? If both chips don't use
+>> > any overlapping memory region, what good does the chip-select do?
+>>
+>> If we take a look on similar controllers found on others SOCs they
+>> usually define an address range / chip-select.
+>>
+>> Example (weim):
+>> ranges = <
+>> 0 0 0x10000000 0x02000000
+>> 1 0 0x12000000 0x01000000
+>> 2 0 0x13000000 0x01000000
+>> 3 0 0x14000000 0x01000000
+>> 4 0 0x15000000 0x01000000
+>> 5 0 0x16000000 0x01000000
+>> >;
+>>
+>> Which means that you all ready have an address mapped to PIN function.
+>>
+>> But Tegra GMI controller is a first for me, where you do not have this
+>> kind of setup in hardware. Usually you also have a timing register /
+>> chip-select so that you can connect different chip types.
+>>
+>> The lack of hardware support do decode an address to a chip-select PIN
+>> function, we have implemented this our self externally.
+>>
+>> We actually have 6 different chips connected to the GMI bus and the
+>> "ranges" would be:
+>>   ranges = <
+>>    0 0 0x48000000 0x00000100
+>>    1 0 0x48040000 0x00000100
+>>    2 0 0x48080000 0x00000100
+>>    3 0 0x480A0000 0x00000100
+>>    4 0 0x480C0000 0x00000100
+>>    5 0 0x480E0000 0x00000100
+>>   >;
+>>
+>> And this not nothing complicated, small number of AND gates and that is it.
+>>
+>> The chip-select signal is necessary for the access characteristics, so
+>> we need to translate an address to an chip-select so that the chip
+>> knows the host CPU wants to talk to it.
+>>
+>> Do not know if I made anything more clear here :).
+>
+> Yes, that clarifies many things. The presence of an external, address-
+> based chip-select is essential information in order to describe this
+> setup properly.
+>
+> Given that the external chip select is entirely invisible to software, I
+> think a more accurate description of your setup would be:
+>
+>         gmi@70090000 {
+>                 ...
+>
+>                 /* for the chip select */
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+>                 /*
+>                  * Technically this could be used to translate the range from
+>                  * 0x48000000 to 0x4fffffff into a different range, but that
+>                  * no longer works because of the #address-cells. Does this
+>                  * matter?
+>                  */
+>                 ranges;
+>
+>                 bus@0 {
+>                         compatible = "simple-bus";
+>                         reg = <0>;
+>
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+>
+>                         can@48000000 {
+>                                 reg = <0x48000000 0x100>;
+>                                 ...
+>                         };
+>
+>                         can@48040000 {
+>                                 reg = <0x48040000 0x100>;
+>                                 ...
+>                         };
+>                 };
+>         };
+>
+> That omits any reference to the external chip select, which I think
+> makes sense because it's something that software is completely unaware
+> of.
+>
+> Perhaps one important question: does your setup use the GMI's CS lines
+> in any way? Or does it simply get ignored?
 
---b0op/nKJ9CeIhp9z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, we use the GMI`s CS line. It is important that is present because
+it is ANDED with address lines and NOT ALE line. Especially since we
+run the GMI controller in AD_MUX mode, which means that we use same
+pins for address and data and the access happens in two phases, one
+address latch phase where CS is not asserted but ALE is, second
+read/write phase where CS must be asserted. In this case we need the
+GMI`s CS line to determine which phase we are in.
 
-On Tue, Jul 19, 2016 at 08:37:17AM +0100, Lee Jones wrote:
-> On Mon, 18 Jul 2016, Thierry Reding wrote:
->=20
-> > On Mon, Jul 18, 2016 at 02:24:26PM +0100, Lee Jones wrote:
-> > > On Mon, 18 Jul 2016, Thierry Reding wrote:
-> > >=20
-> > > > On Mon, Jul 18, 2016 at 09:49:28AM +0100, Lee Jones wrote:
-> > > > > On Fri, 15 Jul 2016, Brian Norris wrote:
-> > > > > > This is the 4th (and final?) version of my series to support th=
-e new ChromeOS
-> > > > > > EC PWM API, so we can control, e.g., a PWM backlight when its P=
-WM is attached
-> > > > > > to the EC. It uses Boris's latest "atomic" hooks for the PWM AP=
-I (i.e., the
-> > > > > > ->apply() callback), which were recently merged.
-> > > > > >=20
-> > > > > > Pulled and adapted the cros_ec_cmd_xfer_status() helper from th=
-is patch, with
-> > > > > > some minor modifications:
-> > > > > >=20
-> > > > > > https://lkml.org/lkml/2016/4/12/342
-> > > > > >=20
-> > > > > > Note that after some style bikeshedding, I proposed to put off =
-rewriting the
-> > > > > > entire cros_ec_commands.h header at the moment, due to the shar=
-ed nature of
-> > > > > > this file. Follow up here:
-> > > > > >=20
-> > > > > > https://bugs.chromium.org/p/chromium/issues/detail?id=3D621123
-> > > > > >=20
-> > > > > > As this touches MFD (sort of), drivers/platform/chrome/, and dr=
-ivers/pwm/, I'm
-> > > > > > still not sure who it should all go through: Lee, Thierry, or O=
-lof?
-> > > > >=20
-> > > > > I usually take this type of submission through the MFD tree, alth=
-ough
-> > > > > it's too late in the day to make it into v4.8.
-> > > > >=20
-> > > > > Which Acks are you missing?
-> > > >=20
-> > > > I'm willing to take this through the PWM tree if you're okay with t=
-he
-> > > > MFD changes. I can put the MFD changes into a separate branch and y=
-ou
-> > > > could pull that in if you needed to resolve any dependencies, which=
- I
-> > > > think would be quite unlikely if you've already closed your tree.
-> > >=20
-> > > Are you saying that you're willing to take these straight into the
-> > > merge-window, with no soak in -next?
-> >=20
-> > There's still a bit of time to let it soak in -next, but I'm not overly
-> > concerned given that this is purely additions of code, so there can't be
-> > any regressions.
->=20
-> No problem my side then.  Apply away.
->=20
-> Before doing so, can you see if there are any clashes with my
-> mfd-for-next branch?  If conflicts occur, please construct an
-> immutable tag I can pull from.  That way, I can base my branch on it
-> and deal with the fallout myself.
+Will give above a test run.
 
-It merges cleanly into your mfd-for-next branch, so I've gone and
-applied patches 1 and 2 to a for-4.8/mfd branch, which I can provide a
-stable tag from if you still need it, and patches 3 and 4 to the
-for-4.8/drivers branch.
+>
+> If it gets ignored, I suppose one could encode this as a special case:
+>
+>         gmi@70090000 {
+>                 ...
+>
+>                 /* simple address translation */
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+>
+>                 ranges = <0x48000000 0x48000000 0x08000000>;
+>
+>                 can@48000000 {
+>                         ...
+>                         reg = <0x48000000 0x100>;
+>                         ...
+>                 };
+>
+>                 can@48040000 {
+>                         ...
+>                         reg = <0x48000000 0x100>;
+>                         ...
+>                 };
+>         };
+>
+> We could use that special case in order to make the driver behave in a
+> special way that suits your setup, namely without explicit chip-select.
+> The case where #size-cells = <0> could be treated as the explicit chip-
+> select case, that somebody could implement in the future if they need
+> it. All other cases could be treated as meaning that the chip-select is
+> automatically handled externally (like in your setup) and we simply
+> statically configure the controller with chip select 0 (kind of in the
+> way your current patch series does).
+>
+> Rob, what do you think about the above?
+>
+>> > Also, it seems to me that you'd have to program the SNOR_CONFIG_0
+>> > register in order to select a specific chip, but I don't see anything in
+>> > the driver access that register after the initial write of the register.
+>>
+>> This is only setup at probe.
+>>
+>> >
+>> > I would've expected this to require some sort of infrastructure to allow
+>> > devices connected to the GMI controller to acquire the bus via some API
+>> > to select their chip.
+>>
+>> Yes, ultimately you would need some sort of infrastructure to allow
+>> devices to acquire the GMI bus if you want to solve this in software.
+>> But at the moment I do not see such an infrastructure in place, and is
+>> it feasible to add one specifically for the GMI controller? If one
+>> such infrastructure was in place we would need to modify all the
+>> drivers that want to use to include Tegra specific infrastructure to
+>> access the GMI bus?
+>>
+>> Since my knowledge is limited it hard for me to comment on this, maybe
+>> there is a simple way of doing this?
+>
+> I don't think there's a simple way to do this. In order to properly
+> implement it we'd need to implement a generic infrastructure for chip
+> selects so that drivers such as the one for your CAN controller can be
+> written without tying them specifically to the Tegra GMI controller.
+>
+> From what you and Jon were saying it sounds like the drivers are
+> completely agnostic of any chip-select, so conversion won't be easy.
+> But technically if these chips take a chip-select as input then it's
+> always possible to hook them up to a controller that doesn't do this
+> automatic translation of address to chip-select, so eventually some
+> setup is bound to come along where they'd need explicit chip-select
+> handling as well.
+>
+> I don't think it's fair to require you to implement this infrastructure
+> if you don't actually need it. At the same time I want to be cautious
+> and make sure we keep the driver and binding flexible enough to allow
+> us to implement explicit chip-selects should we later need them.
+>
+> Thierry
 
-Thanks,
-Thierry
+I understand, and thank you for not requiring me to implement such a
+infrastructure :)
 
---b0op/nKJ9CeIhp9z
-Content-Type: application/pgp-signature; name="signature.asc"
+And thank you for your feedback.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXliJLAAoJEN0jrNd/PrOhWq8QALU4Q1KFB4bYp5NDQvZWSTSP
-MeiDe4+rTqPjWR6quVm+UIkndRjOntsd6QvpbemxyW4dyZSJRDabxndGlcsbmlYo
-dFFZ3ftzUbLu68YuUjLzssq+LwWOYgGOFu7/jWSBWLLDcwhrUl89LbOLxtvYJepU
-phCNSg9WFYO3arW3I4O1Jv8o11KBM+yGpYXOjPBc/nd5QlEiZWbvxbXAc+057HLV
-NolughdDk4P04UpWeP5rosfyiApPSCMV/Mtj8ogHNBuwtFeiBzaeiXlQFpwrkZJP
-08NkmBY6jA/wN6tH9PcauWudfaOs6WJd6+PcMXeTsFXDXRnowaKMbMBSsJkDevZL
-3nCPLXF7/zXIbSJu0JzClw+bnZxwjB9kKZoWvA1zTtdPTLm68WN3fxqgG6GBoueY
-fyxxMcFZ7x2EZvTXPg0fT62lT63hSVs7PdbYPE7dY5G8sMjw7imto4FHXSnHJqal
-GsAOXd0+RWroKguGUadth90Qz8yf8P+BZnekbpqIQNAYGHKFqBdNPOA3A0Kav1E6
-qh2hbQGzw7uoMQZE3hgvh/1SqwbC5ihs+4mbDoLKveY7RVwbI8BFBleDG2tebAmY
-ymt8FzZ6wKbA8rSf9E4gL9x4uJiYkITSy2yBeFQF8waXI1W6686AE8QiN/Vpk5/x
-8CtdUzyXeqSf9KSC9ueD
-=q3VE
------END PGP SIGNATURE-----
-
---b0op/nKJ9CeIhp9z--
+Best Regards,
+Mirza
