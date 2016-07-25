@@ -1,175 +1,145 @@
-From: fixed-term.Oleksij.Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
-Subject: Re: [PATCH] arm: dts: sun7i-a20-bananapi: name the GPIO lines
-Date: Mon, 25 Jul 2016 07:27:16 +0200
-Message-ID: <5795A334.3000701@de.bosch.com>
-References: <1468496825-4896-1-git-send-email-linux@rempel-privat.de>
- <CACRpkdZLG1Ffdiw3xkP4G0XBr=WDXg2Vbh2Xmgno1PTNhfZHfg@mail.gmail.com>
- <CAGb2v66tf1LcBs69ECW0Xa2OeN0C0NWVyvpC8=4DsVLjAnrO3Q@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: sun8i: Extend Orange Pi PC dt to also
+ handle the PC Plus
+Date: Mon, 25 Jul 2016 08:40:33 +0200
+Message-ID: <20160725064033.GA7419@lukather>
+References: <1468095718-18515-1-git-send-email-hdegoede@redhat.com>
+ <20160713084505.GE4761@lukather>
+ <bce2b340-a930-8771-4560-dc61bf5828d5@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v66tf1LcBs69ECW0Xa2OeN0C0NWVyvpC8=4DsVLjAnrO3Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Oleksij Rempel <linux@rempel-privat.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <bce2b340-a930-8771-4560-dc61bf5828d5-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 22.07.2016 17:47, Chen-Yu Tsai wrote:
-> On Fri, Jul 22, 2016 at 10:55 PM, Linus Walleij
-> <linus.walleij@linaro.org> wrote:
->> On Thu, Jul 14, 2016 at 1:47 PM, Oleksij Rempel <linux@rempel-privat.de> wrote:
->>
->>> This names the GPIO lines on the Banana Pi board in accordance with
->>> the A20_Banana_Pi v1.4 Specification.
->>>
->>> This will make these line names reflect through to userspace
->>> so that they can easily be identified and used with the new
->>> character device ABI.
->>>
->>> Some care has been taken to name all lines, not just those used
->>> by the external connectors, also lines that are muxed into some
->>> other function than GPIO: these are named "[FOO]" so that users
->>> can see with lsgpio what all lines are used for.
->>>
->>> Ps: most of the text was taken from Linux Wallej patch.
->>
->> LinuS
+Hi,
 
-oops... :)
+On Wed, Jul 13, 2016 at 12:01:41PM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 13-07-16 10:45, Maxime Ripard wrote:
+> >On Sat, Jul 09, 2016 at 10:21:55PM +0200, Hans de Goede wrote:
+> >>There is a new Orange Pi PC Plus available now, rather then adding
+> >>yet another dts file for this variant, extend the existing
+> >>Orange Pi PC to support the sdio wifi and emmc found on this variant.
+> >>
+> >>Downside of this approach is the following messages in dmesg when run
+> >>on the non Plus Orange Pi PC:
+> >>
+> >>sunxi-mmc 1c10000.mmc: fatal err update clk timeout
+> >>sunxi-mmc 1c11000.mmc: smc 2 err, cmd 8, RTO !!
+> >>sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
+> >>sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
+> >>sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
+> >>sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
+> >>sunxi-mmc 1c11000.mmc: smc 2 err, cmd 1, RTO !!
+> >>
+> >>Note these are completely harmless and there is no adverse effect
+> >>to the functioning of the non Plus Orange Pi PC.
+> >>
+> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>---
+> >> arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 40 ++++++++++++++++++++++=
++++++++-
+> >> 1 file changed, 39 insertions(+), 1 deletion(-)
+> >>
+> >>diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot=
+/dts/sun8i-h3-orangepi-pc.dts
+> >>index b8340f7..f9bf260 100644
+> >>--- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> >>+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> >>@@ -49,11 +49,13 @@
+> >> #include <dt-bindings/pinctrl/sun4i-a10.h>
+> >>
+> >> / {
+> >>-	model =3D "Xunlong Orange Pi PC";
+> >>+	model =3D "Xunlong Orange Pi PC / PC Plus";
+> >> 	compatible =3D "xunlong,orangepi-pc", "allwinner,sun8i-h3";
+> >>
+> >> 	aliases {
+> >> 		serial0 =3D &uart0;
+> >>+		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
+> >>+		ethernet1 =3D &rtl8189ftv;
+> >> 	};
+> >>
+> >> 	chosen {
+> >>@@ -118,6 +120,42 @@
+> >> 	status =3D "okay";
+> >> };
+> >>
+> >>+/* Note only present on orangepi pc *plus* */
+> >>+&mmc1 {
+> >>+	pinctrl-names =3D "default";
+> >>+	pinctrl-0 =3D <&mmc1_pins_a>;
+> >>+	vmmc-supply =3D <&reg_vcc3v3>;
+> >>+	bus-width =3D <4>;
+> >>+	non-removable;
+> >>+	status =3D "okay";
+> >>+
+> >>+	/*
+> >>+	 * Explicitly define the sdio device, so that we can add an ethernet
+> >>+	 * alias for it (which e.g. makes u-boot set a mac-address).
+> >>+	 */
+> >>+	rtl8189ftv: sdio_wifi@1 {
+> >>+		reg =3D <1>;
+> >>+	};
+> >>+};
+> >
+> >Nothing prevents you from including the orange pi pc dts, from the
+> >orange pi plus dts.
+> >
+> >It prevents the duplication you were trying to avoid, and it doesn't
+> >create all those spurious errors and devices.
+>=20
+> That would solve the copy paste problem on the kernel side, but that
+> would still mean adding a new u-boot defconfig for this, which means that
+> all the distro's which ship with prebuild u-boot binaries need to build
+> for yet another board, something which I would like to avoid.
 
->>>
->>> Cc: devicetree@vger.kernel.org
->>> Cc: Linus Walleij <linus.walleij@linaro.org>
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: Chen-Yu Tsai <wens@csie.org>
->>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
->>
->> Nice usecase!
->>
->>> +       /*
->>> +        * Legend: proper name = the GPIO line is used as GPIO
->>> +        *         NC = not connected (not routed from the SoC)
->>> +        *         "[PER]" = pin is muxed for peripheral (not GPIO)
->>> +        *         "" = no idea, schematic doesn't say, could be
->>> +        *              unrouted (not connected to any external pin)
->>> +        *         LSEC = Low Speed External Connector
->>> +        *         HSEC = High Speed External Connector
-> 
-> I don't see LSEC/HSEC used anywhere?
+Still, registering devices that are not present on the board is not an
+option.
 
-ok, will remove it. Probably it will be better to have it in common
-place some where by the Docs?
+Maxime
 
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
->>> +        */
->>
->> So maybe we should make this naming convention a suggested
->> standard. People seem to like it.
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Why should i invent some thing new, some Docs with suggested names will
-be good.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> One question about this whole thing: how extensively should we add
-> the names? Only for exposed pins? Or every pin that's routed/used?
+iQIcBAEBAgAGBQJXlbRhAAoJEBx+YmzsjxAgNmsP/jUuoSLsLBnoGMJn3/B83+uD
+8k8WW+9H8aZvBweuEal0k0PH+4qblKatY1odA1OR7bZyYN445zzKe11GaO7A17a/
+MF1zzBDb978pOYgE2ycVsaQpV7DdBKRJWb7HM99cCGbKAdqchnJgrqw5VtvnUNvA
+fZh5ht5rU7sQzDDzp8CEQA7Kda2Gzs3VU7fo7R8+cjevBDu+bSdKc5JkvcCw4SpK
+35D7W7vuy3w2AvommEfqdYz346mQLnrTBkDVEhSWTKSQiewRT1GCrTFX/psooGa/
+QqN0jrr3reRjbYPVrks0gvZLpgs9nUFWbIq2nrbj37m2neqeXQVvJzzmjYEoSjWv
+baOccnwMbwLd5ChYtyGu/JDwNSVqaS03kRcEu/ljxgwd48Hnws0G2/o8MV1LgvzQ
+HoZ4nMM6smJ9Bc+uLV7z1zXYQiEeRX3Qklxry1FucOE023BKRzZYYEZVkiL//N2s
+xOg/w7XgK0OkV7y91+0nQhwMF0mYn8JzKw4REPTFlRzIO3lDVmTjieeYUBu/LmKB
+3awzHY/leAkBkDwmwaBnvlOj3nxKehjDLzCXTo+9AztRYssok68ddpMLTiOLhxdh
+y28+K3DggQPv1pjZ8ogJk9fU/EdEmPsoL/SeMD9oUQZ/zvlc1RlCZxN0sbowKugZ
+G1uzDFRHe29bMnFtbsiS
+=5O3t
+-----END PGP SIGNATURE-----
 
-Depends on HW. Even on production system i had cases where i need to
-jump in and use some random pin for debugging. So, hawing it in
-devicetree can help to reduce time later.
-
-But i would prefer to have some kind of merged names: Names provided by
-SoC descriptor (real pin names or locations) and names provided by board
-design.
-
->>> +       gpio-line-names =
->>> +               /* PA */
->>> +               "[ERXD3]", "[ERXD2]", "[ERXD1]", "[ERXD0]", "[ETXD3]",
->>> +                       "[ETXD2]", "[ETXD1]", "[ETXD0]",
->>> +               "[ERXCK]", "[ERXERR]", "[ERXDV]", "[EMDC]", "[EMDIO]",
->>> +                       "[ETXEN]", "[ETXCK]", "[ECRS]",
->>> +               "[ECOL]", "[ETXERR]", "", "", "", "", "", "",
->>> +               "", "", "", "", "", "", "", "",
->>> +               /* PB */
->>> +               "[PMU-SCK]", "[PMU-SDA]", "", "", "", "NC", "NC", "NC",
->>> +               "NC", "[USB0-DRV]", "NC", "NC", "NC", "NC", "", "",
->>> +               "", "", "", "", "SCL", "SDA", "", "",
->>
->> Are these bit-banged SCL and SDA for doing I2C with
->> GPIO? Otherwise you probably want to name them "[SCL]" and "[SDA]"
-> 
-> There's an actual I2C controller backing them.
-
-Ok, i will fix it.
-
->>
->>> +               "TXD0", "RXD0", "IO-1", "PH3", "[USB0-IDDET]", "PH5", "", "",
->>
->> Same here. You probably want "[TXD0]" etc unless you're bit-banging
->> the serial port. "IO-1" sounds like a real GPIO though and should
->> probably be named like that without [] and "PH3" what is that really?
->> A device-muxed pin or some kind of GPIO?
-> 
-> PH3 is actually the pin name. The vendor uses "IO-7" and "IO-8" as function
-> names for PH3 and PH5, but actually names them "NC":
-
-Not in:
-https://linux-sunxi.org/images/9/9d/A20_Bananapi_Schematic.pdf
-
-which was used for this patch.
-
->     http://www.bananapi.org/p/product.html
-> 
->>
->>> +               "", "", "[SD0-DET]", "", "", "", "", "",
->>> +               "NC", "", "", "", "IO-4", "IO-5", "NC", "[EMAC-PWR-EN]",
->>
->> So these seem correct too.
->>
->>> +               "[LED1]", "NC", "NC", "NC", "", "", "", "",
->>
->> "LED1" seems like the right name, if this is a GPIO used to drive
->> a LED.
-> 
-> This is GPIO based.
-
-This was not clear to me, marking GPIO pin as peripheral, at moment of
-writing and testing it was a allocated by led driver. Bit for example
-IO-GCLK was free to use for GPIO :).. so do [] actually make sense?
-
->>
->>> +               "", "", "", "IO-GCLK", "NC", "NC", "NC", "NC",
->>
->> WHat is IO-GCLK? A real GPIO line used for toggling a clock?
->> Or a hardware clock signal? In the first case it it correctly named,
->> in the other case it should be "[IO-GCLK]".
-> 
-> According to the schematics this is a PWM output.
-
-there are two names:
-SoC name: PWM1
-Connector name: IO-GCLK
-
-Which should be used. IMO it was user friendly to use connector name.
-
-> Regards
-> ChenYu
-> 
->>
->>> +               "NC", "NC", "[SPI-CE0]", "[SPI-CLK]", "[SPI-MOSI]",
->>> +                       "[SPI-MISO]", "[SPI-CE1]", "NC",
->>> +               "IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
->>
->> Looks right.
->>
->> Yours,
->> Linus Walleij
+--IS0zKkzwUGydFO0o--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
