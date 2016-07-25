@@ -1,50 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 14/18] ARM: mvebu: add support for the Armada 395 SoC family
-Date: Mon, 25 Jul 2016 10:12:43 -0500
-Message-ID: <CAL_JsqL=bkzhjOTcOCeGNvKsAfYg0D=CypZs4sCsQ01pnbitoQ@mail.gmail.com>
-References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
- <1469105055-25181-16-git-send-email-jaz@semihalf.com> <20160721221605.GA21883@rob-hp-laptop>
- <CAH76GKOidxFZ7R1pQZ2W9BRBCxEnLXNHQGrXbAUmouozBUj51Q@mail.gmail.com>
- <CAL_JsqJeObuS8OWeErRA5MX-SrMtu_254A-LtP9-A=xdPO7p1Q@mail.gmail.com> <20160725155050.3aee974e@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160725155050.3aee974e@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Grzegorz Jaszczyk <jaz@semihalf.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, Lior Amsalem <alior@marvell.com>
+From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] Add driver for Domintech DMARD06 accelerometer
+Date: Mon, 25 Jul 2016 18:21:16 +0300
+Message-ID: <1469460078-6460-1-git-send-email-mamlinav@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 25, 2016 at 8:50 AM, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
-> Hello,
->
-> On Mon, 25 Jul 2016 08:47:23 -0500, Rob Herring wrote:
->
->> > I am not sure if I get your point. The Armada-398 extends the
->> > Armada-395 about 2 additional SATA ports (as you can see in commit
->> > "[PATCH 15/18] ARM: mvebu: a398: update the dtsi about missing
->> > interfaces"). In this example the a398-db board contains the Armada398
->> > SoC, so it is a better match and goes first.
->>
->> But your patch title is adding 395 support, but you are adding the
->> string to a 398 based board. It would make sense to have 395 here if
->> the OS already had support for 395 and you want to support the 398
->> without updating the OS. That doesn't seem to apply here.
->
-> I think the argument of Grzegorz is that the 398 is functionally a
-> strict superset of the 395, so that anything that applies to the 395
-> will also apply to 398.
+This patch series adds driver for Domintech DMARD05, DMARD06 and DMARD07
+accelerometers and vendor prefix for Domintech Co., Ltd.
 
-Yes, I get that, but that is only meaningful if you want to run an OS
-that is only aware of 395 on a 398 SoC/board (though I'd guess the 390
-compat is enough for that). Otherwise, that property is not really
-meaningful as the additional nodes are enough to handle what is the
-superset.
+Changes since v1:
+ - Add Rob's Acked-by to vendor-prefix bindings
+ - Remove dmard06_i2c_read function, use i2c_smbus_read_byte_data instead
+ - Remove dmard06_read_chip_id function, check chip id directly on probe
+ - Use sign_extend32 in dmard06_read_raw function
+ - Replace error variable with ret
+ - Remove unnecessary messages
+ - Fix typo in documentation bindings
+ - Add support for DMARD05 and DMARD07 chips
+ - Add PM ops
 
-I would agree both are fine if both chips are in fact the same die,
-just fused or packaged differently. I've seen a lot of chips that are
-supposed to be sub/supersets of each other, but have different errata
-lists because they are different die.
+Aleksei Mamlin (2):
+  devicetree: bindings: Add vendor prefix for Domintech Co., Ltd.
+  iio: accel: Add support for Domintech DMARD06 accelerometer
 
-Rob
+ .../devicetree/bindings/iio/accel/dmard06.txt      |  19 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/accel/Kconfig                          |  11 +
+ drivers/iio/accel/Makefile                         |   1 +
+ drivers/iio/accel/dmard06.c                        | 241 +++++++++++++++++++++
+ 5 files changed, 273 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/dmard06.txt
+ create mode 100644 drivers/iio/accel/dmard06.c
+
+-- 
+2.7.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
