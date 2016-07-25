@@ -1,148 +1,105 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC 3/6] dt/bindings: Add bindings for Tegra20/30 NOR bus driver
-Date: Mon, 25 Jul 2016 13:36:38 +0200
-Message-ID: <20160725113638.GE21170@ulmo.ba.sec>
-References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
- <1468935397-11926-4-git-send-email-mirza.krak@gmail.com>
- <20160720124408.GA19113@rob-hp-laptop>
- <CALw8SCXFexogJn3BwrZm63yEL0rtTpYsYYb0O9D_ibhginVLqw@mail.gmail.com>
- <1f280c99-156f-59d3-308f-b4c8ff0f8f7c@nvidia.com>
+From: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+Subject: [PATCH 1/2 v2] hwmon: (ltc4151) Make shunt-resistor configurable
+Date: Mon, 25 Jul 2016 13:56:02 +0200
+Message-ID: <20160725115558.GA18360@makrotopia.org>
+References: <5795A144.2020300@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tMbDGjvJuJijemkf"
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1f280c99-156f-59d3-308f-b4c8ff0f8f7c@nvidia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Mirza Krak <mirza.krak@gmail.com>, Rob Herring <robh@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk
+In-Reply-To: <5795A144.2020300-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, Per =?iso-8859-1?Q?Dal=E9n?= <per.dalen-US8m9dViuwNWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Allow to specify the resistance of the attached shunt via DT by
+adding the shunt-resistor property. Fall-back to the previous
+default (1 mOhm) if unset.
 
---tMbDGjvJuJijemkf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+---
+v2: removed unneeded things and throw -EINVAL for shunt==0
 
-On Thu, Jul 21, 2016 at 11:26:09AM +0100, Jon Hunter wrote:
->=20
-> On 20/07/16 20:28, Mirza Krak wrote:
-> > 2016-07-20 14:44 GMT+02:00 Rob Herring <robh@kernel.org>:
-> >> On Tue, Jul 19, 2016 at 03:36:34PM +0200, Mirza Krak wrote:
-> >>> From: Mirza Krak <mirza.krak@gmail.com>
-> >>>
-> >>> Document the devicetree bindings for NOR bus driver found on Tegra20 =
-and
-> >>> Tegra30 SOCs
-> >>>
-> >>> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
-> >>> ---
-> >>>  .../devicetree/bindings/bus/nvidia,tegra20-nor.txt | 73 ++++++++++++=
-++++++++++
-> >>>  1 file changed, 73 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegr=
-a20-nor.txt
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor=
-=2Etxt b/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
-> >>> new file mode 100644
-> >>> index 0000000..9ee4a66
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/bus/nvidia,tegra20-nor.txt
-> >>> @@ -0,0 +1,73 @@
-> >>> +Device tree bindings for NVIDIA Tegra20/30 NOR Bus
-> >>> +
-> >>> +The NOR controller supports a number of memory types, including sync=
-hronous NOR,
-> >>> +asynchronous NOR, and other flash memories with similar interfaces, =
-such as
-> >>> +MuxOneNAND. One could also connect high speed devices like FPGAs, DS=
-Ps,
-> >>> +CAN chips, Wi-Fi chips etc.
-> >>> +
-> >>> +The actual devices are instantiated from the child nodes of a NOR no=
-de.
-> >>> +
-> >>> +Required properties:
-> >>> +
-> >>> + - compatible: should be "nvidia,tegra20-nor", "nvidia,tegra30-nor"
-> >>> + - reg: Should contain NOR controller registers location and length.
-> >>> + - clocks: Must contain one entry, for the module clock.
-> >>> +   See ../clocks/clock-bindings.txt for details.
-> >>> + - resets : Must contain an entry for each entry in reset-names.
-> >>> +   See ../reset/reset.txt for details.
-> >>> + - reset-names : Must include the following entries:
-> >>> +  - nor
-> >>> + - #address-cells: Must be set to 2 to allow memory address translat=
-ion
-> >>> + - #size-cells:      Must be set to 1 to allow CS address passing
-> >>> + - ranges: Must be set up to reflect the memory layout with four int=
-eger
-> >>> +             values for each chip-select line in use.
-> >>> + - nvidia,config: This property represents the SNOR_CONFIG_0 registe=
-r.
-> >>> +
-> >>> +Note that the NOR controller does not have any internal chip-select =
-address
-> >>> +decoding and if you want to access multiple devices external chip-se=
-lect
-> >>> +decoding must be provided.
-> >>
-> >> Then what are the 2 chip selects in ranges?
-> >>
-> >> Rob
-> >=20
-> > Those two chip selects are actually a representation of a external
-> > decoding logic based on what we use on our board. Even though it the
-> > NOR controller only supports one single chip select I wanted to give
-> > an example on how one could create more chip-selects with an external
-> > logic and what it would look like in the device tree representation.
->=20
-> Technically, the GMI/SNOR controller supports 8 chip-selects, however,
-> unlike some devices, it appears that software has to select the active
-> chip-select. Although this sounds odd, I believe that the idea is that
-> in order to support devices greater than 256MB (external address space
-> for available NOR/async devices) you can use the chip-selects to page
-> through memory greater than this 256MB range. At least that it my
-> (limited) understanding!
+ drivers/hwmon/ltc4151.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-Actually I had assumed that software would at some point need to select
-the active chip to switch between multiple connected chips. I suppose it
-could be possible to have multiple chips share the same chip-select and
-decode the address lines to determine whether they're being accessed or
-not.
+diff --git a/drivers/hwmon/ltc4151.c b/drivers/hwmon/ltc4151.c
+index c86a184..419c6f7 100644
+--- a/drivers/hwmon/ltc4151.c
++++ b/drivers/hwmon/ltc4151.c
+@@ -30,6 +30,7 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/init.h>
+ #include <linux/err.h>
+ #include <linux/slab.h>
+@@ -52,6 +53,7 @@ struct ltc4151_data {
+ 	struct mutex update_lock;
+ 	bool valid;
+ 	unsigned long last_updated; /* in jiffies */
++	unsigned int shunt; /* in micro ohms */
+ 
+ 	/* Registers */
+ 	u8 regs[6];
+@@ -111,9 +113,9 @@ static int ltc4151_get_value(struct ltc4151_data *data, u8 reg)
+ 	case LTC4151_SENSE_H:
+ 		/*
+ 		 * 20uV resolution. Convert to current as measured with
+-		 * an 1 mOhm sense resistor, in mA.
++		 * a given sense resistor, in mA.
+ 		 */
+-		val = val * 20;
++		val = val * 20 * 1000 / data->shunt;
+ 		break;
+ 	case LTC4151_VIN_H:
+ 		/* 25 mV per increment */
+@@ -176,6 +178,7 @@ static int ltc4151_probe(struct i2c_client *client,
+ 	struct device *dev = &client->dev;
+ 	struct ltc4151_data *data;
+ 	struct device *hwmon_dev;
++	u32 shunt;
+ 
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+ 		return -ENODEV;
+@@ -184,6 +187,14 @@ static int ltc4151_probe(struct i2c_client *client,
+ 	if (!data)
+ 		return -ENOMEM;
+ 
++	if (of_property_read_u32(client->dev.of_node, "shunt-resistor", &shunt))
++		shunt = 1000; /* 1 mOhm if not set via DT */
++
++	if (shunt == 0)
++		return -EINVAL;
++
++	data->shunt = shunt;
++
+ 	data->client = client;
+ 	mutex_init(&data->update_lock);
+ 
+@@ -199,10 +210,16 @@ static const struct i2c_device_id ltc4151_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, ltc4151_id);
+ 
++static const struct of_device_id ltc4151_match[] = {
++	{ .compatible = "lltc,ltc4151" },
++	{},
++};
++
+ /* This is the driver that will be inserted */
+ static struct i2c_driver ltc4151_driver = {
+ 	.driver = {
+ 		.name	= "ltc4151",
++		.of_match_table = of_match_ptr(ltc4151_match),
+ 	},
+ 	.probe		= ltc4151_probe,
+ 	.id_table	= ltc4151_id,
+-- 
+2.9.0
 
-What I don't understand, and it's further complicated by the fact that
-external chip-selects are being used, is how does the controller get
-told what chip to select? It seems to me like it would always access the
-same chips because the SNOR_CONFIG_0 register is only ever written on
-->probe().
-
-For external chip selects, how do they tie in with all this? Who gets to
-implement this logic? Wouldn't we need to abstract this away somehow so
-that we can support whatever board designers will come up with?
-
-Thierry
-
---tMbDGjvJuJijemkf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXlfnGAAoJEN0jrNd/PrOhPM8P/A8cRNhirfegLEmOe3hFA+IF
-p+f3Cwn0h3uI0RTpLO8/yiF+QwA4PWq2Ma/egh+/V528fmBPYLrSUtR3BDbhJ5Lq
-7LNjxM9/6qpGFASeiGl06od/62NjcIz/MekI9GMrExZ/RbwSCP9UVwrSYtSUZSOm
-QTsZRzNTbTLQXUsMRb14ZbZQCxbay2SQcZKWw3OO89spDCmgLo68zeejtHRBss8Z
-PT4JEjdbVQobvli+ySMQYQRdE5RYa4vWZRI9eVYhKgwulmaPJCG50iqEFhNxiRMf
-voAHiNmSTbD/kRyKpyqJ8lurUx7oQUjgwzziYMBWWxBybc9sRwDbiZmUvugEBz03
-sUj5K+IUnS2t2MR8aonomzcCAHbZ/eX6hrUNk1lxcLyGiKcvSfnLGpLb/HuImPhZ
-x9jrClOl0cXwltNPf9/JpeQJ26vdhnsWNILo1ZtePbmvPaAmgYZYv5Lf9HC73n/D
-eX35whfEudNAknQUD3BijkfqeIxS1rDJt8kJwjXvPtKtc+LKWfD0ADnnX3p3mbBX
-jDLZNq+myMdXmi1VzOzHgY9P4CpTwtpLB3wqcAnazKU3WqtRikigNEHUdbhsj5hn
-nLGbDaJP56XMxm2ylXc0ReNLMEod/5uR7KgzmTMOBPRWF5hAoE4KOd1pJOAs/8zQ
-EcJg2NROGPHnBfqSDAJ9
-=pk8t
------END PGP SIGNATURE-----
-
---tMbDGjvJuJijemkf--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
