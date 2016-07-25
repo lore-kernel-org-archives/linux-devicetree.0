@@ -1,155 +1,378 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 06/14] ARM: dts: sun8i: Add cpu0 label to sun8i-h3.dtsi
-Date: Mon, 25 Jul 2016 10:26:48 +0200
-Message-ID: <20160725082648.GG7419@lukather>
-References: <20160623192104.18720-1-megous@megous.com>
- <20160623192104.18720-7-megous@megous.com>
- <CAGb2v66eskVAxdz8VtjBJBCO7VV9WL4bdFDVrPWrSmxk4RASCw@mail.gmail.com>
- <adaf7f61-af80-cc02-8c47-af721b86f81e@megous.com>
- <CAGb2v665O75vQEfo5WdWtWJSbKEbLi6MBAHbgZC7pyrOCOu+6g@mail.gmail.com>
- <20160625070208.GA4000@lukather>
- <49ce09ae-052a-bb2b-ce66-f0aa0d0024e3@megous.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH 2/2] iio: accel: Add support for Domintech DMARD06
+ accelerometer
+Date: Mon, 25 Jul 2016 10:36:28 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1607251033460.23105@pmeerw.net>
+References: <1469133140-14722-1-git-send-email-mamlinav@gmail.com> <1469133191-14812-1-git-send-email-mamlinav@gmail.com> <alpine.DEB.2.02.1607220015530.6041@pmeerw.net> <6007da6c-910d-1091-ce83-72a86cf22100@kernel.org>
+ <20160725105011.eb22fefcdd394186b35a4c84@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nhYGnrYv1PEJ5gA2"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSM2266AKGQEP7KL6EQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <49ce09ae-052a-bb2b-ce66-f0aa0d0024e3-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160725105011.eb22fefcdd394186b35a4c84@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aleksei Mamlin <mamlinav@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---nhYGnrYv1PEJ5gA2
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > >> This patch add support for Domintech DMARD06 accelerometer.
+> > > 
+> > > comments below
+> > >  
+> > >> Domintech DMARD06 is a low-g tri-axial digital accelerometer for
+> > >> cost-sensitive consumer application.
+> > >>
+> > >> Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
+> > I don't have anything to add here. Nice fairly clean first version.
+> 
+> Jonathan, I found that dmard05, dmard06 and dmard07 chips are very similar
+> and have the same registers. There is not so many difference between chips,
+> dmard05 and dmard07 have 8 bit adc and dmard06 only 7 bit adc.
+> 
+> I want to add support of those chips in driver, but there is the question:
+> should driver be renamed to something like dmard050607 or just dmard05
+> as first chip in this series?
 
-On Sun, Jul 17, 2016 at 04:39:27PM +0200, Ond=C5=99ej Jirman wrote:
->=20
->=20
-> On 25.6.2016 09:02, Maxime Ripard wrote:
-> > On Sat, Jun 25, 2016 at 09:02:48AM +0800, Chen-Yu Tsai wrote:
-> >> On Sat, Jun 25, 2016 at 6:51 AM, Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org=
-> wrote:
-> >>> Hello,
-> >>>
-> >>> comments below.
-> >>>
-> >>> On 24.6.2016 05:48, Chen-Yu Tsai wrote:
-> >>>> On Fri, Jun 24, 2016 at 3:20 AM,  <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
-> >>>>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> >>>>>
-> >>>>> Add label to the first cpu so that it can be referenced
-> >>>>> from derived dts files.
-> >>>>>
-> >>>>> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> >>>>> ---
-> >>>>>  arch/arm/boot/dts/sun8i-h3.dtsi | 2 +-
-> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/su=
-n8i-h3.dtsi
-> >>>>> index 9938972..82faefc 100644
-> >>>>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> >>>>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> >>>>> @@ -52,7 +52,7 @@
-> >>>>>                 #address-cells =3D <1>;
-> >>>>>                 #size-cells =3D <0>;
-> >>>>>
-> >>>>> -               cpu@0 {
-> >>>>> +               cpu0: cpu@0 {
-> >>>>>                         compatible =3D "arm,cortex-a7";
-> >>>>>                         device_type =3D "cpu";
-> >>>>>                         reg =3D <0>;
-> >>>>
-> >>>> Can you also set the cpu clock here? It is part of the SoC
-> >>>> and does not belong in the board DTS files.
-> >>>
-> >>> Do you mean operating-points, or something else? Different SBCs will
-> >>> probably require different combinations of operating points just for
-> >>> safety's sake, because they have different regulators and [some have
-> >>> botched] thermal designs, so it might make sense to customize it for
-> >>> differnt boards, and I don't feel adventurous enough setting it for a=
-ll
-> >>> H3 boards out there.
-> >>
-> >> I meant clocks =3D <...> and clock-latency =3D <...>.
-> >>
-> >> These 2 are part of the SoC.
-> >>
-> >> The OPP can stay in the board files. It's a pity there's no standard
-> >> OPP table for H3 though. :(
-> >=20
-> > This has never been the case, and we always had some deviation in the
-> > FEX files for all the SoCs.
-> >=20
-> > If we could come up with standard OPPs that work for every one,
-> > there's no reason it can't happen here.
-> >=20
-> > I don't really see why the thermal design should change anything. If a
-> > boards heats faster, it will throttle down to a lower OPP faster, but
-> > those OPPs are not going to change.
->=20
-> So I tried, and found out that it will not be so easy. Different boards
-> have different regulators, and linux doesn't deal well with voltages
-> that are not supported by the regulator.
->=20
-> So even if the board can run at certain frequency if you round the
-> voltage to the next higher voltage supported by the regulator, opp
-> implementation doesn't do the rounding and just drops the operating
-> points that have no support in the voltage regulator.
->=20
-> We have boards that have 1.1/1.3V switching, only 1.3V, fine tuned
-> voltage regulation and every such board will need it's own set of
-> operating points.
->=20
-> I'd leave the OPP definitions in the board files for now.
+just pick one name, e.g. dmard06; the file name should NOT contain things 
+such as dmard0x or 050607 -- marketing is just too creative :) and 
+remember: 
+"There are two hard things in computer science: cache invalidation, naming 
+things, and off-by-one errors."
 
-Works for me.
+p.
 
-Maxime
+> > >> ---
+> > >>  .../devicetree/bindings/iio/accel/dmard06.txt      |  17 ++
+> > >>  drivers/iio/accel/Kconfig                          |  11 ++
+> > >>  drivers/iio/accel/Makefile                         |   1 +
+> > >>  drivers/iio/accel/dmard06.c                        | 219 +++++++++++++++++++++
+> > >>  4 files changed, 248 insertions(+)
+> > >>  create mode 100644 Documentation/devicetree/bindings/iio/accel/dmard06.txt
+> > >>  create mode 100644 drivers/iio/accel/dmard06.c
+> > >>
+> > >> diff --git a/Documentation/devicetree/bindings/iio/accel/dmard06.txt b/Documentation/devicetree/bindings/iio/accel/dmard06.txt
+> > >> new file mode 100644
+> > >> index 0000000..cc2231a
+> > >> --- /dev/null
+> > >> +++ b/Documentation/devicetree/bindings/iio/accel/dmard06.txt
+> > >> @@ -0,0 +1,17 @@
+> > >> +Device tree bindings for Domintech DMARD06 acceletometer
+> > > 
+> > > typo: accelerometer
+> > > 
+> > >> +
+> > >> +Required properties:
+> > >> + - compatible		: Should be "domintech,dmard06"
+> > >> + - reg			: I2C address of the chip. Should be 0x1c
+> > >> +
+> > >> +Example:
+> > >> +	&i2c1 {
+> > >> +		/* ... */
+> > >> +
+> > >> +		accelerometer@1c {
+> > >> +			compatible = "domintech,dmard06";
+> > >> +			reg = <0x1c>;
+> > >> +		};
+> > >> +
+> > >> +		/* ... */
+> > >> +	};
+> > >> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> > >> index e4a758c..abc8536 100644
+> > >> --- a/drivers/iio/accel/Kconfig
+> > >> +++ b/drivers/iio/accel/Kconfig
+> > >> @@ -40,6 +40,17 @@ config BMC150_ACCEL_SPI
+> > >>  	tristate
+> > >>  	select REGMAP_SPI
+> > >>  
+> > >> +config DMARD06
+> > >> +	tristate "Domintech DMARD06 Digital Accelerometer Driver"
+> > >> +	depends on OF || COMPILE_TEST
+> > >> +	depends on I2C
+> > >> +	help
+> > >> +	  Say yes here to build support for the Domintech DMARD06 low-g
+> > >> +	  tri-axial digital accelerometer connected via an I2C bus.
+> > >> +
+> > >> +	  To compile this driver as a module, choose M here: the
+> > >> +	  module will be called dmard06.
+> > >> +
+> > >>  config HID_SENSOR_ACCEL_3D
+> > >>  	depends on HID_SENSOR_HUB
+> > >>  	select IIO_BUFFER
+> > >> diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
+> > >> index 71b6794..a96b269 100644
+> > >> --- a/drivers/iio/accel/Makefile
+> > >> +++ b/drivers/iio/accel/Makefile
+> > >> @@ -7,6 +7,7 @@ obj-$(CONFIG_BMA180) += bma180.o
+> > >>  obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
+> > >>  obj-$(CONFIG_BMC150_ACCEL_I2C) += bmc150-accel-i2c.o
+> > >>  obj-$(CONFIG_BMC150_ACCEL_SPI) += bmc150-accel-spi.o
+> > >> +obj-$(CONFIG_DMARD06)	+= dmard06.o
+> > >>  obj-$(CONFIG_HID_SENSOR_ACCEL_3D) += hid-sensor-accel-3d.o
+> > >>  obj-$(CONFIG_KXCJK1013) += kxcjk-1013.o
+> > >>  obj-$(CONFIG_KXSD9)	+= kxsd9.o
+> > >> diff --git a/drivers/iio/accel/dmard06.c b/drivers/iio/accel/dmard06.c
+> > >> new file mode 100644
+> > >> index 0000000..433e430
+> > >> --- /dev/null
+> > >> +++ b/drivers/iio/accel/dmard06.c
+> > >> @@ -0,0 +1,219 @@
+> > >> +/*
+> > >> + * IIO driver for Domintech DMARD06 accelerometer
+> > >> + *
+> > >> + * Copyright (C) 2016 Aleksei Mamlin <mamlinav@gmail.com>
+> > >> + *
+> > >> + * This program is free software; you can redistribute it and/or modify it
+> > >> + * under the terms and conditions of the GNU General Public License,
+> > >> + * version 2, as published by the Free Software Foundation.
+> > >> + */
+> > >> +
+> > >> +#include <linux/module.h>
+> > >> +#include <linux/i2c.h>
+> > >> +#include <linux/iio/iio.h>
+> > >> +
+> > >> +struct dmard06_data {
+> > >> +	struct i2c_client *client;
+> > >> +};
+> > >> +
+> > >> +#define DMARD06_DRV_NAME		"dmard06"
+> > >> +
+> > >> +/* Device data registers */
+> > >> +#define DMARD06_CHIP_ID_REG		0x0f
+> > >> +#define DMARD06_TOUT_REG		0x40
+> > >> +#define DMARD06_XOUT_REG		0x41
+> > >> +#define DMARD06_YOUT_REG		0x42
+> > >> +#define DMARD06_ZOUT_REG		0x43
+> > >> +
+> > >> +/* Device ID value */
+> > >> +#define DMARD06_CHIP_ID			0x06
+> > >> +
+> > >> +/* Device values */
+> > >> +#define DMARD06_AXIS_MAX_VAL		64
+> > >> +#define DMARD06_AXIS_SCALE_VAL		31250
+> > >> +#define DMARD06_TEMP_CENTER_VAL		25
+> > >> +
+> > >> +static int dmard06_i2c_read(struct i2c_client *client, u8 reg, u8 *buf)
+> > >> +{
+> > >> +	int error;
+> > > 
+> > > 'error' is a bit pessimistic, how about 'ret'? :-)
+> > > 
+> > >> +
+> > > 
+> > > can't use i2c_smbus_read_byte_data()?
+> > > 
+> > >> +	error = i2c_master_send(client, &reg, 1);
+> > >> +	if (unlikely(error < 0))
+> > >> +		return error;
+> > >> +
+> > >> +	error = i2c_master_recv(client, buf, 1);
+> > >> +	if (unlikely(error < 0))
+> > >> +		return error;
+> > > 
+> > > not sure if it is worth to annotate unlikely() here -- i2c is slooow
+> > > locking is needed if you really need two i2c_master calls
+> > > 
+> > >> +	return 0;
+> > >> +}
+> > >> +
+> > >> +static int dmard06_read_chip_id(struct dmard06_data *dmard06)
+> > >> +{
+> > >> +	u8 buf;
+> > >> +	u8 chip_id;
+> > >> +	int error;
+> > >> +
+> > >> +	error = dmard06_i2c_read(dmard06->client, DMARD06_CHIP_ID_REG, &buf);
+> > >> +	if (error) {
+> > >> +		dev_err(&dmard06->client->dev, "Failed to read chip id: %d\n",
+> > >> +			error);
+> > >> +		return error;
+> > >> +	}
+> > >> +
+> > >> +	chip_id = (buf & 0x00ff);
+> > > 
+> > > why? buf is u8 anyways
+> > > 
+> > >> +	if (chip_id != DMARD06_CHIP_ID) {
+> > >> +		dev_err(&dmard06->client->dev, "Invalid chip id: %02x\n",
+> > >> +			chip_id);
+> > >> +		return -EINVAL;
+> > > 
+> > > often ENODEV is used for this case
+> > > 
+> > >> +	}
+> > >> +
+> > >> +	dev_info(&dmard06->client->dev, "Found DMARD%02x chip\n", chip_id);
+> > > 
+> > > we prefer silent probing of the driver, please don't clutter the log
+> > > 
+> > >> +
+> > >> +	return 0;
+> > >> +}
+> > >> +
+> > >> +static int dmard06_read_raw(struct iio_dev *indio_dev,
+> > >> +			    struct iio_chan_spec const *chan,
+> > >> +			    int *val, int *val2, long mask)
+> > >> +{
+> > >> +	struct dmard06_data *dmard06 = iio_priv(indio_dev);
+> > >> +	u8 buf;
+> > >> +	bool reversed;
+> > >> +	int error;
+> > >> +	int tmp;
+> > >> +
+> > >> +	switch (mask) {
+> > >> +	case IIO_CHAN_INFO_RAW:
+> > >> +		error = dmard06_i2c_read(dmard06->client, chan->address, &buf);
+> > >> +		if (error) {
+> > >> +			dev_err(&dmard06->client->dev,
+> > >> +				"Failed to read data %d\n", error);
+> > >> +			return error;
+> > >> +		}
+> > >> +
+> > >> +		reversed = (buf >> 7) & 1;
+> > >> +		tmp = (int)((buf & 0x7f) >> 1);
+> > > 
+> > > 
+> > >> +
+> > >> +		switch (chan->type) {
+> > >> +		case IIO_ACCEL:
+> > > 
+> > > wouldn't sign_extend32(buf >> 1, 6) do the job?
+> > > 
+> > >> +			*val = reversed ? (tmp - DMARD06_AXIS_MAX_VAL) : tmp;
+> > >> +			return IIO_VAL_INT;
+> > >> +		case IIO_TEMP:
+> > >> +			*val = reversed ? -tmp : tmp;
+> > >> +			return IIO_VAL_INT;
+> > >> +		default:
+> > >> +			return -EINVAL;
+> > >> +		}
+> > >> +	case IIO_CHAN_INFO_OFFSET:
+> > >> +		switch (chan->type) {
+> > >> +		case IIO_TEMP:
+> > >> +			*val = DMARD06_TEMP_CENTER_VAL;
+> > >> +			return IIO_VAL_INT;
+> > >> +		default:
+> > >> +			return -EINVAL;
+> > >> +		}
+> > >> +	case IIO_CHAN_INFO_SCALE:
+> > >> +		switch (chan->type) {
+> > >> +		case IIO_ACCEL:
+> > >> +			*val = 0;
+> > >> +			*val2 = DMARD06_AXIS_SCALE_VAL;
+> > >> +			return IIO_VAL_INT_PLUS_MICRO;
+> > >> +		default:
+> > >> +			return -EINVAL;
+> > >> +		}
+> > >> +	default:
+> > >> +		return -EINVAL;
+> > >> +	}
+> > >> +}
+> > >> +
+> > >> +static const struct iio_info dmard06_info = {
+> > >> +	.driver_module	= THIS_MODULE,
+> > >> +	.read_raw	= dmard06_read_raw,
+> > >> +};
+> > >> +
+> > >> +#define DMARD06_ACCEL_CHANNEL(_axis, reg) {			\
+> > > 
+> > > maybe rename reg to _reg
+> > > 
+> > >> +	.type = IIO_ACCEL,					\
+> > >> +	.address = reg,						\
+> > >> +	.channel2 = IIO_MOD_##_axis,				\
+> > >> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> > >> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> > >> +	.modified = 1,						\
+> > >> +}
+> > >> +
+> > >> +#define DMARD06_TEMP_CHANNEL(reg) {				\
+> > >> +	.type = IIO_TEMP,					\
+> > >> +	.address = reg,						\
+> > >> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |		\
+> > >> +			      BIT(IIO_CHAN_INFO_OFFSET),	\
+> > >> +}
+> > >> +
+> > >> +static const struct iio_chan_spec dmard06_channels[] = {
+> > >> +	DMARD06_ACCEL_CHANNEL(X, DMARD06_XOUT_REG),
+> > >> +	DMARD06_ACCEL_CHANNEL(Y, DMARD06_YOUT_REG),
+> > >> +	DMARD06_ACCEL_CHANNEL(Z, DMARD06_ZOUT_REG),
+> > >> +	DMARD06_TEMP_CHANNEL(DMARD06_TOUT_REG),
+> > >> +};
+> > >> +
+> > >> +static int dmard06_probe(struct i2c_client *client,
+> > >> +			const struct i2c_device_id *id)
+> > >> +{
+> > >> +	int error;
+> > >> +	struct iio_dev *indio_dev;
+> > >> +	struct dmard06_data *dmard06;
+> > >> +
+> > >> +	dev_dbg(&client->dev, "I2C Address: 0x%02x\n", client->addr);
+> > > 
+> > > not needed
+> > > 
+> > >> +
+> > >> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+> > >> +		dev_err(&client->dev, "I2C check functionality failed\n");
+> > >> +		return -ENXIO;
+> > >> +	}
+> > >> +
+> > >> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*dmard06));
+> > >> +	if (!indio_dev) {
+> > >> +		dev_err(&client->dev, "Failed to allocate iio device\n");
+> > >> +		return -ENOMEM;
+> > >> +	}
+> > >> +
+> > >> +	dmard06 = iio_priv(indio_dev);
+> > >> +	dmard06->client = client;
+> > >> +
+> > >> +	error = dmard06_read_chip_id(dmard06);
+> > >> +	if (error)
+> > >> +		return error;
+> > >> +
+> > >> +	i2c_set_clientdata(client, indio_dev);
+> > >> +	indio_dev->dev.parent = &client->dev;
+> > >> +	indio_dev->name = DMARD06_DRV_NAME;
+> > >> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > >> +	indio_dev->channels = dmard06_channels;
+> > >> +	indio_dev->num_channels = ARRAY_SIZE(dmard06_channels);
+> > >> +	indio_dev->info = &dmard06_info;
+> > >> +
+> > >> +	return devm_iio_device_register(&client->dev, indio_dev);
+> > >> +}
+> > >> +
+> > >> +static const struct i2c_device_id dmard06_id[] = {
+> > >> +	{ "dmard06", 0 },
+> > >> +	{ }
+> > >> +};
+> > >> +MODULE_DEVICE_TABLE(i2c, dmard06_id);
+> > >> +
+> > >> +static const struct of_device_id dmard06_of_match[] = {
+> > >> +	{ .compatible = "domintech,dmard06" },
+> > >> +	{ }
+> > >> +};
+> > >> +MODULE_DEVICE_TABLE(of, dmard06_of_match);
+> > >> +
+> > >> +static struct i2c_driver dmard06_driver = {
+> > >> +	.probe = dmard06_probe,
+> > >> +	.id_table = dmard06_id,
+> > >> +	.driver = {
+> > >> +		.name = DMARD06_DRV_NAME,
+> > >> +		.of_match_table = of_match_ptr(dmard06_of_match),
+> > >> +	},
+> > >> +};
+> > >> +module_i2c_driver(dmard06_driver);
+> > >> +
+> > >> +MODULE_AUTHOR("Aleksei Mamlin <mamlinav@gmail.com>");
+> > >> +MODULE_DESCRIPTION("Domintech DMARD06 accelerometer driver");
+> > >> +MODULE_LICENSE("GPL v2");
+> > >>
+> > > 
+> > 
+> 
+> 
+> 
 
+-- 
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---nhYGnrYv1PEJ5gA2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXlc1IAAoJEBx+YmzsjxAg7pMP/jLMfGN/RkMWbVPvUa3eX/5X
-6b88JTyst5W68NKABWuxmtsxHqcDnnO6C66h/dSoCqspItg31GrHhCcSZA8b6pV2
-FJW8HXKYeI/zb5ZWsxDQCu/GmFAe46YNGZpgYwL8IBU77wrgOeMwmh9jTnPq6ch+
-6rN05z3xf3drl8anRQm0aaCu2DA4zr5lQ6RbBF/VZCJ2AQpy/z17cf21ehzY1Db2
-p9FnMWfCOR3TYzF6geCRtYcLdo1J2M5BMIhG6tVEmbdaWKIujg3IWy3Eri8EzcIz
-tHK/LwHREPSH3qK4Dn/N7CDQNJRi+mFQvUn9Y+IGMKw3X48LS2TObw1rxUaCyWax
-ltchUIU/BImgs2ykTjoRHr6W0pexRjF+N8SMxoGIKXt3EkVB8Wq94uy3qgZ1NaVW
-3OgFIkHwbIWNaf9MvcTsga76/uybxlKcMd+32eBUBxgFxEoQdBq52n8dA9fTfrHi
-C1PaoOHGYM2ez3lA2VSeVsBDrgizDd/UwfFFrRjNFi77WqVFRiBQIO1PRdYm35Wx
-A1M1qBY2yCPHDYeyfBxZAgb1Zb4/bpgPZQebO1+fM5CMQnF2DQRUkL9r2tibxWJa
-D5UtQN0Jvq8YQaUwRrKCiiVWIlZvT9IfefX/b44smeJ9JGAQBZpn/+OP77K6QDWQ
-k4toYVvqYjBSXdjWuq7d
-=xHzM
------END PGP SIGNATURE-----
-
---nhYGnrYv1PEJ5gA2--
+Peter Meerwald-Stadler
++43-664-2444418 (mobile)
