@@ -1,28 +1,32 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add I2C clocks
-Date: Mon, 25 Jul 2016 13:37:23 +0300
-Message-ID: <90b02c03-151d-4480-cb61-495979557078@cogentembedded.com>
-References: <1618499.8bcj8adpVO@wasted.cogentembedded.com>
- <1841031.5KOUl1WdV5@wasted.cogentembedded.com>
- <20160725015137.GH12825@verge.net.au>
+Subject: Re: [PATCH 0/2] Add R8A7792 I2C support
+Date: Mon, 25 Jul 2016 13:40:48 +0300
+Message-ID: <162faf65-4286-add4-6eb2-ac07a6d04deb@cogentembedded.com>
+References: <17288006.ERHB6654v5@wasted.cogentembedded.com>
+ <20160725020947.GI12825@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160725015137.GH12825@verge.net.au>
+In-Reply-To: <20160725020947.GI12825@verge.net.au>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>
 Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/25/2016 4:51 AM, Simon Horman wrote:
+On 7/25/2016 5:09 AM, Simon Horman wrote:
 
->> Describe the I2C[0-5] clocks in the R8A7792 device tree.
+>>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+>> 'renesas-devel-20160722-v4.7-rc7' tag plus the SDHI/I2C patches just posted.
+>> We're adding the R8A7792 VIN clocks and device nodes. The patches have been
+>> tested on the Blanche board with the switches set to the HDMI input mode...
 >>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> [1/2] ARM: dts: r8a7792: add VIN clocks
+>> [2/2] ARM: dts: r8a7792: add VIN support
 >
-> Thanks, I have queued this up for v4.8.
+> Thanks, I have queued these up for v4.9.
 
-    4.9 you mean?
+    Oops, sorry for using a stale subject. :-(
+    Thank you!
 
 MBR, Sergei
