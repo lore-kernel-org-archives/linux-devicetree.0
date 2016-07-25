@@ -1,102 +1,28 @@
-From: Daniel Golle <daniel@makrotopia.org>
-Subject: [PATCH] hwmon: (ltc4151) Make shunt-resistor configurable
-Date: Sun, 24 Jul 2016 22:26:25 +0200
-Message-ID: <20160724202620.GA30245@makrotopia.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/2] Add R8A7792 SDHI support
+Date: Mon, 25 Jul 2016 10:39:39 +0900
+Message-ID: <20160725013939.GF12825@verge.net.au>
+References: <4468057.gGDuR4B4DF@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-hwmon-owner@vger.kernel.org
-To: linux-hwmon@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Axel Lin <axel.lin@ingics.com>, Guenter Roeck <linux@roeck-us.net>, Per =?iso-8859-1?Q?Dal=E9n?= <per.dalen@appeartv.com>
+In-Reply-To: <4468057.gGDuR4B4DF@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Allow to specify the resistance of the attached shunt via DT by
-adding the shunt-resistor property. Fall-back to the previous
-default (1 mOhm) if unset.
+On Sat, Jul 23, 2016 at 09:09:24PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> 'renesas-devel-20160722-v4.7-rc7' tag. We're adding the R8A7792 SDHI clocks and
+> device nodes. They have been tested on the Blanche board -- I'm not posting the
+> Blanche patch only because it has some strange interaction with the Ethernet
+> chip, so that NFS root wouldn't work anymore...
+> 
+> [1/2] ARM: dts: r8a7792: add SD clocks
+> [2/2] ARM: dts: r8a7792: add SDHI support
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
- drivers/hwmon/ltc4151.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hwmon/ltc4151.c b/drivers/hwmon/ltc4151.c
-index c86a184..f856e44 100644
---- a/drivers/hwmon/ltc4151.c
-+++ b/drivers/hwmon/ltc4151.c
-@@ -30,6 +30,8 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/init.h>
- #include <linux/err.h>
- #include <linux/slab.h>
-@@ -52,6 +54,7 @@ struct ltc4151_data {
- 	struct mutex update_lock;
- 	bool valid;
- 	unsigned long last_updated; /* in jiffies */
-+	unsigned int shunt; /* in micro ohms */
- 
- 	/* Registers */
- 	u8 regs[6];
-@@ -111,9 +114,9 @@ static int ltc4151_get_value(struct ltc4151_data *data, u8 reg)
- 	case LTC4151_SENSE_H:
- 		/*
- 		 * 20uV resolution. Convert to current as measured with
--		 * an 1 mOhm sense resistor, in mA.
-+		 * a given sense resistor, in mA.
- 		 */
--		val = val * 20;
-+		val = val * 20 * 1000 / data->shunt;
- 		break;
- 	case LTC4151_VIN_H:
- 		/* 25 mV per increment */
-@@ -176,6 +179,7 @@ static int ltc4151_probe(struct i2c_client *client,
- 	struct device *dev = &client->dev;
- 	struct ltc4151_data *data;
- 	struct device *hwmon_dev;
-+	u32 shunt;
- 
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
- 		return -ENODEV;
-@@ -184,6 +188,14 @@ static int ltc4151_probe(struct i2c_client *client,
- 	if (!data)
- 		return -ENOMEM;
- 
-+#ifdef CONFIG_OF
-+	if (!of_property_read_u32(client->dev.of_node, "shunt-resistor", &shunt)
-+		&& shunt > 0 )
-+		data->shunt = shunt;
-+	else
-+#endif
-+		data->shunt = 1000; /* 1 mOhm if not set */
-+
- 	data->client = client;
- 	mutex_init(&data->update_lock);
- 
-@@ -199,10 +211,20 @@ static const struct i2c_device_id ltc4151_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ltc4151_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id ltc4151_match[] = {
-+	{ .compatible = "lltc,ltc4151" },
-+	{},
-+};
-+#endif
-+
- /* This is the driver that will be inserted */
- static struct i2c_driver ltc4151_driver = {
-+	.class		= I2C_CLASS_HWMON,
- 	.driver = {
- 		.name	= "ltc4151",
-+		.owner  = THIS_MODULE,
-+		.of_match_table = of_match_ptr(ltc4151_match),
- 	},
- 	.probe		= ltc4151_probe,
- 	.id_table	= ltc4151_id,
--- 
-2.9.0
-
+Thanks, I have queued this up for v4.9.
