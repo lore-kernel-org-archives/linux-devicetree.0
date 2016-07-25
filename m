@@ -1,77 +1,72 @@
-From: wenpan <wenpan@hisilicon.com>
-Subject: Re: [PATCH v2] i2c: hibvt: add Hisilicon BVT I2C controller driver
-Date: Mon, 25 Jul 2016 15:28:04 +0800
-Message-ID: <b964a669-8c78-5551-4fbc-c61f504bab15@hisilicon.com>
-References: <1468316448-15256-1-git-send-email-wenpan@hisilicon.com>
- <20160716201555.GA6559@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 2/4] mmc: sunxi: Make sample clocks optional
+Date: Mon, 25 Jul 2016 10:18:30 +0200
+Message-ID: <20160725081830.GF7419@lukather>
+References: <1468665964-27142-1-git-send-email-hdegoede@redhat.com>
+ <1468665964-27142-3-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160716201555.GA6559@rob-hp-laptop>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: wsa@the-dreams.de, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, wenpan@hisilicom.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nYySOmuH/HDX6pKp"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468665964-27142-3-git-send-email-hdegoede@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 2016/7/17 4:15, Rob Herring wrote:
-> On Tue, Jul 12, 2016 at 05:40:48PM +0800, Pan Wen wrote:
->> add Hisilicon BVT I2C controller driver support.
->>
->> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
->> ---
->> change log
->> v2:
->> 1)Fixed a compile error.
->> 2)Dropped the clock-names property.
->>  .../devicetree/bindings/i2c/i2c-hibvt.txt          |  23 +
->>  drivers/i2c/busses/Kconfig                         |  10 +
->>  drivers/i2c/busses/Makefile                        |   1 +
->>  drivers/i2c/busses/i2c-hibvt.c                     | 736 +++++++++++++++++++++
->>  4 files changed, 770 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
->>  create mode 100644 drivers/i2c/busses/i2c-hibvt.c
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
->> new file mode 100644
->> index 0000000..9b88afe
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
->> @@ -0,0 +1,23 @@
->> +Hisilicon BVT I2C master controller
->> +
->> +Required properties:
->> +- compatible: should be "hisilicon,hibvt-i2c".
-> 
-> Needs a SoC specific compatible string.
->
+--nYySOmuH/HDX6pKp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK. Thanks for your comments. I will add a SoC specific compatible string in next version.
+Hi,
 
-Thanks,
-Pan.
+On Sat, Jul 16, 2016 at 12:46:02PM +0200, Hans de Goede wrote:
+> It turns out that sun4i (A10) and sun5i (A13 & co) do not have sample
+> clocks, so make them optional.
+>=20
+> Since these do not have sample clocks, they cannot (reliably) do
+> DDR rates, so only set MMC_CAP_1_8V_DDR when we do have sample clks.
+>=20
+> Note this patch only changes the devm_clk_get error checking and sets
+> the clocks to NULL if they don't exists. All the clk_foo calls accept
+> a NULL clk and will return success when called with a NULL clk, so this
+> is all that is necessary.
 
->> +- reg: physical base address of the controller and length of memory mapped.
->> +     region.
->> +- interrupts: interrupt number to the cpu.
->> +- clocks: phandles to input clocks.
->> +
->> +Optional properties:
->> +- clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000.
->> +
->> +Other properties:
->> +see Documentation/devicetree/bindings/i2c/i2c.txt.
->> +
->> +Examples:
->> +i2c_bus0: i2c@12110000 {
->> +	compatible = "hisilicon,hibvt-i2c";
->> +	reg = <0x12110000 0x100>;
->> +	interrupts = <20>;
->> +	clocks = <&crg_ctrl HI3516CV300_APB_CLK>;
->> +	clock-frequency = <100000>;
->> +};
-> 
-> .
-> 
+The clocks aren't really optional. They're not needed for the A10 /
+A13, and mandatory for the A20 and later.
+
+Having a new compatible for the A20 that would require that clock and
+not require it for the A10/A13 anymore seems more appropriate.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--nYySOmuH/HDX6pKp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXlctWAAoJEBx+YmzsjxAgK3IP/iVNhu+yO/IZ/CTA8+87h+jL
+QpPQFocqMinmHROWnDZNmxbpEsq2tHEbiis4y2FC2nymlJrixzuhr3IhNFUSGJ4C
+ZeTKbHva9gDC9YL4IPtZZ5XR9hrPfs0OlSjGvRMlOghmyfmSHcLifih2SMf34hEu
+UzxYeoI7BkzWXrqKqohR9k8cO//DOrVecxkqzviA/RJgRu0tWB4LBvBI0mZhKgbI
+UQ8n/2nLzMHoWukga1bl60vULrNayu4fdpturVKvouXbFDUIQ026PH5kQbWQQXOE
+GXZpY2LCHWhQw5/qPVV9kF7poVits/JoF/cq7Wmt4nZZdwx4YH36yKwbqwUFHi1y
+4QMHktoTLhVaRAqviAlO1sYOycP7eCD5nE3lC/mEpR9e8NlyI17lHaiPIB3O/FMt
+STPrPG4LyXPrJHcdnbQCD7/TNODZ/XzBf+apYnX4uEJv9SE/kwLzp3DY1sE7ZbXo
+C6WNkTUVq7kgRMO4qxgl4fgfEFdt3cVOAU7bIBnYxNl0IWDdorQ4Vl7orn+nP6nw
+5pxABCyivf0Qee57voFXhZpaPUnYaz9cOB02uRirO0ztH0T7SZ8N79gRthnWdSKV
+u9f7+poxsCHRBIXzAwylLn3RJ8vzMkNgLE0MDPJpQXe01oXcUCaEUpiLRmFJdPKU
+NeLKBZnEQ+r57d1Fwx8d
+=QCB+
+-----END PGP SIGNATURE-----
+
+--nYySOmuH/HDX6pKp--
