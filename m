@@ -1,96 +1,57 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 6/6] bus: Add support for Tegra NOR controller
-Date: Mon, 25 Jul 2016 15:41:38 +0200
-Message-ID: <20160725134138.GL21170@ulmo.ba.sec>
-References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
- <1468935397-11926-7-git-send-email-mirza.krak@gmail.com>
- <20160725111443.GB21170@ulmo.ba.sec>
- <CALw8SCU5s8BAg6B8dT=QokY-D-CcokmMEkYqz1GJWHkX-XWpRQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 14/18] ARM: mvebu: add support for the Armada 395 SoC family
+Date: Mon, 25 Jul 2016 08:47:23 -0500
+Message-ID: <CAL_JsqJeObuS8OWeErRA5MX-SrMtu_254A-LtP9-A=xdPO7p1Q@mail.gmail.com>
+References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
+ <1469105055-25181-16-git-send-email-jaz@semihalf.com> <20160721221605.GA21883@rob-hp-laptop>
+ <CAH76GKOidxFZ7R1pQZ2W9BRBCxEnLXNHQGrXbAUmouozBUj51Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UUBKWyapWpFAak7q"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALw8SCU5s8BAg6B8dT=QokY-D-CcokmMEkYqz1GJWHkX-XWpRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAH76GKOidxFZ7R1pQZ2W9BRBCxEnLXNHQGrXbAUmouozBUj51Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grzegorz Jaszczyk <jaz@semihalf.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, Lior Amsalem <alior@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 22, 2016 at 4:10 AM, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
+> Hi Rob,
+>
+> 2016-07-22 0:16 GMT+02:00 Rob Herring <robh@kernel.org>:
+>> On Thu, Jul 21, 2016 at 02:44:11PM +0200, Grzegorz Jaszczyk wrote:
+>>> -compatible = "marvell,a398-db", "marvell,armada398", "marvell,armada390";
+>>> +compatible = "marvell,a398-db", "marvell,armada398", "marvell,armada395", "marvell,armada390";
+>>
+>> If 395 came after 398, then it should come first in the order. This
+>> implies that marvell,armada398 is a better match than marvell,armada395.
+>> Or perhaps you shouldn't have both?
+>>
+>> Rob
+>
+> I am not sure if I get your point. The Armada-398 extends the
+> Armada-395 about 2 additional SATA ports (as you can see in commit
+> "[PATCH 15/18] ARM: mvebu: a398: update the dtsi about missing
+> interfaces"). In this example the a398-db board contains the Armada398
+> SoC, so it is a better match and goes first.
 
---UUBKWyapWpFAak7q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But your patch title is adding 395 support, but you are adding the
+string to a 398 based board. It would make sense to have 395 here if
+the OS already had support for 395 and you want to support the 398
+without updating the OS. That doesn't seem to apply here.
 
-On Mon, Jul 25, 2016 at 02:17:11PM +0200, Mirza Krak wrote:
-> 2016-07-25 13:14 GMT+02:00 Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> > On Tue, Jul 19, 2016 at 03:36:37PM +0200, Mirza Krak wrote:
-[...]
-> >> +
-> >> +     if (of_get_child_count(of_node))
-> >> +             ret =3D of_platform_populate(of_node,
-> >> +                                of_default_bus_match_table,
-> >> +                                NULL, &pdev->dev);
-> >
-> > Why the extra check? of_platform_populate() is almost a no-op if there
-> > aren't any children anyway. What it will do is set the OF_POPULATED_BUS
-> > flag, but I think we want that irrespective of whether or not there are
-> > any children.
-> >
-> > Was there any problem with calling it unconditionally that made you opt
-> > for the extra check?
->=20
-> I have not tested calling it unconditionally. Used another driver as
-> reference and they had that condition (drivers/bus/imx-weim.c), that
-> driver does not mention why the condition is there. But will test
-> removing the condition and see what happens.
+> Quite the same is for existing armada-388-db.dts, in which compatible
+> looks like this:
+> compatible = "marvell,a385-db", "marvell,armada388",
+> "marvell,armada385", "marvell,armada380";
 
-If that works fine for Tegra, it might be a good idea to get rid of the
-call in the imx-weim.c driver, too.
+Maybe so, but IMO this looks a bit excessive.
 
-> >> +static struct platform_driver nor_driver =3D {
-> >> +     .driver =3D {
-> >> +             .name           =3D "tegra-nor",
-> >> +             .of_match_table =3D nor_id_table,
-> >> +     },
-> >> +};
-> >> +module_platform_driver_probe(nor_driver, nor_probe);
-> >> +
-> >> +MODULE_AUTHOR("Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org");
-> >> +MODULE_DESCRIPTION("NVIDIA Tegra NOR Bus Driver");
-> >> +MODULE_LICENSE("GPL");
-> >
-> > You're header comment says GPL version 2, which means that the
-> > MODULE_LICENSE needs to be "GPL v2". "GPL" means "version 2 or later".
->=20
-> Ok, I do not really mind it being GPL version 2 or later so will
-> change the header comment instead if that is ok.
+The problem is what if you need to apply a fix for only 395 (or 385),
+but not 398? If you put both strings in, you can't distinguish you are
+running on a 395 or 398 SoC. You would have to check for !398 and any
+other SoCs you've claimed are 395 compatible. Maybe you have ID
+registers you can read to distinguish SoCs, but then you don't need
+the strings in that case either. The flip side is if you need a fix
+for both, then the OS can easily check for either string.
 
-I think "GPL v2" is traditionally more common in kernel code, but as the
-author the decision is obviously yours.
-
-Thierry
-
---UUBKWyapWpFAak7q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXlhcSAAoJEN0jrNd/PrOhxrkQAKIfNnJW/ScRBGHbRXFNx76t
-jew18H44Px4L2AEbbWXwHFvflQ3TQ3n5M0wL7hu30lvbVh3oKMg80476HMnveUP2
-rV9rWmMRIAWL7yBGdDGWE/b8g9NvT7oteLxPcHq0+uWhq0W7nnfdNNeoeJ/MHClA
-XK0cN9/aBXn7ozo1nYXCcq7cxxPzYUmAvLMbwgawcX7YaY131QGNP+7w13sti3P+
-H7Tro+MJLzwReJNG9q047oBCTrITXvx8Kt91ujQKjI+u0ZmxKjmIaVaNIch0olHu
-9VgtorPZwOjPhAfS6K1zTlHHTUok0QPCd7rNhkXp/qi2aPB9Kksdk0LAVRS0lXln
-vsLe25Fdn+y8jxTLrwzFNcKD3gWzUwxFOVVffoRWN+OywoPpY2zqCBQflGDqfC7u
-2YUgyw7XVzCuVfJRqIT7jMdM3Cr0nrWW1OnSj29DPgAZRxKeMmiDN1GA2b6CZfPS
-SngKBNgEUPoXo8sc8lTp/ytwXIys7smgf3yyO/D0hXyUCiRa0h6mLhqzNF5lbZvo
-Gqo6MHqayGaZt0x67FlssSEWic+nGup55QPEyEFTZ9C3N7tOdV+w+yTPiRehWr/Z
-MsbvT94eMiBnc+Qxc3gtqGPOC8/Wdbsgu+ZE79GW7UXWjls8bYMuOfD69WuvuoFk
-0podG/7XHyb2nBwLheW1
-=yf9T
------END PGP SIGNATURE-----
-
---UUBKWyapWpFAak7q--
+Rob
