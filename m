@@ -1,74 +1,77 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC 3/6] dt/bindings: Add bindings for Tegra20/30 NOR bus driver
-Date: Mon, 25 Jul 2016 09:14:27 +0100
-Message-ID: <88fb7138-f2b4-b51c-307b-5ef69b953498@nvidia.com>
-References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
- <1468935397-11926-4-git-send-email-mirza.krak@gmail.com>
- <434561ec-510e-a3bf-c7b6-c961db299bd6@nvidia.com>
- <CALw8SCU0cz6mbO=oudCZ4-=2PHVORNt3gwmg2bzNjyhJFnWS3g@mail.gmail.com>
- <8e9cdefd-68d1-b788-92fb-b74aae1713c8@nvidia.com>
- <CALw8SCXb29NM=BRnUBsnFFObe25fSFi2mzvhrb5CvvJVCcWRfA@mail.gmail.com>
+From: wenpan <wenpan@hisilicon.com>
+Subject: Re: [PATCH v2] i2c: hibvt: add Hisilicon BVT I2C controller driver
+Date: Mon, 25 Jul 2016 15:28:04 +0800
+Message-ID: <b964a669-8c78-5551-4fbc-c61f504bab15@hisilicon.com>
+References: <1468316448-15256-1-git-send-email-wenpan@hisilicon.com>
+ <20160716201555.GA6559@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALw8SCXb29NM=BRnUBsnFFObe25fSFi2mzvhrb5CvvJVCcWRfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160716201555.GA6559@rob-hp-laptop>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: wsa@the-dreams.de, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, wenpan@hisilicom.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
-On 22/07/16 20:07, Mirza Krak wrote:
-> 2016-07-22 11:32 GMT+02:00 Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
+On 2016/7/17 4:15, Rob Herring wrote:
+> On Tue, Jul 12, 2016 at 05:40:48PM +0800, Pan Wen wrote:
+>> add Hisilicon BVT I2C controller driver support.
 >>
->> On 21/07/16 21:10, Mirza Krak wrote:
->>> 2016-07-21 11:56 GMT+02:00 Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
->>>>
->>>> I wonder if it is worth mentioning that the chip-select specified in the
->>>> "nvidia,config" prop should match that in the "ranges" prop unless you
->>>> have some external decoding logic to provide an external chip-select.
->>>> Which raises a question, what does the chip-select in the ranges
->>>> actually represent? I am not sure if there is a common practice here for
->>>> device tree when boards have external logic to provide additional
->>>> chip-selects. I am sure this is quite common.
->>>
->>> I do not understand why CS pin setting in nvidia,config need to match
->>> the "ranges" prop? Other then maybe cosmetics.
+>> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+>> ---
+>> change log
+>> v2:
+>> 1)Fixed a compile error.
+>> 2)Dropped the clock-names property.
+>>  .../devicetree/bindings/i2c/i2c-hibvt.txt          |  23 +
+>>  drivers/i2c/busses/Kconfig                         |  10 +
+>>  drivers/i2c/busses/Makefile                        |   1 +
+>>  drivers/i2c/busses/i2c-hibvt.c                     | 736 +++++++++++++++++++++
+>>  4 files changed, 770 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+>>  create mode 100644 drivers/i2c/busses/i2c-hibvt.c
 >>
->> Yes it would be cosmetic. That said, I even wonder if CS needs to be
->> exposed at all given that they all map to the same CPU address space.
->> Couldn't your binding for the CAN devices be as follows?
->>
->> nor@70009000 {
->>         ...
->>
->>         can@48000000 {
->>                 ...
->>         };
->>
->>         can@48040000 {
->>                 ...
->>         };
->> };
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+>> new file mode 100644
+>> index 0000000..9b88afe
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-hibvt.txt
+>> @@ -0,0 +1,23 @@
+>> +Hisilicon BVT I2C master controller
+>> +
+>> +Required properties:
+>> +- compatible: should be "hisilicon,hibvt-i2c".
 > 
-> This has also crossed my mind, maybe just get rid of the "ranges" prop
-> and do like you have above. But then again I do not know what is
-> preferred so I went with "ranges" prop initially.
-> 
-> 
->>
->> Problem is if you did have devices on different chip-selects then how
->> would these be handled? They could not point to the same physical
->> address. I am not sure if there is a way to do that in DT?
-> 
-> Having trouble following your though here. We do not have "different"
-> chip-selects?
+> Needs a SoC specific compatible string.
+>
 
-I meant that the device has multiple chip-selects and so I was not sure
-the best way to handle this for the GMI.
+OK. Thanks for your comments. I will add a SoC specific compatible string in next version.
 
-Jon
+Thanks,
+Pan.
 
--- 
-nvpublic
+>> +- reg: physical base address of the controller and length of memory mapped.
+>> +     region.
+>> +- interrupts: interrupt number to the cpu.
+>> +- clocks: phandles to input clocks.
+>> +
+>> +Optional properties:
+>> +- clock-frequency: Desired I2C bus frequency in Hz, otherwise defaults to 100000.
+>> +
+>> +Other properties:
+>> +see Documentation/devicetree/bindings/i2c/i2c.txt.
+>> +
+>> +Examples:
+>> +i2c_bus0: i2c@12110000 {
+>> +	compatible = "hisilicon,hibvt-i2c";
+>> +	reg = <0x12110000 0x100>;
+>> +	interrupts = <20>;
+>> +	clocks = <&crg_ctrl HI3516CV300_APB_CLK>;
+>> +	clock-frequency = <100000>;
+>> +};
+> 
+> .
+> 
