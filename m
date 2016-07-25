@@ -1,70 +1,31 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2 v5] iio: magn: DT bindings for AK8974
-Date: Mon, 25 Jul 2016 15:54:54 +0200
-Message-ID: <1469454895-13659-1-git-send-email-linus.walleij@linaro.org>
+Subject: Re: [PATCH] iio: document bindings for mounting matrixes
+Date: Mon, 25 Jul 2016 15:57:24 +0200
+Message-ID: <CACRpkdbUorArtpy5KH46TmaLHphj3EerQ6cJDfDu5YWZkGFi=w@mail.gmail.com>
+References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org>
+ <06168d06-b609-a0ec-945e-aa36a4dbe795@kernel.org> <57960AAF.1060103@parrot.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57960AAF.1060103-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the AK8974 magnetometer, similar
-to those for the AK8975.
+On Mon, Jul 25, 2016 at 2:48 PM, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org> wrote:
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v4->v5:
-- No changes, just resend.
-ChangeLog v3->v4:
-- Add support for an optional mounting matrix
-ChangeLog v2->v3:
-- No changes, just reposting to keep together with the series
-ChangeLog v1->v2:
-- No changes, just reposting to keep together with the series
----
- .../bindings/iio/magnetometer/ak8974.txt           | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
+> I'm wondering how to ensure consistent documentation between sysfs
+> iio ABI and DT binding since there will be duplicates at some point.
+> Cross-refering Documentation/devicetree/bindings/iio/mount-matrix.txt within
+> Documentation/ABI/testing/sysfs-bus-iio might be an option since "DT
+> bindings
+> are (in theory, mind you) a standards document used by other" as Linus said.
 
-diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
-new file mode 100644
-index 000000000000..77d5aba1bd8c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt
-@@ -0,0 +1,29 @@
-+* Asahi Kasei AK8974 magnetometer sensor
-+
-+Required properties:
-+
-+- compatible : should be "asahi-kasei,ak8974"
-+- reg : the I2C address of the magnetometer
-+
-+Optional properties:
-+
-+- avdd-supply: regulator supply for the analog voltage
-+  (see regulator/regulator.txt)
-+- dvdd-supply: regulator supply for the digital voltage
-+  (see regulator/regulator.txt)
-+- interrupts: data ready (DRDY) and interrupt (INT1) lines
-+  from the chip, the DRDY interrupt must be placed first.
-+  The interrupts can be triggered on rising or falling
-+  edges alike.
-+- mount-matrix: an optional 3x3 mounting rotation matrix
-+
-+Example:
-+
-+ak8974@0f {
-+	compatible = "asahi-kasei,ak8974";
-+	reg = <0x0f>;
-+	avdd-supply = <&foo_reg>;
-+	dvdd-supply = <&bar_reg>;
-+	interrupts = <0 IRQ_TYPE_EDGE_RISING>,
-+		     <1 IRQ_TYPE_EDGE_RISING>;
-+};
--- 
-2.7.4
+That's my position on the issue, if the documents should refer each other
+in any direction the sysfs should reference the DT bindings.
+
+(Maybe someone will slap me for this...)
+
+Yours.
+Linus Walleij
