@@ -1,60 +1,28 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
-Date: Mon, 25 Jul 2016 10:27:01 +0000
-Message-ID: <C89496FEAE474D468F30D558A9468D9F26CFB7EA@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
- <20160602225815.GA5508@rob-hp-laptop>
- <C89496FEAE474D468F30D558A9468D9F26CF8BC0@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160711220623.GB8465@kroah.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add I2C clocks
+Date: Mon, 25 Jul 2016 13:37:23 +0300
+Message-ID: <90b02c03-151d-4480-cb61-495979557078@cogentembedded.com>
+References: <1618499.8bcj8adpVO@wasted.cogentembedded.com>
+ <1841031.5KOUl1WdV5@wasted.cogentembedded.com>
+ <20160725015137.GH12825@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "balbi@ti.com" <balbi@ti.com>, Hyun Kwon <hyunk@xilinx.com>, Radhey Shyam Pandey <radheys@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160725015137.GH12825@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ping!!
+On 7/25/2016 4:51 AM, Simon Horman wrote:
 
-> -----Original Message-----
-> From: Nava kishore Manne
-> Sent: Wednesday, July 13, 2016 1:00 PM
-> To: 'gregkh@linuxfoundation.org' <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh@kernel.org>; pawel.moll@arm.com;
-> mark.rutland@arm.com; ijc+devicetree@hellion.org.uk;
-> galak@codeaurora.org; Michal Simek <michals@xilinx.com>; Soren
-> Brinkmann <sorenb@xilinx.com>; balbi@ti.com; Hyun Kwon
-> <hyunk@xilinx.com>; Radhey Shyam Pandey <radheys@xilinx.com>;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org
-> Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
-> 
-> Hi Greg,
-> 
-> > > Ping!!
-> >
-> > <snip>
-> >
-> > >
-> > > This email and any attachments are intended for the sole use of the
-> > > named
-> > recipient(s) and contain(s) confidential information that may be
-> > proprietary, privileged or copyrighted under applicable law. If you
-> > are not the intended recipient, do not read, copy, or forward this
-> > email message or any attachments. Delete this email message and any
-> attachments immediately.
-> >
-> > You do realize that with an email footer like this, you prevent any of
-> > us from responding to you, sorry.  I shouldn't even be writing this...
-> 
-> Sorry something fishy happened with my email-client I have fixed it now next
-> time onwards will take care before giving replies...
-> 
-> Regards,
-> Navakishore.
-> >
-> 
-> 
-> > greg k-h
+>> Describe the I2C[0-5] clocks in the R8A7792 device tree.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> Thanks, I have queued this up for v4.8.
+
+    4.9 you mean?
+
+MBR, Sergei
