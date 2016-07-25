@@ -1,46 +1,68 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: document bindings for mounting matrixes
-Date: Mon, 25 Jul 2016 10:42:45 +0200
-Message-ID: <CACRpkdYrMWDR2s=QnP3K5V5iL0rKpw16phJd2xKAiH6sG=cY1Q@mail.gmail.com>
-References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org> <06168d06-b609-a0ec-945e-aa36a4dbe795@kernel.org>
+From: Yangbo Lu <yangbo.lu@nxp.com>
+Subject: RE: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Mon, 25 Jul 2016 06:12:18 +0000
+Message-ID: <HE1PR04MB088913D39528958C6905D43DF80D0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net>
+	 <1468723822-30457-5-git-send-email-oss@buserror.net>
+	 <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
+	 <146909676646.16700.8383344640490662952@concordia>
+ <1469119526.25630.42.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <06168d06-b609-a0ec-945e-aa36a4dbe795-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1469119526.25630.42.camel@buserror.net>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: Scott Wood <oss@buserror.net>, Michael Ellerman <mpe@ellerman.id.au>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 24, 2016 at 9:03 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-
->> Please help out to get this right, I think this could be confusing
->> to users unless documented properly. I think the doc has some rough
->> edges since I'm not the smartest in physics nor english at all times.
->
-> Note that there is rather more substantial documentation in the
-> sysfs abi docs.
->
-> Documentation/ABI/testing/sysfs-bus-iio
-
-Yes I used that actually, for the magnetometer example.
-
-Thanks anyways!
-
-> That's not to say we shouldn't have better docs for the
-> binding, but rather that we should make sure they agree ;)
-
-Yes, this is mainly for establishing terminology, as the DT bindings
-are (in theory, mind you) a standards document used by other
-operating systems as well.
-
-There are some problems with the Linux implementation,
-primarily that it is "opt-in per driver" and I think it would make
-sense to try to enable it by default for any 3-axis 3D things
-and move all code to a central spot, if possible. I also think
-we should patch generic_buffer to make use of the mount
-matrix if it finds one. (I know, talk is cheap, show me the
-code, it's all on my TODO list.)
-
-Yours,
-Linus Walleij
+SGkgU2NvdHQsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTY290
+dCBXb29kIFttYWlsdG86b3NzQGJ1c2Vycm9yLm5ldF0NCj4gU2VudDogRnJpZGF5LCBKdWx5IDIy
+LCAyMDE2IDEyOjQ1IEFNDQo+IFRvOiBNaWNoYWVsIEVsbGVybWFuOyBBcm5kIEJlcmdtYW5uDQo+
+IENjOiBsaW51eC1tbWNAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXhwcGMtDQo+IGRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC1rZXJuZWxAdmdlci5r
+ZXJuZWwub3JnOyBZYW5nYm8gTHUNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MTEgNC81XSBwb3dl
+cnBjL2ZzbDogbW92ZSBtcGM4NXh4LmggdG8NCj4gaW5jbHVkZS9saW51eC9mc2wNCj4gDQo+IE9u
+IFRodSwgMjAxNi0wNy0yMSBhdCAyMDoyNiArMTAwMCwgTWljaGFlbCBFbGxlcm1hbiB3cm90ZToN
+Cj4gPiBRdW90aW5nIFNjb3R0IFdvb2QgKDIwMTYtMDctMjEgMDQ6MzE6NDgpDQo+ID4gPg0KPiA+
+ID4gT24gV2VkLCAyMDE2LTA3LTIwIGF0IDEzOjI0ICswMjAwLCBBcm5kIEJlcmdtYW5uIHdyb3Rl
+Og0KPiA+ID4gPg0KPiA+ID4gPiBPbiBTYXR1cmRheSwgSnVseSAxNiwgMjAxNiA5OjUwOjIxIFBN
+IENFU1QgU2NvdHQgV29vZCB3cm90ZToNCj4gPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4g
+RnJvbTogeWFuZ2JvIGx1IDx5YW5nYm8ubHVAbnhwLmNvbT4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+
+IE1vdmUgbXBjODV4eC5oIHRvIGluY2x1ZGUvbGludXgvZnNsIGFuZCByZW5hbWUgaXQgdG8gc3Zy
+LmggYXMgYQ0KPiA+ID4gPiA+IGNvbW1vbiBoZWFkZXIgZmlsZS7CoMKgVGhpcyBTVlIgbnVtYmVy
+c3BhY2UgaXMgdXNlZCBvbiBzb21lIEFSTQ0KPiA+ID4gPiA+IGNoaXBzIGFzIHdlbGwgYXMgUFBD
+LCBhbmQgZXZlbiB0byBjaGVjayBmb3IgYSBQUEMgU1ZSIG11bHRpLWFyY2gNCj4gPiA+ID4gPiBk
+cml2ZXJzIHdvdWxkIG90aGVyd2lzZSBuZWVkIHRvIGlmZGVmIHRoZSBoZWFkZXIgaW5jbHVzaW9u
+IGFuZA0KPiA+ID4gPiA+IGFsbCByZWZlcmVuY2VzIHRvIHRoZSBTVlIgc3ltYm9scy4NCj4gPiA+
+ID4gPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFlhbmdibyBMdSA8eWFuZ2JvLmx1QG54cC5j
+b20+DQo+ID4gPiA+ID4gQWNrZWQtYnk6IFdvbGZyYW0gU2FuZyA8d3NhQHRoZS1kcmVhbXMuZGU+
+DQo+ID4gPiA+ID4gQWNrZWQtYnk6IFN0ZXBoZW4gQm95ZCA8c2JveWRAY29kZWF1cm9yYS5vcmc+
+DQo+ID4gPiA+ID4gQWNrZWQtYnk6IEpvZXJnIFJvZWRlbCA8anJvZWRlbEBzdXNlLmRlPg0KPiA+
+ID4gPiA+IFtzY290dHdvb2Q6IHVwZGF0ZSBkZXNjcmlwdGlvbl0NCj4gPiA+ID4gPiBTaWduZWQt
+b2ZmLWJ5OiBTY290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0Pg0KPiA+ID4gPiA+DQo+ID4gPiA+
+IEFzIGRpc2N1c3NlZCBiZWZvcmUsIHBsZWFzZSBkb24ndCBpbnRyb2R1Y2UgeWV0IGFub3RoZXIg
+dmVuZG9yDQo+ID4gPiA+IHNwZWNpZmljIHdheSB0byBtYXRjaCBhIFNvQyBJRCBmcm9tIGEgZGV2
+aWNlIGRyaXZlci4NCj4gPiA+ID4NCj4gPiA+ID4gSSd2ZSBwb3N0ZWQgYSBwYXRjaCBmb3IgYW4g
+ZXh0ZW5zaW9uIHRvIHRoZSBzb2NfZGV2aWNlDQo+ID4gPiA+IGluZnJhc3RydWN0dXJlIHRvIGFs
+bG93IGNvbXBhcmluZyB0aGUgcnVubmluZyBTb0MgdG8gYSB0YWJsZSBvZg0KPiA+ID4gPiBkZXZp
+Y2VzLCB1c2UgdGhhdCBpbnN0ZWFkLg0KPiA+ID4gQXMgSSBhc2tlZCBiZWZvcmUsIGluIHdoaWNo
+IHJlbGV2YW50IG1haW50YWluZXJzaGlwIGNhcGFjaXR5IGFyZSB5b3UNCj4gPiA+IE5BQ0tpbmcg
+dGhpcz8NCj4gPiBJJ2xsIG5hY2sgdGhlIHBvd2VycGMgcGFydCB1bnRpbCB5b3UgZ3V5cyBjYW4g
+YWdyZWUuDQo+IA0KPiBPSywgSSd2ZSBwdWxsZWQgdGhlc2UgcGF0Y2hlcyBvdXQuDQo+IA0KPiBG
+b3IgdGhlIE1NQyBpc3N1ZSBJIHN1Z2dlc3QgdXNpbmcgaWZkZWYgQ09ORklHX1BQQyBhbmQgbWZz
+cHIoU1BSTl9TVlIpDQo+IGxpa2UgdGhlIGNsb2NrIGRyaXZlciBkb2VzWzFdIGFuZCB3ZSBjYW4g
+cmV2aXNpdCB0aGUgaXNzdWUgaWYvd2hlbiB3ZQ0KPiBuZWVkIHRvIGRvIHNvbWV0aGluZyBzaW1p
+bGFyIG9uIGFuIEFSTSBjaGlwLg0KDQpbTHUgWWFuZ2JvLUI0NzA5M10gSSByZW1lbWJlcmVkIHRo
+YXQgVWZmZSBoYWQgb3Bwb3NlZCB1cyB0byBpbnRyb2R1Y2Ugbm9uLWdlbmVyaWMgaGVhZGVyIGZp
+bGVzKGxpa2UgJyNpbmNsdWRlIDxhc20vbXBjODV4eC5oPicpDQppbiBtbWMgZHJpdmVyIGluaXRp
+YWxseS4gU28gSSB0aGluayBpdCB3aWxsIG5vdCBiZSBhY2NlcHRlZCB0byB1c2UgaWZkZWYgQ09O
+RklHX1BQQyBhbmQgbWZzcHIoU1BSTl9TVlIpLi4uDQpBbmQgdGhpcyBtZXRob2Qgc3RpbGwgY291
+bGRu4oCZdCBnZXQgU1ZSIG9mIEFSTSBjaGlwIG5vdy4NCg0KQW55IG90aGVyIHN1Z2dlc3Rpb24g
+aGVyZT8NClRoYW5rIHlvdSB2ZXJ5IG11Y2guDQoNCi0gWWFuZ2JvIEx1DQoNCj4gDQo+IC1TY290
+dA0KPiANCj4gWzFdIE9uZSBvZiB0aGUgaXNzdWVzIHdpdGggQXJuZCdzIGFwcHJvYWNoIGlzIHRo
+YXQgaXQgd291bGRuJ3QgaGF2ZQ0KPiB3b3JrZWQgZm9yIGVhcmx5IHRoaW5ncyBsaWtlIHRoZSBj
+bG9jayBkcml2ZXIsIGFuZCBoZSBkaWRuJ3Qgc2VlbSB0byBtaW5kDQo+IHVzaW5nIGlmZGVmIGFu
+ZA0KPiBtZnNwcigpIHRoZXJlLg0KDQo=
