@@ -1,94 +1,42 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC 6/6] bus: Add support for Tegra NOR controller
-Date: Mon, 25 Jul 2016 12:57:13 +0200
-Message-ID: <20160725105713.GA21170@ulmo.ba.sec>
-References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
- <1468935397-11926-7-git-send-email-mirza.krak@gmail.com>
- <f6df33eb-53ae-699b-9e1f-69eb7fed7da0@nvidia.com>
- <CALw8SCVy4ud5_+gS3C8WeyTCV0m_4R2xjdEY4vCKEq_3-aFanw@mail.gmail.com>
- <dbbb5c9f-8c67-9d9f-171b-64cd18353411@nvidia.com>
- <CALw8SCXCdVMKgemEyQ-MZbxdthkPCDVzi+3boqtXk1_XNjcz4g@mail.gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v3 1/2] Documentation: Add sbs-manager device tree node
+ documentation
+Date: Mon, 25 Jul 2016 12:33:20 +0200
+Message-ID: <dfc8249b-08ec-888d-7a11-7c6033a1ab64@axentia.se>
+References: <1bIiDr-0004G1-0P>
+ <1468349295-4935-1-git-send-email-karl-heinz@schneider-inet.de>
+ <1468349295-4935-2-git-send-email-karl-heinz@schneider-inet.de>
+ <20160719041432.GB1640@katana>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALw8SCXCdVMKgemEyQ-MZbxdthkPCDVzi+3boqtXk1_XNjcz4g@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mirza Krak <mirza.krak@gmail.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160719041432.GB1640@katana>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Phil Reid <preid@electromag.com.au>
 List-Id: devicetree@vger.kernel.org
 
+On 2016-07-19 06:14, Wolfram Sang wrote:
+>> +batman@0a {
+>> +    compatible = "lltc,ltc1760";
+>> +    reg = <0x0a>;
+>> +    #address-cells = <1>;
+>> +    #size-cells = <0>;
+>> +
+>> +    i2c@1 {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+> 
+> Rob, aren't those two lines inherited from above?
 
---ReaqsoxgOBHFXBhH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I too think they are inherited, but am a bit undecided whether I want
+that fact to be explored or not, as they just happen to match. They do
+not express the same thing (it is for the i2c-mux number in the parent,
+and for the i2c device address in the children).
 
-On Fri, Jul 22, 2016 at 09:18:37PM +0200, Mirza Krak wrote:
-> 2016-07-22 11:38 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
-> >>> The driver should have a remove function given that we can build as a
-> >>> module.
-> >>
-> >> At the moment I do not know what we would do in a remove function and
-> >> hence me not adding one.
-> >
-> > Should just be the inverse of the probe (although there is no inverse
-> > for the parsing DT bit). If you don't wish to add a remove, that is
-> > fine, but make the driver a 'bool' and not 'tristate' in the Kconfig so
-> > it cannot be configured as a module.
->=20
-> I understand the concept of a remove function, but I use devm_ calls
-> for all resources. These should be handled by the device core on a
-> driver detach?
->=20
-> One thing came to mind now that could be done in a remove method and
-> that is clearing the CONFIG_GO bit, or I could just do that first on
-> probe instead to make sure the controller is stopped.
->=20
-> Ok, one more thing came to mind, and that is depopulating the child
-> devices. Got it remove function it is then.
->=20
-> >>>> +module_platform_driver_probe(nor_driver, nor_probe);
-> >>>
-> >>> I would use "tegra_nor" namespace for all the structs, functions, etc.
-> >>> However, we may prefer to go with GMI and in which case tegra_gmi_pro=
-be,
-> >>> etc.
-> >>
-> >> ACK. Who gets the last call on what we should call the driver? It
-> >> seems that we both think GMI is a better name, do we need a third? :).
-> >
-> > The patches would have to go via Thierry and so ultimately, Thierry.
-> > However, I can't imagine he would object to GMI ;-)
->=20
-> Eagerly awaiting Thierry`s comments :).
+But the repetitions are indeed tedious when there are many muxed
+buses...
 
-Let's go with GMI. The TRM has a mix of GMI vs. SNOR, but as Jon points
-out the pinmux doesn't mention SNOR, so in order to hopefully reduce the
-confusion, let's stick with GMI.
-
-Thierry
-
---ReaqsoxgOBHFXBhH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXlfCGAAoJEN0jrNd/PrOh93MP/jsPdVE0PwR+Z94UQsYutowG
-t4bK/9ErFyvkKWiNDRTnKudga+1sOhg3NCsxs6FeJ2Xh0Cr3DVPJuJCH0ZknOkGu
-bqErhIUUaG7fHcdBt2H7VGBYDzQDN5eWVvJWKW7Bik4V8AGhV4EGnfkrhnWU7VVm
-B+qzmiGd2B9ec+F5xVJL4uB+M/Ma50N8aldk3kwqlD7pRfuux8nC7iuKMdF/hotg
-m0Nv/+zBN+RaOKCsIFoSKOITRocFF0oM6R6YX4ZsYLNELQyDoXkO51rtnx3LlrGN
-ce2mcddtSyBorAVVyfPyJFgUG2EJG0EF5Z4yQiBb946DU8x4T4W5M87AgngxsIbb
-aHnkHcSIG+PA73Sg/gDw4bzCKiwaMUD8zW7ZRsx2m9whdLZgfi8I9gI86+KPJUFm
-kSujU8bh6ymOKiKC8r0hsgbmBaIQ6AurxxAfxfKcpK5GHr+Yz6qDYUWCiGnCYHXs
-4Kwb2RlFfmmlw3CpVV4ikZzyCEIsu0UxIskgExaMk5+2rF+sj+x3I5iRZt2uJcv0
-xZR6js7H4aphEO1aIpalaLIxliUhoNZP/7+urJKMZdC4rGfzpGxkZpPHNc3Of1Ua
-fmaB6hXoDQwfZVncIWWrfBHlsr8M9OM3rMZSnJEQG0pDtTB+aBbkgvzp0tsR/BSc
-mKs9izCN/aTemZtwCZAw
-=MF8X
------END PGP SIGNATURE-----
-
---ReaqsoxgOBHFXBhH--
+Cheers,
+Peter
