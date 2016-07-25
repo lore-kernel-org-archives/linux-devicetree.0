@@ -1,293 +1,179 @@
-From: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
-Date: Mon, 25 Jul 2016 15:37:23 +0300
-Message-ID: <1469450243-19138-1-git-send-email-stefan.mavrodiev@gmail.com>
-Reply-To: Stefan.Mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] iio: document bindings for mounting matrixes
+Date: Mon, 25 Jul 2016 14:48:47 +0200
+Message-ID: <57960AAF.1060103@parrot.com>
+References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org> <06168d06-b609-a0ec-945e-aa36a4dbe795@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCSP3JM3Y4JBBDUQ3C6AKGQEMUEE72I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <06168d06-b609-a0ec-945e-aa36a4dbe795-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A33-OLinuXino is A33 development board designed by Olimex LTD.
+Linus, Jonathan,
 
-It has AXP233 PMU, 1GB DRAM, a micro SD card, one USB-OTG connector,
-headphone and mic jacks, connector for LiPo battery and optional
-4GB NAND Flash.
+On 07/24/2016 09:03 PM, Jonathan Cameron wrote:
+> On 24/07/16 11:17, Linus Walleij wrote:
+>> The mounting matrix for sensors was introduced in
+>> commit dfc57732ad38 ("iio:core: mounting matrix support")
+>>
+>> However the device tree bindings are very terse and since this is
+>> a widely applicable property, we need a proper binding for it
+>> that the other bindings can reference. This will also be useful
+>> for other operating systems and sensor engineering at large.
+>>
+>> I think all 3D sensors should support it, the current situation
+>> is probably that the mounting information is confined in magic
+>> userspace components rather than using the mounting matrix, which
+>> is not good for portability and reuse.
+>>
+>> Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+>> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> Please help out to get this right, I think this could be confusing
+>> to users unless documented properly. I think the doc has some rough
+>> edges since I'm not the smartest in physics nor english at all times.
+> Note that there is rather more substantial documentation in the
+> sysfs abi docs.
+>
+> Documentation/ABI/testing/sysfs-bus-iio
+Description of mounting matrix DT property structure was probably missing,
+i.e. how coefficients are mapped along which axes, floating point format,
+etc...
 
-It has two 40-pin headers. One for LCD panel, and one for
-additional modules. Also there is CSI/DSI connector.
+However I'm wondering how to ensure consistent documentation between sysfs
+iio ABI and DT binding since there will be duplicates at some point.
+Cross-refering Documentation/devicetree/bindings/iio/mount-matrix.txt within
+Documentation/ABI/testing/sysfs-bus-iio might be an option since "DT 
+bindings
+are (in theory, mind you) a standards document used by other" as Linus said.
 
-Signed-off-by: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes for v2:
-        - Removed unused power nodes
-        - Removed default-trigger for green led
-        - Removed "always-on" option for LCD power
-
-Changes for v3:
-        - Nodes are sorted alphabetically
-
-Changes for v4:
-	- Green led renamed
-	- Added OTG support
-
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/sun8i-a33-olinuxino.dts | 226 ++++++++++++++++++++++++++++++
- 2 files changed, 227 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 016611d..e02a97e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -759,6 +759,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a33-et-q8-v1.6.dtb \
- 	sun8i-a33-ga10h-v1.1.dtb \
- 	sun8i-a33-ippo-q8h-v1.2.dtb \
-+	sun8i-a33-olinuxino.dtb \
- 	sun8i-a33-q8-tablet.dtb \
- 	sun8i-a33-sinlinx-sina33.dtb \
- 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-a33-olinuxino.dts b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-new file mode 100644
-index 0000000..3882aa1
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a33-olinuxino.dts
-@@ -0,0 +1,226 @@
-+/*
-+ * Copyright 2016 - Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *                  Olimex LTD. <support-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-a33.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Olimex A33-OLinuXino";
-+	compatible = "olimex,a33-olinuxino","allwinner,sun8i-a33";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pin_olinuxino>;
-+
-+		green {
-+			label = "a33-olinuxino:green:usr";
-+			gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_olinuxino>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	led_pin_olinuxino: led_pins@0 {
-+		allwinner,pins = "PB7";
-+        allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+    };
-+
-+	mmc0_cd_pin_olinuxino: mmc0_cd_pin@0 {
-+		allwinner,pins = "PB4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PB3";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&r_rsb {
-+	status = "okay";
-+
-+	axp22x: pmic@3a3 {
-+		compatible = "x-powers,axp223";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		eldoin-supply = <&reg_dcdc1>;
-+		x-powers,drive-vbus-en;
-+	};
-+};
-+
-+#include "axp22x.dtsi"
-+
-+&reg_aldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-io";
-+};
-+
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <2350000>;
-+	regulator-max-microvolt = <2650000>;
-+	regulator-name = "vdd-dll";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-avcc";
-+};
-+
-+&reg_dc1sw {
-+	regulator-name = "vcc-lcd";
-+};
-+
-+&reg_dc5ldo {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpus";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-dsi";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-sys";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+&reg_drivevbus {
-+	regulator-name = "usb0-vbus";
-+	status = "okay";
-+};
-+
-+&reg_rtc_ldo {
-+	regulator-name = "vcc-rtc";
-+};
-+
-+&simplefb_lcd {
-+	vcc-lcd-supply = <&reg_dc1sw>;
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_b>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>;
-+	usb0_id_det-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
-+	usb0_vbus_power-supply = <&usb_power_supply>;
-+	usb0_vbus-supply = <&reg_drivevbus>;
-+	status = "okay";
-+};
--- 
-2.8.1
+>
+> That's not to say we shouldn't have better docs for the
+> binding, but rather that we should make sure they agree ;)
+>
+> I'll try and take a look through this later in the week.
+>
+> Jonathan
+>> ---
+>>   .../devicetree/bindings/iio/mount-matrix.txt       | 104 +++++++++++++++++++++
+>>   1 file changed, 104 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/mount-matrix.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/mount-matrix.txt b/Documentation/devicetree/bindings/iio/mount-matrix.txt
+>> new file mode 100644
+>> index 000000000000..3e72c92c5689
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/mount-matrix.txt
+>> @@ -0,0 +1,104 @@
+>> +Mounting matrix
+>> +
+>> +The mounting matrix is a device tree property used to orient any IIO device
+>> +that produce three-dimensional data.
+>> +
+>> +The typical usecase is that where a component has an internal representation
+>> +of the (x,y,z) triplets, such as different registers to read these coordinates,
+>> +and thus implying that the component should be mounted in a certain orientation
+>> +relative to some specific point of reference.
+>> +
+>> +For example a device with some kind of screen, where the user is supposed to
+>> +interact with the environment using a accelerometer, gyroscope or magnetometer
+>> +mounted on the same chassis as this screen, will likely take the screen as
+>> +reference to (x,y,z) orientation, with (x,y) corresponding to these axes on the
+>> +screen and (z) being depth, the axis perpendicular to the screen.
+>> +
+>> +The axes may also be flipped: for a screen you probably want (x) coordinates to
+>> +go from negative on the left to positive on the right and (z) depth to be
+>> +negative under the screen and positive in front of it, toward the face of the
+>> +user.
+>> +
+>> +Apart from flipping, a sensor can of course also be mounted in any angle along
+>> +the axes relative to the point of reference. This means that the axes may be
+>> +not only flipped, but tilted.
+>> +
+>> +Examples for some three-dimensional sensor types:
+>> +
+>> +- Accelerometers have their frame of reference is toward the center of gravity,
+>> +  usually to the core of the planet, and users would likely expect a value of
+>> +  9.81N upwards along the (z) axis when the device is held with its screen
+>> +  perpendicular to the planets surface and 0 on the other axes. A reading of
+>> +  the (x,y,z) values will give the orientation of the device relative to the
+>> +  center of the planet, i.e. relative to its surface at this point. Up and down
+>> +  relative to the point of reference can thus be determined.
+>> +
+>> +- Magnetometers (compasses) have their frame of reference relative to the
+>> +  geomagnetic field. In a mounting matrix for a magnetometer sensor the main
+>> +  hardware orientation is defined with respect to the local earth geomagnetic
+>> +  reference frame where (y) is in the ground plane and positive towards
+>> +  magnetic North, (x) is in the ground plane, perpendicular to the North axis
+>> +  and positive towards the East and (z) is perpendicular to the ground plane
+>> +  and positive upwards.
+>> +
+>> +- Gyroscopes detects the movement relative the device itself, and has no other
+>> +  frame of reference than the mounting chassis itself. The angular momentum is
+>> +  defined as orthogonal to the plane of rotation, so if you put the device on a
+>> +  flat surface and spin it around the z axis (such as rotating a device lying
+>> +  flat on a table), you should get a negative value along the (z) axis if
+>> +  rotated clockwise, and a positive value if rotated counter-clockwise
+>> +  according to the right-hand rule.
+>> +
+>> +So unless the sensor is ideally mounted, we need a means to indicate the
+>> +relative orientation of any given sensor of this type.
+>> +
+>> +To achieve this, use the device tree property "mount-matrix" for the sensor.
+>> +This supplies a 3x3 transformation matrix in the strict linear algebraic sense,
+>> +to orient the senor axes relative to a desired point of reference. This means
+>> +the resulting values from the sensor, after scaling to proper units, should be
+>> +multiplied by this matrix to give the proper coordinates in three-dimensional
+>> +space, relative to some relevant point of reference.
+>> +
+>> +The mounting matrix has the layout:
+>> +
+>> + (x0, y0, z0)
+>> + (x1, y1, z1)
+>> + (x2, y2, z3)
+>> +
+>> +And it is represented as an array of strings containing the real values for
+>> +producing the transformation matrix. The real values use a decimal point and
+>> +a minus (-) to indicate a negative value.
+>> +
+>> +Examples:
+>> +
+>> +Identity matrix (nothing happens to the coordinates, which means the device was
+>> +mechanically mounted in an ideal way and we need no transformation):
+>> +
+>> +mount-matrix = "1", "0", "0",
+>> +               "0", "1", "0",
+>> +               "0", "0", "1";
+>> +
+>> +Flipped X axis (negative values means positive):
+>> +
+>> +mount-matrix = "-1", "0", "0",
+>> +               "0", "1", "0",
+>> +               "0", "0", "1";
+>> +
+>> +X and Y flipped (X values are for Y and Y values are for X):
+>> +
+>> +mount-matrix = "0", "1", "0",
+>> +               "1", "0", "0",
+>> +               "0", "0", "1";
+>> +
+>> +Complex angular mounting with X and Z in a certain tilted orienation and
+>> +Y flipped:
+>> +
+>> +mount-matrix = "-0.984807753012208",  /* x0 */
+>> +               "0",                   /* y0 */
+>> +               "-0.173648177666930",  /* z0 */
+>> +               "0",                   /* x1 */
+>> +               "-1",                  /* y1 */
+>> +               "0",                   /* z1 */
+>> +               "-0.173648177666930",  /* x2 */
+>> +               "0",                   /* y2 */
+>> +               "0.984807753012208";   /* z2 */
+>>
