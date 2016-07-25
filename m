@@ -1,46 +1,57 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 14/18] ARM: mvebu: add support for the Armada 395 SoC
- family
-Date: Mon, 25 Jul 2016 20:22:09 +0200
-Message-ID: <20160725202209.5fae4d98@free-electrons.com>
-References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-	<1469105055-25181-16-git-send-email-jaz@semihalf.com>
-	<20160721221605.GA21883@rob-hp-laptop>
-	<CAH76GKOidxFZ7R1pQZ2W9BRBCxEnLXNHQGrXbAUmouozBUj51Q@mail.gmail.com>
-	<CAL_JsqJeObuS8OWeErRA5MX-SrMtu_254A-LtP9-A=xdPO7p1Q@mail.gmail.com>
-	<20160725155050.3aee974e@free-electrons.com>
-	<CAL_JsqL=bkzhjOTcOCeGNvKsAfYg0D=CypZs4sCsQ01pnbitoQ@mail.gmail.com>
+From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Subject: Re: [PATCH v3 2/2] power: Adds support for Smart Battery System
+ Manager
+Date: Mon, 25 Jul 2016 21:49:36 +0200
+Message-ID: <1469476176.22243.10.camel@amnesix>
+References: <1bIiDr-0004G1-0P>
+	 <1468349295-4935-1-git-send-email-karl-heinz@schneider-inet.de>
+	 <1468349295-4935-3-git-send-email-karl-heinz@schneider-inet.de>
+	 <20160719041729.GC1640@katana> <1468954265.3053.3.camel@amnesix>
+	 <e252c587-560e-ee85-5016-a0b92124e422@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL=bkzhjOTcOCeGNvKsAfYg0D=CypZs4sCsQ01pnbitoQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Grzegorz Jaszczyk <jaz@semihalf.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, Lior Amsalem <alior@marvell.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <e252c587-560e-ee85-5016-a0b92124e422@axentia.se>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Phil Reid <preid@electromag.com.au>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Peter, Hi Rob,
 
-On Mon, 25 Jul 2016 10:12:43 -0500, Rob Herring wrote:
-
-> Yes, I get that, but that is only meaningful if you want to run an OS
-> that is only aware of 395 on a 398 SoC/board (though I'd guess the 390
-> compat is enough for that). Otherwise, that property is not really
-> meaningful as the additional nodes are enough to handle what is the
-> superset.
+Am Montag, den 25.07.2016, 12:44 +0200 schrieb Peter Rosin:
+> On 2016-07-19 20:51, Karl-Heinz Schneider wrote:
+> >> Other than that, looks good to me, yet Peter has more insight to
+> >> i2c-muxes these days.
+> >>
+> > Tanks for review. 
+> > 
+> > Will wait another few days before sending a new revision, hence changes
+> > are rather small.
 > 
-> I would agree both are fine if both chips are in fact the same die,
-> just fused or packaged differently. I've seen a lot of chips that are
-> supposed to be sub/supersets of each other, but have different errata
-> lists because they are different die.
+> Looks good to me from a muxing perspective, with very a minor nit that the
+> devicetree bindings do not point to i2c-mux.txt for where "standard i2c-mux
+> nodes" are described.
+Right, will add it.
 
-Unfortunately HW vendors are rarely willing to publicly indicate whether
-the different chips in their families are actually the same die fused
-differently, or really different dies.
+like this: 
+@@ -7,7 +7,8 @@ Required properties:
+ From OS view the device is basically an i2c-mux used to communicate with up to
+ four smart battery devices at address 0xb. The driver actually implements this
+ behaviour. So standard i2c-mux nodes can be used to register up to four slave
+-batteries. Channels will be numerated starting from 1 to 4.
++batteries. See Documentation/devicetree/bindings/i2c/i2c-mux.txt for more
++information on i2c-mux nodes. Channels will be numerated starting from 1 to 4.
+ 
+ Example:
 
-Thomas
+Rob, are you OK with that change?
+> 
+> Cheers,
+> Peter
+tanks.
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Karl-Heinz
+
+
