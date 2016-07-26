@@ -1,7 +1,7 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 4/4] arm: dts: rockchip: add reset node for the exist saradc SoCs
-Date: Tue, 26 Jul 2016 20:13:15 +0800
-Message-ID: <1469535195-5227-4-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v2 3/4] arm64: dts: rockchip: add reset saradc node for rk3368 SoCs
+Date: Tue, 26 Jul 2016 20:13:14 +0800
+Message-ID: <1469535195-5227-3-git-send-email-wxt@rock-chips.com>
 References: <1469535195-5227-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1469535195-5227-1-git-send-email-wxt@rock-chips.com>
@@ -18,42 +18,14 @@ Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
 Changes in v2: None
 
- arch/arm/boot/dts/rk3066a.dtsi | 2 ++
- arch/arm/boot/dts/rk3288.dtsi  | 2 ++
- arch/arm/boot/dts/rk3xxx.dtsi  | 2 ++
- 3 files changed, 6 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index c0ba86c..0d0dae3 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -197,6 +197,8 @@
- 		clock-names = "saradc", "apb_pclk";
- 		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
- 		#io-channel-cells = <1>;
-+		resets = <&cru SRST_SARADC>;
-+		reset-names = "saradc-apb";
- 		status = "disabled";
- 	};
- 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cd33f01..91c4b3c 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -279,6 +279,8 @@
- 		#io-channel-cells = <1>;
- 		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
- 		clock-names = "saradc", "apb_pclk";
-+		resets = <&cru SRST_SARADC>;
-+		reset-names = "saradc-apb";
- 		status = "disabled";
- 	};
- 
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 99bbcc2..e2cd683 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -399,6 +399,8 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index d02a9003..4f44d11 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -270,6 +270,8 @@
  		#io-channel-cells = <1>;
  		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
  		clock-names = "saradc", "apb_pclk";
