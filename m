@@ -1,117 +1,60 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: sun8i: Extend Orange Pi PC dt to also
- handle the PC Plus
-Date: Tue, 26 Jul 2016 23:00:52 +0200
-Message-ID: <785086e6-c50c-ed1c-6de1-13a2234c3f58@redhat.com>
-References: <1468095718-18515-1-git-send-email-hdegoede@redhat.com>
- <20160713084505.GE4761@lukather>
- <bce2b340-a930-8771-4560-dc61bf5828d5@redhat.com>
- <20160725064033.GA7419@lukather>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: document bindings for mounting matrixes
+Date: Tue, 26 Jul 2016 22:01:15 +0100
+Message-ID: <1689ff64-e51d-c23f-fa09-b38ced420bfb@kernel.org>
+References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org>
+ <20160726190758.GA31499@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160725064033.GA7419@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160726190758.GA31499@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 07/25/2016 08:40 AM, Maxime Ripard wrote:
-> Hi,
->
-> On Wed, Jul 13, 2016 at 12:01:41PM +0200, Hans de Goede wrote:
->> Hi,
+On 26/07/16 20:07, Rob Herring wrote:
+> On Sun, Jul 24, 2016 at 12:17:14PM +0200, Linus Walleij wrote:
+>> The mounting matrix for sensors was introduced in
+>> commit dfc57732ad38 ("iio:core: mounting matrix support")
 >>
->> On 13-07-16 10:45, Maxime Ripard wrote:
->>> On Sat, Jul 09, 2016 at 10:21:55PM +0200, Hans de Goede wrote:
->>>> There is a new Orange Pi PC Plus available now, rather then adding
->>>> yet another dts file for this variant, extend the existing
->>>> Orange Pi PC to support the sdio wifi and emmc found on this variant.
->>>>
->>>> Downside of this approach is the following messages in dmesg when run
->>>> on the non Plus Orange Pi PC:
->>>>
->>>> sunxi-mmc 1c10000.mmc: fatal err update clk timeout
->>>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 8, RTO !!
->>>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
->>>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
->>>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
->>>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 55, RTO !!
->>>> sunxi-mmc 1c11000.mmc: smc 2 err, cmd 1, RTO !!
->>>>
->>>> Note these are completely harmless and there is no adverse effect
->>>> to the functioning of the non Plus Orange Pi PC.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>> arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 40 +++++++++++++++++++++++++++++-
->>>> 1 file changed, 39 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
->>>> index b8340f7..f9bf260 100644
->>>> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
->>>> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
->>>> @@ -49,11 +49,13 @@
->>>> #include <dt-bindings/pinctrl/sun4i-a10.h>
->>>>
->>>> / {
->>>> -	model = "Xunlong Orange Pi PC";
->>>> +	model = "Xunlong Orange Pi PC / PC Plus";
->>>> 	compatible = "xunlong,orangepi-pc", "allwinner,sun8i-h3";
->>>>
->>>> 	aliases {
->>>> 		serial0 = &uart0;
->>>> +		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
->>>> +		ethernet1 = &rtl8189ftv;
->>>> 	};
->>>>
->>>> 	chosen {
->>>> @@ -118,6 +120,42 @@
->>>> 	status = "okay";
->>>> };
->>>>
->>>> +/* Note only present on orangepi pc *plus* */
->>>> +&mmc1 {
->>>> +	pinctrl-names = "default";
->>>> +	pinctrl-0 = <&mmc1_pins_a>;
->>>> +	vmmc-supply = <&reg_vcc3v3>;
->>>> +	bus-width = <4>;
->>>> +	non-removable;
->>>> +	status = "okay";
->>>> +
->>>> +	/*
->>>> +	 * Explicitly define the sdio device, so that we can add an ethernet
->>>> +	 * alias for it (which e.g. makes u-boot set a mac-address).
->>>> +	 */
->>>> +	rtl8189ftv: sdio_wifi@1 {
->>>> +		reg = <1>;
->>>> +	};
->>>> +};
->>>
->>> Nothing prevents you from including the orange pi pc dts, from the
->>> orange pi plus dts.
->>>
->>> It prevents the duplication you were trying to avoid, and it doesn't
->>> create all those spurious errors and devices.
+>> However the device tree bindings are very terse and since this is
+>> a widely applicable property, we need a proper binding for it
+>> that the other bindings can reference. This will also be useful
+>> for other operating systems and sensor engineering at large.
 >>
->> That would solve the copy paste problem on the kernel side, but that
->> would still mean adding a new u-boot defconfig for this, which means that
->> all the distro's which ship with prebuild u-boot binaries need to build
->> for yet another board, something which I would like to avoid.
->
-> Still, registering devices that are not present on the board is not an
-> option.
-
-Ok, I'll send a new patch which adds a separate dts file for the Orange Pi
-PC Plus.
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> I think all 3D sensors should support it, the current situation
+>> is probably that the mounting information is confined in magic
+>> userspace components rather than using the mounting matrix, which
+>> is not good for portability and reuse.
+>>
+>> Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+>> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> Please help out to get this right, I think this could be confusing
+>> to users unless documented properly. I think the doc has some rough
+>> edges since I'm not the smartest in physics nor english at all times.
+>> ---
+> 
+> I can at least say I understand how it's supposed to work better now.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> On the duplication topic, of course I agree that sysfs docs should refer 
+> to DT and not vice-versa.
+I'd be tempted to keep a 'full' documentation of all the relevant aspects
+in each place, but make sure there is a cross reference from the sysfs
+ABI docs to the device tree ones as has been suggested.
+(rather than converting the sysfs docs just a cross reference + note
+on how the bindings and attribute are related).
+> 
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
