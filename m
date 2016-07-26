@@ -1,21 +1,19 @@
-From: John Keeping <john@metanate.com>
-Subject: Re: [PATCH 1/4] iio: adc: rockchip_saradc: reset saradc controller
- before programming it
-Date: Tue, 26 Jul 2016 10:00:07 +0100
-Message-ID: <20160726100007.5166e7f9.john@metanate.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/4] iio: adc: rockchip_saradc: reset saradc controller before programming it
+Date: Tue, 26 Jul 2016 11:17:34 +0200
+Message-ID: <12149198.2BnIdx96cc@diego>
 References: <1469513510-1516-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1469513510-1516-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Caesar Wang <wxt@rock-chips.com>
-Cc: jic23@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux@roeck-us.net
+Cc: jic23@kernel.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Jul 2016 14:11:47 +0800, Caesar Wang wrote:
-
+Am Dienstag, 26. Juli 2016, 14:11:47 schrieb Caesar Wang:
 > SARADC controller needs to be reset before programming it, otherwise
 > it will not function properly.
 > 
@@ -27,20 +25,23 @@ On Tue, 26 Jul 2016 14:11:47 +0800, Caesar Wang wrote:
 > Cc: linux-rockchip@lists.infradead.org
 > ---
 > 
-> diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-> index f9ad6c2..2f0e110 100644
-> --- a/drivers/iio/adc/rockchip_saradc.c
-> +++ b/drivers/iio/adc/rockchip_saradc.c
-> @@ -218,6 +231,13 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
->  	if (IS_ERR(info->regs))
->  		return PTR_ERR(info->regs);
->  
-> +	info->reset = devm_reset_control_get(&pdev->dev, "saradc-apb");
-> +	if (IS_ERR(info->reset)) {
-> +		ret = PTR_ERR(info->reset);
-> +		dev_err(&pdev->dev, "failed to get saradc reset: %d\n", ret);
-> +		return ret;
-> +	}
+>  .../bindings/iio/adc/rockchip-saradc.txt           |  5 +++++
+>  drivers/iio/adc/Kconfig                            |  1 +
+>  drivers/iio/adc/rockchip_saradc.c                  | 22
+> ++++++++++++++++++++++ 3 files changed, 28 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt index
+> bf99e2f..d2258be 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> @@ -13,6 +13,9 @@ Required properties:
+>  - clocks: Must contain an entry for each entry in clock-names.
+>  - clock-names: Shall be "saradc" for the converter-clock, and "apb_pclk"
+> for the peripheral clock.
+> +- resets: Must contain an entry for each entry in reset-names.
+> +	  See ../reset/reset.txt for details.
+> +- reset-names: Must include the name "saradc-apb".
 
-Does this need to handle ENOENT so as to avoid failing with old device
-tree blobs?
+as pointed out by John, this should be an optional property, as it should work 
+with old devicetrees as well.
