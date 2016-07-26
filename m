@@ -1,109 +1,105 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: rockchip_saradc: reset saradc controller
- before programming it
-Date: Tue, 26 Jul 2016 22:47:16 +0800
-Message-ID: <579777F4.2090002@rock-chips.com>
-References: <1469535195-5227-1-git-send-email-wxt@rock-chips.com> <57976814.3040605@roeck-us.net>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [RFC PATCH v2 1/4] Documentation: DT: net: Add Xilinx
+ gmiitorgmii converter device tree binding documentation
+Date: Tue, 26 Jul 2016 15:09:19 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5C2387@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
+ <1467623084-15471-2-git-send-email-appanad@xilinx.com>
+ <20160704140458.GC3282@lunn.ch>
+ <03CA77BA8AF6F1469AEDFBDA1322A7B74A193913@XAP-PVEXMBX02.xlnx.xilinx.com>
+ <20160706142121.GI19800@lunn.ch>
+ <03CA77BA8AF6F1469AEDFBDA1322A7B74A19393B@XAP-PVEXMBX02.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57976814.3040605-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <03CA77BA8AF6F1469AEDFBDA1322A7B74A19393B@XAP-PVEXMBX02.xlnx.xilinx.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
-On 2016=E5=B9=B407=E6=9C=8826=E6=97=A5 21:39, Guenter Roeck wrote:
->
->> static int rockchip_saradc_probe(struct platform_device *pdev)
->> {
->> struct rockchip_saradc *info =3D NULL;
->> @@ -218,6 +231,21 @@ static int rockchip_saradc_probe(struct=20
->> platform_device *pdev)
->> if (IS_ERR(info->regs))
->> return PTR_ERR(info->regs);
->>
->> + /*
->> + * The reset should be an optional property, as it should work
->> + * with old devicetrees as well
->> + */
->> + info->reset =3D devm_reset_control_get_optional(&pdev->dev,
->> + "saradc-apb");
->
-> Does anyone know what the _optional API is for ? It seems to be=20
-> exactly the same
-> as devm_reset_control_get().
+	Thanks for the inputs...
 
-=E2=80=9C
-As far as I see, the difference is WARN_ON(1)
-when CONFIG_RESET_CONTROLLER is not defined.
+> >
+> > > > Hi Kedareswara
+> > > >
+> > > > So looking at the device tree, you have the gmiitorgmii as an mdio
+> > > > device. It will get probed as an mdio device, and from that you
+> > > > know the address on the bus. However, your driver does not
+> > > > actually do this. xilinx_gmii2rgmii.c is just a library of two
+> > > > functions, and does not use any of this device tree information.
+> > > > You device tree binding is completely bogus.
+> > > >
+> > > > What i think is a much more logical structure, and fits the
+> > > > hardware, which is what DT is all about, is to make your driver an mdio
+> driver.
+> > > > Also, have a phy-handle pointing to the PHY in the gmii_to_rgmii node.
+> > > > You then no longer need the exported gmii2rgmii_phyprobe() function.
+> > > >
+> > > > Next, you want gmiitorgmii driver to register a phy. The MAC
+> > > > driver can then look this up using phy-handle:
+> > > >
+> > > >        mdio {
+> > > >                 #address-cells = <1>;
+> > > >                 #size-cells = <0>;
+> > > >
+> > > >                 phy: ethernet-phy@0 {
+> > > >                         reg = <0>;
+> > > >                 };
+> > > >
+> > > >                 gmii_to_rgmii: gmii-to-rgmii@8 {
+> > > >                         compatible = "xlnx,gmiitorgmii";
+> > > >                         reg = <8>;
+> > > > 			phy-handle = <&phy>;
+> > > >                 };
+> > > >        };
+> > >
+> > >
+> > > Thanks for your inputs initially we too thought the similar
+> > > implementation But the GMII2RGMII converter contains only one
+> > > register and it is  not compatible to the standard ethernet MII
+> > > interface. Also it doesn't have a standard VID and PID registers So,
+> > > during the mdio bus scan, this device
+> > will
+> > > not appear.
 
+I tried to implement the driver as you suggested but there are few limitations in this
+Implementation please correct me if my understanding is wrong...
 
-The _optional functions were introduced by the following commit:
+The device-tree will look like below...
+        mdio {
+                #address-cells = <1>;
+                 #size-cells = <0>;
+                 phy: ethernet-phy@0 {
+                         reg = <0>;
+                 };
+                 gmii_to_rgmii: gmii-to-rgmii@8 {
+                         compatible = "xlnx,gmiitorgmii";
+                         reg = <8>;
+		phy-handle = <&phy>;
+                 };
+      };
 
------------------>8-----------------
-commit b424080a9e086e683ad5fdc624a7cf3c024e0c0f
-Author: Philipp Zabel <p.zabel@xxxxxxxxxxxxxx>
-Date: Fri Mar 7 15:18:47 2014 +0100
+The MAC driver does the below.
+	---> It creates a MDIO device for the gmii_to_rgmii node.
+	---> It creates a PHY device for the External PHY node.
 
-reset: Add optional resets and stubs
+The GMII2RGMII driver does the below.
+	1) It registers the gmii_to_rgmii node as a MDIO driver.
+	It contains the external phy as a phy-handle
+	2) Register a PHY Driver.
+	---> Register it as a phy driver (phy_register_driver): 
+	        For this implementation the converter won't have any VID or DID(PHY register 2 and 3)  
+	---> Register phy using of_phy_connect call: 
+	       For this implementation needed a netdev pointer to pass it to the of_phy_connect call.
+	      (Need to allocate a network device during probe and need to register it as netdev) 
+		
+	For the 2nd one implement I am facing above limitations...
+	Please correct me if my understanding is wrong...
 
-This patch adds device_reset_optional and (devm_)reset_control_get_opti=
-onal
-variants that drivers can use to indicate they can function without con=
-trol
-over the reset line. For those functions, stubs are added so the driver=
-s=20
-can
-be compiled with CONFIG_RESET_CONTROLLER disabled.
-Also, device_reset is annotated with __must_check. Drivers
-ignoring the return
-value should use device_reset_optional instead.
-
-Signed-off-by: Philipp Zabel <p.zabel@xxxxxxxxxxxxxx>
-------------------8<-----------------------------
-=E2=80=9D
-
-for more information on=20
-http://www.spinics.net/lists/kernel/msg2306677.html :-)
-
->
-> Guenter
->
->> + if (IS_ERR(info->reset)) {
->> + ret =3D PTR_ERR(info->reset);
->> + if (ret !=3D -ENOENT)
->> + return ret;
->> +
->> + dev_dbg(&pdev->dev, "no reset control found\n");
->> + info->reset =3D NULL;
->> + }
->> +
->> init_completion(&info->completion);
->>
->> irq =3D platform_get_irq(pdev, 0);
->> @@ -252,6 +280,9 @@ static int rockchip_saradc_probe(struct=20
->> platform_device *pdev)
->> return PTR_ERR(info->vref);
->> }
->>
->> + if (info->reset)
->> + rockchip_saradc_reset_controller(info->reset);
->> +
->> /*
->> * Use a default value for the converter clock.
->> * This may become user-configurable in the future.
->>
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
-
---=20
-caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
+Regards,
+Kedar.
