@@ -1,54 +1,92 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] firmware: Amlogic: Add secure monitor driver
-Date: Tue, 26 Jul 2016 11:20:18 +0100
-Message-ID: <20160726102017.GA12241@leverpostej>
-References: <1467203656-14381-1-git-send-email-carlo@caione.org>
- <1467203656-14381-2-git-send-email-carlo@caione.org>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: Re: [PATCH 1/4] iio: adc: rockchip_saradc: reset saradc controller
+ before programming it
+Date: Tue, 26 Jul 2016 18:49:56 +0800
+Message-ID: <57974054.8040700@rock-chips.com>
+References: <1469513510-1516-1-git-send-email-wxt@rock-chips.com> <20160726100007.5166e7f9.john@metanate.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1467203656-14381-2-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bjdooks-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160726100007.5166e7f9.john@metanate.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Keeping <john@metanate.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux@roeck-us.net, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Sorry for the delay.
+On 2016=E5=B9=B407=E6=9C=8826=E6=97=A5 17:00, John Keeping wrote:
+> On Tue, 26 Jul 2016 14:11:47 +0800, Caesar Wang wrote:
+>
+>> SARADC controller needs to be reset before programming it, otherwise
+>> it will not function properly.
+>>
+>> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+>> Cc: Jonathan Cameron <jic23@kernel.org>
+>> Cc: Heiko Stuebner <heiko@sntech.de>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: linux-iio@vger.kernel.org
+>> Cc: linux-rockchip@lists.infradead.org
+>> ---
+>>
+>> diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/roc=
+kchip_saradc.c
+>> index f9ad6c2..2f0e110 100644
+>> --- a/drivers/iio/adc/rockchip_saradc.c
+>> +++ b/drivers/iio/adc/rockchip_saradc.c
+>> @@ -218,6 +231,13 @@ static int rockchip_saradc_probe(struct platfor=
+m_device *pdev)
+>>   	if (IS_ERR(info->regs))
+>>   		return PTR_ERR(info->regs);
+>>  =20
+>> +	info->reset =3D devm_reset_control_get(&pdev->dev, "saradc-apb");
+>> +	if (IS_ERR(info->reset)) {
+>> +		ret =3D PTR_ERR(info->reset);
+>> +		dev_err(&pdev->dev, "failed to get saradc reset: %d\n", ret);
+>> +		return ret;
+>> +	}
+> Does this need to handle ENOENT so as to avoid failing with old devic=
+e
+> tree blobs?
 
-I don't have any major comments, there are jsut a couple of minor
-details.
+I'm no sure why we have to support the old device tree,
+We can apply this series patches if we need to support the reset proper=
+ty.
+---
 
-> +config MESON_SM
-> +	bool
-> +	default ARCH_MESON
-> +	depends on ARM64_4K_PAGES
+Maybe, I can follow you suggestion to handle the ENOENT, as following:
 
-It would be good to have a commentin the code as to why we depend on
-ARM64_4K_PAGES.
++ /*
++ * The reset should be an optional property, as it should work
++ * with old devicetrees as well
++ */
++ info->reset =3D devm_reset_control_get(&pdev->dev, "saradc-apb");
++ if (IS_ERR(info->reset)) {
++ if (PTR_ERR(info->reset) =3D=3D -EPROBE_DEFER) {
++ ret =3D -EPROBE_DEFER;
++ return ret;
++ }
++ dev_dbg(&pdev->dev, "no reset control found\n");
++ info->reset =3D NULL;
++ }
+=2E..
 
-That way it's possible for others to figure out without having to go
-digging through mail archives and/or git logs.
++ if (info->reset)
++ rockchip_saradc_reset_controller(info->reset);
++
 
-[...]
+How about it?
 
-> +struct meson_sm_chip gxbb_chip = {
-> +	.shmem_size		= 0x1000,
 
-If you include <linux/sizes.h>, you can use SZ_4K here.
+-
+Caesar
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-Immediately above this is probably the best place for the comment
-regarding the 4K page restriction imposed by the FW interface.
 
-Other than that this looks fine, so FWIW:
-
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+caesar wang | software engineer | wxt@rock-chip.com
