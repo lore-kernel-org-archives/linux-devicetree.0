@@ -1,65 +1,49 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 06/14] ARM: sun8i: clk: Add clk-factor rate
- application method
-Date: Tue, 26 Jul 2016 08:32:53 +0200
-Message-ID: <20160726063253.GW7419@lukather>
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-7-megous@megous.com>
- <20160630204001.GC5485@lukather>
- <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
- <20160715085356.GR4761@lukather>
- <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
- <20160721094852.GI5993@lukather>
- <c46d1af5-9410-402a-7144-48b396ef6da7@megous.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] libfdt: Add overlay application function
+Date: Tue, 26 Jul 2016 08:16:59 +0200
+Message-ID: <20160726061659.GT7419@lukather>
+References: <20160720142044.27527-1-maxime.ripard@free-electrons.com>
+ <20160720142044.27527-7-maxime.ripard@free-electrons.com>
+ <20160724142908.GF24621@voom.fritz.box>
+ <20160725182041.GN7419@lukather>
+ <20160726001859.GF17429@voom.fritz.box>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5FFaGRZUwcpbKFrw"
-Return-path: <linux-clk-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="hLTC+yGFJlatjToQ"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <c46d1af5-9410-402a-7144-48b396ef6da7@megous.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Cc: dev@linux-sunxi.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20160726001859.GF17429-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---5FFaGRZUwcpbKFrw
-Content-Type: text/plain; charset=utf-8
+--hLTC+yGFJlatjToQ
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 21, 2016 at 11:52:15AM +0200, Ond=C5=99ej Jirman wrote:
-> >>> If so, then yes, trying to switch to the 24MHz oscillator before
-> >>> applying the factors, and then switching back when the PLL is stable
-> >>> would be a nice solution.
-> >>>
-> >>> I just checked, and all the SoCs we've had so far have that
-> >>> possibility, so if it works, for now, I'd like to stick to that.
-> >>
-> >> It would need to be tested. U-boot does the change only once, while the
-> >> kernel would be doing it all the time and between various frequencies
-> >> and PLL settings. So the issues may show up with this solution too.
+On Tue, Jul 26, 2016 at 10:18:59AM +1000, David Gibson wrote:
+> > > Again, off-by-one in this test, I think.  Since there are so many
+> > > tricky edge cases here, it might be worth making testcases for them.
 > >=20
-> > That would have the benefit of being quite easy to document, not be a
-> > huge amount of code and it would work on all the CPUs PLLs we have so
-> > far, so still, a pretty big win. If it doesn't, of course, we don't
-> > really have the choice.
+> > What do you want here? That we move the parsing code out of that loop,
+> > make it public and put the prototype in libfdt_internal, or that we
+> > craft some DT that would outline all the possible issues with that
+> > function, and just test the return code of fdt_overlay_apply?
 >=20
-> It's probably more code though. It has to access different register from
-> the one that is already defined in dts, which would add a lot of code
-> and require dts changes. The original patch I sent is simpler than that.
+> I was thinking crafted DTs.  But I've realized that doing usefully is
+> pretty tricky, since overruns probably won't cause an immediate
+> problem most of the time.  I guess they'd trip errors under valgrind
+> at least (as long you make sure there's at least one byte's alignment
+> gap until the next tag).
 
-Why?
+Is that a general comment?
 
-You can use container_of to retrieve the parent structure of the clock
-notifier, and then you get a ccu_common structure pointer, with the
-CCU base address, the clock register, its lock, etc.
-
-Look at what is done in drivers/clk/meson/clk-cpu.c. It's like 20 LoC.
-
-I don't really get why anything should be changed in the DT, or why it
-would add a lot of code. Or maybe we're not talking about the same
-thing?
+I'm still not quite sure what you expect from me. Do you want to test
+just that function, or only the fixup parsing function? Should I run
+valgrind, or are you expecting it to be done later?
 
 Maxime
 
@@ -68,25 +52,25 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---5FFaGRZUwcpbKFrw
+--hLTC+yGFJlatjToQ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXlwQVAAoJEBx+YmzsjxAg/8EP/ipA+WJ9Z8ChTI5DhyyqF2j9
-0kaCZyc/mpfHUpzm2FM01UpHXkYt2+vaMPWpPJcjInkAxS/hhRb2yoZW1pOpRWQD
-3z8cpYZTUkT5kCLWRiLdocvlh+KlWiw1Qq82KpsgWuFYmWR1W8nKgKfhlTPM4+lv
-7x1b5zzbcRO244xkgAEM0YzrmM0Vi5aZNaByhP8MwDqWOB7BHYEJ5+S6iqC9sruX
-i8uT0pX+cYEhCs9leiG4UNgHW0v17YVqQiBCS4SJ5vYfdGi36K/0WU+IjRTiMHAb
-jDIt+pcCL74De83B/onoWjOUN7HYB9rxm5dzH7b0Ny8vE7ZS0AX9X8+wQW8+J9SH
-7d97BQssv+FwnTLgv4/1s/qMi1CR9QnxuaC9dzQIFstbd6WYkFhrOZUcIfMs+nRY
-dAX8r6YdW2GUU9s6A1DQEik8U7N5gVLCShImUi7OETgtBH+dh5bT4syhRFoZhsgX
-3jdVC1wl7FqZaj9F/DVd8HWYI19vlNNSM9bmHjdyn2AOaa27rLVXN3BHStVUqeuL
-Gkh3/oSBA2132r7RYR6gj1x+6bvthkGQWGyUMgrl+DvZICmklZGN6CiShLfJ0Piz
-5zYB1N+6u1sScfrr+EE4L9dEazXAeY0qNEmSLkCdwUfqqte/5Shkx3jOCzM9JelN
-z8umqeIqAZMEG8P8h5fY
-=Spuj
+iQIcBAEBAgAGBQJXlwBbAAoJEBx+YmzsjxAgN9oQAKPPsRWZ+zyApkZlio9Gdd//
+VBtZQ6rik8vKdwSYkP8M78q8EQbvvPmHINxlFEUKnfFvG0DDQHiOfjHwRIJWDcZO
+DFN59JWS990Y3CvnzkQEurXSg22Ga67S4FXAZQ4nxL8DxtMmFfQ6yEDA5NJUf8Rt
+fXaqX5pEA6ORN5vTkA7bqt/l1W35ewk6uuLuwo1CXvlQsqp9mQHuS+X3Ucw9Z7xU
+PIx7/TbcJpfEtVOs/HVZuJCC8wQ6O8aR+64/a3skKVRxDu/17k/kAtf40jHgeIMk
+NilhX8BFaImGrkPk8Z10vxnz0nLrvjhThxyPqn9k4gBBzYegNpAx/tnfF9SV5rrk
+PcPgIbDFtexMMNW/8Q8Z+vimkn6jyB1tdP9uv2ImlTij275sszYf06XmGFdz+aTv
+Lt1UEKyl+ZKWhpTRpHQE2QWvxOlcKejp+m0Y0sf4+1H1IyCYLlWb+TnVIaV8wddL
+R7OueQoQC2bn7ArJ/c+AmrikiPRPlQ2p/hjiq8DNHlTaCOET4639LEKPT6gPPoK+
+Umxc7wWw+E77otspLC43rVy1ZMxiiZO7pt8sOLg0hDBI0ryEL2ZYbcRLio/03QbS
+IbIMEVK+PTQMyYz951YEeHVSQR7zGHDncRc1TpbjyHw/AEtiRBviKxoUC6FidfmF
+SvV6AfqIU2RLnuejsQEA
+=RIxr
 -----END PGP SIGNATURE-----
 
---5FFaGRZUwcpbKFrw--
+--hLTC+yGFJlatjToQ--
