@@ -1,94 +1,121 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt-bindings: add Tegra186 BPMP I2C binding
-Date: Tue, 26 Jul 2016 10:24:15 -0600
-Message-ID: <30795dd3-99cd-a1b6-d539-c2afbca34d17@wwwdotorg.org>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org>
- <20160719191442.15439-3-swarren@wwwdotorg.org>
- <b088284b-e87e-0da5-59a8-0b039b06fcad@nvidia.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] iio: adc: rockchip_saradc: reset saradc
+ controller before programming it
+Date: Tue, 26 Jul 2016 10:00:24 -0700
+Message-ID: <20160726170023.GA6590@roeck-us.net>
+References: <1469535195-5227-1-git-send-email-wxt@rock-chips.com>
+ <57976814.3040605@roeck-us.net>
+ <579777F4.2090002@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b088284b-e87e-0da5-59a8-0b039b06fcad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <579777F4.2090002-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/2016 04:03 AM, Jon Hunter wrote:
->
-> On 19/07/16 20:14, Stephen Warren wrote:
->> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> In Tegra186, the BPMP (Boot and Power Management Processor) owns certain
->> HW devices, such as the I2C controller for the power management I2C bus.
->> Software running on other CPUs must perform IPC to the BPMP in order to
->> execute transactions on that I2C bus. This binding describes an I2C bus
->> that is accessed in such a fashion.
->>
->> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../bindings/i2c/nvidia,tegra186-bpmp-i2c.txt      | 42 ++++++++++++++++++++++
->>  1 file changed, 42 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
->> new file mode 100644
->> index 000000000000..fecb549bc250
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.txt
->> @@ -0,0 +1,42 @@
->> +NVIDIA Tegra186 BPMP I2C controller
->> +
->> +In Tegra186, the BPMP (Boot and Power Management Processor) owns certain HW
->> +devices, such as the I2C controller for the power management I2C bus. Software
->> +running on other CPUs must perform IPC to the BPMP in order to execute
->> +transactions on that I2C bus. This binding describes an I2C bus that is
->> +accessed in such a fashion.
->> +
->> +The BPMP I2C node must be located directly inside the main BPMP node. See
->> +../firmware/nvidia,tegra186-bpmp.txt for details of the BPMP binding.
->> +
->> +This node represents an I2C controller. See ../i2c/i2c.txt for details of the
->> +core I2C binding.
->> +
->> +Required properties:
->> +- compatible:
->> +    Array of strings.
->> +    One of:
->> +    - "nvidia,tegra186-bpmp-i2c".
->> +- #address-cells: Address cells for I2C device address.
->> +    Single-cell integer.
->> +    Must be <1>.
->> +- #size-cells:
->> +    Single-cell integer.
->> +    Must be <0>.
->> +- nvidia,bpmp-bus-id:
->> +    Single-cell integer.
->> +    Indicates the I2C bus number this DT node represent, as defined by the
->> +    BPMP firmware.
->> +
->> +Example:
->> +
->> +/ bpmp {
->
-> Is this "/" intentional?
+On Tue, Jul 26, 2016 at 10:47:16PM +0800, Caesar Wang wrote:
+>=20
+> On 2016=E5=B9=B407=E6=9C=8826=E6=97=A5 21:39, Guenter Roeck wrote:
+> >
+> >>static int rockchip_saradc_probe(struct platform_device *pdev)
+> >>{
+> >>struct rockchip_saradc *info =3D NULL;
+> >>@@ -218,6 +231,21 @@ static int rockchip_saradc_probe(struct
+> >>platform_device *pdev)
+> >>if (IS_ERR(info->regs))
+> >>return PTR_ERR(info->regs);
+> >>
+> >>+ /*
+> >>+ * The reset should be an optional property, as it should work
+> >>+ * with old devicetrees as well
+> >>+ */
+> >>+ info->reset =3D devm_reset_control_get_optional(&pdev->dev,
+> >>+ "saradc-apb");
+> >
+> >Does anyone know what the _optional API is for ? It seems to be exac=
+tly
+> >the same
+> >as devm_reset_control_get().
+>=20
+> =E2=80=9C
+> As far as I see, the difference is WARN_ON(1)
+> when CONFIG_RESET_CONTROLLER is not defined.
+>=20
+>=20
+> The _optional functions were introduced by the following commit:
+>=20
+> ----------------->8-----------------
+> commit b424080a9e086e683ad5fdc624a7cf3c024e0c0f
+> Author: Philipp Zabel <p.zabel@xxxxxxxxxxxxxx>
+> Date: Fri Mar 7 15:18:47 2014 +0100
+>=20
+> reset: Add optional resets and stubs
+>=20
+> This patch adds device_reset_optional and (devm_)reset_control_get_op=
+tional
+> variants that drivers can use to indicate they can function without c=
+ontrol
+> over the reset line. For those functions, stubs are added so the driv=
+ers can
+> be compiled with CONFIG_RESET_CONTROLLER disabled.
+> Also, device_reset is annotated with __must_check. Drivers
+> ignoring the return
+> value should use device_reset_optional instead.
+>=20
 
-I think I meant to write "/bpmp" (i.e. without the space) to highlight 
-where the node is in the overall hierarchy, but admittedly that's 
-unusual. Yes, the "/ " should probably simply be removed.
+Is that really what we are looking for here ? CONFIG_RESET_CONTROLLER
+is required for other functions of rk3399, isn't it ?
 
->> +	...
->> +
->> +	bpmp-i2c {
->> +		compatible = "nvidia,tegra186-bpmp-i2c";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		nvidia,bpmp-bus-id = <5>;
->> +	};
->> +};
->>
->
-> Acked-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> Jon
+Guenter
+
+> Signed-off-by: Philipp Zabel <p.zabel@xxxxxxxxxxxxxx>
+> ------------------8<-----------------------------
+> =E2=80=9D
+>=20
+> for more information on http://www.spinics.net/lists/kernel/msg230667=
+7.html
+> :-)
+>=20
+> >
+> >Guenter
+> >
+> >>+ if (IS_ERR(info->reset)) {
+> >>+ ret =3D PTR_ERR(info->reset);
+> >>+ if (ret !=3D -ENOENT)
+> >>+ return ret;
+> >>+
+> >>+ dev_dbg(&pdev->dev, "no reset control found\n");
+> >>+ info->reset =3D NULL;
+> >>+ }
+> >>+
+> >>init_completion(&info->completion);
+> >>
+> >>irq =3D platform_get_irq(pdev, 0);
+> >>@@ -252,6 +280,9 @@ static int rockchip_saradc_probe(struct
+> >>platform_device *pdev)
+> >>return PTR_ERR(info->vref);
+> >>}
+> >>
+> >>+ if (info->reset)
+> >>+ rockchip_saradc_reset_controller(info->reset);
+> >>+
+> >>/*
+> >>* Use a default value for the converter clock.
+> >>* This may become user-configurable in the future.
+> >>
+> >
+> >
+> >_______________________________________________
+> >Linux-rockchip mailing list
+> >Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> >http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>=20
+>=20
+> --=20
+> caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
+>=20
+>=20
