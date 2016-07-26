@@ -1,63 +1,104 @@
-From: Mirza Krak <mirza.krak@gmail.com>
-Subject: Re: [RFC 3/6] dt/bindings: Add bindings for Tegra20/30 NOR bus driver
-Date: Mon, 25 Jul 2016 21:59:34 +0200
-Message-ID: <CALw8SCVmVL82kZapEJA97XqQv6XZnR_S6ddsW1Gwk61v4Px9AA@mail.gmail.com>
-References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
- <1468935397-11926-4-git-send-email-mirza.krak@gmail.com> <20160725113034.GD21170@ulmo.ba.sec>
- <CALw8SCWEFVu__8Gyr5q995h+=oMQEz1VUNB=Ne7MRb0O-tZXqg@mail.gmail.com> <20160725141544.GN21170@ulmo.ba.sec>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160725141544.GN21170@ulmo.ba.sec>
-Sender: linux-clk-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, linux@armlinux.org.uk
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: [PATCH net-next v7 00/12] drivers: net: xgene: Fix module crash and 1G hot-plug
+Date: Mon, 25 Jul 2016 17:12:35 -0700
+Message-ID: <1469491967-28627-1-git-send-email-isubramanian@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, linux@armlinux.org.uk, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-2016-07-25 16:15 GMT+02:00 Thierry Reding <thierry.reding@gmail.com>:
-> On Mon, Jul 25, 2016 at 03:16:28PM +0200, Mirza Krak wrote:
->> 2016-07-25 13:30 GMT+02:00 Thierry Reding <thierry.reding@gmail.com>:
->> >
->> > I would've expected this to require some sort of infrastructure to allow
->> > devices connected to the GMI controller to acquire the bus via some API
->> > to select their chip.
->>
->> Yes, ultimately you would need some sort of infrastructure to allow
->> devices to acquire the GMI bus if you want to solve this in software.
->> But at the moment I do not see such an infrastructure in place, and is
->> it feasible to add one specifically for the GMI controller? If one
->> such infrastructure was in place we would need to modify all the
->> drivers that want to use to include Tegra specific infrastructure to
->> access the GMI bus?
->>
->> Since my knowledge is limited it hard for me to comment on this, maybe
->> there is a simple way of doing this?
->
-> I don't think there's a simple way to do this. In order to properly
-> implement it we'd need to implement a generic infrastructure for chip
-> selects so that drivers such as the one for your CAN controller can be
-> written without tying them specifically to the Tegra GMI controller.
->
-> From what you and Jon were saying it sounds like the drivers are
-> completely agnostic of any chip-select, so conversion won't be easy.
-> But technically if these chips take a chip-select as input then it's
-> always possible to hook them up to a controller that doesn't do this
-> automatic translation of address to chip-select, so eventually some
-> setup is bound to come along where they'd need explicit chip-select
-> handling as well.
->
-> I don't think it's fair to require you to implement this infrastructure
-> if you don't actually need it. At the same time I want to be cautious
-> and make sure we keep the driver and binding flexible enough to allow
-> us to implement explicit chip-selects should we later need them.
->
-> Thierry
+This patchset addresses the following issues,
 
-One thing that should be noted, and that is the GMI controller also
-supports a DMA master mode (feature for the future?).
+1. Fixes the kernel crash when the driver loaded as an kernel module
+	- by fixing hardware cleanups and rearrange kernel API calls
 
-I do not really know how this effects the binding we are discussing
-but wanted to put it out there.
+2. Hot-plug issue on the SGMII 1G interface
+	- by adding a driver for MDIO management
 
-Best Regards,
-Mirza
+Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+Tested-by: Fushen Chen <fchen@apm.com>
+Tested-by: Toan Le <toanle@apm.com>
+---
+v7: Address review comments from v6
+	- fixed kbuild warnings
+	- unmapped DMA memory on xgene_enet_delete_bufpool()
+	- delete descriptor rings and buffer pools on cle_init() failure
+	- fixed error deconstruction path on probe
+
+v6: Address review comments from v5
+	- changed to use devm_ioremap_resource
+	- changed to return PTR_ERR(clk) on failure
+	- cleaned up and removed indirections
+	- exported mdio read/write and phy_register functions
+	- changed mii_bus is to indicate interface instance
+	- changed to call the exported mdio read/write and phy_register functions
+
+v5: Address review comments from v4
+	- Fixed clock reset sequence by adding delay
+	- Fixed clock count by adding clk_unprepare_disable() in port shutdown
+
+v4: Address review comments from v3
+	- Reorganized into smaller patches
+	- Added wrapper functions for sgmii_control_reset and sgmii_tbi_control_reset
+	- Removed clk_get warning info
+	- mdio: Changed the order of 'if' statements and removed the 'else' statement
+	- mdio: Removed the mdio_read(write) indirection wrapper functions
+	- ethtool: Fixed SGMII 1G get_settings and set_settings
+	- Documentation: dtb: Added MDIO node information
+	- MAINTAINERS: Added MDIO driver and documentation path
+
+v3: Address review comments from v2
+	- Add comment about hardware clock reset sequence on xgene_mdio_reset
+
+v2: Address review comments from v1
+	- Fixed patch 1 compilation error
+	- Fixed mdio@1f610000 xge0clk reference
+	- Squashed dtb patches
+	- Added PORT_OFFSET macro
+
+v1:
+	- Initial version
+---
+
+Iyappan Subramanian (12):
+  drivers: net: xgene: Separate set_speed from mac_init
+  drivers: net: xgene: Fix module unload crash - hw resource cleanup
+  drivers: net: xgene: Fix module unload crash - change sw sequence
+  drivers: net: xgene: Fix module unload crash - clkrst sequence
+  drivers: net: phy: xgene: Add MDIO driver
+  drivers: net: xgene: Add backward compatibility
+  drivers: net: xgene: Enable MDIO driver
+  drivers: net: xgene: Use exported functions
+  drivers: net: xgene: ethtool: Use phy_ethtool_gset and sset
+  dtb: xgene: Add MDIO node
+  Documentation: dtb: xgene: Add MDIO node
+  MAINTAINERS: xgene: Add driver and documentation path
+
+ .../devicetree/bindings/net/apm-xgene-mdio.txt     |  37 ++
+ MAINTAINERS                                        |   2 +
+ arch/arm64/boot/dts/apm/apm-merlin.dts             |   6 +
+ arch/arm64/boot/dts/apm/apm-mustang.dts            |  12 +
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi         |  11 +-
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |  26 +-
+ drivers/net/ethernet/apm/xgene/Kconfig             |   1 +
+ .../net/ethernet/apm/xgene/xgene_enet_ethtool.c    |  22 +-
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c     | 255 ++++++-----
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.h     |  11 +-
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c   | 215 ++++++----
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.h   |  33 +-
+ drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c  | 239 +++++++++--
+ drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.h  |   8 +
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c  |  66 ++-
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.h  |   3 +
+ drivers/net/phy/Kconfig                            |   6 +
+ drivers/net/phy/Makefile                           |   1 +
+ drivers/net/phy/mdio-xgene.c                       | 477 +++++++++++++++++++++
+ drivers/net/phy/mdio-xgene.h                       | 143 ++++++
+ 20 files changed, 1291 insertions(+), 283 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-mdio.txt
+ create mode 100644 drivers/net/phy/mdio-xgene.c
+ create mode 100644 drivers/net/phy/mdio-xgene.h
+
+-- 
+1.9.1
