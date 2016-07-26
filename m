@@ -1,76 +1,448 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 4/4] arm: dts: rockchip: add reset node for the exist saradc
- SoCs
-Date: Tue, 26 Jul 2016 14:11:50 +0800
-Message-ID: <1469513510-1516-4-git-send-email-wxt@rock-chips.com>
-References: <1469513510-1516-1-git-send-email-wxt@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1469513510-1516-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 1/2] ARM: dts: imx7d: move ARM platform peripherals inside soc node
+Date: Mon, 25 Jul 2016 23:42:35 -0700
+Message-ID: <20160726064236.11034-1-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-SARADC controller needs to be reset before programming it, otherwise
-it will not function properly.
+Since we have a SoC level node we should make use of it and have
+all nodes which are within the SoC, inside that node. This also
+saves an extra interrupt-parent properties. While at it, also
+order the Coresight nodes according to register addresses.
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
+Hi Shawn,
 
- arch/arm/boot/dts/rk3066a.dtsi | 2 ++
- arch/arm/boot/dts/rk3288.dtsi  | 2 ++
- arch/arm/boot/dts/rk3xxx.dtsi  | 2 ++
- 3 files changed, 6 insertions(+)
+Not sure if there was a reasoning behind having all these nodes
+not within the soc subnode, but it seems to me somewhat uncommon
+in the i.MX world...
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index c0ba86c..0d0dae3 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -197,6 +197,8 @@
- 		clock-names = "saradc", "apb_pclk";
- 		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
- 		#io-channel-cells = <1>;
-+		resets = <&cru SRST_SARADC>;
-+		reset-names = "saradc-apb";
- 		status = "disabled";
+If possible this patchset should go into v4.8 since 2/2 is a fix,
+however, I understand that 1/2 is not really post rc1 material...
+What do you think?
+
+--
+Stefan
+
+ arch/arm/boot/dts/imx7d.dtsi |  32 ++---
+ arch/arm/boot/dts/imx7s.dtsi | 301 +++++++++++++++++++++----------------------
+ 2 files changed, 167 insertions(+), 166 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 51c13cb..3d77d95 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -52,23 +52,25 @@
+ 		};
  	};
  
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cd33f01..91c4b3c 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -279,6 +279,8 @@
- 		#io-channel-cells = <1>;
- 		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
- 		clock-names = "saradc", "apb_pclk";
-+		resets = <&cru SRST_SARADC>;
-+		reset-names = "saradc-apb";
- 		status = "disabled";
+-	etm@3007d000 {
+-		compatible = "arm,coresight-etm3x", "arm,primecell";
+-		reg = <0x3007d000 0x1000>;
++	soc {
++		etm@3007d000 {
++			compatible = "arm,coresight-etm3x", "arm,primecell";
++			reg = <0x3007d000 0x1000>;
+ 
+-		/*
+-		 * System will hang if added nosmp in kernel command line
+-		 * without arm,primecell-periphid because amba bus try to
+-		 * read id and core1 power off at this time.
+-		 */
+-		arm,primecell-periphid = <0xbb956>;
+-		cpu = <&cpu1>;
+-		clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+-		clock-names = "apb_pclk";
++			/*
++			 * System will hang if added nosmp in kernel command line
++			 * without arm,primecell-periphid because amba bus try to
++			 * read id and core1 power off at this time.
++			 */
++			arm,primecell-periphid = <0xbb956>;
++			cpu = <&cpu1>;
++			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
++			clock-names = "apb_pclk";
+ 
+-		port {
+-			etm1_out_port: endpoint {
+-				remote-endpoint = <&ca_funnel_in_port1>;
++			port {
++				etm1_out_port: endpoint {
++					remote-endpoint = <&ca_funnel_in_port1>;
++				};
+ 			};
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 1e90bdb..d89587a 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -95,16 +95,6 @@
+ 		};
  	};
  
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 99bbcc2..e2cd683 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -399,6 +399,8 @@
- 		#io-channel-cells = <1>;
- 		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
- 		clock-names = "saradc", "apb_pclk";
-+		resets = <&cru SRST_SARADC>;
-+		reset-names = "saradc-apb";
- 		status = "disabled";
+-	intc: interrupt-controller@31001000 {
+-		compatible = "arm,cortex-a7-gic";
+-		#interrupt-cells = <3>;
+-		interrupt-controller;
+-		reg = <0x31001000 0x1000>,
+-		      <0x31002000 0x1000>,
+-		      <0x31004000 0x2000>,
+-		      <0x31006000 0x2000>;
+-	};
+-
+ 	ckil: clock-cki {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -119,195 +109,204 @@
+ 		clock-output-names = "osc";
  	};
  
+-	timer {
+-		compatible = "arm,armv7-timer";
+-		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
+ 		interrupt-parent = <&intc>;
+-	};
++		ranges;
+ 
+-	etr@30086000 {
+-		compatible = "arm,coresight-tmc", "arm,primecell";
+-		reg = <0x30086000 0x1000>;
+-		clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+-		clock-names = "apb_pclk";
++		funnel@30041000 {
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x30041000 0x1000>;
++			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
++			clock-names = "apb_pclk";
++
++			ca_funnel_ports: ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/* funnel input ports */
++				port@0 {
++					reg = <0>;
++					ca_funnel_in_port0: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm0_out_port>;
++					};
++				};
++
++				/* funnel output port */
++				port@2 {
++					reg = <0>;
++					ca_funnel_out_port0: endpoint {
++						remote-endpoint = <&hugo_funnel_in_port0>;
++					};
++				};
+ 
+-		port {
+-			etr_in_port: endpoint {
+-				slave-mode;
+-				remote-endpoint = <&replicator_out_port1>;
++				/* the other input ports are not connect to anything */
+ 			};
+ 		};
+-	};
+ 
+-	tpiu@30087000 {
+-		compatible = "arm,coresight-tpiu", "arm,primecell";
+-		reg = <0x30087000 0x1000>;
+-		clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+-		clock-names = "apb_pclk";
++		etm@3007c000 {
++			compatible = "arm,coresight-etm3x", "arm,primecell";
++			reg = <0x3007c000 0x1000>;
++			cpu = <&cpu0>;
++			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
++			clock-names = "apb_pclk";
+ 
+-		port {
+-			tpiu_in_port: endpoint {
+-				slave-mode;
+-				remote-endpoint = <&replicator_out_port1>;
++			port {
++				etm0_out_port: endpoint {
++					remote-endpoint = <&ca_funnel_in_port0>;
++				};
+ 			};
+ 		};
+-	};
+ 
+-	replicator {
+-		/*
+-		 * non-configurable replicators don't show up on the
+-		 * AMBA bus.  As such no need to add "arm,primecell"
+-		 */
+-		compatible = "arm,coresight-replicator";
++		funnel@30083000 {
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x30083000 0x1000>;
++			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
++			clock-names = "apb_pclk";
+ 
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 
+-			/* replicator output ports */
+-			port@0 {
+-				reg = <0>;
+-				replicator_out_port0: endpoint {
+-					remote-endpoint = <&tpiu_in_port>;
++				/* funnel input ports */
++				port@0 {
++					reg = <0>;
++					hugo_funnel_in_port0: endpoint {
++						slave-mode;
++						remote-endpoint = <&ca_funnel_out_port0>;
++					};
+ 				};
+-			};
+ 
+-			port@1 {
+-				reg = <1>;
+-				replicator_out_port1: endpoint {
+-					remote-endpoint = <&etr_in_port>;
++				port@1 {
++					reg = <1>;
++					hugo_funnel_in_port1: endpoint {
++						slave-mode; /* M4 input */
++					};
+ 				};
+-			};
+ 
+-			/* replicator input port */
+-			port@2 {
+-				reg = <0>;
+-				replicator_in_port0: endpoint {
+-					slave-mode;
+-					remote-endpoint = <&etf_out_port>;
++				port@2 {
++					reg = <0>;
++					hugo_funnel_out_port0: endpoint {
++						remote-endpoint = <&etf_in_port>;
++					};
+ 				};
++
++				/* the other input ports are not connect to anything */
+ 			};
+ 		};
+-	};
+ 
+-	etf@30084000 {
+-		compatible = "arm,coresight-tmc", "arm,primecell";
+-		reg = <0x30084000 0x1000>;
+-		clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+-		clock-names = "apb_pclk";
++		etf@30084000 {
++			compatible = "arm,coresight-tmc", "arm,primecell";
++			reg = <0x30084000 0x1000>;
++			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
++			clock-names = "apb_pclk";
+ 
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 
+-			port@0 {
+-				reg = <0>;
+-				etf_in_port: endpoint {
+-					slave-mode;
+-					remote-endpoint = <&hugo_funnel_out_port0>;
++				port@0 {
++					reg = <0>;
++					etf_in_port: endpoint {
++						slave-mode;
++						remote-endpoint = <&hugo_funnel_out_port0>;
++					};
+ 				};
+-			};
+ 
+-			port@1 {
+-				reg = <0>;
+-				etf_out_port: endpoint {
+-					remote-endpoint = <&replicator_in_port0>;
++				port@1 {
++					reg = <0>;
++					etf_out_port: endpoint {
++						remote-endpoint = <&replicator_in_port0>;
++					};
+ 				};
+ 			};
+ 		};
+-	};
+ 
+-	funnel@30083000 {
+-		compatible = "arm,coresight-funnel", "arm,primecell";
+-		reg = <0x30083000 0x1000>;
+-		clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+-		clock-names = "apb_pclk";
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
++		etr@30086000 {
++			compatible = "arm,coresight-tmc", "arm,primecell";
++			reg = <0x30086000 0x1000>;
++			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
++			clock-names = "apb_pclk";
+ 
+-			/* funnel input ports */
+-			port@0 {
+-				reg = <0>;
+-				hugo_funnel_in_port0: endpoint {
++			port {
++				etr_in_port: endpoint {
+ 					slave-mode;
+-					remote-endpoint = <&ca_funnel_out_port0>;
++					remote-endpoint = <&replicator_out_port1>;
+ 				};
+ 			};
++		};
+ 
+-			port@1 {
+-				reg = <1>;
+-				hugo_funnel_in_port1: endpoint {
+-					slave-mode; /* M4 input */
+-				};
+-			};
++		tpiu@30087000 {
++			compatible = "arm,coresight-tpiu", "arm,primecell";
++			reg = <0x30087000 0x1000>;
++			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
++			clock-names = "apb_pclk";
+ 
+-			port@2 {
+-				reg = <0>;
+-				hugo_funnel_out_port0: endpoint {
+-					remote-endpoint = <&etf_in_port>;
++			port {
++				tpiu_in_port: endpoint {
++					slave-mode;
++					remote-endpoint = <&replicator_out_port1>;
+ 				};
+ 			};
+-
+-			/* the other input ports are not connect to anything */
+ 		};
+-	};
+ 
+-	funnel@30041000 {
+-		compatible = "arm,coresight-funnel", "arm,primecell";
+-		reg = <0x30041000 0x1000>;
+-		clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+-		clock-names = "apb_pclk";
++		replicator {
++			/*
++			 * non-configurable replicators don't show up on the
++			 * AMBA bus.  As such no need to add "arm,primecell"
++			 */
++			compatible = "arm,coresight-replicator";
+ 
+-		ca_funnel_ports: ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 
+-			/* funnel input ports */
+-			port@0 {
+-				reg = <0>;
+-				ca_funnel_in_port0: endpoint {
+-					slave-mode;
+-					remote-endpoint = <&etm0_out_port>;
++				/* replicator output ports */
++				port@0 {
++					reg = <0>;
++					replicator_out_port0: endpoint {
++						remote-endpoint = <&tpiu_in_port>;
++					};
+ 				};
+-			};
+ 
+-			/* funnel output port */
+-			port@2 {
+-				reg = <0>;
+-				ca_funnel_out_port0: endpoint {
+-					remote-endpoint = <&hugo_funnel_in_port0>;
++				port@1 {
++					reg = <1>;
++					replicator_out_port1: endpoint {
++						remote-endpoint = <&etr_in_port>;
++					};
+ 				};
+-			};
+ 
+-			/* the other input ports are not connect to anything */
++				/* replicator input port */
++				port@2 {
++					reg = <0>;
++					replicator_in_port0: endpoint {
++						slave-mode;
++						remote-endpoint = <&etf_out_port>;
++					};
++				};
++			};
+ 		};
+-	};
+ 
+-	etm@3007c000 {
+-		compatible = "arm,coresight-etm3x", "arm,primecell";
+-		reg = <0x3007c000 0x1000>;
+-		cpu = <&cpu0>;
+-		clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+-		clock-names = "apb_pclk";
+-
+-		port {
+-			etm0_out_port: endpoint {
+-				remote-endpoint = <&ca_funnel_in_port0>;
+-			};
++		intc: interrupt-controller@31001000 {
++			compatible = "arm,cortex-a7-gic";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x31001000 0x1000>,
++			      <0x31002000 0x1000>,
++			      <0x31004000 0x2000>,
++			      <0x31006000 0x2000>;
+ 		};
+-	};
+ 
+-	soc {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "simple-bus";
+-		interrupt-parent = <&intc>;
+-		ranges;
++		timer {
++			compatible = "arm,armv7-timer";
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		};
+ 
+ 		aips1: aips-bus@30000000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
 -- 
-1.9.1
+2.9.0
