@@ -1,152 +1,95 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: rockchip_saradc: reset saradc controller
- before programming it
-Date: Tue, 26 Jul 2016 06:39:32 -0700
-Message-ID: <57976814.3040605@roeck-us.net>
-References: <1469535195-5227-1-git-send-email-wxt@rock-chips.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] libfdt: Add overlay application function
+Date: Wed, 27 Jul 2016 00:09:14 +1000
+Message-ID: <20160726140914.GN17429@voom.fritz.box>
+References: <20160720142044.27527-1-maxime.ripard@free-electrons.com>
+ <20160720142044.27527-7-maxime.ripard@free-electrons.com>
+ <20160724142908.GF24621@voom.fritz.box>
+ <20160725182041.GN7419@lukather>
+ <20160726001859.GF17429@voom.fritz.box>
+ <20160726061659.GT7419@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469535195-5227-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="95CBLwa+io9O2zXc"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160726061659.GT7419@lukather>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/2016 05:13 AM, Caesar Wang wrote:
-> SARADC controller needs to be reset before programming it, otherwise
-> it will not function properly.
->
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->
-> ---
->
-> Changes in v2:
-> - Make the reset as an optional property, since it should work
-> with old devicetrees as well.
->
->   .../bindings/iio/adc/rockchip-saradc.txt           |  7 +++++
->   drivers/iio/adc/Kconfig                            |  1 +
->   drivers/iio/adc/rockchip_saradc.c                  | 31 ++++++++++++++++++++++
->   3 files changed, 39 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> index bf99e2f..205593f 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> @@ -16,6 +16,11 @@ Required properties:
->   - vref-supply: The regulator supply ADC reference voltage.
->   - #io-channel-cells: Should be 1, see ../iio-bindings.txt
->
-> +Optional properties:
-> +- resets: Must contain an entry for each entry in reset-names if need support
-> +	  this option. See ../reset/reset.txt for details.
-> +- reset-names: Must include the name "saradc-apb".
-> +
->   Example:
->   	saradc: saradc@2006c000 {
->   		compatible = "rockchip,saradc";
-> @@ -23,6 +28,8 @@ Example:
->   		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->   		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
->   		clock-names = "saradc", "apb_pclk";
-> +		resets = <&cru SRST_SARADC>;
-> +		reset-names = "saradc-apb";
->   		#io-channel-cells = <1>;
->   		vref-supply = <&vcc18>;
->   	};
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 1de31bd..7675772 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -389,6 +389,7 @@ config QCOM_SPMI_VADC
->   config ROCKCHIP_SARADC
->   	tristate "Rockchip SARADC driver"
->   	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
-> +	depends on RESET_CONTROLLER
->   	help
->   	  Say yes here to build support for the SARADC found in SoCs from
->   	  Rockchip.
-> diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-> index f9ad6c2..dc1379f 100644
-> --- a/drivers/iio/adc/rockchip_saradc.c
-> +++ b/drivers/iio/adc/rockchip_saradc.c
-> @@ -21,6 +21,8 @@
->   #include <linux/of_device.h>
->   #include <linux/clk.h>
->   #include <linux/completion.h>
-> +#include <linux/delay.h>
-> +#include <linux/reset.h>
->   #include <linux/regulator/consumer.h>
->   #include <linux/iio/iio.h>
->
-> @@ -53,6 +55,7 @@ struct rockchip_saradc {
->   	struct clk		*clk;
->   	struct completion	completion;
->   	struct regulator	*vref;
-> +	struct reset_control	*reset;
->   	const struct rockchip_saradc_data *data;
->   	u16			last_val;
->   };
-> @@ -190,6 +193,16 @@ static const struct of_device_id rockchip_saradc_match[] = {
->   };
->   MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
->
-> +/**
-> + * Reset SARADC Controller.
-> + */
-> +static void rockchip_saradc_reset_controller(struct reset_control *reset)
-> +{
-> +	reset_control_assert(reset);
-> +	usleep_range(10, 20);
-> +	reset_control_deassert(reset);
-> +}
-> +
->   static int rockchip_saradc_probe(struct platform_device *pdev)
->   {
->   	struct rockchip_saradc *info = NULL;
-> @@ -218,6 +231,21 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
->   	if (IS_ERR(info->regs))
->   		return PTR_ERR(info->regs);
->
-> +	/*
-> +	 * The reset should be an optional property, as it should work
-> +	 * with old devicetrees as well
-> +	 */
-> +	info->reset = devm_reset_control_get_optional(&pdev->dev,
-> +			"saradc-apb");
 
-Does anyone know what the _optional API is for ? It seems to be exactly the same
-as devm_reset_control_get().
+--95CBLwa+io9O2zXc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Guenter
+On Tue, Jul 26, 2016 at 08:16:59AM +0200, Maxime Ripard wrote:
+> On Tue, Jul 26, 2016 at 10:18:59AM +1000, David Gibson wrote:
+> > > > Again, off-by-one in this test, I think.  Since there are so many
+> > > > tricky edge cases here, it might be worth making testcases for them.
+> > >=20
+> > > What do you want here? That we move the parsing code out of that loop,
+> > > make it public and put the prototype in libfdt_internal, or that we
+> > > craft some DT that would outline all the possible issues with that
+> > > function, and just test the return code of fdt_overlay_apply?
+> >=20
+> > I was thinking crafted DTs.  But I've realized that doing usefully is
+> > pretty tricky, since overruns probably won't cause an immediate
+> > problem most of the time.  I guess they'd trip errors under valgrind
+> > at least (as long you make sure there's at least one byte's alignment
+> > gap until the next tag).
+>=20
+> Is that a general comment?
+>=20
+> I'm still not quite sure what you expect from me. Do you want to test
+> just that function, or only the fixup parsing function? Should I run
+> valgrind, or are you expecting it to be done later?
 
-> +	if (IS_ERR(info->reset)) {
-> +		ret = PTR_ERR(info->reset);
-> +		if (ret != -ENOENT)
-> +			return ret;
-> +
-> +		dev_dbg(&pdev->dev, "no reset control found\n");
-> +		info->reset = NULL;
-> +	}
-> +
->   	init_completion(&info->completion);
->
->   	irq = platform_get_irq(pdev, 0);
-> @@ -252,6 +280,9 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
->   		return PTR_ERR(info->vref);
->   	}
->
-> +	if (info->reset)
-> +		rockchip_saradc_reset_controller(info->reset);
-> +
->   	/*
->   	 * Use a default value for the converter clock.
->   	 * This may become user-configurable in the future.
->
+Sorry, I wasn't very clear.
+
+You don't necessarily need to do anything.  But the fact that we've
+been through several iterations with problems in the edge cases of
+parsing here suggests that this is tricky and fragile, so tests would
+be a good idea if possible.
+
+Because these are for cases with bad input, you wouldn't need to check
+for any particular results - just that the functions don't crash or
+otherwise do bad things when given the bad input.  It's probably
+easier to construct tests which will have bad behaviour that valgrind
+can detect than ones which have bad behaviour which is more obvious.
+
+The whole testsuite can be run under valgrind with "make checkm".
+It's a good idea to run that every so often - I don't do it routinely
+because of course it's much, much slower than running the testsuite
+normally.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--95CBLwa+io9O2zXc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXl28KAAoJEGw4ysog2bOSfCgP/0dDUyHB//NRH9mSv8kSFw0Q
+IYqe1kEEfII5PJTV22qeP845DJNCWQ/oJ0EMuEehHYwP7x+4F9hFlSPi4bGKQfEj
+LkjfuLyDVdTIRDsVzWIId3goP+bsOzeJZwtyrerI/Cjx5MGqvkAgzpNRSrIAitud
+Chp8igK86pydxFT3lTAyK2ycPCEoMreZUrL/B4w57oCSYHh+nqM6uG38DImeS001
+2xhr99Pu8LSvH90hUlG3IWSkvH7rXFwPMSYDRaTIpbLqo0u9/tZ9a/TAFrzYLQF/
+N37NxjtB8QpZDVkDStr2pdL6u0KbdbgpobZCYhnLRrEhAP2/2nQ4vi1mjP5kqw+4
+Z8Pr3ab1GVzCjicvAh70LFYp+i8O9KYn+pGHzDDiRsenbaXJAMrppLxteBj2D8Lm
+hqmBgxOvbM+WrY8bjljJIWAsjT6A3c/ovtgmW7sQ+d/vCnrT+5A+gToZGG/04qA1
+X0bE6AiHdaeaiN3EZI0mNiKifsnf8cg2Ue+lJPgXTuNoiAKQ6VcRf4LfWc70Wr0I
+L8H/6l2dFaqqrKt1dyP0GE9UyNOTB7ZaSEp3ky4smxAvPPRiyh9qXacjVFv3LGET
+r/mFtdlQTTs0gj7dHv61a8C0LU15eI47TbEwrrOVL46IZUBU8jgT9ZGnC8oIGldE
+iGTD6QEYzPpKpzBMsn+m
+=T0eY
+-----END PGP SIGNATURE-----
+
+--95CBLwa+io9O2zXc--
