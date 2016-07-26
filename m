@@ -1,32 +1,45 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v7 00/12] drivers: net: xgene: Fix module
- crash and 1G hot-plug
-Date: Mon, 25 Jul 2016 21:52:01 -0700 (PDT)
-Message-ID: <20160725.215201.293002281412965878.davem@davemloft.net>
-References: <1469491967-28627-1-git-send-email-isubramanian@apm.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1469491967-28627-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: isubramanian@apm.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@apm.com, linux@armlinux.org.uk
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 2/4] arm64: dts: rockchip: add the saradc for rk3399
+Date: Tue, 26 Jul 2016 14:11:48 +0800
+Message-ID: <1469513510-1516-2-git-send-email-wxt@rock-chips.com>
+References: <1469513510-1516-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469513510-1516-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: heiko@sntech.de, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, dianders@chromium.org, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Iyappan Subramanian <isubramanian@apm.com>
-Date: Mon, 25 Jul 2016 17:12:35 -0700
+This patch adds saradc needed information on rk3399 SoCs.
 
-> This patchset addresses the following issues,
-> 
-> 1. Fixes the kernel crash when the driver loaded as an kernel module
-> 	- by fixing hardware cleanups and rearrange kernel API calls
-> 
-> 2. Hot-plug issue on the SGMII 1G interface
-> 	- by adding a driver for MDIO management
-> 
-> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-> Tested-by: Fushen Chen <fchen@apm.com>
-> Tested-by: Toan Le <toanle@apm.com>
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+---
 
-Series applied, thank you.
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 4c84229..b81f84b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -299,6 +299,18 @@
+ 		};
+ 	};
+ 
++	saradc: saradc@ff100000 {
++		compatible = "rockchip,rk3399-saradc";
++		reg = <0x0 0xff100000 0x0 0x100>;
++		interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++		#io-channel-cells = <1>;
++		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
++		clock-names = "saradc", "apb_pclk";
++		resets = <&cru SRST_P_SARADC>;
++		reset-names = "saradc-apb";
++		status = "disabled";
++	};
++
+ 	i2c1: i2c@ff110000 {
+ 		compatible = "rockchip,rk3399-i2c";
+ 		reg = <0x0 0xff110000 0x0 0x1000>;
+-- 
+1.9.1
