@@ -1,148 +1,106 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: Add a binding for Mediatek MDP
-Date: Tue, 26 Jul 2016 13:54:34 -0500
-Message-ID: <20160726185433.GA14609@rob-hp-laptop>
-References: <1469176383-35210-1-git-send-email-minghsiu.tsai@mediatek.com>
- <1469176383-35210-3-git-send-email-minghsiu.tsai@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1469176383-35210-3-git-send-email-minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH V2 RFC 2/6] usb: dwc2: Add DT properties to specify fifo size in host/otg mode
+Date: Tue, 26 Jul 2016 18:53:29 +0000
+Message-ID: <1469559213-16160-3-git-send-email-stefan.wahren@i2se.com>
+References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469559213-16160-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 22, 2016 at 04:33:01PM +0800, Minghsiu Tsai wrote:
-> Add a DT binding documentation of MDP for the MT8173 SoC
-> from Mediatek
-> 
-> Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/mediatek-mdp.txt     |   96 ++++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek-mdp.txt b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
-> new file mode 100644
-> index 0000000..2dad031
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
-> @@ -0,0 +1,96 @@
-> +* Mediatek Media Data Path
-> +
-> +Media Data Path is used for scaling and color space conversion.
-> +
-> +Required properties (all function blocks):
-> +- compatible: "mediatek,<chip>-mdp"
+Currently the fifo sizes for host/otg mode are defined per platform
+and doesn't take the mode into account. So we will get errors
+like this:
 
-What is this, ...
+dwc2 20980000.usb: 256 invalid for host_nperio_tx_fifo_size.
+dwc2 20980000.usb: Setting host_nperio_tx_fifo_size to 32
 
-> +        "mediatek,<chip>-mdp-<function>", one of
+So add DT properties for these mode specific fifo sizes in order
+to define them in the devicetree and avoid these errors.
 
-and this?
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/dwc2.txt |    3 +++
+ drivers/usb/dwc2/core.c                        |   25 ++++++++++++++++++------
+ 2 files changed, 22 insertions(+), 6 deletions(-)
 
-> +        "mediatek,<chip>-mdp-rdma"  - read DMA
-> +        "mediatek,<chip>-mdp-rsz"   - resizer
-> +        "mediatek,<chip>-mdp-wdma"  - write DMA
-> +        "mediatek,<chip>-mdp-wrot"  - write DMA with rotation
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index 20a68bf..298bac1 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -27,6 +27,9 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
+ - g-rx-fifo-size: size of rx fifo size in gadget mode.
+ - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
+ - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
++- h-rx-fifo-size: size of rx fifo size in host / otg mode.
++- h-np-tx-fifo-size: size of non-periodic tx fifo size in host / otg mode.
++- h-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in host / otg mode.
+ 
+ Example:
+ 
+diff --git a/drivers/usb/dwc2/core.c b/drivers/usb/dwc2/core.c
+index 5645528..5dffc6e 100644
+--- a/drivers/usb/dwc2/core.c
++++ b/drivers/usb/dwc2/core.c
+@@ -47,6 +47,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
+ #include <linux/usb.h>
+ 
+@@ -1289,6 +1290,9 @@ static void dwc2_set_param_hibernation(struct dwc2_hsotg *hsotg,
+ void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
+ 			 const struct dwc2_core_params *params)
+ {
++	struct device_node *np = hsotg->dev->of_node;
++	u32 val = 0;
++
+ 	dev_dbg(hsotg->dev, "%s()\n", __func__);
+ 
+ 	dwc2_set_param_otg_cap(hsotg, params->otg_cap);
+@@ -1299,12 +1303,6 @@ void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
+ 			params->host_support_fs_ls_low_power);
+ 	dwc2_set_param_enable_dynamic_fifo(hsotg,
+ 			params->enable_dynamic_fifo);
+-	dwc2_set_param_host_rx_fifo_size(hsotg,
+-			params->host_rx_fifo_size);
+-	dwc2_set_param_host_nperio_tx_fifo_size(hsotg,
+-			params->host_nperio_tx_fifo_size);
+-	dwc2_set_param_host_perio_tx_fifo_size(hsotg,
+-			params->host_perio_tx_fifo_size);
+ 	dwc2_set_param_max_transfer_size(hsotg,
+ 			params->max_transfer_size);
+ 	dwc2_set_param_max_packet_count(hsotg,
+@@ -1329,6 +1327,21 @@ void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
+ 	dwc2_set_param_uframe_sched(hsotg, params->uframe_sched);
+ 	dwc2_set_param_external_id_pin_ctl(hsotg, params->external_id_pin_ctl);
+ 	dwc2_set_param_hibernation(hsotg, params->hibernation);
++
++	if (!IS_ENABLED(CONFIG_OF) ||
++	    of_property_read_u32(np, "h-rx-fifo-size", &val))
++		val = params->host_rx_fifo_size;
++	dwc2_set_param_host_rx_fifo_size(hsotg, val);
++
++	if (!IS_ENABLED(CONFIG_OF) ||
++	    of_property_read_u32(np, "h-np-tx-fifo-size", &val))
++		val = params->host_nperio_tx_fifo_size;
++	dwc2_set_param_host_nperio_tx_fifo_size(hsotg, val);
++
++	if (!IS_ENABLED(CONFIG_OF) ||
++	    of_property_read_u32(np, "h-tx-fifo-size", &val))
++		val = params->host_perio_tx_fifo_size;
++	dwc2_set_param_host_perio_tx_fifo_size(hsotg, val);
+ }
+ 
+ /*
+-- 
+1.7.9.5
 
-List what are valid values of <chip>.
-
-> +- reg: Physical base address and length of the function block register space
-> +- clocks: device clocks
-> +- power-domains: a phandle to the power domain.
-> +- mediatek,vpu: the node of video processor unit
-> +
-> +Required properties (DMA function blocks):
-> +- compatible: Should be one of
-> +        "mediatek,<chip>-mdp-rdma"
-> +        "mediatek,<chip>-mdp-wdma"
-> +        "mediatek,<chip>-mdp-wrot"
-> +- iommus: should point to the respective IOMMU block with master port as
-> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> +  for details.
-> +- mediatek,larb: must contain the local arbiters in the current Socs.
-
-It is still not clear which properties apply to which compatible 
-strings.
-
-> +
-> +Example:
-> +	mdp_rdma0: rdma@14001000 {
-> +		compatible = "mediatek,mt8173-mdp-rdma",
-> +			     "mediatek,mt8173-mdp";
-> +		reg = <0 0x14001000 0 0x1000>;
-> +		clocks = <&mmsys CLK_MM_MDP_RDMA0>,
-> +			 <&mmsys CLK_MM_MUTEX_32K>;
-> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> +		iommus = <&iommu M4U_PORT_MDP_RDMA0>;
-> +		mediatek,larb = <&larb0>;
-> +		mediatek,vpu = <&vpu>;
-> +	};
-> +
-> +	mdp_rdma1: rdma@14002000 {
-> +		compatible = "mediatek,mt8173-mdp-rdma";
-> +		reg = <0 0x14002000 0 0x1000>;
-> +		clocks = <&mmsys CLK_MM_MDP_RDMA1>,
-> +			 <&mmsys CLK_MM_MUTEX_32K>;
-> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> +		iommus = <&iommu M4U_PORT_MDP_RDMA1>;
-> +		mediatek,larb = <&larb4>;
-> +	};
-> +
-> +	mdp_rsz0: rsz@14003000 {
-> +		compatible = "mediatek,mt8173-mdp-rsz";
-> +		reg = <0 0x14003000 0 0x1000>;
-> +		clocks = <&mmsys CLK_MM_MDP_RSZ0>;
-> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> +	};
-> +
-> +	mdp_rsz1: rsz@14004000 {
-> +		compatible = "mediatek,mt8173-mdp-rsz";
-> +		reg = <0 0x14004000 0 0x1000>;
-> +		clocks = <&mmsys CLK_MM_MDP_RSZ1>;
-> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> +	};
-> +
-> +	mdp_rsz2: rsz@14005000 {
-> +		compatible = "mediatek,mt8173-mdp-rsz";
-> +		reg = <0 0x14005000 0 0x1000>;
-> +		clocks = <&mmsys CLK_MM_MDP_RSZ2>;
-> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> +	};
-> +
-> +	mdp_wdma0: wdma@14006000 {
-> +		compatible = "mediatek,mt8173-mdp-wdma";
-> +		reg = <0 0x14006000 0 0x1000>;
-> +		clocks = <&mmsys CLK_MM_MDP_WDMA>;
-> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> +		iommus = <&iommu M4U_PORT_MDP_WDMA>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
-> +	mdp_wrot0: wrot@14007000 {
-> +		compatible = "mediatek,mt8173-mdp-wrot";
-> +		reg = <0 0x14007000 0 0x1000>;
-> +		clocks = <&mmsys CLK_MM_MDP_WROT0>;
-> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> +		iommus = <&iommu M4U_PORT_MDP_WROT0>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
-> +	mdp_wrot1: wrot@14008000 {
-> +		compatible = "mediatek,mt8173-mdp-wrot";
-> +		reg = <0 0x14008000 0 0x1000>;
-> +		clocks = <&mmsys CLK_MM_MDP_WROT1>;
-> +		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> +		iommus = <&iommu M4U_PORT_MDP_WROT1>;
-> +		mediatek,larb = <&larb4>;
-> +	};
-> -- 
-> 1.7.9.5
-> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
