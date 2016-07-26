@@ -1,52 +1,46 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/9] clk: sunxi-ng: nk: Make
- ccu_nk_find_best static
-Date: Tue, 26 Jul 2016 10:57:11 +0200
-Message-ID: <20160726085711.GC7190@lukather>
-References: <1469516671-19377-1-git-send-email-wens@csie.org>
- <1469516671-19377-3-git-send-email-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: John Keeping <john@metanate.com>
+Subject: Re: [PATCH 1/4] iio: adc: rockchip_saradc: reset saradc controller
+ before programming it
+Date: Tue, 26 Jul 2016 10:00:07 +0100
+Message-ID: <20160726100007.5166e7f9.john@metanate.com>
+References: <1469513510-1516-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="s9fJI615cBHmzTOP"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2WL3S6AKGQEVVPY7CI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1469516671-19377-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469513510-1516-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: jic23@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 26 Jul 2016 14:11:47 +0800, Caesar Wang wrote:
 
---s9fJI615cBHmzTOP
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Tue, Jul 26, 2016 at 03:04:24PM +0800, Chen-Yu Tsai wrote:
-> make C=2 reports:
+> SARADC controller needs to be reset before programming it, otherwise
+> it will not function properly.
 > 
->   CHECK   drivers/clk/sunxi-ng/ccu_nk.c
-> drivers/clk/sunxi-ng/ccu_nk.c:17:6: warning: symbol 'ccu_nk_find_best' was
-> not declared. Should it be static?
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-iio@vger.kernel.org
+> Cc: linux-rockchip@lists.infradead.org
+> ---
 > 
-> ccu_nk_find_best is only used within ccu_nk.c. So make it static to get
-> rid of this warning.
-> 
-> Fixes: adbfb0056e03 ("clk: sunxi-ng: Add N-K-factor clock support")
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
+> index f9ad6c2..2f0e110 100644
+> --- a/drivers/iio/adc/rockchip_saradc.c
+> +++ b/drivers/iio/adc/rockchip_saradc.c
+> @@ -218,6 +231,13 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+>  	if (IS_ERR(info->regs))
+>  		return PTR_ERR(info->regs);
+>  
+> +	info->reset = devm_reset_control_get(&pdev->dev, "saradc-apb");
+> +	if (IS_ERR(info->reset)) {
+> +		ret = PTR_ERR(info->reset);
+> +		dev_err(&pdev->dev, "failed to get saradc reset: %d\n", ret);
+> +		return ret;
+> +	}
 
-Applied, thanks
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---s9fJI615cBHmzTOP--
+Does this need to handle ENOENT so as to avoid failing with old device
+tree blobs?
