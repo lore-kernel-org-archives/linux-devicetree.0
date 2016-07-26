@@ -1,102 +1,145 @@
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH] ata: xgene: Enable NCQ support for APM X-Gene SATA controller
- hardware v1.1
-Date: Tue, 26 Jul 2016 14:50:57 +0530
-Message-ID: <1469524857-3720-1-git-send-email-rsahu@apm.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V3 01/10] Documentation: dt-bindings: mailbox: tegra: Add
+ binding for HSP mailbox
+Date: Tue, 26 Jul 2016 10:41:48 +0100
+Message-ID: <c04f3281-ce63-7d53-898a-bbdb7bc8eb5d@nvidia.com>
+References: <20160719091723.30919-1-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-scsi@vger.kernel.org, jcm@redhat.com, Rameshwar Prasad Sahu <rsahu@apm.com>, patches@apm.com, linux-ide@vger.kernel.org, ddutile@redhat.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160719091723.30919-1-josephl@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joseph Lo <josephl@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>
+Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Matthew Longnecker <MLongnecker@nvidia.com>, devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sivaram Nair <sivaramn@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables NCQ support for APM X-Gene SATA controller
-hardware v1.1 that was broken with hardware v1.0.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
----
- drivers/ata/ahci_xgene.c |   14 ++++++++------
- 1 files changed, 8 insertions(+), 6 deletions(-)
+On 19/07/16 10:17, Joseph Lo wrote:
+> Add DT binding for the Hardware Synchronization Primitives (HSP). The
+> HSP is designed for the processors to share resources and communicate
+> together. It provides a set of hardware synchronization primitives for
+> interprocessor communication. So the interprocessor communication (IPC)
+> protocols can use hardware synchronization primitive, when operating
+> between two processors not in an SMP relationship.
+> 
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> ---
+> Sorry. Please allow me just update the binding patches of this series.
+> Want to make sure the binding is acceptable first.
+> Thanks.
+> 
+> Changes in V3:
+> - use two cells for mboxes property
+> Changes in V2:
+> - revise the compatible string, interrupt-names, interrupts, and #mbox-cells
+>   properties
+> - remove "nvidia,hsp-function" property
+> - fix the header file name
+> - the binding supports the concept of multiple HSP sub-modules on one HSP HW
+>   block now.
+> ---
+>  .../bindings/mailbox/nvidia,tegra186-hsp.txt       | 52 ++++++++++++++++++++++
+>  include/dt-bindings/mailbox/tegra186-hsp.h         | 20 +++++++++
+>  2 files changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+>  create mode 100644 include/dt-bindings/mailbox/tegra186-hsp.h
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+> new file mode 100644
+> index 000000000000..a9152380642d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
+> @@ -0,0 +1,52 @@
+> +NVIDIA Tegra Hardware Synchronization Primitives (HSP)
+> +
+> +The HSP modules are used for the processors to share resources and communicate
+> +together. It provides a set of hardware synchronization primitives for
+> +interprocessor communication. So the interprocessor communication (IPC)
+> +protocols can use hardware synchronization primitives, when operating between
+> +two processors not in an SMP relationship.
+> +
+> +The features that HSP supported are shared mailboxes, shared semaphores,
+> +arbitrated semaphores and doorbells.
+> +
+> +Required properties:
+> +- name : Should be hsp
+> +- compatible
+> +    Array of strings.
+> +    one of:
+> +    - "nvidia,tegra186-hsp"
+> +- reg : Offset and length of the register set for the device.
+> +- interrupt-names
+> +    Array of strings.
+> +    Contains a list of names for the interrupts described by the interrupt
+> +    property. May contain the following entries, in any order:
+> +    - "doorbell"
+> +    Users of this binding MUST look up entries in the interrupt property
+> +    by name, using this interrupt-names property to do so.
+> +- interrupts
+> +    Array of interrupt specifiers.
+> +    Must contain one entry per entry in the interrupt-names property,
+> +    in a matching order.
+> +- #mbox-cells : Should be 2.
+> +
+> +The mbox specifier of the "mboxes" property in the client node should
+> +contain two data. The first one should be the HSP type and the second
+> +one should be the ID that the client is going to use. Those information
+> +can be found in the following file.
+> +
+> +- <dt-bindings/mailbox/tegra186-hsp.h>.
+> +
+> +Example:
+> +
+> +hsp_top0: hsp@3c00000 {
+> +	compatible = "nvidia,tegra186-hsp";
+> +	reg = <0x0 0x03c00000 0x0 0xa0000>;
+> +	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "doorbell";
+> +	#mbox-cells = <2>;
+> +};
+> +
+> +client {
+> +	...
+> +	mboxes = <&hsp_top0 HSP_MBOX_TYPE_DB HSP_DB_MASTER_XXX>;
+> +};
+> diff --git a/include/dt-bindings/mailbox/tegra186-hsp.h b/include/dt-bindings/mailbox/tegra186-hsp.h
+> new file mode 100644
+> index 000000000000..d1c1432707cd
+> --- /dev/null
+> +++ b/include/dt-bindings/mailbox/tegra186-hsp.h
+> @@ -0,0 +1,20 @@
+> +/*
+> + * This header provides constants for binding nvidia,tegra186-hsp.
+> + *
+> + * The number with HSP_DB_MASTER prefix indicates the bit that is
+> + * associated with a master ID in the doorbell registers.
+> + */
+> +
+> +
+> +#ifndef _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
+> +#define _DT_BINDINGS_MAILBOX_TEGRA186_HSP_H
+> +
+> +#define HSP_MBOX_TYPE_DB 0x0
+> +#define HSP_MBOX_TYPE_SM 0x1
+> +#define HSP_MBOX_TYPE_SS 0x2
+> +#define HSP_MBOX_TYPE_AS 0x3
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 73b19b2..8b88be9 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -87,6 +87,7 @@
+Nit ... may be we should add a comment that describes what the above are?
 
- enum xgene_ahci_version {
- 	XGENE_AHCI_V1 = 1,
-+	XGENE_AHCI_V1_1,
- 	XGENE_AHCI_V2,
- };
+> +
+> +#define HSP_DB_MASTER_CCPLEX 17
+> +#define HSP_DB_MASTER_BPMP 19
 
-@@ -734,6 +735,7 @@ static struct scsi_host_template ahci_platform_sht = {
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id xgene_ahci_acpi_match[] = {
- 	{ "APMC0D0D", XGENE_AHCI_V1},
-+	{ "APMC0D67", XGENE_AHCI_V1_1},
- 	{ "APMC0D32", XGENE_AHCI_V2},
- 	{},
- };
-@@ -742,6 +744,7 @@ MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
+Nit ... I would be tempted to move the comment in the header to above
+these defines, as I missed it on my first pass of this.
 
- static const struct of_device_id xgene_ahci_of_match[] = {
- 	{.compatible = "apm,xgene-ahci", .data = (void *) XGENE_AHCI_V1},
-+	{.compatible = "apm,xgene-ahci-v1-1", .data = (void *) XGENE_AHCI_V1_1},
- 	{.compatible = "apm,xgene-ahci-v2", .data = (void *) XGENE_AHCI_V2},
- 	{},
- };
-@@ -755,8 +758,7 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	const struct of_device_id *of_devid;
- 	enum xgene_ahci_version version = XGENE_AHCI_V1;
--	const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
--					      &xgene_ahci_v2_port_info };
-+	const struct ata_port_info *ppi;
- 	int rc;
+Otherwise ...
 
- 	hpriv = ahci_platform_get_resources(pdev);
-@@ -821,8 +823,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 				dev_warn(&pdev->dev, "%s: Error reading device info. Assume version1\n",
- 					__func__);
- 				version = XGENE_AHCI_V1;
--			} else if (info->valid & ACPI_VALID_CID) {
--				version = XGENE_AHCI_V2;
- 			}
- 		}
- 	}
-@@ -858,18 +858,20 @@ skip_clk_phy:
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
- 	switch (version) {
- 	case XGENE_AHCI_V1:
-+		ppi = &xgene_ahci_v1_port_info;
- 		hpriv->flags = AHCI_HFLAG_NO_NCQ;
- 		break;
- 	case XGENE_AHCI_V2:
-+		ppi = &xgene_ahci_v2_port_info;
- 		hpriv->flags |= AHCI_HFLAG_YES_FBS;
- 		hpriv->irq_handler = xgene_ahci_irq_intr;
- 		break;
- 	default:
-+		ppi = &xgene_ahci_v1_port_info;
- 		break;
- 	}
+Cheers
+Jon
 
--	rc = ahci_platform_init_host(pdev, hpriv, ppi[version - 1],
--				     &ahci_platform_sht);
-+	rc = ahci_platform_init_host(pdev, hpriv, ppi, &ahci_platform_sht);
- 	if (rc)
- 		goto disable_resources;
-
---
-1.7.1
+-- 
+nvpublic
