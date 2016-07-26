@@ -1,87 +1,109 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 0/9] clk: sunxi-ng: Support A31/A31s CCU
-Date: Tue, 26 Jul 2016 15:04:22 +0800
-Message-ID: <1469516671-19377-1-git-send-email-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 5/9] clk: sunxi-ng: mux: support fixed
+ pre-dividers on multiple parents
+Date: Tue, 26 Jul 2016 15:04:27 +0800
+Message-ID: <1469516671-19377-6-git-send-email-wens@csie.org>
+References: <1469516671-19377-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBC4X3S6AKGQEHY6Y2EY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1469516671-19377-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+Some clocks on the A31 have fixed pre-dividers on multiple parents.
+Add support for them.
 
-This series adds support for the A31/A31s CCU (clock control unit) with
-the new sunxi-ng binding/driver. This is a near complete driver, with a
-few features unimplemented or might need reworking:
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c |  9 +++++----
+ drivers/clk/sunxi-ng/ccu_mux.c      |  6 ++++--
+ drivers/clk/sunxi-ng/ccu_mux.h      | 10 ++++++----
+ 3 files changed, 15 insertions(+), 10 deletions(-)
 
-  - The HDMI mode of the PLL-MIPI clock is unsupported.
-
-  - The EMAC clock is unimplemented. In the past we modelled this as a
-    clock. Unforunately that doesn't work very well. While it is sort
-    of a clock control, with clock inverters and delay chains, it also
-    controls the interface mode of the EMAC. On later SoCs this register
-    is moved out of the CCU, into the system control register range.
-    Other platforms consider this a part of the ethernet controller glue
-    logic, and map and use it directly as part of the controller bindings.
-    I would like to do the same.
-
-  - The A31 has 2 SDRAM clocks and 2 MBUS clocks. As such we can't have
-    them all as the DRAM gate clocks' parent. Instead I'm using the MDFS
-    clock as their parent. It is unclear what MDFS actually is, but the
-    close proximity of the registers to the DRAM bits, and hints about
-    this tied to DRAM DVFS suggest this is a common memory bus. If we're
-    wrong we can always fix this as the relationship is part of the driver,
-    not the binding. Also, all 5 clocks are marked as critical.
-
-Various changes were made to the common (to sunxi-ng) clock types to make
-them compatible with the A31/A31s' CCU's design.
-
-Also new is support for clk notifiers for mux clocks. This is needed for
-the cpu clock, which should be muxed to the stable main oscillator when
-the PLL-CPU clock rate is changed, to avoid any instabilities in the PLL
-which result in the CPU crashing. This is similar to what the meson
-platform does.
-
-
-Regards
-ChenYu
-
-Chen-Yu Tsai (9):
-  clk: sunxi-ng: Fix inverted test condition in ccu_helper_wait_for_lock
-  clk: sunxi-ng: nk: Make ccu_nk_find_best static
-  clk: sunxi-ng: mux: Increase fixed pre-divider div size
-  clk: sunxi-ng: mux: Add support for mux tables
-  clk: sunxi-ng: mux: support fixed pre-dividers on multiple parents
-  clk: sunxi-ng: nkm: Add mux to support multiple parents
-  clk: sunxi-ng: mux: Add clk notifier functions
-  clk: sunxi-ng: Add A31/A31s clocks
-  ARM: dts: sun6i: switch A31/A31s to new CCU clock bindings
-
- .../devicetree/bindings/clock/sunxi-ccu.txt        |    3 +-
- arch/arm/boot/dts/sun6i-a31.dtsi                   |  424 ++-----
- drivers/clk/sunxi-ng/Kconfig                       |   10 +
- drivers/clk/sunxi-ng/Makefile                      |    1 +
- drivers/clk/sunxi-ng/ccu-sun6i-a31.c               | 1230 ++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu-sun6i-a31.h               |   72 ++
- drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |    9 +-
- drivers/clk/sunxi-ng/ccu_common.c                  |    2 +-
- drivers/clk/sunxi-ng/ccu_mux.c                     |   56 +-
- drivers/clk/sunxi-ng/ccu_mux.h                     |   36 +-
- drivers/clk/sunxi-ng/ccu_nk.c                      |    6 +-
- drivers/clk/sunxi-ng/ccu_nkm.c                     |   40 +-
- drivers/clk/sunxi-ng/ccu_nkm.h                     |   23 +
- include/dt-bindings/clock/sun6i-a31-ccu.h          |  187 +++
- include/dt-bindings/reset/sun6i-a31-ccu.h          |  106 ++
- 15 files changed, 1854 insertions(+), 351 deletions(-)
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun6i-a31.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun6i-a31.h
- create mode 100644 include/dt-bindings/clock/sun6i-a31-ccu.h
- create mode 100644 include/dt-bindings/reset/sun6i-a31-ccu.h
-
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+index 9af359544110..5f5c900c235b 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+@@ -184,15 +184,16 @@ static SUNXI_CCU_MP_WITH_MUX(apb2_clk, "apb2", apb2_parents, 0x058,
+ 			     0);
+ 
+ static const char * const ahb2_parents[] = { "ahb1" , "pll-periph0" };
++static const struct ccu_mux_fixed_prediv ahb2_fixed_predivs[] = {
++	{ .index = 1, .div = 2},
++	{ },
++};
+ static struct ccu_mux ahb2_clk = {
+ 	.mux		= {
+ 		.shift	= 0,
+ 		.width	= 1,
+ 
+-		.fixed_prediv	= {
+-			.index	= 1,
+-			.div	= 2,
+-		},
++		.fixed_predivs	= ahb2_fixed_predivs,
+ 	},
+ 
+ 	.common		= {
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
+index 68b32f168a74..f96eabb5d1f3 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.c
++++ b/drivers/clk/sunxi-ng/ccu_mux.c
+@@ -20,6 +20,7 @@ void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
+ {
+ 	u16 prediv = 1;
+ 	u32 reg;
++	int i;
+ 
+ 	if (!((common->features & CCU_FEATURE_FIXED_PREDIV) ||
+ 	      (common->features & CCU_FEATURE_VARIABLE_PREDIV)))
+@@ -32,8 +33,9 @@ void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
+ 	}
+ 
+ 	if (common->features & CCU_FEATURE_FIXED_PREDIV)
+-		if (parent_index == cm->fixed_prediv.index)
+-			prediv = cm->fixed_prediv.div;
++		for (i = 0; cm->fixed_predivs[i].div; i++)
++			if (parent_index == cm->fixed_predivs[i].index)
++				prediv = cm->fixed_predivs[i].div;
+ 
+ 	if (common->features & CCU_FEATURE_VARIABLE_PREDIV)
+ 		if (parent_index == cm->variable_prediv.index) {
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
+index f0078de78712..28d16ec18d55 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.h
++++ b/drivers/clk/sunxi-ng/ccu_mux.h
+@@ -5,15 +5,17 @@
+ 
+ #include "ccu_common.h"
+ 
++struct ccu_mux_fixed_prediv {
++	u8	index;
++	u16	div;
++};
++
+ struct ccu_mux_internal {
+ 	u8		shift;
+ 	u8		width;
+ 	const u8	*table;
+ 
+-	struct {
+-		u8	index;
+-		u16	div;
+-	} fixed_prediv;
++	const struct ccu_mux_fixed_prediv	*fixed_predivs;
+ 
+ 	struct {
+ 		u8	index;
 -- 
 2.8.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
