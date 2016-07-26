@@ -1,79 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
-Date: Tue, 26 Jul 2016 17:33:52 +0200
-Message-ID: <20160726153352.GH7190@lukather>
-References: <1469450243-19138-1-git-send-email-stefan.mavrodiev@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
+Date: Tue, 26 Jul 2016 10:21:56 -0600
+Message-ID: <f1ca284a-5332-3323-80b9-7cf61e7c97ac@wwwdotorg.org>
+References: <20160719191442.15439-1-swarren@wwwdotorg.org>
+ <20160719191442.15439-2-swarren@wwwdotorg.org>
+ <20160726100302.GE2433@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AqCDj3hiknadvR6t"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYMF326AKGQENO67ZDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1469450243-19138-1-git-send-email-stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160726100302.GE2433-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 07/26/2016 04:03 AM, Thierry Reding wrote:
+> On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> The BPMP implements some services which must be represented by separate
+>> nodes. For example, it can provide access to certain I2C controllers, and
+>> the I2C bindings represent each I2C controller as a device tree node.
+>> Update the binding to describe how the BPMP supports this.
+>>
+>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23 ++++++++++++++++++++++
+>>  1 file changed, 23 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>> index 9a3864f56955..142d363406f6 100644
+>> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>> @@ -38,6 +38,24 @@ implemented by this node:
+>>  - .../reset/reset.txt
+>>  - <dt-bindings/reset/tegra186-reset.h>
+>>
+>> +The BPMP implements some services which must be represented by separate nodes.
+>> +For example, it can provide access to certain I2C controllers, and the I2C
+>> +bindings represent each I2C controller as a device tree node. Such nodes should
+>> +be nested directly inside the main BPMP node.
+>> +
+>> +Software can determine whether a child node of the BPMP node represents a device
+>> +by checking for a compatible property. Any node with a compatible property
+>> +represents a device that can be instantiated. Nodes without a compatible
+>> +property may be used to provide configuration information regarding the BPMP
+>> +itself, although no such configuration nodes are currently defined by this
+>> +binding.
+>> +
+>> +The BPMP firmware defines no single global name-/numbering-space for such
+>> +services. Put another way, the numbering scheme for I2C buses is distinct from
+>> +the numbering scheme for any other service the BPMP may provide (e.g. a future
+>> +hypothetical SPI bus service). As such, child device nodes will have no reg
+>> +property, and the BPMP node will have no #address-cells or #size-cells property.
+>
+> My understanding is that the I2C bus number is passed as part of the
+> request to the BPMP firmware. Does that not count as addressing? Could
+> we not represent that generically using a device tree hierarchy? I'm
+> thinking something along these lines:
+>
+> 	bpmp {
+> 		...
+>
+> 		services {
+> 			i2c {
+> 				i2c@0 {
+> 					reg = <0>;
 
---AqCDj3hiknadvR6t
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Technically, that is possible. However, Rob Herring rejected the idea of 
+multiple levels of sub-nodes.
 
-Hi Stefan,
-
-On Mon, Jul 25, 2016 at 03:37:23PM +0300, Stefan Mavrodiev wrote:
-> A33-OLinuXino is A33 development board designed by Olimex LTD.
-> 
-> It has AXP233 PMU, 1GB DRAM, a micro SD card, one USB-OTG connector,
-> headphone and mic jacks, connector for LiPo battery and optional
-> 4GB NAND Flash.
-> 
-> It has two 40-pin headers. One for LCD panel, and one for
-> additional modules. Also there is CSI/DSI connector.
-> 
-> Signed-off-by: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-It looks mostly good, a few comments though.
-> +&pio {
-> +	led_pin_olinuxino: led_pins@0 {
-> +		allwinner,pins = "PB7";
-> +        allwinner,function = "gpio_out";
-
-This line is not properly indented.
-
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +    };
-
-And this one too.
-
-> +&reg_dc1sw {
-> +	regulator-name = "vcc-lcd";
-> +};
-
-No constraints on this one?
-
-> +&reg_dcdc1 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +	regulator-name = "vcc-dsi";
-> +};
-
-What is it used for? Is it really necessary to keep it on at all time?
-
-Thanks,
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---AqCDj3hiknadvR6t--
+Can we please just go with what we have? DT bindings are frankly an 
+obstacle to getting anything done:-(
