@@ -1,351 +1,135 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH net-next v7 06/12] drivers: net: xgene: Add backward compatibility
-Date: Mon, 25 Jul 2016 17:12:41 -0700
-Message-ID: <1469491967-28627-7-git-send-email-isubramanian@apm.com>
-References: <1469491967-28627-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1469491967-28627-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, linux@armlinux.org.uk, Iyappan Subramanian <isubramanian@apm.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] libfdt: Add overlay application function
+Date: Tue, 26 Jul 2016 10:18:59 +1000
+Message-ID: <20160726001859.GF17429@voom.fritz.box>
+References: <20160720142044.27527-1-maxime.ripard@free-electrons.com>
+ <20160720142044.27527-7-maxime.ripard@free-electrons.com>
+ <20160724142908.GF24621@voom.fritz.box>
+ <20160725182041.GN7419@lukather>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TeJTyD9hb8KJN2Jy"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160725182041.GN7419@lukather>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds xgene_enet_check_phy_hanlde() function that checks whether
-MDIO driver is probed successfully and sets pdata->mdio_driver to true.
-If MDIO driver is not probed, ethernet driver falls back to backward
-compatibility mode.
 
-Since enum xgene_enet_cmd is used by MDIO driver, removing this from
-ethernet driver.
+--TeJTyD9hb8KJN2Jy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Tested-by: Fushen Chen <fchen@apm.com>
-Tested-by: Toan Le <toanle@apm.com>
----
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.c    | 57 ++++++++++++++++++++---
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.h    |  7 +--
- drivers/net/ethernet/apm/xgene/xgene_enet_main.c  | 50 ++++++++++++++------
- drivers/net/ethernet/apm/xgene/xgene_enet_main.h  | 30 +-----------
- drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c |  9 +++-
- 5 files changed, 100 insertions(+), 53 deletions(-)
+On Mon, Jul 25, 2016 at 08:20:41PM +0200, Maxime Ripard wrote:
+> Hi David,
+>=20
+> On Mon, Jul 25, 2016 at 12:29:08AM +1000, David Gibson wrote:
+> > > +static int overlay_fixup_phandle(void *fdt, void *fdto, int symbols_=
+off,
+> > > +				 int property)
+> > > +{
+> > > +	const char *value;
+> > > +	const char *label;
+> > > +	int len;
+> > > +
+> > > +	value =3D fdt_getprop_by_offset(fdto, property,
+> > > +				      &label, &len);
+> > > +	if (!value) {
+> > > +		if (len =3D=3D -FDT_ERR_NOTFOUND)
+> > > +			return -FDT_ERR_INTERNAL;
+> > > +
+> > > +		return len;
+> > > +	}
+> > > +
+> > > +	do {
+> > > +		const char *prop_string =3D value;
+> > > +		const char *path, *name;
+> > > +		uint32_t prop_len =3D strnlen(value, len);
+> >=20
+> > prop_len is a bad name, since it could well be less than the length of
+> > the whole property.
+> >=20
+> > > +		uint32_t path_len, name_len;
+> > > +		char *sep, *endptr;
+> > > +		int index;
+> > > +		int ret;
+> > > +
+> > > +		path =3D prop_string;
+> > > +		sep =3D memchr(prop_string, ':', prop_len);
+> > > +		if (!sep || (*sep !=3D ':'))
+> > > +			return -FDT_ERR_BADSTRUCTURE;
+> >=20
+> > As mentioned on some of the other patches in the series, I think we
+> > want a new error code for bad fixup / overlay information.
+> >=20
+> > > +
+> > > +		path_len =3D sep - path;
+> > > +		if (path_len =3D=3D prop_len)
+> > > +			return -FDT_ERR_BADSTRUCTURE;
+> >=20
+> > I'm pretty sure this is impossible if sep !=3D NULL.
+> >=20
+> > > +		name =3D sep + 1;
+> >=20
+> > But I think the case you actually need to test for is path_len =3D=3D
+> > (prop_len - 1), that will occur when : is the last character.
+> >=20
+> > > +		sep =3D memchr(name, ':', prop_len);
+> > > +		if (!sep || *sep !=3D ':')
+> > > +			return -FDT_ERR_BADSTRUCTURE;
+> >=20
+> > This still isn't quite safe.  If the property has no \0, and : is the
+> > last character in it, you'll access beyond the end of the property
+> > here.  It's probably easier if you just fail early if there is no \0 -
+> > that's probably easier if you use memchr(\0) instead of strnlen().
+> >=20
+> > > +
+> > > +		name_len =3D sep - name;
+> > > +		if ((path_len + 1 + name_len) =3D=3D prop_len)
+> > > +			return -FDT_ERR_BADSTRUCTURE;
+> >=20
+> > Again, off-by-one in this test, I think.  Since there are so many
+> > tricky edge cases here, it might be worth making testcases for them.
+>=20
+> What do you want here? That we move the parsing code out of that loop,
+> make it public and put the prototype in libfdt_internal, or that we
+> craft some DT that would outline all the possible issues with that
+> function, and just test the return code of fdt_overlay_apply?
 
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-index 91a67a0..b8b643f 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-@@ -572,7 +572,9 @@ static void xgene_gmac_init(struct xgene_enet_pdata *pdata)
- {
- 	u32 value;
- 
--	xgene_gmac_reset(pdata);
-+	if (!pdata->mdio_driver)
-+		xgene_gmac_reset(pdata);
-+
- 	xgene_gmac_set_speed(pdata);
- 	xgene_gmac_set_mac_addr(pdata);
- 
-@@ -680,6 +682,11 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- 	if (!xgene_ring_mgr_init(pdata))
- 		return -ENODEV;
- 
-+	if (pdata->mdio_driver) {
-+		xgene_enet_config_ring_if_assoc(pdata);
-+		return 0;
-+	}
-+
- 	if (dev->of_node) {
- 		clk_prepare_enable(pdata->clk);
- 		udelay(5);
-@@ -799,21 +806,47 @@ static void xgene_enet_adjust_link(struct net_device *ndev)
- 	}
- }
- 
--static int xgene_enet_phy_connect(struct net_device *ndev)
-+#ifdef CONFIG_ACPI
-+static struct acpi_device *acpi_phy_find_device(struct device *dev)
-+{
-+	struct acpi_reference_args args;
-+	struct fwnode_handle *fw_node;
-+	int status;
-+
-+	fw_node = acpi_fwnode_handle(ACPI_COMPANION(dev));
-+	status = acpi_node_get_property_reference(fw_node, "phy-handle", 0,
-+						  &args);
-+	if (ACPI_FAILURE(status)) {
-+		dev_dbg(dev, "No matching phy in ACPI table\n");
-+		return NULL;
-+	}
-+
-+	return args.adev;
-+}
-+#endif
-+
-+int xgene_enet_phy_connect(struct net_device *ndev)
- {
- 	struct xgene_enet_pdata *pdata = netdev_priv(ndev);
--	struct device_node *phy_np;
-+	struct device_node *np;
- 	struct phy_device *phy_dev;
- 	struct device *dev = &pdata->pdev->dev;
-+	struct acpi_device *adev;
-+	int i;
- 
- 	if (dev->of_node) {
--		phy_np = of_parse_phandle(dev->of_node, "phy-handle", 0);
--		if (!phy_np) {
-+		for (i = 0 ; i < 2; i++) {
-+			np = of_parse_phandle(dev->of_node, "phy-handle", i);
-+			if (np)
-+				break;
-+		}
-+
-+		if (!np) {
- 			netdev_dbg(ndev, "No phy-handle found in DT\n");
- 			return -ENODEV;
- 		}
- 
--		phy_dev = of_phy_connect(ndev, phy_np, &xgene_enet_adjust_link,
-+		phy_dev = of_phy_connect(ndev, np, &xgene_enet_adjust_link,
- 					 0, pdata->phy_mode);
- 		if (!phy_dev) {
- 			netdev_err(ndev, "Could not connect to PHY\n");
-@@ -822,6 +855,11 @@ static int xgene_enet_phy_connect(struct net_device *ndev)
- 
- 		pdata->phy_dev = phy_dev;
- 	} else {
-+#ifdef CONFIG_ACPI
-+		adev = acpi_phy_find_device(dev);
-+		if (adev)
-+			pdata->phy_dev =  adev->driver_data;
-+
- 		phy_dev = pdata->phy_dev;
- 
- 		if (!phy_dev ||
-@@ -830,6 +868,7 @@ static int xgene_enet_phy_connect(struct net_device *ndev)
- 			netdev_err(ndev, "Could not connect to PHY\n");
- 			return  -ENODEV;
- 		}
-+#endif
- 	}
- 
- 	pdata->phy_speed = SPEED_UNKNOWN;
-@@ -930,6 +969,12 @@ int xgene_enet_mdio_config(struct xgene_enet_pdata *pdata)
- 	return ret;
- }
- 
-+void xgene_enet_phy_disconnect(struct xgene_enet_pdata *pdata)
-+{
-+	if (pdata->phy_dev)
-+		phy_disconnect(pdata->phy_dev);
-+}
-+
- void xgene_enet_mdio_remove(struct xgene_enet_pdata *pdata)
- {
- 	if (pdata->phy_dev)
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
-index eec55c1..179a44d 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
-@@ -301,11 +301,6 @@ enum xgene_enet_ring_bufnum {
- 	RING_BUFNUM_INVALID
- };
- 
--enum xgene_enet_cmd {
--	XGENE_ENET_WR_CMD = BIT(31),
--	XGENE_ENET_RD_CMD = BIT(30)
--};
--
- enum xgene_enet_err_code {
- 	HBF_READ_DATA = 3,
- 	HBF_LL_READ = 4,
-@@ -351,6 +346,8 @@ void xgene_enet_parse_error(struct xgene_enet_desc_ring *ring,
- int xgene_enet_mdio_config(struct xgene_enet_pdata *pdata);
- void xgene_enet_mdio_remove(struct xgene_enet_pdata *pdata);
- bool xgene_ring_mgr_init(struct xgene_enet_pdata *p);
-+int xgene_enet_phy_connect(struct net_device *ndev);
-+void xgene_enet_phy_disconnect(struct xgene_enet_pdata *pdata);
- 
- extern const struct xgene_mac_ops xgene_gmac_ops;
- extern const struct xgene_port_ops xgene_gport_ops;
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-index 87e5929..6398337 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-@@ -763,7 +763,7 @@ static int xgene_enet_close(struct net_device *ndev)
- 	mac_ops->tx_disable(pdata);
- 	mac_ops->rx_disable(pdata);
- 
--	if (pdata->phy_mode == PHY_INTERFACE_MODE_RGMII)
-+	if (pdata->phy_dev)
- 		phy_stop(pdata->phy_dev);
- 	else
- 		cancel_delayed_work_sync(&pdata->link_work);
-@@ -1295,6 +1295,23 @@ static int xgene_enet_get_irqs(struct xgene_enet_pdata *pdata)
- 	return 0;
- }
- 
-+static int xgene_enet_check_phy_handle(struct xgene_enet_pdata *pdata)
-+{
-+	int ret;
-+
-+	if (pdata->phy_mode == PHY_INTERFACE_MODE_XGMII)
-+		return 0;
-+
-+	if (!IS_ENABLED(CONFIG_MDIO_XGENE))
-+		return 0;
-+
-+	ret = xgene_enet_phy_connect(pdata->ndev);
-+	if (!ret)
-+		pdata->mdio_driver = true;
-+
-+	return 0;
-+}
-+
- static int xgene_enet_get_resources(struct xgene_enet_pdata *pdata)
- {
- 	struct platform_device *pdev;
-@@ -1380,6 +1397,10 @@ static int xgene_enet_get_resources(struct xgene_enet_pdata *pdata)
- 	if (ret)
- 		return ret;
- 
-+	ret = xgene_enet_check_phy_handle(pdata);
-+	if (ret)
-+		return ret;
-+
- 	pdata->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(pdata->clk)) {
- 		/* Firmware may have set up the clock already. */
-@@ -1574,7 +1595,7 @@ static int xgene_enet_probe(struct platform_device *pdev)
- 	struct net_device *ndev;
- 	struct xgene_enet_pdata *pdata;
- 	struct device *dev = &pdev->dev;
--	const struct xgene_mac_ops *mac_ops;
-+	void (*link_state)(struct work_struct *);
- 	const struct of_device_id *of_id;
- 	int ret;
- 
-@@ -1636,14 +1657,17 @@ static int xgene_enet_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_netdev;
- 
--	mac_ops = pdata->mac_ops;
--	if (pdata->phy_mode == PHY_INTERFACE_MODE_RGMII) {
--		ret = xgene_enet_mdio_config(pdata);
--		if (ret)
--			goto err_netdev;
--	} else {
--		INIT_DELAYED_WORK(&pdata->link_work, mac_ops->link_state);
-+	link_state = pdata->mac_ops->link_state;
-+	if (pdata->phy_mode == PHY_INTERFACE_MODE_XGMII) {
-+		INIT_DELAYED_WORK(&pdata->link_work, link_state);
-+	} else if (!pdata->mdio_driver) {
-+		if (pdata->phy_mode == PHY_INTERFACE_MODE_RGMII)
-+			ret = xgene_enet_mdio_config(pdata);
-+		else
-+			INIT_DELAYED_WORK(&pdata->link_work, link_state);
- 	}
-+	if (ret)
-+		goto err;
- 
- 	xgene_enet_napi_add(pdata);
- 	ret = register_netdev(ndev);
-@@ -1676,11 +1700,11 @@ static int xgene_enet_remove(struct platform_device *pdev)
- 		dev_close(ndev);
- 	rtnl_unlock();
- 
--	mac_ops->rx_disable(pdata);
--	mac_ops->tx_disable(pdata);
--
--	if (pdata->phy_mode == PHY_INTERFACE_MODE_RGMII)
-+	if (pdata->mdio_driver)
-+		xgene_enet_phy_disconnect(pdata);
-+	else if (pdata->phy_mode == PHY_INTERFACE_MODE_RGMII)
- 		xgene_enet_mdio_remove(pdata);
-+
- 	unregister_netdev(ndev);
- 	pdata->port_ops->shutdown(pdata);
- 	xgene_enet_delete_desc_rings(pdata);
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-index 681a473..217546e 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-@@ -38,6 +38,7 @@
- #include "xgene_enet_hw.h"
- #include "xgene_enet_cle.h"
- #include "xgene_enet_ring2.h"
-+#include "../../../phy/mdio-xgene.h"
- 
- #define XGENE_DRV_VERSION	"v1.0"
- #define XGENE_ENET_MAX_MTU	1536
-@@ -214,6 +215,7 @@ struct xgene_enet_pdata {
- 	u32 mss;
- 	u8 tx_delay;
- 	u8 rx_delay;
-+	bool mdio_driver;
- };
- 
- struct xgene_indirect_ctl {
-@@ -223,34 +225,6 @@ struct xgene_indirect_ctl {
- 	void __iomem *cmd_done;
- };
- 
--/* Set the specified value into a bit-field defined by its starting position
-- * and length within a single u64.
-- */
--static inline u64 xgene_enet_set_field_value(int pos, int len, u64 val)
--{
--	return (val & ((1ULL << len) - 1)) << pos;
--}
--
--#define SET_VAL(field, val) \
--		xgene_enet_set_field_value(field ## _POS, field ## _LEN, val)
--
--#define SET_BIT(field) \
--		xgene_enet_set_field_value(field ## _POS, 1, 1)
--
--/* Get the value from a bit-field defined by its starting position
-- * and length within the specified u64.
-- */
--static inline u64 xgene_enet_get_field_value(int pos, int len, u64 src)
--{
--	return (src >> pos) & ((1ULL << len) - 1);
--}
--
--#define GET_VAL(field, src) \
--		xgene_enet_get_field_value(field ## _POS, field ## _LEN, src)
--
--#define GET_BIT(field, src) \
--		xgene_enet_get_field_value(field ## _POS, 1, src)
--
- static inline struct device *ndev_to_dev(struct net_device *ndev)
- {
- 	return ndev->dev.parent;
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-index 03a70c5..d12e9cb 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-@@ -366,7 +366,9 @@ static void xgene_sgmac_init(struct xgene_enet_pdata *p)
- 	u32 cfg_bypass_reg, rx_dv_gate_reg;
- 	u32 data, offset;
- 
--	xgene_sgmac_reset(p);
-+	if (!(p->enet_id == XGENE_ENET2 && p->mdio_driver))
-+		xgene_sgmac_reset(p);
-+
- 	xgene_sgmii_enable_autoneg(p);
- 	xgene_sgmac_set_speed(p);
- 	xgene_sgmac_set_mac_addr(p);
-@@ -445,6 +447,11 @@ static int xgene_enet_reset(struct xgene_enet_pdata *p)
- 	if (!xgene_ring_mgr_init(p))
- 		return -ENODEV;
- 
-+	if (p->mdio_driver && p->enet_id == XGENE_ENET2) {
-+		xgene_enet_config_ring_if_assoc(p);
-+		return 0;
-+	}
-+
- 	if (p->enet_id == XGENE_ENET2)
- 		xgene_enet_wr_clkrst_csr(p, XGENET_CONFIG_REG_ADDR, SGMII_EN);
- 
--- 
-1.9.1
+I was thinking crafted DTs.  But I've realized that doing usefully is
+pretty tricky, since overruns probably won't cause an immediate
+problem most of the time.  I guess they'd trip errors under valgrind
+at least (as long you make sure there's at least one byte's alignment
+gap until the next tag).
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--TeJTyD9hb8KJN2Jy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXlqxzAAoJEGw4ysog2bOStOcQALPbmyc3NbP8FzmNYEEgbZsR
+VrLocD1idNiUV/0ynzXy9VOBjT60E0F4WOijqAOrjd0a6WUhYuqQWXibD8Xph+7/
+VBJxM6FmrnLS2JTI82w+OHvWJguOGvoeucrheM+z5sxD+E3ZzylgANRRWGokdhUp
+tYIDdy1UOBqOdiiN8Axmh8x7PiiwhFZkolphBCHEsvIYTUo01wEkkL3R5bPeuZOh
+7uK78ljE2X0+9Mm4hdE4Vsglz786frL97q90VGssPfXlhfGqd7h/nHxQWdC801DL
+2mlNhAAsGcSIOpDZ4ZPcqi7ualYn5ypEm1JgvIuPoCBQDqTxasZPg/DH7VwnJInY
+doZcDTmGpZJkLXvQd0K0Yu7WWRTmGK0mr0Wu4kziwQd6orKbdhonTSg1+ir5vOG4
+xmK4G/cxZniKIJqZk2fnMEAS/pxnNON3+j1tIxyPr/+jnhs/cRLmaGsr7Nr0SCfk
+TnvZDnV0o3Ge2bvgQW1AAYU6a9AjrhAFXNi6XvkR7cp0nBUCZwK0Kil8eh2gy/c5
+amRvJiye2ymtzqsamriEBjL96H+PyUIj9iNZd99+6ImAml9fW4nDf6C0Kd30AvnO
+5fpvJ4hAe1IROMqX8pArgbjntq5mQvH1YFTdx2Hjw29VUwmX+D/Vpjob1xyEnFXR
+MKDzIfGDMTTd8TolFjzv
+=H0mV
+-----END PGP SIGNATURE-----
+
+--TeJTyD9hb8KJN2Jy--
