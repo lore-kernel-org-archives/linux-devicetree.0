@@ -1,53 +1,74 @@
-From: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH v4] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
-Date: Wed, 27 Jul 2016 13:02:41 +0300
-Message-ID: <1604486.mrBvLz4HRZ@linux-cigu>
-References: <1469450243-19138-1-git-send-email-stefan.mavrodiev@gmail.com> <30014119.IrjfP0xFry@linux-cigu> <20160727062146.GA6560@lukather>
-Reply-To: Stefan.Mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 0/3] AUXADC: Mediatek auxadc driver
+Date: Wed, 27 Jul 2016 18:02:58 +0800
+Message-ID: <1469613781-1296-1-git-send-email-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCSP3JM3Y4JBBSUN4K6AKGQE7V2S4TY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160727062146.GA6560@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 27, 2016 8:21:46 AM EEST Maxime Ripard wrote:
-> On Wed, Jul 27, 2016 at 08:12:29AM +0300, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > > > +&reg_dcdc1 {
-> > > > +	regulator-always-on;
-> > > > +	regulator-min-microvolt = <3300000>;
-> > > > +	regulator-max-microvolt = <3300000>;
-> > > > +	regulator-name = "vcc-dsi";
-> > > > +};
-> > > 
-> > > What is it used for? Is it really necessary to keep it on at all time?
-> > 
-> > I think so.
-> > This is the supply for the MMC.
-> 
-> Then it's poorly named, and you should tie it to the MMC, and remove
-> the always-on if it's only used by the mmc. always-on is supposed to
-> be for regulators that shouldn't but turned off for the system to stay
-> running. Some MMC regulator doesn't fit that description.
-> 
-It's named upon the A33 power pin - "VCC-DSI". 
-If I remove "always-on" the board still will work, since dcdc1 is tied to 
-mmc0. 
-vmmc-supply = <&reg_dcdc1>;
+This series includes three patches:
+1.Change the device tree binding documentation.
+2.Add auxadc driver based on linux iio.
+3.Add auxadc nodes in the mediatek MT2701 dtsi file.
 
-We assume this voltage will be always present and there are some pullups that 
-are tied to it (on i2c0 and i2c1 bus).  In this case should I remove "always-
-on" from the regulator node?
+Changes in patch v6:
+1).Add commit message in auxadc node patch which dependents on "Add clock support for Mediatek MT2701"[1].
+2).Use val variable instead of rawdata variable and Change 'mutex_unlock' to 'goto err_timeout' in 'mt6577_auxadc_read'.
+3).Remove '.' in the log when failed to get auxadc base address.
+4).Change 'return -EINVAL' to 'return ret' and add 'ret = -EINVAL' when get null clock rate.
+5).Add inline function 'mt6577_auxadc_mod_reg' to replace read/modify/write code sequence.
 
-> Maxime
+Changes in patch v5:
+1).Add 'Acked-by' information in commit message.
+1).Change auxadc compatible in binding document.
+2).Remove power on failed check.
+3).Moved power off error unwind block to 'err_power_off'.
 
-Best regards,
-Stefan Mavrodiev
+Changes in patch v4:
+1).Change the file name 'mt65xx_auxdc.txt' to 'mt6577_auxdc.txt'.
+2).Remove 'break' after 'return' in 'mt6577_auxadc_read_raw'.
+3).Use 'mt2701' instead of 'auxadc' in dts commit message.
+4).Change 'auxadc@' to 'adc@' in mt2701.dtsi.
+
+Changes in patch v3:
+1).Add '#' before 'io-channel-cells' and change 'auxadc@' to 'adc@' in auxadc binding document.
+2).Fix CONFIG_MEDIATEK_MT65XX_AUXADC sequence as alphabetical order.
+3).Change the prefix 'MT65XX' to 'MT6577' to match auxadc driver name.
+4).Remove the delays stored in 'mt6577_auxadc_device' and use the defined delay directly.
+5).Use '-ETIMEDOUT' instead of '-EINVAL'.
+6).Return value directly in 'mt6577_auxadc_read_raw'.
+7).Add power off and unprepare clock if 'iio_device_register' failed.
+8).Change 'Registers' to 'Register'.
+
+Changes in patch v2:
+1).Change the file name mt65xx_auxadc.c to mt6577_auxadc.c.
+2).Add 'depends on ARCH_MEDIATEK || COMPILE_TEST and HAS_IOMEM' for MEDIATEK_MT65XX_AUXADC config.
+3).Add check case for return value of 'readl_poll_timeout'.
+4).Remove returning 1 and 0 for SCALE and OFFSET. use channel type 'IIO_CHAN_INFO_PROCESSED' instead of 'IIO_CHAN_INFO_RAW'.
+5).Remove 'IIO_CHAN_INFO_OFFSET' and 'IIO_CHAN_INFO_SCALE' in 'MT65XX_AUXADC_CHANNEL' channel type.
+6).Add check case when auxadc power on failure. if auxadc power on failure, clk_disable_unprepare should be executed.
+7).Put 'platform_set_drvdata' before 'iio_device_register'.
+8).Fix coding style and spelling error.
+
+Zhiyong Tao (3):
+  dt-bindings: auxadc: Add binding document for Mediatek auxadc.
+  iio: adc: mt2701: Add Mediatek auxadc driver for mt2701.
+  arm: dts: mt2701: Add auxadc node.
+
+ .../auxadc.txt => iio/adc/mt6577_auxadc.txt}       |   18 +-
+ arch/arm/boot/dts/mt2701.dtsi                      |    9 +
+ drivers/iio/adc/Kconfig                            |   13 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/mt6577_auxadc.c                    |  291 ++++++++++++++++++++
+ 5 files changed, 327 insertions(+), 5 deletions(-)
+ rename Documentation/devicetree/bindings/{soc/mediatek/auxadc.txt => iio/adc/mt6577_auxadc.txt} (46%)
+ create mode 100644 drivers/iio/adc/mt6577_auxadc.c
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
