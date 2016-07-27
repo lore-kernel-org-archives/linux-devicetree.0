@@ -1,206 +1,64 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] reset: uniphier: add reset controller drivers for
- UniPhier SoCs
-Date: Wed, 27 Jul 2016 11:17:31 +0200
-Message-ID: <1469611051.2470.15.camel@pengutronix.de>
-References: <1469557209-13089-1-git-send-email-yamada.masahiro@socionext.com>
+From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3] arm64: dts: mt8173: add mmsel clocks for 4K support
+Date: Wed, 27 Jul 2016 17:25:56 +0800
+Message-ID: <1469611556.11841.77.camel@mtksdaap41>
+References: <1469607914-64831-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469557209-13089-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <1469607914-64831-1-git-send-email-bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Junzhi Zhao <ju>
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
+Hi, Bibby:
 
-Am Mittwoch, den 27.07.2016, 03:20 +0900 schrieb Masahiro Yamada:
-> This is the initial commit for UniPhier reset controller drivers.
+On Wed, 2016-07-27 at 16:25 +0800, Bibby Hsieh wrote:
+> If MT8173 can support HDMI 4K resoultion, the
+> VENCPLL should be configured to 800MHZ.
+> We didn't set VENCPLL directly, we set the
+> mm_sel to 400MHz statically in the board device tree.
+
+You may rewrite the description as below:
+
+'To support HDMI 4K resolution, mmsys need clock mm_sel to be 400MHz.'
+
+You need not to mention VENCPLL because it's controlled by clock driver.
+
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
+> Changes since v2:
+>  - Align the clocks of dpi0 node.
 > 
-> Changes in v2 (mostly suggested by Philipp Zabel):
->   - Unify multiple module_platform_driver() boilerplates into one
->   - Unify tiny driver code and decrease the number of files
+> Changes since v1:
+>  - Do not set the VENCPLL by clk_set_rate
+>    at display driver.
+>  - Configure the mm_sel to 400MHz statically
+>    in the board device tree.
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 78529e4..9c22204 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -690,7 +690,9 @@
+>  			compatible = "mediatek,mt8173-mmsys", "syscon";
+>  			reg = <0 0x14000000 0 0x1000>;
+>  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> +			clocks = <&topckgen CLK_TOP_MM_SEL>;
+>  			#clock-cells = <1>;
+> +			clock-frequency  = <400000000>;
+>  		};
+>  
+>  		ovl0: ovl@1400c000 {
 
-Thank you, this looks much better.
-
-[...]
-> +++ b/drivers/reset/uniphier/reset-uniphier-core.c
-> @@ -0,0 +1,270 @@
-> +/*
-> + * Copyright (C) 2016 Socionext Inc.
-> + *   Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset-controller.h>
-> +
-> +#include "reset-uniphier.h"
-> +
-> +struct uniphier_reset_priv {
-> +	struct reset_controller_dev rcdev;
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	const struct uniphier_reset_data *data;
-> +};
-> +
-> +#define to_uniphier_reset_priv(_rcdev) \
-> +			container_of(_rcdev, struct uniphier_reset_priv, rcdev)
-> +
-> +static int uniphier_reset_update(struct reset_controller_dev *rcdev,
-> +				 unsigned long id, bool assert)
-> +{
-> +	struct uniphier_reset_priv *priv = to_uniphier_reset_priv(rcdev);
-> +	const struct uniphier_reset_data *p;
-> +	bool handled = false;
-> +
-> +	for (p = priv->data; p->id != UNIPHIER_RESET_ID_END; p++) {
-> +		unsigned int val;
-> +		int ret;
-> +
-> +		if (p->id != id)
-> +			continue;
-> +
-> +		val = p->assert_val;
-> +		if (!assert)
-> +			val = ~val;
-> +
-> +		ret = regmap_write_bits(priv->regmap, p->reg, p->mask, val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		handled = true;
-
-Why does this continue to walk through the list after the correct id was
-found?
-
-> +	}
-> +
-> +	if (!handled) {
-> +		dev_err(priv->dev, "reset_id=%lu was not handled\n", id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-[...]
-> +static int uniphier_reset_status(struct reset_controller_dev *rcdev,
-> +				 unsigned long id)
-> +{
-> +	struct uniphier_reset_priv *priv = to_uniphier_reset_priv(rcdev);
-> +	const struct uniphier_reset_data *p;
-> +	bool handled = false;
-> +
-> +	for (p = priv->data; p->id != UNIPHIER_RESET_ID_END; p++) {
-> +		unsigned int val;
-> +		int ret;
-> +
-> +		if (p->id != id)
-> +			continue;
-> +
-> +		ret = regmap_read(priv->regmap, p->reg, &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if ((val ^ ~p->assert_val) & p->mask)
-> +			return 1;
-
-Same here if not asserted?
-
-> +		handled = true;
-> +	}
-> +
-> +	if (!handled) {
-> +		dev_err(priv->dev, "reset_id=%lu was not found\n", id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-[...]
-> diff --git a/drivers/reset/uniphier/reset-uniphier-mio.c b/drivers/reset/uniphier/reset-uniphier-mio.c
-> new file mode 100644
-> index 0000000..cbcad75
-> --- /dev/null
-> +++ b/drivers/reset/uniphier/reset-uniphier-mio.c
-> @@ -0,0 +1,55 @@
-> +/*
-> + * Copyright (C) 2016 Socionext Inc.
-> + *   Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +
-> +#include "reset-uniphier.h"
-> +
-> +#define UNIPHIER_MIO_RESET_SD(index, ch)				\
-> +	{								\
-> +		.id = (index),						\
-> +		.reg = 0x110 + 0x200 * (ch),				\
-> +		.mask = BIT(26) | BIT(0),				\
-> +	}
-> +
-> +#define UNIPHIER_MIO_RESET_EMMC_HW_RESET(index, ch)			\
-> +	UNIPHIER_RESETX_SIMPLE((index), 0x80 + 0x200 * (ch), BIT(0))
-> +
-> +#define UNIPHIER_MIO_RESET_USB2(index, ch)				\
-> +	UNIPHIER_RESETX_SIMPLE((index), 0x110 + 0x200 * (ch), BIT(24)),	\
-> +	UNIPHIER_RESETX_SIMPLE((index), 0x114 + 0x200 * (ch), BIT(0))
-
-Ah, so for USB2 reset you have two reset bits in separate registers. Are
-you sure these are controlling the same reset line?
-If the USB core does in fact have two separate reset inputs that just
-happen to need asserting at the same time, this should still get two
-separate ids. Same issue for the SD reset above, if the reset lines are
-physically separate, please don't combine them in the driver.
-
-[...]
-> diff --git a/drivers/reset/uniphier/reset-uniphier-sys.c b/drivers/reset/uniphier/reset-uniphier-sys.c
-> new file mode 100644
-> index 0000000..bda96c0
-> --- /dev/null
-> +++ b/drivers/reset/uniphier/reset-uniphier-sys.c
-> +const struct uniphier_reset_data uniphier_pxs2_sys_reset_data[] = {
-> +	UNIPHIER_SLD3_SYS_RESET_STDMAC(8),		/* HSC, RLE */
-> +	UNIPHIER_PRO4_SYS_RESET_USB3(16, 0),
-> +	UNIPHIER_PRO4_SYS_RESET_USB3(17, 1),
-> +	UNIPHIER_RESETX_SIMPLE(18, 0x2014, 0x15),	/* USB30PHY */
-> +	UNIPHIER_RESETX_SIMPLE(19, 0x2014, 0x22),	/* USB31PHY */
-[...]
-> +	UNIPHIER_RESETX_SIMPLE(18, 0x200c, 0xf000),	/* USB30PHY */
-
-Same here.
-
-regards
-Philipp
+Regards,
+CK
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
