@@ -1,54 +1,144 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 2/2] irqchip: add J-Core AIC driver
-Date: Wed, 27 Jul 2016 14:27:54 +0100
-Message-ID: <20160727132753.GC17195@leverpostej>
-References: <cover.1469595860.git.dalias@libc.org>
- <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
- <20160727101537.GD12880@leverpostej>
- <20160727130821.GB15995@brightrain.aerifal.cx>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160727130821.GB15995@brightrain.aerifal.cx>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 1/4] iio: adc: rockchip_saradc: reset saradc controller before programming it
+Date: Wed, 27 Jul 2016 22:24:04 +0800
+Message-ID: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 09:08:21AM -0400, Rich Felker wrote:
-> On Wed, Jul 27, 2016 at 11:15:38AM +0100, Mark Rutland wrote:
-> > On Wed, Jul 27, 2016 at 05:35:09AM +0000, Rich Felker wrote:
-> > > For simplicity, there is no aic1-specific logic in the driver beyond
-> > > setting the priority register, which is necessary for interrupts to
-> > > work at all. Eventually aic1 will likely be phased out, but it's
-> > > currently in use in deployments and all released bitstream binaries.
-> > 
-> > [...]
-> > 
-> > > +	if (!of_device_is_compatible(node, "jcore,aic2")) {
-> > 
-> > If this is only meant to run for AIC1, it would be better to check for
-> > the "jcore,aic1" compatible string explicitly.
-> > 
-> > While that shouldn't matter much currently, it better matches the intent
-> > described in the commit message, and avoids surprises and/or churn in
-> > future if you have AIC3+.
-> 
-> My intent in doing this was to support a DT that might claim an aic2
-> is aic1-compatible as a fallback "compatible" property. The hardware
-> is designed such that this works (ignoring the spurious writes to
-> unused prio registers) as long as the DT still has the right irq
-> numbers for attached devices.
+SARADC controller needs to be reset before programming it, otherwise
+it will not function properly.
 
-Ok.
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Tested-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-If the HW ignores it, what's the cost of those one-off spurious writes?
-If it's not noticeable, you could allow the kernel to perform them
-regardless.
+---
 
-Otherwise, please add a comment above the check, explaining why we do
-the check this way around.
+Changes in v3:
+- %s/devm_reset_control_get_optional()/devm_reset_control_get()
+- add Guente's test tag.
 
-Thanks,
-Mark.
+Changes in v2:
+- Make the reset as an optional property, since it should work
+with old devicetrees as well.
+
+ .../bindings/iio/adc/rockchip-saradc.txt           |  7 +++++
+ drivers/iio/adc/Kconfig                            |  1 +
+ drivers/iio/adc/rockchip_saradc.c                  | 30 ++++++++++++++++++++++
+ 3 files changed, 38 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+index bf99e2f..205593f 100644
+--- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+@@ -16,6 +16,11 @@ Required properties:
+ - vref-supply: The regulator supply ADC reference voltage.
+ - #io-channel-cells: Should be 1, see ../iio-bindings.txt
+ 
++Optional properties:
++- resets: Must contain an entry for each entry in reset-names if need support
++	  this option. See ../reset/reset.txt for details.
++- reset-names: Must include the name "saradc-apb".
++
+ Example:
+ 	saradc: saradc@2006c000 {
+ 		compatible = "rockchip,saradc";
+@@ -23,6 +28,8 @@ Example:
+ 		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+ 		clock-names = "saradc", "apb_pclk";
++		resets = <&cru SRST_SARADC>;
++		reset-names = "saradc-apb";
+ 		#io-channel-cells = <1>;
+ 		vref-supply = <&vcc18>;
+ 	};
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 1de31bd..7675772 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -389,6 +389,7 @@ config QCOM_SPMI_VADC
+ config ROCKCHIP_SARADC
+ 	tristate "Rockchip SARADC driver"
+ 	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
++	depends on RESET_CONTROLLER
+ 	help
+ 	  Say yes here to build support for the SARADC found in SoCs from
+ 	  Rockchip.
+diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
+index f9ad6c2..85d7012 100644
+--- a/drivers/iio/adc/rockchip_saradc.c
++++ b/drivers/iio/adc/rockchip_saradc.c
+@@ -21,6 +21,8 @@
+ #include <linux/of_device.h>
+ #include <linux/clk.h>
+ #include <linux/completion.h>
++#include <linux/delay.h>
++#include <linux/reset.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/iio/iio.h>
+ 
+@@ -53,6 +55,7 @@ struct rockchip_saradc {
+ 	struct clk		*clk;
+ 	struct completion	completion;
+ 	struct regulator	*vref;
++	struct reset_control	*reset;
+ 	const struct rockchip_saradc_data *data;
+ 	u16			last_val;
+ };
+@@ -190,6 +193,16 @@ static const struct of_device_id rockchip_saradc_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
+ 
++/**
++ * Reset SARADC Controller.
++ */
++static void rockchip_saradc_reset_controller(struct reset_control *reset)
++{
++	reset_control_assert(reset);
++	usleep_range(10, 20);
++	reset_control_deassert(reset);
++}
++
+ static int rockchip_saradc_probe(struct platform_device *pdev)
+ {
+ 	struct rockchip_saradc *info = NULL;
+@@ -218,6 +231,20 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(info->regs))
+ 		return PTR_ERR(info->regs);
+ 
++	/*
++	 * The reset should be an optional property, as it should work
++	 * with old devicetrees as well
++	 */
++	info->reset = devm_reset_control_get(&pdev->dev, "saradc-apb");
++	if (IS_ERR(info->reset)) {
++		ret = PTR_ERR(info->reset);
++		if (ret != -ENOENT)
++			return ret;
++
++		dev_dbg(&pdev->dev, "no reset control found\n");
++		info->reset = NULL;
++	}
++
+ 	init_completion(&info->completion);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+@@ -252,6 +279,9 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(info->vref);
+ 	}
+ 
++	if (info->reset)
++		rockchip_saradc_reset_controller(info->reset);
++
+ 	/*
+ 	 * Use a default value for the converter clock.
+ 	 * This may become user-configurable in the future.
+-- 
+1.9.1
