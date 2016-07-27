@@ -1,163 +1,127 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
-Date: Tue, 26 Jul 2016 19:38:02 -0500
-Message-ID: <1469579882.25630.168.camel@buserror.net>
-References: <1468723822-30457-1-git-send-email-oss@buserror.net>
-	 <1468723822-30457-5-git-send-email-oss@buserror.net>
-	 <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
-	 <146909676646.16700.8383344640490662952@concordia>
-	 <1469119526.25630.42.camel@buserror.net>
-	 <HE1PR04MB088913D39528958C6905D43DF80D0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] iio: adc: rockchip_saradc: reset saradc controller
+ before programming it
+Date: Wed, 27 Jul 2016 08:42:10 +0800
+Message-ID: <57980362.3000406@rock-chips.com>
+References: <1469535195-5227-1-git-send-email-wxt@rock-chips.com> <57976814.3040605@roeck-us.net> <579777F4.2090002@rock-chips.com> <20160726170023.GA6590@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <HE1PR04MB088913D39528958C6905D43DF80D0@HE1PR04MB0889.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yangbo Lu <yangbo.lu@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160726170023.GA6590-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-07-25 at 06:12 +0000, Yangbo Lu wrote:
-> Hi Scott,
->=20
->=20
-> >=20
-> > -----Original Message-----
-> > From: Scott Wood [mailto:oss@buserror.net]
-> > Sent: Friday, July 22, 2016 12:45 AM
-> > To: Michael Ellerman; Arnd Bergmann
-> > Cc: linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; linuxppc=
--
-> > dev@lists.ozlabs.org; linux-kernel@vger.kernel.org; Yangbo Lu
-> > Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to
-> > include/linux/fsl
-> >=20
-> > On Thu, 2016-07-21 at 20:26 +1000, Michael Ellerman wrote:
-> > >=20
-> > > Quoting Scott Wood (2016-07-21 04:31:48)
-> > > >=20
-> > > >=20
-> > > > On Wed, 2016-07-20 at 13:24 +0200, Arnd Bergmann wrote:
-> > > > >=20
-> > > > >=20
-> > > > > On Saturday, July 16, 2016 9:50:21 PM CEST Scott Wood wrote:
-> > > > > >=20
-> > > > > >=20
-> > > > > >=20
-> > > > > > From: yangbo lu <yangbo.lu@nxp.com>
-> > > > > >=20
-> > > > > > Move mpc85xx.h to include/linux/fsl and rename it to svr.h =
-as a
-> > > > > > common header file.=C2=A0=C2=A0This SVR numberspace is used=
- on some ARM
-> > > > > > chips as well as PPC, and even to check for a PPC SVR multi=
--arch
-> > > > > > drivers would otherwise need to ifdef the header inclusion =
-and
-> > > > > > all references to the SVR symbols.
-> > > > > >=20
-> > > > > > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-> > > > > > Acked-by: Wolfram Sang <wsa@the-dreams.de>
-> > > > > > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-> > > > > > Acked-by: Joerg Roedel <jroedel@suse.de>
-> > > > > > [scottwood: update description]
-> > > > > > Signed-off-by: Scott Wood <oss@buserror.net>
-> > > > > >=20
-> > > > > As discussed before, please don't introduce yet another vendo=
-r
-> > > > > specific way to match a SoC ID from a device driver.
-> > > > >=20
-> > > > > I've posted a patch for an extension to the soc_device
-> > > > > infrastructure to allow comparing the running SoC to a table =
-of
-> > > > > devices, use that instead.
-> > > > As I asked before, in which relevant maintainership capacity ar=
-e you
-> > > > NACKing this?
-> > > I'll nack the powerpc part until you guys can agree.
-> > OK, I've pulled these patches out.
-> >=20
-> > For the MMC issue I suggest using ifdef CONFIG_PPC and mfspr(SPRN_S=
-VR)
-> > like the clock driver does[1] and we can revisit the issue if/when =
-we
-> > need to do something similar on an ARM chip.
-> [Lu Yangbo-B47093] I remembered that Uffe had opposed us to introduce=
- non-
-> generic header files(like '#include <asm/mpc85xx.h>')
-> in mmc driver initially. So I think it will not be accepted to use if=
-def
-> CONFIG_PPC and mfspr(SPRN_SVR)...
-> And this method still couldn=E2=80=99t get SVR of ARM chip now.
 
-Right, as I said we'll have to revisit the issue if/when we have the sa=
-me
-problem on an ARM chip. =C2=A0That also applies if the PPC ifdef is sti=
-ll getting
-NACKed from the MMC side.
+On 2016=E5=B9=B407=E6=9C=8827=E6=97=A5 01:00, Guenter Roeck wrote:
+> On Tue, Jul 26, 2016 at 10:47:16PM +0800, Caesar Wang wrote:
+>> On 2016=E5=B9=B407=E6=9C=8826=E6=97=A5 21:39, Guenter Roeck wrote:
+>>>> static int rockchip_saradc_probe(struct platform_device *pdev)
+>>>> {
+>>>> struct rockchip_saradc *info =3D NULL;
+>>>> @@ -218,6 +231,21 @@ static int rockchip_saradc_probe(struct
+>>>> platform_device *pdev)
+>>>> if (IS_ERR(info->regs))
+>>>> return PTR_ERR(info->regs);
+>>>>
+>>>> + /*
+>>>> + * The reset should be an optional property, as it should work
+>>>> + * with old devicetrees as well
+>>>> + */
+>>>> + info->reset =3D devm_reset_control_get_optional(&pdev->dev,
+>>>> + "saradc-apb");
+>>> Does anyone know what the _optional API is for ? It seems to be exa=
+ctly
+>>> the same
+>>> as devm_reset_control_get().
+>> =E2=80=9C
+>> As far as I see, the difference is WARN_ON(1)
+>> when CONFIG_RESET_CONTROLLER is not defined.
+>>
+>>
+>> The _optional functions were introduced by the following commit:
+>>
+>> ----------------->8-----------------
+>> commit b424080a9e086e683ad5fdc624a7cf3c024e0c0f
+>> Author: Philipp Zabel <p.zabel@xxxxxxxxxxxxxx>
+>> Date: Fri Mar 7 15:18:47 2014 +0100
+>>
+>> reset: Add optional resets and stubs
+>>
+>> This patch adds device_reset_optional and (devm_)reset_control_get_o=
+ptional
+>> variants that drivers can use to indicate they can function without =
+control
+>> over the reset line. For those functions, stubs are added so the dri=
+vers can
+>> be compiled with CONFIG_RESET_CONTROLLER disabled.
+>> Also, device_reset is annotated with __must_check. Drivers
+>> ignoring the return
+>> value should use device_reset_optional instead.
+>>
+> Is that really what we are looking for here ? CONFIG_RESET_CONTROLLER
+> is required for other functions of rk3399, isn't it ?
 
-> Any other suggestion here?
+Right, as the DRM and thermal are depend on the CONFIG_RESET_CONTROLLER=
+=20
+=2E....
 
-The other option is to try to come up with something that fits into Arn=
-d's
-framework while addressing the concerns I raised. =C2=A0The soc_id stri=
-ng should be
-well-structured to avoid mismatches and compatibility problems (especia=
-lly
-since it would get exposed to userspace). =C2=A0Maybe something like:
 
-svr:<SVR minus E bit>,svre:<full SVR including E bit>,name:<soc name>,d=
-ie:<soc
-die name>,rev:X.Y,<tag1>,<tag2>,<...>,
+>
+> Guenter
+>
+>> Signed-off-by: Philipp Zabel <p.zabel@xxxxxxxxxxxxxx>
+>> ------------------8<-----------------------------
+>> =E2=80=9D
+>>
+>> for more information on http://www.spinics.net/lists/kernel/msg23066=
+77.html
+>> :-)
+>>
+>>> Guenter
+>>>
+>>>> + if (IS_ERR(info->reset)) {
+>>>> + ret =3D PTR_ERR(info->reset);
+>>>> + if (ret !=3D -ENOENT)
+>>>> + return ret;
+>>>> +
+>>>> + dev_dbg(&pdev->dev, "no reset control found\n");
+>>>> + info->reset =3D NULL;
+>>>> + }
+>>>> +
+>>>> init_completion(&info->completion);
+>>>>
+>>>> irq =3D platform_get_irq(pdev, 0);
+>>>> @@ -252,6 +280,9 @@ static int rockchip_saradc_probe(struct
+>>>> platform_device *pdev)
+>>>> return PTR_ERR(info->vref);
+>>>> }
+>>>>
+>>>> + if (info->reset)
+>>>> + rockchip_saradc_reset_controller(info->reset);
+>>>> +
+>>>> /*
+>>>> * Use a default value for the converter clock.
+>>>> * This may become user-configurable in the future.
+>>>>
+>>>
+>>> _______________________________________________
+>>> Linux-rockchip mailing list
+>>> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>>
+>> --=20
+>> caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
+>>
+>>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-with the final comma used so that globs can put a colon on either end t=
-o be
-sure they're matching a full field. =C2=A0The SoC die name would be the=
- primary
-chip for a given die (e.g. p4040 would have a die name of p4080). =C2=A0=
-The "name"
-and "die" fields would never include the trailing "e" indicated by the =
-E bit.
 
-Extra tags could be used for common groupings, such as all chips from a
-particular die before a certain revision. =C2=A0Once a tag is added it =
-can't be
-removed or reordered, to maintain userspace compatibility, but new tags=
- could
-be appended.
-
-Some examples:
-
-svr:0x82000020,svre:0x82000020,name:p4080,die:p4080,rev:2.0,
-svr:0x82000020,svr
-e:0x82080020,name:p4080,die:p4080,rev:2.0,
-svr:0x82000030,svre:0x82000030,name:
-p4080,die:p4080,rev:3.0,
-svr:0x82000030,svre:0x82080030,name:p4080,die:p4080,re
-v:3.0,
-svr:0x82010020,svre:0x82010020,name:p4040,die:p4080,rev:2.0,
-svr:0x820100
-20,svre:0x82090020,name:p4040,die:p4080,rev:2.0,
-
-svr:0x82010030,svre:0x82010030
-,name:p4040,die:p4080,rev:3.0,
-svr:0x82010030,svre:0x82090030,name:p4040,die:p4
-080,rev:3.0,
-
-Then if you want to apply a workaround on:
-- all chips using the p4080 die, match with "*,die:p4080,*"
-- all chips using the rev 2.0 p4080 die, match with "*,die:p4080,rev:2.=
-0,*"
-- Only p4040, but of any rev, match with "*,name:p4040,*"
-
-Matching via open-coded hex number should be considered a last resort (=
-it's
-more error-prone, either for getting the number wrong or for forgetting
-variants -- the latter is already a common problem), but preferable to =
-adding
-too many tags.
-
-Using wildcards within a tag field would be discouraged. =C2=A0
-
--Scott
+--=20
+caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
