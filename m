@@ -1,238 +1,102 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: Re: [PATCH v3 4/6] usb: core: add power sequence handling for USB
- devices
-Date: Wed, 27 Jul 2016 09:25:11 -0700
-Message-ID: <5798E067.90207@gmail.com>
-References: <1469007629-31757-1-git-send-email-peter.chen@nxp.com>
- <1469007629-31757-5-git-send-email-peter.chen@nxp.com>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v4 2/2] irqchip: add J-Core AIC driver
+Date: Wed, 27 Jul 2016 13:07:09 -0400
+Message-ID: <20160727170709.GC15995@brightrain.aerifal.cx>
+References: <cover.1469595860.git.dalias@libc.org>
+ <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
+ <20160727101235.GC12880@leverpostej>
+ <20160727130606.GA15995@brightrain.aerifal.cx>
+ <20160727132252.GB17195@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1469007629-31757-5-git-send-email-peter.chen@nxp.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org
-Cc: k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160727132252.GB17195@leverpostej>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jul 27, 2016 at 02:22:52PM +0100, Mark Rutland wrote:
+> On Wed, Jul 27, 2016 at 09:06:06AM -0400, Rich Felker wrote:
+> > On Wed, Jul 27, 2016 at 11:12:36AM +0100, Mark Rutland wrote:
+> > > On Wed, Jul 27, 2016 at 05:35:09AM +0000, Rich Felker wrote:
+> > > > +int __init aic_irq_of_init(struct device_node *node, struct device_node *parent)
+> > > > +{
+> > > > +	struct aic_data *aic = &aic_data;
+> > > > +	unsigned min_irq = 64;
+> > > > +
+> > > > +	pr_info("Initializing J-Core AIC\n");
+> > > > +
+> > > > +	if (!of_device_is_compatible(node, "jcore,aic2")) {
+> > > > +		unsigned cpu;
+> > > > +		for_each_possible_cpu(cpu) {
+> > > > +			void __iomem *base = of_iomap(node, cpu);
+> > > > +			if (!base)
+> > > > +				continue;
+> > > 
+> > > This sounds like it would be a critical error.
+> > > 
+> > > It would be best to at least pr_warn() if you can't map a CPU's AI
+> > > interface.
+> > 
+> > It's looping over possible cpus (per the kernel configuration for max
+> > cpus) so it's expected that a system with fewer cpus will also have
+> > fewer reg ranges for the aic. This is not an error. If you think
+> > there's a different/better way I should write this code, I'm open to
+> > suggestions.
+> 
+> In your arch code, set possible cpus based on the DT, before
+> initialising irqchips. i.e. mark any CPUs not in the DT as not possible.
+> 
+> That will also net you savings in other areas (e.g. per-cpu maps not
+> having to be allocated for CPUs which don't exist).
+
+Should it be done for possible or just present? I think the existing
+code already sets both possible and present true if and only if they
+have cpu nodes, so it should work as-is with either.
+
+> Otherwise, you're missing real error cases, e.g. two CPUs with only one
+> AIC region.
+
+Sure, but do invalid DTBs need to be a diagnosable error? An invalid
+DTB can clearly cause the system to blow up arbitrarily badly with
+wrong memory regions, etc.
+
+> > > > +	aic->chip.irq_mask = noop;
+> > > > +	aic->chip.irq_unmask = noop;
+> > > 
+> > > If the core code wants to mask IRQs, how do you handle that? Can you
+> > > mask your CPU traps?
+> > 
+> > There's a global imask in the cpu that masks all interrupts that's
+> > used in the trap entry point, spinlocks, etc. already. This is a cpu
+> > standard feature and not logically part of the AIC.
+> 
+> Just to check, is that a single bit that masks all IRQs, or is there a
+> mark per-IRQ?
+
+It's actually a 4-bit priority mask that masks all interrupts with
+priority <= the configured value, but Linux has no use for interrupt
+priorities and the kernel just sets the value to 0 or 15 for allowing
+or blocking interrupts
+
+> > My understanding is that the kernel already keeps a logical mask of
+> > disabled irqs in addition to mask/disable at the irqchip level so
+> > there's a fairly fast path for ignoring/holding (potentially spurious)
+> > irqs while they're supposed to be disabled and deferring them until
+> > they're enabled again.
+> 
+> While we can ignore suprious IRQs, there are cases where that's
+> insufficient (e.g. screaming interrupts, suspend).
+> 
+> Can your CPU mask IRQs individually?
+
+No. If there's SoC hardware needing that capability it would need to
+be added, but I suspect off-SoC hardware generating interrupts might
+want to use a secondary chained interrupt controller anyway, which
+might have different functionality.
+
+Rich
 
 
-On 07/20/2016 02:40 AM, Peter Chen wrote:
-> Some hard-wired USB devices need to do power sequence to let the
-> device work normally, the typical power sequence like: enable USB
-> PHY clock, toggle reset pin, etc. But current Linux USB driver
-> lacks of such code to do it, it may cause some hard-wired USB devices
-> works abnormal or can't be recognized by controller at all.
->
-> In this patch, it calls power sequence library APIs to finish
-> the power sequence events. At first, it calls pwrseq_alloc_generic
-> to create a generic power sequence instance, then it will do power
-> on sequence at hub's probe for all devices under this hub
-> (includes root hub).
->
-> At hub_disconnect, it will do power off sequence which is at powered
-> on list.
->
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> ---
->  drivers/usb/core/Makefile |   1 +
->  drivers/usb/core/hub.c    |  12 ++++--
->  drivers/usb/core/hub.h    |  12 ++++++
->  drivers/usb/core/pwrseq.c | 100 ++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 122 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/usb/core/pwrseq.c
->
-> diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-> index da36b78..5fd2f54 100644
-> --- a/drivers/usb/core/Makefile
-> +++ b/drivers/usb/core/Makefile
-> @@ -10,5 +10,6 @@ usbcore-y += port.o
->  usbcore-$(CONFIG_OF)		+= of.o
->  usbcore-$(CONFIG_PCI)		+= hcd-pci.o
->  usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
-> +usbcore-$(CONFIG_PWRSEQ_GENERIC) += pwrseq.o
->  
->  obj-$(CONFIG_USB)		+= usbcore.o
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index bee1351..a346a8b 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -1700,6 +1700,7 @@ static void hub_disconnect(struct usb_interface *intf)
->  	hub->error = 0;
->  	hub_quiesce(hub, HUB_DISCONNECT);
->  
-> +	hub_pwrseq_off(hub);
->  	mutex_lock(&usb_port_peer_mutex);
->  
->  	/* Avoid races with recursively_mark_NOTATTACHED() */
-> @@ -1733,6 +1734,7 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
->  	struct usb_endpoint_descriptor *endpoint;
->  	struct usb_device *hdev;
->  	struct usb_hub *hub;
-> +	int ret = -ENODEV;
->  
->  	desc = intf->cur_altsetting;
->  	hdev = interface_to_usbdev(intf);
-> @@ -1839,6 +1841,7 @@ descriptor_error:
->  	INIT_DELAYED_WORK(&hub->leds, led_work);
->  	INIT_DELAYED_WORK(&hub->init_work, NULL);
->  	INIT_WORK(&hub->events, hub_event);
-> +	INIT_LIST_HEAD(&hub->pwrseq_on_list);
->  	usb_get_intf(intf);
->  	usb_get_dev(hdev);
->  
-> @@ -1852,11 +1855,14 @@ descriptor_error:
->  	if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
->  		hub->quirk_check_port_auto_suspend = 1;
->  
-> -	if (hub_configure(hub, endpoint) >= 0)
-> -		return 0;
-> +	if (hub_configure(hub, endpoint) >= 0) {
-> +		ret = hub_pwrseq_on(hub);
-> +		if (!ret)
-> +			return 0;
-> +	}
->  
->  	hub_disconnect(intf);
-> -	return -ENODEV;
-> +	return ret;
->  }
->  
->  static int
-> diff --git a/drivers/usb/core/hub.h b/drivers/usb/core/hub.h
-> index 34c1a7e..9473f6f 100644
-> --- a/drivers/usb/core/hub.h
-> +++ b/drivers/usb/core/hub.h
-> @@ -78,6 +78,7 @@ struct usb_hub {
->  	struct delayed_work	init_work;
->  	struct work_struct      events;
->  	struct usb_port		**ports;
-> +	struct list_head	pwrseq_on_list; /* powered pwrseq node list */
->  };
->  
->  /**
-> @@ -166,3 +167,14 @@ static inline int hub_port_debounce_be_stable(struct usb_hub *hub,
->  {
->  	return hub_port_debounce(hub, port1, false);
->  }
-> +
-> +#if IS_ENABLED(CONFIG_PWRSEQ_GENERIC)
-> +int hub_pwrseq_on(struct usb_hub *hub);
-> +void hub_pwrseq_off(struct usb_hub *hub);
-> +#else
-> +static inline int hub_pwrseq_on(struct usb_hub *hub)
-> +{
-> +	return 0;
-> +}
-> +static inline void hub_pwrseq_off(struct usb_hub *hub) {}
-> +#endif /* CONFIG_PWRSEQ_GENERIC */
-> diff --git a/drivers/usb/core/pwrseq.c b/drivers/usb/core/pwrseq.c
-> new file mode 100644
-> index 0000000..837fe66
-> --- /dev/null
-> +++ b/drivers/usb/core/pwrseq.c
-> @@ -0,0 +1,100 @@
-> +/*
-> + * pwrseq.c	USB device power sequence management
-> + *
-> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> + * Author: Peter Chen <peter.chen@nxp.com>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2  of
-> + * the License as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/list.h>
-> +#include <linux/of.h>
-> +#include <linux/power/pwrseq.h>
-> +#include <linux/slab.h>
-> +#include <linux/usb.h>
-> +#include <linux/usb/hcd.h>
-> +
-> +#include "hub.h"
-> +
-> +struct usb_pwrseq_node {
-> +	struct pwrseq *pwrseq;
-> +	struct list_head list;
-> +};
-> +
-> +static int hub_of_pwrseq_on(struct device_node *np, struct usb_hub *hub)
-> +{
-> +	struct pwrseq *pwrseq;
-> +	struct usb_pwrseq_node *pwrseq_node;
-> +	int ret;
-> +
-> +	pwrseq = pwrseq_alloc_generic();
-> +	if (IS_ERR(pwrseq))
-> +		return PTR_ERR(pwrseq);
-> +
-> +	ret = pwrseq_get(np, pwrseq);
-> +	if (ret)
-> +		goto pwr_free;
-> +
-> +	ret = pwrseq_on(np, pwrseq);
-> +	if (ret)
-> +		goto pwr_put;
-> +
-> +	pwrseq_node = kzalloc(sizeof(*pwrseq_node), GFP_KERNEL);
-> +	pwrseq_node->pwrseq = pwrseq;
-> +	list_add(&pwrseq_node->list, &hub->pwrseq_on_list);
-> +
-> +	return 0;
-> +
-> +pwr_put:
-> +	pwrseq_put(pwrseq);
-> +pwr_free:
-> +	pwrseq_free(pwrseq);
-> +	return ret;
-> +}
-> +
-> +int hub_pwrseq_on(struct usb_hub *hub)
-> +{
-> +	struct device *parent;
-> +	struct usb_device *hdev = hub->hdev;
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	if (hdev->parent)
-> +		parent = &hdev->dev;
-> +	else
-> +		parent = bus_to_hcd(hdev->bus)->self.controller;
-> +
-> +	for_each_child_of_node(parent->of_node, np) {
-> +		ret = hub_of_pwrseq_on(np, hub);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void hub_pwrseq_off(struct usb_hub *hub)
-> +{
-> +	struct pwrseq *pwrseq;
-> +	struct usb_pwrseq_node *pwrseq_node, *tmp_node;
-> +
-> +	list_for_each_entry_safe(pwrseq_node, tmp_node,
-> +			&hub->pwrseq_on_list, list) {
-> +		pwrseq = pwrseq_node->pwrseq;
-> +		pwrseq_off(pwrseq);
-> +		pwrseq_put(pwrseq);
-> +		pwrseq_free(pwrseq);
-> +		list_del(&pwrseq_node->list);
-> +		kfree(pwrseq_node);
-> +	}
-> +}
-Patch 4 does not apply for me
-(The Makefile has  a "usbcore-$(CONFIG_OF) += of.o"
-line which I don't see in 4.7 or linux/next master).
-Is there another patch set this series depends on?
