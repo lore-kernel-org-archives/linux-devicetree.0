@@ -1,39 +1,208 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
-Date: Wed, 27 Jul 2016 10:46:23 +0200
-Message-ID: <20160727104623.e9ca7b708e5c6462f44a5d01@free.fr>
-References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] reset: uniphier: add reset controller drivers for
+ UniPhier SoCs
+Date: Wed, 27 Jul 2016 11:17:31 +0200
+Message-ID: <1469611051.2470.15.camel@pengutronix.de>
+References: <1469557209-13089-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469557209-13089-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Jul 2016 22:30:28 +0200
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+Hi Masahiro,
 
-> ere is the previous A64 patches made by Andre [1], reworked to use
-> the new sunxi-ng clock framework.
->=20
-> This uses the current H3 clock code, as both are really similar. The
-> first patches are just meant to rework slightly the H3 code, before
-> introducing the A64-related patches.
->=20
-> Some WiP stuff have been removed, such as the MMC part, but this seri=
-e
-> already has a decent amount of devices supported: uart, i2c, rsb, etc=
-=2E
->=20
-> Let me know what you think,
+Am Mittwoch, den 27.07.2016, 03:20 +0900 schrieb Masahiro Yamada:
+> This is the initial commit for UniPhier reset controller drivers.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
+> 
+> Changes in v2 (mostly suggested by Philipp Zabel):
+>   - Unify multiple module_platform_driver() boilerplates into one
+>   - Unify tiny driver code and decrease the number of files
 
-I don't see the interest to have common code for 32bits and 64bits.
-The clock driver of a SoC will never evolve, so, it is simpler to
-copy the source common with the H3 into a clean A64 clock driver.
+Thank you, this looks much better.
 
---=20
-Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+[...]
+> +++ b/drivers/reset/uniphier/reset-uniphier-core.c
+> @@ -0,0 +1,270 @@
+> +/*
+> + * Copyright (C) 2016 Socionext Inc.
+> + *   Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#include "reset-uniphier.h"
+> +
+> +struct uniphier_reset_priv {
+> +	struct reset_controller_dev rcdev;
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	const struct uniphier_reset_data *data;
+> +};
+> +
+> +#define to_uniphier_reset_priv(_rcdev) \
+> +			container_of(_rcdev, struct uniphier_reset_priv, rcdev)
+> +
+> +static int uniphier_reset_update(struct reset_controller_dev *rcdev,
+> +				 unsigned long id, bool assert)
+> +{
+> +	struct uniphier_reset_priv *priv = to_uniphier_reset_priv(rcdev);
+> +	const struct uniphier_reset_data *p;
+> +	bool handled = false;
+> +
+> +	for (p = priv->data; p->id != UNIPHIER_RESET_ID_END; p++) {
+> +		unsigned int val;
+> +		int ret;
+> +
+> +		if (p->id != id)
+> +			continue;
+> +
+> +		val = p->assert_val;
+> +		if (!assert)
+> +			val = ~val;
+> +
+> +		ret = regmap_write_bits(priv->regmap, p->reg, p->mask, val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		handled = true;
+
+Why does this continue to walk through the list after the correct id was
+found?
+
+> +	}
+> +
+> +	if (!handled) {
+> +		dev_err(priv->dev, "reset_id=%lu was not handled\n", id);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+[...]
+> +static int uniphier_reset_status(struct reset_controller_dev *rcdev,
+> +				 unsigned long id)
+> +{
+> +	struct uniphier_reset_priv *priv = to_uniphier_reset_priv(rcdev);
+> +	const struct uniphier_reset_data *p;
+> +	bool handled = false;
+> +
+> +	for (p = priv->data; p->id != UNIPHIER_RESET_ID_END; p++) {
+> +		unsigned int val;
+> +		int ret;
+> +
+> +		if (p->id != id)
+> +			continue;
+> +
+> +		ret = regmap_read(priv->regmap, p->reg, &val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if ((val ^ ~p->assert_val) & p->mask)
+> +			return 1;
+
+Same here if not asserted?
+
+> +		handled = true;
+> +	}
+> +
+> +	if (!handled) {
+> +		dev_err(priv->dev, "reset_id=%lu was not found\n", id);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+[...]
+> diff --git a/drivers/reset/uniphier/reset-uniphier-mio.c b/drivers/reset/uniphier/reset-uniphier-mio.c
+> new file mode 100644
+> index 0000000..cbcad75
+> --- /dev/null
+> +++ b/drivers/reset/uniphier/reset-uniphier-mio.c
+> @@ -0,0 +1,55 @@
+> +/*
+> + * Copyright (C) 2016 Socionext Inc.
+> + *   Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +
+> +#include "reset-uniphier.h"
+> +
+> +#define UNIPHIER_MIO_RESET_SD(index, ch)				\
+> +	{								\
+> +		.id = (index),						\
+> +		.reg = 0x110 + 0x200 * (ch),				\
+> +		.mask = BIT(26) | BIT(0),				\
+> +	}
+> +
+> +#define UNIPHIER_MIO_RESET_EMMC_HW_RESET(index, ch)			\
+> +	UNIPHIER_RESETX_SIMPLE((index), 0x80 + 0x200 * (ch), BIT(0))
+> +
+> +#define UNIPHIER_MIO_RESET_USB2(index, ch)				\
+> +	UNIPHIER_RESETX_SIMPLE((index), 0x110 + 0x200 * (ch), BIT(24)),	\
+> +	UNIPHIER_RESETX_SIMPLE((index), 0x114 + 0x200 * (ch), BIT(0))
+
+Ah, so for USB2 reset you have two reset bits in separate registers. Are
+you sure these are controlling the same reset line?
+If the USB core does in fact have two separate reset inputs that just
+happen to need asserting at the same time, this should still get two
+separate ids. Same issue for the SD reset above, if the reset lines are
+physically separate, please don't combine them in the driver.
+
+[...]
+> diff --git a/drivers/reset/uniphier/reset-uniphier-sys.c b/drivers/reset/uniphier/reset-uniphier-sys.c
+> new file mode 100644
+> index 0000000..bda96c0
+> --- /dev/null
+> +++ b/drivers/reset/uniphier/reset-uniphier-sys.c
+> +const struct uniphier_reset_data uniphier_pxs2_sys_reset_data[] = {
+> +	UNIPHIER_SLD3_SYS_RESET_STDMAC(8),		/* HSC, RLE */
+> +	UNIPHIER_PRO4_SYS_RESET_USB3(16, 0),
+> +	UNIPHIER_PRO4_SYS_RESET_USB3(17, 1),
+> +	UNIPHIER_RESETX_SIMPLE(18, 0x2014, 0x15),	/* USB30PHY */
+> +	UNIPHIER_RESETX_SIMPLE(19, 0x2014, 0x22),	/* USB31PHY */
+[...]
+> +	UNIPHIER_RESETX_SIMPLE(18, 0x200c, 0xf000),	/* USB30PHY */
+
+Same here.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
