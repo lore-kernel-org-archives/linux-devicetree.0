@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v4 1/6] ARM: dts: r8a7794: add audio clocks
-Date: Wed, 27 Jul 2016 23:59:18 +0300
-Message-ID: <4789280.VAzvua9Bym@wasted.cogentembedded.com>
+Subject: [PATCH v4 2/6] ARM: dts: r8a7794: add MSTP5 clocks
+Date: Wed, 27 Jul 2016 23:59:59 +0300
+Message-ID: <3560619.yXVhzgu5Aq@wasted.cogentembedded.com>
 References: <3910788.ckTpUWEs6B@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -13,56 +13,54 @@ To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, m
 Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Describe  the external audio clocks (signals AUDIO_CLK[ABC]) required by
-the sound driver.  Boards that provide audio clocks need to  override the
-clock frequencies.
-
-This patch is based on the commit 0d3dbde84a45 ("ARM: shmobile: r8a7791:
-add  audio clock on DTSI").
+Add some MSTP5 clocks to the R8A7794 device tree.
 
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
 Changes in version 4:
+- removed non-existant thermal sensor clock;
 - refreshed the patch.
 
 Changes in version 3:
-- removed now redundant "clock-output-names" properties;
-- reformatted the changelog;
 - refreshed the patch.
 
- arch/arm/boot/dts/r8a7794.dtsi |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Changes in version 2:
+- added "the" article to the change log.
+
+ arch/arm/boot/dts/r8a7794.dtsi            |    9 +++++++++
+ include/dt-bindings/clock/r8a7794-clock.h |    1 +
+ 2 files changed, 10 insertions(+)
 
 Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
 ===================================================================
 --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
 +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-@@ -952,6 +952,27 @@
- 			clock-frequency = <0>;
+@@ -1204,6 +1204,15 @@
+ 			clock-indices = <R8A7794_CLK_IRQC>;
+ 			clock-output-names = "irqc";
  		};
++		mstp5_clks: mstp5_clks@e6150144 {
++			compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150144 0 4>, <0 0xe615003c 0 4>;
++			clocks = <&hp_clk>, <&extal_clk>, <&p_clk>;
++			#clock-cells = <1>;
++			clock-indices = <R8A7794_CLK_AUDIO_DMAC0
++					 R8A7794_CLK_PWM>;
++			clock-output-names = "audmac0", "pwm";
++		};
+ 		mstp7_clks: mstp7_clks@e615014c {
+ 			compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0 0xe615014c 0 4>, <0 0xe61501c4 0 4>;
+Index: renesas/include/dt-bindings/clock/r8a7794-clock.h
+===================================================================
+--- renesas.orig/include/dt-bindings/clock/r8a7794-clock.h
++++ renesas/include/dt-bindings/clock/r8a7794-clock.h
+@@ -67,6 +67,7 @@
+ #define R8A7794_CLK_IRQC		7
  
-+		/*
-+		 * The external audio clocks are configured  as 0 Hz fixed
-+		 * frequency clocks by default.  Boards that provide audio
-+		 * clocks should override them.
-+		 */
-+		audio_clka: audio_clka {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <0>;
-+		};
-+		audio_clkb: audio_clkb {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <0>;
-+		};
-+		audio_clkc: audio_clkc {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <0>;
-+		};
-+
- 		/* Special CPG clocks */
- 		cpg_clocks: cpg_clocks@e6150000 {
- 			compatible = "renesas,r8a7794-cpg-clocks",
+ /* MSTP5 */
++#define R8A7794_CLK_AUDIO_DMAC0		2
+ #define R8A7794_CLK_PWM			23
+ 
+ /* MSTP7 */
