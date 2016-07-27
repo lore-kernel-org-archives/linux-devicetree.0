@@ -1,49 +1,24 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC] regulator: da9052/53: da9052-i2c.txt binding document
- changes
-Date: Wed, 27 Jul 2016 19:24:17 +0100
-Message-ID: <20160727182417.GW11806@sirena.org.uk>
-References: <6ED8E3B22081A4459DAC7699F3695FB70173DAC199@SW-EX-MBX02.diasemi.com>
- <6ED8E3B22081A4459DAC7699F3695FB70173DB39F6@NB-EX-MBX02.diasemi.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v5 3/3] ARM: dts: NSP: Add PWM Support to DT
+Date: Wed, 27 Jul 2016 11:29:48 -0700
+Message-ID: <819d6d21-9096-4174-0bc7-3d8f3fd388b7@gmail.com>
+References: <1467698426-27600-1-git-send-email-yendapally.reddy@broadcom.com>
+ <1467698426-27600-4-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NQqDiQVflaif2hna"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6ED8E3B22081A4459DAC7699F3695FB70173DB39F6@NB-EX-MBX02.diasemi.com>
+In-Reply-To: <1467698426-27600-4-git-send-email-yendapally.reddy@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DEVICTREE <devicetree@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, "Ying-Chun Liu (PaulLiu" <paul.liu@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Shawn Guo <shawn.guo@linaro.org>, Support Opensource <Support.Opensource@diasemi.com>
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/04/2016 11:00 PM, Yendapally Reddy Dhananjaya Reddy wrote:
+> Add PWM support to the device tree for the Broadcom Northstar Plus SoC.
+> 
+> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 
---NQqDiQVflaif2hna
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jul 25, 2016 at 11:31:27AM +0000, Steve Twiss wrote:
-
-> There are already several device tree files using a naming scheme different to that found
-> in the binding text document. Since those have been used for real already, I will just follow
-> those existing DT file naming conventions instead.
-
-The other thing you can try to do here is have a -v2 binding with the
-corrected names that's easier for people to follow though it does make
-the implementation more complex and may not be worth it.
-
---NQqDiQVflaif2hna
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXmPxQAAoJECTWi3JdVIfQc7UH/R0Atm/sbo9H75SaZVsczyOP
-DBDibkmtKXWov8mEeq7LWOO0eINr0oN9ybZWYrvvIM3VOiK5n2nG55QcFzt+1Sxj
-a6e5Rjn3rymj0Znb5SPXrtRsUHnmC6lD2Ik1CZXxZKZj8gQwMtqqbq9GOFDedLn9
-IcKP/Q/8S7ysYvE51AMIO0FFF2R2ExPlSI6M6C1Pe3ZBRjfIa33ccLZXlsdVEPS7
-1FNl25/9julb3ijmDo0dCI2ZINyc6x5sxSYFY+vwjG5PTf62kwhNuo/vLg3AlnTp
-D+Rp23s8LzMrxKI8f3CXOPBEkGqH49yjB1Qp1bl8gDq4jbahqFj4ZDeJ0Xqf6pM=
-=T4kX
------END PGP SIGNATURE-----
-
---NQqDiQVflaif2hna--
+Applied, thanks
+-- 
+Florian
