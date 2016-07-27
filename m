@@ -1,51 +1,78 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH 4/9] clk: sunxi-ng: mux: Add support for mux tables
-Date: Wed, 27 Jul 2016 09:18:27 +0200
-Message-ID: <20160727091827.e26f72701ce5758fa29aff7a@free.fr>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/9] clk: sunxi-ng: mux: support fixed
+ pre-dividers on multiple parents
+Date: Wed, 27 Jul 2016 09:26:10 +0200
+Message-ID: <20160727072610.GE6560@lukather>
 References: <1469516671-19377-1-git-send-email-wens@csie.org>
-	<1469516671-19377-5-git-send-email-wens@csie.org>
-	<20160726194306.9b6aadd3d1669bd6f5a54d99@free.fr>
-	<20160727065934.GD6560@lukather>
+ <1469516671-19377-6-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160727065934.GD6560@lukather>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dev@linux-sunxi.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="C94crkcyjafcjHxo"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHOE4G6AKGQE4P33LLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1469516671-19377-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Jul 2016 08:59:34 +0200
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
 
-> On Tue, Jul 26, 2016 at 07:43:06PM +0200, Jean-Francois Moine wrote:
-> > On Tue, 26 Jul 2016 15:04:26 +0800
-> > Chen-Yu Tsai <wens@csie.org> wrote:
-> >=20
-> > > Some clock muxes have holes, i.e. invalid or unconnected inputs,
-> > > between parent mux values.
-> > >=20
-> > > Add support for specifying a mux table to map clock parents to
-> > > mux values.
-> >=20
-> > Putting empty strings in the holes should work. No?
-> > Ex:
-> >=20
-> > static const char * const csi_mclk_parents[] =3D
-> > 	{ "pll-video0", "pll-video1", "", "", "", "osc24M" };
->=20
-> Not really. The clock would be declared as orphan, while it's really
-> not.
->=20
-> Parenting functions would also not work as expected,
-> clk_hw_get_parent_by_index being the obvious example, in that case
-> returning the empty string for an invalid parent, while it should
-> really return NULL.
+--C94crkcyjafcjHxo
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I don't see why the clock should be orphan.
-Then, when a parent is "", clk_hw_get_parent_by_index() returns NULL.
+Hi,
 
---=20
-Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+On Tue, Jul 26, 2016 at 03:04:27PM +0800, Chen-Yu Tsai wrote:
+> Some clocks on the A31 have fixed pre-dividers on multiple parents.
+> Add support for them.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  drivers/clk/sunxi-ng/ccu-sun8i-h3.c |  9 +++++----
+>  drivers/clk/sunxi-ng/ccu_mux.c      |  6 ++++--
+>  drivers/clk/sunxi-ng/ccu_mux.h      | 10 ++++++----
+>  3 files changed, 15 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+> index 9af359544110..5f5c900c235b 100644
+> --- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+> @@ -184,15 +184,16 @@ static SUNXI_CCU_MP_WITH_MUX(apb2_clk, "apb2", apb2_parents, 0x058,
+>  			     0);
+>  
+>  static const char * const ahb2_parents[] = { "ahb1" , "pll-periph0" };
+> +static const struct ccu_mux_fixed_prediv ahb2_fixed_predivs[] = {
+> +	{ .index = 1, .div = 2},
+> +	{ },
+> +};
+>  static struct ccu_mux ahb2_clk = {
+>  	.mux		= {
+>  		.shift	= 0,
+>  		.width	= 1,
+>  
+> -		.fixed_prediv	= {
+> -			.index	= 1,
+> -			.div	= 2,
+> -		},
+> +		.fixed_predivs	= ahb2_fixed_predivs,
+
+I think I'd prefer to have the number of dividers too, instead of
+iterating until we find a 0 one. It's easier to iterate over it, the
+errors are easier to catch and it's consistent with the other arrays
+we give, for example for the parents.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--C94crkcyjafcjHxo--
