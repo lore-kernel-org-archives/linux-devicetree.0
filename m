@@ -1,57 +1,62 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 1/2] of: add J-Core interrupt controller bindings
-Date: Wed, 27 Jul 2016 11:05:05 +0100
-Message-ID: <20160727100504.GB12880@leverpostej>
+Subject: Re: [PATCH v4 2/2] irqchip: add J-Core AIC driver
+Date: Wed, 27 Jul 2016 11:12:36 +0100
+Message-ID: <20160727101235.GC12880@leverpostej>
 References: <cover.1469595860.git.dalias@libc.org>
- <9039efc9336670b3399b9104f1ab5e1a2d8d9025.1469595861.git.dalias@libc.org>
+ <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9039efc9336670b3399b9104f1ab5e1a2d8d9025.1469595861.git.dalias@libc.org>
+In-Reply-To: <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
 Sender: linux-sh-owner@vger.kernel.org
 To: Rich Felker <dalias@libc.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Jul 27, 2016 at 05:35:09AM +0000, Rich Felker wrote:
-> Signed-off-by: Rich Felker <dalias@libc.org>
-> ---
->  .../bindings/interrupt-controller/jcore,aic.txt    | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-> new file mode 100644
-> index 0000000..b7a56ad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-> @@ -0,0 +1,26 @@
-> +J-Core Advanced Interrupt Controller
+> +int __init aic_irq_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	struct aic_data *aic = &aic_data;
+> +	unsigned min_irq = 64;
 > +
-> +Required properties:
+> +	pr_info("Initializing J-Core AIC\n");
 > +
-> +- compatible: Should be "jcore,aic1" for the (obsolete) first-generation aic
-> +  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
-> +  the "aic2" core with 64 interrupts.
+> +	if (!of_device_is_compatible(node, "jcore,aic2")) {
+> +		unsigned cpu;
+> +		for_each_possible_cpu(cpu) {
+> +			void __iomem *base = of_iomap(node, cpu);
+> +			if (!base)
+> +				continue;
+
+This sounds like it would be a critical error.
+
+It would be best to at least pr_warn() if you can't map a CPU's AI
+interface.
+
+> +			pr_info("Local AIC1 enable for cpu %u at %p\n",
+> +				cpu, base + AIC1_INTPRI);
+> +			__raw_writel(0xffffffff, base + AIC1_INTPRI);
+> +		}
+
+Here base goes out of scope. If you don't need it, it would be best
+practice to iounmap it (even if that happens to be a no-op on your
+arch).
+
+> +		min_irq = 16;
+> +	}
 > +
-> +- reg: Memory region(s) for configuration. For SMP, there should be one
-> +  region per cpu, indexed by the sequential, zero-based hardware cpu
-> +  number (which is also the logical cpu number).
+> +	aic->chip.name = node->name;
 
-Nit: remove the bit about the logical number. That's a linux detail that
-doesn't belong in the binding.
+It's probably best to give the name explicitly in the driver (e.g.
+"AIC"), rather than taknig whatever happens to be in the DT (which
+should be 'interrupt-controller@<addr>'.
 
-> +- interrupt-controller: Identifies the node as an interrupt controller
-> +
-> +- #interrupt-cells: Specifies the number of cells needed to encode an
-> +  interrupt source. The value shall be 1.
+> +	aic->chip.irq_mask = noop;
+> +	aic->chip.irq_unmask = noop;
 
-... where the value encoded in that cell is?
-
-I guess it's the zero-based index of the interrupt?
-
-No flags? Can the AIC only do one trigger type?
+If the core code wants to mask IRQs, how do you handle that? Can you
+mask your CPU traps?
 
 Thanks,
 Mark.
