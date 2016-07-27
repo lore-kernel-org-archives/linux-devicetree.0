@@ -1,35 +1,40 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] iio: accel: Add support for Domintech DMARD06
- accelerometer
-Date: Wed, 27 Jul 2016 09:57:40 -0500
-Message-ID: <20160727145740.GA23467@rob-hp-laptop>
-References: <1469460078-6460-1-git-send-email-mamlinav@gmail.com>
- <1469460078-6460-3-git-send-email-mamlinav@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 8/9] clk: sunxi-ng: Add A31/A31s clocks
+Date: Wed, 27 Jul 2016 09:59:07 -0500
+Message-ID: <20160727145907.GA24979@rob-hp-laptop>
+References: <1469516671-19377-1-git-send-email-wens@csie.org>
+ <1469516671-19377-9-git-send-email-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1469460078-6460-3-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1469516671-19377-9-git-send-email-wens@csie.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, dev@linux-sunxi.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 25, 2016 at 06:21:18PM +0300, Aleksei Mamlin wrote:
-> This patch add support for Domintech DMARD05, DMARD06 and DMARD07
-> accelerometers.
+On Tue, Jul 26, 2016 at 03:04:30PM +0800, Chen-Yu Tsai wrote:
+> Add a new style driver for the clock control unit in Allwinner A31/A31s.
 > 
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> A few clocks are still missing:
+> 
+>     - EMAC clock
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
->  .../devicetree/bindings/iio/accel/dmard06.txt      |  19 ++
+>  .../devicetree/bindings/clock/sunxi-ccu.txt        |    3 +-
 
-This could go into trivial-devices.txt, but this is fine too:
+Acked-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/iio/accel/Kconfig                          |  11 +
->  drivers/iio/accel/Makefile                         |   1 +
->  drivers/iio/accel/dmard06.c                        | 241 +++++++++++++++++++++
->  4 files changed, 272 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/dmard06.txt
->  create mode 100644 drivers/iio/accel/dmard06.c
+>  drivers/clk/sunxi-ng/Kconfig                       |   10 +
+>  drivers/clk/sunxi-ng/Makefile                      |    1 +
+>  drivers/clk/sunxi-ng/ccu-sun6i-a31.c               | 1230 ++++++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun6i-a31.h               |   72 ++
+>  include/dt-bindings/clock/sun6i-a31-ccu.h          |  187 +++
+>  include/dt-bindings/reset/sun6i-a31-ccu.h          |  106 ++
+>  7 files changed, 1608 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun6i-a31.h
+>  create mode 100644 include/dt-bindings/clock/sun6i-a31-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun6i-a31-ccu.h
