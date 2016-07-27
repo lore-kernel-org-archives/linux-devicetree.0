@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 2/8] libfdt: Add iterator over properties
-Date: Wed, 27 Jul 2016 14:55:54 +0200
-Message-ID: <20160727125600.15949-3-maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 8/8] tests: Add tests cases for the overlay code
+Date: Wed, 27 Jul 2016 14:56:00 +0200
+Message-ID: <20160727125600.15949-9-maxime.ripard@free-electrons.com>
 References: <20160727125600.15949-1-maxime.ripard@free-electrons.com>
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20160727125600.15949-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,98 +10,82 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implement a macro based on fdt_first_property_offset and
-fdt_next_property_offset that provides a convenience to iterate over all
-the properties of a given node.
+Add some test infrastructure to test that the overlay can be merged, but
+also that poorly formatted fixups would fail as expected.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- libfdt/libfdt.h            | 27 +++++++++++++
- tests/.gitignore           |  1 +
- tests/Makefile.tests       |  1 +
- tests/property_iterate.c   | 97 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/property_iterate.dts | 24 ++++++++++++
- tests/run_tests.sh         |  3 ++
- 6 files changed, 153 insertions(+)
- create mode 100644 tests/property_iterate.c
- create mode 100644 tests/property_iterate.dts
+ tests/.gitignore                            |   2 +
+ tests/Makefile.tests                        |   3 +-
+ tests/overlay.c                             | 232 ++++++++++++++++++++++++++++
+ tests/overlay_bad_fixup.c                   |  70 +++++++++
+ tests/overlay_bad_fixup_bad_index.dts       |  14 ++
+ tests/overlay_bad_fixup_base.dtsi           |  18 +++
+ tests/overlay_bad_fixup_empty.dts           |  14 ++
+ tests/overlay_bad_fixup_empty_index.dts     |  14 ++
+ tests/overlay_bad_fixup_index_trailing.dts  |  14 ++
+ tests/overlay_bad_fixup_path_empty_prop.dts |  14 ++
+ tests/overlay_bad_fixup_path_only.dts       |  14 ++
+ tests/overlay_bad_fixup_path_only_sep.dts   |  14 ++
+ tests/overlay_bad_fixup_path_prop.dts       |  14 ++
+ tests/overlay_base.dts                      |  21 +++
+ tests/overlay_overlay_dtc.dts               |  85 ++++++++++
+ tests/overlay_overlay_nodtc.dts             |  82 ++++++++++
+ tests/run_tests.sh                          |  32 ++++
+ 17 files changed, 656 insertions(+), 1 deletion(-)
+ create mode 100644 tests/overlay.c
+ create mode 100644 tests/overlay_bad_fixup.c
+ create mode 100644 tests/overlay_bad_fixup_bad_index.dts
+ create mode 100644 tests/overlay_bad_fixup_base.dtsi
+ create mode 100644 tests/overlay_bad_fixup_empty.dts
+ create mode 100644 tests/overlay_bad_fixup_empty_index.dts
+ create mode 100644 tests/overlay_bad_fixup_index_trailing.dts
+ create mode 100644 tests/overlay_bad_fixup_path_empty_prop.dts
+ create mode 100644 tests/overlay_bad_fixup_path_only.dts
+ create mode 100644 tests/overlay_bad_fixup_path_only_sep.dts
+ create mode 100644 tests/overlay_bad_fixup_path_prop.dts
+ create mode 100644 tests/overlay_base.dts
+ create mode 100644 tests/overlay_overlay_dtc.dts
+ create mode 100644 tests/overlay_overlay_nodtc.dts
 
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 911e548163d8..be109a8aac84 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -458,6 +458,33 @@ int fdt_first_property_offset(const void *fdt, int nodeoffset);
-  */
- int fdt_next_property_offset(const void *fdt, int offset);
- 
-+/**
-+ * fdt_for_each_property_offset - iterate over all properties of a node
-+ *
-+ * @property_offset:	property offset (int, lvalue)
-+ * @fdt:		FDT blob (const void *)
-+ * @node:		node offset (int)
-+ *
-+ * This is actually a wrapper around a for loop and would be used like so:
-+ *
-+ *	fdt_for_each_property_offset(property, fdt, node) {
-+ *		Use property
-+ *		...
-+ *	}
-+ *
-+ *	if ((property < 0) && (property != -FDT_ERR_NOT_FOUND)) {
-+ *		Error handling
-+ *	}
-+ *
-+ * Note that this is implemented as a macro and property is used as
-+ * iterator in the loop. The node variable can be constant or even a
-+ * literal.
-+ */
-+#define fdt_for_each_property_offset(property, fdt, node)	\
-+	for (property = fdt_first_property_offset(fdt, node);	\
-+	     property >= 0;					\
-+	     property = fdt_next_property_offset(fdt, property))
-+
- /**
-  * fdt_get_property_by_offset - retrieve the property at a given offset
-  * @fdt: pointer to the device tree blob
 diff --git a/tests/.gitignore b/tests/.gitignore
-index e4532da30bf5..fa4616ba28c2 100644
+index fa4616ba28c2..354b565aa095 100644
 --- a/tests/.gitignore
 +++ b/tests/.gitignore
-@@ -40,6 +40,7 @@ tmp.*
+@@ -35,6 +35,8 @@ tmp.*
+ /nopulate
+ /notfound
+ /open_pack
++/overlay
++/overlay_bad_fixup
+ /parent_offset
+ /path-references
  /path_offset
- /path_offset_aliases
- /phandle_format
-+/property_iterate
- /propname_escapes
- /references
- /root_node
 diff --git a/tests/Makefile.tests b/tests/Makefile.tests
-index f7c3a4b00ead..196518c83eda 100644
+index 196518c83eda..eb039c5a40c1 100644
 --- a/tests/Makefile.tests
 +++ b/tests/Makefile.tests
-@@ -23,6 +23,7 @@ LIB_TESTS_L = get_mem_rsv \
- 	add_subnode_with_nops path_offset_aliases \
+@@ -24,7 +24,8 @@ LIB_TESTS_L = get_mem_rsv \
  	utilfdt_test \
  	integer-expressions \
-+	property_iterate \
- 	subnode_iterate
+ 	property_iterate \
+-	subnode_iterate
++	subnode_iterate \
++	overlay overlay_bad_fixup
  LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
  
-diff --git a/tests/property_iterate.c b/tests/property_iterate.c
+ LIBTREE_TESTS_L = truncated_property
+diff --git a/tests/overlay.c b/tests/overlay.c
 new file mode 100644
-index 000000000000..0f3959cb8c22
+index 000000000000..e467b037255f
 --- /dev/null
-+++ b/tests/property_iterate.c
-@@ -0,0 +1,97 @@
++++ b/tests/overlay.c
+@@ -0,0 +1,232 @@
 +/*
 + * libfdt - Flat Device Tree manipulation
-+ *	Tests that fdt_next_subnode() works as expected
-+ *
-+ * Copyright (C) 2013 Google, Inc
-+ *
-+ * Copyright (C) 2007 David Gibson, IBM Corporation.
++ *	Testcase for DT overlays()
++ * Copyright (C) 2016 Free Electrons
++ * Copyright (C) 2016 NextThing Co.
 + *
 + * This library is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU Lesser General Public License
@@ -118,123 +102,732 @@ index 000000000000..0f3959cb8c22
 + * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 + */
 +
-+#include <stdlib.h>
 +#include <stdio.h>
-+#include <string.h>
-+#include <stdint.h>
 +
 +#include <libfdt.h>
 +
 +#include "tests.h"
-+#include "testdata.h"
 +
-+static void test_node(void *fdt, int parent_offset)
++#define CHECK(code) \
++	{ \
++		if (code) \
++			FAIL(#code ": %s", fdt_strerror(code)); \
++	}
++
++/* 4k ought to be enough for anybody */
++#define FDT_COPY_SIZE	(4 * 1024)
++
++static int fdt_getprop_u32_by_index(void *fdt, const char *path,
++				    const char *name, int index,
++				    unsigned long *out)
 +{
-+	fdt32_t properties;
-+	const fdt32_t *prop;
-+	int offset, property;
-+	int count;
++	const fdt32_t *val;
++	int node_off;
 +	int len;
 +
-+	/*
-+	 * This property indicates the number of properties in our
-+	 * test node to expect
-+	 */
-+	prop = fdt_getprop(fdt, parent_offset, "test-properties", &len);
-+	if (!prop || len != sizeof(fdt32_t)) {
-+		FAIL("Missing/invalid test-properties property at '%s'",
-+		     fdt_get_name(fdt, parent_offset, NULL));
-+	}
-+	properties = cpu_to_fdt32(*prop);
++	node_off = fdt_path_offset(fdt, path);
++	if (node_off < 0)
++		return node_off;
 +
-+	count = 0;
-+	offset = fdt_first_subnode(fdt, parent_offset);
-+	if (offset < 0)
-+		FAIL("Missing test node\n");
++	val = fdt_getprop(fdt, node_off, name, &len);
++	if (!val || (len < (sizeof(uint32_t) * (index + 1))))
++		return -FDT_ERR_NOTFOUND;
 +
-+	fdt_for_each_property_offset(property, fdt, offset)
-+		count++;
++	*out = fdt32_to_cpu(*(val + index));
 +
-+	if (count != properties) {
-+		FAIL("Node '%s': Expected %d properties, got %d\n",
-+		     fdt_get_name(fdt, parent_offset, NULL), properties,
-+		     count);
-+	}
++	return 0;
 +}
 +
-+static void check_fdt_next_subnode(void *fdt)
++static int check_getprop_string_by_name(void *fdt, const char *path,
++					const char *name, const char *val)
 +{
-+	int offset;
-+	int count = 0;
++	int node_off;
 +
-+	fdt_for_each_subnode(offset, fdt, 0) {
-+		test_node(fdt, offset);
-+		count++;
-+	}
++	node_off = fdt_path_offset(fdt, path);
++	if (node_off < 0)
++		return node_off;
 +
-+	if (count != 2)
-+		FAIL("Expected %d tests, got %d\n", 2, count);
++	check_getprop_string(fdt, node_off, name, val);
++
++	return 0;
++}
++
++static int check_getprop_u32_by_name(void *fdt, const char *path,
++				     const char *name, uint32_t val)
++{
++	int node_off;
++
++	node_off = fdt_path_offset(fdt, path);
++	CHECK(node_off < 0);
++
++	check_getprop_cell(fdt, node_off, name, val);
++
++	return 0;
++}
++
++static int check_getprop_null_by_name(void *fdt, const char *path,
++				      const char *name)
++{
++	int node_off;
++
++	node_off = fdt_path_offset(fdt, path);
++	CHECK(node_off < 0);
++
++	check_property(fdt, node_off, name, 0, NULL);
++
++	return 0;
++}
++
++static int fdt_overlay_change_int_property(void *fdt)
++{
++	return check_getprop_u32_by_name(fdt, "/test-node", "test-int-property",
++					 43);
++}
++
++static int fdt_overlay_change_str_property(void *fdt)
++{
++	return check_getprop_string_by_name(fdt, "/test-node",
++					    "test-str-property", "foobar");
++}
++
++static int fdt_overlay_add_str_property(void *fdt)
++{
++	return check_getprop_string_by_name(fdt, "/test-node",
++					    "test-str-property-2", "foobar2");
++}
++
++static int fdt_overlay_add_node(void *fdt)
++{
++	return check_getprop_null_by_name(fdt, "/test-node/new-node",
++					  "new-property");
++}
++
++static int fdt_overlay_add_subnode_property(void *fdt)
++{
++	check_getprop_null_by_name(fdt, "/test-node/sub-test-node",
++				   "sub-test-property");
++	check_getprop_null_by_name(fdt, "/test-node/sub-test-node",
++				   "new-sub-test-property");
++
++	return 0;
++}
++
++static int fdt_overlay_local_phandle(void *fdt)
++{
++	uint32_t local_phandle;
++	unsigned long val = 0;
++	int off;
++
++	off = fdt_path_offset(fdt, "/test-node/new-local-node");
++	CHECK(off < 0);
++
++	local_phandle = fdt_get_phandle(fdt, off);
++	CHECK(!local_phandle);
++
++	CHECK(fdt_getprop_u32_by_index(fdt, "/test-node",
++				       "test-several-phandle",
++				       0, &val));
++	CHECK(val != local_phandle);
++
++	CHECK(fdt_getprop_u32_by_index(fdt, "/test-node",
++				       "test-several-phandle",
++				       1, &val));
++	CHECK(val != local_phandle);
++
++	return 0;
++}
++
++static int fdt_overlay_local_phandles(void *fdt)
++{
++	uint32_t local_phandle, test_phandle;
++	unsigned long val = 0;
++	int off;
++
++	off = fdt_path_offset(fdt, "/test-node/new-local-node");
++	CHECK(off < 0);
++
++	local_phandle = fdt_get_phandle(fdt, off);
++	CHECK(!local_phandle);
++
++	off = fdt_path_offset(fdt, "/test-node");
++	CHECK(off < 0);
++
++	test_phandle = fdt_get_phandle(fdt, off);
++	CHECK(!test_phandle);
++
++	CHECK(fdt_getprop_u32_by_index(fdt, "/test-node",
++				       "test-phandle", 0, &val));
++	CHECK(test_phandle != val);
++
++	CHECK(fdt_getprop_u32_by_index(fdt, "/test-node",
++				       "test-phandle", 1, &val));
++	CHECK(local_phandle != val);
++
++	return 0;
++}
++
++static void *open_dt(char *path)
++{
++	void *dt, *copy;
++
++	dt = load_blob(path);
++	copy = xmalloc(FDT_COPY_SIZE);
++
++	/*
++	 * Resize our DTs to 4k so that we have room to operate on
++	 */
++	CHECK(fdt_open_into(dt, copy, FDT_COPY_SIZE));
++
++	return copy;
 +}
 +
 +int main(int argc, char *argv[])
 +{
-+	void *fdt;
++	void *fdt_base, *fdt_overlay;
 +
 +	test_init(argc, argv);
-+	if (argc != 2)
-+		CONFIG("Usage: %s <dtb file>", argv[0]);
++	if (argc != 3)
++		CONFIG("Usage: %s <base dtb> <overlay dtb>", argv[0]);
 +
-+	fdt = load_blob(argv[1]);
-+	if (!fdt)
-+		FAIL("No device tree available");
++	fdt_base = open_dt(argv[1]);
++	fdt_overlay = open_dt(argv[2]);
 +
-+	check_fdt_next_subnode(fdt);
++	/* Apply the overlay */
++	CHECK(fdt_overlay_apply(fdt_base, fdt_overlay));
++
++	fdt_overlay_change_int_property(fdt_base);
++	fdt_overlay_change_str_property(fdt_base);
++	fdt_overlay_add_str_property(fdt_base);
++	fdt_overlay_add_node(fdt_base);
++	fdt_overlay_add_subnode_property(fdt_base);
++
++	/*
++	 * If the base tree has a __symbols__ node, do the tests that
++	 * are only successful with a proper phandle support, and thus
++	 * dtc -@
++	 */
++	if (fdt_path_offset(fdt_base, "/__symbols__") >= 0) {
++		fdt_overlay_local_phandle(fdt_base);
++		fdt_overlay_local_phandles(fdt_base);
++	}
 +
 +	PASS();
 +}
-diff --git a/tests/property_iterate.dts b/tests/property_iterate.dts
+diff --git a/tests/overlay_bad_fixup.c b/tests/overlay_bad_fixup.c
 new file mode 100644
-index 000000000000..2ed677e7e6ea
+index 000000000000..c9d81c350cd7
 --- /dev/null
-+++ b/tests/property_iterate.dts
-@@ -0,0 +1,24 @@
++++ b/tests/overlay_bad_fixup.c
+@@ -0,0 +1,70 @@
++/*
++ * libfdt - Flat Device Tree manipulation
++ *	Testcase for DT overlays()
++ * Copyright (C) 2016 Free Electrons
++ * Copyright (C) 2016 NextThing Co.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#include <stdio.h>
++
++#include <libfdt.h>
++
++#include "tests.h"
++
++#define CHECK(code, expected)					\
++	{							\
++		err = (code);					\
++		if (err != expected)				\
++			FAIL(#code ": %s", fdt_strerror(err));	\
++	}
++
++/* 4k ought to be enough for anybody */
++#define FDT_COPY_SIZE	(4 * 1024)
++
++static void *open_dt(char *path)
++{
++	void *dt, *copy;
++	int err;
++
++	dt = load_blob(path);
++	copy = xmalloc(FDT_COPY_SIZE);
++
++	/*
++	 * Resize our DTs to 4k so that we have room to operate on
++	 */
++	CHECK(fdt_open_into(dt, copy, FDT_COPY_SIZE), 0);
++
++	return copy;
++}
++
++int main(int argc, char *argv[])
++{
++	void *fdt_base, *fdt_overlay;
++	int err;
++
++	test_init(argc, argv);
++	if (argc != 3)
++		CONFIG("Usage: %s <base dtb> <overlay dtb>", argv[0]);
++
++	fdt_base = open_dt(argv[1]);
++	fdt_overlay = open_dt(argv[2]);
++
++	/* Apply the overlay */
++	CHECK(fdt_overlay_apply(fdt_base, fdt_overlay), -FDT_ERR_BADFIXUP);
++
++	PASS();
++}
+diff --git a/tests/overlay_bad_fixup_bad_index.dts b/tests/overlay_bad_fixup_bad_index.dts
+new file mode 100644
+index 000000000000..b5cf13137169
+--- /dev/null
++++ b/tests/overlay_bad_fixup_bad_index.dts
+@@ -0,0 +1,14 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/include/ "overlay_bad_fixup_base.dtsi"
++
++/ {
++	__fixups__ {
++		test = "/fragment@0:target:ab";
++	};
++};
+diff --git a/tests/overlay_bad_fixup_base.dtsi b/tests/overlay_bad_fixup_base.dtsi
+new file mode 100644
+index 000000000000..216bcab52263
+--- /dev/null
++++ b/tests/overlay_bad_fixup_base.dtsi
+@@ -0,0 +1,18 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
 +/dts-v1/;
 +
 +/ {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
++	fragment@0 {
++		target = <0xffffffff>;
 +
-+	test1 {
-+		test-properties = <3>;
-+
-+		test {
-+			linux,phandle = <0x1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++		__overlay__ {
++			test-property;
 +		};
 +	};
++};
+diff --git a/tests/overlay_bad_fixup_empty.dts b/tests/overlay_bad_fixup_empty.dts
+new file mode 100644
+index 000000000000..e111db4c8527
+--- /dev/null
++++ b/tests/overlay_bad_fixup_empty.dts
+@@ -0,0 +1,14 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
 +
-+	test2 {
-+		test-properties = <0>;
++/include/ "overlay_bad_fixup_base.dtsi"
 +
-+		test {
++/ {
++	__fixups__ {
++		test = "";
++	};
++};
+diff --git a/tests/overlay_bad_fixup_empty_index.dts b/tests/overlay_bad_fixup_empty_index.dts
+new file mode 100644
+index 000000000000..9e12e2177ad5
+--- /dev/null
++++ b/tests/overlay_bad_fixup_empty_index.dts
+@@ -0,0 +1,14 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/include/ "overlay_bad_fixup_base.dtsi"
++
++/ {
++	__fixups__ {
++		test = "/fragment@0:target:";
++	};
++};
+diff --git a/tests/overlay_bad_fixup_index_trailing.dts b/tests/overlay_bad_fixup_index_trailing.dts
+new file mode 100644
+index 000000000000..f586bef4d374
+--- /dev/null
++++ b/tests/overlay_bad_fixup_index_trailing.dts
+@@ -0,0 +1,14 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/include/ "overlay_bad_fixup_base.dtsi"
++
++/ {
++	__fixups__ {
++		test = "/fragment@0:target:0a";
++	};
++};
+diff --git a/tests/overlay_bad_fixup_path_empty_prop.dts b/tests/overlay_bad_fixup_path_empty_prop.dts
+new file mode 100644
+index 000000000000..608b5f9247b5
+--- /dev/null
++++ b/tests/overlay_bad_fixup_path_empty_prop.dts
+@@ -0,0 +1,14 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/include/ "overlay_bad_fixup_base.dtsi"
++
++/ {
++	__fixups__ {
++		test = "/fragment@0::";
++	};
++};
+diff --git a/tests/overlay_bad_fixup_path_only.dts b/tests/overlay_bad_fixup_path_only.dts
+new file mode 100644
+index 000000000000..2485dd965ee5
+--- /dev/null
++++ b/tests/overlay_bad_fixup_path_only.dts
+@@ -0,0 +1,14 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/include/ "overlay_bad_fixup_base.dtsi"
++
++/ {
++	__fixups__ {
++		test = "/fragment@0";
++	};
++};
+diff --git a/tests/overlay_bad_fixup_path_only_sep.dts b/tests/overlay_bad_fixup_path_only_sep.dts
+new file mode 100644
+index 000000000000..3cbf6c40fba5
+--- /dev/null
++++ b/tests/overlay_bad_fixup_path_only_sep.dts
+@@ -0,0 +1,14 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/include/ "overlay_bad_fixup_base.dtsi"
++
++/ {
++	__fixups__ {
++		test = "/fragment@0:";
++	};
++};
+diff --git a/tests/overlay_bad_fixup_path_prop.dts b/tests/overlay_bad_fixup_path_prop.dts
+new file mode 100644
+index 000000000000..ca79b52bcb22
+--- /dev/null
++++ b/tests/overlay_bad_fixup_path_prop.dts
+@@ -0,0 +1,14 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/include/ "overlay_bad_fixup_base.dtsi"
++
++/ {
++	__fixups__ {
++		test = "/fragment@0:target";
++	};
++};
+diff --git a/tests/overlay_base.dts b/tests/overlay_base.dts
+new file mode 100644
+index 000000000000..2603adb6821e
+--- /dev/null
++++ b/tests/overlay_base.dts
+@@ -0,0 +1,21 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/dts-v1/;
++
++/ {
++	test: test-node {
++		test-int-property = <42>;
++		test-str-property = "foo";
++
++		subtest: sub-test-node {
++			sub-test-property;
 +		};
 +	};
 +};
 +
++
+diff --git a/tests/overlay_overlay_dtc.dts b/tests/overlay_overlay_dtc.dts
+new file mode 100644
+index 000000000000..30d2362f746b
+--- /dev/null
++++ b/tests/overlay_overlay_dtc.dts
+@@ -0,0 +1,85 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/dts-v1/;
++/plugin/;
++
++/ {
++	/* Test that we can change an int by another */
++	fragment@0 {
++		target = <&test>;
++
++		__overlay__ {
++			test-int-property = <43>;
++		};
++	};
++
++	/* Test that we can replace a string by a longer one */
++	fragment@1 {
++		target = <&test>;
++
++		__overlay__ {
++			test-str-property = "foobar";
++		};
++	};
++
++	/* Test that we add a new property */
++	fragment@2 {
++		target = <&test>;
++
++		__overlay__ {
++			test-str-property-2 = "foobar2";
++		};
++	};
++
++	/* Test that we add a new node (by phandle) */
++	fragment@3 {
++		target = <&test>;
++
++		__overlay__ {
++			new-node {
++				new-property;
++			};
++		};
++	};
++
++	fragment@5 {
++		target = <&test>;
++
++		__overlay__ {
++			local: new-local-node {
++				new-property;
++			};
++		};
++	};
++
++	fragment@6 {
++		target = <&test>;
++
++		__overlay__ {
++			test-phandle = <&test>, <&local>;
++		};
++	};
++
++	fragment@7 {
++		target = <&test>;
++
++		__overlay__ {
++			test-several-phandle = <&local>, <&local>;
++		};
++	};
++
++	fragment@8 {
++		target = <&test>;
++
++		__overlay__ {
++			sub-test-node {
++				new-sub-test-property;
++			};
++		};
++	};
++};
+diff --git a/tests/overlay_overlay_nodtc.dts b/tests/overlay_overlay_nodtc.dts
+new file mode 100644
+index 000000000000..e8d0f96d889c
+--- /dev/null
++++ b/tests/overlay_overlay_nodtc.dts
+@@ -0,0 +1,82 @@
++/*
++ * Copyright (c) 2016 NextThing Co
++ * Copyright (c) 2016 Free Electrons
++ *
++ * SPDX-License-Identifier:	GPL-2.0+
++ */
++
++/dts-v1/;
++
++/ {
++	fragment@0 {
++		target-path = "/test-node";
++
++		__overlay__ {
++			test-int-property = <43>;
++		};
++	};
++
++	/* Test that we can replace a string by a longer one */
++	fragment@1 {
++		target-path = "/test-node";
++
++		__overlay__ {
++			test-str-property = "foobar";
++		};
++	};
++
++	/* Test that we add a new property */
++	fragment@2 {
++		target-path = "/test-node";
++
++		__overlay__ {
++			test-str-property-2 = "foobar2";
++		};
++	};
++
++	fragment@3 {
++		target-path = "/test-node";
++
++		__overlay__ {
++			new-node {
++				new-property;
++			};
++		};
++	};
++
++	fragment@4 {
++		target-path = "/";
++
++		__overlay__ {
++			local: new-local-node {
++				new-property;
++			};
++		};
++	};
++
++	fragment@5 {
++		target-path = "/";
++
++		__overlay__ {
++			test-several-phandle = <&local>, <&local>;
++		};
++	};
++
++	fragment@6 {
++		target-path = "/test-node";
++
++		__overlay__ {
++			sub-test-node {
++				new-sub-test-property;
++			};
++		};
++	};
++
++	__local_fixups__ {
++		fragment@5 {
++			__overlay__ {
++				test-several-phandle = <0 4>;
++			};
++		};
++	};
++};
 diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 7eb9b3d33108..6a2662b2abaf 100755
+index 6a2662b2abaf..785a8deed997 100755
 --- a/tests/run_tests.sh
 +++ b/tests/run_tests.sh
-@@ -269,6 +269,9 @@ libfdt_tests () {
-     run_dtc_test -I dts -O dtb -o subnode_iterate.dtb subnode_iterate.dts
-     run_test subnode_iterate subnode_iterate.dtb
+@@ -145,6 +145,37 @@ run_fdtdump_test() {
+     base_run_test sh fdtdump-runtest.sh "$file"
+ }
  
-+    run_dtc_test -I dts -O dtb -o property_iterate.dtb property_iterate.dts
-+    run_test property_iterate property_iterate.dtb
++BAD_FIXUP_TREES="bad_index \
++		empty \
++		empty_index \
++		index_trailing \
++		path_empty_prop \
++		path_only \
++		path_only_sep \
++		path_prop"
 +
-     # Tests for behaviour on various sorts of corrupted trees
-     run_test truncated_property
++overlay_tests () {
++    # Overlay tests that don't require overlay support in dtc
++    run_dtc_test -I dts -O dtb -o overlay_base.dtb overlay_base.dts
++    run_dtc_test -I dts -O dtb -o overlay_overlay.dtb overlay_overlay_nodtc.dts
++    run_test overlay overlay_base.dtb overlay_overlay.dtb
++
++    # Overlay tests that requires overlay support in dtc
++    echo "/dts-v1/; / {};" | $DTC -@ > /dev/null 2>&1
++    if [ $? -eq 0 ]; then
++        run_dtc_test -@ -I dts -O dtb -o overlay_base.dtb overlay_base.dts
++        run_dtc_test -@ -I dts -O dtb -o overlay_overlay.dtb overlay_overlay_dtc.dts
++        run_test overlay overlay_base.dtb overlay_overlay.dtb
++    fi
++
++    # Bad fixup tests
++    for test in $BAD_FIXUP_TREES; do
++	tree="overlay_bad_fixup_$test"
++	run_dtc_test -I dts -O dtb -o $tree.dtb $tree.dts
++	run_test overlay_bad_fixup overlay_base.dtb $tree.dtb
++    done
++}
++
+ tree1_tests () {
+     TREE=$1
  
+@@ -258,6 +289,7 @@ libfdt_tests () {
+     run_test appendprop2 appendprop1.test.dtb
+     run_dtc_test -I dts -O dtb -o appendprop.test.dtb appendprop.dts
+     run_test dtbs_equal_ordered appendprop2.test.dtb appendprop.test.dtb
++    overlay_tests
+ 
+     for basetree in test_tree1.dtb sw_tree1.test.dtb rw_tree1.test.dtb; do
+ 	run_test nopulate $basetree
 -- 
 2.9.2
