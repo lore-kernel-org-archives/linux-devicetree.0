@@ -1,78 +1,92 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: armada388-clearfog: number LAN ports properly
-Date: Wed, 27 Jul 2016 11:42:06 +0100
-Message-ID: <20160727104205.GW1041@n2100.armlinux.org.uk>
-References: <E1bLWIh-0001ZK-Ai@rmk-PC.armlinux.org.uk>
- <20160708152616.GF8426@lunn.ch>
- <87vazro02y.fsf@free-electrons.com>
- <20160727102120.GV1041@n2100.armlinux.org.uk>
- <87r3afnzq6.fsf@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87r3afnzq6.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 1/8] libfdt: Add a subnodes iterator macro
+Date: Wed, 27 Jul 2016 14:55:53 +0200
+Message-ID: <20160727125600.15949-2-maxime.ripard@free-electrons.com>
+References: <20160727125600.15949-1-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160727125600.15949-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 12:26:41PM +0200, Gregory CLEMENT wrote:
-> Hi Russell King,
->  
->  On mer., juil. 27 2016, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-> 
-> > On Wed, Jul 27, 2016 at 12:19:01PM +0200, Gregory CLEMENT wrote:
-> >> Hi,
-> >>  
-> >>  On ven., juil. 08 2016, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
-> >> 
-> >> > On Fri, Jul 08, 2016 at 02:58:39PM +0100, Russell King wrote:
-> >> >> Currently, the ports as seen from the rear number as:
-> >> >> 
-> >> >> 	eth0 sfp lan5 lan4 lan3 lan2 lan1 lan6
-> >> >> 
-> >> >> which is illogical - this came about because the rev 2.0 boards have the
-> >> >> LEDs on the front for the DSA switch (lan5-1) reversed.  Rev 2.1 boards
-> >> >> fixed the LED issue, and the Clearfog case numbers the lan ports
-> >> >> increasing from left to right.
-> >> >> 
-> >> >> Maintaining this illogical numbering causes confusion, with reports that
-> >> >> "my link isn't coming up" and "my connection negotiates 10base-Half"
-> >> >> both of which are due to people thinking that the port next to the SFP
-> >> >> is lan1.
-> >> >> 
-> >> >> Fix this by renumbering the ports to match people's expectations.
-> >> >> 
-> >> >> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> >> >
-> >> > Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> >> 
-> >> I missed this patch, but I now applied it on mvebu/dt-4.9
-> >
-> > It would be much better to get it into 4.8-rc so that we don't spread
-> > the port renumbering over a large range of kernels, as well as forcing
-> > vendors to carry patches like this to fix problems.
-> 
-> I can move it to the mvebu/fixes branch, it is not too late. Also what
-> about to apply it on the stable kernel?
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-That'd probably be best.
+The fdt_for_each_subnode() iterator macro provided by this patch can be
+used to iterate over a device tree node's subnodes. At each iteration a
+loop variable will be set to the next subnode.
 
-As far as stable goes, I can't convince myself that it is really stable
-kernel material.  I'm not aware what happened to the eth* renumber patch,
-was that applied to stable trees?  My view would be that the lan*
-renumbering should be applied to the same trees which include the eth*
-renumbering and no further, iff the eth* renumber was even backported.
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ libfdt/libfdt.h         | 28 ++++++++++++++++++++++++++++
+ tests/subnode_iterate.c |  8 ++------
+ 2 files changed, 30 insertions(+), 6 deletions(-)
 
-Talking to Jon Nettleton @ SR, he's in favour of it being applied to
-stable kernels.
-
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index 36222fd4a6f4..911e548163d8 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -168,6 +168,34 @@ int fdt_first_subnode(const void *fdt, int offset);
+  */
+ int fdt_next_subnode(const void *fdt, int offset);
+ 
++/**
++ * fdt_for_each_subnode - iterate over all subnodes of a parent
++ *
++ * @node:	child node (int, lvalue)
++ * @fdt:	FDT blob (const void *)
++ * @parent:	parent node (int)
++ *
++ * This is actually a wrapper around a for loop and would be used like so:
++ *
++ *	fdt_for_each_subnode(node, fdt, parent) {
++ *		Use node
++ *		...
++ *	}
++ *
++ *	if ((node < 0) && (node != -FDT_ERR_NOT_FOUND)) {
++ *		Error handling
++ *	}
++ *
++ * Note that this is implemented as a macro and @node is used as
++ * iterator in the loop. The parent variable be constant or even a
++ * literal.
++ *
++ */
++#define fdt_for_each_subnode(node, fdt, parent)		\
++	for (node = fdt_first_subnode(fdt, parent);	\
++	     node >= 0;					\
++	     node = fdt_next_subnode(fdt, node))
++
+ /**********************************************************************/
+ /* General functions                                                  */
+ /**********************************************************************/
+diff --git a/tests/subnode_iterate.c b/tests/subnode_iterate.c
+index b9f379d5963c..0fb5c901ebd7 100644
+--- a/tests/subnode_iterate.c
++++ b/tests/subnode_iterate.c
+@@ -48,9 +48,7 @@ static void test_node(void *fdt, int parent_offset)
+ 	subnodes = cpu_to_fdt32(*prop);
+ 
+ 	count = 0;
+-	for (offset = fdt_first_subnode(fdt, parent_offset);
+-	     offset >= 0;
+-	     offset = fdt_next_subnode(fdt, offset))
++	fdt_for_each_subnode(offset, fdt, parent_offset)
+ 		count++;
+ 
+ 	if (count != subnodes) {
+@@ -65,9 +63,7 @@ static void check_fdt_next_subnode(void *fdt)
+ 	int offset;
+ 	int count = 0;
+ 
+-	for (offset = fdt_first_subnode(fdt, 0);
+-	     offset >= 0;
+-	     offset = fdt_next_subnode(fdt, offset)) {
++	fdt_for_each_subnode(offset, fdt, 0) {
+ 		test_node(fdt, offset);
+ 		count++;
+ 	}
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.2
