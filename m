@@ -1,74 +1,49 @@
-From: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [PATCH v4] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
-Date: Wed, 27 Jul 2016 08:12:29 +0300
-Message-ID: <30014119.IrjfP0xFry@linux-cigu>
-References: <1469450243-19138-1-git-send-email-stefan.mavrodiev@gmail.com> <20160726153352.GH7190@lukather>
-Reply-To: Stefan.Mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v3 01/12] of: add vendor prefix for J-Core
+Date: Wed, 27 Jul 2016 01:31:12 -0400
+Message-ID: <20160727053112.GY15995@brightrain.aerifal.cx>
+References: <cover.1464148904.git.dalias@libc.org>
+ <b6d33800300bde8f1d9a7b88a715d741548fad4a.1464148904.git.dalias@libc.org>
+ <CAL_JsqKWq-DBQMWof6hyh0_sS4OPOP7afJXYdaWTiqf15MpKAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCSP3JM3Y4JBBS4F4G6AKGQEOYUQMIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160726153352.GH7190@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKWq-DBQMWof6hyh0_sS4OPOP7afJXYdaWTiqf15MpKAg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 26, 2016 5:33:52 PM EEST Maxime Ripard wrote:
-> Hi Stefan,
+On Wed, May 25, 2016 at 08:18:06AM -0500, Rob Herring wrote:
+> On Wed, May 25, 2016 at 12:43 AM, Rich Felker <dalias@libc.org> wrote:
+> > The J-Core project (j-core.org) produces open source cpu and SoC
+> > peripheral cores synthesizable as FPGA bitstreams or ASICs.
+> >
+> > Signed-off-by: Rich Felker <dalias@libc.org>
 > 
-> On Mon, Jul 25, 2016 at 03:37:23PM +0300, Stefan Mavrodiev wrote:
-> > A33-OLinuXino is A33 development board designed by Olimex LTD.
-> > 
-> > It has AXP233 PMU, 1GB DRAM, a micro SD card, one USB-OTG connector,
-> > headphone and mic jacks, connector for LiPo battery and optional
-> > 4GB NAND Flash.
-> > 
-> > It has two 40-pin headers. One for LCD panel, and one for
-> > additional modules. Also there is CSI/DSI connector.
-> > 
-> > Signed-off-by: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Please add acks when posting subsequent versions.
 > 
-> It looks mostly good, a few comments though.
-> 
-> > +&pio {
-> > +	led_pin_olinuxino: led_pins@0 {
-> > +		allwinner,pins = "PB7";
-> > +        allwinner,function = "gpio_out";
-> 
-> This line is not properly indented.
-> 
-> > +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> > +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> > +    };
-> 
-> And this one too.
-> 
-> > +&reg_dc1sw {
-> > +	regulator-name = "vcc-lcd";
-> > +};
-> 
-> No constraints on this one?
-> 
-> > +&reg_dcdc1 {
-> > +	regulator-always-on;
-> > +	regulator-min-microvolt = <3300000>;
-> > +	regulator-max-microvolt = <3300000>;
-> > +	regulator-name = "vcc-dsi";
-> > +};
-> 
-> What is it used for? Is it really necessary to keep it on at all time?
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > index 86740d4..9c070b8 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > @@ -126,6 +126,7 @@ invensense  InvenSense Inc.
+> >  isee   ISEE 2007 S.L.
+> >  isil   Intersil
+> >  issi   Integrated Silicon Solutions Inc.
+> > +jcore  J-Core.org
+> >  jedec  JEDEC Solid State Technology Association
+> >  karo   Ka-Ro electronics GmbH
+> >  keymile        Keymile GmbH
+> > --
+> > 2.8.1
 
-I think so.
-This is the supply for the MMC.
-> 
-> Thanks,
-> Maxime
+Since this was previously acked, can I include it in my tree for
+upstreaming? Or do you want me to submit the patch again?
 
-Best regards,
-Stefan Mavrodiev
+Rich
