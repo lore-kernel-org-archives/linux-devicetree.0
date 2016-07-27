@@ -1,51 +1,91 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 4/9] clk: sunxi-ng: mux: Add support for mux tables
-Date: Wed, 27 Jul 2016 15:30:11 +0800
-Message-ID: <CAGb2v65MfbOm-F49VEXTW_GW_0=atwcQTY=8Od4B2cz1xsgHMw@mail.gmail.com>
+Subject: Re: [PATCH 7/9] clk: sunxi-ng: mux: Add clk notifier functions
+Date: Wed, 27 Jul 2016 15:32:58 +0800
+Message-ID: <CAGb2v67KcvzxadXYTWSg42+gpRxt4fhNmiWmtAD5D7r0+K4T8g@mail.gmail.com>
 References: <1469516671-19377-1-git-send-email-wens@csie.org>
- <1469516671-19377-5-git-send-email-wens@csie.org> <20160726194306.9b6aadd3d1669bd6f5a54d99@free.fr>
- <20160727065934.GD6560@lukather> <20160727091827.e26f72701ce5758fa29aff7a@free.fr>
+ <1469516671-19377-8-git-send-email-wens@csie.org> <20160727073005.GG6560@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160727091827.e26f72701ce5758fa29aff7a@free.fr>
+In-Reply-To: <20160727073005.GG6560@lukather>
 Sender: linux-clk-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, dev <dev@linux-sunxi.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dev <dev@linux-sunxi.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 3:18 PM, Jean-Francois Moine <moinejf@free.fr> wrote:
-> On Wed, 27 Jul 2016 08:59:34 +0200
-> Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
->
->> On Tue, Jul 26, 2016 at 07:43:06PM +0200, Jean-Francois Moine wrote:
->> > On Tue, 26 Jul 2016 15:04:26 +0800
->> > Chen-Yu Tsai <wens@csie.org> wrote:
->> >
->> > > Some clock muxes have holes, i.e. invalid or unconnected inputs,
->> > > between parent mux values.
->> > >
->> > > Add support for specifying a mux table to map clock parents to
->> > > mux values.
->> >
->> > Putting empty strings in the holes should work. No?
->> > Ex:
->> >
->> > static const char * const csi_mclk_parents[] =
->> >     { "pll-video0", "pll-video1", "", "", "", "osc24M" };
+On Wed, Jul 27, 2016 at 3:30 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Tue, Jul 26, 2016 at 03:04:29PM +0800, Chen-Yu Tsai wrote:
+>> On sunxi we support cpufreq by changing the clock rate of PLL-CPU.
+>> It's possible the clock output of the PLL goes out of the CPU's
+>> operational limits when the PLL's multipliers / dividers are changed
+>> and it hasn't stabilized yet. This would result in the CPU hanging.
 >>
->> Not really. The clock would be declared as orphan, while it's really
->> not.
+>> To circumvent this, we temporarily switch the CPU mux clock to another
+>> stable clock before the rate change, and switch it back after the PLL
+>> stabilizes. This is done with clk notifiers registered on the PLL.
 >>
->> Parenting functions would also not work as expected,
->> clk_hw_get_parent_by_index being the obvious example, in that case
->> returning the empty string for an invalid parent, while it should
->> really return NULL.
+>> This patch adds common functions for notifiers to reparent mux clocks.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> ---
+>>  drivers/clk/sunxi-ng/ccu_mux.c | 36 ++++++++++++++++++++++++++++++++++++
+>>  drivers/clk/sunxi-ng/ccu_mux.h | 14 ++++++++++++++
+>>  2 files changed, 50 insertions(+)
+>>
+>> diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
+>> index f96eabb5d1f3..8a6e9065cb85 100644
+>> --- a/drivers/clk/sunxi-ng/ccu_mux.c
+>> +++ b/drivers/clk/sunxi-ng/ccu_mux.c
+>> @@ -8,7 +8,9 @@
+>>   * the License, or (at your option) any later version.
+>>   */
+>>
+>> +#include <linux/clk.h>
+>>  #include <linux/clk-provider.h>
+>> +#include <linux/delay.h>
+>>
+>>  #include "ccu_gate.h"
+>>  #include "ccu_mux.h"
+>> @@ -199,3 +201,37 @@ const struct clk_ops ccu_mux_ops = {
+>>       .determine_rate = __clk_mux_determine_rate,
+>>       .recalc_rate    = ccu_mux_recalc_rate,
+>>  };
+>> +
+>> +/*
+>> + * This clock notifier is called when the frequency of the of the parent
+>> + * PLL clock is to be changed. The idea is to switch the parent to a
+>> + * stable clock, such as the main oscillator, while the PLL frequency
+>> + * stabilizes.
+>> + */
+>> +static int ccu_mux_notifier_cb(struct notifier_block *nb,
+>> +                            unsigned long event, void *data)
+>> +{
+>> +     struct ccu_mux_nb *mux = to_ccu_mux_nb(nb);
+>> +     int ret = 0;
+>> +
+>> +     if (event == PRE_RATE_CHANGE) {
+>> +             mux->original_index = ccu_mux_helper_get_parent(mux->common,
+>> +                                                             mux->cm);
+>> +             ret = ccu_mux_helper_set_parent(mux->common, mux->cm,
+>> +                                             mux->bypass_index);
+>> +     } else if (event == POST_RATE_CHANGE) {
+>> +             ret = ccu_mux_helper_set_parent(mux->common, mux->cm,
+>> +                                             mux->original_index);
+>> +     }
+>> +
+>> +     udelay(mux->delay_us);
 >
-> I don't see why the clock should be orphan.
-> Then, when a parent is "", clk_hw_get_parent_by_index() returns NULL.
+> Are you sure we need that delay?
+>
+> set_rate will end and notify you once the PLL rate is stable, so it
+> looks redundant.
 
-There's no requirement for parent clk indexes to match the actual
-register value, is there?
+The delay requirement is on the cpu mux clk, not the PLL. The
+datasheet says you should wait for up to 8 clock cycles after
+changing the parent. Not sure how this factors with the CPU
+actually doing the waiting though.
+
+So this is separate from the PLL lock delay.
 
 ChenYu
