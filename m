@@ -1,106 +1,94 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: rockchip_saradc: reset saradc controller
- before programming it
-Date: Wed, 27 Jul 2016 10:11:30 +0800
-Message-ID: <57981852.1040006@rock-chips.com>
-References: <1469535195-5227-1-git-send-email-wxt@rock-chips.com> <57976814.3040605@roeck-us.net> <579777F4.2090002@rock-chips.com> <20160726170023.GA6590@roeck-us.net> <57980362.3000406@rock-chips.com> <579815B2.5010205@roeck-us.net>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH v4] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
+Date: Wed, 27 Jul 2016 10:38:10 +0800
+Message-ID: <5601469587090@web14m.yandex.ru>
+References: <1469450243-19138-1-git-send-email-stefan.mavrodiev@gmail.com> <20160726153352.GH7190@lukather>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <579815B2.5010205-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBFN54C6AKGQEU3KETXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160726153352.GH7190@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 2016=E5=B9=B407=E6=9C=8827=E6=97=A5 10:00, Guenter Roeck wrote:
-> On 07/26/2016 05:42 PM, Caesar Wang wrote:
->>
->> On 2016=E5=B9=B407=E6=9C=8827=E6=97=A5 01:00, Guenter Roeck wrote:
->>> On Tue, Jul 26, 2016 at 10:47:16PM +0800, Caesar Wang wrote:
->>>> On 2016=E5=B9=B407=E6=9C=8826=E6=97=A5 21:39, Guenter Roeck wrote:
->>>>>> static int rockchip_saradc_probe(struct platform_device *pdev)
->>>>>> {
->>>>>> struct rockchip_saradc *info =3D NULL;
->>>>>> @@ -218,6 +231,21 @@ static int rockchip_saradc_probe(struct
->>>>>> platform_device *pdev)
->>>>>> if (IS_ERR(info->regs))
->>>>>> return PTR_ERR(info->regs);
->>>>>>
->>>>>> + /*
->>>>>> + * The reset should be an optional property, as it should work
->>>>>> + * with old devicetrees as well
->>>>>> + */
->>>>>> + info->reset =3D devm_reset_control_get_optional(&pdev->dev,
->>>>>> + "saradc-apb");
->>>>> Does anyone know what the _optional API is for ? It seems to be=20
->>>>> exactly
->>>>> the same
->>>>> as devm_reset_control_get().
->>>> =E2=80=9C
->>>> As far as I see, the difference is WARN_ON(1)
->>>> when  is not defined.
->>>>
->>>>
->>>> The _optional functions were introduced by the following commit:
->>>>
->>>> ----------------->8-----------------
->>>> commit b424080a9e086e683ad5fdc624a7cf3c024e0c0f
->>>> Author: Philipp Zabel <p.zabel@xxxxxxxxxxxxxx>
->>>> Date: Fri Mar 7 15:18:47 2014 +0100
->>>>
->>>> reset: Add optional resets and stubs
->>>>
->>>> This patch adds device_reset_optional and
->>>> variants that drivers can use to indicate they can function withou=
-t=20
->>>> control
->>>> over the reset line. For those functions, stubs are added so the=20
->>>> drivers can
->>>> be compiled with CONFIG_RESET_CONTROLLER disabled.
->>>> Also, device_reset is annotated with __must_check. Drivers
->>>> ignoring the return
->>>> value should use device_reset_optional instead.
->>>>
->>> Is that really what we are looking for here ? CONFIG_RESET_CONTROLL=
-ER
->>> is required for other functions of rk3399, isn't it ?
->>
->> Right, as the DRM and thermal are depend on the=20
->> CONFIG_RESET_CONTROLLER .....
->>
+
+26.07.2016, 23:38, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> Hi Stefan,
 >
-> Since "optional" doesn't really mean "the reset property is optional"
-> but "CONFIG_RESET_CONTROLLER is optional", I would suggest to use
-> devm_reset_control_get().
-
-Agree, free riding.
-Maybe the API (_optional) will be changed in later.
-As someone make a point present an idea on=20
-http://www.spinics.net/lists/kernel/msg2306677.html
-
-Okay,  devm_reset_control_get() will be better, anyway the driver has=20
-been depend on the CONFIG_RESET_CONTROLLER.
---
-
-I will send a new patch for upstream if nobody object it on today.
-
-
-Sorry for noisy!
-
-
+> On Mon, Jul 25, 2016 at 03:37:23PM +0300, Stefan Mavrodiev wrote:
+>> =C2=A0A33-OLinuXino is A33 development board designed by Olimex LTD.
+>>
+>> =C2=A0It has AXP233 PMU, 1GB DRAM, a micro SD card, one USB-OTG connecto=
+r,
+>> =C2=A0headphone and mic jacks, connector for LiPo battery and optional
+>> =C2=A04GB NAND Flash.
+>>
+>> =C2=A0It has two 40-pin headers. One for LCD panel, and one for
+>> =C2=A0additional modules. Also there is CSI/DSI connector.
+>>
+>> =C2=A0Signed-off-by: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >
-> Guenter
+> It looks mostly good, a few comments though.
+>> =C2=A0+&pio {
+>> =C2=A0+ led_pin_olinuxino: led_pins@0 {
+>> =C2=A0+ allwinner,pins =3D "PB7";
+>> =C2=A0+ allwinner,function =3D "gpio_out";
 >
+> This line is not properly indented.
+>
+>> =C2=A0+ allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+>> =C2=A0+ allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+>> =C2=A0+ };
+>
+> And this one too.
+>
+>> =C2=A0+&reg_dc1sw {
+>> =C2=A0+ regulator-name =3D "vcc-lcd";
+>> =C2=A0+};
+>
+> No constraints on this one?
+The "regulator" dc1sw is, in fact, a switch (so it's named as "sw").
+So it have only on-off status.
+
+The constraints in dc1sw has prevented one of my A31s tablet from booting
+when it's not removed.
+>
+>> =C2=A0+&reg_dcdc1 {
+>> =C2=A0+ regulator-always-on;
+>> =C2=A0+ regulator-min-microvolt =3D <3300000>;
+>> =C2=A0+ regulator-max-microvolt =3D <3300000>;
+>> =C2=A0+ regulator-name =3D "vcc-dsi";
+>> =C2=A0+};
+>
+> What is it used for? Is it really necessary to keep it on at all time?
+>
+> Thanks,
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+> ,
 >
 > _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 --=20
-caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
