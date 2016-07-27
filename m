@@ -1,151 +1,163 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: rockchip_saradc: reset saradc
- controller before programming it
-Date: Tue, 26 Jul 2016 15:41:15 -0700
-Message-ID: <20160726224115.GA25307@roeck-us.net>
-References: <1469535195-5227-1-git-send-email-wxt@rock-chips.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Tue, 26 Jul 2016 19:38:02 -0500
+Message-ID: <1469579882.25630.168.camel@buserror.net>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net>
+	 <1468723822-30457-5-git-send-email-oss@buserror.net>
+	 <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
+	 <146909676646.16700.8383344640490662952@concordia>
+	 <1469119526.25630.42.camel@buserror.net>
+	 <HE1PR04MB088913D39528958C6905D43DF80D0@HE1PR04MB0889.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1469535195-5227-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <HE1PR04MB088913D39528958C6905D43DF80D0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yangbo Lu <yangbo.lu@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 26, 2016 at 08:13:12PM +0800, Caesar Wang wrote:
-> SARADC controller needs to be reset before programming it, otherwise
-> it will not function properly.
-> 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+On Mon, 2016-07-25 at 06:12 +0000, Yangbo Lu wrote:
+> Hi Scott,
+>=20
+>=20
+> >=20
+> > -----Original Message-----
+> > From: Scott Wood [mailto:oss@buserror.net]
+> > Sent: Friday, July 22, 2016 12:45 AM
+> > To: Michael Ellerman; Arnd Bergmann
+> > Cc: linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; linuxppc=
+-
+> > dev@lists.ozlabs.org; linux-kernel@vger.kernel.org; Yangbo Lu
+> > Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to
+> > include/linux/fsl
+> >=20
+> > On Thu, 2016-07-21 at 20:26 +1000, Michael Ellerman wrote:
+> > >=20
+> > > Quoting Scott Wood (2016-07-21 04:31:48)
+> > > >=20
+> > > >=20
+> > > > On Wed, 2016-07-20 at 13:24 +0200, Arnd Bergmann wrote:
+> > > > >=20
+> > > > >=20
+> > > > > On Saturday, July 16, 2016 9:50:21 PM CEST Scott Wood wrote:
+> > > > > >=20
+> > > > > >=20
+> > > > > >=20
+> > > > > > From: yangbo lu <yangbo.lu@nxp.com>
+> > > > > >=20
+> > > > > > Move mpc85xx.h to include/linux/fsl and rename it to svr.h =
+as a
+> > > > > > common header file.=C2=A0=C2=A0This SVR numberspace is used=
+ on some ARM
+> > > > > > chips as well as PPC, and even to check for a PPC SVR multi=
+-arch
+> > > > > > drivers would otherwise need to ifdef the header inclusion =
+and
+> > > > > > all references to the SVR symbols.
+> > > > > >=20
+> > > > > > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> > > > > > Acked-by: Wolfram Sang <wsa@the-dreams.de>
+> > > > > > Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+> > > > > > Acked-by: Joerg Roedel <jroedel@suse.de>
+> > > > > > [scottwood: update description]
+> > > > > > Signed-off-by: Scott Wood <oss@buserror.net>
+> > > > > >=20
+> > > > > As discussed before, please don't introduce yet another vendo=
+r
+> > > > > specific way to match a SoC ID from a device driver.
+> > > > >=20
+> > > > > I've posted a patch for an extension to the soc_device
+> > > > > infrastructure to allow comparing the running SoC to a table =
+of
+> > > > > devices, use that instead.
+> > > > As I asked before, in which relevant maintainership capacity ar=
+e you
+> > > > NACKing this?
+> > > I'll nack the powerpc part until you guys can agree.
+> > OK, I've pulled these patches out.
+> >=20
+> > For the MMC issue I suggest using ifdef CONFIG_PPC and mfspr(SPRN_S=
+VR)
+> > like the clock driver does[1] and we can revisit the issue if/when =
+we
+> > need to do something similar on an ARM chip.
+> [Lu Yangbo-B47093] I remembered that Uffe had opposed us to introduce=
+ non-
+> generic header files(like '#include <asm/mpc85xx.h>')
+> in mmc driver initially. So I think it will not be accepted to use if=
+def
+> CONFIG_PPC and mfspr(SPRN_SVR)...
+> And this method still couldn=E2=80=99t get SVR of ARM chip now.
 
-Tested-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Right, as I said we'll have to revisit the issue if/when we have the sa=
+me
+problem on an ARM chip. =C2=A0That also applies if the PPC ifdef is sti=
+ll getting
+NACKed from the MMC side.
 
-> 
-> ---
-> 
-> Changes in v2:
-> - Make the reset as an optional property, since it should work
-> with old devicetrees as well.
-> 
->  .../bindings/iio/adc/rockchip-saradc.txt           |  7 +++++
->  drivers/iio/adc/Kconfig                            |  1 +
->  drivers/iio/adc/rockchip_saradc.c                  | 31 ++++++++++++++++++++++
->  3 files changed, 39 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> index bf99e2f..205593f 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> @@ -16,6 +16,11 @@ Required properties:
->  - vref-supply: The regulator supply ADC reference voltage.
->  - #io-channel-cells: Should be 1, see ../iio-bindings.txt
->  
-> +Optional properties:
-> +- resets: Must contain an entry for each entry in reset-names if need support
-> +	  this option. See ../reset/reset.txt for details.
-> +- reset-names: Must include the name "saradc-apb".
-> +
->  Example:
->  	saradc: saradc@2006c000 {
->  		compatible = "rockchip,saradc";
-> @@ -23,6 +28,8 @@ Example:
->  		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->  		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
->  		clock-names = "saradc", "apb_pclk";
-> +		resets = <&cru SRST_SARADC>;
-> +		reset-names = "saradc-apb";
->  		#io-channel-cells = <1>;
->  		vref-supply = <&vcc18>;
->  	};
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 1de31bd..7675772 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -389,6 +389,7 @@ config QCOM_SPMI_VADC
->  config ROCKCHIP_SARADC
->  	tristate "Rockchip SARADC driver"
->  	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
-> +	depends on RESET_CONTROLLER
->  	help
->  	  Say yes here to build support for the SARADC found in SoCs from
->  	  Rockchip.
-> diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-> index f9ad6c2..dc1379f 100644
-> --- a/drivers/iio/adc/rockchip_saradc.c
-> +++ b/drivers/iio/adc/rockchip_saradc.c
-> @@ -21,6 +21,8 @@
->  #include <linux/of_device.h>
->  #include <linux/clk.h>
->  #include <linux/completion.h>
-> +#include <linux/delay.h>
-> +#include <linux/reset.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/iio/iio.h>
->  
-> @@ -53,6 +55,7 @@ struct rockchip_saradc {
->  	struct clk		*clk;
->  	struct completion	completion;
->  	struct regulator	*vref;
-> +	struct reset_control	*reset;
->  	const struct rockchip_saradc_data *data;
->  	u16			last_val;
->  };
-> @@ -190,6 +193,16 @@ static const struct of_device_id rockchip_saradc_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
->  
-> +/**
-> + * Reset SARADC Controller.
-> + */
-> +static void rockchip_saradc_reset_controller(struct reset_control *reset)
-> +{
-> +	reset_control_assert(reset);
-> +	usleep_range(10, 20);
-> +	reset_control_deassert(reset);
-> +}
-> +
->  static int rockchip_saradc_probe(struct platform_device *pdev)
->  {
->  	struct rockchip_saradc *info = NULL;
-> @@ -218,6 +231,21 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
->  	if (IS_ERR(info->regs))
->  		return PTR_ERR(info->regs);
->  
-> +	/*
-> +	 * The reset should be an optional property, as it should work
-> +	 * with old devicetrees as well
-> +	 */
-> +	info->reset = devm_reset_control_get_optional(&pdev->dev,
-> +			"saradc-apb");
-> +	if (IS_ERR(info->reset)) {
-> +		ret = PTR_ERR(info->reset);
-> +		if (ret != -ENOENT)
-> +			return ret;
-> +
-> +		dev_dbg(&pdev->dev, "no reset control found\n");
-> +		info->reset = NULL;
-> +	}
-> +
->  	init_completion(&info->completion);
->  
->  	irq = platform_get_irq(pdev, 0);
-> @@ -252,6 +280,9 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
->  		return PTR_ERR(info->vref);
->  	}
->  
-> +	if (info->reset)
-> +		rockchip_saradc_reset_controller(info->reset);
-> +
->  	/*
->  	 * Use a default value for the converter clock.
->  	 * This may become user-configurable in the future.
-> -- 
-> 1.9.1
-> 
+> Any other suggestion here?
+
+The other option is to try to come up with something that fits into Arn=
+d's
+framework while addressing the concerns I raised. =C2=A0The soc_id stri=
+ng should be
+well-structured to avoid mismatches and compatibility problems (especia=
+lly
+since it would get exposed to userspace). =C2=A0Maybe something like:
+
+svr:<SVR minus E bit>,svre:<full SVR including E bit>,name:<soc name>,d=
+ie:<soc
+die name>,rev:X.Y,<tag1>,<tag2>,<...>,
+
+with the final comma used so that globs can put a colon on either end t=
+o be
+sure they're matching a full field. =C2=A0The SoC die name would be the=
+ primary
+chip for a given die (e.g. p4040 would have a die name of p4080). =C2=A0=
+The "name"
+and "die" fields would never include the trailing "e" indicated by the =
+E bit.
+
+Extra tags could be used for common groupings, such as all chips from a
+particular die before a certain revision. =C2=A0Once a tag is added it =
+can't be
+removed or reordered, to maintain userspace compatibility, but new tags=
+ could
+be appended.
+
+Some examples:
+
+svr:0x82000020,svre:0x82000020,name:p4080,die:p4080,rev:2.0,
+svr:0x82000020,svr
+e:0x82080020,name:p4080,die:p4080,rev:2.0,
+svr:0x82000030,svre:0x82000030,name:
+p4080,die:p4080,rev:3.0,
+svr:0x82000030,svre:0x82080030,name:p4080,die:p4080,re
+v:3.0,
+svr:0x82010020,svre:0x82010020,name:p4040,die:p4080,rev:2.0,
+svr:0x820100
+20,svre:0x82090020,name:p4040,die:p4080,rev:2.0,
+
+svr:0x82010030,svre:0x82010030
+,name:p4040,die:p4080,rev:3.0,
+svr:0x82010030,svre:0x82090030,name:p4040,die:p4
+080,rev:3.0,
+
+Then if you want to apply a workaround on:
+- all chips using the p4080 die, match with "*,die:p4080,*"
+- all chips using the rev 2.0 p4080 die, match with "*,die:p4080,rev:2.=
+0,*"
+- Only p4040, but of any rev, match with "*,name:p4040,*"
+
+Matching via open-coded hex number should be considered a last resort (=
+it's
+more error-prone, either for getting the number wrong or for forgetting
+variants -- the latter is already a common problem), but preferable to =
+adding
+too many tags.
+
+Using wildcards within a tag field would be discouraged. =C2=A0
+
+-Scott
