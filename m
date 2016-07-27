@@ -1,60 +1,74 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v4 2/2] irqchip: add J-Core AIC driver
-Date: Wed, 27 Jul 2016 13:08:27 -0400
-Message-ID: <20160727170827.GD15995@brightrain.aerifal.cx>
-References: <cover.1469595860.git.dalias@libc.org>
- <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
- <20160727101537.GD12880@leverpostej>
- <20160727130821.GB15995@brightrain.aerifal.cx>
- <20160727132753.GC17195@leverpostej>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 05/10] EDAC, altera: Add Arria10 NAND EDAC support
+Date: Wed, 27 Jul 2016 19:10:35 +0200
+Message-ID: <20160727171035.GA23851@nazgul.tnic>
+References: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
+ <1468512408-5156-6-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160727132753.GC17195@leverpostej>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+In-Reply-To: <1468512408-5156-6-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 02:27:54PM +0100, Mark Rutland wrote:
-> On Wed, Jul 27, 2016 at 09:08:21AM -0400, Rich Felker wrote:
-> > On Wed, Jul 27, 2016 at 11:15:38AM +0100, Mark Rutland wrote:
-> > > On Wed, Jul 27, 2016 at 05:35:09AM +0000, Rich Felker wrote:
-> > > > For simplicity, there is no aic1-specific logic in the driver beyond
-> > > > setting the priority register, which is necessary for interrupts to
-> > > > work at all. Eventually aic1 will likely be phased out, but it's
-> > > > currently in use in deployments and all released bitstream binaries.
-> > > 
-> > > [...]
-> > > 
-> > > > +	if (!of_device_is_compatible(node, "jcore,aic2")) {
-> > > 
-> > > If this is only meant to run for AIC1, it would be better to check for
-> > > the "jcore,aic1" compatible string explicitly.
-> > > 
-> > > While that shouldn't matter much currently, it better matches the intent
-> > > described in the commit message, and avoids surprises and/or churn in
-> > > future if you have AIC3+.
-> > 
-> > My intent in doing this was to support a DT that might claim an aic2
-> > is aic1-compatible as a fallback "compatible" property. The hardware
-> > is designed such that this works (ignoring the spurious writes to
-> > unused prio registers) as long as the DT still has the right irq
-> > numbers for attached devices.
+On Thu, Jul 14, 2016 at 11:06:43AM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
 > 
-> Ok.
+> Add Altera Arria10 NAND FIFO memory EDAC support.
 > 
-> If the HW ignores it, what's the cost of those one-off spurious writes?
-> If it's not noticeable, you could allow the kernel to perform them
-> regardless.
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+>  drivers/edac/Kconfig       |    7 +++++++
+>  drivers/edac/altera_edac.c |   34 +++++++++++++++++++++++++++++++++-
+>  2 files changed, 40 insertions(+), 1 deletion(-)
 
-Indeed, it essentially costs nothing. My motivation was more just to
-document that it's not needed/used for aic2.
+...
 
-> Otherwise, please add a comment above the check, explaining why we do
-> the check this way around.
+> @@ -1589,7 +1619,9 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+>  		else if ((of_device_is_compatible(child,
+>  					"altr,socfpga-a10-ocram-ecc")) ||
+>  			 (of_device_is_compatible(child,
+> -					"altr,socfpga-eth-mac-ecc")))
+> +					"altr,socfpga-eth-mac-ecc")) ||
+> +			 (of_device_is_compatible(child,
+> +						  "altr,socfpga-nand-ecc")))
+>  			altr_edac_a10_device_add(edac, child);
+>  		else if (of_device_is_compatible(child,
+>  						 "altr,sdram-edac-a10"))
 
-Since the intent is documenting this might be the best approach.
+Can we simplify this loop like this?
 
-Rich
+	for_each_child_of_node(pdev->dev.of_node, child) {
+		if (!of_device_is_available(child))
+			continue;
+
+		if (of_device_is_compatible(child, "altr,socfpga-a10-l2-ecc") ||
+		    of_device_is_compatible(child, "altr,socfpga-a10-ocram-ecc") ||
+		    of_device_is_compatible(child, "altr,socfpga-eth-mac-ecc") ||
+		    of_device_is_compatible(child, "altr,socfpga-nand-ecc"))
+
+			altr_edac_a10_device_add(edac, child);
+
+		else if (of_device_is_compatible(child, "altr,sdram-edac-a10"))
+			of_platform_populate(pdev->dev.of_node,
+					     altr_sdram_ctrl_of_match,
+					     NULL, &pdev->dev);
+	}
+
+I've merged the first "if" and subsequent "else if" because they all
+do altr_edac_a10_device_add(edac, child) and added spacing for better
+readability.
+
+Look ok?
+
+Or have I fatfingered it?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
