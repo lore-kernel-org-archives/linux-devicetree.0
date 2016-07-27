@@ -1,114 +1,53 @@
-From: Marcin Niestroj <m.niestroj@grinn-global.com>
-Subject: Re: [PATCH v4 3/5] power_supply: tps65217-charger: Add support for
- IRQs
-Date: Wed, 27 Jul 2016 11:14:27 +0200
-Message-ID: <e70d4f16-e727-6729-b3f2-fad2dd7847cb@grinn-global.com>
-References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
- <20160620105056.25843-4-m.niestroj@grinn-global.com>
+From: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH v4] ARM: dts: sun8i: Add dts file for Olimex A33-OLinuXino
+Date: Wed, 27 Jul 2016 13:02:41 +0300
+Message-ID: <1604486.mrBvLz4HRZ@linux-cigu>
+References: <1469450243-19138-1-git-send-email-stefan.mavrodiev@gmail.com> <30014119.IrjfP0xFry@linux-cigu> <20160727062146.GA6560@lukather>
+Reply-To: Stefan.Mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160620105056.25843-4-m.niestroj@grinn-global.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCSP3JM3Y4JBBSUN4K6AKGQE7V2S4TY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160727062146.GA6560@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ping
+On Wednesday, July 27, 2016 8:21:46 AM EEST Maxime Ripard wrote:
+> On Wed, Jul 27, 2016 at 08:12:29AM +0300, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> > > > +&reg_dcdc1 {
+> > > > +	regulator-always-on;
+> > > > +	regulator-min-microvolt = <3300000>;
+> > > > +	regulator-max-microvolt = <3300000>;
+> > > > +	regulator-name = "vcc-dsi";
+> > > > +};
+> > > 
+> > > What is it used for? Is it really necessary to keep it on at all time?
+> > 
+> > I think so.
+> > This is the supply for the MMC.
+> 
+> Then it's poorly named, and you should tie it to the MMC, and remove
+> the always-on if it's only used by the mmc. always-on is supposed to
+> be for regulators that shouldn't but turned off for the system to stay
+> running. Some MMC regulator doesn't fit that description.
+> 
+It's named upon the A33 power pin - "VCC-DSI". 
+If I remove "always-on" the board still will work, since dcdc1 is tied to 
+mmc0. 
+vmmc-supply = <&reg_dcdc1>;
 
-On 20.06.2016 12:50, Marcin Niestroj wrote:
-> Make use of IRQ resources defined in tps65217 mfd code. If they are valid
-> we use them instead separate poll task, in order to define AC power state.
->
-> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
-> ---
-> Depends on patch 1 and 2 in series
->
-> Changes v1 -> v4: none
->
->  drivers/power/tps65217_charger.c | 40 +++++++++++++++++++++++++++++++++-------
->  1 file changed, 33 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/power/tps65217_charger.c b/drivers/power/tps65217_charger.c
-> index 73dfae4..c8c4a0c 100644
-> --- a/drivers/power/tps65217_charger.c
-> +++ b/drivers/power/tps65217_charger.c
-> @@ -46,6 +46,8 @@ struct tps65217_charger {
->  	int	prev_ac_online;
->
->  	struct task_struct	*poll_task;
-> +
-> +	int	irq;
->  };
->
->  static enum power_supply_property tps65217_ac_props[] = {
-> @@ -198,6 +200,7 @@ static int tps65217_charger_probe(struct platform_device *pdev)
->  	struct tps65217 *tps = dev_get_drvdata(pdev->dev.parent);
->  	struct tps65217_charger *charger;
->  	struct power_supply_config cfg = {};
-> +	int irq;
->  	int ret;
->
->  	dev_dbg(&pdev->dev, "%s\n", __func__);
-> @@ -220,18 +223,40 @@ static int tps65217_charger_probe(struct platform_device *pdev)
->  		return PTR_ERR(charger->ac);
->  	}
->
-> +	irq = platform_get_irq_byname(pdev, "AC");
-> +	if (irq < 0)
-> +		irq = -ENXIO;
-> +	charger->irq = irq;
-> +
->  	ret = tps65217_config_charger(charger);
->  	if (ret < 0) {
->  		dev_err(charger->dev, "charger config failed, err %d\n", ret);
->  		return ret;
->  	}
->
-> -	charger->poll_task = kthread_run(tps65217_charger_poll_task,
-> -				      charger, "ktps65217charger");
-> -	if (IS_ERR(charger->poll_task)) {
-> -		ret = PTR_ERR(charger->poll_task);
-> -		dev_err(charger->dev, "Unable to run kthread err %d\n", ret);
-> -		return ret;
-> +	if (irq != -ENXIO) {
-> +		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> +						tps65217_charger_irq,
-> +						0, "tps65217-charger",
-> +						charger);
-> +		if (ret) {
-> +			dev_err(charger->dev,
-> +				"Unable to register irq %d err %d\n", irq,
-> +				ret);
-> +			return ret;
-> +		}
-> +
-> +		/* Check current state */
-> +		tps65217_charger_irq(irq, charger);
-> +	} else {
-> +		charger->poll_task = kthread_run(tps65217_charger_poll_task,
-> +						charger, "ktps65217charger");
-> +		if (IS_ERR(charger->poll_task)) {
-> +			ret = PTR_ERR(charger->poll_task);
-> +			dev_err(charger->dev,
-> +				"Unable to run kthread err %d\n", ret);
-> +			return ret;
-> +		}
->  	}
->
->  	return 0;
-> @@ -241,7 +266,8 @@ static int tps65217_charger_remove(struct platform_device *pdev)
->  {
->  	struct tps65217_charger *charger = platform_get_drvdata(pdev);
->
-> -	kthread_stop(charger->poll_task);
-> +	if (charger->irq == -ENXIO)
-> +		kthread_stop(charger->poll_task);
->
->  	return 0;
->  }
->
+We assume this voltage will be always present and there are some pullups that 
+are tied to it (on i2c0 and i2c1 bus).  In this case should I remove "always-
+on" from the regulator node?
 
--- 
-Marcin Niestroj
+> Maxime
+
+Best regards,
+Stefan Mavrodiev
