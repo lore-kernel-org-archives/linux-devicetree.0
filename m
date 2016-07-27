@@ -1,40 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: rockchip_saradc: reset saradc
- controller before programming it
-Date: Wed, 27 Jul 2016 10:12:33 -0500
-Message-ID: <20160727151233.GA31731@rob-hp-laptop>
-References: <1469535195-5227-1-git-send-email-wxt@rock-chips.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 01/18] ARM: mvebu: enable MTD command line partition table in mvebu_v7_defconfig
+Date: Wed, 27 Jul 2016 17:57:45 +0200
+Message-ID: <87wpk7m5ty.fsf@free-electrons.com>
+References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
+	<1469105055-25181-2-git-send-email-jaz@semihalf.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1469535195-5227-1-git-send-email-wxt@rock-chips.com>
+In-Reply-To: <1469105055-25181-2-git-send-email-jaz@semihalf.com> (Grzegorz
+	Jaszczyk's message of "Thu, 21 Jul 2016 14:43:57 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: jic23@kernel.org, heiko@sntech.de, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, john@metanate.com, dianders@chromium.org, linux@roeck-us.net
+To: Grzegorz Jaszczyk <jaz@semihalf.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, mw@semihalf.com, alior@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 26, 2016 at 08:13:12PM +0800, Caesar Wang wrote:
-> SARADC controller needs to be reset before programming it, otherwise
-> it will not function properly.
-> 
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-iio@vger.kernel.org
-> Cc: linux-rockchip@lists.infradead.org
-> 
+Hi Grzegorz,
+ 
+ On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
+
+> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+
+As pointed by Andrew a commit log entry would be nice. Except this:
+
+Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+
+Thanks,
+
+Gregory
+
+
 > ---
-> 
-> Changes in v2:
-> - Make the reset as an optional property, since it should work
-> with old devicetrees as well.
-> 
->  .../bindings/iio/adc/rockchip-saradc.txt           |  7 +++++
+>  arch/arm/configs/mvebu_v7_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
+> index 486a4ca..f43a7aa 100644
+> --- a/arch/arm/configs/mvebu_v7_defconfig
+> +++ b/arch/arm/configs/mvebu_v7_defconfig
+> @@ -48,6 +48,7 @@ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+>  CONFIG_DEVTMPFS=y
+>  CONFIG_DEVTMPFS_MOUNT=y
+>  CONFIG_MTD=y
+> +CONFIG_MTD_CMDLINE_PARTS=y
+>  CONFIG_MTD_BLOCK=y
+>  CONFIG_MTD_CFI=y
+>  CONFIG_MTD_CFI_INTELEXT=y
+> -- 
+> 1.8.3.1
+>
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/iio/adc/Kconfig                            |  1 +
->  drivers/iio/adc/rockchip_saradc.c                  | 31 ++++++++++++++++++++++
->  3 files changed, 39 insertions(+)
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
