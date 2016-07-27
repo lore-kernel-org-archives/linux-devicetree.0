@@ -1,84 +1,95 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v6] input: touchscreen: Add generic driver for Silead
- touchscreens
-Date: Wed, 27 Jul 2016 14:35:55 -0700
-Message-ID: <20160727213555.GC24351@dtor-ws>
-References: <1468252304-22850-1-git-send-email-hdegoede@redhat.com>
- <20160716175605.GA4873@rob-hp-laptop>
- <20160719184425.GC19250@dtor-ws>
+From: Guenter Roeck <groeck@google.com>
+Subject: Re: [v7 PATCH 4/6] arm64: dts: rockchip: add Type-C phy for RK3399
+Date: Wed, 27 Jul 2016 14:50:31 -0700
+Message-ID: <CABXOdTcr70v9QxnAh_Btvhwo4h0ZPq18T1bSAakhT5Nco-1S7Q@mail.gmail.com>
+References: <1469624836-22792-1-git-send-email-zyw@rock-chips.com> <1469624836-22792-5-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160719184425.GC19250@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Wessel Blokzijl <wesselb94@gmail.com>, Siebren Vroegindeweij <siebren.vroegindeweij@gmail.com>, Robert Dolca <robert.dolca@intel.com>, Daniel Jansen <djaniboe@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469624836-22792-5-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Douglas Anderson <dianders@chromium.org>, Tomasz Figa <tfiga@chromium.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, Guenter Roeck <groeck@chromium.org>, myungjoo.ham@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, wulf <wulf@rock-chips.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2016 at 11:44:25AM -0700, Dmitry Torokhov wrote:
-> On Sat, Jul 16, 2016 at 12:56:05PM -0500, Rob Herring wrote:
-> > On Mon, Jul 11, 2016 at 05:51:44PM +0200, Hans de Goede wrote:
-> > > From: Robert Dolca <robert.dolca@intel.com>
-> > > 
-> > > This driver adds support for Silead touchscreens. It has been tested
-> > > with GSL1680 and GSL3680 touch panels.
-> > > 
-> > > It supports ACPI and device tree enumeration. Screen resolution,
-> > > the maximum number of fingers supported and firmware name are
-> > > configurable.
-> > > 
-> > > Signed-off-by: Robert Dolca <robert.dolca@intel.com>
-> > > Signed-off-by: Daniel Jansen <djaniboe@gmail.com>
-> > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > > ---
-> > > Changes in v6:
-> > > -Default to 5 fingers if max-fingers is not specified
-> > > -Improve devicetree binding doc: improve wake-gpios description, use
-> > >  "See touchscreen.txt" where applicable
-> > > ---
-> > >  .../bindings/input/touchscreen/silead_gsl1680.txt  |  36 ++
-> > >  drivers/input/touchscreen/Kconfig                  |  13 +
-> > >  drivers/input/touchscreen/Makefile                 |   1 +
-> > >  drivers/input/touchscreen/silead.c                 | 652 +++++++++++++++++++++
-> > >  4 files changed, 702 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> > >  create mode 100644 drivers/input/touchscreen/silead.c
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> > > new file mode 100644
-> > > index 0000000..1e58d37
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> > > @@ -0,0 +1,36 @@
-> > > +* GSL 1680 touchscreen controller
-> > > +
-> > > +Required properties:
-> > > +- compatible		  : "silead,gsl1680"
-> > > +- reg			  : I2C slave address of the chip (0x40)
-> > > +- interrupt-parent	  : a phandle pointing to the interrupt controller
-> > > +			    serving the interrupt for this chip
-> > > +- interrupts		  : interrupt specification for the gsl1680 interrupt
-> > > +- power-gpios		  : Specification for the pin connected to the gsl1680's
-> > > +			    shutdown input. This needs to be driven high to take the
-> > > +			    gsl1680 out of its low power state
-> > > +- touchscreen-size-x	  : See touchscreen.txt
-> > > +- touchscreen-size-y	  : See touchscreen.txt
-> > > +- touchscreen-max-fingers : maximum number of fingers the touchscreen can detect
-> > 
-> > If you name it like a standard property, then it should be documented in 
-> > touchscreen.txt.
-> 
-> Actually this is very much Silead-specific wart, I'd rather we called it
-> "max-fingers" or "silead,max-fingers" to illustrate that it is not at
-> all a generic property.
-> 
-> Rob, will you be OK with it?
+On Wed, Jul 27, 2016 at 6:07 AM, Chris Zhong <zyw@rock-chips.com> wrote:
+> There are 2 Type-C phy on RK3399, they are almost same, except the
+> address of register. They support USB3.0 Type-C and DisplayPort1.3
+> Alt Mode on USB Type-C. Register a phy, supply it to USB3 controller
+> and DP controller.
+>
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 
-Rob, ping? I'd like to get it into the tree and this is only outstanding
-question.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Thanks!
-
--- 
-Dmitry
+> ---
+>
+> Changes in v7: None
+> Changes in v6: None
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> Changes in v1: None
+>
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 44 ++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 0af03a3..7095ddf 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -952,6 +952,50 @@
+>                 };
+>         };
+>
+> +       tcphy0: phy@ff7c0000 {
+> +               compatible = "rockchip,rk3399-typec-phy";
+> +               reg = <0x0 0xff7c0000 0x0 0x40000>;
+> +               rockchip,grf = <&grf>;
+> +               #phy-cells = <0>;
+> +               clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+> +                        <&cru SCLK_UPHY0_TCPDPHY_REF>;
+> +               clock-names = "tcpdcore", "tcpdphy-ref";
+> +               assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
+> +               assigned-clock-rates = <50000000>;
+> +               resets = <&cru SRST_UPHY0>,
+> +                        <&cru SRST_UPHY0_PIPE_L00>,
+> +                        <&cru SRST_P_UPHY0_TCPHY>;
+> +               reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
+> +               rockchip,typec-conn-dir = <0xe580 0 16>;
+> +               rockchip,usb3tousb2-en = <0xe580 3 19>;
+> +               rockchip,external-psm = <0xe588 14 30>;
+> +               rockchip,pipe-status = <0xe5c0 0 0>;
+> +               rockchip,uphy-dp-sel = <0x6268 19 19>;
+> +               status = "disabled";
+> +       };
+> +
+> +       tcphy1: phy@ff800000 {
+> +               compatible = "rockchip,rk3399-typec-phy";
+> +               reg = <0x0 0xff800000 0x0 0x40000>;
+> +               rockchip,grf = <&grf>;
+> +               #phy-cells = <0>;
+> +               clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+> +                        <&cru SCLK_UPHY1_TCPDPHY_REF>;
+> +               clock-names = "tcpdcore", "tcpdphy-ref";
+> +               assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
+> +               assigned-clock-rates = <50000000>;
+> +               resets = <&cru SRST_UPHY1>,
+> +                        <&cru SRST_UPHY1_PIPE_L00>,
+> +                        <&cru SRST_P_UPHY1_TCPHY>;
+> +               reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
+> +               rockchip,typec-conn-dir = <0xe58c 0 16>;
+> +               rockchip,usb3tousb2-en = <0xe58c 3 19>;
+> +               rockchip,external-psm = <0xe594 14 30>;
+> +               rockchip,pipe-status = <0xe5c0 16 16>;
+> +               rockchip,uphy-dp-sel = <0x6268 3 19>;
+> +               status = "disabled";
+> +       };
+> +
+>         watchdog@ff840000 {
+>                 compatible = "snps,dw-wdt";
+>                 reg = <0x0 0xff840000 0x0 0x100>;
+> --
+> 2.6.3
+>
