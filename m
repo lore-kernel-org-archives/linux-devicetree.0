@@ -1,103 +1,129 @@
-From: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] PCI: Rockchip: Add Rockchip PCIe controller support
-Date: Wed, 27 Jul 2016 17:57:39 -0400
-Message-ID: <20160727215739.GV11410@windriver.com>
-References: <1468802533-17699-1-git-send-email-shawn.lin@rock-chips.com>
- <1468802533-17699-2-git-send-email-shawn.lin@rock-chips.com>
- <20160727182233.GB8901@localhost>
- <CAP=VYLqPj=81Q_8kV1wi=FHP-CB6arrXFAC0ktJrLqR-1TSCjw@mail.gmail.com>
- <20160727200443.GA30281@google.com>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v4 2/2] irqchip: add J-Core AIC driver
+Date: Wed, 27 Jul 2016 19:01:24 -0400
+Message-ID: <20160727230124.GE15995@brightrain.aerifal.cx>
+References: <cover.1469595860.git.dalias@libc.org>
+ <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
+ <20160727101235.GC12880@leverpostej>
+ <20160727130606.GA15995@brightrain.aerifal.cx>
+ <20160727132252.GB17195@leverpostej>
+ <20160727170709.GC15995@brightrain.aerifal.cx>
+ <20160727173152.GH17195@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160727200443.GA30281-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <20160727173152.GH17195@leverpostej>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-[Re: [PATCH v7 2/2] PCI: Rockchip: Add Rockchip PCIe controller support] On 27/07/2016 (Wed 13:04) Brian Norris wrote:
-
-> + Guenter
-> 
-> Hi,
-> 
-> On Wed, Jul 27, 2016 at 03:56:36PM -0400, Paul Gortmaker wrote:
-> > On Wed, Jul 27, 2016 at 2:22 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > > On Mon, Jul 18, 2016 at 08:42:13AM +0800, Shawn Lin wrote:
-> > >> This patch adds Rockchip PCIe controller support found
-> > >> on RK3399 Soc platform.
-> > >>
-> > >> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > >>
-> > >> ---
-> > >>
-> > >> Changes in v7:
-> > >> - make it as a build-in driver
+On Wed, Jul 27, 2016 at 06:31:52PM +0100, Mark Rutland wrote:
+> > > > It's looping over possible cpus (per the kernel configuration for max
+> > > > cpus) so it's expected that a system with fewer cpus will also have
+> > > > fewer reg ranges for the aic. This is not an error. If you think
+> > > > there's a different/better way I should write this code, I'm open to
+> > > > suggestions.
+> > > 
+> > > In your arch code, set possible cpus based on the DT, before
+> > > initialising irqchips. i.e. mark any CPUs not in the DT as not possible.
+> > > 
+> > > That will also net you savings in other areas (e.g. per-cpu maps not
+> > > having to be allocated for CPUs which don't exist).
 > > 
-> > [...]
-> > 
+> > Should it be done for possible or just present? I think the existing
+> > code already sets both possible and present true if and only if they
+> > have cpu nodes, so it should work as-is with either.
 > 
-> ...
+> You'll want possible to be clear for the per-cpu maps case. 
 > 
-> > [...]
-> > 
-> > >> +static struct platform_driver rockchip_pcie_driver = {
-> > >> +     .driver = {
-> > >> +             .name = "rockchip-pcie",
-> > >> +             .of_match_table = rockchip_pcie_of_match,
-> > >> +     },
-> > >> +     .probe = rockchip_pcie_probe,
-> > >> +
-> > >> +};
-> > >> +module_platform_driver(rockchip_pcie_driver);
-> > >> +
-> > >> +MODULE_AUTHOR("Rockchip Inc");
-> > >> +MODULE_DESCRIPTION("Rockchip AXI PCIe driver");
-> > >> +MODULE_LICENSE("GPL v2");
-> > >
-> > > Per your Kconfig, this driver cannot be a module, so remove these MODULE_*
-> > > annotations.  This is to follow Paul Gortmaker's recent "Make explicitly
-> > > non-modular" work.  Also change the include of <linux/module.h> to
-> > > <linux/init.h>.
-> > 
-> > Thanks!  You beat me to it.    I didn't see any EXPORT_SYMBOL so it doesn't
-> > look like we need export.h  added here.   Also, at the risk of stating
-> > the obvious,
-> > the module_platform_driver becomes builtin_platform_driver.
-> 
-> Just for reference (not to necessarily disagree here): we've kinda
-> ping-ponged on this one. I suggested it could be built as a module, so
-> Shawn added it, but apparently we're missing an export:
-> 
-> https://lkml.org/lkml/2016/7/8/704
-> 
-> so he reverted back. It's probably best to just leave this built-in and
-> resolve the comments Paul and Bjorn made, to avoid too much more
-> flip-flopping. If we still want to patch up the __weak
-> pci_remap_iospace(), then we can make this a module at a later time.
+> I guess for the interrupt controller either is appropriate.
 
-Agreed, and this was the general consensus we came to for other PCI code
-as well.   It might be different if we were deleting hundreds of lines
-of code, but we are just making a few simple changes to make it clear
-that things aren't modular, and that ensures others don't continue to
-copy the same inconsistency into their new driver(s).  It doesn't in any
-way prevent a future conversion to tristate if that use case makes sense.
+OK. Semantically I should probably change it to present, but I agree
+it doesn't matter much right now and it's a minor detail.
 
-THanks,
-Paul.
---
-
+> > > Otherwise, you're missing real error cases, e.g. two CPUs with only one
+> > > AIC region.
+> > 
+> > Sure, but do invalid DTBs need to be a diagnosable error?
 > 
-> Regards,
-> Brian
+> To the extent that we can reasonably detect such issues, we should do
+> so. This case is trivial to detect, so I think we should do so.
+> 
+> This sort of logic helps to catch issues far earlier (e.g. when people
+> write their first DTs), and saves a fair amount of pain later down the
+> line.
+
+OK.
+
+> > > > > > +	aic->chip.irq_mask = noop;
+> > > > > > +	aic->chip.irq_unmask = noop;
+> > > > > 
+> > > > > If the core code wants to mask IRQs, how do you handle that? Can you
+> > > > > mask your CPU traps?
+> > > > 
+> > > > There's a global imask in the cpu that masks all interrupts that's
+> > > > used in the trap entry point, spinlocks, etc. already. This is a cpu
+> > > > standard feature and not logically part of the AIC.
+> > > 
+> > > Just to check, is that a single bit that masks all IRQs, or is there a
+> > > mark per-IRQ?
+> > 
+> > It's actually a 4-bit priority mask that masks all interrupts with
+> > priority <= the configured value, but Linux has no use for interrupt
+> > priorities and the kernel just sets the value to 0 or 15 for allowing
+> > or blocking interrupts
+> 
+> Ok.
+> 
+> IIUC, that means you *could* implement per-irq masking by having the
+> CPU's mask value set to 0, and flipping the priority of an IRQ between 0
+> and 1 to disable/enable.
+> 
+> Though from your prior comments it sounds like for AIC2 writes to the
+> MMIO priority registers are ignored, so that would not work for AIC2?
+
+Right. The register with 8 4-bit fields only made sense for the setup
+with 8 irq lines with variable priority; the aic2 has 64 lines with
+static priorities.
+
+> > > > My understanding is that the kernel already keeps a logical mask of
+> > > > disabled irqs in addition to mask/disable at the irqchip level so
+> > > > there's a fairly fast path for ignoring/holding (potentially spurious)
+> > > > irqs while they're supposed to be disabled and deferring them until
+> > > > they're enabled again.
+> > > 
+> > > While we can ignore suprious IRQs, there are cases where that's
+> > > insufficient (e.g. screaming interrupts, suspend).
+> > > 
+> > > Can your CPU mask IRQs individually?
+> > 
+> > No. If there's SoC hardware needing that capability it would need to
+> > be added, but I suspect off-SoC hardware generating interrupts might
+> > want to use a secondary chained interrupt controller anyway, which
+> > might have different functionality.
+> 
+> I was under the impression that the core IRQ code expected irq_mask and
+> irq_unmask to do what their names imply. I would be worried about what
+> might depend on that functionality.
+> 
+> I am far from an expert in that area, so I'll leave that to Marc,
+> Thomas, and Jason to comment on that.
+
+I'm a little bit confused about the intended requirements too.
+kernel/irq/chip.c contains both code that tests if the chip->irq_mask
+pointer is non-null (in mask_irq) and code that assumes chip->irq_mask
+is non-null if chip->irq_disable is null (e.g. in irq_percpu_disable).
+This suggests to me that irq_mask can be null/unsupported and that
+irq_disable can be, but I'm not sure which should be defined when
+there's no such operation for either, and I don't see anywhere it's
+documented what's required. The comment for irq_disable even has a
+typo and repeats the "If the chip does not implement the irq_disable
+callback" condition for both cases whereas presumably it's only
+intended to apply to the second.
+
+Anyway the current code seems to work fine but it would be nice to
+know what it's "supposed" to do.
+
+Rich
