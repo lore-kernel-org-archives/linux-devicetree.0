@@ -1,82 +1,76 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCH 05/10] EDAC, altera: Add Arria10 NAND EDAC support
-Date: Wed, 27 Jul 2016 13:43:04 -0500
-Message-ID: <579900B8.3020502@opensource.altera.com>
-References: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
- <1468512408-5156-6-git-send-email-tthayer@opensource.altera.com>
- <20160727171035.GA23851@nazgul.tnic>
-Reply-To: <tthayer@opensource.altera.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] rtc: ds1302: add register access
+ abstraction layer
+Date: Wed, 27 Jul 2016 19:47:23 +0100
+Message-ID: <20160727184723.GZ11806@sirena.org.uk>
+References: <1467026362-29446-1-git-send-email-akinobu.mita@gmail.com>
+ <1467026362-29446-2-git-send-email-akinobu.mita@gmail.com>
+ <1467028249.3182.11.camel@gmail.com>
+ <20160627124432.GI29249@piout.net>
+ <1467040517.3182.34.camel@gmail.com>
+ <20160719151314.GH7132@piout.net>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160727171035.GA23851@nazgul.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Er97KPJOrxRt+yKZ"
+Return-path: <rtc-linux+bncBDQ2L75W5QGBBSMD4S6AKGQER2ENRVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160719151314.GH7132-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--Er97KPJOrxRt+yKZ
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 07/27/2016 12:10 PM, Borislav Petkov wrote:
-> On Thu, Jul 14, 2016 at 11:06:43AM -0500, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
->>
->> Add Altera Arria10 NAND FIFO memory EDAC support.
->>
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> ---
->>   drivers/edac/Kconfig       |    7 +++++++
->>   drivers/edac/altera_edac.c |   34 +++++++++++++++++++++++++++++++++-
->>   2 files changed, 40 insertions(+), 1 deletion(-)
->
-> ...
->
->> @@ -1589,7 +1619,9 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
->>   		else if ((of_device_is_compatible(child,
->>   					"altr,socfpga-a10-ocram-ecc")) ||
->>   			 (of_device_is_compatible(child,
->> -					"altr,socfpga-eth-mac-ecc")))
->> +					"altr,socfpga-eth-mac-ecc")) ||
->> +			 (of_device_is_compatible(child,
->> +						  "altr,socfpga-nand-ecc")))
->>   			altr_edac_a10_device_add(edac, child);
->>   		else if (of_device_is_compatible(child,
->>   						 "altr,sdram-edac-a10"))
->
-> Can we simplify this loop like this?
->
-> 	for_each_child_of_node(pdev->dev.of_node, child) {
-> 		if (!of_device_is_available(child))
-> 			continue;
->
-> 		if (of_device_is_compatible(child, "altr,socfpga-a10-l2-ecc") ||
-> 		    of_device_is_compatible(child, "altr,socfpga-a10-ocram-ecc") ||
-> 		    of_device_is_compatible(child, "altr,socfpga-eth-mac-ecc") ||
-> 		    of_device_is_compatible(child, "altr,socfpga-nand-ecc"))
->
-> 			altr_edac_a10_device_add(edac, child);
->
-> 		else if (of_device_is_compatible(child, "altr,sdram-edac-a10"))
-> 			of_platform_populate(pdev->dev.of_node,
-> 					     altr_sdram_ctrl_of_match,
-> 					     NULL, &pdev->dev);
-> 	}
->
-> I've merged the first "if" and subsequent "else if" because they all
-> do altr_edac_a10_device_add(edac, child) and added spacing for better
-> readability.
->
-> Look ok?
->
-> Or have I fatfingered it?
->
+On Tue, Jul 19, 2016 at 05:13:14PM +0200, Alexandre Belloni wrote:
 
-Yes, that's better. I was trying to stay within the 80 character limit 
-but missed the if/else if improvement. Thanks, Boris!
+> Ok, seeing that, now I'm thinking that switching the ds1302 driver to
+> spi was a mistake and bitbanging in the driver was the right thing to
+> do.
+> What you introduced are two drivers instead of one and the abstraction
+> is actually getting worse.
 
-Should I re-submit?
+> So I'm thinking the best solution is to write a proper driver bitbanging
+> microwire (maybe in the SPI subsystem) that everybody could use,
+> including old architectures.
 
-Thanks,
+That seems to make sense to me.  We could probably accomodate in SPI,
+the programming model should be very similar so the microwire bit could
+be hidden in the driver.
 
-Thor
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--Er97KPJOrxRt+yKZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXmQG2AAoJECTWi3JdVIfQn2cH/03oacarRiEE29pto/RFuf0D
+UTULip7IsS4B4+2/4cb3YDSPBwA6xVo9J4U/Skw54OJogsMhpESulmdqyS+TB23t
+2e5c5YRWc6txNVejAwp6iOYMTJypueJCoLcJH5Q4EPT5stCAtlZkcpt/HKZA+JOK
+66aogWisx10pylsqDLYPrQGX1hp2ln1xWxZsxk7Iamex2wzQD3N9Rm9FJK3T/CVx
+Fz9zJzzqqrNWqshcUZ+xt2Us6kgen2eHtfyMD0SjefWgyhKrDMkCZosN/TSapa4H
+49ugbRwZwJHm+n8+PeZg2E6IYTSxAgYqdpNCIA2vgzyJfM3QwhGZYFBW1quPNdY=
+=A7ou
+-----END PGP SIGNATURE-----
+
+--Er97KPJOrxRt+yKZ--
