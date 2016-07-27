@@ -1,64 +1,153 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] hwmon: (ltc4151) Add devicetree binding for ltc4151
-Date: Wed, 27 Jul 2016 09:48:59 -0500
-Message-ID: <20160727144859.GA18846@rob-hp-laptop>
-References: <5795A144.2020300@roeck-us.net>
- <20160725115616.GA31557@makrotopia.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 1/4] iio: adc: rockchip_saradc: reset saradc controller
+ before programming it
+Date: Wed, 27 Jul 2016 07:50:27 -0700
+Message-ID: <5798CA33.1070404@roeck-us.net>
+References: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160725115616.GA31557-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, Per =?iso-8859-1?Q?Dal=E9n?= <per.dalen-US8m9dViuwNWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>, jic23@kernel.org, heiko@sntech.de
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, john@metanate.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 25, 2016 at 01:56:20PM +0200, Daniel Golle wrote:
-> Signed-off-by: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+On 07/27/2016 07:24 AM, Caesar Wang wrote:
+> SARADC controller needs to be reset before programming it, otherwise
+> it will not function properly.
+>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-iio@vger.kernel.org
+> Cc: linux-rockchip@lists.infradead.org
+> Tested-by: Guenter Roeck <linux@roeck-us.net>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+>
 > ---
->  Documentation/devicetree/bindings/hwmon/ltc4151.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/ltc4151.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/ltc4151.txt b/Documentation/devicetree/bindings/hwmon/ltc4151.txt
-> new file mode 100644
-> index 0000000..aec69ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/ltc4151.txt
-> @@ -0,0 +1,18 @@
-> +ltc4151 properties
-
-Add a brief description of what the chip does please.
-
-> +
-> +Required properties:
-> +- compatible: Must be "lltc,ltc4151"
-> +- reg: I2C address
-> +
+>
+> Changes in v3:
+> - %s/devm_reset_control_get_optional()/devm_reset_control_get()
+> - add Guente's test tag.
+>
+> Changes in v2:
+> - Make the reset as an optional property, since it should work
+> with old devicetrees as well.
+>
+>   .../bindings/iio/adc/rockchip-saradc.txt           |  7 +++++
+>   drivers/iio/adc/Kconfig                            |  1 +
+>   drivers/iio/adc/rockchip_saradc.c                  | 30 ++++++++++++++++++++++
+>   3 files changed, 38 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> index bf99e2f..205593f 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> @@ -16,6 +16,11 @@ Required properties:
+>   - vref-supply: The regulator supply ADC reference voltage.
+>   - #io-channel-cells: Should be 1, see ../iio-bindings.txt
+>
 > +Optional properties:
+> +- resets: Must contain an entry for each entry in reset-names if need support
+> +	  this option. See ../reset/reset.txt for details.
+> +- reset-names: Must include the name "saradc-apb".
 > +
-> +- shunt-resistor
-> +	Shunt resistor value in micro-Ohm
-
-Add a unit suffix (-micro-ohms).
-
+>   Example:
+>   	saradc: saradc@2006c000 {
+>   		compatible = "rockchip,saradc";
+> @@ -23,6 +28,8 @@ Example:
+>   		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+>   		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+>   		clock-names = "saradc", "apb_pclk";
+> +		resets = <&cru SRST_SARADC>;
+> +		reset-names = "saradc-apb";
+>   		#io-channel-cells = <1>;
+>   		vref-supply = <&vcc18>;
+>   	};
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 1de31bd..7675772 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -389,6 +389,7 @@ config QCOM_SPMI_VADC
+>   config ROCKCHIP_SARADC
+>   	tristate "Rockchip SARADC driver"
+>   	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+> +	depends on RESET_CONTROLLER
+>   	help
+>   	  Say yes here to build support for the SARADC found in SoCs from
+>   	  Rockchip.
+> diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
+> index f9ad6c2..85d7012 100644
+> --- a/drivers/iio/adc/rockchip_saradc.c
+> +++ b/drivers/iio/adc/rockchip_saradc.c
+> @@ -21,6 +21,8 @@
+>   #include <linux/of_device.h>
+>   #include <linux/clk.h>
+>   #include <linux/completion.h>
+> +#include <linux/delay.h>
+> +#include <linux/reset.h>
+>   #include <linux/regulator/consumer.h>
+>   #include <linux/iio/iio.h>
+>
+> @@ -53,6 +55,7 @@ struct rockchip_saradc {
+>   	struct clk		*clk;
+>   	struct completion	completion;
+>   	struct regulator	*vref;
+> +	struct reset_control	*reset;
+>   	const struct rockchip_saradc_data *data;
+>   	u16			last_val;
+>   };
+> @@ -190,6 +193,16 @@ static const struct of_device_id rockchip_saradc_match[] = {
+>   };
+>   MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
+>
+> +/**
+> + * Reset SARADC Controller.
+> + */
+> +static void rockchip_saradc_reset_controller(struct reset_control *reset)
+> +{
+> +	reset_control_assert(reset);
+> +	usleep_range(10, 20);
+> +	reset_control_deassert(reset);
+> +}
 > +
-> +Example:
+>   static int rockchip_saradc_probe(struct platform_device *pdev)
+>   {
+>   	struct rockchip_saradc *info = NULL;
+> @@ -218,6 +231,20 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+>   	if (IS_ERR(info->regs))
+>   		return PTR_ERR(info->regs);
+>
+> +	/*
+> +	 * The reset should be an optional property, as it should work
+> +	 * with old devicetrees as well
+> +	 */
+> +	info->reset = devm_reset_control_get(&pdev->dev, "saradc-apb");
+> +	if (IS_ERR(info->reset)) {
+> +		ret = PTR_ERR(info->reset);
+> +		if (ret != -ENOENT)
+> +			return ret;
 > +
-> +ltc4151@6e {
-> +	compatible = "lltc,ltc4151";
-> +	reg = <0x6e>;
-> +	shunt-resistor = <1500>;
-> +};
-> -- 
-> 2.9.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		dev_dbg(&pdev->dev, "no reset control found\n");
+> +		info->reset = NULL;
+> +	}
+> +
+>   	init_completion(&info->completion);
+>
+>   	irq = platform_get_irq(pdev, 0);
+> @@ -252,6 +279,9 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+>   		return PTR_ERR(info->vref);
+>   	}
+>
+> +	if (info->reset)
+> +		rockchip_saradc_reset_controller(info->reset);
+> +
+>   	/*
+>   	 * Use a default value for the converter clock.
+>   	 * This may become user-configurable in the future.
+>
