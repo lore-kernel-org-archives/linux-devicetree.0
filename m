@@ -1,100 +1,103 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
-Date: Wed, 27 Jul 2016 15:50:52 -0600
-Message-ID: <36967d69-cb2a-654e-9a4c-2021fd476464@wwwdotorg.org>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org>
- <20160719191442.15439-2-swarren@wwwdotorg.org>
- <20160726100302.GE2433@ulmo.ba.sec>
- <f1ca284a-5332-3323-80b9-7cf61e7c97ac@wwwdotorg.org>
+From: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] PCI: Rockchip: Add Rockchip PCIe controller support
+Date: Wed, 27 Jul 2016 17:57:39 -0400
+Message-ID: <20160727215739.GV11410@windriver.com>
+References: <1468802533-17699-1-git-send-email-shawn.lin@rock-chips.com>
+ <1468802533-17699-2-git-send-email-shawn.lin@rock-chips.com>
+ <20160727182233.GB8901@localhost>
+ <CAP=VYLqPj=81Q_8kV1wi=FHP-CB6arrXFAC0ktJrLqR-1TSCjw@mail.gmail.com>
+ <20160727200443.GA30281@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f1ca284a-5332-3323-80b9-7cf61e7c97ac-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160727200443.GA30281-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/2016 10:21 AM, Stephen Warren wrote:
-> On 07/26/2016 04:03 AM, Thierry Reding wrote:
->> On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
->>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> The BPMP implements some services which must be represented by separate
->>> nodes. For example, it can provide access to certain I2C controllers,
->>> and
->>> the I2C bindings represent each I2C controller as a device tree node.
->>> Update the binding to describe how the BPMP supports this.
->>>
->>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23
->>> ++++++++++++++++++++++
->>>  1 file changed, 23 insertions(+)
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>> index 9a3864f56955..142d363406f6 100644
->>> ---
->>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>> +++
->>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>> @@ -38,6 +38,24 @@ implemented by this node:
->>>  - .../reset/reset.txt
->>>  - <dt-bindings/reset/tegra186-reset.h>
->>>
->>> +The BPMP implements some services which must be represented by
->>> separate nodes.
->>> +For example, it can provide access to certain I2C controllers, and
->>> the I2C
->>> +bindings represent each I2C controller as a device tree node. Such
->>> nodes should
->>> +be nested directly inside the main BPMP node.
->>> +
->>> +Software can determine whether a child node of the BPMP node
->>> represents a device
->>> +by checking for a compatible property. Any node with a compatible
->>> property
->>> +represents a device that can be instantiated. Nodes without a
->>> compatible
->>> +property may be used to provide configuration information regarding
->>> the BPMP
->>> +itself, although no such configuration nodes are currently defined
->>> by this
->>> +binding.
->>> +
->>> +The BPMP firmware defines no single global name-/numbering-space for
->>> such
->>> +services. Put another way, the numbering scheme for I2C buses is
->>> distinct from
->>> +the numbering scheme for any other service the BPMP may provide
->>> (e.g. a future
->>> +hypothetical SPI bus service). As such, child device nodes will have
->>> no reg
->>> +property, and the BPMP node will have no #address-cells or
->>> #size-cells property.
->>
->> My understanding is that the I2C bus number is passed as part of the
->> request to the BPMP firmware. Does that not count as addressing? Could
->> we not represent that generically using a device tree hierarchy? I'm
->> thinking something along these lines:
->>
->>     bpmp {
->>         ...
->>
->>         services {
->>             i2c {
->>                 i2c@0 {
->>                     reg = <0>;
->
-> Technically, that is possible. However, Rob Herring rejected the idea of
-> multiple levels of sub-nodes.
->
-> Can we please just go with what we have? DT bindings are frankly an
-> obstacle to getting anything done:-(
+[Re: [PATCH v7 2/2] PCI: Rockchip: Add Rockchip PCIe controller support] On 27/07/2016 (Wed 13:04) Brian Norris wrote:
 
-Thierry, any further thoughts here? I really need to get these DT 
-bindings finalized so that I can use them in U-Boot, which is very 
-urgent. Thanks.
+> + Guenter
+> 
+> Hi,
+> 
+> On Wed, Jul 27, 2016 at 03:56:36PM -0400, Paul Gortmaker wrote:
+> > On Wed, Jul 27, 2016 at 2:22 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > > On Mon, Jul 18, 2016 at 08:42:13AM +0800, Shawn Lin wrote:
+> > >> This patch adds Rockchip PCIe controller support found
+> > >> on RK3399 Soc platform.
+> > >>
+> > >> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > >>
+> > >> ---
+> > >>
+> > >> Changes in v7:
+> > >> - make it as a build-in driver
+> > 
+> > [...]
+> > 
+> 
+> ...
+> 
+> > [...]
+> > 
+> > >> +static struct platform_driver rockchip_pcie_driver = {
+> > >> +     .driver = {
+> > >> +             .name = "rockchip-pcie",
+> > >> +             .of_match_table = rockchip_pcie_of_match,
+> > >> +     },
+> > >> +     .probe = rockchip_pcie_probe,
+> > >> +
+> > >> +};
+> > >> +module_platform_driver(rockchip_pcie_driver);
+> > >> +
+> > >> +MODULE_AUTHOR("Rockchip Inc");
+> > >> +MODULE_DESCRIPTION("Rockchip AXI PCIe driver");
+> > >> +MODULE_LICENSE("GPL v2");
+> > >
+> > > Per your Kconfig, this driver cannot be a module, so remove these MODULE_*
+> > > annotations.  This is to follow Paul Gortmaker's recent "Make explicitly
+> > > non-modular" work.  Also change the include of <linux/module.h> to
+> > > <linux/init.h>.
+> > 
+> > Thanks!  You beat me to it.    I didn't see any EXPORT_SYMBOL so it doesn't
+> > look like we need export.h  added here.   Also, at the risk of stating
+> > the obvious,
+> > the module_platform_driver becomes builtin_platform_driver.
+> 
+> Just for reference (not to necessarily disagree here): we've kinda
+> ping-ponged on this one. I suggested it could be built as a module, so
+> Shawn added it, but apparently we're missing an export:
+> 
+> https://lkml.org/lkml/2016/7/8/704
+> 
+> so he reverted back. It's probably best to just leave this built-in and
+> resolve the comments Paul and Bjorn made, to avoid too much more
+> flip-flopping. If we still want to patch up the __weak
+> pci_remap_iospace(), then we can make this a module at a later time.
+
+Agreed, and this was the general consensus we came to for other PCI code
+as well.   It might be different if we were deleting hundreds of lines
+of code, but we are just making a few simple changes to make it clear
+that things aren't modular, and that ensures others don't continue to
+copy the same inconsistency into their new driver(s).  It doesn't in any
+way prevent a future conversion to tristate if that use case makes sense.
+
+THanks,
+Paul.
+--
+
+> 
+> Regards,
+> Brian
