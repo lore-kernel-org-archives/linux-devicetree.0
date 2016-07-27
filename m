@@ -1,92 +1,160 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 1/8] libfdt: Add a subnodes iterator macro
-Date: Wed, 27 Jul 2016 14:55:53 +0200
-Message-ID: <20160727125600.15949-2-maxime.ripard@free-electrons.com>
-References: <20160727125600.15949-1-maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 0/8] libfdt: Add support for device tree overlays
+Date: Wed, 27 Jul 2016 14:55:52 +0200
+Message-ID: <20160727125600.15949-1-maxime.ripard@free-electrons.com>
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160727125600.15949-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hi,
 
-The fdt_for_each_subnode() iterator macro provided by this patch can be
-used to iterate over a device tree node's subnodes. At each iteration a
-loop variable will be set to the next subnode.
+The device tree overlays are a great solution to the issue raised by
+the bunch expandable boards we find everywhere these days, like the
+Beaglebone, Raspberry Pi or CHIP.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- libfdt/libfdt.h         | 28 ++++++++++++++++++++++++++++
- tests/subnode_iterate.c |  8 ++------
- 2 files changed, 30 insertions(+), 6 deletions(-)
+Although for now Linux is the only available tool that can deal with
+overlays, some other components like bootloaders or user-space tools
+might need to apply these overlays on top of a base device tree.
 
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 36222fd4a6f4..911e548163d8 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -168,6 +168,34 @@ int fdt_first_subnode(const void *fdt, int offset);
-  */
- int fdt_next_subnode(const void *fdt, int offset);
- 
-+/**
-+ * fdt_for_each_subnode - iterate over all subnodes of a parent
-+ *
-+ * @node:	child node (int, lvalue)
-+ * @fdt:	FDT blob (const void *)
-+ * @parent:	parent node (int)
-+ *
-+ * This is actually a wrapper around a for loop and would be used like so:
-+ *
-+ *	fdt_for_each_subnode(node, fdt, parent) {
-+ *		Use node
-+ *		...
-+ *	}
-+ *
-+ *	if ((node < 0) && (node != -FDT_ERR_NOT_FOUND)) {
-+ *		Error handling
-+ *	}
-+ *
-+ * Note that this is implemented as a macro and @node is used as
-+ * iterator in the loop. The parent variable be constant or even a
-+ * literal.
-+ *
-+ */
-+#define fdt_for_each_subnode(node, fdt, parent)		\
-+	for (node = fdt_first_subnode(fdt, parent);	\
-+	     node >= 0;					\
-+	     node = fdt_next_subnode(fdt, node))
-+
- /**********************************************************************/
- /* General functions                                                  */
- /**********************************************************************/
-diff --git a/tests/subnode_iterate.c b/tests/subnode_iterate.c
-index b9f379d5963c..0fb5c901ebd7 100644
---- a/tests/subnode_iterate.c
-+++ b/tests/subnode_iterate.c
-@@ -48,9 +48,7 @@ static void test_node(void *fdt, int parent_offset)
- 	subnodes = cpu_to_fdt32(*prop);
- 
- 	count = 0;
--	for (offset = fdt_first_subnode(fdt, parent_offset);
--	     offset >= 0;
--	     offset = fdt_next_subnode(fdt, offset))
-+	fdt_for_each_subnode(offset, fdt, parent_offset)
- 		count++;
- 
- 	if (count != subnodes) {
-@@ -65,9 +63,7 @@ static void check_fdt_next_subnode(void *fdt)
- 	int offset;
- 	int count = 0;
- 
--	for (offset = fdt_first_subnode(fdt, 0);
--	     offset >= 0;
--	     offset = fdt_next_subnode(fdt, offset)) {
-+	fdt_for_each_subnode(offset, fdt, 0) {
- 		test_node(fdt, offset);
- 		count++;
- 	}
+To address these use cases, we introduce a new function to the libfdt,
+fdt_overlay_apply, that does just that.
+
+You can find a test program here: http://code.bulix.org/792zum-99476?raw
+
+This is the last patches sent to U-boot, with the modifications
+suggested by David, and the additional test cases.
+
+Let me know what you think!
+Maxime
+
+Changes from libfdt v3:
+  - Fixed a few error in the fixup parsing code
+  - Added test cases with overlays with poorly formatted fixups
+  - Fixed a few error, types returned
+  - Added a new error for poorly formatted fixups
+  - Added new tests for fdt_setprop_inplace_namelen_partial
+  - Fixed the documentation of fdt_for_each_property_offset and
+    fdt_for_each_subnode
+
+Changes from libfdt v2:
+  - Added test cases for the overlays that don't require overlay
+    support in dtc
+  - Only treat as fragments the top-level subnodes with an __overlay__
+    subnode
+  - Fixed kerneldoc for subnodes and property iterators
+  - Improve kerneldoc for fdt_get_max_phandle
+  - Make sure the fixup properties length is a multiple of 4 bytes
+  - Improve the error checking on a few places
+  - Improve a few variables names and types
+
+Changes from U-Boot v4:
+  - Added test cases for the functions
+  - Changed the fdt_for_each_subnode argument order
+  - Don't error out if -1 phandle is found in fdt_get_max_phandle
+  - Used libfdt's fdt_path_offset_namelen
+
+Changes from U-Boot v3:
+  - Moved the patch to introduce fdt_getprop_namelen_w earlier to keep
+    bisectability
+  - Renamed fdt_setprop_inplace_namelen_by_index in
+    fdt_setprop_inplace_namelen_partial
+  - Reintroduced the check on the property length in fdt_setprop_inplace
+  - Made sure the code was taking the non 32bits-aligned phandles
+  - Used memchr instead of strchr in the fixup parsing code, and made
+    sure the cases where the fixup format was wrong was reported as an
+    error.
+  - Fixed a bug where a property in a overlay having multiple phandles
+    local to that overlay would only resolve the first one. Also added
+    a test case for this
+  - Added kerneldocs for all the overlay functions
+  - Added a patch to fix a typo in separator
+  - A few fixes, function renamings, error checking changes here and there
+
+Changes from U-boot v2 / libfdt v1
+  - Reworked the code to deal with Pantelis and David numerous
+    comments, among which:
+    * Remove the need for malloc in the overlay code, and added some
+      libfdt functions to do that
+    * Remove the DT magic in case of an error to not be able to use it
+      anymore
+    * Removed the fdt_ and _ function prefix for the static functions
+    * Plus the usual bunch of rework, error checking and optimizations.
+
+Maxime Ripard (7):
+  libfdt: Add iterator over properties
+  libfdt: Add max phandle retrieval function
+  libfdt: Add fdt_getprop_namelen_w
+  libfdt: Add fdt_setprop_inplace_namelen_partial
+  libfdt: Introduce FDT_ERR_BADFIXUP
+  libfdt: Add overlay application function
+  tests: Add tests cases for the overlay code
+
+Thierry Reding (1):
+  libfdt: Add a subnodes iterator macro
+
+ libfdt/Makefile.libfdt                          |   2 +-
+ libfdt/fdt_overlay.c                            | 641 ++++++++++++++++++++++++
+ libfdt/fdt_ro.c                                 |  26 +
+ libfdt/fdt_strerror.c                           |   1 +
+ libfdt/fdt_wip.c                                |  29 +-
+ libfdt/libfdt.h                                 | 135 ++++-
+ libfdt/libfdt_env.h                             |   1 +
+ tests/.gitignore                                |   3 +
+ tests/Makefile.tests                            |   4 +-
+ tests/get_phandle.c                             |   6 +
+ tests/include1.dts                              |   1 +
+ tests/overlay.c                                 | 232 +++++++++
+ tests/overlay_bad_fixup.c                       |  70 +++
+ tests/overlay_bad_fixup_bad_index.dts           |  14 +
+ tests/overlay_bad_fixup_base.dtsi               |  18 +
+ tests/overlay_bad_fixup_empty.dts               |  14 +
+ tests/overlay_bad_fixup_empty_index.dts         |  14 +
+ tests/overlay_bad_fixup_empty_prop.dts          |  14 +
+ tests/overlay_bad_fixup_index_trailing.dts      |  14 +
+ tests/overlay_bad_fixup_path_empty_prop.dts     |  14 +
+ tests/overlay_bad_fixup_path_empty_prop_sep.dts |  14 +
+ tests/overlay_bad_fixup_path_only.dts           |  14 +
+ tests/overlay_bad_fixup_path_only_sep.dts       |  14 +
+ tests/overlay_bad_fixup_path_prop.dts           |  14 +
+ tests/overlay_base.dts                          |  21 +
+ tests/overlay_overlay_dtc.dts                   |  85 ++++
+ tests/overlay_overlay_nodtc.dts                 |  82 +++
+ tests/property_iterate.c                        |  97 ++++
+ tests/property_iterate.dts                      |  24 +
+ tests/run_tests.sh                              |  37 ++
+ tests/rw_tree1.c                                |   5 +
+ tests/setprop_inplace.c                         |  14 +
+ tests/subnode_iterate.c                         |   8 +-
+ tests/sw_tree1.c                                |   4 +
+ tests/test_tree1.dts                            |   1 +
+ tests/test_tree1_label_noderef.dts              |   1 +
+ tests/test_tree1_merge.dts                      |   1 +
+ tests/test_tree1_merge_labelled.dts             |   1 +
+ tests/test_tree1_merge_path.dts                 |   1 +
+ tests/testdata.h                                |   5 +
+ tests/trees.S                                   |   8 +
+ 41 files changed, 1691 insertions(+), 13 deletions(-)
+ create mode 100644 libfdt/fdt_overlay.c
+ create mode 100644 tests/overlay.c
+ create mode 100644 tests/overlay_bad_fixup.c
+ create mode 100644 tests/overlay_bad_fixup_bad_index.dts
+ create mode 100644 tests/overlay_bad_fixup_base.dtsi
+ create mode 100644 tests/overlay_bad_fixup_empty.dts
+ create mode 100644 tests/overlay_bad_fixup_empty_index.dts
+ create mode 100644 tests/overlay_bad_fixup_empty_prop.dts
+ create mode 100644 tests/overlay_bad_fixup_index_trailing.dts
+ create mode 100644 tests/overlay_bad_fixup_path_empty_prop.dts
+ create mode 100644 tests/overlay_bad_fixup_path_empty_prop_sep.dts
+ create mode 100644 tests/overlay_bad_fixup_path_only.dts
+ create mode 100644 tests/overlay_bad_fixup_path_only_sep.dts
+ create mode 100644 tests/overlay_bad_fixup_path_prop.dts
+ create mode 100644 tests/overlay_base.dts
+ create mode 100644 tests/overlay_overlay_dtc.dts
+ create mode 100644 tests/overlay_overlay_nodtc.dts
+ create mode 100644 tests/property_iterate.c
+ create mode 100644 tests/property_iterate.dts
+
 -- 
 2.9.2
