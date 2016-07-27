@@ -1,15 +1,15 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 04/18] ARM: mvebu: a385-db-ap: enable USB (orion-ehci) port
-Date: Wed, 27 Jul 2016 18:09:26 +0200
-Message-ID: <87a8h3m5ah.fsf@free-electrons.com>
+Subject: Re: [PATCH 05/18] ARM: mvebu: a385-db-ap: add default partition description for NAND
+Date: Wed, 27 Jul 2016 18:10:41 +0200
+Message-ID: <8760rrm58e.fsf@free-electrons.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-	<1469105055-25181-5-git-send-email-jaz@semihalf.com>
-	<87oa5jm5ps.fsf@free-electrons.com>
+	<1469105055-25181-6-git-send-email-jaz@semihalf.com>
+	<87k2g7m5j1.fsf@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87oa5jm5ps.fsf@free-electrons.com> (Gregory CLEMENT's message of
-	"Wed, 27 Jul 2016 18:00:15 +0200")
+In-Reply-To: <87k2g7m5j1.fsf@free-electrons.com> (Gregory CLEMENT's message of
+	"Wed, 27 Jul 2016 18:04:18 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
 To: Grzegorz Jaszczyk <jaz@semihalf.com>
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jason@lakedaemon.net, andrew@lunn.ch, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, alior@marvell.com, robh+dt@kernel.org, mw@semihalf.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
@@ -24,40 +24,65 @@ Hi,
 >  On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
 >
 >> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
->
->
-> Here agina, as pointed by Andrew a commit log entry would be
-> nice. Except this:
+> It looks good:
 >
 > Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-I also forget to mention that the title prefix should be change to:
-"ARM: dts: mvebu: a385-db-ap:"
+And here again the title prefix should be change to:
+"ARM: dts: mvebu: a385-db-ap:" also do not forget fo add a commit log.
+
+Thanks,
 
 Gregory
+
 >
-> Thanks,
->
-> Gregory
 >> ---
->>  arch/arm/boot/dts/armada-385-db-ap.dts | 4 ++++
->>  1 file changed, 4 insertions(+)
+>>  arch/arm/boot/dts/armada-385-db-ap.dts | 26 +++++++++++++++++++++++---
+>>  1 file changed, 23 insertions(+), 3 deletions(-)
 >>
 >> diff --git a/arch/arm/boot/dts/armada-385-db-ap.dts b/arch/arm/boot/dts/armada-385-db-ap.dts
->> index 2d3fd6e..a18f516 100644
+>> index a18f516..6648a3f 100644
 >> --- a/arch/arm/boot/dts/armada-385-db-ap.dts
 >> +++ b/arch/arm/boot/dts/armada-385-db-ap.dts
->> @@ -155,6 +155,10 @@
->>  				bm,pool-short = <3>;
+>> @@ -182,15 +182,35 @@
+>>  
+>>  			nfc: flash@d0000 {
+>>  				status = "okay";
+>> -				#address-cells = <1>;
+>> -				#size-cells = <1>;
+>> -
+>>  				num-cs = <1>;
+>>  				nand-ecc-strength = <4>;
+>>  				nand-ecc-step-size = <512>;
+>>  				marvell,nand-keep-config;
+>>  				marvell,nand-enable-arbiter;
+>>  				nand-on-flash-bbt;
+>> +
+>> +				partitions {
+>> +					compatible = "fixed-partitions";
+>> +					#address-cells = <1>;
+>> +					#size-cells = <1>;
+>> +
+>> +					partition@0 {
+>> +						label = "U-Boot";
+>> +						reg = <0x00000000 0x00800000>;
+>> +						read-only;
+>> +					};
+>> +
+>> +					partition@800000 {
+>> +						label = "uImage";
+>> +						reg = <0x00800000 0x00400000>;
+>> +						read-only;
+>> +					};
+>> +
+>> +					partition@c00000 {
+>> +						label = "Root";
+>> +						reg = <0x00c00000 0x3f400000>;
+>> +					};
+>> +				};
 >>  			};
 >>  
->> +			usb@58000 {
->> +				status = "okay";
->> +			};
->> +
->>  			/* CON4 */
->>  			ethernet@70000 {
->>  				pinctrl-names = "default";
+>>  			usb3@f0000 {
 >> -- 
 >> 1.8.3.1
 >>
