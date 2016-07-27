@@ -1,94 +1,137 @@
-From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] tpm: devicetree: document
-	properties for cr50
-Date: Wed, 27 Jul 2016 14:00:47 -0700
-Message-ID: <20160727210047.GA119121@apronin>
-References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
-	<cover.1468985673.git.apronin@chromium.org>
-	<5274cc806888a709c639e701dad894543885b2c9.1468985673.git.apronin@chromium.org>
-	<20160720190303.GA5620@rob-hp-laptop>
-	<20160720194912.GA61154@apronin>
-	<20160721210312.GA10605@rob-hp-laptop>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v4 3/6] ARM: dts: r8a7794: add MSTP10 clocks
+Date: Wed, 27 Jul 2016 14:01:01 -0700 (PDT)
+Message-ID: <5158815.xFJQ7LtYb1@wasted.cogentembedded.com>
+References: <3910788.ckTpUWEs6B@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160721210312.GA10605@rob-hp-laptop>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <3910788.ckTpUWEs6B@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 21, 2016 at 04:03:12PM -0500, Rob Herring wrote:
-> On Wed, Jul 20, 2016 at 12:49:12PM -0700, Andrey Pronin wrote:
-> > On Wed, Jul 20, 2016 at 02:03:03PM -0500, Rob Herring wrote:
-> > > On Tue, Jul 19, 2016 at 08:41:24PM -0700, Andrey Pronin wrote:
-> > 
-> > Hi Rob,
-> > 
-> > > As I mentioned, there may be common properties. It doesn't seem you 
-> > > looked, so I did:
-> > > 
-> > > - spi-rx-delay-us  - (optional) Microsecond delay after a read transfer.
-> > > - spi-tx-delay-us  - (optional) Microsecond delay after a write transfer.
-> > > 
-> > > Seems to me setting one or both of these should work for you.
-> > >
-> > 
-> > Yes, good catch, my fault I didn't see those.
-> > But they are not exactly what I mean and need. I don't need delay after
-> > each read or write transfer. What is needed is a guaranteed time
-> > between transfers.
-> > 
-> > So, if the next transaction doesn't come withing the next X ms (or us),
-> > we don't waste time on inserting a delays after this transaction at all.
-> > Following the description and always inserting a delay must work well
-> > for short microseconds-long delays. For longer milliseconds-long delays
-> > a different strategy of checking the time when the previous transaction
-> > was and only delaying if it was not too long ago is better.
-> 
-> I'd guess that the intent is the same for all. A simple delay is 
-> just much easier to implement. I would think implementing the more 
-> sophisticated algorithm would work for all users. Perhaps with some 
-> threshold for a simple delay.
-> 
-> > Thus, I won't be able to re-use these properties anyways based on their
-> > current description in bindings/spi/spi-bus.txt.
-> > 
-> > > > +- sleep-delay-ms: Time after the last SPI activity, after which the chip
-> > > > +  may go to sleep.
-> > > > +- wake-start-delay-ms: Time after initiating wake up before the chip is
-> > > > +  ready to accept commands over SPI.
-> > > 
-> > > I also asked why these 2 can't be hard-coded in the driver?
-> > >
-> > 
-> > Sorry, I just updated this patch description in v2 to indicate why they are not
-> > hard-coded, but didn't answer explicitly. As the firmware changes, a different
-> > revision of it can have a different time before it sleeps in its configuration,
-> > or the time it takes it to startup may be different. Thus, there's a way to
-> > set it here w/o changing the driver.
-> 
-> The firmware and DT may not be updated in sync especially if you are 
-> loading the firmware from the rootfs. Are you doing DT and firmware 
-> updates without changing the kernel?
-> 
-> Rob
+Add MSTP10 clocks to the R8A7794 device tree.
 
-Hi Rob,
+This patch is based on the commit ee9141522dcf ("ARM: shmobile: r8a7791:
+add MSTP10 support on DTSI").
 
-Thanks for the feedback. I will hard-code those parameters in the
-driver instead of reading from DT.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks,
-Andrey
+---
+Changes in version 4:
+- removed non-existing SRC0/7/8/9 clocks;
+- reparented SSI[0-9] clocks;
+- refreshed the patch.
 
-------------------------------------------------------------------------------
+Changes in version 3:
+- refreshed the patch.
+
+Changes in version 2:
+- fixed the SoC model in the change log;
+- added "the" article to the change log.
+
+ arch/arm/boot/dts/r8a7794.dtsi            |   52 ++++++++++++++++++++++++++++++
+ include/dt-bindings/clock/r8a7794-clock.h |   24 +++++++++++++
+ 2 files changed, 76 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
++++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+@@ -1267,6 +1267,58 @@
+ 				"gpio1", "gpio0", "rcan1", "rcan0", "qspi_mod",
+ 				"i2c5", "i2c4", "i2c3", "i2c2", "i2c1", "i2c0";
+ 		};
++		mstp10_clks: mstp10_clks@e6150998 {
++			compatible = "renesas,r8a7794-mstp-clocks",
++				     "renesas,cpg-mstp-clocks";
++			reg = <0 0xe6150998 0 4>, <0 0xe61509a8 0 4>;
++			clocks = <&p_clk>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SSI_ALL>,
++				 <&p_clk>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>,
++				 <&mstp10_clks R8A7794_CLK_SCU_ALL>;
++			#clock-cells = <1>;
++			clock-indices = <R8A7794_CLK_SSI_ALL
++					 R8A7794_CLK_SSI9 R8A7794_CLK_SSI8
++					 R8A7794_CLK_SSI7 R8A7794_CLK_SSI6
++					 R8A7794_CLK_SSI5 R8A7794_CLK_SSI4
++					 R8A7794_CLK_SSI3 R8A7794_CLK_SSI2
++					 R8A7794_CLK_SSI1 R8A7794_CLK_SSI0
++					 R8A7794_CLK_SCU_ALL
++					 R8A7794_CLK_SCU_DVC1
++					 R8A7794_CLK_SCU_DVC0
++					 R8A7794_CLK_SCU_CTU1_MIX1
++					 R8A7794_CLK_SCU_CTU0_MIX0
++					 R8A7794_CLK_SCU_SRC6
++					 R8A7794_CLK_SCU_SRC5
++					 R8A7794_CLK_SCU_SRC4
++					 R8A7794_CLK_SCU_SRC3
++					 R8A7794_CLK_SCU_SRC2
++					 R8A7794_CLK_SCU_SRC1>;
++			clock-output-names = "ssi-all", "ssi9", "ssi8", "ssi7",
++					     "ssi6", "ssi5", "ssi4", "ssi3",
++					     "ssi2", "ssi1", "ssi0",
++					     "scu-all", "scu-dvc1", "scu-dvc0",
++					     "scu-ctu1-mix1", "scu-ctu0-mix0",
++					     "scu-src6", "scu-src5", "scu-src4",
++					     "scu-src3", "scu-src2", "scu-src1";
++		};
+ 		mstp11_clks: mstp11_clks@e615099c {
+ 			compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0 0xe615099c 0 4>, <0 0xe61509ac 0 4>;
+Index: renesas/include/dt-bindings/clock/r8a7794-clock.h
+===================================================================
+--- renesas.orig/include/dt-bindings/clock/r8a7794-clock.h
++++ renesas/include/dt-bindings/clock/r8a7794-clock.h
+@@ -108,6 +108,30 @@
+ #define R8A7794_CLK_I2C1		30
+ #define R8A7794_CLK_I2C0		31
+ 
++/* MSTP10 */
++#define R8A7794_CLK_SSI_ALL		5
++#define R8A7794_CLK_SSI9		6
++#define R8A7794_CLK_SSI8		7
++#define R8A7794_CLK_SSI7		8
++#define R8A7794_CLK_SSI6		9
++#define R8A7794_CLK_SSI5		10
++#define R8A7794_CLK_SSI4		11
++#define R8A7794_CLK_SSI3		12
++#define R8A7794_CLK_SSI2		13
++#define R8A7794_CLK_SSI1		14
++#define R8A7794_CLK_SSI0		15
++#define R8A7794_CLK_SCU_ALL		17
++#define R8A7794_CLK_SCU_DVC1		18
++#define R8A7794_CLK_SCU_DVC0		19
++#define R8A7794_CLK_SCU_CTU1_MIX1	20
++#define R8A7794_CLK_SCU_CTU0_MIX0	21
++#define R8A7794_CLK_SCU_SRC6		25
++#define R8A7794_CLK_SCU_SRC5		26
++#define R8A7794_CLK_SCU_SRC4		27
++#define R8A7794_CLK_SCU_SRC3		28
++#define R8A7794_CLK_SCU_SRC2		29
++#define R8A7794_CLK_SCU_SRC1		30
++
+ /* MSTP11 */
+ #define R8A7794_CLK_SCIFA3		6
+ #define R8A7794_CLK_SCIFA4		7
