@@ -1,49 +1,54 @@
 From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v3 01/12] of: add vendor prefix for J-Core
-Date: Wed, 27 Jul 2016 01:31:12 -0400
-Message-ID: <20160727053112.GY15995@brightrain.aerifal.cx>
-References: <cover.1464148904.git.dalias@libc.org>
- <b6d33800300bde8f1d9a7b88a715d741548fad4a.1464148904.git.dalias@libc.org>
- <CAL_JsqKWq-DBQMWof6hyh0_sS4OPOP7afJXYdaWTiqf15MpKAg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Subject: [PATCH v4 1/2] of: add J-Core interrupt controller bindings
+Date: Wed, 27 Jul 2016 05:35:09 +0000
+Message-ID: <9039efc9336670b3399b9104f1ab5e1a2d8d9025.1469595861.git.dalias@libc.org>
+References: <cover.1469595860.git.dalias@libc.org>
 Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKWq-DBQMWof6hyh0_sS4OPOP7afJXYdaWTiqf15MpKAg@mail.gmail.com>
+In-Reply-To: <cover.1469595860.git.dalias@libc.org>
 Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 08:18:06AM -0500, Rob Herring wrote:
-> On Wed, May 25, 2016 at 12:43 AM, Rich Felker <dalias@libc.org> wrote:
-> > The J-Core project (j-core.org) produces open source cpu and SoC
-> > peripheral cores synthesizable as FPGA bitstreams or ASICs.
-> >
-> > Signed-off-by: Rich Felker <dalias@libc.org>
-> 
-> Please add acks when posting subsequent versions.
-> 
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index 86740d4..9c070b8 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -126,6 +126,7 @@ invensense  InvenSense Inc.
-> >  isee   ISEE 2007 S.L.
-> >  isil   Intersil
-> >  issi   Integrated Silicon Solutions Inc.
-> > +jcore  J-Core.org
-> >  jedec  JEDEC Solid State Technology Association
-> >  karo   Ka-Ro electronics GmbH
-> >  keymile        Keymile GmbH
-> > --
-> > 2.8.1
+Signed-off-by: Rich Felker <dalias@libc.org>
+---
+ .../bindings/interrupt-controller/jcore,aic.txt    | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
 
-Since this was previously acked, can I include it in my tree for
-upstreaming? Or do you want me to submit the patch again?
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+new file mode 100644
+index 0000000..b7a56ad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+@@ -0,0 +1,26 @@
++J-Core Advanced Interrupt Controller
++
++Required properties:
++
++- compatible: Should be "jcore,aic1" for the (obsolete) first-generation aic
++  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
++  the "aic2" core with 64 interrupts.
++
++- reg: Memory region(s) for configuration. For SMP, there should be one
++  region per cpu, indexed by the sequential, zero-based hardware cpu
++  number (which is also the logical cpu number).
++
++- interrupt-controller: Identifies the node as an interrupt controller
++
++- #interrupt-cells: Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++
++
++Example:
++
++aic: interrupt-controller@200 {
++	compatible = "jcore,aic2";
++	reg = < 0x200 0x30 0x500 0x30 >;
++	interrupt-controller;
++	#interrupt-cells = <1>;
++};
+-- 
+2.8.1
 
-Rich
+
