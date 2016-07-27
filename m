@@ -1,86 +1,48 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [v7 PATCH 5/6] Documentation: bindings: add dt documentation for cdn
- DP controller
-Date: Wed, 27 Jul 2016 21:07:15 +0800
-Message-ID: <1469624836-22792-6-git-send-email-zyw@rock-chips.com>
-References: <1469624836-22792-1-git-send-email-zyw@rock-chips.com>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] irqchip: add J-Core AIC driver
+Date: Wed, 27 Jul 2016 09:08:21 -0400
+Message-ID: <20160727130821.GB15995@brightrain.aerifal.cx>
+References: <cover.1469595860.git.dalias@libc.org>
+ <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
+ <20160727101537.GD12880@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1469624836-22792-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, wulf@rock-chips.com, marcheu@chromium.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160727101537.GD12880@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIGEgYmluZGluZyB0aGF0IGRlc2NyaWJlcyB0aGUgY2RuIERQIGNvbnRy
-b2xsZXIgZm9yCnJrMzM5OS4KClNpZ25lZC1vZmYtYnk6IENocmlzIFpob25nIDx6eXdAcm9jay1j
-aGlwcy5jb20+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKLS0tCgpD
-aGFuZ2VzIGluIHY3OiBOb25lCkNoYW5nZXMgaW4gdjY6Ci0gYWRkIGFzc2lnbmVkLWNsb2NrcyBh
-bmQgYXNzaWduZWQtY2xvY2stcmF0ZXMKLSBhZGQgcG93ZXItZG9tYWlucwoKQ2hhbmdlcyBpbiB2
-NTogTm9uZQpDaGFuZ2VzIGluIHY0OgotIGFkZCBhIHJlc2V0IG5vZGUKLSBzdXBwb3J0IDIgcGh5
-cwoKQ2hhbmdlcyBpbiB2MzoKLSBhZGQgU29DIHNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5nCi0g
-cmVtb3ZlIHJlZyA9IDwxPjsKCkNoYW5nZXMgaW4gdjI6IE5vbmUKQ2hhbmdlcyBpbiB2MToKLSBh
-ZGQgZXh0Y29uIG5vZGUgZGVzY3JpcHRpb24KLSBhZGQgI3NvdW5kLWRhaS1jZWxscyBkZXNjcmlw
-dGlvbgoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQg
-IHwgNzQgKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDc0IGluc2VydGlv
-bnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9yb2NrY2hpcC9jZG4tZHAtcm9ja2NoaXAudHh0CgpkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvY2RuLWRwLXJv
-Y2tjaGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jv
-Y2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAw
-MDAwMC4uYWY4N2RjYwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2Nkbi1kcC1yb2NrY2hpcC50eHQKQEAgLTAsMCAr
-MSw3NCBAQAorUm9ja2NoaXAgUkszMzk5IHNwZWNpZmljIGV4dGVuc2lvbnMgdG8gdGhlIGNkbiBE
-aXNwbGF5IFBvcnQKKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CisKK1JlcXVpcmVk
-IHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IG11c3QgYmUgInJvY2tjaGlwLHJrMzM5OS1jZG4t
-ZHAiCisKKy0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNvbnRyb2xsZXIgYW5k
-IGxlbmd0aAorCistIGNsb2NrczogZnJvbSBjb21tb24gY2xvY2sgYmluZGluZzogaGFuZGxlIHRv
-IGRwIGNsb2NrLgorCistIGNsb2NrLW5hbWVzOiBmcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nOgor
-CSAgICAgICBSZXF1aXJlZCBlbGVtZW50czogImNvcmUtY2xrIiAicGNsayIgInNwZGlmIgorCist
-IHJlc2V0cyA6IGEgbGlzdCBvZiBwaGFuZGxlICsgcmVzZXQgc3BlY2lmaWVyIHBhaXJzCistIHJl
-c2V0LW5hbWVzIDogc3RyaW5nIHJlc2V0IG5hbWUsIG11c3QgYmU6CisJCSJzcGRpZiIKKy0gcG93
-ZXItZG9tYWlucyA6IHBvd2VyLWRvbWFpbiBwcm9wZXJ0eSBkZWZpbmVkIHdpdGggYSBwaGFuZGxl
-CisJCSAgdG8gcmVzcGVjdGl2ZSBwb3dlciBkb21haW4uCistIGFzc2lnbmVkLWNsb2NrczogbWFp
-biBjbG9jaywgc2hvdWxkIGJlIDwmY3J1IFNDTEtfRFBfQ09SRT4KKy0gYXNzaWduZWQtY2xvY2st
-cmF0ZXMgOiB0aGUgRFAgY29yZSBjbGsgZnJlcXVlbmN5LCBzaGFsbCBiZTogMTAwMDAwMDAwCisK
-Ky0gcm9ja2NoaXAsZ3JmOiB0aGlzIHNvYyBzaG91bGQgc2V0IEdSRiByZWdzLCBzbyBuZWVkIGdl
-dCBncmYgaGVyZS4KKworLSBwb3J0czogY29udGFpbiBhIHBvcnQgbm9kZXMgd2l0aCBlbmRwb2lu
-dCBkZWZpbml0aW9ucyBhcyBkZWZpbmVkIGluCisJIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dC4KKwkgY29udGFpbmVkIDIgZW5kcG9p
-bnRzLCBjb25uZWN0aW5nIHRvIHRoZSBvdXRwdXQgb2Ygdm9wLgorCistIHBoeXM6IGZyb20gZ2Vu
-ZXJhbCBQSFkgYmluZGluZzogdGhlIHBoYW5kbGUgZm9yIHRoZSBQSFkgZGV2aWNlLgorCistIGV4
-dGNvbjogZXh0Y29uIHNwZWNpZmllciBmb3IgdGhlIFBvd2VyIERlbGl2ZXJ5CisKKy0gI3NvdW5k
-LWRhaS1jZWxscyA9IGl0IG11c3QgYmUgMSBpZiB5b3VyIHN5c3RlbSBpcyB1c2luZyAyIERBSXM6
-IEkyUywgU1BESUYKKworLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQorCitFeGFtcGxlOgorCWNkbl9k
-cDogZHBAZmVjMDAwMDAgeworCQljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzM5OS1jZG4tZHAi
-OworCQlyZWcgPSA8MHgwIDB4ZmVjMDAwMDAgMHgwIDB4MTAwMDAwPjsKKwkJaW50ZXJydXB0cyA9
-IDxHSUNfU1BJIDkgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCWNsb2NrcyA9IDwmY3J1IFNDTEtf
-RFBfQ09SRT4sIDwmY3J1IFBDTEtfRFBfQ1RSTD4sCisJCQkgPCZjcnUgU0NMS19TUERJRl9SRUNf
-RFBUWD47CisJCWNsb2NrLW5hbWVzID0gImNvcmUtY2xrIiwgInBjbGsiLCAic3BkaWYiOworCQlh
-c3NpZ25lZC1jbG9ja3MgPSA8JmNydSBTQ0xLX0RQX0NPUkU+OworCQlhc3NpZ25lZC1jbG9jay1y
-YXRlcyA9IDwxMDAwMDAwMDA+OworCQlwb3dlci1kb21haW5zID0gPCZwb3dlciBSSzMzOTlfUERf
-SERDUD47CisJCXBoeXMgPSA8JnRjcGh5MD4sIDwmdGNwaHkxPjsKKwkJcmVzZXRzID0gPCZjcnUg
-U1JTVF9EUFRYX1NQRElGX1JFQz47CisJCXJlc2V0LW5hbWVzID0gInNwZGlmIjsKKwkJZXh0Y29u
-ID0gPCZmdXNiMD4sIDwmZnVzYjE+OworCQlyb2NrY2hpcCxncmYgPSA8JmdyZj47CisJCSNhZGRy
-ZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwkJI3NvdW5kLWRhaS1jZWxs
-cyA9IDwxPjsKKworCQlwb3J0cyB7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXpl
-LWNlbGxzID0gPDA+OworCisJCQlkcF9pbjogcG9ydCB7CisJCQkJI2FkZHJlc3MtY2VsbHMgPSA8
-MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJZHBfaW5fdm9wYjogZW5kcG9pbnRAMCB7
-CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2b3BiX291dF9kcD47
-CisJCQkJfTsKKworCQkJCWRwX2luX3ZvcGw6IGVuZHBvaW50QDEgeworCQkJCQlyZWcgPSA8MT47
-CisJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdm9wbF9vdXRfZHA+OworCQkJCX07CisJCQl9Owor
-CQl9OworCX07Ci0tIAoyLjYuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+On Wed, Jul 27, 2016 at 11:15:38AM +0100, Mark Rutland wrote:
+> On Wed, Jul 27, 2016 at 05:35:09AM +0000, Rich Felker wrote:
+> > For simplicity, there is no aic1-specific logic in the driver beyond
+> > setting the priority register, which is necessary for interrupts to
+> > work at all. Eventually aic1 will likely be phased out, but it's
+> > currently in use in deployments and all released bitstream binaries.
+> 
+> [...]
+> 
+> > +	if (!of_device_is_compatible(node, "jcore,aic2")) {
+> 
+> If this is only meant to run for AIC1, it would be better to check for
+> the "jcore,aic1" compatible string explicitly.
+> 
+> While that shouldn't matter much currently, it better matches the intent
+> described in the commit message, and avoids surprises and/or churn in
+> future if you have AIC3+.
+
+My intent in doing this was to support a DT that might claim an aic2
+is aic1-compatible as a fallback "compatible" property. The hardware
+is designed such that this works (ignoring the spurious writes to
+unused prio registers) as long as the DT still has the right irq
+numbers for attached devices. I'm not sure we actually need to do that
+for compatibility with any existing software but I thought it better
+not to preclude it.
+
+Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
