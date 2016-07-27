@@ -1,136 +1,110 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: [PATCH V2] documentation: da9052: Update regulator bindings names to
- match DA9052/53 driver expectations
-Date: Wed, 27 Jul 2016 16:04:15 +0100
-Message-ID: <20160727150638.8A2703FB13@swsrvapps-01.diasemi.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v23 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Date: Wed, 27 Jul 2016 10:09:33 -0500
+Message-ID: <20160727150933.GA25732@rob-hp-laptop>
+References: <20160726075659.2290-1-takahiro.akashi@linaro.org>
+ <20160726080206.2441-1-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: DEVICETREE <devicetree@vger.kernel.org>, DTKERNEL <dt@kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Ying-Chun Liu <paul.liu@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160726080206.2441-1-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+On Tue, Jul 26, 2016 at 05:02:06PM +0900, AKASHI Takahiro wrote:
+> From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> 
+> Add documentation for
+> 	linux,crashkernel-base and crashkernel-size,
+> 	linux,usable-memory-range, and
+> 	linux,elfcorehdr
+> used by arm64 kexec/kdump to decribe the kdump reserved area, and
+> the elfcorehdr's location within it.
+> 
+> Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> [takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
+>     renamed "usable-memory" to "usable-memory-range",
+>     added "linux,crashkernel-base" and "-size" ]
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/chosen.txt | 45 ++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 6ae9d82..d7a3a86 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -52,3 +52,48 @@ This property is set (currently only on PowerPC, and only needed on
+>  book3e) by some versions of kexec-tools to tell the new kernel that it
+>  is being booted by kexec, as the booting environment may differ (e.g.
+>  a different secondary CPU release mechanism)
+> +
+> +linux,crashkernel-base
+> +linux,crashkernel-size
+> +----------------------
+> +These properties are set (on PowerPC and arm64) during kdump to tell
+> +use-space tools, like kexec-tools, the base address of the crash-dump
 
-Buck and LDO binding name changes.
+s/use/user/
 
-The binding names for the regulators have been changed to match the current
-expectation from existing device tree source files.
+Ideally, userspace should not care whether this comes from DT, kernel 
+command-line or somewhere else and should be exposed in some source 
+independent way. However, that's not really the problem for the binding.
 
-This fix rectifies the disparity between what currently exists in some
-.dts[i] board files and what is listed in this binding document. This
-change re-aligns those differences and also brings the binding document
-in-line with the expectations of the product datasheet from Dialog
-Semiconductor.
+> +kernel's reserved area of memory and the size. e.g.
+> +
+> +/ {
+> +	chosen {
+> +		linux,crashkernel-base = <0x9 0xf0000000>;
+> +		linux,crashkernel-size = <0x0 0x10000000>;
+> +	};
+> +};
+> +
+> +linux,usable-memory-range
+> +-------------------------
+> +
+> +This property is set (currently only on arm64) during kdump to tell
+> +the crash-dump kernel the base address of its reserved area of memory,
+> +and the size. e.g.
+> +
+> +/ {
+> +	chosen {
+> +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
 
-Bucks and LDOs now follow the expected notation:
-{ buck1, buck2, buck3, buck4 }
-{ ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10 }
+This is the same range as linux,crashkernel-*, but used by the 2nd 
+kernel? Why not just update the memory node or use command line mem= 
+parameter?
 
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Why has PPC not need this and ARM does? 
 
----
-This patch applies against linux-next and v4.7
-
-Patch History
--------------
-in V2: update to remove "Hi" from the beginning of the commit message;
-       added Acked-by Rob Herring;
-
-Hi Mark,
-
-Several device tree source files use a regulator naming scheme different to
-that found in the binding text document. Since those have been used
-already, I would like ensure to the binding document follows those existing
-DT file naming conventions.
-
-Please refer to the files containing da9052/53 references:
- - ./arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
- - ./arch/arm/boot/dts/imx53-qsb.dts
-
-Those board files use the naming convention:
- { buck1, buck2, buck3, buck4 }
- { ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10 }
-
-Instead of the existing suggestion in the device tree binding file:
- { buck0, buck1, buck2, buck3 }
- { ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10, ldo11, ldo12, ldo13 }
-
-The binding file regulator names (as it stands) does not reflect any
-real-world uses I can find. This change would bring it in-line with
-currect expectations from existing DTS files and make it similar enough to
-the product datasheets to be "less confusing" than it currently is.
-
-Regards,
-Steve
- 
-See reference:
-https://lkml.org/lkml/2016/7/25/197
-
-
- .../devicetree/bindings/mfd/da9052-i2c.txt         | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-index 1857f4a..9554292 100644
---- a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-+++ b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-@@ -8,10 +8,13 @@ Sub-nodes:
- - regulators : Contain the regulator nodes. The DA9052/53 regulators are
-   bound using their names as listed below:
- 
--    buck0     : regulator BUCK0
--    buck1     : regulator BUCK1
--    buck2     : regulator BUCK2
--    buck3     : regulator BUCK3
-+    buck1     : regulator BUCK CORE
-+    buck2     : regulator BUCK PRO
-+    buck3     : regulator BUCK MEM
-+    buck4     : regulator BUCK PERI
-+    ldo1      : regulator LDO1
-+    ldo2      : regulator LDO2
-+    ldo3      : regulator LDO3
-     ldo4      : regulator LDO4
-     ldo5      : regulator LDO5
-     ldo6      : regulator LDO6
-@@ -19,9 +22,6 @@ Sub-nodes:
-     ldo8      : regulator LDO8
-     ldo9      : regulator LDO9
-     ldo10     : regulator LDO10
--    ldo11     : regulator LDO11
--    ldo12     : regulator LDO12
--    ldo13     : regulator LDO13
- 
-   The bindings details of individual regulator device can be found in:
-   Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -36,22 +36,22 @@ i2c@63fc8000 { /* I2C1 */
- 		reg = <0x48>;
- 
- 		regulators {
--			buck0 {
-+			buck1 {
- 				regulator-min-microvolt = <500000>;
- 				regulator-max-microvolt = <2075000>;
- 			};
- 
--			buck1 {
-+			buck2 {
- 				regulator-min-microvolt = <500000>;
- 				regulator-max-microvolt = <2075000>;
- 			};
- 
--			buck2 {
-+			buck3 {
- 				regulator-min-microvolt = <925000>;
- 				regulator-max-microvolt = <2500000>;
- 			};
- 
--			buck3 {
-+			buck4 {
- 				regulator-min-microvolt = <925000>;
- 				regulator-max-microvolt = <2500000>;
- 			};
--- 
-end-of-patch for PATCH V2
+> +	};
+> +};
+> +
+> +Please note that, if this property is present, any memory regions under
+> +"memory" nodes will be ignored.
+> +
+> +linux,elfcorehdr
+> +----------------
+> +
+> +This property is set (currently only on arm64) during kdump to tell
+> +the crash-dump kernel the address and size of the elfcorehdr that describes
+> +the old kernel's memory as an elf file. This memory must reside within
+> +the area described by 'linux,usable-memory-range'. e.g.
+> +
+> +/ {
+> +	chosen {
+> +		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
+> +		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
+> +	};
+> +};
+> -- 
+> 2.9.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
