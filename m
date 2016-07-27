@@ -1,81 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V1] documentation: da9052: Update regulator bindings
- names to match DA9052/53 DTS expectations
-Date: Wed, 27 Jul 2016 09:51:51 -0500
-Message-ID: <20160727145151.GA20193@rob-hp-laptop>
-References: <20160725152349.A692D3FACB@swsrvapps-01.diasemi.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] arm: dts: rockchip: add reset node for the exist
+ saradc SoCs
+Date: Wed, 27 Jul 2016 07:52:56 -0700
+Message-ID: <5798CAC8.6030403@roeck-us.net>
+References: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
+ <1469629447-544-4-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160725152349.A692D3FACB@swsrvapps-01.diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, DTKERNEL <dt@kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, Ying-Chun Liu <paul.liu@linaro.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469629447-544-4-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 25, 2016 at 04:20:54PM +0100, Steve Twiss wrote:
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-> Hi Mark,
+On 07/27/2016 07:24 AM, Caesar Wang wrote:
+> SARADC controller needs to be reset before programming it, otherwise
+> it will not function properly.
+>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Drop this from the commit msg.
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-> 
-> Buck and LDO binding name changes.
-> 
-> The binding names for the regulators have been changed to match the current
-> expectation from existing device tree source files.
-> 
-> This fix rectifies the disparity between what currently exists in some
-> .dts[i] board files and what is listed in this binding document. This
-> change re-aligns those differences and also brings the binding document
-> in-line with the expectations of the product datasheet from Dialog
-> Semiconductor.
-> 
-> Bucks and LDOs now follow the expected notation:
-> { buck1, buck2, buck3, buck4 }
-> { ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10 }
-> 
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
 > ---
-> This patch applies against linux-next and v4.7
-> 
-> Hi,
-> 
-> Several device tree source files use a regulator naming scheme different to
-> that found in the binding text document. Since those have been used
-> already, I would like ensure to the binding document follows those existing
-> DT file naming conventions.
-> 
-> Please refer to the files containing da9052/53 references:
->  - ./arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
->  - ./arch/arm/boot/dts/imx53-qsb.dts
-> 
-> Those board files use the naming convention:
->  { buck1, buck2, buck3, buck4 }
->  { ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10 }
-> 
-> Instead of the existing suggestion in the device tree binding file:
->  { buck0, buck1, buck2, buck3 }
->  { ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10, ldo11, ldo12, ldo13 }
-> 
-> The binding file regulator names (as it stands) does not reflect any
-> real-world uses I can find. This change would bring it in-line with
-> currect expectations from existing DTS files and make it similar enough to
-> the product datasheets to be "less confusing" than it currently is.
-> 
-> Regards,
-> Steve
->  
-> See reference:
-> https://lkml.org/lkml/2016/7/25/197
-> 
-> 
->  .../devicetree/bindings/mfd/da9052-i2c.txt         | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-
-Otherwise,
-
-Acked-by: Rob Herring <robh@kernel.org>
+>
+> Changes in v3: None
+> Changes in v2: None
+>
+>   arch/arm/boot/dts/rk3066a.dtsi | 2 ++
+>   arch/arm/boot/dts/rk3288.dtsi  | 2 ++
+>   arch/arm/boot/dts/rk3xxx.dtsi  | 2 ++
+>   3 files changed, 6 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+> index c0ba86c..0d0dae3 100644
+> --- a/arch/arm/boot/dts/rk3066a.dtsi
+> +++ b/arch/arm/boot/dts/rk3066a.dtsi
+> @@ -197,6 +197,8 @@
+>   		clock-names = "saradc", "apb_pclk";
+>   		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+>   		#io-channel-cells = <1>;
+> +		resets = <&cru SRST_SARADC>;
+> +		reset-names = "saradc-apb";
+>   		status = "disabled";
+>   	};
+>
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index cd33f01..91c4b3c 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -279,6 +279,8 @@
+>   		#io-channel-cells = <1>;
+>   		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+>   		clock-names = "saradc", "apb_pclk";
+> +		resets = <&cru SRST_SARADC>;
+> +		reset-names = "saradc-apb";
+>   		status = "disabled";
+>   	};
+>
+> diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+> index 99bbcc2..e2cd683 100644
+> --- a/arch/arm/boot/dts/rk3xxx.dtsi
+> +++ b/arch/arm/boot/dts/rk3xxx.dtsi
+> @@ -399,6 +399,8 @@
+>   		#io-channel-cells = <1>;
+>   		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+>   		clock-names = "saradc", "apb_pclk";
+> +		resets = <&cru SRST_SARADC>;
+> +		reset-names = "saradc-apb";
+>   		status = "disabled";
+>   	};
+>
+>
