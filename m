@@ -1,56 +1,37 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v4 3/5] power_supply: tps65217-charger: Add support for
- IRQs
-Date: Wed, 27 Jul 2016 22:04:51 +0200
-Message-ID: <20160727200450.GA14663@earth>
-References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
- <20160620105056.25843-4-m.niestroj@grinn-global.com>
- <e70d4f16-e727-6729-b3f2-fad2dd7847cb@grinn-global.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 05/10] EDAC, altera: Add Arria10 NAND EDAC support
+Date: Wed, 27 Jul 2016 22:17:04 +0200
+Message-ID: <20160727201704.GA25159@nazgul.tnic>
+References: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
+ <1468512408-5156-6-git-send-email-tthayer@opensource.altera.com>
+ <20160727171035.GA23851@nazgul.tnic>
+ <579900B8.3020502@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e70d4f16-e727-6729-b3f2-fad2dd7847cb@grinn-global.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+In-Reply-To: <579900B8.3020502@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jul 27, 2016 at 01:43:04PM -0500, Thor Thayer wrote:
+> Yes, that's better. I was trying to stay within the 80 character limit but
+> missed the if/else if improvement. Thanks, Boris!
+> 
+> Should I re-submit?
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Nah, no need.
 
-Hi,
+I'd only ask you to test the final result once I've pushed it out after
+the merge window is over.
 
-On Wed, Jul 27, 2016 at 11:14:27AM +0200, Marcin Niestroj wrote:
-> ping
+Thanks.
 
-I missed this one. We are currently in the merge window. I will have
-a look after 4.8-rc1 has been released.
+-- 
+Regards/Gruss,
+    Boris.
 
--- Sebastian
-
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXmRPfAAoJENju1/PIO/qa2isP+wfS1bY1onLzQTObSas+JKIk
-UuN0x/HSiyOUauI8+V33K7UAjioQm5AlB/a/XXGjtj9W5KmgRKZyCz7Pomyjebol
-ifSypuanXuT4NjHHYH6xtu60R8Wq0ibnmeLAImJlei6jTE+xuex8U9Ztmo9c5fHm
-9S2sqV8T9819m380YHUuzf5kVl9X1WUyATOrdWGJ0H6az56tiLG3Bd3PLCgkw6IK
-127/NWCm4dNpL0XS4EFD4NyQAj75V4f+4TgoX57Ov/d9M3mqNuXfNqCScutlD2Rs
-EJp0T81sItQDU8ilC5/u1Gr9pxmYTGTuoL5l94Xv7M/4dRMwytFzjwfpEbvY7edA
-iIAvWqLzeUFpcrXaxLxctZPbNZot5E/TdkdJbFaRWwJMUdoyxGqWpuMyTairq/72
-QACWuhZfTghVYaozT9lpZEmuInjv6TdUKL1cu4zXx4l565FF2O7H+kwzdC8g55Hs
-+cyryykp0dqF50ryh1gUy15IPwt5ep22HbO1/FDIOFl9TYBvF1Sk+F67fCEr1rlZ
-LnbM1LxbFzTtI/nqy0+gHwWgBfcOyuH+8spdIiwExKIqaHCdka70ufR3UEmL/kKh
-4lNnHTnvrUDkgiQJQQDoTM5QxsNPUpH4ise4uSLh4/ZYdF6S4IGO2dVaTu90LUer
-jIP8V7dbXgt/jDWYnpLL
-=JdyA
------END PGP SIGNATURE-----
-
---7AUc2qLy4jB3hD7Z--
+ECO tip #101: Trim your mails when you reply.
+--
