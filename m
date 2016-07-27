@@ -1,96 +1,52 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC PATCH v2 1/4] Documentation: DT: net: Add Xilinx
- gmiitorgmii converter device tree binding documentation
-Date: Wed, 27 Jul 2016 10:05:26 +0200
-Message-ID: <20160727080526.GH11538@lunn.ch>
-References: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
- <1467623084-15471-2-git-send-email-appanad@xilinx.com>
- <20160704140458.GC3282@lunn.ch>
- <03CA77BA8AF6F1469AEDFBDA1322A7B74A193913@XAP-PVEXMBX02.xlnx.xilinx.com>
- <20160706142121.GI19800@lunn.ch>
- <03CA77BA8AF6F1469AEDFBDA1322A7B74A19393B@XAP-PVEXMBX02.xlnx.xilinx.com>
- <C246CAC1457055469EF09E3A7AC4E11A4A5C2387@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3] arm64: dts: mt8173: add mmsel clocks for 4K support
+Date: Wed, 27 Jul 2016 16:25:14 +0800
+Message-ID: <1469607914-64831-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A5C2387@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Junzhi Zhao <junzhi.zhao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Appana
+If MT8173 can support HDMI 4K resoultion, the
+VENCPLL should be configured to 800MHZ.
+We didn't set VENCPLL directly, we set the
+mm_sel to 400MHz statically in the board device tree.
 
-Here is roughly what i was thinking:
+Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+Changes since v2:
+ - Align the clocks of dpi0 node.
 
-struct priv {
-       phy_device *master;
-       phy_device *slave;
-       struct phy_driver *slave_drv;
-};
+Changes since v1:
+ - Do not set the VENCPLL by clk_set_rate
+   at display driver.
+ - Configure the mm_sel to 400MHz statically
+   in the board device tree.
+---
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
-phy_status_clone(phy_device *master, phy_device *slave)
-{
-	master->speed = slave->speed;
-	master->duplex = slave->duplex;
-	master->pause = slave->pause;
-}
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 78529e4..9c22204 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -690,7 +690,9 @@
+ 			compatible = "mediatek,mt8173-mmsys", "syscon";
+ 			reg = <0 0x14000000 0 0x1000>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
++			clocks = <&topckgen CLK_TOP_MM_SEL>;
+ 			#clock-cells = <1>;
++			clock-frequency  = <400000000>;
+ 		};
+ 
+ 		ovl0: ovl@1400c000 {
+-- 
+1.7.9.5
 
-read_status(struct phy_device *phydev)
-{
-	struct priv *priv = phydev->priv;
-
-	/* Get the status from the slave, and duplicate in into the
-	 * master */
-	 slave_drv->read_status(priv->slave);
-	 phy_status_clone(priv->master, priv->slave);
-
-	 /* Update the gmiitorgmii with the current link parameters */
-	 update_link(master);
-}
-
-config_init(struct phy_device *phydev)
-{
-	struct priv *priv = phydev->priv;
-
-	/* Configure the slave, and duplicate in into the master */
-	slave_drv->config_init(priv->slave);
-	phy_status_clone(priv->master, priv->slave);
-}
-
-struct phy_driver master_drv = {
-       .read_status = read_status,
-       .config_init = config_init,
-       .soft_reset  = ...
-       .suspend = ...
-};
-
-probe(mdio_device *mdio)
-{
-	struct priv *priv = devm_alloc();
-
-	/* Use the phy-handle property to find the slave phy */
-	node_phy = of_parse_phandle(mdio->of_node, "phy", 0);
-	priv->slave = of_phy_find_device(node_phy);
-
-	/* Create the master phy on the control address. Use the phy
-	   ID from the slave. */
-	priv->master = phy_device_create(mdio->bus, mdio->addr,
-	  				 phy->slave->phy_id,
-					 phy->slave->is_c45,
-					 phy->slave->c45_ids);
-
-	slave_dev_drv = phydev->mdio.dev.driver;
-	priv->slave_drv = to_phy_driver(slave_dev_drv);
-	priv->master->mdio.dev.driver = master_drv;
-}
-
-It would however be nice to only have one phydev structure, so you are
-not copying status and settings backwards and forwards from one to the
-other all the time, and need a wrapper for every function in
-phy_driver. Studying the structures a bit, that might be possible. You
-would then only need to wrap the read_status(), so that when the link
-speed/duplex changes, you can configure the converter as appropriate.
-
-	     Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
