@@ -1,67 +1,45 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v3 4/4] arm: dts: rockchip: add reset node for the exist saradc SoCs
-Date: Wed, 27 Jul 2016 22:24:07 +0800
-Message-ID: <1469629447-544-4-git-send-email-wxt@rock-chips.com>
-References: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, heiko@sntech.de
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, john@metanate.com, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/1] power: sbs-manager: Add interrupt support and
+ battery detect gpios
+Date: Wed, 27 Jul 2016 09:46:09 -0500
+Message-ID: <20160727144609.GA12462@rob-hp-laptop>
+References: <1469433003-68564-1-git-send-email-preid@electromag.com.au>
+ <1469433003-68564-2-git-send-email-preid@electromag.com.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1469433003-68564-2-git-send-email-preid@electromag.com.au>
+Sender: linux-pm-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: mark.rutland@arm.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, karl-heinz@schneider-inet.de, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SARADC controller needs to be reset before programming it, otherwise
-it will not function properly.
+On Mon, Jul 25, 2016 at 03:50:03PM +0800, Phil Reid wrote:
+> This patch added irq support for the SMBALERT pin and notification of
+> the battery removal / insertion. The sbs manager would typically be
+> used with the corresponding sbs-battery driver that currently uses a
+> gpio input for battery presence and interrupt. To remain compatible with
+> that existing driver this patch implements GPIO inputs with interrupt
+> support. IRQ masking is performed in software as the hardware does not
+> support masking of notifications from each battery.
+> In addition a power_supply change notification is generated for the sbs
+> manager device when the AC present flag is changed.
+> Tested with LTC1760 and dual sbs compatible batteries.
 
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
----
+Please don't submit a binding and immediately turn around and add to it. 
+While that is often preferred for drivers or kernel features, bindings 
+should be complete as possible and not evolve. Combine this with your 
+previous patch add sbs-mgr if that hasn't been accepted yet.
 
-Changes in v3: None
-Changes in v2: None
+IMO, the sbs-bat should just be a interrupt and making it and this 
+binding a GPIO is overkill. Since batteries nodes using this will be 
+new, there's no reason the driver can't be updated to support 
+interrupts.
 
- arch/arm/boot/dts/rk3066a.dtsi | 2 ++
- arch/arm/boot/dts/rk3288.dtsi  | 2 ++
- arch/arm/boot/dts/rk3xxx.dtsi  | 2 ++
- 3 files changed, 6 insertions(+)
+Also, I'm not even convinced you need the sbs-mgr to be an 
+interrupt-controller. Is this anything more that just wire-OR'ed 
+interrupt lines which can be handled as shared irq? Does reading 
+SBSM_CMD_BATSYSSTATE have a side effect for example?
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index c0ba86c..0d0dae3 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -197,6 +197,8 @@
- 		clock-names = "saradc", "apb_pclk";
- 		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
- 		#io-channel-cells = <1>;
-+		resets = <&cru SRST_SARADC>;
-+		reset-names = "saradc-apb";
- 		status = "disabled";
- 	};
- 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cd33f01..91c4b3c 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -279,6 +279,8 @@
- 		#io-channel-cells = <1>;
- 		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
- 		clock-names = "saradc", "apb_pclk";
-+		resets = <&cru SRST_SARADC>;
-+		reset-names = "saradc-apb";
- 		status = "disabled";
- 	};
- 
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 99bbcc2..e2cd683 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -399,6 +399,8 @@
- 		#io-channel-cells = <1>;
- 		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
- 		clock-names = "saradc", "apb_pclk";
-+		resets = <&cru SRST_SARADC>;
-+		reset-names = "saradc-apb";
- 		status = "disabled";
- 	};
- 
--- 
-1.9.1
+Rob
