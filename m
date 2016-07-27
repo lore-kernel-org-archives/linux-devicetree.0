@@ -1,40 +1,56 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 2/2] irqchip: add J-Core AIC driver
-Date: Wed, 27 Jul 2016 11:15:38 +0100
-Message-ID: <20160727101537.GD12880@leverpostej>
-References: <cover.1469595860.git.dalias@libc.org>
- <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: armada388-clearfog: number LAN ports properly
+Date: Wed, 27 Jul 2016 12:19:01 +0200
+Message-ID: <87vazro02y.fsf@free-electrons.com>
+References: <E1bLWIh-0001ZK-Ai@rmk-PC.armlinux.org.uk>
+	<20160708152616.GF8426@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160708152616.GF8426-g2DYL2Zd6BY@public.gmane.org> (Andrew Lunn's message of "Fri, 8
+	Jul 2016 17:26:16 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 05:35:09AM +0000, Rich Felker wrote:
-> For simplicity, there is no aic1-specific logic in the driver beyond
-> setting the priority register, which is necessary for interrupts to
-> work at all. Eventually aic1 will likely be phased out, but it's
-> currently in use in deployments and all released bitstream binaries.
+Hi,
+ 
+ On ven., juil. 08 2016, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
 
-[...]
+> On Fri, Jul 08, 2016 at 02:58:39PM +0100, Russell King wrote:
+>> Currently, the ports as seen from the rear number as:
+>> 
+>> 	eth0 sfp lan5 lan4 lan3 lan2 lan1 lan6
+>> 
+>> which is illogical - this came about because the rev 2.0 boards have the
+>> LEDs on the front for the DSA switch (lan5-1) reversed.  Rev 2.1 boards
+>> fixed the LED issue, and the Clearfog case numbers the lan ports
+>> increasing from left to right.
+>> 
+>> Maintaining this illogical numbering causes confusion, with reports that
+>> "my link isn't coming up" and "my connection negotiates 10base-Half"
+>> both of which are due to people thinking that the port next to the SFP
+>> is lan1.
+>> 
+>> Fix this by renumbering the ports to match people's expectations.
+>> 
+>> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+>
+> Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-> +	if (!of_device_is_compatible(node, "jcore,aic2")) {
+I missed this patch, but I now applied it on mvebu/dt-4.9
 
-If this is only meant to run for AIC1, it would be better to check for
-the "jcore,aic1" compatible string explicitly.
+Thanks,
 
-While that shouldn't matter much currently, it better matches the intent
-described in the commit message, and avoids surprises and/or churn in
-future if you have AIC3+.
+Gregory
 
-Mark.
-
-> +IRQCHIP_DECLARE(jcore_aic2, "jcore,aic2", aic_irq_of_init);
-> +IRQCHIP_DECLARE(jcore_aic1, "jcore,aic1", aic_irq_of_init);
-> -- 
-> 2.8.1
-> 
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
