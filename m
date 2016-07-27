@@ -1,71 +1,50 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v4 4/6] ARM: dts: r8a7794: add Audio-DMAC support
-Date: Thu, 28 Jul 2016 00:02:18 +0300
-Message-ID: <6419837.qqlciQTB8q@wasted.cogentembedded.com>
-References: <3910788.ckTpUWEs6B@wasted.cogentembedded.com>
+From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] tpm: devicetree: document
+	properties for cr50
+Date: Wed, 27 Jul 2016 14:02:32 -0700
+Message-ID: <20160727210232.GB119121@apronin>
+References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
+	<cover.1468985673.git.apronin@chromium.org>
+	<5274cc806888a709c639e701dad894543885b2c9.1468985673.git.apronin@chromium.org>
+	<20160720190303.GA5620@rob-hp-laptop>
+	<20160720194912.GA61154@apronin>
+	<20160720195422.GA30947@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <3910788.ckTpUWEs6B@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160720195422.GA30947-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe Audio-DMAC in the R8A7794 device tree.
+On Wed, Jul 20, 2016 at 01:54:22PM -0600, Jason Gunthorpe wrote:
+> On Wed, Jul 20, 2016 at 12:49:12PM -0700, Andrey Pronin wrote:
+> 
+> > Sorry, I just updated this patch description in v2 to indicate why they are not
+> > hard-coded, but didn't answer explicitly. As the firmware changes, a different
+> > revision of it can have a different time before it sleeps in its configuration,
+> > or the time it takes it to startup may be different. Thus, there's a way to
+> > set it here w/o changing the driver.
+> 
+> This sort of stuff should be read out of the firmware, not DT..
+> 
+> Why has Google created such a non-standard TPM firmware???
+> 
+> Jason
 
-This patch is loosely based on the commit 8994fff67761 ("ARM: shmobile:
-r8a7791: Add Audio DMAC devices to DT").
+Thanks, Jason. Will hard-code those in the driver instead of reading
+from DT.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Andrey
 
----
-Changes in version 4:
-- refreshed the patch.
-
-Changes in version 3:
-- refreshed the patch.
-
- arch/arm/boot/dts/r8a7794.dtsi |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-@@ -296,6 +296,34 @@
- 		dma-channels = <15>;
- 	};
- 
-+	audma0: dma-controller@ec700000 {
-+		compatible = "renesas,dmac-r8a7794", "renesas,rcar-dmac";
-+		reg = <0 0xec700000 0 0x10000>;
-+		interrupts =	<GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH
-+				 GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "error",
-+				  "ch0", "ch1", "ch2", "ch3", "ch4", "ch5",
-+				  "ch6", "ch7", "ch8", "ch9", "ch10", "ch11",
-+				  "ch12";
-+		clocks = <&mstp5_clks R8A7794_CLK_AUDIO_DMAC0>;
-+		clock-names = "fck";
-+		power-domains = <&cpg_clocks>;
-+		#dma-cells = <1>;
-+		dma-channels = <13>;
-+	};
-+
- 	scifa0: serial@e6c40000 {
- 		compatible = "renesas,scifa-r8a7794",
- 			     "renesas,rcar-gen2-scifa", "renesas,scifa";
+------------------------------------------------------------------------------
