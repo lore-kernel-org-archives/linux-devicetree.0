@@ -1,95 +1,100 @@
-From: Guenter Roeck <groeck@google.com>
-Subject: Re: [v7 PATCH 4/6] arm64: dts: rockchip: add Type-C phy for RK3399
-Date: Wed, 27 Jul 2016 14:50:31 -0700
-Message-ID: <CABXOdTcr70v9QxnAh_Btvhwo4h0ZPq18T1bSAakhT5Nco-1S7Q@mail.gmail.com>
-References: <1469624836-22792-1-git-send-email-zyw@rock-chips.com> <1469624836-22792-5-git-send-email-zyw@rock-chips.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
+Date: Wed, 27 Jul 2016 15:50:52 -0600
+Message-ID: <36967d69-cb2a-654e-9a4c-2021fd476464@wwwdotorg.org>
+References: <20160719191442.15439-1-swarren@wwwdotorg.org>
+ <20160719191442.15439-2-swarren@wwwdotorg.org>
+ <20160726100302.GE2433@ulmo.ba.sec>
+ <f1ca284a-5332-3323-80b9-7cf61e7c97ac@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469624836-22792-5-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Douglas Anderson <dianders@chromium.org>, Tomasz Figa <tfiga@chromium.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, Guenter Roeck <groeck@chromium.org>, myungjoo.ham@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, wulf <wulf@rock-chips.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f1ca284a-5332-3323-80b9-7cf61e7c97ac-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 6:07 AM, Chris Zhong <zyw@rock-chips.com> wrote:
-> There are 2 Type-C phy on RK3399, they are almost same, except the
-> address of register. They support USB3.0 Type-C and DisplayPort1.3
-> Alt Mode on USB Type-C. Register a phy, supply it to USB3 controller
-> and DP controller.
+On 07/26/2016 10:21 AM, Stephen Warren wrote:
+> On 07/26/2016 04:03 AM, Thierry Reding wrote:
+>> On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
+>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> The BPMP implements some services which must be represented by separate
+>>> nodes. For example, it can provide access to certain I2C controllers,
+>>> and
+>>> the I2C bindings represent each I2C controller as a device tree node.
+>>> Update the binding to describe how the BPMP supports this.
+>>>
+>>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23
+>>> ++++++++++++++++++++++
+>>>  1 file changed, 23 insertions(+)
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>>> index 9a3864f56955..142d363406f6 100644
+>>> ---
+>>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>>> +++
+>>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>>> @@ -38,6 +38,24 @@ implemented by this node:
+>>>  - .../reset/reset.txt
+>>>  - <dt-bindings/reset/tegra186-reset.h>
+>>>
+>>> +The BPMP implements some services which must be represented by
+>>> separate nodes.
+>>> +For example, it can provide access to certain I2C controllers, and
+>>> the I2C
+>>> +bindings represent each I2C controller as a device tree node. Such
+>>> nodes should
+>>> +be nested directly inside the main BPMP node.
+>>> +
+>>> +Software can determine whether a child node of the BPMP node
+>>> represents a device
+>>> +by checking for a compatible property. Any node with a compatible
+>>> property
+>>> +represents a device that can be instantiated. Nodes without a
+>>> compatible
+>>> +property may be used to provide configuration information regarding
+>>> the BPMP
+>>> +itself, although no such configuration nodes are currently defined
+>>> by this
+>>> +binding.
+>>> +
+>>> +The BPMP firmware defines no single global name-/numbering-space for
+>>> such
+>>> +services. Put another way, the numbering scheme for I2C buses is
+>>> distinct from
+>>> +the numbering scheme for any other service the BPMP may provide
+>>> (e.g. a future
+>>> +hypothetical SPI bus service). As such, child device nodes will have
+>>> no reg
+>>> +property, and the BPMP node will have no #address-cells or
+>>> #size-cells property.
+>>
+>> My understanding is that the I2C bus number is passed as part of the
+>> request to the BPMP firmware. Does that not count as addressing? Could
+>> we not represent that generically using a device tree hierarchy? I'm
+>> thinking something along these lines:
+>>
+>>     bpmp {
+>>         ...
+>>
+>>         services {
+>>             i2c {
+>>                 i2c@0 {
+>>                     reg = <0>;
 >
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> Technically, that is possible. However, Rob Herring rejected the idea of
+> multiple levels of sub-nodes.
+>
+> Can we please just go with what we have? DT bindings are frankly an
+> obstacle to getting anything done:-(
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> Changes in v1: None
->
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 44 ++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 0af03a3..7095ddf 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -952,6 +952,50 @@
->                 };
->         };
->
-> +       tcphy0: phy@ff7c0000 {
-> +               compatible = "rockchip,rk3399-typec-phy";
-> +               reg = <0x0 0xff7c0000 0x0 0x40000>;
-> +               rockchip,grf = <&grf>;
-> +               #phy-cells = <0>;
-> +               clocks = <&cru SCLK_UPHY0_TCPDCORE>,
-> +                        <&cru SCLK_UPHY0_TCPDPHY_REF>;
-> +               clock-names = "tcpdcore", "tcpdphy-ref";
-> +               assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
-> +               assigned-clock-rates = <50000000>;
-> +               resets = <&cru SRST_UPHY0>,
-> +                        <&cru SRST_UPHY0_PIPE_L00>,
-> +                        <&cru SRST_P_UPHY0_TCPHY>;
-> +               reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-> +               rockchip,typec-conn-dir = <0xe580 0 16>;
-> +               rockchip,usb3tousb2-en = <0xe580 3 19>;
-> +               rockchip,external-psm = <0xe588 14 30>;
-> +               rockchip,pipe-status = <0xe5c0 0 0>;
-> +               rockchip,uphy-dp-sel = <0x6268 19 19>;
-> +               status = "disabled";
-> +       };
-> +
-> +       tcphy1: phy@ff800000 {
-> +               compatible = "rockchip,rk3399-typec-phy";
-> +               reg = <0x0 0xff800000 0x0 0x40000>;
-> +               rockchip,grf = <&grf>;
-> +               #phy-cells = <0>;
-> +               clocks = <&cru SCLK_UPHY1_TCPDCORE>,
-> +                        <&cru SCLK_UPHY1_TCPDPHY_REF>;
-> +               clock-names = "tcpdcore", "tcpdphy-ref";
-> +               assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
-> +               assigned-clock-rates = <50000000>;
-> +               resets = <&cru SRST_UPHY1>,
-> +                        <&cru SRST_UPHY1_PIPE_L00>,
-> +                        <&cru SRST_P_UPHY1_TCPHY>;
-> +               reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-> +               rockchip,typec-conn-dir = <0xe58c 0 16>;
-> +               rockchip,usb3tousb2-en = <0xe58c 3 19>;
-> +               rockchip,external-psm = <0xe594 14 30>;
-> +               rockchip,pipe-status = <0xe5c0 16 16>;
-> +               rockchip,uphy-dp-sel = <0x6268 3 19>;
-> +               status = "disabled";
-> +       };
-> +
->         watchdog@ff840000 {
->                 compatible = "snps,dw-wdt";
->                 reg = <0x0 0xff840000 0x0 0x100>;
-> --
-> 2.6.3
->
+Thierry, any further thoughts here? I really need to get these DT 
+bindings finalized so that I can use them in U-Boot, which is very 
+urgent. Thanks.
