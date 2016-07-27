@@ -1,67 +1,86 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v4 1/2] of: add J-Core interrupt controller bindings
-Date: Wed, 27 Jul 2016 09:00:07 -0400
-Message-ID: <20160727130007.GZ15995@brightrain.aerifal.cx>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] irqchip: add J-Core AIC driver
+Date: Wed, 27 Jul 2016 09:06:06 -0400
+Message-ID: <20160727130606.GA15995@brightrain.aerifal.cx>
 References: <cover.1469595860.git.dalias@libc.org>
- <9039efc9336670b3399b9104f1ab5e1a2d8d9025.1469595861.git.dalias@libc.org>
- <20160727100504.GB12880@leverpostej>
+ <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
+ <20160727101235.GC12880@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160727100504.GB12880@leverpostej>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+In-Reply-To: <20160727101235.GC12880@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 11:05:05AM +0100, Mark Rutland wrote:
+On Wed, Jul 27, 2016 at 11:12:36AM +0100, Mark Rutland wrote:
 > On Wed, Jul 27, 2016 at 05:35:09AM +0000, Rich Felker wrote:
-> > Signed-off-by: Rich Felker <dalias@libc.org>
-> > ---
-> >  .../bindings/interrupt-controller/jcore,aic.txt    | 26 ++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-> > new file mode 100644
-> > index 0000000..b7a56ad
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
-> > @@ -0,0 +1,26 @@
-> > +J-Core Advanced Interrupt Controller
+> > +int __init aic_irq_of_init(struct device_node *node, struct device_node *parent)
+> > +{
+> > +	struct aic_data *aic = &aic_data;
+> > +	unsigned min_irq = 64;
 > > +
-> > +Required properties:
+> > +	pr_info("Initializing J-Core AIC\n");
 > > +
-> > +- compatible: Should be "jcore,aic1" for the (obsolete) first-generation aic
-> > +  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
-> > +  the "aic2" core with 64 interrupts.
-> > +
-> > +- reg: Memory region(s) for configuration. For SMP, there should be one
-> > +  region per cpu, indexed by the sequential, zero-based hardware cpu
-> > +  number (which is also the logical cpu number).
+> > +	if (!of_device_is_compatible(node, "jcore,aic2")) {
+> > +		unsigned cpu;
+> > +		for_each_possible_cpu(cpu) {
+> > +			void __iomem *base = of_iomap(node, cpu);
+> > +			if (!base)
+> > +				continue;
 > 
-> Nit: remove the bit about the logical number. That's a linux detail that
-> doesn't belong in the binding.
+> This sounds like it would be a critical error.
+> 
+> It would be best to at least pr_warn() if you can't map a CPU's AI
+> interface.
+
+It's looping over possible cpus (per the kernel configuration for max
+cpus) so it's expected that a system with fewer cpus will also have
+fewer reg ranges for the aic. This is not an error. If you think
+there's a different/better way I should write this code, I'm open to
+suggestions.
+
+> > +			pr_info("Local AIC1 enable for cpu %u at %p\n",
+> > +				cpu, base + AIC1_INTPRI);
+> > +			__raw_writel(0xffffffff, base + AIC1_INTPRI);
+> > +		}
+> 
+> Here base goes out of scope. If you don't need it, it would be best
+> practice to iounmap it (even if that happens to be a no-op on your
+> arch).
+
+OK. I can add that.
+
+> > +		min_irq = 16;
+> > +	}
+> > +
+> > +	aic->chip.name = node->name;
+> 
+> It's probably best to give the name explicitly in the driver (e.g.
+> "AIC"), rather than taknig whatever happens to be in the DT (which
+> should be 'interrupt-controller@<addr>'.
 
 OK.
 
-> > +- interrupt-controller: Identifies the node as an interrupt controller
-> > +
-> > +- #interrupt-cells: Specifies the number of cells needed to encode an
-> > +  interrupt source. The value shall be 1.
+> > +	aic->chip.irq_mask = noop;
+> > +	aic->chip.irq_unmask = noop;
 > 
-> .... where the value encoded in that cell is?
-> 
-> I guess it's the zero-based index of the interrupt?
-> 
-> No flags? Can the AIC only do one trigger type?
+> If the core code wants to mask IRQs, how do you handle that? Can you
+> mask your CPU traps?
 
-This was asked before. The AIC does all the interrupt control (aside
-from the cpu's main imask status) and does not expose trigger types or
-require any kind of ack/eoi from the software. If you'd like to know
-more about the motivations behind how it works I could ask on the
-j-core list but for the purpose of the bindings and driver I'm just
-documenting/supporting what the existing hw design does.
+There's a global imask in the cpu that masks all interrupts that's
+used in the trap entry point, spinlocks, etc. already. This is a cpu
+standard feature and not logically part of the AIC. My understanding
+is that the kernel already keeps a logical mask of disabled irqs in
+addition to mask/disable at the irqchip level so there's a fairly fast
+path for ignoring/holding (potentially spurious) irqs while they're
+supposed to be disabled and deferring them until they're enabled
+again.
 
 Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
