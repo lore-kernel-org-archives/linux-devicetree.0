@@ -1,67 +1,57 @@
-From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Subject: [PATCH v6 1/3] dt-bindings: auxadc: Add binding document for Mediatek auxadc.
-Date: Wed, 27 Jul 2016 18:02:59 +0800
-Message-ID: <1469613781-1296-2-git-send-email-zhiyong.tao@mediatek.com>
-References: <1469613781-1296-1-git-send-email-zhiyong.tao@mediatek.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 1/2] of: add J-Core interrupt controller bindings
+Date: Wed, 27 Jul 2016 11:05:05 +0100
+Message-ID: <20160727100504.GB12880@leverpostej>
+References: <cover.1469595860.git.dalias@libc.org>
+ <9039efc9336670b3399b9104f1ab5e1a2d8d9025.1469595861.git.dalias@libc.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469613781-1296-1-git-send-email-zhiyong.tao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, erin.lo@mediatek.com, dawei.chien@mediatek.com, matthias.bgg@gmail.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-mediatek@lists.infradead.org, robh@kernel.org, Zhiyong Tao <zhiyong.tao@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9039efc9336670b3399b9104f1ab5e1a2d8d9025.1469595861.git.dalias@libc.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-The commit adds the device tree binding documentation for the mediatek
-auxadc found on Mediatek MT2701.
-Thermal gets auxadc sample data by iio device.
-So the commit changes auxadc device tree binding documentation from
-/soc/mediatek/auxadc.txt to /iio/adc/mt6577_auxadc.txt.
+On Wed, Jul 27, 2016 at 05:35:09AM +0000, Rich Felker wrote:
+> Signed-off-by: Rich Felker <dalias@libc.org>
+> ---
+>  .../bindings/interrupt-controller/jcore,aic.txt    | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+> new file mode 100644
+> index 0000000..b7a56ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+> @@ -0,0 +1,26 @@
+> +J-Core Advanced Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "jcore,aic1" for the (obsolete) first-generation aic
+> +  with 8 interrupt lines with programmable priorities, or "jcore,aic2" for
+> +  the "aic2" core with 64 interrupts.
+> +
+> +- reg: Memory region(s) for configuration. For SMP, there should be one
+> +  region per cpu, indexed by the sequential, zero-based hardware cpu
+> +  number (which is also the logical cpu number).
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
----
- .../auxadc.txt => iio/adc/mt6577_auxadc.txt}       |   18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
- rename Documentation/devicetree/bindings/{soc/mediatek/auxadc.txt => iio/adc/mt6577_auxadc.txt} (46%)
+Nit: remove the bit about the logical number. That's a linux detail that
+doesn't belong in the binding.
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-similarity index 46%
-rename from Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
-rename to Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-index bdb7829..68c45cb 100644
---- a/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-@@ -1,4 +1,4 @@
--MediaTek AUXADC
-+* Mediatek AUXADC - Analog to Digital Converter on Mediatek mobile soc (mt65xx/mt81xx/mt27xx)
- ===============
- 
- The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
-@@ -10,12 +10,20 @@ Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
- for the Thermal Controller which holds a phandle to the AUXADC.
- 
- Required properties:
--- compatible: Must be "mediatek,mt8173-auxadc"
--- reg: Address range of the AUXADC unit
-+  - compatible: Should be one of:
-+    - "mediatek,mt2701-auxadc": For MT2701 family of SoCs
-+    - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
-+  - reg: Address range of the AUXADC unit.
-+  - clocks: Should contain a clock specifier for each entry in clock-names
-+  - clock-names: Should contain "main".
-+  - #io-channel-cells: Should be 1, see ../iio-bindings.txt
- 
- Example:
- 
--auxadc: auxadc@11001000 {
--	compatible = "mediatek,mt8173-auxadc";
-+auxadc: adc@11001000 {
-+	compatible = "mediatek,mt2701-auxadc";
- 	reg = <0 0x11001000 0 0x1000>;
-+	clocks = <&pericfg CLK_PERI_AUXADC>;
-+	clock-names = "main";
-+	#io-channel-cells = <1>;
- };
--- 
-1.7.9.5
+> +- interrupt-controller: Identifies the node as an interrupt controller
+> +
+> +- #interrupt-cells: Specifies the number of cells needed to encode an
+> +  interrupt source. The value shall be 1.
+
+... where the value encoded in that cell is?
+
+I guess it's the zero-based index of the interrupt?
+
+No flags? Can the AIC only do one trigger type?
+
+Thanks,
+Mark.
