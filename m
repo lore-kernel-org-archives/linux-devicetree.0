@@ -1,106 +1,91 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] reset: uniphier: add reset controller drivers for
- UniPhier SoCs
-Date: Thu, 28 Jul 2016 11:23:11 +0200
-Message-ID: <1469697791.12835.8.camel@pengutronix.de>
-References: <1469557209-13089-1-git-send-email-yamada.masahiro@socionext.com>
-	 <1469611051.2470.15.camel@pengutronix.de>
-	 <CAK7LNAShnmaZ-Gd8yDEvJwdiEbf6ceWkabsFVtMz3hjfzJG2rw@mail.gmail.com>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: [PATCH v5 00/10] MT2701 DRM support
+Date: Thu, 28 Jul 2016 17:27:54 +0800
+Message-ID: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNAShnmaZ-Gd8yDEvJwdiEbf6ceWkabsFVtMz3hjfzJG2rw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
-
-Am Donnerstag, den 28.07.2016, 11:40 +0900 schrieb Masahiro Yamada:
-> >> +static int uniphier_reset_update(struct reset_controller_dev *rcdev,
-> >> +                              unsigned long id, bool assert)
-> >> +{
-> >> +     struct uniphier_reset_priv *priv = to_uniphier_reset_priv(rcdev);
-> >> +     const struct uniphier_reset_data *p;
-> >> +     bool handled = false;
-> >> +
-> >> +     for (p = priv->data; p->id != UNIPHIER_RESET_ID_END; p++) {
-> >> +             unsigned int val;
-> >> +             int ret;
-> >> +
-> >> +             if (p->id != id)
-> >> +                     continue;
-> >> +
-> >> +             val = p->assert_val;
-> >> +             if (!assert)
-> >> +                     val = ~val;
-> >> +
-> >> +             ret = regmap_write_bits(priv->regmap, p->reg, p->mask, val);
-> >> +             if (ret)
-> >> +                     return ret;
-> >> +
-> >> +             handled = true;
-> >
-> > Why does this continue to walk through the list after the correct id was
-> > found?
-> 
-> Looks like you already found the answer for this.
-
-Yes.
-
-[...]
-> >> +#define UNIPHIER_MIO_RESET_USB2(index, ch)                           \
-> >> +     UNIPHIER_RESETX_SIMPLE((index), 0x110 + 0x200 * (ch), BIT(24)), \
-> >> +     UNIPHIER_RESETX_SIMPLE((index), 0x114 + 0x200 * (ch), BIT(0))
-> >
-> > Ah, so for USB2 reset you have two reset bits in separate registers. Are
-> > you sure these are controlling the same reset line?
-> 
-> I am not a hardware guy, so I am not sure about the hardware design.
-> 
-> From my best guess, I think each bit controls a different block.
-> But both of them must be de-asserted before starting up USB.
->
-> There is no use-case where they are asserted/de-asserted independently.
-> 
-> So, I thought it made sense to couple them into a single ID.
-
-If it turns out to be useful for drivers to bundle resets, I'd prefer to
-do this in the framework rather than in the individual drivers, maybe
-have a reset_assert/deassert_array, similarly to gpiod.
-
-> > If the USB core does in fact have two separate reset inputs that just
-> > happen to need asserting at the same time, this should still get two
-> > separate ids. Same issue for the SD reset above, if the reset lines are
-> > physically separate, please don't combine them in the driver.
-> 
-> Right.
-> From the view of point of Device Tree interface,
-> it should reflect the hardware design.
-> I believe they are separate reset signals, so should be given with separate IDs.
-> 
-> But, as a software engineer, it is sometimes difficult to fully understand
-> the hardware structure.
-> 
-> The hardware document often just says "how to use USB",
-> but "how clock/reset signals are connected in each block" is not mentioned,
-> or at least very unclear.
-
-I understand the problem. If you have any way of finding out whether
-these are in fact separate resets, please do. Otherwise we'll have to
-guess.
-
-> Probably, I will come back with real per-reset-line ID,
-> but I need some time to take a look.
-
-Ok, thanks.
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBpcyBNVDI3MDEgRFJNIHN1cHBvcnQgUEFUQ0ggdjUsIGJhc2VkIG9uIDQuNy1yYzEuCldl
+IGFkZCBEU0kgaW50ZXJydXB0IGNvbnRyb2wsIHRyYW5zZmVyIGZ1bmN0aW9uIGZvciBNSVBJIERT
+SSBwYW5lbCBzdXBwb3J0LgpNb3N0IGNvZGVzIGFyZSB0aGUgc2FtZSwgZXhjZXB0IHNvbWUgcmVn
+aXN0ZXIgY2hhbmdlZC4KCkZvciBleGFtcGxlOgogLSBESVNQX09WTCBhZGRyZXNzIG9mZnNldCBj
+aGFuZ2VkLCBjb2xvciBmb3JtYXQgZGVmaW5pdGlvbiBjaGFuZ2VkLgogLSBESVNQX1JETUEgZmlm
+byBzaXplIGNoYW5nZWQuCiAtIERJU1BfQ09MT1Igb2Zmc2V0IGNoYW5nZWQuCiAtIE1JUElfVFgg
+c2V0dGluZyBjaGFuZ2VkLgoKV2UgYWRkIGEgbmV3IGNvbXBvbmVudCBERFBfQ09NUE9ORU5UX0JM
+UywgYW5kIHRoZSBjb25uZWN0aW9ucyBhcmUgdXBkYXRlZC4KT1ZMIC0+IFJETUEgLT4gQ09MT1Ig
+LT4gQkxTIC0+IERTSQpSRE1BIC0+IERQSQpBbmQgd2UgaGF2ZSBzaGFkb3cgcmVnaXN0ZXIgc3Vw
+cG9ydCBpbiBNVDI3MDEuCgpDaGFuZ2VzIHNpbmNlIHY0OgotIEFkZCBtZXNzYWdlcyB3aGVuIHRp
+bWVvdXQgaW4gbXRrX2Rpc3BfbXV0ZXhfYWNxdWlyZSgpCi0gQWRkIGRlc2NyaXB0aW9ucyBmb3Ig
+RElTUF9SRUdfTVVURVggcmVnaXN0ZXJzCi0gTW92ZSBjb25uZWN0aW9uIHNldHRpbmdzIGZvciBk
+aXNwbGF5IG1vZHVsZXMgdG8gYSBzZXBhcmF0ZSBwYXRjaAotIFJlbW92ZSAnbXQyNzAxLWRpc3At
+d2RtYScgYmVjYXVzZSBpdCBpcyB1bnVzZWQKLSBNb3ZlIGNsZWFuaW5nIHVwIGFuZCByZW5hbWlu
+ZyB0byBhIHNlcGFyYXRlIHBhdGNoCi0gVXNlIHdhaXRfZXZlbnRfaW50ZXJydXB0aWJsZV90aW1l
+b3V0KCkgdG8gcmVwbGFjZSBwb2xsaW5nCi0gUmVtb3ZlIGlycV9udW0gZnJvbSBtdGtfZHNpIHN0
+cnVjdHVyZQotIFJlbW92ZSByZWR1bmRhbnQgYW5kIGRlYnVnIGNvZGVzCgpDaGFuZ2VzIHNpbmNl
+IHYzOgotIEFkZCBEU0kgc3VwcG9ydCBmb3IgTUlQSSBEU0kgcGFuZWxzCi0gVXBkYXRlIEJMUyBi
+aW5kaW5nIHRvIFBXTSBub2RlcwotIFJlbW92ZSB1Zm9lIGRldmljZSBub2RlcwotIFJlbW92ZSBy
+ZWR1bmRhbnQgcGFyZW50aGVzZXMKLSBSZW1vdmUgZ2xvYmFsIHZhcmlhYmxlIGluaXRpYWxpemF0
+aW9uCgpDaGFuZ2VzIHNpbmNlIHYyOgotIFJlbmFtZSBtdGtfZGRwX211eF9zZWwgdG8gbXRrX2Rk
+cF9zb3V0X3NlbAotIFVwZGF0ZSBtdDI3MDFfbXRrX2RkcF9leHQgY29tcG9uZW50cwotIENoYW5n
+ZWQgdG8gcHJlZml4IG5hbWluZwotIFJlb3JkZXIgdGhlIHBhdGNoIHNlcmllcwotIFVzZSBvZl9k
+ZXZpY2VfZ2V0X21hdGNoX2RhdGEoKSB0byBnZXQgZHJpdmVyIHByaXZhdGUgZGF0YQotIFVzZSBp
+b3BvbGwgbWFjcm9zIHRvIGltcGxlbWVudCBtdGtfZGlzcF9tdXRleF9hY3F1aXJlKCkKLSBSZW1v
+dmVkIGVtcHR5IGRldmljZSB0cmVlIG5vZGVzCgpDaGFuZ2VzIHNpbmNlIHYxOgotIFJlbW92ZWQg
+QkxTIGJpbmRpbmdzIGFuZCBjb2Rlcywgd2hpY2ggYmVsb25nIHRvIHB3bSBkcml2ZXIKLSBNb3Zl
+ZCBtdGtfZGlzcF9tdXRleF9hY3F1aXJlKCkganVzdCBiZWZvcmUgbXRrX2NydGNfZGRwX2NvbmZp
+ZygpCi0gU3BsaXQgcGF0Y2ggaW50byBzbWFsbGVyIHBhcnRzCi0gQWRkZWQgY29uc3Qga2V5d29y
+ZCB0byBjb25zdGFudCBzdHJ1Y3R1cmUKLSBSZW1vdmVkIGNvZGVzIGZvciBzcGVjaWFsIG1lbW9y
+eSBhbGlnbgoKVGhlIFBBVENIIGRlcGVuZHMgb24gdGhlIGZvbGxvd2luZyBwYXRjaDoKaHR0cHM6
+Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC84ODMyNDQxLyAoImR0LWJpbmRpbmdzOiBBUk06
+IE1lZGlhdGVrOiBEb2N1bWVudCBiaW5kaW5ncyBmb3IgTVQyNzAxIikKaHR0cHM6Ly9wYXRjaHdv
+cmsua2VybmVsLm9yZy9wYXRjaC85MjIyOTk3LyAoImR0LWJpbmRpbmdzOiBwd206IEFkZCBNZWRp
+YVRlayBkaXNwbGF5IFBXTSBiaW5kaW5ncyIpCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvOTE2NDAyOS8gKCJkdC1iaW5kaW5nczogbWVkaWF0ZWs6IGFkZCBkZXNjcmlwdGlvbnMg
+Zm9yIG1lZGlhdGVrIG10MjcwMSBpb21tdSBhbmQgc21pIikKaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC85MTY0MDE3LyAoImlvbW11L21lZGlhdGVrOiBtb3ZlIHRoZSBjb21tb24g
+c3RydWN0IGludG8gaGVhZGVyIGZpbGUiKQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
+dGNoLzkxNjQwMjUvICgibWVtb3J5L21lZGlhdGVrOiBhZGQgc3VwcG9ydCBmb3IgbXQyNzAxIikK
+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MTY0MDQxLyAoImlvbW11L21lZGlh
+dGVrOiBhZGQgc3VwcG9ydCBmb3IgbXRrIGlvbW11IGdlbmVyYXRpb24gb25lIEhXIikKaHR0cHM6
+Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MTY0MDEzLyAoIkFSTTogZHRzOiBtdDI3MDE6
+IGFkZCBpb21tdS9zbWkgZHRzaSBub2RlIGZvciBtdDI3MDEiKQoKVGhhbmtzLAp5dC5zaGVuCgpZ
+VCBTaGVuICg4KToKICBkcm0vbWVkaWF0ZWs6IHJlbmFtZSBtYWNyb3MsIGFkZCBjaGlwIHByZWZp
+eAogIGRybS9tZWRpYXRlazogYWRkICpkcml2ZXJfZGF0YSBmb3IgZGlmZmVyZW50IGhhcmR3YXJl
+IHNldHRpbmdzCiAgZHJtL21lZGlhdGVrOiBhZGQgc2hhZG93IHJlZ2lzdGVyIHN1cHBvcnQKICBk
+cm0vbWVkaWF0ZWs6IHVwZGF0ZSBkaXNwbGF5IG1vZHVsZSBjb25uZWN0aW9ucwogIGRybS9tZWRp
+YXRlazogY2xlYW5pbmcgdXAgYW5kIHJlZmluZQogIGRybS9tZWRpYXRlazogdXBkYXRlIERTSSBz
+dWIgZHJpdmVyIGZsb3cKICBkcm0vbWVkaWF0ZWs6IGFkZCBzdXBwb3J0IGZvciBNZWRpYXRlayBT
+b0MgTVQyNzAxCiAgYXJtOiBkdHM6IG10MjcwMTogQWRkIGRpc3BsYXkgc3Vic3lzdGVtIHJlbGF0
+ZWQgbm9kZXMgZm9yIE1UMjcwMQoKc2hhb21pbmcgY2hlbiAoMik6CiAgZHJtL21lZGlhdGVrOiBh
+ZGQgZHNpIGludGVycnVwdCBjb250cm9sCiAgZHJtL21lZGlhdGVrOiBhZGQgZHNpIHRyYW5zZmVy
+IGZ1bmN0aW9uCgogYXJjaC9hcm0vYm9vdC9kdHMvbXQyNzAxLmR0c2kgICAgICAgICAgICAgICB8
+ICAxMDAgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAg
+fCAgIDMyICstCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jICAgIHwg
+ICAxNyArLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICAgICB8ICAg
+NzUgKystLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICB8ICAx
+MzcgKysrKystLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmggICAgICB8
+ICAgIDIgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8ICAg
+MzQgKy0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggfCAgIDE0
+ICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgICAgfCAgIDU1ICsr
+LQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmggICAgICB8ICAgIDkgKwog
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAgICAgICB8ICA1NDggKysrKysr
+KysrKysrKysrKysrKysrKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21pcGlf
+dHguYyAgICAgIHwgICA2NyArKystCiAxMiBmaWxlcyBjaGFuZ2VkLCA5MzAgaW5zZXJ0aW9ucygr
+KSwgMTYwIGRlbGV0aW9ucygtKQoKLS0gCjEuNy45LjUKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
