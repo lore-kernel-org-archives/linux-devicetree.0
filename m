@@ -1,37 +1,78 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 0/6] power: add power sequence library
-Date: Thu, 28 Jul 2016 13:41:23 -0300
-Message-ID: <CAOMZO5Dv_X-u6qKqAWtysAqmMw91bVoAaRvnc81yUGDxbd27rA@mail.gmail.com>
-References: <1469007629-31757-1-git-send-email-peter.chen@nxp.com> <579A2B38.3000202@gmail.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] clocksource: add J-Core timer/clocksource
+ driver
+Date: Thu, 28 Jul 2016 18:44:15 +0200 (CEST)
+Message-ID: <alpine.DEB.2.11.1607281837450.19896@nanos>
+References: <cover.1469688975.git.dalias@libc.org> <ed156509aed631486decf1828acb4f0afa61dd31.1469688975.git.dalias@libc.org> <alpine.DEB.2.11.1607281515330.19896@nanos> <20160728163748.GI15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <579A2B38.3000202@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Joshua Clayton <stillcompiling@gmail.com>
-Cc: Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, USB list <linux-usb@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, Troy
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160728163748.GI15995-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joshua,
+On Thu, 28 Jul 2016, Rich Felker wrote:
+> On Thu, Jul 28, 2016 at 04:44:05PM +0200, Thomas Gleixner wrote:
+> > > +	return ((u64)sechi << 32 | seclo) * NSEC_PER_SEC + nsec;
+> > 
+> > Wow, that's an expensive thing for a hotpath operation. You really don't have
+> > binary readout register for that clock thingy?
+> 
+> Unforunately the clock is in sec64.nsec32 format instead of a flat
+> nanoseconds count. Daniel Lezcano also suggested just using
+> nanoseconds, which would still need some retry and arithmetic for
+> adding seclo*NSEC_PER_SEC (otherwise it's problematic because it wraps
+> at NSEC_PER_SEC rather than at a power of two) but that does put a
+> hard upper bound on tickless sleep time of 4 sec. In practice it
+> probably doesn't matter. Should I try that instead?
 
-On Thu, Jul 28, 2016 at 12:56 PM, Joshua Clayton
-<stillcompiling@gmail.com> wrote:
+Up to you. I was just wondering about the MUL.
+ 
+> > > +static notrace u64 jcore_sched_clock_read(void)
+> > > +{
+> > > +	return jcore_clocksource_read(jcore_cs);
+> > 
+> > Why don't you stuff the above code into this function?
+> 
+> I was trying to avoid code duplication, but I could if you think it
+> really matters for performance.
 
-> I assume there is a v4 coming due to rmk's comments on patch 5.
-> I couldn't figure out where to null the of_node in error paths, but in testing
-> we did put a line of code to null the of_node on release.
->
-> but...
-> As an aside,
-> I was hoping this series would magically fix a problem
-> with the imx6q-evi which has forced us to disable
-> runtime power management. But it did not. :(
+Did not see where the other usage site was. Must have missed that. So keep it
+as is and please add notrace to jcore_clocksource_read().
+ 
+> > Please convert this to the new state machine model of cpu
+> > hotplug. CPU_STARTING will be gone very soon. Here is an example:
+> > 
+> > http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/?h=smp/hotplug&id=7e86e8bd8dd67649d176e08d8dfb90039f0a1e98
+> 
+> I don't think that's the commit you wanted to link -- it doesn't show
+> a usage example.
+ 
+It's the conversion of a driver from the old to the new style, So it's an
+example how to move your stuff to the new interface or am I missing something
+here?
 
-I also see a similar problem on a mx28 board with a hub.
+> I've asked about this before in another context but didn't get an
+> answer -- I'm a bit concerned that, from what I can tell, the new
+> framework is a big singleton does assumes singletons in all the
+> drivers that use it. In practice it doesn't matter as long as there's
+> only one instance of the pit driver, but this seems architecturally
+> really bad and like it's a time bomb waiting to blow up on us in the
+> future. Am I missing something?
 
-Does it help in your case if you pass 'usbcore.autosuspend=-1' in the
-kernel command line?
+Most of the users are single instance. We have a dynamic interface for the
+online callbacks and we might get one for the prep stage as well.
 
-Regards,
+Now for the real core stuff like starting/dying we want explicit states and if
+a driver really is multi instance then having a private list there is not
+rocket science. Most of them have an instance list anyway.
+ 
+Thanks,
 
-Fabio Estevam
+	tglx
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
