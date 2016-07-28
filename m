@@ -1,143 +1,124 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v5 03/10] drm/mediatek: add shadow register support
-Date: Thu, 28 Jul 2016 17:27:57 +0800
-Message-ID: <1469698084-20185-4-git-send-email-yt.shen@mediatek.com>
-References: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
+From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 3/6] dt/bindings: Add bindings for Tegra20/30 NOR bus driver
+Date: Thu, 28 Jul 2016 11:29:03 +0200
+Message-ID: <CALw8SCX+Sktdij7AKFtkAh3To6qA16xtZNFi4GpkzHE8256N_w@mail.gmail.com>
+References: <1468935397-11926-1-git-send-email-mirza.krak@gmail.com>
+ <1468935397-11926-4-git-send-email-mirza.krak@gmail.com> <20160725113034.GD21170@ulmo.ba.sec>
+ <CALw8SCWEFVu__8Gyr5q995h+=oMQEz1VUNB=Ne7MRb0O-tZXqg@mail.gmail.com> <20160725141544.GN21170@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160725141544.GN21170-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-V2UgbmVlZCB0byBhY3F1aXJlIG11dGV4IGJlZm9yZSB1c2luZyB0aGUgcmVzb3VyY2VzLAphbmQg
-bmVlZCB0byByZWxlYXNlIGl0IGFmdGVyIGZpbmlzaGVkLgpTbyB3ZSBkb24ndCBuZWVkIHRvIHdy
-aXRlIHJlZ2lzdGVycyBpbiB0aGUgYmxhbmtpbmcgcGVyaW9kLgoKU2lnbmVkLW9mZi1ieTogWVQg
-U2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fY3J0Yy5jIHwgICA3NSArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tCiBk
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyAgfCAgIDI1ICsrKysrKysrKysr
-CiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaCAgfCAgICAyICsKIGRyaXZl
-cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oICB8ICAgIDEgKwogNCBmaWxlcyBjaGFu
-Z2VkLCA3NCBpbnNlcnRpb25zKCspLCAyOSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9jcnRjLmMKaW5kZXggMjRhYTNiYS4uODBkOTY0MSAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jCisrKyBiL2RyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYwpAQCAtMzE1LDYgKzMxNSw0MiBAQCBzdGF0aWMg
-dm9pZCBtdGtfY3J0Y19kZHBfaHdfZmluaShzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykK
-IAlwbV9ydW50aW1lX3B1dChkcm0tPmRldik7CiB9CiAKK3N0YXRpYyB2b2lkIG10a19jcnRjX2Rk
-cF9jb25maWcoc3RydWN0IGRybV9jcnRjICpjcnRjKQoreworCXN0cnVjdCBtdGtfZHJtX2NydGMg
-Km10a19jcnRjID0gdG9fbXRrX2NydGMoY3J0Yyk7CisJc3RydWN0IG10a19jcnRjX3N0YXRlICpz
-dGF0ZSA9IHRvX210a19jcnRjX3N0YXRlKG10a19jcnRjLT5iYXNlLnN0YXRlKTsKKwlzdHJ1Y3Qg
-bXRrX2RkcF9jb21wICpvdmwgPSBtdGtfY3J0Yy0+ZGRwX2NvbXBbMF07CisJdW5zaWduZWQgaW50
-IGk7CisKKwkvKgorCSAqIFRPRE86IGluc3RlYWQgb2YgdXBkYXRpbmcgdGhlIHJlZ2lzdGVycyBo
-ZXJlLCB3ZSBzaG91bGQgcHJlcGFyZQorCSAqIHdvcmtpbmcgcmVnaXN0ZXJzIGluIGF0b21pY19j
-b21taXQgYW5kIGxldCB0aGUgaGFyZHdhcmUgY29tbWFuZAorCSAqIHF1ZXVlIHVwZGF0ZSBtb2R1
-bGUgcmVnaXN0ZXJzIG9uIHZibGFuay4KKwkgKi8KKwlpZiAoc3RhdGUtPnBlbmRpbmdfY29uZmln
-KSB7CisJCW10a19kZHBfY29tcF9jb25maWcob3ZsLCBzdGF0ZS0+cGVuZGluZ193aWR0aCwKKwkJ
-CQkgICAgc3RhdGUtPnBlbmRpbmdfaGVpZ2h0LAorCQkJCSAgICBzdGF0ZS0+cGVuZGluZ192cmVm
-cmVzaCk7CisKKwkJc3RhdGUtPnBlbmRpbmdfY29uZmlnID0gZmFsc2U7CisJfQorCisJaWYgKG10
-a19jcnRjLT5wZW5kaW5nX3BsYW5lcykgeworCQlmb3IgKGkgPSAwOyBpIDwgT1ZMX0xBWUVSX05S
-OyBpKyspIHsKKwkJCXN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gJm10a19jcnRjLT5wbGFuZXNb
-aV0uYmFzZTsKKwkJCXN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnBsYW5lX3N0YXRlOworCisJCQlw
-bGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShwbGFuZS0+c3RhdGUpOworCisJCQlpZiAo
-cGxhbmVfc3RhdGUtPnBlbmRpbmcuY29uZmlnKSB7CisJCQkJbXRrX2RkcF9jb21wX2xheWVyX2Nv
-bmZpZyhvdmwsIGksIHBsYW5lX3N0YXRlKTsKKwkJCQlwbGFuZV9zdGF0ZS0+cGVuZGluZy5jb25m
-aWcgPSBmYWxzZTsKKwkJCX0KKwkJfQorCQltdGtfY3J0Yy0+cGVuZGluZ19wbGFuZXMgPSBmYWxz
-ZTsKKwl9Cit9CisKIHN0YXRpYyB2b2lkIG10a19kcm1fY3J0Y19lbmFibGUoc3RydWN0IGRybV9j
-cnRjICpjcnRjKQogewogCXN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjID0gdG9fbXRrX2Ny
-dGMoY3J0Yyk7CkBAIC0zOTEsNiArNDI3LDcgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRjX2F0
-b21pY19mbHVzaChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCiAJCQkJICAgICAgc3RydWN0IGRybV9j
-cnRjX3N0YXRlICpvbGRfY3J0Y19zdGF0ZSkKIHsKIAlzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtf
-Y3J0YyA9IHRvX210a19jcnRjKGNydGMpOworCXN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgKnByaXYg
-PSBjcnRjLT5kZXYtPmRldl9wcml2YXRlOwogCXVuc2lnbmVkIGludCBwZW5kaW5nX3BsYW5lcyA9
-IDA7CiAJaW50IGk7CiAKQEAgLTQwOSw2ICs0NDYsMTIgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9j
-cnRjX2F0b21pY19mbHVzaChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCiAJfQogCWlmIChwZW5kaW5n
-X3BsYW5lcykKIAkJbXRrX2NydGMtPnBlbmRpbmdfcGxhbmVzID0gdHJ1ZTsKKworCWlmIChwcml2
-LT5kYXRhLT5zaGFkb3dfcmVnaXN0ZXIpIHsKKwkJbXRrX2Rpc3BfbXV0ZXhfYWNxdWlyZShtdGtf
-Y3J0Yy0+bXV0ZXgpOworCQltdGtfY3J0Y19kZHBfY29uZmlnKGNydGMpOworCQltdGtfZGlzcF9t
-dXRleF9yZWxlYXNlKG10a19jcnRjLT5tdXRleCk7CisJfQogfQogCiBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGRybV9jcnRjX2Z1bmNzIG10a19jcnRjX2Z1bmNzID0gewpAQCAtNDUzLDM2ICs0OTYsMTAg
-QEAgZXJyX2NsZWFudXBfY3J0YzoKIHZvaWQgbXRrX2NydGNfZGRwX2lycShzdHJ1Y3QgZHJtX2Ny
-dGMgKmNydGMsIHN0cnVjdCBtdGtfZGRwX2NvbXAgKm92bCkKIHsKIAlzdHJ1Y3QgbXRrX2RybV9j
-cnRjICptdGtfY3J0YyA9IHRvX210a19jcnRjKGNydGMpOwotCXN0cnVjdCBtdGtfY3J0Y19zdGF0
-ZSAqc3RhdGUgPSB0b19tdGtfY3J0Y19zdGF0ZShtdGtfY3J0Yy0+YmFzZS5zdGF0ZSk7Ci0JdW5z
-aWduZWQgaW50IGk7CisJc3RydWN0IG10a19kcm1fcHJpdmF0ZSAqcHJpdiA9IGNydGMtPmRldi0+
-ZGV2X3ByaXZhdGU7CiAKLQkvKgotCSAqIFRPRE86IGluc3RlYWQgb2YgdXBkYXRpbmcgdGhlIHJl
-Z2lzdGVycyBoZXJlLCB3ZSBzaG91bGQgcHJlcGFyZQotCSAqIHdvcmtpbmcgcmVnaXN0ZXJzIGlu
-IGF0b21pY19jb21taXQgYW5kIGxldCB0aGUgaGFyZHdhcmUgY29tbWFuZAotCSAqIHF1ZXVlIHVw
-ZGF0ZSBtb2R1bGUgcmVnaXN0ZXJzIG9uIHZibGFuay4KLQkgKi8KLQlpZiAoc3RhdGUtPnBlbmRp
-bmdfY29uZmlnKSB7Ci0JCW10a19kZHBfY29tcF9jb25maWcob3ZsLCBzdGF0ZS0+cGVuZGluZ193
-aWR0aCwKLQkJCQkgICAgc3RhdGUtPnBlbmRpbmdfaGVpZ2h0LAotCQkJCSAgICBzdGF0ZS0+cGVu
-ZGluZ192cmVmcmVzaCk7Ci0KLQkJc3RhdGUtPnBlbmRpbmdfY29uZmlnID0gZmFsc2U7Ci0JfQot
-Ci0JaWYgKG10a19jcnRjLT5wZW5kaW5nX3BsYW5lcykgewotCQlmb3IgKGkgPSAwOyBpIDwgT1ZM
-X0xBWUVSX05SOyBpKyspIHsKLQkJCXN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gJm10a19jcnRj
-LT5wbGFuZXNbaV0uYmFzZTsKLQkJCXN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnBsYW5lX3N0YXRl
-OwotCi0JCQlwbGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShwbGFuZS0+c3RhdGUpOwot
-Ci0JCQlpZiAocGxhbmVfc3RhdGUtPnBlbmRpbmcuY29uZmlnKSB7Ci0JCQkJbXRrX2RkcF9jb21w
-X2xheWVyX2NvbmZpZyhvdmwsIGksIHBsYW5lX3N0YXRlKTsKLQkJCQlwbGFuZV9zdGF0ZS0+cGVu
-ZGluZy5jb25maWcgPSBmYWxzZTsKLQkJCX0KLQkJfQotCQltdGtfY3J0Yy0+cGVuZGluZ19wbGFu
-ZXMgPSBmYWxzZTsKLQl9CisJaWYgKCFwcml2LT5kYXRhLT5zaGFkb3dfcmVnaXN0ZXIpCisJCW10
-a19jcnRjX2RkcF9jb25maWcoY3J0Yyk7CiAKIAltdGtfZHJtX2ZpbmlzaF9wYWdlX2ZsaXAobXRr
-X2NydGMpOwogfQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-ZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwppbmRleCA4MDMw
-NzY5Li5iNzdkNDU2IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHAuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwpAQCAt
-MTIsNiArMTIsNyBAQAogICovCiAKICNpbmNsdWRlIDxsaW51eC9jbGsuaD4KKyNpbmNsdWRlIDxs
-aW51eC9pb3BvbGwuaD4KICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KICNpbmNsdWRlIDxsaW51
-eC9vZl9kZXZpY2UuaD4KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KQEAgLTMy
-LDEwICszMywxMyBAQAogI2RlZmluZSBESVNQX1JFR19DT05GSUdfTU1TWVNfQ0dfQ09OMAkJMHgx
-MDAKIAogI2RlZmluZSBESVNQX1JFR19NVVRFWF9FTihuKQkoMHgyMCArIDB4MjAgKiAobikpCisj
-ZGVmaW5lIERJU1BfUkVHX01VVEVYKG4pCSgweDI0ICsgMHgyMCAqIChuKSkKICNkZWZpbmUgRElT
-UF9SRUdfTVVURVhfUlNUKG4pCSgweDI4ICsgMHgyMCAqIChuKSkKICNkZWZpbmUgRElTUF9SRUdf
-TVVURVhfTU9EKG4pCSgweDJjICsgMHgyMCAqIChuKSkKICNkZWZpbmUgRElTUF9SRUdfTVVURVhf
-U09GKG4pCSgweDMwICsgMHgyMCAqIChuKSkKIAorI2RlZmluZSBJTlRfTVVURVgJCQkJQklUKDEp
-CisKICNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX09WTDAJCUJJVCgxMSkKICNkZWZpbmUg
-TVQ4MTczX01VVEVYX01PRF9ESVNQX09WTDEJCUJJVCgxMikKICNkZWZpbmUgTVQ4MTczX01VVEVY
-X01PRF9ESVNQX1JETUEwCQlCSVQoMTMpCkBAIC0zMDAsNiArMzA0LDI3IEBAIHZvaWQgbXRrX2Rp
-c3BfbXV0ZXhfZGlzYWJsZShzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4KQogCXdyaXRlbCgw
-LCBkZHAtPnJlZ3MgKyBESVNQX1JFR19NVVRFWF9FTihtdXRleC0+aWQpKTsKIH0KIAordm9pZCBt
-dGtfZGlzcF9tdXRleF9hY3F1aXJlKHN0cnVjdCBtdGtfZGlzcF9tdXRleCAqbXV0ZXgpCit7CisJ
-c3RydWN0IG10a19kZHAgKmRkcCA9IGNvbnRhaW5lcl9vZihtdXRleCwgc3RydWN0IG10a19kZHAs
-CisJCQkJCSAgIG11dGV4W211dGV4LT5pZF0pOworCXUzMiB0bXA7CisKKwl3cml0ZWwoMSwgZGRw
-LT5yZWdzICsgRElTUF9SRUdfTVVURVhfRU4obXV0ZXgtPmlkKSk7CisJd3JpdGVsKDEsIGRkcC0+
-cmVncyArIERJU1BfUkVHX01VVEVYKG11dGV4LT5pZCkpOworCWlmIChyZWFkbF9wb2xsX3RpbWVv
-dXRfYXRvbWljKGRkcC0+cmVncyArIERJU1BfUkVHX01VVEVYKG11dGV4LT5pZCksCisJCQkJICAg
-ICAgdG1wLCB0bXAgJiBJTlRfTVVURVgsIDEsIDEwMDAwKSkKKwkJcHJfZXJyKCJjb3VsZCBub3Qg
-YWNxdWlyZSBtdXRleCAlZFxuIiwgbXV0ZXgtPmlkKTsKK30KKwordm9pZCBtdGtfZGlzcF9tdXRl
-eF9yZWxlYXNlKHN0cnVjdCBtdGtfZGlzcF9tdXRleCAqbXV0ZXgpCit7CisJc3RydWN0IG10a19k
-ZHAgKmRkcCA9IGNvbnRhaW5lcl9vZihtdXRleCwgc3RydWN0IG10a19kZHAsCisJCQkJCSAgIG11
-dGV4W211dGV4LT5pZF0pOworCisJd3JpdGVsKDAsIGRkcC0+cmVncyArIERJU1BfUkVHX01VVEVY
-KG11dGV4LT5pZCkpOworfQorCiBzdGF0aWMgaW50IG10a19kZHBfcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikKIHsKIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmggYi9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaAppbmRleCA5MmMxMTc1Li5mOWE3OTkx
-IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaAorKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaApAQCAtMzcsNSArMzcsNyBA
-QCB2b2lkIG10a19kaXNwX211dGV4X3JlbW92ZV9jb21wKHN0cnVjdCBtdGtfZGlzcF9tdXRleCAq
-bXV0ZXgsCiAJCQkJZW51bSBtdGtfZGRwX2NvbXBfaWQgaWQpOwogdm9pZCBtdGtfZGlzcF9tdXRl
-eF91bnByZXBhcmUoc3RydWN0IG10a19kaXNwX211dGV4ICptdXRleCk7CiB2b2lkIG10a19kaXNw
-X211dGV4X3B1dChzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4KTsKK3ZvaWQgbXRrX2Rpc3Bf
-bXV0ZXhfYWNxdWlyZShzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4KTsKK3ZvaWQgbXRrX2Rp
-c3BfbXV0ZXhfcmVsZWFzZShzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4KTsKIAogI2VuZGlm
-IC8qIE1US19EUk1fRERQX0ggKi8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHJtX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmgK
-aW5kZXggZmEwYjEwNi4uOTRmOGI2NiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fZHJ2LmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
-ZHJ2LmgKQEAgLTMzLDYgKzMzLDcgQEAgc3RydWN0IG10a19tbXN5c19kcml2ZXJfZGF0YSB7CiAJ
-dW5zaWduZWQgaW50IG1haW5fbGVuOwogCWNvbnN0IGVudW0gbXRrX2RkcF9jb21wX2lkICpleHRf
-cGF0aDsKIAl1bnNpZ25lZCBpbnQgZXh0X2xlbjsKKwlib29sIHNoYWRvd19yZWdpc3RlcjsKIH07
-CiAKIHN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgewotLSAKMS43LjkuNQoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+2016-07-25 16:15 GMT+02:00 Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> On Mon, Jul 25, 2016 at 03:16:28PM +0200, Mirza Krak wrote:
+>> 2016-07-25 13:30 GMT+02:00 Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> Yes, that clarifies many things. The presence of an external, address-
+> based chip-select is essential information in order to describe this
+> setup properly.
+>
+> Given that the external chip select is entirely invisible to software, I
+> think a more accurate description of your setup would be:
+>
+>         gmi@70090000 {
+>                 ...
+>
+>                 /* for the chip select */
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+>                 /*
+>                  * Technically this could be used to translate the range from
+>                  * 0x48000000 to 0x4fffffff into a different range, but that
+>                  * no longer works because of the #address-cells. Does this
+>                  * matter?
+>                  */
+>                 ranges;
+>
+>                 bus@0 {
+>                         compatible = "simple-bus";
+>                         reg = <0>;
+>
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+>
+>                         can@48000000 {
+>                                 reg = <0x48000000 0x100>;
+>                                 ...
+>                         };
+>
+>                         can@48040000 {
+>                                 reg = <0x48040000 0x100>;
+>                                 ...
+>                         };
+>                 };
+>         };
+>
+
+Finally got around to test this. Above example had some issues, or I
+am doing something wrong.
+
+First of, the address parser does not seem to like that #size-cells =
+<0> when ranges are empty. Got following warning from device tree
+compiler:
+Warning (ranges_format): /nor@70009000 has empty "ranges" property but
+its #size-cells (0) differs from / (1)
+
+and on boot:
+[    0.399357] prom_parse: Bad cell count for /nor@70009000/bus@0
+
+Got it to work if I changed to (also had to add an empty ranges prop
+in bus node):
+
+gmi@70009000 {
+    #address-cells = <1>;
+    #size-cells = <1>;
+    ranges;
+
+    bus@0,0 {
+                compatible = "simple-bus";
+                reg = <0 0>;
+                ranges;
+
+                #address-cells = <1>;
+                #size-cells = <1>;
+
+                can@48000000 {
+                    reg = <0x48000000 0x100>;
+                    ...
+                };
+
+
+                can@48040000 {
+                    reg = <0x48040000 0x100>;
+                    ...
+                };
+}
+
+But I wonder is there something wrong with below example (which does
+work), that is omitting the bus node:
+
+gmi@70009000 {
+    #address-cells = <1>;
+    #size-cells = <1>;
+    ranges;
+
+    can@48000000 {
+        reg = <0x48000000 0x100>;
+        ...
+    };
+
+    can@48040000 {
+        reg = <0x48040000 0x100>;
+        ...
+    };
+}
+
+Just feel that I need to duplicate information if add an bus node.
+
+Best Regards,
+Mirza
