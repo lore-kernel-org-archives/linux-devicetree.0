@@ -1,100 +1,106 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH 1/1] power: sbs-manager: Add interrupt support and battery
- detect gpios
-Date: Thu, 28 Jul 2016 17:01:15 +0800
-Message-ID: <e2ca7188-03e4-978d-9c10-9498117acb8e@electromag.com.au>
-References: <1469433003-68564-1-git-send-email-preid@electromag.com.au>
- <1469433003-68564-2-git-send-email-preid@electromag.com.au>
- <20160727144609.GA12462@rob-hp-laptop> <1469653707.27666.22.camel@amnesix>
- <4553a3f5-55cc-807d-7f34-11b4c7e11a0b@electromag.com.au>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] reset: uniphier: add reset controller drivers for
+ UniPhier SoCs
+Date: Thu, 28 Jul 2016 11:23:11 +0200
+Message-ID: <1469697791.12835.8.camel@pengutronix.de>
+References: <1469557209-13089-1-git-send-email-yamada.masahiro@socionext.com>
+	 <1469611051.2470.15.camel@pengutronix.de>
+	 <CAK7LNAShnmaZ-Gd8yDEvJwdiEbf6ceWkabsFVtMz3hjfzJG2rw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <4553a3f5-55cc-807d-7f34-11b4c7e11a0b@electromag.com.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>, Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNAShnmaZ-Gd8yDEvJwdiEbf6ceWkabsFVtMz3hjfzJG2rw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-G'day Rob,
+Hi Masahiro,
 
-Just another thought.
+Am Donnerstag, den 28.07.2016, 11:40 +0900 schrieb Masahiro Yamada:
+> >> +static int uniphier_reset_update(struct reset_controller_dev *rcdev,
+> >> +                              unsigned long id, bool assert)
+> >> +{
+> >> +     struct uniphier_reset_priv *priv = to_uniphier_reset_priv(rcdev);
+> >> +     const struct uniphier_reset_data *p;
+> >> +     bool handled = false;
+> >> +
+> >> +     for (p = priv->data; p->id != UNIPHIER_RESET_ID_END; p++) {
+> >> +             unsigned int val;
+> >> +             int ret;
+> >> +
+> >> +             if (p->id != id)
+> >> +                     continue;
+> >> +
+> >> +             val = p->assert_val;
+> >> +             if (!assert)
+> >> +                     val = ~val;
+> >> +
+> >> +             ret = regmap_write_bits(priv->regmap, p->reg, p->mask, val);
+> >> +             if (ret)
+> >> +                     return ret;
+> >> +
+> >> +             handled = true;
+> >
+> > Why does this continue to walk through the list after the correct id was
+> > found?
+> 
+> Looks like you already found the answer for this.
 
-On 28/07/2016 10:11, Phil Reid wrote:
-> G'day Karl / Rob,
+Yes.
+
+[...]
+> >> +#define UNIPHIER_MIO_RESET_USB2(index, ch)                           \
+> >> +     UNIPHIER_RESETX_SIMPLE((index), 0x110 + 0x200 * (ch), BIT(24)), \
+> >> +     UNIPHIER_RESETX_SIMPLE((index), 0x114 + 0x200 * (ch), BIT(0))
+> >
+> > Ah, so for USB2 reset you have two reset bits in separate registers. Are
+> > you sure these are controlling the same reset line?
+> 
+> I am not a hardware guy, so I am not sure about the hardware design.
+> 
+> From my best guess, I think each bit controls a different block.
+> But both of them must be de-asserted before starting up USB.
 >
-> On 28/07/2016 05:08, Karl-Heinz Schneider wrote:
->> Am Mittwoch, den 27.07.2016, 09:46 -0500 schrieb Rob Herring:
->>> On Mon, Jul 25, 2016 at 03:50:03PM +0800, Phil Reid wrote:
->>>> This patch added irq support for the SMBALERT pin and notification of
->>>> the battery removal / insertion. The sbs manager would typically be
->>>> used with the corresponding sbs-battery driver that currently uses a
->>>> gpio input for battery presence and interrupt. To remain compatible with
->>>> that existing driver this patch implements GPIO inputs with interrupt
->>>> support. IRQ masking is performed in software as the hardware does not
->>>> support masking of notifications from each battery.
->>>> In addition a power_supply change notification is generated for the sbs
->>>> manager device when the AC present flag is changed.
->>>> Tested with LTC1760 and dual sbs compatible batteries.
->>>
->>> Please don't submit a binding and immediately turn around and add to it.
->>> While that is often preferred for drivers or kernel features, bindings
->>> should be complete as possible and not evolve. Combine this with your
->>> previous patch add sbs-mgr if that hasn't been accepted yet.
-> That was from Karl. I'm happy to have this combined if he is.
->
->>>
->>> IMO, the sbs-bat should just be a interrupt and making it and this
->>> binding a GPIO is overkill. Since batteries nodes using this will be
->>> new, there's no reason the driver can't be updated to support
->>> interrupts.
-I did consider this and didn't go that way as:
-1) the current sbs-battery driver didn't support it.
-2) Then there's also the problem of reporting  the presence of the battery to the battery driver.
-Without the GPIO support you resort to polling and looking for a NACK. Which didn't seem that nice.
+> There is no use-case where they are asserted/de-asserted independently.
+> 
+> So, I thought it made sense to couple them into a single ID.
 
+If it turns out to be useful for drivers to bundle resets, I'd prefer to
+do this in the framework rather than in the individual drivers, maybe
+have a reset_assert/deassert_array, similarly to gpiod.
 
->>>
->>> Also, I'm not even convinced you need the sbs-mgr to be an
->>> interrupt-controller. Is this anything more that just wire-OR'ed
->>> interrupt lines which can be handled as shared irq? Does reading
->>> SBSM_CMD_BATSYSSTATE have a side effect for example?
->> Yes, according to the Datasheed it clears SMBALERT#.
->
-> Yes you need to service the Ltc1760 for the irq to clear. reading the batteries does nothing.
-> Even without any batteries present  you may get an irq and need to service it.
-> eg: I have a system with 2 ltc1760 with a total of 4 batteries.
-> So if only one battery is present and AC power is connected then both ltc1760 will generate
-> a notification on SMBALERT. One which has no batteries present.
->
->>>
->>> Rob
->> SMBALERT is electrically an active low line which is pulled down by one
->> or more devices needing attention, isn't it? The I2C host driver or some
->> other instance need to implement support for it, the device driver may
->> register some sort of handler function (e.g by implementing struct
->> i2c_driver.alert function)
->>
->> That's my understanding of the SMBALERT.
->>
->> I once tried to implement the alert function and see if it get's called.
->> It didn't. At that point I didn't investigate further.
->>
->> So, do I miss something or is that part incomplete/broken? I can only
->> find lm90 and ipmi_ssif which implement the callback.
->>
-> I wasn't aware of that functionality. Most devices seem to use a GPIO to
-> obtain irq support. Which I guess is the most flexible solution.
-> I think SMBALERT also support a mechanism to query all devices on the bus to determine
-> which device address is asserting the irq. Not sure how this would work with multiplexed
-> address buses (eg dual ltc1760) and devices with the same address.
->
-> Open to suggestions
->
+> > If the USB core does in fact have two separate reset inputs that just
+> > happen to need asserting at the same time, this should still get two
+> > separate ids. Same issue for the SD reset above, if the reset lines are
+> > physically separate, please don't combine them in the driver.
+> 
+> Right.
+> From the view of point of Device Tree interface,
+> it should reflect the hardware design.
+> I believe they are separate reset signals, so should be given with separate IDs.
+> 
+> But, as a software engineer, it is sometimes difficult to fully understand
+> the hardware structure.
+> 
+> The hardware document often just says "how to use USB",
+> but "how clock/reset signals are connected in each block" is not mentioned,
+> or at least very unclear.
 
+I understand the problem. If you have any way of finding out whether
+these are in fact separate resets, please do. Otherwise we'll have to
+guess.
 
--- 
-Regards
-Phil Reid
+> Probably, I will come back with real per-reset-line ID,
+> but I need some time to take a look.
 
+Ok, thanks.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
