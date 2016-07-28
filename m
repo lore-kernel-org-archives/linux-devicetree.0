@@ -1,91 +1,101 @@
 From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v5 00/10] MT2701 DRM support
-Date: Thu, 28 Jul 2016 17:27:54 +0800
-Message-ID: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
+Subject: [PATCH v5 01/10] drm/mediatek: rename macros, add chip prefix
+Date: Thu, 28 Jul 2016 17:27:55 +0800
+Message-ID: <1469698084-20185-2-git-send-email-yt.shen@mediatek.com>
+References: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, YT Shen <yt.shen@mediatek.com>, CK Hu <ck.hu@mediatek.com>, Mao Huang <littlecvr@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, emil.l.velikov@gmail.com, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBpcyBNVDI3MDEgRFJNIHN1cHBvcnQgUEFUQ0ggdjUsIGJhc2VkIG9uIDQuNy1yYzEuCldl
-IGFkZCBEU0kgaW50ZXJydXB0IGNvbnRyb2wsIHRyYW5zZmVyIGZ1bmN0aW9uIGZvciBNSVBJIERT
-SSBwYW5lbCBzdXBwb3J0LgpNb3N0IGNvZGVzIGFyZSB0aGUgc2FtZSwgZXhjZXB0IHNvbWUgcmVn
-aXN0ZXIgY2hhbmdlZC4KCkZvciBleGFtcGxlOgogLSBESVNQX09WTCBhZGRyZXNzIG9mZnNldCBj
-aGFuZ2VkLCBjb2xvciBmb3JtYXQgZGVmaW5pdGlvbiBjaGFuZ2VkLgogLSBESVNQX1JETUEgZmlm
-byBzaXplIGNoYW5nZWQuCiAtIERJU1BfQ09MT1Igb2Zmc2V0IGNoYW5nZWQuCiAtIE1JUElfVFgg
-c2V0dGluZyBjaGFuZ2VkLgoKV2UgYWRkIGEgbmV3IGNvbXBvbmVudCBERFBfQ09NUE9ORU5UX0JM
-UywgYW5kIHRoZSBjb25uZWN0aW9ucyBhcmUgdXBkYXRlZC4KT1ZMIC0+IFJETUEgLT4gQ09MT1Ig
-LT4gQkxTIC0+IERTSQpSRE1BIC0+IERQSQpBbmQgd2UgaGF2ZSBzaGFkb3cgcmVnaXN0ZXIgc3Vw
-cG9ydCBpbiBNVDI3MDEuCgpDaGFuZ2VzIHNpbmNlIHY0OgotIEFkZCBtZXNzYWdlcyB3aGVuIHRp
-bWVvdXQgaW4gbXRrX2Rpc3BfbXV0ZXhfYWNxdWlyZSgpCi0gQWRkIGRlc2NyaXB0aW9ucyBmb3Ig
-RElTUF9SRUdfTVVURVggcmVnaXN0ZXJzCi0gTW92ZSBjb25uZWN0aW9uIHNldHRpbmdzIGZvciBk
-aXNwbGF5IG1vZHVsZXMgdG8gYSBzZXBhcmF0ZSBwYXRjaAotIFJlbW92ZSAnbXQyNzAxLWRpc3At
-d2RtYScgYmVjYXVzZSBpdCBpcyB1bnVzZWQKLSBNb3ZlIGNsZWFuaW5nIHVwIGFuZCByZW5hbWlu
-ZyB0byBhIHNlcGFyYXRlIHBhdGNoCi0gVXNlIHdhaXRfZXZlbnRfaW50ZXJydXB0aWJsZV90aW1l
-b3V0KCkgdG8gcmVwbGFjZSBwb2xsaW5nCi0gUmVtb3ZlIGlycV9udW0gZnJvbSBtdGtfZHNpIHN0
-cnVjdHVyZQotIFJlbW92ZSByZWR1bmRhbnQgYW5kIGRlYnVnIGNvZGVzCgpDaGFuZ2VzIHNpbmNl
-IHYzOgotIEFkZCBEU0kgc3VwcG9ydCBmb3IgTUlQSSBEU0kgcGFuZWxzCi0gVXBkYXRlIEJMUyBi
-aW5kaW5nIHRvIFBXTSBub2RlcwotIFJlbW92ZSB1Zm9lIGRldmljZSBub2RlcwotIFJlbW92ZSBy
-ZWR1bmRhbnQgcGFyZW50aGVzZXMKLSBSZW1vdmUgZ2xvYmFsIHZhcmlhYmxlIGluaXRpYWxpemF0
-aW9uCgpDaGFuZ2VzIHNpbmNlIHYyOgotIFJlbmFtZSBtdGtfZGRwX211eF9zZWwgdG8gbXRrX2Rk
-cF9zb3V0X3NlbAotIFVwZGF0ZSBtdDI3MDFfbXRrX2RkcF9leHQgY29tcG9uZW50cwotIENoYW5n
-ZWQgdG8gcHJlZml4IG5hbWluZwotIFJlb3JkZXIgdGhlIHBhdGNoIHNlcmllcwotIFVzZSBvZl9k
-ZXZpY2VfZ2V0X21hdGNoX2RhdGEoKSB0byBnZXQgZHJpdmVyIHByaXZhdGUgZGF0YQotIFVzZSBp
-b3BvbGwgbWFjcm9zIHRvIGltcGxlbWVudCBtdGtfZGlzcF9tdXRleF9hY3F1aXJlKCkKLSBSZW1v
-dmVkIGVtcHR5IGRldmljZSB0cmVlIG5vZGVzCgpDaGFuZ2VzIHNpbmNlIHYxOgotIFJlbW92ZWQg
-QkxTIGJpbmRpbmdzIGFuZCBjb2Rlcywgd2hpY2ggYmVsb25nIHRvIHB3bSBkcml2ZXIKLSBNb3Zl
-ZCBtdGtfZGlzcF9tdXRleF9hY3F1aXJlKCkganVzdCBiZWZvcmUgbXRrX2NydGNfZGRwX2NvbmZp
-ZygpCi0gU3BsaXQgcGF0Y2ggaW50byBzbWFsbGVyIHBhcnRzCi0gQWRkZWQgY29uc3Qga2V5d29y
-ZCB0byBjb25zdGFudCBzdHJ1Y3R1cmUKLSBSZW1vdmVkIGNvZGVzIGZvciBzcGVjaWFsIG1lbW9y
-eSBhbGlnbgoKVGhlIFBBVENIIGRlcGVuZHMgb24gdGhlIGZvbGxvd2luZyBwYXRjaDoKaHR0cHM6
-Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC84ODMyNDQxLyAoImR0LWJpbmRpbmdzOiBBUk06
-IE1lZGlhdGVrOiBEb2N1bWVudCBiaW5kaW5ncyBmb3IgTVQyNzAxIikKaHR0cHM6Ly9wYXRjaHdv
-cmsua2VybmVsLm9yZy9wYXRjaC85MjIyOTk3LyAoImR0LWJpbmRpbmdzOiBwd206IEFkZCBNZWRp
-YVRlayBkaXNwbGF5IFBXTSBiaW5kaW5ncyIpCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
-cGF0Y2gvOTE2NDAyOS8gKCJkdC1iaW5kaW5nczogbWVkaWF0ZWs6IGFkZCBkZXNjcmlwdGlvbnMg
-Zm9yIG1lZGlhdGVrIG10MjcwMSBpb21tdSBhbmQgc21pIikKaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
-bmVsLm9yZy9wYXRjaC85MTY0MDE3LyAoImlvbW11L21lZGlhdGVrOiBtb3ZlIHRoZSBjb21tb24g
-c3RydWN0IGludG8gaGVhZGVyIGZpbGUiKQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
-dGNoLzkxNjQwMjUvICgibWVtb3J5L21lZGlhdGVrOiBhZGQgc3VwcG9ydCBmb3IgbXQyNzAxIikK
-aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MTY0MDQxLyAoImlvbW11L21lZGlh
-dGVrOiBhZGQgc3VwcG9ydCBmb3IgbXRrIGlvbW11IGdlbmVyYXRpb24gb25lIEhXIikKaHR0cHM6
-Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MTY0MDEzLyAoIkFSTTogZHRzOiBtdDI3MDE6
-IGFkZCBpb21tdS9zbWkgZHRzaSBub2RlIGZvciBtdDI3MDEiKQoKVGhhbmtzLAp5dC5zaGVuCgpZ
-VCBTaGVuICg4KToKICBkcm0vbWVkaWF0ZWs6IHJlbmFtZSBtYWNyb3MsIGFkZCBjaGlwIHByZWZp
-eAogIGRybS9tZWRpYXRlazogYWRkICpkcml2ZXJfZGF0YSBmb3IgZGlmZmVyZW50IGhhcmR3YXJl
-IHNldHRpbmdzCiAgZHJtL21lZGlhdGVrOiBhZGQgc2hhZG93IHJlZ2lzdGVyIHN1cHBvcnQKICBk
-cm0vbWVkaWF0ZWs6IHVwZGF0ZSBkaXNwbGF5IG1vZHVsZSBjb25uZWN0aW9ucwogIGRybS9tZWRp
-YXRlazogY2xlYW5pbmcgdXAgYW5kIHJlZmluZQogIGRybS9tZWRpYXRlazogdXBkYXRlIERTSSBz
-dWIgZHJpdmVyIGZsb3cKICBkcm0vbWVkaWF0ZWs6IGFkZCBzdXBwb3J0IGZvciBNZWRpYXRlayBT
-b0MgTVQyNzAxCiAgYXJtOiBkdHM6IG10MjcwMTogQWRkIGRpc3BsYXkgc3Vic3lzdGVtIHJlbGF0
-ZWQgbm9kZXMgZm9yIE1UMjcwMQoKc2hhb21pbmcgY2hlbiAoMik6CiAgZHJtL21lZGlhdGVrOiBh
-ZGQgZHNpIGludGVycnVwdCBjb250cm9sCiAgZHJtL21lZGlhdGVrOiBhZGQgZHNpIHRyYW5zZmVy
-IGZ1bmN0aW9uCgogYXJjaC9hcm0vYm9vdC9kdHMvbXQyNzAxLmR0c2kgICAgICAgICAgICAgICB8
-ICAxMDAgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAg
-fCAgIDMyICstCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jICAgIHwg
-ICAxNyArLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICAgICB8ICAg
-NzUgKystLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICB8ICAx
-MzcgKysrKystLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmggICAgICB8
-ICAgIDIgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8ICAg
-MzQgKy0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggfCAgIDE0
-ICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgICAgfCAgIDU1ICsr
-LQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmggICAgICB8ICAgIDkgKwog
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAgICAgICB8ICA1NDggKysrKysr
-KysrKysrKysrKysrKysrKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX21pcGlf
-dHguYyAgICAgIHwgICA2NyArKystCiAxMiBmaWxlcyBjaGFuZ2VkLCA5MzAgaW5zZXJ0aW9ucygr
-KSwgMTYwIGRlbGV0aW9ucygtKQoKLS0gCjEuNy45LjUKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add MT8173 prefix for hardware related macros.
+
+Signed-off-by: YT Shen <yt.shen@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c |   60 ++++++++++++++++----------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 17ba935..2fc4321 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -36,21 +36,21 @@
+ #define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
+ #define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
+ 
+-#define MUTEX_MOD_DISP_OVL0		BIT(11)
+-#define MUTEX_MOD_DISP_OVL1		BIT(12)
+-#define MUTEX_MOD_DISP_RDMA0		BIT(13)
+-#define MUTEX_MOD_DISP_RDMA1		BIT(14)
+-#define MUTEX_MOD_DISP_RDMA2		BIT(15)
+-#define MUTEX_MOD_DISP_WDMA0		BIT(16)
+-#define MUTEX_MOD_DISP_WDMA1		BIT(17)
+-#define MUTEX_MOD_DISP_COLOR0		BIT(18)
+-#define MUTEX_MOD_DISP_COLOR1		BIT(19)
+-#define MUTEX_MOD_DISP_AAL		BIT(20)
+-#define MUTEX_MOD_DISP_GAMMA		BIT(21)
+-#define MUTEX_MOD_DISP_UFOE		BIT(22)
+-#define MUTEX_MOD_DISP_PWM0		BIT(23)
+-#define MUTEX_MOD_DISP_PWM1		BIT(24)
+-#define MUTEX_MOD_DISP_OD		BIT(25)
++#define MT8173_MUTEX_MOD_DISP_OVL0		BIT(11)
++#define MT8173_MUTEX_MOD_DISP_OVL1		BIT(12)
++#define MT8173_MUTEX_MOD_DISP_RDMA0		BIT(13)
++#define MT8173_MUTEX_MOD_DISP_RDMA1		BIT(14)
++#define MT8173_MUTEX_MOD_DISP_RDMA2		BIT(15)
++#define MT8173_MUTEX_MOD_DISP_WDMA0		BIT(16)
++#define MT8173_MUTEX_MOD_DISP_WDMA1		BIT(17)
++#define MT8173_MUTEX_MOD_DISP_COLOR0		BIT(18)
++#define MT8173_MUTEX_MOD_DISP_COLOR1		BIT(19)
++#define MT8173_MUTEX_MOD_DISP_AAL		BIT(20)
++#define MT8173_MUTEX_MOD_DISP_GAMMA		BIT(21)
++#define MT8173_MUTEX_MOD_DISP_UFOE		BIT(22)
++#define MT8173_MUTEX_MOD_DISP_PWM0		BIT(23)
++#define MT8173_MUTEX_MOD_DISP_PWM1		BIT(24)
++#define MT8173_MUTEX_MOD_DISP_OD		BIT(25)
+ 
+ #define MUTEX_SOF_SINGLE_MODE		0
+ #define MUTEX_SOF_DSI0			1
+@@ -80,21 +80,21 @@ struct mtk_ddp {
+ };
+ 
+ static const unsigned int mutex_mod[DDP_COMPONENT_ID_MAX] = {
+-	[DDP_COMPONENT_AAL] = MUTEX_MOD_DISP_AAL,
+-	[DDP_COMPONENT_COLOR0] = MUTEX_MOD_DISP_COLOR0,
+-	[DDP_COMPONENT_COLOR1] = MUTEX_MOD_DISP_COLOR1,
+-	[DDP_COMPONENT_GAMMA] = MUTEX_MOD_DISP_GAMMA,
+-	[DDP_COMPONENT_OD] = MUTEX_MOD_DISP_OD,
+-	[DDP_COMPONENT_OVL0] = MUTEX_MOD_DISP_OVL0,
+-	[DDP_COMPONENT_OVL1] = MUTEX_MOD_DISP_OVL1,
+-	[DDP_COMPONENT_PWM0] = MUTEX_MOD_DISP_PWM0,
+-	[DDP_COMPONENT_PWM1] = MUTEX_MOD_DISP_PWM1,
+-	[DDP_COMPONENT_RDMA0] = MUTEX_MOD_DISP_RDMA0,
+-	[DDP_COMPONENT_RDMA1] = MUTEX_MOD_DISP_RDMA1,
+-	[DDP_COMPONENT_RDMA2] = MUTEX_MOD_DISP_RDMA2,
+-	[DDP_COMPONENT_UFOE] = MUTEX_MOD_DISP_UFOE,
+-	[DDP_COMPONENT_WDMA0] = MUTEX_MOD_DISP_WDMA0,
+-	[DDP_COMPONENT_WDMA1] = MUTEX_MOD_DISP_WDMA1,
++	[DDP_COMPONENT_AAL] = MT8173_MUTEX_MOD_DISP_AAL,
++	[DDP_COMPONENT_COLOR0] = MT8173_MUTEX_MOD_DISP_COLOR0,
++	[DDP_COMPONENT_COLOR1] = MT8173_MUTEX_MOD_DISP_COLOR1,
++	[DDP_COMPONENT_GAMMA] = MT8173_MUTEX_MOD_DISP_GAMMA,
++	[DDP_COMPONENT_OD] = MT8173_MUTEX_MOD_DISP_OD,
++	[DDP_COMPONENT_OVL0] = MT8173_MUTEX_MOD_DISP_OVL0,
++	[DDP_COMPONENT_OVL1] = MT8173_MUTEX_MOD_DISP_OVL1,
++	[DDP_COMPONENT_PWM0] = MT8173_MUTEX_MOD_DISP_PWM0,
++	[DDP_COMPONENT_PWM1] = MT8173_MUTEX_MOD_DISP_PWM1,
++	[DDP_COMPONENT_RDMA0] = MT8173_MUTEX_MOD_DISP_RDMA0,
++	[DDP_COMPONENT_RDMA1] = MT8173_MUTEX_MOD_DISP_RDMA1,
++	[DDP_COMPONENT_RDMA2] = MT8173_MUTEX_MOD_DISP_RDMA2,
++	[DDP_COMPONENT_UFOE] = MT8173_MUTEX_MOD_DISP_UFOE,
++	[DDP_COMPONENT_WDMA0] = MT8173_MUTEX_MOD_DISP_WDMA0,
++	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
+ };
+ 
+ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+-- 
+1.7.9.5
