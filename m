@@ -1,86 +1,98 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH 1/1] power: sbs-manager: Add interrupt support and battery
- detect gpios
-Date: Thu, 28 Jul 2016 10:11:31 +0800
-Message-ID: <4553a3f5-55cc-807d-7f34-11b4c7e11a0b@electromag.com.au>
-References: <1469433003-68564-1-git-send-email-preid@electromag.com.au>
- <1469433003-68564-2-git-send-email-preid@electromag.com.au>
- <20160727144609.GA12462@rob-hp-laptop> <1469653707.27666.22.camel@amnesix>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v5 0/2] clk: uniphier: add clock drivers for UniPhier SoCs
+Date: Thu, 28 Jul 2016 11:25:06 +0900
+Message-ID: <CAK7LNAQo9UCxXXGWU81fR+DGhuiet=cnV86xOXVbJUTOYSstdg@mail.gmail.com>
+References: <1469556593-11369-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1469653707.27666.22.camel@amnesix>
-Sender: linux-pm-owner@vger.kernel.org
-To: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>, Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1469556593-11369-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk <linux-clk@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-G'day Karl / Rob,
+Hi.
 
-On 28/07/2016 05:08, Karl-Heinz Schneider wrote:
-> Am Mittwoch, den 27.07.2016, 09:46 -0500 schrieb Rob Herring:
->> On Mon, Jul 25, 2016 at 03:50:03PM +0800, Phil Reid wrote:
->>> This patch added irq support for the SMBALERT pin and notification of
->>> the battery removal / insertion. The sbs manager would typically be
->>> used with the corresponding sbs-battery driver that currently uses a
->>> gpio input for battery presence and interrupt. To remain compatible with
->>> that existing driver this patch implements GPIO inputs with interrupt
->>> support. IRQ masking is performed in software as the hardware does not
->>> support masking of notifications from each battery.
->>> In addition a power_supply change notification is generated for the sbs
->>> manager device when the AC present flag is changed.
->>> Tested with LTC1760 and dual sbs compatible batteries.
->>
->> Please don't submit a binding and immediately turn around and add to it.
->> While that is often preferred for drivers or kernel features, bindings
->> should be complete as possible and not evolve. Combine this with your
->> previous patch add sbs-mgr if that hasn't been accepted yet.
-That was from Karl. I'm happy to have this combined if he is.
 
->>
->> IMO, the sbs-bat should just be a interrupt and making it and this
->> binding a GPIO is overkill. Since batteries nodes using this will be
->> new, there's no reason the driver can't be updated to support
->> interrupts.
->>
->> Also, I'm not even convinced you need the sbs-mgr to be an
->> interrupt-controller. Is this anything more that just wire-OR'ed
->> interrupt lines which can be handled as shared irq? Does reading
->> SBSM_CMD_BATSYSSTATE have a side effect for example?
-> Yes, according to the Datasheed it clears SMBALERT#.
+I will send v6,
+so please do not apply this version.
 
-Yes you need to service the Ltc1760 for the irq to clear. reading the batteries does nothing.
-Even without any batteries present  you may get an irq and need to service it.
-eg: I have a system with 2 ltc1760 with a total of 4 batteries.
-So if only one battery is present and AC power is connected then both ltc1760 will generate
-a notification on SMBALERT. One which has no batteries present.
+(meantime review is very appreciated, though.)
 
->>
->> Rob
-> SMBALERT is electrically an active low line which is pulled down by one
-> or more devices needing attention, isn't it? The I2C host driver or some
-> other instance need to implement support for it, the device driver may
-> register some sort of handler function (e.g by implementing struct
-> i2c_driver.alert function)
+
+
+2016-07-27 3:09 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> I split into two patches to make review easier.
 >
-> That's my understanding of the SMBALERT.
+>  1/2: core support code
+>  2/2: data arrays
 >
-> I once tried to implement the alert function and see if it get's called.
-> It didn't. At that point I didn't investigate further.
 >
-> So, do I miss something or is that part incomplete/broken? I can only
-> find lm90 and ipmi_ssif which implement the callback.
+> Changes in v5:
+>   - Rebase onto next-20160726 for easier git-am
 >
-I wasn't aware of that functionality. Most devices seem to use a GPIO to
-obtain irq support. Which I guess is the most flexible solution.
-I think SMBALERT also support a mechanism to query all devices on the bus to determine
-which device address is asserting the irq. Not sure how this would work with multiplexed
-address buses (eg dual ltc1760) and devices with the same address.
+> Changes in v4:
+>   - Unify module_platform_driver() boilerplate into a single place
+>   - Add binding document
+>   - Add USB3 clocks
+>
+> Changes in v3:
+>   - Change to platform drivers instead of OF_CLK_DECLARE
+>   - Split into a core part + SoC drivers
+>     SoC drivers just consist of tables of SoC-specific data.
+>     This allows reviewer to concentrate on the core-part
+>   - Hard-code parent clock names for cascading
+>
+> Changes in v2:
+>   - split emmc_hw_reset
+>   - make SD clock rate-controllable
+>   - add CLK_SET_RATE_PARENT flag to mux, gate, fixed-factor clocks
+>
+> Masahiro Yamada (2):
+>   clk: uniphier: add core support code for UniPhier clock drivers
+>   clk: uniphier: add clock data for UniPhier SoCs
+>
+>  .../devicetree/bindings/clock/uniphier-clock.txt   | 123 ++++
+>  MAINTAINERS                                        |   1 +
+>  drivers/clk/Kconfig                                |   1 +
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/uniphier/Kconfig                       |   9 +
+>  drivers/clk/uniphier/Makefile                      |   9 +
+>  drivers/clk/uniphier/clk-uniphier-core.c           | 216 +++++++
+>  drivers/clk/uniphier/clk-uniphier-fixed-factor.c   |  49 ++
+>  drivers/clk/uniphier/clk-uniphier-fixed-rate.c     |  48 ++
+>  drivers/clk/uniphier/clk-uniphier-gate.c           |  97 ++++
+>  drivers/clk/uniphier/clk-uniphier-mio.c            | 195 +++++++
+>  drivers/clk/uniphier/clk-uniphier-mux.c            |  95 ++++
+>  drivers/clk/uniphier/clk-uniphier-peri.c           |  95 ++++
+>  drivers/clk/uniphier/clk-uniphier-sys.c            | 626 +++++++++++++++++++++
+>  drivers/clk/uniphier/clk-uniphier.h                |  96 ++++
+>  15 files changed, 1661 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/uniphier-clock.txt
+>  create mode 100644 drivers/clk/uniphier/Kconfig
+>  create mode 100644 drivers/clk/uniphier/Makefile
+>  create mode 100644 drivers/clk/uniphier/clk-uniphier-core.c
+>  create mode 100644 drivers/clk/uniphier/clk-uniphier-fixed-factor.c
+>  create mode 100644 drivers/clk/uniphier/clk-uniphier-fixed-rate.c
+>  create mode 100644 drivers/clk/uniphier/clk-uniphier-gate.c
+>  create mode 100644 drivers/clk/uniphier/clk-uniphier-mio.c
+>  create mode 100644 drivers/clk/uniphier/clk-uniphier-mux.c
+>  create mode 100644 drivers/clk/uniphier/clk-uniphier-peri.c
+>  create mode 100644 drivers/clk/uniphier/clk-uniphier-sys.c
+>  create mode 100644 drivers/clk/uniphier/clk-uniphier.h
+>
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Open to suggestions
+
 
 -- 
-Regards
-Phil Reid
-
+Best Regards
+Masahiro Yamada
