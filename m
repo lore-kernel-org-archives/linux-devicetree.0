@@ -1,57 +1,239 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v5 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Thu, 28 Jul 2016 16:18:44 -0400
-Message-ID: <20160728201844.GM15995@brightrain.aerifal.cx>
-References: <cover.1469688975.git.dalias@libc.org>
- <ed156509aed631486decf1828acb4f0afa61dd31.1469688975.git.dalias@libc.org>
- <alpine.DEB.2.11.1607281515330.19896@nanos>
- <20160728200047.GL15995@brightrain.aerifal.cx>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160728200047.GL15995@brightrain.aerifal.cx>
-Sender: linux-sh-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] Revert "pstore/ram: add Device Tree bindings"
+Date: Thu, 28 Jul 2016 15:25:37 -0500
+Message-ID: <20160728202537.11961-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Hackmann <ghackmann@google.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 28, 2016 at 04:00:47PM -0400, Rich Felker wrote:
-> On Thu, Jul 28, 2016 at 04:44:05PM +0200, Thomas Gleixner wrote:
-> > > +static int jcore_pit_cpu_notify(struct notifier_block *self,
-> > > +			unsigned long action, void *hcpu)
-> > > +{
-> > > +	struct jcore_pit_nb *nb = container_of(self, struct jcore_pit_nb, nb);
-> > > +	switch (action & ~CPU_TASKS_FROZEN) {
-> > > +	case CPU_STARTING:
-> > > +		jcore_pit_local_init(this_cpu_ptr(nb->pit_percpu));
-> > > +		break;
-> > > +	}
-> > > +	return NOTIFY_OK;
-> > 
-> > Please convert this to the new state machine model of cpu
-> > hotplug. CPU_STARTING will be gone very soon. Here is an example:
-> > 
-> > http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/?h=smp/hotplug&id=7e86e8bd8dd67649d176e08d8dfb90039f0a1e98
-> 
-> Trying this change now and I'm getting hangs inside
-> cpuhp_invoke_ap_callback between wake_up_process and
-> wait_for_completion. I suspect it's not possible to run a scheduled
-> task yet because there's no timer yet, or something like that. Do I
-> need further infrastructure from tip that's not upstream yet in order
-> to test this? I just rebased on linus/master and still have the same
-> problem, but none of the other driver changes are in Linus's tree yet.
-> Following the other drivers in tip (again, I don't have any of these
-> in my tree), I put the new state between CPUHP_AP_SCHED_STARTING and
-> CPUHP_AP_NOTIFY_STARTING; is this correct?
+This reverts commit 35da60941e44dbf57868e67686dd24cc1a33125a.
+---
+WTF!
 
-I think it's this bug where the fix is not yet in Linus's tree:
+I don't recall acking this nor have my comments (Arnd's really) been 
+addressed[1]. This should not have been merged yet.
 
-http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/kernel/cpu.c?h=smp/hotplug&id=6a4e24518c8a10f78f44da219835239cb5aca90d
+Rob
 
-Cherry-picking that made it work. FWIW, it's really hard to do
-development on top of new infrastructure that's not yet working in any
-tree that's intended for others to pull, but I made it work and I'll
-have a new version of the patch for you soon.
+[1] https://lkml.org/lkml/2016/6/21/969
 
-Rich
+ Documentation/devicetree/bindings/misc/ramoops.txt | 48 -----------
+ Documentation/ramoops.txt                          |  6 +-
+ fs/pstore/ram.c                                    | 95 +---------------------
+ 3 files changed, 4 insertions(+), 145 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
+
+diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
+deleted file mode 100644
+index cd02cec..0000000
+--- a/Documentation/devicetree/bindings/misc/ramoops.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-Ramoops oops/panic logger
+-=========================
+-
+-ramoops provides persistent RAM storage for oops and panics, so they can be
+-recovered after a reboot. It is a backend to pstore, so this node is named
+-"ramoops" after the backend, rather than "pstore" which is the subsystem.
+-
+-Parts of this storage may be set aside for other persistent log buffers, such
+-as kernel log messages, or for optional ECC error-correction data.  The total
+-size of these optional buffers must fit in the reserved region.
+-
+-Any remaining space will be used for a circular buffer of oops and panic
+-records.  These records have a configurable size, with a size of 0 indicating
+-that they should be disabled.
+-
+-At least one of "record-size", "console-size", "ftrace-size", or "pmsg-size"
+-must be set non-zero, but are otherwise optional as listed below.
+-
+-
+-Required properties:
+-
+-- compatible: must be "ramoops"
+-
+-- memory-region: phandle to a region of memory that is preserved between
+-  reboots
+-
+-
+-Optional properties:
+-
+-- ecc-size: enables ECC support and specifies ECC buffer size in bytes
+-  (defaults to 0: no ECC)
+-
+-- record-size: maximum size in bytes of each dump done on oops/panic
+-  (defaults to 0: disabled)
+-
+-- console-size: size in bytes of log buffer reserved for kernel messages
+-  (defaults to 0: disabled)
+-
+-- ftrace-size: size in bytes of log buffer reserved for function tracing and
+-  profiling (defaults to 0: disabled)
+-
+-- pmsg-size: size in bytes of log buffer reserved for userspace messages
+-  (defaults to 0: disabled)
+-
+-- unbuffered: if present, use unbuffered mappings to map the reserved region
+-  (defaults to buffered mappings)
+-
+-- no-dump-oops: if present, only dump panics (defaults to panics and oops)
+diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
+index 9264bca..5d86756 100644
+--- a/Documentation/ramoops.txt
++++ b/Documentation/ramoops.txt
+@@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
+ 
+ 2. Setting the parameters
+ 
+-Setting the ramoops parameters can be done in 3 different manners:
++Setting the ramoops parameters can be done in 2 different manners:
+  1. Use the module parameters (which have the names of the variables described
+  as before).
+  For quick debugging, you can also reserve parts of memory during boot
+@@ -54,9 +54,7 @@ Setting the ramoops parameters can be done in 3 different manners:
+  kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
+  region at 128 MB boundary:
+  "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
+- 2. Use Device Tree bindings, as described in
+- Documentation/device-tree/bindings/misc/ramoops.txt.
+- 3. Use a platform device and set the platform data. The parameters can then
++ 2. Use a platform device and set the platform data. The parameters can then
+  be set through that platform data. An example of doing that is:
+ 
+ #include <linux/pstore_ram.h>
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 47516a7..d9668c2 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -34,8 +34,6 @@
+ #include <linux/slab.h>
+ #include <linux/compiler.h>
+ #include <linux/pstore_ram.h>
+-#include <linux/of.h>
+-#include <linux/of_address.h>
+ 
+ #define RAMOOPS_KERNMSG_HDR "===="
+ #define MIN_MEM_SIZE 4096UL
+@@ -460,98 +458,15 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
+ 	return 0;
+ }
+ 
+-static int ramoops_parse_dt_size(struct platform_device *pdev,
+-				 const char *propname, u32 *value)
+-{
+-	u32 val32 = 0;
+-	int ret;
+-
+-	ret = of_property_read_u32(pdev->dev.of_node, propname, &val32);
+-	if (ret < 0 && ret != -EINVAL) {
+-		dev_err(&pdev->dev, "failed to parse property %s: %d\n",
+-			propname, ret);
+-		return ret;
+-	}
+-
+-	if (val32 > INT_MAX) {
+-		dev_err(&pdev->dev, "%s %u > INT_MAX\n", propname, val32);
+-		return -EOVERFLOW;
+-	}
+-
+-	*value = val32;
+-	return 0;
+-}
+-
+-static int ramoops_parse_dt(struct platform_device *pdev,
+-			    struct ramoops_platform_data *pdata)
+-{
+-	struct device_node *of_node = pdev->dev.of_node;
+-	struct device_node *mem_region;
+-	struct resource res;
+-	u32 value;
+-	int ret;
+-
+-	dev_dbg(&pdev->dev, "using Device Tree\n");
+-
+-	mem_region = of_parse_phandle(of_node, "memory-region", 0);
+-	if (!mem_region) {
+-		dev_err(&pdev->dev, "no memory-region phandle\n");
+-		return -ENODEV;
+-	}
+-
+-	ret = of_address_to_resource(mem_region, 0, &res);
+-	of_node_put(mem_region);
+-	if (ret) {
+-		dev_err(&pdev->dev,
+-			"failed to translate memory-region to resource: %d\n",
+-			ret);
+-		return ret;
+-	}
+-
+-	pdata->mem_size = resource_size(&res);
+-	pdata->mem_address = res.start;
+-	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
+-	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+-
+-#define parse_size(name, field) {					\
+-		ret = ramoops_parse_dt_size(pdev, name, &value);	\
+-		if (ret < 0)						\
+-			return ret;					\
+-		field = value;						\
+-	}
+-
+-	parse_size("record-size", pdata->record_size);
+-	parse_size("console-size", pdata->console_size);
+-	parse_size("ftrace-size", pdata->ftrace_size);
+-	parse_size("pmsg-size", pdata->pmsg_size);
+-	parse_size("ecc-size", pdata->ecc_info.ecc_size);
+-
+-#undef parse_size
+-
+-	return 0;
+-}
+-
+ static int ramoops_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct ramoops_platform_data *pdata = dev->platform_data;
++	struct ramoops_platform_data *pdata = pdev->dev.platform_data;
+ 	struct ramoops_context *cxt = &oops_cxt;
+ 	size_t dump_mem_sz;
+ 	phys_addr_t paddr;
+ 	int err = -EINVAL;
+ 
+-	if (dev_of_node(dev) && !pdata) {
+-		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+-		if (!pdata) {
+-			err = -ENOMEM;
+-			goto fail_out;
+-		}
+-
+-		err = ramoops_parse_dt(pdev, pdata);
+-		if (err < 0)
+-			goto fail_out;
+-	}
+-
+ 	/* Only a single ramoops area allowed at a time, so fail extra
+ 	 * probes.
+ 	 */
+@@ -681,17 +596,11 @@ static int ramoops_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id dt_match[] = {
+-	{ .compatible = "ramoops" },
+-	{}
+-};
+-
+ static struct platform_driver ramoops_driver = {
+ 	.probe		= ramoops_probe,
+ 	.remove		= ramoops_remove,
+ 	.driver		= {
+-		.name		= "ramoops",
+-		.of_match_table	= dt_match,
++		.name	= "ramoops",
+ 	},
+ };
+ 
+-- 
+2.9.2
