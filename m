@@ -1,138 +1,160 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 18/18] ARM: mvebu: a395-gp: add support for the Armada 395 GP Board
-Date: Thu, 28 Jul 2016 15:15:46 +0200
-Message-ID: <87h9b9kinx.fsf@free-electrons.com>
-References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-	<1469105055-25181-20-git-send-email-jaz@semihalf.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] irqchip: add J-Core AIC driver
+Date: Thu, 28 Jul 2016 15:15:09 +0200 (CEST)
+Message-ID: <alpine.DEB.2.11.1607281500340.19896@nanos>
+References: <cover.1469688756.git.dalias@libc.org> <83d2b655baaaa387203a0432f0b52c1deb9d64e4.1469688756.git.dalias@libc.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469105055-25181-20-git-send-email-jaz@semihalf.com> (Grzegorz
-	Jaszczyk's message of "Thu, 21 Jul 2016 14:44:15 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grzegorz Jaszczyk <jaz@semihalf.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, mw@semihalf.com, alior@marvell.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <83d2b655baaaa387203a0432f0b52c1deb9d64e4.1469688756.git.dalias-8zAoT0mYgF4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grzegorz,
- 
- On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
+On Thu, 17 Mar 2016, Rich Felker wrote:
+> @@ -0,0 +1,86 @@
+> +/*
+> + * J-Core SoC AIC driver
+> + *
+> + * Copyright (C) 2015-2016 Smart Energy Instruments, Inc.
+> + *
+> + * This file is subject to the terms and conditions of the GNU General Public
+> + * License.  See the file "COPYING" in the main directory of this archive
+> + * for more details.
+> + */
+> +
+> +#include <linux/irq.h>
+> +#include <linux/io.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/cpu.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +
+> +#define AIC1_INTPRI 8
+> +
+> +static struct aic_data {
+> +	struct irq_chip chip;
+> +	struct irq_domain *domain;
+> +	struct notifier_block nb;
 
-Change the prefix to "ARM: dts: mvebu: armada-395-gp:"
+Please align the struct members for readability sake:
 
-> This commit adds description for the following features for this board:
->
-> - Serial port
-> - PCIe interfaces
-> - USB2.0
-> - USB3.0
-> - SDIO
-> - 1024 MiB NAND-FLASH
-> - SATA
-> - I2C buses
->
-> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-[...]
+	struct irq_chip		chip;
+	struct irq_domain	*domain;
 
-As for the other board, try to add information about the connector used:
+domain is just used in the init function as a replacement for a local
+variable. 
 
-> +			serial@12000 {
-Here,
+	struct notifier_block	nb;
 
-> +				status = "okay";
-> +			};
+nb is not used anywhere in the code.
+
+So what's the purpose of this data structure at all?
+
+> +} aic_data;
+
+Please seperate the struct definition and the variable declaration.
+
 > +
-> +			usb@58000 {
-here
-> +				status = "okay";
-> +			};
+> +static int aic_irqdomain_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hwirq)
+> +{
+> +	struct aic_data *aic = d->host_data;
 > +
-> +			sata@a8000 {
-here
-> +				status = "okay";
-> +			};
+> +	irq_set_chip_data(irq, aic);
+> +	irq_set_chip_and_handler(irq, &aic->chip, handle_simple_irq);
+> +	irq_set_probe(irq);
 > +
-> +			flash@d0000 {
-> +				status = "okay";
-> +				pinctrl-0 = <&nand_pins>;
-> +				pinctrl-names = "default";
-> +				num-cs = <1>;
-> +				marvell,nand-keep-config;
-> +				marvell,nand-enable-arbiter;
-> +				nand-on-flash-bbt;
-> +				nand-ecc-strength = <4>;
-> +				nand-ecc-step-size = <512>;
+> +	return 0;
+> +}
 > +
-> +				partitions {
-> +					compatible = "fixed-partitions";
-> +					#address-cells = <1>;
-> +					#size-cells = <1>;
-> +
-> +					partition@0 {
-> +						label = "U-Boot";
-> +						reg = <0x00000000 0x00600000>;
-> +						read-only;
-> +					};
-> +
-> +					partition@800000 {
-> +						label = "uImage";
-> +						reg = <0x00600000 0x00400000>;
-> +						read-only;
-> +					};
-> +
-> +					partition@1000000 {
-> +						label = "Root";
-> +						reg = <0x00a00000 0x3f600000>;
-> +					};
-> +				};
-> +			};
-> +
-> +			sdhci@d8000 {
-here
-> +				clock-frequency = <200000000>;
-> +				broken-cd;
-> +				wp-inverted;
-> +				bus-width = <8>;
-> +				status = "okay";
-> +				no-1-8-v;
-> +			};
-> +
-> +			usb3@f0000 {
-here
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		pcie-controller {
-> +			status = "okay";
-> +
-> +			/*
-> +			 * The two PCIe units are accessible through
-> +			 * mini PCIe slot on the board.
-> +			 */
-and here for each slot
-> +			pcie@2,0 {
-> +				/* Port 1, Lane 0 */
-> +				status = "okay";
-> +			};
-> +
-> +			pcie@4,0 {
-> +				/* Port 3, Lane 0 */
-> +				status = "okay";
-> +			};
-> +		};
-> +	};
+> +static const struct irq_domain_ops aic_irqdomain_ops = {
+> +	.map = aic_irqdomain_map,
+> +	.xlate = irq_domain_xlate_onecell,
 > +};
+> +
+> +static void noop(struct irq_data *data)
+> +{
+> +}
+> +
+> +int __init aic_irq_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	struct aic_data *aic = &aic_data;
+> +	unsigned min_irq = 64;
 
-then you can add my:
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Magic constant. Please use a proper define with a proper explanation.
+
+> +
+> +	pr_info("Initializing J-Core AIC\n");
+> +
+> +	/* Only the AIC1 needs priority initialization in order to receive
+> +	 * interrupts, but the DT may declare a newer AIC as being
+> +	 * fallback-compatible with AIC1, so use incompatibility with AIC2
+> +	 * as the condition for actually being AIC1 and needing setup. */
+
+Please use proper multi line comment style:
+
+       /*
+        * First line.
+	* ...
+	* Last line.
+	*/
+
+> +	if (!of_device_is_compatible(node, "jcore,aic2")) {
+
+This should really be
+
+	if (of_device_is_compatible(node, "jcore,aic1")) {
+
+as you want it explicitely for AIC1 only
+
+> +		unsigned cpu;
+
+Missing newline between declaration and code.
+
+> +		for_each_present_cpu(cpu) {
+> +			void __iomem *base = of_iomap(node, cpu);
+> +			if (!base) {
+> +				pr_err("Unable to map AIC for cpu %u\n", cpu);
+> +				return -ENOMEM;
+> +			}
+> +			pr_info("Local AIC1 enable for cpu %u at %p\n",
+> +				cpu, base + AIC1_INTPRI);
+> +			__raw_writel(0xffffffff, base + AIC1_INTPRI);
+> +			iounmap(base);
+> +		}
+> +		min_irq = 16;
+
+Please use a proper define and not hardcoded magic numbers which are
+completely undocumented.
+
+> +	}
+> +
+> +	aic->chip.name = "AIC";
+> +	aic->chip.irq_mask = noop;
+> +	aic->chip.irq_unmask = noop;
+
+So how is that going to work when an irq is raised and there is no handler or
+the interrupt is disabled? That's going to end up in an eternal interrupt
+storm except when that interrupt line is level type.
+
+If all your interrupts are edge type, then you want to add at least a comment
+which explains WHY this won't end up in a complete disaster.
+
+> +	aic->domain = irq_domain_add_linear(node, 128, &aic_irqdomain_ops, aic);
+
+Again. 128 is a magic number pulled out of thin air, right?
+
+> +	irq_create_strict_mappings(aic->domain, min_irq, min_irq, 128-min_irq);
+
+  	s/128-min_irq/128 - min_irq/
 
 Thanks,
 
-Gregory
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+	tglx
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
