@@ -1,102 +1,87 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
-Date: Thu, 28 Jul 2016 14:07:24 -0500
-Message-ID: <CAL_JsqLfs5jnO9DkP5io5qbuCfhojfspkHQbHBttgWfTeokYkQ@mail.gmail.com>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org> <20160719191442.15439-2-swarren@wwwdotorg.org>
- <20160726100302.GE2433@ulmo.ba.sec> <f1ca284a-5332-3323-80b9-7cf61e7c97ac@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 2/2] spi: add driver for J-Core SPI controller
+Date: Thu, 28 Jul 2016 20:11:53 +0100
+Message-ID: <20160728191153.GL11806@sirena.org.uk>
+References: <cover.1469686300.git.dalias@libc.org>
+ <2a46090a5a7c177b7eca83f68406650844423e7f.1469686300.git.dalias@libc.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f1ca284a-5332-3323-80b9-7cf61e7c97ac-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Epi5nlKhkk4Kf+ga"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2a46090a5a7c177b7eca83f68406650844423e7f.1469686300.git.dalias@libc.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 26, 2016 at 11:21 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 07/26/2016 04:03 AM, Thierry Reding wrote:
->>
->> On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
->>>
->>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> The BPMP implements some services which must be represented by separate
->>> nodes. For example, it can provide access to certain I2C controllers, and
->>> the I2C bindings represent each I2C controller as a device tree node.
->>> Update the binding to describe how the BPMP supports this.
->>>
->>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23
->>> ++++++++++++++++++++++
->>>  1 file changed, 23 insertions(+)
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>> index 9a3864f56955..142d363406f6 100644
->>> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>> @@ -38,6 +38,24 @@ implemented by this node:
->>>  - .../reset/reset.txt
->>>  - <dt-bindings/reset/tegra186-reset.h>
->>>
->>> +The BPMP implements some services which must be represented by separate
->>> nodes.
->>> +For example, it can provide access to certain I2C controllers, and the
->>> I2C
->>> +bindings represent each I2C controller as a device tree node. Such nodes
->>> should
->>> +be nested directly inside the main BPMP node.
->>> +
->>> +Software can determine whether a child node of the BPMP node represents
->>> a device
->>> +by checking for a compatible property. Any node with a compatible
->>> property
->>> +represents a device that can be instantiated. Nodes without a compatible
->>> +property may be used to provide configuration information regarding the
->>> BPMP
->>> +itself, although no such configuration nodes are currently defined by
->>> this
->>> +binding.
->>> +
->>> +The BPMP firmware defines no single global name-/numbering-space for
->>> such
->>> +services. Put another way, the numbering scheme for I2C buses is
->>> distinct from
->>> +the numbering scheme for any other service the BPMP may provide (e.g. a
->>> future
->>> +hypothetical SPI bus service). As such, child device nodes will have no
->>> reg
->>> +property, and the BPMP node will have no #address-cells or #size-cells
->>> property.
->>
->>
->> My understanding is that the I2C bus number is passed as part of the
->> request to the BPMP firmware. Does that not count as addressing? Could
->> we not represent that generically using a device tree hierarchy? I'm
->> thinking something along these lines:
->>
->>         bpmp {
->>                 ...
->>
->>                 services {
->>                         i2c {
->>                                 i2c@0 {
->>                                         reg = <0>;
->
->
-> Technically, that is possible. However, Rob Herring rejected the idea of
-> multiple levels of sub-nodes.
 
-I think I questioned the need, not rejected. What about the above, but
-remove serivces level:
+--Epi5nlKhkk4Kf+ga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-         bpmp {
-                 ...
+On Sun, Apr 03, 2016 at 05:12:45AM +0000, Rich Felker wrote:
 
-                 i2c {
-                         i2c@0 {
-                                 reg = <0>;
+> +config SPI_JCORE
+> +	tristate "J-Core SPI Master"
+> +	depends on OF
+> +
 
-Rob
+An architecture or SoC dependency with || COMPILE_TEST would be useful
+for avoiding cluttering Kconfig for other users.  Though as this is in a
+FPGA it's perhaps likely people will pick this up for other FPGAs so
+perhaps a comment to that effect if it seems likely.
+
+> +static void jcore_spi_baudrate(struct jcore_spi *hw, int speed)
+> +{
+> +	if (speed == hw->speed_hz) return;
+> +	hw->speed_hz = speed;
+> +	if (speed >= hw->clock_freq/2)
+
+Coding style, spaces around /.
+
+> +	return count<len ? -EREMOTEIO : 0;
+
+Again here, and please also write this as a normal if statement so it's
+easier to read.
+
+> +	/* The SPI clock rate controlled via a configurable clock divider
+> +	 * which is applied to the reference clock. A 50 MHz reference is
+> +	 * most suitable for obtaining standard SPI clock rates, but some
+> +	 * designs may have a different reference clock, and the DT must
+> +	 * make the driver aware so that it can properly program the
+> +	 * requested rate. If omitted, 50 MHz is assumed. */
+> +	clock_freq = 50000000;
+> +	of_property_read_u32(node, "clock-frequency", &clock_freq);
+> +	hw->clock_freq = clock_freq;
+
+Why are you not using the clock API for this?  Just require a clock and
+use clk_get_rate() to find out what rate it is.
+
+> +	pdev->dev.dma_mask = 0;
+
+Why are we doing this?  There's no DMA code...
+
+> +	dev_info(&pdev->dev, "base %p, noirq\n", hw->base);
+
+This is just adding noise to the boot, just remove it - it's useful to
+log information we get from the silicon but things like the base address
+don't really add anything and end up cluttering (and slowing) the boot
+when everything does it.
+
+--Epi5nlKhkk4Kf+ga
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXmlj4AAoJECTWi3JdVIfQy5QH/35g8/6zlsdIcQujUaCJiXiO
+2zojNTrkofTDrfsHQCT7/5Pp82Q9Dze1XZ3LmAEFLg/mWgJX5VZA89WYBEAw/Jkf
+dEpLBN/FfnnLJH60ReZf80nytfbKIidLm8gpfjrGZ+KNM1UTACOrN5kkwvdJHk+t
+7jQZJ5M/rOu++CFKBmMIE3zXk81GkbPe1OBs8/S0/phTUFEah7GxaJ8i6iK5cECM
+du+mzvYU2D9oiPC4rFeQw3Tcigmm4GmYItsqq3ePYxJBuEB0nHrU3+xFbFvw1OgR
+rMfZjDHM0KWFdZaxozl4UxqbC0RWE8+cbzmjhglxe54BjvDjh59wzhRhfH/uXYk=
+=1y9J
+-----END PGP SIGNATURE-----
+
+--Epi5nlKhkk4Kf+ga--
