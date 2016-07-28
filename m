@@ -1,110 +1,121 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
-Date: Thu, 28 Jul 2016 15:24:22 -0600
-Message-ID: <6db4ff47-974b-94ac-3739-e630b6d38c0e@wwwdotorg.org>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org>
- <20160719191442.15439-2-swarren@wwwdotorg.org>
- <20160726100302.GE2433@ulmo.ba.sec>
- <f1ca284a-5332-3323-80b9-7cf61e7c97ac@wwwdotorg.org>
- <CAL_JsqLfs5jnO9DkP5io5qbuCfhojfspkHQbHBttgWfTeokYkQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLfs5jnO9DkP5io5qbuCfhojfspkHQbHBttgWfTeokYkQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] ASoC: rt5659: Add mclk controls
+Date: Thu, 28 Jul 2016 14:57:16 -0700
+Message-ID: <1469743036-20034-1-git-send-email-nicoleotsuka@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/28/2016 01:07 PM, Rob Herring wrote:
-> On Tue, Jul 26, 2016 at 11:21 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 07/26/2016 04:03 AM, Thierry Reding wrote:
->>>
->>> On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
->>>>
->>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>
->>>> The BPMP implements some services which must be represented by separate
->>>> nodes. For example, it can provide access to certain I2C controllers, and
->>>> the I2C bindings represent each I2C controller as a device tree node.
->>>> Update the binding to describe how the BPMP supports this.
->>>>
->>>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23
->>>> ++++++++++++++++++++++
->>>>  1 file changed, 23 insertions(+)
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>> index 9a3864f56955..142d363406f6 100644
->>>> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>> @@ -38,6 +38,24 @@ implemented by this node:
->>>>  - .../reset/reset.txt
->>>>  - <dt-bindings/reset/tegra186-reset.h>
->>>>
->>>> +The BPMP implements some services which must be represented by separate
->>>> nodes.
->>>> +For example, it can provide access to certain I2C controllers, and the
->>>> I2C
->>>> +bindings represent each I2C controller as a device tree node. Such nodes
->>>> should
->>>> +be nested directly inside the main BPMP node.
->>>> +
->>>> +Software can determine whether a child node of the BPMP node represents
->>>> a device
->>>> +by checking for a compatible property. Any node with a compatible
->>>> property
->>>> +represents a device that can be instantiated. Nodes without a compatible
->>>> +property may be used to provide configuration information regarding the
->>>> BPMP
->>>> +itself, although no such configuration nodes are currently defined by
->>>> this
->>>> +binding.
->>>> +
->>>> +The BPMP firmware defines no single global name-/numbering-space for
->>>> such
->>>> +services. Put another way, the numbering scheme for I2C buses is
->>>> distinct from
->>>> +the numbering scheme for any other service the BPMP may provide (e.g. a
->>>> future
->>>> +hypothetical SPI bus service). As such, child device nodes will have no
->>>> reg
->>>> +property, and the BPMP node will have no #address-cells or #size-cells
->>>> property.
->>>
->>>
->>> My understanding is that the I2C bus number is passed as part of the
->>> request to the BPMP firmware. Does that not count as addressing? Could
->>> we not represent that generically using a device tree hierarchy? I'm
->>> thinking something along these lines:
->>>
->>>         bpmp {
->>>                 ...
->>>
->>>                 services {
->>>                         i2c {
->>>                                 i2c@0 {
->>>                                         reg = <0>;
->>
->>
->> Technically, that is possible. However, Rob Herring rejected the idea of
->> multiple levels of sub-nodes.
->
-> I think I questioned the need, not rejected. What about the above, but
-> remove serivces level:
->
->          bpmp {
->                  ...
->
->                  i2c {
->                          i2c@0 {
->                                  reg = <0>;
+The codec driver should control the mclk. So this patch adds this support.
 
-Sigh. Can you please talk to Thierry and work out what the binding would 
-be (perhaps on IRC to expedite things?) and I'll just implement whatever 
-you two agree upon. I don't really care much what the binding looks like 
-any more; I just need something that will pass review. Thanks.
+Signed-off-by: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changlog:
+v1->v2
+ * Only set the mclk pointer to NULL when getting an ENOENT error code
+   (i.e. no clock is specified)  -- corrected by Lars-Peter
+
+ Documentation/devicetree/bindings/sound/rt5659.txt |  3 +++
+ sound/soc/codecs/rt5659.c                          | 24 ++++++++++++++++++++++
+ sound/soc/codecs/rt5659.h                          |  1 +
+ 3 files changed, 28 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/rt5659.txt b/Documentation/devicetree/bindings/sound/rt5659.txt
+index 5f79e7f..1766e05 100644
+--- a/Documentation/devicetree/bindings/sound/rt5659.txt
++++ b/Documentation/devicetree/bindings/sound/rt5659.txt
+@@ -12,6 +12,9 @@ Required properties:
+ 
+ Optional properties:
+ 
++- clocks: The phandle of the master clock to the CODEC
++- clock-names: Should be "mclk"
++
+ - realtek,in1-differential
+ - realtek,in3-differential
+ - realtek,in4-differential
+diff --git a/sound/soc/codecs/rt5659.c b/sound/soc/codecs/rt5659.c
+index 1b30914..42c183f 100644
+--- a/sound/soc/codecs/rt5659.c
++++ b/sound/soc/codecs/rt5659.c
+@@ -9,6 +9,7 @@
+  * published by the Free Software Foundation.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/init.h>
+@@ -3565,7 +3566,9 @@ static int rt5659_set_bclk_ratio(struct snd_soc_dai *dai, unsigned int ratio)
+ static int rt5659_set_bias_level(struct snd_soc_codec *codec,
+ 			enum snd_soc_bias_level level)
+ {
++	struct snd_soc_dapm_context *dapm = snd_soc_codec_get_dapm(codec);
+ 	struct rt5659_priv *rt5659 = snd_soc_codec_get_drvdata(codec);
++	int ret;
+ 
+ 	switch (level) {
+ 	case SND_SOC_BIAS_PREPARE:
+@@ -3582,6 +3585,17 @@ static int rt5659_set_bias_level(struct snd_soc_codec *codec,
+ 			RT5659_PWR_FV1 | RT5659_PWR_FV2);
+ 		break;
+ 
++	case SND_SOC_BIAS_STANDBY:
++		if (dapm->bias_level == SND_SOC_BIAS_OFF) {
++			ret = clk_prepare_enable(rt5659->mclk);
++			if (ret) {
++				dev_err(codec->dev,
++					"failed to enable MCLK: %d\n", ret);
++				return ret;
++			}
++		}
++		break;
++
+ 	case SND_SOC_BIAS_OFF:
+ 		regmap_update_bits(rt5659->regmap, RT5659_PWR_DIG_1,
+ 			RT5659_PWR_LDO, 0);
+@@ -3591,6 +3605,7 @@ static int rt5659_set_bias_level(struct snd_soc_codec *codec,
+ 			RT5659_PWR_MB | RT5659_PWR_VREF2);
+ 		regmap_update_bits(rt5659->regmap, RT5659_DIG_MISC,
+ 			RT5659_DIG_GATE_CTRL, 0);
++		clk_disable_unprepare(rt5659->mclk);
+ 		break;
+ 
+ 	default:
+@@ -4020,6 +4035,15 @@ static int rt5659_i2c_probe(struct i2c_client *i2c,
+ 
+ 	regmap_write(rt5659->regmap, RT5659_RESET, 0);
+ 
++	/* Check if MCLK provided */
++	rt5659->mclk = devm_clk_get(&i2c->dev, "mclk");
++	if (IS_ERR(rt5659->mclk)) {
++		if (PTR_ERR(rt5659->mclk) != -ENOENT)
++			return PTR_ERR(rt5659->mclk);
++		/* Otherwise mark the mclk pointer to NULL */
++		rt5659->mclk = NULL;
++	}
++
+ 	rt5659_calibrate(rt5659);
+ 
+ 	/* line in diff mode*/
+diff --git a/sound/soc/codecs/rt5659.h b/sound/soc/codecs/rt5659.h
+index d31c9e5..d69b0eb 100644
+--- a/sound/soc/codecs/rt5659.h
++++ b/sound/soc/codecs/rt5659.h
+@@ -1796,6 +1796,7 @@ struct rt5659_priv {
+ 	struct gpio_desc *gpiod_reset;
+ 	struct snd_soc_jack *hs_jack;
+ 	struct delayed_work jack_detect_work;
++	struct clk *mclk;
+ 
+ 	int sysclk;
+ 	int sysclk_src;
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
