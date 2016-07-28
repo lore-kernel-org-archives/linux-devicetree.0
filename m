@@ -1,61 +1,63 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 09/18] ARM: mvebu: a39x: enable the thermal sensor in Armada-39x SoCs
-Date: Thu, 28 Jul 2016 11:52:50 +0200
-Message-ID: <87k2g6ks25.fsf@free-electrons.com>
-References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-	<1469105055-25181-11-git-send-email-jaz@semihalf.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469105055-25181-11-git-send-email-jaz@semihalf.com> (Grzegorz
-	Jaszczyk's message of "Thu, 21 Jul 2016 14:44:06 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grzegorz Jaszczyk <jaz@semihalf.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, mw@semihalf.com, alior@marvell.com
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCH 1/2] ARM: dts: zx: remove the slot sub-nodes relevant to dwmmc
+ controller
+Date: Thu, 28 Jul 2016 18:55:26 +0900
+Message-ID: <1469699727-23339-1-git-send-email-jh80.chung@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: ulf.hansson@linaro.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, robh+dt@kernel.or, mark.rutland@arm.com, devicetree@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grzegorz,
+Dwmmc controller didn't support the slot sub-nodes.
+(dwmmc controller decided not to consider the slot nodes.)
+And "supports-highspeed" property was deprecated.
+Instead, use "cap-sd/mmc-highspeed" properties.
+
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+---
+ arch/arm/boot/dts/zx296702-ad1.dts | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/zx296702-ad1.dts b/arch/arm/boot/dts/zx296702-ad1.dts
+index 081f980..23b1c79 100644
+--- a/arch/arm/boot/dts/zx296702-ad1.dts
++++ b/arch/arm/boot/dts/zx296702-ad1.dts
+@@ -19,28 +19,22 @@
  
- On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
-
-Add a commit log here and change the prefix to "ARM: dts: mvebu:
-armada-39x:"
-
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-
-Thanks,
-
-Gregory
-
-
-> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-> ---
->  arch/arm/boot/dts/armada-39x.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-> index 8a22c02..03dc0ec 100644
-> --- a/arch/arm/boot/dts/armada-39x.dtsi
-> +++ b/arch/arm/boot/dts/armada-39x.dtsi
-> @@ -413,6 +413,12 @@
->  				clocks = <&mainpll>;
->  				clock-output-names = "nand";
->  			};
-> +
-> +			thermal@e8078 {
-> +				compatible = "marvell,armada380-thermal";
-> +				reg = <0xe4078 0x4>, <0xe4074 0x4>;
-> +				status = "okay";
-> +			};
->  		};
->  
->  		pcie-controller {
-> -- 
-> 1.8.3.1
->
-
+ &mmc0 {
+ 	num-slots = <1>;
+-	supports-highspeed;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
+ 	non-removable;
+ 	disable-wp;
++	bus-width = <4>;
+ 	status = "okay";
+-
+-	slot@0 {
+-		reg = <0>;
+-		bus-width = <4>;
+-	};
+ };
+ 
+ &mmc1 {
+ 	num-slots = <1>;
+-	supports-highspeed;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
+ 	non-removable;
+ 	disable-wp;
++	bus-width = <8>;
+ 	status = "okay";
+-
+-	slot@0 {
+-		reg = <0>;
+-		bus-width = <8>;
+-	};
+ };
+ 
+ &uart0 {
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.9.1
+
