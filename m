@@ -1,67 +1,71 @@
-From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 1/2] tpm: devicetree: document properties
-	for cr50
-Date: Wed, 27 Jul 2016 21:25:16 -0700
-Message-ID: <1469679917-120240-2-git-send-email-apronin@chromium.org>
-References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
-	<1469679917-120240-1-git-send-email-apronin@chromium.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v4 0/8] libfdt: Add support for device tree overlays
+Date: Thu, 28 Jul 2016 15:29:51 +1000
+Message-ID: <20160728052951.GB2588@voom.fritz.box>
+References: <20160727125600.15949-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1469679917-120240-1-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <1468549218-19215-1-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-References: <1468549218-19215-1-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="U+BazGySraz5kW0T"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160727125600.15949-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-firmware.
 
-Signed-off-by: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- .../devicetree/bindings/security/tpm/cr50_spi.txt   | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+--U+BazGySraz5kW0T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
-new file mode 100644
-index 0000000..2fbebd3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
-@@ -0,0 +1,21 @@
-+* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
-+
-+H1 Secure Microcontroller running Cr50 firmware provides several
-+functions, including TPM-like functionality. It communicates over
-+SPI using the FIFO protocol described in the PTP Spec, section 6.
-+
-+Required properties:
-+- compatible: Should be "google,cr50".
-+- spi-max-frequency: Maximum SPI frequency.
-+
-+Example:
-+
-+&spi0 {
-+        status = "okay";
-+
-+        cr50@0 {
-+                compatible = "google,cr50";
-+                reg = <0>;
-+                spi-max-frequency = <800000>;
-+        };
-+};
--- 
-2.6.6
+On Wed, Jul 27, 2016 at 02:55:52PM +0200, Maxime Ripard wrote:
+> Hi,
+>=20
+> The device tree overlays are a great solution to the issue raised by
+> the bunch expandable boards we find everywhere these days, like the
+> Beaglebone, Raspberry Pi or CHIP.
+>=20
+> Although for now Linux is the only available tool that can deal with
+> overlays, some other components like bootloaders or user-space tools
+> might need to apply these overlays on top of a base device tree.
+>=20
+> To address these use cases, we introduce a new function to the libfdt,
+> fdt_overlay_apply, that does just that.
+>=20
+> You can find a test program here: http://code.bulix.org/792zum-99476?raw
+>=20
+> This is the last patches sent to U-boot, with the modifications
+> suggested by David, and the additional test cases.
 
+I've merged 1-4/8, some comments on the remaining patches.
 
-------------------------------------------------------------------------------
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--U+BazGySraz5kW0T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXmZhPAAoJEGw4ysog2bOSsJUQALVL3B++iY038mHbPDGf2CG2
+P3Q1lxlF5NtVfJ6PPRUWpiJAu6Yae1f62ajgkprSWS0a/154xirgI3Kf3OkqWXSQ
+sdZfR/K+L9P4vzg60UqCQD5bjtY+41qv46t1xxAxNZY0yv5BNPuZSV0WJWbJ8QeE
+2i/iKYSvA8A9f3mPVPcr5KAfFvhzsVPkGekvH1YSgWocxTj1SuBotlESkDxlbOrj
+WSyrnL2mzKyBvk6C59lXaq9RiT7A9AdCvmD+QV0mJ8bZF0B/VvhZHG0VoHOFhTvO
+3Q8tACZSEtzjCTH9GY8S9s+HKdb2UeWGF+FJ3i4G4HK/ewBbYOeeAfTnhY9fljb/
+QQQzKPk1ZeYrlbfuVTLIqKhXzJP8O2fRAxIrWnyUemRJiE9NHmPVHk7mHrjcVZOP
+rx61XFdrDGg6cKjvJiGe+u/JeeW1p8y1mccYTPVofE54kW+T4ZqwpR/5FuZbz5Ca
+Cz8Y2rDX8Zob64B9o15z2/JUFyCcvwgLuxDYnKD1T/RImj8arekxARqfFLLOziYK
+tDHoOFVZEmRrlsDRPD16m9fNAsuxzO7v6ykGjkJITIcuhepSt6yfcqC+kgFRDwFm
+gpIEVUdyoGeLqGXqHqFqOKX5N/THCyCC4lpVOEYVOOMO+wWpuhIUnkJi/qI6Y2sy
+Gxq3NQiwHVSEPJGwNVmp
+=xVKE
+-----END PGP SIGNATURE-----
+
+--U+BazGySraz5kW0T--
