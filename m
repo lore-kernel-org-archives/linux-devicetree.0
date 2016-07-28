@@ -1,76 +1,67 @@
-From: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3] arm64: dts: mt8173: add mmsel clocks for 4K support
-Date: Thu, 28 Jul 2016 10:49:25 +0800
-Message-ID: <1469674165.29230.1.camel@mtksdaap41>
-References: <1469607914-64831-1-git-send-email-bibby.hsieh@mediatek.com>
-	 <1469611964.2470.30.camel@pengutronix.de>
+From: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 1/2] tpm: devicetree: document properties
+	for cr50
+Date: Wed, 27 Jul 2016 21:25:16 -0700
+Message-ID: <1469679917-120240-2-git-send-email-apronin@chromium.org>
+References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
+	<1469679917-120240-1-git-send-email-apronin@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469611964.2470.30.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun@m>
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1469679917-120240-1-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1468549218-19215-1-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+References: <1468549218-19215-1-git-send-email-apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Philipp,
+Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
+firmware.
 
-Thanks for your comments.
+Signed-off-by: Andrey Pronin <apronin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ .../devicetree/bindings/security/tpm/cr50_spi.txt   | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
 
-On Wed, 2016-07-27 at 11:32 +0200, Philipp Zabel wrote:
-> Am Mittwoch, den 27.07.2016, 16:25 +0800 schrieb Bibby Hsieh:
-> > If MT8173 can support HDMI 4K resoultion, the
-> > VENCPLL should be configured to 800MHZ.
-> > We didn't set VENCPLL directly, we set the
-> > mm_sel to 400MHz statically in the board device tree.
-> 
-> Maybe add a comment that the board .dts file should override the clock
-> rate property with the higher VENCPLL frequency the board supports HDMI
-> 4K resolution.
-> 
-Ok, I will add that.
-> > Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> > Changes since v2:
-> >  - Align the clocks of dpi0 node.
-> > 
-> > Changes since v1:
-> >  - Do not set the VENCPLL by clk_set_rate
-> >    at display driver.
-> >  - Configure the mm_sel to 400MHz statically
-> >    in the board device tree.
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index 78529e4..9c22204 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -690,7 +690,9 @@
-> >  			compatible = "mediatek,mt8173-mmsys", "syscon";
-> >  			reg = <0 0x14000000 0 0x1000>;
-> >  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> > +			clocks = <&topckgen CLK_TOP_MM_SEL>;
-> >  			#clock-cells = <1>;
-> > +			clock-frequency  = <400000000>;
-> 
-> According to the "Assigned clock parents and rates" section in
-> Documentation/devicetree/bindings/clock/clock-bindings.txt,
-> this should be:
-> 			assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
-> 			assigned-clock-rates = <400000000>;
-> 
-Ok, will do.
-> regards
-> Philipp
-> 
-
+diff --git a/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+new file mode 100644
+index 0000000..2fbebd3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/cr50_spi.txt
+@@ -0,0 +1,21 @@
++* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
++
++H1 Secure Microcontroller running Cr50 firmware provides several
++functions, including TPM-like functionality. It communicates over
++SPI using the FIFO protocol described in the PTP Spec, section 6.
++
++Required properties:
++- compatible: Should be "google,cr50".
++- spi-max-frequency: Maximum SPI frequency.
++
++Example:
++
++&spi0 {
++        status = "okay";
++
++        cr50@0 {
++                compatible = "google,cr50";
++                reg = <0>;
++                spi-max-frequency = <800000>;
++        };
++};
 -- 
-Bibby
+2.6.6
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+------------------------------------------------------------------------------
