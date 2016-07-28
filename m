@@ -1,89 +1,85 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v6] input: touchscreen: Add generic driver for Silead
- touchscreens
-Date: Thu, 28 Jul 2016 17:42:05 +0200
-Message-ID: <c4b48718-4dd8-9637-b5a0-e3226895f78a@redhat.com>
-References: <1468252304-22850-1-git-send-email-hdegoede@redhat.com>
- <20160716175605.GA4873@rob-hp-laptop> <20160719184425.GC19250@dtor-ws>
- <20160727213555.GC24351@dtor-ws>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/1] power: sbs-manager: Add interrupt support and battery
+ detect gpios
+Date: Thu, 28 Jul 2016 10:45:14 -0500
+Message-ID: <CAL_JsqL0+b5GRMMtK7PmECatR7aayiv-Of05HahGWSHHQ-vrYg@mail.gmail.com>
+References: <1469433003-68564-1-git-send-email-preid@electromag.com.au>
+ <1469433003-68564-2-git-send-email-preid@electromag.com.au>
+ <20160727144609.GA12462@rob-hp-laptop> <1469653707.27666.22.camel@amnesix>
+ <4553a3f5-55cc-807d-7f34-11b4c7e11a0b@electromag.com.au> <e2ca7188-03e4-978d-9c10-9498117acb8e@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160727213555.GC24351@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Wessel Blokzijl <wesselb94@gmail.com>, Siebren Vroegindeweij <siebren.vroegindeweij@gmail.com>, Robert Dolca <robert.dolca@intel.com>, Daniel Jansen <djaniboe@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <e2ca7188-03e4-978d-9c10-9498117acb8e@electromag.com.au>
+Sender: linux-pm-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 27-07-16 23:35, Dmitry Torokhov wrote:
-> On Tue, Jul 19, 2016 at 11:44:25AM -0700, Dmitry Torokhov wrote:
->> On Sat, Jul 16, 2016 at 12:56:05PM -0500, Rob Herring wrote:
->>> On Mon, Jul 11, 2016 at 05:51:44PM +0200, Hans de Goede wrote:
->>>> From: Robert Dolca <robert.dolca@intel.com>
->>>>
->>>> This driver adds support for Silead touchscreens. It has been tested
->>>> with GSL1680 and GSL3680 touch panels.
->>>>
->>>> It supports ACPI and device tree enumeration. Screen resolution,
->>>> the maximum number of fingers supported and firmware name are
->>>> configurable.
->>>>
->>>> Signed-off-by: Robert Dolca <robert.dolca@intel.com>
->>>> Signed-off-by: Daniel Jansen <djaniboe@gmail.com>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>> ---
->>>> Changes in v6:
->>>> -Default to 5 fingers if max-fingers is not specified
->>>> -Improve devicetree binding doc: improve wake-gpios description, use
->>>>  "See touchscreen.txt" where applicable
->>>> ---
->>>>  .../bindings/input/touchscreen/silead_gsl1680.txt  |  36 ++
->>>>  drivers/input/touchscreen/Kconfig                  |  13 +
->>>>  drivers/input/touchscreen/Makefile                 |   1 +
->>>>  drivers/input/touchscreen/silead.c                 | 652 +++++++++++++++++++++
->>>>  4 files changed, 702 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
->>>>  create mode 100644 drivers/input/touchscreen/silead.c
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
->>>> new file mode 100644
->>>> index 0000000..1e58d37
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
->>>> @@ -0,0 +1,36 @@
->>>> +* GSL 1680 touchscreen controller
->>>> +
->>>> +Required properties:
->>>> +- compatible		  : "silead,gsl1680"
->>>> +- reg			  : I2C slave address of the chip (0x40)
->>>> +- interrupt-parent	  : a phandle pointing to the interrupt controller
->>>> +			    serving the interrupt for this chip
->>>> +- interrupts		  : interrupt specification for the gsl1680 interrupt
->>>> +- power-gpios		  : Specification for the pin connected to the gsl1680's
->>>> +			    shutdown input. This needs to be driven high to take the
->>>> +			    gsl1680 out of its low power state
->>>> +- touchscreen-size-x	  : See touchscreen.txt
->>>> +- touchscreen-size-y	  : See touchscreen.txt
->>>> +- touchscreen-max-fingers : maximum number of fingers the touchscreen can detect
->>>
->>> If you name it like a standard property, then it should be documented in
->>> touchscreen.txt.
->>
->> Actually this is very much Silead-specific wart, I'd rather we called it
->> "max-fingers" or "silead,max-fingers" to illustrate that it is not at
->> all a generic property.
->>
->> Rob, will you be OK with it?
+On Thu, Jul 28, 2016 at 4:01 AM, Phil Reid <preid@electromag.com.au> wrote:
+> G'day Rob,
 >
-> Rob, ping? I'd like to get it into the tree and this is only outstanding
-> question.
+> Just another thought.
+>
+> On 28/07/2016 10:11, Phil Reid wrote:
+>>
+>> G'day Karl / Rob,
+>>
+>> On 28/07/2016 05:08, Karl-Heinz Schneider wrote:
+>>>
+>>> Am Mittwoch, den 27.07.2016, 09:46 -0500 schrieb Rob Herring:
+>>>>
+>>>> On Mon, Jul 25, 2016 at 03:50:03PM +0800, Phil Reid wrote:
+>>>>>
+>>>>> This patch added irq support for the SMBALERT pin and notification of
+>>>>> the battery removal / insertion. The sbs manager would typically be
+>>>>> used with the corresponding sbs-battery driver that currently uses a
+>>>>> gpio input for battery presence and interrupt. To remain compatible
+>>>>> with
+>>>>> that existing driver this patch implements GPIO inputs with interrupt
+>>>>> support. IRQ masking is performed in software as the hardware does not
+>>>>> support masking of notifications from each battery.
+>>>>> In addition a power_supply change notification is generated for the sbs
+>>>>> manager device when the AC present flag is changed.
+>>>>> Tested with LTC1760 and dual sbs compatible batteries.
+>>>>
+>>>>
+>>>> Please don't submit a binding and immediately turn around and add to it.
+>>>> While that is often preferred for drivers or kernel features, bindings
+>>>> should be complete as possible and not evolve. Combine this with your
+>>>> previous patch add sbs-mgr if that hasn't been accepted yet.
+>>
+>> That was from Karl. I'm happy to have this combined if he is.
 
-I think that your suggestion to make this "silead,max-fingers" is a good idea,
-I will do a v8 with this soon (or feel free to fixup v7 yourself).
+Indeed it was. Still, it should be combined. You can leave the driver
+implementation as multiple patches, just combine all the binding to a
+single patch by itself.
 
-Regards,
+>>>> IMO, the sbs-bat should just be a interrupt and making it and this
+>>>> binding a GPIO is overkill. Since batteries nodes using this will be
+>>>> new, there's no reason the driver can't be updated to support
+>>>> interrupts.
+>
+> I did consider this and didn't go that way as:
+> 1) the current sbs-battery driver didn't support it.
+> 2) Then there's also the problem of reporting  the presence of the battery
+> to the battery driver.
+> Without the GPIO support you resort to polling and looking for a NACK. Which
+> didn't seem that nice.
 
-Hans
+The ability to read the current irq signal state with the irq api
+would be nice. Of course you can't really count on being able to on
+all irqs. Anyway, we shouldn't really design the binding around kernel
+limitations.
+
+As I understand how SMBALERT works, you have to poll the devices
+anyway to determine which device is asserting the irq and to ack the
+irq. Of course, here you are doing point to point connections, but you
+still need to know which batteries are present by reading the sbs-mgr
+registers.
+
+Wouldn't switching the driver to level irq allow you to get the state
+immediately without a gpio read? After all, the gpio read and irq
+handler are reading the same register.
+
+Rob
