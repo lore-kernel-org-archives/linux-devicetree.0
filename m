@@ -1,53 +1,67 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH v2 0/7] power: act8945a_charger: Improvements
-Date: Thu, 28 Jul 2016 09:36:35 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641018CCCBFB3@penmbx01>
-References: <1467076970-12206-1-git-send-email-wenyou.yang@atmel.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 07/18] ARM: mvebu: a39x: update the SDHCI node on Armada 39x
+Date: Thu, 28 Jul 2016 11:39:14 +0200
+Message-ID: <87wpk6ksot.fsf@free-electrons.com>
+References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
+	<1469105055-25181-8-git-send-email-jaz@semihalf.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1467076970-12206-1-git-send-email-wenyou.yang@atmel.com>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469105055-25181-8-git-send-email-jaz@semihalf.com> (Grzegorz
+	Jaszczyk's message of "Thu, 21 Jul 2016 14:44:03 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grzegorz Jaszczyk <jaz@semihalf.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, mw@semihalf.com, alior@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-Hello everyone
+Hi Grzegorz,
+ 
+ On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
 
-Do you have any comments for this patch set?
+> Commit 1140011ee9d9 ("mmc: sdhci-pxav3: Modify clock settings
+> for the SDR50 and DDR50 modes") has extended the Device Tree
+> binding used to describe PXAv3 SDHCI controllers in order to be
+> able to use the SDR50 and DDR50 modes.
+>
+> This commit updates the Device Tree description of the Armada
+> 39x SDHCI controller in other to take advantage of this
+> functionality.
+>
+> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 
-Best Regards,
-Wenyou Yang
-________________________________________
-From: Wenyou Yang [wenyou.yang@atmel.com]
-Sent: Tuesday, June 28, 2016 9:22
-To: Sebastian Reichel; Dmitry Eremin-Solenikov; David Woodhouse; Rob Herring; Pawel Moll; Mark Brown; Ian Campbell; Kumar Gala
-Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Ferre, Nicolas; linux-pm@vger.kernel.org; Yang, Wenyou
-Subject: [PATCH v2 0/7] power: act8945a_charger: Improvements
+Change the prefix title to "ARM: dts: mvebu: armada-39x". With this:
 
-This patch series is used to improve the act8945a-charger, such as
-improve the way to check the status, fix the power supply type
-property, add the status change update, and add more properties:
-capacity level property and max current property.
+Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-Changes in v2:
- - Add missing ret declaration.
+Thanks,
 
-Wenyou Yang (7):
-  power: act8945a_charger: Remove "battery_temperature"
-  power: act8945a_charger: Improve
-  power: act8945a_charger: Add status change update support
-  power: act8945a_charger: Fix the power supply type
-  power: act8945a_charger: Add capacity level property
-  power: act8945a_charger: Add max current property
-  doc: bindings: act8945a-charger: Update properties
+Gregory
+> ---
+>  arch/arm/boot/dts/armada-39x.dtsi | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
+> index dc6efd3..cb66f20 100644
+> --- a/arch/arm/boot/dts/armada-39x.dtsi
+> +++ b/arch/arm/boot/dts/armada-39x.dtsi
+> @@ -380,7 +380,10 @@
+>  
+>  			sdhci@d8000 {
+>  				compatible = "marvell,armada-380-sdhci";
+> -				reg = <0xd8000 0x1000>, <0xdc000 0x100>;
+> +				reg-names = "sdhci", "mbus", "conf-sdio3";
+> +				reg = <0xd8000 0x1000>,
+> +					<0xdc000 0x100>,
+> +					<0x18454 0x4>;
+>  				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks = <&gateclk 17>;
+>  				mrvl,clk-delay-cycles = <0x1F>;
+> -- 
+> 1.8.3.1
+>
 
- .../devicetree/bindings/power/act8945a-charger.txt |   6 +-
- drivers/power/act8945a_charger.c                   | 371 ++++++++++++++++++---
- 2 files changed, 337 insertions(+), 40 deletions(-)
-
---
-2.7.4
-
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
