@@ -1,414 +1,143 @@
-From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 02/10] drm/mediatek: add *driver_data for different hardware settings
-Date: Thu, 28 Jul 2016 17:27:56 +0800
-Message-ID: <1469698084-20185-3-git-send-email-yt.shen@mediatek.com>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: [PATCH v5 03/10] drm/mediatek: add shadow register support
+Date: Thu, 28 Jul 2016 17:27:57 +0800
+Message-ID: <1469698084-20185-4-git-send-email-yt.shen@mediatek.com>
 References: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469698084-20185-1-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mao Huang <littlecvr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There are some hardware settings changed, between MT8173 & MT2701:
-DISP_OVL address offset changed, color format definition changed.
-DISP_RDMA fifo size changed.
-DISP_COLOR offset changed.
-And add prefix for mtk_ddp_main & mtk_ddp_ext & mutex_mod.
-
-Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |   26 ++++++++++++++++----------
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |   11 +++++++++--
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c      |   11 +++++++----
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |   27 +++++++++++++++++++++------
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |   13 +++++++++++++
- drivers/gpu/drm/mediatek/mtk_drm_drv.c      |   25 ++++++++++++++++++-------
- drivers/gpu/drm/mediatek/mtk_drm_drv.h      |    8 ++++++++
- 7 files changed, 92 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index 8f62671f..eb5c05e 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -40,8 +40,6 @@
- #define	OVL_RDMA_MEM_GMC	0x40402020
- 
- #define OVL_CON_BYTE_SWAP	BIT(24)
--#define OVL_CON_CLRFMT_RGB565	(0 << 12)
--#define OVL_CON_CLRFMT_RGB888	(1 << 12)
- #define OVL_CON_CLRFMT_RGBA8888	(2 << 12)
- #define OVL_CON_CLRFMT_ARGB8888	(3 << 12)
- #define	OVL_CON_AEN		BIT(8)
-@@ -136,18 +134,18 @@ static void mtk_ovl_layer_off(struct mtk_ddp_comp *comp, unsigned int idx)
- 	writel(0x0, comp->regs + DISP_REG_OVL_RDMA_CTRL(idx));
- }
- 
--static unsigned int ovl_fmt_convert(unsigned int fmt)
-+static unsigned int ovl_fmt_convert(struct mtk_ddp_comp *comp, unsigned int fmt)
- {
- 	switch (fmt) {
- 	default:
- 	case DRM_FORMAT_RGB565:
--		return OVL_CON_CLRFMT_RGB565;
-+		return comp->data->ovl.fmt_rgb565;
- 	case DRM_FORMAT_BGR565:
--		return OVL_CON_CLRFMT_RGB565 | OVL_CON_BYTE_SWAP;
-+		return comp->data->ovl.fmt_rgb565 | OVL_CON_BYTE_SWAP;
- 	case DRM_FORMAT_RGB888:
--		return OVL_CON_CLRFMT_RGB888;
-+		return comp->data->ovl.fmt_rgb888;
- 	case DRM_FORMAT_BGR888:
--		return OVL_CON_CLRFMT_RGB888 | OVL_CON_BYTE_SWAP;
-+		return comp->data->ovl.fmt_rgb888 | OVL_CON_BYTE_SWAP;
- 	case DRM_FORMAT_RGBX8888:
- 	case DRM_FORMAT_RGBA8888:
- 		return OVL_CON_CLRFMT_ARGB8888;
-@@ -177,7 +175,7 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
- 	if (!pending->enable)
- 		mtk_ovl_layer_off(comp, idx);
- 
--	con = ovl_fmt_convert(fmt);
-+	con = ovl_fmt_convert(comp, fmt);
- 	if (idx != 0)
- 		con |= OVL_CON_AEN | OVL_CON_ALPHA;
- 
-@@ -185,7 +183,8 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
- 	writel_relaxed(pitch, comp->regs + DISP_REG_OVL_PITCH(idx));
- 	writel_relaxed(src_size, comp->regs + DISP_REG_OVL_SRC_SIZE(idx));
- 	writel_relaxed(offset, comp->regs + DISP_REG_OVL_OFFSET(idx));
--	writel_relaxed(addr, comp->regs + DISP_REG_OVL_ADDR(idx));
-+	writel_relaxed(addr, comp->regs + comp->data->ovl.addr_offset
-+					+ idx * 0x20);
- 
- 	if (pending->enable)
- 		mtk_ovl_layer_on(comp, idx);
-@@ -269,6 +268,8 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	priv->ddp_comp.data = of_device_get_match_data(dev);
-+
- 	platform_set_drvdata(pdev, priv);
- 
- 	ret = component_add(dev, &mtk_disp_ovl_component_ops);
-@@ -285,8 +286,13 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct mtk_ddp_comp_driver_data mt8173_ovl_driver_data = {
-+	.ovl = {0x0f40, 0, 1 << 12}
-+};
-+
- static const struct of_device_id mtk_disp_ovl_driver_dt_match[] = {
--	{ .compatible = "mediatek,mt8173-disp-ovl", },
-+	{ .compatible = "mediatek,mt8173-disp-ovl",
-+	  .data = &mt8173_ovl_driver_data},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, mtk_disp_ovl_driver_dt_match);
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-index 5fb80cb..fb0db50 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-@@ -122,7 +122,7 @@ static void mtk_rdma_config(struct mtk_ddp_comp *comp, unsigned int width,
- 	 */
- 	threshold = width * height * vrefresh * 4 * 7 / 1000000;
- 	reg = RDMA_FIFO_UNDERFLOW_EN |
--	      RDMA_FIFO_PSEUDO_SIZE(SZ_8K) |
-+	      RDMA_FIFO_PSEUDO_SIZE(comp->data->rdma_fifo_pseudo_size) |
- 	      RDMA_OUTPUT_VALID_FIFO_THRESHOLD(threshold);
- 	writel(reg, comp->regs + DISP_REG_RDMA_FIFO_CON);
- }
-@@ -207,6 +207,8 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	priv->ddp_comp.data = of_device_get_match_data(dev);
-+
- 	platform_set_drvdata(pdev, priv);
- 
- 	ret = component_add(dev, &mtk_disp_rdma_component_ops);
-@@ -223,8 +225,13 @@ static int mtk_disp_rdma_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct mtk_ddp_comp_driver_data mt8173_rdma_driver_data = {
-+	.rdma_fifo_pseudo_size = SZ_8K,
-+};
-+
- static const struct of_device_id mtk_disp_rdma_driver_dt_match[] = {
--	{ .compatible = "mediatek,mt8173-disp-rdma", },
-+	{ .compatible = "mediatek,mt8173-disp-rdma",
-+	  .data = &mt8173_rdma_driver_data},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, mtk_disp_rdma_driver_dt_match);
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 2fc4321..8030769 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -77,9 +77,10 @@ struct mtk_ddp {
- 	struct clk			*clk;
- 	void __iomem			*regs;
- 	struct mtk_disp_mutex		mutex[10];
-+	const unsigned int		*mutex_mod;
- };
- 
--static const unsigned int mutex_mod[DDP_COMPONENT_ID_MAX] = {
-+static const unsigned int mt8173_mutex_mod[DDP_COMPONENT_ID_MAX] = {
- 	[DDP_COMPONENT_AAL] = MT8173_MUTEX_MOD_DISP_AAL,
- 	[DDP_COMPONENT_COLOR0] = MT8173_MUTEX_MOD_DISP_COLOR0,
- 	[DDP_COMPONENT_COLOR1] = MT8173_MUTEX_MOD_DISP_COLOR1,
-@@ -247,7 +248,7 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
- 		break;
- 	default:
- 		reg = readl_relaxed(ddp->regs + DISP_REG_MUTEX_MOD(mutex->id));
--		reg |= mutex_mod[id];
-+		reg |= ddp->mutex_mod[id];
- 		writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_MOD(mutex->id));
- 		return;
- 	}
-@@ -273,7 +274,7 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
- 		break;
- 	default:
- 		reg = readl_relaxed(ddp->regs + DISP_REG_MUTEX_MOD(mutex->id));
--		reg &= ~mutex_mod[id];
-+		reg &= ~(ddp->mutex_mod[id]);
- 		writel_relaxed(reg, ddp->regs + DISP_REG_MUTEX_MOD(mutex->id));
- 		break;
- 	}
-@@ -326,6 +327,8 @@ static int mtk_ddp_probe(struct platform_device *pdev)
- 		return PTR_ERR(ddp->regs);
- 	}
- 
-+	ddp->mutex_mod = of_device_get_match_data(dev);
-+
- 	platform_set_drvdata(pdev, ddp);
- 
- 	return 0;
-@@ -337,7 +340,7 @@ static int mtk_ddp_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id ddp_driver_dt_match[] = {
--	{ .compatible = "mediatek,mt8173-disp-mutex" },
-+	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 3970fcf..4b4e449 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -34,9 +34,8 @@
- #define DISP_REG_UFO_START			0x0000
- 
- #define DISP_COLOR_CFG_MAIN			0x0400
--#define DISP_COLOR_START			0x0c00
--#define DISP_COLOR_WIDTH			0x0c50
--#define DISP_COLOR_HEIGHT			0x0c54
-+#define DISP_COLOR_WIDTH			0x50
-+#define DISP_COLOR_HEIGHT			0x54
- 
- #define	OD_RELAY_MODE		BIT(0)
- 
-@@ -48,15 +47,15 @@
- static void mtk_color_config(struct mtk_ddp_comp *comp, unsigned int w,
- 			     unsigned int h, unsigned int vrefresh)
- {
--	writel(w, comp->regs + DISP_COLOR_WIDTH);
--	writel(h, comp->regs + DISP_COLOR_HEIGHT);
-+	writel(w, comp->regs + comp->data->color_offset + DISP_COLOR_WIDTH);
-+	writel(h, comp->regs + comp->data->color_offset + DISP_COLOR_HEIGHT);
- }
- 
- static void mtk_color_start(struct mtk_ddp_comp *comp)
- {
- 	writel(COLOR_BYPASS_ALL | COLOR_SEQ_SEL,
- 	       comp->regs + DISP_COLOR_CFG_MAIN);
--	writel(0x1, comp->regs + DISP_COLOR_START);
-+	writel(0x1, comp->regs + comp->data->color_offset);
- }
- 
- static void mtk_od_config(struct mtk_ddp_comp *comp, unsigned int w,
-@@ -131,6 +130,16 @@ static const struct mtk_ddp_comp_match mtk_ddp_matches[DDP_COMPONENT_ID_MAX] = {
- 	[DDP_COMPONENT_WDMA1]	= { MTK_DISP_WDMA,	1, NULL },
- };
- 
-+static const struct mtk_ddp_comp_driver_data mt8173_color_driver_data = {
-+	.color_offset = 0x0c00,
-+};
-+
-+static const struct of_device_id mtk_disp_color_driver_dt_match[] = {
-+	{ .compatible = "mediatek,mt8173-disp-color",
-+	  .data = &mt8173_color_driver_data},
-+	{},
-+};
-+
- int mtk_ddp_comp_get_id(struct device_node *node,
- 			enum mtk_ddp_comp_type comp_type)
- {
-@@ -153,6 +162,7 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
- 	enum mtk_ddp_comp_type type;
- 	struct device_node *larb_node;
- 	struct platform_device *larb_pdev;
-+	const struct of_device_id *match;
- 
- 	if (comp_id < 0 || comp_id >= DDP_COMPONENT_ID_MAX)
- 		return -EINVAL;
-@@ -177,6 +187,11 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
- 
- 	type = mtk_ddp_matches[comp_id].type;
- 
-+	if (type == MTK_DISP_COLOR) {
-+		match = of_match_node(mtk_disp_color_driver_dt_match, node);
-+		comp->data = match->data;
-+	}
-+
- 	/* Only DMA capable components need the LARB property */
- 	comp->larb_dev = NULL;
- 	if (type != MTK_DISP_OVL &&
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-index 6b13ba9..53065c7 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-@@ -75,6 +75,18 @@ struct mtk_ddp_comp_funcs {
- 			     struct mtk_plane_state *state);
- };
- 
-+struct mtk_ddp_comp_driver_data {
-+	union {
-+		struct ovl {
-+			unsigned int addr_offset;
-+			unsigned int fmt_rgb565;
-+			unsigned int fmt_rgb888;
-+		} ovl;
-+		unsigned int rdma_fifo_pseudo_size;
-+		unsigned int color_offset;
-+	};
-+};
-+
- struct mtk_ddp_comp {
- 	struct clk *clk;
- 	void __iomem *regs;
-@@ -82,6 +94,7 @@ struct mtk_ddp_comp {
- 	struct device *larb_dev;
- 	enum mtk_ddp_comp_id id;
- 	const struct mtk_ddp_comp_funcs *funcs;
-+	const struct mtk_ddp_comp_driver_data *data;
- };
- 
- static inline void mtk_ddp_comp_config(struct mtk_ddp_comp *comp,
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index b1223d5..80b4f54 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -109,7 +109,7 @@ static const struct drm_mode_config_funcs mtk_drm_mode_config_funcs = {
- 	.atomic_commit = mtk_atomic_commit,
- };
- 
--static const enum mtk_ddp_comp_id mtk_ddp_main[] = {
-+static const enum mtk_ddp_comp_id mt8173_mtk_ddp_main[] = {
- 	DDP_COMPONENT_OVL0,
- 	DDP_COMPONENT_COLOR0,
- 	DDP_COMPONENT_AAL,
-@@ -120,7 +120,7 @@ static const enum mtk_ddp_comp_id mtk_ddp_main[] = {
- 	DDP_COMPONENT_PWM0,
- };
- 
--static const enum mtk_ddp_comp_id mtk_ddp_ext[] = {
-+static const enum mtk_ddp_comp_id mt8173_mtk_ddp_ext[] = {
- 	DDP_COMPONENT_OVL1,
- 	DDP_COMPONENT_COLOR1,
- 	DDP_COMPONENT_GAMMA,
-@@ -128,6 +128,13 @@ static const enum mtk_ddp_comp_id mtk_ddp_ext[] = {
- 	DDP_COMPONENT_DPI0,
- };
- 
-+static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
-+	.main_path = mt8173_mtk_ddp_main,
-+	.main_len = ARRAY_SIZE(mt8173_mtk_ddp_main),
-+	.ext_path = mt8173_mtk_ddp_ext,
-+	.ext_len = ARRAY_SIZE(mt8173_mtk_ddp_ext),
-+};
-+
- static int mtk_drm_kms_init(struct drm_device *drm)
- {
- 	struct mtk_drm_private *private = drm->dev_private;
-@@ -170,17 +177,19 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- 	 * and each statically assigned to a crtc:
- 	 * OVL0 -> COLOR0 -> AAL -> OD -> RDMA0 -> UFOE -> DSI0 ...
- 	 */
--	ret = mtk_drm_crtc_create(drm, mtk_ddp_main, ARRAY_SIZE(mtk_ddp_main));
-+	ret = mtk_drm_crtc_create(drm, private->data->main_path,
-+				  private->data->main_len);
- 	if (ret < 0)
- 		goto err_component_unbind;
- 	/* ... and OVL1 -> COLOR1 -> GAMMA -> RDMA1 -> DPI0. */
--	ret = mtk_drm_crtc_create(drm, mtk_ddp_ext, ARRAY_SIZE(mtk_ddp_ext));
-+	ret = mtk_drm_crtc_create(drm, private->data->ext_path,
-+				  private->data->ext_len);
- 	if (ret < 0)
- 		goto err_component_unbind;
- 
- 	/* Use OVL device for all DMA memory allocations */
--	np = private->comp_node[mtk_ddp_main[0]] ?:
--	     private->comp_node[mtk_ddp_ext[0]];
-+	np = private->comp_node[private->data->main_path[0]] ?:
-+	     private->comp_node[private->data->ext_path[0]];
- 	pdev = of_find_device_by_node(np);
- 	if (!pdev) {
- 		ret = -ENODEV;
-@@ -353,6 +362,7 @@ static int mtk_drm_probe(struct platform_device *pdev)
- 
- 	mutex_init(&private->commit.lock);
- 	INIT_WORK(&private->commit.work, mtk_atomic_work);
-+	private->data = of_device_get_match_data(dev);
- 
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	private->config_regs = devm_ioremap_resource(dev, mem);
-@@ -504,7 +514,8 @@ static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
- 			 mtk_drm_sys_resume);
- 
- static const struct of_device_id mtk_drm_of_ids[] = {
--	{ .compatible = "mediatek,mt8173-mmsys", },
-+	{ .compatible = "mediatek,mt8173-mmsys",
-+	  .data = &mt8173_mmsys_driver_data},
- 	{ }
- };
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-index aa93894..fa0b106 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-@@ -28,6 +28,13 @@ struct drm_fb_helper;
- struct drm_property;
- struct regmap;
- 
-+struct mtk_mmsys_driver_data {
-+	const enum mtk_ddp_comp_id *main_path;
-+	unsigned int main_len;
-+	const enum mtk_ddp_comp_id *ext_path;
-+	unsigned int ext_len;
-+};
-+
- struct mtk_drm_private {
- 	struct drm_device *drm;
- 	struct device *dma_dev;
-@@ -40,6 +47,7 @@ struct mtk_drm_private {
- 	void __iomem *config_regs;
- 	struct device_node *comp_node[DDP_COMPONENT_ID_MAX];
- 	struct mtk_ddp_comp *ddp_comp[DDP_COMPONENT_ID_MAX];
-+	const struct mtk_mmsys_driver_data *data;
- 
- 	struct {
- 		struct drm_atomic_state *state;
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+V2UgbmVlZCB0byBhY3F1aXJlIG11dGV4IGJlZm9yZSB1c2luZyB0aGUgcmVzb3VyY2VzLAphbmQg
+bmVlZCB0byByZWxlYXNlIGl0IGFmdGVyIGZpbmlzaGVkLgpTbyB3ZSBkb24ndCBuZWVkIHRvIHdy
+aXRlIHJlZ2lzdGVycyBpbiB0aGUgYmxhbmtpbmcgcGVyaW9kLgoKU2lnbmVkLW9mZi1ieTogWVQg
+U2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fY3J0Yy5jIHwgICA3NSArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tCiBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyAgfCAgIDI1ICsrKysrKysrKysr
+CiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaCAgfCAgICAyICsKIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oICB8ICAgIDEgKwogNCBmaWxlcyBjaGFu
+Z2VkLCA3NCBpbnNlcnRpb25zKCspLCAyOSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9jcnRjLmMKaW5kZXggMjRhYTNiYS4uODBkOTY0MSAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jCisrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYwpAQCAtMzE1LDYgKzMxNSw0MiBAQCBzdGF0aWMg
+dm9pZCBtdGtfY3J0Y19kZHBfaHdfZmluaShzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykK
+IAlwbV9ydW50aW1lX3B1dChkcm0tPmRldik7CiB9CiAKK3N0YXRpYyB2b2lkIG10a19jcnRjX2Rk
+cF9jb25maWcoc3RydWN0IGRybV9jcnRjICpjcnRjKQoreworCXN0cnVjdCBtdGtfZHJtX2NydGMg
+Km10a19jcnRjID0gdG9fbXRrX2NydGMoY3J0Yyk7CisJc3RydWN0IG10a19jcnRjX3N0YXRlICpz
+dGF0ZSA9IHRvX210a19jcnRjX3N0YXRlKG10a19jcnRjLT5iYXNlLnN0YXRlKTsKKwlzdHJ1Y3Qg
+bXRrX2RkcF9jb21wICpvdmwgPSBtdGtfY3J0Yy0+ZGRwX2NvbXBbMF07CisJdW5zaWduZWQgaW50
+IGk7CisKKwkvKgorCSAqIFRPRE86IGluc3RlYWQgb2YgdXBkYXRpbmcgdGhlIHJlZ2lzdGVycyBo
+ZXJlLCB3ZSBzaG91bGQgcHJlcGFyZQorCSAqIHdvcmtpbmcgcmVnaXN0ZXJzIGluIGF0b21pY19j
+b21taXQgYW5kIGxldCB0aGUgaGFyZHdhcmUgY29tbWFuZAorCSAqIHF1ZXVlIHVwZGF0ZSBtb2R1
+bGUgcmVnaXN0ZXJzIG9uIHZibGFuay4KKwkgKi8KKwlpZiAoc3RhdGUtPnBlbmRpbmdfY29uZmln
+KSB7CisJCW10a19kZHBfY29tcF9jb25maWcob3ZsLCBzdGF0ZS0+cGVuZGluZ193aWR0aCwKKwkJ
+CQkgICAgc3RhdGUtPnBlbmRpbmdfaGVpZ2h0LAorCQkJCSAgICBzdGF0ZS0+cGVuZGluZ192cmVm
+cmVzaCk7CisKKwkJc3RhdGUtPnBlbmRpbmdfY29uZmlnID0gZmFsc2U7CisJfQorCisJaWYgKG10
+a19jcnRjLT5wZW5kaW5nX3BsYW5lcykgeworCQlmb3IgKGkgPSAwOyBpIDwgT1ZMX0xBWUVSX05S
+OyBpKyspIHsKKwkJCXN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gJm10a19jcnRjLT5wbGFuZXNb
+aV0uYmFzZTsKKwkJCXN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnBsYW5lX3N0YXRlOworCisJCQlw
+bGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShwbGFuZS0+c3RhdGUpOworCisJCQlpZiAo
+cGxhbmVfc3RhdGUtPnBlbmRpbmcuY29uZmlnKSB7CisJCQkJbXRrX2RkcF9jb21wX2xheWVyX2Nv
+bmZpZyhvdmwsIGksIHBsYW5lX3N0YXRlKTsKKwkJCQlwbGFuZV9zdGF0ZS0+cGVuZGluZy5jb25m
+aWcgPSBmYWxzZTsKKwkJCX0KKwkJfQorCQltdGtfY3J0Yy0+cGVuZGluZ19wbGFuZXMgPSBmYWxz
+ZTsKKwl9Cit9CisKIHN0YXRpYyB2b2lkIG10a19kcm1fY3J0Y19lbmFibGUoc3RydWN0IGRybV9j
+cnRjICpjcnRjKQogewogCXN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjID0gdG9fbXRrX2Ny
+dGMoY3J0Yyk7CkBAIC0zOTEsNiArNDI3LDcgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9jcnRjX2F0
+b21pY19mbHVzaChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCiAJCQkJICAgICAgc3RydWN0IGRybV9j
+cnRjX3N0YXRlICpvbGRfY3J0Y19zdGF0ZSkKIHsKIAlzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtf
+Y3J0YyA9IHRvX210a19jcnRjKGNydGMpOworCXN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgKnByaXYg
+PSBjcnRjLT5kZXYtPmRldl9wcml2YXRlOwogCXVuc2lnbmVkIGludCBwZW5kaW5nX3BsYW5lcyA9
+IDA7CiAJaW50IGk7CiAKQEAgLTQwOSw2ICs0NDYsMTIgQEAgc3RhdGljIHZvaWQgbXRrX2RybV9j
+cnRjX2F0b21pY19mbHVzaChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCiAJfQogCWlmIChwZW5kaW5n
+X3BsYW5lcykKIAkJbXRrX2NydGMtPnBlbmRpbmdfcGxhbmVzID0gdHJ1ZTsKKworCWlmIChwcml2
+LT5kYXRhLT5zaGFkb3dfcmVnaXN0ZXIpIHsKKwkJbXRrX2Rpc3BfbXV0ZXhfYWNxdWlyZShtdGtf
+Y3J0Yy0+bXV0ZXgpOworCQltdGtfY3J0Y19kZHBfY29uZmlnKGNydGMpOworCQltdGtfZGlzcF9t
+dXRleF9yZWxlYXNlKG10a19jcnRjLT5tdXRleCk7CisJfQogfQogCiBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IGRybV9jcnRjX2Z1bmNzIG10a19jcnRjX2Z1bmNzID0gewpAQCAtNDUzLDM2ICs0OTYsMTAg
+QEAgZXJyX2NsZWFudXBfY3J0YzoKIHZvaWQgbXRrX2NydGNfZGRwX2lycShzdHJ1Y3QgZHJtX2Ny
+dGMgKmNydGMsIHN0cnVjdCBtdGtfZGRwX2NvbXAgKm92bCkKIHsKIAlzdHJ1Y3QgbXRrX2RybV9j
+cnRjICptdGtfY3J0YyA9IHRvX210a19jcnRjKGNydGMpOwotCXN0cnVjdCBtdGtfY3J0Y19zdGF0
+ZSAqc3RhdGUgPSB0b19tdGtfY3J0Y19zdGF0ZShtdGtfY3J0Yy0+YmFzZS5zdGF0ZSk7Ci0JdW5z
+aWduZWQgaW50IGk7CisJc3RydWN0IG10a19kcm1fcHJpdmF0ZSAqcHJpdiA9IGNydGMtPmRldi0+
+ZGV2X3ByaXZhdGU7CiAKLQkvKgotCSAqIFRPRE86IGluc3RlYWQgb2YgdXBkYXRpbmcgdGhlIHJl
+Z2lzdGVycyBoZXJlLCB3ZSBzaG91bGQgcHJlcGFyZQotCSAqIHdvcmtpbmcgcmVnaXN0ZXJzIGlu
+IGF0b21pY19jb21taXQgYW5kIGxldCB0aGUgaGFyZHdhcmUgY29tbWFuZAotCSAqIHF1ZXVlIHVw
+ZGF0ZSBtb2R1bGUgcmVnaXN0ZXJzIG9uIHZibGFuay4KLQkgKi8KLQlpZiAoc3RhdGUtPnBlbmRp
+bmdfY29uZmlnKSB7Ci0JCW10a19kZHBfY29tcF9jb25maWcob3ZsLCBzdGF0ZS0+cGVuZGluZ193
+aWR0aCwKLQkJCQkgICAgc3RhdGUtPnBlbmRpbmdfaGVpZ2h0LAotCQkJCSAgICBzdGF0ZS0+cGVu
+ZGluZ192cmVmcmVzaCk7Ci0KLQkJc3RhdGUtPnBlbmRpbmdfY29uZmlnID0gZmFsc2U7Ci0JfQot
+Ci0JaWYgKG10a19jcnRjLT5wZW5kaW5nX3BsYW5lcykgewotCQlmb3IgKGkgPSAwOyBpIDwgT1ZM
+X0xBWUVSX05SOyBpKyspIHsKLQkJCXN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gJm10a19jcnRj
+LT5wbGFuZXNbaV0uYmFzZTsKLQkJCXN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnBsYW5lX3N0YXRl
+OwotCi0JCQlwbGFuZV9zdGF0ZSA9IHRvX210a19wbGFuZV9zdGF0ZShwbGFuZS0+c3RhdGUpOwot
+Ci0JCQlpZiAocGxhbmVfc3RhdGUtPnBlbmRpbmcuY29uZmlnKSB7Ci0JCQkJbXRrX2RkcF9jb21w
+X2xheWVyX2NvbmZpZyhvdmwsIGksIHBsYW5lX3N0YXRlKTsKLQkJCQlwbGFuZV9zdGF0ZS0+cGVu
+ZGluZy5jb25maWcgPSBmYWxzZTsKLQkJCX0KLQkJfQotCQltdGtfY3J0Yy0+cGVuZGluZ19wbGFu
+ZXMgPSBmYWxzZTsKLQl9CisJaWYgKCFwcml2LT5kYXRhLT5zaGFkb3dfcmVnaXN0ZXIpCisJCW10
+a19jcnRjX2RkcF9jb25maWcoY3J0Yyk7CiAKIAltdGtfZHJtX2ZpbmlzaF9wYWdlX2ZsaXAobXRr
+X2NydGMpOwogfQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwppbmRleCA4MDMw
+NzY5Li5iNzdkNDU2IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kZHAuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwpAQCAt
+MTIsNiArMTIsNyBAQAogICovCiAKICNpbmNsdWRlIDxsaW51eC9jbGsuaD4KKyNpbmNsdWRlIDxs
+aW51eC9pb3BvbGwuaD4KICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KICNpbmNsdWRlIDxsaW51
+eC9vZl9kZXZpY2UuaD4KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KQEAgLTMy
+LDEwICszMywxMyBAQAogI2RlZmluZSBESVNQX1JFR19DT05GSUdfTU1TWVNfQ0dfQ09OMAkJMHgx
+MDAKIAogI2RlZmluZSBESVNQX1JFR19NVVRFWF9FTihuKQkoMHgyMCArIDB4MjAgKiAobikpCisj
+ZGVmaW5lIERJU1BfUkVHX01VVEVYKG4pCSgweDI0ICsgMHgyMCAqIChuKSkKICNkZWZpbmUgRElT
+UF9SRUdfTVVURVhfUlNUKG4pCSgweDI4ICsgMHgyMCAqIChuKSkKICNkZWZpbmUgRElTUF9SRUdf
+TVVURVhfTU9EKG4pCSgweDJjICsgMHgyMCAqIChuKSkKICNkZWZpbmUgRElTUF9SRUdfTVVURVhf
+U09GKG4pCSgweDMwICsgMHgyMCAqIChuKSkKIAorI2RlZmluZSBJTlRfTVVURVgJCQkJQklUKDEp
+CisKICNkZWZpbmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX09WTDAJCUJJVCgxMSkKICNkZWZpbmUg
+TVQ4MTczX01VVEVYX01PRF9ESVNQX09WTDEJCUJJVCgxMikKICNkZWZpbmUgTVQ4MTczX01VVEVY
+X01PRF9ESVNQX1JETUEwCQlCSVQoMTMpCkBAIC0zMDAsNiArMzA0LDI3IEBAIHZvaWQgbXRrX2Rp
+c3BfbXV0ZXhfZGlzYWJsZShzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4KQogCXdyaXRlbCgw
+LCBkZHAtPnJlZ3MgKyBESVNQX1JFR19NVVRFWF9FTihtdXRleC0+aWQpKTsKIH0KIAordm9pZCBt
+dGtfZGlzcF9tdXRleF9hY3F1aXJlKHN0cnVjdCBtdGtfZGlzcF9tdXRleCAqbXV0ZXgpCit7CisJ
+c3RydWN0IG10a19kZHAgKmRkcCA9IGNvbnRhaW5lcl9vZihtdXRleCwgc3RydWN0IG10a19kZHAs
+CisJCQkJCSAgIG11dGV4W211dGV4LT5pZF0pOworCXUzMiB0bXA7CisKKwl3cml0ZWwoMSwgZGRw
+LT5yZWdzICsgRElTUF9SRUdfTVVURVhfRU4obXV0ZXgtPmlkKSk7CisJd3JpdGVsKDEsIGRkcC0+
+cmVncyArIERJU1BfUkVHX01VVEVYKG11dGV4LT5pZCkpOworCWlmIChyZWFkbF9wb2xsX3RpbWVv
+dXRfYXRvbWljKGRkcC0+cmVncyArIERJU1BfUkVHX01VVEVYKG11dGV4LT5pZCksCisJCQkJICAg
+ICAgdG1wLCB0bXAgJiBJTlRfTVVURVgsIDEsIDEwMDAwKSkKKwkJcHJfZXJyKCJjb3VsZCBub3Qg
+YWNxdWlyZSBtdXRleCAlZFxuIiwgbXV0ZXgtPmlkKTsKK30KKwordm9pZCBtdGtfZGlzcF9tdXRl
+eF9yZWxlYXNlKHN0cnVjdCBtdGtfZGlzcF9tdXRleCAqbXV0ZXgpCit7CisJc3RydWN0IG10a19k
+ZHAgKmRkcCA9IGNvbnRhaW5lcl9vZihtdXRleCwgc3RydWN0IG10a19kZHAsCisJCQkJCSAgIG11
+dGV4W211dGV4LT5pZF0pOworCisJd3JpdGVsKDAsIGRkcC0+cmVncyArIERJU1BfUkVHX01VVEVY
+KG11dGV4LT5pZCkpOworfQorCiBzdGF0aWMgaW50IG10a19kZHBfcHJvYmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikKIHsKIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmggYi9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaAppbmRleCA5MmMxMTc1Li5mOWE3OTkx
+IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaAorKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaApAQCAtMzcsNSArMzcsNyBA
+QCB2b2lkIG10a19kaXNwX211dGV4X3JlbW92ZV9jb21wKHN0cnVjdCBtdGtfZGlzcF9tdXRleCAq
+bXV0ZXgsCiAJCQkJZW51bSBtdGtfZGRwX2NvbXBfaWQgaWQpOwogdm9pZCBtdGtfZGlzcF9tdXRl
+eF91bnByZXBhcmUoc3RydWN0IG10a19kaXNwX211dGV4ICptdXRleCk7CiB2b2lkIG10a19kaXNw
+X211dGV4X3B1dChzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4KTsKK3ZvaWQgbXRrX2Rpc3Bf
+bXV0ZXhfYWNxdWlyZShzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4KTsKK3ZvaWQgbXRrX2Rp
+c3BfbXV0ZXhfcmVsZWFzZShzdHJ1Y3QgbXRrX2Rpc3BfbXV0ZXggKm11dGV4KTsKIAogI2VuZGlm
+IC8qIE1US19EUk1fRERQX0ggKi8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmgK
+aW5kZXggZmEwYjEwNi4uOTRmOGI2NiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZHJ2LmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZHJ2LmgKQEAgLTMzLDYgKzMzLDcgQEAgc3RydWN0IG10a19tbXN5c19kcml2ZXJfZGF0YSB7CiAJ
+dW5zaWduZWQgaW50IG1haW5fbGVuOwogCWNvbnN0IGVudW0gbXRrX2RkcF9jb21wX2lkICpleHRf
+cGF0aDsKIAl1bnNpZ25lZCBpbnQgZXh0X2xlbjsKKwlib29sIHNoYWRvd19yZWdpc3RlcjsKIH07
+CiAKIHN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgewotLSAKMS43LjkuNQoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
