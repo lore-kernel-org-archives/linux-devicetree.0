@@ -1,63 +1,40 @@
 From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH 1/2] ARM: dts: zx: remove the slot sub-nodes relevant to dwmmc
- controller
-Date: Thu, 28 Jul 2016 18:55:26 +0900
-Message-ID: <1469699727-23339-1-git-send-email-jh80.chung@samsung.com>
+Subject: [PATCH 2/2] mmc: dw_mmc: remove the deprecated "supports-highspeed"
+ property
+Date: Thu, 28 Jul 2016 18:55:27 +0900
+Message-ID: <1469699727-23339-2-git-send-email-jh80.chung@samsung.com>
+References: <1469699727-23339-1-git-send-email-jh80.chung@samsung.com>
 Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1469699727-23339-1-git-send-email-jh80.chung@samsung.com>
 Sender: linux-mmc-owner@vger.kernel.org
 To: linux-mmc@vger.kernel.org
 Cc: ulf.hansson@linaro.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, robh+dt@kernel.or, mark.rutland@arm.com, devicetree@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Dwmmc controller didn't support the slot sub-nodes.
-(dwmmc controller decided not to consider the slot nodes.)
-And "supports-highspeed" property was deprecated.
-Instead, use "cap-sd/mmc-highspeed" properties.
+Remvoe the deprecated "supports-highspeed" property.
+DWMMC controller will not use this property anymore.
 
 Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 ---
- arch/arm/boot/dts/zx296702-ad1.dts | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/mmc/host/dw_mmc.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/zx296702-ad1.dts b/arch/arm/boot/dts/zx296702-ad1.dts
-index 081f980..23b1c79 100644
---- a/arch/arm/boot/dts/zx296702-ad1.dts
-+++ b/arch/arm/boot/dts/zx296702-ad1.dts
-@@ -19,28 +19,22 @@
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 1b719a6..e9faedd 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -2890,11 +2890,6 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
+ 			return ERR_PTR(ret);
+ 	}
  
- &mmc0 {
- 	num-slots = <1>;
--	supports-highspeed;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
- 	non-removable;
- 	disable-wp;
-+	bus-width = <4>;
- 	status = "okay";
+-	if (of_find_property(np, "supports-highspeed", NULL)) {
+-		dev_info(dev, "supports-highspeed property is deprecated.\n");
+-		pdata->caps |= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED;
+-	}
 -
--	slot@0 {
--		reg = <0>;
--		bus-width = <4>;
--	};
- };
+ 	return pdata;
+ }
  
- &mmc1 {
- 	num-slots = <1>;
--	supports-highspeed;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
- 	non-removable;
- 	disable-wp;
-+	bus-width = <8>;
- 	status = "okay";
--
--	slot@0 {
--		reg = <0>;
--		bus-width = <8>;
--	};
- };
- 
- &uart0 {
 -- 
 1.9.1
 
