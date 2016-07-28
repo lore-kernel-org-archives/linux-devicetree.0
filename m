@@ -1,46 +1,74 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 00/10] Add NAND, DMA, USB, and QSPI EDAC
-Date: Thu, 28 Jul 2016 13:47:56 +0200
-Message-ID: <20160728114756.GA11218@nazgul.tnic>
-References: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 15/18] ARM: mvebu: a398: update the dtsi about missing interfaces
+Date: Thu, 28 Jul 2016 14:55:02 +0200
+Message-ID: <87twf9kjmh.fsf@free-electrons.com>
+References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
+	<1469105055-25181-17-git-send-email-jaz@semihalf.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468512408-5156-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469105055-25181-17-git-send-email-jaz@semihalf.com> (Grzegorz
+	Jaszczyk's message of "Thu, 21 Jul 2016 14:44:12 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grzegorz Jaszczyk <jaz@semihalf.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, mw@semihalf.com, alior@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 14, 2016 at 11:06:38AM -0500, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> This patch series adds the NAND, DMA, USB and QSPI FIFO EDAC modules.
-> 
-> Thor Thayer (10):
->   Documentation: dt: socfpga: Add Arria10 NAND EDAC binding
->   Documentation: dt: socfpga: Add Arria10 DMA EDAC binding
->   Documentation: dt: socfpga: Add Arria10 USB EDAC binding
->   Documentation: dt: socfpga: Add Arria10 QSPI EDAC binding
->   EDAC, altera: Add Arria10 NAND EDAC support
->   EDAC, altera: Add Arria10 DMA EDAC support
->   EDAC, altera: Add Arria10 USB EDAC support
->   EDAC, altera: Add Arria10 QSPI EDAC support
->   ARM: dts: Add Arria10 DMA EDAC devicetree entry
->   ARM: dts: Add Arria10 USB EDAC devicetree entry
-> 
->  .../bindings/arm/altera/socfpga-eccmgr.txt         |   79 ++++++++++++
->  arch/arm/boot/dts/socfpga_arria10.dtsi             |   16 +++
->  drivers/edac/Kconfig                               |   28 +++++
->  drivers/edac/altera_edac.c                         |  130 +++++++++++++++++++-
->  4 files changed, 252 insertions(+), 1 deletion(-)
+Hi Grzegorz,
+ 
+ On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
 
-All applied, thanks!
+> Beside interfaces described in the armada-39x.dtsi and armada-395.dtsi, the
+> Armada 398 SoC family supports 2 additional SATA port (2 ports in one unit)
+>
+> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+
+Change the prefix to "ARM: dts: mvebu: armada-398:"
+
+Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+
+Thanks,
+
+Gregory
+
+> ---
+>  arch/arm/boot/dts/armada-398.dtsi | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/armada-398.dtsi b/arch/arm/boot/dts/armada-398.dtsi
+> index fdc2591..234a998 100644
+> --- a/arch/arm/boot/dts/armada-398.dtsi
+> +++ b/arch/arm/boot/dts/armada-398.dtsi
+> @@ -44,7 +44,7 @@
+>   *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>  
+> -#include "armada-39x.dtsi"
+> +#include "armada-395.dtsi"
+>  
+>  / {
+>  	compatible = "marvell,armada398", "marvell,armada390";
+> @@ -55,6 +55,14 @@
+>  				compatible = "marvell,mv88f6928-pinctrl";
+>  				reg = <0x18000 0x20>;
+>  			};
+> +
+> +			sata@e0000 {
+> +				compatible = "marvell,armada-380-ahci";
+> +				reg = <0xe0000 0x2000>;
+> +				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&gateclk 30>;
+> +				status = "disabled";
+> +			};
+>  		};
+>  	};
+>  };
+> -- 
+> 1.8.3.1
+>
 
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
