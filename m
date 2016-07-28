@@ -1,700 +1,269 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v8] input: touchscreen: Add generic driver for Silead touchscreens
-Date: Thu, 28 Jul 2016 22:43:26 +0200
-Message-ID: <1469738606-8298-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Wessel Blokzijl <wesselb94@gmail.com>, Siebren Vroegindeweij <siebren.vroegindeweij@gmail.com>, Robert Dolca <robert.dolca@intel.com>, Daniel Jansen <djaniboe@gmail.com>, Hans de Goede <hdegoede@redhat.com>
+From: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] Revert "pstore/ram: add Device Tree bindings"
+Date: Thu, 28 Jul 2016 13:50:41 -0700
+Message-ID: <CAGXu5jJnfCGsqiuVWNrvrZkmKz5nD0hnQSQ+Vr4x-GD5dDa7AA@mail.gmail.com>
+References: <20160728202537.11961-1-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160728202537.11961-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Robert Dolca <robert.dolca@intel.com>
+On Thu, Jul 28, 2016 at 1:25 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> This reverts commit 35da60941e44dbf57868e67686dd24cc1a33125a.
+> ---
+> WTF!
+>
+> I don't recall acking this nor have my comments (Arnd's really) been
+> addressed[1]. This should not have been merged yet.
 
-This driver adds support for Silead touchscreens. It has been tested
-with GSL1680 and GSL3680 touch panels.
+The conversation seemed to me to describe an alternative that could be
+moved to, but that it was going to need more work. In the meantime,
+these are the DT bindings used in real devices already. It seemed
+clear to me that reducing the delta now and improving the
+implementation in the future was the right thing to do in this case. I
+didn't think your comments were a hard NAK, but rather a "we should do
+this in the future", and I added it as a TODO for the pstore tree.
 
-It supports ACPI and device tree enumeration. Screen resolution,
-the maximum number of fingers supported and firmware name are
-configurable.
+Is a revert really justified here? This doesn't break anything (quite
+the opposite, actually).
 
-Signed-off-by: Robert Dolca <robert.dolca@intel.com>
-Signed-off-by: Daniel Jansen <djaniboe@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v8:
--Rename touchscreen-max-fingers property to silead,max-fingers
-Changes in v7:
--Various style fixes
--use only fw_name instead of both fw_name and custom_fw_name
--use gpiod_get_optional for power gpio
--cleanup touch data parsing
--use new touchscreen_parse_properties() / touchscreen_set_mt_pos()
- instead of diy axis invertion / swapping code
--Move touchscreen-max-fingers documentation to bindings/touchscreen.txt
-Changes in v6:
--Default to 5 fingers if max-fingers is not specified
--Improve devicetree binding doc: improve wake-gpios description, use
- "See touchscreen.txt" where applicable
----
- .../bindings/input/touchscreen/silead_gsl1680.txt  |  36 ++
- drivers/input/touchscreen/Kconfig                  |  13 +
- drivers/input/touchscreen/Makefile                 |   1 +
- drivers/input/touchscreen/silead.c                 | 572 +++++++++++++++++++++
- 4 files changed, 622 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
- create mode 100644 drivers/input/touchscreen/silead.c
+-Kees
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-new file mode 100644
-index 0000000..1112e0d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-@@ -0,0 +1,36 @@
-+* GSL 1680 touchscreen controller
-+
-+Required properties:
-+- compatible		  : "silead,gsl1680"
-+- reg			  : I2C slave address of the chip (0x40)
-+- interrupt-parent	  : a phandle pointing to the interrupt controller
-+			    serving the interrupt for this chip
-+- interrupts		  : interrupt specification for the gsl1680 interrupt
-+- power-gpios		  : Specification for the pin connected to the gsl1680's
-+			    shutdown input. This needs to be driven high to take the
-+			    gsl1680 out of its low power state
-+- touchscreen-size-x	  : See touchscreen.txt
-+- touchscreen-size-y	  : See touchscreen.txt
-+
-+Optional properties:
-+- touchscreen-inverted-x  : See touchscreen.txt
-+- touchscreen-inverted-y  : See touchscreen.txt
-+- touchscreen-swapped-x-y : See touchscreen.txt
-+- silead,max-fingers	  : maximum number of fingers the touchscreen can detect
-+
-+Example:
-+
-+i2c@00000000 {
-+	gsl1680: touchscreen@40 {
-+		compatible = "silead,gsl1680";
-+		reg = <0x40>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>;
-+		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>;
-+		touchscreen-size-x = <480>;
-+		touchscreen-size-y = <800>;
-+		touchscreen-inverted-x;
-+		touchscreen-swapped-x-y;
-+		silead,max-fingers = <5>;
-+	};
-+};
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index ee02dc7..64e7501 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -1181,4 +1181,17 @@ config TOUCHSCREEN_ROHM_BU21023
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called bu21023_ts.
- 
-+config TOUCHSCREEN_SILEAD
-+	tristate "Silead I2C touchscreen"
-+	depends on I2C
-+	help
-+	  Say Y here if you have the Silead touchscreen connected to
-+	  your system.
-+
-+	  If unsure, say N.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called silead.
-+
-+
- endif
-diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
-index 3315882..4166747 100644
---- a/drivers/input/touchscreen/Makefile
-+++ b/drivers/input/touchscreen/Makefile
-@@ -97,3 +97,4 @@ obj-$(CONFIG_TOUCHSCREEN_TPS6507X)	+= tps6507x-ts.o
- obj-$(CONFIG_TOUCHSCREEN_ZFORCE)	+= zforce_ts.o
- obj-$(CONFIG_TOUCHSCREEN_COLIBRI_VF50)	+= colibri-vf50-ts.o
- obj-$(CONFIG_TOUCHSCREEN_ROHM_BU21023)	+= rohm_bu21023.o
-+obj-$(CONFIG_TOUCHSCREEN_SILEAD)	+= silead.o
-diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-new file mode 100644
-index 0000000..52379e1
---- /dev/null
-+++ b/drivers/input/touchscreen/silead.c
-@@ -0,0 +1,572 @@
-+/* -------------------------------------------------------------------------
-+ * Copyright (C) 2014-2015, Intel Corporation
-+ *
-+ * Derived from:
-+ *  gslX68X.c
-+ *  Copyright (C) 2010-2015, Shanghai Sileadinc Co.Ltd
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ * -------------------------------------------------------------------------
-+ */
-+
-+#include <asm/unaligned.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/acpi.h>
-+#include <linux/interrupt.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/delay.h>
-+#include <linux/firmware.h>
-+#include <linux/input.h>
-+#include <linux/input/mt.h>
-+#include <linux/input/touchscreen.h>
-+#include <linux/pm.h>
-+#include <linux/irq.h>
-+
-+#define SILEAD_TS_NAME "silead_ts"
-+
-+#define SILEAD_REG_RESET	0xE0
-+#define SILEAD_REG_DATA		0x80
-+#define SILEAD_REG_TOUCH_NR	0x80
-+#define SILEAD_REG_POWER	0xBC
-+#define SILEAD_REG_CLOCK	0xE4
-+#define SILEAD_REG_STATUS	0xB0
-+#define SILEAD_REG_ID		0xFC
-+#define SILEAD_REG_MEM_CHECK	0xB0
-+
-+#define SILEAD_STATUS_OK	0x5A5A5A5A
-+#define SILEAD_TS_DATA_LEN	44
-+#define SILEAD_CLOCK		0x04
-+
-+#define SILEAD_CMD_RESET	0x88
-+#define SILEAD_CMD_START	0x00
-+
-+#define SILEAD_POINT_DATA_LEN	0x04
-+#define SILEAD_POINT_Y_OFF      0x00
-+#define SILEAD_POINT_Y_MSB_OFF	0x01
-+#define SILEAD_POINT_X_OFF	0x02
-+#define SILEAD_POINT_X_MSB_OFF	0x03
-+#define SILEAD_TOUCH_ID_MASK	0xF0
-+
-+#define SILEAD_CMD_SLEEP_MIN	10000
-+#define SILEAD_CMD_SLEEP_MAX	20000
-+#define SILEAD_POWER_SLEEP	20
-+#define SILEAD_STARTUP_SLEEP	30
-+
-+#define SILEAD_MAX_FINGERS	10
-+
-+enum silead_ts_power {
-+	SILEAD_POWER_ON  = 1,
-+	SILEAD_POWER_OFF = 0
-+};
-+
-+struct silead_ts_data {
-+	struct i2c_client *client;
-+	struct gpio_desc *gpio_power;
-+	struct input_dev *input;
-+	char fw_name[64];
-+	struct touchscreen_properties prop;
-+	u32 max_fingers;
-+	u32 chip_id;
-+	struct input_mt_pos pos[SILEAD_MAX_FINGERS];
-+	int slots[SILEAD_MAX_FINGERS];
-+	int id[SILEAD_MAX_FINGERS];
-+};
-+
-+struct silead_fw_data {
-+	u32 offset;
-+	u32 val;
-+};
-+
-+static int silead_ts_request_input_dev(struct silead_ts_data *data)
-+{
-+	struct device *dev = &data->client->dev;
-+	int error;
-+
-+	data->input = devm_input_allocate_device(dev);
-+	if (!data->input) {
-+		dev_err(dev,
-+			"Failed to allocate input device\n");
-+		return -ENOMEM;
-+	}
-+
-+	input_set_abs_params(data->input, ABS_MT_POSITION_X, 0, 4095, 0, 0);
-+	input_set_abs_params(data->input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
-+	touchscreen_parse_properties(data->input, true, &data->prop);
-+
-+	input_mt_init_slots(data->input, data->max_fingers,
-+			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED |
-+			    INPUT_MT_TRACK);
-+
-+	data->input->name = SILEAD_TS_NAME;
-+	data->input->phys = "input/ts";
-+	data->input->id.bustype = BUS_I2C;
-+
-+	error = input_register_device(data->input);
-+	if (error) {
-+		dev_err(dev, "Failed to register input device: %d\n", error);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static void silead_ts_set_power(struct i2c_client *client,
-+				enum silead_ts_power state)
-+{
-+	struct silead_ts_data *data = i2c_get_clientdata(client);
-+
-+	if (data->gpio_power) {
-+		gpiod_set_value_cansleep(data->gpio_power, state);
-+		msleep(SILEAD_POWER_SLEEP);
-+	}
-+}
-+
-+static void silead_ts_read_data(struct i2c_client *client)
-+{
-+	struct silead_ts_data *data = i2c_get_clientdata(client);
-+	struct input_dev *input = data->input;
-+	struct device *dev = &client->dev;
-+	u8 *bufp, buf[SILEAD_TS_DATA_LEN];
-+	int touch_nr, error, i;
-+
-+	error = i2c_smbus_read_i2c_block_data(client, SILEAD_REG_DATA,
-+					      SILEAD_TS_DATA_LEN, buf);
-+	if (error < 0) {
-+		dev_err(dev, "Data read error %d\n", error);
-+		return;
-+	}
-+
-+	touch_nr = buf[0];
-+	if (touch_nr < 0)
-+		return;
-+
-+	if (touch_nr > data->max_fingers) {
-+		dev_warn(dev, "More touches reported then supported %d > %d\n",
-+			 touch_nr, data->max_fingers);
-+		touch_nr = data->max_fingers;
-+	}
-+
-+	bufp = buf + SILEAD_POINT_DATA_LEN;
-+	for (i = 0; i < touch_nr; i++, bufp += SILEAD_POINT_DATA_LEN) {
-+		/* Bits 4-7 are the touch id */
-+		data->id[i] = (bufp[SILEAD_POINT_X_MSB_OFF] &
-+			       SILEAD_TOUCH_ID_MASK) >> 4;
-+		touchscreen_set_mt_pos(&data->pos[i], &data->prop,
-+			get_unaligned_le16(&bufp[SILEAD_POINT_X_OFF]) & 0xfff,
-+			get_unaligned_le16(&bufp[SILEAD_POINT_Y_OFF]) & 0xfff);
-+	}
-+
-+	input_mt_assign_slots(input, data->slots, data->pos, touch_nr, 0);
-+
-+	for (i = 0; i < touch_nr; i++) {
-+		input_mt_slot(input, data->slots[i]);
-+		input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
-+		input_report_abs(input, ABS_MT_POSITION_X, data->pos[i].x);
-+		input_report_abs(input, ABS_MT_POSITION_Y, data->pos[i].y);
-+
-+		dev_dbg(dev, "x=%d y=%d hw_id=%d sw_id=%d\n", data->pos[i].x,
-+			data->pos[i].y, data->id[i], data->slots[i]);
-+	}
-+
-+	input_mt_sync_frame(input);
-+	input_sync(input);
-+}
-+
-+static int silead_ts_init(struct i2c_client *client)
-+{
-+	struct silead_ts_data *data = i2c_get_clientdata(client);
-+	int error;
-+
-+	error = i2c_smbus_write_byte_data(client, SILEAD_REG_RESET,
-+					SILEAD_CMD_RESET);
-+	if (error)
-+		goto i2c_write_err;
-+	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
-+
-+	error = i2c_smbus_write_byte_data(client, SILEAD_REG_TOUCH_NR,
-+					data->max_fingers);
-+	if (error)
-+		goto i2c_write_err;
-+	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
-+
-+	error = i2c_smbus_write_byte_data(client, SILEAD_REG_CLOCK,
-+					  SILEAD_CLOCK);
-+	if (error)
-+		goto i2c_write_err;
-+	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
-+
-+	error = i2c_smbus_write_byte_data(client, SILEAD_REG_RESET,
-+					SILEAD_CMD_START);
-+	if (error)
-+		goto i2c_write_err;
-+	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
-+
-+	return 0;
-+
-+i2c_write_err:
-+	dev_err(&client->dev, "Registers clear error %d\n", error);
-+	return error;
-+}
-+
-+static int silead_ts_reset(struct i2c_client *client)
-+{
-+	int error;
-+
-+	error = i2c_smbus_write_byte_data(client, SILEAD_REG_RESET,
-+					SILEAD_CMD_RESET);
-+	if (error)
-+		goto i2c_write_err;
-+	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
-+
-+	error = i2c_smbus_write_byte_data(client, SILEAD_REG_CLOCK,
-+					  SILEAD_CLOCK);
-+	if (error)
-+		goto i2c_write_err;
-+	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
-+
-+	error = i2c_smbus_write_byte_data(client, SILEAD_REG_POWER,
-+					SILEAD_CMD_START);
-+	if (error)
-+		goto i2c_write_err;
-+	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
-+
-+	return 0;
-+
-+i2c_write_err:
-+	dev_err(&client->dev, "Chip reset error %d\n", error);
-+	return error;
-+}
-+
-+static int silead_ts_startup(struct i2c_client *client)
-+{
-+	int error;
-+
-+	error = i2c_smbus_write_byte_data(client, SILEAD_REG_RESET, 0x00);
-+	if (error) {
-+		dev_err(&client->dev, "Startup error %d\n", error);
-+		return error;
-+	}
-+	msleep(SILEAD_STARTUP_SLEEP);
-+
-+	return 0;
-+}
-+
-+static int silead_ts_load_fw(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct silead_ts_data *data = i2c_get_clientdata(client);
-+	unsigned int fw_size, i;
-+	const struct firmware *fw;
-+	struct silead_fw_data *fw_data;
-+	int error;
-+
-+	dev_dbg(dev, "Firmware file name: %s", data->fw_name);
-+
-+	error = request_firmware(&fw, data->fw_name, dev);
-+	if (error) {
-+		dev_err(dev, "Firmware request error %d\n", error);
-+		return error;
-+	}
-+
-+	fw_size = fw->size / sizeof(*fw_data);
-+	fw_data = (struct silead_fw_data *)fw->data;
-+
-+	for (i = 0; i < fw_size; i++) {
-+		error = i2c_smbus_write_i2c_block_data(client,
-+						       fw_data[i].offset,
-+						       4,
-+						       (u8 *)&fw_data[i].val);
-+		if (error) {
-+			dev_err(dev, "Firmware load error %d\n", error);
-+			goto release_fw_err;
-+		}
-+	}
-+
-+	release_firmware(fw);
-+	return 0;
-+
-+release_fw_err:
-+	release_firmware(fw);
-+	return error;
-+}
-+
-+static u32 silead_ts_get_status(struct i2c_client *client)
-+{
-+	int error;
-+	u32 status;
-+
-+	error = i2c_smbus_read_i2c_block_data(client, SILEAD_REG_STATUS, 4,
-+					    (u8 *)&status);
-+	if (error < 0) {
-+		dev_err(&client->dev, "Status read error %d\n", error);
-+		return error;
-+	}
-+
-+	return le32_to_cpu(status);
-+}
-+
-+static int silead_ts_get_id(struct i2c_client *client)
-+{
-+	struct silead_ts_data *data = i2c_get_clientdata(client);
-+	int error;
-+
-+	error = i2c_smbus_read_i2c_block_data(client, SILEAD_REG_ID, 4,
-+					    (u8 *)&data->chip_id);
-+
-+	data->chip_id = le32_to_cpu(data->chip_id);
-+
-+	if (error < 0) {
-+		dev_err(&client->dev, "Chip ID read error %d\n", error);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static int silead_ts_setup(struct i2c_client *client)
-+{
-+	struct silead_ts_data *data = i2c_get_clientdata(client);
-+	struct device *dev = &client->dev;
-+	int error;
-+	u32 status;
-+
-+	silead_ts_set_power(client, SILEAD_POWER_OFF);
-+	silead_ts_set_power(client, SILEAD_POWER_ON);
-+
-+	error = silead_ts_get_id(client);
-+	if (error)
-+		return error;
-+	dev_info(dev, "Silead chip ID: 0x%8X", data->chip_id);
-+
-+	error = silead_ts_init(client);
-+	if (error)
-+		return error;
-+
-+	error = silead_ts_reset(client);
-+	if (error)
-+		return error;
-+
-+	error = silead_ts_load_fw(client);
-+	if (error)
-+		return error;
-+
-+	error = silead_ts_startup(client);
-+	if (error)
-+		return error;
-+
-+	status = silead_ts_get_status(client);
-+	if (status != SILEAD_STATUS_OK) {
-+		dev_err(dev, "Initialization error, status: 0x%X\n", status);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static irqreturn_t silead_ts_threaded_irq_handler(int irq, void *id)
-+{
-+	struct silead_ts_data *data = id;
-+	struct i2c_client *client = data->client;
-+
-+	silead_ts_read_data(client);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void silead_ts_read_props(struct i2c_client *client)
-+{
-+	struct silead_ts_data *data = i2c_get_clientdata(client);
-+	struct device *dev = &client->dev;
-+	const char *str;
-+	int error;
-+
-+	error = device_property_read_u32(dev, "silead,max-fingers",
-+					 &data->max_fingers);
-+	if (error) {
-+		dev_dbg(dev, "Max fingers read error %d\n", error);
-+		data->max_fingers = 5; /* Most devices handle up-to 5 fingers */
-+	}
-+
-+	error = device_property_read_string(dev, "touchscreen-fw-name", &str);
-+	if (!error)
-+		snprintf(data->fw_name, sizeof(data->fw_name), "%s", str);
-+	else
-+		dev_dbg(dev, "Firmware file name read error. Using default.");
-+}
-+
-+#ifdef CONFIG_ACPI
-+static int silead_ts_set_default_fw_name(struct silead_ts_data *data,
-+					 const struct i2c_device_id *id)
-+{
-+	const struct acpi_device_id *acpi_id;
-+	struct device *dev = &data->client->dev;
-+	int i;
-+
-+	if (ACPI_HANDLE(dev)) {
-+		acpi_id = acpi_match_device(dev->driver->acpi_match_table, dev);
-+		if (!acpi_id)
-+			return -ENODEV;
-+
-+		snprintf(data->fw_name, sizeof(data->fw_name), "%s.fw",
-+			acpi_id->id);
-+
-+		for (i = 0; i < strlen(data->fw_name); i++)
-+			data->fw_name[i] = tolower(data->fw_name[i]);
-+	} else {
-+		snprintf(data->fw_name, sizeof(data->fw_name), "%s.fw",
-+			id->name);
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int silead_ts_set_default_fw_name(struct silead_ts_data *data,
-+					 const struct i2c_device_id *id)
-+{
-+	snprintf(data->fw_name, sizeof(data->fw_name), "%s.fw", id->name);
-+	return 0;
-+}
-+#endif
-+
-+static int silead_ts_probe(struct i2c_client *client,
-+			   const struct i2c_device_id *id)
-+{
-+	struct silead_ts_data *data;
-+	struct device *dev = &client->dev;
-+	int error;
-+
-+	if (!i2c_check_functionality(client->adapter,
-+				     I2C_FUNC_I2C |
-+				     I2C_FUNC_SMBUS_READ_I2C_BLOCK |
-+				     I2C_FUNC_SMBUS_WRITE_I2C_BLOCK)) {
-+		dev_err(dev, "I2C functionality check failed\n");
-+		return -ENXIO;
-+	}
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, data);
-+	data->client = client;
-+
-+	error = silead_ts_set_default_fw_name(data, id);
-+	if (error)
-+		return error;
-+
-+	silead_ts_read_props(client);
-+
-+	/* We must have the IRQ provided by DT or ACPI subsytem */
-+	if (client->irq <= 0)
-+		return -ENODEV;
-+
-+	/* Power GPIO pin */
-+	data->gpio_power = gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
-+	if (IS_ERR(data->gpio_power)) {
-+		if (PTR_ERR(data->gpio_power) != -EPROBE_DEFER)
-+			dev_err(dev, "Shutdown GPIO request failed\n");
-+		return PTR_ERR(data->gpio_power);
-+	}
-+
-+	error = silead_ts_setup(client);
-+	if (error)
-+		return error;
-+
-+	error = silead_ts_request_input_dev(data);
-+	if (error)
-+		return error;
-+
-+	error = devm_request_threaded_irq(dev, client->irq, NULL,
-+			silead_ts_threaded_irq_handler, IRQF_ONESHOT,
-+			client->name, data);
-+	if (error) {
-+		if (error != -EPROBE_DEFER)
-+			dev_err(dev, "IRQ request failed %d\n", error);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused silead_ts_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+
-+	silead_ts_set_power(client, SILEAD_POWER_OFF);
-+	return 0;
-+}
-+
-+static int __maybe_unused silead_ts_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	int error, status;
-+
-+	silead_ts_set_power(client, SILEAD_POWER_ON);
-+
-+	error = silead_ts_reset(client);
-+	if (error)
-+		return error;
-+
-+	error = silead_ts_startup(client);
-+	if (error)
-+		return error;
-+
-+	status = silead_ts_get_status(client);
-+	if (status != SILEAD_STATUS_OK) {
-+		dev_err(dev, "Resume error, status: 0x%02x\n", status);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(silead_ts_pm, silead_ts_suspend, silead_ts_resume);
-+
-+static const struct i2c_device_id silead_ts_id[] = {
-+	{ "gsl1680", 0 },
-+	{ "gsl1688", 0 },
-+	{ "gsl3670", 0 },
-+	{ "gsl3675", 0 },
-+	{ "gsl3692", 0 },
-+	{ "mssl1680", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, silead_ts_id);
-+
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id silead_ts_acpi_match[] = {
-+	{ "GSL1680", 0 },
-+	{ "GSL1688", 0 },
-+	{ "GSL3670", 0 },
-+	{ "GSL3675", 0 },
-+	{ "GSL3692", 0 },
-+	{ "MSSL1680", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
-+#endif
-+
-+static struct i2c_driver silead_ts_driver = {
-+	.probe = silead_ts_probe,
-+	.id_table = silead_ts_id,
-+	.driver = {
-+		.name = SILEAD_TS_NAME,
-+		.owner = THIS_MODULE,
-+		.acpi_match_table = ACPI_PTR(silead_ts_acpi_match),
-+		.pm = &silead_ts_pm,
-+	},
-+};
-+module_i2c_driver(silead_ts_driver);
-+
-+MODULE_AUTHOR("Robert Dolca <robert.dolca@intel.com>");
-+MODULE_DESCRIPTION("Silead I2C touchscreen driver");
-+MODULE_LICENSE("GPL");
+>
+> Rob
+>
+> [1] https://lkml.org/lkml/2016/6/21/969
+>
+>  Documentation/devicetree/bindings/misc/ramoops.txt | 48 -----------
+>  Documentation/ramoops.txt                          |  6 +-
+>  fs/pstore/ram.c                                    | 95 +---------------------
+>  3 files changed, 4 insertions(+), 145 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
+>
+> diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
+> deleted file mode 100644
+> index cd02cec..0000000
+> --- a/Documentation/devicetree/bindings/misc/ramoops.txt
+> +++ /dev/null
+> @@ -1,48 +0,0 @@
+> -Ramoops oops/panic logger
+> -=========================
+> -
+> -ramoops provides persistent RAM storage for oops and panics, so they can be
+> -recovered after a reboot. It is a backend to pstore, so this node is named
+> -"ramoops" after the backend, rather than "pstore" which is the subsystem.
+> -
+> -Parts of this storage may be set aside for other persistent log buffers, such
+> -as kernel log messages, or for optional ECC error-correction data.  The total
+> -size of these optional buffers must fit in the reserved region.
+> -
+> -Any remaining space will be used for a circular buffer of oops and panic
+> -records.  These records have a configurable size, with a size of 0 indicating
+> -that they should be disabled.
+> -
+> -At least one of "record-size", "console-size", "ftrace-size", or "pmsg-size"
+> -must be set non-zero, but are otherwise optional as listed below.
+> -
+> -
+> -Required properties:
+> -
+> -- compatible: must be "ramoops"
+> -
+> -- memory-region: phandle to a region of memory that is preserved between
+> -  reboots
+> -
+> -
+> -Optional properties:
+> -
+> -- ecc-size: enables ECC support and specifies ECC buffer size in bytes
+> -  (defaults to 0: no ECC)
+> -
+> -- record-size: maximum size in bytes of each dump done on oops/panic
+> -  (defaults to 0: disabled)
+> -
+> -- console-size: size in bytes of log buffer reserved for kernel messages
+> -  (defaults to 0: disabled)
+> -
+> -- ftrace-size: size in bytes of log buffer reserved for function tracing and
+> -  profiling (defaults to 0: disabled)
+> -
+> -- pmsg-size: size in bytes of log buffer reserved for userspace messages
+> -  (defaults to 0: disabled)
+> -
+> -- unbuffered: if present, use unbuffered mappings to map the reserved region
+> -  (defaults to buffered mappings)
+> -
+> -- no-dump-oops: if present, only dump panics (defaults to panics and oops)
+> diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
+> index 9264bca..5d86756 100644
+> --- a/Documentation/ramoops.txt
+> +++ b/Documentation/ramoops.txt
+> @@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
+>
+>  2. Setting the parameters
+>
+> -Setting the ramoops parameters can be done in 3 different manners:
+> +Setting the ramoops parameters can be done in 2 different manners:
+>   1. Use the module parameters (which have the names of the variables described
+>   as before).
+>   For quick debugging, you can also reserve parts of memory during boot
+> @@ -54,9 +54,7 @@ Setting the ramoops parameters can be done in 3 different manners:
+>   kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
+>   region at 128 MB boundary:
+>   "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
+> - 2. Use Device Tree bindings, as described in
+> - Documentation/device-tree/bindings/misc/ramoops.txt.
+> - 3. Use a platform device and set the platform data. The parameters can then
+> + 2. Use a platform device and set the platform data. The parameters can then
+>   be set through that platform data. An example of doing that is:
+>
+>  #include <linux/pstore_ram.h>
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 47516a7..d9668c2 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -34,8 +34,6 @@
+>  #include <linux/slab.h>
+>  #include <linux/compiler.h>
+>  #include <linux/pstore_ram.h>
+> -#include <linux/of.h>
+> -#include <linux/of_address.h>
+>
+>  #define RAMOOPS_KERNMSG_HDR "===="
+>  #define MIN_MEM_SIZE 4096UL
+> @@ -460,98 +458,15 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
+>         return 0;
+>  }
+>
+> -static int ramoops_parse_dt_size(struct platform_device *pdev,
+> -                                const char *propname, u32 *value)
+> -{
+> -       u32 val32 = 0;
+> -       int ret;
+> -
+> -       ret = of_property_read_u32(pdev->dev.of_node, propname, &val32);
+> -       if (ret < 0 && ret != -EINVAL) {
+> -               dev_err(&pdev->dev, "failed to parse property %s: %d\n",
+> -                       propname, ret);
+> -               return ret;
+> -       }
+> -
+> -       if (val32 > INT_MAX) {
+> -               dev_err(&pdev->dev, "%s %u > INT_MAX\n", propname, val32);
+> -               return -EOVERFLOW;
+> -       }
+> -
+> -       *value = val32;
+> -       return 0;
+> -}
+> -
+> -static int ramoops_parse_dt(struct platform_device *pdev,
+> -                           struct ramoops_platform_data *pdata)
+> -{
+> -       struct device_node *of_node = pdev->dev.of_node;
+> -       struct device_node *mem_region;
+> -       struct resource res;
+> -       u32 value;
+> -       int ret;
+> -
+> -       dev_dbg(&pdev->dev, "using Device Tree\n");
+> -
+> -       mem_region = of_parse_phandle(of_node, "memory-region", 0);
+> -       if (!mem_region) {
+> -               dev_err(&pdev->dev, "no memory-region phandle\n");
+> -               return -ENODEV;
+> -       }
+> -
+> -       ret = of_address_to_resource(mem_region, 0, &res);
+> -       of_node_put(mem_region);
+> -       if (ret) {
+> -               dev_err(&pdev->dev,
+> -                       "failed to translate memory-region to resource: %d\n",
+> -                       ret);
+> -               return ret;
+> -       }
+> -
+> -       pdata->mem_size = resource_size(&res);
+> -       pdata->mem_address = res.start;
+> -       pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
+> -       pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+> -
+> -#define parse_size(name, field) {                                      \
+> -               ret = ramoops_parse_dt_size(pdev, name, &value);        \
+> -               if (ret < 0)                                            \
+> -                       return ret;                                     \
+> -               field = value;                                          \
+> -       }
+> -
+> -       parse_size("record-size", pdata->record_size);
+> -       parse_size("console-size", pdata->console_size);
+> -       parse_size("ftrace-size", pdata->ftrace_size);
+> -       parse_size("pmsg-size", pdata->pmsg_size);
+> -       parse_size("ecc-size", pdata->ecc_info.ecc_size);
+> -
+> -#undef parse_size
+> -
+> -       return 0;
+> -}
+> -
+>  static int ramoops_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+> -       struct ramoops_platform_data *pdata = dev->platform_data;
+> +       struct ramoops_platform_data *pdata = pdev->dev.platform_data;
+>         struct ramoops_context *cxt = &oops_cxt;
+>         size_t dump_mem_sz;
+>         phys_addr_t paddr;
+>         int err = -EINVAL;
+>
+> -       if (dev_of_node(dev) && !pdata) {
+> -               pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> -               if (!pdata) {
+> -                       err = -ENOMEM;
+> -                       goto fail_out;
+> -               }
+> -
+> -               err = ramoops_parse_dt(pdev, pdata);
+> -               if (err < 0)
+> -                       goto fail_out;
+> -       }
+> -
+>         /* Only a single ramoops area allowed at a time, so fail extra
+>          * probes.
+>          */
+> @@ -681,17 +596,11 @@ static int ramoops_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> -static const struct of_device_id dt_match[] = {
+> -       { .compatible = "ramoops" },
+> -       {}
+> -};
+> -
+>  static struct platform_driver ramoops_driver = {
+>         .probe          = ramoops_probe,
+>         .remove         = ramoops_remove,
+>         .driver         = {
+> -               .name           = "ramoops",
+> -               .of_match_table = dt_match,
+> +               .name   = "ramoops",
+>         },
+>  };
+>
+> --
+> 2.9.2
+>
+
+
+
 -- 
-2.7.4
-
+Kees Cook
+Chrome OS & Brillo Security
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
