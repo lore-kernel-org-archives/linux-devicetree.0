@@ -1,78 +1,93 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] clocksource: add J-Core timer/clocksource
- driver
-Date: Thu, 28 Jul 2016 18:44:15 +0200 (CEST)
-Message-ID: <alpine.DEB.2.11.1607281837450.19896@nanos>
-References: <cover.1469688975.git.dalias@libc.org> <ed156509aed631486decf1828acb4f0afa61dd31.1469688975.git.dalias@libc.org> <alpine.DEB.2.11.1607281515330.19896@nanos> <20160728163748.GI15995@brightrain.aerifal.cx>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [Patch v2 1/5] ARM: dts: qcom: Add initial DTS for LG Nexus 5
+ Phone
+Date: Thu, 28 Jul 2016 09:55:39 -0700
+Message-ID: <20160728165539.GO13516@tuxbot>
+References: <20160719050414.31704-1-bshah@kde.org>
+ <20160719050414.31704-2-bshah@kde.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160728163748.GI15995-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160719050414.31704-2-bshah@kde.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bhushan Shah <bshah@kde.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Jul 2016, Rich Felker wrote:
-> On Thu, Jul 28, 2016 at 04:44:05PM +0200, Thomas Gleixner wrote:
-> > > +	return ((u64)sechi << 32 | seclo) * NSEC_PER_SEC + nsec;
-> > 
-> > Wow, that's an expensive thing for a hotpath operation. You really don't have
-> > binary readout register for that clock thingy?
+On Mon 18 Jul 22:04 PDT 2016, Bhushan Shah wrote:
+
+> This DTS file have support LG Nexus 5 (codenamed hammerhead).
+> Initial version have support for just serial console over headphone
+> jack.
 > 
-> Unforunately the clock is in sec64.nsec32 format instead of a flat
-> nanoseconds count. Daniel Lezcano also suggested just using
-> nanoseconds, which would still need some retry and arithmetic for
-> adding seclo*NSEC_PER_SEC (otherwise it's problematic because it wraps
-> at NSEC_PER_SEC rather than at a power of two) but that does put a
-> hard upper bound on tickless sleep time of 4 sec. In practice it
-> probably doesn't matter. Should I try that instead?
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-arm-msm@vger.kernel.org
+> Signed-off-by: Bhushan Shah <bshah@kde.org>
 
-Up to you. I was just wondering about the MUL.
- 
-> > > +static notrace u64 jcore_sched_clock_read(void)
-> > > +{
-> > > +	return jcore_clocksource_read(jcore_cs);
-> > 
-> > Why don't you stuff the above code into this function?
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+> Changes in v2
+>     - Removed qcom,msm-id
+>     - Added "lge,hammerhead" in the compatible
 > 
-> I was trying to avoid code duplication, but I could if you think it
-> really matters for performance.
-
-Did not see where the other usage site was. Must have missed that. So keep it
-as is and please add notrace to jcore_clocksource_read().
- 
-> > Please convert this to the new state machine model of cpu
-> > hotplug. CPU_STARTING will be gone very soon. Here is an example:
-> > 
-> > http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/?h=smp/hotplug&id=7e86e8bd8dd67649d176e08d8dfb90039f0a1e98
+>  arch/arm/boot/dts/Makefile                         |  1 +
+>  .../dts/qcom-msm8974-lge-nexus5-hammerhead.dts     | 23 ++++++++++++++++++++++
+>  2 files changed, 24 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
 > 
-> I don't think that's the commit you wanted to link -- it doesn't show
-> a usage example.
- 
-It's the conversion of a driver from the old to the new style, So it's an
-example how to move your stuff to the new interface or am I missing something
-here?
-
-> I've asked about this before in another context but didn't get an
-> answer -- I'm a bit concerned that, from what I can tell, the new
-> framework is a big singleton does assumes singletons in all the
-> drivers that use it. In practice it doesn't matter as long as there's
-> only one instance of the pit driver, but this seems architecturally
-> really bad and like it's a time bomb waiting to blow up on us in the
-> future. Am I missing something?
-
-Most of the users are single instance. We have a dynamic interface for the
-online callbacks and we might get one for the prep stage as well.
-
-Now for the real core stuff like starting/dying we want explicit states and if
-a driver really is multi instance then having a private list there is not
-rocket science. Most of them have an instance list anyway.
- 
-Thanks,
-
-	tglx
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 414b427..13947ec 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -584,6 +584,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+>  	qcom-ipq8064-ap148.dtb \
+>  	qcom-msm8660-surf.dtb \
+>  	qcom-msm8960-cdp.dtb \
+> +	qcom-msm8974-lge-nexus5-hammerhead.dtb \
+>  	qcom-msm8974-sony-xperia-honami.dtb
+>  dtb-$(CONFIG_ARCH_REALVIEW) += \
+>  	arm-realview-pb1176.dtb \
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> new file mode 100644
+> index 0000000..68f3a8a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> @@ -0,0 +1,23 @@
+> +#include "qcom-msm8974.dtsi"
+> +#include "qcom-pm8841.dtsi"
+> +#include "qcom-pm8941.dtsi"
+> +
+> +/ {
+> +	model = "LGE MSM 8974 HAMMERHEAD";
+> +	compatible = "lge,hammerhead", "qcom,msm8974";
+> +
+> +	aliases {
+> +		serial0 = &blsp1_uart1;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +};
+> +
+> +&soc {
+> +	serial@f991d000 {
+> +		status = "ok";
+> +	};
+> +
+> +};
+> -- 
+> 2.9.0
+> 
