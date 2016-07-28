@@ -1,129 +1,55 @@
-From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner sun8i-emac
-Date: Thu, 28 Jul 2016 15:40:31 +0200
-Message-ID: <20160728134031.GC7582@Red>
-References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com>
- <1469001800-11615-4-git-send-email-clabbe.montjoie@gmail.com>
- <20160721075519.GC5993@lukather>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] irqchip: add J-Core AIC driver
+Date: Thu, 28 Jul 2016 15:02:37 +0100
+Message-ID: <20160728140236.GC5881@leverpostej>
+References: <cover.1469595860.git.dalias@libc.org>
+ <862a5642f4a30f062171bbc14fe95a729eab8ba2.1469595861.git.dalias@libc.org>
+ <20160727101235.GC12880@leverpostej>
+ <20160727130606.GA15995@brightrain.aerifal.cx>
+ <20160727132252.GB17195@leverpostej>
+ <20160727170709.GC15995@brightrain.aerifal.cx>
+ <20160727173152.GH17195@leverpostej>
+ <20160727230124.GE15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBU4W5C6AKGQEQVNAWRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160721075519.GC5993@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160727230124.GE15995-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 21, 2016 at 09:55:19AM +0200, Maxime Ripard wrote:
-> Hi,
-> 
-> On Wed, Jul 20, 2016 at 10:03:18AM +0200, LABBE Corentin wrote:
-> > This patch adds documentation for Device-Tree bindings for the
-> > Allwinner sun8i-emac driver.
+On Wed, Jul 27, 2016 at 07:01:24PM -0400, Rich Felker wrote:
+> On Wed, Jul 27, 2016 at 06:31:52PM +0100, Mark Rutland wrote:
+
+> > IIUC, that means you *could* implement per-irq masking by having the
+> > CPU's mask value set to 0, and flipping the priority of an IRQ between 0
+> > and 1 to disable/enable.
 > > 
-> > Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../bindings/net/allwinner,sun8i-emac.txt          | 65 ++++++++++++++++++++++
-> >  1 file changed, 65 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> > new file mode 100644
-> > index 0000000..4bf4e53
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
-> > @@ -0,0 +1,65 @@
-> > +* Allwinner sun8i EMAC ethernet controller
-> > +
-> > +Required properties:
-> > +- compatible: "allwinner,sun8i-a83t-emac", "allwinner,sun8i-h3-emac",
-> > +		or "allwinner,sun50i-a64-emac"
-> > +- reg: address and length of the register sets for the device.
-> > +- reg-names: should be "emac" and "syscon", matching the register sets
+> > Though from your prior comments it sounds like for AIC2 writes to the
+> > MMIO priority registers are ignored, so that would not work for AIC2?
 > 
-> Blindly mapping a register of some other device on the SoC doesn't
-> look very reasonable.
-> 
+> Right. The register with 8 4-bit fields only made sense for the setup
+> with 8 irq lines with variable priority; the aic2 has 64 lines with
+> static priorities.
 
-As we discuss after this mail on IRC, this register is dedicated to EMAC.
+Thinking about this a little further, this is a good argument for the
+"jcore,aic1" *not* being a valid fallback entry in an AIC2 compatible
+list. Anything wanting to rely on this behaviour of AIC1 would be broken
+on AIC2.
 
-> > +- interrupts: interrupt for the device
-> > +- clocks: A phandle to the reference clock for this device
-> > +- clock-names: should be "ahb"
-> > +- resets: A phandle to the reset control for this device
-> > +- reset-names: should be "ahb"
-> > +- phy-mode: See ethernet.txt
-> > +- phy or phy-handle: See ethernet.txt
-> > +- #address-cells: shall be 1
-> > +- #size-cells: shall be 0
-> > +
-> > +"allwinner,sun8i-h3-emac" also requires:
-> > +- clocks: an extra phandle to the reference clock for the EPHY
-> > +- clock-names: an extra "ephy" entry matching the clocks property
-> > +- resets: an extra phandle to the reset control for the EPHY
-> > +- resets-names: an extra "ephy" entry matching the resets property
-> 
-> Shouldn't that be attached to the phy itself?
-> 
+That being the case, no DT should have "jcore,aic1" for an AIC2 node,
+and we can explciitly check for the AIC1 string for AIC1-specific
+initialisation code (though regardless, it's worht a comment).
 
-Ok I will move them.
+A further curiosity: what static priority values for AIC2 apply to
+interrupts? Does it apply 0xf (or some over value) uniformly, or can
+AIC2 interrupts potentially have varied priorities?
 
-> > +See ethernet.txt in the same directory for generic bindings for ethernet
-> > +controllers.
-> > +
-> > +The device node referenced by "phy" or "phy-handle" should be a child node
-> > +of this node. See phy.txt for the generic PHY bindings.
-> > +
-> > +Optional properties:
-> > +- phy-supply: phandle to a regulator if the PHY needs one
-> > +- phy-io-supply: phandle to a regulator if the PHY needs a another one for I/O.
-> > +		 This is sometimes found with RGMII PHYs, which use a second
-> > +		 regulator for the lower I/O voltage.
-> > +- allwinner,tx-delay: The setting of the TX clock delay chain
-> > +- allwinner,rx-delay: The setting of the RX clock delay chain
-> 
-> In which unit? What is the default value?
-> 
-
-The unit is unknown to me, but I have added a comment for the default and acceptable range value.
-
-> > +
-> > +The TX/RX clock delay chain settings are board specific.
-> > +
-> > +Optional properties for "allwinner,sun8i-h3-emac":
-> > +- allwinner,use-internal-phy: Use the H3 SoC's internal E(thernet) PHY
-> 
-> Can't that be derived from the presence of the phy property?
-> 
-
-Yes, I have reworked the "variant" of the driver for easily handling this.
-
-> > +- allwinner,leds-active-low: EPHY LEDs are active low
-> 
-> That also seems PHY related. Overall, I feel like we really need a phy
-> node for the internal phy.
-> 
-
-Moved also in the phy node.
-
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
-Best regards
-
-Thanks
-
-LABBE Corentin
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
