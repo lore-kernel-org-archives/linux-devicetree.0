@@ -1,53 +1,27 @@
 From: Rich Felker <dalias@libc.org>
-Subject: [PATCH v5 1/2] of: add J-Core timer bindings
-Date: Tue, 17 May 2016 23:18:58 +0000
-Message-ID: <afa8eaaebc9216e83e542e9bcad8fa1dd659d489.1469688975.git.dalias@libc.org>
-References: <cover.1469688975.git.dalias@libc.org>
+Subject: [PATCH v5 0/2] J-Core interrupt controller support
+Date: Thu, 28 Jul 2016 06:52:36 +0000
+Message-ID: <cover.1469688756.git.dalias@libc.org>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <cover.1469688975.git.dalias@libc.org>
 Sender: linux-sh-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rich Felker <dalias@libc.org>
----
- .../devicetree/bindings/timer/jcore,pit.txt        | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+Updated based on feedback from Mark Rutland.
 
-diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-new file mode 100644
-index 0000000..0f42af4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-@@ -0,0 +1,25 @@
-+J-Core Programmable Interval Timer and Clocksource
-+
-+Required properties:
-+
-+- compatible: Must be "jcore,pit".
-+
-+- reg: Memory region(s) for timer/clocksource registers. For SMP,
-+  there should be one region per cpu, indexed by the sequential,
-+  zero-based hardware cpu number (which is also the logical cpu
-+  number).
-+
-+- interrupts: An interrupt to assign for the timer. The actual pit
-+  core is integrated with the aic and allows the timer interrupt
-+  assignment to be programmed by software, but this property is
-+  required in order to reserve an interrupt number that doesn't
-+  conflict with other devices.
-+
-+
-+Example:
-+
-+timer@200 {
-+	compatible = "jcore,pit";
-+	reg = < 0x200 0x30 0x500 0x30 >;
-+	interrupts = < 0x48 >;
-+};
+Rich Felker (2):
+  of: add J-Core interrupt controller bindings
+  irqchip: add J-Core AIC driver
+
+ .../bindings/interrupt-controller/jcore,aic.txt    | 26 +++++++
+ drivers/irqchip/Kconfig                            |  6 ++
+ drivers/irqchip/Makefile                           |  1 +
+ drivers/irqchip/irq-jcore-aic.c                    | 86 ++++++++++++++++++++++
+ 4 files changed, 119 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+ create mode 100644 drivers/irqchip/irq-jcore-aic.c
+
 -- 
 2.8.1
-
 
