@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/2] arm64: dts: marvell: add description for the slave CP110 in Armada 8K
-Date: Thu, 28 Jul 2016 16:35:55 +0200
-Message-ID: <1469716556-15299-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 2/2] arm64: dts: marvell: add description for the Armada 8040 dev board
+Date: Thu, 28 Jul 2016 16:35:56 +0200
+Message-ID: <1469716556-15299-3-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1469716556-15299-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1469716556-15299-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,53 +10,39 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Armada 8K platforms (8020 and 8040) have two CP110 HW blocks: one
-master, one slave. So far, only the master CP110 was described. This
-commit adds the Device Tree description for the slave CP110, and hooks
-it up in the DT description of the Armada 8020 and Armada 8040 SoCs.
+This commit adds a Device Tree description for the Marvell Armada 8040
+Development Board. It features a quad-core Cortex A72 Armada 8040 SoC,
+with a large number of peripherals: dual Gigabit, dual 10 GBit, 6 PCIe
+interfaces, 6 SATA ports, 4 USB 3.0 ports, and more.
 
-The slave CP110 description is somewhat similar to the master CP110
-description except for a number of things like register offsets,
-interrupt numbers, references to clocks, etc.
+Only a subset of the functionalities are supported so far, and
+additional features will be progressively enabled in the future.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm64/boot/dts/marvell/armada-8020.dtsi       |   1 +
- arch/arm64/boot/dts/marvell/armada-8040.dtsi       |   1 +
- .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi | 246 +++++++++++++++++++++
- 3 files changed, 248 insertions(+)
- create mode 100644 arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+ arch/arm64/boot/dts/marvell/Makefile           |   1 +
+ arch/arm64/boot/dts/marvell/armada-8040-db.dts | 150 +++++++++++++++++++++++++
+ 2 files changed, 151 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-8040-db.dts
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8020.dtsi b/arch/arm64/boot/dts/marvell/armada-8020.dtsi
-index 3753c1c..048e5cf 100644
---- a/arch/arm64/boot/dts/marvell/armada-8020.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-8020.dtsi
-@@ -47,6 +47,7 @@
+diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+index 308468d..cf39531 100644
+--- a/arch/arm64/boot/dts/marvell/Makefile
++++ b/arch/arm64/boot/dts/marvell/Makefile
+@@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += berlin4ct-stb.dtb
+ # Mvebu SoC Family
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
++dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
  
- #include "armada-ap806-dual.dtsi"
- #include "armada-cp110-master.dtsi"
-+#include "armada-cp110-slave.dtsi"
- 
- / {
- 	model = "Marvell Armada 8020";
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040.dtsi b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
-index 8bd0d8f..9c1b28c 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
-@@ -47,6 +47,7 @@
- 
- #include "armada-ap806-quad.dtsi"
- #include "armada-cp110-master.dtsi"
-+#include "armada-cp110-slave.dtsi"
- 
- / {
- 	model = "Marvell Armada 8040";
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
 new file mode 100644
-index 0000000..6ff1201
+index 0000000..6e6f182
 --- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-@@ -0,0 +1,246 @@
++++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+@@ -0,0 +1,150 @@
 +/*
 + * Copyright (C) 2016 Marvell Technology Group Ltd.
 + *
@@ -100,208 +86,112 @@ index 0000000..6ff1201
 + */
 +
 +/*
-+ * Device Tree file for Marvell Armada CP110 Slave.
++ * Device Tree file for Marvell Armada 8040 Development board platform
 + */
 +
-+/ {
-+	cp110-slave {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+		ranges;
++#include "armada-8040.dtsi"
 +
-+		config-space {
++/ {
++	model = "Marvell Armada 8040 DB board";
++	compatible = "marvell,armada8040-db", "marvell,armada8040",
++		     "marvell,armada-ap806-quad", "marvell,armada-ap806";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@00000000 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x80000000>;
++	};
++};
++
++&i2c0 {
++	status = "okay";
++	clock-frequency = <100000>;
++};
++
++&spi0 {
++	status = "okay";
++
++	spi-flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <10000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
 +			#address-cells = <1>;
 +			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			interrupt-parent = <&gic>;
-+			ranges = <0x0 0x0 0xf4000000 0x2000000>;
 +
-+			cps_syscon0: system-controller@440000 {
-+				compatible = "marvell,cp110-system-controller0",
-+					     "syscon";
-+				reg = <0x440000 0x1000>;
-+				#clock-cells = <2>;
-+				core-clock-output-names =
-+					"cps-apll", "cps-ppv2-core", "cps-eip",
-+					"cps-core", "cps-nand-core";
-+				gate-clock-output-names =
-+					"cps-audio", "cps-communit", "cps-nand",
-+					"cps-ppv2", "cps-sdio", "cps-mg-domain",
-+					"cps-mg-core", "cps-xor1", "cps-xor0",
-+					"cps-gop-dp", "none", "cps-pcie_x10",
-+					"cps-pcie_x11", "cps-pcie_x4", "cps-pcie-xor",
-+					"cps-sata", "cps-sata-usb", "cps-main",
-+					"cps-sd-mmc", "none", "none",
-+					"cps-slow-io", "cps-usb3h0", "cps-usb3h1",
-+					"cps-usb3dev", "cps-eip150", "cps-eip197";
++			partition@0 {
++				label = "U-Boot";
++				reg = <0 0x200000>;
 +			};
-+
-+			cps_sata0: sata@540000 {
-+				compatible = "marvell,armada-8k-ahci";
-+				reg = <0x540000 0x30000>;
-+				interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cps_syscon0 1 15>;
-+				status = "disabled";
++			partition@400000 {
++				label = "Filesystem";
++				reg = <0x200000 0xce0000>;
 +			};
-+
-+			cps_usb3_0: usb3@500000 {
-+				compatible = "marvell,armada-8k-xhci",
-+					     "generic-xhci";
-+				reg = <0x500000 0x4000>;
-+				dma-coherent;
-+				interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cps_syscon0 1 22>;
-+				status = "disabled";
-+			};
-+
-+			cps_usb3_1: usb3@510000 {
-+				compatible = "marvell,armada-8k-xhci",
-+					     "generic-xhci";
-+				reg = <0x510000 0x4000>;
-+				dma-coherent;
-+				interrupts = <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cps_syscon0 1 23>;
-+				status = "disabled";
-+			};
-+
-+			cps_xor0: xor@6a0000 {
-+				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
-+				reg = <0x6a0000 0x1000>,
-+				      <0x6b0000 0x1000>;
-+				dma-coherent;
-+				msi-parent = <&gic_v2m0>;
-+				clocks = <&cps_syscon0 1 8>;
-+			};
-+
-+			cps_xor1: xor@6c0000 {
-+				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
-+				reg = <0x6c0000 0x1000>,
-+				      <0x6d0000 0x1000>;
-+				dma-coherent;
-+				msi-parent = <&gic_v2m0>;
-+				clocks = <&cps_syscon0 1 7>;
-+			};
-+
-+			cps_spi0: spi@700600 {
-+				compatible = "marvell,armada-380-spi";
-+				reg = <0x700600 0x50>;
-+				#address-cells = <0x1>;
-+				#size-cells = <0x0>;
-+				cell-index = <1>;
-+				clocks = <&cps_syscon0 0 3>;
-+				status = "disabled";
-+			};
-+
-+			cps_spi1: spi@700680 {
-+				compatible = "marvell,armada-380-spi";
-+				reg = <0x700680 0x50>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				cell-index = <2>;
-+				clocks = <&cps_syscon0 1 21>;
-+				status = "disabled";
-+			};
-+
-+			cps_i2c0: i2c@701000 {
-+				compatible = "marvell,mv78230-i2c";
-+				reg = <0x701000 0x20>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				interrupts = <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cps_syscon0 1 21>;
-+				status = "disabled";
-+			};
-+
-+			cps_i2c1: i2c@701100 {
-+				compatible = "marvell,mv78230-i2c";
-+				reg = <0x701100 0x20>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				interrupts = <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&cps_syscon0 1 21>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		cps_pcie0: pcie@f4600000 {
-+			compatible = "marvell,armada8k-pcie", "snps,dw-pcie";
-+			reg = <0 0xf4600000 0 0x10000>,
-+			      <0 0xfaf00000 0 0x80000>;
-+			reg-names = "ctrl", "config";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			device_type = "pci";
-+			dma-coherent;
-+
-+			bus-range = <0 0xff>;
-+			ranges =
-+				/* downstream I/O */
-+				<0x81000000 0 0xfd000000 0  0xfd000000 0 0x10000
-+				/* non-prefetchable memory */
-+				0x82000000 0 0xfa000000 0  0xfa000000 0 0xf00000>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-+			num-lanes = <1>;
-+			clocks = <&cps_syscon0 1 13>;
-+			status = "disabled";
-+		};
-+
-+		cps_pcie1: pcie@f4620000 {
-+			compatible = "marvell,armada8k-pcie", "snps,dw-pcie";
-+			reg = <0 0xf4620000 0 0x10000>,
-+			      <0 0xfbf00000 0 0x80000>;
-+			reg-names = "ctrl", "config";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			device_type = "pci";
-+			dma-coherent;
-+
-+			bus-range = <0 0xff>;
-+			ranges =
-+				/* downstream I/O */
-+				<0x81000000 0 0xfd010000 0  0xfd010000 0 0x10000
-+				/* non-prefetchable memory */
-+				0x82000000 0 0xfb000000 0  0xfb000000 0 0xf00000>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			num-lanes = <1>;
-+			clocks = <&cps_syscon0 1 11>;
-+			status = "disabled";
-+		};
-+
-+		cps_pcie2: pcie@f4640000 {
-+			compatible = "marvell,armada8k-pcie", "snps,dw-pcie";
-+			reg = <0 0xf4640000 0 0x10000>,
-+			      <0 0xfcf00000 0 0x80000>;
-+			reg-names = "ctrl", "config";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			device_type = "pci";
-+			dma-coherent;
-+
-+			bus-range = <0 0xff>;
-+			ranges =
-+				/* downstream I/O */
-+				<0x81000000 0 0xfd020000 0  0xfd020000 0 0x10000
-+				/* non-prefetchable memory */
-+				0x82000000 0 0xfc000000 0  0xfc000000 0 0xf00000>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			num-lanes = <1>;
-+			clocks = <&cps_syscon0 1 12>;
-+			status = "disabled";
 +		};
 +	};
++};
++
++/* Accessible over the mini-USB CON9 connector on the main board */
++&uart0 {
++	status = "okay";
++};
++
++
++/* CON5 on CP0 expansion */
++&cpm_pcie2 {
++	status = "okay";
++};
++
++&cpm_i2c0 {
++	status = "okay";
++	clock-frequency = <100000>;
++};
++
++/* CON4 on CP0 expansion */
++&cpm_sata0 {
++	status = "okay";
++};
++
++/* CON9 on CP0 expansion */
++&cpm_usb3_0 {
++	status = "okay";
++};
++
++/* CON10 on CP0 expansion */
++&cpm_usb3_1 {
++	status = "okay";
++};
++
++/* CON5 on CP1 expansion */
++&cps_pcie2 {
++	status = "okay";
++};
++
++&cps_i2c0 {
++	status = "okay";
++	clock-frequency = <100000>;
++};
++
++/* CON4 on CP1 expansion */
++&cps_sata0 {
++	status = "okay";
++};
++
++/* CON9 on CP1 expansion */
++&cps_usb3_0 {
++	status = "okay";
++};
++
++/* CON10 on CP1 expansion */
++&cps_usb3_1 {
++	status = "okay";
 +};
 -- 
 2.7.4
