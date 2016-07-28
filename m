@@ -1,98 +1,37 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 11/18] ARM: mvebu: a39x: add missing nodes describing GPIO's
-Date: Thu, 28 Jul 2016 12:25:13 +0200
-Message-ID: <87bn1ikqk6.fsf@free-electrons.com>
-References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-	<1469105055-25181-13-git-send-email-jaz@semihalf.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: Sample led driver dts file
+Date: Thu, 28 Jul 2016 12:26:31 +0200
+Message-ID: <5799DDD7.8010103@samsung.com>
+References: <CAEwN+MBTMi29n30vC6SM=-_Db3WXxv_w81yrYZf0+Rcn=74eKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469105055-25181-13-git-send-email-jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> (Grzegorz
-	Jaszczyk's message of "Thu, 21 Jul 2016 14:44:08 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <CAEwN+MBTMi29n30vC6SM=-_Db3WXxv_w81yrYZf0+Rcn=74eKg@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Raul Piper <raulpblooper@gmail.com>
+Cc: kernelnewbies <kernelnewbies@kernelnewbies.org>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grzegorz,
- 
- On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> wrote:
+On 07/28/2016 12:03 PM, Raul Piper wrote:
+> Hi,
+> Can any one please send me the sample led driver dts file.I tried the
+> sample from the /documentation/devicetree/bindings/leds/<dts file> but
 
-> The whole Armada 39x SoC family of processors has GPIO's which all can be
-> supported with existing driver.
->
+These are documentation files. Have you tried to check the build
+instruction I mentioned in the previous reply?
 
-Change the prefix to "ARM: dts: mvebu: armada-39x:"
+> I am getting some parsing error from the dtc compiler.
+> is "#" required while including the .dtsi file inside the dts while
+> referring any include files.
 
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Yes, it is. Please refer to the files in e.g. arch/arm/boot/dts.
 
-Thanks,
+> Also can we dynamically buil teh dts file and push/copy it to kernel?
+> Reboot required?
 
-Gregory
-
-> Signed-off-by: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-39x.dtsi | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-> index 5e01438..0749878 100644
-> --- a/arch/arm/boot/dts/armada-39x.dtsi
-> +++ b/arch/arm/boot/dts/armada-39x.dtsi
-> @@ -55,6 +55,8 @@
->  	compatible = "marvell,armada390";
->  
->  	aliases {
-> +		gpio0 = &gpio0;
-> +		gpio1 = &gpio1;
->  		serial0 = &uart0;
->  		serial1 = &uart1;
->  		serial2 = &uart2;
-> @@ -274,6 +276,34 @@
->  				};
->  			};
->  
-> +			gpio0: gpio@18100 {
-> +				compatible = "marvell,orion-gpio";
-> +				reg = <0x18100 0x40>;
-> +				ngpios = <32>;
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-> +			};
-> +
-> +			gpio1: gpio@18140 {
-> +				compatible = "marvell,orion-gpio";
-> +				reg = <0x18140 0x40>;
-> +				ngpios = <28>;
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> +			};
-> +
->  			system-controller@18200 {
->  				compatible = "marvell,armada-390-system-controller",
->  					     "marvell,armada-370-xp-system-controller";
-> -- 
-> 1.8.3.1
->
+Please direct your DT related questions to devicetree@vger.kernel.org.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jacek Anaszewski
