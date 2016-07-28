@@ -1,98 +1,90 @@
-From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Thu, 28 Jul 2016 15:34:48 -0400
-Message-ID: <20160728193447.GJ15995@brightrain.aerifal.cx>
-References: <cover.1469688975.git.dalias@libc.org>
- <ed156509aed631486decf1828acb4f0afa61dd31.1469688975.git.dalias@libc.org>
- <alpine.DEB.2.11.1607281515330.19896@nanos>
- <20160728163748.GI15995@brightrain.aerifal.cx>
- <alpine.DEB.2.11.1607281837450.19896@nanos>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v4 2/2] spi: add driver for J-Core SPI controller
+Date: Thu, 28 Jul 2016 15:40:45 -0400
+Message-ID: <20160728194045.GK15995@brightrain.aerifal.cx>
+References: <cover.1469686300.git.dalias@libc.org>
+ <2a46090a5a7c177b7eca83f68406650844423e7f.1469686300.git.dalias@libc.org>
+ <20160728191153.GL11806@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.11.1607281837450.19896@nanos>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20160728191153.GL11806@sirena.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 28, 2016 at 06:44:15PM +0200, Thomas Gleixner wrote:
-> On Thu, 28 Jul 2016, Rich Felker wrote:
-> > On Thu, Jul 28, 2016 at 04:44:05PM +0200, Thomas Gleixner wrote:
-> > > > +	return ((u64)sechi << 32 | seclo) * NSEC_PER_SEC + nsec;
-> > > 
-> > > Wow, that's an expensive thing for a hotpath operation. You really don't have
-> > > binary readout register for that clock thingy?
-> > 
-> > Unforunately the clock is in sec64.nsec32 format instead of a flat
-> > nanoseconds count. Daniel Lezcano also suggested just using
-> > nanoseconds, which would still need some retry and arithmetic for
-> > adding seclo*NSEC_PER_SEC (otherwise it's problematic because it wraps
-> > at NSEC_PER_SEC rather than at a power of two) but that does put a
-> > hard upper bound on tickless sleep time of 4 sec. In practice it
-> > probably doesn't matter. Should I try that instead?
+On Thu, Jul 28, 2016 at 08:11:53PM +0100, Mark Brown wrote:
+> On Sun, Apr 03, 2016 at 05:12:45AM +0000, Rich Felker wrote:
 > 
-> Up to you. I was just wondering about the MUL.
-
-Well 2 people have raised the issue now so I think I'll go ahead and
-try changing it.
-
-> > > > +static notrace u64 jcore_sched_clock_read(void)
-> > > > +{
-> > > > +	return jcore_clocksource_read(jcore_cs);
-> > > 
-> > > Why don't you stuff the above code into this function?
-> > 
-> > I was trying to avoid code duplication, but I could if you think it
-> > really matters for performance.
+> > +config SPI_JCORE
+> > +	tristate "J-Core SPI Master"
+> > +	depends on OF
+> > +
 > 
-> Did not see where the other usage site was. Must have missed that. So keep it
-> as is and please add notrace to jcore_clocksource_read().
+> An architecture or SoC dependency with || COMPILE_TEST would be useful
+> for avoiding cluttering Kconfig for other users.  Though as this is in a
+> FPGA it's perhaps likely people will pick this up for other FPGAs so
+> perhaps a comment to that effect if it seems likely.
 
-Since we have to assume a singleton now anyway, I'm just going to
-switch the caller/callee relationship the other way around and make
-the sched version use static objects directly. This shought be
-slightly faster/smaller.
+Unlike some of the other SoC hardware (interrupt controller) that's
+more closely tied to the SH cpu trap behavior, the SPI master seems
+like something that would be nice and easy to reuse elsewhere. I don't
+feel strongly about it either way though; I can add the arch dep if
+you want.
 
-> > > Please convert this to the new state machine model of cpu
-> > > hotplug. CPU_STARTING will be gone very soon. Here is an example:
-> > > 
-> > > http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/?h=smp/hotplug&id=7e86e8bd8dd67649d176e08d8dfb90039f0a1e98
-> > 
-> > I don't think that's the commit you wanted to link -- it doesn't show
-> > a usage example.
->  
-> It's the conversion of a driver from the old to the new style, So it's an
-> example how to move your stuff to the new interface or am I missing something
-> here?
-
-I botched the link copy and paste. Sorry for the noise. I see it now.
-
-> > I've asked about this before in another context but didn't get an
-> > answer -- I'm a bit concerned that, from what I can tell, the new
-> > framework is a big singleton does assumes singletons in all the
-> > drivers that use it. In practice it doesn't matter as long as there's
-> > only one instance of the pit driver, but this seems architecturally
-> > really bad and like it's a time bomb waiting to blow up on us in the
-> > future. Am I missing something?
+> > +static void jcore_spi_baudrate(struct jcore_spi *hw, int speed)
+> > +{
+> > +	if (speed == hw->speed_hz) return;
+> > +	hw->speed_hz = speed;
+> > +	if (speed >= hw->clock_freq/2)
 > 
-> Most of the users are single instance. We have a dynamic interface for the
-> online callbacks and we might get one for the prep stage as well.
-> 
-> Now for the real core stuff like starting/dying we want explicit states and if
-> a driver really is multi instance then having a private list there is not
-> rocket science. Most of them have an instance list anyway.
+> Coding style, spaces around /.
 
-For now I'll just remove some of the dynamic allocation I added and
-simplify assuming a single instance. It doesn't make sense to be
-incurring costs for the nominal ability to have multiple instances
-when it doesn't actually work in the new framework (without a lot more
-per-driver code duplication that really should be in the framework)
-and when it's not needed anyway.
+OK.
+
+> > +	return count<len ? -EREMOTEIO : 0;
+> 
+> Again here, and please also write this as a normal if statement so it's
+> easier to read.
+
+OK.
+
+> > +	/* The SPI clock rate controlled via a configurable clock divider
+> > +	 * which is applied to the reference clock. A 50 MHz reference is
+> > +	 * most suitable for obtaining standard SPI clock rates, but some
+> > +	 * designs may have a different reference clock, and the DT must
+> > +	 * make the driver aware so that it can properly program the
+> > +	 * requested rate. If omitted, 50 MHz is assumed. */
+> > +	clock_freq = 50000000;
+> > +	of_property_read_u32(node, "clock-frequency", &clock_freq);
+> > +	hw->clock_freq = clock_freq;
+> 
+> Why are you not using the clock API for this?  Just require a clock and
+> use clk_get_rate() to find out what rate it is.
+
+I thought about that but I'm not familiar with it. I can try to figure
+it out quickly and test that approach; don't see any reason it
+shouldn't work. Would you insist on having full support for
+enabling/disabling the clk when it's in use, or would you be happy
+with treating it as a fixed clock that's always-on for now and
+possibly extending it with more functionality later if there's ever
+hardware where that's relevant/helpful?
+
+> > +	pdev->dev.dma_mask = 0;
+> 
+> Why are we doing this?  There's no DMA code...
+
+There will be later, but I can remove this for now if it's not needed.
+
+> > +	dev_info(&pdev->dev, "base %p, noirq\n", hw->base);
+> 
+> This is just adding noise to the boot, just remove it - it's useful to
+> log information we get from the silicon but things like the base address
+> don't really add anything and end up cluttering (and slowing) the boot
+> when everything does it.
+
+OK.
 
 Rich
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
