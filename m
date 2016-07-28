@@ -1,239 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] Revert "pstore/ram: add Device Tree bindings"
-Date: Thu, 28 Jul 2016 15:25:37 -0500
-Message-ID: <20160728202537.11961-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Hackmann <ghackmann@google.com>, Arnd Bergmann <arnd@arndb.de>
+From: Trent Piepho <tpiepho@kymetacorp.com>
+Subject: Re: [PATCH v16 6/6] ARM: socfpga: fpga bridge driver support
+Date: Thu, 28 Jul 2016 20:26:50 +0000
+Message-ID: <1469737696.30803.152.camel@rtred1test09.kymeta.local>
+References: <1454707803-27947-1-git-send-email-atull@opensource.altera.com>
+	 <1454707803-27947-7-git-send-email-atull@opensource.altera.com>
+	 <1465525089.15779.203.camel@rtred1test09.kymeta.local>
+	 <CAC+thW3U_vEre0DovmK7t_oiK5v1evZCBPqpahf+e6aCvmhqLA@mail.gmail.com>
+	 <alpine.DEB.2.02.1607281019100.1032@linuxheads99>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1607281019100.1032@linuxheads99>
+Content-Language: en-US
+Content-ID: <386CA76A829DEC49930BFD4EF15396EA@kymetacorp.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: Andrea Galbusera <gizero@gmail.com>, Rob Herring <robh+dt@kernel.org>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "monstr@monstr.eu" <monstr@monstr.eu>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, Matthew Gerlach <mge>
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 35da60941e44dbf57868e67686dd24cc1a33125a.
----
-WTF!
-
-I don't recall acking this nor have my comments (Arnd's really) been 
-addressed[1]. This should not have been merged yet.
-
-Rob
-
-[1] https://lkml.org/lkml/2016/6/21/969
-
- Documentation/devicetree/bindings/misc/ramoops.txt | 48 -----------
- Documentation/ramoops.txt                          |  6 +-
- fs/pstore/ram.c                                    | 95 +---------------------
- 3 files changed, 4 insertions(+), 145 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
-
-diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
-deleted file mode 100644
-index cd02cec..0000000
---- a/Documentation/devicetree/bindings/misc/ramoops.txt
-+++ /dev/null
-@@ -1,48 +0,0 @@
--Ramoops oops/panic logger
--=========================
--
--ramoops provides persistent RAM storage for oops and panics, so they can be
--recovered after a reboot. It is a backend to pstore, so this node is named
--"ramoops" after the backend, rather than "pstore" which is the subsystem.
--
--Parts of this storage may be set aside for other persistent log buffers, such
--as kernel log messages, or for optional ECC error-correction data.  The total
--size of these optional buffers must fit in the reserved region.
--
--Any remaining space will be used for a circular buffer of oops and panic
--records.  These records have a configurable size, with a size of 0 indicating
--that they should be disabled.
--
--At least one of "record-size", "console-size", "ftrace-size", or "pmsg-size"
--must be set non-zero, but are otherwise optional as listed below.
--
--
--Required properties:
--
--- compatible: must be "ramoops"
--
--- memory-region: phandle to a region of memory that is preserved between
--  reboots
--
--
--Optional properties:
--
--- ecc-size: enables ECC support and specifies ECC buffer size in bytes
--  (defaults to 0: no ECC)
--
--- record-size: maximum size in bytes of each dump done on oops/panic
--  (defaults to 0: disabled)
--
--- console-size: size in bytes of log buffer reserved for kernel messages
--  (defaults to 0: disabled)
--
--- ftrace-size: size in bytes of log buffer reserved for function tracing and
--  profiling (defaults to 0: disabled)
--
--- pmsg-size: size in bytes of log buffer reserved for userspace messages
--  (defaults to 0: disabled)
--
--- unbuffered: if present, use unbuffered mappings to map the reserved region
--  (defaults to buffered mappings)
--
--- no-dump-oops: if present, only dump panics (defaults to panics and oops)
-diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
-index 9264bca..5d86756 100644
---- a/Documentation/ramoops.txt
-+++ b/Documentation/ramoops.txt
-@@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
- 
- 2. Setting the parameters
- 
--Setting the ramoops parameters can be done in 3 different manners:
-+Setting the ramoops parameters can be done in 2 different manners:
-  1. Use the module parameters (which have the names of the variables described
-  as before).
-  For quick debugging, you can also reserve parts of memory during boot
-@@ -54,9 +54,7 @@ Setting the ramoops parameters can be done in 3 different manners:
-  kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
-  region at 128 MB boundary:
-  "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
-- 2. Use Device Tree bindings, as described in
-- Documentation/device-tree/bindings/misc/ramoops.txt.
-- 3. Use a platform device and set the platform data. The parameters can then
-+ 2. Use a platform device and set the platform data. The parameters can then
-  be set through that platform data. An example of doing that is:
- 
- #include <linux/pstore_ram.h>
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 47516a7..d9668c2 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -34,8 +34,6 @@
- #include <linux/slab.h>
- #include <linux/compiler.h>
- #include <linux/pstore_ram.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
- 
- #define RAMOOPS_KERNMSG_HDR "===="
- #define MIN_MEM_SIZE 4096UL
-@@ -460,98 +458,15 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
- 	return 0;
- }
- 
--static int ramoops_parse_dt_size(struct platform_device *pdev,
--				 const char *propname, u32 *value)
--{
--	u32 val32 = 0;
--	int ret;
--
--	ret = of_property_read_u32(pdev->dev.of_node, propname, &val32);
--	if (ret < 0 && ret != -EINVAL) {
--		dev_err(&pdev->dev, "failed to parse property %s: %d\n",
--			propname, ret);
--		return ret;
--	}
--
--	if (val32 > INT_MAX) {
--		dev_err(&pdev->dev, "%s %u > INT_MAX\n", propname, val32);
--		return -EOVERFLOW;
--	}
--
--	*value = val32;
--	return 0;
--}
--
--static int ramoops_parse_dt(struct platform_device *pdev,
--			    struct ramoops_platform_data *pdata)
--{
--	struct device_node *of_node = pdev->dev.of_node;
--	struct device_node *mem_region;
--	struct resource res;
--	u32 value;
--	int ret;
--
--	dev_dbg(&pdev->dev, "using Device Tree\n");
--
--	mem_region = of_parse_phandle(of_node, "memory-region", 0);
--	if (!mem_region) {
--		dev_err(&pdev->dev, "no memory-region phandle\n");
--		return -ENODEV;
--	}
--
--	ret = of_address_to_resource(mem_region, 0, &res);
--	of_node_put(mem_region);
--	if (ret) {
--		dev_err(&pdev->dev,
--			"failed to translate memory-region to resource: %d\n",
--			ret);
--		return ret;
--	}
--
--	pdata->mem_size = resource_size(&res);
--	pdata->mem_address = res.start;
--	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
--	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
--
--#define parse_size(name, field) {					\
--		ret = ramoops_parse_dt_size(pdev, name, &value);	\
--		if (ret < 0)						\
--			return ret;					\
--		field = value;						\
--	}
--
--	parse_size("record-size", pdata->record_size);
--	parse_size("console-size", pdata->console_size);
--	parse_size("ftrace-size", pdata->ftrace_size);
--	parse_size("pmsg-size", pdata->pmsg_size);
--	parse_size("ecc-size", pdata->ecc_info.ecc_size);
--
--#undef parse_size
--
--	return 0;
--}
--
- static int ramoops_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct ramoops_platform_data *pdata = dev->platform_data;
-+	struct ramoops_platform_data *pdata = pdev->dev.platform_data;
- 	struct ramoops_context *cxt = &oops_cxt;
- 	size_t dump_mem_sz;
- 	phys_addr_t paddr;
- 	int err = -EINVAL;
- 
--	if (dev_of_node(dev) && !pdata) {
--		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
--		if (!pdata) {
--			err = -ENOMEM;
--			goto fail_out;
--		}
--
--		err = ramoops_parse_dt(pdev, pdata);
--		if (err < 0)
--			goto fail_out;
--	}
--
- 	/* Only a single ramoops area allowed at a time, so fail extra
- 	 * probes.
- 	 */
-@@ -681,17 +596,11 @@ static int ramoops_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id dt_match[] = {
--	{ .compatible = "ramoops" },
--	{}
--};
--
- static struct platform_driver ramoops_driver = {
- 	.probe		= ramoops_probe,
- 	.remove		= ramoops_remove,
- 	.driver		= {
--		.name		= "ramoops",
--		.of_match_table	= dt_match,
-+		.name	= "ramoops",
- 	},
- };
- 
--- 
-2.9.2
+T24gVGh1LCAyMDE2LTA3LTI4IGF0IDEwOjIxIC0wNTAwLCBhdHVsbCB3cm90ZToNCj4gPiA+DQo+
+ID4gPiBUaGlzIGlzbid0IGdvaW5nIHdvcmsgaWYgbW9yZSB0aGFuIG9uZSBicmlkZ2UgaXMgdXNl
+ZC4gIEVhY2ggYnJpZGdlIGhhcw0KPiA+ID4gaXRzIG93biBwcml2IGFuZCB0aHVzIHByaXYtPmwz
+X3JlbWFwX3ZhbHVlLiAgRWFjaCBicmlkZ2UncyBwcml2IHdpbGwNCj4gPiA+IGhhdmUganVzdCB0
+aGUgYml0IGZvciBpdCdzIG93biByZW1hcCBzZXQuICBUaGUgMm5kIGJyaWRnZSB0byBiZSBlbmFi
+bGVkDQo+ID4gPiB3aWxsIHR1cm4gb2ZmIHRoZSAxc3QgYnJpZGdlIHdoZW4gaXQgcmUtd3JpdGUg
+dGhlIGwzIHJlZ2lzdGVyLg0KPiA+IA0KPiA+IEkgY2FuIGNvbmZpcm0gdGhpcyBpcyBleGFjdGx5
+IHdoYXQgaGFwcGVucyB3aXRoIHRhZw0KPiA+ICJyZWxfc29jZnBnYS00LjEuMjItbHRzaV8xNi4w
+Ni4wMl9wciIgb2Ygc29jZnBnYS00LjEuMjItbHRzaSBicmFuY2gNCj4gPiBmcm9tIGFsdGVyYS1v
+cGVuc291cmNlL2xpbnV4LXNvY2ZwZ2Egd2hpY2ggaW5jbHVkZXMgbW9yZSBvciBsZXNzIHRoZQ0K
+PiA+IGNvZGUgaW4gdGhpcyBwYXRjaC4gSWYgeW91IGhhdmUgMiBicmlkZ2VzIChsdy1ocHMyZnBn
+YSBhbmQgaHBzMmZwZ2EpDQo+ID4geW91IGVuZCB1cCB3aXRoIG9ubHkgb25lIG9mIHRoZW0gYmVp
+bmcgdmlzaWJsZS4gRWFzaWx5IHNwb3QgYnkgbG9nZ2luZw0KPiA+IGwzX3JlbWFwX3ZhbHVlIGJl
+aW5nIHBhc3NlZCB0byByZWdtYXBfd3JpdGUoKS4uLg0KPiA+IA0KPiANCj4gQW5hdG9saWoga2lu
+ZGx5IHByb3ZpZGVkIGEgcGF0Y2ggZm9yIHRoaXMgaXNzdWUuICBJJ2xsIHB1c2ggaXQNCj4gdG8g
+bXkgZ2l0aHViIHJlcG8gd2hlbiBJIGNhbi4NCg0KSSBzdGlsbCB0aGluayBhIGJldHRlciBzb2x1
+dGlvbiB3b3VsZCBiZSB0byBhbGxvdyB0aGUgc3lzY29uIGRyaXZlcg0KbWFuYWdlIHNoYXJlZCBh
+Y2Nlc3MuICBUaGUgcHVycG9zZSBvZiBzeXNjb24gaXMgdG8gbWFuYWdlIGFjY2VzcyB0byBhDQpz
+aGFyZWQgcmVzb3VyY2UgZnJvbSBtdWx0aXBsZSBkZXZpY2VzLiAgQW5kIHJlZ21hcCBhbHJlYWR5
+IGhhcyB0aGUNCmFiaWxpdHkgdG8gY2FjaGUgYSB3cml0ZS1vbmx5IHJlZ2lzdGVyIGFuZCBhbGxv
+dyB0aHJlYWQgc2FmZSBhY2Nlc3MgdG8NCm1vZGlmeSBiaXRzIGluIHNhaWQgcmVnaXN0ZXIuICBU
+aGUgcHJvYmxlbSBpcyBqdXN0IHRoZSBwYWluIG9mIHRyeWluZyB0bw0KZG8gYW55dGhpbmcgdG8g
+c3lzY29uIERUIGJpbmRpbmdzLiAgU29tZXRoaW5nIGxpa2UgIndyaXRlLW9ubHkiIGluIHRoZQ0K
+c3lzY29uIGJpbmRpbmcgdGhhdCBzZXRzIGEgY291cGxlIHZhbHVlcyBpbiB0aGUgcmVnbWFwX2Nv
+bmZpZyBpcyBhbGwNCnRoYXQncyBuZWNlc3NhcnkuDQoNCk1pZ2h0IGFzIHdlbGwgbm90IHVzZSBz
+eXNjb24gYXQgYWxsIGFuZCBoYXZlIHRoZSBicmlkZ2UgZHJpdmVyIG1hcCB0aGUNCmwzcmVncyBp
+dHNlbGYsIHNpbmNlIGl0IGRvZXNuJ3QgcmVhbGx5IHVzZSBzeXNjb24gZm9yIGFueXRoaW5nLg0K
