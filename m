@@ -1,67 +1,140 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 07/18] ARM: mvebu: a39x: update the SDHCI node on Armada 39x
-Date: Thu, 28 Jul 2016 11:39:14 +0200
-Message-ID: <87wpk6ksot.fsf@free-electrons.com>
-References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-	<1469105055-25181-8-git-send-email-jaz@semihalf.com>
+From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 4/8] drm/mediatek: add support for Mediatek SoC MT2701
+Date: Thu, 28 Jul 2016 17:41:05 +0800
+Message-ID: <1469698865.11841.94.camel@mtksdaap41>
+References: <1468577274-6178-1-git-send-email-yt.shen@mediatek.com>
+	 <1468577274-6178-5-git-send-email-yt.shen@mediatek.com>
+	 <1468997599.11841.49.camel@mtksdaap41>
+	 <1469529774.4678.34.camel@mtksdaap41>
+	 <1469613816.2470.50.camel@pengutronix.de>
+	 <1469671655.11841.85.camel@mtksdaap41>
+	 <1469690256.28644.42.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469105055-25181-8-git-send-email-jaz@semihalf.com> (Grzegorz
-	Jaszczyk's message of "Thu, 21 Jul 2016 14:44:03 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grzegorz Jaszczyk <jaz@semihalf.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, mw@semihalf.com, alior@marvell.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469690256.28644.42.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mao Huang <littlecvr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grzegorz,
- 
- On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
+Hi, YT:
 
-> Commit 1140011ee9d9 ("mmc: sdhci-pxav3: Modify clock settings
-> for the SDR50 and DDR50 modes") has extended the Device Tree
-> binding used to describe PXAv3 SDHCI controllers in order to be
-> able to use the SDR50 and DDR50 modes.
->
-> This commit updates the Device Tree description of the Armada
-> 39x SDHCI controller in other to take advantage of this
-> functionality.
->
-> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 
-Change the prefix title to "ARM: dts: mvebu: armada-39x". With this:
+On Thu, 2016-07-28 at 15:17 +0800, YT Shen wrote:
+> Hi Philipp, CK,
+> 
+> On Thu, 2016-07-28 at 10:07 +0800, CK Hu wrote:
+> > Hi, YT:
+> > 
+> > On Wed, 2016-07-27 at 12:03 +0200, Philipp Zabel wrote:
+> > > Am Dienstag, den 26.07.2016, 18:42 +0800 schrieb YT Shen:
+> > > > Hi CK,
+> > > > 
+> > > > On Wed, 2016-07-20 at 14:53 +0800, CK Hu wrote:
+> > > > > Hi, YT:
+> > > > > 
+> > > > > Some comments inline.
+> > > > > 
+> > > > > On Fri, 2016-07-15 at 18:07 +0800, YT Shen wrote:
+> > > > > > This patch add support for the Mediatek MT2701 DISP subsystem.
+> > > > > > There is only one OVL engine in MT2701.
+> > > > > > 
+> > > > > > Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > > > ---
+> > > > > >  drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |    6 ++++
+> > > > > >  drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |    6 ++++
+> > > > > >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c      |   41 +++++++++++++++++++++++++++
+> > > > > >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |    7 +++++
+> > > > > >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |    1 +
+> > > > > >  drivers/gpu/drm/mediatek/mtk_drm_drv.c      |   31 ++++++++++++++++++++
+> > > > > >  6 files changed, 92 insertions(+)
+> > > > > > 
+> > > > > 
+> > > > > [snip...]
+> > > > > 
+> > > > > >  
+> > > > > >  static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
+> > > > > > +	{ .compatible = "mediatek,mt2701-disp-ovl",   .data = (void *)MTK_DISP_OVL },
+> > > > > >  	{ .compatible = "mediatek,mt8173-disp-ovl",   .data = (void *)MTK_DISP_OVL },
+> > > > > > +	{ .compatible = "mediatek,mt2701-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
+> > > > > >  	{ .compatible = "mediatek,mt8173-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
+> > > > > > +	{ .compatible = "mediatek,mt2701-disp-wdma",  .data = (void *)MTK_DISP_WDMA },
+> > > > > 
+> > > > > Is WDMA different from MT8173 to MT2701. If they are the same, you need
+> > > > > not to add compatible of 'mediatek,mt2701-disp-wdma' because use
+> > > > > 'mediatek,mt8173-disp-wdma' is enough.
+> > > > Yes, the hardware has differences, so we need add new compatible
+> > > > 'mt2701-disp-wdma'
+> > > 
+> > > It would be nice if you could add a short paragraph to the patch
+> > > description about what the hardware differences are (probably just
+> > > changed register layout in most cases).
+> Thanks for the suggestions, we will add more descriptions in the future.
+> 
+> > 
+> > If you don't want to add description, you may separate the modification
+> > of OVL, RDMA, WDMA, PWM to different patch. And you send patch of OVL
+> > and RDMA first because you have related code modification for these two.
+> > You temporarily treat WDMA and PWM as MT8173 and it works. And one day
+> > you need to modify code of WDMA and PWM for MT2701, then you send the
+> > patch of WDMA and PWM and you need not to add any description because we
+> > can find out the difference from source code.
+> 
+> The display module connections is shown in mt2701_mtk_ddp_main[] and
+> mt2701_mtk_ddp_ext[].
+> OVL -> RDMA -> COLOR -> BLS(pwm) -> DSI
+> RDMA -> DPI
+> 
+> This patch series mainly focus on DSI support for MT2701 SoC and the
+> basic functions.  The BLS(pwm) and DPI parts are not included here.
+> 
+> We will remove 'mt2701-disp-wdma'. We didn't implement its driver and it
+> is unused now.
+> 
+> For the pwm part, we need the device node to establish the display
+> module connections.  The pwm compatible string is described in
+> "dt-bindings: pwm: Add MediaTek display PWM bindings" [1] and the
+> control is implemented in "pwm: Add MediaTek MT2701 display PWM driver
+> support" [2].
+> 
+> For the dpi part, we need the device node to establish the display
+> module connections.  The dpi patch will be in another patch series,
+> split out from "drm/mediatek: fix the wrong pixel clock when resolution
+> is 4K" [3].
 
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+For dpi part, I think you need not to include it in this patch. You can
+send it with the MT2701 DPI patch. For module connection, you can use
+"mediatek,mt8173-dpi" and it works. If you want to add it in this patch,
+please describe the difference of mt8173-dpi and mt2701-dpi in this
+patch.
 
-Thanks,
+> 
+> 
+> [1] https://patchwork.kernel.org/patch/9222997/
+> [2] https://patchwork.kernel.org/patch/9223001/
+> [3] https://patchwork.kernel.org/patch/9249471/ 
+> 
+> Regards,
+> yt.shen
+> 
+> > 
+> > > 
+> > > regards
+> > > Philipp
+> > > 
+> > 
+> > Regards,
+> > CK
+> > 
+> 
+> 
 
-Gregory
-> ---
->  arch/arm/boot/dts/armada-39x.dtsi | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-> index dc6efd3..cb66f20 100644
-> --- a/arch/arm/boot/dts/armada-39x.dtsi
-> +++ b/arch/arm/boot/dts/armada-39x.dtsi
-> @@ -380,7 +380,10 @@
->  
->  			sdhci@d8000 {
->  				compatible = "marvell,armada-380-sdhci";
-> -				reg = <0xd8000 0x1000>, <0xdc000 0x100>;
-> +				reg-names = "sdhci", "mbus", "conf-sdio3";
-> +				reg = <0xd8000 0x1000>,
-> +					<0xdc000 0x100>,
-> +					<0x18454 0x4>;
->  				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&gateclk 17>;
->  				mrvl,clk-delay-cycles = <0x1F>;
-> -- 
-> 1.8.3.1
->
+Regards,
+CK
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
