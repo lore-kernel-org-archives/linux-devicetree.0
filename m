@@ -1,155 +1,53 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v5 10/10] arm: dts: mt2701: Add display subsystem related nodes for MT2701
-Date: Thu, 28 Jul 2016 17:28:04 +0800
-Message-ID: <1469698084-20185-11-git-send-email-yt.shen@mediatek.com>
-References: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v2 0/7] power: act8945a_charger: Improvements
+Date: Thu, 28 Jul 2016 09:36:35 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641018CCCBFB3@penmbx01>
+References: <1467076970-12206-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, YT Shen <yt.shen@mediatek.com>, CK Hu <ck.hu@mediatek.com>, Mao Huang <littlecvr@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, emil.l.velikov@gmail.com, thierry.reding@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1467076970-12206-1-git-send-email-wenyou.yang@atmel.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device nodes for the DISP function blocks for MT2701
+Hello everyone
 
-Signed-off-by: YT Shen <yt.shen@mediatek.com>
----
- arch/arm/boot/dts/mt2701.dtsi |  100 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 100 insertions(+)
+Do you have any comments for this patch set?
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 363de0d..7da9310 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -24,6 +24,11 @@
- 	compatible = "mediatek,mt2701";
- 	interrupt-parent = <&sysirq>;
- 
-+	aliases {
-+		rdma0 = &rdma0;
-+		rdma1 = &rdma1;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -171,6 +176,16 @@
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
- 	};
- 
-+	mipi_tx0: mipi-dphy@10010000 {
-+		compatible = "mediatek,mt2701-mipi-tx";
-+		reg = <0 0x10010000 0 0x90>;
-+		clocks = <&clk26m>;
-+		clock-output-names = "mipi_tx0_pll";
-+		#clock-cells = <0>;
-+		#phy-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	sysirq: interrupt-controller@10200100 {
- 		compatible = "mediatek,mt2701-sysirq",
- 			     "mediatek,mt6577-sysirq";
-@@ -255,6 +270,68 @@
- 		status = "disabled";
- 	};
- 
-+	ovl@14007000 {
-+		compatible = "mediatek,mt2701-disp-ovl";
-+		reg = <0 0x14007000 0 0x1000>;
-+		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_OVL>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	rdma0: rdma@14008000 {
-+		compatible = "mediatek,mt2701-disp-rdma";
-+		reg = <0 0x14008000 0 0x1000>;
-+		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_RDMA>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	wdma@14009000 {
-+		compatible = "mediatek,mt2701-disp-wdma";
-+		reg = <0 0x14009000 0 0x1000>;
-+		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_WDMA>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	bls@1400a000 {
-+		compatible = "mediatek,mt2701-disp-pwm";
-+		reg = <0 0x1400a000 0 0x1000>;
-+		interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_BLS>;
-+	};
-+
-+	color@1400b000 {
-+		compatible = "mediatek,mt2701-disp-color";
-+		reg = <0 0x1400b000 0 0x1000>;
-+		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_COLOR>;
-+	};
-+
-+	dsi0: dsi@1400c000 {
-+		compatible = "mediatek,mt2701-dsi";
-+		reg = <0 0x1400c000 0 0x1000>;
-+		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DSI_ENGINE>, <&mmsys CLK_MM_DSI_DIG>,
-+			 <&mipi_tx0>;
-+		clock-names = "engine", "digital", "hs";
-+		mediatek,syscon-dsi = <&mmsys 0x138>;
-+		mediatek,ssc-range = <5>;
-+		phys = <&mipi_tx0>;
-+		phy-names = "dphy";
-+		status = "disabled";
-+	};
-+
-+	mutex: mutex@1400e000 {
-+		compatible = "mediatek,mt2701-disp-mutex";
-+		reg = <0 0x1400e000 0 0x1000>;
-+		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_MUTEX_32K>;
-+	};
-+
- 	larb0: larb@14010000 {
- 		compatible = "mediatek,mt2701-smi-larb";
- 		reg = <0 0x14010000 0 0x1000>;
-@@ -265,6 +342,29 @@
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
- 	};
- 
-+	rdma1: rdma@14012000 {
-+		compatible = "mediatek,mt2701-disp-rdma";
-+		reg = <0 0x14012000 0 0x1000>;
-+		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	dpi0: dpi@14014000 {
-+		compatible = "mediatek,mt2701-dpi";
-+		reg = <0 0x14014000 0 0x1000>;
-+		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DPI1_DIGL>,
-+			 <&mmsys CLK_MM_DPI1_ENGINE>,
-+			 <&topckgen CLK_TOP_DPI1_SEL>,
-+			 <&topckgen CLK_TOP_TVDPLL>,
-+			 <&topckgen CLK_TOP_TVDPLL_D2>,
-+			 <&topckgen CLK_TOP_TVDPLL_D4>;
-+		clock-names = "pixel", "engine", "sel","div1","div2","div4";
-+		status = "disabled";
-+	};
-+
- 	imgsys: syscon@15000000 {
- 		compatible = "mediatek,mt2701-imgsys", "syscon";
- 		reg = <0 0x15000000 0 0x1000>;
--- 
-1.7.9.5
+Best Regards,
+Wenyou Yang
+________________________________________
+From: Wenyou Yang [wenyou.yang@atmel.com]
+Sent: Tuesday, June 28, 2016 9:22
+To: Sebastian Reichel; Dmitry Eremin-Solenikov; David Woodhouse; Rob Herring; Pawel Moll; Mark Brown; Ian Campbell; Kumar Gala
+Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Ferre, Nicolas; linux-pm@vger.kernel.org; Yang, Wenyou
+Subject: [PATCH v2 0/7] power: act8945a_charger: Improvements
+
+This patch series is used to improve the act8945a-charger, such as
+improve the way to check the status, fix the power supply type
+property, add the status change update, and add more properties:
+capacity level property and max current property.
+
+Changes in v2:
+ - Add missing ret declaration.
+
+Wenyou Yang (7):
+  power: act8945a_charger: Remove "battery_temperature"
+  power: act8945a_charger: Improve
+  power: act8945a_charger: Add status change update support
+  power: act8945a_charger: Fix the power supply type
+  power: act8945a_charger: Add capacity level property
+  power: act8945a_charger: Add max current property
+  doc: bindings: act8945a-charger: Update properties
+
+ .../devicetree/bindings/power/act8945a-charger.txt |   6 +-
+ drivers/power/act8945a_charger.c                   | 371 ++++++++++++++++++---
+ 2 files changed, 337 insertions(+), 40 deletions(-)
+
+--
+2.7.4
+
