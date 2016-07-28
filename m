@@ -1,40 +1,35 @@
 From: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PATCH v3] arm64: dts: mt8173: add mmsel clocks for 4K support
-Date: Thu, 28 Jul 2016 10:47:17 +0800
-Message-ID: <1469674037.29230.0.camel@mtksdaap41>
+Date: Thu, 28 Jul 2016 10:49:25 +0800
+Message-ID: <1469674165.29230.1.camel@mtksdaap41>
 References: <1469607914-64831-1-git-send-email-bibby.hsieh@mediatek.com>
-	 <1469611556.11841.77.camel@mtksdaap41>
+	 <1469611964.2470.30.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469611556.11841.77.camel@mtksdaap41>
+In-Reply-To: <1469611964.2470.30.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Junzhi Zhao <ju>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun@m>
 List-Id: devicetree@vger.kernel.org
 
-Hi, CK,
+Hi, Philipp,
 
 Thanks for your comments.
 
-On Wed, 2016-07-27 at 17:25 +0800, CK Hu wrote:
-> Hi, Bibby:
-> 
-> On Wed, 2016-07-27 at 16:25 +0800, Bibby Hsieh wrote:
+On Wed, 2016-07-27 at 11:32 +0200, Philipp Zabel wrote:
+> Am Mittwoch, den 27.07.2016, 16:25 +0800 schrieb Bibby Hsieh:
 > > If MT8173 can support HDMI 4K resoultion, the
 > > VENCPLL should be configured to 800MHZ.
 > > We didn't set VENCPLL directly, we set the
 > > mm_sel to 400MHz statically in the board device tree.
 > 
-> You may rewrite the description as below:
+> Maybe add a comment that the board .dts file should override the clock
+> rate property with the higher VENCPLL frequency the board supports HDMI
+> 4K resolution.
 > 
-> 'To support HDMI 4K resolution, mmsys need clock mm_sel to be 400MHz.'
-> 
-> You need not to mention VENCPLL because it's controlled by clock driver.
-> 
-Ok, I will modify that.
-> > 
+Ok, I will add that.
 > > Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > ---
 > > Changes since v2:
@@ -60,15 +55,19 @@ Ok, I will modify that.
 > > +			clocks = <&topckgen CLK_TOP_MM_SEL>;
 > >  			#clock-cells = <1>;
 > > +			clock-frequency  = <400000000>;
-> >  		};
-> >  
-> >  		ovl0: ovl@1400c000 {
 > 
-> Regards,
-> CK
+> According to the "Assigned clock parents and rates" section in
+> Documentation/devicetree/bindings/clock/clock-bindings.txt,
+> this should be:
+> 			assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
+> 			assigned-clock-rates = <400000000>;
+> 
+Ok, will do.
+> regards
+> Philipp
 > 
 
-
+-- 
 Bibby
 
 --
