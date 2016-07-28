@@ -1,85 +1,86 @@
-From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 4/8] drm/mediatek: add support for Mediatek SoC MT2701
-Date: Thu, 28 Jul 2016 10:07:35 +0800
-Message-ID: <1469671655.11841.85.camel@mtksdaap41>
-References: <1468577274-6178-1-git-send-email-yt.shen@mediatek.com>
-	 <1468577274-6178-5-git-send-email-yt.shen@mediatek.com>
-	 <1468997599.11841.49.camel@mtksdaap41>
-	 <1469529774.4678.34.camel@mtksdaap41>
-	 <1469613816.2470.50.camel@pengutronix.de>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH 1/1] power: sbs-manager: Add interrupt support and battery
+ detect gpios
+Date: Thu, 28 Jul 2016 10:11:31 +0800
+Message-ID: <4553a3f5-55cc-807d-7f34-11b4c7e11a0b@electromag.com.au>
+References: <1469433003-68564-1-git-send-email-preid@electromag.com.au>
+ <1469433003-68564-2-git-send-email-preid@electromag.com.au>
+ <20160727144609.GA12462@rob-hp-laptop> <1469653707.27666.22.camel@amnesix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469613816.2470.50.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mao Huang <littlecvr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1469653707.27666.22.camel@amnesix>
+Sender: linux-pm-owner@vger.kernel.org
+To: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>, Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, YT:
+G'day Karl / Rob,
 
-On Wed, 2016-07-27 at 12:03 +0200, Philipp Zabel wrote:
-> Am Dienstag, den 26.07.2016, 18:42 +0800 schrieb YT Shen:
-> > Hi CK,
-> > 
-> > On Wed, 2016-07-20 at 14:53 +0800, CK Hu wrote:
-> > > Hi, YT:
-> > > 
-> > > Some comments inline.
-> > > 
-> > > On Fri, 2016-07-15 at 18:07 +0800, YT Shen wrote:
-> > > > This patch add support for the Mediatek MT2701 DISP subsystem.
-> > > > There is only one OVL engine in MT2701.
-> > > > 
-> > > > Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > > ---
-> > > >  drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |    6 ++++
-> > > >  drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |    6 ++++
-> > > >  drivers/gpu/drm/mediatek/mtk_drm_ddp.c      |   41 +++++++++++++++++++++++++++
-> > > >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |    7 +++++
-> > > >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |    1 +
-> > > >  drivers/gpu/drm/mediatek/mtk_drm_drv.c      |   31 ++++++++++++++++++++
-> > > >  6 files changed, 92 insertions(+)
-> > > > 
-> > > 
-> > > [snip...]
-> > > 
-> > > >  
-> > > >  static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
-> > > > +	{ .compatible = "mediatek,mt2701-disp-ovl",   .data = (void *)MTK_DISP_OVL },
-> > > >  	{ .compatible = "mediatek,mt8173-disp-ovl",   .data = (void *)MTK_DISP_OVL },
-> > > > +	{ .compatible = "mediatek,mt2701-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
-> > > >  	{ .compatible = "mediatek,mt8173-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
-> > > > +	{ .compatible = "mediatek,mt2701-disp-wdma",  .data = (void *)MTK_DISP_WDMA },
-> > > 
-> > > Is WDMA different from MT8173 to MT2701. If they are the same, you need
-> > > not to add compatible of 'mediatek,mt2701-disp-wdma' because use
-> > > 'mediatek,mt8173-disp-wdma' is enough.
-> > Yes, the hardware has differences, so we need add new compatible
-> > 'mt2701-disp-wdma'
-> 
-> It would be nice if you could add a short paragraph to the patch
-> description about what the hardware differences are (probably just
-> changed register layout in most cases).
+On 28/07/2016 05:08, Karl-Heinz Schneider wrote:
+> Am Mittwoch, den 27.07.2016, 09:46 -0500 schrieb Rob Herring:
+>> On Mon, Jul 25, 2016 at 03:50:03PM +0800, Phil Reid wrote:
+>>> This patch added irq support for the SMBALERT pin and notification of
+>>> the battery removal / insertion. The sbs manager would typically be
+>>> used with the corresponding sbs-battery driver that currently uses a
+>>> gpio input for battery presence and interrupt. To remain compatible with
+>>> that existing driver this patch implements GPIO inputs with interrupt
+>>> support. IRQ masking is performed in software as the hardware does not
+>>> support masking of notifications from each battery.
+>>> In addition a power_supply change notification is generated for the sbs
+>>> manager device when the AC present flag is changed.
+>>> Tested with LTC1760 and dual sbs compatible batteries.
+>>
+>> Please don't submit a binding and immediately turn around and add to it.
+>> While that is often preferred for drivers or kernel features, bindings
+>> should be complete as possible and not evolve. Combine this with your
+>> previous patch add sbs-mgr if that hasn't been accepted yet.
+That was from Karl. I'm happy to have this combined if he is.
 
-If you don't want to add description, you may separate the modification
-of OVL, RDMA, WDMA, PWM to different patch. And you send patch of OVL
-and RDMA first because you have related code modification for these two.
-You temporarily treat WDMA and PWM as MT8173 and it works. And one day
-you need to modify code of WDMA and PWM for MT2701, then you send the
-patch of WDMA and PWM and you need not to add any description because we
-can find out the difference from source code.
+>>
+>> IMO, the sbs-bat should just be a interrupt and making it and this
+>> binding a GPIO is overkill. Since batteries nodes using this will be
+>> new, there's no reason the driver can't be updated to support
+>> interrupts.
+>>
+>> Also, I'm not even convinced you need the sbs-mgr to be an
+>> interrupt-controller. Is this anything more that just wire-OR'ed
+>> interrupt lines which can be handled as shared irq? Does reading
+>> SBSM_CMD_BATSYSSTATE have a side effect for example?
+> Yes, according to the Datasheed it clears SMBALERT#.
 
-> 
-> regards
-> Philipp
-> 
+Yes you need to service the Ltc1760 for the irq to clear. reading the batteries does nothing.
+Even without any batteries present  you may get an irq and need to service it.
+eg: I have a system with 2 ltc1760 with a total of 4 batteries.
+So if only one battery is present and AC power is connected then both ltc1760 will generate
+a notification on SMBALERT. One which has no batteries present.
 
-Regards,
-CK
+>>
+>> Rob
+> SMBALERT is electrically an active low line which is pulled down by one
+> or more devices needing attention, isn't it? The I2C host driver or some
+> other instance need to implement support for it, the device driver may
+> register some sort of handler function (e.g by implementing struct
+> i2c_driver.alert function)
+>
+> That's my understanding of the SMBALERT.
+>
+> I once tried to implement the alert function and see if it get's called.
+> It didn't. At that point I didn't investigate further.
+>
+> So, do I miss something or is that part incomplete/broken? I can only
+> find lm90 and ipmi_ssif which implement the callback.
+>
+I wasn't aware of that functionality. Most devices seem to use a GPIO to
+obtain irq support. Which I guess is the most flexible solution.
+I think SMBALERT also support a mechanism to query all devices on the bus to determine
+which device address is asserting the irq. Not sure how this would work with multiplexed
+address buses (eg dual ltc1760) and devices with the same address.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Open to suggestions
+
+-- 
+Regards
+Phil Reid
+
