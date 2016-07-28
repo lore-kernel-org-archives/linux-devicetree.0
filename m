@@ -1,59 +1,53 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: rt5659: Add mclk controls
-Date: Thu, 28 Jul 2016 16:57:32 +0100
-Message-ID: <20160728155732.GG11806@sirena.org.uk>
-References: <1469660568-3511-1-git-send-email-nicoleotsuka@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 14/18] ARM: mvebu: add support for the Armada 395 SoC family
+Date: Thu, 28 Jul 2016 10:59:38 -0500
+Message-ID: <CAL_Jsq+Or4=Oa5+OMw5pZh6CBgHktiTL89UcZcw6pJ1VBWB8cg@mail.gmail.com>
+References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
+ <1469105055-25181-16-git-send-email-jaz@semihalf.com> <20160721221605.GA21883@rob-hp-laptop>
+ <CAH76GKOidxFZ7R1pQZ2W9BRBCxEnLXNHQGrXbAUmouozBUj51Q@mail.gmail.com>
+ <CAL_JsqJeObuS8OWeErRA5MX-SrMtu_254A-LtP9-A=xdPO7p1Q@mail.gmail.com>
+ <20160725155050.3aee974e@free-electrons.com> <CAL_JsqL=bkzhjOTcOCeGNvKsAfYg0D=CypZs4sCsQ01pnbitoQ@mail.gmail.com>
+ <20160725202209.5fae4d98@free-electrons.com> <87y44mj9h8.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hX3v94LCWtOgt2h1"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1469660568-3511-1-git-send-email-nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87y44mj9h8.fsf@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Marcin Wojtas <mw@semihalf.com>, Lior Amsalem <alior@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 28, 2016 at 6:19 AM, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
+> Hi Rob,
+>
+>  On lun., juil. 25 2016, Thomas Petazzoni <thomas.petazzoni@free-electrons.com> wrote:
+>
+>> Hello,
+>>
+>> On Mon, 25 Jul 2016 10:12:43 -0500, Rob Herring wrote:
+>>
+>>> Yes, I get that, but that is only meaningful if you want to run an OS
+>>> that is only aware of 395 on a 398 SoC/board (though I'd guess the 390
+>>> compat is enough for that). Otherwise, that property is not really
+>>> meaningful as the additional nodes are enough to handle what is the
+>>> superset.
+>>>
+>>> I would agree both are fine if both chips are in fact the same die,
+>>> just fused or packaged differently. I've seen a lot of chips that are
+>>> supposed to be sub/supersets of each other, but have different errata
+>>> lists because they are different die.
+>>
+>> Unfortunately HW vendors are rarely willing to publicly indicate whether
+>> the different chips in their families are actually the same die fused
+>> differently, or really different dies.
 
---hX3v94LCWtOgt2h1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Then it is safest to assume they are different.
 
-On Wed, Jul 27, 2016 at 04:02:48PM -0700, Nicolin Chen wrote:
+> So do you want that we keep both "marvell,armada398" and
+> "marvell,armada395" or do you xant we use only "marvell,armada398" ?
 
-> The codec driver should control the mclk. So this patch adds this support.
+For the 398 based boards, I think it should only have
+"marvell,armada398" and don't add "marvell,armada395".
 
-> +	/* Check if MCLK provided */
-> +	rt5659->mclk = devm_clk_get(&i2c->dev, "mclk");
-> +	if (IS_ERR(rt5659->mclk)) {
-> +		if (PTR_ERR(rt5659->mclk) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		/* Otherwise mark the mclk pointer to NULL */
-> +		rt5659->mclk = NULL;
-> +	}
-
-This device seems to be used on x86 systems so we'll need to ensure that
-they register clocks for this.  They really should set this up using
-quirks keyed off DMI information or similar so it's hidden from other
-systems.
-
---hX3v94LCWtOgt2h1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXmitqAAoJECTWi3JdVIfQpp4H/19ATmfl1VRcjaF7lc14wijU
-bFCBPOLgOTZLlYWp5hY6Q+5ppTZxbheQ0X7uVzXMGt2Sh9OarDa+/J2wZ3XSDfFf
-ENQ3FdNab2llVZns0qw/nuEhQyVQnJnJndD6KGlY5l5ESXUUr4Emy7Pi8Z95rTXG
-TBc1vpgNFN6PA4UsugDdGO8Zwn10y9cAVYZnQ+6R4cb4Otic+emugOlgN1K5WxXd
-yN9LqJoRynOj+b/a3AuSe2Y++4pHD7jmGD+gf0MeLz5nz6QhPYyuvx2lSSXhhcC7
-/kIZ1WcusOs1WzyI2PAt6Dwx6NzFoKpe6m0/LrR0ORB58pL2u6y94SFh/HIa0Aw=
-=t2qj
------END PGP SIGNATURE-----
-
---hX3v94LCWtOgt2h1--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
