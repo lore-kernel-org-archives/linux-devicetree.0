@@ -1,76 +1,46 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] spi: add driver for J-Core SPI controller
-Date: Thu, 28 Jul 2016 20:51:25 +0100
-Message-ID: <20160728195125.GN11806@sirena.org.uk>
-References: <cover.1469686300.git.dalias@libc.org>
- <2a46090a5a7c177b7eca83f68406650844423e7f.1469686300.git.dalias@libc.org>
- <20160728191153.GL11806@sirena.org.uk>
- <20160728194045.GK15995@brightrain.aerifal.cx>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v5 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Thu, 28 Jul 2016 16:00:47 -0400
+Message-ID: <20160728200047.GL15995@brightrain.aerifal.cx>
+References: <cover.1469688975.git.dalias@libc.org>
+ <ed156509aed631486decf1828acb4f0afa61dd31.1469688975.git.dalias@libc.org>
+ <alpine.DEB.2.11.1607281515330.19896@nanos>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KsSkVHHhotaZRe1D"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160728194045.GK15995-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.11.1607281515330.19896@nanos>
+Sender: linux-sh-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 28, 2016 at 04:44:05PM +0200, Thomas Gleixner wrote:
+> > +static int jcore_pit_cpu_notify(struct notifier_block *self,
+> > +			unsigned long action, void *hcpu)
+> > +{
+> > +	struct jcore_pit_nb *nb = container_of(self, struct jcore_pit_nb, nb);
+> > +	switch (action & ~CPU_TASKS_FROZEN) {
+> > +	case CPU_STARTING:
+> > +		jcore_pit_local_init(this_cpu_ptr(nb->pit_percpu));
+> > +		break;
+> > +	}
+> > +	return NOTIFY_OK;
+> 
+> Please convert this to the new state machine model of cpu
+> hotplug. CPU_STARTING will be gone very soon. Here is an example:
+> 
+> http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/?h=smp/hotplug&id=7e86e8bd8dd67649d176e08d8dfb90039f0a1e98
 
---KsSkVHHhotaZRe1D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Trying this change now and I'm getting hangs inside
+cpuhp_invoke_ap_callback between wake_up_process and
+wait_for_completion. I suspect it's not possible to run a scheduled
+task yet because there's no timer yet, or something like that. Do I
+need further infrastructure from tip that's not upstream yet in order
+to test this? I just rebased on linus/master and still have the same
+problem, but none of the other driver changes are in Linus's tree yet.
+Following the other drivers in tip (again, I don't have any of these
+in my tree), I put the new state between CPUHP_AP_SCHED_STARTING and
+CPUHP_AP_NOTIFY_STARTING; is this correct?
 
-On Thu, Jul 28, 2016 at 03:40:45PM -0400, Rich Felker wrote:
-> On Thu, Jul 28, 2016 at 08:11:53PM +0100, Mark Brown wrote:
-
-> > An architecture or SoC dependency with || COMPILE_TEST would be useful
-> > for avoiding cluttering Kconfig for other users.  Though as this is in a
-> > FPGA it's perhaps likely people will pick this up for other FPGAs so
-> > perhaps a comment to that effect if it seems likely.
-
-> Unlike some of the other SoC hardware (interrupt controller) that's
-> more closely tied to the SH cpu trap behavior, the SPI master seems
-> like something that would be nice and easy to reuse elsewhere. I don't
-> feel strongly about it either way though; I can add the arch dep if
-> you want.
-
-I guess it depends if anyone is actually doing that or not, if nobody is
-the dependency would be better.
-
-> > Why are you not using the clock API for this?  Just require a clock and
-> > use clk_get_rate() to find out what rate it is.
-
-> I thought about that but I'm not familiar with it. I can try to figure
-> it out quickly and test that approach; don't see any reason it
-> shouldn't work. Would you insist on having full support for
-> enabling/disabling the clk when it's in use, or would you be happy
-> with treating it as a fixed clock that's always-on for now and
-> possibly extending it with more functionality later if there's ever
-> hardware where that's relevant/helpful?
-
-It's fine to just enable it at startup and leave it on, though the
-runtime PM ops are trivial and you can set auto_runtime_pm to have the
-core do the gets and puts.
-
---KsSkVHHhotaZRe1D
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXmmI8AAoJECTWi3JdVIfQcUsH/24azC7orxSkRAiAbOE2fiDY
-s9reR3nHmds+Lv+jCtXgAf23W3KXVivaBAd8tNz5jXQyMDBeoqA1pgp5iDyL+/7C
-WICMdYwkuZ3dWzsuPZB85Yu/1SN+pia9NkJDS4+m4ODJA/nmIA0/5G1ZR6dj5Hxr
-L1uWF2pH2685PskB+AhGAqNn3SIJqeOSjy2O178uMKvY99s2Bp2sVFTUW4fk3K/c
-T961zPilop0+csiYDyYD9OzGKN9RUlwSb1Me1dIDbJk7Cj49SMR6ZMqcWL8bkHbA
-8rzsFQ0sbSc0GALjQKtK0VPHcPHLEgMRwnuUfTAdOjr6//3AlcHZiUeA1nxZkOo=
-=6WQn
------END PGP SIGNATURE-----
-
---KsSkVHHhotaZRe1D--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rich
