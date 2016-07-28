@@ -1,206 +1,281 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Changed: sunxi-ng clock code - NKMP clock
- implementation is wrong
-Date: Thu, 28 Jul 2016 23:00:11 +0200
-Message-ID: <20160728210011.GJ6682@lukather>
-References: <20160625034511.7966-1-megous@megous.com>
- <20160625034511.7966-7-megous@megous.com>
- <20160630204001.GC5485@lukather>
- <0b71ed7e-98c9-109e-85e6-ceb95131d88a@megous.com>
- <20160715085356.GR4761@lukather>
- <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
- <20160721094852.GI5993@lukather>
- <c46d1af5-9410-402a-7144-48b396ef6da7@megous.com>
- <20160726063253.GW7419@lukather>
- <e1b8127f-c422-46ab-384b-aeee85aa940b@megous.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Revert "pstore/ram: add Device Tree bindings"
+Date: Thu, 28 Jul 2016 16:10:59 -0500
+Message-ID: <CAL_Jsq+VmaFjWKqKfuqh5a1WkSYuw8w8SKBHK7MF6j-i7Fv_gA@mail.gmail.com>
+References: <20160728202537.11961-1-robh@kernel.org> <CAGXu5jJnfCGsqiuVWNrvrZkmKz5nD0hnQSQ+Vr4x-GD5dDa7AA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2fjX3cMESU3XgGmZ"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZXE5G6AKGQETKS2GRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <e1b8127f-c422-46ab-384b-aeee85aa940b-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGXu5jJnfCGsqiuVWNrvrZkmKz5nD0hnQSQ+Vr4x-GD5dDa7AA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 28, 2016 at 3:50 PM, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Thu, Jul 28, 2016 at 1:25 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> This reverts commit 35da60941e44dbf57868e67686dd24cc1a33125a.
+>> ---
+>> WTF!
+>>
+>> I don't recall acking this nor have my comments (Arnd's really) been
+>> addressed[1]. This should not have been merged yet.
+>
+> The conversation seemed to me to describe an alternative that could be
+> moved to, but that it was going to need more work. In the meantime,
+> these are the DT bindings used in real devices already. It seemed
+> clear to me that reducing the delta now and improving the
+> implementation in the future was the right thing to do in this case. I
+> didn't think your comments were a hard NAK, but rather a "we should do
+> this in the future", and I added it as a TODO for the pstore tree.
+>
+> Is a revert really justified here? This doesn't break anything (quite
+> the opposite, actually).
 
---2fjX3cMESU3XgGmZ
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes. Bindings are an ABI, so they can't evolve other than get
+additional properties.
 
-Hi Ondrej,
+I'm keen to have this in too because I know there are lots of users
+(extract a DT from a Calxeda system ;)). It's not really that far off
+(drop memory-region and define the location in /reserved-memory) I
+think. So send a follow-up for 4.8 and then it doesn't need a revert.
 
-On Thu, Jul 28, 2016 at 01:27:05PM +0200, Ond=C5=99ej Jirman wrote:
-> Hi Maxime,
->=20
-> I don't have your sunxi-ng clock patches in my mailbox, so I'm replying
-> to this.
+Rob
 
-You can find it in the clock maintainers tree:
-https://git.kernel.org/cgit/linux/kernel/git/clk/linux.git/log/?h=3Dclk-sun=
-xi-ng
-
-> On 26.7.2016 08:32, Maxime Ripard wrote:
-> > On Thu, Jul 21, 2016 at 11:52:15AM +0200, Ond=C5=99ej Jirman wrote:
-> >>>>> If so, then yes, trying to switch to the 24MHz oscillator before
-> >>>>> applying the factors, and then switching back when the PLL is stabl=
-e
-> >>>>> would be a nice solution.
-> >>>>>
-> >>>>> I just checked, and all the SoCs we've had so far have that
-> >>>>> possibility, so if it works, for now, I'd like to stick to that.
-> >>>>
-> >>>> It would need to be tested. U-boot does the change only once, while =
-the
-> >>>> kernel would be doing it all the time and between various frequencie=
-s
-> >>>> and PLL settings. So the issues may show up with this solution too.
-> >>>
-> >>> That would have the benefit of being quite easy to document, not be a
-> >>> huge amount of code and it would work on all the CPUs PLLs we have so
-> >>> far, so still, a pretty big win. If it doesn't, of course, we don't
-> >>> really have the choice.
-> >>
-> >> It's probably more code though. It has to access different register fr=
-om
-> >> the one that is already defined in dts, which would add a lot of code
-> >> and require dts changes. The original patch I sent is simpler than tha=
-t.
-> >=20
-> > Why?
-> >=20
-> > You can use container_of to retrieve the parent structure of the clock
-> > notifier, and then you get a ccu_common structure pointer, with the
-> > CCU base address, the clock register, its lock, etc.
-> >=20
-> > Look at what is done in drivers/clk/meson/clk-cpu.c. It's like 20 LoC.
-> >=20
-> > I don't really get why anything should be changed in the DT, or why it
-> > would add a lot of code. Or maybe we're not talking about the same
-> > thing?
->=20
-> I've looked at the new CCU code, particularly ccu_nkmp.c, and found that
-> it very liberally uses divider parameters, even in situations that are
-> out of spec compared to the current code in the kernel.
->=20
-> In the current code and especially in the original vendor code, divider
-> parameters are used as last resort only. Presumably because, of the
-> inherent trouble in changing them, as I described to you in other email.
->=20
-> The new ccu code uses dividers often and even at very high frequencies,
-> which goes against the spec.
->=20
-> In the vendor code M is never anything else but 0, and P is used only
-> for frequencies below 288MHz, which matches the H3 datasheet, which says:
-
-In the vendor code, P is never used either. All the boards we had so
-far don't go that low, so we cannot make any of these assumptions,
-especially since the vendor code has had the bad habit of doing
-something wrong and / or useless in the past.
-
-However, this implementation is a new thing, and it was using the H3
-precisely because of its early stage of support to use it as a testbed
-for the more established.
-
-If you feel like we should use a different formula to favour the
-multipliers over the dividers (or want to change the class of the CPU
-PLL to an NKM or something else, this is totally doable.
-
-> "The P factor only use in the condition that PLL output less than 288
-> MHz."
-
-And the datasheet also had some issues, either misleading or wrong
-comments in the past. Don't get me wrong, I'm not saying that this is
-wrong, just that we should not follow it religiously, and that we
-should trust more the experiments than the datasheet.
-
-> Also other datasheets of similar socs from Allwinner state that M should
-> not be used in production code.
-
-Which ones specifically?
-
-> So it may be that they either forgot to state it in the H3
-> datasheet, or it can be used. In any case, they never use M in their
-> code, so it may be wise to keep to that.
->=20
-> When I boot with the new CCU code I get this:
->=20
-> PLL_CPUX =3D 0x00001B21 : M =3D 2, K =3D 3, N =3D 28, P =3D 1, EN =3D 0
-> PLL_CPUX : freq =3D 1008MHz
->=20
-> Mathematically it works, but it is against the spec.
->=20
-> Also, this:
->=20
-> analyzing CPU 0:
->   driver: cpufreq-dt
->   CPUs which run at the same hardware frequency: 0 1 2 3
->   CPUs which need to have their frequency coordinated by software: 0 1 2 =
-3
->   maximum transition latency: 1.74 ms
->   hardware limits: 120 MHz - 1.37 GHz
->   available frequency steps:  120 MHz, 240 MHz, 480 MHz, 648 MHz, 816
-> MHz, 960 MHz, 1.01 GHz, 1.06 GHz, 1.10 GHz, 1.15 GHz, 1.20 GHz, 1.22
-> GHz, 1.25 GHz, 1.30 GHz, 1.34 GHz, 1.37 GHz
->   available cpufreq governors: conservative ondemand userspace powersave
-> performance
->   current policy: frequency should be within 240 MHz and 240 MHz.
->                   The governor "performance" may decide which speed to us=
-e
->                   within this range.
->   current CPU frequency: 24.0 MHz (asserted by call to hardware)
->=20
->=20
-> Somehow, the new CCU code sets the CPUX to 24MHz no matter what.
->=20
-> I'm using your pen/clk-rework branch without any other patches that were
-> later sent to the mailing list.
-
-It's probably because of CLK_SET_RATE_PARENT on the CPU clock missing,
-as Chen-Yu suggested.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---2fjX3cMESU3XgGmZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXmnJbAAoJEBx+YmzsjxAgWWAP/A7BsJE8WGm/7/xzEgDV2Q7F
-rwy2yWrzyhpRkCYrB91/99Ov/0Yvuh0+X5JEeQq9Y3xy5v+2qIAiaIR1x0IoGDrz
-uzEepj5p1CcyhwGlbE654qssN8P6Xg9HnDycALdrI11i04CUvsw1nzfzGwwM2/wA
-v4R9z0AnSTUqupsy1yd5VdcjXk6PWVnDlM5wj1jqzsV9VOi87aEpzUkvsK6M8GCo
-kZiUp3mt1+hDrAe7O8W7jjb1dpH80YuTUwtQRQeJACZclnJB/pRoJ+ac/0kDRBeY
-yfDGppBvtVLeJXOrnMy7BkHJCb5LHhHPqPnutIU9Xi6x6dcZIcvT65a+G4ANRvmn
-j16Wqanf3/MTjE3m/NYjP5P0Y85s9XD2RFSIpCdTFbqxQOy+0XfNDdXdptu6VAfh
-z1R3BArPJDxL2NfUoVm4nXq2lnMEIoayMybOlboIJRdpysB/YIi4LzZ9z3iiyWqV
-J1SQR5K3DaDKFS9fNhmeFjETbEEJkO3Wg+iTZH/nNDtG7edMHe80m1G2hGmvCXGw
-RyvizakJaM+Tyyz49PkuwF7jk0GRoCTmnCJdY77E/MU1xaCEBCWEezZ0++jxiebV
-vNav4tq12aY/b+gjYiCL46h/nEOFxR6NM1JN5kmZaRhYHZ1DmODES9VD5kimV5rm
-1L06scykho6yr8OWCkOx
-=eDC8
------END PGP SIGNATURE-----
-
---2fjX3cMESU3XgGmZ--
+>
+> -Kees
+>
+>>
+>> Rob
+>>
+>> [1] https://lkml.org/lkml/2016/6/21/969
+>>
+>>  Documentation/devicetree/bindings/misc/ramoops.txt | 48 -----------
+>>  Documentation/ramoops.txt                          |  6 +-
+>>  fs/pstore/ram.c                                    | 95 +---------------------
+>>  3 files changed, 4 insertions(+), 145 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
+>> deleted file mode 100644
+>> index cd02cec..0000000
+>> --- a/Documentation/devicetree/bindings/misc/ramoops.txt
+>> +++ /dev/null
+>> @@ -1,48 +0,0 @@
+>> -Ramoops oops/panic logger
+>> -=========================
+>> -
+>> -ramoops provides persistent RAM storage for oops and panics, so they can be
+>> -recovered after a reboot. It is a backend to pstore, so this node is named
+>> -"ramoops" after the backend, rather than "pstore" which is the subsystem.
+>> -
+>> -Parts of this storage may be set aside for other persistent log buffers, such
+>> -as kernel log messages, or for optional ECC error-correction data.  The total
+>> -size of these optional buffers must fit in the reserved region.
+>> -
+>> -Any remaining space will be used for a circular buffer of oops and panic
+>> -records.  These records have a configurable size, with a size of 0 indicating
+>> -that they should be disabled.
+>> -
+>> -At least one of "record-size", "console-size", "ftrace-size", or "pmsg-size"
+>> -must be set non-zero, but are otherwise optional as listed below.
+>> -
+>> -
+>> -Required properties:
+>> -
+>> -- compatible: must be "ramoops"
+>> -
+>> -- memory-region: phandle to a region of memory that is preserved between
+>> -  reboots
+>> -
+>> -
+>> -Optional properties:
+>> -
+>> -- ecc-size: enables ECC support and specifies ECC buffer size in bytes
+>> -  (defaults to 0: no ECC)
+>> -
+>> -- record-size: maximum size in bytes of each dump done on oops/panic
+>> -  (defaults to 0: disabled)
+>> -
+>> -- console-size: size in bytes of log buffer reserved for kernel messages
+>> -  (defaults to 0: disabled)
+>> -
+>> -- ftrace-size: size in bytes of log buffer reserved for function tracing and
+>> -  profiling (defaults to 0: disabled)
+>> -
+>> -- pmsg-size: size in bytes of log buffer reserved for userspace messages
+>> -  (defaults to 0: disabled)
+>> -
+>> -- unbuffered: if present, use unbuffered mappings to map the reserved region
+>> -  (defaults to buffered mappings)
+>> -
+>> -- no-dump-oops: if present, only dump panics (defaults to panics and oops)
+>> diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
+>> index 9264bca..5d86756 100644
+>> --- a/Documentation/ramoops.txt
+>> +++ b/Documentation/ramoops.txt
+>> @@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
+>>
+>>  2. Setting the parameters
+>>
+>> -Setting the ramoops parameters can be done in 3 different manners:
+>> +Setting the ramoops parameters can be done in 2 different manners:
+>>   1. Use the module parameters (which have the names of the variables described
+>>   as before).
+>>   For quick debugging, you can also reserve parts of memory during boot
+>> @@ -54,9 +54,7 @@ Setting the ramoops parameters can be done in 3 different manners:
+>>   kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
+>>   region at 128 MB boundary:
+>>   "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
+>> - 2. Use Device Tree bindings, as described in
+>> - Documentation/device-tree/bindings/misc/ramoops.txt.
+>> - 3. Use a platform device and set the platform data. The parameters can then
+>> + 2. Use a platform device and set the platform data. The parameters can then
+>>   be set through that platform data. An example of doing that is:
+>>
+>>  #include <linux/pstore_ram.h>
+>> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+>> index 47516a7..d9668c2 100644
+>> --- a/fs/pstore/ram.c
+>> +++ b/fs/pstore/ram.c
+>> @@ -34,8 +34,6 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/compiler.h>
+>>  #include <linux/pstore_ram.h>
+>> -#include <linux/of.h>
+>> -#include <linux/of_address.h>
+>>
+>>  #define RAMOOPS_KERNMSG_HDR "===="
+>>  #define MIN_MEM_SIZE 4096UL
+>> @@ -460,98 +458,15 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
+>>         return 0;
+>>  }
+>>
+>> -static int ramoops_parse_dt_size(struct platform_device *pdev,
+>> -                                const char *propname, u32 *value)
+>> -{
+>> -       u32 val32 = 0;
+>> -       int ret;
+>> -
+>> -       ret = of_property_read_u32(pdev->dev.of_node, propname, &val32);
+>> -       if (ret < 0 && ret != -EINVAL) {
+>> -               dev_err(&pdev->dev, "failed to parse property %s: %d\n",
+>> -                       propname, ret);
+>> -               return ret;
+>> -       }
+>> -
+>> -       if (val32 > INT_MAX) {
+>> -               dev_err(&pdev->dev, "%s %u > INT_MAX\n", propname, val32);
+>> -               return -EOVERFLOW;
+>> -       }
+>> -
+>> -       *value = val32;
+>> -       return 0;
+>> -}
+>> -
+>> -static int ramoops_parse_dt(struct platform_device *pdev,
+>> -                           struct ramoops_platform_data *pdata)
+>> -{
+>> -       struct device_node *of_node = pdev->dev.of_node;
+>> -       struct device_node *mem_region;
+>> -       struct resource res;
+>> -       u32 value;
+>> -       int ret;
+>> -
+>> -       dev_dbg(&pdev->dev, "using Device Tree\n");
+>> -
+>> -       mem_region = of_parse_phandle(of_node, "memory-region", 0);
+>> -       if (!mem_region) {
+>> -               dev_err(&pdev->dev, "no memory-region phandle\n");
+>> -               return -ENODEV;
+>> -       }
+>> -
+>> -       ret = of_address_to_resource(mem_region, 0, &res);
+>> -       of_node_put(mem_region);
+>> -       if (ret) {
+>> -               dev_err(&pdev->dev,
+>> -                       "failed to translate memory-region to resource: %d\n",
+>> -                       ret);
+>> -               return ret;
+>> -       }
+>> -
+>> -       pdata->mem_size = resource_size(&res);
+>> -       pdata->mem_address = res.start;
+>> -       pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
+>> -       pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+>> -
+>> -#define parse_size(name, field) {                                      \
+>> -               ret = ramoops_parse_dt_size(pdev, name, &value);        \
+>> -               if (ret < 0)                                            \
+>> -                       return ret;                                     \
+>> -               field = value;                                          \
+>> -       }
+>> -
+>> -       parse_size("record-size", pdata->record_size);
+>> -       parse_size("console-size", pdata->console_size);
+>> -       parse_size("ftrace-size", pdata->ftrace_size);
+>> -       parse_size("pmsg-size", pdata->pmsg_size);
+>> -       parse_size("ecc-size", pdata->ecc_info.ecc_size);
+>> -
+>> -#undef parse_size
+>> -
+>> -       return 0;
+>> -}
+>> -
+>>  static int ramoops_probe(struct platform_device *pdev)
+>>  {
+>>         struct device *dev = &pdev->dev;
+>> -       struct ramoops_platform_data *pdata = dev->platform_data;
+>> +       struct ramoops_platform_data *pdata = pdev->dev.platform_data;
+>>         struct ramoops_context *cxt = &oops_cxt;
+>>         size_t dump_mem_sz;
+>>         phys_addr_t paddr;
+>>         int err = -EINVAL;
+>>
+>> -       if (dev_of_node(dev) && !pdata) {
+>> -               pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+>> -               if (!pdata) {
+>> -                       err = -ENOMEM;
+>> -                       goto fail_out;
+>> -               }
+>> -
+>> -               err = ramoops_parse_dt(pdev, pdata);
+>> -               if (err < 0)
+>> -                       goto fail_out;
+>> -       }
+>> -
+>>         /* Only a single ramoops area allowed at a time, so fail extra
+>>          * probes.
+>>          */
+>> @@ -681,17 +596,11 @@ static int ramoops_remove(struct platform_device *pdev)
+>>         return 0;
+>>  }
+>>
+>> -static const struct of_device_id dt_match[] = {
+>> -       { .compatible = "ramoops" },
+>> -       {}
+>> -};
+>> -
+>>  static struct platform_driver ramoops_driver = {
+>>         .probe          = ramoops_probe,
+>>         .remove         = ramoops_remove,
+>>         .driver         = {
+>> -               .name           = "ramoops",
+>> -               .of_match_table = dt_match,
+>> +               .name   = "ramoops",
+>>         },
+>>  };
+>>
+>> --
+>> 2.9.2
+>>
+>
+>
+>
+> --
+> Kees Cook
+> Chrome OS & Brillo Security
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
