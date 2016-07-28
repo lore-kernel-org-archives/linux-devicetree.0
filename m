@@ -1,39 +1,223 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: Re: [PATCH v3 4/6] usb: core: add power sequence handling for USB
- devices
-Date: Thu, 28 Jul 2016 09:18:45 -0700
-Message-ID: <579A3065.2080402@gmail.com>
-References: <1469007629-31757-1-git-send-email-peter.chen@nxp.com>
- <1469007629-31757-5-git-send-email-peter.chen@nxp.com>
- <5798E067.90207@gmail.com> <20160728014521.GB26186@shlinux2>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Thu, 28 Jul 2016 12:37:49 -0400
+Message-ID: <20160728163748.GI15995@brightrain.aerifal.cx>
+References: <cover.1469688975.git.dalias@libc.org>
+ <ed156509aed631486decf1828acb4f0afa61dd31.1469688975.git.dalias@libc.org>
+ <alpine.DEB.2.11.1607281515330.19896@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160728014521.GB26186@shlinux2>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.11.1607281515330.19896@nanos>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Peter,
+On Thu, Jul 28, 2016 at 04:44:05PM +0200, Thomas Gleixner wrote:
+> > +
+> > +#define PIT_IRQ_SHIFT 12
+> > +#define PIT_PRIO_SHIFT 20
+> > +#define PIT_ENABLE_SHIFT 26
+> > +#define PIT_IRQ_MASK 0x3f
+> > +#define PIT_PRIO_MASK 0xf
+> 
+> Can you please align the numbers as nicely as you did below and please use
+> TABS not spaces to seperate them.
 
-On 07/27/2016 06:45 PM, Peter Chen wrote:
-> On Wed, Jul 27, 2016 at 09:25:11AM -0700, Joshua Clayton wrote:
->> Patch 4 does not apply for me
->> (The Makefile has  a "usbcore-$(CONFIG_OF) += of.o"
->> line which I don't see in 4.7 or linux/next master).
->> Is there another patch set this series depends on?
-> It seems below patch has not been queued:
->
-> https://git.kernel.org/cgit/linux/kernel/git/peter.chen/usb.git/commit/?h=add_pwrseq_for_usb&id=2efd73d0f935ffbc66135553da0ac807c0b4c3fe
->
-> This pwrseq-lib patch set does not depend on it, I will send patch set
-> on top of a clean mainline next time, sorry for confusing. 
->
-Good to know.
-I just wanted to make sure I wasn't missing something important.
+OK.
 
-Thanks,
+> 
+> > +#define REG_PITEN 0x00
+> > +#define REG_THROT 0x10
+> > +#define REG_COUNT 0x14
+> > +#define REG_BUSPD 0x18
+> > +#define REG_SECHI 0x20
+> > +#define REG_SECLO 0x24
+> > +#define REG_NSEC  0x28
+> > +
+> > +struct jcore_clocksource {
+> > +	struct clocksource cs;
+> > +	__iomem void *base;
+> > +};
+> > +
+> > +struct jcore_pit {
+> > +	struct clock_event_device ced;
+> > +	__iomem void *base;
+> > +	unsigned long periodic_delta;
+> > +	unsigned cpu;
+> > +	u32 enable_val;
+> > +};
+> 
+> Again. Please align the struct members as I asked in the other mail.
 
-Joshua Clayton
+OK.
+
+> > +
+> > +struct jcore_pit_nb {
+> > +	struct notifier_block nb;
+> > +	struct jcore_pit __percpu *pit_percpu;
+> > +};
+> > +
+> > +static struct clocksource *jcore_cs;
+> > +
+> > +static cycle_t jcore_clocksource_read(struct clocksource *cs)
+> > +{
+> > +	__iomem void *base =
+> > +		container_of(cs, struct jcore_clocksource, cs)->base;
+> > +	u32 sechi, seclo, nsec, sechi0, seclo0;
+> 
+> It would be way simpler to read if you avoid that line break by doing:
+> 
+> 	u32 sechi, seclo, nsec, sechi0, seclo0;
+> 	__iomem void *base;
+>    
+> 	base = container_of(cs, struct jcore_clocksource, cs)->base; 
+> 
+> Hmm?
+
+Yes, I agree.
+
+> > +
+> > +	sechi = __raw_readl(base + REG_SECHI);
+> > +	seclo = __raw_readl(base + REG_SECLO);
+> > +	do {
+> > +		sechi0 = sechi;
+> > +		seclo0 = seclo;
+> > +		nsec  = __raw_readl(base + REG_NSEC);
+> > +		sechi = __raw_readl(base + REG_SECHI);
+> > +		seclo = __raw_readl(base + REG_SECLO);
+> > +	} while (sechi0 != sechi || seclo0 != seclo);
+> > +
+> > +	return ((u64)sechi << 32 | seclo) * NSEC_PER_SEC + nsec;
+> 
+> Wow, that's an expensive thing for a hotpath operation. You really don't have
+> binary readout register for that clock thingy?
+
+Unforunately the clock is in sec64.nsec32 format instead of a flat
+nanoseconds count. Daniel Lezcano also suggested just using
+nanoseconds, which would still need some retry and arithmetic for
+adding seclo*NSEC_PER_SEC (otherwise it's problematic because it wraps
+at NSEC_PER_SEC rather than at a power of two) but that does put a
+hard upper bound on tickless sleep time of 4 sec. In practice it
+probably doesn't matter. Should I try that instead?
+
+> > +static notrace u64 jcore_sched_clock_read(void)
+> > +{
+> > +	return jcore_clocksource_read(jcore_cs);
+> 
+> Why don't you stuff the above code into this function?
+
+I was trying to avoid code duplication, but I could if you think it
+really matters for performance.
+
+> > +static int jcore_pit_disable(struct jcore_pit *pit)
+> > +{
+> > +	__raw_writel(0, pit->base + REG_PITEN);
+> > +	return 0;
+> > +}
+> > +
+> > +static int jcore_pit_set(unsigned long delta, struct jcore_pit *pit)
+> > +{
+> > +	jcore_pit_disable(pit);
+> > +	__raw_writel(delta, pit->base + REG_THROT);
+> > +	__raw_writel(pit->enable_val, pit->base + REG_PITEN);
+> > +	return 0;
+> > +}
+> > +
+> > +static int jcore_pit_set_state_shutdown(struct clock_event_device *ced)
+> > +{
+> > +	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
+> 
+> Newline between declaration and code please....
+
+OK.
+
+> > +static int jcore_pit_cpu_notify(struct notifier_block *self,
+> > +			unsigned long action, void *hcpu)
+> > +{
+> > +	struct jcore_pit_nb *nb = container_of(self, struct jcore_pit_nb, nb);
+> > +	switch (action & ~CPU_TASKS_FROZEN) {
+> > +	case CPU_STARTING:
+> > +		jcore_pit_local_init(this_cpu_ptr(nb->pit_percpu));
+> > +		break;
+> > +	}
+> > +	return NOTIFY_OK;
+> 
+> Please convert this to the new state machine model of cpu
+> hotplug. CPU_STARTING will be gone very soon. Here is an example:
+> 
+> http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/?h=smp/hotplug&id=7e86e8bd8dd67649d176e08d8dfb90039f0a1e98
+
+I don't think that's the commit you wanted to link -- it doesn't show
+a usage example.
+
+I've asked about this before in another context but didn't get an
+answer -- I'm a bit concerned that, from what I can tell, the new
+framework is a big singleton does assumes singletons in all the
+drivers that use it. In practice it doesn't matter as long as there's
+only one instance of the pit driver, but this seems architecturally
+really bad and like it's a time bomb waiting to blow up on us in the
+future. Am I missing something?
+
+> > +static int __init jcore_pit_init(struct device_node *node)
+> > +{
+> > +	int err;
+> > +	__iomem void *pit_base;
+> > +	unsigned pit_irq;
+> > +	unsigned cpu;
+> 
+> Please put the same data types into a single line
+
+OK.
+
+> > +	struct jcore_pit_nb *nb = 0;
+> 
+>   = NULL;
+> 
+> Please
+
+OK.
+
+> > +	struct jcore_clocksource *cs = 0;
+> > +	struct jcore_pit __percpu *pit_percpu = 0;
+> > +
+> > +	err = request_irq(pit_irq, jcore_timer_interrupt,
+> > +		IRQF_TIMER | IRQF_PERCPU, "jcore_pit", pit_percpu);
+> 
+> If you need line breaks, then please keep the arguments aligned:
+
+OK.
+
+> 	err = request_irq(pit_irq, jcore_timer_interrupt,
+> 			  IRQF_TIMER | IRQF_PERCPU, "jcore_pit", pit_percpu);
+> 
+> > +	/* The J-Core PIT is not hard-wired to a particular IRQ, but
+> > +	 * integrated with the interrupt controller such that the IRQ it
+> > +	 * generates is programmable. The programming interface has a
+> > +	 * legacy field which was an interrupt priority for AIC1, but
+> > +	 * which is OR'd onto bits 2-5 of the generated IRQ number when
+> > +	 * used with J-Core AIC2, so set it to match these bits. */
+> 
+> Proper multiline comments please
+
+OK.
+
+> > +	return 0;
+> > +
+> > +out:
+> > +	pr_err("Could not initialize J-Core PIT driver\n");
+> 
+> So you have a pr_err in every error path and that goto just to pr_err the
+> obvious? Well, yes ...
+
+I can remove it if you prefer. I'd have to look back at how this
+happened but I suspect some of the individual pr_errs did not exist
+before.
+
+Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
