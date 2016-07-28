@@ -1,93 +1,70 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [Patch v2 1/5] ARM: dts: qcom: Add initial DTS for LG Nexus 5
- Phone
-Date: Thu, 28 Jul 2016 09:55:39 -0700
-Message-ID: <20160728165539.GO13516@tuxbot>
+Subject: Re: [Patch v2 2/5] ARM: dts: msm8974: Move vreg_boost node from the
+ honami to msm8974
+Date: Thu, 28 Jul 2016 09:58:46 -0700
+Message-ID: <20160728165846.GP13516@tuxbot>
 References: <20160719050414.31704-1-bshah@kde.org>
- <20160719050414.31704-2-bshah@kde.org>
+ <20160719050414.31704-3-bshah@kde.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160719050414.31704-2-bshah@kde.org>
+In-Reply-To: <20160719050414.31704-3-bshah@kde.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Bhushan Shah <bshah@kde.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Mon 18 Jul 22:04 PDT 2016, Bhushan Shah wrote:
 
-> This DTS file have support LG Nexus 5 (codenamed hammerhead).
-> Initial version have support for just serial console over headphone
-> jack.
+> vreg_boost is Qualcomm platform specific and is also used in hammerhead
+> device.
 > 
 > Cc: Andy Gross <andy.gross@linaro.org>
 > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 > Cc: David Brown <david.brown@linaro.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
 > Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
 > Cc: Russell King <linux@armlinux.org.uk>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
 > Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-soc@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 > Signed-off-by: Bhushan Shah <bshah@kde.org>
+> ---
+>  arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 18 ++----------------
+>  arch/arm/boot/dts/qcom-msm8974.dtsi                   | 11 +++++++++++
+>  arch/arm/boot/dts/qcom-pm8941.dtsi                    |  6 ++++++
+>  3 files changed, 19 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> index a0398b6..8e33fc3 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> +++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> @@ -258,22 +258,13 @@
+>  		};
+>  	};
+>  
+> -	vreg_boost: vreg-boost {
+> -		compatible = "regulator-fixed";
+> -
+> -		regulator-name = "vreg-boost";
+> -		regulator-min-microvolt = <3150000>;
+> -		regulator-max-microvolt = <3150000>;
+> -
+> -		regulator-always-on;
+> -		regulator-boot-on;
+> -
+> +	vreg_boost {
+>  		gpio = <&pm8941_gpios 21 GPIO_ACTIVE_HIGH>;
+>  		enable-active-high;
+>  
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&boost_bypass_n_pin>;
+> -     };
+> +	};
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This part is Qualcomm reference design and I think we should just move
+the entire node to the dtsi. Sorry if I wasn't clearer.
 
 Regards,
 Bjorn
-
-> ---
-> Changes in v2
->     - Removed qcom,msm-id
->     - Added "lge,hammerhead" in the compatible
-> 
->  arch/arm/boot/dts/Makefile                         |  1 +
->  .../dts/qcom-msm8974-lge-nexus5-hammerhead.dts     | 23 ++++++++++++++++++++++
->  2 files changed, 24 insertions(+)
->  create mode 100644 arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 414b427..13947ec 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -584,6 +584,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
->  	qcom-ipq8064-ap148.dtb \
->  	qcom-msm8660-surf.dtb \
->  	qcom-msm8960-cdp.dtb \
-> +	qcom-msm8974-lge-nexus5-hammerhead.dtb \
->  	qcom-msm8974-sony-xperia-honami.dtb
->  dtb-$(CONFIG_ARCH_REALVIEW) += \
->  	arm-realview-pb1176.dtb \
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> new file mode 100644
-> index 0000000..68f3a8a
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> @@ -0,0 +1,23 @@
-> +#include "qcom-msm8974.dtsi"
-> +#include "qcom-pm8841.dtsi"
-> +#include "qcom-pm8941.dtsi"
-> +
-> +/ {
-> +	model = "LGE MSM 8974 HAMMERHEAD";
-> +	compatible = "lge,hammerhead", "qcom,msm8974";
-> +
-> +	aliases {
-> +		serial0 = &blsp1_uart1;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&soc {
-> +	serial@f991d000 {
-> +		status = "ok";
-> +	};
-> +
-> +};
-> -- 
-> 2.9.0
-> 
