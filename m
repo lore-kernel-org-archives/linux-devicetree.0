@@ -1,22 +1,22 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 08/18] ARM: mvebu: a39x: enable PMU, CA9 MPcore SoC Controller and Coherency fabric
-Date: Thu, 28 Jul 2016 11:44:10 +0200
-Message-ID: <87shuuksgl.fsf@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 08/18] ARM: mvebu: a39x: Enable PMU, CA9 MPcore SoC Controller and Coherency fabric
+Date: Thu, 28 Jul 2016 11:51:11 +0200
+Message-ID: <87oa5iks4w.fsf@free-electrons.com>
 References: <1469105055-25181-1-git-send-email-jaz@semihalf.com>
-	<1469105055-25181-9-git-send-email-jaz@semihalf.com>
+	<1469105055-25181-10-git-send-email-jaz@semihalf.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469105055-25181-9-git-send-email-jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> (Grzegorz
-	Jaszczyk's message of "Thu, 21 Jul 2016 14:44:04 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1469105055-25181-10-git-send-email-jaz@semihalf.com> (Grzegorz
+	Jaszczyk's message of "Thu, 21 Jul 2016 14:44:05 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grzegorz Jaszczyk <jaz@semihalf.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, mw@semihalf.com, alior@marvell.com
 List-Id: devicetree@vger.kernel.org
 
 Hi Grzegorz,
  
- On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> wrote:
+ On jeu., juil. 21 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
 
 > This commit enables:
 > - CA9's Performance Monitor Unit
@@ -24,11 +24,11 @@ Hi Grzegorz,
 > - Coherency fabric
 > on Armada 39x, basing on the Armada 38x (which has the same CA9 CPU).
 >
-> Signed-off-by: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+> Reviewed-by: Lior Amsalem <alior@marvell.com>
 
-Rename prefix to "ARM: dts: mvebu: armada-39x:" then 
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+It looks like exactly the same patch that the previous one. Did I miss
+something?
 
 Thanks,
 
@@ -80,7 +80,3 @@ Gregory Clement, Free Electrons
 Kernel, drivers, real-time and embedded Linux
 development, consulting, training and support.
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
