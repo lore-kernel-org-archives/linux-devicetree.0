@@ -1,26 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: i2c: add bindings for nxp,pca9541
-Date: Fri, 29 Jul 2016 16:27:21 -0500
-Message-ID: <20160729212721.GA11963@rob-hp-laptop>
-References: <1469609010-23049-1-git-send-email-peda@axentia.se>
- <1469609010-23049-5-git-send-email-peda@axentia.se>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] iio: adc: rockchip_saradc: reset saradc
+ controller before programming it
+Date: Fri, 29 Jul 2016 16:28:33 -0500
+Message-ID: <20160729212833.GA12688@rob-hp-laptop>
+References: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1469609010-23049-5-git-send-email-peda@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kalle Valo <kvalo@codeaurora.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
+In-Reply-To: <1469629447-544-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 10:43:27AM +0200, Peter Rosin wrote:
-> Fill the gap for this pre-existing driver.
+On Wed, Jul 27, 2016 at 10:24:04PM +0800, Caesar Wang wrote:
+> SARADC controller needs to be reset before programming it, otherwise
+> it will not function properly.
 > 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Tested-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> 
 > ---
->  .../devicetree/bindings/i2c/nxp,pca9541.txt        | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/nxp,pca9541.txt
+> 
+> Changes in v3:
+> - %s/devm_reset_control_get_optional()/devm_reset_control_get()
+> - add Guente's test tag.
+> 
+> Changes in v2:
+> - Make the reset as an optional property, since it should work
+> with old devicetrees as well.
+> 
+>  .../bindings/iio/adc/rockchip-saradc.txt           |  7 +++++
+>  drivers/iio/adc/Kconfig                            |  1 +
+>  drivers/iio/adc/rockchip_saradc.c                  | 30 ++++++++++++++++++++++
+>  3 files changed, 38 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Please add acks when posting new versions.
+
+Rob
