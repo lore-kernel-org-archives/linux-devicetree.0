@@ -1,116 +1,154 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 00/13] sunxi spi fixes
-Date: Fri, 29 Jul 2016 22:22:47 +0200
-Message-ID: <20160729202247.GJ6215@lukather>
-References: <cover.1465490774.git.hramrach@gmail.com>
- <20160613195716.GD9354@lukather>
- <CAOMqctS6ZQ3_a97sE2e7H34ZCny2aDE38V1tQA=-SBZwF2sbDQ@mail.gmail.com>
- <20160725073204.GD7419@lukather>
- <CAOMqctQybJoOfUHGtpmpB_koQ=iY+GpQ_BOL2o0QBbwC_HXC0g@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
+Date: Fri, 29 Jul 2016 15:28:33 -0500
+Message-ID: <CAL_Jsq+k8AaQJK1Bre-8fuMWnHRY3wmBKB3ghZH-9UT4u9zRCQ@mail.gmail.com>
+References: <20160719191442.15439-1-swarren@wwwdotorg.org> <20160719191442.15439-2-swarren@wwwdotorg.org>
+ <20160726100302.GE2433@ulmo.ba.sec> <f1ca284a-5332-3323-80b9-7cf61e7c97ac@wwwdotorg.org>
+ <CAL_JsqLfs5jnO9DkP5io5qbuCfhojfspkHQbHBttgWfTeokYkQ@mail.gmail.com>
+ <6db4ff47-974b-94ac-3739-e630b6d38c0e@wwwdotorg.org> <20160729134831.GA3864@ulmo.ba.sec>
+ <a86a95d0-8d4b-2abe-f2ef-870c29b3334e@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ofZMSlrAVk9bLeVm"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMqctQybJoOfUHGtpmpB_koQ=iY+GpQ_BOL2o0QBbwC_HXC0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Bertelsmann <info-La43T0Mi4bH5xCKuJOYmCvaTkwRoYoCU@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, devicetree <devicetree-u79uwXL29TasMV2rI37PzA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a86a95d0-8d4b-2abe-f2ef-870c29b3334e-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 29, 2016 at 11:06 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 07/29/2016 07:48 AM, Thierry Reding wrote:
+>>
+>> On Thu, Jul 28, 2016 at 03:24:22PM -0600, Stephen Warren wrote:
+>>>
+>>> On 07/28/2016 01:07 PM, Rob Herring wrote:
+>>>>
+>>>> On Tue, Jul 26, 2016 at 11:21 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>>> wrote:
+>>>>>
+>>>>> On 07/26/2016 04:03 AM, Thierry Reding wrote:
+>>>>>>
+>>>>>>
+>>>>>> On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>>>>
+>>>>>>> The BPMP implements some services which must be represented by
+>>>>>>> separate
+>>>>>>> nodes. For example, it can provide access to certain I2C controllers,
+>>>>>>> and
+>>>>>>> the I2C bindings represent each I2C controller as a device tree node.
+>>>>>>> Update the binding to describe how the BPMP supports this.
+>>>>>>>
+>>>>>>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>>>> ---
+>>>>>>>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23
+>>>>>>> ++++++++++++++++++++++
+>>>>>>>  1 file changed, 23 insertions(+)
+>>>>>>>
+>>>>>>> diff --git
+>>>>>>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>>>>>>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>>>>>>> index 9a3864f56955..142d363406f6 100644
+>>>>>>> ---
+>>>>>>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>>>>>>> +++
+>>>>>>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+>>>>>>> @@ -38,6 +38,24 @@ implemented by this node:
+>>>>>>>  - .../reset/reset.txt
+>>>>>>>  - <dt-bindings/reset/tegra186-reset.h>
+>>>>>>>
+>>>>>>> +The BPMP implements some services which must be represented by
+>>>>>>> separate
+>>>>>>> nodes.
+>>>>>>> +For example, it can provide access to certain I2C controllers, and
+>>>>>>> the
+>>>>>>> I2C
+>>>>>>> +bindings represent each I2C controller as a device tree node. Such
+>>>>>>> nodes
+>>>>>>> should
+>>>>>>> +be nested directly inside the main BPMP node.
+>>>>>>> +
+>>>>>>> +Software can determine whether a child node of the BPMP node
+>>>>>>> represents
+>>>>>>> a device
+>>>>>>> +by checking for a compatible property. Any node with a compatible
+>>>>>>> property
+>>>>>>> +represents a device that can be instantiated. Nodes without a
+>>>>>>> compatible
+>>>>>>> +property may be used to provide configuration information regarding
+>>>>>>> the
+>>>>>>> BPMP
+>>>>>>> +itself, although no such configuration nodes are currently defined
+>>>>>>> by
+>>>>>>> this
+>>>>>>> +binding.
+>>>>>>> +
+>>>>>>> +The BPMP firmware defines no single global name-/numbering-space for
+>>>>>>> such
+>>>>>>> +services. Put another way, the numbering scheme for I2C buses is
+>>>>>>> distinct from
+>>>>>>> +the numbering scheme for any other service the BPMP may provide
+>>>>>>> (e.g. a
+>>>>>>> future
+>>>>>>> +hypothetical SPI bus service). As such, child device nodes will have
+>>>>>>> no
+>>>>>>> reg
+>>>>>>> +property, and the BPMP node will have no #address-cells or
+>>>>>>> #size-cells
+>>>>>>> property.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> My understanding is that the I2C bus number is passed as part of the
+>>>>>> request to the BPMP firmware. Does that not count as addressing? Could
+>>>>>> we not represent that generically using a device tree hierarchy? I'm
+>>>>>> thinking something along these lines:
+>>>>>>
+>>>>>>         bpmp {
+>>>>>>                 ...
+>>>>>>
+>>>>>>                 services {
+>>>>>>                         i2c {
+>>>>>>                                 i2c@0 {
+>>>>>>                                         reg = <0>;
+>>>>>
+>>>>>
+>>>>>
+>>>>> Technically, that is possible. However, Rob Herring rejected the idea
+>>>>> of
+>>>>> multiple levels of sub-nodes.
+>>>>
+>>>>
+>>>> I think I questioned the need, not rejected. What about the above, but
+>>>> remove serivces level:
+>>>>
+>>>>          bpmp {
+>>>>                  ...
+>>>>
+>>>>                  i2c {
+>>>>                          i2c@0 {
+>>>>                                  reg = <0>;
+>>>
+>>>
+>>> Sigh. Can you please talk to Thierry and work out what the binding would
+>>> be
+>>> (perhaps on IRC to expedite things?) and I'll just implement whatever you
+>>> two agree upon. I don't really care much what the binding looks like any
+>>> more; I just need something that will pass review. Thanks.
+>>
+>>
+>> Like I said, I'm fine going with what you proposed.
+>
+>
+> OK, great. For the record, I'm going to send U-Boot patches today that apply
+> this binding patch (the original one I sent, unmodified) to the U-Boot tree,
+> and implement it in the U-Boot driver.
 
---ofZMSlrAVk9bLeVm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's fine, I did ack that.
 
-On Mon, Jul 25, 2016 at 10:03:14AM +0200, Michal Suchanek wrote:
-> Hello,
->=20
-> On 25 July 2016 at 09:32, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Fri, Jun 17, 2016 at 12:34:44PM +0200, Michal Suchanek wrote:
-> >> Hello,
-> >>
-> >> On 13 June 2016 at 21:57, Maxime Ripard
-> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >> > On Mon, Jun 13, 2016 at 05:46:48PM -0000, Michal Suchanek wrote:
-> >> >> Hello,
-> >> >>
-> >> >> This is update of the sunxi spi patches that should give full-featu=
-red SPI
-> >> >> driver.
-> >> >>
-> >> >> First three patches fix issues with the current driver and can be o=
-f use for
-> >> >> stable kernels so adding cc for those.
-> >> >>
-> >> >> I merged the sun4i and sun6i driver because there several issues th=
-at need to
-> >> >> be fixed in both separately and they are even out of sync wrt some =
-fixes.
-> >> >> I guess some of the merge patches can be squashed.
-> >> >>
-> >> >> I tested this with A10s Olinuxino Micro. I have no sun6i device so =
-I cannot
-> >> >> tell if that side was broken by this patchset - especially the last=
- patch that
-> >> >> adds DMA was afaik never tested on sun6i.
-> >> >
-> >> >
-> >> > For the record, I'm still very much opposed to such a merge.
-> >>
-> >> What is the reason against the merge? I did not find the original
-> >> discussion.
-> >
-> > I really prefer some code that is concise and clear but a little
-> > duplicated over some code that shares every possible lines of code but
-> > is a giant mess impossible to understand.
->=20
-> Yes, it's been tried. In the case of this driver there is more duplication
-> than differences. Also bitrot due to different variants receiving differe=
-nt
-> updates and fixes crept in already.
->=20
-> Adding the remap layer certainly does not make the driver easier to
-> understand but it's not becoming giant mess either.
+I really don't want to ask, but why are you documenting in u-boot? Is
+it some how different for u-boot?
 
-Well, when you say that you're not quite fond of using your structure
-all over the place because "it makes your eyes bleed", I wouldn't call
-that a good sales pitch.
-
-But again, reg_field seems like a good solution for that.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---ofZMSlrAVk9bLeVm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXm7sXAAoJEBx+YmzsjxAgN44QALni8ey49XrCL4PifJ3gnnsY
-71M0TJp0VVKadiDNbcKEFzhc2dZLRd/F5fWPq2a9Wk78JhE0x0EW9VFHolXgsm6p
-AQrhBiwcY7jUHQbMtgb4upH3BUfmaa06M1+VfYGmkeG20cUzoE5bTDdOgUXSftZC
-OIh8QvYks0eJsJpBca2aou8NO/PUoR/XXytTFtiJN12sc4VjyGXkKiSVYhAkMtUm
-6E961wMfYuy6LsdEMcIzPFPe3tcDa2gQD5Kt+KAT4C2fdcrBGSeTWp7bpFW3W/ae
-8u1Py8BMJO83/Do0kEHQa81OzMkDUiZp/YUvbkQFAkKKGNMdcyWTLHuocjedvpPQ
-pNHFsQNB8/bX+a918Mlv5HBpoEE1T8CG7JPN1lRCjankJTrw9vYdTgVi+xI+1NQk
-jzA0IZyQCc6o+ifB7pfaYpEl+oIUeoRRf0ydqn3pau+g36aAcT53IO2y7OuGrmLS
-Hl4i6ATWQcqRkPRicukkiyK+WDUngJVWr4Bzv1SziSxpgLJdhxkTj+/QzP7RQm80
-/X3rAruQD+pUPar7PfW25WjV/M1sSsEfud3XO+G5GW9nej52GRtNAfTKiJFzww1c
-9LHiv4KIX2XTng91xpUnDFFbHmuF3ayxas3RNVqD/z1+tRtMZuQLCJg7z/sCrBTS
-Q1tmK6hlFyo6wYkFGMs6
-=SoxN
------END PGP SIGNATURE-----
-
---ofZMSlrAVk9bLeVm--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
