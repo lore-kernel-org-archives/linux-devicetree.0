@@ -1,81 +1,141 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH] ASoC: rt5659: Add mclk controls
-Date: Fri, 29 Jul 2016 21:45:21 +0530
-Message-ID: <20160729161521.GL9681@localhost>
-References: <1469660568-3511-1-git-send-email-nicoleotsuka@gmail.com>
- <20160728155732.GG11806@sirena.org.uk>
- <20160728181419.GA4742@Asurada-Nvidia>
- <20160728185510.GK11806@sirena.org.uk>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 2/5] ARM: dts: msm8974: Move vreg_boost node from the
+ honami to msm8974
+Date: Fri, 29 Jul 2016 09:21:25 -0700
+Message-ID: <20160729162125.GX13516@tuxbot>
+References: <20160729060910.16943-1-bshah@kde.org>
+ <20160729060910.16943-3-bshah@kde.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160728185510.GK11806@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, bardliao@realtek.com, oder_chiou@realtek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Darren Hart <dvhart@linux.intel.com>
+In-Reply-To: <20160729060910.16943-3-bshah@kde.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bhushan Shah <bshah@kde.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu 28 Jul 23:09 PDT 2016, Bhushan Shah wrote:
 
---+jhVVhN62yS6hEJ8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> vreg_boost is Qualcomm platform specific and is also used in hammerhead
+> device.
+> 
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-soc@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Bhushan Shah <bshah@kde.org>
 
-On Thu, Jul 28, 2016 at 07:55:10PM +0100, Mark Brown wrote:
-> On Thu, Jul 28, 2016 at 11:14:20AM -0700, Nicolin Chen wrote:
-> > On Thu, Jul 28, 2016 at 04:57:32PM +0100, Mark Brown wrote:
->=20
-> > > This device seems to be used on x86 systems so we'll need to ensure t=
-hat
-> > > they register clocks for this.  They really should set this up using
-> > > quirks keyed off DMI information or similar so it's hidden from other
-> > > systems.
->=20
-> > Hmm..the change defines this mclk as a optional property so I'm
-> > not sure how it would affect x86 systems. (Would love to refine
->=20
-> Ah, clk_prepare_enable() silently ignores NULL as an argument?  It is a
-> bit messy to do things that way but might be the most practical thing.
->=20
-> > it to make it impactless.) Since it's literally hidden, any way
-> > that I can manually ensure it? Or just wait for an ack from x86
-> > developers?
->=20
-> Hopefully they'll speak up - we're in the merge window anyway so it'll
-> be just over a week before this can go into -next.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Yeah I am not aware of any plan to have clks on x86. For audio we are not
-going to use much. ACPI and controller w/ firmware does the job.
+Regards,
+Bjorn
 
-I have added Darren, he oversee platform things so might know if clocks
-would be there in future..
-
-Thanks
---=20
-~Vinod
-
---+jhVVhN62yS6hEJ8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXm4EYAAoJEHwUBw8lI4NHyKAQAJKbJjjg/5TkhnsomEV11g7H
-WP5n9T/fPVtjEK3GMxzGmuhxmHmZ3IlqGVGM9wkyd5eqFRi1JhFcHn64/kzG8Kg1
-NvoRCY+OBFuej1/FEVQCe1W1xMby190T5GgufJIVxICqbV0cAv3/7imzBzoesayv
-k1yLfXCeZqkUbjnSEphiQjxkXEEqlQi2meehkMDW2+r1ktF5A4eVztfLis5PpkNo
-Admol6L2sIudpjrF7l3nh6cu/hypPuSAGhgnoHcF2y3hBznLuOz3Gtnqo2Na0dWV
-s8ysxQnAZuUrlcZz43ElbH1l4vh6+P6ABgyxQZQ02AbXNNqvPxvbbwxGQBAofCRk
-WN5a1cjZ/HofOKUoH4OqKFtyvd1wd9qFamaaFvl+U8aAhafzsnlIYP7iwbkOeKQj
-hzBvO8joy8YgO7qV0HUfhV/cxn+QDySedjRjTNIQwTPmOWmHnb+TfGinojjG8e8w
-XJKtp0HSrkOYBoN1oqMsuzaRG2ILR1Vu1qvYcaK5BQBTl38xNJIraoCojbG3rh/a
-6NGrPAlIfhBqKQ/o5Ddk+Xi2tDU4GkFXioCU5k97kn401YecrSMNGjAokxFXtir3
-pfdZT34+da+W6JNUyYRoI0Rnuj5rQMDKqx2nLX3jwT7EbY678MMSfTBBQfnKHXiV
-48bxTNWD6jQYPE8jZbSB
-=U1cq
------END PGP SIGNATURE-----
-
---+jhVVhN62yS6hEJ8--
+> ---
+> 
+> Changes since v2:
+>     - Move vreg-boost node completely, along with pinctrl stuff
+> 
+>  .../boot/dts/qcom-msm8974-sony-xperia-honami.dts    | 21 ---------------------
+>  arch/arm/boot/dts/qcom-msm8974.dtsi                 | 18 ++++++++++++++++++
+>  arch/arm/boot/dts/qcom-pm8941.dtsi                  |  6 ++++++
+>  3 files changed, 24 insertions(+), 21 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> index a0398b6..a90e34c 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> +++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> @@ -258,22 +258,6 @@
+>  		};
+>  	};
+>  
+> -	vreg_boost: vreg-boost {
+> -		compatible = "regulator-fixed";
+> -
+> -		regulator-name = "vreg-boost";
+> -		regulator-min-microvolt = <3150000>;
+> -		regulator-max-microvolt = <3150000>;
+> -
+> -		regulator-always-on;
+> -		regulator-boot-on;
+> -
+> -		gpio = <&pm8941_gpios 21 GPIO_ACTIVE_HIGH>;
+> -		enable-active-high;
+> -
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&boost_bypass_n_pin>;
+> -     };
+>  };
+>  
+>  &soc {
+> @@ -383,11 +367,6 @@
+>  		};
+>  
+>  		gpios@c000 {
+> -			boost_bypass_n_pin: boost-bypass {
+> -				pins = "gpio21";
+> -				function = "normal";
+> -			};
+> -
+>  			gpio_keys_pin_a: gpio-keys-active {
+>  				pins = "gpio2", "gpio3", "gpio4", "gpio5";
+>  				function = "normal";
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> index dc2ce00..1f9b649 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -2,6 +2,7 @@
+>  
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/clock/qcom,gcc-msm8974.h>
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include "skeleton.dtsi"
+>  
+>  / {
+> @@ -604,4 +605,21 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	vreg_boost: vreg-boost {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "vreg-boost";
+> +		regulator-min-microvolt = <3150000>;
+> +		regulator-max-microvolt = <3150000>;
+> +
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +
+> +		gpio = <&pm8941_gpios 21 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&boost_bypass_n_pin>;
+> +	};
+>  };
+> diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
+> index d95edb6..ae8e5cc 100644
+> --- a/arch/arm/boot/dts/qcom-pm8941.dtsi
+> +++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
+> @@ -88,6 +88,12 @@
+>  				     <0 0xe1 0 IRQ_TYPE_NONE>,
+>  				     <0 0xe2 0 IRQ_TYPE_NONE>,
+>  				     <0 0xe3 0 IRQ_TYPE_NONE>;
+> +
+> +			boost_bypass_n_pin: boost-bypass {
+> +				pins = "gpio21";
+> +				function = "normal";
+> +			};
+> +
+>  		};
+>  
+>  		pm8941_mpps: mpps@a000 {
+> -- 
+> 2.9.0
+> 
