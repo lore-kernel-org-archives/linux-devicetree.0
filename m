@@ -1,154 +1,257 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
-Date: Fri, 29 Jul 2016 15:28:33 -0500
-Message-ID: <CAL_Jsq+k8AaQJK1Bre-8fuMWnHRY3wmBKB3ghZH-9UT4u9zRCQ@mail.gmail.com>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org> <20160719191442.15439-2-swarren@wwwdotorg.org>
- <20160726100302.GE2433@ulmo.ba.sec> <f1ca284a-5332-3323-80b9-7cf61e7c97ac@wwwdotorg.org>
- <CAL_JsqLfs5jnO9DkP5io5qbuCfhojfspkHQbHBttgWfTeokYkQ@mail.gmail.com>
- <6db4ff47-974b-94ac-3739-e630b6d38c0e@wwwdotorg.org> <20160729134831.GA3864@ulmo.ba.sec>
- <a86a95d0-8d4b-2abe-f2ef-870c29b3334e@wwwdotorg.org>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH] clk: bcm: Add driver for Northstar ILP clock
+Date: Fri, 29 Jul 2016 13:44:13 -0700
+Message-ID: <de0ba9d2-8b2b-b1e8-9235-1b402f0ffec0@broadcom.com>
+References: <1469797120-29298-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a86a95d0-8d4b-2abe-f2ef-870c29b3334e-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1469797120-29298-1-git-send-email-zajec5@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 29, 2016 at 11:06 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 07/29/2016 07:48 AM, Thierry Reding wrote:
->>
->> On Thu, Jul 28, 2016 at 03:24:22PM -0600, Stephen Warren wrote:
->>>
->>> On 07/28/2016 01:07 PM, Rob Herring wrote:
->>>>
->>>> On Tue, Jul 26, 2016 at 11:21 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>>> wrote:
->>>>>
->>>>> On 07/26/2016 04:03 AM, Thierry Reding wrote:
->>>>>>
->>>>>>
->>>>>> On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
->>>>>>>
->>>>>>>
->>>>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>>>
->>>>>>> The BPMP implements some services which must be represented by
->>>>>>> separate
->>>>>>> nodes. For example, it can provide access to certain I2C controllers,
->>>>>>> and
->>>>>>> the I2C bindings represent each I2C controller as a device tree node.
->>>>>>> Update the binding to describe how the BPMP supports this.
->>>>>>>
->>>>>>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>>> ---
->>>>>>>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23
->>>>>>> ++++++++++++++++++++++
->>>>>>>  1 file changed, 23 insertions(+)
->>>>>>>
->>>>>>> diff --git
->>>>>>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>>>>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>>>>> index 9a3864f56955..142d363406f6 100644
->>>>>>> ---
->>>>>>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>>>>> +++
->>>>>>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>>>>> @@ -38,6 +38,24 @@ implemented by this node:
->>>>>>>  - .../reset/reset.txt
->>>>>>>  - <dt-bindings/reset/tegra186-reset.h>
->>>>>>>
->>>>>>> +The BPMP implements some services which must be represented by
->>>>>>> separate
->>>>>>> nodes.
->>>>>>> +For example, it can provide access to certain I2C controllers, and
->>>>>>> the
->>>>>>> I2C
->>>>>>> +bindings represent each I2C controller as a device tree node. Such
->>>>>>> nodes
->>>>>>> should
->>>>>>> +be nested directly inside the main BPMP node.
->>>>>>> +
->>>>>>> +Software can determine whether a child node of the BPMP node
->>>>>>> represents
->>>>>>> a device
->>>>>>> +by checking for a compatible property. Any node with a compatible
->>>>>>> property
->>>>>>> +represents a device that can be instantiated. Nodes without a
->>>>>>> compatible
->>>>>>> +property may be used to provide configuration information regarding
->>>>>>> the
->>>>>>> BPMP
->>>>>>> +itself, although no such configuration nodes are currently defined
->>>>>>> by
->>>>>>> this
->>>>>>> +binding.
->>>>>>> +
->>>>>>> +The BPMP firmware defines no single global name-/numbering-space for
->>>>>>> such
->>>>>>> +services. Put another way, the numbering scheme for I2C buses is
->>>>>>> distinct from
->>>>>>> +the numbering scheme for any other service the BPMP may provide
->>>>>>> (e.g. a
->>>>>>> future
->>>>>>> +hypothetical SPI bus service). As such, child device nodes will have
->>>>>>> no
->>>>>>> reg
->>>>>>> +property, and the BPMP node will have no #address-cells or
->>>>>>> #size-cells
->>>>>>> property.
->>>>>>
->>>>>>
->>>>>>
->>>>>> My understanding is that the I2C bus number is passed as part of the
->>>>>> request to the BPMP firmware. Does that not count as addressing? Could
->>>>>> we not represent that generically using a device tree hierarchy? I'm
->>>>>> thinking something along these lines:
->>>>>>
->>>>>>         bpmp {
->>>>>>                 ...
->>>>>>
->>>>>>                 services {
->>>>>>                         i2c {
->>>>>>                                 i2c@0 {
->>>>>>                                         reg = <0>;
->>>>>
->>>>>
->>>>>
->>>>> Technically, that is possible. However, Rob Herring rejected the idea
->>>>> of
->>>>> multiple levels of sub-nodes.
->>>>
->>>>
->>>> I think I questioned the need, not rejected. What about the above, but
->>>> remove serivces level:
->>>>
->>>>          bpmp {
->>>>                  ...
->>>>
->>>>                  i2c {
->>>>                          i2c@0 {
->>>>                                  reg = <0>;
->>>
->>>
->>> Sigh. Can you please talk to Thierry and work out what the binding would
->>> be
->>> (perhaps on IRC to expedite things?) and I'll just implement whatever you
->>> two agree upon. I don't really care much what the binding looks like any
->>> more; I just need something that will pass review. Thanks.
->>
->>
->> Like I said, I'm fine going with what you proposed.
+Hi Rafal,
+
+On 7/29/2016 5:58 AM, Rafa=C5=82 Mi=C5=82ecki wrote:
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 >
+> This clock is present on cheaper Northstar devices like BCM53573 or
+> BCM47189 using Corex-A7. This driver uses PMU (Power Management Unit)
+> to calculate clock rate and allows using it in a generic (clk_*) way.
 >
-> OK, great. For the record, I'm going to send U-Boot patches today that apply
-> this binding patch (the original one I sent, unmodified) to the U-Boot tree,
-> and implement it in the U-Boot driver.
 
-That's fine, I did ack that.
+I thought Northstar uses Cortex A9 instead of A7?
 
-I really don't want to ask, but why are you documenting in u-boot? Is
-it some how different for u-boot?
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> ---
+>  .../devicetree/bindings/clock/brcm,ns-ilp.txt      |  28 ++++
+>  drivers/clk/bcm/Makefile                           |   1 +
+>  drivers/clk/bcm/clk-ns-ilp.c                       | 146 +++++++++++=
+++++++++++
+>  3 files changed, 175 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,ns-i=
+lp.txt
+>  create mode 100644 drivers/clk/bcm/clk-ns-ilp.c
+>
+> diff --git a/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt =
+b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
+> new file mode 100644
+> index 0000000..c4df38e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
+> @@ -0,0 +1,28 @@
+> +Broadcom Northstar ILP clock
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> +
+> +This binding uses the common clock binding:
+> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +This binding is used for ILP clock on Broadcom Northstar devices usi=
+ng
+> +Corex-A7 CPU. ILP clock depends on ALP one and has to be calculated =
+on
+> +runtime.
+> +
 
-Rob
+Cortex-A9.
+
+> +Required properties:
+> +- compatible: "brcm,ns-ilp"
+> +- reg: iomem address range of PMU (Power Management Unit)
+> +- reg-names: "pmu", the only needed & supported reg right now
+> +- clocks: should reference an ALP clock
+> +- clock-names: "alp", the only needed & supported clock right now
+
+clock-names must be "alp-clk"
+
+> +- #clock-cells: should be <0>
+> +
+> +Example:
+> +
+> +ilp: ilp {
+> +	compatible =3D "brcm,ns-ilp";
+> +	reg =3D <0x18012000 0x1000>;
+> +	reg-names =3D "pmu";
+> +	clocks =3D <&alp>;
+> +	clock-names =3D "alp-clk";
+> +	#clock-cells =3D <0>;
+> +};
+> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+> index 1d79bd2..1389379 100644
+> --- a/drivers/clk/bcm/Makefile
+> +++ b/drivers/clk/bcm/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_COMMON_CLK_IPROC)	+=3D clk-ns2.o
+>  obj-$(CONFIG_ARCH_BCM_CYGNUS)	+=3D clk-cygnus.o
+>  obj-$(CONFIG_ARCH_BCM_NSP)	+=3D clk-nsp.o
+>  obj-$(CONFIG_ARCH_BCM_5301X)	+=3D clk-nsp.o
+> +obj-$(CONFIG_ARCH_BCM_5301X)	+=3D clk-ns-ilp.o
+> diff --git a/drivers/clk/bcm/clk-ns-ilp.c b/drivers/clk/bcm/clk-ns-il=
+p.c
+> new file mode 100644
+> index 0000000..230458e8
+> --- /dev/null
+> +++ b/drivers/clk/bcm/clk-ns-ilp.c
+> @@ -0,0 +1,146 @@
+> +/*
+> + * Copyright (C) 2016 Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +
+> +#define PMU_XTAL_FREQ_RATIO			0x66c
+> +#define  XTAL_ALP_PER_4ILP			0x00001fff
+> +#define  XTAL_CTL_EN				0x80000000
+> +#define PMU_SLOW_CLK_PERIOD			0x6dc
+> +
+> +struct ns_ilp {
+> +	struct clk *clk;
+> +	struct clk_hw hw;
+> +	struct clk *alp_clk;
+> +	void __iomem *pmu;
+> +};
+> +
+> +static int ns_ilp_enable(struct clk_hw *hw)
+> +{
+> +	struct ns_ilp *ilp =3D container_of(hw, struct ns_ilp, hw);
+> +
+> +	writel(0x10199, ilp->pmu + PMU_SLOW_CLK_PERIOD);
+> +	writel(0x10000, ilp->pmu + 0x674);
+> +
+> +	return 0;
+> +}
+> +
+> +static unsigned long ns_ilp_recalc_rate(struct clk_hw *hw,
+> +					unsigned long parent_rate)
+> +{
+> +	struct ns_ilp *ilp =3D container_of(hw, struct ns_ilp, hw);
+> +	void __iomem *pmu =3D ilp->pmu;
+> +	u32 last_val, cur_val;
+> +	u32 sum =3D 0, num =3D 0, loop_num =3D 0;
+> +	u32 avg;
+> +	int err;
+> +
+> +	err =3D clk_prepare_enable(ilp->alp_clk);
+> +	if (err)
+> +		return 0;
+> +
+> +	/* Enable */
+> +	writel(XTAL_CTL_EN, pmu + PMU_XTAL_FREQ_RATIO);
+> +
+> +	/* Read initial value */
+> +	last_val =3D readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
+> +
+> +	/* Try getting 20 different values for calculating average */
+> +	while (num < 20) {
+> +		cur_val =3D readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
+> +
+> +		if (cur_val !=3D last_val) {
+> +			/* Got different value, use it */
+> +			sum +=3D cur_val;
+> +			num++;
+> +			loop_num =3D 0;
+> +			last_val =3D cur_val;
+> +		} else if (++loop_num > 5000) {
+> +			/* Same value over and over, give up */
+> +			sum +=3D cur_val;
+> +			num++;
+> +			break;
+> +		}
+> +	}
+> +
+> +	/* Disable */
+> +	writel(0x0, pmu + PMU_XTAL_FREQ_RATIO);
+> +
+> +	avg =3D sum / num;
+> +
+> +	return clk_get_rate(ilp->alp_clk) * 4 / avg;
+> +}
+> +
+> +const struct clk_ops ns_ilp_clk_ops =3D {
+
+static
+
+> +	.enable =3D ns_ilp_enable,
+> +	.recalc_rate =3D ns_ilp_recalc_rate,
+> +};
+> +
+> +static void ns_ilp_init(struct device_node *np)
+> +{
+> +	struct ns_ilp *ilp;
+> +	struct resource res;
+> +	struct clk_init_data init =3D { 0 };
+> +	int index;
+> +	int err;
+> +
+> +	ilp =3D kzalloc(sizeof(*ilp), GFP_KERNEL);
+> +	if (!ilp)
+> +		return;
+> +
+> +	index =3D of_property_match_string(np, "reg-names", "pmu");
+> +	if (index < 0) {
+> +		err =3D index;
+> +		goto err_free_ilp;
+> +	}
+> +	err =3D of_address_to_resource(np, index, &res);
+> +	if (err) {
+> +		err =3D index;
+> +		goto err_free_ilp;
+> +	}
+> +	ilp->pmu =3D ioremap_nocache(res.start, resource_size(&res));
+> +	if (IS_ERR(ilp->pmu)) {
+> +		err =3D PTR_ERR(ilp->pmu);
+> +		goto err_free_ilp;
+> +	}
+> +
+> +	ilp->alp_clk =3D of_clk_get_by_name(np, "alp-clk");
+> +	if (IS_ERR(ilp->alp_clk)) {
+> +		err =3D PTR_ERR(ilp->alp_clk);
+> +		goto err_unmap_pmu;
+> +	}
+> +
+> +	init.name =3D np->name;
+> +	init.ops =3D &ns_ilp_clk_ops;
+> +	init.flags =3D CLK_IS_ROOT;
+> +
+> +	ilp->hw.init =3D &init;
+> +	ilp->clk =3D clk_register(NULL, &ilp->hw);
+> +	if (WARN_ON(IS_ERR(ilp->clk)))
+> +		goto err_put_alp_clk;
+> +
+> +	of_clk_add_provider(np, of_clk_src_simple_get, ilp->clk);
+
+Check return value and handle error conditions
+
+> +
+> +	return;
+> +
+> +err_put_alp_clk:
+> +	clk_put(ilp->alp_clk);
+> +err_unmap_pmu:
+> +	iounmap(ilp->pmu);
+> +err_free_ilp:
+> +	kfree(ilp);
+> +	pr_err("Failed to init ILP clock: %d\n", err);
+> +}
+> +CLK_OF_DECLARE(ns_ilp_clk, "brcm,ns-ilp", ns_ilp_init);
+>
+
+Thanks,
+
+Ray
