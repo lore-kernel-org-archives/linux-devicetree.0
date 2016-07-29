@@ -1,81 +1,153 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner sun8i-emac
-Date: Fri, 29 Jul 2016 20:12:32 +0200
-Message-ID: <20160729181232.GF6215@lukather>
-References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com>
- <1469001800-11615-4-git-send-email-clabbe.montjoie@gmail.com>
- <20160721075519.GC5993@lukather>
- <20160728134031.GC7582@Red>
- <20160728184916.GF6682@lukather>
- <20160729081519.GA31878@Red>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 6/8] iommu/arm-smmu: Implement of_xlate() for SMMUv3
+Date: Fri, 29 Jul 2016 19:55:33 +0100
+Message-ID: <1d570682-d815-657e-2119-b706e0034e2c@arm.com>
+References: <cover.1467388950.git.robin.murphy@arm.com>
+ <925b054b1e96dc83c0b1dc9607785d0346187366.1467388950.git.robin.murphy@arm.com>
+ <20160729144655.GA3359@e106794-lin.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hK8Uo4Yp55NZU70L"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBG5Z526AKGQE7PJNOOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160729081519.GA31878@Red>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160729144655.GA3359-lfHAr0XZR/FyySVAYrpuPyZi+YwRKgec@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Philippe Brucker <Jean-Philippe.Brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---hK8Uo4Yp55NZU70L
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Fri, Jul 29, 2016 at 10:15:19AM +0200, LABBE Corentin wrote:
-> > > > > +See ethernet.txt in the same directory for generic bindings for ethernet
-> > > > > +controllers.
-> > > > > +
-> > > > > +The device node referenced by "phy" or "phy-handle" should be a child node
-> > > > > +of this node. See phy.txt for the generic PHY bindings.
-> > > > > +
-> > > > > +Optional properties:
-> > > > > +- phy-supply: phandle to a regulator if the PHY needs one
-> > > > > +- phy-io-supply: phandle to a regulator if the PHY needs a another one for I/O.
-> > > > > +		 This is sometimes found with RGMII PHYs, which use a second
-> > > > > +		 regulator for the lower I/O voltage.
-> > > > > +- allwinner,tx-delay: The setting of the TX clock delay chain
-> > > > > +- allwinner,rx-delay: The setting of the RX clock delay chain
-> > > > 
-> > > > In which unit? What is the default value?
-> > > 
-> > > The unit is unknown to me, but I have added a comment for the
-> > > default and acceptable range value.
-> > 
-> > That's unfortunate. We'll see how the DT maintainers feel about that.
-> > 
+On 29/07/16 15:46, Jean-Philippe Brucker wrote:
+> Hi Robin,
 > 
-> I have searched for txdelay in Documentation, and found a few driver
-> that give the units (us/ps).
->
-> But in that case, the value in ps/us must be found in a table
-> indexed by the Xxdelay value.
->
-> So the settings seems always a raw number, and for sun8i-emac
-> nothing in user manual could help to find what each value is/related
-> to.
+> Very sorry about the delay, I forgot about this minor comment, below
 > 
-> So the good value is either found by "try and test" or "copy the
-> value found in fex file".
+> On Fri, Jul 01, 2016 at 05:50:15PM +0100, Robin Murphy wrote:
+>> Now that we can properly describe the mapping between PCI RIDs and
+>> stream IDs via "iommu-map", and have it fed it to the driver
+>> automatically via of_xlate(), rework the SMMUv3 driver to benefit from
+>> that, and get rid of the current misuse of the "iommus" binding.
+>>
+>> Since having of_xlate wired up means that masters will now be given the
+>> appropriate DMA ops, we also need to make sure that default domains work
+>> properly. This necessitates dispensing with the "whole group at a time"
+>> notion for attaching to a domain, as devices which share a group get
+>> attached to the group's default domain one by one as they are initially
+>> probed.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>
+>> v4: Add explicit device probe in of_init callback.
+>>
+>>  drivers/iommu/arm-smmu-v3.c | 278 +++++++++++++++++++-------------------------
+>>  1 file changed, 121 insertions(+), 157 deletions(-)
+>>
+>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+>> index 94b68213c50d..fb438664b9f0 100644
+>> --- a/drivers/iommu/arm-smmu-v3.c
+>> +++ b/drivers/iommu/arm-smmu-v3.c
+> [...]
+>> @@ -1800,94 +1752,74 @@ static bool arm_smmu_sid_in_range(struct arm_smmu_device *smmu, u32 sid)
+>>  	return sid < limit;
+>>  }
+>>  
+>> +static struct iommu_ops arm_smmu_ops;
+>> +
+>>  static int arm_smmu_add_device(struct device *dev)
+>>  {
+>>  	int i, ret;
+>> -	u32 sid, *sids;
+>> -	struct pci_dev *pdev;
+>> -	struct iommu_group *group;
+>> -	struct arm_smmu_group *smmu_group;
+>>  	struct arm_smmu_device *smmu;
+>> +	struct arm_smmu_master_data *master;
+>> +	struct iommu_fwspec *fwspec = dev_iommu_fwspec(dev);
+>> +	struct iommu_group *group;
+>>  
+>> -	/* We only support PCI, for now */
+>> -	if (!dev_is_pci(dev))
+>> +	if (!fwspec || fwspec->iommu_ops != &arm_smmu_ops)
+>>  		return -ENODEV;
+>> -
+>> -	pdev = to_pci_dev(dev);
+>> -	group = iommu_group_get_for_dev(dev);
+>> -	if (IS_ERR(group))
+>> -		return PTR_ERR(group);
+>> -
+>> -	smmu_group = iommu_group_get_iommudata(group);
+>> -	if (!smmu_group) {
+>> -		smmu = arm_smmu_get_for_pci_dev(pdev);
+>> -		if (!smmu) {
+>> -			ret = -ENOENT;
+>> -			goto out_remove_dev;
+>> -		}
+>> -
+>> -		smmu_group = kzalloc(sizeof(*smmu_group), GFP_KERNEL);
+>> -		if (!smmu_group) {
+>> -			ret = -ENOMEM;
+>> -			goto out_remove_dev;
+>> -		}
+>> -
+>> -		smmu_group->ste.valid	= true;
+>> -		smmu_group->smmu	= smmu;
+>> -		iommu_group_set_iommudata(group, smmu_group,
+>> -					  __arm_smmu_release_pci_iommudata);
+>> +	/*
+>> +	 * We _can_ actually withstand dodgy bus code re-calling add_device()
+>> +	 * without an intervening remove_device()/of_xlate() sequence, but
+>> +	 * we're not going to do so quietly...
+>> +	 */
+>> +	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
+>> +		master = fwspec->iommu_priv;
+>> +		smmu = master->smmu;
+>>  	} else {
+>> -		smmu = smmu_group->smmu;
+>> +		smmu = arm_smmu_get_by_node(fwspec->iommu_np);
+>> +		if (!smmu)
+>> +			return -ENODEV;
+>> +		master = kzalloc(sizeof(*master), GFP_KERNEL);
+>> +		if (!master)
+>> +			return -ENOMEM;
+>> +
+>> +		master->smmu = smmu;
+>> +		fwspec->iommu_priv = master;
+> 
+> It's probably best to initialise master->ste.bypass = true here, to
+> reflect the initial state of STEs. Otherwise attach_dev always calls
+> detach_dev first for nothing.
 
-What I meant was that, just like you found out already, most of the
-time the properties should be in absolute units, so that it doesn't
-depend on some clock rate most likely in that case.
+I'm actually now thinking that that check in attach_dev() should be for
+ste->valid, rather than ste->bypass. That matches the similar check in
+remove_device(), and looking at old local branches I apparently did have
+it that way at some point, and I now can't quite remember why it ended
+up differently. I'll have a proper dig into it next week.
 
-Maxime
+> Apart from that, this version works fine with my twisted setup. Note
+> that we might have to add a master->fwspec reference in the future, to
+> access those SIDs from various places. If I understood correctly, it
+> should be fine as those objects have the same lifetime after the
+> add_device call.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---hK8Uo4Yp55NZU70L--
+That sounds reasonable, although I can't think offhand where we might
+have a master_data without having got it via the containing device
+(unless we also add some other means of keeping track of them). Since
+this series doesn't need any kind of reverse-lookup capabilities I'm
+just keeping things as simple as possible for the time being.
+
+Robin.
+
+> 
+> Thanks,
+> Jean-Philippe
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
