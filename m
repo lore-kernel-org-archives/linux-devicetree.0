@@ -1,73 +1,54 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] ARM: dts: qcom: msm8974-hammerhead: Add sdhci1 node
-Date: Fri, 29 Jul 2016 09:27:53 -0700
-Message-ID: <20160729162753.GY13516@tuxbot>
-References: <20160720062610.20822-1-bshah@kde.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: rt5659: Add mclk controls
+Date: Fri, 29 Jul 2016 17:39:33 +0100
+Message-ID: <20160729163933.GJ10376@sirena.org.uk>
+References: <1469660568-3511-1-git-send-email-nicoleotsuka@gmail.com>
+ <20160728155732.GG11806@sirena.org.uk>
+ <20160728181419.GA4742@Asurada-Nvidia>
+ <20160728185510.GK11806@sirena.org.uk>
+ <20160729161521.GL9681@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aziWXe2aaRGlkyg3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160720062610.20822-1-bshah@kde.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bhushan Shah <bshah@kde.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20160729161521.GL9681@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, bardliao@realtek.com, oder_chiou@realtek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 19 Jul 23:26 PDT 2016, Bhushan Shah wrote:
 
-> This introduces the eMMC sdhci node and its pinctrl state
-> 
-> Signed-off-by: Bhushan Shah <bshah@kde.org>
+--aziWXe2aaRGlkyg3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Fri, Jul 29, 2016 at 09:45:21PM +0530, Vinod Koul wrote:
 
-Regards,
-Bjorn
+> Yeah I am not aware of any plan to have clks on x86. For audio we are not
+> going to use much. ACPI and controller w/ firmware does the job.
 
-> ---
->  .../dts/qcom-msm8974-lge-nexus5-hammerhead.dts     | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> index 68f071f..947bd7f 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> @@ -233,6 +233,35 @@
->  		status = "ok";
->  	};
->  
-> +	pinctrl@fd510000 {
-> +		sdhc1_pin_a: sdhc1-pin-active {
-> +			clk {
-> +				pins = "sdc1_clk";
-> +				drive-strength = <16>;
-> +				bias-disable;
-> +			};
-> +
-> +			cmd-data {
-> +				pins = "sdc1_cmd", "sdc1_data";
-> +				drive-strength = <10>;
-> +				bias-pull-up;
-> +			};
-> +		};
-> +	};
-> +
-> +	sdhci@f9824900 {
-> +		status = "ok";
-> +
-> +		vmmc-supply = <&pm8941_l20>;
-> +		vqmmc-supply = <&pm8941_s3>;
-> +
-> +		bus-width = <8>;
-> +		non-removable;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sdhc1_pin_a>;
-> +	};
-> +
->  	gpio-keys {
->  		compatible = "gpio-keys";
->  		input-name = "gpio-keys";
-> -- 
-> 2.9.0
-> 
+> I have added Darren, he oversee platform things so might know if clocks
+> would be there in future..
+
+Not having controllable clocks is fine but as we've discussed before
+you're going to need to represent the clocks that are there with fixed
+clocks instantiated through whatever you use to enumerate boards.  We
+don't want to have to special case x86 all the time in CODEC drivers.
+
+--aziWXe2aaRGlkyg3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXm4bEAAoJECTWi3JdVIfQw1gH/163HvlZDgT+dvkx9mvZKxVH
+DzCeODijEp++mUFcmtQrOSmXOUnoBiv1gC7ZKSjAJp13Eoa8GjEWjv7JetZtyexp
+o00UWuTgEE4+tYaphamJcFv4y6evV98OISlRA+HiJxYEO2yICXhv3POuQj7eXTzE
+XPBVQ7MqUgPxy+E0PRBqSgUqOa7+6pvuH9l9G83vo9vMbnV8WzIfG6ZAqUuCZuSF
+OJVtYaULQAXVuSXBqZ01uydWDtRjeYZCWq9LQCXo3+02VNDuIqPh6svoQ+b/lq+f
+OFRbofuQs/IsgUAiuzdSr6TL+sll6waA4h+3K7TVOYYomcumuDv+faTIVUOkbso=
+=MaYQ
+-----END PGP SIGNATURE-----
+
+--aziWXe2aaRGlkyg3--
