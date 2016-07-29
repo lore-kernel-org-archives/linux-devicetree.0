@@ -1,176 +1,133 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
-Date: Fri, 29 Jul 2016 15:48:31 +0200
-Message-ID: <20160729134831.GA3864@ulmo.ba.sec>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org>
- <20160719191442.15439-2-swarren@wwwdotorg.org>
- <20160726100302.GE2433@ulmo.ba.sec>
- <f1ca284a-5332-3323-80b9-7cf61e7c97ac@wwwdotorg.org>
- <CAL_JsqLfs5jnO9DkP5io5qbuCfhojfspkHQbHBttgWfTeokYkQ@mail.gmail.com>
- <6db4ff47-974b-94ac-3739-e630b6d38c0e@wwwdotorg.org>
+From: Jean-Philippe Brucker <Jean-Philippe.Brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 6/8] iommu/arm-smmu: Implement of_xlate() for SMMUv3
+Date: Fri, 29 Jul 2016 15:46:55 +0100
+Message-ID: <20160729144655.GA3359@e106794-lin.localdomain>
+References: <cover.1467388950.git.robin.murphy@arm.com>
+	<925b054b1e96dc83c0b1dc9607785d0346187366.1467388950.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6db4ff47-974b-94ac-3739-e630b6d38c0e-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <925b054b1e96dc83c0b1dc9607785d0346187366.1467388950.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Robin,
 
---7JfCtLOvnd9MIVvH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Very sorry about the delay, I forgot about this minor comment, below
 
-On Thu, Jul 28, 2016 at 03:24:22PM -0600, Stephen Warren wrote:
-> On 07/28/2016 01:07 PM, Rob Herring wrote:
-> > On Tue, Jul 26, 2016 at 11:21 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org=
-> wrote:
-> > > On 07/26/2016 04:03 AM, Thierry Reding wrote:
-> > > >=20
-> > > > On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
-> > > > >=20
-> > > > > From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > >=20
-> > > > > The BPMP implements some services which must be represented by se=
-parate
-> > > > > nodes. For example, it can provide access to certain I2C controll=
-ers, and
-> > > > > the I2C bindings represent each I2C controller as a device tree n=
-ode.
-> > > > > Update the binding to describe how the BPMP supports this.
-> > > > >=20
-> > > > > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > > ---
-> > > > >  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23
-> > > > > ++++++++++++++++++++++
-> > > > >  1 file changed, 23 insertions(+)
-> > > > >=20
-> > > > > diff --git
-> > > > > a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp=
-=2Etxt
-> > > > > b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp=
-=2Etxt
-> > > > > index 9a3864f56955..142d363406f6 100644
-> > > > > --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-=
-bpmp.txt
-> > > > > +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-=
-bpmp.txt
-> > > > > @@ -38,6 +38,24 @@ implemented by this node:
-> > > > >  - .../reset/reset.txt
-> > > > >  - <dt-bindings/reset/tegra186-reset.h>
-> > > > >=20
-> > > > > +The BPMP implements some services which must be represented by s=
-eparate
-> > > > > nodes.
-> > > > > +For example, it can provide access to certain I2C controllers, a=
-nd the
-> > > > > I2C
-> > > > > +bindings represent each I2C controller as a device tree node. Su=
-ch nodes
-> > > > > should
-> > > > > +be nested directly inside the main BPMP node.
-> > > > > +
-> > > > > +Software can determine whether a child node of the BPMP node rep=
-resents
-> > > > > a device
-> > > > > +by checking for a compatible property. Any node with a compatible
-> > > > > property
-> > > > > +represents a device that can be instantiated. Nodes without a co=
-mpatible
-> > > > > +property may be used to provide configuration information regard=
-ing the
-> > > > > BPMP
-> > > > > +itself, although no such configuration nodes are currently defin=
-ed by
-> > > > > this
-> > > > > +binding.
-> > > > > +
-> > > > > +The BPMP firmware defines no single global name-/numbering-space=
- for
-> > > > > such
-> > > > > +services. Put another way, the numbering scheme for I2C buses is
-> > > > > distinct from
-> > > > > +the numbering scheme for any other service the BPMP may provide =
-(e.g. a
-> > > > > future
-> > > > > +hypothetical SPI bus service). As such, child device nodes will =
-have no
-> > > > > reg
-> > > > > +property, and the BPMP node will have no #address-cells or #size=
--cells
-> > > > > property.
-> > > >=20
-> > > >=20
-> > > > My understanding is that the I2C bus number is passed as part of the
-> > > > request to the BPMP firmware. Does that not count as addressing? Co=
-uld
-> > > > we not represent that generically using a device tree hierarchy? I'm
-> > > > thinking something along these lines:
-> > > >=20
-> > > >         bpmp {
-> > > >                 ...
-> > > >=20
-> > > >                 services {
-> > > >                         i2c {
-> > > >                                 i2c@0 {
-> > > >                                         reg =3D <0>;
-> > >=20
-> > >=20
-> > > Technically, that is possible. However, Rob Herring rejected the idea=
- of
-> > > multiple levels of sub-nodes.
-> >=20
-> > I think I questioned the need, not rejected. What about the above, but
-> > remove serivces level:
-> >=20
-> >          bpmp {
-> >                  ...
-> >=20
-> >                  i2c {
-> >                          i2c@0 {
-> >                                  reg =3D <0>;
->=20
-> Sigh. Can you please talk to Thierry and work out what the binding would =
-be
-> (perhaps on IRC to expedite things?) and I'll just implement whatever you
-> two agree upon. I don't really care much what the binding looks like any
-> more; I just need something that will pass review. Thanks.
+On Fri, Jul 01, 2016 at 05:50:15PM +0100, Robin Murphy wrote:
+> Now that we can properly describe the mapping between PCI RIDs and
+> stream IDs via "iommu-map", and have it fed it to the driver
+> automatically via of_xlate(), rework the SMMUv3 driver to benefit from
+> that, and get rid of the current misuse of the "iommus" binding.
+> 
+> Since having of_xlate wired up means that masters will now be given the
+> appropriate DMA ops, we also need to make sure that default domains work
+> properly. This necessitates dispensing with the "whole group at a time"
+> notion for attaching to a domain, as devices which share a group get
+> attached to the group's default domain one by one as they are initially
+> probed.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+> 
+> v4: Add explicit device probe in of_init callback.
+> 
+>  drivers/iommu/arm-smmu-v3.c | 278 +++++++++++++++++++-------------------------
+>  1 file changed, 121 insertions(+), 157 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 94b68213c50d..fb438664b9f0 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+[...]
+> @@ -1800,94 +1752,74 @@ static bool arm_smmu_sid_in_range(struct arm_smmu_device *smmu, u32 sid)
+>  	return sid < limit;
+>  }
+>  
+> +static struct iommu_ops arm_smmu_ops;
+> +
+>  static int arm_smmu_add_device(struct device *dev)
+>  {
+>  	int i, ret;
+> -	u32 sid, *sids;
+> -	struct pci_dev *pdev;
+> -	struct iommu_group *group;
+> -	struct arm_smmu_group *smmu_group;
+>  	struct arm_smmu_device *smmu;
+> +	struct arm_smmu_master_data *master;
+> +	struct iommu_fwspec *fwspec = dev_iommu_fwspec(dev);
+> +	struct iommu_group *group;
+>  
+> -	/* We only support PCI, for now */
+> -	if (!dev_is_pci(dev))
+> +	if (!fwspec || fwspec->iommu_ops != &arm_smmu_ops)
+>  		return -ENODEV;
+> -
+> -	pdev = to_pci_dev(dev);
+> -	group = iommu_group_get_for_dev(dev);
+> -	if (IS_ERR(group))
+> -		return PTR_ERR(group);
+> -
+> -	smmu_group = iommu_group_get_iommudata(group);
+> -	if (!smmu_group) {
+> -		smmu = arm_smmu_get_for_pci_dev(pdev);
+> -		if (!smmu) {
+> -			ret = -ENOENT;
+> -			goto out_remove_dev;
+> -		}
+> -
+> -		smmu_group = kzalloc(sizeof(*smmu_group), GFP_KERNEL);
+> -		if (!smmu_group) {
+> -			ret = -ENOMEM;
+> -			goto out_remove_dev;
+> -		}
+> -
+> -		smmu_group->ste.valid	= true;
+> -		smmu_group->smmu	= smmu;
+> -		iommu_group_set_iommudata(group, smmu_group,
+> -					  __arm_smmu_release_pci_iommudata);
+> +	/*
+> +	 * We _can_ actually withstand dodgy bus code re-calling add_device()
+> +	 * without an intervening remove_device()/of_xlate() sequence, but
+> +	 * we're not going to do so quietly...
+> +	 */
+> +	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
+> +		master = fwspec->iommu_priv;
+> +		smmu = master->smmu;
+>  	} else {
+> -		smmu = smmu_group->smmu;
+> +		smmu = arm_smmu_get_by_node(fwspec->iommu_np);
+> +		if (!smmu)
+> +			return -ENODEV;
+> +		master = kzalloc(sizeof(*master), GFP_KERNEL);
+> +		if (!master)
+> +			return -ENOMEM;
+> +
+> +		master->smmu = smmu;
+> +		fwspec->iommu_priv = master;
 
-Like I said, I'm fine going with what you proposed. I'm sure by now the
-BPMP has long been frozen and if the proposed binding works fine that's
-good. No need to over-engineer.
+It's probably best to initialise master->ste.bypass = true here, to
+reflect the initial state of STEs. Otherwise attach_dev always calls
+detach_dev first for nothing.
 
-If we ever need more than one I2C (or expose other busses) I'm sure we
-can find a way to switch to something like the above later on. Like I
-said, that's very unlikely to happen on Tegra186, so we'll have a new
-compatible string (and hence an easy way to differentiate between these
-bindings) anyway.
+Apart from that, this version works fine with my twisted setup. Note
+that we might have to add a master->fwspec reference in the future, to
+access those SIDs from various places. If I understood correctly, it
+should be fine as those objects have the same lifetime after the
+add_device call.
 
-Thierry
-
---7JfCtLOvnd9MIVvH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXm16tAAoJEN0jrNd/PrOhXTYP/iiFsGU+f3UM/A4aSAdgM/9g
-/Ev3g9tDMCi/5iP1MJa8cJGmzI0TyqFIHJVOuIb2vGd4A2w9RfNZ1VRoSh2xz8ej
-hWIIukHEB9isCwfGIf0qV9O+rAx8GEIkIVeTLXXhAO/mzarRhdFZdfB4zL8kFw3x
-gv//SUKxWLmpnHyh3ZdfXLnLxImT8gT7u9gQJCOu/sh+Ovu7hhmn8SFgNP3S+dWO
-X43++LY0g4VNm+QfnAf2rW5L9KKOG+Zvv46OSJx9XFw+HSaMHJn0BI+jyNuI0CDJ
-xYGE6BrydqmsmblkmqWaGXIe4oJCWc995FkeXfRe0BoHrqQZQJMxZrBj8jlsT8XT
-cdoXCoGDc/7AAEkVicBAUZVAtcQavoGSs3rFCvyc/d8Wn4qc3sOuwuy+Ut9U3i/n
-yEbx4qFvjqYXchmjAXRylcTE60pED2jf9gJGuQYmoK8/EbsDMJrZsAhPJ9F65f2I
-AUUTk85T5XTdSIdq0LN8ygLto7Nfct2geeS5S+SKjlYdVpheFe5wVcmUY+lOenW3
-9l46kQ4vgKR1jluDXK2kk5cmVQLYKqRnfayxsoTp8B8C4df2X87TqU6pSrw4ZgBN
-RHZNCbeaiRgSitk42EnR0X5tA0ulCX0b4a31DTN6q/TUN3NxONSHRkHkt98HQ2n7
-0XmMgrh0rhTgAI4YX9Nb
-=4lLS
------END PGP SIGNATURE-----
-
---7JfCtLOvnd9MIVvH--
+Thanks,
+Jean-Philippe
