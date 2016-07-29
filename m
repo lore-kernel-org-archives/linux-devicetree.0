@@ -1,82 +1,48 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 0/5] Add power domain support for dw_mmc/sdhci-of-arasan
-Date: Fri, 29 Jul 2016 11:21:01 +0200
-Message-ID: <CAPDyKFq6itpANwnLqgOqKHT0fJH4SvZi2FWrafa=HSBfiZE52w@mail.gmail.com>
-References: <1469765703-30999-1-git-send-email-shawn.lin@rock-chips.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] ethernet: add sun8i-emac driver
+Date: Fri, 29 Jul 2016 11:26:57 +0200
+Message-ID: <4552489.XcKoxjnXeP@wuerfel>
+References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com> <4697175.RMdFEWr9V5@wuerfel> <20160728131826.GA7582@Red>
+Reply-To: arnd-r2nGTMty4D4@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1469765703-30999-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Feng Xiao <xf@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRB3GC5S6AKGQE5NFSSIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160728131826.GA7582@Red>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 July 2016 at 06:14, Shawn Lin <shawn.lin@rock-chips.com> wrote:
->
-> We need to enable the power domain manually while probing as the
-> power policy will turn off the pd which is not referenced. Otherwise
+On Thursday, July 28, 2016 3:18:26 PM CEST LABBE Corentin wrote:
+> 
+> I will reworked locking and it seems that no locking is necessary.
+> I have added the following comment about the locking strategy:
+> 
+> /* Locking strategy:
+>  * RX queue does not need any lock since only sun8i_emac_poll() access it.
+>  * (All other RX modifiers (ringparam/ndo_stop) disable NAPI and so sun8i_emac_poll())
+>  * TX queue is handled by sun8i_emac_xmit(), sun8i_emac_complete_xmit() and sun8i_emac_tx_timeout()
+>  * (All other RX modifiers (ringparam/ndo_stop) disable NAPI and stop queue)
+>  *
+>  * sun8i_emac_xmit() could fire only once (netif_tx_lock)
+>  * sun8i_emac_complete_xmit() could fire only once (called from NAPI)
+>  * sun8i_emac_tx_timeout() could fire only once (netif_tx_lock) and couldnt
+>  * race with sun8i_emac_xmit (due to netif_tx_lock) and with sun8i_emac_complete_xmit which disable NAPI.
+>  *
+>  * So only sun8i_emac_xmit and sun8i_emac_complete_xmit could fire at the same time.
+>  * But they never could modify the same descriptors:
+>  * - sun8i_emac_complete_xmit() will modify only descriptors with empty status
+>  * - sun8i_emac_xmit() will modify only descriptors set to DCLEAN
+>  * Proper memory barriers ensure that descriptor set to DCLEAN could not be
+>  * modified latter by sun8i_emac_complete_xmit().
+>  * */
 
-I assume you are going to use the generic PM domain (genpd)?
-If so, this statement isn't entirely correct.
+Sounds good, the comment is certainly very helpful here.
 
-As a matter of fact, the PM domain will be "powered on" once you have
-registered your PM domain with genpd and when the device (dw_mmc etc)
-gets attached to the domain. The attach occurs when the platform bus'
-->probe() function get invoked for the device.
-
-Genpd monitors each device within the domain. To allow it to "power
-off", all devices in same domain needs to be runtime PM enabled and
-runtime PM suspended.
-
-Due to this, you should be able to deploy genpd support+an updated
-DTB, without first having to deploying runtime PM support in the
-related drivers. In other words, you should be able to work on these
-things almost independently of each other.
-
-> we may take risk of breaking kernel once Feng Xiao land the rockchip pd
-> relate stuff. So, let's do it in advance.
->
-> This pachset is based on the latest linux-next[1] which should contain
-> the next branch of linux-mmc and dt stuff. It's ideal to pack these all
-> into Ulf' tree with Heiko's ack for dts, Rob's ack for Doc and Jaehoon's
-> ack for dw_mmc. But it's okay to be merged seperately.
->
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->
-> Thanks.
->
->
->
-> Shawn Lin (5):
->   Documentation: mmc: synopsys-dw-mshc: add power domain description
->   Documentation: mmc: sdhci-of-arasan: add power domain description
-
-To me this isn't necessary to describe for each device. I think
-Documentation/devicetree/bindings/power/power_domain.txt describes all
-that is needed.
-
->   arm64: dts: rockchip: Provide power-domains for sd/sdio/emmc
->     controllers
->   mmc: dw_mmc: add power domain support
->   mmc: sdhci-of-arasan: add power domain support
-
-I would rephrase these commit message headers, to something like
-"Deploy runtime PM support", as that is actually what you intend to
-do.
-
->
->  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt     |  1 +
->  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt |  2 ++
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi                   |  3 +++
->  drivers/mmc/host/dw_mmc.c                                  | 11 +++++++++++
->  drivers/mmc/host/sdhci-of-arasan.c                         | 10 ++++++++++
->  5 files changed, 27 insertions(+)
->
-> --
-> 2.3.7
->
->
-
-Kind regards
-Uffe
+	Arnd
