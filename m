@@ -1,38 +1,99 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V6 3/9] irqdomain: Don't set type when mapping an IRQ
-Date: Fri, 29 Jul 2016 09:10:20 +0100
-Message-ID: <579B0F6C.9070806@arm.com>
-References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
- <1465312354-27778-4-git-send-email-jonathanh@nvidia.com>
- <CAK7LNASBpym341Yz57LPa5z81aLX0xmhEVvoY+q5zfiQkFSxwg@mail.gmail.com>
+From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] ARM: sun8i: dt: Add DT bindings
+ documentation for Allwinner sun8i-emac
+Date: Fri, 29 Jul 2016 10:15:19 +0200
+Message-ID: <20160729081519.GA31878@Red>
+References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1469001800-11615-4-git-send-email-clabbe.montjoie@gmail.com>
+ <20160721075519.GC5993@lukather>
+ <20160728134031.GC7582@Red>
+ <20160728184916.GF6682@lukather>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNASBpym341Yz57LPa5z81aLX0xmhEVvoY+q5zfiQkFSxwg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBGVB5S6AKGQE7W72UBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160728184916.GF6682@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/07/16 04:53, Masahiro Yamada wrote:
-> Hi.
+On Thu, Jul 28, 2016 at 08:49:16PM +0200, Maxime Ripard wrote:
+> On Thu, Jul 28, 2016 at 03:40:31PM +0200, LABBE Corentin wrote:
+> > On Thu, Jul 21, 2016 at 09:55:19AM +0200, Maxime Ripard wrote:
+> > > Hi,
+> > > 
+> > > On Wed, Jul 20, 2016 at 10:03:18AM +0200, LABBE Corentin wrote:
+> > > > This patch adds documentation for Device-Tree bindings for the
+> > > > Allwinner sun8i-emac driver.
+> > > > 
+> > > > Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > ---
+> > > >  .../bindings/net/allwinner,sun8i-emac.txt          | 65 ++++++++++++++++++++++
+> > > >  1 file changed, 65 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+> > > > new file mode 100644
+> > > > index 0000000..4bf4e53
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+> > > > @@ -0,0 +1,65 @@
+> > > > +* Allwinner sun8i EMAC ethernet controller
+> > > > +
+> > > > +Required properties:
+> > > > +- compatible: "allwinner,sun8i-a83t-emac", "allwinner,sun8i-h3-emac",
+> > > > +		or "allwinner,sun50i-a64-emac"
+> > > > +- reg: address and length of the register sets for the device.
+> > > > +- reg-names: should be "emac" and "syscon", matching the register sets
+> > > 
+> > > Blindly mapping a register of some other device on the SoC doesn't
+> > > look very reasonable.
+> > 
+> > As we discuss after this mail on IRC, this register is dedicated to EMAC.
 > 
+> I don't think we did. It's still right in the middle of some other
+> hardware block register space. You actually have a syscon driver to do
+> just that, why not use it?
 > 
-> I noticed my board would not work any more
-> when pulling recent updates.
+
+I will try with syscon driver
+
+> > > > +See ethernet.txt in the same directory for generic bindings for ethernet
+> > > > +controllers.
+> > > > +
+> > > > +The device node referenced by "phy" or "phy-handle" should be a child node
+> > > > +of this node. See phy.txt for the generic PHY bindings.
+> > > > +
+> > > > +Optional properties:
+> > > > +- phy-supply: phandle to a regulator if the PHY needs one
+> > > > +- phy-io-supply: phandle to a regulator if the PHY needs a another one for I/O.
+> > > > +		 This is sometimes found with RGMII PHYs, which use a second
+> > > > +		 regulator for the lower I/O voltage.
+> > > > +- allwinner,tx-delay: The setting of the TX clock delay chain
+> > > > +- allwinner,rx-delay: The setting of the RX clock delay chain
+> > > 
+> > > In which unit? What is the default value?
+> > 
+> > The unit is unknown to me, but I have added a comment for the
+> > default and acceptable range value.
 > 
+> That's unfortunate. We'll see how the DT maintainers feel about that.
 > 
-> I did "git-bisect" and I found the following commit is it.
 
-It would help if you did post the log showing the failure.
+I have searched for txdelay in Documentation, and found a few driver that give the units (us/ps).
+But in that case, the value in ps/us must be found in a table indexed by the Xxdelay value.
+So the settings seems always a raw number, and for sun8i-emac nothing in user manual could help to find what each value is/related to.
 
-What if you apply the following patch:
+So the good value is either found by "try and test" or "copy the value found in fex file".
 
-https://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/diff/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi?h=timers/level-trigger&id=95e1fd920fcadce81626cfa9bd6af1a361f17e58
+Regards
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+LABBE Corentin
