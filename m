@@ -1,120 +1,81 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
-Date: Fri, 29 Jul 2016 10:06:41 -0600
-Message-ID: <a86a95d0-8d4b-2abe-f2ef-870c29b3334e@wwwdotorg.org>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org>
- <20160719191442.15439-2-swarren@wwwdotorg.org>
- <20160726100302.GE2433@ulmo.ba.sec>
- <f1ca284a-5332-3323-80b9-7cf61e7c97ac@wwwdotorg.org>
- <CAL_JsqLfs5jnO9DkP5io5qbuCfhojfspkHQbHBttgWfTeokYkQ@mail.gmail.com>
- <6db4ff47-974b-94ac-3739-e630b6d38c0e@wwwdotorg.org>
- <20160729134831.GA3864@ulmo.ba.sec>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] ASoC: rt5659: Add mclk controls
+Date: Fri, 29 Jul 2016 21:45:21 +0530
+Message-ID: <20160729161521.GL9681@localhost>
+References: <1469660568-3511-1-git-send-email-nicoleotsuka@gmail.com>
+ <20160728155732.GG11806@sirena.org.uk>
+ <20160728181419.GA4742@Asurada-Nvidia>
+ <20160728185510.GK11806@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160729134831.GA3864-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160728185510.GK11806@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, bardliao@realtek.com, oder_chiou@realtek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/29/2016 07:48 AM, Thierry Reding wrote:
-> On Thu, Jul 28, 2016 at 03:24:22PM -0600, Stephen Warren wrote:
->> On 07/28/2016 01:07 PM, Rob Herring wrote:
->>> On Tue, Jul 26, 2016 at 11:21 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>>> On 07/26/2016 04:03 AM, Thierry Reding wrote:
->>>>>
->>>>> On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
->>>>>>
->>>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>>
->>>>>> The BPMP implements some services which must be represented by separate
->>>>>> nodes. For example, it can provide access to certain I2C controllers, and
->>>>>> the I2C bindings represent each I2C controller as a device tree node.
->>>>>> Update the binding to describe how the BPMP supports this.
->>>>>>
->>>>>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>> ---
->>>>>>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23
->>>>>> ++++++++++++++++++++++
->>>>>>  1 file changed, 23 insertions(+)
->>>>>>
->>>>>> diff --git
->>>>>> a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>>>> b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>>>> index 9a3864f56955..142d363406f6 100644
->>>>>> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>>>> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
->>>>>> @@ -38,6 +38,24 @@ implemented by this node:
->>>>>>  - .../reset/reset.txt
->>>>>>  - <dt-bindings/reset/tegra186-reset.h>
->>>>>>
->>>>>> +The BPMP implements some services which must be represented by separate
->>>>>> nodes.
->>>>>> +For example, it can provide access to certain I2C controllers, and the
->>>>>> I2C
->>>>>> +bindings represent each I2C controller as a device tree node. Such nodes
->>>>>> should
->>>>>> +be nested directly inside the main BPMP node.
->>>>>> +
->>>>>> +Software can determine whether a child node of the BPMP node represents
->>>>>> a device
->>>>>> +by checking for a compatible property. Any node with a compatible
->>>>>> property
->>>>>> +represents a device that can be instantiated. Nodes without a compatible
->>>>>> +property may be used to provide configuration information regarding the
->>>>>> BPMP
->>>>>> +itself, although no such configuration nodes are currently defined by
->>>>>> this
->>>>>> +binding.
->>>>>> +
->>>>>> +The BPMP firmware defines no single global name-/numbering-space for
->>>>>> such
->>>>>> +services. Put another way, the numbering scheme for I2C buses is
->>>>>> distinct from
->>>>>> +the numbering scheme for any other service the BPMP may provide (e.g. a
->>>>>> future
->>>>>> +hypothetical SPI bus service). As such, child device nodes will have no
->>>>>> reg
->>>>>> +property, and the BPMP node will have no #address-cells or #size-cells
->>>>>> property.
->>>>>
->>>>>
->>>>> My understanding is that the I2C bus number is passed as part of the
->>>>> request to the BPMP firmware. Does that not count as addressing? Could
->>>>> we not represent that generically using a device tree hierarchy? I'm
->>>>> thinking something along these lines:
->>>>>
->>>>>         bpmp {
->>>>>                 ...
->>>>>
->>>>>                 services {
->>>>>                         i2c {
->>>>>                                 i2c@0 {
->>>>>                                         reg = <0>;
->>>>
->>>>
->>>> Technically, that is possible. However, Rob Herring rejected the idea of
->>>> multiple levels of sub-nodes.
->>>
->>> I think I questioned the need, not rejected. What about the above, but
->>> remove serivces level:
->>>
->>>          bpmp {
->>>                  ...
->>>
->>>                  i2c {
->>>                          i2c@0 {
->>>                                  reg = <0>;
->>
->> Sigh. Can you please talk to Thierry and work out what the binding would be
->> (perhaps on IRC to expedite things?) and I'll just implement whatever you
->> two agree upon. I don't really care much what the binding looks like any
->> more; I just need something that will pass review. Thanks.
->
-> Like I said, I'm fine going with what you proposed.
 
-OK, great. For the record, I'm going to send U-Boot patches today that 
-apply this binding patch (the original one I sent, unmodified) to the 
-U-Boot tree, and implement it in the U-Boot driver.
+--+jhVVhN62yS6hEJ8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 28, 2016 at 07:55:10PM +0100, Mark Brown wrote:
+> On Thu, Jul 28, 2016 at 11:14:20AM -0700, Nicolin Chen wrote:
+> > On Thu, Jul 28, 2016 at 04:57:32PM +0100, Mark Brown wrote:
+>=20
+> > > This device seems to be used on x86 systems so we'll need to ensure t=
+hat
+> > > they register clocks for this.  They really should set this up using
+> > > quirks keyed off DMI information or similar so it's hidden from other
+> > > systems.
+>=20
+> > Hmm..the change defines this mclk as a optional property so I'm
+> > not sure how it would affect x86 systems. (Would love to refine
+>=20
+> Ah, clk_prepare_enable() silently ignores NULL as an argument?  It is a
+> bit messy to do things that way but might be the most practical thing.
+>=20
+> > it to make it impactless.) Since it's literally hidden, any way
+> > that I can manually ensure it? Or just wait for an ack from x86
+> > developers?
+>=20
+> Hopefully they'll speak up - we're in the merge window anyway so it'll
+> be just over a week before this can go into -next.
+
+Yeah I am not aware of any plan to have clks on x86. For audio we are not
+going to use much. ACPI and controller w/ firmware does the job.
+
+I have added Darren, he oversee platform things so might know if clocks
+would be there in future..
+
+Thanks
+--=20
+~Vinod
+
+--+jhVVhN62yS6hEJ8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXm4EYAAoJEHwUBw8lI4NHyKAQAJKbJjjg/5TkhnsomEV11g7H
+WP5n9T/fPVtjEK3GMxzGmuhxmHmZ3IlqGVGM9wkyd5eqFRi1JhFcHn64/kzG8Kg1
+NvoRCY+OBFuej1/FEVQCe1W1xMby190T5GgufJIVxICqbV0cAv3/7imzBzoesayv
+k1yLfXCeZqkUbjnSEphiQjxkXEEqlQi2meehkMDW2+r1ktF5A4eVztfLis5PpkNo
+Admol6L2sIudpjrF7l3nh6cu/hypPuSAGhgnoHcF2y3hBznLuOz3Gtnqo2Na0dWV
+s8ysxQnAZuUrlcZz43ElbH1l4vh6+P6ABgyxQZQ02AbXNNqvPxvbbwxGQBAofCRk
+WN5a1cjZ/HofOKUoH4OqKFtyvd1wd9qFamaaFvl+U8aAhafzsnlIYP7iwbkOeKQj
+hzBvO8joy8YgO7qV0HUfhV/cxn+QDySedjRjTNIQwTPmOWmHnb+TfGinojjG8e8w
+XJKtp0HSrkOYBoN1oqMsuzaRG2ILR1Vu1qvYcaK5BQBTl38xNJIraoCojbG3rh/a
+6NGrPAlIfhBqKQ/o5Ddk+Xi2tDU4GkFXioCU5k97kn401YecrSMNGjAokxFXtir3
+pfdZT34+da+W6JNUyYRoI0Rnuj5rQMDKqx2nLX3jwT7EbY678MMSfTBBQfnKHXiV
+48bxTNWD6jQYPE8jZbSB
+=U1cq
+-----END PGP SIGNATURE-----
+
+--+jhVVhN62yS6hEJ8--
