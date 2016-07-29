@@ -1,40 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] tpm: devicetree: document
-	properties for cr50
-Date: Fri, 29 Jul 2016 16:42:01 -0500
-Message-ID: <20160729214201.GA19523@rob-hp-laptop>
-References: <1468549218-19215-1-git-send-email-apronin@chromium.org>
-	<1469757314-116169-2-git-send-email-apronin@chromium.org>
-	<20160729172752.GA7458@obsidianresearch.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/5] Documentation: mmc: synopsys-dw-mshc: add power
+ domain description
+Date: Fri, 29 Jul 2016 16:43:28 -0500
+Message-ID: <20160729214328.GA20468@rob-hp-laptop>
+References: <1469765703-30999-1-git-send-email-shawn.lin@rock-chips.com>
+ <1469765703-30999-2-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160729172752.GA7458-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+In-Reply-To: <1469765703-30999-2-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Feng Xiao <xf@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 29, 2016 at 11:27:52AM -0600, Jason Gunthorpe wrote:
-> On Thu, Jul 28, 2016 at 06:55:13PM -0700, Andrey Pronin wrote:
-> > Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-> > firmware.
+On Fri, Jul 29, 2016 at 12:14:59PM +0800, Shawn Lin wrote:
+> This patch adds power domain as a optional property for dw_mmc.
+> We should handle the power domain if available as it's in off
+> state dut to the policy of power-saving after booting up. Otherwise
+> dw_mmc can not be accessed.
 > 
-> Since this is now a trivial device, does it still need a dedicated
-> file?
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> 
+> ---
+> 
+>  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-There is no trivial devices file for SPI, only I2C. We could add one, 
-but this is fine as is for me.
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-------------------------------------------------------------------------------
+Acked-by: Rob Herring <robh@kernel.org>
