@@ -1,51 +1,92 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4] arm64: dts: mt8173: add mmsel clocks for 4K support
-Date: Fri, 29 Jul 2016 11:53:10 +0200
-Message-ID: <1469785990.3012.35.camel@pengutronix.de>
-References: <1469783388-56804-1-git-send-email-bibby.hsieh@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469783388-56804-1-git-send-email-bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ju
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 1/8] libfdt: Add a subnodes iterator macro
+Date: Fri, 29 Jul 2016 11:55:44 +0200
+Message-ID: <20160729095551.13592-2-maxime.ripard@free-electrons.com>
+References: <20160729095551.13592-1-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160729095551.13592-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bibby,
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Am Freitag, den 29.07.2016, 17:09 +0800 schrieb Bibby Hsieh:
-> To support HDMI 4K resolution, mmsys need clcok
-> mm_sel to be 400MHz.
-> 
-> The board .dts file should override the clock rate
-> property with the higher VENCPLL frequency the board
-> supports HDMI 4K resolution.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 78529e4..93d4d17 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -690,6 +690,8 @@
->  			compatible = "mediatek,mt8173-mmsys", "syscon";
->  			reg = <0 0x14000000 0 0x1000>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-> +			clocks = <&topckgen CLK_TOP_MM_SEL>;
-> +			clock-frequency  = <400000000>;
+The fdt_for_each_subnode() iterator macro provided by this patch can be
+used to iterate over a device tree node's subnodes. At each iteration a
+loop variable will be set to the next subnode.
 
-This is unchanged compared to v3, I suggest to use assigned-clocks /
-assigned-clock-rates properties instead.
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ libfdt/libfdt.h         | 28 ++++++++++++++++++++++++++++
+ tests/subnode_iterate.c |  8 ++------
+ 2 files changed, 30 insertions(+), 6 deletions(-)
 
-best regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index 36222fd4a6f4..911e548163d8 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -168,6 +168,34 @@ int fdt_first_subnode(const void *fdt, int offset);
+  */
+ int fdt_next_subnode(const void *fdt, int offset);
+ 
++/**
++ * fdt_for_each_subnode - iterate over all subnodes of a parent
++ *
++ * @node:	child node (int, lvalue)
++ * @fdt:	FDT blob (const void *)
++ * @parent:	parent node (int)
++ *
++ * This is actually a wrapper around a for loop and would be used like so:
++ *
++ *	fdt_for_each_subnode(node, fdt, parent) {
++ *		Use node
++ *		...
++ *	}
++ *
++ *	if ((node < 0) && (node != -FDT_ERR_NOT_FOUND)) {
++ *		Error handling
++ *	}
++ *
++ * Note that this is implemented as a macro and @node is used as
++ * iterator in the loop. The parent variable be constant or even a
++ * literal.
++ *
++ */
++#define fdt_for_each_subnode(node, fdt, parent)		\
++	for (node = fdt_first_subnode(fdt, parent);	\
++	     node >= 0;					\
++	     node = fdt_next_subnode(fdt, node))
++
+ /**********************************************************************/
+ /* General functions                                                  */
+ /**********************************************************************/
+diff --git a/tests/subnode_iterate.c b/tests/subnode_iterate.c
+index b9f379d5963c..0fb5c901ebd7 100644
+--- a/tests/subnode_iterate.c
++++ b/tests/subnode_iterate.c
+@@ -48,9 +48,7 @@ static void test_node(void *fdt, int parent_offset)
+ 	subnodes = cpu_to_fdt32(*prop);
+ 
+ 	count = 0;
+-	for (offset = fdt_first_subnode(fdt, parent_offset);
+-	     offset >= 0;
+-	     offset = fdt_next_subnode(fdt, offset))
++	fdt_for_each_subnode(offset, fdt, parent_offset)
+ 		count++;
+ 
+ 	if (count != subnodes) {
+@@ -65,9 +63,7 @@ static void check_fdt_next_subnode(void *fdt)
+ 	int offset;
+ 	int count = 0;
+ 
+-	for (offset = fdt_first_subnode(fdt, 0);
+-	     offset >= 0;
+-	     offset = fdt_next_subnode(fdt, offset)) {
++	fdt_for_each_subnode(offset, fdt, 0) {
+ 		test_node(fdt, offset);
+ 		count++;
+ 	}
+-- 
+2.9.2
