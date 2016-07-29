@@ -1,35 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 08/13] clk: sunxi-ng: Add A64 clocks
-Date: Fri, 29 Jul 2016 16:15:11 -0500
-Message-ID: <20160729211511.GA5571@rob-hp-laptop>
-References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
- <20160726203041.29366-9-maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/7] dt-bindings: i2c: add support for 'i2c-mux' subnode
+Date: Fri, 29 Jul 2016 16:17:32 -0500
+Message-ID: <20160729211732.GA6288@rob-hp-laptop>
+References: <1469609010-23049-1-git-send-email-peda@axentia.se>
+ <1469609010-23049-2-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160726203041.29366-9-maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+In-Reply-To: <1469609010-23049-2-git-send-email-peda@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kalle Valo <kvalo@codeaurora.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 26, 2016 at 10:30:36PM +0200, Maxime Ripard wrote:
-> Add the A64 CCU clocks set.
+On Wed, Jul 27, 2016 at 10:43:24AM +0200, Peter Rosin wrote:
+> Similar to the new optional 'i2c-bus' subnode from Jon Hunter, this
+> adds an optional 'i2c-mux' subnode, for similar reasons. I.e. it is
+> bad of the i2c mux core to assume that any subnode of an i2c mux device
+> is a potential (when the 'reg' property matches) i2c-mux child bus,
+> given that i2c mux devices might do more than mux i2c traffic.
 > 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> So, if an 'i2c-mux' subnode is present, dictate that all i2c-mux child
+> buses exist beneath that subnode.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
->  .../devicetree/bindings/clock/sunxi-ccu.txt        |   1 +
+>  Documentation/devicetree/bindings/i2c/i2c-mux.txt | 23 ++++++++++++++++++-----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/clk/sunxi-ng/Kconfig                       |  13 +-
->  drivers/clk/sunxi-ng/Makefile                      |   2 +-
->  drivers/clk/sunxi-ng/ccu-sun50i-a64.h              |  68 +++
->  drivers/clk/sunxi-ng/ccu-sun8i-h3.c                | 483 +++++++++++++++++++++
->  include/dt-bindings/clock/sun50i-a64-ccu.h         | 132 ++++++
->  include/dt-bindings/reset/sun50i-a64-ccu.h         |  97 +++++
->  7 files changed, 793 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a64.h
->  create mode 100644 include/dt-bindings/clock/sun50i-a64-ccu.h
->  create mode 100644 include/dt-bindings/reset/sun50i-a64-ccu.h
