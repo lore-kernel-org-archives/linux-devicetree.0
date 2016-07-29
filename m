@@ -1,91 +1,87 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH] clk: bcm: Add driver for Northstar ILP clock
-Date: Fri, 29 Jul 2016 22:59:18 +0200
-Message-ID: <CACna6rzVWSTPTvp+jMq63PEtshNEH0vyOU10Q+UmzT+sVWuPgA@mail.gmail.com>
-References: <1469797120-29298-1-git-send-email-zajec5@gmail.com>
- <de0ba9d2-8b2b-b1e8-9235-1b402f0ffec0@broadcom.com> <CACna6rwj=ordfzTri1_iTOK162VjS+1bNVBSKo8p3AshGZun=Q@mail.gmail.com>
- <1e7e8319-d6d5-d952-634d-1ee9b9f2b1a3@broadcom.com> <CACna6ryOndBTzLL_H+3S01YmWg1Te7T5t2J4tVsxoUtat2xAiw@mail.gmail.com>
- <23e2aa2f-a0ff-f72e-5e98-ea539c6fb69d@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/6] binding-doc: power: pwrseq-generic: add binding
+ doc for generic power sequence library
+Date: Fri, 29 Jul 2016 16:09:43 -0500
+Message-ID: <20160729210943.GA2200@rob-hp-laptop>
+References: <1469007629-31757-1-git-send-email-peter.chen@nxp.com>
+ <1469007629-31757-2-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <23e2aa2f-a0ff-f72e-5e98-ea539c6fb69d@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Ray Jui <ray.jui@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jon Mason <jonmason@broadcom.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1469007629-31757-2-git-send-email-peter.chen@nxp.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Chen <peter.chen@nxp.com>
+Cc: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 July 2016 at 22:55, Florian Fainelli <f.fainelli@gmail.com> wrote=
-:
-> On 07/29/2016 01:52 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
->> On 29 July 2016 at 22:49, Ray Jui <ray.jui@broadcom.com> wrote:
->>> On 7/29/2016 1:46 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
->>>> On 29 July 2016 at 22:44, Ray Jui <ray.jui@broadcom.com> wrote:
->>>>>
->>>>> On 7/29/2016 5:58 AM, Rafa=C5=82 Mi=C5=82ecki wrote:
->>>>>>
->>>>>>
->>>>>> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->>>>>>
->>>>>> This clock is present on cheaper Northstar devices like BCM53573=
- or
->>>>>> BCM47189 using Corex-A7. This driver uses PMU (Power Management =
-Unit)
->>>>>> to calculate clock rate and allows using it in a generic (clk_*)=
- way.
->>>>>>
->>>>>
->>>>> I thought Northstar uses Cortex A9 instead of A7?
->>>>
->>>>
->>>> [    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7),
->>>> cr=3D10c5387d
->>>> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT alias=
-ing
->>>> instruction cache
->>>> [    0.000000] Machine model: Tenda AC9
->>>>
->>>
->>> Yeah ARMv7 instruction set but the core is Cortex A7. Both Cortex A=
-7 and A9
->>> use ARMv7 instructions.
->>
->> OK, sorry for irrelevant part then :)
->>
->> This is from BCM4709C0:
->> bcma: bus0: Core 10 found: ARM Cortex A9 core (ihost) (manuf 0x4BF, =
-id
->> 0x510, rev 0x07, class 0x0)
->>
->> This is from BCM47189B0::
->> bcma: bus0: Core 3 found: ARM CA7 (manuf 0x4BF, id 0x847, rev 0x00, =
-class 0x0)
->>
->
-> This is indeed a Cortex A7-based chip, not clear if putting this chip=
- in
-> the Northstar family is accurate here because it really seems to have=
- a
-> different architecture from the NS/NSP family here...
+On Wed, Jul 20, 2016 at 05:40:24PM +0800, Peter Chen wrote:
+> Add binding doc for generic power sequence library.
+> 
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  .../bindings/power/pwrseq/pwrseq-generic.txt       | 48 ++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
 
-Broadcom claims it is a Northstar, at least according to their SDKs:
+Acked-by: Rob Herring <robh@kernel.org>
 
-Asus RT-AC1200G+
-
-# cat /proc/cpuinfo
-Processor : ARMv7 Processor rev 5 (v7l)
-BogoMIPS : 1795.68
-=46eatures : swp half thumb fastmult edsp
-CPU implementer : 0x41
-CPU architecture: 7
-CPU variant : 0x0
-CPU part : 0xc07
-CPU revision : 5
-
-Hardware : Northstar Prototype
-Revision : 0000
-Serial : 0000000000000000
-
---=20
-Rafa=C5=82
+> 
+> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> new file mode 100644
+> index 0000000..48bb3e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> @@ -0,0 +1,48 @@
+> +The generic power sequence library
+> +
+> +Some hard-wired devices (eg USB/MMC) need to do power sequence before
+> +the device can be enumerated on the bus, the typical power sequence
+> +like: enable USB PHY clock, toggle reset pin, etc. But current
+> +Linux device driver lacks of such code to do it, it may cause some
+> +hard-wired devices works abnormal or can't be recognized by
+> +controller at all. The power sequence will be done before this device
+> +can be found at the bus.
+> +
+> +The power sequence properties is under the device node.
+> +
+> +Optional properties:
+> +- clocks: the input clock for device.
+> +- reset-gpios: Should specify the GPIO for reset.
+> +- reset-duration-us: the duration in microsecond for assert reset signal.
+> +
+> +Below is the example of USB power sequence properties on USB device
+> +nodes which have two level USB hubs.
+> +
+> +&usbotg1 {
+> +	vbus-supply = <&reg_usb_otg1_vbus>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+> +	status = "okay";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	genesys: hub@1 {
+> +		compatible = "usb5e3,608";
+> +		reg = <1>;
+> +
+> +		clocks = <&clks IMX6SX_CLK_CKO>;
+> +		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
+> +		reset-duration-us = <10>;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		asix: ethernet@1 {
+> +			compatible = "usbb95,1708";
+> +			reg = <1>;
+> +
+> +			clocks = <&clks IMX6SX_CLK_IPG>;
+> +			reset-gpios = <&gpio4 6 GPIO_ACTIVE_LOW>; /* ethernet_rst */
+> +			reset-duration-us = <15>;
+> +		};
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
