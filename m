@@ -1,88 +1,95 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V1] documentation: da9052: Update regulator bindings names
- to match DA9052/53 DTS expectations
-Date: Fri, 29 Jul 2016 17:31:27 -0500
-Message-ID: <CAL_Jsq+rLp5Ue-VsVLoAQ=EpvhH4oZHR_6FCBbhWGXcNhgSa3g@mail.gmail.com>
-References: <20160725152349.A692D3FACB@swsrvapps-01.diasemi.com> <20160727145151.GA20193@rob-hp-laptop>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] pci/aer: interrupt fixup in the quirk
+Date: Fri, 29 Jul 2016 17:41:54 -0500
+Message-ID: <20160729224154.GC13632@localhost>
+References: <1464242406-20203-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-1-git-send-email-po.liu@nxp.com>
+ <1465892645-32381-2-git-send-email-po.liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160727145151.GA20193@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1465892645-32381-2-git-send-email-po.liu-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXKERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Ying-Chun Liu <paul.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 9:51 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Jul 25, 2016 at 04:20:54PM +0100, Steve Twiss wrote:
->> From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
->>
->> Hi Mark,
->
-> Drop this from the commit msg.
->
->>
->> Buck and LDO binding name changes.
->>
->> The binding names for the regulators have been changed to match the current
->> expectation from existing device tree source files.
->>
->> This fix rectifies the disparity between what currently exists in some
->> .dts[i] board files and what is listed in this binding document. This
->> change re-aligns those differences and also brings the binding document
->> in-line with the expectations of the product datasheet from Dialog
->> Semiconductor.
->>
->> Bucks and LDOs now follow the expected notation:
->> { buck1, buck2, buck3, buck4 }
->> { ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10 }
->>
->> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
->>
->> ---
->> This patch applies against linux-next and v4.7
->>
->> Hi,
->>
->> Several device tree source files use a regulator naming scheme different to
->> that found in the binding text document. Since those have been used
->> already, I would like ensure to the binding document follows those existing
->> DT file naming conventions.
->>
->> Please refer to the files containing da9052/53 references:
->>  - ./arch/arm/boot/dts/imx53-voipac-dmm-668.dtsi
->>  - ./arch/arm/boot/dts/imx53-qsb.dts
->>
->> Those board files use the naming convention:
->>  { buck1, buck2, buck3, buck4 }
->>  { ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10 }
->>
->> Instead of the existing suggestion in the device tree binding file:
->>  { buck0, buck1, buck2, buck3 }
->>  { ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10, ldo11, ldo12, ldo13 }
->>
->> The binding file regulator names (as it stands) does not reflect any
->> real-world uses I can find. This change would bring it in-line with
->> currect expectations from existing DTS files and make it similar enough to
->> the product datasheets to be "less confusing" than it currently is.
->>
->> Regards,
->> Steve
->>
->> See reference:
->> https://lkml.org/lkml/2016/7/25/197
->>
->>
->>  .../devicetree/bindings/mfd/da9052-i2c.txt         | 22 +++++++++++-----------
->>  1 file changed, 11 insertions(+), 11 deletions(-)
->
-> Otherwise,
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Tue, Jun 14, 2016 at 04:24:05PM +0800, Po Liu wrote:
+> On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
+> When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
+> maybe there is interrupt line for aer pme etc. Search the interrupt
+> number in the fdt file. Then fixup the dev->irq with it.
+> 
+> Signed-off-by: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
 
-As this is just a doc change, I've fixed up the commit msg and applied.
+I'm not sure where we're at with this.  Dongdong had some issue
+(possibly with a version of the quirk on a different platform?), and I
+think the suggestion of explicitly checking for a root port device was
+a good one.
 
-Rob
+So please update and repost this for next cycle.
+
+> ---
+> changes for V3:
+> 	- Move to quirk;
+> 	- Only correct the irq in RC mode;
+> 
+>  drivers/pci/quirks.c | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index ee72ebe..8b39cce 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/ktime.h>
+>  #include <linux/mm.h>
+> +#include <linux/of_irq.h>
+>  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
+>  #include "pci.h"
+>  
+> @@ -4419,3 +4420,31 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
+>  	}
+>  }
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+> +
+> +/* If root port doesn't support MSI/MSI-X/INTx in RC mode,
+> + * but use standalone irq. Read the device tree for the aer
+> + * interrupt number.
+> + */
+> +static void quirk_aer_interrupt(struct pci_dev *dev)
+> +{
+> +	int ret;
+> +	u8 header_type;
+> +	struct device_node *np = NULL;
+> +
+> +	/* Only for the RC mode device */
+> +	pci_read_config_byte(dev, PCI_HEADER_TYPE, &header_type);
+> +	if ((header_type & 0x7F) != PCI_HEADER_TYPE_BRIDGE)
+> +		return;
+> +
+> +	if (dev->bus->dev.of_node)
+> +		np = dev->bus->dev.of_node;
+> +
+> +	if (IS_ENABLED(CONFIG_OF_IRQ) && np) {
+> +		ret = of_irq_get_byname(np, "aer");
+> +		if (ret > 0) {
+> +			dev->no_msi = 1;
+> +			dev->irq = ret;
+> +		}
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_FREESCALE, PCI_ANY_ID, quirk_aer_interrupt);
+> -- 
+> 2.1.0.27.g96db324
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
