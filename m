@@ -1,104 +1,65 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH] clk: bcm: Add driver for Northstar ILP clock
-Date: Fri, 29 Jul 2016 23:24:50 +0200
-Message-ID: <CACna6rxiPx_7R1AwwvV40Wi6j+X=gUw1ChJY8R=oiXVNK1cDgw@mail.gmail.com>
-References: <1469797120-29298-1-git-send-email-zajec5@gmail.com> <20160729131513.GB13080@leverpostej>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/7] dt-bindings: i2c: add support for 'i2c-arb' subnode
+Date: Fri, 29 Jul 2016 16:24:52 -0500
+Message-ID: <20160729212452.GA7487@rob-hp-laptop>
+References: <1469609010-23049-1-git-send-email-peda@axentia.se>
+ <1469609010-23049-3-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160729131513.GB13080@leverpostej>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1469609010-23049-3-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kalle Valo <kvalo@codeaurora.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29 July 2016 at 15:15, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Fri, Jul 29, 2016 at 02:58:32PM +0200, Rafa=C5=82 Mi=C5=82ecki wro=
-te:
->> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->>
->> This clock is present on cheaper Northstar devices like BCM53573 or
->> BCM47189 using Corex-A7. This driver uses PMU (Power Management Unit=
-)
->> to calculate clock rate and allows using it in a generic (clk_*) way=
-=2E
->>
->> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->> ---
->>  .../devicetree/bindings/clock/brcm,ns-ilp.txt      |  28 ++++
->>  drivers/clk/bcm/Makefile                           |   1 +
->>  drivers/clk/bcm/clk-ns-ilp.c                       | 146 ++++++++++=
-+++++++++++
->>  3 files changed, 175 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,ns-=
-ilp.txt
->>  create mode 100644 drivers/clk/bcm/clk-ns-ilp.c
->>
->> diff --git a/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt=
- b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
->> new file mode 100644
->> index 0000000..c4df38e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
->> @@ -0,0 +1,28 @@
->> +Broadcom Northstar ILP clock
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
->> +
->> +This binding uses the common clock binding:
->> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +This binding is used for ILP clock on Broadcom Northstar devices us=
-ing
->> +Corex-A7 CPU. ILP clock depends on ALP one and has to be calculated=
- on
->> +runtime.
->> +
->> +Required properties:
->> +- compatible: "brcm,ns-ilp"
->> +- reg: iomem address range of PMU (Power Management Unit)
->> +- reg-names: "pmu", the only needed & supported reg right now
->
-> From the commit message and binding description, it sounds like there
-> should be a binding for the PMU, and that should cover the clocks
-> required/exported by the PMU.
+On Wed, Jul 27, 2016 at 10:43:25AM +0200, Peter Rosin wrote:
+> This gets rid of the need for a pointless 'reg' property for i2c
+> arbitrators.
+> 
+> I.e. this new and more compact style
+> 
+> 	some-arbitrator {
+> 		i2c-mux {
 
-This is a bit of problem, because PMU handles a lot of different stuff
-and is used by various drivers. Some examples of what you can do
-with/find on a PMU:
-1) Power management
-2) Watchdog
-3) Timer
-4) XTAL
-5) PLLs
-6) Control registers for some ARM debugging (whatever it is), UART, JTA=
-G, more
+You mean i2c-arb here?
 
-PMU is used by different drivers, e.g.:
-1) Ethernet driver
-2) Wireless driver
-3) NAND controller driver
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 
+> 			some-i2c-device@50 {
+> 				reg = <0x50>;
+> 			};
+> 		};
+> 	};
+> 
+> instead of the old
+> 
+> 	some-arbitrator {
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 
+> 		i2c@0 {
+> 			reg = <0>;
+> 
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 
+> 			some-i2c-device@50 {
+> 				reg = <0x50>;
+> 			};
+> 		};
+> 	};
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  .../bindings/i2c/i2c-arb-gpio-challenge.txt        |  8 ++---
+>  Documentation/devicetree/bindings/i2c/i2c-arb.txt  | 35 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  3 files changed, 38 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arb.txt
 
-I don't have access to Broadcom's datasheets so unfortunately I can't
-provide all details.
+Otherwise,
 
-
->> +- clocks: should reference an ALP clock
->> +- clock-names: "alp", the only needed & supported clock right now
->> +- #clock-cells: should be <0>
->
-> How many clocks does the PMU output, including the ILP clock?
-
-Well, ALP clock (AKA XTAL clock) is definitely part of PMU. It's a
-fixed rate clock with rate specific to the chip.
-
-I think ILP is also part of PMU (again: I don't have datasheets) as
-PMU has this ALP_PER_4ILP register.
-
-=46rom Broadcom's SDK I can say they also have "ARM debug unit" on some
-chipsets. It requires enabling "ARM debug clk" to operate which is
-handled by PMU as well.
-
---=20
-Rafa=C5=82
+Acked-by: Rob Herring <robh@kernel.org>
