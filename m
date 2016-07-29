@@ -1,44 +1,82 @@
-From: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4] arm64: dts: mt8173: add mmsel clocks for 4K support
-Date: Fri, 29 Jul 2016 17:09:48 +0800
-Message-ID: <1469783388-56804-1-git-send-email-bibby.hsieh@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 0/5] Add power domain support for dw_mmc/sdhci-of-arasan
+Date: Fri, 29 Jul 2016 11:21:01 +0200
+Message-ID: <CAPDyKFq6itpANwnLqgOqKHT0fJH4SvZi2FWrafa=HSBfiZE52w@mail.gmail.com>
+References: <1469765703-30999-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Junzhi Zhao <junzhi.zhao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1469765703-30999-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Feng Xiao <xf@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-To support HDMI 4K resolution, mmsys need clcok
-mm_sel to be 400MHz.
+On 29 July 2016 at 06:14, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>
+> We need to enable the power domain manually while probing as the
+> power policy will turn off the pd which is not referenced. Otherwise
 
-The board .dts file should override the clock rate
-property with the higher VENCPLL frequency the board
-supports HDMI 4K resolution.
+I assume you are going to use the generic PM domain (genpd)?
+If so, this statement isn't entirely correct.
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+As a matter of fact, the PM domain will be "powered on" once you have
+registered your PM domain with genpd and when the device (dw_mmc etc)
+gets attached to the domain. The attach occurs when the platform bus'
+->probe() function get invoked for the device.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 78529e4..93d4d17 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -690,6 +690,8 @@
- 			compatible = "mediatek,mt8173-mmsys", "syscon";
- 			reg = <0 0x14000000 0 0x1000>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+			clocks = <&topckgen CLK_TOP_MM_SEL>;
-+			clock-frequency  = <400000000>;
- 			#clock-cells = <1>;
- 		};
- 
--- 
-1.7.9.5
+Genpd monitors each device within the domain. To allow it to "power
+off", all devices in same domain needs to be runtime PM enabled and
+runtime PM suspended.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Due to this, you should be able to deploy genpd support+an updated
+DTB, without first having to deploying runtime PM support in the
+related drivers. In other words, you should be able to work on these
+things almost independently of each other.
+
+> we may take risk of breaking kernel once Feng Xiao land the rockchip pd
+> relate stuff. So, let's do it in advance.
+>
+> This pachset is based on the latest linux-next[1] which should contain
+> the next branch of linux-mmc and dt stuff. It's ideal to pack these all
+> into Ulf' tree with Heiko's ack for dts, Rob's ack for Doc and Jaehoon's
+> ack for dw_mmc. But it's okay to be merged seperately.
+>
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>
+> Thanks.
+>
+>
+>
+> Shawn Lin (5):
+>   Documentation: mmc: synopsys-dw-mshc: add power domain description
+>   Documentation: mmc: sdhci-of-arasan: add power domain description
+
+To me this isn't necessary to describe for each device. I think
+Documentation/devicetree/bindings/power/power_domain.txt describes all
+that is needed.
+
+>   arm64: dts: rockchip: Provide power-domains for sd/sdio/emmc
+>     controllers
+>   mmc: dw_mmc: add power domain support
+>   mmc: sdhci-of-arasan: add power domain support
+
+I would rephrase these commit message headers, to something like
+"Deploy runtime PM support", as that is actually what you intend to
+do.
+
+>
+>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt     |  1 +
+>  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt |  2 ++
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi                   |  3 +++
+>  drivers/mmc/host/dw_mmc.c                                  | 11 +++++++++++
+>  drivers/mmc/host/sdhci-of-arasan.c                         | 10 ++++++++++
+>  5 files changed, 27 insertions(+)
+>
+> --
+> 2.3.7
+>
+>
+
+Kind regards
+Uffe
