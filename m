@@ -1,70 +1,54 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Caesar Wang <sasukewxt-9Onoh4P/yGk@public.gmane.org>
 Subject: Re: [PATCH v3 1/4] iio: adc: rockchip_saradc: reset saradc controller
  before programming it
-Date: Sat, 30 Jul 2016 07:13:41 +0800
-Message-ID: <579BE325.4010103@rock-chips.com>
-References: <1469629447-544-1-git-send-email-wxt@rock-chips.com> <20160729212833.GA12688@rob-hp-laptop>
+Date: Sat, 30 Jul 2016 07:13:33 +0800
+Message-ID: <579BE31D.6020802@163.com>
+References: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
+ <20160729212833.GA12688@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 In-Reply-To: <20160729212833.GA12688@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2016=E5=B9=B407=E6=9C=8830=E6=97=A5 05:28, Rob Herring wrote:
-> On Wed, Jul 27, 2016 at 10:24:04PM +0800, Caesar Wang wrote:
->> SARADC controller needs to be reset before programming it, otherwise
->> it will not function properly.
->>
->> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Tested-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>
->> ---
->>
->> Changes in v3:
->> - %s/devm_reset_control_get_optional()/devm_reset_control_get()
->> - add Guente's test tag.
->>
->> Changes in v2:
->> - Make the reset as an optional property, since it should work
->> with old devicetrees as well.
->>
->>   .../bindings/iio/adc/rockchip-saradc.txt           |  7 +++++
->>   drivers/iio/adc/Kconfig                            |  1 +
->>   drivers/iio/adc/rockchip_saradc.c                  | 30 ++++++++++=
-++++++++++++
->>   3 files changed, 38 insertions(+)
-> Please add acks when posting new versions.
-
-I didn't get your ACK when posting the V3. :-P
-
----
-Your ack on 2016-07-27 23:12
-
-  .../bindings/iio/adc/rockchip-saradc.txt           |  7 +++++
-
-Acked-by: Rob Herring<robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
-
->
-> Rob
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
-
---=20
-caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
+Ck9uIDIwMTblubQwN+aciDMw5pelIDA1OjI4LCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBXZWQs
+IEp1bCAyNywgMjAxNiBhdCAxMDoyNDowNFBNICswODAwLCBDYWVzYXIgV2FuZyB3cm90ZToKPj4g
+U0FSQURDIGNvbnRyb2xsZXIgbmVlZHMgdG8gYmUgcmVzZXQgYmVmb3JlIHByb2dyYW1taW5nIGl0
+LCBvdGhlcndpc2UKPj4gaXQgd2lsbCBub3QgZnVuY3Rpb24gcHJvcGVybHkuCj4+Cj4+IFNpZ25l
+ZC1vZmYtYnk6IENhZXNhciBXYW5nIDx3eHRAcm9jay1jaGlwcy5jb20+Cj4+IENjOiBKb25hdGhh
+biBDYW1lcm9uIDxqaWMyM0BrZXJuZWwub3JnPgo+PiBDYzogSGVpa28gU3R1ZWJuZXIgPGhlaWtv
+QHNudGVjaC5kZT4KPj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4+IENj
+OiBsaW51eC1paW9Admdlci5rZXJuZWwub3JnCj4+IENjOiBsaW51eC1yb2NrY2hpcEBsaXN0cy5p
+bmZyYWRlYWQub3JnCj4+IFRlc3RlZC1ieTogR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2stdXMu
+bmV0Pgo+Pgo+PiAtLS0KPj4KPj4gQ2hhbmdlcyBpbiB2MzoKPj4gLSAlcy9kZXZtX3Jlc2V0X2Nv
+bnRyb2xfZ2V0X29wdGlvbmFsKCkvZGV2bV9yZXNldF9jb250cm9sX2dldCgpCj4+IC0gYWRkIEd1
+ZW50ZSdzIHRlc3QgdGFnLgo+Pgo+PiBDaGFuZ2VzIGluIHYyOgo+PiAtIE1ha2UgdGhlIHJlc2V0
+IGFzIGFuIG9wdGlvbmFsIHByb3BlcnR5LCBzaW5jZSBpdCBzaG91bGQgd29yawo+PiB3aXRoIG9s
+ZCBkZXZpY2V0cmVlcyBhcyB3ZWxsLgo+Pgo+PiAgIC4uLi9iaW5kaW5ncy9paW8vYWRjL3JvY2tj
+aGlwLXNhcmFkYy50eHQgICAgICAgICAgIHwgIDcgKysrKysKPj4gICBkcml2ZXJzL2lpby9hZGMv
+S2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxICsKPj4gICBkcml2ZXJzL2lp
+by9hZGMvcm9ja2NoaXBfc2FyYWRjLmMgICAgICAgICAgICAgICAgICB8IDMwICsrKysrKysrKysr
+KysrKysrKysrKysKPj4gICAzIGZpbGVzIGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKykKPiBQbGVh
+c2UgYWRkIGFja3Mgd2hlbiBwb3N0aW5nIG5ldyB2ZXJzaW9ucy4KCkkgZGlkbid0IGdldCB5b3Vy
+IEFDSyB3aGVuIHBvc3RpbmcgdGhlIFYzLiA6LVAKCi0tLQpZb3VyIGFjayBvbiAyMDE2LTA3LTI3
+IDIzOjEyCgogIC4uLi9iaW5kaW5ncy9paW8vYWRjL3JvY2tjaGlwLXNhcmFkYy50eHQgICAgICAg
+ICAgIHwgIDcgKysrKysKCkFja2VkLWJ5OiBSb2IgSGVycmluZzxyb2JoQGtlcm5lbC5vcmc+CgoK
+Cj4KPiBSb2IKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCj4gTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0Cj4gTGludXgtcm9ja2NoaXBAbGlzdHMu
+aW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtcm9ja2NoaXAKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxp
+c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9saW51eC1yb2NrY2hpcAo=
