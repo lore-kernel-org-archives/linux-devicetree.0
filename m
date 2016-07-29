@@ -1,48 +1,51 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] ethernet: add sun8i-emac driver
-Date: Fri, 29 Jul 2016 11:26:57 +0200
-Message-ID: <4552489.XcKoxjnXeP@wuerfel>
-References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com> <4697175.RMdFEWr9V5@wuerfel> <20160728131826.GA7582@Red>
-Reply-To: arnd-r2nGTMty4D4@public.gmane.org
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4] arm64: dts: mt8173: add mmsel clocks for 4K support
+Date: Fri, 29 Jul 2016 11:53:10 +0200
+Message-ID: <1469785990.3012.35.camel@pengutronix.de>
+References: <1469783388-56804-1-git-send-email-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRB3GC5S6AKGQE5NFSSIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160728131826.GA7582@Red>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469783388-56804-1-git-send-email-bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ju
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 28, 2016 3:18:26 PM CEST LABBE Corentin wrote:
-> 
-> I will reworked locking and it seems that no locking is necessary.
-> I have added the following comment about the locking strategy:
-> 
-> /* Locking strategy:
->  * RX queue does not need any lock since only sun8i_emac_poll() access it.
->  * (All other RX modifiers (ringparam/ndo_stop) disable NAPI and so sun8i_emac_poll())
->  * TX queue is handled by sun8i_emac_xmit(), sun8i_emac_complete_xmit() and sun8i_emac_tx_timeout()
->  * (All other RX modifiers (ringparam/ndo_stop) disable NAPI and stop queue)
->  *
->  * sun8i_emac_xmit() could fire only once (netif_tx_lock)
->  * sun8i_emac_complete_xmit() could fire only once (called from NAPI)
->  * sun8i_emac_tx_timeout() could fire only once (netif_tx_lock) and couldnt
->  * race with sun8i_emac_xmit (due to netif_tx_lock) and with sun8i_emac_complete_xmit which disable NAPI.
->  *
->  * So only sun8i_emac_xmit and sun8i_emac_complete_xmit could fire at the same time.
->  * But they never could modify the same descriptors:
->  * - sun8i_emac_complete_xmit() will modify only descriptors with empty status
->  * - sun8i_emac_xmit() will modify only descriptors set to DCLEAN
->  * Proper memory barriers ensure that descriptor set to DCLEAN could not be
->  * modified latter by sun8i_emac_complete_xmit().
->  * */
+Hi Bibby,
 
-Sounds good, the comment is certainly very helpful here.
+Am Freitag, den 29.07.2016, 17:09 +0800 schrieb Bibby Hsieh:
+> To support HDMI 4K resolution, mmsys need clcok
+> mm_sel to be 400MHz.
+> 
+> The board .dts file should override the clock rate
+> property with the higher VENCPLL frequency the board
+> supports HDMI 4K resolution.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 78529e4..93d4d17 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -690,6 +690,8 @@
+>  			compatible = "mediatek,mt8173-mmsys", "syscon";
+>  			reg = <0 0x14000000 0 0x1000>;
+>  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+> +			clocks = <&topckgen CLK_TOP_MM_SEL>;
+> +			clock-frequency  = <400000000>;
 
-	Arnd
+This is unchanged compared to v3, I suggest to use assigned-clocks /
+assigned-clock-rates properties instead.
+
+best regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
