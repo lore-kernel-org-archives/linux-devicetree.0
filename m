@@ -1,68 +1,41 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 5/5] mmc: sdhci-of-arasan: add power domain support
-Date: Fri, 29 Jul 2016 12:16:45 +0800
-Message-ID: <1469765805-31049-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1469765703-30999-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1469765703-30999-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Feng Xiao <xf@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
+Date: Fri, 29 Jul 2016 07:48:00 +0200
+Message-ID: <20160729074800.44b8860cc0a3d2dfcdde32ce@free.fr>
+References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
+	<20160727104623.e9ca7b708e5c6462f44a5d01@free.fr>
+	<20160728200705.GG6682@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160728200705.GG6682@lukather>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We should enable power domain once provided. Otherwise
-we take risk of bus err as it's maybe in off state before
-probing.
+On Thu, 28 Jul 2016 22:07:05 +0200
+Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+> > > Let me know what you think,
+> >=20
+> > I don't see the interest to have common code for 32bits and 64bits.
+> > The clock driver of a SoC will never evolve, so, it is simpler to
+> > copy the source common with the H3 into a clean A64 clock driver.
+>=20
+> I'm not sure why 32 bits vs 64 bits matters here. We're going to shar=
+e
+> a significant number of drivers already between armv7 and armv8, like
+> MMC, EMAC, I2C, and so on.
+>=20
+> And I expect to share the data in other SoCs for the A10, A13 and A20
+> for example, or A23/A33, which have a lot of clocks in common too.
 
- drivers/mmc/host/sdhci-of-arasan.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+The interest of your sunxi-ng approach is that the clocks of each SoC
+is described in one file. Here you are mixing 2 SoCs in the same source
+file. The advantage is lost.
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index e0f193f..e507e94 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -25,6 +25,8 @@
- #include <linux/of_device.h>
- #include <linux/phy/phy.h>
- #include <linux/regmap.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pm_opp.h>
- #include "sdhci-pltfm.h"
- 
- #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
-@@ -515,6 +517,9 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
- 		goto clk_dis_ahb;
- 	}
- 
-+	pm_runtime_enable(host->dev);
-+	pm_runtime_get_sync(host->dev);
-+
- 	sdhci_get_of_property(pdev);
- 	pltfm_host->clk = clk_xin;
- 
-@@ -577,6 +582,8 @@ clk_dis_ahb:
- 	clk_disable_unprepare(sdhci_arasan->clk_ahb);
- err_pltfm_free:
- 	sdhci_pltfm_free(pdev);
-+	pm_runtime_put(host->dev);
-+	pm_runtime_disable(host->dev);
- 	return ret;
- }
- 
-@@ -599,6 +606,9 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
- 
- 	clk_disable_unprepare(clk_ahb);
- 
-+	pm_runtime_put(host->dev);
-+	pm_runtime_disable(host->dev);
-+
- 	return ret;
- }
- 
--- 
-2.3.7
-
-
+--=20
+Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
