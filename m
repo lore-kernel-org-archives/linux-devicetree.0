@@ -1,89 +1,29 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 00/13] sunxi spi fixes
-Date: Sat, 30 Jul 2016 19:32:51 +0200
-Message-ID: <CAOMqctQkaQnEt6U3dd_kzi8GtfS_G3=hue3sz_TomMATn8o3iA@mail.gmail.com>
-References: <cover.1465490774.git.hramrach@gmail.com> <20160613195716.GD9354@lukather>
- <CAOMqctS6ZQ3_a97sE2e7H34ZCny2aDE38V1tQA=-SBZwF2sbDQ@mail.gmail.com>
- <20160725073204.GD7419@lukather> <CAOMqctQybJoOfUHGtpmpB_koQ=iY+GpQ_BOL2o0QBbwC_HXC0g@mail.gmail.com>
- <20160729202247.GJ6215@lukather>
-Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: "this30" <this30@a.shhzf.net>
+Subject: 200 countries worldwide customer development!
+Date: Sun, 31 Jul 2016 05:06:12 +0800
+Message-ID: <201607310506120557889@a.shhzf.net>
+Reply-To: 3183346925-9uewiaClKEY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCQMLUOX54MBB26J6O6AKGQE3YKBUYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160729202247.GJ6215@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerhard Bertelsmann <info-La43T0Mi4bH5xCKuJOYmCvaTkwRoYoCU@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, devicetree <devicetree-u79uwXL29TZNg+MwTxZMZA@public.gmane.org>
+Content-Type: text/plain;
+	charset="GB2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29 July 2016 at 22:22, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Jul 25, 2016 at 10:03:14AM +0200, Michal Suchanek wrote:
->> Hello,
->>
->> On 25 July 2016 at 09:32, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Fri, Jun 17, 2016 at 12:34:44PM +0200, Michal Suchanek wrote:
->> >> Hello,
->> >>
->> >> On 13 June 2016 at 21:57, Maxime Ripard
->> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> > On Mon, Jun 13, 2016 at 05:46:48PM -0000, Michal Suchanek wrote:
->> >> >> Hello,
->> >> >>
->> >> >> This is update of the sunxi spi patches that should give full-featured SPI
->> >> >> driver.
->> >> >>
->> >> >> First three patches fix issues with the current driver and can be of use for
->> >> >> stable kernels so adding cc for those.
->> >> >>
->> >> >> I merged the sun4i and sun6i driver because there several issues that need to
->> >> >> be fixed in both separately and they are even out of sync wrt some fixes.
->> >> >> I guess some of the merge patches can be squashed.
->> >> >>
->> >> >> I tested this with A10s Olinuxino Micro. I have no sun6i device so I cannot
->> >> >> tell if that side was broken by this patchset - especially the last patch that
->> >> >> adds DMA was afaik never tested on sun6i.
->> >> >
->> >> >
->> >> > For the record, I'm still very much opposed to such a merge.
->> >>
->> >> What is the reason against the merge? I did not find the original
->> >> discussion.
->> >
->> > I really prefer some code that is concise and clear but a little
->> > duplicated over some code that shares every possible lines of code but
->> > is a giant mess impossible to understand.
->>
->> Yes, it's been tried. In the case of this driver there is more duplication
->> than differences. Also bitrot due to different variants receiving different
->> updates and fixes crept in already.
->>
->> Adding the remap layer certainly does not make the driver easier to
->> understand but it's not becoming giant mess either.
->
-> Well, when you say that you're not quite fond of using your structure
-> all over the place because "it makes your eyes bleed", I wouldn't call
-> that a good sales pitch.
-
-That's why put dereferencing it inside the read function. It reduces the noise
-throughout the code and make it easier to add checks or change the remap
-implementation.
-
->
-> But again, reg_field seems like a good solution for that.
-
-I will look at reg_field.
-
-I saw some drivers using remap layers that are way more heavyweight than
-looking up an integer in a table so I wanted to avoid that.
-
-Thanks
-
-Michal
+yta5pMO/zOzWu8Tct6LLzby4yq634tPKvP6/qrei0MWjrM/gttTT2r/Nu6fK/b7dusblq7XEu6XB
+qs34wLTLtcrV0KfJ9c6ioaMNCg0K1NrV4rj20KfCyr72tqjQp7n7tcS3vbeo1tCjrCDU9dH5zOG4
+37/Nu6e/qrei0KfCyqOss7m117TTyta5pLLZ1/fW0L3izdGz9sC0o78NCg0Ky6vPss3iw7O/zbun
+y9HL99Prv6q3os+1zbOjrMrXz8jNqLn9xPq1xLL6xre52Lz8tMqw79b6xPrDv8zsy9HL98nPzfK1
+xL/Nu6fTys/ktdjWtw0KDQrIu7rzzai5/bbg08q8/tb3zOKhorbg08q8/sTayN2horbgt6LQxdXL
+u6fL5rv61+m6z7ei0MW3vcq9DQoNCs3qyKvEo8TixPrK1rmk0ru21NK719S2r7j4v827p7eiy83T
+yrz+v6q3otDFo6y/ydLUsNmxtszhuN/E+rXEv827p7+qt6LQp8LKDQoNCsjDxPqw0bj8tuC1xMqx
+vOS6zb6rwaa3xdTav827p7XEuPq9+MnPoaMNCg0KDQrP68HLveK4/Lbg1ve2r8q9zeLDs7+qt6K/
+zbuno6zH67zTIFFRLS0tLS0tPiAzMjQ2MDc1NzA3ICDWsb3T0enWpL/Nu6fQxc+iIMrHt/HV5sq1
+oaLT0NCnIA0K0rK/ybzTzqLQxbrFo7pzdW5zZXNvZnRzYW0NCg0KLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0NCsj0srvQ6NKqtMvA4NPKvP7H68no1sO+3MrVo6yxp8e4tPLE0w==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
