@@ -1,211 +1,166 @@
-From: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [RFC][PATCH] pstore: use DT reserved-memory bindings
-Date: Fri, 29 Jul 2016 18:16:23 -0700
-Message-ID: <20160730011623.GA25495@www.outflux.net>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] ethernet: add sun8i-emac driver
+Date: Sat, 30 Jul 2016 09:30:01 +0800
+Message-ID: <CAGb2v678MidsiV=QJjk1bvAPL-hRFyNzZy636aObEG+HC908xw@mail.gmail.com>
+References: <1469001800-11615-1-git-send-email-clabbe.montjoie@gmail.com>
+ <1469001800-11615-2-git-send-email-clabbe.montjoie@gmail.com>
+ <20160725195455.GQ7419@lukather> <20160728145734.GD7582@Red> <20160729172526.GE6215@lukather>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBMEG6C6AKGQEO35ZGWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160729172526.GE6215@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of a ramoops-specific node, use a child node of /reserved-memory.
-This requires that of_platform_populate() be called for the node, though,
-since it does not have its own "compatible" property.
+On Sat, Jul 30, 2016 at 1:25 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Thu, Jul 28, 2016 at 04:57:34PM +0200, LABBE Corentin wrote:
+>> > > +static int sun8i_mdio_write(struct mii_bus *bus, int phy_addr, int phy_reg,
+>> > > +                     u16 data)
+>> > > +{
+>> > > + struct net_device *ndev = bus->priv;
+>> > > + struct sun8i_emac_priv *priv = netdev_priv(ndev);
+>> > > + u32 reg;
+>> > > + int err;
+>> > > +
+>> > > + err = readl_poll_timeout(priv->base + SUN8I_EMAC_MDIO_CMD, reg,
+>> > > +                          !(reg & MDIO_CMD_MII_BUSY), 100, 10000);
+>> > > + if (err) {
+>> > > +         dev_err(priv->dev, "%s timeout %x\n", __func__, reg);
+>> > > +         return err;
+>> > > + }
+>> >
+>> > Why the poll_timeout variant?
+>> >
+>> Because, in case of bad clock/reset/regulator setting, the value
+>> expected to come could never be set.
+>
+> Ah, I missed that it was for a busy bit, my bad. However, you seem to
+> be using that on several occasions, maybe you could turn that into a
+> function?
+>
+>> > > +static void sun8i_emac_unset_syscon(struct net_device *ndev)
+>> > > +{
+>> > > + struct sun8i_emac_priv *priv = netdev_priv(ndev);
+>> > > + u32 reg = 0;
+>> > > +
+>> > > + if (priv->variant == H3_EMAC)
+>> > > +         reg = H3_EPHY_DEFAULT_VALUE;
+>> >
+>> > Why do you need that?
+>> >
+>> For resetting the syscon to the factory default.
+>
+> Yes, but does it matter? Does it have any side effect? Is that
+> register shared with another device?
+>
+> Otherwise, either it won't be used anymore, and you don't care, or you
+> will reload the driver later, and the driver should work whatever
+> state is programmed in there. In both cases, you don't need to reset
+> that value.
 
-Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Here's what I've got for moving ramoops under /reserved-memory... still
-feels like a bit of a hack.
----
- Documentation/devicetree/bindings/misc/ramoops.txt | 48 ----------------------
- .../bindings/reserved-memory/ramoops.txt           | 48 ++++++++++++++++++++++
- Documentation/ramoops.txt                          |  2 +-
- drivers/of/platform.c                              |  5 +++
- fs/pstore/ram.c                                    | 12 +-----
- 5 files changed, 56 insertions(+), 59 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
- create mode 100644 Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+The "default" setting also disables and powers down the internal PHY.
+I think that's a good thing? The naming could be better.
 
-diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
-deleted file mode 100644
-index cd02cec67d38..000000000000
---- a/Documentation/devicetree/bindings/misc/ramoops.txt
-+++ /dev/null
-@@ -1,48 +0,0 @@
--Ramoops oops/panic logger
--=========================
--
--ramoops provides persistent RAM storage for oops and panics, so they can be
--recovered after a reboot. It is a backend to pstore, so this node is named
--"ramoops" after the backend, rather than "pstore" which is the subsystem.
--
--Parts of this storage may be set aside for other persistent log buffers, such
--as kernel log messages, or for optional ECC error-correction data.  The total
--size of these optional buffers must fit in the reserved region.
--
--Any remaining space will be used for a circular buffer of oops and panic
--records.  These records have a configurable size, with a size of 0 indicating
--that they should be disabled.
--
--At least one of "record-size", "console-size", "ftrace-size", or "pmsg-size"
--must be set non-zero, but are otherwise optional as listed below.
--
--
--Required properties:
--
--- compatible: must be "ramoops"
--
--- memory-region: phandle to a region of memory that is preserved between
--  reboots
--
--
--Optional properties:
--
--- ecc-size: enables ECC support and specifies ECC buffer size in bytes
--  (defaults to 0: no ECC)
--
--- record-size: maximum size in bytes of each dump done on oops/panic
--  (defaults to 0: disabled)
--
--- console-size: size in bytes of log buffer reserved for kernel messages
--  (defaults to 0: disabled)
--
--- ftrace-size: size in bytes of log buffer reserved for function tracing and
--  profiling (defaults to 0: disabled)
--
--- pmsg-size: size in bytes of log buffer reserved for userspace messages
--  (defaults to 0: disabled)
--
--- unbuffered: if present, use unbuffered mappings to map the reserved region
--  (defaults to buffered mappings)
--
--- no-dump-oops: if present, only dump panics (defaults to panics and oops)
-diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.txt b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
-new file mode 100644
-index 000000000000..e81f821a2135
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.txt
-@@ -0,0 +1,48 @@
-+Ramoops oops/panic logger
-+=========================
-+
-+ramoops provides persistent RAM storage for oops and panics, so they can be
-+recovered after a reboot. This is a child-node of "/reserved-memory", and
-+is named "ramoops" after the backend, rather than "pstore" which is the
-+subsystem.
-+
-+Parts of this storage may be set aside for other persistent log buffers, such
-+as kernel log messages, or for optional ECC error-correction data.  The total
-+size of these optional buffers must fit in the reserved region.
-+
-+Any remaining space will be used for a circular buffer of oops and panic
-+records.  These records have a configurable size, with a size of 0 indicating
-+that they should be disabled.
-+
-+At least one of "record-size", "console-size", "ftrace-size", or "pmsg-size"
-+must be set non-zero, but are otherwise optional as listed below.
-+
-+
-+Required properties:
-+
-+- compatible: must be "ramoops"
-+
-+- reg: region of memory that is preserved between reboots
-+
-+
-+Optional properties:
-+
-+- ecc-size: enables ECC support and specifies ECC buffer size in bytes
-+  (defaults to 0: no ECC)
-+
-+- record-size: maximum size in bytes of each dump done on oops/panic
-+  (defaults to 0: disabled)
-+
-+- console-size: size in bytes of log buffer reserved for kernel messages
-+  (defaults to 0: disabled)
-+
-+- ftrace-size: size in bytes of log buffer reserved for function tracing and
-+  profiling (defaults to 0: disabled)
-+
-+- pmsg-size: size in bytes of log buffer reserved for userspace messages
-+  (defaults to 0: disabled)
-+
-+- unbuffered: if present, use unbuffered mappings to map the reserved region
-+  (defaults to buffered mappings)
-+
-+- no-dump-oops: if present, only dump panics (defaults to panics and oops)
-diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
-index 9264bcab4099..deaf07cbf484 100644
---- a/Documentation/ramoops.txt
-+++ b/Documentation/ramoops.txt
-@@ -55,7 +55,7 @@ Setting the ramoops parameters can be done in 3 different manners:
-  region at 128 MB boundary:
-  "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
-  2. Use Device Tree bindings, as described in
-- Documentation/device-tree/bindings/misc/ramoops.txt.
-+ Documentation/device-tree/bindings/reserved-memory/ramoops.txt.
-  3. Use a platform device and set the platform data. The parameters can then
-  be set through that platform data. An example of doing that is:
- 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 16e8daffac06..c07adf72bb8e 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -356,6 +356,11 @@ static int of_platform_bus_create(struct device_node *bus,
- 	void *platform_data = NULL;
- 	int rc = 0;
- 
-+	/* Always populate reserved-memory nodes. */
-+	if (strict && strcmp(bus->full_name, "/reserved-memory") == 0) {
-+		return of_platform_populate(bus, matches, lookup, parent);
-+	}
-+
- 	/* Make sure it has a compatible property */
- 	if (strict && (!of_get_property(bus, "compatible", NULL))) {
- 		pr_debug("%s() - skipping %s, no compatible prop\n",
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 47516a794011..af5cee0c2156 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -486,24 +486,16 @@ static int ramoops_parse_dt(struct platform_device *pdev,
- 			    struct ramoops_platform_data *pdata)
- {
- 	struct device_node *of_node = pdev->dev.of_node;
--	struct device_node *mem_region;
- 	struct resource res;
- 	u32 value;
- 	int ret;
- 
- 	dev_dbg(&pdev->dev, "using Device Tree\n");
- 
--	mem_region = of_parse_phandle(of_node, "memory-region", 0);
--	if (!mem_region) {
--		dev_err(&pdev->dev, "no memory-region phandle\n");
--		return -ENODEV;
--	}
--
--	ret = of_address_to_resource(mem_region, 0, &res);
--	of_node_put(mem_region);
-+	ret = of_address_to_resource(of_node, 0, &res);
- 	if (ret) {
- 		dev_err(&pdev->dev,
--			"failed to translate memory-region to resource: %d\n",
-+			"failed to translate reserved-memory to resource: %d\n",
- 			ret);
- 		return ret;
- 	}
--- 
-2.7.4
+>> > > +static irqreturn_t sun8i_emac_dma_interrupt(int irq, void *dev_id)
+>> > > +{
+>> > > + struct net_device *ndev = dev_id;
+>> > > + struct sun8i_emac_priv *priv = netdev_priv(ndev);
+>> > > + u32 v, u;
+>> > > +
+>> > > + v = readl(priv->base + SUN8I_EMAC_INT_STA);
+>> > > +
+>> > > + /* When this bit is asserted, a frame transmission is completed. */
+>> > > + if (v & BIT(0)) {
+>> > > +         priv->estats.tx_int++;
+>> > > +         writel(0, priv->base + SUN8I_EMAC_INT_EN);
+>> > > +         napi_schedule(&priv->napi);
+>> > > + }
+>> > > +
+>> > > + /* When this bit is asserted, the TX DMA FSM is stopped. */
+>> > > + if (v & BIT(1))
+>> > > +         priv->estats.tx_dma_stop++;
+>> > > +
+>> > > + /* When this asserted, the TX DMA can not acquire next TX descriptor
+>> > > +  * and TX DMA FSM is suspended.
+>> > > + */
+>> > > + if (v & BIT(2))
+>> > > +         priv->estats.tx_dma_ua++;
+>> > > +
+>> > > + if (v & BIT(3))
+>> > > +         netif_dbg(priv, intr, ndev, "Unhandled interrupt TX TIMEOUT\n");
+>> >
+>> > Why do you enable that interrupt if you can't handle it?
+>>
+>> Some interrupt fire even when not enabled (like RX_BUF_UA_INT/TX_BUF_UA_INT)
+>
+> So the bits 9 and 2, respectively, in the interrupt enable register
+> are useless?
 
+Does it actually fire, i.e. pull the interrupt line on the GIC? Or is it just
+the interrupt state showing an event? IIRC some other hardware blocks have this
+behavior, such as the timer.
 
--- 
-Kees Cook
-Brillo & Chrome OS Security
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
+
+>> > And printing in the interrupt handler is a very bad idea.
+>>
+>> There are printed only when DEBUG is set, so not a problem ?
+>
+> It's always a problem, this adds a very significant latency and will
+> fill the kernel log buffer at an insane rate, flushing out actual
+> important messages, for no particular reason.
+>> > > +
+>> > > + return IRQ_HANDLED;
+>> >
+>> > The lack of spinlocks in there is quite worrying.
+>> >
+>>
+>> The interrupt handler just do nothing harmfull if it race with itself.
+>> Just stats, enabling NAPI etc..
+>> Anyway, It miss a comment for that non-locking strategy
+>
+> The interrupt handler cannot race with itself. The interrupts will be
+> masked on the local CPU and the interrupt can only be delivered to a
+> single CPU (so, the one that the handler is currently running from).
+>
+>> > > +}
+>> > > +
+>> > > +static int sun8i_emac_probe(struct platform_device *pdev)
+>> > > +{
+>> > > + struct device_node *node = pdev->dev.of_node;
+>> > > + struct sun8i_emac_priv *priv;
+>> > > + struct net_device *ndev;
+>> > > + struct resource *res;
+>> > > + int ret;
+>> > > +
+>> > > + ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+>> > > + if (ret) {
+>> > > +         dev_err(&pdev->dev, "No suitable DMA available\n");
+>> > > +         return ret;
+>> > > + }
+>> >
+>> > Isn't that the default?
+>> >
+>> No, it is necessary on arm64 as apritzel requested.
+>
+> http://lxr.free-electrons.com/source/drivers/of/device.c#L93
+>
+> It seems to be shared between the two.
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
