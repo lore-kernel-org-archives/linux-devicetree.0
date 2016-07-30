@@ -1,246 +1,88 @@
-Return-Path: <wulf@rock-chips.com>
-Message-ID: <5775E74D.9070909@rock-chips.com>
-Date: Fri, 01 Jul 2016 11:45:17 +0800
-From: William Wu <william.wu@rock-chips.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 3/5] usb: dwc3: add phyif_utmi_quirk[Involving remittance
- information, please pay attention to the safety of property]
-References: <1467285176-25222-1-git-send-email-william.wu@rock-chips.com> <1467285176-25222-4-git-send-email-william.wu@rock-chips.com> <20160701023552.GA26314@rob-hp-laptop>
-In-Reply-To: <20160701023552.GA26314@rob-hp-laptop>
-Content-Type: multipart/alternative;
- boundary="------------050703010204090701040700"
-To: Rob Herring <robh@kernel.org>
-Cc: gregkh@linuxfoundation.org, balbi@kernel.org, heiko@sntech.de, linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, devicetree@vger.kernel.org
+In-Reply-To: <CAGXu5j+YpTLarGSAPwHi81VXzvj4J090LBnAO6wgReAS_EQU=A@mail.gmail.com>
+References: <20160728202537.11961-1-robh@kernel.org>
+	<CAGXu5jJnfCGsqiuVWNrvrZkmKz5nD0hnQSQ+Vr4x-GD5dDa7AA@mail.gmail.com>
+	<CAL_Jsq+VmaFjWKqKfuqh5a1WkSYuw8w8SKBHK7MF6j-i7Fv_gA@mail.gmail.com>
+	<CAGXu5jL94J59+TKfgmT-5vPOBpNhXc96Nn1Ka1ZMWrT0TP989Q@mail.gmail.com>
+	<CAGXu5j+YpTLarGSAPwHi81VXzvj4J090LBnAO6wgReAS_EQU=A@mail.gmail.com>
+Date: Sat, 30 Jul 2016 08:29:33 -0500
+Message-ID: <CAL_JsqKp=2de292smvjrb2Y-3EHFmkQMy11K7jU09+QUs8QX8g@mail.gmail.com>
+Subject: Re: [PATCH] Revert "pstore/ram: add Device Tree bindings"
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Kees Cook <keescook@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Hackmann <ghackmann@google.com>, Arnd Bergmann <arnd@arndb.de>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------050703010204090701040700
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Dear Rob,
 
-On 07/01/2016 10:35 AM, Rob Herring wrote:
-> On Thu, Jun 30, 2016 at 07:12:54PM +0800, William Wu wrote:
->> Add a quirk to configure the core to support the
->> UTMI+ PHY with an 8- or 16-bit interface. UTMI+ PHY
->> interface is hardware property, and it's platform
->> dependent. Normall, the PHYIf can be configured
->> during coreconsultant. But for some specific usb
->> cores(e.g. rk3399 soc dwc3), the default PHYIf
->> configuration value is fault, so we need to
->> reconfigure it by software.
+On Fri, Jul 29, 2016 at 7:49 PM, Kees Cook <keescook@chromium.org> wrote:
+> On Thu, Jul 28, 2016 at 3:44 PM, Kees Cook <keescook@chromium.org> wrote:
+>> On Thu, Jul 28, 2016 at 2:10 PM, Rob Herring <robh@kernel.org> wrote:
+>>> On Thu, Jul 28, 2016 at 3:50 PM, Kees Cook <keescook@chromium.org> wrote:
+>>>> On Thu, Jul 28, 2016 at 1:25 PM, Rob Herring <robh@kernel.org> wrote:
+>>>>> This reverts commit 35da60941e44dbf57868e67686dd24cc1a33125a.
+>>>>> ---
+>>>>> WTF!
+>>>>>
+>>>>> I don't recall acking this nor have my comments (Arnd's really) been
+>>>>> addressed[1]. This should not have been merged yet.
+>>>>
+>>>> The conversation seemed to me to describe an alternative that could be
+>>>> moved to, but that it was going to need more work. In the meantime,
+>>>> these are the DT bindings used in real devices already. It seemed
+>>>> clear to me that reducing the delta now and improving the
+>>>> implementation in the future was the right thing to do in this case. I
+>>>> didn't think your comments were a hard NAK, but rather a "we should do
+>>>> this in the future", and I added it as a TODO for the pstore tree.
+>>>>
+>>>> Is a revert really justified here? This doesn't break anything (quite
+>>>> the opposite, actually).
+>>>
+>>> Yes. Bindings are an ABI, so they can't evolve other than get
+>>> additional properties.
 >>
->> And refer to the dwc3 databook, the GUSB2PHYCFG.USBTRDTIM
->> must be set to the corresponding value according to
->> the UTMI+ PHY interface.
+>> Okay. I still think that from a pragmatic perspective, this isn't
+>> different from reality: Android carries a version of this, so that ABI
+>> already "exists", but, regardless, I misunderstood the intensity of
+>> your concerns. :)
 >>
->> Signed-off-by: William Wu <william.wu@rock-chips.com>
->> ---
->> Changes in v5:
->> - None
+>>> I'm keen to have this in too because I know there are lots of users
+>>> (extract a DT from a Calxeda system ;)). It's not really that far off
+>>> (drop memory-region and define the location in /reserved-memory) I
+>>> think. So send a follow-up for 4.8 and then it doesn't need a revert.
 >>
->> Changes in v4:
->> - rebase on top of balbi testing/next, remove pdata (balbi)
->>
->> Changes in v3:
->> - None
->>
->> Changes in v2:
->> - add a quirk for phyif_utmi (balbi)
->>
->>   Documentation/devicetree/bindings/usb/dwc3.txt |  4 ++++
->>   drivers/usb/dwc3/core.c                        | 19 +++++++++++++++++++
->>   drivers/usb/dwc3/core.h                        | 12 ++++++++++++
->>   3 files changed, 35 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
->> index 1ada121..34d13a5 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->> @@ -42,6 +42,10 @@ Optional properties:
->>    - snps,dis_u2_freeclk_exists_quirk: when set, clear the u2_freeclk_exists
->>   			in GUSB2PHYCFG, specify that USB2 PHY doesn't provide
->>   			a free-running PHY clock.
->> + - snps,phyif_utmi_quirk: when set core will set phyif UTMI+ interface.
-> This isn't really what I'd call a quirk.
-I'm sorry that add you in the review list too late.
-
-Actually, I have discussed the property "snps,phyif_utmi_quirk"
-with balbi in patch v2.
-
-As we know, UTMI+ PHY interface is hardware property, and
-it can be configured correctly during coreconsulttant according
-to dwc3 TRM, section 8.1.1 Table 8-1 where itstates:
-
-|-------------+------------------------------------------------------------|
-| GUSB2PHYCFG | Program the following PHY configuration fields: USBTrdTim, |
-|             | FSIntf, PHYIf, TOUTCal, or leave the default values if     |
-|             | the correct power-on values were selected during           |
-|             | coreConsultant configuration.  Note: The PHY must not      |
-|             | be enabled for auto-resume in device mode. Hence the       |
-|             | field GUSB2PHYCFG[15] (ULPIAutoRes) must be written        |
-|             | with '0' during the power-on initialization in case        |
-|             | the reset value is '1'.                                    |
-|             |                                                            |
-|-------------+------------------------------------------------------------|
-
-But for some specific usb cores(e.g. rk3399 soc dwc3),  the default
-PHYIf configuration value is fault after core init, ad we need to
-reconfigure it by software. so I think maybe a quirk is more proper.
-
+>> Okay, I'll see what I can figure out.
 >
->> + - snps,phyif_utmi: the value to configure the core to support a UTMI+ PHY
->> +			with an 8- or 16-bit interface. Value 0 select 8-bit
->> +			interface, value 1 select 16-bit interface.
-> These seem like they should be standard properties for setting the phy
-> type/mode. I think we already have something defined in fact.
-Yes, it's standard properties for setting the phy interface.
-But as I describe above, for most of dwc3 cores designed
-by IC vendors, the phy interface can be automatically set
-with correct value during coreConsultant configuration,
-and don't need to reconfigure it by software. For now,
-I haven't found any SoC had this issue except rk3399,
-and dwc3 driver also doesn't have any defined similar to
-what I defined here.
-
-Best Regards
-      William Wu
-> Rob
+> Confusing: ARM doesn't show reserved memblocks in /proc/iomem. I spent
+> way too much time thinking my .dts was wrong. :( Booting with
+> "memblock=debug" helped...
 >
+> So, the proposed DT looks like this:
 >
+> {/
+>         reserved-memory {
+>                   ramoops@78000000 {
 >
-
-
---------------050703010204090701040700
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <div class="moz-cite-prefix">Dear Rob,<br>
-      <br>
-      On 07/01/2016 10:35 AM, Rob Herring wrote:<br>
-    </div>
-    <blockquote cite="mid:20160701023552.GA26314@rob-hp-laptop"
-      type="cite">
-      <pre wrap="">On Thu, Jun 30, 2016 at 07:12:54PM +0800, William Wu wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">Add a quirk to configure the core to support the
-UTMI+ PHY with an 8- or 16-bit interface. UTMI+ PHY
-interface is hardware property, and it's platform
-dependent. Normall, the PHYIf can be configured
-during coreconsultant. But for some specific usb
-cores(e.g. rk3399 soc dwc3), the default PHYIf
-configuration value is fault, so we need to
-reconfigure it by software.
-
-And refer to the dwc3 databook, the GUSB2PHYCFG.USBTRDTIM
-must be set to the corresponding value according to
-the UTMI+ PHY interface.
-
-Signed-off-by: William Wu <a class="moz-txt-link-rfc2396E" href="mailto:william.wu@rock-chips.com">&lt;william.wu@rock-chips.com&gt;</a>
----
-Changes in v5:
-- None
-
-Changes in v4:
-- rebase on top of balbi testing/next, remove pdata (balbi)
-
-Changes in v3:
-- None
-
-Changes in v2:
-- add a quirk for phyif_utmi (balbi)
-
- Documentation/devicetree/bindings/usb/dwc3.txt |  4 ++++
- drivers/usb/dwc3/core.c                        | 19 +++++++++++++++++++
- drivers/usb/dwc3/core.h                        | 12 ++++++++++++
- 3 files changed, 35 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 1ada121..34d13a5 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -42,6 +42,10 @@ Optional properties:
-  - snps,dis_u2_freeclk_exists_quirk: when set, clear the u2_freeclk_exists
- 			in GUSB2PHYCFG, specify that USB2 PHY doesn't provide
- 			a free-running PHY clock.
-+ - snps,phyif_utmi_quirk: when set core will set phyif UTMI+ interface.
-</pre>
-      </blockquote>
-      <pre wrap="">
-This isn't really what I'd call a quirk.</pre>
-    </blockquote>
-    I'm sorry that add you in the review list too late.<br>
-    <br>
-    Actually, I have discussed the property "snps,phyif_utmi_quirk"<br>
-    with balbi in patch v2.<br>
-    <br>
-    As we know, UTMI+ PHY interface is hardware property, and<br>
-    it can be configured correctly during coreconsulttant according<br>
-    to dwc3 TRM, section 8.1.1 Table 8-1 where itstates:<br>
-    <pre wrap="">|-------------+------------------------------------------------------------|
-| GUSB2PHYCFG | Program the following PHY configuration fields: USBTrdTim, |
-|             | FSIntf, PHYIf, TOUTCal, or leave the default values if     |
-|             | the correct power-on values were selected during           |
-|             | coreConsultant configuration.  Note: The PHY must not      |
-|             | be enabled for auto-resume in device mode. Hence the       |
-|             | field GUSB2PHYCFG[15] (ULPIAutoRes) must be written        |
-|             | with '0' during the power-on initialization in case        |
-|             | the reset value is '1'.                                    |
-|             |                                                            |
-|-------------+------------------------------------------------------------|
-
-</pre>
-    <font face="sans-serif">But </font>for some specific usb cores(e.g.
-    rk3399 soc dwc3),&nbsp; the default<br>
-    PHYIf configuration value is fault after core init, ad we need to<br>
-    reconfigure it by software. so I think maybe a quirk is more proper.<br>
-    <br>
-    <blockquote cite="mid:20160701023552.GA26314@rob-hp-laptop"
-      type="cite">
-      <pre wrap="">
-
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+ - snps,phyif_utmi: the value to configure the core to support a UTMI+ PHY
-+			with an 8- or 16-bit interface. Value 0 select 8-bit
-+			interface, value 1 select 16-bit interface.
-</pre>
-      </blockquote>
-      <pre wrap="">
-These seem like they should be standard properties for setting the phy 
-type/mode. I think we already have something defined in fact.
-</pre>
-    </blockquote>
-    Yes, it's standard properties for setting the phy interface.<br>
-    But as I describe above, for most of dwc3 cores designed<br>
-    by IC vendors, the phy interface can be automatically set<br>
-    with correct value during coreConsultant configuration,<br>
-    and don't need to reconfigure it by software. For now,<br>
-    I haven't found any SoC had this issue except rk3399,<br>
-    and dwc3 driver also doesn't have any defined similar to<br>
-    what I defined here.<br>
-    <br>
-    Best Regards<br>
-    &nbsp; &nbsp;&nbsp; William Wu <br>
-    <blockquote cite="mid:20160701023552.GA26314@rob-hp-laptop"
-      type="cite">
-      <pre wrap="">
-Rob
-
-
-
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------050703010204090701040700--
+> There's no "compatible" entry in "reserved-memory", so it's skipped
+> for probing, as far as I can tell. Which brings me back to your
+> original email where you said:
+>
+>> This will in addition need an
+>> of_platform_populate call on the /reserved-memory node to get the
+>> platform device created.
+>
+> Where should I add the of_platform_populate() call? All the reserved
+> memory logic is way too early during FDT, so right now I have it
+> working by adding it to init_machine_late() which feels very ugly (and
+> a bit too late: I'd like it as early as possible). :P
+>
+> It seems like it should go right after the top-level call to
+> of_platform_populate(NULL, NULL, NULL, NULL), but that seems to be
+> done on a per-board basis? I can't figure it out.
+>
+> -Kees
+>
+> --
+> Kees Cook
+> Chrome OS & Brillo Security
