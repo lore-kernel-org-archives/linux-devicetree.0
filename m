@@ -1,85 +1,114 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH v2 3/5] mmc: sunxi: Factor out clock phase setting code
- into a helper function
-Date: Sat, 30 Jul 2016 23:18:15 +0800
-Message-ID: <195421469891895@web9j.yandex.ru>
-References: <1469888748-26085-1-git-send-email-hdegoede@redhat.com>
- <1469888748-26085-4-git-send-email-hdegoede@redhat.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 1/2 v2] hwmon: (ltc4151) Make shunt-resistor configurable
+Date: Sat, 30 Jul 2016 09:00:14 -0700
+Message-ID: <579CCF0E.9050506@roeck-us.net>
+References: <5795A144.2020300@roeck-us.net>
+ <20160725115558.GA18360@makrotopia.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1469888748-26085-4-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160725115558.GA18360-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Per_Dal=c3=a9n?= <per.dalen-US8m9dViuwNWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgozMC4wNy4yMDE2LCAyMjoyNiwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
-PjoKPiBBZGQgYSBzdW54aV9tbWNfY2xrX3NldF9waGFzZSgpIGhlbHBlciBmdW5jdGlvbi4KVGhh
-bmtzISBJdCdzIHVzZWZ1bCBmb3IgQTY0IE1NQyBpbXBsZW1lbnRhdGlvbi4KCj4KPiBTaWduZWQt
-b2ZmLWJ5OiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPgo+IC0tLQo+IENoYW5n
-ZXMgaW4gdjI6Cj4gLU5ldyBwYXRjaCBpbiB2MiBvZiB0aGlzIHBhdGNoLXNldAo+IC0tLQo+IMKg
-ZHJpdmVycy9tbWMvaG9zdC9zdW54aS1tbWMuYyB8IDYxICsrKysrKysrKysrKysrKysrKysrKysr
-Ky0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygr
-KSwgMjggZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tbWMvaG9zdC9zdW54
-aS1tbWMuYyBiL2RyaXZlcnMvbW1jL2hvc3Qvc3VueGktbW1jLmMKPiBpbmRleCA5ZjQ0YzgzLi5i
-NjMxYjVjIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbW1jL2hvc3Qvc3VueGktbW1jLmMKPiArKysg
-Yi9kcml2ZXJzL21tYy9ob3N0L3N1bnhpLW1tYy5jCj4gQEAgLTY1NywxMiArNjU3LDM5IEBAIHN0
-YXRpYyBpbnQgc3VueGlfbW1jX29jbGtfb25vZmYoc3RydWN0IHN1bnhpX21tY19ob3N0ICpob3N0
-LCB1MzIgb2Nsa19lbikKPiDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gMDsKPiDCoH0KPgo+ICtz
-dGF0aWMgaW50IHN1bnhpX21tY19jbGtfc2V0X3BoYXNlKHN0cnVjdCBzdW54aV9tbWNfaG9zdCAq
-aG9zdCwKPiArIHN0cnVjdCBtbWNfaW9zICppb3MsIHUzMiByYXRlKQo+ICt7Cj4gKyBpbnQgaW5k
-ZXg7Cj4gKwo+ICsgLyogZGV0ZXJtaW5lIGRlbGF5cyAqLwo+ICsgaWYgKHJhdGUgPD0gNDAwMDAw
-KSB7Cj4gKyBpbmRleCA9IFNEWENfQ0xLXzQwMEs7Cj4gKyB9IGVsc2UgaWYgKHJhdGUgPD0gMjUw
-MDAwMDApIHsKPiArIGluZGV4ID0gU0RYQ19DTEtfMjVNOwo+ICsgfSBlbHNlIGlmIChyYXRlIDw9
-IDUyMDAwMDAwKSB7Cj4gKyBpZiAoaW9zLT50aW1pbmcgIT0gTU1DX1RJTUlOR19VSFNfRERSNTAg
-JiYKPiArIGlvcy0+dGltaW5nICE9IE1NQ19USU1JTkdfTU1DX0REUjUyKSB7Cj4gKyBpbmRleCA9
-IFNEWENfQ0xLXzUwTTsKPiArIH0gZWxzZSBpZiAoaW9zLT5idXNfd2lkdGggPT0gTU1DX0JVU19X
-SURUSF84KSB7Cj4gKyBpbmRleCA9IFNEWENfQ0xLXzUwTV9ERFJfOEJJVDsKPiArIH0gZWxzZSB7
-Cj4gKyBpbmRleCA9IFNEWENfQ0xLXzUwTV9ERFI7Cj4gKyB9Cj4gKyB9IGVsc2Ugewo+ICsgcmV0
-dXJuIC1FSU5WQUw7Cj4gKyB9Cj4gKwo+ICsgY2xrX3NldF9waGFzZShob3N0LT5jbGtfc2FtcGxl
-LCBob3N0LT5jZmctPmNsa19kZWxheXNbaW5kZXhdLnNhbXBsZSk7Cj4gKyBjbGtfc2V0X3BoYXNl
-KGhvc3QtPmNsa19vdXRwdXQsIGhvc3QtPmNmZy0+Y2xrX2RlbGF5c1tpbmRleF0ub3V0cHV0KTsK
-PiArCj4gKyByZXR1cm4gMDsKPiArfQo+ICsKPiDCoHN0YXRpYyBpbnQgc3VueGlfbW1jX2Nsa19z
-ZXRfcmF0ZShzdHJ1Y3Qgc3VueGlfbW1jX2hvc3QgKmhvc3QsCj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0cnVj
-dCBtbWNfaW9zICppb3MpCj4gwqB7Cj4gLSBjb25zdCBzdHJ1Y3Qgc3VueGlfbW1jX2Nsa19kZWxh
-eSAqY2xrX2RlbGF5cyA9IGhvc3QtPmNmZy0+Y2xrX2RlbGF5czsKPiAtIHUzMiByYXRlLCBvY2xr
-X2RseSwgcnZhbCwgc2Nsa19kbHk7Cj4gLSB1MzIgY2xvY2sgPSBpb3MtPmNsb2NrOwo+ICsgdTMy
-IHJhdGUsIHJ2YWwsIGNsb2NrID0gaW9zLT5jbG9jazsKPiDCoMKgwqDCoMKgwqDCoMKgwqBpbnQg
-cmV0Owo+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgLyogOCBiaXQgRERSIHJlcXVpcmVzIGEgaGlnaGVy
-IG1vZHVsZSBjbG9jayAqLwo+IEBAIC02OTcsMzEgKzcyNCw5IEBAIHN0YXRpYyBpbnQgc3VueGlf
-bW1jX2Nsa19zZXRfcmF0ZShzdHJ1Y3Qgc3VueGlfbW1jX2hvc3QgKmhvc3QsCj4gwqDCoMKgwqDC
-oMKgwqDCoMKgfQo+IMKgwqDCoMKgwqDCoMKgwqDCoG1tY193cml0ZWwoaG9zdCwgUkVHX0NMS0NS
-LCBydmFsKTsKPgo+IC0gLyogZGV0ZXJtaW5lIGRlbGF5cyAqLwo+IC0gaWYgKHJhdGUgPD0gNDAw
-MDAwKSB7Cj4gLSBvY2xrX2RseSA9IGNsa19kZWxheXNbU0RYQ19DTEtfNDAwS10ub3V0cHV0Owo+
-IC0gc2Nsa19kbHkgPSBjbGtfZGVsYXlzW1NEWENfQ0xLXzQwMEtdLnNhbXBsZTsKPiAtIH0gZWxz
-ZSBpZiAocmF0ZSA8PSAyNTAwMDAwMCkgewo+IC0gb2Nsa19kbHkgPSBjbGtfZGVsYXlzW1NEWENf
-Q0xLXzI1TV0ub3V0cHV0Owo+IC0gc2Nsa19kbHkgPSBjbGtfZGVsYXlzW1NEWENfQ0xLXzI1TV0u
-c2FtcGxlOwo+IC0gfSBlbHNlIGlmIChyYXRlIDw9IDUyMDAwMDAwKSB7Cj4gLSBpZiAoaW9zLT50
-aW1pbmcgIT0gTU1DX1RJTUlOR19VSFNfRERSNTAgJiYKPiAtIGlvcy0+dGltaW5nICE9IE1NQ19U
-SU1JTkdfTU1DX0REUjUyKSB7Cj4gLSBvY2xrX2RseSA9IGNsa19kZWxheXNbU0RYQ19DTEtfNTBN
-XS5vdXRwdXQ7Cj4gLSBzY2xrX2RseSA9IGNsa19kZWxheXNbU0RYQ19DTEtfNTBNXS5zYW1wbGU7
-Cj4gLSB9IGVsc2UgaWYgKGlvcy0+YnVzX3dpZHRoID09IE1NQ19CVVNfV0lEVEhfOCkgewo+IC0g
-b2Nsa19kbHkgPSBjbGtfZGVsYXlzW1NEWENfQ0xLXzUwTV9ERFJfOEJJVF0ub3V0cHV0Owo+IC0g
-c2Nsa19kbHkgPSBjbGtfZGVsYXlzW1NEWENfQ0xLXzUwTV9ERFJfOEJJVF0uc2FtcGxlOwo+IC0g
-fSBlbHNlIHsKPiAtIG9jbGtfZGx5ID0gY2xrX2RlbGF5c1tTRFhDX0NMS181ME1fRERSXS5vdXRw
-dXQ7Cj4gLSBzY2xrX2RseSA9IGNsa19kZWxheXNbU0RYQ19DTEtfNTBNX0REUl0uc2FtcGxlOwo+
-IC0gfQo+IC0gfSBlbHNlIHsKPiAtIHJldHVybiAtRUlOVkFMOwo+IC0gfQo+IC0KPiAtIGNsa19z
-ZXRfcGhhc2UoaG9zdC0+Y2xrX3NhbXBsZSwgc2Nsa19kbHkpOwo+IC0gY2xrX3NldF9waGFzZSho
-b3N0LT5jbGtfb3V0cHV0LCBvY2xrX2RseSk7Cj4gKyByZXQgPSBzdW54aV9tbWNfY2xrX3NldF9w
-aGFzZShob3N0LCBpb3MsIHJhdGUpOwo+ICsgaWYgKHJldCkKPiArIHJldHVybiByZXQ7Cj4KPiDC
-oMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gc3VueGlfbW1jX29jbGtfb25vZmYoaG9zdCwgMSk7Cj4g
-wqB9Cj4gLS0KPiAyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Daniel,
+
+On 07/25/2016 04:56 AM, Daniel Golle wrote:
+> Allow to specify the resistance of the attached shunt via DT by
+> adding the shunt-resistor property. Fall-back to the previous
+> default (1 mOhm) if unset.
+>
+> Signed-off-by: Daniel Golle <daniel-g5gK2j5usbvCyp4qypjU+w@public.gmane.org>
+
+Please resend with the property name changed as asked for by Rob.
+
+Thanks,
+Guenter
+
+> ---
+> v2: removed unneeded things and throw -EINVAL for shunt==0
+>
+>   drivers/hwmon/ltc4151.c | 21 +++++++++++++++++++--
+>   1 file changed, 19 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/hwmon/ltc4151.c b/drivers/hwmon/ltc4151.c
+> index c86a184..419c6f7 100644
+> --- a/drivers/hwmon/ltc4151.c
+> +++ b/drivers/hwmon/ltc4151.c
+> @@ -30,6 +30,7 @@
+>
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+> +#include <linux/of.h>
+>   #include <linux/init.h>
+>   #include <linux/err.h>
+>   #include <linux/slab.h>
+> @@ -52,6 +53,7 @@ struct ltc4151_data {
+>   	struct mutex update_lock;
+>   	bool valid;
+>   	unsigned long last_updated; /* in jiffies */
+> +	unsigned int shunt; /* in micro ohms */
+>
+>   	/* Registers */
+>   	u8 regs[6];
+> @@ -111,9 +113,9 @@ static int ltc4151_get_value(struct ltc4151_data *data, u8 reg)
+>   	case LTC4151_SENSE_H:
+>   		/*
+>   		 * 20uV resolution. Convert to current as measured with
+> -		 * an 1 mOhm sense resistor, in mA.
+> +		 * a given sense resistor, in mA.
+>   		 */
+> -		val = val * 20;
+> +		val = val * 20 * 1000 / data->shunt;
+>   		break;
+>   	case LTC4151_VIN_H:
+>   		/* 25 mV per increment */
+> @@ -176,6 +178,7 @@ static int ltc4151_probe(struct i2c_client *client,
+>   	struct device *dev = &client->dev;
+>   	struct ltc4151_data *data;
+>   	struct device *hwmon_dev;
+> +	u32 shunt;
+>
+>   	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+>   		return -ENODEV;
+> @@ -184,6 +187,14 @@ static int ltc4151_probe(struct i2c_client *client,
+>   	if (!data)
+>   		return -ENOMEM;
+>
+> +	if (of_property_read_u32(client->dev.of_node, "shunt-resistor", &shunt))
+> +		shunt = 1000; /* 1 mOhm if not set via DT */
+> +
+> +	if (shunt == 0)
+> +		return -EINVAL;
+> +
+> +	data->shunt = shunt;
+> +
+>   	data->client = client;
+>   	mutex_init(&data->update_lock);
+>
+> @@ -199,10 +210,16 @@ static const struct i2c_device_id ltc4151_id[] = {
+>   };
+>   MODULE_DEVICE_TABLE(i2c, ltc4151_id);
+>
+> +static const struct of_device_id ltc4151_match[] = {
+> +	{ .compatible = "lltc,ltc4151" },
+> +	{},
+> +};
+> +
+>   /* This is the driver that will be inserted */
+>   static struct i2c_driver ltc4151_driver = {
+>   	.driver = {
+>   		.name	= "ltc4151",
+> +		.of_match_table = of_match_ptr(ltc4151_match),
+>   	},
+>   	.probe		= ltc4151_probe,
+>   	.id_table	= ltc4151_id,
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
