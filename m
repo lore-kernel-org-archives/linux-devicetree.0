@@ -1,28 +1,68 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH net-next 00/10] Fix warning and issues
-Date: Fri, 29 Jul 2016 20:12:15 -0700 (PDT)
-Message-ID: <20160729.201215.318561347612813239.davem@davemloft.net>
-References: <1469838843-19943-1-git-send-email-isubramanian@apm.com>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v4 2/2] spi: add driver for J-Core SPI controller
+Date: Fri, 29 Jul 2016 23:34:41 -0400
+Message-ID: <20160730033441.GO15995@brightrain.aerifal.cx>
+References: <cover.1469686300.git.dalias@libc.org>
+ <2a46090a5a7c177b7eca83f68406650844423e7f.1469686300.git.dalias@libc.org>
+ <20160728191153.GL11806@sirena.org.uk>
+ <20160728194045.GK15995@brightrain.aerifal.cx>
+ <20160728195125.GN11806@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469838843-19943-1-git-send-email-isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: isubramanian-qTEPVZfXA3Y@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160728195125.GN11806@sirena.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>
 List-Id: devicetree@vger.kernel.org
 
-From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Date: Fri, 29 Jul 2016 17:33:53 -0700
+On Thu, Jul 28, 2016 at 08:51:25PM +0100, Mark Brown wrote:
+> On Thu, Jul 28, 2016 at 03:40:45PM -0400, Rich Felker wrote:
+> > On Thu, Jul 28, 2016 at 08:11:53PM +0100, Mark Brown wrote:
+> 
+> > > An architecture or SoC dependency with || COMPILE_TEST would be useful
+> > > for avoiding cluttering Kconfig for other users.  Though as this is in a
+> > > FPGA it's perhaps likely people will pick this up for other FPGAs so
+> > > perhaps a comment to that effect if it seems likely.
+> 
+> > Unlike some of the other SoC hardware (interrupt controller) that's
+> > more closely tied to the SH cpu trap behavior, the SPI master seems
+> > like something that would be nice and easy to reuse elsewhere. I don't
+> > feel strongly about it either way though; I can add the arch dep if
+> > you want.
+> 
+> I guess it depends if anyone is actually doing that or not, if nobody is
+> the dependency would be better.
 
-> This patch set fixes the following warning and issues,
+OK, let's add the dependency for now with the intent to remove it
+if/when there's a need.
 
-net-next is closed, please resubmit this after the merge window
-is closed and net-next re-opens.
+> > > Why are you not using the clock API for this?  Just require a clock and
+> > > use clk_get_rate() to find out what rate it is.
+> 
+> > I thought about that but I'm not familiar with it. I can try to figure
+> > it out quickly and test that approach; don't see any reason it
+> > shouldn't work. Would you insist on having full support for
+> > enabling/disabling the clk when it's in use, or would you be happy
+> > with treating it as a fixed clock that's always-on for now and
+> > possibly extending it with more functionality later if there's ever
+> > hardware where that's relevant/helpful?
+> 
+> It's fine to just enable it at startup and leave it on, though the
+> runtime PM ops are trivial and you can set auto_runtime_pm to have the
+> core do the gets and puts.
 
-Thank you.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I was able to get it working via the clk api and I'll include support
+for this in the next version of the patch, but to actually use it
+depends on changing arch/sh to use the common clk framework; otherwise
+there's no way to provide a suitable clk in the DT and have
+[devm_]clk_get actually pick it up. Should I keep around the option of
+using clock-frequency too? That would be most convenient.
+
+I do have a pending patch from Sato-san to switch arch/sh over to CCF
+but it's part of a series and I don't think it's ready to merge. I may
+be able to merge just a minimal, safe subset that won't break legacy
+non-DT configurations, though.
+
+Rich
