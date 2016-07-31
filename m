@@ -1,120 +1,45 @@
-From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
-Subject: Re: [PATCH 1/1] power: sbs-manager: Add interrupt support and
- battery detect gpios
-Date: Sun, 31 Jul 2016 16:04:33 +0200
-Message-ID: <1469973873.5299.9.camel@schneider-inet.de>
-References: <1469433003-68564-1-git-send-email-preid@electromag.com.au>
-	 <1469433003-68564-2-git-send-email-preid@electromag.com.au>
-	 <20160727144609.GA12462@rob-hp-laptop> <1469653707.27666.22.camel@amnesix>
-	 <4553a3f5-55cc-807d-7f34-11b4c7e11a0b@electromag.com.au>
-	 <e2ca7188-03e4-978d-9c10-9498117acb8e@electromag.com.au>
-	 <CAL_JsqL0+b5GRMMtK7PmECatR7aayiv-Of05HahGWSHHQ-vrYg@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: sunxi: Use new sun7i-a20-mmc compatible
+ on sun7i and newer
+Date: Sun, 31 Jul 2016 16:17:24 +0200
+Message-ID: <7d813018-49ad-c382-52ec-844f32bbad07@redhat.com>
+References: <1469888748-26085-1-git-send-email-hdegoede@redhat.com>
+ <1469888748-26085-6-git-send-email-hdegoede@redhat.com>
+ <20160730151619.GR6215@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL0+b5GRMMtK7PmECatR7aayiv-Of05HahGWSHHQ-vrYg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Phil Reid <preid@electromag.com.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160730151619.GR6215@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 28.07.2016, 10:45 -0500 schrieb Rob Herring:
-> On Thu, Jul 28, 2016 at 4:01 AM, Phil Reid <preid@electromag.com.au>
-> wrote:
-> > 
-> > G'day Rob,
-> > 
-> > Just another thought.
-> > 
-> > On 28/07/2016 10:11, Phil Reid wrote:
-> > > 
-> > > 
-> > > G'day Karl / Rob,
-> > > 
-> > > On 28/07/2016 05:08, Karl-Heinz Schneider wrote:
-> > > > 
-> > > > 
-> > > > Am Mittwoch, den 27.07.2016, 09:46 -0500 schrieb Rob Herring:
-> > > > > 
-> > > > > 
-> > > > > On Mon, Jul 25, 2016 at 03:50:03PM +0800, Phil Reid wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > This patch added irq support for the SMBALERT pin and
-> > > > > > notification of
-> > > > > > the battery removal / insertion. The sbs manager would
-> > > > > > typically be
-> > > > > > used with the corresponding sbs-battery driver that
-> > > > > > currently uses a
-> > > > > > gpio input for battery presence and interrupt. To remain
-> > > > > > compatible
-> > > > > > with
-> > > > > > that existing driver this patch implements GPIO inputs with
-> > > > > > interrupt
-> > > > > > support. IRQ masking is performed in software as the
-> > > > > > hardware does not
-> > > > > > support masking of notifications from each battery.
-> > > > > > In addition a power_supply change notification is generated
-> > > > > > for the sbs
-> > > > > > manager device when the AC present flag is changed.
-> > > > > > Tested with LTC1760 and dual sbs compatible batteries.
-> > > > > 
-> > > > > Please don't submit a binding and immediately turn around and
-> > > > > add to it.
-> > > > > While that is often preferred for drivers or kernel features,
-> > > > > bindings
-> > > > > should be complete as possible and not evolve. Combine this
-> > > > > with your
-> > > > > previous patch add sbs-mgr if that hasn't been accepted yet.
-> > > That was from Karl. I'm happy to have this combined if he is.Me
-> Indeed it was. Still, it should be combined. You can leave the driver
-> implementation as multiple patches, just combine all the binding to a
-> single patch by itself.
-Will do that.
-> > 
-> > > 
-> > > > 
-> > > > > 
-> > > > > IMO, the sbs-bat should just be a interrupt and making it and
-> > > > > this
-> > > > > binding a GPIO is overkill. Since batteries nodes using this
-> > > > > will be
-> > > > > new, there's no reason the driver can't be updated to support
-> > > > > interrupts.
-> > I did consider this and didn't go that way as:
-> > 1) the current sbs-battery driver didn't support it.
-> > 2) Then there's also the problem of reporting  the presence of the
-> > battery
-> > to the battery driver.
-> > Without the GPIO support you resort to polling and looking for a
-> > NACK. Which
-> > didn't seem that nice.
-> The ability to read the current irq signal state with the irq api
-> would be nice. Of course you can't really count on being able to on
-> all irqs. Anyway, we shouldn't really design the binding around
-> kernel
-> limitations.
-> 
-> As I understand how SMBALERT works, you have to poll the devices
-> anyway to determine which device is asserting the irq and to ack the
-> irq. Of course, here you are doing point to point connections, but
-> you
-> still need to know which batteries are present by reading the sbs-mgr
-> registers.
-The more interesting point for me is, that SMBALERT seems to provide an
-easy to use driver side interface. The code Registering the IRQ would
-vanish...
-Anyways I'm not very familiar with Linux IRQ handling, so I will follow
-your advise.
-> 
-> Wouldn't switching the driver to level irq allow you to get the state
-> immediately without a gpio read? After all, the gpio read and irq
-> handler are reading the same register.
-> 
-> Rob
--- 
-Karl-Heinz
+Hi,
 
+On 30-07-16 17:16, Maxime Ripard wrote:
+> On Sat, Jul 30, 2016 at 04:25:48PM +0200, Hans de Goede wrote:
+>> Use the new sun7i-a20-mmc compatible for the mmc controllers on sun7i
+>> and newer.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>
+> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+>
+> This should probably go through Ulf tree together with the rest of
+> that serie to maintain the bisectability.
 
+This going through Ulf's tree is fine with me, and indeed seems best, ack.
 
+Regards,
+
+Hans
