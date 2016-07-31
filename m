@@ -1,66 +1,117 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v5 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Sun, 31 Jul 2016 12:08:07 -0400
-Message-ID: <20160731160807.GP15995@brightrain.aerifal.cx>
-References: <cover.1469688975.git.dalias@libc.org>
- <ed156509aed631486decf1828acb4f0afa61dd31.1469688975.git.dalias@libc.org>
- <alpine.DEB.2.11.1607281515330.19896@nanos>
- <20160728200047.GL15995@brightrain.aerifal.cx>
- <20160728201844.GM15995@brightrain.aerifal.cx>
+From: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Subject: Re: [PATCH V2] clk: bcm: Add driver for Northstar ILP clock
+Date: Sun, 31 Jul 2016 15:38:05 -0400
+Message-ID: <CAP=VYLoMQwD8N2_YthDQjaWyF5VgEkehd0acrXV5BT0UKxh_aQ@mail.gmail.com>
+References: <1469797120-29298-1-git-send-email-zajec5@gmail.com> <1469832362-13947-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160728201844.GM15995@brightrain.aerifal.cx>
-Sender: linux-sh-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469832362-13947-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 28, 2016 at 04:18:44PM -0400, Rich Felker wrote:
-> On Thu, Jul 28, 2016 at 04:00:47PM -0400, Rich Felker wrote:
-> > On Thu, Jul 28, 2016 at 04:44:05PM +0200, Thomas Gleixner wrote:
-> > > > +static int jcore_pit_cpu_notify(struct notifier_block *self,
-> > > > +			unsigned long action, void *hcpu)
-> > > > +{
-> > > > +	struct jcore_pit_nb *nb = container_of(self, struct jcore_pit_nb, nb);
-> > > > +	switch (action & ~CPU_TASKS_FROZEN) {
-> > > > +	case CPU_STARTING:
-> > > > +		jcore_pit_local_init(this_cpu_ptr(nb->pit_percpu));
-> > > > +		break;
-> > > > +	}
-> > > > +	return NOTIFY_OK;
-> > > 
-> > > Please convert this to the new state machine model of cpu
-> > > hotplug. CPU_STARTING will be gone very soon. Here is an example:
-> > > 
-> > > http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/?h=smp/hotplug&id=7e86e8bd8dd67649d176e08d8dfb90039f0a1e98
-> > 
-> > Trying this change now and I'm getting hangs inside
-> > cpuhp_invoke_ap_callback between wake_up_process and
-> > wait_for_completion. I suspect it's not possible to run a scheduled
-> > task yet because there's no timer yet, or something like that. Do I
-> > need further infrastructure from tip that's not upstream yet in order
-> > to test this? I just rebased on linus/master and still have the same
-> > problem, but none of the other driver changes are in Linus's tree yet.
-> > Following the other drivers in tip (again, I don't have any of these
-> > in my tree), I put the new state between CPUHP_AP_SCHED_STARTING and
-> > CPUHP_AP_NOTIFY_STARTING; is this correct?
-> 
-> I think it's this bug where the fix is not yet in Linus's tree:
-> 
-> http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/kernel/cpu.c?h=smp/hotplug&id=6a4e24518c8a10f78f44da219835239cb5aca90d
-> 
-> Cherry-picking that made it work. FWIW, it's really hard to do
-> development on top of new infrastructure that's not yet working in any
-> tree that's intended for others to pull, but I made it work and I'll
-> have a new version of the patch for you soon.
+On Fri, Jul 29, 2016 at 6:45 PM, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>
+> This clock is present on cheaper Northstar devices like BCM53573 or
+> BCM47189 using Corex-A7. This driver uses PMU (Power Management Unit)
+> to calculate clock rate and allows using it in a generic (clk_*) way.
+>
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+> V2: Rebase on top of clk-next
+>     Use ALP as parent clock
+>     Improve comments
+>     Switch from ioremap_nocache to ioremap
+>     Check of_clk_add_provide result for error
+> ---
+>  .../devicetree/bindings/clock/brcm,ns-ilp.txt      |  26 ++++
+>  drivers/clk/bcm/Makefile                           |   1 +
+>  drivers/clk/bcm/clk-ns-ilp.c                       | 147 +++++++++++++++++++++
+>  3 files changed, 174 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
+>  create mode 100644 drivers/clk/bcm/clk-ns-ilp.c
+>
+> diff --git a/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
+> new file mode 100644
+> index 0000000..2c862a0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
+> @@ -0,0 +1,26 @@
+> +Broadcom Northstar ILP clock
+> +============================
+> +
+> +This binding uses the common clock binding:
+> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +This binding is used for ILP clock on Broadcom Northstar devices using
+> +Corex-A7 CPU. ILP clock depends on ALP one and has to be calculated on
+> +runtime.
+> +
+> +Required properties:
+> +- compatible: "brcm,ns-ilp"
+> +- reg: iomem address range of PMU (Power Management Unit)
+> +- reg-names: "pmu", the only needed & supported reg right now
+> +- clocks: has to reference an ALP clock
+> +- #clock-cells: should be <0>
+> +
+> +Example:
+> +
+> +ilp: ilp {
+> +       compatible = "brcm,ns-ilp";
+> +       reg = <0x18012000 0x1000>;
+> +       reg-names = "pmu";
+> +       clocks = <&alp>;
+> +       #clock-cells = <0>;
+> +};
+> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+> index 1d79bd2..1389379 100644
+> --- a/drivers/clk/bcm/Makefile
+> +++ b/drivers/clk/bcm/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_COMMON_CLK_IPROC)        += clk-ns2.o
+>  obj-$(CONFIG_ARCH_BCM_CYGNUS)  += clk-cygnus.o
+>  obj-$(CONFIG_ARCH_BCM_NSP)     += clk-nsp.o
+>  obj-$(CONFIG_ARCH_BCM_5301X)   += clk-nsp.o
+> +obj-$(CONFIG_ARCH_BCM_5301X)   += clk-ns-ilp.o
+> diff --git a/drivers/clk/bcm/clk-ns-ilp.c b/drivers/clk/bcm/clk-ns-ilp.c
+> new file mode 100644
+> index 0000000..0337313
+> --- /dev/null
+> +++ b/drivers/clk/bcm/clk-ns-ilp.c
+> @@ -0,0 +1,147 @@
+> +/*
+> + * Copyright (C) 2016 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
 
-I hit some more snags with rcu_sched stalls that I thought were my
-fault, but it looks like it's actually something in the linus/master I
-had to rebase on (I've tagged the revision locally in case this is
-something we need to track later). They happen equally with or without
-my latest changes for the notify_nb -> cpuhp transition and other
-requested changes to the pit driver.
+I didn't see anything using modular content from the above header file, so
+I think you can remove it.
 
-Rich
+Paul.
+--
+
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +
+> +#define PMU_XTAL_FREQ_RATIO                    0x66c
+> +#define  XTAL_ALP_PER_4ILP                     0x00001fff
+> +#define  XTAL_CTL_EN                           0x80000000
+> +#define PMU_SLOW_CLK_PERIOD                    0x6dc
+> +
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
