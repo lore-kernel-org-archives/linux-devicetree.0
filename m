@@ -1,97 +1,66 @@
-From: Vinay Simha BN <simhavcs@gmail.com>
-Subject: [RESEND] [PATCH v2 2/4] dt-bindings: Add jdi lt070me05000 panel bindings
-Date: Sun, 31 Jul 2016 20:45:21 +0530
-Message-ID: <1469978126-925-2-git-send-email-simhavcs@gmail.com>
-References: <1469978126-925-1-git-send-email-simhavcs@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1469978126-925-1-git-send-email-simhavcs@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Vinay Simha BN <simhavcs@gmail.com>, Archit Taneja <archit.taneja@gmail.com>, John Stultz <john.stultz@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v5 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Sun, 31 Jul 2016 12:08:07 -0400
+Message-ID: <20160731160807.GP15995@brightrain.aerifal.cx>
+References: <cover.1469688975.git.dalias@libc.org>
+ <ed156509aed631486decf1828acb4f0afa61dd31.1469688975.git.dalias@libc.org>
+ <alpine.DEB.2.11.1607281515330.19896@nanos>
+ <20160728200047.GL15995@brightrain.aerifal.cx>
+ <20160728201844.GM15995@brightrain.aerifal.cx>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160728201844.GM15995@brightrain.aerifal.cx>
+Sender: linux-sh-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for lt070me05000 panel
+On Thu, Jul 28, 2016 at 04:18:44PM -0400, Rich Felker wrote:
+> On Thu, Jul 28, 2016 at 04:00:47PM -0400, Rich Felker wrote:
+> > On Thu, Jul 28, 2016 at 04:44:05PM +0200, Thomas Gleixner wrote:
+> > > > +static int jcore_pit_cpu_notify(struct notifier_block *self,
+> > > > +			unsigned long action, void *hcpu)
+> > > > +{
+> > > > +	struct jcore_pit_nb *nb = container_of(self, struct jcore_pit_nb, nb);
+> > > > +	switch (action & ~CPU_TASKS_FROZEN) {
+> > > > +	case CPU_STARTING:
+> > > > +		jcore_pit_local_init(this_cpu_ptr(nb->pit_percpu));
+> > > > +		break;
+> > > > +	}
+> > > > +	return NOTIFY_OK;
+> > > 
+> > > Please convert this to the new state machine model of cpu
+> > > hotplug. CPU_STARTING will be gone very soon. Here is an example:
+> > > 
+> > > http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/?h=smp/hotplug&id=7e86e8bd8dd67649d176e08d8dfb90039f0a1e98
+> > 
+> > Trying this change now and I'm getting hangs inside
+> > cpuhp_invoke_ap_callback between wake_up_process and
+> > wait_for_completion. I suspect it's not possible to run a scheduled
+> > task yet because there's no timer yet, or something like that. Do I
+> > need further infrastructure from tip that's not upstream yet in order
+> > to test this? I just rebased on linus/master and still have the same
+> > problem, but none of the other driver changes are in Linus's tree yet.
+> > Following the other drivers in tip (again, I don't have any of these
+> > in my tree), I put the new state between CPUHP_AP_SCHED_STARTING and
+> > CPUHP_AP_NOTIFY_STARTING; is this correct?
+> 
+> I think it's this bug where the fix is not yet in Linus's tree:
+> 
+> http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/commit/kernel/cpu.c?h=smp/hotplug&id=6a4e24518c8a10f78f44da219835239cb5aca90d
+> 
+> Cherry-picking that made it work. FWIW, it's really hard to do
+> development on top of new infrastructure that's not yet working in any
+> tree that's intended for others to pull, but I made it work and I'll
+> have a new version of the patch for you soon.
 
-Cc: Archit Taneja <archit.taneja@gmail.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
+I hit some more snags with rcu_sched stalls that I thought were my
+fault, but it looks like it's actually something in the linus/master I
+had to rebase on (I've tagged the revision locally in case this is
+something we need to track later). They happen equally with or without
+my latest changes for the notify_nb -> cpuhp transition and other
+requested changes to the pit driver.
 
----
-v2:
- * incorporated rob herring and thierry reviews
-   gpio to gpios, gpio to regulator using fixed regulators
-   and pwm backlight is removed, since it is controlled by
-   dcs commands
----
- .../bindings/display/panel/jdi,lt070me05000.txt    | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-new file mode 100644
-index 0000000..613b76f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-@@ -0,0 +1,57 @@
-+JDI model LT070ME05000 1200x1920 7" DSI Panel
-+
-+Required properties:
-+- compatible: should be "jdi,lt070me05000"
-+- vddp-supply: phandle of the regulator that provides the supply voltage
-+  Power IC supply (3-5V)
-+- dcdc_en-supply: phandle of the regulator that provides the supply voltage
-+  Power IC supply enable, High active
-+- vcc-supply: phandle of the regulator that provides the supply voltage
-+  IOVCC , power supply for LCM (1.8V)
-+- reset-gpios: phandle of gpio for reset line
-+  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
-+  XRES, Reset, Low active
-+- enable-gpios: phandle of gpio for enable line
-+  LED_EN, LED backlight enable, High active
-+
-+Example:
-+
-+	vcc_1p8v: regulator-fixed@2 {
-+		compatible = "regulator-fixed";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-name = "vcc_1p8v";
-+		regulator-type = "voltage";
-+		startup-delay-us = <0>;
-+		gpio = <&pm8921_gpio 23 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-boot-on;
-+	};
-+
-+	tlmm_pinmux: pinctrl@800000 {
-+
-+		dsi_panel_pinctrl: dsi-panel-pinctrl {
-+			mux {
-+				pins = "gpio54";
-+				function = "gpio";
-+				bias-pull-up;
-+				drive-strength = <8>;
-+			};
-+		};
-+	};
-+
-+	dsi0: qcom,mdss_dsi@4700000 {
-+		panel@0 {
-+			compatible = "jdi,lt070me05000";
-+			reg = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&dsi_panel_pinctrl>;
-+
-+			vddp-supply = <&pm8921_l17>;
-+			dcdc_en-supply = <&pm8921_lvs7>;
-+			vcc-supply = <&vcc_1p8v>;
-+
-+			reset-gpios = <&tlmm_pinmux 54 0>;
-+			enable-gpios = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
--- 
-2.1.2
+Rich
