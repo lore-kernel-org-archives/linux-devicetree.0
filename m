@@ -1,7 +1,7 @@
 From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH 2/3] phy: sun4i: add support for A64 usb phy
-Date: Sun, 31 Jul 2016 19:25:35 +0800
-Message-ID: <20160731112536.4625-2-icenowy@aosc.xyz>
+Subject: [PATCH 3/3] ehci-platform: add the max clock number to 4
+Date: Sun, 31 Jul 2016 19:25:36 +0800
+Message-ID: <20160731112536.4625-3-icenowy@aosc.xyz>
 References: <20160731112536.4625-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,72 +21,25 @@ To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electron
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Reinder de Haan <patchesrdh@mveas.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There's something unknown in the pmu part.
+Allwinner A64 EHCI requires 4 clocks to be enabled.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 ---
- drivers/phy/phy-sun4i-usb.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ drivers/usb/host/ehci-platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index 0a45bc6..6f94369 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -97,6 +97,7 @@ enum sun4i_usb_phy_type {
- 	sun6i_a31_phy,
- 	sun8i_a33_phy,
- 	sun8i_h3_phy,
-+	sun50i_a64_phy,
- };
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index 6816b8c..876dca4 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -38,7 +38,7 @@
+ #include "ehci.h"
  
- struct sun4i_usb_phy_cfg {
-@@ -180,8 +181,9 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
+ #define DRIVER_DESC "EHCI generic platform driver"
+-#define EHCI_MAX_CLKS 3
++#define EHCI_MAX_CLKS 4
+ #define EHCI_MAX_RSTS 3
+ #define hcd_to_ehci_priv(h) ((struct ehci_platform_priv *)hcd_to_ehci(h)->priv)
  
- 	mutex_lock(&phy_data->mutex);
- 
--	if (phy_data->cfg->type == sun8i_a33_phy) {
--		/* A33 needs us to set phyctl to 0 explicitly */
-+	if (phy_data->cfg->type == sun8i_a33_phy ||
-+	    phy_data->cfg->type == sun50i_a64_phy) {
-+		/* A33 or A64 needs us to set phyctl to 0 explicitly */
- 		writel(0, phyctl);
- 	}
- 
-@@ -264,6 +266,12 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		val = readl(phy->pmu + REG_PMU_UNK_H3);
- 		writel(val & ~2, phy->pmu + REG_PMU_UNK_H3);
- 	} else {
-+		/* A64 needs also this unknown bit */
-+		if (data->cfg->type == sun50i_a64_phy) {
-+			val = readl(phy->pmu + REG_PMU_UNK_H3);
-+			writel(val & ~2, phy->pmu + REG_PMU_UNK_H3);
-+		}
-+
- 		/* Enable USB 45 Ohm resistor calibration */
- 		if (phy->index == 0)
- 			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
-@@ -762,6 +770,14 @@ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
- 	.dedicated_clocks = true,
- };
- 
-+static const struct sun4i_usb_phy_cfg sun50i_a64_cfg = {
-+	.num_phys = 2,
-+	.type = sun50i_a64_phy,
-+	.disc_thresh = 3,
-+	.phyctl_offset = REG_PHYCTL_A33,
-+	.dedicated_clocks = true,
-+};
-+
- static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = &sun4i_a10_cfg },
- 	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = &sun5i_a13_cfg },
-@@ -770,6 +786,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun8i-a23-usb-phy", .data = &sun8i_a23_cfg },
- 	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = &sun8i_a33_cfg },
- 	{ .compatible = "allwinner,sun8i-h3-usb-phy", .data = &sun8i_h3_cfg },
-+	{ .compatible = "allwinner,sun50i-a64-usb-phy", .data = &sun50i_a64_cfg},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
 -- 
 2.9.0
