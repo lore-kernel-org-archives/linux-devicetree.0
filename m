@@ -1,7 +1,7 @@
 From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH V3 1/5] drm/imx-ldb: Add support to drm-bridge
-Date: Sun, 31 Jul 2016 21:55:34 +0200
-Message-ID: <5d55969a1509de751dc550d9a02bd5070455f99b.1469993472.git.peter.senna@collabora.com>
+Subject: [PATCH V3 5/5] dts/imx6q-b850v3: Use GE B850v3 LVDS/DP++ Bridge
+Date: Sun, 31 Jul 2016 21:55:38 +0200
+Message-ID: <4cf8120ec5a41f1db8dec60807839fb59ab0b925.1469993472.git.peter.senna@collabora.com>
 References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
  <cover.1469993472.git.peter.senna@collabora.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -10,210 +10,72 @@ In-Reply-To: <cover.1469993472.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gma
 References: <cover.1469993472.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andrey.gusakov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support to attach a drm_bridge to imx-ldb in addition to
-existing support to attach a LVDS panel.
+Configures the GE B850v3 LVDS/DP++ bridge on the dts file.
 
-This patch does a simple code refactoring by moving code
-from for_each_child_of_node iterator to a new function named
-imx_ldb_panel_ddc(). This was necessary to allow the panel ddc
-code to run only when the imx_ldb is not attached to a bridge.
-
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
-Changes from V2:
- - Updated to be aplied on top of Liu Ying changes that made imx-ldb atomic.
- - Tested on next-20160729.
+Unchanged from V2.
 
 Changes from V1:
- - Reanmed ext_bridge to bridge
- - Removed empty entry point imx_ldb_encoder_enable()
- - Adapted the code to apply to the latest linux next: next-20160609
+ - Replaced '_' by '-' in node names or compatible strings
+ - Added missing @73 to b850v3-lvds-dp-bridge
 
- drivers/gpu/drm/imx/imx-ldb.c | 111 ++++++++++++++++++++++++++----------------
- 1 file changed, 70 insertions(+), 41 deletions(-)
+ arch/arm/boot/dts/imx6q-b850v3.dts | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
-index 5d2831d..ebe9abd 100644
---- a/drivers/gpu/drm/imx/imx-ldb.c
-+++ b/drivers/gpu/drm/imx/imx-ldb.c
-@@ -57,7 +57,11 @@ struct imx_ldb_channel {
- 	struct imx_ldb *ldb;
- 	struct drm_connector connector;
- 	struct drm_encoder encoder;
+diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+index 88a70de..10dfc3b 100644
+--- a/arch/arm/boot/dts/imx6q-b850v3.dts
++++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+@@ -77,6 +77,13 @@
+ 		fsl,data-mapping = "spwg";
+ 		fsl,data-width = <24>;
+ 		status = "okay";
 +
-+	/* Defines what is connected to the ldb, only one at a time */
- 	struct drm_panel *panel;
-+	struct drm_bridge *bridge;
-+
- 	struct device_node *child;
- 	struct i2c_adapter *ddc;
- 	int chno;
-@@ -469,19 +473,28 @@ static int imx_ldb_register(struct drm_device *drm,
- 	drm_encoder_init(drm, encoder, &imx_ldb_encoder_funcs,
- 			 DRM_MODE_ENCODER_LVDS, NULL);
- 
--	drm_connector_helper_add(&imx_ldb_ch->connector,
--			&imx_ldb_connector_helper_funcs);
--	drm_connector_init(drm, &imx_ldb_ch->connector,
--			   &imx_ldb_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
--
- 	if (imx_ldb_ch->panel) {
-+		drm_connector_helper_add(&imx_ldb_ch->connector,
-+				&imx_ldb_connector_helper_funcs);
-+		drm_connector_init(drm, &imx_ldb_ch->connector,
-+				&imx_ldb_connector_funcs,
-+				DRM_MODE_CONNECTOR_LVDS);
- 		ret = drm_panel_attach(imx_ldb_ch->panel,
--				       &imx_ldb_ch->connector);
-+				&imx_ldb_ch->connector);
- 		if (ret)
- 			return ret;
- 	}
- 
--	drm_mode_connector_attach_encoder(&imx_ldb_ch->connector, encoder);
-+	if (imx_ldb_ch->bridge) {
-+		imx_ldb_ch->bridge->encoder = encoder;
-+
-+		imx_ldb_ch->encoder.bridge = imx_ldb_ch->bridge;
-+		ret = drm_bridge_attach(drm, imx_ldb_ch->bridge);
-+		if (ret) {
-+			DRM_ERROR("Failed to initialize bridge with drm\n");
-+			return ret;
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -551,6 +564,45 @@ static const struct of_device_id imx_ldb_dt_ids[] = {
++		port@4 {
++			reg = <4>;
++			lvds0_out: endpoint {
++				remote-endpoint = <&b850v3_lvds_dp_bridge_in>;
++			};
++		};
+ 	};
  };
- MODULE_DEVICE_TABLE(of, imx_ldb_dt_ids);
  
-+static int imx_ldb_panel_ddc(struct device *dev,
-+		struct imx_ldb_channel *channel, struct device_node *child)
-+{
-+	struct device_node *ddc_node;
-+	const u8 *edidp;
-+	int ret;
+@@ -147,3 +154,26 @@
+ 		reg = <0x4a>;
+ 	};
+ };
 +
-+	ddc_node = of_parse_phandle(child, "ddc-i2c-bus", 0);
-+	if (ddc_node) {
-+		channel->ddc = of_find_i2c_adapter_by_node(ddc_node);
-+		of_node_put(ddc_node);
-+		if (!channel->ddc) {
-+			dev_warn(dev, "failed to get ddc i2c adapter\n");
-+			return -EPROBE_DEFER;
-+		}
-+	}
++&mux2_i2c2 {
++	status = "okay";
++	clock-frequency = <100000>;
 +
-+	if (!channel->ddc) {
-+		/* if no DDC available, fallback to hardcoded EDID */
-+		dev_dbg(dev, "no ddc available\n");
++	b850v3-lvds-dp-bridge@73 {
++		compatible = "ge,b850v3-lvds-dp";
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+		edidp = of_get_property(child, "edid",
-+					&channel->edid_len);
-+		if (edidp) {
-+			channel->edid = kmemdup(edidp,
-+						channel->edid_len,
-+						GFP_KERNEL);
-+		} else if (!channel->panel) {
-+			/* fallback to display-timings node */
-+			ret = of_get_drm_display_mode(child,
-+						      &channel->mode,
-+						      OF_USE_NATIVE_MODE);
-+			if (!ret)
-+				channel->mode_valid = 1;
-+		}
-+	}
-+	return 0;
-+}
++		reg = <0x73>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
 +
- static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- {
- 	struct drm_device *drm = data;
-@@ -558,7 +610,6 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 	const struct of_device_id *of_id =
- 			of_match_device(imx_ldb_dt_ids, dev);
- 	struct device_node *child;
--	const u8 *edidp;
- 	struct imx_ldb *imx_ldb;
- 	int dual;
- 	int ret;
-@@ -608,7 +659,6 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 
- 	for_each_child_of_node(np, child) {
- 		struct imx_ldb_channel *channel;
--		struct device_node *ddc_node;
- 		struct device_node *ep;
- 		int bus_format;
- 
-@@ -641,46 +691,25 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 
- 			remote = of_graph_get_remote_port_parent(ep);
- 			of_node_put(ep);
--			if (remote)
-+			if (remote) {
- 				channel->panel = of_drm_find_panel(remote);
--			else
-+				channel->bridge = of_drm_find_bridge(remote);
-+			} else
- 				return -EPROBE_DEFER;
- 			of_node_put(remote);
--			if (!channel->panel) {
--				dev_err(dev, "panel not found: %s\n",
--					remote->full_name);
--				return -EPROBE_DEFER;
--			}
--		}
- 
--		ddc_node = of_parse_phandle(child, "ddc-i2c-bus", 0);
--		if (ddc_node) {
--			channel->ddc = of_find_i2c_adapter_by_node(ddc_node);
--			of_node_put(ddc_node);
--			if (!channel->ddc) {
--				dev_warn(dev, "failed to get ddc i2c adapter\n");
-+			if (!channel->panel && !channel->bridge) {
-+				dev_err(dev, "panel/bridge not found: %s\n",
-+					remote->full_name);
- 				return -EPROBE_DEFER;
- 			}
- 		}
- 
--		if (!channel->ddc) {
--			/* if no DDC available, fallback to hardcoded EDID */
--			dev_dbg(dev, "no ddc available\n");
--
--			edidp = of_get_property(child, "edid",
--						&channel->edid_len);
--			if (edidp) {
--				channel->edid = kmemdup(edidp,
--							channel->edid_len,
--							GFP_KERNEL);
--			} else if (!channel->panel) {
--				/* fallback to display-timings node */
--				ret = of_get_drm_display_mode(child,
--							      &channel->mode,
--							      OF_USE_NATIVE_MODE);
--				if (!ret)
--					channel->mode_valid = 1;
--			}
-+		/* panel ddc only if there is no bridge */
-+		if (!channel->bridge) {
-+			ret = imx_ldb_panel_ddc(dev, channel, child);
-+			if (ret)
-+				return ret;
- 		}
- 
- 		bus_format = of_get_bus_format(dev, child);
++		edid-reg = <0x72>;
++
++		port {
++			b850v3_lvds_dp_bridge_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
++};
 -- 
 2.5.5
 
