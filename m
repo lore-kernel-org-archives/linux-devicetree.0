@@ -1,127 +1,200 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 3/7] dt-bindings: i2c: add support for 'i2c-gate' subnode
-Date: Mon, 1 Aug 2016 00:05:24 +0200
-Message-ID: <947e687b-7937-042d-451a-616ecf362d7a@axentia.se>
-References: <1469609010-23049-1-git-send-email-peda@axentia.se>
- <1469609010-23049-4-git-send-email-peda@axentia.se>
- <20160729212559.GA11341@rob-hp-laptop>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH v2 2/2] mmc: host: sunxi: add support for A64 mmc
+ controller
+Date: Mon, 01 Aug 2016 07:48:32 +0800
+Message-ID: <24941470008912@web11j.yandex.ru>
+References: <20160731110234.3593-1-icenowy@aosc.xyz>
+ <20160731110234.3593-3-icenowy@aosc.xyz>
+ <aaeda3c8-1487-cb6c-bfc6-44a63fed5ea2@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160729212559.GA11341@rob-hp-laptop>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kalle Valo <kvalo@codeaurora.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <aaeda3c8-1487-cb6c-bfc6-44a63fed5ea2@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Suchanek <hramrach@gmail.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-07-29 23:25, Rob Herring wrote:
-> On Wed, Jul 27, 2016 at 10:43:26AM +0200, Peter Rosin wrote:
->> Handle i2c gates similarly to how i2c arbitrators are handled.
->> This gets rid of a pointless 'reg' property for i2c gates.
->>
->> I.e. this new and more compact style
->>
->>         some-gate {
->>                 i2c-gate {
->>                         #address-cells = <1>;
->>                         #size-cells = <0>;
->>
->>                         some-i2c-device@50 {
->>                                 reg = <0x50>;
->>                         };
->>                 };
->>         };
->>
->> instead of the old
->>
->>         some-gate {
->>                 #address-cells = <1>;
->>                 #size-cells = <0>;
->>
->>                 i2c@0 {
->>                         reg = <0>;
->>
->>                         #address-cells = <1>;
->>                         #size-cells = <0>;
->>
->>                         some-i2c-device@50 {
->>                                 reg = <0x50>;
->>                         };
->>                 };
->>         };
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>  Documentation/devicetree/bindings/i2c/i2c-gate.txt | 35 ++++++++++++++++++++++
->>  MAINTAINERS                                        |  1 +
->>  2 files changed, 36 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-gate.txt
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-gate.txt b/Documentation/devicetree/bindings/i2c/i2c-gate.txt
->> new file mode 100644
->> index 000000000000..78f17892dfc6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-gate.txt
->> @@ -0,0 +1,35 @@
->> +Common i2c gate properties.
-> 
-> Perhaps define what a gate is.
-
-How about the following paragraph at the very top of the file?
-
-An i2c gate is useful to e.g. reduce the digital noise for RF tuners connected
-to the i2c bus. Gates are similar to arbitrators in that you need to perform
-some kind of operation to access the i2c bus past the arbitrator/gate, but
-there are no competing masters to consider for gates and therefore there is
-no arbitration happening for gates.
-
->> +
->> +- i2c-gate child node
->> +
->> +Required properties for the i2c-gate child node:
->> +- #address-cells = <1>;
->> +- #size-cells = <0>;
->> +
->> +Optional properties for i2c-gate child node:
->> +- Child nodes conforming to i2c bus binding
->> +
->> +
->> +Example :
->> +
->> +	/*
->> +	   An Invensense mpu9150 at address 0x68 featuring an on-chip Asahi
->> +	   Kasei ak8975 compass behind a gate.
->> +	 */
->> +
->> +	mpu9150@68 {
->> +		compatible = "invensense,mpu9150";
->> +		reg = <0x68>;
->> +		interrupt-parent = <&gpio1>;
->> +		interrupts = <18 1>;
->> +
->> +		i2c-gate {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			ax8975@0c {
->> +				compatible = "ak,ak8975";
->> +				reg = <0x0c>;
->> +			};
->> +		};
->> +	};
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 543052305a09..0e6cc071c480 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -5525,6 +5525,7 @@ F:	Documentation/i2c/i2c-topology
->>  F:	Documentation/i2c/muxes/
->>  F:	Documentation/devicetree/bindings/i2c/i2c-mux*
->>  F:	Documentation/devicetree/bindings/i2c/i2c-arb*
->> +F:	Documentation/devicetree/bindings/i2c/i2c-gate*
->>  F:	drivers/i2c/i2c-mux.c
->>  F:	drivers/i2c/muxes/
->>  F:	include/linux/i2c-mux.h
->> -- 
->> 2.1.4
->>
+CkhpLAozMS4wNy4yMDE2LCAyMjozMCwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQu
+Y29tPjoKPiBIaSwKPgo+IE9uIDMxLTA3LTE2IDEzOjAyLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+
+PiDCoEE2NCBTb0MgZmVhdHVyZXMgYSBNTUMgY29udHJvbGxlciB3aGljaCBuZWVkIG9ubHkgdGhl
+IG1vZCBjbG9jaywgYW5kIGNhbgo+PiDCoGNhbGlicmF0ZSBkZWxheSBieSBpdHNlbGYuIFRoaXMg
+cGF0Y2ggYWRkcyBzdXBwb3J0IGZvciB0aGUgbmV3IE1NQwo+PiDCoGNvbnRyb2xsZXIgSVAgY29y
+ZS4KPj4KPj4gwqBCYXNlZCBvbiB3b3JrIGJ5IEFuZHJlIFByenl3YXJhIDxhbmRyZS5wcnp5d2Fy
+YUBhcm0uY29tPi4KPj4KPj4gwqBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5
+QGFvc2MueHl6Pgo+Cj4gTG9va3MgZ29vZCwgc29tZSBtaW5vciByZW1hcmtzIChzZWUgY29tbWVu
+dHMgaW5saW5lKSBhZnRlciB0aG9zZQo+IGFyZSBhZGRyZXNzZWQgdGhpcyBpcyByZWFkeSB0byBi
+ZSBtZXJnZWQgSU1ITy4KPgo+PiDCoC0tLQo+PiDCoMKgZHJpdmVycy9tbWMvaG9zdC9zdW54aS1t
+bWMuYyB8IDEwNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tCj4+
+IMKgwqAxIGZpbGUgY2hhbmdlZCwgOTAgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCj4+
+Cj4+IMKgZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3Qvc3VueGktbW1jLmMgYi9kcml2ZXJz
+L21tYy9ob3N0L3N1bnhpLW1tYy5jCj4+IMKgaW5kZXggMmVjOTFjZS4uYWEyYWJmMyAxMDA2NDQK
+Pj4gwqAtLS0gYS9kcml2ZXJzL21tYy9ob3N0L3N1bnhpLW1tYy5jCj4+IMKgKysrIGIvZHJpdmVy
+cy9tbWMvaG9zdC9zdW54aS1tbWMuYwo+PiDCoEBAIC03Miw2ICs3MiwxNCBAQAo+PiDCoMKgI2Rl
+ZmluZSBTRFhDX1JFR19DSERBICgweDkwKQo+PiDCoMKgI2RlZmluZSBTRFhDX1JFR19DQkRBICgw
+eDk0KQo+Pgo+PiDCoCsvKiBOZXcgcmVnaXN0ZXJzIGludHJvZHVjZWQgaW4gQTY0ICovCj4+IMKg
+KyNkZWZpbmUgU0RYQ19SRUdfQTEyQSAweDA1OCAvKiBTTUMgQXV0byBDb21tYW5kIDEyIFJlZ2lz
+dGVyICovCj4+IMKgKyNkZWZpbmUgU0RYQ19SRUdfU0RfTlRTUiAweDA1QyAvKiBTTUMgTmV3IFRp
+bWluZyBTZXQgUmVnaXN0ZXIgKi8KPj4gwqArI2RlZmluZSBTRFhDX1JFR19EUlZfREwgMHgxNDAg
+LyogRHJpdmUgRGVsYXkgQ29udHJvbCBSZWdpc3RlciAqLwo+PiDCoCsjZGVmaW5lIFNEWENfUkVH
+X1NBTVBfRExfUkVHIDB4MTQ0IC8qIFNNQyBzYW1wbGUgZGVsYXkgY29udHJvbCAqLwo+PiDCoCsj
+ZGVmaW5lIFNEWENfUkVHX0RTX0RMX1JFRyAweDE0OCAvKiBTTUMgZGF0YSBzdHJvYmUgZGVsYXkg
+Y29udHJvbCAqLwo+PiDCoCsKPj4gwqArCj4KPiBQbGVhc2UgZHJvcCAxIGVtcHR5IGxpbmUgaGVy
+ZS4KVGhhbmtzIGZvciB5b3Ugbm90aWNlLi4uIEkgZm9yZ290IHRvIGNoZWNrb3V0IHRoZSBlbXB0
+eSBsaW5lLi4uCj4KPj4gwqDCoCNkZWZpbmUgbW1jX3JlYWRsKGhvc3QsIHJlZykgXAo+PiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoHJlYWRsKChob3N0KS0+cmVnX2Jhc2UgKyBTRFhDXyMjcmVnKQo+PiDC
+oMKgI2RlZmluZSBtbWNfd3JpdGVsKGhvc3QsIHJlZywgdmFsdWUpIFwKPj4gwqBAQCAtMjE3LDYg
+KzIyNSwxNSBAQAo+PiDCoMKgI2RlZmluZSBTRFhDX0NMS181ME1fRERSIDMKPj4gwqDCoCNkZWZp
+bmUgU0RYQ19DTEtfNTBNX0REUl84QklUIDQKPj4KPj4gwqArI2RlZmluZSBTRFhDXzJYX1RJTUlO
+R19NT0RFIEJJVCgzMSkKPj4gwqArCj4+IMKgKyNkZWZpbmUgU0RYQ19DQUxfU1RBUlQgQklUKDE1
+KQo+PiDCoCsjZGVmaW5lIFNEWENfQ0FMX0RPTkUgQklUKDE0KQo+PiDCoCsjZGVmaW5lIFNEWENf
+Q0FMX0RMX1NISUZUIDgKPj4gwqArI2RlZmluZSBTRFhDX0NBTF9ETF9TV19FTiBCSVQoNykKPj4g
+wqArI2RlZmluZSBTRFhDX0NBTF9ETF9TV19TSElGVCAwCj4+IMKgKyNkZWZpbmUgU0RYQ19DQUxf
+RExfTUFTSyAweDNmCj4+IMKgKwo+PiDCoMKgc3RydWN0IHN1bnhpX21tY19jbGtfZGVsYXkgewo+
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoHUzMiBvdXRwdXQ7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+dTMyIHNhbXBsZTsKPj4gwqBAQCAtMjMyLDYgKzI0OSw5IEBAIHN0cnVjdCBzdW54aV9pZG1hX2Rl
+cyB7Cj4+IMKgwqBzdHJ1Y3Qgc3VueGlfbW1jX2NmZyB7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+dTMyIGlkbWFfZGVzX3NpemVfYml0czsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqBjb25zdCBzdHJ1
+Y3Qgc3VueGlfbW1jX2Nsa19kZWxheSAqY2xrX2RlbGF5czsKPj4gwqArCj4KPiBJIHdvdWxkIG5v
+dCBpbnNlcnQgYW4gZW1wdHkgbGluZSBoZXJlLgpJJ20gb25seSBmZWVsaW5nIHRoYXQgYSBlbXB0
+eSBiZWZvcmUgc3VjaCBhIGNvbW1lbnQgbGluZSBpcyBhCmtpbmQgb2Ygc2VwYXJhdG9yLi4uCihS
+ZWZlciB0byBzdHJ1Y3Qgc3VueGlfbW1jX2hvc3QpCj4KPj4gwqArIC8qIGRvZXMgdGhlIElQIGJs
+b2NrIHN1cHBvcnQgYXV0b2NhbGlicmF0aW9uPyAqLwo+PiDCoCsgYm9vbCBjYW5fY2FsaWJyYXRl
+Owo+PiDCoMKgfTsKPj4KPj4gwqDCoHN0cnVjdCBzdW54aV9tbWNfaG9zdCB7Cj4+IMKgQEAgLTY1
+Nyw2ICs2NzcsMzQgQEAgc3RhdGljIGludCBzdW54aV9tbWNfb2Nsa19vbm9mZihzdHJ1Y3Qgc3Vu
+eGlfbW1jX2hvc3QgKmhvc3QsIHUzMiBvY2xrX2VuKQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoHJl
+dHVybiAwOwo+PiDCoMKgfQo+Pgo+PiDCoCtzdGF0aWMgaW50IHN1bnhpX21tY19jYWxpYnJhdGUo
+c3RydWN0IHN1bnhpX21tY19ob3N0ICpob3N0LAo+PiDCoCsgc3RydWN0IG1tY19pb3MgKmlvcywg
+aW50IHJlZ19vZmYpCj4+IMKgK3sKPj4gwqArIHUzMiByZWcgPSByZWFkbChob3N0LT5yZWdfYmFz
+ZSArIHJlZ19vZmYpOwo+PiDCoCsgdTMyIGRlbGF5Owo+PiDCoCsKPgo+IEkgd291bGQgYWRkOgo+
+Cj4gwqDCoMKgwqDCoMKgwqDCoGlmICghaG9zdC0+Y2ZnLT5jYW5fY2FsaWJyYXRlKQo+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIDA7Cj4KPiBIZXJlOyBhbmQgLi4uCkkg
+YWdyZWUgd2l0aCBpdC4gSXQncyBzb21lIGtpbmQgb2YgZXJyb3IgY2hlY2tpbmcuCj4KPj4gwqAr
+IHJlZyAmPSB+KFNEWENfQ0FMX0RMX01BU0sgPDwgU0RYQ19DQUxfRExfU1dfU0hJRlQpOwo+PiDC
+oCsgcmVnICY9IH5TRFhDX0NBTF9ETF9TV19FTjsKPj4gwqArCj4+IMKgKyB3cml0ZWwocmVnIHwg
+U0RYQ19DQUxfU1RBUlQsIGhvc3QtPnJlZ19iYXNlICsgcmVnX29mZik7Cj4+IMKgKwo+PiDCoCsg
+ZGV2X2RiZyhtbWNfZGV2KGhvc3QtPm1tYyksICJjYWxpYnJhdGlvbiBzdGFydGVkXG4iKTsKPj4g
+wqArCj4+IMKgKyB3aGlsZSAoISgocmVnID0gcmVhZGwoaG9zdC0+cmVnX2Jhc2UgKyByZWdfb2Zm
+KSkgJiBTRFhDX0NBTF9ET05FKSkKPj4gwqArIGNwdV9yZWxheCgpOwo+PiDCoCsKPj4gwqArIGRl
+bGF5ID0gKHJlZyA+PiBTRFhDX0NBTF9ETF9TSElGVCkgJiBTRFhDX0NBTF9ETF9NQVNLOwo+PiDC
+oCsKPj4gwqArIHJlZyAmPSB+U0RYQ19DQUxfU1RBUlQ7Cj4+IMKgKyByZWcgfD0gKGRlbGF5IDw8
+IFNEWENfQ0FMX0RMX1NXX1NISUZUKSB8IFNEWENfQ0FMX0RMX1NXX0VOOwo+PiDCoCsKPj4gwqAr
+IHdyaXRlbChyZWcsIGhvc3QtPnJlZ19iYXNlICsgcmVnX29mZik7Cj4+IMKgKwo+PiDCoCsgZGV2
+X2RiZyhtbWNfZGV2KGhvc3QtPm1tYyksICJjYWxpYnJhdGlvbiBlbmRlZCwgcmVzIGlzIDB4JXhc
+biIsIHJlZyk7Cj4KPiBBZGQ6Cj4KPiDCoMKgwqDCoMKgwqDCoMKgLyogVE9ETzogZW5hYmxlIGNh
+bGlicmF0ZSBvbiBzZGMyIFNEWENfUkVHX0RTX0RMX1JFRyBvZiBBNjQgKi8KPgo+IGhlcmU7IGFu
+ZCAuLi4KVGhlIGZ1bmN0aW9uIG9ubHkgcmVjZWl2ZWQgYSByZWdpc3RlciBhZGRyZXNzIGFzIGEg
+cGFyYW1ldGVyLi4uCkl0IGRvIG5vdCBrbm93IHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gZGlmZmVy
+ZW50IHJlZ3MgdG8gY2FsaWJyYXRlLgo+Cj4+IMKgKwo+PiDCoCsgcmV0dXJuIDA7Cj4+IMKgK30K
+Pj4gwqArCj4+IMKgwqBzdGF0aWMgaW50IHN1bnhpX21tY19jbGtfc2V0X3BoYXNlKHN0cnVjdCBz
+dW54aV9tbWNfaG9zdCAqaG9zdCwKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbW1jX2lvcyAq
+aW9zLCB1MzIgcmF0ZSkKPj4gwqDCoHsKPj4gwqBAQCAtNzI3LDkgKzc3NSwxNyBAQCBzdGF0aWMg
+aW50IHN1bnhpX21tY19jbGtfc2V0X3JhdGUoc3RydWN0IHN1bnhpX21tY19ob3N0ICpob3N0LAo+
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoH0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqBtbWNfd3JpdGVs
+KGhvc3QsIFJFR19DTEtDUiwgcnZhbCk7Cj4+Cj4+IMKgLSByZXQgPSBzdW54aV9tbWNfY2xrX3Nl
+dF9waGFzZShob3N0LCBpb3MsIHJhdGUpOwo+PiDCoC0gaWYgKHJldCkKPj4gwqAtIHJldHVybiBy
+ZXQ7Cj4KPiBLZWVwIHRoaXMgYXMgaXM7IGFuZCBhZGQ6Cj4KPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHJldCA9IHN1bnhpX21tY19jYWxpYnJhdGUoaG9zdCwgaW9zLCBTRFhDX1JF
+R19TQU1QX0RMX1JFRyk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAocmV0
+KQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVy
+biByZXQ7Cj4KSXQncyBhIGdvb2QgaWRlYSA6LSkKPiBJbnN0ZWFkIG9mOgo+Cj4+IMKgKyBpZiAo
+aG9zdC0+Y2ZnLT5jYW5fY2FsaWJyYXRlKSB7Cj4+IMKgKyByZXQgPSBzdW54aV9tbWNfY2FsaWJy
+YXRlKGhvc3QsIGlvcywgU0RYQ19SRUdfU0FNUF9ETF9SRUcpOwo+PiDCoCsgaWYgKHJldCkKPj4g
+wqArIHJldHVybiByZXQ7Cj4+IMKgKwo+PiDCoCsgLyogVE9ETzogZW5hYmxlIGNhbGlicmF0ZSBv
+biBzZGMyIFNEWENfUkVHX0RTX0RMX1JFRyBvZiBBNjQgKi8KPj4gwqArIH0gZWxzZSB7Cj4+IMKg
+KyByZXQgPSBzdW54aV9tbWNfY2xrX3NldF9waGFzZShob3N0LCBpb3MsIHJhdGUpOwo+PiDCoCsg
+aWYgKHJldCkKPj4gwqArIHJldHVybiByZXQ7Cj4+IMKgKyB9Cj4+Cj4+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgcmV0dXJuIHN1bnhpX21tY19vY2xrX29ub2ZmKGhvc3QsIDEpOwo+PiDCoMKgfQo+PiDC
+oEBAIC05ODIsMjEgKzEwMzgsMzEgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzdW54aV9tbWNfY2xr
+X2RlbGF5IHN1bjlpX21tY19jbGtfZGVsYXlzW10gPSB7Cj4+IMKgwqBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IHN1bnhpX21tY19jZmcgc3VuNGlfYTEwX2NmZyA9IHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqAuaWRtYV9kZXNfc2l6ZV9iaXRzID0gMTMsCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgLmNsa19k
+ZWxheXMgPSBOVUxMLAo+PiDCoCsgLmNhbl9jYWxpYnJhdGUgPSBmYWxzZSwKPj4gwqDCoH07Cj4+
+Cj4+IMKgwqBzdGF0aWMgY29uc3Qgc3RydWN0IHN1bnhpX21tY19jZmcgc3VuNWlfYTEzX2NmZyA9
+IHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAuaWRtYV9kZXNfc2l6ZV9iaXRzID0gMTYsCj4+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgLmNsa19kZWxheXMgPSBOVUxMLAo+PiDCoCsgLmNhbl9jYWxpYnJh
+dGUgPSBmYWxzZSwKPj4gwqDCoH07Cj4+Cj4+IMKgwqBzdGF0aWMgY29uc3Qgc3RydWN0IHN1bnhp
+X21tY19jZmcgc3VuN2lfYTIwX2NmZyA9IHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAuaWRtYV9k
+ZXNfc2l6ZV9iaXRzID0gMTYsCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgLmNsa19kZWxheXMgPSBz
+dW54aV9tbWNfY2xrX2RlbGF5cywKPj4gwqArIC5jYW5fY2FsaWJyYXRlID0gZmFsc2UsCj4+IMKg
+wqB9Owo+Pgo+PiDCoMKgc3RhdGljIGNvbnN0IHN0cnVjdCBzdW54aV9tbWNfY2ZnIHN1bjlpX2E4
+MF9jZmcgPSB7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgLmlkbWFfZGVzX3NpemVfYml0cyA9IDE2
+LAo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoC5jbGtfZGVsYXlzID0gc3VuOWlfbW1jX2Nsa19kZWxh
+eXMsCj4+IMKgKyAuY2FuX2NhbGlicmF0ZSA9IGZhbHNlLAo+PiDCoCt9Owo+PiDCoCsKPj4gwqAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBzdW54aV9tbWNfY2ZnIHN1bjUwaV9hNjRfY2ZnID0gewo+PiDC
+oCsgLmlkbWFfZGVzX3NpemVfYml0cyA9IDE2LAo+PiDCoCsgLmNsa19kZWxheXMgPSBOVUxMLAo+
+PiDCoCsgLmNhbl9jYWxpYnJhdGUgPSB0cnVlLAo+PiDCoMKgfTsKPj4KPj4gwqDCoHN0YXRpYyBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHN1bnhpX21tY19vZl9tYXRjaFtdID0gewo+PiDCoEBA
+IC0xMDA0LDYgKzEwNzAsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBzdW54
+aV9tbWNfb2ZfbWF0Y2hbXSA9IHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqB7IC5jb21wYXRpYmxl
+ID0gImFsbHdpbm5lcixzdW41aS1hMTMtbW1jIiwgLmRhdGEgPSAmc3VuNWlfYTEzX2NmZyB9LAo+
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoHsgLmNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjdpLWEy
+MC1tbWMiLCAuZGF0YSA9ICZzdW43aV9hMjBfY2ZnIH0sCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+eyAuY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuOWktYTgwLW1tYyIsIC5kYXRhID0gJnN1bjlp
+X2E4MF9jZmcgfSwKPj4gwqArIHsgLmNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjUwaS1hNjQt
+bW1jIiwgLmRhdGEgPSAmc3VuNTBpX2E2NF9jZmcgfSwKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqB7
+IC8qIHNlbnRpbmVsICovIH0KPj4gwqDCoH07Cj4+IMKgwqBNT0RVTEVfREVWSUNFX1RBQkxFKG9m
+LCBzdW54aV9tbWNfb2ZfbWF0Y2gpOwo+Cj4gTm90IHN1cmUgd2h5IGFsbCB0aGUgYmVsb3cgaHVu
+a3MgYXJlIGhlcmUsIHRoZXkgY2VydGFpbmx5IGRvIG5vdCBiZWxvbmcKPiBpbiB0aGlzIHBhdGNo
+OyBhbmQgdGhleSBhcmUgbm90IG5lY2Vzc2FyeS4gQXMgSSBtZW50aW9uZWQgaW4gdGhlCj4gY29t
+bWl0IG1zZyBvZiAibW1jOiBzdW54aTogc3VuNGkgLyBzdW41aSBkbyBub3QgaGF2ZSBzYW1wbGUg
+Y2xvY2tzIiA6Cj4KPiDCoMKgwqDCoCJOb3RlIHRoaXMgcGF0Y2ggbGVhdmVzIHRoZSBjbGtfcHJl
+cGFyZV9lbmFibGUoKSAvIGNsa19kaXNhYmxlX3VucHJlcGFyZSgpCj4gwqDCoMKgwqDCoGNhbGxz
+IHRvIHRoZSBzYW1wbGUgY2xrcyBhcy1pcywgd2l0aG91dCBhZGRpbmcgY2hlY2tzIGZvciB0aGVt
+IGJlaW5nCj4gwqDCoMKgwqDCoE5VTEwuIEFsbCB0aGUgY2xrX2ZvbyBjYWxscyBhY2NlcHQgYSBO
+VUxMIGNsayBhbmQgd2lsbCByZXR1cm4gc3VjY2VzcyB3aGVuCj4gwqDCoMKgwqDCoGNhbGxlZCB3
+aXRoIGEgTlVMTCBjbGsuIgo+Cj4gU28gcGxlYXNlIGRyb3AgdGhlc2UuCj4KVGhhbmtzISBJIHdp
+bGwgZHJvcCB0aGVzZSEKKEkgZG9uJ3Qga25vdyB0aGF0IHRoZSBjbGsgZnVuY3Rpb25zIGNhbiBh
+Y2NlcHQgTlVMTC4uLikKCj4gVGhhbmtzICYgUmVnYXJkcywKPgo+IEhhbnMKPgo+PiDCoEBAIC0x
+MDcxLDE2ICsxMTM4LDE4IEBAIHN0YXRpYyBpbnQgc3VueGlfbW1jX3Jlc291cmNlX3JlcXVlc3Qo
+c3RydWN0IHN1bnhpX21tY19ob3N0ICpob3N0LAo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBnb3RvIGVycm9yX2Rpc2FibGVfY2xrX2FoYjsKPj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqB9Cj4+Cj4+IMKgLSByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoaG9zdC0+Y2xrX291dHB1
+dCk7Cj4+IMKgLSBpZiAocmV0KSB7Cj4+IMKgLSBkZXZfZXJyKCZwZGV2LT5kZXYsICJFbmFibGUg
+b3V0cHV0IGNsayBlcnIgJWRcbiIsIHJldCk7Cj4+IMKgLSBnb3RvIGVycm9yX2Rpc2FibGVfY2xr
+X21tYzsKPj4gwqAtIH0KPj4gwqArIGlmIChob3N0LT5jZmctPmNsa19kZWxheXMpIHsKPj4gwqAr
+IHJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShob3N0LT5jbGtfb3V0cHV0KTsKPj4gwqArIGlmIChy
+ZXQpIHsKPj4gwqArIGRldl9lcnIoJnBkZXYtPmRldiwgIkVuYWJsZSBvdXRwdXQgY2xrIGVyciAl
+ZFxuIiwgcmV0KTsKPj4gwqArIGdvdG8gZXJyb3JfZGlzYWJsZV9jbGtfbW1jOwo+PiDCoCsgfQo+
+Pgo+PiDCoC0gcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGhvc3QtPmNsa19zYW1wbGUpOwo+PiDC
+oC0gaWYgKHJldCkgewo+PiDCoC0gZGV2X2VycigmcGRldi0+ZGV2LCAiRW5hYmxlIHNhbXBsZSBj
+bGsgZXJyICVkXG4iLCByZXQpOwo+PiDCoC0gZ290byBlcnJvcl9kaXNhYmxlX2Nsa19vdXRwdXQ7
+Cj4+IMKgKyByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoaG9zdC0+Y2xrX3NhbXBsZSk7Cj4+IMKg
+KyBpZiAocmV0KSB7Cj4+IMKgKyBkZXZfZXJyKCZwZGV2LT5kZXYsICJFbmFibGUgc2FtcGxlIGNs
+ayBlcnIgJWRcbiIsIHJldCk7Cj4+IMKgKyBnb3RvIGVycm9yX2Rpc2FibGVfY2xrX291dHB1dDsK
+Pj4gwqArIH0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqB9Cj4+Cj4+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgaWYgKCFJU19FUlIoaG9zdC0+cmVzZXQpKSB7Cj4+IMKgQEAgLTExMDcsOSArMTE3NiwxMSBA
+QCBlcnJvcl9hc3NlcnRfcmVzZXQ6Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKCFJU19FUlIo
+aG9zdC0+cmVzZXQpKQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXNl
+dF9jb250cm9sX2Fzc2VydChob3N0LT5yZXNldCk7Cj4+IMKgwqBlcnJvcl9kaXNhYmxlX2Nsa19z
+YW1wbGU6Cj4+IMKgLSBjbGtfZGlzYWJsZV91bnByZXBhcmUoaG9zdC0+Y2xrX3NhbXBsZSk7Cj4+
+IMKgKyBpZiAoaG9zdC0+Y2ZnLT5jbGtfZGVsYXlzKQo+PiDCoCsgY2xrX2Rpc2FibGVfdW5wcmVw
+YXJlKGhvc3QtPmNsa19zYW1wbGUpOwo+PiDCoMKgZXJyb3JfZGlzYWJsZV9jbGtfb3V0cHV0Ogo+
+PiDCoC0gY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGhvc3QtPmNsa19vdXRwdXQpOwo+PiDCoCsgaWYg
+KGhvc3QtPmNmZy0+Y2xrX2RlbGF5cykKPj4gwqArIGNsa19kaXNhYmxlX3VucHJlcGFyZShob3N0
+LT5jbGtfb3V0cHV0KTsKPj4gwqDCoGVycm9yX2Rpc2FibGVfY2xrX21tYzoKPj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqBjbGtfZGlzYWJsZV91bnByZXBhcmUoaG9zdC0+Y2xrX21tYyk7Cj4+IMKgwqBl
+cnJvcl9kaXNhYmxlX2Nsa19haGI6Cj4+IMKgQEAgLTExOTEsOCArMTI2MiwxMSBAQCBzdGF0aWMg
+aW50IHN1bnhpX21tY19yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqBpZiAoIUlTX0VSUihob3N0LT5yZXNldCkpCj4+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlc2V0X2NvbnRyb2xfYXNzZXJ0KGhvc3QtPnJlc2V0
+KTsKPj4KPj4gwqAtIGNsa19kaXNhYmxlX3VucHJlcGFyZShob3N0LT5jbGtfc2FtcGxlKTsKPj4g
+wqAtIGNsa19kaXNhYmxlX3VucHJlcGFyZShob3N0LT5jbGtfb3V0cHV0KTsKPj4gwqArIGlmICho
+b3N0LT5jZmctPmNsa19kZWxheXMpIHsKPj4gwqArIGNsa19kaXNhYmxlX3VucHJlcGFyZShob3N0
+LT5jbGtfc2FtcGxlKTsKPj4gwqArIGNsa19kaXNhYmxlX3VucHJlcGFyZShob3N0LT5jbGtfb3V0
+cHV0KTsKPj4gwqArIH0KPj4gwqArCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xrX2Rpc2FibGVf
+dW5wcmVwYXJlKGhvc3QtPmNsa19tbWMpOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsa19kaXNh
+YmxlX3VucHJlcGFyZShob3N0LT5jbGtfYWhiKTsKClRoYW5rcywKSWNlbm93eQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
