@@ -1,105 +1,78 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 5/9] vcodec: mediatek: Add Mediatek V4L2 Video Decoder
- Driver
-Date: Mon, 1 Aug 2016 12:39:44 +0200
-Message-ID: <8bd71dee-62ec-beba-c1d1-fc7e586d593b@xs4all.nl>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-2-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-3-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-4-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-5-git-send-email-tiffany.lin@mediatek.com>
- <1464611363-14936-6-git-send-email-tiffany.lin@mediatek.com>
- <32112952-6a34-ac8b-9d06-198c6c653611@xs4all.nl>
- <1470044307.30651.18.camel@mtksdaap41>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
+Date: Mon, 1 Aug 2016 11:44:20 +0100
+Message-ID: <8b4d1f09-b1ce-5708-f815-29dbd438c2db@arm.com>
+References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
+ <fb559224-561c-3476-1146-96f7aea427f0@arm.com>
+ <20160801103024.cc74c093466d7fdfd91a2587@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1470044307.30651.18.camel@mtksdaap41>
-Sender: linux-media-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160801103024.cc74c093466d7fdfd91a2587@free.fr>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tiffany,
+Hi Jean-Francois,
 
-On 08/01/2016 11:38 AM, Tiffany Lin wrote:
-> Hi Hans,
-
-<snip>
-
->>> +static int vidioc_vdec_g_selection(struct file *file, void *priv,
->>> +			struct v4l2_selection *s)
->>> +{
->>> +	struct mtk_vcodec_ctx *ctx = fh_to_ctx(priv);
->>> +
->>> +	if (V4L2_TYPE_IS_OUTPUT(s->type))
->>> +		return -EINVAL;
->>> +
->>> +	if (s->target != V4L2_SEL_TGT_CROP)
->>> +		return -EINVAL;
->>
->> How does the cropping rectangle relate to the format size? There is no s_selection,
->> so this doesn't make sense.
->>
-> I want to return encoded crop information or real display region that
-> display driver could know where is padding region.
-
-Sorry, I don't understand this.
-
-This is a decoder, so based on the bitstream it decodes to a certain width
-and height. I assume that is what you refer to as coded_width and coded_height?
-
-If so, then what is the 'real display region' and how does it relate to the
-coded width/height?
-
-This is probably a terminology issue but I need to understand this before I
-can decide what should be done here.
-
-Regards,
-
-	Hans
-
-> User space use s_fmt/g_fmt  to set/get coded_width and coded_height, and
-> use g_crop to get real display region.
-> That's why I do not add s_selection.
+On 01/08/16 09:30, Jean-Francois Moine wrote:
+> On Mon, 1 Aug 2016 02:43:06 +0100
+> André Przywara <andre.przywara@arm.com> wrote:
 > 
->> Alternatively, it could be that you are really returning V4L2_SEL_TGT_COMPOSE_PADDED.
+>> As this became quite a long read, here a TL;DR:
+>> - We consider using an SCPI based clock system for the A64, alongside
+>> allwinner,simple-gates and fixed clocks. We try to avoid any Allwinner
+>> specific clocks (apart from the simple-gates).
+>> - ARM Trusted Firmware provides the SCPI implementation - for now, later
+>> we may move this into a possible arisc firmware.
+>> - We upstream some basic DT first, possibly omitting any controversial
+>> clock parts at all.
 >>
+>> Let me know what you think!
 > 
-> V4L2_SEL_TGT_COMPOSE_PADDED means
-> "The active area and all padding pixels that are inserted or modified by
-> hardware."
-> But I just want to return active area to user space.
+> Hi André,
 > 
->>> +
->>> +	if (ctx->state < MTK_STATE_HEADER)
->>> +		return -EINVAL;
->>> +
->>> +	if ((ctx->q_data[MTK_Q_DATA_SRC].fmt->fourcc == V4L2_PIX_FMT_H264) ||
->>> +	    (ctx->q_data[MTK_Q_DATA_SRC].fmt->fourcc == V4L2_PIX_FMT_VP8) ||
->>> +	    (ctx->q_data[MTK_Q_DATA_SRC].fmt->fourcc == V4L2_PIX_FMT_VP9)) {
->>> +
->>> +		if (vdec_if_get_param(ctx, GET_PARAM_CROP_INFO, &(s->r))) {
->>> +			mtk_v4l2_debug(2,
->>> +					"[%d]Error!! Cannot get param : GET_PARAM_CROP_INFO ERR",
->>> +					ctx->id);
->>> +			s->r.left = 0;
->>> +			s->r.top = 0;
->>> +			s->r.width = ctx->picinfo.buf_w;
->>> +			s->r.height = ctx->picinfo.buf_h;
->>> +		}
->>> +		mtk_v4l2_debug(2, "Cropping info: l=%d t=%d w=%d h=%d",
->>> +				s->r.left, s->r.top, s->r.width,
->>> +				s->r.height);
->>> +	} else {
->>> +		s->r.left = 0;
->>> +		s->r.top = 0;
->>> +		s->r.width = ctx->picinfo.pic_w;
->>> +		s->r.height = ctx->picinfo.pic_h;
->>> +		mtk_v4l2_debug(2, "Cropping info: w=%d h=%d fw=%d fh=%d",
->>> +				s->r.width, s->r.height, ctx->picinfo.buf_w,
->>> +				ctx->picinfo.buf_h);
->>> +	}
->>> +	return 0;
->>> +}
+> This looks interesting.
+> As I understand, the clock enable/rate setting functions would be in
+> the arisc. The arisc firmware would be loaded only once in the Soc and
+> would contain the code for handling this specific SoC.
+> From my calculations, this would save about 1Mb of clock descriptions
+> in the kernel for a universal Allwinner kernel.
+
+This is the rough idea, yes. In the moment the clock code sits in the
+ARM Trusted Firmware part, but in fact this is an implementation detail.
+Theoretically we could also move that clock code to U-Boot on 32-bit
+SoCs to sit next to the PSCI implementation, which uses the same smc
+call mechanism as I do in this first implementation.
+But unfortunately we cannot remove the existing code from the kernel,
+since that would break all existing users (unless they upgrade their
+firmware). So I am not sure if supporting older SoCs with this mechanism
+is worthwhile.
+
+But: yes, I want to avoid adding tedious clock descriptions for each and
+every new SoC to the kernel. What really worries me is that sunxi-ng
+makes this situation probably worse, as we now have to add SoC specific
+"code" (in fact: clock descriptions) for every SoC, even if that chip
+doesn't introduce any new clock type.
+
+> But I don't see why you are keeping the simple-gates. The bus gate may
+> be ungated/gated when the clock is enabled/disabled, and that's what
+> Allwinner's software does.
+
+We could do. But SCPI does not have an explicit enable/disable
+interface, it only describes that setting the frequency to 0 disables
+the clock. For enabling it one would have to set some frequency (!= 0),
+which the firmware could then translate into a "set that bit in the gate
+register" for any gate-only clock, which sounds rather hackish to me.
+Also it would require to alter the SCPI clock driver to implement the
+enable/disable ops, since I think we never call set_rate for those clocks.
+
+So having the quite straight forward "simple-gates" driver around seems
+more sane. In the end this driver just translates "clock number x" into
+"bit number x" in that register, which is very generic. That's why I
+urged to introduce a fallback compatible name to express this very feature.
+
+Cheers,
+Andre.
