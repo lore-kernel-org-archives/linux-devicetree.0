@@ -1,44 +1,50 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH v2 1/8] clk: rockchip: rk3399: export USBPHYx_480M_SRC clock IDs
-Date: Mon,  1 Aug 2016 17:53:36 +0800
-Message-ID: <1470045224-31854-2-git-send-email-zhengxing@rock-chips.com>
-References: <1470045224-31854-1-git-send-email-zhengxing@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470045224-31854-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Daniel Golle <daniel@makrotopia.org>
+Subject: [PATCH 2/2] hwmon: (ltc4151) Add devicetree binding for ltc4151
+Date: Mon, 1 Aug 2016 12:08:58 +0200
+Message-ID: <20160801100853.GA4250@makrotopia.org>
+References: <20160727144859.GA18846@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160727144859.GA18846@rob-hp-laptop>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Axel Lin <axel.lin@ingics.com>, Per =?iso-8859-1?Q?Dal=E9n?= <per.dalen@appeartv.com>
+Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We export some clock IDs for the usb phy 480m source clocks.
-
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 ---
+v2: add description and -micro-ohms unit suffix to property
 
-Changes in v2: None
+ Documentation/devicetree/bindings/hwmon/ltc4151.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ltc4151.txt
 
- include/dt-bindings/clock/rk3399-cru.h |    2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/dt-bindings/clock/rk3399-cru.h b/include/dt-bindings/clock/rk3399-cru.h
-index 50a44cf..c4d8311 100644
---- a/include/dt-bindings/clock/rk3399-cru.h
-+++ b/include/dt-bindings/clock/rk3399-cru.h
-@@ -131,6 +131,8 @@
- #define SCLK_DPHY_RX0_CFG		165
- #define SCLK_RMII_SRC			166
- #define SCLK_PCIEPHY_REF100M		167
-+#define SCLK_USBPHY0_480M_SRC		168
-+#define SCLK_USBPHY1_480M_SRC		169
- 
- #define DCLK_VOP0			180
- #define DCLK_VOP1			181
+diff --git a/Documentation/devicetree/bindings/hwmon/ltc4151.txt b/Documentation/devicetree/bindings/hwmon/ltc4151.txt
+new file mode 100644
+index 0000000..d008a5e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/ltc4151.txt
+@@ -0,0 +1,18 @@
++LTC4151 High Voltage I2C Current and Voltage Monitor
++
++Required properties:
++- compatible: Must be "lltc,ltc4151"
++- reg: I2C address
++
++Optional properties:
++- shunt-resistor-micro-ohms
++	Shunt resistor value in micro-Ohms
++	Defaults to <1000> if unset.
++
++Example:
++
++ltc4151@6e {
++	compatible = "lltc,ltc4151";
++	reg = <0x6e>;
++	shunt-resistor-micro-ohms = <1500>;
++};
 -- 
-1.7.9.5
+2.9.2
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
