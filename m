@@ -1,46 +1,46 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
 Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
-Date: Mon, 1 Aug 2016 14:00:12 +0200
-Message-ID: <20160801140012.41b8609b69faa1fe1d7d2a4a@free.fr>
+Date: Mon, 1 Aug 2016 20:01:49 +0800
+Message-ID: <CAGb2v66bvtY5qtkSJ_BgyPtA+Mi-3m06NwVnntcwaNnbdwYC6w@mail.gmail.com>
 References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
-	<fb559224-561c-3476-1146-96f7aea427f0@arm.com>
-	<20160801103024.cc74c093466d7fdfd91a2587@free.fr>
-	<CAGb2v67+1rG1kj+7cGO=TMwSgpktP4xMAeZ9Zfy8PRWXyRLi+g@mail.gmail.com>
+ <fb559224-561c-3476-1146-96f7aea427f0@arm.com> <20160801103024.cc74c093466d7fdfd91a2587@free.fr>
+ <CAGb2v67+1rG1kj+7cGO=TMwSgpktP4xMAeZ9Zfy8PRWXyRLi+g@mail.gmail.com> <20160801140012.41b8609b69faa1fe1d7d2a4a@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v67+1rG1kj+7cGO=TMwSgpktP4xMAeZ9Zfy8PRWXyRLi+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: =?ISO-8859-1?Q?Andr=E9?= Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160801140012.41b8609b69faa1fe1d7d2a4a@free.fr>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Chen-Yu Tsai <wens@csie.org>, =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 1 Aug 2016 17:13:34 +0800
-Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+On Mon, Aug 1, 2016 at 8:00 PM, Jean-Francois Moine <moinejf@free.fr> wrote:
+> On Mon, 1 Aug 2016 17:13:34 +0800
+> Chen-Yu Tsai <wens@csie.org> wrote:
+>
+>> > But I don't see why you are keeping the simple-gates. The bus gate may
+>> > be ungated/gated when the clock is enabled/disabled, and that's what
+>> > Allwinner's software does.
+>>
+>> For peripherals that have a separate mod clock, having them separate
+>> is a good thing. One example might be the audio codecs. You could ungate
+>> the bus gate to access its registers to program it, but only enable
+>> the mod clock when you actually play something.
+>
+> The roles of the bus gate and the clock gate are the same. I don't see
+> any reason to set one gate without setting the other one. More, the
+> spec says what the bus gate must be enabled before the clock gate (and
+> reverse order while disabling). So, setting both gates in one function
+> call seems safer.
 
-> > But I don't see why you are keeping the simple-gates. The bus gate may
-> > be ungated/gated when the clock is enabled/disabled, and that's what
-> > Allwinner's software does.
-> 
-> For peripherals that have a separate mod clock, having them separate
-> is a good thing. One example might be the audio codecs. You could ungate
-> the bus gate to access its registers to program it, but only enable
-> the mod clock when you actually play something.
+Wha? Aren't bus gates and clock gates the same thing in this context?
 
-The roles of the bus gate and the clock gate are the same. I don't see
-any reason to set one gate without setting the other one. More, the
-spec says what the bus gate must be enabled before the clock gate (and
-reverse order while disabling). So, setting both gates in one function
-call seems safer.
+ChenYu
 
-Then, if you want to save some power while not playing anything, just do
-clk_disable() of the (main and only) i2s clock.
-
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Then, if you want to save some power while not playing anything, just do
+> clk_disable() of the (main and only) i2s clock.
+>
+> --
+> Ken ar c'hentaÃ± |             ** Breizh ha Linux atav! **
+> Jef             |               http://moinejf.free.fr/
