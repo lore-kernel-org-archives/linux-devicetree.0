@@ -1,14 +1,15 @@
-From: Hoan Tran <hotran@apm.com>
-Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
-Date: Mon, 1 Aug 2016 09:39:31 -0700
-Message-ID: <CAFHUOYzpD2J_uqdeFqVJk9jMw2J2fN5nGxqt2Xu-=0HXooHNdg@mail.gmail.com>
-References: <1469134557-26869-3-git-send-email-hotran@apm.com>
- <201608012126.BWziGkjc%fengguang.wu@intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt: bindings: Make compatible optional for mmc
+ function nodes
+Date: Mon, 1 Aug 2016 11:41:56 -0500
+Message-ID: <20160801164156.GA29075@rob-hp-laptop>
+References: <1469891030-28838-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201608012126.BWziGkjc%fengguang.wu@intel.com>
+Content-Disposition: inline
+In-Reply-To: <1469891030-28838-1-git-send-email-hdegoede@redhat.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,55 +19,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kbuild test robot <lkp@intel.com>
-Cc: linux-hwmon@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Jean Delvare <jdelvare@suse.com>, linux-arm-kernel@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>, Duc Dang <dhdang@apm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Guenter Roeck <linux@roeck-us.net>, Loc Ho <lho@apm.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Aug 1, 2016 at 6:21 AM, kbuild test robot <lkp@intel.com> wrote:
-> Hi Hoan,
->
-> [auto build test ERROR on hwmon/hwmon-next]
-> [also build test ERROR on v4.7]
-> [cannot apply to next-20160801]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Hoan-Tran/hwmon-xgene-Add-support-for-X-Gene-hwmon-driver/20160725-015356
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
-> config: arm64-allmodconfig (attached as .config)
-> compiler: aarch64-linux-gnu-gcc (Debian 5.4.0-6) 5.4.0 20160609
-> reproduce:
->         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm64
->
-> All errors (new ones prefixed by >>):
->
->>> drivers/hwmon/xgene-hwmon.c:38:22: fatal error: acpi/pcc.h: No such file or directory
->    compilation terminated.
-
-This driver should be built with kernel 4.8 and above where the
-"pcc.h" file is available.
-
-Thanks
-Hoan
-
->
-> vim +38 drivers/hwmon/xgene-hwmon.c
->
->     32  #include <linux/mailbox_controller.h>
->     33  #include <linux/mailbox_client.h>
->     34  #include <linux/module.h>
->     35  #include <linux/of.h>
->     36  #include <linux/platform_device.h>
->     37  #include <acpi/acpi_io.h>
->   > 38  #include <acpi/pcc.h>
->     39
->     40  /* SLIMpro message defines */
->     41  #define MSG_TYPE_DBG                    0
->
+On Sat, Jul 30, 2016 at 05:03:50PM +0200, Hans de Goede wrote:
+> On some boards (android tablets) different batches use different sdio
+> wifi modules. This is not a problem since mmc/sdio is an enumerable bus,
+> so we only need to describe and activate the mmc controller in dt and
+> then the kernel will automatically load the right driver.
+> 
+> Sometimes it is useful to specify certain ethernet properties for these
+> "unknown" sdio devices, specifically we want the boot-loader to be able
+> to set "local-mac-address" as some of these sdio wifi modules come without
+> an eeprom / without a factory programmed mac address.
+> 
+> Since the exact device is unknown (differs per batch) we cannot use
+> a wifi-chip specific compatible, thus sometimes it is desirable to have a
+> mmc function node, without having to make up an otherwise unused compatible
+> for the node, so make the compatible property optional.
+> 
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> Changes in v2:
+> -Change the commit-msg to explain why it sometimes is desirable to have a
+>  mmc function node without a compatible
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+
+Acked-by: Rob Herring <robh@kernel.org>
