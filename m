@@ -1,49 +1,69 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
-Date: Mon, 1 Aug 2016 10:30:24 +0200
-Message-ID: <20160801103024.cc74c093466d7fdfd91a2587@free.fr>
-References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
-	<fb559224-561c-3476-1146-96f7aea427f0@arm.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V3 2/5] dts/imx6q-b850v3: Configure IPU assignment order
+Date: Mon, 01 Aug 2016 10:54:07 +0200
+Message-ID: <1470041647.6640.3.camel@pengutronix.de>
+References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
+	 <cover.1469993472.git.peter.senna@collabora.com>
+	 <7e5985c0b25505eeaf50294ea04ed750c6c0f576.1469993472.git.peter.senna@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fb559224-561c-3476-1146-96f7aea427f0-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <7e5985c0b25505eeaf50294ea04ed750c6c0f576.1469993472.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?Andr=E9?= Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andrey.gusakov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 1 Aug 2016 02:43:06 +0100
-André Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-
-> As this became quite a long read, here a TL;DR:
-> - We consider using an SCPI based clock system for the A64, alongside
-> allwinner,simple-gates and fixed clocks. We try to avoid any Allwinner
-> specific clocks (apart from the simple-gates).
-> - ARM Trusted Firmware provides the SCPI implementation - for now, later
-> we may move this into a possible arisc firmware.
-> - We upstream some basic DT first, possibly omitting any controversial
-> clock parts at all.
+Am Sonntag, den 31.07.2016, 21:55 +0200 schrieb Peter Senna Tschudin:
+> As the IPU has combined limitations across multiple crtcs, and as that
+> can't be communicated to userspace at the moment, reorder the crtcs to
+> allow support to two Full-HD monitors by avoiding assigning two
+> monitors to a single IPU.
 > 
-> Let me know what you think!
+> Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 
-Hi André,
+NACK. This is a userspace issue. Changing the assignment order of the
+CRTCs just shifts the failure to a userspace that want to use CRTC 0 and
+2 now.
 
-This looks interesting.
-As I understand, the clock enable/rate setting functions would be in
-the arisc. The arisc firmware would be loaded only once in the Soc and
-would contain the code for handling this specific SoC.
->From my calculations, this would save about 1Mb of clock descriptions
-in the kernel for a universal Allwinner kernel.
+imx-drm just got atomic support and with the atomic check it should be
+possible to inform userspace in a reasonable way about such issues.
 
-But I don't see why you are keeping the simple-gates. The bus gate may
-be ungated/gated when the clock is enabled/disabled, and that's what
-Allwinner's software does.
+Regards,
+Lucas
 
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+> ---
+> Unchanged from V2.
+> 
+> Changes from V1:
+>  - New commit message
+> 
+>  arch/arm/boot/dts/imx6q-b850v3.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+> index 167f744..88a70de 100644
+> --- a/arch/arm/boot/dts/imx6q-b850v3.dts
+> +++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+> @@ -51,6 +51,11 @@
+>  	chosen {
+>  		stdout-path = &uart3;
+>  	};
+> +
+> +	display-subsystem {
+> +		compatible = "fsl,imx-display-subsystem";
+> +		ports = <&ipu1_di0>, <&ipu2_di0>, <&ipu1_di1>, <&ipu2_di1>;
+> +	};
+>  };
+>  
+>  &clks {
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
