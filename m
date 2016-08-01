@@ -1,73 +1,59 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [v3,2/6] power: add power sequence library
-Date: Mon, 1 Aug 2016 09:58:57 +0800
-Message-ID: <20160801015857.GA15388@shlinux2>
-References: <1469007629-31757-3-git-send-email-peter.chen@nxp.com>
- <c2e3679b-4522-d403-0a98-eb09c5a2c02d@chromium.org>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] Documentation: bindings: add dt documentation for
+ Rockchip PCIe PHY
+Date: Mon, 1 Aug 2016 11:03:09 +0800
+Message-ID: <56d82103-1561-9410-d058-3b7a3534490f@rock-chips.com>
+References: <1469755326-10263-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160729213435.GA15549@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <c2e3679b-4522-d403-0a98-eb09c5a2c02d@chromium.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: mark.rutland@arm.com, Peter Chen <peter.chen@nxp.com>, ulf.hansson@linaro.org, stephen.boyd@linaro.org, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, festevam@gmail.com, stillcompiling@gmail.com, pawel.moll@arm.com, dbaryshkov@gmail.com, stern@rowland.harvard.edu, dwmw2@infradead.org, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, arnd@arndb.de, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, sre@kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160729213435.GA15549@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 29, 2016 at 01:06:48PM -0700, Matthias Kaehlcke wrote:
-> Hi Peter,
-> 
-> Thanks for your work on this, a few comments inline
-> 
-> 
-> On 07/20/2016 02:40 AM, Peter Chen wrote:
-> 
-> >...
-> >
-> >+static int pwrseq_generic_on(struct device_node *np, struct pwrseq *pwrseq)
-> >+{
-> >
-> >...
-> >
-> >+	if (gpiod_reset) {
-> >+		u32 duration_us = 50;
-> >+
-> >+		of_property_read_u32(np, "reset-duration-us",
-> >+				&duration_us);
-> >+		usleep_range(duration_us, duration_us + 10);
-> The end of the range could allow for more margin. Also consider busy
-> looping for very short delays as in
-> http://lxr.free-electrons.com/source/drivers/regulator/core.c#L2062
+在 2016/7/30 5:34, Rob Herring 写道:
+> On Fri, Jul 29, 2016 at 09:22:05AM +0800, Shawn Lin wrote:
+>> This patch adds a binding that describes the Rockchip PCIe PHY
+>> found on Rockchip SoCs PCIe interface.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> ---
+>>
+>> Changes in v4: None
+>> Changes in v3:
+>> - rename the node to pcie_phy: pcie-phy suggested by Doug
+>>
+>> Changes in v2:
+>> - add clk and reset description
+>> - remove unit-address
+>>
+>>  .../devicetree/bindings/phy/rockchip-pcie-phy.txt  | 32 ++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+>
+> Please add acks when posting new versions.
 
-Thanks, I will change it.
+yup, but I didn't see your ack for my previous version.
+Anyway, I will add it if needing to respin one, or Kishon could add
+it if all others look good to him when applying these? :)
 
-> >...
-> >
-> >+static int pwrseq_generic_get(struct device_node *np, struct pwrseq *pwrseq)
-> >+{
-> >+	struct pwrseq_generic *pwrseq_gen = to_generic_pwrseq(pwrseq);
-> >+	enum of_gpio_flags flags;
-> >+	int reset_gpio, ret = 0;
-> >+
-> >+	pwrseq_gen->clk = of_clk_get_by_name(np, NULL);
-> This only gets the first of potentially multiple clocks, is that intended?
+>
+> Rob
+>
+>
+>
 
-Since it is ran before the driver's probe, we thought one clock for
-power sequence is enough. If your case really needs several clocks
-to be enabled before your device can be found by bus, let me know.
-I will add support for it. But what are the name for clocks, since
-it is generic library? "gen1, gen2 and gen3"?
 
 -- 
+Best Regards
+Shawn Lin
 
-Best Regards,
-Peter Chento 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
