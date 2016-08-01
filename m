@@ -1,49 +1,95 @@
-From: Jean-Francois Moine <moinejf@free.fr>
+From: Icenowy Zheng <icenowy@aosc.xyz>
 Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
-Date: Mon, 1 Aug 2016 14:11:39 +0200
-Message-ID: <20160801141139.f8458f31c6c7b5c081653a93@free.fr>
+Date: Mon, 01 Aug 2016 20:19:54 +0800
+Message-ID: <70891470053994@web8m.yandex.ru>
 References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
-	<fb559224-561c-3476-1146-96f7aea427f0@arm.com>
-	<20160801103024.cc74c093466d7fdfd91a2587@free.fr>
-	<CAGb2v67+1rG1kj+7cGO=TMwSgpktP4xMAeZ9Zfy8PRWXyRLi+g@mail.gmail.com>
-	<20160801140012.41b8609b69faa1fe1d7d2a4a@free.fr>
-	<CAGb2v66bvtY5qtkSJ_BgyPtA+Mi-3m06NwVnntcwaNnbdwYC6w@mail.gmail.com>
+ <fb559224-561c-3476-1146-96f7aea427f0@arm.com>
+ <20160801103024.cc74c093466d7fdfd91a2587@free.fr>
+ <8b4d1f09-b1ce-5708-f815-29dbd438c2db@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v66bvtY5qtkSJ_BgyPtA+Mi-3m06NwVnntcwaNnbdwYC6w@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: =?ISO-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8b4d1f09-b1ce-5708-f815-29dbd438c2db@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andre Przywara <andre.przywara@arm.com>, Jean-Francois Moine <moinejf@free.fr>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 1 Aug 2016 20:01:49 +0800
-Chen-Yu Tsai <wens@csie.org> wrote:
-
-> On Mon, Aug 1, 2016 at 8:00 PM, Jean-Francois Moine <moinejf@free.fr> wrote:
-> > On Mon, 1 Aug 2016 17:13:34 +0800
-> > Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> >> > But I don't see why you are keeping the simple-gates. The bus gate may
-> >> > be ungated/gated when the clock is enabled/disabled, and that's what
-> >> > Allwinner's software does.
-> >>
-> >> For peripherals that have a separate mod clock, having them separate
-> >> is a good thing. One example might be the audio codecs. You could ungate
-> >> the bus gate to access its registers to program it, but only enable
-> >> the mod clock when you actually play something.
-> >
-> > The roles of the bus gate and the clock gate are the same. I don't see
-> > any reason to set one gate without setting the other one. More, the
-> > spec says what the bus gate must be enabled before the clock gate (and
-> > reverse order while disabling). So, setting both gates in one function
-> > call seems safer.
-> 
-> Wha? Aren't bus gates and clock gates the same thing in this context?
-
-Yes. What is the problem?
-
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+SGkgQW5kcmUsCgowMS4wOC4yMDE2LCAxODo0OCwgIkFuZHJlIFByenl3YXJhIiA8YW5kcmUucHJ6
+eXdhcmFAYXJtLmNvbT46Cj4gSGkgSmVhbi1GcmFuY29pcywKPgo+IE9uIDAxLzA4LzE2IDA5OjMw
+LCBKZWFuLUZyYW5jb2lzIE1vaW5lIHdyb3RlOgo+PiDCoE9uIE1vbiwgMSBBdWcgMjAxNiAwMjo0
+MzowNiArMDEwMAo+PiDCoEFuZHLDqSBQcnp5d2FyYSA8YW5kcmUucHJ6eXdhcmFAYXJtLmNvbT4g
+d3JvdGU6Cj4+Cj4+PiDCoEFzIHRoaXMgYmVjYW1lIHF1aXRlIGEgbG9uZyByZWFkLCBoZXJlIGEg
+VEw7RFI6Cj4+PiDCoC0gV2UgY29uc2lkZXIgdXNpbmcgYW4gU0NQSSBiYXNlZCBjbG9jayBzeXN0
+ZW0gZm9yIHRoZSBBNjQsIGFsb25nc2lkZQo+Pj4gwqBhbGx3aW5uZXIsc2ltcGxlLWdhdGVzIGFu
+ZCBmaXhlZCBjbG9ja3MuIFdlIHRyeSB0byBhdm9pZCBhbnkgQWxsd2lubmVyCj4+PiDCoHNwZWNp
+ZmljIGNsb2NrcyAoYXBhcnQgZnJvbSB0aGUgc2ltcGxlLWdhdGVzKS4KPj4+IMKgLSBBUk0gVHJ1
+c3RlZCBGaXJtd2FyZSBwcm92aWRlcyB0aGUgU0NQSSBpbXBsZW1lbnRhdGlvbiAtIGZvciBub3cs
+IGxhdGVyCj4+PiDCoHdlIG1heSBtb3ZlIHRoaXMgaW50byBhIHBvc3NpYmxlIGFyaXNjIGZpcm13
+YXJlLgo+Pj4gwqAtIFdlIHVwc3RyZWFtIHNvbWUgYmFzaWMgRFQgZmlyc3QsIHBvc3NpYmx5IG9t
+aXR0aW5nIGFueSBjb250cm92ZXJzaWFsCj4+PiDCoGNsb2NrIHBhcnRzIGF0IGFsbC4KPj4+Cj4+
+PiDCoExldCBtZSBrbm93IHdoYXQgeW91IHRoaW5rIQo+Pgo+PiDCoEhpIEFuZHLDqSwKPj4KPj4g
+wqBUaGlzIGxvb2tzIGludGVyZXN0aW5nLgo+PiDCoEFzIEkgdW5kZXJzdGFuZCwgdGhlIGNsb2Nr
+IGVuYWJsZS9yYXRlIHNldHRpbmcgZnVuY3Rpb25zIHdvdWxkIGJlIGluCj4+IMKgdGhlIGFyaXNj
+LiBUaGUgYXJpc2MgZmlybXdhcmUgd291bGQgYmUgbG9hZGVkIG9ubHkgb25jZSBpbiB0aGUgU29j
+IGFuZAo+PiDCoHdvdWxkIGNvbnRhaW4gdGhlIGNvZGUgZm9yIGhhbmRsaW5nIHRoaXMgc3BlY2lm
+aWMgU29DLgo+PiDCoEZyb20gbXkgY2FsY3VsYXRpb25zLCB0aGlzIHdvdWxkIHNhdmUgYWJvdXQg
+MU1iIG9mIGNsb2NrIGRlc2NyaXB0aW9ucwo+PiDCoGluIHRoZSBrZXJuZWwgZm9yIGEgdW5pdmVy
+c2FsIEFsbHdpbm5lciBrZXJuZWwuCj4KPiBUaGlzIGlzIHRoZSByb3VnaCBpZGVhLCB5ZXMuIElu
+IHRoZSBtb21lbnQgdGhlIGNsb2NrIGNvZGUgc2l0cyBpbiB0aGUKPiBBUk0gVHJ1c3RlZCBGaXJt
+d2FyZSBwYXJ0LCBidXQgaW4gZmFjdCB0aGlzIGlzIGFuIGltcGxlbWVudGF0aW9uIGRldGFpbC4K
+PiBUaGVvcmV0aWNhbGx5IHdlIGNvdWxkIGFsc28gbW92ZSB0aGF0IGNsb2NrIGNvZGUgdG8gVS1C
+b290IG9uIDMyLWJpdAo+IFNvQ3MgdG8gc2l0IG5leHQgdG8gdGhlIFBTQ0kgaW1wbGVtZW50YXRp
+b24sIHdoaWNoIHVzZXMgdGhlIHNhbWUgc21jCj4gY2FsbCBtZWNoYW5pc20gYXMgSSBkbyBpbiB0
+aGlzIGZpcnN0IGltcGxlbWVudGF0aW9uLgo+IEJ1dCB1bmZvcnR1bmF0ZWx5IHdlIGNhbm5vdCBy
+ZW1vdmUgdGhlIGV4aXN0aW5nIGNvZGUgZnJvbSB0aGUga2VybmVsLAo+IHNpbmNlIHRoYXQgd291
+bGQgYnJlYWsgYWxsIGV4aXN0aW5nIHVzZXJzICh1bmxlc3MgdGhleSB1cGdyYWRlIHRoZWlyCj4g
+ZmlybXdhcmUpLiBTbyBJIGFtIG5vdCBzdXJlIGlmIHN1cHBvcnRpbmcgb2xkZXIgU29DcyB3aXRo
+IHRoaXMgbWVjaGFuaXNtCj4gaXMgd29ydGh3aGlsZS4KPgo+IEJ1dDogeWVzLCBJIHdhbnQgdG8g
+YXZvaWQgYWRkaW5nIHRlZGlvdXMgY2xvY2sgZGVzY3JpcHRpb25zIGZvciBlYWNoIGFuZAo+IGV2
+ZXJ5IG5ldyBTb0MgdG8gdGhlIGtlcm5lbC4gV2hhdCByZWFsbHkgd29ycmllcyBtZSBpcyB0aGF0
+IHN1bnhpLW5nCj4gbWFrZXMgdGhpcyBzaXR1YXRpb24gcHJvYmFibHkgd29yc2UsIGFzIHdlIG5v
+dyBoYXZlIHRvIGFkZCBTb0Mgc3BlY2lmaWMKPiAiY29kZSIgKGluIGZhY3Q6IGNsb2NrIGRlc2Ny
+aXB0aW9ucykgZm9yIGV2ZXJ5IFNvQywgZXZlbiBpZiB0aGF0IGNoaXAKPiBkb2Vzbid0IGludHJv
+ZHVjZSBhbnkgbmV3IGNsb2NrIHR5cGUuCj4KPj4gwqBCdXQgSSBkb24ndCBzZWUgd2h5IHlvdSBh
+cmUga2VlcGluZyB0aGUgc2ltcGxlLWdhdGVzLiBUaGUgYnVzIGdhdGUgbWF5Cj4+IMKgYmUgdW5n
+YXRlZC9nYXRlZCB3aGVuIHRoZSBjbG9jayBpcyBlbmFibGVkL2Rpc2FibGVkLCBhbmQgdGhhdCdz
+IHdoYXQKPj4gwqBBbGx3aW5uZXIncyBzb2Z0d2FyZSBkb2VzLgo+Cj4gV2UgY291bGQgZG8uIEJ1
+dCBTQ1BJIGRvZXMgbm90IGhhdmUgYW4gZXhwbGljaXQgZW5hYmxlL2Rpc2FibGUKPiBpbnRlcmZh
+Y2UsIGl0IG9ubHkgZGVzY3JpYmVzIHRoYXQgc2V0dGluZyB0aGUgZnJlcXVlbmN5IHRvIDAgZGlz
+YWJsZXMKPiB0aGUgY2xvY2suIEZvciBlbmFibGluZyBpdCBvbmUgd291bGQgaGF2ZSB0byBzZXQg
+c29tZSBmcmVxdWVuY3kgKCE9IDApLAo+IHdoaWNoIHRoZSBmaXJtd2FyZSBjb3VsZCB0aGVuIHRy
+YW5zbGF0ZSBpbnRvIGEgInNldCB0aGF0IGJpdCBpbiB0aGUgZ2F0ZQo+IHJlZ2lzdGVyIiBmb3Ig
+YW55IGdhdGUtb25seSBjbG9jaywgd2hpY2ggc291bmRzIHJhdGhlciBoYWNraXNoIHRvIG1lLgo+
+IEFsc28gaXQgd291bGQgcmVxdWlyZSB0byBhbHRlciB0aGUgU0NQSSBjbG9jayBkcml2ZXIgdG8g
+aW1wbGVtZW50IHRoZQo+IGVuYWJsZS9kaXNhYmxlIG9wcywgc2luY2UgSSB0aGluayB3ZSBuZXZl
+ciBjYWxsIHNldF9yYXRlIGZvciB0aG9zZSBjbG9ja3MuCj4KPiBTbyBoYXZpbmcgdGhlIHF1aXRl
+IHN0cmFpZ2h0IGZvcndhcmQgInNpbXBsZS1nYXRlcyIgZHJpdmVyIGFyb3VuZCBzZWVtcwo+IG1v
+cmUgc2FuZS4gSW4gdGhlIGVuZCB0aGlzIGRyaXZlciBqdXN0IHRyYW5zbGF0ZXMgImNsb2NrIG51
+bWJlciB4IiBpbnRvCj4gImJpdCBudW1iZXIgeCIgaW4gdGhhdCByZWdpc3Rlciwgd2hpY2ggaXMg
+dmVyeSBnZW5lcmljLiBUaGF0J3Mgd2h5IEkKPiB1cmdlZCB0byBpbnRyb2R1Y2UgYSBmYWxsYmFj
+ayBjb21wYXRpYmxlIG5hbWUgdG8gZXhwcmVzcyB0aGlzIHZlcnkgZmVhdHVyZS4KPgo+IENoZWVy
+cywKPiBBbmRyZS4KPgpJdCBtYXkgYmUgdW5wb2xpdGUgdG8gc2F5IHRoYXQsIGJ1dCBJIGp1c3Qg
+d2FudCBhIHdvcmtpbmcgQTY0IG1haW5saW5lIGtlcm5lbCBhdCBmaXJzdC4KSSdtIHRyeWluZyB0
+byBzdWJtaXQgdGhlIGRyaXZlcnMgb2YgdGhlIGNoYW5nZWQgSVAgYmxvY2tzIG5vdywgYnV0IGl0
+J3MgYSBwaXR5IHRoYXQgSQpjYW5ub3Qgc3VibWl0IHRoZSBEVCBwYXRjaGVzIG5vdy4KY2xvY2st
+bmcgaXMgYXQgbGVhc3Qgbm93IGEgdXNhYmxlIHNvbHV0aW9uLgpPciBjYW4geW91IHdvcmsgb3V0
+IHN1Y2ggYSBmaXJtd2FyZS1iYXNlZCBjbG9jayBkcml2ZXIgYXMgc29vbiBhcyBwb3NzaWJsZT8K
+CkknbSBleHBlY3RpbmcgeW91ciBTQ1BJLWJhc2VkIGRyaXZlciEKKEFSTSBpcyBub3cgc3VjaCBh
+IG1lc3MgdGhhdCBpdCByZWFsbHkgbmVlZHMgYSBzdGFuZGFyZC4pCj4gX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
