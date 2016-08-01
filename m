@@ -1,216 +1,197 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH 2/2] pinctrl: sunxi: Add A64 R_PIO controller support
-Date: Mon,  1 Aug 2016 22:59:39 +0800
-Message-ID: <20160801145939.50583-2-icenowy@aosc.xyz>
-References: <20160801145939.50583-1-icenowy@aosc.xyz>
+From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 3/3] rtc: pcf85263: Support multiple centuries
+Date: Mon, 01 Aug 2016 17:50:36 +0200
+Message-ID: <20160801155036.32232.7242.stgit@localhost>
+References: <20160801155029.32232.56063.stgit@localhost>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160801145939.50583-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Andre Przywara <andre.przywara@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Jens Kuske <jenskuske@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, Krzysztof Adamski <k@japko.eu>, Icenowy Zheng <icenowy@aosc.xyz>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCLLTU5HV4PRBUG77W6AKGQETK4KBVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160801155029.32232.56063.stgit@localhost>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The A64 has a R_PIO pin controller, similar to the one found on the H3 SoCs.
-Add support for the pins controlled by the R_PIO controller.
+The hardware has neither a century register nor a century warp around bit.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+However it does have a single byte of non volatile RAM.
+
+Use this to provide full century and wrap around support by storing:
+* The current century
+* The current half century (lower=00-49, upper=50-99)
+
+If the byte is not set the 21st century is assumed.
+
+Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/pinctrl/sunxi/Kconfig                |   5 +
- drivers/pinctrl/sunxi/Makefile               |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c | 148 +++++++++++++++++++++++++++
- 3 files changed, 154 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
+ drivers/rtc/rtc-pcf85263.c |  105 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 103 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index aaf075b..c4b476f 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -72,4 +72,9 @@ config PINCTRL_SUN50I_A64
- 	bool
- 	select PINCTRL_SUNXI
+diff --git a/drivers/rtc/rtc-pcf85263.c b/drivers/rtc/rtc-pcf85263.c
+index 997742d..7b55d92 100644
+--- a/drivers/rtc/rtc-pcf85263.c
++++ b/drivers/rtc/rtc-pcf85263.c
+@@ -83,6 +83,10 @@
  
-+config PINCTRL_SUN50I_A64_R
-+	bool
-+	depends on RESET_CONTROLLER
-+	select PINCTRL_SUNXI
+ #define PCF85263_HR_PM		BIT(5)
+ 
++/* Our data stored in the RAM byte */
++#define PCF85263_STATE_CENTURY_MASK		0x7f
++#define PCF85263_STATE_UPPER_HALF_CENTURY	BIT(7)
 +
- endif
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index 2d8b64e..d6eabdd 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23)		+= pinctrl-sun8i-a23.o
- obj-$(CONFIG_PINCTRL_SUN8I_A23_R)	+= pinctrl-sun8i-a23-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_A33)		+= pinctrl-sun8i-a33.o
- obj-$(CONFIG_PINCTRL_SUN50I_A64)	+= pinctrl-sun50i-a64.o
-+obj-$(CONFIG_PINCTRL_SUN50I_A64_R)	+= pinctrl-sun50i-a64-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_A83T)	+= pinctrl-sun8i-a83t.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
-new file mode 100644
-index 0000000..b836264
---- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
-@@ -0,0 +1,148 @@
-+/*
-+ * Allwinner A64 SoCs special pins pinctrl driver.
-+ *
-+ * Based on pinctrl-sun8i-a23-r.c
-+ *
-+ * Copyright (C) 2016 Icenowy Zheng
-+ * Icenowy Zheng <icenowy@aosc.xyz>
-+ *
-+ * Copyright (C) 2014 Chen-Yu Tsai
-+ * Chen-Yu Tsai <wens@csie.org>
-+ *
-+ * Copyright (C) 2014 Boris Brezillon
-+ * Boris Brezillon <boris.brezillon@free-electrons.com>
-+ *
-+ * Copyright (C) 2014 Maxime Ripard
-+ * Maxime Ripard <maxime.ripard@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/reset.h>
-+
-+#include "pinctrl-sunxi.h"
-+
-+static const struct sunxi_desc_pin sun50i_a64_r_pins[] = {
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SCK */
-+		  SUNXI_FUNCTION(0x3, "s_twi"),		/* SCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* PL_EINT0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SDA */
-+		  SUNXI_FUNCTION(0x3, "s_twi"),		/* SDA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),	/* PL_EINT1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_uart"),	/* TX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),	/* PL_EINT2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_uart"),	/* RX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),	/* PL_EINT3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* MS */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),	/* PL_EINT4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* CK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),	/* PL_EINT5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* DO */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),	/* PL_EINT6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* DI */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),	/* PL_EINT7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_twi"),		/* SCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),	/* PL_EINT8 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_twi"),		/* SDA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),	/* PL_EINT9 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 10),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_pwm"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)),	/* PL_EINT10 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 11),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_cir_rx"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 11)),	/* PL_EINT11 */
-+};
-+
-+static const struct sunxi_pinctrl_desc sun50i_a64_r_pinctrl_data = {
-+	.pins = sun50i_a64_r_pins,
-+	.npins = ARRAY_SIZE(sun50i_a64_r_pins),
-+	.pin_base = PL_BASE,
-+	.irq_banks = 1,
-+};
-+
-+static int sun50i_a64_r_pinctrl_probe(struct platform_device *pdev)
+ enum pcf85263_irqpin {
+ 	PCF85263_IRQPIN_NONE,
+ 	PCF85263_IRQPIN_INTA,
+@@ -101,6 +105,8 @@ struct pcf85263 {
+ 	struct regmap *regmap;
+ 	enum pcf85263_irqpin irq_pin;
+ 	int irq;
++	u8 century;		/* 1 = 1900 2 = 2000, ... */
++	bool century_half;	/* false = 0-49, true=50-99 */
+ 	bool mode_12h;
+ };
+ 
+@@ -136,6 +142,85 @@ static int pcf85263_bin24h_to_bcd12h(int hr24)
+ 	return bin2bcd(hr12) | pm ? 0 : PCF85263_HR_PM;
+ }
+ 
++static inline bool pcf85263_century_half(int year)
 +{
-+	struct reset_control *rstc;
++	return (year % 100) >= 50;
++}
++
++/*
++ * Since the hardware only has a year range of 00 to 99 we use
++ * the ram byte to store the century. 1=1900, 2=2000, 3=2100
++ * A value of zero is assumed to be 2000
++ *
++ * Set the ram byte when we set the clock which lets us use any
++ * century supported by linux (tm_year=0 => 1900)
++ *
++ * Unfortunately the hardware has no wrap around flag so fix it
++ * by also storing a flag indicating if the year is in the
++ * upper or lower half of the century.
++ */
++static int pcf85263_update_ram_byte(struct pcf85263 *pcf85263)
++{
++	u8 val = pcf85263->century & PCF85263_STATE_CENTURY_MASK;
++
++	if (pcf85263->century_half)
++		val |= PCF85263_STATE_UPPER_HALF_CENTURY;
++
++	return regmap_write(pcf85263->regmap, PCF85263_REG_RAM_BYTE, val);
++}
++
++static int pcf85263_read_ram_byte(struct pcf85263 *pcf85263)
++{
++	unsigned int regval;
 +	int ret;
 +
-+	rstc = devm_reset_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(rstc)) {
-+		dev_err(&pdev->dev, "Reset controller missing\n");
-+		return PTR_ERR(rstc);
-+	}
-+
-+	ret = reset_control_deassert(rstc);
++	ret = regmap_read(pcf85263->regmap, PCF85263_REG_RAM_BYTE, &regval);
 +	if (ret)
 +		return ret;
 +
-+	ret = sunxi_pinctrl_init(pdev,
-+				 &sun50i_a64_r_pinctrl_data);
++	pcf85263->century = regval & PCF85263_STATE_CENTURY_MASK;
++	pcf85263->century_half = !!(regval & PCF85263_STATE_UPPER_HALF_CENTURY);
 +
-+	if (ret)
-+		reset_control_assert(rstc);
++	if (!pcf85263->century) { /* Not valid => not initialised yet */
++		int year;
 +
-+	return ret;
++		ret = regmap_read(pcf85263->regmap,
++				  PCF85263_REG_RTC_YR, &regval);
++		if (ret)
++			return ret;
++
++		pcf85263->century = 2;
++		year = bcd2bin(regval) + 1900 + (pcf85263->century - 1) * 100;
++		pcf85263->century_half = pcf85263_century_half(year);
++
++		dev_warn(pcf85263->dev, "No century in NVRAM - assume %d\n",
++			 year);
++	}
++
++	return 0;
 +}
 +
-+static const struct of_device_id sun50i_a64_r_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun50i-a64-r-pinctrl", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sun50i_a64_r_pinctrl_match);
++/*
++ * Detect year overflow by comparing the half (upper, lower) of
++ * the current year with the half the last time we read it
++ */
++static int pcf85263_update_century(struct pcf85263 *pcf85263, int year)
++{
++	bool cur_century_half;
 +
-+static struct platform_driver sun50i_a64_r_pinctrl_driver = {
-+	.probe	= sun50i_a64_r_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun50i-a64-r-pinctrl",
-+		.of_match_table	= sun50i_a64_r_pinctrl_match,
-+	},
-+};
-+module_platform_driver(sun50i_a64_r_pinctrl_driver);
++	cur_century_half = pcf85263_century_half(year);
 +
-+MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.xyz>");
-+MODULE_AUTHOR("Chen-Yu Tsai <wens@csie.org>");
-+MODULE_AUTHOR("Boris Brezillon <boris.brezillon@free-electrons.com");
-+MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com");
-+MODULE_DESCRIPTION("Allwinner A64 R_PIO pinctrl driver");
-+MODULE_LICENSE("GPL");
++	if (cur_century_half == pcf85263->century_half)
++		return 0;
++
++	if (!cur_century_half) /* Year has wrapped around */
++		pcf85263->century++;
++
++	pcf85263->century_half = cur_century_half;
++
++	return pcf85263_update_ram_byte(pcf85263);
++}
++
+ static int pcf85263_read_time(struct device *dev, struct rtc_time *tm)
+ {
+ 	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
+@@ -169,7 +254,11 @@ static int pcf85263_read_time(struct device *dev, struct rtc_time *tm)
+ 	tm->tm_mon  = bcd2bin(regs[PCF85263_REG_RTC_MO - first]) - 1;
+ 	tm->tm_year = bcd2bin(regs[PCF85263_REG_RTC_YR - first]);
+ 
+-	tm->tm_year += 100;  /* Assume 21st century */
++	ret = pcf85263_update_century(pcf85263, tm->tm_year);
++	if (ret)
++		return ret;
++
++	tm->tm_year += (pcf85263->century - 1) * 100;
+ 
+ 	return 0;
+ }
+@@ -214,7 +303,14 @@ static int pcf85263_set_time(struct device *dev, struct rtc_time *tm)
+ 	}
+ 
+ 	/* Start it again */
+-	return regmap_write(pcf85263->regmap, PCF85263_REG_STOPENABLE, 0);
++	ret = regmap_write(pcf85263->regmap, PCF85263_REG_STOPENABLE, 0);
++	if (ret)
++		return ret;
++
++	pcf85263->century = (tm->tm_year / 100) + 1;
++	pcf85263->century_half = pcf85263_century_half(tm->tm_year);
++
++	return pcf85263_update_ram_byte(pcf85263);
+ }
+ 
+ static int pcf85263_enable_alarm(struct pcf85263 *pcf85263, bool enable)
+@@ -422,6 +518,11 @@ static int pcf85263_init_hw(struct pcf85263 *pcf85263)
+ 		return ret;
+ 	}
+ 
++	/* Get our persistent state from the ram byte */
++	ret = pcf85263_read_ram_byte(pcf85263);
++	if (ret < 0)
++		return ret;
++
+ 	/* Determine 12/24H mode */
+ 	ret = regmap_read(pcf85263->regmap, PCF85263_REG_OSC, &regval);
+ 	if (ret)
+
 -- 
-2.9.0
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
