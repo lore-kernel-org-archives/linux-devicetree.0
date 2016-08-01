@@ -1,12 +1,12 @@
 From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] rtc: pcf85263: Support multiple centuries
-Date: Mon, 01 Aug 2016 17:50:36 +0200
-Message-ID: <20160801155036.32232.7242.stgit@localhost>
+Subject: [PATCH 1/3] dt-binding: rtc Add DT binding for NXP 85263 RTC
+Date: Mon, 01 Aug 2016 17:50:32 +0200
+Message-ID: <20160801155032.32232.68432.stgit@localhost>
 References: <20160801155029.32232.56063.stgit@localhost>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCLLTU5HV4PRBUG77W6AKGQETK4KBVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCLLTU5HV4PRBTO77W6AKGQECPWH6BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20160801155029.32232.56063.stgit@localhost>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,172 +19,81 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herr
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The hardware has neither a century register nor a century warp around bit.
-
-However it does have a single byte of non volatile RAM.
-
-Use this to provide full century and wrap around support by storing:
-* The current century
-* The current half century (lower=00-49, upper=50-99)
-
-If the byte is not set the 21st century is assumed.
-
 Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/rtc/rtc-pcf85263.c |  105 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 103 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/rtc/nxp,pcf85263.txt       |   41 ++++++++++++++++++++
+ include/dt-bindings/rtc/nxp,pcf85263.h             |   14 +++++++
+ 2 files changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt
+ create mode 100644 include/dt-bindings/rtc/nxp,pcf85263.h
 
-diff --git a/drivers/rtc/rtc-pcf85263.c b/drivers/rtc/rtc-pcf85263.c
-index 997742d..7b55d92 100644
---- a/drivers/rtc/rtc-pcf85263.c
-+++ b/drivers/rtc/rtc-pcf85263.c
-@@ -83,6 +83,10 @@
- 
- #define PCF85263_HR_PM		BIT(5)
- 
-+/* Our data stored in the RAM byte */
-+#define PCF85263_STATE_CENTURY_MASK		0x7f
-+#define PCF85263_STATE_UPPER_HALF_CENTURY	BIT(7)
+diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt
+new file mode 100644
+index 0000000..03b9505
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85263.txt
+@@ -0,0 +1,41 @@
++NXP PCF85263 I2C Real Time Clock
 +
- enum pcf85263_irqpin {
- 	PCF85263_IRQPIN_NONE,
- 	PCF85263_IRQPIN_INTA,
-@@ -101,6 +105,8 @@ struct pcf85263 {
- 	struct regmap *regmap;
- 	enum pcf85263_irqpin irq_pin;
- 	int irq;
-+	u8 century;		/* 1 = 1900 2 = 2000, ... */
-+	bool century_half;	/* false = 0-49, true=50-99 */
- 	bool mode_12h;
- };
- 
-@@ -136,6 +142,85 @@ static int pcf85263_bin24h_to_bcd12h(int hr24)
- 	return bin2bcd(hr12) | pm ? 0 : PCF85263_HR_PM;
- }
- 
-+static inline bool pcf85263_century_half(int year)
-+{
-+	return (year % 100) >= 50;
-+}
++Required properties:
++- compatible: must be: "nxp,rtc-pcf85263"
++- reg: must be the I2C address
 +
-+/*
-+ * Since the hardware only has a year range of 00 to 99 we use
-+ * the ram byte to store the century. 1=1900, 2=2000, 3=2100
-+ * A value of zero is assumed to be 2000
-+ *
-+ * Set the ram byte when we set the clock which lets us use any
-+ * century supported by linux (tm_year=0 => 1900)
-+ *
-+ * Unfortunately the hardware has no wrap around flag so fix it
-+ * by also storing a flag indicating if the year is in the
-+ * upper or lower half of the century.
-+ */
-+static int pcf85263_update_ram_byte(struct pcf85263 *pcf85263)
-+{
-+	u8 val = pcf85263->century & PCF85263_STATE_CENTURY_MASK;
++Optional properties:
++- interrupt-names: Which interrupt signal is used must be "INTA" or "INTB"
++    Defaults to "INTA"
 +
-+	if (pcf85263->century_half)
-+		val |= PCF85263_STATE_UPPER_HALF_CENTURY;
++- quartz-load-capacitance: The internal capacitor to select for the quartz:
++	PCF85263_QUARTZCAP_7pF		[0]
++	PCF85263_QUARTZCAP_6pF		[1]
++	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
 +
-+	return regmap_write(pcf85263->regmap, PCF85263_REG_RAM_BYTE, val);
-+}
++- quartz-drive-strength: Drive strength for the quartz:
++	PCF85263_QUARTZDRIVE_NORMAL	[0] DEFAULT
++	PCF85263_QUARTZDRIVE_LOW	[1]
++	PCF85263_QUARTZDRIVE_HIGH	[2]
 +
-+static int pcf85263_read_ram_byte(struct pcf85263 *pcf85263)
-+{
-+	unsigned int regval;
-+	int ret;
++- quartz-low-jitter: Boolean property, if present enables low jitter mode which
++    reduces jitter at the cost of increased power consumption.
 +
-+	ret = regmap_read(pcf85263->regmap, PCF85263_REG_RAM_BYTE, &regval);
-+	if (ret)
-+		return ret;
++- wakeup-source: mark the chip as a wakeup source, independently of
++    the availability of an IRQ line connected to the SoC.
++    This is useful if the IRQ line is connected to a PMIC or other circuit
++    that can power up the device rather than to a normal SOC interrupt.
 +
-+	pcf85263->century = regval & PCF85263_STATE_CENTURY_MASK;
-+	pcf85263->century_half = !!(regval & PCF85263_STATE_UPPER_HALF_CENTURY);
++Example:
 +
-+	if (!pcf85263->century) { /* Not valid => not initialised yet */
-+		int year;
++rtc@51 {
++	compatible = "nxp,pcf85263";
++	reg = <0x51>;
 +
-+		ret = regmap_read(pcf85263->regmap,
-+				  PCF85263_REG_RTC_YR, &regval);
-+		if (ret)
-+			return ret;
++	interrupt-parent = <&gpio4>;
++	interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
++	interrupt-names = "INTB";
 +
-+		pcf85263->century = 2;
-+		year = bcd2bin(regval) + 1900 + (pcf85263->century - 1) * 100;
-+		pcf85263->century_half = pcf85263_century_half(year);
++	quartz-load-capacitance = <PCF85263_QUARTZCAP_12p5pF>;
++	quartz-drive-strength = <PCF85263_QUARTZDRIVE_LOW>;
++};
+diff --git a/include/dt-bindings/rtc/nxp,pcf85263.h b/include/dt-bindings/rtc/nxp,pcf85263.h
+new file mode 100644
+index 0000000..ea87ae4
+--- /dev/null
++++ b/include/dt-bindings/rtc/nxp,pcf85263.h
+@@ -0,0 +1,14 @@
++#ifndef _DT_BINDINGS_RTC_NXP_PCF85263_H
++#define _DT_BINDINGS_RTC_NXP_PCF85263_H
 +
-+		dev_warn(pcf85263->dev, "No century in NVRAM - assume %d\n",
-+			 year);
-+	}
++/* Quartz capacitance */
++#define PCF85263_QUARTZCAP_7pF		0
++#define PCF85263_QUARTZCAP_6pF		1
++#define PCF85263_QUARTZCAP_12p5pF	2
 +
-+	return 0;
-+}
++/* Quartz drive strength */
++#define PCF85263_QUARTZDRIVE_NORMAL	0
++#define PCF85263_QUARTZDRIVE_LOW	1
++#define PCF85263_QUARTZDRIVE_HIGH	2
 +
-+/*
-+ * Detect year overflow by comparing the half (upper, lower) of
-+ * the current year with the half the last time we read it
-+ */
-+static int pcf85263_update_century(struct pcf85263 *pcf85263, int year)
-+{
-+	bool cur_century_half;
-+
-+	cur_century_half = pcf85263_century_half(year);
-+
-+	if (cur_century_half == pcf85263->century_half)
-+		return 0;
-+
-+	if (!cur_century_half) /* Year has wrapped around */
-+		pcf85263->century++;
-+
-+	pcf85263->century_half = cur_century_half;
-+
-+	return pcf85263_update_ram_byte(pcf85263);
-+}
-+
- static int pcf85263_read_time(struct device *dev, struct rtc_time *tm)
- {
- 	struct pcf85263 *pcf85263 = dev_get_drvdata(dev);
-@@ -169,7 +254,11 @@ static int pcf85263_read_time(struct device *dev, struct rtc_time *tm)
- 	tm->tm_mon  = bcd2bin(regs[PCF85263_REG_RTC_MO - first]) - 1;
- 	tm->tm_year = bcd2bin(regs[PCF85263_REG_RTC_YR - first]);
- 
--	tm->tm_year += 100;  /* Assume 21st century */
-+	ret = pcf85263_update_century(pcf85263, tm->tm_year);
-+	if (ret)
-+		return ret;
-+
-+	tm->tm_year += (pcf85263->century - 1) * 100;
- 
- 	return 0;
- }
-@@ -214,7 +303,14 @@ static int pcf85263_set_time(struct device *dev, struct rtc_time *tm)
- 	}
- 
- 	/* Start it again */
--	return regmap_write(pcf85263->regmap, PCF85263_REG_STOPENABLE, 0);
-+	ret = regmap_write(pcf85263->regmap, PCF85263_REG_STOPENABLE, 0);
-+	if (ret)
-+		return ret;
-+
-+	pcf85263->century = (tm->tm_year / 100) + 1;
-+	pcf85263->century_half = pcf85263_century_half(tm->tm_year);
-+
-+	return pcf85263_update_ram_byte(pcf85263);
- }
- 
- static int pcf85263_enable_alarm(struct pcf85263 *pcf85263, bool enable)
-@@ -422,6 +518,11 @@ static int pcf85263_init_hw(struct pcf85263 *pcf85263)
- 		return ret;
- 	}
- 
-+	/* Get our persistent state from the ram byte */
-+	ret = pcf85263_read_ram_byte(pcf85263);
-+	if (ret < 0)
-+		return ret;
-+
- 	/* Determine 12/24H mode */
- 	ret = regmap_read(pcf85263->regmap, PCF85263_REG_OSC, &regval);
- 	if (ret)
++#endif /* _DT_BINDINGS_RTC_NXP_PCF85263_H */
 
 -- 
 You received this message because you are subscribed to "rtc-linux".
