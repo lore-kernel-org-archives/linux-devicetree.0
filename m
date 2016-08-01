@@ -1,114 +1,88 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC v4 0/7] extcon: usb-gpio: fixes and improvements
-Date: Mon, 1 Aug 2016 15:23:46 +0300
-Message-ID: <7ca666e4-545e-6057-bed3-db45997b255d@ti.com>
-References: <CGME20160608134820epcas1p4ee75a89888f2ae2adb733124a330bd2c@epcas1p4.samsung.com>
- <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
- <57592A40.9080608@samsung.com> <57592B4A.4000407@samsung.com>
- <575937BA.1070609@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] soc: nxp: Add a RCPM driver
+Date: Mon, 01 Aug 2016 14:25:04 +0200
+Message-ID: <2024386.Ra8uvttlE9@wuerfel>
+References: <1470044943-3814-1-git-send-email-chenhui.zhao@nxp.com>
+ <1470044943-3814-2-git-send-email-chenhui.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <575937BA.1070609-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kishon-l0cyMroinI0@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470044943-3814-2-git-send-email-chenhui.zhao@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, z.chenhui@gmail.com, Chenhui Zhao <chenhui.zhao@nxp.com>, jason.jin@nxp.com, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Monday, August 1, 2016 5:49:03 PM CEST Chenhui Zhao wrote:
+> The NXP's QorIQ Processors based on ARM Core have a RCPM module
+> (Run Control and Power Management), which performs all device-level
+> tasks associated with power management.
+> 
+> This patch mainly implements the wakeup sources configuration before
+> entering LPM20, a low power state of device-level. The devices can be
+> waked up by specified sources, such as Flextimer, GPIO and so on.
+> 
+> Signed-off-by: Chenhui Zhao <chenhui.zhao@nxp.com>
 
-On 09/06/16 12:32, Chanwoo Choi wrote:
-> Hi,
-> 
-> On 2016년 06월 09일 17:39, Krzysztof Kozlowski wrote:
->>
->> Hi,
->>
->>
->> On 06/09/2016 10:35 AM, Chanwoo Choi wrote:
->>> Hi,
->>>
->>> It is good to support USB_ID and USB_VBUS by extcon.
->>>
->>> But,
->>> there is some issue about adding the new cable type for
->>> both EXTCON_USB_ID and EXTCON_USB_VBUS
->>>
->>> I think that the ID and VBUS state are not cable type
->>> Instead, ID and VBUS state are the property of USB cable.
->>>
->>> So, I'd like to add the following function to support
->>> the property of each cable as following:
->>> The client driver can get the state of property by using
->>> the extcon_get_cable_property_state().
->>>
->>> - int extcon_get_cable_property_state(struct extcon_dev *edev,
->>> 				unsigned int id,
->>> 				enum extcon_property property);
->>> - int extcon_set_cable_property_state(struct extcon_dev *edev,
->>> 				unsigned int id,
->>> 				enum extcon_property property,
->>> 				unsigned int state);
->>>
->>> For example,
->>> In extcon-usb-gpio.c, set state of property as follwoing:
->>> 	extcon_set_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_ID, 1);
->>> 	extcon_set_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_VBUS, 1);
->>>
->>>
->>> In the extcon client driver, get state of property as following:
->>> 	id_state = extcon_get_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_ID);
->>> 	vbus_state = extcon_get_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_VUBS);
->>
->> How one can receive notifications with this API?
-> 
-> I think that the extcon don't support the notification only for property.
-> When USB or USB_HOST cable state is changed, the client driver
-> call the extcon_get_cable_property_state() to read the state of property.
-> 
-> Namely, the property depend on the specific external connector.
-> 
->>
->> Last time you wrote, at the end of discussion:
->> http://thread.gmane.org/gmane.linux.kernel/1923192/focus=1923193
->>> IMO, if some usb driver check both id and vbus pin at the same time,
->>> the usb driver can know the both id and vbus pin state through only
->> one notifier event.
->>>
->>> Also,
->>> If some usb driver want to know the state of id pin except of vbus state,
->>> when receiving following events, id pin is low.
->>> 	#define EXTCON_USB_ID_L_VBUS_L0
->>> 	#define EXTCON_USB_ID_L_VBUS_H1
->>> when receiving following events, id pin is high.
->>> 	#define EXTCON_USB_ID_H_VBUS_L2
->>> 	#define EXTCON_USB_ID_H_VBUS_H3
->>> Also, some usb driver would catch the vbus pin state with same method.
->>>
->>> But, it is just my opinion. We may use following notifier events for
->> each pin.
->>> We need to discuss it.
->>> 	#define EXTCON_USB_ID_LOW
->>> 	#define EXTCON_USB_ID_HIGH	
->>> 	#define EXTCON_USB_VBUS_LOW
->>> 	#define EXTCON_USB_VBUS_HIGH
->>
->> ... all other participants agreed on that conclusion. So why change of
->> view point now?
-> 
-> Unitl now, the extcon framework only handle the state of external connector(cable).
-> - The state of external connector is either attached or detached.
-> 
-> I think that ID and VBUS are not external connector(cable).
-> The ID and VBUS are more appropriate as property than new type of external connector.
-> 
+Adding irqchip maintainers to cc, as this wakeup handling is normally
+part of the irq controller.
 
-Was there any conclusion on how we can support raw ID and VBUS events with extcon?
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/io.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <linux/suspend.h>
+> +
+> +/* So far there are not more than two registers */
+> +#define RCPM_IPPDEXPCR0		0x140
+> +#define RCPM_IPPDEXPCR1		0x144
+> +#define RCPM_IPPDEXPCR(x)	(RCPM_IPPDEXPCR0 + 4 * x)
+> +#define RCPM_WAKEUP_CELL_MAX_SIZE	2
+> +
+> +/* it reprents the number of the registers RCPM_IPPDEXPCR */
+> +static unsigned int rcpm_wakeup_cells;
+> +static void __iomem *rcpm_reg_base;
+> +static u32 ippdexpcr[RCPM_WAKEUP_CELL_MAX_SIZE];
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you make these local to the context of whoever
+calls into the driver?
+
+
+> +static void rcpm_wakeup_fixup(struct device *dev, void *data)
+> +{
+> +	struct device_node *node = dev ? dev->of_node : NULL;
+> +	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
+> +	int ret;
+> +	int i;
+> +
+> +	if (!dev || !node || !device_may_wakeup(dev))
+> +		return;
+> +
+> +	/*
+> +	 * Get the values in the "rcpm-wakeup" property.
+> +	 * Refer to Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> +	 */
+> +	ret = of_property_read_u32_array(node, "rcpm-wakeup",
+> +					 value, rcpm_wakeup_cells + 1);
+
+My first impression is that you are trying to do something
+in a platform specific way that should be handled by common
+code here.
+
+You are parsing rcpm_wakeup_cells once for the global node,
+but you don't check whether the device that has the rcpm-wakeup
+node actually refers to this instance, and that would require
+an incompatible change if we ever get an implementation that
+has multiple such nodes.
+
+	Arnd
