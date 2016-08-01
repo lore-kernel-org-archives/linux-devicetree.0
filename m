@@ -1,95 +1,114 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
-Date: Mon, 01 Aug 2016 20:19:54 +0800
-Message-ID: <70891470053994@web8m.yandex.ru>
-References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
- <fb559224-561c-3476-1146-96f7aea427f0@arm.com>
- <20160801103024.cc74c093466d7fdfd91a2587@free.fr>
- <8b4d1f09-b1ce-5708-f815-29dbd438c2db@arm.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC v4 0/7] extcon: usb-gpio: fixes and improvements
+Date: Mon, 1 Aug 2016 15:23:46 +0300
+Message-ID: <7ca666e4-545e-6057-bed3-db45997b255d@ti.com>
+References: <CGME20160608134820epcas1p4ee75a89888f2ae2adb733124a330bd2c@epcas1p4.samsung.com>
+ <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
+ <57592A40.9080608@samsung.com> <57592B4A.4000407@samsung.com>
+ <575937BA.1070609@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8b4d1f09-b1ce-5708-f815-29dbd438c2db@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andre Przywara <andre.przywara@arm.com>, Jean-Francois Moine <moinejf@free.fr>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <575937BA.1070609-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kishon-l0cyMroinI0@public.gmane.org, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmUsCgowMS4wOC4yMDE2LCAxODo0OCwgIkFuZHJlIFByenl3YXJhIiA8YW5kcmUucHJ6
-eXdhcmFAYXJtLmNvbT46Cj4gSGkgSmVhbi1GcmFuY29pcywKPgo+IE9uIDAxLzA4LzE2IDA5OjMw
-LCBKZWFuLUZyYW5jb2lzIE1vaW5lIHdyb3RlOgo+PiDCoE9uIE1vbiwgMSBBdWcgMjAxNiAwMjo0
-MzowNiArMDEwMAo+PiDCoEFuZHLDqSBQcnp5d2FyYSA8YW5kcmUucHJ6eXdhcmFAYXJtLmNvbT4g
-d3JvdGU6Cj4+Cj4+PiDCoEFzIHRoaXMgYmVjYW1lIHF1aXRlIGEgbG9uZyByZWFkLCBoZXJlIGEg
-VEw7RFI6Cj4+PiDCoC0gV2UgY29uc2lkZXIgdXNpbmcgYW4gU0NQSSBiYXNlZCBjbG9jayBzeXN0
-ZW0gZm9yIHRoZSBBNjQsIGFsb25nc2lkZQo+Pj4gwqBhbGx3aW5uZXIsc2ltcGxlLWdhdGVzIGFu
-ZCBmaXhlZCBjbG9ja3MuIFdlIHRyeSB0byBhdm9pZCBhbnkgQWxsd2lubmVyCj4+PiDCoHNwZWNp
-ZmljIGNsb2NrcyAoYXBhcnQgZnJvbSB0aGUgc2ltcGxlLWdhdGVzKS4KPj4+IMKgLSBBUk0gVHJ1
-c3RlZCBGaXJtd2FyZSBwcm92aWRlcyB0aGUgU0NQSSBpbXBsZW1lbnRhdGlvbiAtIGZvciBub3cs
-IGxhdGVyCj4+PiDCoHdlIG1heSBtb3ZlIHRoaXMgaW50byBhIHBvc3NpYmxlIGFyaXNjIGZpcm13
-YXJlLgo+Pj4gwqAtIFdlIHVwc3RyZWFtIHNvbWUgYmFzaWMgRFQgZmlyc3QsIHBvc3NpYmx5IG9t
-aXR0aW5nIGFueSBjb250cm92ZXJzaWFsCj4+PiDCoGNsb2NrIHBhcnRzIGF0IGFsbC4KPj4+Cj4+
-PiDCoExldCBtZSBrbm93IHdoYXQgeW91IHRoaW5rIQo+Pgo+PiDCoEhpIEFuZHLDqSwKPj4KPj4g
-wqBUaGlzIGxvb2tzIGludGVyZXN0aW5nLgo+PiDCoEFzIEkgdW5kZXJzdGFuZCwgdGhlIGNsb2Nr
-IGVuYWJsZS9yYXRlIHNldHRpbmcgZnVuY3Rpb25zIHdvdWxkIGJlIGluCj4+IMKgdGhlIGFyaXNj
-LiBUaGUgYXJpc2MgZmlybXdhcmUgd291bGQgYmUgbG9hZGVkIG9ubHkgb25jZSBpbiB0aGUgU29j
-IGFuZAo+PiDCoHdvdWxkIGNvbnRhaW4gdGhlIGNvZGUgZm9yIGhhbmRsaW5nIHRoaXMgc3BlY2lm
-aWMgU29DLgo+PiDCoEZyb20gbXkgY2FsY3VsYXRpb25zLCB0aGlzIHdvdWxkIHNhdmUgYWJvdXQg
-MU1iIG9mIGNsb2NrIGRlc2NyaXB0aW9ucwo+PiDCoGluIHRoZSBrZXJuZWwgZm9yIGEgdW5pdmVy
-c2FsIEFsbHdpbm5lciBrZXJuZWwuCj4KPiBUaGlzIGlzIHRoZSByb3VnaCBpZGVhLCB5ZXMuIElu
-IHRoZSBtb21lbnQgdGhlIGNsb2NrIGNvZGUgc2l0cyBpbiB0aGUKPiBBUk0gVHJ1c3RlZCBGaXJt
-d2FyZSBwYXJ0LCBidXQgaW4gZmFjdCB0aGlzIGlzIGFuIGltcGxlbWVudGF0aW9uIGRldGFpbC4K
-PiBUaGVvcmV0aWNhbGx5IHdlIGNvdWxkIGFsc28gbW92ZSB0aGF0IGNsb2NrIGNvZGUgdG8gVS1C
-b290IG9uIDMyLWJpdAo+IFNvQ3MgdG8gc2l0IG5leHQgdG8gdGhlIFBTQ0kgaW1wbGVtZW50YXRp
-b24sIHdoaWNoIHVzZXMgdGhlIHNhbWUgc21jCj4gY2FsbCBtZWNoYW5pc20gYXMgSSBkbyBpbiB0
-aGlzIGZpcnN0IGltcGxlbWVudGF0aW9uLgo+IEJ1dCB1bmZvcnR1bmF0ZWx5IHdlIGNhbm5vdCBy
-ZW1vdmUgdGhlIGV4aXN0aW5nIGNvZGUgZnJvbSB0aGUga2VybmVsLAo+IHNpbmNlIHRoYXQgd291
-bGQgYnJlYWsgYWxsIGV4aXN0aW5nIHVzZXJzICh1bmxlc3MgdGhleSB1cGdyYWRlIHRoZWlyCj4g
-ZmlybXdhcmUpLiBTbyBJIGFtIG5vdCBzdXJlIGlmIHN1cHBvcnRpbmcgb2xkZXIgU29DcyB3aXRo
-IHRoaXMgbWVjaGFuaXNtCj4gaXMgd29ydGh3aGlsZS4KPgo+IEJ1dDogeWVzLCBJIHdhbnQgdG8g
-YXZvaWQgYWRkaW5nIHRlZGlvdXMgY2xvY2sgZGVzY3JpcHRpb25zIGZvciBlYWNoIGFuZAo+IGV2
-ZXJ5IG5ldyBTb0MgdG8gdGhlIGtlcm5lbC4gV2hhdCByZWFsbHkgd29ycmllcyBtZSBpcyB0aGF0
-IHN1bnhpLW5nCj4gbWFrZXMgdGhpcyBzaXR1YXRpb24gcHJvYmFibHkgd29yc2UsIGFzIHdlIG5v
-dyBoYXZlIHRvIGFkZCBTb0Mgc3BlY2lmaWMKPiAiY29kZSIgKGluIGZhY3Q6IGNsb2NrIGRlc2Ny
-aXB0aW9ucykgZm9yIGV2ZXJ5IFNvQywgZXZlbiBpZiB0aGF0IGNoaXAKPiBkb2Vzbid0IGludHJv
-ZHVjZSBhbnkgbmV3IGNsb2NrIHR5cGUuCj4KPj4gwqBCdXQgSSBkb24ndCBzZWUgd2h5IHlvdSBh
-cmUga2VlcGluZyB0aGUgc2ltcGxlLWdhdGVzLiBUaGUgYnVzIGdhdGUgbWF5Cj4+IMKgYmUgdW5n
-YXRlZC9nYXRlZCB3aGVuIHRoZSBjbG9jayBpcyBlbmFibGVkL2Rpc2FibGVkLCBhbmQgdGhhdCdz
-IHdoYXQKPj4gwqBBbGx3aW5uZXIncyBzb2Z0d2FyZSBkb2VzLgo+Cj4gV2UgY291bGQgZG8uIEJ1
-dCBTQ1BJIGRvZXMgbm90IGhhdmUgYW4gZXhwbGljaXQgZW5hYmxlL2Rpc2FibGUKPiBpbnRlcmZh
-Y2UsIGl0IG9ubHkgZGVzY3JpYmVzIHRoYXQgc2V0dGluZyB0aGUgZnJlcXVlbmN5IHRvIDAgZGlz
-YWJsZXMKPiB0aGUgY2xvY2suIEZvciBlbmFibGluZyBpdCBvbmUgd291bGQgaGF2ZSB0byBzZXQg
-c29tZSBmcmVxdWVuY3kgKCE9IDApLAo+IHdoaWNoIHRoZSBmaXJtd2FyZSBjb3VsZCB0aGVuIHRy
-YW5zbGF0ZSBpbnRvIGEgInNldCB0aGF0IGJpdCBpbiB0aGUgZ2F0ZQo+IHJlZ2lzdGVyIiBmb3Ig
-YW55IGdhdGUtb25seSBjbG9jaywgd2hpY2ggc291bmRzIHJhdGhlciBoYWNraXNoIHRvIG1lLgo+
-IEFsc28gaXQgd291bGQgcmVxdWlyZSB0byBhbHRlciB0aGUgU0NQSSBjbG9jayBkcml2ZXIgdG8g
-aW1wbGVtZW50IHRoZQo+IGVuYWJsZS9kaXNhYmxlIG9wcywgc2luY2UgSSB0aGluayB3ZSBuZXZl
-ciBjYWxsIHNldF9yYXRlIGZvciB0aG9zZSBjbG9ja3MuCj4KPiBTbyBoYXZpbmcgdGhlIHF1aXRl
-IHN0cmFpZ2h0IGZvcndhcmQgInNpbXBsZS1nYXRlcyIgZHJpdmVyIGFyb3VuZCBzZWVtcwo+IG1v
-cmUgc2FuZS4gSW4gdGhlIGVuZCB0aGlzIGRyaXZlciBqdXN0IHRyYW5zbGF0ZXMgImNsb2NrIG51
-bWJlciB4IiBpbnRvCj4gImJpdCBudW1iZXIgeCIgaW4gdGhhdCByZWdpc3Rlciwgd2hpY2ggaXMg
-dmVyeSBnZW5lcmljLiBUaGF0J3Mgd2h5IEkKPiB1cmdlZCB0byBpbnRyb2R1Y2UgYSBmYWxsYmFj
-ayBjb21wYXRpYmxlIG5hbWUgdG8gZXhwcmVzcyB0aGlzIHZlcnkgZmVhdHVyZS4KPgo+IENoZWVy
-cywKPiBBbmRyZS4KPgpJdCBtYXkgYmUgdW5wb2xpdGUgdG8gc2F5IHRoYXQsIGJ1dCBJIGp1c3Qg
-d2FudCBhIHdvcmtpbmcgQTY0IG1haW5saW5lIGtlcm5lbCBhdCBmaXJzdC4KSSdtIHRyeWluZyB0
-byBzdWJtaXQgdGhlIGRyaXZlcnMgb2YgdGhlIGNoYW5nZWQgSVAgYmxvY2tzIG5vdywgYnV0IGl0
-J3MgYSBwaXR5IHRoYXQgSQpjYW5ub3Qgc3VibWl0IHRoZSBEVCBwYXRjaGVzIG5vdy4KY2xvY2st
-bmcgaXMgYXQgbGVhc3Qgbm93IGEgdXNhYmxlIHNvbHV0aW9uLgpPciBjYW4geW91IHdvcmsgb3V0
-IHN1Y2ggYSBmaXJtd2FyZS1iYXNlZCBjbG9jayBkcml2ZXIgYXMgc29vbiBhcyBwb3NzaWJsZT8K
-CkknbSBleHBlY3RpbmcgeW91ciBTQ1BJLWJhc2VkIGRyaXZlciEKKEFSTSBpcyBub3cgc3VjaCBh
-IG1lc3MgdGhhdCBpdCByZWFsbHkgbmVlZHMgYSBzdGFuZGFyZC4pCj4gX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+Hi,
+
+On 09/06/16 12:32, Chanwoo Choi wrote:
+> Hi,
+> 
+> On 2016년 06월 09일 17:39, Krzysztof Kozlowski wrote:
+>>
+>> Hi,
+>>
+>>
+>> On 06/09/2016 10:35 AM, Chanwoo Choi wrote:
+>>> Hi,
+>>>
+>>> It is good to support USB_ID and USB_VBUS by extcon.
+>>>
+>>> But,
+>>> there is some issue about adding the new cable type for
+>>> both EXTCON_USB_ID and EXTCON_USB_VBUS
+>>>
+>>> I think that the ID and VBUS state are not cable type
+>>> Instead, ID and VBUS state are the property of USB cable.
+>>>
+>>> So, I'd like to add the following function to support
+>>> the property of each cable as following:
+>>> The client driver can get the state of property by using
+>>> the extcon_get_cable_property_state().
+>>>
+>>> - int extcon_get_cable_property_state(struct extcon_dev *edev,
+>>> 				unsigned int id,
+>>> 				enum extcon_property property);
+>>> - int extcon_set_cable_property_state(struct extcon_dev *edev,
+>>> 				unsigned int id,
+>>> 				enum extcon_property property,
+>>> 				unsigned int state);
+>>>
+>>> For example,
+>>> In extcon-usb-gpio.c, set state of property as follwoing:
+>>> 	extcon_set_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_ID, 1);
+>>> 	extcon_set_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_VBUS, 1);
+>>>
+>>>
+>>> In the extcon client driver, get state of property as following:
+>>> 	id_state = extcon_get_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_ID);
+>>> 	vbus_state = extcon_get_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_VUBS);
+>>
+>> How one can receive notifications with this API?
+> 
+> I think that the extcon don't support the notification only for property.
+> When USB or USB_HOST cable state is changed, the client driver
+> call the extcon_get_cable_property_state() to read the state of property.
+> 
+> Namely, the property depend on the specific external connector.
+> 
+>>
+>> Last time you wrote, at the end of discussion:
+>> http://thread.gmane.org/gmane.linux.kernel/1923192/focus=1923193
+>>> IMO, if some usb driver check both id and vbus pin at the same time,
+>>> the usb driver can know the both id and vbus pin state through only
+>> one notifier event.
+>>>
+>>> Also,
+>>> If some usb driver want to know the state of id pin except of vbus state,
+>>> when receiving following events, id pin is low.
+>>> 	#define EXTCON_USB_ID_L_VBUS_L0
+>>> 	#define EXTCON_USB_ID_L_VBUS_H1
+>>> when receiving following events, id pin is high.
+>>> 	#define EXTCON_USB_ID_H_VBUS_L2
+>>> 	#define EXTCON_USB_ID_H_VBUS_H3
+>>> Also, some usb driver would catch the vbus pin state with same method.
+>>>
+>>> But, it is just my opinion. We may use following notifier events for
+>> each pin.
+>>> We need to discuss it.
+>>> 	#define EXTCON_USB_ID_LOW
+>>> 	#define EXTCON_USB_ID_HIGH	
+>>> 	#define EXTCON_USB_VBUS_LOW
+>>> 	#define EXTCON_USB_VBUS_HIGH
+>>
+>> ... all other participants agreed on that conclusion. So why change of
+>> view point now?
+> 
+> Unitl now, the extcon framework only handle the state of external connector(cable).
+> - The state of external connector is either attached or detached.
+> 
+> I think that ID and VBUS are not external connector(cable).
+> The ID and VBUS are more appropriate as property than new type of external connector.
+> 
+
+Was there any conclusion on how we can support raw ID and VBUS events with extcon?
+
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
