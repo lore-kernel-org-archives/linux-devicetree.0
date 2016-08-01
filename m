@@ -1,120 +1,68 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [RFC v4 0/7] extcon: usb-gpio: fixes and improvements
-Date: Mon, 1 Aug 2016 21:57:37 +0900
-Message-ID: <CAGTfZH2QUgd___CdSG4+gxL4sbURZBBEH7TjQ=GsQX4X3gx9Nw@mail.gmail.com>
-References: <CGME20160608134820epcas1p4ee75a89888f2ae2adb733124a330bd2c@epcas1p4.samsung.com>
- <1465393686-16644-1-git-send-email-k.kozlowski@samsung.com>
- <57592A40.9080608@samsung.com> <57592B4A.4000407@samsung.com>
- <575937BA.1070609@samsung.com> <7ca666e4-545e-6057-bed3-db45997b255d@ti.com>
-Reply-To: chanwoo@kernel.org
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH] ARM: dts: dra7xx: Increase spi-max-frequency to 76.8MHz for
+ QSPI
+Date: Mon, 1 Aug 2016 18:36:55 +0530
+Message-ID: <20160801130655.15004-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <7ca666e4-545e-6057-bed3-db45997b255d@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Peter Chen <peter.chen@freescale.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Felipe Balbi <balbi@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh R <vigneshr@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+According to AM572x DM SPRS953A, QSPI maximum bus speed can be 76.8MHz.
+Therefore, increase the spi-max-frequency value of QSPI node to 76.8MHz
+for DRA74 and DRA72 evm. This improves flash raw read speed by ~2MB/s.
 
-2016-08-01 21:23 GMT+09:00 Roger Quadros <rogerq@ti.com>:
-> Hi,
->
-> On 09/06/16 12:32, Chanwoo Choi wrote:
->> Hi,
->>
->> On 2016년 06월 09일 17:39, Krzysztof Kozlowski wrote:
->>>
->>> Hi,
->>>
->>>
->>> On 06/09/2016 10:35 AM, Chanwoo Choi wrote:
->>>> Hi,
->>>>
->>>> It is good to support USB_ID and USB_VBUS by extcon.
->>>>
->>>> But,
->>>> there is some issue about adding the new cable type for
->>>> both EXTCON_USB_ID and EXTCON_USB_VBUS
->>>>
->>>> I think that the ID and VBUS state are not cable type
->>>> Instead, ID and VBUS state are the property of USB cable.
->>>>
->>>> So, I'd like to add the following function to support
->>>> the property of each cable as following:
->>>> The client driver can get the state of property by using
->>>> the extcon_get_cable_property_state().
->>>>
->>>> - int extcon_get_cable_property_state(struct extcon_dev *edev,
->>>>                             unsigned int id,
->>>>                             enum extcon_property property);
->>>> - int extcon_set_cable_property_state(struct extcon_dev *edev,
->>>>                             unsigned int id,
->>>>                             enum extcon_property property,
->>>>                             unsigned int state);
->>>>
->>>> For example,
->>>> In extcon-usb-gpio.c, set state of property as follwoing:
->>>>     extcon_set_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_ID, 1);
->>>>     extcon_set_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_VBUS, 1);
->>>>
->>>>
->>>> In the extcon client driver, get state of property as following:
->>>>     id_state = extcon_get_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_ID);
->>>>     vbus_state = extcon_get_cable_property_state(edev, EXTCON_USB, EXTCON_USB_PROP_VUBS);
->>>
->>> How one can receive notifications with this API?
->>
->> I think that the extcon don't support the notification only for property.
->> When USB or USB_HOST cable state is changed, the client driver
->> call the extcon_get_cable_property_state() to read the state of property.
->>
->> Namely, the property depend on the specific external connector.
->>
->>>
->>> Last time you wrote, at the end of discussion:
->>> http://thread.gmane.org/gmane.linux.kernel/1923192/focus=1923193
->>>> IMO, if some usb driver check both id and vbus pin at the same time,
->>>> the usb driver can know the both id and vbus pin state through only
->>> one notifier event.
->>>>
->>>> Also,
->>>> If some usb driver want to know the state of id pin except of vbus state,
->>>> when receiving following events, id pin is low.
->>>>     #define EXTCON_USB_ID_L_VBUS_L0
->>>>     #define EXTCON_USB_ID_L_VBUS_H1
->>>> when receiving following events, id pin is high.
->>>>     #define EXTCON_USB_ID_H_VBUS_L2
->>>>     #define EXTCON_USB_ID_H_VBUS_H3
->>>> Also, some usb driver would catch the vbus pin state with same method.
->>>>
->>>> But, it is just my opinion. We may use following notifier events for
->>> each pin.
->>>> We need to discuss it.
->>>>     #define EXTCON_USB_ID_LOW
->>>>     #define EXTCON_USB_ID_HIGH
->>>>     #define EXTCON_USB_VBUS_LOW
->>>>     #define EXTCON_USB_VBUS_HIGH
->>>
->>> ... all other participants agreed on that conclusion. So why change of
->>> view point now?
->>
->> Unitl now, the extcon framework only handle the state of external connector(cable).
->> - The state of external connector is either attached or detached.
->>
->> I think that ID and VBUS are not external connector(cable).
->> The ID and VBUS are more appropriate as property than new type of external connector.
->>
->
-> Was there any conclusion on how we can support raw ID and VBUS events with extcon?
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
+ arch/arm/boot/dts/dra7-evm.dts          | 4 ++--
+ arch/arm/boot/dts/dra72-evm-common.dtsi | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-The extcon will support the USB_ID and USB_VBUS as extcon property.
-I'm sending the patches[1] for extcon property.
-
-[1] https://lkml.org/lkml/2016/8/1/25
-: [PATCH v2 0/6] extcon: Add the support for extcon type and property
-
-Thanks,
-Chanwoo Choi
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index bafcfac067ec..f9d1170033fd 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -664,10 +664,10 @@
+ &qspi {
+ 	status = "okay";
+ 
+-	spi-max-frequency = <64000000>;
++	spi-max-frequency = <76800000>;
+ 	m25p80@0 {
+ 		compatible = "s25fl256s1";
+-		spi-max-frequency = <64000000>;
++		spi-max-frequency = <76800000>;
+ 		reg = <0>;
+ 		spi-tx-bus-width = <1>;
+ 		spi-rx-bus-width = <4>;
+diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
+index 9d3cf50ca37e..c94d8d64710d 100644
+--- a/arch/arm/boot/dts/dra72-evm-common.dtsi
++++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
+@@ -681,10 +681,10 @@
+ &qspi {
+ 	status = "okay";
+ 
+-	spi-max-frequency = <64000000>;
++	spi-max-frequency = <76800000>;
+ 	m25p80@0 {
+ 		compatible = "s25fl256s1";
+-		spi-max-frequency = <64000000>;
++		spi-max-frequency = <76800000>;
+ 		reg = <0>;
+ 		spi-tx-bus-width = <1>;
+ 		spi-rx-bus-width = <4>;
+-- 
+2.9.2
