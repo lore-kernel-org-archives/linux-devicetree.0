@@ -1,42 +1,44 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [RESEND PATCH v2 0/8] fix and optimize some clock configuration for the RK3399 platfom
-Date: Mon,  1 Aug 2016 17:53:35 +0800
-Message-ID: <1470045224-31854-1-git-send-email-zhengxing@rock-chips.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, dianders@chromium.org, briannorris@chromium.org, huangtao@rock-chips.com, zhangqing@rock-chips.com, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, frank.wang@rock-chips.com, shawn.lin@rock-chips.com, Michael Turquette <mturquette@baylibre.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, wulf@rock-chips.com, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RESEND PATCH v2 1/8] clk: rockchip: rk3399: export USBPHYx_480M_SRC clock IDs
+Date: Mon,  1 Aug 2016 17:53:36 +0800
+Message-ID: <1470045224-31854-2-git-send-email-zhengxing@rock-chips.com>
+References: <1470045224-31854-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470045224-31854-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+We export some clock IDs for the usb phy 480m source clocks.
 
-Hi:
-  In the development work, we found that some of the previous
-incorrect clock configuration on the RK3399 platform, we should
-fix and optimize them.
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Changes in v2:
-- add the patch "fix incorrect parent for rk3399's {c,g}pll_aclk_perihp_src"
-- add the patch "fix incorrect GATE bits for {c, g}pll_aclk_perihp_src"
+---
 
-Elaine Zhang (1):
-  clk: rockchip: rk3399: delete the CLK_IGNORE_UNUSED for aclk_pcie
+Changes in v2: None
 
-Xing Zheng (7):
-  clk: rockchip: rk3399: export USBPHYx_480M_SRC clock IDs
-  clk: rockchip: rk3399: export 480M_SRC clock id for usbphy0/usbphy1
-  clk: rockchip: rk3399: fix incorrect parent for rk3399's {c,
-    g}pll_aclk_perihp_src
-  clk: rockchip: rk3399: fix incorrect GATE bits for {c,
-    g}pll_aclk_perihp_src
-  clk: rockchip: rk3399: fix incorrect aclk_emmc source gate bits
-  clk: rockchip: rk3399: add 65MHz and 106.5MHz clocks for HDMI
-  clk: rockchip: rk3399: Add support frac mode frequencies
-
- drivers/clk/rockchip/clk-rk3399.c      |   41 ++++++++++++++++++++++++--------
  include/dt-bindings/clock/rk3399-cru.h |    2 ++
- 2 files changed, 33 insertions(+), 10 deletions(-)
+ 1 file changed, 2 insertions(+)
 
+diff --git a/include/dt-bindings/clock/rk3399-cru.h b/include/dt-bindings/clock/rk3399-cru.h
+index 50a44cf..c4d8311 100644
+--- a/include/dt-bindings/clock/rk3399-cru.h
++++ b/include/dt-bindings/clock/rk3399-cru.h
+@@ -131,6 +131,8 @@
+ #define SCLK_DPHY_RX0_CFG		165
+ #define SCLK_RMII_SRC			166
+ #define SCLK_PCIEPHY_REF100M		167
++#define SCLK_USBPHY0_480M_SRC		168
++#define SCLK_USBPHY1_480M_SRC		169
+ 
+ #define DCLK_VOP0			180
+ #define DCLK_VOP1			181
 -- 
 1.7.9.5
 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
