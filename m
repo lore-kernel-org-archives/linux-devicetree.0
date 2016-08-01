@@ -1,76 +1,61 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH V6 3/9] irqdomain: Don't set type when mapping an IRQ
-Date: Mon, 1 Aug 2016 08:46:53 +0100
-Message-ID: <579EFE6D.3050807@arm.com>
-References: <1465312354-27778-1-git-send-email-jonathanh@nvidia.com>
- <1465312354-27778-4-git-send-email-jonathanh@nvidia.com>
- <CAK7LNASBpym341Yz57LPa5z81aLX0xmhEVvoY+q5zfiQkFSxwg@mail.gmail.com>
- <579B0F6C.9070806@arm.com>
- <CAK7LNARR3WmaPbri3xWmFLJw3gpwgdEPKZw9GvXyVzoiub8Wew@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNARR3WmaPbri3xWmFLJw3gpwgdEPKZw9GvXyVzoiub8Wew@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [Urgent PATCH] arm64: dts: uniphier: fix IRQ trigger type of ARMv8 timer
+Date: Mon,  1 Aug 2016 17:12:20 +0900
+Message-ID: <1470039140-3801-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/16 02:28, Masahiro Yamada wrote:
-> 2016-07-29 17:10 GMT+09:00 Marc Zyngier <marc.zyngier@arm.com>:
->> On 29/07/16 04:53, Masahiro Yamada wrote:
->>> Hi.
->>>
->>>
->>> I noticed my board would not work any more
->>> when pulling recent updates.
->>>
->>>
->>> I did "git-bisect" and I found the following commit is it.
->>
->> It would help if you did post the log showing the failure.
->>
->> What if you apply the following patch:
->>
->> https://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/diff/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi?h=timers/level-trigger&id=95e1fd920fcadce81626cfa9bd6af1a361f17e58
->>
-> 
-> Hi Mark,
-> 
-> Yes, it worked.
-> 
-> But I did not understand why you changed the 3rd cell to 0xf08.
-> 
-> 
-> The binding of arm,gic-v3.txt says as follows:
-> 
-> 
->   The 3rd cell is the flags, encoded as follows:
->         bits[3:0] trigger type and level flags.
->                 1 = edge triggered
->                 4 = level triggered
-> 
-> 
-> Only 1 and 4 are defined for the bits[3:0].
+Since commit 1e2a7d78499e ("irqdomain: Don't set type when mapping
+an IRQ"), the interrupt type is strictly checked.  Without this
+patch, this board would not boot any more.
 
-Ah, I didn't realize you were using GICv3.
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+says that the 3rd cell should be either 1 (edge) or 4 (level)
+depending on the trigger type.  As the CA72 Generic Timer provides
+active-low interrupts, the value of the 3rd cell should be 4.
 
-If you look at the documentation for the A72 timers:
-http://infocenter.arm.com/help/topic/com.arm.doc.100095_0003_05_en/way1382454511590.html
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Suggested-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+---
+Arnd, Olof,
 
-You'll notice that all timers have an active-low output. Switching to
-"level triggered" fixes the issue in general.
+I guess you are about to send pull-reqs for v4.8 cycle.
+Could you include this one in them?
+After IRQ updates for 4.8 were merged, my board would not
+boot at all.  I consulted experts and looks like my DT
+was wrong.
 
-> 0xf04 worked, too.
-> 
-> Which is correct?
+I could do this after -rc1 is out because it is apparently a
+bug fix, but in that case the for-next branch in ASOC will be
+broken for me, which would make bisect-ability difficult for me.
 
-None of them. 0x04 is the correct answer (as we don't encode the
-affinity in the 3rd cell.
 
-Thanks,
+ arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-	M.
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+index fd1af50..bafbcce 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+@@ -117,10 +117,7 @@
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+-		interrupts = <1 13 0xf01>,
+-			     <1 14 0xf01>,
+-			     <1 11 0xf01>,
+-			     <1 10 0xf01>;
++		interrupts = <1 13 4>, <1 14 4>, <1 11 4>, <1 10 4>;
+ 	};
+ 
+ 	soc {
 -- 
-Jazz is not dead. It just smells funny...
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
