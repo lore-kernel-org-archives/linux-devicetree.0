@@ -1,81 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] input: touchscreen: Add generic touchscreen
- softbutton handling code
-Date: Mon, 1 Aug 2016 11:54:30 -0500
-Message-ID: <20160801165430.GA30345@rob-hp-laptop>
-References: <1469978590-14081-1-git-send-email-hdegoede@redhat.com>
- <1469978590-14081-2-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH V3 3/5] Documentation/devicetree/bindings: b850v3_lvds_dp
+Date: Mon, 1 Aug 2016 11:59:23 -0500
+Message-ID: <20160801165923.GA5529@rob-hp-laptop>
+References: <cover.1469993472.git.peter.senna@collabora.com>
+ <cd3180af2c0f35b4a36624124f4d564cd1f35dec.1469993472.git.peter.senna@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1469978590-14081-2-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <cd3180af2c0f35b4a36624124f4d564cd1f35dec.1469993472.git.peter.senna@collabora.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Senna Tschudin <peter.senna@collabora.com>
+Cc: mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux@armlinux.org.uk, geert@linux-m68k.org, Javier Martinez Canillas <javier@dowhile0.org>, treding@nvidia.com, linux@roeck-us.net, devicetree@vger.kernel.org, kernel@pengutronix.de, andrey.gusakov@cogentembedded.com, fabio.estevam@nxp.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, enric.balletbo@collabora.com, akpm@linux-foundation.org, shawnguo@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 31, 2016 at 05:23:07PM +0200, Hans de Goede wrote:
-> Some touchscreens extend over the display they cover and have a number
-> of capacative softbuttons outside of the display the cover.
-> 
-> With some hardware these softbuttons simply report touches with
-> coordinates outside of the normal coordinate space for touches on the
-> display.
-> 
-> This commit adds a devicetree binding for describing such buttons in
-> devicetree and a bunch of helper functions to easily add support for
-> these to existing touchscreen drivers.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  .../bindings/input/touchscreen/softbuttons.txt     |  58 +++++++++
->  drivers/input/touchscreen/Makefile                 |   2 +-
->  drivers/input/touchscreen/softbuttons.c            | 145 +++++++++++++++++++++
->  include/linux/input/touchscreen.h                  |   9 ++
->  4 files changed, 213 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt
->  create mode 100644 drivers/input/touchscreen/softbuttons.c
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt b/Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt
-> new file mode 100644
-> index 0000000..3eb6f4c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt
-> @@ -0,0 +1,58 @@
-> +General Touchscreen Softbutton Properties:
-> +
-> +Some touchscreens extend over the display they cover and have a number
-> +of capacative softbuttons outside of the display the cover.
-> +
-> +Some of these softbuttons simply report touches with coordinates outside of
-> +the normal coordinate space for touches on the display. This binding is for
-> +describing such buttons in devicetree.
-> +
-> +Each softkey is represented as a sub-node of the touchscreen node.
-> +
-> +Required subnode-properties:
-> + - label			: Descriptive name of the key.
-> + - linux,code			: Keycode to emit.
-> + - softbutton-min-x		: X start of the area the softbutton area covers
-> + - softbutton-max-x		: X end of the area the softbutton area covers
-> + - softbutton-min-y		: Y start of the area the softbutton area covers
-> + - softbutton-max-y		: Y end of the area the softbutton area covers
-
-This generally looks fine to me, but I am wondering one thing. If the 
-buttons are located at the origin of an axis, can we handle that case? I 
-don't think you can unless you assume softbutton-max-? is 0 for the 
-touchscreen. To put it another way, you have a gap from 1024 to 1084 
-which you can't express for buttons at the origin unless you do negative 
-numbers.
-
-Rob
+T24gU3VuLCBKdWwgMzEsIDIwMTYgYXQgMDk6NTU6MzZQTSArMDIwMCwgUGV0ZXIgU2VubmEgVHNj
+aHVkaW4gd3JvdGU6Cj4gRGV2aWNldHJlZSBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIGZvciB0aGUg
+R0UgQjg1MHYzIExWRFMvRFArKwo+IGRpc3BsYXkgYnJpZGdlLgo+IAo+IENjOiBKYXZpZXIgTWFy
+dGluZXogQ2FuaWxsYXMgPGphdmllckBkb3doaWxlMC5vcmc+Cj4gQ2M6IEVucmljIEJhbGxldGJv
+IGkgU2VycmEgPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+Cj4gQ2M6IFBoaWxpcHAgWmFi
+ZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+Cj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
+bC5vcmc+Cj4gQ2M6IEZhYmlvIEVzdGV2YW0gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT4KPiBTaWdu
+ZWQtb2ZmLWJ5OiBQZXRlciBTZW5uYSBUc2NodWRpbiA8cGV0ZXIuc2VubmFAY29sbGFib3JhLmNv
+bT4KPiAtLS0KPiBVbmNoYW5nZWQgZnJvbSBWMi4KPiAKPiBDaGFuZ2VzIGZyb20gVjE6Cj4gIC0g
+UmVwbGFjZWQgJ18nIGJ5ICctJyBpbiBub2RlIG5hbWVzIG9yIGNvbXBhdGlibGUgc3RyaW5ncwo+
+ICAtIEFkZGVkIG1pc3NpbmcgQDczIHRvIHRoZSBleGFtcGxlCj4gCj4gIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2dlL2I4NTB2My1sdmRzLWRwLnR4dCAgICAgIHwgMzcgKysrKysrKysrKysrKysr
+KysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dlL2I4NTB2My1sdmRz
+LWRwLnR4dAoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
