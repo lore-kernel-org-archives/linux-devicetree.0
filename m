@@ -1,48 +1,42 @@
-From: Chenhui Zhao <chenhui.zhao@nxp.com>
-Subject: [PATCH 1/2] ARM: dts: ls1043a: add a rcpm node
-Date: Mon, 1 Aug 2016 17:49:02 +0800
-Message-ID: <1470044943-3814-1-git-send-email-chenhui.zhao@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: z.chenhui@gmail.com, Chenhui Zhao <chenhui.zhao@nxp.com>, jason.jin@nxp.com
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [RESEND PATCH v2 0/8] fix and optimize some clock configuration for the RK3399 platfom
+Date: Mon,  1 Aug 2016 17:53:35 +0800
+Message-ID: <1470045224-31854-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, dianders@chromium.org, briannorris@chromium.org, huangtao@rock-chips.com, zhangqing@rock-chips.com, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, frank.wang@rock-chips.com, shawn.lin@rock-chips.com, Michael Turquette <mturquette@baylibre.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, wulf@rock-chips.com, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-LS1043A have a RCPM module (Run Control and Power Management), which
-performs all device-level tasks associated with power management.
 
-Signed-off-by: Chenhui Zhao <chenhui.zhao@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Hi:
+  In the development work, we found that some of the previous
+incorrect clock configuration on the RK3399 platform, we should
+fix and optimize them.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index de0323b..43944b7 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -196,6 +196,12 @@
- 			bus-width = <4>;
- 		};
- 
-+		rcpm: rcpm@1ee2000 {
-+			compatible = "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1";
-+			reg = <0x0 0x1ee2000 0x0 0x1000>;
-+			fsl,#rcpm-wakeup-cells = <1>;
-+		};
-+
- 		dspi0: dspi@2100000 {
- 			compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
- 			#address-cells = <1>;
+Changes in v2:
+- add the patch "fix incorrect parent for rk3399's {c,g}pll_aclk_perihp_src"
+- add the patch "fix incorrect GATE bits for {c, g}pll_aclk_perihp_src"
+
+Elaine Zhang (1):
+  clk: rockchip: rk3399: delete the CLK_IGNORE_UNUSED for aclk_pcie
+
+Xing Zheng (7):
+  clk: rockchip: rk3399: export USBPHYx_480M_SRC clock IDs
+  clk: rockchip: rk3399: export 480M_SRC clock id for usbphy0/usbphy1
+  clk: rockchip: rk3399: fix incorrect parent for rk3399's {c,
+    g}pll_aclk_perihp_src
+  clk: rockchip: rk3399: fix incorrect GATE bits for {c,
+    g}pll_aclk_perihp_src
+  clk: rockchip: rk3399: fix incorrect aclk_emmc source gate bits
+  clk: rockchip: rk3399: add 65MHz and 106.5MHz clocks for HDMI
+  clk: rockchip: rk3399: Add support frac mode frequencies
+
+ drivers/clk/rockchip/clk-rk3399.c      |   41 ++++++++++++++++++++++++--------
+ include/dt-bindings/clock/rk3399-cru.h |    2 ++
+ 2 files changed, 33 insertions(+), 10 deletions(-)
+
 -- 
-1.9.1
+1.7.9.5
+
+
