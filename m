@@ -1,88 +1,110 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [RFC] i2c: device-tree: Handling child nodes which are not i2c
- devices
-Date: Mon, 1 Aug 2016 11:41:59 +0200
-Message-ID: <dd04aac8-5c8a-b10d-b726-b16e6d69c599@axentia.se>
-References: <57110A35.2070509@nvidia.com>
- <CAAObsKC-DGH4GedCcZdv2zvesaTSo6ugsHSQU=J0=P1cZeyCDA@mail.gmail.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v2 14/14] ARM64: dts: Define CPU power domain for MSM8916
+Date: Mon, 1 Aug 2016 08:53:03 -0600
+Message-ID: <20160801145303.GH1369@linaro.org>
+References: <1469829385-11511-1-git-send-email-lina.iyer@linaro.org>
+ <1469829385-11511-15-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAObsKC-DGH4GedCcZdv2zvesaTSo6ugsHSQU=J0=P1cZeyCDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1469829385-11511-15-git-send-email-lina.iyer@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-08-01 11:19, Tomeu Vizoso wrote:
-> On 15 April 2016 at 17:35, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi all,
->>
->> For Tegra we have an i2c device for display port, namely the display
->> port auxiliary channel (or dpaux) as specified by the display port
->> standard. If an design using Tegra does not utilise the display port
->> interface, then the pads assigned to the dpaux can be re-assigned to
->> another generic i2c controller (i2c6 for Tegra124/210). In other words,
->> the pads can be re-used for a generic i2c interface.
->>
->> The registers that control whether the pads are mapped to the dpaux or
->> i2c6 are located in the dpaux register space. Therefore, I am looking at
->> adding pin controller support for dpaux so that i2c6 can request these
->> pads if it is enabled and I was hoping to add a pinmux node the to dpaux
->> device in device-tree to do this. For example, something like ...
->>
->>         dpaux@0,545c0000 {
->>                 ...
->>
->>                 /* pinctrl node */
->>                 pinmux {
->>                         ...
->>                 };
->>         };
->>
->> Although the above works, when doing this I noticed that when the device
->> booted, I would seeing the following error messages on boot ...
->>
->>  i2c i2c-5: of_i2c: modalias failure on ...
->>
->> These error messages being caused by the new pinmux node because it is
->> not recognised as an i2c device. To avoid this error messages we have
->> come up with a couple solutions but wanted to get some feedback on the
->> best approach.
-> 
-> Hi,
-> 
-> I'm finding this issue as well on Rockchip SoCs, this is the specific
-> node that is raising this warning when an adapter is registered with
-> it:
-> 
-> edp: dp@ff970000 {
->     compatible = "rockchip,rk3288-dp";
->     ...
->     ports {
->         ...
->     };
-> };
-> 
-> Has there been any agreement since this thread waned?
-> 
-> Thanks,
-> 
-> Tomeu
+On Fri, Jul 29 2016 at 15:57 -0600, Lina Iyer wrote:
+>Define power domain and the power states for the domain as defined by
+>the PSCI firmware. The 8916 firmware supports OS initiated method of
+>powering off the CPU clusters.
+>
+>Cc: <devicetree@vger.kernel.org>
+>Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+>---
+> arch/arm64/boot/dts/qcom/msm8916.dtsi | 27 +++++++++++++++++++++++++++
+> 1 file changed, 27 insertions(+)
+>
+>diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+>index 3029773..d122fa1 100644
+>--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+>+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+>@@ -64,6 +64,7 @@
+> 			next-level-cache = <&L2_0>;
+> 			enable-method = "psci";
+> 			cpu-idle-states = <&CPU_SPC>;
+>+			power-domains = <&CPU_PD>;
+> 		};
+>
+> 		CPU1: cpu@1 {
+>@@ -73,6 +74,7 @@
+> 			next-level-cache = <&L2_0>;
+> 			enable-method = "psci";
+> 			cpu-idle-states = <&CPU_SPC>;
+>+			power-domains = <&CPU_PD>;
+> 		};
+>
+> 		CPU2: cpu@2 {
+>@@ -82,6 +84,7 @@
+> 			next-level-cache = <&L2_0>;
+> 			enable-method = "psci";
+> 			cpu-idle-states = <&CPU_SPC>;
+>+			power-domains = <&CPU_PD>;
+> 		};
+>
+> 		CPU3: cpu@3 {
+>@@ -91,6 +94,7 @@
+> 			next-level-cache = <&L2_0>;
+> 			enable-method = "psci";
+> 			cpu-idle-states = <&CPU_SPC>;
+>+			power-domains = <&CPU_PD>;
+> 		};
+>
+> 		L2_0: l2-cache {
+>@@ -110,6 +114,29 @@
+> 		};
+> 	};
+>
+>+	CPU_PD: cpu-pd@0 {
+>+		#power-domain-cells = <0>;
+>+		domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWR_DWN>;
+>+	};
+>+
+>+	cpu-domain-states {
+I think, these state nodes should be a child of the psci node.
 
-This is currently soaking in linux-next:
+Mark, do you think, that makes sense?
 
-dt-bindings: i2c: Add support for 'i2c-bus' subnode
-https://git.kernel.org/cgit/linux/kernel/git/wsa/linux.git/commit/?h=i2c/for-next&id=98b00488459e
-
-i2c: core: Add support for 'i2c-bus' subnode
-https://git.kernel.org/cgit/linux/kernel/git/wsa/linux.git/commit/?h=i2c/for-next&id=7e4c224abfe8
-
-Cheers,
-Peter
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- Lina
+>+		CLUSTER_RET: domain_ret {
+>+			compatible = "arm,idle-state";
+>+			arm,psci-suspend-param = <0x1000010>;
+>+			entry-latency-us = <500>;
+>+			exit-latency-us = <500>;
+>+			residency-us = <2000>;
+>+		 };
+>+
+>+		CLUSTER_PWR_DWN: domain_gdhs {
+>+			compatible = "arm,idle-state";
+>+			arm,psci-suspend-param = <0x1000030>;
+>+			entry-latency-us = <2000>;
+>+			exit-latency-us = <2000>;
+>+			residency-us = <6000>;
+>+		};
+>+	};
+>+
+> 	psci {
+> 		compatible = "arm,psci-1.0";
+> 		method = "smc";
+>-- 
+>2.7.4
+>
