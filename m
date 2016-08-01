@@ -1,58 +1,114 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v18 2/6] ARM: socfpga: add bindings document for fpga
- bridge drivers
-Date: Mon, 1 Aug 2016 11:18:06 -0500
-Message-ID: <20160801161806.GA16067@rob-hp-laptop>
-References: <20160712193645.9098-1-atull@opensource.altera.com>
- <20160712193645.9098-3-atull@opensource.altera.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 02/14] dt/bindings: update binding for PM domain idle
+ states
+Date: Mon, 1 Aug 2016 11:30:03 -0500
+Message-ID: <20160801163003.GA17592@rob-hp-laptop>
+References: <1469829385-11511-1-git-send-email-lina.iyer@linaro.org>
+ <1469829385-11511-3-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160712193645.9098-3-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Matthew Gerlach <mgerlach-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1469829385-11511-3-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 12, 2016 at 02:36:41PM -0500, Alan Tull wrote:
-> Add bindings documentation for Altera SOCFPGA bridges:
->  * fpga2sdram
->  * fpga2hps
->  * hps2fpga
->  * lwhps2fpga
+On Fri, Jul 29, 2016 at 03:56:13PM -0600, Lina Iyer wrote:
+> From: Axel Haslam <ahaslam+renesas@baylibre.com>
 > 
-> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Signed-off-by: Matthew Gerlach <mgerlach-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Update DT bindings to describe idle states of PM domains.
+> 
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Marc Titinger <mtitinger+renesas@baylibre.com>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> [Lina: Added state properties, removed state names, wakeup-latency,
+> added of_pm_genpd_init() API, pruned commit text]
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> [Ulf: Moved around code to make it compile properly, rebased on top of multiple state support]
 > ---
-> v2:  separate into 2 documents for the 2 drivers
-> v12: bump version to line up with simple-fpga-bus version
->      remove Linux specific notes such as references to sysfs
->      move non-DT specific documentation elsewhere
->      remove bindings that would have been used to pass configuration
->      clean up formatting
-> v13: Remove 'label' property
->      Change property from init-val to bridge-enable
->      Fix email address
-> v14: Add resets
->      Change order of bridges to put lw bridge (controlling bridge) first
-> v15: No change in this patch for v15 of this patch set
-> v16: Added regs property, cleaned up unit addresses
-> v17: No change to this patch in v17 of patch set
-> v18: Changed to not need reset-names property
->      node names as fpga-bridge@...
->      labels as fpga_bridge
->      Add address of fpgaportrst to give and address for f2s bridge
-> ---
->  .../bindings/fpga/altera-fpga2sdram-bridge.txt     | 16 +++++++++
->  .../bindings/fpga/altera-hps2fpga-bridge.txt       | 39 ++++++++++++++++++++++
->  2 files changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+>  .../devicetree/bindings/power/power_domain.txt     | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index 025b5e7..69aa4e2 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -29,6 +29,10 @@ Optional properties:
+>     specified by this binding. More details about power domain specifier are
+>     available in the next section.
+>  
+> +- domain-idle-states : A phandle of an idle-state that shall be soaked into a
+> +                generic domain power state. The idle state definitions are
+> +                compatible with arm,idle-state specified in [1].
+> +
+>  Example:
+>  
+>  	power: power-controller@12340000 {
+> @@ -55,6 +59,39 @@ Example 2:
+>  		#power-domain-cells = <1>;
+>  	};
+>  
+> +Example 3:
+> +
+> +	pm-domains {
+> +		a57_pd: a57_pd@ {
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The trailing '@' is not valid. If dtc doesn't complain about that, it 
+should.
+
+> +			/* will have a57 platform ARM_PD_METHOD_OF_DECLARE*/
+> +			compatible = "arm,pd","arm,cortex-a57";
+> +			#power-domain-cells = <0>;
+> +			idle-states = <&CLUSTER_SLEEP_0>;
+
+Is this supposed to be 'domain-idle-states'? The domain part is 
+pointless IMO given these are power domain nodes.
+
+> +		};
+> +
+> +		a53_pd: a53_pd@ {
+> +			/* will have a a53 platform ARM_PD_METHOD_OF_DECLARE*/
+> +			compatible = "arm,pd","arm,cortex-a53";
+> +			#power-domain-cells = <0>;
+> +			idle-states = <&CLUSTER_SLEEP_0>, <&CLUSTER_SLEEP_1>;
+> +		};
+> +
+> +		CLUSTER_SLEEP_0: idle-state@0 {
+
+A unit-address should have a matching reg value or be dropped. A reg 
+property would be fine here, but I think it should correspond to MPIDR 
+values. 
+
+> +			compatible = "arm,idle-state";
+> +			entry-latency-us = <1000>;
+> +			exit-latency-us = <2000>;
+> +			residency-us = <10000>;
+> +		};
+> +
+> +		CLUSTER_SLEEP_1: idle-state@1 {
+> +			compatible = "arm,idle-state";
+> +			entry-latency-us = <5000>;
+> +			exit-latency-us = <5000>;
+> +			residency-us = <100000>;
+> +		};
+> +	};
+> +
+> +
+>  The nodes above define two power controllers: 'parent' and 'child'.
+>  Domains created by the 'child' power controller are subdomains of '0' power
+>  domain provided by the 'parent' power controller.
+> @@ -76,3 +113,5 @@ Example:
+>  The node above defines a typical PM domain consumer device, which is located
+>  inside a PM domain with index 0 of a power controller represented by a node
+>  with the label "power".
+> +
+> +[1]. Documentation/devicetree/bindings/arm/idle-states.txt
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
