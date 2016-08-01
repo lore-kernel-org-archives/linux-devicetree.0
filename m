@@ -1,78 +1,62 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
-Date: Mon, 1 Aug 2016 11:44:20 +0100
-Message-ID: <8b4d1f09-b1ce-5708-f815-29dbd438c2db@arm.com>
-References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
- <fb559224-561c-3476-1146-96f7aea427f0@arm.com>
- <20160801103024.cc74c093466d7fdfd91a2587@free.fr>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 0/3] ARM: cleanup PCI specific configs
+Date: Mon, 1 Aug 2016 16:42:27 +0530
+Message-ID: <1470049950-4697-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160801103024.cc74c093466d7fdfd91a2587@free.fr>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Krzysztof Halasa <khalasa@piap.pl>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-pci@vger.kernel.org, nsekhar@ti.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, helgaas@kernel.org, Benoit Cousson <bcousson@baylibre.com>, Greg Ungerer <gerg@uclinux.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Francois,
+This series was initially sent to add support for two PCIe
+ports in dra7. This included selecting PCI_DOMAINS config
+in SOC_DRA7XX.
 
-On 01/08/16 09:30, Jean-Francois Moine wrote:
-> On Mon, 1 Aug 2016 02:43:06 +0100
-> André Przywara <andre.przywara@arm.com> wrote:
-> 
->> As this became quite a long read, here a TL;DR:
->> - We consider using an SCPI based clock system for the A64, alongside
->> allwinner,simple-gates and fixed clocks. We try to avoid any Allwinner
->> specific clocks (apart from the simple-gates).
->> - ARM Trusted Firmware provides the SCPI implementation - for now, later
->> we may move this into a possible arisc firmware.
->> - We upstream some basic DT first, possibly omitting any controversial
->> clock parts at all.
->>
->> Let me know what you think!
-> 
-> Hi André,
-> 
-> This looks interesting.
-> As I understand, the clock enable/rate setting functions would be in
-> the arisc. The arisc firmware would be loaded only once in the Soc and
-> would contain the code for handling this specific SoC.
-> From my calculations, this would save about 1Mb of clock descriptions
-> in the kernel for a universal Allwinner kernel.
+However from the review, PCI_DOMAINS can instead be selected
+from ARCH_MULTIPLATFORM. This is fixed in this series along
+with removing PCI_DOMAINS from other configs.
 
-This is the rough idea, yes. In the moment the clock code sits in the
-ARM Trusted Firmware part, but in fact this is an implementation detail.
-Theoretically we could also move that clock code to U-Boot on 32-bit
-SoCs to sit next to the PSCI implementation, which uses the same smc
-call mechanism as I do in this first implementation.
-But unfortunately we cannot remove the existing code from the kernel,
-since that would break all existing users (unless they upgrade their
-firmware). So I am not sure if supporting older SoCs with this mechanism
-is worthwhile.
+Since this series was initially sent to add support for
+two PCIe ports in dra7, it has been tested to see if there
+are regressions with 1 PCIe port. Though testing of 2 PCIe ports
+is not done while sending this patch series, it has been verified
+before in few of the customer boards.
 
-But: yes, I want to avoid adding tedious clock descriptions for each and
-every new SoC to the kernel. What really worries me is that sunxi-ng
-makes this situation probably worse, as we now have to add SoC specific
-"code" (in fact: clock descriptions) for every SoC, even if that chip
-doesn't introduce any new clock type.
+The 2nd and 3rd patch has been marked as RFT since it modifies
+the configs of other platforms I can't test though this
+series shouldn't break anything.
 
-> But I don't see why you are keeping the simple-gates. The bus gate may
-> be ungated/gated when the clock is enabled/disabled, and that's what
-> Allwinner's software does.
+Kishon Vijay Abraham I (3):
+  ARM: dts: DRA7: Add "linux,pci-domain" property for pci dt nodes
+  ARM: Fix *MIGHT_HAVE_PCI* config from being selected redundantly
+  ARM: select PCI_DOMAINS config from ARCH_MULTIPLATFORM
 
-We could do. But SCPI does not have an explicit enable/disable
-interface, it only describes that setting the frequency to 0 disables
-the clock. For enabling it one would have to set some frequency (!= 0),
-which the firmware could then translate into a "set that bit in the gate
-register" for any gate-only clock, which sounds rather hackish to me.
-Also it would require to alter the SCPI clock driver to implement the
-enable/disable ops, since I think we never call set_rate for those clocks.
+ arch/arm/Kconfig                 |    3 +--
+ arch/arm/boot/dts/dra7.dtsi      |    2 ++
+ arch/arm/mach-at91/Kconfig       |    1 -
+ arch/arm/mach-axxia/Kconfig      |    2 --
+ arch/arm/mach-cns3xxx/Kconfig    |    1 -
+ arch/arm/mach-exynos/Kconfig     |    2 --
+ arch/arm/mach-imx/Kconfig        |    2 --
+ arch/arm/mach-integrator/Kconfig |    1 -
+ arch/arm/mach-keystone/Kconfig   |    2 --
+ arch/arm/mach-ks8695/Kconfig     |    5 -----
+ arch/arm/mach-pxa/Kconfig        |    1 -
+ arch/arm/mach-shmobile/Kconfig   |    1 -
+ arch/arm/mach-spear/Kconfig      |    1 -
+ arch/arm/mach-versatile/Kconfig  |    1 -
+ 14 files changed, 3 insertions(+), 22 deletions(-)
 
-So having the quite straight forward "simple-gates" driver around seems
-more sane. In the end this driver just translates "clock number x" into
-"bit number x" in that register, which is very generic. That's why I
-urged to introduce a fallback compatible name to express this very feature.
-
-Cheers,
-Andre.
+-- 
+1.7.9.5
