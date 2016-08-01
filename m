@@ -1,54 +1,87 @@
-From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH v16 6/6] ARM: socfpga: fpga bridge driver support
-Date: Mon, 1 Aug 2016 09:07:34 -0500
-Message-ID: <alpine.DEB.2.02.1608010907110.2521@linuxheads99>
-References: <1454707803-27947-1-git-send-email-atull@opensource.altera.com>  <1454707803-27947-7-git-send-email-atull@opensource.altera.com>  <1465525089.15779.203.camel@rtred1test09.kymeta.local>  <CAC+thW3U_vEre0DovmK7t_oiK5v1evZCBPqpahf+e6aCvmhqLA@mail.gmail.com>
-  <alpine.DEB.2.02.1607281019100.1032@linuxheads99> <1469737696.30803.152.camel@rtred1test09.kymeta.local>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [RFC] i2c: device-tree: Handling child nodes which are not i2c
+ devices
+Date: Mon, 1 Aug 2016 11:41:59 +0200
+Message-ID: <dd04aac8-5c8a-b10d-b726-b16e6d69c599@axentia.se>
+References: <57110A35.2070509@nvidia.com>
+ <CAAObsKC-DGH4GedCcZdv2zvesaTSo6ugsHSQU=J0=P1cZeyCDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469737696.30803.152.camel-dVGoCQn2UwS33l2LyG1otL1RWLrjA2wiZkel5v8DVj8@public.gmane.org>
+In-Reply-To: <CAAObsKC-DGH4GedCcZdv2zvesaTSo6ugsHSQU=J0=P1cZeyCDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Trent Piepho <tpiepho-KTxT7QYAYfgCx7yrEBmKXg@public.gmane.org>
-Cc: Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org" <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org" <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Matthew Gerlach <mge>
+To: Tomeu Vizoso <tomeu.vizoso-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Jul 2016, Trent Piepho wrote:
-
-> On Thu, 2016-07-28 at 10:21 -0500, atull wrote:
-> > > >
-> > > > This isn't going work if more than one bridge is used.  Each bridge has
-> > > > its own priv and thus priv->l3_remap_value.  Each bridge's priv will
-> > > > have just the bit for it's own remap set.  The 2nd bridge to be enabled
-> > > > will turn off the 1st bridge when it re-write the l3 register.
-> > > 
-> > > I can confirm this is exactly what happens with tag
-> > > "rel_socfpga-4.1.22-ltsi_16.06.02_pr" of socfpga-4.1.22-ltsi branch
-> > > from altera-opensource/linux-socfpga which includes more or less the
-> > > code in this patch. If you have 2 bridges (lw-hps2fpga and hps2fpga)
-> > > you end up with only one of them being visible. Easily spot by logging
-> > > l3_remap_value being passed to regmap_write()...
-> > > 
-> > 
-> > Anatolij kindly provided a patch for this issue.  I'll push it
-> > to my github repo when I can.
+On 2016-08-01 11:19, Tomeu Vizoso wrote:
+> On 15 April 2016 at 17:35, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> Hi all,
+>>
+>> For Tegra we have an i2c device for display port, namely the display
+>> port auxiliary channel (or dpaux) as specified by the display port
+>> standard. If an design using Tegra does not utilise the display port
+>> interface, then the pads assigned to the dpaux can be re-assigned to
+>> another generic i2c controller (i2c6 for Tegra124/210). In other words,
+>> the pads can be re-used for a generic i2c interface.
+>>
+>> The registers that control whether the pads are mapped to the dpaux or
+>> i2c6 are located in the dpaux register space. Therefore, I am looking at
+>> adding pin controller support for dpaux so that i2c6 can request these
+>> pads if it is enabled and I was hoping to add a pinmux node the to dpaux
+>> device in device-tree to do this. For example, something like ...
+>>
+>>         dpaux@0,545c0000 {
+>>                 ...
+>>
+>>                 /* pinctrl node */
+>>                 pinmux {
+>>                         ...
+>>                 };
+>>         };
+>>
+>> Although the above works, when doing this I noticed that when the device
+>> booted, I would seeing the following error messages on boot ...
+>>
+>>  i2c i2c-5: of_i2c: modalias failure on ...
+>>
+>> These error messages being caused by the new pinmux node because it is
+>> not recognised as an i2c device. To avoid this error messages we have
+>> come up with a couple solutions but wanted to get some feedback on the
+>> best approach.
 > 
-> I still think a better solution would be to allow the syscon driver
-> manage shared access.  The purpose of syscon is to manage access to a
-> shared resource from multiple devices.  And regmap already has the
-> ability to cache a write-only register and allow thread safe access to
-> modify bits in said register.  The problem is just the pain of trying to
-> do anything to syscon DT bindings.  Something like "write-only" in the
-> syscon binding that sets a couple values in the regmap_config is all
-> that's necessary.
+> Hi,
 > 
-> Might as well not use syscon at all and have the bridge driver map the
-> l3regs itself, since it doesn't really use syscon for anything.
+> I'm finding this issue as well on Rockchip SoCs, this is the specific
+> node that is raising this warning when an adapter is registered with
+> it:
 > 
+> edp: dp@ff970000 {
+>     compatible = "rockchip,rk3288-dp";
+>     ...
+>     ports {
+>         ...
+>     };
+> };
+> 
+> Has there been any agreement since this thread waned?
+> 
+> Thanks,
+> 
+> Tomeu
 
-I agree.  Just need time to do it.
+This is currently soaking in linux-next:
 
-Alan
+dt-bindings: i2c: Add support for 'i2c-bus' subnode
+https://git.kernel.org/cgit/linux/kernel/git/wsa/linux.git/commit/?h=i2c/for-next&id=98b00488459e
+
+i2c: core: Add support for 'i2c-bus' subnode
+https://git.kernel.org/cgit/linux/kernel/git/wsa/linux.git/commit/?h=i2c/for-next&id=7e4c224abfe8
+
+Cheers,
+Peter
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
