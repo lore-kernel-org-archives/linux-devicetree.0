@@ -1,15 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt: bindings: Make compatible optional for mmc
- function nodes
-Date: Mon, 1 Aug 2016 11:41:56 -0500
-Message-ID: <20160801164156.GA29075@rob-hp-laptop>
-References: <1469891030-28838-1-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH 1/4] input: touchscreen: Add generic touchscreen
+ softbutton handling code
+Date: Mon, 1 Aug 2016 11:54:30 -0500
+Message-ID: <20160801165430.GA30345@rob-hp-laptop>
+References: <1469978590-14081-1-git-send-email-hdegoede@redhat.com>
+ <1469978590-14081-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1469891030-28838-1-git-send-email-hdegoede@redhat.com>
+In-Reply-To: <1469978590-14081-2-git-send-email-hdegoede@redhat.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,34 +21,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 30, 2016 at 05:03:50PM +0200, Hans de Goede wrote:
-> On some boards (android tablets) different batches use different sdio
-> wifi modules. This is not a problem since mmc/sdio is an enumerable bus,
-> so we only need to describe and activate the mmc controller in dt and
-> then the kernel will automatically load the right driver.
+On Sun, Jul 31, 2016 at 05:23:07PM +0200, Hans de Goede wrote:
+> Some touchscreens extend over the display they cover and have a number
+> of capacative softbuttons outside of the display the cover.
 > 
-> Sometimes it is useful to specify certain ethernet properties for these
-> "unknown" sdio devices, specifically we want the boot-loader to be able
-> to set "local-mac-address" as some of these sdio wifi modules come without
-> an eeprom / without a factory programmed mac address.
+> With some hardware these softbuttons simply report touches with
+> coordinates outside of the normal coordinate space for touches on the
+> display.
 > 
-> Since the exact device is unknown (differs per batch) we cannot use
-> a wifi-chip specific compatible, thus sometimes it is desirable to have a
-> mmc function node, without having to make up an otherwise unused compatible
-> for the node, so make the compatible property optional.
+> This commit adds a devicetree binding for describing such buttons in
+> devicetree and a bunch of helper functions to easily add support for
+> these to existing touchscreen drivers.
 > 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
-> Changes in v2:
-> -Change the commit-msg to explain why it sometimes is desirable to have a
->  mmc function node without a compatible
-> ---
->  Documentation/devicetree/bindings/mmc/mmc.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../bindings/input/touchscreen/softbuttons.txt     |  58 +++++++++
+>  drivers/input/touchscreen/Makefile                 |   2 +-
+>  drivers/input/touchscreen/softbuttons.c            | 145 +++++++++++++++++++++
+>  include/linux/input/touchscreen.h                  |   9 ++
+>  4 files changed, 213 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt
+>  create mode 100644 drivers/input/touchscreen/softbuttons.c
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt b/Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt
+> new file mode 100644
+> index 0000000..3eb6f4c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/softbuttons.txt
+> @@ -0,0 +1,58 @@
+> +General Touchscreen Softbutton Properties:
+> +
+> +Some touchscreens extend over the display they cover and have a number
+> +of capacative softbuttons outside of the display the cover.
+> +
+> +Some of these softbuttons simply report touches with coordinates outside of
+> +the normal coordinate space for touches on the display. This binding is for
+> +describing such buttons in devicetree.
+> +
+> +Each softkey is represented as a sub-node of the touchscreen node.
+> +
+> +Required subnode-properties:
+> + - label			: Descriptive name of the key.
+> + - linux,code			: Keycode to emit.
+> + - softbutton-min-x		: X start of the area the softbutton area covers
+> + - softbutton-max-x		: X end of the area the softbutton area covers
+> + - softbutton-min-y		: Y start of the area the softbutton area covers
+> + - softbutton-max-y		: Y end of the area the softbutton area covers
 
-Acked-by: Rob Herring <robh@kernel.org>
+This generally looks fine to me, but I am wondering one thing. If the 
+buttons are located at the origin of an axis, can we handle that case? I 
+don't think you can unless you assume softbutton-max-? is 0 for the 
+touchscreen. To put it another way, you have a gap from 1024 to 1084 
+which you can't express for buttons at the origin unless you do negative 
+numbers.
+
+Rob
