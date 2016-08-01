@@ -1,34 +1,126 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [RFT PATCH v2 2/3] ARM: Fix *MIGHT_HAVE_PCI* config from being
- selected redundantly
-Date: Mon, 1 Aug 2016 16:24:30 +0100
-Message-ID: <20160801152430.GM5783@n2100.arm.linux.org.uk>
-References: <1470049950-4697-1-git-send-email-kishon@ti.com>
- <1470049950-4697-3-git-send-email-kishon@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC][PATCH] pstore: use DT reserved-memory bindings
+Date: Mon, 1 Aug 2016 10:54:50 -0500
+Message-ID: <CAL_JsqKgQGzqpj+McSVap_8F1NHZxyBnx+wqX1FohcG2XTCFDg@mail.gmail.com>
+References: <20160730011623.GA25495@www.outflux.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470049950-4697-3-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Krzysztof Halasa <khalasa-NlWvg49iv0c@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shiraz Hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.este>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160730011623.GA25495@www.outflux.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kees Cook <keescook@chromium.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Hackmann <ghackmann@google.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 01, 2016 at 04:42:29PM +0530, Kishon Vijay Abraham I wrote:
-> *MIGHT_HAVE_PCI* config is already selected in ARCH_MULTIPLATFORM.
-> Fix it from getting redundantly selected in all
-> ARCH_MULTIPLATFORM based machines.
+On Fri, Jul 29, 2016 at 8:16 PM, Kees Cook <keescook@chromium.org> wrote:
+> Instead of a ramoops-specific node, use a child node of /reserved-memory.
+> This requires that of_platform_populate() be called for the node, though,
+> since it does not have its own "compatible" property.
+>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Here's what I've got for moving ramoops under /reserved-memory... still
+> feels like a bit of a hack.
+> ---
+>  Documentation/devicetree/bindings/misc/ramoops.txt | 48 ----------------------
+>  .../bindings/reserved-memory/ramoops.txt           | 48 ++++++++++++++++++++++
 
-You're changing more than just platforms that are part of
-ARCH_MULTIPLATFORM.  Eg, ARCH_DOVE and ARCH_IXP4XX.  So, these will
-probably end up losing PCI support as a result of this change.
+Use -M option or so you don't forget you can set in your git config:
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[diff]
+        renames = true
+
+>  Documentation/ramoops.txt                          |  2 +-
+>  drivers/of/platform.c                              |  5 +++
+>  fs/pstore/ram.c                                    | 12 +-----
+>  5 files changed, 56 insertions(+), 59 deletions(-)
+
+[...]
+
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 16e8daffac06..c07adf72bb8e 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -356,6 +356,11 @@ static int of_platform_bus_create(struct device_node *bus,
+>         void *platform_data = NULL;
+>         int rc = 0;
+>
+> +       /* Always populate reserved-memory nodes. */
+> +       if (strict && strcmp(bus->full_name, "/reserved-memory") == 0) {
+> +               return of_platform_populate(bus, matches, lookup, parent);
+> +       }
+> +
+
+This can be a lot cleaner now with the DT changes in 4.8. We could
+make this more generic and call of_platform_populate with the
+/reserved-memory node as the root, but that would :
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 765390e..4c36e06 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -499,8 +499,15 @@ EXPORT_SYMBOL_GPL(of_platform_default_populate);
+
+ static int __init of_platform_default_populate_init(void)
+ {
+-       if (of_have_populated_dt())
+-               of_platform_default_populate(NULL, NULL, NULL);
++       struct device_node *node;
++
++       if (!of_have_populated_dt())
++               return -ENODEV;
++
++       node = of_find_compatible_node(NULL, NULL, "ramoops");
++       of_platform_device_create(node, NULL, NULL);
++
++       of_platform_default_populate(NULL, NULL, NULL);
+
+        return 0;
+ }
+
+
+>         /* Make sure it has a compatible property */
+>         if (strict && (!of_get_property(bus, "compatible", NULL))) {
+>                 pr_debug("%s() - skipping %s, no compatible prop\n",
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 47516a794011..af5cee0c2156 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -486,24 +486,16 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>                             struct ramoops_platform_data *pdata)
+>  {
+>         struct device_node *of_node = pdev->dev.of_node;
+> -       struct device_node *mem_region;
+>         struct resource res;
+>         u32 value;
+>         int ret;
+>
+>         dev_dbg(&pdev->dev, "using Device Tree\n");
+>
+> -       mem_region = of_parse_phandle(of_node, "memory-region", 0);
+> -       if (!mem_region) {
+> -               dev_err(&pdev->dev, "no memory-region phandle\n");
+> -               return -ENODEV;
+> -       }
+> -
+> -       ret = of_address_to_resource(mem_region, 0, &res);
+> -       of_node_put(mem_region);
+> +       ret = of_address_to_resource(of_node, 0, &res);
+
+You can use the standard platform device resource functions now.
+
+>         if (ret) {
+>                 dev_err(&pdev->dev,
+> -                       "failed to translate memory-region to resource: %d\n",
+> +                       "failed to translate reserved-memory to resource: %d\n",
+>                         ret);
+>                 return ret;
+>         }
+> --
+> 2.7.4
+>
+>
+> --
+> Kees Cook
+> Brillo & Chrome OS Security
