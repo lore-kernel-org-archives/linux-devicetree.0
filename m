@@ -1,103 +1,75 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] clk: bcm: Add driver for Northstar ILP clock
-Date: Mon, 1 Aug 2016 13:36:29 +0100
-Message-ID: <20160801123428.GA13179@leverpostej>
-References: <1469797120-29298-1-git-send-email-zajec5@gmail.com>
- <20160729131513.GB13080@leverpostej>
- <CACna6rxiPx_7R1AwwvV40Wi6j+X=gUw1ChJY8R=oiXVNK1cDgw@mail.gmail.com>
+Subject: Re: [PATCH] pwm: add pwm driver for HiSilicon BVT SOCs
+Date: Mon, 1 Aug 2016 13:43:55 +0100
+Message-ID: <20160801124355.GB13179@leverpostej>
+References: <1470015728-36979-1-git-send-email-yuanjian12@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACna6rxiPx_7R1AwwvV40Wi6j+X=gUw1ChJY8R=oiXVNK1cDgw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <1470015728-36979-1-git-send-email-yuanjian12@hisilicon.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Jian Yuan <yuanjian12@hisilicon.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 29, 2016 at 11:24:50PM +0200, Rafał Miłecki wrote:
-> On 29 July 2016 at 15:15, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Fri, Jul 29, 2016 at 02:58:32PM +0200, Rafał Miłecki wrote:
-> >> From: Rafał Miłecki <rafal@milecki.pl>
-> >>
-> >> This clock is present on cheaper Northstar devices like BCM53573 or
-> >> BCM47189 using Corex-A7. This driver uses PMU (Power Management Unit)
-> >> to calculate clock rate and allows using it in a generic (clk_*) way.
-> >>
-> >> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> >> ---
-> >>  .../devicetree/bindings/clock/brcm,ns-ilp.txt      |  28 ++++
-> >>  drivers/clk/bcm/Makefile                           |   1 +
-> >>  drivers/clk/bcm/clk-ns-ilp.c                       | 146 +++++++++++++++++++++
-> >>  3 files changed, 175 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
-> >>  create mode 100644 drivers/clk/bcm/clk-ns-ilp.c
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
-> >> new file mode 100644
-> >> index 0000000..c4df38e
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
-> >> @@ -0,0 +1,28 @@
-> >> +Broadcom Northstar ILP clock
-> >> +============================
-> >> +
-> >> +This binding uses the common clock binding:
-> >> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >> +
-> >> +This binding is used for ILP clock on Broadcom Northstar devices using
-> >> +Corex-A7 CPU. ILP clock depends on ALP one and has to be calculated on
-> >> +runtime.
-> >> +
-> >> +Required properties:
-> >> +- compatible: "brcm,ns-ilp"
-> >> +- reg: iomem address range of PMU (Power Management Unit)
-> >> +- reg-names: "pmu", the only needed & supported reg right now
-> >
-> > From the commit message and binding description, it sounds like there
-> > should be a binding for the PMU, and that should cover the clocks
-> > required/exported by the PMU.
+On Mon, Aug 01, 2016 at 09:42:08AM +0800, Jian Yuan wrote:
+> From: yuanjian <yuanjian12@hisilicon.com>
 > 
-> This is a bit of problem, because PMU handles a lot of different stuff
-> and is used by various drivers. Some examples of what you can do
-> with/find on a PMU:
-> 1) Power management
-> 2) Watchdog
-> 3) Timer
-> 4) XTAL
-> 5) PLLs
-> 6) Control registers for some ARM debugging (whatever it is), UART, JTAG, more
-
-The organisation of subsystems in Libnux shouldn't affect the binding in
-this manner.
-
-There'll likely be shared resources (e.g. register ranges), and you need
-knowledge of the entire PMU to operate the sub-resources (and their
-potentially shared dependencies) without conflict.
-
-While you might one sub-nodes on a larger PMU node, these should
-certainly not be entirely separate nodes and/or bindings.
-
-> >> +- clocks: should reference an ALP clock
-> >> +- clock-names: "alp", the only needed & supported clock right now
-> >> +- #clock-cells: should be <0>
-> >
-> > How many clocks does the PMU output, including the ILP clock?
+> Add pwm driver for HiSilicon BVT SOCs
 > 
-> Well, ALP clock (AKA XTAL clock) is definitely part of PMU. It's a
-> fixed rate clock with rate specific to the chip.
+> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  18 ++
+>  drivers/pwm/Kconfig                                |  10 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-hibvt.c                            | 272 +++++++++++++++++++++
+>  4 files changed, 301 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
+>  create mode 100644 drivers/pwm/pwm-hibvt.c
 > 
-> I think ILP is also part of PMU (again: I don't have datasheets) as
-> PMU has this ALP_PER_4ILP register.
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
+> new file mode 100644
+> index 0000000..4efd83e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
+> @@ -0,0 +1,18 @@
+> +Hisilicon PWM controller
+> +
+> +Required properties:
+> + - compatible: should be "hisilicon,hibvt-pwm" and one of the following:
+> +			"hisilicon,hi3516cv300-pwm".
 
-Ok. Is that output from the PMU, or is it strictly internal?
+I take it "hisilicon,hibvt-pwm" is the fallback entry.
 
-> From Broadcom's SDK I can say they also have "ARM debug unit" on some
-> chipsets. It requires enabling "ARM debug clk" to operate which is
-> handled by PMU as well.
+It would be good to note that explicitly.
 
-Likewise?
+> + - reg: physical base address and length of the controller's registers.
+> + - clocks: phandle and clock specifier of the PWM reference clock.
+> + - resets: offset address and offset bit for reset or unreset of the controller.
+> + - pwm-nums: pwm number of the controller.
+
+This should be 'num-pwms'.
+
+I assume this is the number of PWMs exposed by this controller. Is this
+not probeable, or dicoverable based on the compatible string?
+
+How does this vary in practice?
+
+> +
+> +Example:
+> +	pwm: pwm@12130000 {
+> +		compatible = "hisilicon,hibvt-pwm";
+
+This is missing "hisilicon,hi3516cv300-pwm" as per the requirements of
+the binding.
+
+> +		reg = <0x12130000 0x10000>;
+> +		clocks = <&crg_ctrl HI3516CV300_PWM_CLK>;
+> +		resets = <&crg_ctrl 0x38 0>;
+> +		pwm-nums = <4>;
+> +	};
 
 Thanks,
 Mark.
