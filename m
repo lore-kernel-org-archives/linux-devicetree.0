@@ -1,34 +1,78 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] power: add power sequence library
-Date: Mon, 1 Aug 2016 13:29:26 -0300
-Message-ID: <CAOMZO5C-mD=uiCML5W9sxBQOK2a_JEhJvJOQBzuhZxcWPnzexw@mail.gmail.com>
-References: <1469007629-31757-1-git-send-email-peter.chen@nxp.com>
- <579A2B38.3000202@gmail.com> <CAOMZO5Dv_X-u6qKqAWtysAqmMw91bVoAaRvnc81yUGDxbd27rA@mail.gmail.com>
- <579F62CE.1050900@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2] clk: bcm: Add driver for Northstar ILP clock
+Date: Mon, 1 Aug 2016 11:33:33 -0500
+Message-ID: <20160801163332.GA23920@rob-hp-laptop>
+References: <1469797120-29298-1-git-send-email-zajec5@gmail.com>
+ <1469832362-13947-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <579F62CE.1050900-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Troy
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1469832362-13947-1-git-send-email-zajec5@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 1, 2016 at 11:55 AM, Joshua Clayton
-<stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Sat, Jul 30, 2016 at 12:45:40AM +0200, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> This clock is present on cheaper Northstar devices like BCM53573 or
+> BCM47189 using Corex-A7. This driver uses PMU (Power Management Unit)
+> to calculate clock rate and allows using it in a generic (clk_*) way.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> ---
+> V2: Rebase on top of clk-next
+>     Use ALP as parent clock
+>     Improve comments
+>     Switch from ioremap_nocache to ioremap
+>     Check of_clk_add_provide result for error
+> ---
+>  .../devicetree/bindings/clock/brcm,ns-ilp.txt      |  26 ++++
+>  drivers/clk/bcm/Makefile                           |   1 +
+>  drivers/clk/bcm/clk-ns-ilp.c                       | 147 +++++++++++++++++++++
+>  3 files changed, 174 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
+>  create mode 100644 drivers/clk/bcm/clk-ns-ilp.c
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
+> new file mode 100644
+> index 0000000..2c862a0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
+> @@ -0,0 +1,26 @@
+> +Broadcom Northstar ILP clock
+> +============================
+> +
+> +This binding uses the common clock binding:
+> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +This binding is used for ILP clock on Broadcom Northstar devices using
+> +Corex-A7 CPU. ILP clock depends on ALP one and has to be calculated on
+> +runtime.
+> +
+> +Required properties:
+> +- compatible: "brcm,ns-ilp"
+> +- reg: iomem address range of PMU (Power Management Unit)
 
-> Thanks a million, Fabio!
->
-> 'usbcore.autosuspend=-1' quiets the errors.
->
-> ~joshua
->
-> P.S. I guess this technically is a bug in chipidea usb.
-> I'll give it a quick once over, though I am not very familiar
-> with USB core or the CI driver.
+PMU would imply to me there is more than just 1 clock the block 
+controls and the compatible should reflect that if so.
 
-Yes, it would be really nice if we can get a proper fix for this bug.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- reg-names: "pmu", the only needed & supported reg right now
+> +- clocks: has to reference an ALP clock
+> +- #clock-cells: should be <0>
+> +
+> +Example:
+> +
+> +ilp: ilp {
+
+ilp@18012000
+
+> +	compatible = "brcm,ns-ilp";
+> +	reg = <0x18012000 0x1000>;
+> +	reg-names = "pmu";
+> +	clocks = <&alp>;
+> +	#clock-cells = <0>;
+> +};
