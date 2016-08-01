@@ -1,88 +1,66 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] soc: nxp: Add a RCPM driver
-Date: Mon, 01 Aug 2016 14:25:04 +0200
-Message-ID: <2024386.Ra8uvttlE9@wuerfel>
-References: <1470044943-3814-1-git-send-email-chenhui.zhao@nxp.com>
- <1470044943-3814-2-git-send-email-chenhui.zhao@nxp.com>
+From: "Peter Senna Tschudin" <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: =?utf-8?q?Re=3A?==?utf-8?q?_=5BPATCH?= V3 =?utf-8?q?2=2F5=5D?=
+ =?utf-8?q?_dts=2Fimx6q-b850v3=3A?= Configure IPU assignment order
+Date: Mon, 01 Aug 2016 13:30:57 +0100
+Message-ID: <70b6-579f4100-9-6ce4f380@208251793>
+References: <1470041647.6640.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470044943-3814-2-git-send-email-chenhui.zhao@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, z.chenhui@gmail.com, Chenhui Zhao <chenhui.zhao@nxp.com>, jason.jin@nxp.com, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+in-reply-to: <1470041647.6640.3.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: andrey.gusakov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Stone <daniel.stone-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 1, 2016 5:49:03 PM CEST Chenhui Zhao wrote:
-> The NXP's QorIQ Processors based on ARM Core have a RCPM module
-> (Run Control and Power Management), which performs all device-level
-> tasks associated with power management.
+Hi Lucas,
+
+Thank you for the prompt review.
+ 
+On Monday, August 1, 2016 10:54 CEST, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote: 
+ 
+> Am Sonntag, den 31.07.2016, 21:55 +0200 schrieb Peter Senna Tschudin:
+> > As the IPU has combined limitations across multiple crtcs, and as that
+> > can't be communicated to userspace at the moment, reorder the crtcs to
+> > allow support to two Full-HD monitors by avoiding assigning two
+> > monitors to a single IPU.
+> > 
+> > Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> > Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> > Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 > 
-> This patch mainly implements the wakeup sources configuration before
-> entering LPM20, a low power state of device-level. The devices can be
-> waked up by specified sources, such as Flextimer, GPIO and so on.
+> NACK. This is a userspace issue. Changing the assignment order of the
+> CRTCs just shifts the failure to a userspace that want to use CRTC 0 and
+> 2 now.
+
+Err, yeah user space issue... But how the kernel is currently telling user space about what exactly went wrong and how user space might fix it? How Weston(our user space) is going to know  that reshuffling crtcs is going to lead to success; how could it? I guess some  platform-specific code in user space is needed for this to work...
+
 > 
-> Signed-off-by: Chenhui Zhao <chenhui.zhao@nxp.com>
+> imx-drm just got atomic support and with the atomic check it should be
+> possible to inform userspace in a reasonable way about such issues.
 
-Adding irqchip maintainers to cc, as this wakeup handling is normally
-part of the irq controller.
+Should be possible, but I guess it isn't, and wont be until a considerable effort is put on both kernel and user space. Or am I missing something? What do you propose?
 
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/io.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <linux/suspend.h>
-> +
-> +/* So far there are not more than two registers */
-> +#define RCPM_IPPDEXPCR0		0x140
-> +#define RCPM_IPPDEXPCR1		0x144
-> +#define RCPM_IPPDEXPCR(x)	(RCPM_IPPDEXPCR0 + 4 * x)
-> +#define RCPM_WAKEUP_CELL_MAX_SIZE	2
-> +
-> +/* it reprents the number of the registers RCPM_IPPDEXPCR */
-> +static unsigned int rcpm_wakeup_cells;
-> +static void __iomem *rcpm_reg_base;
-> +static u32 ippdexpcr[RCPM_WAKEUP_CELL_MAX_SIZE];
+I got inspiration from: arch/arm/boot/dts/imx6q.dtsi
+...
+        display-subsystem {
+                compatible = "fsl,imx-display-subsystem";
+                ports = <&ipu1_di0>, <&ipu1_di1>, <&ipu2_di0>, <&ipu2_di1>;
+        };
+...
 
-Can you make these local to the context of whoever
-calls into the driver?
+This is there for more than 2 years now, and I get that the idea here is not ordering, but just declaring.
 
+However even if this patch is not the perfect solution, it allows us to stay close to upstream now without creating problems(does it create any issue?).
 
-> +static void rcpm_wakeup_fixup(struct device *dev, void *data)
-> +{
-> +	struct device_node *node = dev ? dev->of_node : NULL;
-> +	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
-> +	int ret;
-> +	int i;
-> +
-> +	if (!dev || !node || !device_may_wakeup(dev))
-> +		return;
-> +
-> +	/*
-> +	 * Get the values in the "rcpm-wakeup" property.
-> +	 * Refer to Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> +	 */
-> +	ret = of_property_read_u32_array(node, "rcpm-wakeup",
-> +					 value, rcpm_wakeup_cells + 1);
+Can you reconsider or propose a concrete solution that is not more complex than our entire driver?
 
-My first impression is that you are trying to do something
-in a platform specific way that should be handled by common
-code here.
+Thanks a lot!
 
-You are parsing rcpm_wakeup_cells once for the global node,
-but you don't check whether the device that has the rcpm-wakeup
-node actually refers to this instance, and that would require
-an incompatible change if we ever get an implementation that
-has multiple such nodes.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
