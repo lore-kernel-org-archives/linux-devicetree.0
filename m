@@ -1,54 +1,115 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
-Date: Mon, 1 Aug 2016 17:13:34 +0800
-Message-ID: <CAGb2v67+1rG1kj+7cGO=TMwSgpktP4xMAeZ9Zfy8PRWXyRLi+g@mail.gmail.com>
-References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
- <fb559224-561c-3476-1146-96f7aea427f0@arm.com> <20160801103024.cc74c093466d7fdfd91a2587@free.fr>
+From: Tomeu Vizoso <tomeu.vizoso-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] i2c: device-tree: Handling child nodes which are not i2c devices
+Date: Mon, 1 Aug 2016 11:19:37 +0200
+Message-ID: <CAAObsKC-DGH4GedCcZdv2zvesaTSo6ugsHSQU=J0=P1cZeyCDA@mail.gmail.com>
+References: <57110A35.2070509@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160801103024.cc74c093466d7fdfd91a2587-GANU6spQydw@public.gmane.org>
+In-Reply-To: <57110A35.2070509-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 1, 2016 at 4:30 PM, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org> wrote:
-> On Mon, 1 Aug 2016 02:43:06 +0100
-> André Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
+On 15 April 2016 at 17:35, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi all,
 >
->> As this became quite a long read, here a TL;DR:
->> - We consider using an SCPI based clock system for the A64, alongside
->> allwinner,simple-gates and fixed clocks. We try to avoid any Allwinner
->> specific clocks (apart from the simple-gates).
->> - ARM Trusted Firmware provides the SCPI implementation - for now, later
->> we may move this into a possible arisc firmware.
->> - We upstream some basic DT first, possibly omitting any controversial
->> clock parts at all.
->>
->> Let me know what you think!
+> For Tegra we have an i2c device for display port, namely the display
+> port auxiliary channel (or dpaux) as specified by the display port
+> standard. If an design using Tegra does not utilise the display port
+> interface, then the pads assigned to the dpaux can be re-assigned to
+> another generic i2c controller (i2c6 for Tegra124/210). In other words,
+> the pads can be re-used for a generic i2c interface.
 >
-> Hi André,
+> The registers that control whether the pads are mapped to the dpaux or
+> i2c6 are located in the dpaux register space. Therefore, I am looking at
+> adding pin controller support for dpaux so that i2c6 can request these
+> pads if it is enabled and I was hoping to add a pinmux node the to dpaux
+> device in device-tree to do this. For example, something like ...
 >
-> This looks interesting.
-> As I understand, the clock enable/rate setting functions would be in
-> the arisc. The arisc firmware would be loaded only once in the Soc and
-> would contain the code for handling this specific SoC.
-> From my calculations, this would save about 1Mb of clock descriptions
-> in the kernel for a universal Allwinner kernel.
+>         dpaux@0,545c0000 {
+>                 ...
 >
-> But I don't see why you are keeping the simple-gates. The bus gate may
-> be ungated/gated when the clock is enabled/disabled, and that's what
-> Allwinner's software does.
+>                 /* pinctrl node */
+>                 pinmux {
+>                         ...
+>                 };
+>         };
+>
+> Although the above works, when doing this I noticed that when the device
+> booted, I would seeing the following error messages on boot ...
+>
+>  i2c i2c-5: of_i2c: modalias failure on ...
+>
+> These error messages being caused by the new pinmux node because it is
+> not recognised as an i2c device. To avoid this error messages we have
+> come up with a couple solutions but wanted to get some feedback on the
+> best approach.
 
-For peripherals that have a separate mod clock, having them separate
-is a good thing. One example might be the audio codecs. You could ungate
-the bus gate to access its registers to program it, but only enable
-the mod clock when you actually play something.
+Hi,
 
-Regards
-ChenYu
+I'm finding this issue as well on Rockchip SoCs, this is the specific
+node that is raising this warning when an adapter is registered with
+it:
+
+edp: dp@ff970000 {
+    compatible = "rockchip,rk3288-dp";
+    ...
+    ports {
+        ...
+    };
+};
+
+Has there been any agreement since this thread waned?
+
+Thanks,
+
+Tomeu
+
+> 1. Add a i2c-bus sub-node to the dpaux binding (suggested by Stephen
+>    Warren), so we would have something like the below. Then i2c devices
+>    for dpaux would be place in the i2c-bus sub-node.
+>
+>         dpaux@0,545c0000 {
+>                 ...
+>
+>                 /* pinctrl node */
+>                 pinmux {
+>                         ...
+>                 };
+>
+>                 /* place-holder for i2c devices */
+>                 i2c-bus {
+>                         ...
+>                 };
+>         };
+>
+>    To make the above work ideally we would like to make the 'i2c-bus'
+>    node a generic solution for all i2c devices, so the i2c core would
+>    check for the presence of this node and if it is found then would
+>    default to this node for looking for i2c-devices.
+>
+> 2. When registering i2c devices via device-tree, the function
+>    of_i2c_register_devices() checks to see if OF_POPULATED flag is set
+>    for a given node. If it is set, then the node is skipped. I believe
+>    this was added for device-tree overlays (commit 4f001fd30145 i2c:
+>    Mark instantiated device nodes with OF_POPULATE). Another option is
+>    for the dpaux driver to mark the pinmux node as populated before
+>    registering the i2c adapter and this will prevent the i2c core from
+>    trying to parse the pinmux node. I am not sure if this would be
+>    frowned upon in anyway or if we can guarantee that no future changes
+>    to DT overlays would change this in a way where it would not work.
+>
+> Let me know your thoughts.
+>
+> Cheers
+> Jon
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
