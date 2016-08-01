@@ -1,13 +1,15 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH v2 3/3] ehci-platform: add the max clock number to 4
-Date: Tue,  2 Aug 2016 00:34:48 +0800
-Message-ID: <20160801163448.54921-3-icenowy@aosc.xyz>
-References: <20160801163448.54921-1-icenowy@aosc.xyz>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/5] mmc: sunxi: sun4i / sun5i do not have sample clocks
+Date: Mon, 1 Aug 2016 11:39:36 -0500
+Message-ID: <20160801163936.GA26855@rob-hp-laptop>
+References: <1469888748-26085-1-git-send-email-hdegoede@redhat.com>
+ <1469888748-26085-5-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160801163448.54921-1-icenowy@aosc.xyz>
+Content-Disposition: inline
+In-Reply-To: <1469888748-26085-5-git-send-email-hdegoede@redhat.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,29 +19,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Reinder de Haan <patchesrdh@mveas.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A64 EHCI requires 4 clocks to be enabled.
+On Sat, Jul 30, 2016 at 04:25:47PM +0200, Hans de Goede wrote:
+> It turns out that sun4i (A10) and sun5i (A13 & co) do not have sample
+> clocks, so add a new sun7i-a20-mmc compatible and do not try to use
+> sample clocks on sun4i / sun5i.
+> 
+> Since sun4i / sun5i do not have sample clocks, they cannot (reliably) do
+> DDR rates, so only set MMC_CAP_1_8V_DDR when we do have sample clks.
+> 
+> Note this patch leaves the clk_prepare_enable() / clk_disable_unprepare()
+> calls to the sample clks as-is, without adding checks for them being
+> NULL. All the clk_foo calls accept a NULL clk and will return success when
+> called with a NULL clk.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> -Add a new sun7i-a20-compatible for SoCs with sample clks, rather then
+>  making them optional
+> ---
+>  .../devicetree/bindings/mmc/sunxi-mmc.txt          |  6 +++-
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
- drivers/usb/host/ehci-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I find the subject a bit strange as it should describe the change, not 
+the problem. Otherwise,
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index 6816b8c..876dca4 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -38,7 +38,7 @@
- #include "ehci.h"
- 
- #define DRIVER_DESC "EHCI generic platform driver"
--#define EHCI_MAX_CLKS 3
-+#define EHCI_MAX_CLKS 4
- #define EHCI_MAX_RSTS 3
- #define hcd_to_ehci_priv(h) ((struct ehci_platform_priv *)hcd_to_ehci(h)->priv)
- 
--- 
-2.9.0
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/mmc/host/sunxi-mmc.c                       | 35 +++++++++++++++-------
+>  2 files changed, 29 insertions(+), 12 deletions(-)
