@@ -1,75 +1,47 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] pwm: add pwm driver for HiSilicon BVT SOCs
-Date: Mon, 1 Aug 2016 13:43:55 +0100
-Message-ID: <20160801124355.GB13179@leverpostej>
-References: <1470015728-36979-1-git-send-email-yuanjian12@hisilicon.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 2/2] soc: nxp: Add a RCPM driver
+Date: Mon, 1 Aug 2016 13:55:27 +0100
+Message-ID: <579F46BF.4080604@arm.com>
+References: <1470044943-3814-1-git-send-email-chenhui.zhao@nxp.com>
+ <1470044943-3814-2-git-send-email-chenhui.zhao@nxp.com>
+ <2024386.Ra8uvttlE9@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1470015728-36979-1-git-send-email-yuanjian12@hisilicon.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Jian Yuan <yuanjian12@hisilicon.com>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2024386.Ra8uvttlE9@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, z.chenhui@gmail.com, Chenhui Zhao <chenhui.zhao@nxp.com>, jason.jin@nxp.com, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 01, 2016 at 09:42:08AM +0800, Jian Yuan wrote:
-> From: yuanjian <yuanjian12@hisilicon.com>
+On 01/08/16 13:25, Arnd Bergmann wrote:
+> On Monday, August 1, 2016 5:49:03 PM CEST Chenhui Zhao wrote:
+>> The NXP's QorIQ Processors based on ARM Core have a RCPM module
+>> (Run Control and Power Management), which performs all device-level
+>> tasks associated with power management.
+>>
+>> This patch mainly implements the wakeup sources configuration before
+>> entering LPM20, a low power state of device-level. The devices can be
+>> waked up by specified sources, such as Flextimer, GPIO and so on.
+>>
+>> Signed-off-by: Chenhui Zhao <chenhui.zhao@nxp.com>
 > 
-> Add pwm driver for HiSilicon BVT SOCs
-> 
-> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  18 ++
->  drivers/pwm/Kconfig                                |  10 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-hibvt.c                            | 272 +++++++++++++++++++++
->  4 files changed, 301 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->  create mode 100644 drivers/pwm/pwm-hibvt.c
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
-> new file mode 100644
-> index 0000000..4efd83e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
-> @@ -0,0 +1,18 @@
-> +Hisilicon PWM controller
-> +
-> +Required properties:
-> + - compatible: should be "hisilicon,hibvt-pwm" and one of the following:
-> +			"hisilicon,hi3516cv300-pwm".
+> Adding irqchip maintainers to cc, as this wakeup handling is normally
+> part of the irq controller.
 
-I take it "hisilicon,hibvt-pwm" is the fallback entry.
+Thanks for looping me in. This very much look like it should be a
+stacked irqchip, just like we handle everything else. I'll go and review
+the actual patch.
 
-It would be good to note that explicitly.
-
-> + - reg: physical base address and length of the controller's registers.
-> + - clocks: phandle and clock specifier of the PWM reference clock.
-> + - resets: offset address and offset bit for reset or unreset of the controller.
-> + - pwm-nums: pwm number of the controller.
-
-This should be 'num-pwms'.
-
-I assume this is the number of PWMs exposed by this controller. Is this
-not probeable, or dicoverable based on the compatible string?
-
-How does this vary in practice?
-
-> +
-> +Example:
-> +	pwm: pwm@12130000 {
-> +		compatible = "hisilicon,hibvt-pwm";
-
-This is missing "hisilicon,hi3516cv300-pwm" as per the requirements of
-the binding.
-
-> +		reg = <0x12130000 0x10000>;
-> +		clocks = <&crg_ctrl HI3516CV300_PWM_CLK>;
-> +		resets = <&crg_ctrl 0x38 0>;
-> +		pwm-nums = <4>;
-> +	};
-
-Thanks,
-Mark.
+	M.
+-- 
+Jazz is not dead. It just smells funny...
