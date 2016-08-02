@@ -1,36 +1,45 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: omap: fix 4.7 gpmc networking regression
-Date: Tue, 2 Aug 2016 03:35:05 -0700
-Message-ID: <20160802103505.GD28140@atomide.com>
-References: <1469362260-20066-1-git-send-email-johan@kernel.org>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH 0/3] drm/i2c: tda998x ASoC hdmi-codec support +
+ BeagleBoneBlack audio support
+Date: Tue, 2 Aug 2016 15:05:06 +0300
+Message-ID: <cover.1470129989.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1469362260-20066-1-git-send-email-johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, rmk+kernel@arm.linux.org.uk
+Cc: peter.ujfalusi@ti.com, tony@atomide.com, broonie@kernel.org, Jyri Sarha <jsarha@ti.com>, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com
 List-Id: devicetree@vger.kernel.org
 
-* Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [160724 05:11]:
-> Networking is currently broken for Overo boards due to a regression in
-> 4.7. I bisected it down to
-> 
-> 	d2d00862dfbb ("memory: omap-gpmc: Support general purpose input
-> 	for WAITPINs")
-...
-
-> Note that simply fixing the Overo NAND issue would fix the Overo
-> networking regression, but by restoring the 4.6 gpmc-probe behaviour
-> similar regressions on other OMAP systems are also avoided.
-
-Roger, got a better fix in mind?
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlc2UgcGF0Y2hlcyBhcmUganVzdCBhIHJlYmFzZSBvZiB0aGUgc2FtZSBwYXRjaGVzIGZyb20g
+bXkgIltQQVRDSAp2NCAwLzddIEltcGxlbWVudCBnZW5lcmljIEFTb0MgSERNSSBjb2RlYyBhbmQg
+dXNlIGl0IGluIHRkYTk5OHgiCi1wYXRjaCBzZXJpZXMuIEkgaGF2ZSBvbmx5IG1hZGUgdXBkYXRl
+cyByZXF1aXJlZCBieSBlZmM5MTk0YmNmZjgKKCJBU29DOiBoZG1pLWNvZGVjOiBjYWxsYmFjayBm
+dW5jdGlvbiB3aWxsIGJlIGNhbGxlZCB3aXRoIHByaXZhdGUKZGF0YSIpIC1wYXRjaC4KClRoZSBm
+aXJzdCBwYXRjaCBjaGFuZ2VzIHRkYTk5OHggcGRhdGEsIHNvIGlmIHRoZXJlIGFyZSBhbnkgb3V0
+IG9mIHRyZWUKdXNlcnMgb2YgdGRhOTk4eC1kcml2ZXIgdGhlIG91dCBvZiB0cmVlIGNvZGUgbmVl
+ZHMgdG8gYmUgdXBkYXRlZC4KCkp5cmkgU2FyaGEgKDMpOgogIGRybS9pMmM6IHRkYTk5OHg6IElt
+cHJvdmUgdGRhOTk4eF9jb25maWd1cmVfYXVkaW8oKSBhdWRpbyByZWxhdGVkCiAgICBwZGF0YQog
+IGRybS9pMmM6IHRkYTk5OHg6IFJlZ2lzdGVyIEFTb0MgaGRtaS1jb2RlYyBhbmQgYWRkIGF1ZGlv
+IERUIGJpbmRpbmcKICBBUk06IGR0czogYW0zMzV4LWJvbmVibGFjazogQWRkIEhETUkgYXVkaW8g
+c3VwcG9ydAoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RkYTk5OHgu
+dHh0IHwgIDE4ICsrCiBhcmNoL2FybS9ib290L2R0cy9hbTMzNXgtYm9uZWJsYWNrLmR0cyAgICAg
+ICAgICAgICB8ICA3MSArKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9pMmMvS2NvbmZpZyAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9pMmMvdGRhOTk4eF9kcnYu
+YyAgICAgICAgICAgICAgICAgIHwgMjc2ICsrKysrKysrKysrKysrKysrKy0tLQogaW5jbHVkZS9k
+cm0vaTJjL3RkYTk5OHguaCAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMjQgKy0KIGluY2x1
+ZGUvZHQtYmluZGluZ3MvZGlzcGxheS90ZGE5OTh4LmggICAgICAgICAgICAgIHwgICA3ICsKIDYg
+ZmlsZXMgY2hhbmdlZCwgMzQyIGluc2VydGlvbnMoKyksIDU1IGRlbGV0aW9ucygtKQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvZGlzcGxheS90ZGE5OTh4LmgKCi0tIAox
+LjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
