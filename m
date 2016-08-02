@@ -1,83 +1,140 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 RFC 6/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
-Date: Tue, 2 Aug 2016 14:56:59 -0600
-Message-ID: <14206e73-c7bc-0b19-ecc9-640292c2a0c4@wwwdotorg.org>
-References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <1469559213-16160-7-git-send-email-stefan.wahren@i2se.com>
- <597f3289-91c3-7c19-8992-d6b386d50c02@wwwdotorg.org>
- <1427745143.15570.152fe5dd-527b-4ad6-b2fd-e4b0af6bc2a9.open-xchange@email.1und1.de>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Tue, 02 Aug 2016 16:40:43 -0500
+Message-ID: <1470174043.25630.233.camel@buserror.net>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net>
+ <1468723822-30457-5-git-send-email-oss@buserror.net>
+ <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
+ <146909676646.16700.8383344640490662952@concordia>
+ <1469119526.25630.42.camel@buserror.net>
+ <HE1PR04MB088913D39528958C6905D43DF80D0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+ <1469579882.25630.168.camel@buserror.net>
+ <HE1PR04MB0889EE0A961723541F9904A1F8050@HE1PR04MB0889.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1427745143.15570.152fe5dd-527b-4ad6-b2fd-e4b0af6bc2a9.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <HE1PR04MB0889EE0A961723541F9904A1F8050@HE1PR04MB0889.eurprd04.prod.outlook.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Yangbo Lu <yangbo.lu@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/02/2016 01:29 PM, Stefan Wahren wrote:
-> Hi Stephen,
->
->> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> hat am 2. August 2016 um 19:19
->> geschrieben:
->>
->>
->> On 07/26/2016 12:53 PM, Stefan Wahren wrote:
->>> The Raspberry Pi Zero is a minified version of model A+. It's
->>> notable there is no PWR LED and the ACT LED is inverted.
->>
->> Patches 3-6,
->> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts
->>> b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
->>
->> The following comment format is a bit strange, but I'm not sure there's
->> anything objectively better...
->
-> the idea behind that was to provide valid values for every dr_mode with minimum
-> effort. I see 2 alternative solutions:
->   a) add different dr_mode examples to the dwc2 => doesn't work for all
-> platforms
->   b) add comments to drivers/usb/dwc2/platform.c => harder to find
->
-> At the end the solution here is already obsolete. This patch series doesn't
-> contain an update for the bcm2835_defconfig which should set the following:
->
-> CONFIG_NOP_USB_XCEIV=y
-> CONFIG_USB_GADGET=y
->
-> After enabling these options another issue is revealed. Currently the dr_mode
-> for all the other bcm283x boards isn't defined, which means "otg" instead of
-> intended "host". But the dwc2 driver ignores this as long as CONFIG_USB_GADGET
-> is not defined. So we need to define the dr_mode for all bcm283x boards.
-
-Do note that the existing DTs must work with any new kernel update; 
-that's part of DT being an ABI. So, there should be no need to update 
-any of the existing DTs. Rather, the driver must cope with missing 
-properties and operate as best it can. Perhaps that means that even if 
-dr_mode is unspecified and hence defaults to otg, then if properties 
-that are mandatory for OTG to operate are missing, the driver falls back 
-to host mode. I think that'd be completely backwards-compatible?
-
- > In
-> order to avoid such massive copy & paste, we better define 3 dtsi files for each
-> dr_mode.
-
-3 DT files, with an appropriate one of those included in each RPi DT, 
-sounds reasonable.
-
-> The only catch about this solution is the modes "otg" and "peripheral"
-> wouldn't be referenced.
-
-That's probably OK; in this patch the properties for those modes are in 
-a comment too, so essentially unreferenced. Perhaps on RPi platforms 
-where a choice is possible (Zero, A), there could be a comment next to 
-the include of the "host" or "otg" version that states the user might 
-want to edit the DT and include the other version instead. Then, those 
-files would be somewhat referenced.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCAyMDE2LTA4LTAyIGF0IDA1OjU3ICswMDAwLCBZYW5nYm8gTHUgd3JvdGU6Cj4gSGkg
+U2NvdHQsCj4gCj4gPiAKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiBGcm9tOiBT
+Y290dCBXb29kIFttYWlsdG86b3NzQGJ1c2Vycm9yLm5ldF0KPiA+IFNlbnQ6IFdlZG5lc2RheSwg
+SnVseSAyNywgMjAxNiA4OjM4IEFNCj4gPiBUbzogWWFuZ2JvIEx1OyBNaWNoYWVsIEVsbGVybWFu
+OyBBcm5kIEJlcmdtYW5uOyBVbGYgSGFuc3Nvbgo+ID4gQ2M6IGxpbnV4LW1tY0B2Z2VyLmtlcm5l
+bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy0KPiA+IGRldkBsaXN0
+cy5vemxhYnMub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCj4gPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIHYxMSA0LzVdIHBvd2VycGMvZnNsOiBtb3ZlIG1wYzg1eHguaCB0bwo+ID4gaW5j
+bHVkZS9saW51eC9mc2wKPiA+IAo+ID4gT24gTW9uLCAyMDE2LTA3LTI1IGF0IDA2OjEyICswMDAw
+LCBZYW5nYm8gTHUgd3JvdGU6Cj4gPiA+IAo+ID4gPiBIaSBTY290dCwKPiA+ID4gCj4gPiA+IAo+
+ID4gPiA+IAo+ID4gPiA+IAo+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiA+
+ID4gRnJvbTogU2NvdHQgV29vZCBbbWFpbHRvOm9zc0BidXNlcnJvci5uZXRdCj4gPiA+ID4gU2Vu
+dDogRnJpZGF5LCBKdWx5IDIyLCAyMDE2IDEyOjQ1IEFNCj4gPiA+ID4gVG86IE1pY2hhZWwgRWxs
+ZXJtYW47IEFybmQgQmVyZ21hbm4KPiA+ID4gPiBDYzogbGludXgtbW1jQHZnZXIua2VybmVsLm9y
+ZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLQo+ID4gPiA+IGRldkBsaXN0
+cy5vemxhYnMub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZYW5nYm8gTHUKPiA+
+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxMSA0LzVdIHBvd2VycGMvZnNsOiBtb3ZlIG1wYzg1
+eHguaCB0bwo+ID4gPiA+IGluY2x1ZGUvbGludXgvZnNsCj4gPiA+ID4gCj4gPiA+ID4gT24gVGh1
+LCAyMDE2LTA3LTIxIGF0IDIwOjI2ICsxMDAwLCBNaWNoYWVsIEVsbGVybWFuIHdyb3RlOgo+ID4g
+PiA+ID4gCj4gPiA+ID4gPiAKPiA+ID4gPiA+IFF1b3RpbmcgU2NvdHQgV29vZCAoMjAxNi0wNy0y
+MSAwNDozMTo0OCkKPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiAKPiA+ID4g
+PiA+ID4gT24gV2VkLCAyMDE2LTA3LTIwIGF0IDEzOjI0ICswMjAwLCBBcm5kIEJlcmdtYW5uIHdy
+b3RlOgo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+
+ID4gPiA+IE9uIFNhdHVyZGF5LCBKdWx5IDE2LCAyMDE2IDk6NTA6MjEgUE0gQ0VTVCBTY290dCBX
+b29kIHdyb3RlOgo+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiAKPiA+ID4gPiA+ID4g
+PiA+IAo+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiBGcm9tOiB5YW5nYm8gbHUgPHlh
+bmdiby5sdUBueHAuY29tPgo+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiBNb3ZlIG1w
+Yzg1eHguaCB0byBpbmNsdWRlL2xpbnV4L2ZzbCBhbmQgcmVuYW1lIGl0IHRvIHN2ci5oCj4gPiA+
+ID4gPiA+ID4gPiBhcyBhIGNvbW1vbiBoZWFkZXIgZmlsZS7CoMKgVGhpcyBTVlIgbnVtYmVyc3Bh
+Y2UgaXMgdXNlZCBvbgo+ID4gPiA+ID4gPiA+ID4gc29tZSBBUk0gY2hpcHMgYXMgd2VsbCBhcyBQ
+UEMsIGFuZCBldmVuIHRvIGNoZWNrIGZvciBhIFBQQwo+ID4gPiA+ID4gPiA+ID4gU1ZSIG11bHRp
+LWFyY2ggZHJpdmVycyB3b3VsZCBvdGhlcndpc2UgbmVlZCB0byBpZmRlZiB0aGUKPiA+ID4gPiA+
+ID4gPiA+IGhlYWRlciBpbmNsdXNpb24gYW5kIGFsbCByZWZlcmVuY2VzIHRvIHRoZSBTVlIgc3lt
+Ym9scy4KPiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogWWFu
+Z2JvIEx1IDx5YW5nYm8ubHVAbnhwLmNvbT4KPiA+ID4gPiA+ID4gPiA+IEFja2VkLWJ5OiBXb2xm
+cmFtIFNhbmcgPHdzYUB0aGUtZHJlYW1zLmRlPgo+ID4gPiA+ID4gPiA+ID4gQWNrZWQtYnk6IFN0
+ZXBoZW4gQm95ZCA8c2JveWRAY29kZWF1cm9yYS5vcmc+Cj4gPiA+ID4gPiA+ID4gPiBBY2tlZC1i
+eTogSm9lcmcgUm9lZGVsIDxqcm9lZGVsQHN1c2UuZGU+Cj4gPiA+ID4gPiA+ID4gPiBbc2NvdHR3
+b29kOiB1cGRhdGUgZGVzY3JpcHRpb25dCj4gPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBT
+Y290dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0Pgo+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+
+ID4gQXMgZGlzY3Vzc2VkIGJlZm9yZSwgcGxlYXNlIGRvbid0IGludHJvZHVjZSB5ZXQgYW5vdGhl
+ciB2ZW5kb3IKPiA+ID4gPiA+ID4gPiBzcGVjaWZpYyB3YXkgdG8gbWF0Y2ggYSBTb0MgSUQgZnJv
+bSBhIGRldmljZSBkcml2ZXIuCj4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gSSd2ZSBwb3N0
+ZWQgYSBwYXRjaCBmb3IgYW4gZXh0ZW5zaW9uIHRvIHRoZSBzb2NfZGV2aWNlCj4gPiA+ID4gPiA+
+ID4gaW5mcmFzdHJ1Y3R1cmUgdG8gYWxsb3cgY29tcGFyaW5nIHRoZSBydW5uaW5nIFNvQyB0byBh
+IHRhYmxlCj4gPiA+ID4gPiA+ID4gb2YgZGV2aWNlcywgdXNlIHRoYXQgaW5zdGVhZC4KPiA+ID4g
+PiA+ID4gQXMgSSBhc2tlZCBiZWZvcmUsIGluIHdoaWNoIHJlbGV2YW50IG1haW50YWluZXJzaGlw
+IGNhcGFjaXR5IGFyZQo+ID4gPiA+ID4gPiB5b3UgTkFDS2luZyB0aGlzPwo+ID4gPiA+ID4gSSds
+bCBuYWNrIHRoZSBwb3dlcnBjIHBhcnQgdW50aWwgeW91IGd1eXMgY2FuIGFncmVlLgo+ID4gPiA+
+IE9LLCBJJ3ZlIHB1bGxlZCB0aGVzZSBwYXRjaGVzIG91dC4KPiA+ID4gPiAKPiA+ID4gPiBGb3Ig
+dGhlIE1NQyBpc3N1ZSBJIHN1Z2dlc3QgdXNpbmcgaWZkZWYgQ09ORklHX1BQQyBhbmQKPiA+ID4g
+PiBtZnNwcihTUFJOX1NWUikgbGlrZSB0aGUgY2xvY2sgZHJpdmVyIGRvZXNbMV0gYW5kIHdlIGNh
+biByZXZpc2l0IHRoZQo+ID4gPiA+IGlzc3VlIGlmL3doZW4gd2UgbmVlZCB0byBkbyBzb21ldGhp
+bmcgc2ltaWxhciBvbiBhbiBBUk0gY2hpcC4KPiA+ID4gW0x1IFlhbmdiby1CNDcwOTNdIEkgcmVt
+ZW1iZXJlZCB0aGF0IFVmZmUgaGFkIG9wcG9zZWQgdXMgdG8gaW50cm9kdWNlCj4gPiA+IG5vbi0g
+Z2VuZXJpYyBoZWFkZXIgZmlsZXMobGlrZSAnI2luY2x1ZGUgPGFzbS9tcGM4NXh4Lmg+JykgaW4g
+bW1jCj4gPiA+IGRyaXZlciBpbml0aWFsbHkuIFNvIEkgdGhpbmsgaXQgd2lsbCBub3QgYmUgYWNj
+ZXB0ZWQgdG8gdXNlIGlmZGVmCj4gPiA+IENPTkZJR19QUEMgYW5kIG1mc3ByKFNQUk5fU1ZSKS4u
+Lgo+ID4gPiBBbmQgdGhpcyBtZXRob2Qgc3RpbGwgY291bGRu4oCZdCBnZXQgU1ZSIG9mIEFSTSBj
+aGlwIG5vdy4KPiA+IFJpZ2h0LCBhcyBJIHNhaWQgd2UnbGwgaGF2ZSB0byByZXZpc2l0IHRoZSBp
+c3N1ZSBpZi93aGVuIHdlIGhhdmUgdGhlIHNhbWUKPiA+IHByb2JsZW0gb24gYW4gQVJNIGNoaXAu
+IMKgVGhhdCBhbHNvIGFwcGxpZXMgaWYgdGhlIFBQQyBpZmRlZiBpcyBzdGlsbAo+ID4gZ2V0dGlu
+ZyBOQUNLZWQgZnJvbSB0aGUgTU1DIHNpZGUuCj4gW0x1IFlhbmdiby1CNDcwOTNdIEl0J3Mgbm90
+IGNsZWFyIGZvciBtZSBhYm91dCB5b3VyIGlkZWEgOijCoAo+IERvIHlvdSBtZWFuIHdlIGNhbiBz
+dGlsbCB1c2UgdGhpcyBtZXRob2QsIG9yIG5vdCA/Cj4gSSB0aGluayBVZmZlIGhhZCBvcHBvc2Vk
+IHRvIHVzZSBpZmRlZiBDT05GSUdfUFBDIGFuZCBtZnNwcihTUFJOX1NWUikuCj4gSXMgdGhlcmUg
+YW55IHNvbHV0aW9uIHRvIHJlc29sdmUgPwo+IDopCgpBcyBJIHNhaWQsIEknbSBPSyB3aXRoIHVz
+aW5nIHRoZSBTUFIuIMKgSXQncyB1cCB0byB5b3UgdG8gZmluZCBvdXQgd2hldGhlciBpdCdzCnN0
+aWxsIHVuYWNjZXB0YWJsZSB3aXRoIHRoZSBNTUMgbWFpbnRhaW5lcnMgZ2l2ZW4gYWxsIHRoZSBk
+aXNjdXNzaW9uIChpdCB3b3VsZApiZSB0aGUgcXVpY2tlc3Qgd2F5IHRvIGdldCB0aGUgd29ya2Fy
+b3VuZCBlbmFibGVkKSwgb3IganVzdCBnbyB3aXRoIHRoZSBtZXRob2QKYmVsb3cuCgo+ID4gPiBB
+bnkgb3RoZXIgc3VnZ2VzdGlvbiBoZXJlPwo+ID4gVGhlIG90aGVyIG9wdGlvbiBpcyB0byB0cnkg
+dG8gY29tZSB1cCB3aXRoIHNvbWV0aGluZyB0aGF0IGZpdHMgaW50bwo+ID4gQXJuZCdzIGZyYW1l
+d29yayB3aGlsZSBhZGRyZXNzaW5nIHRoZSBjb25jZXJucyBJIHJhaXNlZC4gwqBUaGUgc29jX2lk
+Cj4gPiBzdHJpbmcgc2hvdWxkIGJlIHdlbGwtc3RydWN0dXJlZCB0byBhdm9pZCBtaXNtYXRjaGVz
+IGFuZCBjb21wYXRpYmlsaXR5Cj4gPiBwcm9ibGVtcyAoZXNwZWNpYWxseSBzaW5jZSBpdCB3b3Vs
+ZCBnZXQgZXhwb3NlZCB0byB1c2Vyc3BhY2UpLiDCoE1heWJlCj4gPiBzb21ldGhpbmcgbGlrZToK
+PiA+IAo+ID4gc3ZyOjxTVlIgbWludXMgRSBiaXQ+LHN2cmU6PGZ1bGwgU1ZSIGluY2x1ZGluZyBF
+IGJpdD4sbmFtZTo8c29jCj4gPiBuYW1lPixkaWU6PHNvYyBkaWUgbmFtZT4scmV2OlguWSw8dGFn
+MT4sPHRhZzI+LDwuLi4+LAo+IFtMdSBZYW5nYm8tQjQ3MDkzXSBUaGUgc29jX2RldmljZV9hdHRy
+aWJ1dCBzdHJ1Y3QgaXMgZGVmaW5lZCBhcyBiZWxvdy4KPiBzdHJ1Y3Qgc29jX2RldmljZV9hdHRy
+aWJ1dGUgewo+IMKgwqDCoMKgwqDCoMKgwqBjb25zdCBjaGFyICptYWNoaW5lOwo+IMKgwqDCoMKg
+wqDCoMKgwqBjb25zdCBjaGFyICpmYW1pbHk7Cj4gwqDCoMKgwqDCoMKgwqDCoGNvbnN0IGNoYXIg
+KnJldmlzaW9uOwo+IMKgwqDCoMKgwqDCoMKgwqBjb25zdCBjaGFyICpzb2NfaWQ7Cj4gfTsKPiAK
+PiBXZSBjYW4gcHV0IHRoZSAnbW9kZWwnIGluIHJvb3Qgbm9kZSBvZiBkdHMgYXMgbWFjaGluZSwg
+cHV0ICdGcmVlc2NhbGUgUW9ySVEnCj4gYXMgZmFtaWx5LAoKSSdkIGp1c3QgcHV0ICJRb3JJUSIg
+dG8gYXZvaWQgdGhlIHF1ZXN0aW9uIG9mIHdoZXRoZXIgdG8gdXNlICJGcmVlc2NhbGUiIG9yCiJO
+WFAiLgoKPiBhbmQgcHV0IHgueCBhcyByZXZpc2lvbi4gSXMgaXQgb2s/Cj4gQXMgeW91IHN1Z2dl
+c3RlZCwgeW91IGxpa2UgdG8gdXNlIGJlbG93IHN0cmluZyBhcyBzb2NfaWQuIEl0J3MgZWFzeSB0
+byBnZXQKPiBzdnIsIGJ1dCBob3cgZG9lcyB0aGUgc29mdHdhcmUga25vdyB0aGUgbmFtZSBhbmQg
+ZGllLAo+IGFuZCBwdXQgdGhlbSBpbnRvIHRoaXMgc3RyaW5nID8gSXQncyBhIGxhcmdlIGNvZGUg
+dG8gZGVmaW5lIHRoZW0uwqAKClllcywgdGhlcmUgd291bGQgbmVlZCB0byBiZSBhIHRhYmxlIGlu
+IHRoZSBndXRzIGRyaXZlciBmb3IgZWFjaCBTVlIuIMKgSWYgdGhlClNWUiBpc24ndCBmb3VuZCBp
+biB0aGUgdGFibGUgdGhlbiB0aGUgc29jX2lkIHdvdWxkIG9ubHkgY29udGFpbiB0aGUgc3ZyOiBh
+bmQKc3ZyZTogZmllbGRzLgoKPiA+IAo+ID4gc3ZyOjxTVlIgbWludXMgRSBiaXQ+LHN2cmU6PGZ1
+bGwgU1ZSIGluY2x1ZGluZyBFIGJpdD4sbmFtZTo8c29jCj4gPiBuYW1lPixkaWU6PHNvYyBkaWUg
+bmFtZT4scmV2OlguWSw8dGFnMT4sPHRhZzI+LDwuLi4+LAo+IFNob3VsZCB3ZSByZW1vdmUgcmV2
+IGhlcmUgc2luY2UgdGhlcmUgaXMgYWxzbyBhIHJldmlzaW9uIG1lbWJlcj8KClllcywgSSBmb3Jn
+b3QgdGhlcmUgd2FzIGEgcmV2aXNpb24gZmllbGQgLS0gaXQgc2hvdWxkIGdvIHRoZXJlIG9idmlv
+dXNseS4KCj4gUmVnYXJkaW5nIHRoZSBndXRzX2luaXQsIHdlIHN0aWxsIGNhbGwgZ3V0c19pbml0
+IGFuZCB0aGVuIG1hdGNoIHRoZSBzb2MsIG9yCj4gd2UgY2hhbmdlIHRvIHVzZSBwbGF0Zm9ybSBk
+cml2ZXI/Cj4gT3IgZG8geW91IGtub3cgYW55IGJldHRlciBwbGFjZSB0byBjYWxsIGd1dHNfaW5p
+dCB0byBpbml0aWFsaXplIG9ubHkgb25jZT8KClVzZSBhIHBsYXRmb3JtIGRyaXZlciBmb3Igbm93
+LiDCoElmIHdlIGV2ZXIgbmVlZCB0byBjaGVjayBhbiBBUk0gU1ZSIGluIHRoZQpjbG9jayBkcml2
+ZXIgb3Igc2ltaWxhciBwbGFjZSwgdGhlbiBBcm5kIGNhbiBleHBsYWluIHdoYXQgaGUgd2FudHMg
+dXMgdG8gZG8KdGhlbiA6LSkKCi1TY290dAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZA
+bGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhw
+cGMtZGV2
