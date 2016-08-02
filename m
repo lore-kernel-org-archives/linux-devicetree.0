@@ -1,217 +1,111 @@
-From: Peter Senna Tschudin <peter.senna@collabora.com>
-Subject: Re: [PATCH V3 1/5] drm/imx-ldb: Add support to drm-bridge
-Date: Tue, 2 Aug 2016 20:46:55 +0200
-Message-ID: <20160802184655.GA21085@collabora.com>
-References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
- <cover.1469993472.git.peter.senna@collabora.com>
- <5d55969a1509de751dc550d9a02bd5070455f99b.1469993472.git.peter.senna@collabora.com>
- <1470046870.3025.36.camel@pengutronix.de>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: how to structure some disruptive patches
+Date: Tue, 2 Aug 2016 13:53:41 -0500
+Message-ID: <CAL_JsqJ4QQ9HjHZYp-jgODTiu-BHiyo2ZV5u9ysBr-oL1xbF_Q@mail.gmail.com>
+References: <57A0D84C.9000605@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1470046870.3025.36.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, ykk@rock-chips.com, boris.brezillon@free-electrons.com, architt@codeaurora.org, linux@armlinux.org.uk, geert@linux-m68k.org, treding@nvidia.com, linux@roeck-us.net, devicetree@vger.kernel.org, andrey.gusakov@cogentembedded.com, fabio.estevam@nxp.com, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, enric.balletbo@collabora.com, akpm@linux-foundation.org, shawnguo@kernel.org, davem@davemloft.net
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57A0D84C.9000605-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+On Tue, Aug 2, 2016 at 12:28 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Rob,
+>
+> I've been working on cleaning up the docbook function documentation
+> in the device tree files.  The resulting patches could interfere with
+> code patches, so I want to figure out how to structure the documentation
+> patches to avoid that.  I would like your opinion and suggestions on
+> the subject.
+>
+> First premise: this set of documentation changes is a second class
+> citizen compared to code changes.  Any patch from this set can be
+> dropped any time it interferes with a code patch.
+>
+> I started the project with the simple intent of fixing what was
+> clearly broken.
+>   - fix syntax errors
+>   - fix mismatches between actual function arguments vs docbook
+>     list of function arguments
+>   - fix mismatches between function return type (void vs anything) and
+>     values vs docbook return types and values
+>   - fix factually incorrect descriptions of what the function does
+>
+> When I was making those changes, I found also found documentation
+> that was somewhat cryptic or otherwise hard to understand.  I also
+> found that the description of the same item was described in a
+> wide variety of ways in different docbook headers.  I made an
+> effort to also clean that up.
+>
+> The result was a large patch series (that was not totally complete):
+>
+>    15 files changed, 1414 insertions(+), 730 deletions(-)
 
-Thank you for the review. I'm preparing V4, what about this:
+All in drivers/of and related headers?
 
----
- drivers/gpu/drm/imx/imx-ldb.c | 118 ++++++++++++++++++++++++++++--------------
- 1 file changed, 78 insertions(+), 40 deletions(-)
+> plus around 150 lines of change to docbook files so that
+> the device tree man pages would be created.  I did not
+> add any other significant docbook documentation of device tree.
+>
+> There are at least a couple of approaches I could take for
+> submitting patches (and would be glad to hear of any other
+> approach that I did not think of):
+>
+> 1) The big ugly patchset referenced above, one patch per
+>    file.
+>      pro: exposes what changes were made to each function
+>           documentation header
+>      con: very dense and not very readable
+>      con: the mechanical corrections create a lot of noise if
+>           the reviewer wants to view actual content changes
+>      con: probably more likely to conflict with code patches
+>           in a way that is not easily fixed
 
-diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
-index b03919e..4a33077 100644
---- a/drivers/gpu/drm/imx/imx-ldb.c
-+++ b/drivers/gpu/drm/imx/imx-ldb.c
-@@ -57,7 +57,11 @@ struct imx_ldb_channel {
- 	struct imx_ldb *ldb;
- 	struct drm_connector connector;
- 	struct drm_encoder encoder;
-+
-+	/* Defines what is connected to the ldb, only one at a time */
- 	struct drm_panel *panel;
-+	struct drm_bridge *bridge;
-+
- 	struct device_node *child;
- 	struct i2c_adapter *ddc;
- 	int chno;
-@@ -466,10 +470,30 @@ static int imx_ldb_register(struct drm_device *drm,
- 	drm_encoder_init(drm, encoder, &imx_ldb_encoder_funcs,
- 			 DRM_MODE_ENCODER_LVDS, NULL);
- 
--	drm_connector_helper_add(&imx_ldb_ch->connector,
--			&imx_ldb_connector_helper_funcs);
--	drm_connector_init(drm, &imx_ldb_ch->connector,
--			   &imx_ldb_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
-+	if (imx_ldb_ch->bridge) {
-+		imx_ldb_ch->bridge->encoder = encoder;
-+
-+		imx_ldb_ch->encoder.bridge = imx_ldb_ch->bridge;
-+		ret = drm_bridge_attach(drm, imx_ldb_ch->bridge);
-+		if (ret) {
-+			DRM_ERROR("Failed to initialize bridge with drm\n");
-+			return ret;
-+		}
-+	} else {
-+		/*
-+		 * We want to add the connector whenever there is no bridge
-+		 * that brings its own, not only when there is a panel. For
-+		 * historical reasons, the ldb driver can also work without
-+		 * a panel.
-+		 */
-+		drm_connector_helper_add(&imx_ldb_ch->connector,
-+				&imx_ldb_connector_helper_funcs);
-+		drm_connector_init(drm, &imx_ldb_ch->connector,
-+				&imx_ldb_connector_funcs,
-+				DRM_MODE_CONNECTOR_LVDS);
-+		drm_mode_connector_attach_encoder(&imx_ldb_ch->connector,
-+				encoder);
-+	}
- 
- 	if (imx_ldb_ch->panel) {
- 		ret = drm_panel_attach(imx_ldb_ch->panel,
-@@ -478,8 +502,6 @@ static int imx_ldb_register(struct drm_device *drm,
- 			return ret;
- 	}
- 
--	drm_mode_connector_attach_encoder(&imx_ldb_ch->connector, encoder);
--
- 	return 0;
- }
- 
-@@ -548,6 +570,45 @@ static const struct of_device_id imx_ldb_dt_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, imx_ldb_dt_ids);
- 
-+static int imx_ldb_panel_ddc(struct device *dev,
-+		struct imx_ldb_channel *channel, struct device_node *child)
-+{
-+	struct device_node *ddc_node;
-+	const u8 *edidp;
-+	int ret;
-+
-+	ddc_node = of_parse_phandle(child, "ddc-i2c-bus", 0);
-+	if (ddc_node) {
-+		channel->ddc = of_find_i2c_adapter_by_node(ddc_node);
-+		of_node_put(ddc_node);
-+		if (!channel->ddc) {
-+			dev_warn(dev, "failed to get ddc i2c adapter\n");
-+			return -EPROBE_DEFER;
-+		}
-+	}
-+
-+	if (!channel->ddc) {
-+		/* if no DDC available, fallback to hardcoded EDID */
-+		dev_dbg(dev, "no ddc available\n");
-+
-+		edidp = of_get_property(child, "edid",
-+					&channel->edid_len);
-+		if (edidp) {
-+			channel->edid = kmemdup(edidp,
-+						channel->edid_len,
-+						GFP_KERNEL);
-+		} else if (!channel->panel) {
-+			/* fallback to display-timings node */
-+			ret = of_get_drm_display_mode(child,
-+						      &channel->mode,
-+						      OF_USE_NATIVE_MODE);
-+			if (!ret)
-+				channel->mode_valid = 1;
-+		}
-+	}
-+	return 0;
-+}
-+
- static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- {
- 	struct drm_device *drm = data;
-@@ -555,7 +616,6 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 	const struct of_device_id *of_id =
- 			of_match_device(imx_ldb_dt_ids, dev);
- 	struct device_node *child;
--	const u8 *edidp;
- 	struct imx_ldb *imx_ldb;
- 	int dual;
- 	int ret;
-@@ -605,7 +665,6 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 
- 	for_each_child_of_node(np, child) {
- 		struct imx_ldb_channel *channel;
--		struct device_node *ddc_node;
- 		struct device_node *ep;
- 		int bus_format;
- 
-@@ -638,46 +697,25 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 
- 			remote = of_graph_get_remote_port_parent(ep);
- 			of_node_put(ep);
--			if (remote)
-+			if (remote) {
- 				channel->panel = of_drm_find_panel(remote);
--			else
-+				channel->bridge = of_drm_find_bridge(remote);
-+			} else
- 				return -EPROBE_DEFER;
- 			of_node_put(remote);
--			if (!channel->panel) {
--				dev_err(dev, "panel not found: %s\n",
--					remote->full_name);
--				return -EPROBE_DEFER;
--			}
--		}
- 
--		ddc_node = of_parse_phandle(child, "ddc-i2c-bus", 0);
--		if (ddc_node) {
--			channel->ddc = of_find_i2c_adapter_by_node(ddc_node);
--			of_node_put(ddc_node);
--			if (!channel->ddc) {
--				dev_warn(dev, "failed to get ddc i2c adapter\n");
-+			if (!channel->panel && !channel->bridge) {
-+				dev_err(dev, "panel/bridge not found: %s\n",
-+					remote->full_name);
- 				return -EPROBE_DEFER;
- 			}
- 		}
- 
--		if (!channel->ddc) {
--			/* if no DDC available, fallback to hardcoded EDID */
--			dev_dbg(dev, "no ddc available\n");
--
--			edidp = of_get_property(child, "edid",
--						&channel->edid_len);
--			if (edidp) {
--				channel->edid = kmemdup(edidp,
--							channel->edid_len,
--							GFP_KERNEL);
--			} else if (!channel->panel) {
--				/* fallback to display-timings node */
--				ret = of_get_drm_display_mode(child,
--							      &channel->mode,
--							      OF_USE_NATIVE_MODE);
--				if (!ret)
--					channel->mode_valid = 1;
--			}
-+		/* panel ddc only if there is no bridge */
-+		if (!channel->bridge) {
-+			ret = imx_ldb_panel_ddc(dev, channel, child);
-+			if (ret)
-+				return ret;
- 		}
- 
- 		bus_format = of_get_bus_format(dev, child);
--- 
-2.5.5
+This is fine with me. Let's not over complicate things. There aren't
+that many changes typically in a cycle, so we can deal with it. I'd
+expect most changes would not collide as docbook comments and code
+changes are separated somewhat.
+
+I'd like a git branch for this. I'll keep it separate until -rc6 or so
+and then you can rebase things then if merging becomes a problem. Or
+we can drop any problematic patches.
+
+> 2) Split method 1 into stages (one patch per file for each stage).
+>    Examples of some possible stages are:
+>    - white space fixes
+>    - syntax fixes
+>    - incorrect argument list fixes
+>    - incorrect return type fixes
+>    - incorrect return value fixes
+>    - incorrect behavior description fixes
+>    - confusing behavior description fixes
+>      pro: it would be easier to review patches for many of the stages
+>      con: a lot more patches
+>      con: maybe difficult to handle conflicts with code patches
+>      con: maybe difficult to rework patches for review comments (changes
+>           for an earlier stage are likely to impact a patch for a later
+>           stage)
+>
+> 3) Do one patch series to remove all docbook function header documentation.
+>    Do a second patch series to add the updated docbook function header
+>    documentation.  For each of the two series, one patch per file.
+>      pro: the patches are much easier to read
+>      pro: it might be easier to resolve conflicts with source patches
+>           (either you dropping a few hunks or me redoing the docbook patch
+>           to remove the conflict)
+>      con: the actual changes to what the documentation says are not visible
+>
+> My current version of the patches is against 4.7-rc2.  I will have to update
+> this to 4.7 or 4.8-rc1 (I would assume that 4.8-rc1 would make more sense).
+
+You've followed all the documentation changes for 4.8 using Sphinx,
+right? Is this going to impact your work?
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
