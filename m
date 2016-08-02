@@ -1,98 +1,211 @@
-From: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCH 01/01] Add nvd9128 as a simple panel
-Date: Tue,  2 Aug 2016 15:28:59 +0200
-Message-ID: <1470144542-23585-1-git-send-email-fabien.lahoudere@collabora.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: sunxi: Use new sun7i-a20-mmc compatible
+ on sun7i and newer
+Date: Tue, 2 Aug 2016 15:58:40 +0200
+Message-ID: <cc932ae0-3198-38cc-b6fa-2c97530cdb3b@redhat.com>
+References: <1469888748-26085-1-git-send-email-hdegoede@redhat.com>
+ <1469888748-26085-6-git-send-email-hdegoede@redhat.com>
+ <9b6ed836-27ff-c8c8-d886-d86c787605fc@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9b6ed836-27ff-c8c8-d886-d86c787605fc@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andre Przywara <andre.przywara@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add New Vision Display 7.0" 800 RGB x 480 TFT LCD panel
+Hi,
 
-Upstream-Status: Pending
+On 01-08-16 15:11, Andre Przywara wrote:
+> Hi Hans,
+>
+> On 30/07/16 15:25, Hans de Goede wrote:
+>> Use the new sun7i-a20-mmc compatible for the mmc controllers on sun7i
+>> and newer.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> -New patch in v2 of this patch-set
+>> ---
+>>  arch/arm/boot/dts/sun6i-a31.dtsi     | 8 ++++----
+>>  arch/arm/boot/dts/sun7i-a20.dtsi     | 8 ++++----
+>>  arch/arm/boot/dts/sun8i-a23-a33.dtsi | 6 +++---
+>>  arch/arm/boot/dts/sun8i-h3.dtsi      | 6 +++---
+>>  4 files changed, 14 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> index 1867af2..0d24f10 100644
+>> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+>> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> @@ -469,7 +469,7 @@
+>>  		};
+>>
+>>  		mmc0: mmc@01c0f000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>
+> But that breaks systems with newer DTs on older kernels, which do not
+> know about sun7i-a20-mmc. I assume this somehow worked before(?), so why
+> not use:
+> 	compatible = "allwinner,sun7i-a20-mmc",
+> 		     "allwinner,sun5i-a13-mmc";
+>
+> So newer kernels would pick up the new name and behaviour, while older
+> kernels would revert to the old name and use the existing driver.
 
-Signed-off-by: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
----
- .../devicetree/bindings/display/panel/nvd,9128.txt |  7 ++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
- 3 files changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/nvd,9128.txt
+Good idea, I'll send a v3 with this change.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/nvd,9128.txt b/Documentation/devicetree/bindings/display/panel/nvd,9128.txt
-new file mode 100644
-index 0000000..17bcd01
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/nvd,9128.txt
-@@ -0,0 +1,7 @@
-+New Vision Display 7.0" 800 RGB x 480 TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "nvd,9128"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 68391a4..2ed703a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -178,6 +178,7 @@ netgear	NETGEAR
- netlogic	Broadcom Corporation (formerly NetLogic Microsystems)
- netxeon		Shenzhen Netxeon Technology CO., LTD
- newhaven	Newhaven Display International
-+nvd	New Vision Display
- nintendo	Nintendo
- nokia	Nokia
- nuvoton	Nuvoton Technology Corporation
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 85143d1..eaed716 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1136,6 +1136,29 @@ static const struct panel_desc nec_nl4827hc19_05b = {
- 	.bus_flags = DRM_BUS_FLAG_PIXDATA_POSEDGE,
- };
- 
-+static const struct drm_display_mode nvd_9128_mode = {
-+	.clock = 29500,
-+	.hdisplay = 800,
-+	.hsync_start = 800 + 130,
-+	.hsync_end = 800 + 130 + 98,
-+	.htotal = 800 + 0 + 130 + 98,
-+	.vdisplay = 480,
-+	.vsync_start = 480 + 10,
-+	.vsync_end = 480 + 10 + 50,
-+	.vtotal = 480 + 0 + 10 + 50,
-+};
-+
-+static const struct panel_desc nvd_9128 = {
-+	.modes = &nvd_9128_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 156,
-+		.height = 88,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+};
-+
- static const struct display_timing okaya_rs800480t_7x0gp_timing = {
- 	.pixelclock = { 30000000, 30000000, 40000000 },
- 	.hactive = { 800, 800, 800 },
-@@ -1611,6 +1634,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "nec,nl4827hc19-05b",
- 		.data = &nec_nl4827hc19_05b,
- 	}, {
-+		.compatible = "nvd,9128",
-+		.data = &nvd_9128,
-+	}, {
- 		.compatible = "okaya,rs800480t-7x0gp",
- 		.data = &okaya_rs800480t_7x0gp,
- 	}, {
--- 
-2.7.4
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
+
+
+
+>
+> Cheers,
+> Andre.
+>
+>>  			reg = <0x01c0f000 0x1000>;
+>>  			clocks = <&ahb1_gates 8>,
+>>  				 <&mmc0_clk 0>,
+>> @@ -488,7 +488,7 @@
+>>  		};
+>>
+>>  		mmc1: mmc@01c10000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c10000 0x1000>;
+>>  			clocks = <&ahb1_gates 9>,
+>>  				 <&mmc1_clk 0>,
+>> @@ -507,7 +507,7 @@
+>>  		};
+>>
+>>  		mmc2: mmc@01c11000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c11000 0x1000>;
+>>  			clocks = <&ahb1_gates 10>,
+>>  				 <&mmc2_clk 0>,
+>> @@ -526,7 +526,7 @@
+>>  		};
+>>
+>>  		mmc3: mmc@01c12000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c12000 0x1000>;
+>>  			clocks = <&ahb1_gates 11>,
+>>  				 <&mmc3_clk 0>,
+>> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+>> index bd0c476..94cf5a1 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+>> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+>> @@ -905,7 +905,7 @@
+>>  		};
+>>
+>>  		mmc0: mmc@01c0f000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c0f000 0x1000>;
+>>  			clocks = <&ahb_gates 8>,
+>>  				 <&mmc0_clk 0>,
+>> @@ -922,7 +922,7 @@
+>>  		};
+>>
+>>  		mmc1: mmc@01c10000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c10000 0x1000>;
+>>  			clocks = <&ahb_gates 9>,
+>>  				 <&mmc1_clk 0>,
+>> @@ -939,7 +939,7 @@
+>>  		};
+>>
+>>  		mmc2: mmc@01c11000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c11000 0x1000>;
+>>  			clocks = <&ahb_gates 10>,
+>>  				 <&mmc2_clk 0>,
+>> @@ -956,7 +956,7 @@
+>>  		};
+>>
+>>  		mmc3: mmc@01c12000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c12000 0x1000>;
+>>  			clocks = <&ahb_gates 11>,
+>>  				 <&mmc3_clk 0>,
+>> diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+>> index 7e05e09..e3b196e 100644
+>> --- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+>> +++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+>> @@ -266,7 +266,7 @@
+>>  		};
+>>
+>>  		mmc0: mmc@01c0f000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c0f000 0x1000>;
+>>  			clocks = <&ahb1_gates 8>,
+>>  				 <&mmc0_clk 0>,
+>> @@ -285,7 +285,7 @@
+>>  		};
+>>
+>>  		mmc1: mmc@01c10000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c10000 0x1000>;
+>>  			clocks = <&ahb1_gates 9>,
+>>  				 <&mmc1_clk 0>,
+>> @@ -304,7 +304,7 @@
+>>  		};
+>>
+>>  		mmc2: mmc@01c11000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c11000 0x1000>;
+>>  			clocks = <&ahb1_gates 10>,
+>>  				 <&mmc2_clk 0>,
+>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+>> index 93c88f3..b5cc2dc 100644
+>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+>> @@ -154,7 +154,7 @@
+>>  		};
+>>
+>>  		mmc0: mmc@01c0f000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c0f000 0x1000>;
+>>  			clocks = <&ccu CLK_BUS_MMC0>,
+>>  				 <&ccu CLK_MMC0>,
+>> @@ -173,7 +173,7 @@
+>>  		};
+>>
+>>  		mmc1: mmc@01c10000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c10000 0x1000>;
+>>  			clocks = <&ccu CLK_BUS_MMC1>,
+>>  				 <&ccu CLK_MMC1>,
+>> @@ -192,7 +192,7 @@
+>>  		};
+>>
+>>  		mmc2: mmc@01c11000 {
+>> -			compatible = "allwinner,sun5i-a13-mmc";
+>> +			compatible = "allwinner,sun7i-a20-mmc";
+>>  			reg = <0x01c11000 0x1000>;
+>>  			clocks = <&ccu CLK_BUS_MMC2>,
+>>  				 <&ccu CLK_MMC2>,
+>>
