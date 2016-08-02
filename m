@@ -1,48 +1,36 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/4] arm64: tegra: Add clock and reset names for audio powergate
-Date: Tue, 2 Aug 2016 11:34:29 +0100
-Message-ID: <1470134069-12178-5-git-send-email-jonathanh@nvidia.com>
-References: <1470134069-12178-1-git-send-email-jonathanh@nvidia.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: omap: fix 4.7 gpmc networking regression
+Date: Tue, 2 Aug 2016 03:35:05 -0700
+Message-ID: <20160802103505.GD28140@atomide.com>
+References: <1469362260-20066-1-git-send-email-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470134069-12178-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1469362260-20066-1-git-send-email-johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the clock and reset names for the Tegra210 Audio powergate. Please
-note that these are not currently used, but added from completeness and
-to be consistent with the other powergate nodes.
+* Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [160724 05:11]:
+> Networking is currently broken for Overo boards due to a regression in
+> 4.7. I bisected it down to
+> 
+> 	d2d00862dfbb ("memory: omap-gpmc: Support general purpose input
+> 	for WAITPINs")
+...
 
-Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
+> Note that simply fixing the Overo NAND issue would fix the Overo
+> networking regression, but by restoring the 4.6 gpmc-probe behaviour
+> similar regressions on other OMAP systems are also avoided.
 
-We added the clock and resets names for the XUSB partitions and so I
-thought we should do the same for the Audio. Should I update the binding
-documentation to say these should be provided? Currently it does not
-state these are required. If we do update the binding doc, I was not
-entirely sure what to put in the description for these properties.
-Typically the clock and reset names would be fixed for a device, but here
-we are not using them and so there are no fixed names.
+Roger, got a better fix in mind?
 
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Regards,
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index c4cfdcf60d26..92e987acc551 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -644,7 +644,9 @@
- 			pd_audio: aud {
- 				clocks = <&tegra_car TEGRA210_CLK_APE>,
- 					 <&tegra_car TEGRA210_CLK_APB2APE>;
-+				clock-names = "ape", "apb2ape";
- 				resets = <&tegra_car 198>;
-+				reset-names = "ape";
- 				#power-domain-cells = <0>;
- 			};
- 
--- 
-2.1.4
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
