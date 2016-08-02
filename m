@@ -1,123 +1,135 @@
-From: Duc Dang <dhdang@apm.com>
-Subject: Re: [PATCH v5 09/11] dtb: xgene: Add MDIO node
-Date: Tue, 2 Aug 2016 12:10:28 -0700
-Message-ID: <CADaLNDnizBfxXcy8_W2WQ29X_s3FxOsU+CGV_O63ES_4zSLZcg@mail.gmail.com>
-References: <1467932579-14320-1-git-send-email-isubramanian@apm.com>
- <1467932579-14320-10-git-send-email-isubramanian@apm.com>
- <CAOesGMiF0PQocy2jj9Fpz_K-dYRtJDnd789DOCLz35y5g+KVzw@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH] watchdog: xilinx: Add clock support
+Date: Tue, 2 Aug 2016 12:23:13 -0700
+Message-ID: <20160802192313.GA647@roeck-us.net>
+References: <1470134220-12927-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOesGMiF0PQocy2jj9Fpz_K-dYRtJDnd789DOCLz35y5g+KVzw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Network Development <netdev@vger.kernel.org>, patches <patches@apm.com>, Russell King <linux@armlinux.org.uk>, Iyappan Subramanian <isubramanian@apm.com>, Matthias Brugger <matthias.bgg@gmail.com>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1470134220-12927-1-git-send-email-shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 1, 2016 at 2:13 PM, Olof Johansson <olof@lixom.net> wrote:
->
-> Hi,
->
-> I came across this now when looking at merge conflicts when preparing
-> this. I wish I had seen it sooner.
->
-> On Thu, Jul 7, 2016 at 4:02 PM, Iyappan Subramanian
-> <isubramanian@apm.com> wrote:
-> > Added mdio node for mdio driver.  Also added phy-handle
-> > reference to the ethernet nodes.
-> >
-> > Removed unused mdio subnode within storm menet ethernet node.
-> > Removed unused clock node from storm sgenet1.
-> >
-> > Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-> > Tested-by: Fushen Chen <fchen@apm.com>
-> > Tested-by: Toan Le <toanle@apm.com>
-> > Tested-by: Matthias Brugger <mbrugger@suse.com>
-> > ---
-> >  arch/arm64/boot/dts/apm/apm-mustang.dts | 12 +++++++++++
-> >  arch/arm64/boot/dts/apm/apm-storm.dtsi  | 36 ++++++++++++---------------------
-> >  2 files changed, 25 insertions(+), 23 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
-> > index 44db32e..b7fb5d9 100644
-> > --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
-> > +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
-> > @@ -79,3 +79,15 @@
-> >  &mmc0 {
-> >         status = "ok";
-> >  };
-> > +
-> > +&mdio {
-> > +       menet0phy: phy@3 {
-> > +               reg = <0x3>;
-> > +       };
-> > +       sgenet0phy: phy@4 {
-> > +               reg = <0x4>;
-> > +       };
-> > +       sgenet1phy: phy@5 {
-> > +               reg = <0x5>;
-> > +       };
-> > +};
-> > diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> > index 5147d76..a415b3a 100644
-> > --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> > +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> > @@ -237,20 +237,11 @@
-> >                                 clocks = <&socplldiv2 0>;
-> >                                 reg = <0x0 0x1f21c000 0x0 0x1000>;
-> >                                 reg-names = "csr-reg";
-> > -                               csr-mask = <0x3>;
-> > +                               csr-mask = <0xa>;
-> > +                               enable-mask = <0xf>;
-> >                                 clock-output-names = "sge0clk";
-> >                         };
-> >
-> > -                       sge1clk: sge1clk@1f21c000 {
-> > -                               compatible = "apm,xgene-device-clock";
-> > -                               #clock-cells = <1>;
-> > -                               clocks = <&socplldiv2 0>;
-> > -                               reg = <0x0 0x1f21c000 0x0 0x1000>;
-> > -                               reg-names = "csr-reg";
-> > -                               csr-mask = <0xc>;
-> > -                               clock-output-names = "sge1clk";
-> > -                       };
-> > -
-> >                         xge0clk: xge0clk@1f61c000 {
-> >                                 compatible = "apm,xgene-device-clock";
-> >                                 #clock-cells = <1>;
-> > @@ -921,6 +912,14 @@
-> >                         clocks = <&rtcclk 0>;
-> >                 };
-> >
-> > +               mdio: mdio@0x17020000 {
-> > +                       compatible = "apm,xgene-mdio-rgmii";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
-> > +                       reg = <0x0 0x17020000 0x0 0xd100>;
-> > +                       clocks = <&menetclk 0>;
-> > +               };
-> > +
-> >                 menet: ethernet@17020000 {
->
->
-> This new mmio node has the same unit address, and claims the same
-> register window as the ethernet controller.
-> That's doesn't seem correct?
-Hi Olof,
+On Tue, Aug 02, 2016 at 04:07:00PM +0530, Shubhrajyoti Datta wrote:
+> Add support for the clock. Currently we enable
+> at probe and relinquish at remove.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
+>  drivers/watchdog/of_xilinx_wdt.c                   | 24 ++++++++++++++++++++--
+>  2 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+> index 6d63782..b0a9fa3 100644
+> --- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+> @@ -5,6 +5,8 @@ Required properties:
+>  - compatible		: Should be "xlnx,xps-timebase-wdt-1.00.a" or
+>  			  "xlnx,xps-timebase-wdt-1.01.a".
+>  - reg			: Physical base address and size
+> +- clocks		: Input clock specifier. Refer to common clock
+> +			  bindings.
+>  
+>  Optional properties:
+>  - clock-frequency	: Frequency of clock in Hz
+> @@ -17,6 +19,7 @@ Example:
+>  axi-timebase-wdt@40100000 {
+>  	clock-frequency = <50000000>;
+>  	compatible = "xlnx,xps-timebase-wdt-1.00.a";
+> +	clocks = <&clkc 15>;
+>  	reg = <0x40100000 0x10000>;
+>  	xlnx,wdt-enable-once = <0x0>;
+>  	xlnx,wdt-interval = <0x1b>;
+> diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
+> index b2e1b4c..23cbb33 100644
+> --- a/drivers/watchdog/of_xilinx_wdt.c
+> +++ b/drivers/watchdog/of_xilinx_wdt.c
+> @@ -10,6 +10,7 @@
+>   * 2 of the License, or (at your option) any later version.
+>   */
+>  
+> +#include <linux/clk.h>
+>  #include <linux/err.h>
+>  #include <linux/module.h>
+>  #include <linux/types.h>
+> @@ -45,6 +46,7 @@ struct xwdt_device {
+>  	u32 wdt_interval;
+>  	spinlock_t spinlock;
+>  	struct watchdog_device xilinx_wdt_wdd;
+> +	struct clk		*clk;
+>  };
+>  
+>  static int xilinx_wdt_start(struct watchdog_device *wdd)
+> @@ -194,17 +196,30 @@ static int xwdt_probe(struct platform_device *pdev)
+>  
+>  	spin_lock_init(&xdev->spinlock);
+>  	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
+> +	xdev->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(xdev->clk)) {
+> +		dev_err(&pdev->dev, "input clock not found\n");
+> +		rc = PTR_ERR(xdev->clk);
+> +		return rc;
+> +	}
+> +
+> +	rc = clk_prepare_enable(xdev->clk);
+> +	if (rc) {
+> +		dev_err(&pdev->dev, "unable to enable clock\n");
+> +		goto err_clk_disable;
 
-Unfortunately, Iyappan is on vacation. He will respond as soon as he gets back.
+Enable failed. Why try to disable ?
 
-Regards,
-Duc Dang.
->
->
-> -Olof
+> +	}
+> +
+>  
+
+Please no double empty lines.
+
+>  	rc = xwdt_selftest(xdev);
+>  	if (rc == XWT_TIMER_FAILED) {
+>  		dev_err(&pdev->dev, "SelfTest routine error\n");
+> -		return rc;
+> +		goto err_clk_disable;
+>  	}
+>  
+>  	rc = watchdog_register_device(xilinx_wdt_wdd);
+>  	if (rc) {
+>  		dev_err(&pdev->dev, "Cannot register watchdog (err=%d)\n", rc);
+> -		return rc;
+> +		goto err_clk_disable;
+>  	}
+>  
+>  	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds\n",
+> @@ -213,6 +228,10 @@ static int xwdt_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, xdev);
+>  
+>  	return 0;
+> +err_clk_disable:
+> +	clk_disable_unprepare(xdev->clk);
+> +
+> +	return rc;
+>  }
+>  
+>  static int xwdt_remove(struct platform_device *pdev)
+> @@ -220,6 +239,7 @@ static int xwdt_remove(struct platform_device *pdev)
+>  	struct xwdt_device *xdev = platform_get_drvdata(pdev);
+>  
+>  	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
+> +	clk_disable_unprepare(xdev->clk);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.1.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
