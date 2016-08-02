@@ -1,136 +1,207 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: how to structure some disruptive patches
-Date: Tue, 2 Aug 2016 15:51:20 -0700
-Message-ID: <57A123E8.3070109@gmail.com>
-References: <57A0D84C.9000605@gmail.com>
- <CAL_JsqJ4QQ9HjHZYp-jgODTiu-BHiyo2ZV5u9ysBr-oL1xbF_Q@mail.gmail.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v3 2/2] mmc: host: sunxi: add support for A64 mmc
+ controller
+Date: Wed, 03 Aug 2016 08:43:36 +0900
+Message-ID: <57A13028.2030506@samsung.com>
+References: <20160801151351.51854-1-icenowy@aosc.xyz>
+ <CGME20160801151434epcas1p15f57862a238cf493445ed667f37a8a88@epcas1p1.samsung.com>
+ <20160801151351.51854-3-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ4QQ9HjHZYp-jgODTiu-BHiyo2ZV5u9ysBr-oL1xbF_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20160801151351.51854-3-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Ulf Hansson <ulf.hansson@linaro.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michal Suchanek <hramrach@gmail.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/02/16 11:53, Rob Herring wrote:
-> On Tue, Aug 2, 2016 at 12:28 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Rob,
->>
->> I've been working on cleaning up the docbook function documentation
->> in the device tree files.  The resulting patches could interfere with
->> code patches, so I want to figure out how to structure the documentation
->> patches to avoid that.  I would like your opinion and suggestions on
->> the subject.
->>
->> First premise: this set of documentation changes is a second class
->> citizen compared to code changes.  Any patch from this set can be
->> dropped any time it interferes with a code patch.
->>
->> I started the project with the simple intent of fixing what was
->> clearly broken.
->>   - fix syntax errors
->>   - fix mismatches between actual function arguments vs docbook
->>     list of function arguments
->>   - fix mismatches between function return type (void vs anything) and
->>     values vs docbook return types and values
->>   - fix factually incorrect descriptions of what the function does
->>
->> When I was making those changes, I found also found documentation
->> that was somewhat cryptic or otherwise hard to understand.  I also
->> found that the description of the same item was described in a
->> wide variety of ways in different docbook headers.  I made an
->> effort to also clean that up.
->>
->> The result was a large patch series (that was not totally complete):
->>
->>    15 files changed, 1414 insertions(+), 730 deletions(-)
+Hi Icenowy,
+
+On 08/02/2016 12:13 AM, Icenowy Zheng wrote:
+> A64 SoC features a MMC controller which need only the mod clock, and can
+> calibrate delay by itself. This patch adds support for the new MMC
+> controller IP core.
 > 
-> All in drivers/of and related headers?
-
-Yes.  Plus a line in the docbook makefile and a small docbook
-file that specifies which source files to process.
-
-
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> ---
+> Changes in v2:
+> - Rebased on Hans de Goede's patchset.
+> Changes in v3:
+> - Tidy up based on Hans de Goede's opinions.
 > 
->> plus around 150 lines of change to docbook files so that
->> the device tree man pages would be created.  I did not
->> add any other significant docbook documentation of device tree.
->>
->> There are at least a couple of approaches I could take for
->> submitting patches (and would be glad to hear of any other
->> approach that I did not think of):
->>
->> 1) The big ugly patchset referenced above, one patch per
->>    file.
->>      pro: exposes what changes were made to each function
->>           documentation header
->>      con: very dense and not very readable
->>      con: the mechanical corrections create a lot of noise if
->>           the reviewer wants to view actual content changes
->>      con: probably more likely to conflict with code patches
->>           in a way that is not easily fixed
+>  drivers/mmc/host/sunxi-mmc.c | 66 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
 > 
-> This is fine with me. Let's not over complicate things. There aren't
-> that many changes typically in a cycle, so we can deal with it. I'd
-> expect most changes would not collide as docbook comments and code
-> changes are separated somewhat.
+> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+> index 2ec91ce..3c26180 100644
+> --- a/drivers/mmc/host/sunxi-mmc.c
+> +++ b/drivers/mmc/host/sunxi-mmc.c
+> @@ -72,6 +72,13 @@
+>  #define SDXC_REG_CHDA	(0x90)
+>  #define SDXC_REG_CBDA	(0x94)
+>  
+> +/* New registers introduced in A64 */
+> +#define SDXC_REG_A12A		0x058 /* SMC Auto Command 12 Register */
+> +#define SDXC_REG_SD_NTSR	0x05C /* SMC New Timing Set Register */
+> +#define SDXC_REG_DRV_DL		0x140 /* Drive Delay Control Register */
+> +#define SDXC_REG_SAMP_DL_REG	0x144 /* SMC sample delay control */
+> +#define SDXC_REG_DS_DL_REG	0x148 /* SMC data strobe delay control */
+> +
+>  #define mmc_readl(host, reg) \
+>  	readl((host)->reg_base + SDXC_##reg)
+>  #define mmc_writel(host, reg, value) \
+> @@ -217,6 +224,15 @@
+>  #define SDXC_CLK_50M_DDR	3
+>  #define SDXC_CLK_50M_DDR_8BIT	4
+>  
+> +#define SDXC_2X_TIMING_MODE	BIT(31)
+> +
+> +#define SDXC_CAL_START		BIT(15)
+> +#define SDXC_CAL_DONE		BIT(14)
+> +#define SDXC_CAL_DL_SHIFT	8
+> +#define SDXC_CAL_DL_SW_EN	BIT(7)
+> +#define SDXC_CAL_DL_SW_SHIFT	0
+> +#define SDXC_CAL_DL_MASK	0x3f
+> +
+>  struct sunxi_mmc_clk_delay {
+>  	u32 output;
+>  	u32 sample;
+> @@ -232,6 +248,9 @@ struct sunxi_idma_des {
+>  struct sunxi_mmc_cfg {
+>  	u32 idma_des_size_bits;
+>  	const struct sunxi_mmc_clk_delay *clk_delays;
+> +
+> +	/* does the IP block support autocalibration? */
+> +	bool can_calibrate;
+>  };
+>  
+>  struct sunxi_mmc_host {
+> @@ -657,6 +676,38 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
+>  	return 0;
+>  }
+>  
+> +static int sunxi_mmc_calibrate(struct sunxi_mmc_host *host,
+> +			       struct mmc_ios *ios, int reg_off)
 
-Thanks, I like less complication in my life. :-)
+Where is mmc_ios structure used in this function?
+And why passing the reg_off?
 
+> +{
+> +	u32 reg = readl(host->reg_base + reg_off);
+> +	u32 delay;
+
+delay doesn't need to use u32..
+reg_off is only passed with SDXC_REG_SAMP_DL_REG..this function doesn't reuse anywhere.
+
+> +
+> +	if (!host->cfg->can_calibrate)
+> +		return 0;
+> +
+> +	reg &= ~(SDXC_CAL_DL_MASK << SDXC_CAL_DL_SW_SHIFT);
+> +	reg &= ~SDXC_CAL_DL_SW_EN;
+> +
+> +	writel(reg | SDXC_CAL_START, host->reg_base + reg_off);
+> +
+> +	dev_dbg(mmc_dev(host->mmc), "calibration started\n");
+> +
+> +	while (!((reg = readl(host->reg_base + reg_off)) & SDXC_CAL_DONE))
+> +		cpu_relax();
+
+If never hit this condition, infinite loop? 
+
+> +
+> +	delay = (reg >> SDXC_CAL_DL_SHIFT) & SDXC_CAL_DL_MASK;
+> +
+> +	reg &= ~SDXC_CAL_START;
+> +	reg |= (delay << SDXC_CAL_DL_SW_SHIFT) | SDXC_CAL_DL_SW_EN;
+
+Something is strange. It seems to maintain the  delay value.
+
+reg &= ~(SDXC_CAL_START | (SDXC_CAL_DL_MASK << SDXC_CAL_DL_SHIFT));
+reg |= SDXC_CAL_DL_SW_EN; 
+
+is it same thing?
+
+> +
+> +	writel(reg, host->reg_base + reg_off);
+> +
+> +	dev_dbg(mmc_dev(host->mmc), "calibration ended, res is 0x%x\n", reg);
+
+s/res is/reg is ?
+
+> +
+> +	/* TODO: enable calibrate on sdc2 SDXC_REG_DS_DL_REG of A64 */
+> +	return 0;
+> +}
+> +
+>  static int sunxi_mmc_clk_set_phase(struct sunxi_mmc_host *host,
+>  				   struct mmc_ios *ios, u32 rate)
+>  {
+> @@ -731,6 +782,10 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = sunxi_mmc_calibrate(host, ios, SDXC_REG_SAMP_DL_REG);
+> +	if (ret)
+> +		return ret;
+
+Never enter this condition. sunxi_mmc_calibrate() is always returned 0.
+
+
+Best Regards,
+Jaehoon Chung
+
+> +
+>  	return sunxi_mmc_oclk_onoff(host, 1);
+>  }
+>  
+> @@ -982,21 +1037,31 @@ static const struct sunxi_mmc_clk_delay sun9i_mmc_clk_delays[] = {
+>  static const struct sunxi_mmc_cfg sun4i_a10_cfg = {
+>  	.idma_des_size_bits = 13,
+>  	.clk_delays = NULL,
+> +	.can_calibrate = false,
+>  };
+>  
+>  static const struct sunxi_mmc_cfg sun5i_a13_cfg = {
+>  	.idma_des_size_bits = 16,
+>  	.clk_delays = NULL,
+> +	.can_calibrate = false,
+>  };
+>  
+>  static const struct sunxi_mmc_cfg sun7i_a20_cfg = {
+>  	.idma_des_size_bits = 16,
+>  	.clk_delays = sunxi_mmc_clk_delays,
+> +	.can_calibrate = false,
+>  };
+>  
+>  static const struct sunxi_mmc_cfg sun9i_a80_cfg = {
+>  	.idma_des_size_bits = 16,
+>  	.clk_delays = sun9i_mmc_clk_delays,
+> +	.can_calibrate = false,
+> +};
+> +
+> +static const struct sunxi_mmc_cfg sun50i_a64_cfg = {
+> +	.idma_des_size_bits = 16,
+> +	.clk_delays = NULL,
+> +	.can_calibrate = true,
+>  };
+>  
+>  static const struct of_device_id sunxi_mmc_of_match[] = {
+> @@ -1004,6 +1069,7 @@ static const struct of_device_id sunxi_mmc_of_match[] = {
+>  	{ .compatible = "allwinner,sun5i-a13-mmc", .data = &sun5i_a13_cfg },
+>  	{ .compatible = "allwinner,sun7i-a20-mmc", .data = &sun7i_a20_cfg },
+>  	{ .compatible = "allwinner,sun9i-a80-mmc", .data = &sun9i_a80_cfg },
+> +	{ .compatible = "allwinner,sun50i-a64-mmc", .data = &sun50i_a64_cfg },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, sunxi_mmc_of_match);
 > 
-> I'd like a git branch for this. I'll keep it separate until -rc6 or so
-> and then you can rebase things then if merging becomes a problem. Or
-> we can drop any problematic patches.
-
-Sounds like a good plan.  I will send the patches to the mail list
-for review as well as keep a git branch.
-
-> 
->> 2) Split method 1 into stages (one patch per file for each stage).
->>    Examples of some possible stages are:
->>    - white space fixes
->>    - syntax fixes
->>    - incorrect argument list fixes
->>    - incorrect return type fixes
->>    - incorrect return value fixes
->>    - incorrect behavior description fixes
->>    - confusing behavior description fixes
->>      pro: it would be easier to review patches for many of the stages
->>      con: a lot more patches
->>      con: maybe difficult to handle conflicts with code patches
->>      con: maybe difficult to rework patches for review comments (changes
->>           for an earlier stage are likely to impact a patch for a later
->>           stage)
->>
->> 3) Do one patch series to remove all docbook function header documentation.
->>    Do a second patch series to add the updated docbook function header
->>    documentation.  For each of the two series, one patch per file.
->>      pro: the patches are much easier to read
->>      pro: it might be easier to resolve conflicts with source patches
->>           (either you dropping a few hunks or me redoing the docbook patch
->>           to remove the conflict)
->>      con: the actual changes to what the documentation says are not visible
->>
->> My current version of the patches is against 4.7-rc2.  I will have to update
->> this to 4.7 or 4.8-rc1 (I would assume that 4.8-rc1 would make more sense).
-> 
-> You've followed all the documentation changes for 4.8 using Sphinx,
-> right? Is this going to impact your work?
-
-I've been following at a distance for the last year.  The last I heard the intent
-was to not change the syntax in the source files (though there was muttering
-about possibly enhancing the syntax).  I have articles on Linux Sphinx open in a
-browser, and will make sure I'm up to speed.  Worse case that I expect would
-be if I have to make some sort of Sphinx file instead of a docbook file to
-point to the source files containing the docbook headers.
-
-> 
-> Rob
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
