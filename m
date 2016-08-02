@@ -1,26 +1,82 @@
-From: "peter11" <peter11@a.shhzf.net>
-Subject: Re:Help you develop global target market to win customers! !
-Date: Wed, 3 Aug 2016 04:04:15 +0800
-Message-ID: <201608030404152248889@a.shhzf.net>
-Reply-To: 3183346925-9uewiaClKEY@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 RFC 6/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
+Date: Tue, 2 Aug 2016 14:56:59 -0600
+Message-ID: <14206e73-c7bc-0b19-ecc9-640292c2a0c4@wwwdotorg.org>
+References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
+ <1469559213-16160-7-git-send-email-stefan.wahren@i2se.com>
+ <597f3289-91c3-7c19-8992-d6b386d50c02@wwwdotorg.org>
+ <1427745143.15570.152fe5dd-527b-4ad6-b2fd-e4b0af6bc2a9.open-xchange@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="GB2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1427745143.15570.152fe5dd-527b-4ad6-b2fd-e4b0af6bc2a9.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ysfW97avv6q3orn6zeK1sbXYtcTEv7Hqv827p7u5yse8zND4tci/zbun19S8usnPw8XBy73ixNgg
-DQoNCtTay9HL99L9x+bJz8Pmy9HL99PQ0ru2qMD6yre1xLmry77G89K1zfjVvqOszOHIocS/seq/
-zbun0MXPog0KDQrW97avs/a798Gqz7XV5tX9uN/WysG/tcTEv7Hqv827pw0KDQqw79b6zeLDs8bz
-0rWjrHNvaG+jrM3iw7PStc7x1LG9tbXNv827p7+qt6LDxbz3o6yyu8DLt9HKsbzk1NrArLv40a/F
-zMntyc+how0KIA0Kz+vBy73iuPy24Nb3tq/Kvc3iw7O/qreiv827p6Osx+u80yBRUSsrICAzMjQ2
-MDc1NzA3ICDWsb3T0enWpL/Nu6fQxc+iIMrHt/HV5sq1oaLT0NCnIA0K0rK/ybzTzqLQxbrFo7pz
-dW5zZXNvZnRzYW0NCg0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KyOfT0LK70OjS
-qrTL0MXPoqOsx+u72Li0obCyu9Do0qqhsaOsztLDx72ru+G9q8T6tcTTys/kvfjQ0MbBsc6jrLK7
-1Nm4+MT6t6LQxbXEoaMNCg0KDQrXo6O6yfrS4tDLwqGjoQ==
+On 08/02/2016 01:29 PM, Stefan Wahren wrote:
+> Hi Stephen,
+>
+>> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> hat am 2. August 2016 um 19:19
+>> geschrieben:
+>>
+>>
+>> On 07/26/2016 12:53 PM, Stefan Wahren wrote:
+>>> The Raspberry Pi Zero is a minified version of model A+. It's
+>>> notable there is no PWR LED and the ACT LED is inverted.
+>>
+>> Patches 3-6,
+>> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts
+>>> b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
+>>
+>> The following comment format is a bit strange, but I'm not sure there's
+>> anything objectively better...
+>
+> the idea behind that was to provide valid values for every dr_mode with minimum
+> effort. I see 2 alternative solutions:
+>   a) add different dr_mode examples to the dwc2 => doesn't work for all
+> platforms
+>   b) add comments to drivers/usb/dwc2/platform.c => harder to find
+>
+> At the end the solution here is already obsolete. This patch series doesn't
+> contain an update for the bcm2835_defconfig which should set the following:
+>
+> CONFIG_NOP_USB_XCEIV=y
+> CONFIG_USB_GADGET=y
+>
+> After enabling these options another issue is revealed. Currently the dr_mode
+> for all the other bcm283x boards isn't defined, which means "otg" instead of
+> intended "host". But the dwc2 driver ignores this as long as CONFIG_USB_GADGET
+> is not defined. So we need to define the dr_mode for all bcm283x boards.
+
+Do note that the existing DTs must work with any new kernel update; 
+that's part of DT being an ABI. So, there should be no need to update 
+any of the existing DTs. Rather, the driver must cope with missing 
+properties and operate as best it can. Perhaps that means that even if 
+dr_mode is unspecified and hence defaults to otg, then if properties 
+that are mandatory for OTG to operate are missing, the driver falls back 
+to host mode. I think that'd be completely backwards-compatible?
+
+ > In
+> order to avoid such massive copy & paste, we better define 3 dtsi files for each
+> dr_mode.
+
+3 DT files, with an appropriate one of those included in each RPi DT, 
+sounds reasonable.
+
+> The only catch about this solution is the modes "otg" and "peripheral"
+> wouldn't be referenced.
+
+That's probably OK; in this patch the properties for those modes are in 
+a comment too, so essentially unreferenced. Perhaps on RPi platforms 
+where a choice is possible (Zero, A), there could be a comment next to 
+the include of the "host" or "otg" version that states the user might 
+want to edit the DT and include the other version instead. Then, those 
+files would be somewhat referenced.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
