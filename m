@@ -1,60 +1,101 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 RFC 6/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
-Date: Tue, 2 Aug 2016 11:19:00 -0600
-Message-ID: <597f3289-91c3-7c19-8992-d6b386d50c02@wwwdotorg.org>
-References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <1469559213-16160-7-git-send-email-stefan.wahren@i2se.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: how to structure some disruptive patches
+Date: Tue, 2 Aug 2016 10:28:44 -0700
+Message-ID: <57A0D84C.9000605@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469559213-16160-7-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/2016 12:53 PM, Stefan Wahren wrote:
-> The Raspberry Pi Zero is a minified version of model A+. It's
-> notable there is no PWR LED and the ACT LED is inverted.
+Hi Rob,
 
-Patches 3-6,
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+I've been working on cleaning up the docbook function documentation
+in the device tree files.  The resulting patches could interfere with
+code patches, so I want to figure out how to structure the documentation
+patches to avoid that.  I would like your opinion and suggestions on
+the subject.
 
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
+First premise: this set of documentation changes is a second class
+citizen compared to code changes.  Any patch from this set can be
+dropped any time it interferes with a code patch.
 
-The following comment format is a bit strange, but I'm not sure there's 
-anything objectively better...
+I started the project with the simple intent of fixing what was
+clearly broken.
+  - fix syntax errors
+  - fix mismatches between actual function arguments vs docbook
+    list of function arguments
+  - fix mismatches between function return type (void vs anything) and
+    values vs docbook return types and values
+  - fix factually incorrect descriptions of what the function does
 
-> +&usb {
-> +	dr_mode = "host";
-> +	h-rx-fifo-size = <774>;
-> +	h-np-tx-fifo-size = <256>;
-> +	h-tx-fifo-size = <512>;
-> +/*
-> + * Settings for otg
-> + *
-> +	dr_mode = "otg";
-> +	h-rx-fifo-size = <774>;
-> +	h-np-tx-fifo-size = <32>;
-> +	h-tx-fifo-size = <0>;
-> +	g-np-tx-fifo-size = <16>;
-> +	g-rx-fifo-size = <256>;
-> +	g-tx-fifo-size = <256 128 128 64 64 64 32>;
-> + *
-> + * Settings for peripheral
-> + *
-> +	dr_mode = "peripheral";
-> +	h-rx-fifo-size = <774>;
-> +	h-np-tx-fifo-size = <0>;
-> +	h-tx-fifo-size = <0>;
-> +	g-np-tx-fifo-size = <16>;
-> +	g-rx-fifo-size = <256>;
-> +	g-tx-fifo-size = <256 128 128 64 64 64 32>;
-> + */
-> +};
+When I was making those changes, I found also found documentation
+that was somewhat cryptic or otherwise hard to understand.  I also
+found that the description of the same item was described in a
+wide variety of ways in different docbook headers.  I made an
+effort to also clean that up.
 
+The result was a large patch series (that was not totally complete):
+
+   15 files changed, 1414 insertions(+), 730 deletions(-)
+
+plus around 150 lines of change to docbook files so that
+the device tree man pages would be created.  I did not
+add any other significant docbook documentation of device tree.
+
+There are at least a couple of approaches I could take for
+submitting patches (and would be glad to hear of any other
+approach that I did not think of):
+
+1) The big ugly patchset referenced above, one patch per
+   file.
+     pro: exposes what changes were made to each function
+          documentation header
+     con: very dense and not very readable
+     con: the mechanical corrections create a lot of noise if
+          the reviewer wants to view actual content changes
+     con: probably more likely to conflict with code patches
+          in a way that is not easily fixed
+
+2) Split method 1 into stages (one patch per file for each stage).
+   Examples of some possible stages are:
+   - white space fixes
+   - syntax fixes
+   - incorrect argument list fixes
+   - incorrect return type fixes
+   - incorrect return value fixes
+   - incorrect behavior description fixes
+   - confusing behavior description fixes
+     pro: it would be easier to review patches for many of the stages
+     con: a lot more patches
+     con: maybe difficult to handle conflicts with code patches
+     con: maybe difficult to rework patches for review comments (changes
+          for an earlier stage are likely to impact a patch for a later
+          stage)
+
+3) Do one patch series to remove all docbook function header documentation.
+   Do a second patch series to add the updated docbook function header
+   documentation.  For each of the two series, one patch per file.
+     pro: the patches are much easier to read
+     pro: it might be easier to resolve conflicts with source patches
+          (either you dropping a few hunks or me redoing the docbook patch
+          to remove the conflict)
+     con: the actual changes to what the documentation says are not visible
+
+My current version of the patches is against 4.7-rc2.  I will have to update
+this to 4.7 or 4.8-rc1 (I would assume that 4.8-rc1 would make more sense).
+
+One comment that applies to all of the above approaches is that I could
+attack subsets of the device tree files instead of trying to do all of
+them at the same time.
+
+What do you think of all of this?
+
+-Frank
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
