@@ -1,53 +1,217 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: tegra: Add clock and reset names for audio
- powergate
-Date: Tue, 2 Aug 2016 19:43:41 +0100
-Message-ID: <4a793df3-3ac1-9300-62fd-cd628dc47879@nvidia.com>
-References: <1470134069-12178-1-git-send-email-jonathanh@nvidia.com>
- <1470134069-12178-5-git-send-email-jonathanh@nvidia.com>
- <20160802141833.GB20134@leverpostej>
+From: Peter Senna Tschudin <peter.senna@collabora.com>
+Subject: Re: [PATCH V3 1/5] drm/imx-ldb: Add support to drm-bridge
+Date: Tue, 2 Aug 2016 20:46:55 +0200
+Message-ID: <20160802184655.GA21085@collabora.com>
+References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
+ <cover.1469993472.git.peter.senna@collabora.com>
+ <5d55969a1509de751dc550d9a02bd5070455f99b.1469993472.git.peter.senna@collabora.com>
+ <1470046870.3025.36.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160802141833.GB20134@leverpostej>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1470046870.3025.36.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, ykk@rock-chips.com, boris.brezillon@free-electrons.com, architt@codeaurora.org, linux@armlinux.org.uk, geert@linux-m68k.org, treding@nvidia.com, linux@roeck-us.net, devicetree@vger.kernel.org, andrey.gusakov@cogentembedded.com, fabio.estevam@nxp.com, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, enric.balletbo@collabora.com, akpm@linux-foundation.org, shawnguo@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
+Hi Philipp,
 
-On 02/08/16 15:18, Mark Rutland wrote:
-> On Tue, Aug 02, 2016 at 11:34:29AM +0100, Jon Hunter wrote:
->> Add the clock and reset names for the Tegra210 Audio powergate. Please
->> note that these are not currently used, but added from completeness and
->> to be consistent with the other powergate nodes.
->>
->> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>
->> We added the clock and resets names for the XUSB partitions and so I
->> thought we should do the same for the Audio. Should I update the binding
->> documentation to say these should be provided? Currently it does not
->> state these are required. If we do update the binding doc, I was not
->> entirely sure what to put in the description for these properties.
->> Typically the clock and reset names would be fixed for a device, but here
->> we are not using them and so there are no fixed names.
-> 
-> The names are there for the consumer's benefit, so if the consumer
-> binding doesn't require specific names, they shouldn't be in the DT.
-> It doesn't make sense to have names which are not fixed from the
-> consumer's PoV, so if anything the above is an argument for *removing*
-> the unnecessary and varied names from other nodes.
+Thank you for the review. I'm preparing V4, what about this:
 
-Yes I was not sure if this correct. We could always add the names at a
-later stage if they are needed.
+---
+ drivers/gpu/drm/imx/imx-ldb.c | 118 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 78 insertions(+), 40 deletions(-)
 
-Thierry, do you still want to have the names present? If not, then I can
-remove those for xusb.
-
-Cheers
-Jon
-
+diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
+index b03919e..4a33077 100644
+--- a/drivers/gpu/drm/imx/imx-ldb.c
++++ b/drivers/gpu/drm/imx/imx-ldb.c
+@@ -57,7 +57,11 @@ struct imx_ldb_channel {
+ 	struct imx_ldb *ldb;
+ 	struct drm_connector connector;
+ 	struct drm_encoder encoder;
++
++	/* Defines what is connected to the ldb, only one at a time */
+ 	struct drm_panel *panel;
++	struct drm_bridge *bridge;
++
+ 	struct device_node *child;
+ 	struct i2c_adapter *ddc;
+ 	int chno;
+@@ -466,10 +470,30 @@ static int imx_ldb_register(struct drm_device *drm,
+ 	drm_encoder_init(drm, encoder, &imx_ldb_encoder_funcs,
+ 			 DRM_MODE_ENCODER_LVDS, NULL);
+ 
+-	drm_connector_helper_add(&imx_ldb_ch->connector,
+-			&imx_ldb_connector_helper_funcs);
+-	drm_connector_init(drm, &imx_ldb_ch->connector,
+-			   &imx_ldb_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
++	if (imx_ldb_ch->bridge) {
++		imx_ldb_ch->bridge->encoder = encoder;
++
++		imx_ldb_ch->encoder.bridge = imx_ldb_ch->bridge;
++		ret = drm_bridge_attach(drm, imx_ldb_ch->bridge);
++		if (ret) {
++			DRM_ERROR("Failed to initialize bridge with drm\n");
++			return ret;
++		}
++	} else {
++		/*
++		 * We want to add the connector whenever there is no bridge
++		 * that brings its own, not only when there is a panel. For
++		 * historical reasons, the ldb driver can also work without
++		 * a panel.
++		 */
++		drm_connector_helper_add(&imx_ldb_ch->connector,
++				&imx_ldb_connector_helper_funcs);
++		drm_connector_init(drm, &imx_ldb_ch->connector,
++				&imx_ldb_connector_funcs,
++				DRM_MODE_CONNECTOR_LVDS);
++		drm_mode_connector_attach_encoder(&imx_ldb_ch->connector,
++				encoder);
++	}
+ 
+ 	if (imx_ldb_ch->panel) {
+ 		ret = drm_panel_attach(imx_ldb_ch->panel,
+@@ -478,8 +502,6 @@ static int imx_ldb_register(struct drm_device *drm,
+ 			return ret;
+ 	}
+ 
+-	drm_mode_connector_attach_encoder(&imx_ldb_ch->connector, encoder);
+-
+ 	return 0;
+ }
+ 
+@@ -548,6 +570,45 @@ static const struct of_device_id imx_ldb_dt_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(of, imx_ldb_dt_ids);
+ 
++static int imx_ldb_panel_ddc(struct device *dev,
++		struct imx_ldb_channel *channel, struct device_node *child)
++{
++	struct device_node *ddc_node;
++	const u8 *edidp;
++	int ret;
++
++	ddc_node = of_parse_phandle(child, "ddc-i2c-bus", 0);
++	if (ddc_node) {
++		channel->ddc = of_find_i2c_adapter_by_node(ddc_node);
++		of_node_put(ddc_node);
++		if (!channel->ddc) {
++			dev_warn(dev, "failed to get ddc i2c adapter\n");
++			return -EPROBE_DEFER;
++		}
++	}
++
++	if (!channel->ddc) {
++		/* if no DDC available, fallback to hardcoded EDID */
++		dev_dbg(dev, "no ddc available\n");
++
++		edidp = of_get_property(child, "edid",
++					&channel->edid_len);
++		if (edidp) {
++			channel->edid = kmemdup(edidp,
++						channel->edid_len,
++						GFP_KERNEL);
++		} else if (!channel->panel) {
++			/* fallback to display-timings node */
++			ret = of_get_drm_display_mode(child,
++						      &channel->mode,
++						      OF_USE_NATIVE_MODE);
++			if (!ret)
++				channel->mode_valid = 1;
++		}
++	}
++	return 0;
++}
++
+ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
+ {
+ 	struct drm_device *drm = data;
+@@ -555,7 +616,6 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
+ 	const struct of_device_id *of_id =
+ 			of_match_device(imx_ldb_dt_ids, dev);
+ 	struct device_node *child;
+-	const u8 *edidp;
+ 	struct imx_ldb *imx_ldb;
+ 	int dual;
+ 	int ret;
+@@ -605,7 +665,6 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	for_each_child_of_node(np, child) {
+ 		struct imx_ldb_channel *channel;
+-		struct device_node *ddc_node;
+ 		struct device_node *ep;
+ 		int bus_format;
+ 
+@@ -638,46 +697,25 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
+ 
+ 			remote = of_graph_get_remote_port_parent(ep);
+ 			of_node_put(ep);
+-			if (remote)
++			if (remote) {
+ 				channel->panel = of_drm_find_panel(remote);
+-			else
++				channel->bridge = of_drm_find_bridge(remote);
++			} else
+ 				return -EPROBE_DEFER;
+ 			of_node_put(remote);
+-			if (!channel->panel) {
+-				dev_err(dev, "panel not found: %s\n",
+-					remote->full_name);
+-				return -EPROBE_DEFER;
+-			}
+-		}
+ 
+-		ddc_node = of_parse_phandle(child, "ddc-i2c-bus", 0);
+-		if (ddc_node) {
+-			channel->ddc = of_find_i2c_adapter_by_node(ddc_node);
+-			of_node_put(ddc_node);
+-			if (!channel->ddc) {
+-				dev_warn(dev, "failed to get ddc i2c adapter\n");
++			if (!channel->panel && !channel->bridge) {
++				dev_err(dev, "panel/bridge not found: %s\n",
++					remote->full_name);
+ 				return -EPROBE_DEFER;
+ 			}
+ 		}
+ 
+-		if (!channel->ddc) {
+-			/* if no DDC available, fallback to hardcoded EDID */
+-			dev_dbg(dev, "no ddc available\n");
+-
+-			edidp = of_get_property(child, "edid",
+-						&channel->edid_len);
+-			if (edidp) {
+-				channel->edid = kmemdup(edidp,
+-							channel->edid_len,
+-							GFP_KERNEL);
+-			} else if (!channel->panel) {
+-				/* fallback to display-timings node */
+-				ret = of_get_drm_display_mode(child,
+-							      &channel->mode,
+-							      OF_USE_NATIVE_MODE);
+-				if (!ret)
+-					channel->mode_valid = 1;
+-			}
++		/* panel ddc only if there is no bridge */
++		if (!channel->bridge) {
++			ret = imx_ldb_panel_ddc(dev, channel, child);
++			if (ret)
++				return ret;
+ 		}
+ 
+ 		bus_format = of_get_bus_format(dev, child);
 -- 
-nvpublic
+2.5.5
