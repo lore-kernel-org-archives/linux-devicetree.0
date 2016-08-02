@@ -1,123 +1,43 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5 06/10] drm/mediatek: add dsi interrupt control
-Date: Tue, 2 Aug 2016 14:07:37 +0800
-Message-ID: <1470118057.16554.5.camel@mtksdaap41>
-References: <1469698084-20185-1-git-send-email-yt.shen@mediatek.com>
- <1469698084-20185-7-git-send-email-yt.shen@mediatek.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFT PATCH v2 2/3] ARM: Fix *MIGHT_HAVE_PCI* config from being
+ selected redundantly
+Date: Tue, 2 Aug 2016 11:41:46 +0530
+Message-ID: <57A039A2.7030406@ti.com>
+References: <1470049950-4697-1-git-send-email-kishon@ti.com>
+ <1470049950-4697-3-git-send-email-kishon@ti.com>
+ <20160801152430.GM5783@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1469698084-20185-7-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YT Shen <yt.shen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Russell King <linux@arm.linux.org.uk>, Mao Huang <littlecvr@chromium.org>, yingjoe.chen@mediatek.com, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160801152430.GM5783@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tony Lindgren <tony@atomide.com>, linux-pci@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Greg Ungerer <gerg@uclinux.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-samsung-soc@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Kukjin Kim <kgene@kernel.org>, helgaas@kernel.org, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, nsekhar@ti.com, Haojian Zhuang <haojian.zhuang@gmail.com>, Simon Horman <horms@verge.net.au>, Krzysztof Halasa <khalasa@piap.pl>, Santosh Shilimkar <ssantosh@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shiraz
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlUOgoKT24gVGh1LCAyMDE2LTA3LTI4IGF0IDE3OjI4ICswODAwLCBZVCBTaGVuIHdyb3Rl
-Ogo+IEZyb206IHNoYW9taW5nIGNoZW4gPHNoYW9taW5nLmNoZW5AbWVkaWF0ZWsuY29tPgo+IAo+
-IGFkZCBkc2kgaW50ZXJydXB0IGNvbnRyb2wKPiAKPiBTaWduZWQtb2ZmLWJ5OiBzaGFvbWluZyBj
-aGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kc2kuYyB8ICAgOTIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA5MiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RzaS5jCj4gaW5kZXggYTljZjVhMS4uNTUzNDQzYSAxMDA2NDQKPiAtLS0g
-YS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kc2kuYwo+IEBAIC0xOCw2ICsxOCw3IEBACj4gICNpbmNsdWRlIDxk
-cm0vZHJtX3BhbmVsLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiAgI2luY2x1ZGUgPGxp
-bnV4L2NvbXBvbmVudC5oPgo+ICsjaW5jbHVkZSA8bGludXgvaXJxLmg+Cj4gICNpbmNsdWRlIDxs
-aW51eC9vZi5oPgo+ICAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KPiAgI2luY2x1ZGUg
-PGxpbnV4L29mX2dyYXBoLmg+Cj4gQEAgLTI5LDYgKzMwLDE3IEBACj4gIAo+ICAjZGVmaW5lIERT
-SV9TVEFSVAkJMHgwMAo+ICAKPiArI2RlZmluZSBEU0lfSU5URU4JCTB4MDgKPiArCj4gKyNkZWZp
-bmUgRFNJX0lOVFNUQQkJMHgwYwo+ICsjZGVmaW5lIExQUlhfUkRfUkRZX0lOVF9GTEFHCQlCSVQo
-MCkKPiArI2RlZmluZSBDTURfRE9ORV9JTlRfRkxBRwkJQklUKDEpCj4gKyNkZWZpbmUgVEVfUkRZ
-X0lOVF9GTEFHCQkJQklUKDIpCj4gKyNkZWZpbmUgVk1fRE9ORV9JTlRfRkxBRwkJQklUKDMpCj4g
-KyNkZWZpbmUgRVhUX1RFX1JEWV9JTlRfRkxBRwkJQklUKDQpCj4gKyNkZWZpbmUgRFNJX0lOVF9B
-TExfQklUUwkJMHg3Zgo+ICsjZGVmaW5lIERTSV9CVVNZCQkJQklUKDMxKQo+ICsKPiAgI2RlZmlu
-ZSBEU0lfQ09OX0NUUkwJCTB4MTAKPiAgI2RlZmluZSBEU0lfUkVTRVQJCQlCSVQoMCkKPiAgI2Rl
-ZmluZSBEU0lfRU4JCQkJQklUKDEpCj4gQEAgLTcxLDYgKzgzLDkgQEAKPiAgCj4gICNkZWZpbmUg
-RFNJX0hTVFhfQ0tMX1dDCQkweDY0Cj4gIAo+ICsjZGVmaW5lIERTSV9SQUNLCQkweDg0Cj4gKyNk
-ZWZpbmUgUkFDSwkJCQlCSVQoMCkKPiArCj4gICNkZWZpbmUgRFNJX1BIWV9MQ0NPTgkJMHgxMDQK
-PiAgI2RlZmluZSBMQ19IU19UWF9FTgkJCUJJVCgwKQo+ICAjZGVmaW5lIExDX1VMUE1fRU4JCQlC
-SVQoMSkKPiBAQCAtMTMxLDggKzE0NiwxMyBAQCBzdHJ1Y3QgbXRrX2RzaSB7Cj4gIAlzdHJ1Y3Qg
-dmlkZW9tb2RlIHZtOwo+ICAJaW50IHJlZmNvdW50Owo+ICAJYm9vbCBlbmFibGVkOwo+ICsJaW50
-IGlycV9kYXRhOwo+ICB9Owo+ICAKPiArc3RhdGljIHdhaXRfcXVldWVfaGVhZF90IF9kc2lfY21k
-X2RvbmVfd2FpdF9xdWV1ZTsKPiArc3RhdGljIHdhaXRfcXVldWVfaGVhZF90IF9kc2lfZGNzX3Jl
-YWRfd2FpdF9xdWV1ZTsKPiArc3RhdGljIHdhaXRfcXVldWVfaGVhZF90IF9kc2lfd2FpdF92bV9k
-b25lX3F1ZXVlOwoKSSB0aGluayBmb3IgZGlmZmVyZW5jZSBpcnEgc3RhdHVzIHdlIGNhbiB1c2Ug
-b25seSBvbmUgd2FpdCBxdWV1ZS4gU28KbXVsdGlwbGUgY2xpZW50IHdhaXQgb24gdGhlIHNhbWUg
-d2FpdCBxdWV1ZSwgYnV0IGVhY2ggY2xpZW50IGhhcwpkaWZmZXJlbnQgd2FrZSB1cCBjb25kaXRp
-b24uCgo+ICsKPiAgc3RhdGljIGlubGluZSBzdHJ1Y3QgbXRrX2RzaSAqZW5jb2Rlcl90b19kc2ko
-c3RydWN0IGRybV9lbmNvZGVyICplKQo+ICB7Cj4gIAlyZXR1cm4gY29udGFpbmVyX29mKGUsIHN0
-cnVjdCBtdGtfZHNpLCBlbmNvZGVyKTsKPiBAQCAtNDM3LDYgKzQ1Nyw1NSBAQCBzdGF0aWMgdm9p
-ZCBtdGtfZHNpX3N0YXJ0KHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gIAl3cml0ZWwoMSwgZHNpLT5y
-ZWdzICsgRFNJX1NUQVJUKTsKPiAgfQo+ICAKPiArc3RhdGljIHZvaWQgbXRrX2RzaV9zZXRfaW50
-ZXJydXB0X2VuYWJsZShzdHJ1Y3QgbXRrX2RzaSAqZHNpKQo+ICt7Cj4gKwl1MzIgaW50ZW4gPSBE
-U0lfSU5UX0FMTF9CSVRTOwo+ICsKPiArCWlmIChkc2ktPm1vZGVfZmxhZ3MgJiBNSVBJX0RTSV9N
-T0RFX1ZJREVPKQo+ICsJCWludGVuICY9IH4oVEVfUkRZX0lOVF9GTEFHIHwgRVhUX1RFX1JEWV9J
-TlRfRkxBRyk7Cj4gKwo+ICsJd3JpdGVsKGludGVuLCBkc2ktPnJlZ3MgKyBEU0lfSU5URU4pOwo+
-ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBtdGtfZHNpX2lycV93YWtldXAoc3RydWN0IG10a19kc2kg
-KmRzaSwgdTMyIGlycV9iaXQpCj4gK3sKPiArCWRzaS0+aXJxX2RhdGEgfD0gaXJxX2JpdDsKPiAr
-fQo+ICsKPiArc3RhdGljIGlycXJldHVybl90IG10a19kc2lfaXJxKGludCBpcnEsIHZvaWQgKmRl
-dl9pZCkKPiArewo+ICsJc3RydWN0IG10a19kc2kgKmRzaSA9IGRldl9pZDsKPiArCj4gKwl1MzIg
-c3RhdHVzLCB0bXA7Cj4gKwo+ICsJc3RhdHVzID0gcmVhZGwoZHNpLT5yZWdzICsgRFNJX0lOVFNU
-QSk7Cj4gKwo+ICsJaWYgKHN0YXR1cyAmIExQUlhfUkRfUkRZX0lOVF9GTEFHKSB7Cj4gKwkJZG8g
-ewo+ICsJCQltdGtfZHNpX21hc2soZHNpLCBEU0lfUkFDSywgUkFDSywgUkFDSyk7Cj4gKwkJCXRt
-cCA9IHJlYWRsKGRzaS0+cmVncyArIERTSV9JTlRTVEEpOwo+ICsJCX0gd2hpbGUgKHRtcCAmIERT
-SV9CVVNZKTsKPiArCj4gKwkJbXRrX2RzaV9tYXNrKGRzaSwgRFNJX0lOVFNUQSwgTFBSWF9SRF9S
-RFlfSU5UX0ZMQUcsIDApOwo+ICsJCW10a19kc2lfaXJxX3dha2V1cChkc2ksIExQUlhfUkRfUkRZ
-X0lOVF9GTEFHKTsKPiArCQl3YWtlX3VwX2ludGVycnVwdGlibGUoJl9kc2lfZGNzX3JlYWRfd2Fp
-dF9xdWV1ZSk7Cj4gKwl9Cj4gKwo+ICsJaWYgKHN0YXR1cyAmIENNRF9ET05FX0lOVF9GTEFHKSB7
-Cj4gKwkJbXRrX2RzaV9tYXNrKGRzaSwgRFNJX0lOVFNUQSwgQ01EX0RPTkVfSU5UX0ZMQUcsIDAp
-Owo+ICsJCW10a19kc2lfaXJxX3dha2V1cChkc2ksIENNRF9ET05FX0lOVF9GTEFHKTsKPiArCQl3
-YWtlX3VwX2ludGVycnVwdGlibGUoJl9kc2lfY21kX2RvbmVfd2FpdF9xdWV1ZSk7Cj4gKwl9Cj4g
-Kwo+ICsJaWYgKHN0YXR1cyAmIFZNX0RPTkVfSU5UX0ZMQUcpIHsKPiArCQltdGtfZHNpX21hc2so
-ZHNpLCBEU0lfSU5UU1RBLCBWTV9ET05FX0lOVF9GTEFHLCAwKTsKPiArCQltdGtfZHNpX2lycV93
-YWtldXAoZHNpLCBWTV9ET05FX0lOVF9GTEFHKTsKPiArCQl3YWtlX3VwX2ludGVycnVwdGlibGUo
-Jl9kc2lfd2FpdF92bV9kb25lX3F1ZXVlKTsKPiArCX0KCkkgdGhpbmsgdGhlc2UgdGhyZWUgcGFy
-dCBjYW4gYmUgbWVyZ2VkIGludG8gb25lLgp1MzIgZGVhbF9zdGF0dXMgPSBMUFJYX1JEX1JEWV9J
-TlRfRkxBRyB8IENNRF9ET05FX0lOVF9GTEFHIHwKVk1fRE9ORV9JTlRfRkxBRzsKaWYgKHN0YXR1
-cyAmIGRlYWxfc3RhdHVzKSB7CiAgICBtdGtfZHNpX21hc2soZHNpLCBEU0lfSU5UU1RBLCBkZWFs
-X3N0YXR1cywgMCk7CiAgICBtdGtfZHNpX2lycV93YWtldXAoZHNpLCBzdGF0dXMgJiBkZWFsX3N0
-YXR1cyk7CiAgICB3YWtlX3VwX2ludGVycnVwdGlibGUoJl9kc2lfaXJxX3dhaXRfcXVldWUpOwp9
-CgpPdGhlcndpc2UsIHdoeSBlbmFibGUgRFNJX0lOVF9BTExfQklUUywgYnV0IGRlYWwgb25seQpM
-UFJYX1JEX1JEWV9JTlRfRkxBRywgQ01EX0RPTkVfSU5UX0ZMQUcsIGFuZCBWTV9ET05FX0lOVF9G
-TEFHPwoKPiArCj4gKwlyZXR1cm4gSVJRX0hBTkRMRUQ7Cj4gK30KPiArCj4gIHN0YXRpYyB2b2lk
-IG10a19kc2lfcG93ZXJvZmYoc3RydWN0IG10a19kc2kgKmRzaSkKPiAgewo+ICAJaWYgKFdBUk5f
-T04oZHNpLT5yZWZjb3VudCA9PSAwKSkKPiBAQCAtNDg1LDYgKzU1NCw3IEBAIHN0YXRpYyB2b2lk
-IG10a19vdXRwdXRfZHNpX2VuYWJsZShzdHJ1Y3QgbXRrX2RzaSAqZHNpKQo+ICAKPiAgCW10a19k
-c2lfcHNfY29udHJvbF92YWN0KGRzaSk7Cj4gIAltdGtfZHNpX2NvbmZpZ192ZG9fdGltaW5nKGRz
-aSk7Cj4gKwltdGtfZHNpX3NldF9pbnRlcnJ1cHRfZW5hYmxlKGRzaSk7Cj4gIAo+ICAJbXRrX2Rz
-aV9zZXRfbW9kZShkc2kpOwo+ICAJbXRrX2RzaV9jbGtfaHNfbW9kZShkc2ksIDEpOwo+IEBAIC04
-MDQsNiArODc0LDcgQEAgc3RhdGljIGludCBtdGtfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpCj4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ICAJc3Ry
-dWN0IGRldmljZV9ub2RlICpyZW1vdGVfbm9kZSwgKmVuZHBvaW50Owo+ICAJc3RydWN0IHJlc291
-cmNlICpyZWdzOwo+ICsJaW50IGlycV9udW07Cj4gIAlpbnQgY29tcF9pZDsKPiAgCWludCByZXQ7
-Cj4gIAo+IEBAIC04ODAsOCArOTUxLDI5IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wcm9iZShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJCXJldHVybiByZXQ7Cj4gIAl9Cj4gIAo+ICsJ
-aXJxX251bSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7Cj4gKwlpZiAoaXJxX251bSA8IDAp
-IHsKPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBkc2kgaXJxIHJl
-c291cmNlXG4iKTsKPiArCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKPiArCX0KPiArCj4gKwlpcnFf
-c2V0X3N0YXR1c19mbGFncyhpcnFfbnVtLCBJUlFfVFlQRV9MRVZFTF9MT1cpOwo+ICsJcmV0ID0g
-ZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+ZGV2LCBpcnFfbnVtLCBtdGtfZHNpX2lycSwKPiArCQkJ
-ICAgICAgIElSUUZfVFJJR0dFUl9MT1csIGRldl9uYW1lKCZwZGV2LT5kZXYpLCBkc2kpOwo+ICsJ
-aWYgKHJldCkgewo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZXF1ZXN0IG1l
-ZGlhdGVrIGRzaSBpcnFcbiIpOwo+ICsJCXJldHVybiAtRVBST0JFX0RFRkVSOwo+ICsJfQo+ICsK
-PiArCWRzaS0+aXJxX2RhdGEgPSAwOwo+ICsJZGV2X2luZm8oZGV2LCAiZHNpIGlycSBudW0gaXMg
-MHgleFxuIiwgaXJxX251bSk7Cj4gKwo+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgZHNp
-KTsKPiAgCj4gKwlpbml0X3dhaXRxdWV1ZV9oZWFkKCZfZHNpX2NtZF9kb25lX3dhaXRfcXVldWUp
-Owo+ICsJaW5pdF93YWl0cXVldWVfaGVhZCgmX2RzaV9kY3NfcmVhZF93YWl0X3F1ZXVlKTsKPiAr
-CWluaXRfd2FpdHF1ZXVlX2hlYWQoJl9kc2lfd2FpdF92bV9kb25lX3F1ZXVlKTsKPiArCj4gIAly
-ZXR1cm4gY29tcG9uZW50X2FkZCgmcGRldi0+ZGV2LCAmbXRrX2RzaV9jb21wb25lbnRfb3BzKTsK
-PiAgfQo+ICAKClJlZ2FyZHMsCkNLCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+Hi,
+
+On Monday 01 August 2016 08:54 PM, Russell King - ARM Linux wrote:
+> On Mon, Aug 01, 2016 at 04:42:29PM +0530, Kishon Vijay Abraham I wrote:
+>> *MIGHT_HAVE_PCI* config is already selected in ARCH_MULTIPLATFORM.
+>> Fix it from getting redundantly selected in all
+>> ARCH_MULTIPLATFORM based machines.
+> 
+> You're changing more than just platforms that are part of
+> ARCH_MULTIPLATFORM.  Eg, ARCH_DOVE and ARCH_IXP4XX.  So, these will
+> probably end up losing PCI support as a result of this change.
+
+Okay. Initially assumed ARCH_MULTIPLATFORM will be set if MMU is set. But looks
+like that's not true for some of the platforms. Will fix it and resend the series.
+
+Thanks
+Kishon
