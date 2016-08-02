@@ -1,111 +1,123 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: how to structure some disruptive patches
-Date: Tue, 2 Aug 2016 13:53:41 -0500
-Message-ID: <CAL_JsqJ4QQ9HjHZYp-jgODTiu-BHiyo2ZV5u9ysBr-oL1xbF_Q@mail.gmail.com>
-References: <57A0D84C.9000605@gmail.com>
+From: Duc Dang <dhdang@apm.com>
+Subject: Re: [PATCH v5 09/11] dtb: xgene: Add MDIO node
+Date: Tue, 2 Aug 2016 12:10:28 -0700
+Message-ID: <CADaLNDnizBfxXcy8_W2WQ29X_s3FxOsU+CGV_O63ES_4zSLZcg@mail.gmail.com>
+References: <1467932579-14320-1-git-send-email-isubramanian@apm.com>
+ <1467932579-14320-10-git-send-email-isubramanian@apm.com>
+ <CAOesGMiF0PQocy2jj9Fpz_K-dYRtJDnd789DOCLz35y5g+KVzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57A0D84C.9000605-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOesGMiF0PQocy2jj9Fpz_K-dYRtJDnd789DOCLz35y5g+KVzw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Network Development <netdev@vger.kernel.org>, patches <patches@apm.com>, Russell King <linux@armlinux.org.uk>, Iyappan Subramanian <isubramanian@apm.com>, Matthias Brugger <matthias.bgg@gmail.com>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 2, 2016 at 12:28 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Rob,
+On Mon, Aug 1, 2016 at 2:13 PM, Olof Johansson <olof@lixom.net> wrote:
 >
-> I've been working on cleaning up the docbook function documentation
-> in the device tree files.  The resulting patches could interfere with
-> code patches, so I want to figure out how to structure the documentation
-> patches to avoid that.  I would like your opinion and suggestions on
-> the subject.
+> Hi,
 >
-> First premise: this set of documentation changes is a second class
-> citizen compared to code changes.  Any patch from this set can be
-> dropped any time it interferes with a code patch.
+> I came across this now when looking at merge conflicts when preparing
+> this. I wish I had seen it sooner.
 >
-> I started the project with the simple intent of fixing what was
-> clearly broken.
->   - fix syntax errors
->   - fix mismatches between actual function arguments vs docbook
->     list of function arguments
->   - fix mismatches between function return type (void vs anything) and
->     values vs docbook return types and values
->   - fix factually incorrect descriptions of what the function does
+> On Thu, Jul 7, 2016 at 4:02 PM, Iyappan Subramanian
+> <isubramanian@apm.com> wrote:
+> > Added mdio node for mdio driver.  Also added phy-handle
+> > reference to the ethernet nodes.
+> >
+> > Removed unused mdio subnode within storm menet ethernet node.
+> > Removed unused clock node from storm sgenet1.
+> >
+> > Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+> > Tested-by: Fushen Chen <fchen@apm.com>
+> > Tested-by: Toan Le <toanle@apm.com>
+> > Tested-by: Matthias Brugger <mbrugger@suse.com>
+> > ---
+> >  arch/arm64/boot/dts/apm/apm-mustang.dts | 12 +++++++++++
+> >  arch/arm64/boot/dts/apm/apm-storm.dtsi  | 36 ++++++++++++---------------------
+> >  2 files changed, 25 insertions(+), 23 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/apm/apm-mustang.dts b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> > index 44db32e..b7fb5d9 100644
+> > --- a/arch/arm64/boot/dts/apm/apm-mustang.dts
+> > +++ b/arch/arm64/boot/dts/apm/apm-mustang.dts
+> > @@ -79,3 +79,15 @@
+> >  &mmc0 {
+> >         status = "ok";
+> >  };
+> > +
+> > +&mdio {
+> > +       menet0phy: phy@3 {
+> > +               reg = <0x3>;
+> > +       };
+> > +       sgenet0phy: phy@4 {
+> > +               reg = <0x4>;
+> > +       };
+> > +       sgenet1phy: phy@5 {
+> > +               reg = <0x5>;
+> > +       };
+> > +};
+> > diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> > index 5147d76..a415b3a 100644
+> > --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> > +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> > @@ -237,20 +237,11 @@
+> >                                 clocks = <&socplldiv2 0>;
+> >                                 reg = <0x0 0x1f21c000 0x0 0x1000>;
+> >                                 reg-names = "csr-reg";
+> > -                               csr-mask = <0x3>;
+> > +                               csr-mask = <0xa>;
+> > +                               enable-mask = <0xf>;
+> >                                 clock-output-names = "sge0clk";
+> >                         };
+> >
+> > -                       sge1clk: sge1clk@1f21c000 {
+> > -                               compatible = "apm,xgene-device-clock";
+> > -                               #clock-cells = <1>;
+> > -                               clocks = <&socplldiv2 0>;
+> > -                               reg = <0x0 0x1f21c000 0x0 0x1000>;
+> > -                               reg-names = "csr-reg";
+> > -                               csr-mask = <0xc>;
+> > -                               clock-output-names = "sge1clk";
+> > -                       };
+> > -
+> >                         xge0clk: xge0clk@1f61c000 {
+> >                                 compatible = "apm,xgene-device-clock";
+> >                                 #clock-cells = <1>;
+> > @@ -921,6 +912,14 @@
+> >                         clocks = <&rtcclk 0>;
+> >                 };
+> >
+> > +               mdio: mdio@0x17020000 {
+> > +                       compatible = "apm,xgene-mdio-rgmii";
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       reg = <0x0 0x17020000 0x0 0xd100>;
+> > +                       clocks = <&menetclk 0>;
+> > +               };
+> > +
+> >                 menet: ethernet@17020000 {
 >
-> When I was making those changes, I found also found documentation
-> that was somewhat cryptic or otherwise hard to understand.  I also
-> found that the description of the same item was described in a
-> wide variety of ways in different docbook headers.  I made an
-> effort to also clean that up.
 >
-> The result was a large patch series (that was not totally complete):
->
->    15 files changed, 1414 insertions(+), 730 deletions(-)
+> This new mmio node has the same unit address, and claims the same
+> register window as the ethernet controller.
+> That's doesn't seem correct?
+Hi Olof,
 
-All in drivers/of and related headers?
+Unfortunately, Iyappan is on vacation. He will respond as soon as he gets back.
 
-> plus around 150 lines of change to docbook files so that
-> the device tree man pages would be created.  I did not
-> add any other significant docbook documentation of device tree.
+Regards,
+Duc Dang.
 >
-> There are at least a couple of approaches I could take for
-> submitting patches (and would be glad to hear of any other
-> approach that I did not think of):
 >
-> 1) The big ugly patchset referenced above, one patch per
->    file.
->      pro: exposes what changes were made to each function
->           documentation header
->      con: very dense and not very readable
->      con: the mechanical corrections create a lot of noise if
->           the reviewer wants to view actual content changes
->      con: probably more likely to conflict with code patches
->           in a way that is not easily fixed
-
-This is fine with me. Let's not over complicate things. There aren't
-that many changes typically in a cycle, so we can deal with it. I'd
-expect most changes would not collide as docbook comments and code
-changes are separated somewhat.
-
-I'd like a git branch for this. I'll keep it separate until -rc6 or so
-and then you can rebase things then if merging becomes a problem. Or
-we can drop any problematic patches.
-
-> 2) Split method 1 into stages (one patch per file for each stage).
->    Examples of some possible stages are:
->    - white space fixes
->    - syntax fixes
->    - incorrect argument list fixes
->    - incorrect return type fixes
->    - incorrect return value fixes
->    - incorrect behavior description fixes
->    - confusing behavior description fixes
->      pro: it would be easier to review patches for many of the stages
->      con: a lot more patches
->      con: maybe difficult to handle conflicts with code patches
->      con: maybe difficult to rework patches for review comments (changes
->           for an earlier stage are likely to impact a patch for a later
->           stage)
->
-> 3) Do one patch series to remove all docbook function header documentation.
->    Do a second patch series to add the updated docbook function header
->    documentation.  For each of the two series, one patch per file.
->      pro: the patches are much easier to read
->      pro: it might be easier to resolve conflicts with source patches
->           (either you dropping a few hunks or me redoing the docbook patch
->           to remove the conflict)
->      con: the actual changes to what the documentation says are not visible
->
-> My current version of the patches is against 4.7-rc2.  I will have to update
-> this to 4.7 or 4.8-rc1 (I would assume that 4.8-rc1 would make more sense).
-
-You've followed all the documentation changes for 4.8 using Sphinx,
-right? Is this going to impact your work?
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -Olof
