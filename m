@@ -1,88 +1,121 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH V3 2/5] dts/imx6q-b850v3: Configure IPU assignment order
-Date: Tue, 2 Aug 2016 15:13:35 +0200
-Message-ID: <20160802131335.GH6232@phenom.ffwll.local>
-References: <1470041647.6640.3.camel@pengutronix.de>
- <70b6-579f4100-9-6ce4f380@208251793>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] watchdog: xilinx: Add clock support
+Date: Tue, 2 Aug 2016 16:07:00 +0530
+Message-ID: <1470134220-12927-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <70b6-579f4100-9-6ce4f380@208251793>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Senna Tschudin <peter.senna@collabora.co.uk>
-Cc: mark.rutland@arm.com, dri-devel@lists.freedesktop.org, linux@armlinux.org.uk, Peter Senna Tschudin <peter.senna@collabora.com>, geert@linux-m68k.org, treding@nvidia.com, linux@roeck-us.net, devicetree@vger.kernel.org, andrey.gusakov@cogentembedded.com, fabio.estevam@nxp.com, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Daniel Stone <daniel.stone@collabora.co.uk>, kernel@pengutronix.de, enric.balletbo@collabora.com, akpm@linux-foundation.org, shawnguo@kernel.org, davem@davemloft.net
+Content-Type: text/plain
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMDEsIDIwMTYgYXQgMDE6MzA6NTdQTSArMDEwMCwgUGV0ZXIgU2VubmEgVHNj
-aHVkaW4gd3JvdGU6Cj4gSGkgTHVjYXMsCj4gCj4gVGhhbmsgeW91IGZvciB0aGUgcHJvbXB0IHJl
-dmlldy4KPiAgCj4gT24gTW9uZGF5LCBBdWd1c3QgMSwgMjAxNiAxMDo1NCBDRVNULCBMdWNhcyBT
-dGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4gd3JvdGU6IAo+ICAKPiA+IEFtIFNvbm50YWcs
-IGRlbiAzMS4wNy4yMDE2LCAyMTo1NSArMDIwMCBzY2hyaWViIFBldGVyIFNlbm5hIFRzY2h1ZGlu
-Ogo+ID4gPiBBcyB0aGUgSVBVIGhhcyBjb21iaW5lZCBsaW1pdGF0aW9ucyBhY3Jvc3MgbXVsdGlw
-bGUgY3J0Y3MsIGFuZCBhcyB0aGF0Cj4gPiA+IGNhbid0IGJlIGNvbW11bmljYXRlZCB0byB1c2Vy
-c3BhY2UgYXQgdGhlIG1vbWVudCwgcmVvcmRlciB0aGUgY3J0Y3MgdG8KPiA+ID4gYWxsb3cgc3Vw
-cG9ydCB0byB0d28gRnVsbC1IRCBtb25pdG9ycyBieSBhdm9pZGluZyBhc3NpZ25pbmcgdHdvCj4g
-PiA+IG1vbml0b3JzIHRvIGEgc2luZ2xlIElQVS4KPiA+ID4gCj4gPiA+IENjOiBFbnJpYyBCYWxs
-ZXRibyBpIFNlcnJhIDxlbnJpYy5iYWxsZXRib0Bjb2xsYWJvcmEuY29tPgo+ID4gPiBDYzogUGhp
-bGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KPiA+ID4gQ2M6IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+Cj4gPiA+IENjOiBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFt
-QG54cC5jb20+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IFBldGVyIFNlbm5hIFRzY2h1ZGluIDxwZXRl
-ci5zZW5uYUBjb2xsYWJvcmEuY29tPgo+ID4gCj4gPiBOQUNLLiBUaGlzIGlzIGEgdXNlcnNwYWNl
-IGlzc3VlLiBDaGFuZ2luZyB0aGUgYXNzaWdubWVudCBvcmRlciBvZiB0aGUKPiA+IENSVENzIGp1
-c3Qgc2hpZnRzIHRoZSBmYWlsdXJlIHRvIGEgdXNlcnNwYWNlIHRoYXQgd2FudCB0byB1c2UgQ1JU
-QyAwIGFuZAo+ID4gMiBub3cuCj4gCj4gRXJyLCB5ZWFoIHVzZXIgc3BhY2UgaXNzdWUuLi4gQnV0
-IGhvdyB0aGUga2VybmVsIGlzIGN1cnJlbnRseSB0ZWxsaW5nCj4gdXNlciBzcGFjZSBhYm91dCB3
-aGF0IGV4YWN0bHkgd2VudCB3cm9uZyBhbmQgaG93IHVzZXIgc3BhY2UgbWlnaHQgZml4Cj4gaXQ/
-IEhvdyBXZXN0b24ob3VyIHVzZXIgc3BhY2UpIGlzIGdvaW5nIHRvIGtub3cgIHRoYXQgcmVzaHVm
-ZmxpbmcgY3J0Y3MKPiBpcyBnb2luZyB0byBsZWFkIHRvIHN1Y2Nlc3M7IGhvdyBjb3VsZCBpdD8g
-SSBndWVzcyBzb21lCj4gcGxhdGZvcm0tc3BlY2lmaWMgY29kZSBpbiB1c2VyIHNwYWNlIGlzIG5l
-ZWRlZCBmb3IgdGhpcyB0byB3b3JrLi4uCgphdG9taWMgd2l0aCB0aGUgVEVTVF9PTkxZIGZsYWcu
-IFRoaXMgaXMgd2hhdCB1c2Vyc3BhY2Ugc2hvdWxkIGRvOgoxLiBzdWJtaXQgYXRvbWljIFRFU1Rf
-T05MWSByZXF1ZXN0IHdpdGggMSBzY3JlZW4gb24gZmlyc3QgY3J0YwoyLiBJZiByZWplY3QsIG1v
-dmUgdG8gYW5vdGhlciBjcnRjIG9yIGlmIHRob3NlIGFyZSBhbGwgdHJpZWQsIHJlZHVjZSBtb2Rl
-Cih0aGlzIHNob3VsZCBuZXZlciBoYXBwZW4gZm9yIHRoZSAxc3Qgc2NyZWVuLCBrZXJuZWwgL3No
-b3VsZC8gZmlsdGVyIG91dApzaG91bGQgaW1wb3NzaWJsZSBtb2Rlcy4gQnV0IGZvciAybmQvM3Jk
-IHNjcmVlbiBjb21iaW5lZCBtb2RlcyBtaWdodCBub3QKYWxsIHdvcmspLgozLiBPbmNlIHlvdSBo
-YXZlIGEgc3VjY2Vzc2Z1bHkgY29uZmlnIGZvciB0aGUgMXN0IHNjcmVlbiwgYWRkIDJuZCBzY3Jl
-ZW4uCjQuIGdvdG8gMiB3aXRoIHRoYXQgMm5kIHNjcmVlbi4KNS4gT25jZSBhbGwgdGhlIHNjcmVl
-bnMgaGF2ZSBhIG1vZGUvY3J0YyB0aGV5IGNhbiBiZSB1c2VkIG9uLCBkbyB0aGUgcmVhbAphdG9t
-aWMgcmVxdWVzdCB3aXRob3V0IFRFU1RfT05MWS4KCkxpa2UgTHVjYXMgc2FpZCwgbm8gbmVlZCB0
-byBmdW1ibGUgYXJvdW5kIHdpdGggb3JkZXJpbmcgb2YgQ1JUQ3MuIFRoZSBvbmx5CnRoaW5nIHdl
-IGRvIGluIHRoZSBkcml2ZXIgaXMgbW92ZSB0aGUgcHJlZmVycmVkIG91dHB1dCAoaWYgdGhlcmUg
-aXMgYW55KQp0byB0aGUgZnJvbnQgb2YgdGhlIF9jb25uZWN0b3JfIGxpc3QsIGUuZy4gZm9yIGJ1
-aWx0LWluIHBhbmVscy4KCk5vIG5lZWQgYXQgYWxsIGZvciBwbGF0Zm9ybSBzcGVjaWZpYyBjb2Rl
-LgoKQ2hlZXJzLCBEYW5pZWwKPiAKPiA+IAo+ID4gaW14LWRybSBqdXN0IGdvdCBhdG9taWMgc3Vw
-cG9ydCBhbmQgd2l0aCB0aGUgYXRvbWljIGNoZWNrIGl0IHNob3VsZCBiZQo+ID4gcG9zc2libGUg
-dG8gaW5mb3JtIHVzZXJzcGFjZSBpbiBhIHJlYXNvbmFibGUgd2F5IGFib3V0IHN1Y2ggaXNzdWVz
-Lgo+IAo+IFNob3VsZCBiZSBwb3NzaWJsZSwgYnV0IEkgZ3Vlc3MgaXQgaXNuJ3QsIGFuZCB3b250
-IGJlIHVudGlsIGEgY29uc2lkZXJhYmxlIGVmZm9ydCBpcyBwdXQgb24gYm90aCBrZXJuZWwgYW5k
-IHVzZXIgc3BhY2UuIE9yIGFtIEkgbWlzc2luZyBzb21ldGhpbmc/IFdoYXQgZG8geW91IHByb3Bv
-c2U/Cj4gCj4gSSBnb3QgaW5zcGlyYXRpb24gZnJvbTogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEu
-ZHRzaQo+IC4uLgo+ICAgICAgICAgZGlzcGxheS1zdWJzeXN0ZW0gewo+ICAgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gImZzbCxpbXgtZGlzcGxheS1zdWJzeXN0ZW0iOwo+ICAgICAgICAgICAg
-ICAgICBwb3J0cyA9IDwmaXB1MV9kaTA+LCA8JmlwdTFfZGkxPiwgPCZpcHUyX2RpMD4sIDwmaXB1
-Ml9kaTE+Owo+ICAgICAgICAgfTsKPiAuLi4KPiAKPiBUaGlzIGlzIHRoZXJlIGZvciBtb3JlIHRo
-YW4gMiB5ZWFycyBub3csIGFuZCBJIGdldCB0aGF0IHRoZSBpZGVhIGhlcmUgaXMgbm90IG9yZGVy
-aW5nLCBidXQganVzdCBkZWNsYXJpbmcuCj4gCj4gSG93ZXZlciBldmVuIGlmIHRoaXMgcGF0Y2gg
-aXMgbm90IHRoZSBwZXJmZWN0IHNvbHV0aW9uLCBpdCBhbGxvd3MgdXMgdG8gc3RheSBjbG9zZSB0
-byB1cHN0cmVhbSBub3cgd2l0aG91dCBjcmVhdGluZyBwcm9ibGVtcyhkb2VzIGl0IGNyZWF0ZSBh
-bnkgaXNzdWU/KS4KPiAKPiBDYW4geW91IHJlY29uc2lkZXIgb3IgcHJvcG9zZSBhIGNvbmNyZXRl
-IHNvbHV0aW9uIHRoYXQgaXMgbm90IG1vcmUgY29tcGxleCB0aGFuIG91ciBlbnRpcmUgZHJpdmVy
-Pwo+IAo+IFRoYW5rcyBhIGxvdCEKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwKCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2luZWVy
-LCBJbnRlbCBDb3Jwb3JhdGlvbgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Add support for the clock. Currently we enable
+at probe and relinquish at remove.
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
+ drivers/watchdog/of_xilinx_wdt.c                   | 24 ++++++++++++++++++++--
+ 2 files changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+index 6d63782..b0a9fa3 100644
+--- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+@@ -5,6 +5,8 @@ Required properties:
+ - compatible		: Should be "xlnx,xps-timebase-wdt-1.00.a" or
+ 			  "xlnx,xps-timebase-wdt-1.01.a".
+ - reg			: Physical base address and size
++- clocks		: Input clock specifier. Refer to common clock
++			  bindings.
+ 
+ Optional properties:
+ - clock-frequency	: Frequency of clock in Hz
+@@ -17,6 +19,7 @@ Example:
+ axi-timebase-wdt@40100000 {
+ 	clock-frequency = <50000000>;
+ 	compatible = "xlnx,xps-timebase-wdt-1.00.a";
++	clocks = <&clkc 15>;
+ 	reg = <0x40100000 0x10000>;
+ 	xlnx,wdt-enable-once = <0x0>;
+ 	xlnx,wdt-interval = <0x1b>;
+diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
+index b2e1b4c..23cbb33 100644
+--- a/drivers/watchdog/of_xilinx_wdt.c
++++ b/drivers/watchdog/of_xilinx_wdt.c
+@@ -10,6 +10,7 @@
+  * 2 of the License, or (at your option) any later version.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+@@ -45,6 +46,7 @@ struct xwdt_device {
+ 	u32 wdt_interval;
+ 	spinlock_t spinlock;
+ 	struct watchdog_device xilinx_wdt_wdd;
++	struct clk		*clk;
+ };
+ 
+ static int xilinx_wdt_start(struct watchdog_device *wdd)
+@@ -194,17 +196,30 @@ static int xwdt_probe(struct platform_device *pdev)
+ 
+ 	spin_lock_init(&xdev->spinlock);
+ 	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
++	xdev->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(xdev->clk)) {
++		dev_err(&pdev->dev, "input clock not found\n");
++		rc = PTR_ERR(xdev->clk);
++		return rc;
++	}
++
++	rc = clk_prepare_enable(xdev->clk);
++	if (rc) {
++		dev_err(&pdev->dev, "unable to enable clock\n");
++		goto err_clk_disable;
++	}
++
+ 
+ 	rc = xwdt_selftest(xdev);
+ 	if (rc == XWT_TIMER_FAILED) {
+ 		dev_err(&pdev->dev, "SelfTest routine error\n");
+-		return rc;
++		goto err_clk_disable;
+ 	}
+ 
+ 	rc = watchdog_register_device(xilinx_wdt_wdd);
+ 	if (rc) {
+ 		dev_err(&pdev->dev, "Cannot register watchdog (err=%d)\n", rc);
+-		return rc;
++		goto err_clk_disable;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds\n",
+@@ -213,6 +228,10 @@ static int xwdt_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, xdev);
+ 
+ 	return 0;
++err_clk_disable:
++	clk_disable_unprepare(xdev->clk);
++
++	return rc;
+ }
+ 
+ static int xwdt_remove(struct platform_device *pdev)
+@@ -220,6 +239,7 @@ static int xwdt_remove(struct platform_device *pdev)
+ 	struct xwdt_device *xdev = platform_get_drvdata(pdev);
+ 
+ 	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
++	clk_disable_unprepare(xdev->clk);
+ 
+ 	return 0;
+ }
+-- 
+2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
