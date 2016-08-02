@@ -1,101 +1,94 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: how to structure some disruptive patches
-Date: Tue, 2 Aug 2016 10:28:44 -0700
-Message-ID: <57A0D84C.9000605@gmail.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Tue, 2 Aug 2016 12:59:09 -0500
+Message-ID: <57A0DF6D.6040207@codeaurora.org>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
+ <577999EC.1010104@gmx.de> <579A5929.4010908@codeaurora.org>
+ <d41488bf-ef79-ab11-f5fd-5ab15195c932@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <d41488bf-ef79-ab11-f5fd-5ab15195c932@gmx.de>
+Sender: netdev-owner@vger.kernel.org
+To: Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Lino Sanfilippo wrote:
 
-I've been working on cleaning up the docbook function documentation
-in the device tree files.  The resulting patches could interfere with
-code patches, so I want to figure out how to structure the documentation
-patches to avoid that.  I would like your opinion and suggestions on
-the subject.
+> By looking closer to the code, the lock seems to serve the protection of a list of skbs that
+> are queued to be timestamped. However there is nothing that ever enqueues those skbs, is it?
+> I assume that this is a leftover of a previous version of that driver. Code to be merged into
+> mailine has to be completely cleaned up and must not contains any functions which are never
+> called. So either you implement the timestamping feature completely or you remove the concerning
+> code altogether for the initial mainline driver version. You can add that feature any time later.
 
-First premise: this set of documentation changes is a second class
-citizen compared to code changes.  Any patch from this set can be
-dropped any time it interferes with a code patch.
+I will remove it.  It's not enabled by default on my platform anyway.  I 
+didn't realize it wasn't properly implemented.
 
-I started the project with the simple intent of fixing what was
-clearly broken.
-  - fix syntax errors
-  - fix mismatches between actual function arguments vs docbook
-    list of function arguments
-  - fix mismatches between function return type (void vs anything) and
-    values vs docbook return types and values
-  - fix factually incorrect descriptions of what the function does
+>> So you're saying that if NETIF_F_RXCSUM is not set, then
+>> napi_gro_receive() should not be called?
+>
+> This requirement seems indeed to be obsolete now so you can ignore my former complaint and
+> leave it as it is.
 
-When I was making those changes, I found also found documentation
-that was somewhat cryptic or otherwise hard to understand.  I also
-found that the description of the same item was described in a
-wide variety of ways in different docbook headers.  I made an
-effort to also clean that up.
+Ok.
 
-The result was a large patch series (that was not totally complete):
+> No, how should it? There still is nothing that wakes up the queue once it is stopped. Stopping and
+> restarting/waking up a queue is up to the driver, since the network stack cant know if the hw is
+> ready to queue another transmission or not. Usually the queue is stopped in the xmit function
+> as soon as there are not enough descs left. Stopping the queue tells the network stack not to
+> call the xmit function any more. When there are enough descs available again the driver
+> has to wake up the queue. This is normally done in the tx completion handler (emac_mac_tx_process()
+> in your case) as soon as enough free list elements are available again. Take a look at other
+> drivers and when they call netif_wake_queue (or one of its variants).
 
-   15 files changed, 1414 insertions(+), 730 deletions(-)
+Something must have gotten deleted by accident.  The internal version of 
+the driver has this:
 
-plus around 150 lines of change to docbook files so that
-the device tree man pages would be created.  I did not
-add any other significant docbook documentation of device tree.
+if (netif_queue_stopped(adpt->netdev) &&
+     netif_carrier_ok(adpt->netdev) &&
+     (emac_get_num_free_tpdescs(txque) >= (txque->tpd.count / 8)))
+	netif_wake_queue(adpt->netdev);
 
-There are at least a couple of approaches I could take for
-submitting patches (and would be glad to hear of any other
-approach that I did not think of):
+My version replaces this with:
 
-1) The big ugly patchset referenced above, one patch per
-   file.
-     pro: exposes what changes were made to each function
-          documentation header
-     con: very dense and not very readable
-     con: the mechanical corrections create a lot of noise if
-          the reviewer wants to view actual content changes
-     con: probably more likely to conflict with code patches
-          in a way that is not easily fixed
+	netdev_completed_queue(adpt->netdev, pkts_compl, bytes_compl);
 
-2) Split method 1 into stages (one patch per file for each stage).
-   Examples of some possible stages are:
-   - white space fixes
-   - syntax fixes
-   - incorrect argument list fixes
-   - incorrect return type fixes
-   - incorrect return value fixes
-   - incorrect behavior description fixes
-   - confusing behavior description fixes
-     pro: it would be easier to review patches for many of the stages
-     con: a lot more patches
-     con: maybe difficult to handle conflicts with code patches
-     con: maybe difficult to rework patches for review comments (changes
-          for an earlier stage are likely to impact a patch for a later
-          stage)
+I don't know why this change was made.  However, if I comment out this 
+line, the transmit queue times out, so obviously it's necessary.
 
-3) Do one patch series to remove all docbook function header documentation.
-   Do a second patch series to add the updated docbook function header
-   documentation.  For each of the two series, one patch per file.
-     pro: the patches are much easier to read
-     pro: it might be easier to resolve conflicts with source patches
-          (either you dropping a few hunks or me redoing the docbook patch
-          to remove the conflict)
-     con: the actual changes to what the documentation says are not visible
+I notice that *some* drivers, follow that with some variant of:
 
-My current version of the patches is against 4.7-rc2.  I will have to update
-this to 4.7 or 4.8-rc1 (I would assume that 4.8-rc1 would make more sense).
+	if (netif_queue_stopped(bgmac->net_dev))
+		netif_wake_queue(bgmac->net_dev);
 
-One comment that applies to all of the above approaches is that I could
-attack subsets of the device tree files instead of trying to do all of
-them at the same time.
+Is there a good way to test my code? ping and iperf appear to send no 
+more than 3 packets at a time, which comes nowhere close to filling the 
+queue (which holds 512 normally).  netif_queue_stopped() never returns 
+true, no matter what I do.
 
-What do you think of all of this?
+>> Should I just move the "netdev->mtu = new_mtu" line outside of the
+>> if-statement?
+>
+> You can do that, but take care to ajdust dpt->rxbuf_size to the correct
+> value as soon as the interface is brought up. (The same applies to the
+> initialization of the mac with the new mtu value of course).
 
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is there any reason this doesn't work:
+
+	netdev->mtu = new_mtu;
+	adpt->rxbuf_size = new_mtu > EMAC_DEF_RX_BUF_SIZE ?
+		ALIGN(max_frame, 8) : EMAC_DEF_RX_BUF_SIZE;
+
+	if (netif_running(netdev))
+		return emac_reinit_locked(adpt);
+
+I set rxbuf_size regardless.  If the interface is up, it will 
+reinitialize and load the new value.  If the interface is down, 
+rxbuf_size will be ignored until emac_mac_up() is called.
+
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
