@@ -1,170 +1,153 @@
-From: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: Add a binding for Mediatek MDP
-Date: Tue, 2 Aug 2016 13:49:46 +0800
-Message-ID: <1470116986.16982.5.camel@mtksdaap41>
-References: <1469176383-35210-1-git-send-email-minghsiu.tsai@mediatek.com>
- <1469176383-35210-3-git-send-email-minghsiu.tsai@mediatek.com>
- <20160726185433.GA14609@rob-hp-laptop>
- <1469583886.27630.18.camel@mtksdaap41>
- <CAL_JsqK4Lz9mSJ+EXAY1g9L-CzBmbsed+MfCjkf_545y1Ov0iw@mail.gmail.com>
+From: Yangbo Lu <yangbo.lu@nxp.com>
+Subject: RE: [PATCH v11 4/5] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Tue, 2 Aug 2016 05:57:33 +0000
+Message-ID: <HE1PR04MB0889EE0A961723541F9904A1F8050@HE1PR04MB0889.eurprd04.prod.outlook.com>
+References: <1468723822-30457-1-git-send-email-oss@buserror.net>
+ <1468723822-30457-5-git-send-email-oss@buserror.net>
+ <4016699.uYaV8nWfqC@wuerfel> <1469039508.25630.17.camel@buserror.net>
+ <146909676646.16700.8383344640490662952@concordia>
+ <1469119526.25630.42.camel@buserror.net>
+ <HE1PR04MB088913D39528958C6905D43DF80D0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+ <1469579882.25630.168.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAL_JsqK4Lz9mSJ+EXAY1g9L-CzBmbsed+MfCjkf_545y1Ov0iw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1469579882.25630.168.camel@buserror.net>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <oss@buserror.net>, Michael Ellerman <mpe@ellerman.id.au>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-07-28 at 10:55 -0500, Rob Herring wrote:
-> On Tue, Jul 26, 2016 at 8:44 PM, Minghsiu Tsai
-> <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > On Tue, 2016-07-26 at 13:54 -0500, Rob Herring wrote:
-> >> On Fri, Jul 22, 2016 at 04:33:01PM +0800, Minghsiu Tsai wrote:
-> >> > Add a DT binding documentation of MDP for the MT8173 SoC
-> >> > from Mediatek
-> >> >
-> >> > Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> > ---
-> >> >  .../devicetree/bindings/media/mediatek-mdp.txt     |   96 ++++++++++++++++++++
-> >> >  1 file changed, 96 insertions(+)
-> >> >  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/media/mediatek-mdp.txt b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
-> >> > new file mode 100644
-> >> > index 0000000..2dad031
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
-> >> > @@ -0,0 +1,96 @@
-> >> > +* Mediatek Media Data Path
-> >> > +
-> >> > +Media Data Path is used for scaling and color space conversion.
-> >> > +
-> >> > +Required properties (all function blocks):
-> >> > +- compatible: "mediatek,<chip>-mdp"
-> >>
-> >> What is this, ...
-> >>
-> >
-> > It is used to match platform driver.
-> 
-> Would structuring things like this work instead:
-> 
-> {
->   compatible = "mediatek,<chip>-mdp";
->   ranges = ...;
->   {
->     compatible = "mediatek,<chip>-mdp-rdma";
->     ...
->   };
->   {
->     compatible = "mediatek,<chip>-mdp-wdma";
->     ...
->   };
->   ...
-> };
-> 
-
-I am trying to modify it as structured node. But mdp failed to convert
-image. Under debugging.
-
-
-> >
-> >
-> >> > +        "mediatek,<chip>-mdp-<function>", one of
-> >>
-> >> and this?
-> >>
-> >
-> > It is string format of HW block. <chip> could be "mt8173", and
-> > <function> are "rdma", "rsz", "wdma", and "wrot".
-> >
-> >
-> >> > +        "mediatek,<chip>-mdp-rdma"  - read DMA
-> >> > +        "mediatek,<chip>-mdp-rsz"   - resizer
-> >> > +        "mediatek,<chip>-mdp-wdma"  - write DMA
-> >> > +        "mediatek,<chip>-mdp-wrot"  - write DMA with rotation
-> >>
-> >> List what are valid values of <chip>.
-> >>
-> >
-> > <chip> - mt8173. There should be other chip added in future.
-> > I will change the property as blow:
-> >
-> > - compatible: "mediatek,<chip>-mdp"
-> >         Should be one of
-> >         "mediatek,<chip>-mdp-rdma"  - read DMA
-> >         "mediatek,<chip>-mdp-rsz"   - resizer
-> >         "mediatek,<chip>-mdp-wdma"  - write DMA
-> >         "mediatek,<chip>-mdp-wrot"  - write DMA with rotation
-> >         <chip> - could be 8173
-> >
-> >
-> > If don't need <chip>, I also can change it as below. It is more clear.
-> 
-> Up to you. Depends on how many different chips you will have.
-> 
-
-I will replace "<chip>" with "mt8173"
-
-
-> > - compatible: "mediatek,mt8173-mdp"
-> >         Should be one of
-> >         "mediatek,mt8173-mdp-rdma"  - read DMA
-> >         "mediatek,mt8173-mdp-rsz"   - resizer
-> >         "mediatek,mt8173-mdp-wdma"  - write DMA
-> >         "mediatek,mt8173-mdp-wrot"  - write DMA with rotation
-> >
-> >
-> >> > +- reg: Physical base address and length of the function block register space
-> >> > +- clocks: device clocks
-> >> > +- power-domains: a phandle to the power domain.
-> >> > +- mediatek,vpu: the node of video processor unit
-> >> > +
-> >> > +Required properties (DMA function blocks):
-> >> > +- compatible: Should be one of
-> >> > +        "mediatek,<chip>-mdp-rdma"
-> >> > +        "mediatek,<chip>-mdp-wdma"
-> >> > +        "mediatek,<chip>-mdp-wrot"
-> >> > +- iommus: should point to the respective IOMMU block with master port as
-> >> > +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> >> > +  for details.
-> >> > +- mediatek,larb: must contain the local arbiters in the current Socs.
-> >>
-> >> It is still not clear which properties apply to which compatible
-> >> strings.
-> >>
-> >
-> > I found out the document for larb.
-> > I will change the property as below:
-> >
-> > - mediatek,larb: must contain the local arbiters in the current Socs,
-> > see
-> > Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-> >   for details.
-> 
-> That's good, but not what I meant. You still have properties which
-> only apply to certain blocks, but are listed for all blocks like
-> mediatek,vpu for example.
-> 
-> Rob
-
-
-I find out other properties' document. 
-
-- clocks: device clocks, see
-  Documentation/devicetree/bindings/clock/clock-bindings.txt for
-details.
-- power-domains: a phandle to the power domain, see
-  Documentation/devicetree/bindings/power/power_domain.txt for details.
-- mediatek,vpu: the node of video processor unit, see
-  Documentation/devicetree/bindings/media/mediatek-vpu.txt for details.
+SGkgU2NvdHQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQg
+V29vZCBbbWFpbHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgSnVseSAy
+NywgMjAxNiA4OjM4IEFNDQo+IFRvOiBZYW5nYm8gTHU7IE1pY2hhZWwgRWxsZXJtYW47IEFybmQg
+QmVyZ21hbm47IFVsZiBIYW5zc29uDQo+IENjOiBsaW51eC1tbWNAdmdlci5rZXJuZWwub3JnOyBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtDQo+IGRldkBsaXN0cy5vemxhYnMu
+b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djExIDQvNV0gcG93ZXJwYy9mc2w6IG1vdmUgbXBjODV4eC5oIHRvDQo+IGluY2x1ZGUvbGludXgv
+ZnNsDQo+IA0KPiBPbiBNb24sIDIwMTYtMDctMjUgYXQgMDY6MTIgKzAwMDAsIFlhbmdibyBMdSB3
+cm90ZToNCj4gPiBIaSBTY290dCwNCj4gPg0KPiA+DQo+ID4gPg0KPiA+ID4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFNjb3R0IFdvb2QgW21haWx0bzpvc3NAYnVzZXJy
+b3IubmV0XQ0KPiA+ID4gU2VudDogRnJpZGF5LCBKdWx5IDIyLCAyMDE2IDEyOjQ1IEFNDQo+ID4g
+PiBUbzogTWljaGFlbCBFbGxlcm1hbjsgQXJuZCBCZXJnbWFubg0KPiA+ID4gQ2M6IGxpbnV4LW1t
+Y0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy0N
+Cj4gPiA+IGRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+OyBZYW5nYm8gTHUNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjExIDQvNV0gcG93ZXJwYy9m
+c2w6IG1vdmUgbXBjODV4eC5oIHRvDQo+ID4gPiBpbmNsdWRlL2xpbnV4L2ZzbA0KPiA+ID4NCj4g
+PiA+IE9uIFRodSwgMjAxNi0wNy0yMSBhdCAyMDoyNiArMTAwMCwgTWljaGFlbCBFbGxlcm1hbiB3
+cm90ZToNCj4gPiA+ID4NCj4gPiA+ID4gUXVvdGluZyBTY290dCBXb29kICgyMDE2LTA3LTIxIDA0
+OjMxOjQ4KQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBXZWQsIDIwMTYtMDct
+MjAgYXQgMTM6MjQgKzAyMDAsIEFybmQgQmVyZ21hbm4gd3JvdGU6DQo+ID4gPiA+ID4gPg0KPiA+
+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IE9uIFNhdHVyZGF5LCBKdWx5IDE2LCAyMDE2IDk6NTA6MjEg
+UE0gQ0VTVCBTY290dCBXb29kIHdyb3RlOg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPg0K
+PiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBGcm9tOiB5YW5nYm8gbHUgPHlhbmdiby5sdUBu
+eHAuY29tPg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBNb3ZlIG1wYzg1eHguaCB0byBp
+bmNsdWRlL2xpbnV4L2ZzbCBhbmQgcmVuYW1lIGl0IHRvIHN2ci5oDQo+ID4gPiA+ID4gPiA+IGFz
+IGEgY29tbW9uIGhlYWRlciBmaWxlLsKgwqBUaGlzIFNWUiBudW1iZXJzcGFjZSBpcyB1c2VkIG9u
+DQo+ID4gPiA+ID4gPiA+IHNvbWUgQVJNIGNoaXBzIGFzIHdlbGwgYXMgUFBDLCBhbmQgZXZlbiB0
+byBjaGVjayBmb3IgYSBQUEMNCj4gPiA+ID4gPiA+ID4gU1ZSIG11bHRpLWFyY2ggZHJpdmVycyB3
+b3VsZCBvdGhlcndpc2UgbmVlZCB0byBpZmRlZiB0aGUNCj4gPiA+ID4gPiA+ID4gaGVhZGVyIGlu
+Y2x1c2lvbiBhbmQgYWxsIHJlZmVyZW5jZXMgdG8gdGhlIFNWUiBzeW1ib2xzLg0KPiA+ID4gPiA+
+ID4gPg0KPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBZYW5nYm8gTHUgPHlhbmdiby5sdUBu
+eHAuY29tPg0KPiA+ID4gPiA+ID4gPiBBY2tlZC1ieTogV29sZnJhbSBTYW5nIDx3c2FAdGhlLWRy
+ZWFtcy5kZT4NCj4gPiA+ID4gPiA+ID4gQWNrZWQtYnk6IFN0ZXBoZW4gQm95ZCA8c2JveWRAY29k
+ZWF1cm9yYS5vcmc+DQo+ID4gPiA+ID4gPiA+IEFja2VkLWJ5OiBKb2VyZyBSb2VkZWwgPGpyb2Vk
+ZWxAc3VzZS5kZT4NCj4gPiA+ID4gPiA+ID4gW3Njb3R0d29vZDogdXBkYXRlIGRlc2NyaXB0aW9u
+XQ0KPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBTY290dCBXb29kIDxvc3NAYnVzZXJyb3Iu
+bmV0Pg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gQXMgZGlzY3Vzc2VkIGJlZm9yZSwgcGxl
+YXNlIGRvbid0IGludHJvZHVjZSB5ZXQgYW5vdGhlciB2ZW5kb3INCj4gPiA+ID4gPiA+IHNwZWNp
+ZmljIHdheSB0byBtYXRjaCBhIFNvQyBJRCBmcm9tIGEgZGV2aWNlIGRyaXZlci4NCj4gPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gPiBJJ3ZlIHBvc3RlZCBhIHBhdGNoIGZvciBhbiBleHRlbnNpb24gdG8g
+dGhlIHNvY19kZXZpY2UNCj4gPiA+ID4gPiA+IGluZnJhc3RydWN0dXJlIHRvIGFsbG93IGNvbXBh
+cmluZyB0aGUgcnVubmluZyBTb0MgdG8gYSB0YWJsZQ0KPiA+ID4gPiA+ID4gb2YgZGV2aWNlcywg
+dXNlIHRoYXQgaW5zdGVhZC4NCj4gPiA+ID4gPiBBcyBJIGFza2VkIGJlZm9yZSwgaW4gd2hpY2gg
+cmVsZXZhbnQgbWFpbnRhaW5lcnNoaXAgY2FwYWNpdHkgYXJlDQo+ID4gPiA+ID4geW91IE5BQ0tp
+bmcgdGhpcz8NCj4gPiA+ID4gSSdsbCBuYWNrIHRoZSBwb3dlcnBjIHBhcnQgdW50aWwgeW91IGd1
+eXMgY2FuIGFncmVlLg0KPiA+ID4gT0ssIEkndmUgcHVsbGVkIHRoZXNlIHBhdGNoZXMgb3V0Lg0K
+PiA+ID4NCj4gPiA+IEZvciB0aGUgTU1DIGlzc3VlIEkgc3VnZ2VzdCB1c2luZyBpZmRlZiBDT05G
+SUdfUFBDIGFuZA0KPiA+ID4gbWZzcHIoU1BSTl9TVlIpIGxpa2UgdGhlIGNsb2NrIGRyaXZlciBk
+b2VzWzFdIGFuZCB3ZSBjYW4gcmV2aXNpdCB0aGUNCj4gPiA+IGlzc3VlIGlmL3doZW4gd2UgbmVl
+ZCB0byBkbyBzb21ldGhpbmcgc2ltaWxhciBvbiBhbiBBUk0gY2hpcC4NCj4gPiBbTHUgWWFuZ2Jv
+LUI0NzA5M10gSSByZW1lbWJlcmVkIHRoYXQgVWZmZSBoYWQgb3Bwb3NlZCB1cyB0byBpbnRyb2R1
+Y2UNCj4gPiBub24tIGdlbmVyaWMgaGVhZGVyIGZpbGVzKGxpa2UgJyNpbmNsdWRlIDxhc20vbXBj
+ODV4eC5oPicpIGluIG1tYw0KPiA+IGRyaXZlciBpbml0aWFsbHkuIFNvIEkgdGhpbmsgaXQgd2ls
+bCBub3QgYmUgYWNjZXB0ZWQgdG8gdXNlIGlmZGVmDQo+ID4gQ09ORklHX1BQQyBhbmQgbWZzcHIo
+U1BSTl9TVlIpLi4uDQo+ID4gQW5kIHRoaXMgbWV0aG9kIHN0aWxsIGNvdWxkbuKAmXQgZ2V0IFNW
+UiBvZiBBUk0gY2hpcCBub3cuDQo+IA0KPiBSaWdodCwgYXMgSSBzYWlkIHdlJ2xsIGhhdmUgdG8g
+cmV2aXNpdCB0aGUgaXNzdWUgaWYvd2hlbiB3ZSBoYXZlIHRoZSBzYW1lDQo+IHByb2JsZW0gb24g
+YW4gQVJNIGNoaXAuIMKgVGhhdCBhbHNvIGFwcGxpZXMgaWYgdGhlIFBQQyBpZmRlZiBpcyBzdGls
+bA0KPiBnZXR0aW5nIE5BQ0tlZCBmcm9tIHRoZSBNTUMgc2lkZS4NCg0KW0x1IFlhbmdiby1CNDcw
+OTNdIEl0J3Mgbm90IGNsZWFyIGZvciBtZSBhYm91dCB5b3VyIGlkZWEgOiggDQpEbyB5b3UgbWVh
+biB3ZSBjYW4gc3RpbGwgdXNlIHRoaXMgbWV0aG9kLCBvciBub3QgPw0KSSB0aGluayBVZmZlIGhh
+ZCBvcHBvc2VkIHRvIHVzZSBpZmRlZiBDT05GSUdfUFBDIGFuZCBtZnNwcihTUFJOX1NWUikuDQpJ
+cyB0aGVyZSBhbnkgc29sdXRpb24gdG8gcmVzb2x2ZSA/DQo6KQ0KDQo+IA0KPiA+IEFueSBvdGhl
+ciBzdWdnZXN0aW9uIGhlcmU/DQo+IA0KPiBUaGUgb3RoZXIgb3B0aW9uIGlzIHRvIHRyeSB0byBj
+b21lIHVwIHdpdGggc29tZXRoaW5nIHRoYXQgZml0cyBpbnRvDQo+IEFybmQncyBmcmFtZXdvcmsg
+d2hpbGUgYWRkcmVzc2luZyB0aGUgY29uY2VybnMgSSByYWlzZWQuIMKgVGhlIHNvY19pZA0KPiBz
+dHJpbmcgc2hvdWxkIGJlIHdlbGwtc3RydWN0dXJlZCB0byBhdm9pZCBtaXNtYXRjaGVzIGFuZCBj
+b21wYXRpYmlsaXR5DQo+IHByb2JsZW1zIChlc3BlY2lhbGx5IHNpbmNlIGl0IHdvdWxkIGdldCBl
+eHBvc2VkIHRvIHVzZXJzcGFjZSkuIMKgTWF5YmUNCj4gc29tZXRoaW5nIGxpa2U6DQo+IA0KPiBz
+dnI6PFNWUiBtaW51cyBFIGJpdD4sc3ZyZTo8ZnVsbCBTVlIgaW5jbHVkaW5nIEUgYml0PixuYW1l
+Ojxzb2MNCj4gbmFtZT4sZGllOjxzb2MgZGllIG5hbWU+LHJldjpYLlksPHRhZzE+LDx0YWcyPiw8
+Li4uPiwNCg0KW0x1IFlhbmdiby1CNDcwOTNdIFRoZSBzb2NfZGV2aWNlX2F0dHJpYnV0IHN0cnVj
+dCBpcyBkZWZpbmVkIGFzIGJlbG93Lg0Kc3RydWN0IHNvY19kZXZpY2VfYXR0cmlidXRlIHsNCiAg
+ICAgICAgY29uc3QgY2hhciAqbWFjaGluZTsNCiAgICAgICAgY29uc3QgY2hhciAqZmFtaWx5Ow0K
+ICAgICAgICBjb25zdCBjaGFyICpyZXZpc2lvbjsNCiAgICAgICAgY29uc3QgY2hhciAqc29jX2lk
+Ow0KfTsNCg0KV2UgY2FuIHB1dCB0aGUgJ21vZGVsJyBpbiByb290IG5vZGUgb2YgZHRzIGFzIG1h
+Y2hpbmUsIHB1dCAnRnJlZXNjYWxlIFFvcklRJyBhcyBmYW1pbHksDQphbmQgcHV0IHgueCBhcyBy
+ZXZpc2lvbi4gSXMgaXQgb2s/DQpBcyB5b3Ugc3VnZ2VzdGVkLCB5b3UgbGlrZSB0byB1c2UgYmVs
+b3cgc3RyaW5nIGFzIHNvY19pZC4gSXQncyBlYXN5IHRvIGdldCBzdnIsIGJ1dCBob3cgZG9lcyB0
+aGUgc29mdHdhcmUga25vdyB0aGUgbmFtZSBhbmQgZGllLA0KYW5kIHB1dCB0aGVtIGludG8gdGhp
+cyBzdHJpbmcgPyBJdCdzIGEgbGFyZ2UgY29kZSB0byBkZWZpbmUgdGhlbS4gDQo+IHN2cjo8U1ZS
+IG1pbnVzIEUgYml0PixzdnJlOjxmdWxsIFNWUiBpbmNsdWRpbmcgRSBiaXQ+LG5hbWU6PHNvYw0K
+PiBuYW1lPixkaWU6PHNvYyBkaWUgbmFtZT4scmV2OlguWSw8dGFnMT4sPHRhZzI+LDwuLi4+LA0K
+U2hvdWxkIHdlIHJlbW92ZSByZXYgaGVyZSBzaW5jZSB0aGVyZSBpcyBhbHNvIGEgcmV2aXNpb24g
+bWVtYmVyPw0KDQpSZWdhcmRpbmcgdGhlIGd1dHNfaW5pdCwgd2Ugc3RpbGwgY2FsbCBndXRzX2lu
+aXQgYW5kIHRoZW4gbWF0Y2ggdGhlIHNvYywgb3Igd2UgY2hhbmdlIHRvIHVzZSBwbGF0Zm9ybSBk
+cml2ZXI/DQpPciBkbyB5b3Uga25vdyBhbnkgYmV0dGVyIHBsYWNlIHRvIGNhbGwgZ3V0c19pbml0
+IHRvIGluaXRpYWxpemUgb25seSBvbmNlPw0KDQpUaGFuayB5b3Ugc28gbXVjaCA6KQ0KDQo+IA0K
+PiB3aXRoIHRoZSBmaW5hbCBjb21tYSB1c2VkIHNvIHRoYXQgZ2xvYnMgY2FuIHB1dCBhIGNvbG9u
+IG9uIGVpdGhlciBlbmQgdG8NCj4gYmUgc3VyZSB0aGV5J3JlIG1hdGNoaW5nIGEgZnVsbCBmaWVs
+ZC4gwqBUaGUgU29DIGRpZSBuYW1lIHdvdWxkIGJlIHRoZQ0KPiBwcmltYXJ5IGNoaXAgZm9yIGEg
+Z2l2ZW4gZGllIChlLmcuIHA0MDQwIHdvdWxkIGhhdmUgYSBkaWUgbmFtZSBvZg0KPiBwNDA4MCku
+IMKgVGhlICJuYW1lIg0KPiBhbmQgImRpZSIgZmllbGRzIHdvdWxkIG5ldmVyIGluY2x1ZGUgdGhl
+IHRyYWlsaW5nICJlIiBpbmRpY2F0ZWQgYnkgdGhlIEUNCj4gYml0Lg0KPiANCj4gRXh0cmEgdGFn
+cyBjb3VsZCBiZSB1c2VkIGZvciBjb21tb24gZ3JvdXBpbmdzLCBzdWNoIGFzIGFsbCBjaGlwcyBm
+cm9tIGENCj4gcGFydGljdWxhciBkaWUgYmVmb3JlIGEgY2VydGFpbiByZXZpc2lvbi4gwqBPbmNl
+IGEgdGFnIGlzIGFkZGVkIGl0IGNhbid0DQo+IGJlIHJlbW92ZWQgb3IgcmVvcmRlcmVkLCB0byBt
+YWludGFpbiB1c2Vyc3BhY2UgY29tcGF0aWJpbGl0eSwgYnV0IG5ldw0KPiB0YWdzIGNvdWxkIGJl
+IGFwcGVuZGVkLg0KPiANCj4gU29tZSBleGFtcGxlczoNCj4gDQo+IHN2cjoweDgyMDAwMDIwLHN2
+cmU6MHg4MjAwMDAyMCxuYW1lOnA0MDgwLGRpZTpwNDA4MCxyZXY6Mi4wLA0KPiBzdnI6MHg4MjAw
+MDAyMCxzdnINCj4gZToweDgyMDgwMDIwLG5hbWU6cDQwODAsZGllOnA0MDgwLHJldjoyLjAsDQo+
+IHN2cjoweDgyMDAwMDMwLHN2cmU6MHg4MjAwMDAzMCxuYW1lOg0KPiBwNDA4MCxkaWU6cDQwODAs
+cmV2OjMuMCwNCj4gc3ZyOjB4ODIwMDAwMzAsc3ZyZToweDgyMDgwMDMwLG5hbWU6cDQwODAsZGll
+OnA0MDgwLHJlDQo+IHY6My4wLA0KPiBzdnI6MHg4MjAxMDAyMCxzdnJlOjB4ODIwMTAwMjAsbmFt
+ZTpwNDA0MCxkaWU6cDQwODAscmV2OjIuMCwNCj4gc3ZyOjB4ODIwMTAwDQo+IDIwLHN2cmU6MHg4
+MjA5MDAyMCxuYW1lOnA0MDQwLGRpZTpwNDA4MCxyZXY6Mi4wLA0KPiANCj4gc3ZyOjB4ODIwMTAw
+MzAsc3ZyZToweDgyMDEwMDMwDQo+ICxuYW1lOnA0MDQwLGRpZTpwNDA4MCxyZXY6My4wLA0KPiBz
+dnI6MHg4MjAxMDAzMCxzdnJlOjB4ODIwOTAwMzAsbmFtZTpwNDA0MCxkaWU6cDQNCj4gMDgwLHJl
+djozLjAsDQo+IA0KPiBUaGVuIGlmIHlvdSB3YW50IHRvIGFwcGx5IGEgd29ya2Fyb3VuZCBvbjoN
+Cj4gLSBhbGwgY2hpcHMgdXNpbmcgdGhlIHA0MDgwIGRpZSwgbWF0Y2ggd2l0aCAiKixkaWU6cDQw
+ODAsKiINCj4gLSBhbGwgY2hpcHMgdXNpbmcgdGhlIHJldiAyLjAgcDQwODAgZGllLCBtYXRjaCB3
+aXRoDQo+ICIqLGRpZTpwNDA4MCxyZXY6Mi4wLCoiDQo+IC0gT25seSBwNDA0MCwgYnV0IG9mIGFu
+eSByZXYsIG1hdGNoIHdpdGggIiosbmFtZTpwNDA0MCwqIg0KPiANCj4gTWF0Y2hpbmcgdmlhIG9w
+ZW4tY29kZWQgaGV4IG51bWJlciBzaG91bGQgYmUgY29uc2lkZXJlZCBhIGxhc3QgcmVzb3J0DQo+
+IChpdCdzIG1vcmUgZXJyb3ItcHJvbmUsIGVpdGhlciBmb3IgZ2V0dGluZyB0aGUgbnVtYmVyIHdy
+b25nIG9yIGZvcg0KPiBmb3JnZXR0aW5nIHZhcmlhbnRzIC0tIHRoZSBsYXR0ZXIgaXMgYWxyZWFk
+eSBhIGNvbW1vbiBwcm9ibGVtKSwgYnV0DQo+IHByZWZlcmFibGUgdG8gYWRkaW5nIHRvbyBtYW55
+IHRhZ3MuDQo+IA0KPiBVc2luZyB3aWxkY2FyZHMgd2l0aGluIGEgdGFnIGZpZWxkIHdvdWxkIGJl
+IGRpc2NvdXJhZ2VkLg0KPiANCj4gLVNjb3R0DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMt
+ZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xp
+bnV4cHBjLWRldg==
