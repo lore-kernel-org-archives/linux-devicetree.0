@@ -1,12 +1,16 @@
-From: Ian Campbell <ijc@hellion.org.uk>
-Subject: [PATCH] ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from
- arch=arm
-Date: Wed,  3 Aug 2016 09:40:35 +0100
-Message-ID: <1470213635-6934-1-git-send-email-ijc@hellion.org.uk>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 0/3] ARM: omap: fix 4.7 gpmc networking regression
+Date: Wed, 3 Aug 2016 12:55:33 +0300
+Message-ID: <2fde63f3-62b1-75a0-524a-f858ff1de459@ti.com>
+References: <1469362260-20066-1-git-send-email-johan@kernel.org>
+ <20160802103505.GD28140@atomide.com>
+ <9cf04231-091c-4ac3-bfb8-8d8be3d591eb@ti.com>
+ <20160803080149.GB15860@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160803080149.GB15860@localhost>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,115 +20,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arm@kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Lee Jones <lee@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, Ian Campbell <ijc@hellion.org.uk>, Frank Rowand <frowand.list@gmail.com>, linux-rpi-kernel@lists.infradead.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, stable@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The ../../../arm... style cross-references added by commit 9d56c22a7861
-("ARM: bcm2835: Add devicetree for the Raspberry Pi 3.") do not work in the
-context of the split device-tree repository[0] (where the directory
-structure differs). As with commit 8ee57b8182c4 ("ARM64: dts: vexpress: Use
-a symlink to vexpress-v2m-rs1.dtsi from arch=arm") use symlinks instead.
+On 03/08/16 11:01, Johan Hovold wrote:
+> On Wed, Aug 03, 2016 at 10:46:24AM +0300, Roger Quadros wrote:
+>> On 02/08/16 13:35, Tony Lindgren wrote:
+>>> * Johan Hovold <johan@kernel.org> [160724 05:11]:
+>>>> Networking is currently broken for Overo boards due to a regression in
+>>>> 4.7. I bisected it down to
+>>>>
+>>>> 	d2d00862dfbb ("memory: omap-gpmc: Support general purpose input
+>>>> 	for WAITPINs")
+>>> ...
+>>>
+>>>> Note that simply fixing the Overo NAND issue would fix the Overo
+>>>> networking regression, but by restoring the 4.6 gpmc-probe behaviour
+>>>> similar regressions on other OMAP systems are also avoided.
+>>>
+>>> Roger, got a better fix in mind?
+>>>
+>>
+>> Nope. I'll take patch 1 in my omap-gpmc queue for v4.8.
+>> Thanks for the fixes Johan.
+> 
+> Now that 4.7 has been released, you may want to consider adding a stable
+> tag also for the first patch to avoid similar issues on other systems
+> when they get updated to 4.7-stable.
+> 
 
-These includes in turn require a skeleton.dtsi to be present, so add one as
-a real file (with the same contents as arch/arm) rather than a symlink.
+Yes, that was my plan as well.
 
-[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
-
-Signed-off-by: Ian Campbell <ijc@hellion.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Eric Anholt <eric@anholt.net>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Lee Jones <lee@kernel.org>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-rpi-kernel@lists.infradead.org
-Cc: arm@kernel.org
----
- arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi          |  1 +
- arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts       |  4 ++--
- arch/arm64/boot/dts/broadcom/bcm2837.dtsi              |  2 +-
- arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi |  1 +
- arch/arm64/boot/dts/broadcom/bcm283x.dtsi              |  1 +
- arch/arm64/boot/dts/skeleton.dtsi                      | 13 +++++++++++++
- 6 files changed, 19 insertions(+), 3 deletions(-)
- create mode 120000 arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
- create mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
- create mode 120000 arch/arm64/boot/dts/broadcom/bcm283x.dtsi
- create mode 100644 arch/arm64/boot/dts/skeleton.dtsi
-
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
-new file mode 120000
-index 0000000..3937b77
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/bcm2835-rpi.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-index 6f47dd2..7841b72 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-@@ -1,7 +1,7 @@
- /dts-v1/;
- #include "bcm2837.dtsi"
--#include "../../../../arm/boot/dts/bcm2835-rpi.dtsi"
--#include "../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
- 
- / {
- 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-index f2a31d0..8216bbb 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-@@ -1,4 +1,4 @@
--#include "../../../../arm/boot/dts/bcm283x.dtsi"
-+#include "bcm283x.dtsi"
- 
- / {
- 	compatible = "brcm,bcm2836";
-diff --git a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
-new file mode 120000
-index 0000000..dca7c05
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/broadcom/bcm283x.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
-new file mode 120000
-index 0000000..5f54e4c
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/bcm283x.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/skeleton.dtsi b/arch/arm64/boot/dts/skeleton.dtsi
-new file mode 100644
-index 0000000..b41d241
---- /dev/null
-+++ b/arch/arm64/boot/dts/skeleton.dtsi
-@@ -0,0 +1,13 @@
-+/*
-+ * Skeleton device tree; the bare minimum needed to boot; just include and
-+ * add a compatible value.  The bootloader will typically populate the memory
-+ * node.
-+ */
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	chosen { };
-+	aliases { };
-+	memory { device_type = "memory"; reg = <0 0>; };
-+};
--- 
-2.8.1
+cheers,
+-roger
