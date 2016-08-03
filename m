@@ -1,33 +1,86 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxbb: add MMC support
-Date: Wed, 3 Aug 2016 15:13:41 -0700
-Message-ID: <CAOi56cUABXzQ=iXF0xxc4ZSVWyCdTes0_9raGtzJC-_1yMnVsQ@mail.gmail.com>
-References: <20160803003045.24980-1-khilman@baylibre.com>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] power: add power sequence library
+Date: Wed, 3 Aug 2016 15:16:58 -0700
+Message-ID: <20160803221658.GD1405@google.com>
+References: <1470108652-16812-1-git-send-email-peter.chen@nxp.com>
+ <1470108652-16812-3-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160803003045.24980-1-khilman@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1470108652-16812-3-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 2, 2016 at 5:30 PM, Kevin Hilman <khilman@baylibre.com> wrote:
-> Add binding and basic support for the SD/eMMC controller on Amlogic
-> S905/GXBB devices.
+El Tue, Aug 02, 2016 at 11:30:48AM +0800 Peter Chen ha dit:
+
+> diff --git a/drivers/power/pwrseq/core.c b/drivers/power/pwrseq/core.c
 >
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+> ...
+>
+> +static DEFINE_MUTEX(pwrseq_list_mutex);
+> +static LIST_HEAD(pwrseq_list);
+> +
+> +int pwrseq_get(struct device_node *np, struct pwrseq *p)
+> +{
+> +	if (p && p->get)
+> +		return p->get(np, p);
+> +
+> +	return -ENOTSUPP;
+> +}
+> +
+> +int pwrseq_on(struct device_node *np, struct pwrseq *p)
+> +{
+> +	if (p && p->on)
+> +		return p->on(np, p);
+> +
+> +	return -ENOTSUPP;
+> +}
+> +
+> +void pwrseq_off(struct pwrseq *p)
+> +{
+> +	if (p && p->off)
+> +		p->off(p);
+> +}
+> +
+> +void pwrseq_put(struct pwrseq *p)
+> +{
+> +	if (p && p->put)
+> +		p->put(p);
+> +}
+> +
+> +void pwrseq_free(struct pwrseq *p)
+> +{
+> +	if (p && p->free)
+> +		p->free(p);
+> +}
+> +
+> +void pwrseq_register(struct pwrseq *pwrseq)
+> +{
+> +	mutex_lock(&pwrseq_list_mutex);
+> +	list_add(&pwrseq->node, &pwrseq_list);
+> +	mutex_unlock(&pwrseq_list_mutex);
+> +}
+> +
+> +void pwrseq_unregister(struct pwrseq *pwrseq)
+> +{
+> +	mutex_lock(&pwrseq_list_mutex);
+> +	list_del(&pwrseq->node);
+> +	mutex_unlock(&pwrseq_list_mutex);
+> +}
 
-Oops, please disregard.  Sent due to a missing "--dry-run" with
-git-send-email. :(
+What is the purpose of pwrseq_register/unregister()? The pwrseq
+structs are added and removed from pwrseq_list, but besides that
+pwrseq_list is not used.
 
-Kevin
+Looks like this is a remainder from the ancestor of this code
+(drivers/mmc/core/pwrseq.c) which uses the list to avoid having
+multiple pwrseq instances for the same device.
+
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
