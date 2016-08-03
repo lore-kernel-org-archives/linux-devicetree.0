@@ -1,56 +1,71 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 0/3] ARM: omap: fix 4.7 gpmc networking regression
-Date: Wed, 3 Aug 2016 12:55:33 +0300
-Message-ID: <2fde63f3-62b1-75a0-524a-f858ff1de459@ti.com>
-References: <1469362260-20066-1-git-send-email-johan@kernel.org>
- <20160802103505.GD28140@atomide.com>
- <9cf04231-091c-4ac3-bfb8-8d8be3d591eb@ti.com>
- <20160803080149.GB15860@localhost>
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
+        <noltari@gmail.com>
+Subject: [PATCH v2 1/7] MIPS: BMIPS: add missing bcm97435svmb to DT_NONE
+Date: Wed,  3 Aug 2016 11:58:24 +0200
+Message-ID: <1470218310-2978-1-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160803080149.GB15860@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, stable@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ralf@linux-mips.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com, robh@kernel.org, simon@fire.lp0.eu, john@phrozen.org
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/08/16 11:01, Johan Hovold wrote:
-> On Wed, Aug 03, 2016 at 10:46:24AM +0300, Roger Quadros wrote:
->> On 02/08/16 13:35, Tony Lindgren wrote:
->>> * Johan Hovold <johan@kernel.org> [160724 05:11]:
->>>> Networking is currently broken for Overo boards due to a regression in
->>>> 4.7. I bisected it down to
->>>>
->>>> 	d2d00862dfbb ("memory: omap-gpmc: Support general purpose input
->>>> 	for WAITPINs")
->>> ...
->>>
->>>> Note that simply fixing the Overo NAND issue would fix the Overo
->>>> networking regression, but by restoring the 4.6 gpmc-probe behaviour
->>>> similar regressions on other OMAP systems are also avoided.
->>>
->>> Roger, got a better fix in mind?
->>>
->>
->> Nope. I'll take patch 1 in my omap-gpmc queue for v4.8.
->> Thanks for the fixes Johan.
-> 
-> Now that 4.7 has been released, you may want to consider adding a stable
-> tag also for the first patch to avoid similar issues on other systems
-> when they get updated to 4.7-stable.
-> 
+Commit 380e4270 added support for bcm97435svmb.dtb but missed adding it to
+DT_NONE.
+Also refactor DT_NONE dtbs in order to add larger names in the future.
 
-Yes, that was my plan as well.
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ arch/mips/boot/dts/brcm/Makefile | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
-cheers,
--roger
+diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/brcm/Makefile
+index fda9d38..87e07e2 100644
+--- a/arch/mips/boot/dts/brcm/Makefile
++++ b/arch/mips/boot/dts/brcm/Makefile
+@@ -12,19 +12,20 @@ dtb-$(CONFIG_DT_BCM97420C)		+= bcm97420c.dtb
+ dtb-$(CONFIG_DT_BCM97425SVMB)		+= bcm97425svmb.dtb
+ dtb-$(CONFIG_DT_BCM97435SVMB)		+= bcm97435svmb.dtb
+ 
+-dtb-$(CONFIG_DT_NONE)			+= \
+-						bcm93384wvg.dtb		\
+-						bcm93384wvg_viper.dtb	\
+-						bcm96358nb4ser.dtb	\
+-						bcm96368mvwg.dtb	\
+-						bcm9ejtagprb.dtb	\
+-						bcm97125cbmb.dtb	\
+-						bcm97346dbsmb.dtb	\
+-						bcm97358svmb.dtb	\
+-						bcm97360svmb.dtb	\
+-						bcm97362svmb.dtb	\
+-						bcm97420c.dtb		\
+-						bcm97425svmb.dtb
++dtb-$(CONFIG_DT_NONE) += \
++	bcm93384wvg.dtb \
++	bcm93384wvg_viper.dtb \
++	bcm96358nb4ser.dtb \
++	bcm96368mvwg.dtb \
++	bcm9ejtagprb.dtb \
++	bcm97125cbmb.dtb \
++	bcm97346dbsmb.dtb \
++	bcm97358svmb.dtb \
++	bcm97360svmb.dtb \
++	bcm97362svmb.dtb \
++	bcm97420c.dtb \
++	bcm97425svmb.dtb \
++	bcm97435svmb.dtb
+ 
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+ 
+-- 
+2.1.4
