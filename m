@@ -1,99 +1,125 @@
-From: Chenhui Zhao <z.chenhui@gmail.com>
-Subject: Re: [PATCH 2/2] soc: nxp: Add a RCPM driver
-Date: Wed, 3 Aug 2016 11:42:23 +0800
-Message-ID: <CAHwnS+UOjxY4Vj37P2zsQJEjzqVzK5LeTOKJ9KeT26kLqgLjUg@mail.gmail.com>
-References: <1470044943-3814-1-git-send-email-chenhui.zhao@nxp.com>
- <1470044943-3814-2-git-send-email-chenhui.zhao@nxp.com>
- <2024386.Ra8uvttlE9@wuerfel>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv2] watchdog: xilinx: Add clock support
+Date: Wed, 3 Aug 2016 09:58:38 +0530
+Message-ID: <1470198518-22286-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2024386.Ra8uvttlE9@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, Chenhui Zhao <chenhui.zhao@nxp.com>, jason.jin@nxp.com, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 1, 2016 at 8:25 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday, August 1, 2016 5:49:03 PM CEST Chenhui Zhao wrote:
->> The NXP's QorIQ Processors based on ARM Core have a RCPM module
->> (Run Control and Power Management), which performs all device-level
->> tasks associated with power management.
->>
->> This patch mainly implements the wakeup sources configuration before
->> entering LPM20, a low power state of device-level. The devices can be
->> waked up by specified sources, such as Flextimer, GPIO and so on.
->>
->> Signed-off-by: Chenhui Zhao <chenhui.zhao@nxp.com>
->
-> Adding irqchip maintainers to cc, as this wakeup handling is normally
-> part of the irq controller.
->
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/io.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_address.h>
->> +#include <linux/suspend.h>
->> +
->> +/* So far there are not more than two registers */
->> +#define RCPM_IPPDEXPCR0              0x140
->> +#define RCPM_IPPDEXPCR1              0x144
->> +#define RCPM_IPPDEXPCR(x)    (RCPM_IPPDEXPCR0 + 4 * x)
->> +#define RCPM_WAKEUP_CELL_MAX_SIZE    2
->> +
->> +/* it reprents the number of the registers RCPM_IPPDEXPCR */
->> +static unsigned int rcpm_wakeup_cells;
->> +static void __iomem *rcpm_reg_base;
->> +static u32 ippdexpcr[RCPM_WAKEUP_CELL_MAX_SIZE];
->
-> Can you make these local to the context of whoever
-> calls into the driver?
->
->
->> +static void rcpm_wakeup_fixup(struct device *dev, void *data)
->> +{
->> +     struct device_node *node = dev ? dev->of_node : NULL;
->> +     u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
->> +     int ret;
->> +     int i;
->> +
->> +     if (!dev || !node || !device_may_wakeup(dev))
->> +             return;
->> +
->> +     /*
->> +      * Get the values in the "rcpm-wakeup" property.
->> +      * Refer to Documentation/devicetree/bindings/soc/fsl/rcpm.txt
->> +      */
->> +     ret = of_property_read_u32_array(node, "rcpm-wakeup",c
->> +                                      value, rcpm_wakeup_cells + 1);
->
-> My first impression is that you are trying to do something
-> in a platform specific way that should be handled by common
-> code here.
->
-> You are parsing rcpm_wakeup_cells once for the global node,
-> but you don't check whether the device that has the rcpm-wakeup
-> node actually refers to this instance, and that would require
-> an incompatible change if we ever get an implementation that
-> has multiple such nodes.
->
->         Arnd
+Add support for the clock. Currently we enable
+at probe and relinquish at remove.
 
-The code is specific to the QorIQ platform.
+Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+v2:
+fix spaces and error path.
 
-For a given QorIQ SoC, the value of the "fsl,#rcpm-wakeup-cells"
-property would not change. Anyway, your suggestion is better getting
-the rcpm node from the "rcpm-wakeup" property.
+ .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
+ drivers/watchdog/of_xilinx_wdt.c                   | 23 ++++++++++++++++++++--
+ 2 files changed, 24 insertions(+), 2 deletions(-)
 
-Thanks,
-Chenhui
+diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+index 6d63782..b0a9fa3 100644
+--- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+@@ -5,6 +5,8 @@ Required properties:
+ - compatible		: Should be "xlnx,xps-timebase-wdt-1.00.a" or
+ 			  "xlnx,xps-timebase-wdt-1.01.a".
+ - reg			: Physical base address and size
++- clocks		: Input clock specifier. Refer to common clock
++			  bindings.
+ 
+ Optional properties:
+ - clock-frequency	: Frequency of clock in Hz
+@@ -17,6 +19,7 @@ Example:
+ axi-timebase-wdt@40100000 {
+ 	clock-frequency = <50000000>;
+ 	compatible = "xlnx,xps-timebase-wdt-1.00.a";
++	clocks = <&clkc 15>;
+ 	reg = <0x40100000 0x10000>;
+ 	xlnx,wdt-enable-once = <0x0>;
+ 	xlnx,wdt-interval = <0x1b>;
+diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
+index b2e1b4c..a225e43 100644
+--- a/drivers/watchdog/of_xilinx_wdt.c
++++ b/drivers/watchdog/of_xilinx_wdt.c
+@@ -10,6 +10,7 @@
+  * 2 of the License, or (at your option) any later version.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+@@ -45,6 +46,7 @@ struct xwdt_device {
+ 	u32 wdt_interval;
+ 	spinlock_t spinlock;
+ 	struct watchdog_device xilinx_wdt_wdd;
++	struct clk		*clk;
+ };
+ 
+ static int xilinx_wdt_start(struct watchdog_device *wdd)
+@@ -194,17 +196,29 @@ static int xwdt_probe(struct platform_device *pdev)
+ 
+ 	spin_lock_init(&xdev->spinlock);
+ 	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
++	xdev->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(xdev->clk)) {
++		dev_err(&pdev->dev, "input clock not found\n");
++		rc = PTR_ERR(xdev->clk);
++		return rc;
++	}
++
++	rc = clk_prepare_enable(xdev->clk);
++	if (rc) {
++		dev_err(&pdev->dev, "unable to enable clock\n");
++		return rc;
++	}
+ 
+ 	rc = xwdt_selftest(xdev);
+ 	if (rc == XWT_TIMER_FAILED) {
+ 		dev_err(&pdev->dev, "SelfTest routine error\n");
+-		return rc;
++		goto err_clk_disable;
+ 	}
+ 
+ 	rc = watchdog_register_device(xilinx_wdt_wdd);
+ 	if (rc) {
+ 		dev_err(&pdev->dev, "Cannot register watchdog (err=%d)\n", rc);
+-		return rc;
++		goto err_clk_disable;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds\n",
+@@ -213,6 +227,10 @@ static int xwdt_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, xdev);
+ 
+ 	return 0;
++err_clk_disable:
++	clk_disable_unprepare(xdev->clk);
++
++	return rc;
+ }
+ 
+ static int xwdt_remove(struct platform_device *pdev)
+@@ -220,6 +238,7 @@ static int xwdt_remove(struct platform_device *pdev)
+ 	struct xwdt_device *xdev = platform_get_drvdata(pdev);
+ 
+ 	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
++	clk_disable_unprepare(xdev->clk);
+ 
+ 	return 0;
+ }
+-- 
+2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
