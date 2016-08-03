@@ -1,125 +1,183 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv2] watchdog: xilinx: Add clock support
-Date: Wed, 3 Aug 2016 09:58:38 +0530
-Message-ID: <1470198518-22286-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v9 01/10] clk: fix initial state of critical clock's
+ parents
+Date: Wed, 3 Aug 2016 13:46:22 +0800
+Message-ID: <1470203182.17063.3.camel@mtksdaap41>
+References: <1466581229-2342-1-git-send-email-erin.lo@mediatek.com>
+ <1466581229-2342-2-git-send-email-erin.lo@mediatek.com>
+ <20160702012140.GB17071@codeaurora.org>
+ <1467604308.26485.4.camel@mtksdaap41>
+ <146802073038.73491.6675612765998057903@resonance>
+ <1468225452.31247.7.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1468225452.31247.7.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the clock. Currently we enable
-at probe and relinquish at remove.
+On Mon, 2016-07-11 at 16:24 +0800, James Liao wrote:
+> Hi Mike,
+> 
+> On Fri, 2016-07-08 at 16:32 -0700, Michael Turquette wrote:
+> > Hi James,
+> > 
+> > Quoting James Liao (2016-07-03 20:51:48)
+> > > On Fri, 2016-07-01 at 18:21 -0700, Stephen Boyd wrote:
+> > > > (Resending to everyone)
+> > > > 
+> > > > On 06/22, Erin Lo wrote:
+> > > > > From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > > 
+> > > > > This patch fixed wrong state of parent clocks if they are registered
+> > > > > after critical clocks.
+> > > > > 
+> > > > > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > > Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > 
+> > > > It would be nice if you included the information about the
+> > > > problem from James' previous mail. This says what it does, but
+> > > > doesn't explain what the problem is and how it is fixing it.
+> > > > 
+> > > > > ---
+> > > > >  drivers/clk/clk.c | 9 ++++++++-
+> > > > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > > > index d584004..e9f5f89 100644
+> > > > > --- a/drivers/clk/clk.c
+> > > > > +++ b/drivers/clk/clk.c
+> > > > > @@ -2388,8 +2388,15 @@ static int __clk_core_init(struct clk_core *core)
+> > > > >     hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
+> > > > >             struct clk_core *parent = __clk_init_parent(orphan);
+> > > > >  
+> > > > > -           if (parent)
+> > > > > +           if (parent) {
+> > > > >                     clk_core_reparent(orphan, parent);
+> > > > > +
+> > > > > +                   if (orphan->prepare_count)
+> > > > > +                           clk_core_prepare(parent);
+> > > > > +
+> > > > > +                   if (orphan->enable_count)
+> > > > > +                           clk_core_enable(parent);
+> > > > > +           }
+> > > > >     }
+> > > > 
+> > > > I'm pretty sure I pointed this problem out to Mike when the
+> > > > critical clk patches were being pushed. I can't recall what the
+> > > > plan was though to fix the problem. I'm pretty sure he said that
+> > > > clk_core_reparent() would take care of it, but obviously it is
+> > > > not doing that. Or perhaps it was that clk handoff should figure
+> > > > out that the parents of a critical clk are also on and thus keep
+> > > > them on.
+> > > 
+> > > Hi Mike
+> > > 
+> > > Is there any other patch to fix this issue? Or did I misuse critical
+> > > clock flag?
+> > 
+> > There is no fix yes. Your fix is basically correct. I was mistaken back
+> > when I told you and Stephen that the framework already took care of
+> > this.
+> > 
+> > However, instead of "open coding" this solution, I would rather re-use
+> > the __clk_set_parent_{before,after} helpers instead. Can you review/test
+> > the following patch and let me know what you think?
+> > 
+> > Thanks,
+> > Mike
+> > 
+> > 
+> > 
+> > From c0163b3f719b1e219b28ad425f94f9ef54a25a8f Mon Sep 17 00:00:00 2001
+> > From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > Date: Fri, 8 Jul 2016 16:05:22 -0700
+> > Subject: [PATCH] clk: migrate ref counts when orphans are reunited
+> > 
+> > It's always nice to see families reunited, and this is equally true when
+> > talking about parent clocks and their children. However, if the orphan
+> > clk had a positive prepare_count or enable_count, then we would not
+> > migrate those counts up the parent chain correctly.
+> > 
+> > This has manifested with the recent critical clocks feature, which often
+> > enables clocks very early, before their parents have been registered.
+> > 
+> > Fixed by replacing the call to clk_core_reparent with calls to
+> > __clk_set_parent_{before,after}.
+> > 
+> > Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Cc: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/clk/clk.c | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index 820a939fb6bb..70efe4c4e0cc 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -2449,8 +2449,14 @@ static int __clk_core_init(struct clk_core *core)
+> >  	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
+> >  		struct clk_core *parent = __clk_init_parent(orphan);
+> >  
+> > -		if (parent)
+> > -			clk_core_reparent(orphan, parent);
+> 
+> Is it correct to remove clk_core_reparent()? It lacks
+> __clk_recalc_accuracies() and __clk_recalc_rates(), so the new parent's
+> rate will not propagate correctly.
+> 
+> For example, I set vdec_sel as a critical clock. Without your patch, the
+> result was:
+> 
+>     vdecpll         0            0   338000000
+>        vdecpll_ck   1            1   338000000
+>           vdec_sel  1            1   338000000
+> 
+> With your patch, it became:
+> 
+>     vdecpll         1            1   338000000
+>        vdecpll_ck   1            1           0
+>           vdec_sel  1            1           0
+> 
+> The prepare_count and enable_count are correct with your patch, but the
+> rates of vdecpll_ck and vdec_sel become incorrect.
+> 
+> 
+> Best regards,
+> 
+> James
+> 
+> > +		/*
+> > +		 * we could call __clk_set_parent, but that would result in a
+> > +		 * reducant call to the .set_rate op, if it exists
+> > +		 */
+> > +		if (parent) {
+> > +			__clk_set_parent_before(orphan, parent);
+> > +			__clk_set_parent_after(orphan, parent, NULL);
+> > +		}
+> >  	}
+> >  
+> >  	/*
+> 
 
-Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-v2:
-fix spaces and error path.
+Hi Mike,
 
- .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
- drivers/watchdog/of_xilinx_wdt.c                   | 23 ++++++++++++++++++++--
- 2 files changed, 24 insertions(+), 2 deletions(-)
+Do you have new patches to fix new clock parents? If not, I think we can
+use my patch first. Is it okay?
 
-diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-index 6d63782..b0a9fa3 100644
---- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-@@ -5,6 +5,8 @@ Required properties:
- - compatible		: Should be "xlnx,xps-timebase-wdt-1.00.a" or
- 			  "xlnx,xps-timebase-wdt-1.01.a".
- - reg			: Physical base address and size
-+- clocks		: Input clock specifier. Refer to common clock
-+			  bindings.
- 
- Optional properties:
- - clock-frequency	: Frequency of clock in Hz
-@@ -17,6 +19,7 @@ Example:
- axi-timebase-wdt@40100000 {
- 	clock-frequency = <50000000>;
- 	compatible = "xlnx,xps-timebase-wdt-1.00.a";
-+	clocks = <&clkc 15>;
- 	reg = <0x40100000 0x10000>;
- 	xlnx,wdt-enable-once = <0x0>;
- 	xlnx,wdt-interval = <0x1b>;
-diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
-index b2e1b4c..a225e43 100644
---- a/drivers/watchdog/of_xilinx_wdt.c
-+++ b/drivers/watchdog/of_xilinx_wdt.c
-@@ -10,6 +10,7 @@
-  * 2 of the License, or (at your option) any later version.
-  */
- 
-+#include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -45,6 +46,7 @@ struct xwdt_device {
- 	u32 wdt_interval;
- 	spinlock_t spinlock;
- 	struct watchdog_device xilinx_wdt_wdd;
-+	struct clk		*clk;
- };
- 
- static int xilinx_wdt_start(struct watchdog_device *wdd)
-@@ -194,17 +196,29 @@ static int xwdt_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&xdev->spinlock);
- 	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
-+	xdev->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(xdev->clk)) {
-+		dev_err(&pdev->dev, "input clock not found\n");
-+		rc = PTR_ERR(xdev->clk);
-+		return rc;
-+	}
-+
-+	rc = clk_prepare_enable(xdev->clk);
-+	if (rc) {
-+		dev_err(&pdev->dev, "unable to enable clock\n");
-+		return rc;
-+	}
- 
- 	rc = xwdt_selftest(xdev);
- 	if (rc == XWT_TIMER_FAILED) {
- 		dev_err(&pdev->dev, "SelfTest routine error\n");
--		return rc;
-+		goto err_clk_disable;
- 	}
- 
- 	rc = watchdog_register_device(xilinx_wdt_wdd);
- 	if (rc) {
- 		dev_err(&pdev->dev, "Cannot register watchdog (err=%d)\n", rc);
--		return rc;
-+		goto err_clk_disable;
- 	}
- 
- 	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds\n",
-@@ -213,6 +227,10 @@ static int xwdt_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, xdev);
- 
- 	return 0;
-+err_clk_disable:
-+	clk_disable_unprepare(xdev->clk);
-+
-+	return rc;
- }
- 
- static int xwdt_remove(struct platform_device *pdev)
-@@ -220,6 +238,7 @@ static int xwdt_remove(struct platform_device *pdev)
- 	struct xwdt_device *xdev = platform_get_drvdata(pdev);
- 
- 	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
-+	clk_disable_unprepare(xdev->clk);
- 
- 	return 0;
- }
--- 
-2.1.1
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+
+James
