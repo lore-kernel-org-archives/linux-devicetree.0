@@ -1,40 +1,56 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v2 1/2] ARM: dts: Remove use of skeleton.dtsi from
- bcm283x.dtsi
-Date: Wed, 3 Aug 2016 18:57:01 +0200 (CEST)
-Message-ID: <914380166.36980.cd778509-7d01-4a7c-93d2-94401387c355.open-xchange@email.1und1.de>
-References: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Campbell <ijc@hellion.org.uk>, linux-arm-kernel@lists.infradead.org
-Cc: Will Deacon <will.deacon@arm.com>, Lee Jones <lee@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>, Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, arm@kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARM: dts: da850: Adjust the pinctrl muxing for the NAND on CS3
+Date: Wed,  3 Aug 2016 17:06:27 +0000
+Message-ID: <20160803170627.1773-1-kbeldan@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ian,
+- Adjust the settings to also allow driving EMA_D[8..15] for 16bits
+  NANDs. These are shared with GPIO3[0..7] which have no in-tree user.
+- Remove the useless CS4 setting
 
-> Ian Campbell <ijc@hellion.org.uk> hat am 3. August 2016 um 16:12 geschrieben:
-> 
-> 
-> This file is included from DTS files under arch/arm64 too (via
-> broadcom/bcm2837-rpi-3-b.dts and broadcom/bcm2837.dtsi). There is a desire
-> not to have skeleton.dtsi for ARM64. See commit 3ebee5a2e141 ("arm64: dts:
-> kill skeleton.dtsi") for rationale for its removal.
-> 
-> As well as the addition of #*-cells also requires adding the device_type to
-> the rpi memory node explicitly.
-> 
-> Note that this change results in the removal of an empty /aliases node from
-> bcm2835-rpi-a.dtb and bcm2835-rpi-a-plus.dtb. I have no hardware to check
-> if this is a problem or not.
-> 
-> It also results in some reordering of the nodes in the DTBs (the /aliases
-> and /memory nodes come later). This isn't supposed to matter but, again,
-> I've no hardware to check if it is true in this particular case.
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/da850.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-i tested this patch with a Raspberry Pi Model B successfully.
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 3a00978..ae5dc18 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -43,16 +43,20 @@
+ 
+ 			nand_cs3_pins: pinmux_nand_pins {
+ 				pinctrl-single,bits = <
+-					/* EMA_OE, EMA_WE */
+-					0x1c 0x00110000  0x00ff0000
+-					/* EMA_CS[4],EMA_CS[3]*/
+-					0x1c 0x00000110  0x00000ff0
++					/* EMA_OE, EMA_WE, EMA_CS[3] */
++					0x1c 0x00110010  0x00ff00f0
+ 					/*
+ 					 * EMA_D[0], EMA_D[1], EMA_D[2],
+ 					 * EMA_D[3], EMA_D[4], EMA_D[5],
+ 					 * EMA_D[6], EMA_D[7]
+ 					 */
+ 					0x24 0x11111111  0xffffffff
++					/*
++					 * EMA_D[8],  EMA_D[9],  EMA_D[10],
++					 * EMA_D[11], EMA_D[12], EMA_D[13],
++					 * EMA_D[14], EMA_D[15]
++					 */
++					0x20 0x11111111  0xffffffff
+ 					/* EMA_A[1], EMA_A[2] */
+ 					0x30 0x01100000  0x0ff00000
+ 				>;
+-- 
+2.9.0.rc1
 
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
