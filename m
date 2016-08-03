@@ -1,61 +1,63 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH 06/11] ARM: dts: NSP: Add GPIO reboot method to bcm958625xmc
- DTS file
-Date: Wed,  3 Aug 2016 14:39:01 -0400
-Message-ID: <1470249546-12440-7-git-send-email-jon.mason@broadcom.com>
-References: <1470249546-12440-1-git-send-email-jon.mason@broadcom.com>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH v18 2/6] ARM: socfpga: add bindings document for fpga
+ bridge drivers
+Date: Wed, 3 Aug 2016 13:44:38 -0500
+Message-ID: <alpine.DEB.2.02.1608031344220.20611@linuxheads99>
+References: <20160712193645.9098-1-atull@opensource.altera.com> <20160712193645.9098-3-atull@opensource.altera.com> <20160801161806.GA16067@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470249546-12440-1-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: f.fainelli@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160801161806.GA16067@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Matthew Gerlach <mgerlach-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the ability to reboot the bcm958625xmc board via GPIO.
-Unfortunately, not all of the NSP based boards use the same GPIO pin
-and one doesn't have the ability to reboot via GPIO at all.  So, this
-will need to be specified per DTS file.
+On Mon, 1 Aug 2016, Rob Herring wrote:
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
----
- arch/arm/boot/dts/bcm958525xmc.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+> On Tue, Jul 12, 2016 at 02:36:41PM -0500, Alan Tull wrote:
+> > Add bindings documentation for Altera SOCFPGA bridges:
+> >  * fpga2sdram
+> >  * fpga2hps
+> >  * hps2fpga
+> >  * lwhps2fpga
+> > 
+> > Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Signed-off-by: Matthew Gerlach <mgerlach-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > ---
+> > v2:  separate into 2 documents for the 2 drivers
+> > v12: bump version to line up with simple-fpga-bus version
+> >      remove Linux specific notes such as references to sysfs
+> >      move non-DT specific documentation elsewhere
+> >      remove bindings that would have been used to pass configuration
+> >      clean up formatting
+> > v13: Remove 'label' property
+> >      Change property from init-val to bridge-enable
+> >      Fix email address
+> > v14: Add resets
+> >      Change order of bridges to put lw bridge (controlling bridge) first
+> > v15: No change in this patch for v15 of this patch set
+> > v16: Added regs property, cleaned up unit addresses
+> > v17: No change to this patch in v17 of patch set
+> > v18: Changed to not need reset-names property
+> >      node names as fpga-bridge@...
+> >      labels as fpga_bridge
+> >      Add address of fpgaportrst to give and address for f2s bridge
+> > ---
+> >  .../bindings/fpga/altera-fpga2sdram-bridge.txt     | 16 +++++++++
+> >  .../bindings/fpga/altera-hps2fpga-bridge.txt       | 39 ++++++++++++++++++++++
+> >  2 files changed, 55 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
 
-diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
-index 9517360..959cde9 100644
---- a/arch/arm/boot/dts/bcm958525xmc.dts
-+++ b/arch/arm/boot/dts/bcm958525xmc.dts
-@@ -33,6 +33,7 @@
- /dts-v1/;
- 
- #include "bcm-nsp.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "NorthStar Plus XMC (BCM958525xmc)";
-@@ -50,6 +51,12 @@
- 		device_type = "memory";
- 		reg = <0x60000000 0x40000000>;
- 	};
-+
-+	gpio-restart {
-+		compatible = "gpio-restart";
-+		gpios = <&gpioa 31 GPIO_ACTIVE_LOW>;
-+		priority = <200>;
-+	};
- };
- 
- &i2c0 {
--- 
-2.7.4
+Thanks!
+
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
