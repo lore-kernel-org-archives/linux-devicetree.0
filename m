@@ -1,34 +1,43 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: device tree verification tools
-Date: Wed, 3 Aug 2016 12:49:58 -0700
-Message-ID: <57A24AE6.404@gmail.com>
-References: <alpine.DEB.2.10.1607262241240.3426@hadrien>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 3 Aug 2016 15:00:34 -0500
+Message-ID: <57A24D62.5080207@codeaurora.org>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
+ <577999EC.1010104@gmx.de> <579A5929.4010908@codeaurora.org>
+ <d41488bf-ef79-ab11-f5fd-5ab15195c932@gmx.de>
+ <57A0DF6D.6040207@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.10.1607262241240.3426@hadrien>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57A0DF6D.6040207@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/16 13:43, Julia Lawall wrote:
-> I saw that there will be a microconference on device trees at Linux
-> Plumbers.  Unfortunately, I won't be able to attend, due to another event
-> at the same time, but I was wondering what is the status of verification
-> tools for device tree specifications?
-> 
-> thanks,
-> julia
-> 
+Timur Tabi wrote:
+>
+> Is there a good way to test my code? ping and iperf appear to send no
+> more than 3 packets at a time, which comes nowhere close to filling the
+> queue (which holds 512 normally).  netif_queue_stopped() never returns
+> true, no matter what I do.
 
-Matt, Rob,
+Never mind, I fixed this problem.  I had a race condition between
 
-Is activity on this topic likely to resume later this year?
+	/* update produce idx */
+	prod_idx = (tx_q->tpd.produce_idx << tx_q->produce_shift) &
+		    tx_q->produce_mask;
+	emac_reg_update32(adpt->base + tx_q->produce_reg,
+			  tx_q->produce_mask, prod_idx);
 
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+and the call to netif_stop_queue().  The emac_reg_update32() signalled 
+to the hardware that data is available, and it immediately called the 
+ISR, before I had a chance to call netif_stop_queue().  So now I call 
+emac_reg_update32() after netif_stop_queue(), and everything works.
+
+I'll post a v7 soon.
+
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
