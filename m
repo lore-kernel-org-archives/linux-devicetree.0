@@ -1,43 +1,87 @@
-From: Guenther Wutz <info-G3iWtta5+v4b1SvskN2V4Q@public.gmane.org>
-Subject: [PATCH] Documentation: devicetree: spi: fix wrong spi-bus documentation
-Date: Wed,  3 Aug 2016 16:11:54 +0200
-Message-ID: <20160803141154.3811-1-info@gunibert.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Guenther Wutz <info-G3iWtta5+v4b1SvskN2V4Q@public.gmane.org>, Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: Remove use of skeleton.dtsi from
+ bcm283x.dtsi
+Date: Wed, 3 Aug 2016 15:48:58 +0100
+Message-ID: <20160803144858.GA29054@leverpostej>
+References: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ian Campbell <ijc@hellion.org.uk>
+Cc: devicetree@vger.kernel.org, arm@kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Lee Jones <lee@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds missing commas to the spi-bus documentation of the
-cs-gpio lines.
+On Wed, Aug 03, 2016 at 03:12:44PM +0100, Ian Campbell wrote:
+> This file is included from DTS files under arch/arm64 too (via
+> broadcom/bcm2837-rpi-3-b.dts and broadcom/bcm2837.dtsi). There is a desire
+> not to have skeleton.dtsi for ARM64. See commit 3ebee5a2e141 ("arm64: dts:
+> kill skeleton.dtsi") for rationale for its removal.
+> 
+> As well as the addition of #*-cells also requires adding the device_type to
+> the rpi memory node explicitly.
+> 
+> Note that this change results in the removal of an empty /aliases node from
+> bcm2835-rpi-a.dtb and bcm2835-rpi-a-plus.dtb. I have no hardware to check
+> if this is a problem or not.
+> 
+> It also results in some reordering of the nodes in the DTBs (the /aliases
+> and /memory nodes come later). This isn't supposed to matter but, again,
+> I've no hardware to check if it is true in this particular case.
+> 
+> Signed-off-by: Ian Campbell <ijc@hellion.org.uk>
 
-The device tree compiler fails if chip select lines are not
-comma-separated. Fix the erroneous documentation by adding missing
-commas.
+I also don't have the relevant hardware to test with, but this looks
+generally like the right thing. So FWIW:
 
-Signed-off-by: Guenther Wutz <info-G3iWtta5+v4b1SvskN2V4Q@public.gmane.org>
-Signed-off-by: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/spi-bus.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index 42d5954..3f636f9 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -31,7 +31,7 @@ with max(cs-gpios > hw cs)
- So if for example the controller has 2 CS lines, and the cs-gpios
- property looks like this:
- 
--cs-gpios = <&gpio1 0 0> <0> <&gpio1 1 0> <&gpio1 2 0>;
-+cs-gpios = <&gpio1 0 0>, <0>, <&gpio1 1 0>, <&gpio1 2 0>;
- 
- Then it should be configured so that num_chipselect = 4 with the
- following mapping:
--- 
-2.9.2
+Mark.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> index caf2707..e9b47b2 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> @@ -2,6 +2,7 @@
+>  
+>  / {
+>  	memory {
+> +		device_type = "memory";
+>  		reg = <0 0x10000000>;
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> index b982522..445624a 100644
+> --- a/arch/arm/boot/dts/bcm283x.dtsi
+> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> @@ -2,7 +2,6 @@
+>  #include <dt-bindings/clock/bcm2835.h>
+>  #include <dt-bindings/clock/bcm2835-aux.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> -#include "skeleton.dtsi"
+>  
+>  /* This include file covers the common peripherals and configuration between
+>   * bcm2835 and bcm2836 implementations, leaving the CPU configuration to
+> @@ -13,6 +12,8 @@
+>  	compatible = "brcm,bcm2835";
+>  	model = "BCM2835";
+>  	interrupt-parent = <&intc>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+>  
+>  	chosen {
+>  		bootargs = "earlyprintk console=ttyAMA0";
+> -- 
+> 2.8.1
+> 
