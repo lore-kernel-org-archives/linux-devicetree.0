@@ -1,50 +1,40 @@
-From: Rich Felker <dalias@libc.org>
-Subject: [PATCH v6 1/2] of: add J-Core timer bindings
-Date: Tue, 17 May 2016 23:18:58 +0000
-Message-ID: <5e1d4f3346f69bdd9d840c8b5a855c1f93ff93f6.1470183518.git.dalias@libc.org>
-References: <cover.1470183518.git.dalias@libc.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1470183518.git.dalias@libc.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: [PATCH v5 0/2] J-Core SPI controller support
+Date: Wed, 3 Aug 2016 01:26:32 +0000
+Message-ID: <cover.1470187592.git.dalias@libc.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rich Felker <dalias@libc.org>
----
- .../devicetree/bindings/timer/jcore,pit.txt        | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/jcore,pit.txt
+Updates based on requests by Mark Brown. Driver has been made
+conditional in Kconfig to avoid it showing up in configurations where
+it's not relevant. Lots of small style improvements have been made,
+and the input clock frequency is now handled via the clk framework
+rather than a fixed clock-frequency property in the DT. Corresponding
+changes were made to the DT binding patch.
 
-diff --git a/Documentation/devicetree/bindings/timer/jcore,pit.txt b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-new file mode 100644
-index 0000000..af5dd35
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/jcore,pit.txt
-@@ -0,0 +1,24 @@
-+J-Core Programmable Interval Timer and Clocksource
-+
-+Required properties:
-+
-+- compatible: Must be "jcore,pit".
-+
-+- reg: Memory region(s) for timer/clocksource registers. For SMP,
-+  there should be one region per cpu, indexed by the sequential,
-+  zero-based hardware cpu number.
-+
-+- interrupts: An interrupt to assign for the timer. The actual pit
-+  core is integrated with the aic and allows the timer interrupt
-+  assignment to be programmed by software, but this property is
-+  required in order to reserve an interrupt number that doesn't
-+  conflict with other devices.
-+
-+
-+Example:
-+
-+timer@200 {
-+	compatible = "jcore,pit";
-+	reg = < 0x200 0x30 0x500 0x30 >;
-+	interrupts = < 0x48 >;
-+};
+Rich
+
+
+
+Rich Felker (2):
+  of: add J-Core SPI master bindings
+  spi: add driver for J-Core SPI controller
+
+ .../devicetree/bindings/spi/jcore,spi.txt          |  34 +++
+ drivers/spi/Kconfig                                |   7 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-jcore.c                            | 232 +++++++++++++++++++++
+ 4 files changed, 274 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
+ create mode 100644 drivers/spi/spi-jcore.c
+
 -- 
 2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
