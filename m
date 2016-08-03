@@ -1,465 +1,209 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH v7] ASoC: rockchip: Add machine driver for
-	RK3399 GRU Boards
-Date: Wed,  3 Aug 2016 16:10:00 +0800
-Message-ID: <1470211800-16717-1-git-send-email-zhengxing@rock-chips.com>
+From: Songjun Wu <songjun.wu@microchip.com>
+Subject: [PATCH v8 0/2] [media] atmel-isc: add driver for Atmel ISC
+Date: Wed, 3 Aug 2016 16:08:02 +0800
+Message-ID: <1470211686-2198-1-git-send-email-songjun.wu@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Xing Zheng <zhengxing@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, dianders@chromium.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, smbarber@google.com, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, heiko@sntech.de
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.ferre@atmel.com, robh@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Kamil Debski <kamil@wypas.org>, Songjun Wu <songjun.wu@microchip.com>, laurent.pinchart@ideasonboard.com, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Peter Griffin <peter.griffin@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Benoit Parrot <bparrot@ti.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Tiffany Lin <tiffany.lin@mediatek.com>, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Niklas=20S=C3=83=C2=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, linux-kernel@vger.kernel.org, =?UTF-8?q?Richard=20R=C3=B6jfors?= <richard@puffinpack.se>, Sudi
 List-Id: devicetree@vger.kernel.org
 
-Because we need to support the multiple codecs (MAX98357A/RT5514/DA7219)
-on the RK3399 GRU boards, this patch can help us to support these codecs.
+The Image Sensor Controller driver includes two parts.
+1) Driver code to implement the ISC function.
+2) Device tree binding documentation, it describes how
+   to add the ISC in device tree.
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+Test result with v4l-utils.
+v4l2-compliance SHA   : not available
+
+Driver Info:
+        Driver name   : atmel_isc
+        Card type     : Atmel Image Sensor Controller
+        Bus info      : platform:atmel_isc f0008000.isc
+        Driver version: 4.7.0
+        Capabilities  : 0x84200001
+                Video Capture
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x04200001
+                Video Capture
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/video0 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second video open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Test input 0:
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+                test VIDIOC_QUERYCTRL: OK (Not Supported)
+                test VIDIOC_G/S_CTRL: OK (Not Supported)
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 0 Private Controls: 0
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK (Not Supported)
+                test Scaling: OK (Not Supported)
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Stream using all formats:
+        test MMAP for Format BA81, Frame Size 640x480@60.00 Hz:
+                Stride 640, Field None: OK
+        test MMAP for Format YUYV, Frame Size 640x480@60.00 Hz:
+                Stride 1280, Field None: OK
+
+Total: 45, Succeeded: 45, Failed: 0, Warnings: 0
+
+Changes in v8:
+- Power on the sensor on the first open in function
+  'isc_open'.
+- Power off the sensor on the last release in function
+  'isc_release'.
+- Remove the switch of the pipeline.
 
 Changes in v7:
-- add default MCLK and PLL settings for the da7219_init() so that the
-  accessory detection works as expected
+- Add enum_framesizes and enum_frameintervals.
+- Call s_stream(0) when stream start fail.
+- Fill the device_caps field of struct video_device
+  with V4L2_CAP_STREAMING and V4L2_CAP_VIDEO_CAPTURE.
+- Initialize the dev of struct vb2_queue.
+- Set field to FIELD_NONE if the pix field is not supported.
+- Return the result directly when call g/s_parm of subdev.
 
 Changes in v6:
-- remove enable/disable dapm pins, and to switch codecs via user space
-- fix "Speaker" dapm route for max98357a
-- add SND_JACK_LINEOUT flag for da7219 jack detection
+- Add "iscck" and "gck" to clock-names.
 
 Changes in v5:
-- fix the build warning for missing I2C/CLKDEV_LOOKUP dependency
+- Modify the macro definition and the related code.
+- Add clock-output-names.
 
 Changes in v4:
-- the compatible name needs to be based on a single reference design,
-  and the name of the board is called "GRU"
-- use one i2sX card "rockchip,cpu = <&i2s0>" instead of array that is
-  based on GRU
-- rename DOC to rockchip,rk3399-gru-sound.txt
-- rename compatible to rockchip,rk3399-gru-sound
-- rename source code to rk3399_gru_sound.c
+- Modify the isc clock code since the dt is changed.
+- Remove the isc clock nodes.
 
 Changes in v3:
-- rename DOC to rockchip,rk3399-max98357a-rt5514-da7219.txt
-- rename compatible to rockchip,rk3399-max98357a-rt5514-da7219
-- rename source code to rk3399_max98357a_rt5514_da7219.c
+- Add pm runtime feature.
+- Modify the isc clock code since the dt is changed.
+- Remove the 'atmel,sensor-preferred'.
+- Modify the isc clock node according to the Rob's remarks.
 
 Changes in v2:
-- use the FS 256 to set mclks of the max98357a and rt5514 danamically
-- add more sample rate for da7219
+- Add "depends on COMMON_CLK" and "VIDEO_V4L2_SUBDEV_API"
+  in Kconfig file.
+- Correct typos and coding style according to Laurent's remarks
+- Delete the loop while in 'isc_clk_enable' function.
+- Replace 'hsync_active', 'vsync_active' and 'pclk_sample'
+  with 'pfe_cfg0' in struct isc_subdev_entity.
+- Add the code to support VIDIOC_CREATE_BUFS in
+  'isc_queue_setup' function.
+- Invoke isc_config to configure register in
+  'isc_start_streaming' function.
+- Add the struct completion 'comp' to synchronize with
+  the frame end interrupt in 'isc_stop_streaming' function.
+- Check the return value of the clk_prepare_enable
+  in 'isc_open' function.
+- Set the default format in 'isc_open' function.
+- Add an exit condition in the loop while in 'isc_config'.
+- Delete the hardware setup operation in 'isc_set_format'.
+- Refuse format modification during streaming
+  in 'isc_s_fmt_vid_cap' function.
+- Invoke v4l2_subdev_alloc_pad_config to allocate and
+  initialize the pad config in 'isc_async_complete' function.
+- Remove the '.owner  = THIS_MODULE,' in atmel_isc_driver.
+- Replace the module_platform_driver_probe() with
+  module_platform_driver().
+- Remove the unit address of the endpoint.
+- Add the unit address to the clock node.
+- Avoid using underscores in node names.
+- Drop the "0x" in the unit address of the i2c node.
+- Modify the description of 'atmel,sensor-preferred'.
+- Add the description for the ISC internal clock.
 
- .../bindings/sound/rockchip,rk3399-gru-sound.txt   |   15 +
- sound/soc/rockchip/Kconfig                         |   11 +
- sound/soc/rockchip/Makefile                        |    2 +
- sound/soc/rockchip/rk3399_gru_sound.c              |  337 ++++++++++++++++++++
- 4 files changed, 365 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
- create mode 100644 sound/soc/rockchip/rk3399_gru_sound.c
+Songjun Wu (2):
+  [media] atmel-isc: add the Image Sensor Controller code
+  [media] atmel-isc: DT binding for Image Sensor Controller driver
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-new file mode 100644
-index 0000000..f19b6c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -0,0 +1,15 @@
-+ROCKCHIP with MAX98357A/RT5514/DA7219 codecs on GRU boards
-+
-+Required properties:
-+- compatible: "rockchip,rk3399-gru-sound"
-+- rockchip,cpu: The phandle of the Rockchip I2S controller that's
-+  connected to the codecs
-+- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-+
-+Example:
-+
-+sound {
-+	compatible = "rockchip,rk3399-gru-sound";
-+	rockchip,cpu = <&i2s0>;
-+	rockchip,codec = <&max98357a &rt5514 &da7219>;
-+};
-diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
-index f1e0c70..6d39032 100644
---- a/sound/soc/rockchip/Kconfig
-+++ b/sound/soc/rockchip/Kconfig
-@@ -41,3 +41,14 @@ config SND_SOC_ROCKCHIP_RT5645
- 	help
- 	  Say Y or M here if you want to add support for SoC audio on Rockchip
- 	  boards using the RT5645/RT5650 codec, such as Veyron.
-+
-+config SND_SOC_RK3399_GRU_SOUND
-+	tristate "ASoC support multiple codecs for Rockchip RK3399 GRU boards"
-+	depends on SND_SOC_ROCKCHIP && I2C && GPIOLIB && CLKDEV_LOOKUP
-+	select SND_SOC_ROCKCHIP_I2S
-+	select SND_SOC_MAX98357A
-+	select SND_SOC_RT5514
-+	select SND_SOC_DA7219
-+	help
-+	  Say Y or M here if you want to add support multiple codecs for SoC
-+	  audio on Rockchip RK3399 GRU boards.
-diff --git a/sound/soc/rockchip/Makefile b/sound/soc/rockchip/Makefile
-index c0bf560..84e5c7c 100644
---- a/sound/soc/rockchip/Makefile
-+++ b/sound/soc/rockchip/Makefile
-@@ -7,6 +7,8 @@ obj-$(CONFIG_SND_SOC_ROCKCHIP_SPDIF) += snd-soc-rockchip-spdif.o
- 
- snd-soc-rockchip-max98090-objs := rockchip_max98090.o
- snd-soc-rockchip-rt5645-objs := rockchip_rt5645.o
-+snd-soc-rk3399-gru-sound-objs := rk3399_gru_sound.o
- 
- obj-$(CONFIG_SND_SOC_ROCKCHIP_MAX98090) += snd-soc-rockchip-max98090.o
- obj-$(CONFIG_SND_SOC_ROCKCHIP_RT5645) += snd-soc-rockchip-rt5645.o
-+obj-$(CONFIG_SND_SOC_RK3399_GRU_SOUND) += snd-soc-rk3399-gru-sound.o
-diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-new file mode 100644
-index 0000000..9933703
---- /dev/null
-+++ b/sound/soc/rockchip/rk3399_gru_sound.c
-@@ -0,0 +1,337 @@
-+/*
-+ * Rockchip machine ASoC driver for boards using MAX98357A/RT5514/DA7219
-+ *
-+ * Copyright (c) 2016, ROCKCHIP CORPORATION.  All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/delay.h>
-+#include <linux/spi/spi.h>
-+#include <sound/core.h>
-+#include <sound/jack.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include "rockchip_i2s.h"
-+#include "../codecs/da7219.h"
-+#include "../codecs/da7219-aad.h"
-+#include "../codecs/rt5514.h"
-+
-+#define DRV_NAME "rk3399-gru-sound"
-+
-+#define SOUND_FS	256
-+
-+static struct snd_soc_jack rockchip_sound_jack;
-+
-+static const struct snd_soc_dapm_widget rockchip_dapm_widgets[] = {
-+	SND_SOC_DAPM_HP("Headphones", NULL),
-+	SND_SOC_DAPM_SPK("Speakers", NULL),
-+	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-+	SND_SOC_DAPM_MIC("Int Mic", NULL),
-+};
-+
-+static const struct snd_soc_dapm_route rockchip_dapm_routes[] = {
-+	/* Input Lines */
-+	{"MIC", NULL, "Headset Mic"},
-+	{"DMIC1L", NULL, "Int Mic"},
-+	{"DMIC1R", NULL, "Int Mic"},
-+
-+	/* Output Lines */
-+	{"Headphones", NULL, "HPL"},
-+	{"Headphones", NULL, "HPR"},
-+	{"Speakers", NULL, "Speaker"},
-+};
-+
-+static const struct snd_kcontrol_new rockchip_controls[] = {
-+	SOC_DAPM_PIN_SWITCH("Headphones"),
-+	SOC_DAPM_PIN_SWITCH("Speakers"),
-+	SOC_DAPM_PIN_SWITCH("Headset Mic"),
-+	SOC_DAPM_PIN_SWITCH("Int Mic"),
-+};
-+
-+static int rockchip_sound_max98357a_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	unsigned int mclk;
-+	int ret;
-+
-+	/* max98357a supports these sample rates */
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+	case 48000:
-+	case 96000:
-+		mclk = params_rate(params) * SOUND_FS;
-+		break;
-+	default:
-+		dev_err(rtd->card->dev, "%s() doesn't support this sample rate: %d\n",
-+				__func__, params_rate(params));
-+		return -EINVAL;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(rtd->cpu_dai, 0, mclk, 0);
-+	if (ret) {
-+		dev_err(rtd->card->dev, "%s() error setting sysclk to %u: %d\n",
-+				__func__, mclk, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_sound_rt5514_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	unsigned int mclk;
-+	int ret;
-+
-+	mclk = params_rate(params) * SOUND_FS;
-+
-+	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
-+				     SND_SOC_CLOCK_OUT);
-+	if (ret < 0) {
-+		dev_err(rtd->card->dev, "Can't set cpu clock out %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(codec_dai, RT5514_SCLK_S_MCLK,
-+				     mclk, SND_SOC_CLOCK_IN);
-+	if (ret) {
-+		dev_err(rtd->card->dev, "%s() error setting sysclk to %u: %d\n",
-+				__func__, params_rate(params) * 512, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_sound_da7219_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	int mclk, ret;
-+
-+	/* in bypass mode, the mclk has to be one of the frequencies below */
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+	case 24000:
-+	case 32000:
-+	case 48000:
-+	case 64000:
-+	case 96000:
-+		mclk = 12288000;
-+		break;
-+	case 11025:
-+	case 22050:
-+	case 44100:
-+	case 88200:
-+		mclk = 11289600;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
-+				     SND_SOC_CLOCK_OUT);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Can't set cpu clock out %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
-+				     SND_SOC_CLOCK_IN);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Can't set codec clock in %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_pll(codec_dai, 0, DA7219_SYSCLK_MCLK, 0, 0);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Can't set pll sysclk mclk %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_sound_da7219_init(struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct snd_soc_codec *codec = rtd->codec_dais[0]->codec;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	int ret;
-+
-+	/* We need default MCLK and PLL settings for the accessory detection */
-+	ret = snd_soc_dai_set_sysclk(codec_dai, 0, 12288000,
-+				     SND_SOC_CLOCK_IN);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Init can't set codec clock in %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_pll(codec_dai, 0, DA7219_SYSCLK_MCLK, 0, 0);
-+	if (ret < 0) {
-+		dev_err(codec_dai->dev, "Init can't set pll sysclk mclk %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Enable Headset and 4 Buttons Jack detection */
-+	ret = snd_soc_card_jack_new(rtd->card, "Headset Jack",
-+				    SND_JACK_HEADSET | SND_JACK_LINEOUT |
-+				    SND_JACK_BTN_0 | SND_JACK_BTN_1 |
-+				    SND_JACK_BTN_2 | SND_JACK_BTN_3,
-+				    &rockchip_sound_jack, NULL, 0);
-+
-+	if (ret) {
-+		dev_err(rtd->card->dev, "New Headset Jack failed! (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	da7219_aad_jack_det(codec, &rockchip_sound_jack);
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_ops rockchip_sound_max98357a_ops = {
-+	.hw_params = rockchip_sound_max98357a_hw_params,
-+};
-+
-+static struct snd_soc_ops rockchip_sound_rt5514_ops = {
-+	.hw_params = rockchip_sound_rt5514_hw_params,
-+};
-+
-+static struct snd_soc_ops rockchip_sound_da7219_ops = {
-+	.hw_params = rockchip_sound_da7219_hw_params,
-+};
-+
-+enum {
-+	DAILINK_MAX98357A,
-+	DAILINK_RT5514,
-+	DAILINK_DA7219,
-+};
-+
-+static struct snd_soc_dai_link rockchip_dailinks[] = {
-+	[DAILINK_MAX98357A] = {
-+		.name = "MAX98357A",
-+		.stream_name = "MAX98357A PCM",
-+		.codec_dai_name = "HiFi",
-+		.ops = &rockchip_sound_max98357a_ops,
-+		/* set max98357a as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
-+	[DAILINK_RT5514] = {
-+		.name = "RT5514",
-+		.stream_name = "RT5514 PCM",
-+		.codec_dai_name = "rt5514-aif1",
-+		.ops = &rockchip_sound_rt5514_ops,
-+		/* set rt5514 as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
-+	[DAILINK_DA7219] = {
-+		.name = "DA7219",
-+		.stream_name = "DA7219 PCM",
-+		.codec_dai_name = "da7219-hifi",
-+		.init = rockchip_sound_da7219_init,
-+		.ops = &rockchip_sound_da7219_ops,
-+		/* set da7219 as slave */
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
-+};
-+
-+static struct snd_soc_card rockchip_sound_card = {
-+	.name = "rk3399-gru-sound",
-+	.owner = THIS_MODULE,
-+	.dai_link = rockchip_dailinks,
-+	.num_links =  ARRAY_SIZE(rockchip_dailinks),
-+	.dapm_widgets = rockchip_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(rockchip_dapm_widgets),
-+	.dapm_routes = rockchip_dapm_routes,
-+	.num_dapm_routes = ARRAY_SIZE(rockchip_dapm_routes),
-+	.controls = rockchip_controls,
-+	.num_controls = ARRAY_SIZE(rockchip_controls),
-+};
-+
-+static int rockchip_sound_probe(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = &rockchip_sound_card;
-+	struct device_node *cpu_node;
-+	int i, ret;
-+
-+	cpu_node = of_parse_phandle(pdev->dev.of_node, "rockchip,cpu", 0);
-+	if (!cpu_node) {
-+		dev_err(&pdev->dev, "Property 'rockchip,cpu' missing or invalid\n");
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < card->num_links; i++) {
-+		rockchip_dailinks[i].platform_of_node = cpu_node;
-+		rockchip_dailinks[i].cpu_of_node = cpu_node;
-+
-+		rockchip_dailinks[i].codec_of_node =
-+			of_parse_phandle(pdev->dev.of_node, "rockchip,codec", i);
-+		if (!rockchip_dailinks[i].codec_of_node) {
-+			dev_err(&pdev->dev,
-+				"Property[%d] 'rockchip,codec' missing or invalid\n", i);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	card->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, card);
-+
-+	ret = devm_snd_soc_register_card(&pdev->dev, card);
-+	if (ret)
-+		dev_err(&pdev->dev, "%s snd_soc_register_card fail %d\n",
-+			__func__, ret);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id rockchip_sound_of_match[] = {
-+	{ .compatible = "rockchip,rk3399-gru-sound", },
-+	{},
-+};
-+
-+static struct platform_driver rockchip_sound_driver = {
-+	.probe = rockchip_sound_probe,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = rockchip_sound_of_match,
-+#ifdef CONFIG_PM
-+		.pm = &snd_soc_pm_ops,
-+#endif
-+	},
-+};
-+
-+module_platform_driver(rockchip_sound_driver);
-+
-+MODULE_AUTHOR("Xing Zheng <zhengxing@rock-chips.com>");
-+MODULE_DESCRIPTION("Rockchip ASoC Machine Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_DEVICE_TABLE(of, rockchip_sound_of_match);
+ .../devicetree/bindings/media/atmel-isc.txt        |   65 +
+ drivers/media/platform/Kconfig                     |    1 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/atmel/Kconfig               |    9 +
+ drivers/media/platform/atmel/Makefile              |    1 +
+ drivers/media/platform/atmel/atmel-isc-regs.h      |  165 +++
+ drivers/media/platform/atmel/atmel-isc.c           | 1503 ++++++++++++++++++++
+ 7 files changed, 1746 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+ create mode 100644 drivers/media/platform/atmel/Kconfig
+ create mode 100644 drivers/media/platform/atmel/Makefile
+ create mode 100644 drivers/media/platform/atmel/atmel-isc-regs.h
+ create mode 100644 drivers/media/platform/atmel/atmel-isc.c
+
 -- 
-1.7.9.5
+2.7.4
