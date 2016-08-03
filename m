@@ -1,8 +1,8 @@
 From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
         <noltari@gmail.com>
-Subject: [PATCH v2 3/7] MIPS: BMIPS: Add device tree example for BCM63268
-Date: Wed,  3 Aug 2016 11:58:26 +0200
-Message-ID: <1470218310-2978-3-git-send-email-noltari@gmail.com>
+Subject: [PATCH v2 5/7] MIPS: BMIPS: Add device tree example for BCM3368
+Date: Wed,  3 Aug 2016 11:58:28 +0200
+Message-ID: <1470218310-2978-5-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -20,68 +20,66 @@ To: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.ker
 Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a device tree example for Comtrend VR-3032u, which
-also serves as a real example for brcm,bcm6328-leds.
+This adds a device tree example for Netgear CVG834G.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
  arch/mips/bmips/Kconfig                            |   4 +
  arch/mips/boot/dts/brcm/Makefile                   |   2 +
- .../boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts   | 108 +++++++++++++++++
- arch/mips/boot/dts/brcm/bcm63268.dtsi              | 134 +++++++++++++++++++++
- 4 files changed, 248 insertions(+)
- create mode 100644 arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts
- create mode 100644 arch/mips/boot/dts/brcm/bcm63268.dtsi
+ .../mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts |  22 +++++
+ arch/mips/boot/dts/brcm/bcm3368.dtsi               | 101 +++++++++++++++++++++
+ 4 files changed, 129 insertions(+)
+ create mode 100644 arch/mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts
+ create mode 100644 arch/mips/boot/dts/brcm/bcm3368.dtsi
 
 diff --git a/arch/mips/bmips/Kconfig b/arch/mips/bmips/Kconfig
-index c8f1427..6a0946c 100644
+index 6a0946c..f499fd2 100644
 --- a/arch/mips/bmips/Kconfig
 +++ b/arch/mips/bmips/Kconfig
-@@ -61,6 +61,10 @@ config DT_BCM97435SVMB
- 	bool "BCM97435SVMB"
+@@ -65,6 +65,10 @@ config DT_COMTREND_VR3032U
+ 	bool "Comtrend VR-3032u"
  	select BUILTIN_DTB
  
-+config DT_COMTREND_VR3032U
-+	bool "Comtrend VR-3032u"
++config DT_NETGEAR_CVG834G
++	bool "NETGEAR CVG834G"
 +	select BUILTIN_DTB
 +
  config DT_SFR_NEUFBOX4_SERCOMM
  	bool "SFR Neufbox 4 (Sercomm)"
  	select BUILTIN_DTB
 diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/brcm/Makefile
-index 0abe298..8281ec6 100644
+index 8281ec6..a698e84 100644
 --- a/arch/mips/boot/dts/brcm/Makefile
 +++ b/arch/mips/boot/dts/brcm/Makefile
-@@ -10,10 +10,12 @@ dtb-$(CONFIG_DT_BCM97362SVMB)		+= bcm97362svmb.dtb
- dtb-$(CONFIG_DT_BCM97420C)		+= bcm97420c.dtb
+@@ -11,9 +11,11 @@ dtb-$(CONFIG_DT_BCM97420C)		+= bcm97420c.dtb
  dtb-$(CONFIG_DT_BCM97425SVMB)		+= bcm97425svmb.dtb
  dtb-$(CONFIG_DT_BCM97435SVMB)		+= bcm97435svmb.dtb
-+dtb-$(CONFIG_DT_COMTREND_VR3032U)	+= bcm63268-comtrend-vr-3032u.dtb
+ dtb-$(CONFIG_DT_COMTREND_VR3032U)	+= bcm63268-comtrend-vr-3032u.dtb
++dtb-$(CONFIG_DT_NETGEAR_CVG834G)	+= bcm3368-netgear-cvg834g.dtb
  dtb-$(CONFIG_DT_SFR_NEUFBOX4_SERCOMM)	+= bcm6358-neufbox4-sercomm.dtb
  
  dtb-$(CONFIG_DT_NONE) += \
++	bcm3368-netgear-cvg834g.dtb \
  	bcm6358-neufbox4-sercomm.dtb \
-+	bcm63268-comtrend-vr-3032u.dtb \
+ 	bcm63268-comtrend-vr-3032u.dtb \
  	bcm93384wvg.dtb \
- 	bcm93384wvg_viper.dtb \
- 	bcm96358nb4ser.dtb \
-diff --git a/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts b/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts
+diff --git a/arch/mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts b/arch/mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts
 new file mode 100644
-index 0000000..430d35c
+index 0000000..2f2e80f
 --- /dev/null
-+++ b/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts
-@@ -0,0 +1,108 @@
++++ b/arch/mips/boot/dts/brcm/bcm3368-netgear-cvg834g.dts
+@@ -0,0 +1,22 @@
 +/dts-v1/;
 +
-+/include/ "bcm63268.dtsi"
++/include/ "bcm3368.dtsi"
 +
 +/ {
-+	compatible = "comtrend,vr-3032u", "brcm,bcm63268";
-+	model = "Comtrend VR-3032u";
++	compatible = "netgear,cvg834g", "brcm,bcm3368";
++	model = "NETGEAR CVG834G";
 +
 +	memory@0 {
 +		device_type = "memory";
-+		reg = <0x00000000 0x04000000>;
++		reg = <0x00000000 0x02000000>;
 +	};
 +
 +	chosen {
@@ -90,111 +88,25 @@ index 0000000..430d35c
 +	};
 +};
 +
-+&leds0 {
-+	status = "ok";
-+	brcm,serial-leds;
-+	brcm,serial-dat-low;
-+	brcm,serial-shift-inv;
-+
-+	led@0 {
-+		reg = <0>;
-+		brcm,hardware-controlled;
-+		brcm,link-signal-sources = <0>;
-+		/* GPHY0 Speed 0 */
-+	};
-+	led@1 {
-+		reg = <1>;
-+		brcm,hardware-controlled;
-+		brcm,link-signal-sources = <1>;
-+		/* GPHY0 Speed 1 */
-+	};
-+	led@2 {
-+		reg = <2>;
-+		active-low;
-+		label = "vr-3032u:red:inet";
-+	};
-+	led@3 {
-+		reg = <3>;
-+		active-low;
-+		label = "vr-3032u:green:dsl";
-+	};
-+	led@4 {
-+		reg = <4>;
-+		active-low;
-+		label = "vr-3032u:green:usb";
-+	};
-+	led@7 {
-+		reg = <7>;
-+		active-low;
-+		label = "vr-3032u:green:wps";
-+	};
-+	led@8 {
-+		reg = <8>;
-+		active-low;
-+		label = "vr-3032u:green:inet";
-+	};
-+	led@9 {
-+		reg = <9>;
-+		brcm,hardware-controlled;
-+		/* EPHY0 Activity */
-+	};
-+	led@10 {
-+		reg = <10>;
-+		brcm,hardware-controlled;
-+		/* EPHY1 Activity */
-+	};
-+	led@11 {
-+		reg = <11>;
-+		brcm,hardware-controlled;
-+		/* EPHY2 Activity */
-+	};
-+	led@12 {
-+		reg = <12>;
-+		brcm,hardware-controlled;
-+		/* GPHY0 Activity */
-+	};
-+	led@13 {
-+		reg = <13>;
-+		brcm,hardware-controlled;
-+		/* EPHY0 Speed */
-+	};
-+	led@14 {
-+		reg = <14>;
-+		brcm,hardware-controlled;
-+		/* EPHY1 Speed */
-+	};
-+	led@15 {
-+		reg = <15>;
-+		brcm,hardware-controlled;
-+		/* EPHY2 Speed */
-+	};
-+	led@20 {
-+		reg = <20>;
-+		active-low;
-+		label = "vr-3032u:green:power";
-+		default-state = "on";
-+	};
-+};
-+
 +&uart0 {
 +	status = "okay";
 +};
-diff --git a/arch/mips/boot/dts/brcm/bcm63268.dtsi b/arch/mips/boot/dts/brcm/bcm63268.dtsi
+diff --git a/arch/mips/boot/dts/brcm/bcm3368.dtsi b/arch/mips/boot/dts/brcm/bcm3368.dtsi
 new file mode 100644
-index 0000000..7e6bf2c
+index 0000000..bee855c
 --- /dev/null
-+++ b/arch/mips/boot/dts/brcm/bcm63268.dtsi
-@@ -0,0 +1,134 @@
++++ b/arch/mips/boot/dts/brcm/bcm3368.dtsi
+@@ -0,0 +1,101 @@
 +/ {
 +	#address-cells = <1>;
 +	#size-cells = <1>;
-+	compatible = "brcm,bcm63268";
++	compatible = "brcm,bcm3368";
 +
 +	cpus {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		mips-hpt-frequency = <200000000>;
++		mips-hpt-frequency = <150000000>;
 +
 +		cpu@0 {
 +			compatible = "brcm,bmips4350";
@@ -237,83 +149,50 @@ index 0000000..7e6bf2c
 +		compatible = "simple-bus";
 +		ranges;
 +
-+		periph_cntl: syscon@10000000 {
++		periph_cntl: syscon@fff8c000 {
 +			compatible = "syscon";
-+			reg = <0x10000000 0x14>;
++			reg = <0xfff8c000 0xc>;
 +			native-endian;
 +		};
 +
-+		reboot: syscon-reboot@10000008 {
++		reboot: syscon-reboot@fff8c008 {
 +			compatible = "syscon-reboot";
 +			regmap = <&periph_cntl>;
 +			offset = <0x8>;
 +			mask = <0x1>;
 +		};
 +
-+		periph_intc: interrupt-controller@10000020 {
++		periph_intc: interrupt-controller@fff8c00c {
 +			compatible = "brcm,bcm6345-l1-intc";
-+			reg = <0x10000020 0x20>,
-+			      <0x10000040 0x20>;
++			reg = <0xfff8c00c 0x8>;
 +
 +			interrupt-controller;
 +			#interrupt-cells = <1>;
 +
 +			interrupt-parent = <&cpu_intc>;
-+			interrupts = <2>, <3>;
++			interrupts = <2>;
 +		};
 +
-+		uart0: serial@10000180 {
++		uart0: serial@fff8c100 {
 +			compatible = "brcm,bcm6345-uart";
-+			reg = <0x10000180 0x18>;
++			reg = <0xfff8c100 0x18>;
 +
 +			interrupt-parent = <&periph_intc>;
-+			interrupts = <5>;
++			interrupts = <2>;
 +
 +			clocks = <&periph_clk>;
 +
 +			status = "disabled";
 +		};
 +
-+		uart1: serial@100001a0 {
++		uart1: serial@fff8c120 {
 +			compatible = "brcm,bcm6345-uart";
-+			reg = <0x100001a0 0x18>;
++			reg = <0xfff8c120 0x18>;
 +
 +			interrupt-parent = <&periph_intc>;
-+			interrupts = <34>;
++			interrupts = <3>;
 +
 +			clocks = <&periph_clk>;
-+
-+			status = "disabled";
-+		};
-+
-+		leds0: led-controller@10001900 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "brcm,bcm6328-leds";
-+			reg = <0x10001900 0x24>;
-+
-+			status = "disabled";
-+		};
-+
-+		ehci: usb@10002500 {
-+			compatible = "brcm,bcm63268-ehci", "generic-ehci";
-+			reg = <0x10002500 0x100>;
-+			big-endian;
-+
-+			interrupt-parent = <&periph_intc>;
-+			interrupts = <10>;
-+
-+			status = "disabled";
-+		};
-+
-+		ohci: usb@10002600 {
-+			compatible = "brcm,bcm63268-ohci", "generic-ohci";
-+			reg = <0x10002600 0x100>;
-+			big-endian;
-+			no-big-frame-no;
-+
-+			interrupt-parent = <&periph_intc>;
-+			interrupts = <9>;
 +
 +			status = "disabled";
 +		};
