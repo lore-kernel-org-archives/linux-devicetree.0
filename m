@@ -1,98 +1,45 @@
-From: Jian Yuan <yuanjian12@hisilicon.com>
-Subject: Re: [PATCH] pwm: add pwm driver for HiSilicon BVT SOCs
-Date: Wed, 3 Aug 2016 14:32:52 +0800
-Message-ID: <3fc992b7-c141-8da4-52c9-00c65ad4da42@hisilicon.com>
-References: <1470015728-36979-1-git-send-email-yuanjian12@hisilicon.com>
- <20160801124355.GB13179@leverpostej>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 0/3] ARM: omap: fix 4.7 gpmc networking regression
+Date: Wed, 3 Aug 2016 10:46:24 +0300
+Message-ID: <9cf04231-091c-4ac3-bfb8-8d8be3d591eb@ti.com>
+References: <1469362260-20066-1-git-send-email-johan@kernel.org>
+ <20160802103505.GD28140@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20160801124355.GB13179@leverpostej>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160802103505.GD28140@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, stable@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016/8/1 20:43, Mark Rutland wrote:
-> On Mon, Aug 01, 2016 at 09:42:08AM +0800, Jian Yuan wrote:
->> From: yuanjian <yuanjian12@hisilicon.com>
+On 02/08/16 13:35, Tony Lindgren wrote:
+> * Johan Hovold <johan@kernel.org> [160724 05:11]:
+>> Networking is currently broken for Overo boards due to a regression in
+>> 4.7. I bisected it down to
 >>
->> Add pwm driver for HiSilicon BVT SOCs
->>
->> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
->> Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
->> ---
->>  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  18 ++
->>  drivers/pwm/Kconfig                                |  10 +
->>  drivers/pwm/Makefile                               |   1 +
->>  drivers/pwm/pwm-hibvt.c                            | 272 +++++++++++++++++++++
->>  4 files changed, 301 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->>  create mode 100644 drivers/pwm/pwm-hibvt.c
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->> new file mode 100644
->> index 0000000..4efd83e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->> @@ -0,0 +1,18 @@
->> +Hisilicon PWM controller
->> +
->> +Required properties:
->> + - compatible: should be "hisilicon,hibvt-pwm" and one of the following:
->> +			"hisilicon,hi3516cv300-pwm".
+>> 	d2d00862dfbb ("memory: omap-gpmc: Support general purpose input
+>> 	for WAITPINs")
+> ...
 > 
-> I take it "hisilicon,hibvt-pwm" is the fallback entry.
+>> Note that simply fixing the Overo NAND issue would fix the Overo
+>> networking regression, but by restoring the 4.6 gpmc-probe behaviour
+>> similar regressions on other OMAP systems are also avoided.
 > 
-> It would be good to note that explicitly.
+> Roger, got a better fix in mind?
 > 
-I do not understand what the fallback entry means.
 
-"hisilicon,hibvt-pwm" is a general compatible string, which is available for most HiSilicon BVT SOCs.
-Howerver, "hisilicon,hi3516cv300-pwm" is specially for hi3516cv300.
+Nope. I'll take patch 1 in my omap-gpmc queue for v4.8.
+Thanks for the fixes Johan.
 
-Maybe I should note the compatible string as described above, right?
-
->> + - reg: physical base address and length of the controller's registers.
->> + - clocks: phandle and clock specifier of the PWM reference clock.
->> + - resets: offset address and offset bit for reset or unreset of the controller.
->> + - pwm-nums: pwm number of the controller.
-> 
-> This should be 'num-pwms'.
-> 
-> I assume this is the number of PWMs exposed by this controller. Is this
-> not probeable, or dicoverable based on the compatible string?
-> 
-> How does this vary in practice?
-> 
-"pwm-nums" means the maximum number of PWMS that this controller can support, which is the hardware capability.
-E.g.,HI3516CV300 PWM controller supports 4 PWM, while other chips support 8 PWM.
-
-I agree that the PWM number is probeable based on the compatible string. I shall change it, thanks.
-
->> +
->> +Example:
->> +	pwm: pwm@12130000 {
->> +		compatible = "hisilicon,hibvt-pwm";
-> 
-> This is missing "hisilicon,hi3516cv300-pwm" as per the requirements of
-> the binding.
-> 
-Ok, it's right. I'll fix it in next v2 patch.
-
->> +		reg = <0x12130000 0x10000>;
->> +		clocks = <&crg_ctrl HI3516CV300_PWM_CLK>;
->> +		resets = <&crg_ctrl 0x38 0>;
->> +		pwm-nums = <4>;
->> +	};
-> 
-> Thanks,
-> Mark.
-> 
-> .
-> 
-Thanks,
-Jian.
+cheers,
+-roger
