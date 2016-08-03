@@ -1,44 +1,40 @@
-From: Karl Beldan <kbeldan@baylibre.com>
-Subject: [PATCH] ARM: dt: da850: add nand_cs3 node label in the dtsi
-Date: Wed,  3 Aug 2016 16:25:28 +0000
-Message-ID: <20160803162528.2337-1-kbeldan@baylibre.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: Remove use of skeleton.dtsi from
+ bcm283x.dtsi
+Date: Wed, 3 Aug 2016 18:57:01 +0200 (CEST)
+Message-ID: <914380166.36980.cd778509-7d01-4a7c-93d2-94401387c355.open-xchange@email.1und1.de>
+References: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, karl.beldan+oss@gmail.com, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Karl Beldan <kbeldan@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Campbell <ijc@hellion.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: Will Deacon <will.deacon@arm.com>, Lee Jones <lee@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>, Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, arm@kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This will allow to adjust the related settings in the board files.
+Hi Ian,
 
-Cc: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
----
- arch/arm/boot/dts/da850.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Ian Campbell <ijc@hellion.org.uk> hat am 3. August 2016 um 16:12 geschrieben:
+> 
+> 
+> This file is included from DTS files under arch/arm64 too (via
+> broadcom/bcm2837-rpi-3-b.dts and broadcom/bcm2837.dtsi). There is a desire
+> not to have skeleton.dtsi for ARM64. See commit 3ebee5a2e141 ("arm64: dts:
+> kill skeleton.dtsi") for rationale for its removal.
+> 
+> As well as the addition of #*-cells also requires adding the device_type to
+> the rpi memory node explicitly.
+> 
+> Note that this change results in the removal of an empty /aliases node from
+> bcm2835-rpi-a.dtb and bcm2835-rpi-a-plus.dtb. I have no hardware to check
+> if this is a problem or not.
+> 
+> It also results in some reordering of the nodes in the DTBs (the /aliases
+> and /memory nodes come later). This isn't supposed to matter but, again,
+> I've no hardware to check if it is true in this particular case.
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 25f0f8e..3a00978 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -375,7 +375,7 @@
- 			dma-names = "tx", "rx";
- 		};
- 	};
--	nand_cs3@62000000 {
-+	nand_cs3: nand_cs3@62000000 {
- 		compatible = "ti,davinci-nand";
- 		reg = <0x62000000 0x807ff
- 		       0x68000000 0x8000>;
--- 
-2.9.0.rc1
+i tested this patch with a Raspberry Pi Model B successfully.
+
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
