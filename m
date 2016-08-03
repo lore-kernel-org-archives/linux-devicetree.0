@@ -1,14 +1,12 @@
-From: Songjun Wu <songjun.wu@microchip.com>
-Subject: [PATCH v8 2/2] [media] atmel-isc: DT binding for Image Sensor
- Controller driver
-Date: Wed, 3 Aug 2016 16:08:04 +0800
-Message-ID: <1470211686-2198-3-git-send-email-songjun.wu@microchip.com>
-References: <1470211686-2198-1-git-send-email-songjun.wu@microchip.com>
+From: Ian Campbell <ijc@hellion.org.uk>
+Subject: [PATCH] ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from
+ arch=arm
+Date: Wed,  3 Aug 2016 09:40:35 +0100
+Message-ID: <1470213635-6934-1-git-send-email-ijc@hellion.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470211686-2198-1-git-send-email-songjun.wu@microchip.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,113 +16,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: nicolas.ferre@atmel.com, robh@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Songjun Wu <songjun.wu@microchip.com>, Rob Herring <robh+dt@kernel.org>, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arm@kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Lee Jones <lee@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, Ian Campbell <ijc@hellion.org.uk>, Frank Rowand <frowand.list@gmail.com>, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DT binding documentation for ISC driver.
+The ../../../arm... style cross-references added by commit 9d56c22a7861
+("ARM: bcm2835: Add devicetree for the Raspberry Pi 3.") do not work in the
+context of the split device-tree repository[0] (where the directory
+structure differs). As with commit 8ee57b8182c4 ("ARM64: dts: vexpress: Use
+a symlink to vexpress-v2m-rs1.dtsi from arch=arm") use symlinks instead.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Songjun Wu <songjun.wu@microchip.com>
+These includes in turn require a skeleton.dtsi to be present, so add one as
+a real file (with the same contents as arch/arm) rather than a symlink.
+
+[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+
+Signed-off-by: Ian Campbell <ijc@hellion.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Eric Anholt <eric@anholt.net>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Lee Jones <lee@kernel.org>
+Cc: Gerd Hoffmann <kraxel@redhat.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-rpi-kernel@lists.infradead.org
+Cc: arm@kernel.org
 ---
+ arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi          |  1 +
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts       |  4 ++--
+ arch/arm64/boot/dts/broadcom/bcm2837.dtsi              |  2 +-
+ arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi |  1 +
+ arch/arm64/boot/dts/broadcom/bcm283x.dtsi              |  1 +
+ arch/arm64/boot/dts/skeleton.dtsi                      | 13 +++++++++++++
+ 6 files changed, 19 insertions(+), 3 deletions(-)
+ create mode 120000 arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
+ create mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
+ create mode 120000 arch/arm64/boot/dts/broadcom/bcm283x.dtsi
+ create mode 100644 arch/arm64/boot/dts/skeleton.dtsi
 
-Changes in v8: None
-Changes in v7: None
-Changes in v6:
-- Add "iscck" and "gck" to clock-names.
-
-Changes in v5:
-- Add clock-output-names.
-
-Changes in v4:
-- Remove the isc clock nodes.
-
-Changes in v3:
-- Remove the 'atmel,sensor-preferred'.
-- Modify the isc clock node according to the Rob's remarks.
-
-Changes in v2:
-- Remove the unit address of the endpoint.
-- Add the unit address to the clock node.
-- Avoid using underscores in node names.
-- Drop the "0x" in the unit address of the i2c node.
-- Modify the description of 'atmel,sensor-preferred'.
-- Add the description for the ISC internal clock.
-
- .../devicetree/bindings/media/atmel-isc.txt        | 65 ++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
-
-diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
-new file mode 100644
-index 0000000..bbe0e87c
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
+new file mode 120000
+index 0000000..3937b77
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-@@ -0,0 +1,65 @@
-+Atmel Image Sensor Controller (ISC)
-+----------------------------------------------
++++ b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
+@@ -0,0 +1 @@
++../../../../arm/boot/dts/bcm2835-rpi.dtsi
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index 6f47dd2..7841b72 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -1,7 +1,7 @@
+ /dts-v1/;
+ #include "bcm2837.dtsi"
+-#include "../../../../arm/boot/dts/bcm2835-rpi.dtsi"
+-#include "../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi"
++#include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
+index f2a31d0..8216bbb 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
++++ b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
+@@ -1,4 +1,4 @@
+-#include "../../../../arm/boot/dts/bcm283x.dtsi"
++#include "bcm283x.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm2836";
+diff --git a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
+new file mode 120000
+index 0000000..dca7c05
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
+@@ -0,0 +1 @@
++../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/broadcom/bcm283x.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
+new file mode 120000
+index 0000000..5f54e4c
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
+@@ -0,0 +1 @@
++../../../../arm/boot/dts/bcm283x.dtsi
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/skeleton.dtsi b/arch/arm64/boot/dts/skeleton.dtsi
+new file mode 100644
+index 0000000..b41d241
+--- /dev/null
++++ b/arch/arm64/boot/dts/skeleton.dtsi
+@@ -0,0 +1,13 @@
++/*
++ * Skeleton device tree; the bare minimum needed to boot; just include and
++ * add a compatible value.  The bootloader will typically populate the memory
++ * node.
++ */
 +
-+Required properties for ISC:
-+- compatible
-+	Must be "atmel,sama5d2-isc".
-+- reg
-+	Physical base address and length of the registers set for the device.
-+- interrupts
-+	Should contain IRQ line for the ISC.
-+- clocks
-+	List of clock specifiers, corresponding to entries in
-+	the clock-names property;
-+	Please refer to clock-bindings.txt.
-+- clock-names
-+	Required elements: "hclock", "iscck", "gck".
-+- #clock-cells
-+	Should be 0.
-+- clock-output-names
-+	Should be "isc-mck".
-+- pinctrl-names, pinctrl-0
-+	Please refer to pinctrl-bindings.txt.
-+
-+ISC supports a single port node with parallel bus. It should contain one
-+'port' child node with child 'endpoint' node. Please refer to the bindings
-+defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+isc: isc@f0008000 {
-+	compatible = "atmel,sama5d2-isc";
-+	reg = <0xf0008000 0x4000>;
-+	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
-+	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
-+	clock-names = "hclock", "iscck", "gck";
-+	#clock-cells = <0>;
-+	clock-output-names = "isc-mck";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_isc_base &pinctrl_isc_data_8bit &pinctrl_isc_data_9_10 &pinctrl_isc_data_11_12>;
-+
-+	port {
-+		isc_0: endpoint {
-+			remote-endpoint = <&ov7740_0>;
-+			hsync-active = <1>;
-+			vsync-active = <0>;
-+			pclk-sample = <1>;
-+		};
-+	};
-+};
-+
-+i2c1: i2c@fc028000 {
-+	ov7740: camera@21 {
-+		compatible = "ovti,ov7740";
-+		reg = <0x21>;
-+		clocks = <&isc>;
-+		clock-names = "xvclk";
-+		assigned-clocks = <&isc>;
-+		assigned-clock-rates = <24000000>;
-+
-+		port {
-+			ov7740_0: endpoint {
-+				remote-endpoint = <&isc_0>;
-+			};
-+		};
-+	};
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	chosen { };
++	aliases { };
++	memory { device_type = "memory"; reg = <0 0>; };
 +};
 -- 
-2.7.4
+2.8.1
