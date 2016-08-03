@@ -1,99 +1,71 @@
-From: Ian Campbell <ijc@hellion.org.uk>
-Subject: [PATCH v2 2/2] ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from arch=arm
-Date: Wed,  3 Aug 2016 15:12:45 +0100
-Message-ID: <1470233565-30154-2-git-send-email-ijc@hellion.org.uk>
-References: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Ian Campbell <ijc@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, arm@kernel.org
+From: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+Subject: [PATCH 2/2] imx53.dtsi : Add DMA configuration for UART
+Date: Wed,  3 Aug 2016 16:13:13 +0200
+Message-ID: <1470233593-4513-2-git-send-email-fabien.lahoudere@collabora.co.uk>
+References: <1470233593-4513-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470233593-4513-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The ../../../arm... style cross-references added by commit 9d56c22a7861
-("ARM: bcm2835: Add devicetree for the Raspberry Pi 3.") do not work in the
-context of the split device-tree repository[0] (where the directory
-structure differs). As with commit 8ee57b8182c4 ("ARM64: dts: vexpress: Use
-a symlink to vexpress-v2m-rs1.dtsi from arch=arm") use symlinks instead.
+In order to use sdma with UART, we need to add DMA configuration in device tree.
 
-[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
-
-Signed-off-by: Ian Campbell <ijc@hellion.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Eric Anholt <eric@anholt.net>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Lee Jones <lee@kernel.org>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-rpi-kernel@lists.infradead.org
-Cc: arm@kernel.org
+Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
 ---
-v2: No more need for skeleton.dtsi since this was cleaned up in the previous
-    patch
----
- arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi          | 1 +
- arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts       | 4 ++--
- arch/arm64/boot/dts/broadcom/bcm2837.dtsi              | 2 +-
- arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi | 1 +
- arch/arm64/boot/dts/broadcom/bcm283x.dtsi              | 1 +
- 5 files changed, 6 insertions(+), 3 deletions(-)
- create mode 120000 arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
- create mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
- create mode 120000 arch/arm64/boot/dts/broadcom/bcm283x.dtsi
+ arch/arm/boot/dts/imx53.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
-new file mode 120000
-index 0000000..3937b77
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/bcm2835-rpi.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-index 6f47dd2..7841b72 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-@@ -1,7 +1,7 @@
- /dts-v1/;
- #include "bcm2837.dtsi"
--#include "../../../../arm/boot/dts/bcm2835-rpi.dtsi"
--#include "../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index cd17037..de545e2 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -217,6 +217,8 @@
+ 					clocks = <&clks IMX5_CLK_UART3_IPG_GATE>,
+ 					         <&clks IMX5_CLK_UART3_PER_GATE>;
+ 					clock-names = "ipg", "per";
++					dmas = <&sdma 42 4 0>, <&sdma 43 4 0>;
++					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
  
- / {
- 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-index f2a31d0..8216bbb 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-@@ -1,4 +1,4 @@
--#include "../../../../arm/boot/dts/bcm283x.dtsi"
-+#include "bcm283x.dtsi"
+@@ -508,6 +510,8 @@
+ 				clocks = <&clks IMX5_CLK_UART2_IPG_GATE>,
+ 				         <&clks IMX5_CLK_UART2_PER_GATE>;
+ 				clock-names = "ipg", "per";
++				dmas = <&sdma 12 4 0>, <&sdma 13 4 0>;
++				dma-names = "rx", "tx";
+ 				status = "disabled";
+ 			};
  
- / {
- 	compatible = "brcm,bcm2836";
-diff --git a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
-new file mode 120000
-index 0000000..dca7c05
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/broadcom/bcm283x.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
-new file mode 120000
-index 0000000..5f54e4c
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts/bcm283x.dtsi
-\ No newline at end of file
+@@ -591,6 +595,8 @@
+ 				clocks = <&clks IMX5_CLK_UART4_IPG_GATE>,
+ 				         <&clks IMX5_CLK_UART4_PER_GATE>;
+ 				clock-names = "ipg", "per";
++				dmas = <&sdma 2 4 0>, <&sdma 3 4 0>;
++				dma-names = "rx", "tx";
+ 				status = "disabled";
+ 			};
+ 		};
+@@ -621,6 +627,8 @@
+ 				clocks = <&clks IMX5_CLK_UART5_IPG_GATE>,
+ 				         <&clks IMX5_CLK_UART5_PER_GATE>;
+ 				clock-names = "ipg", "per";
++				dmas = <&sdma 16 4 0>, <&sdma 17 4 0>;
++				dma-names = "rx", "tx";
+ 				status = "disabled";
+ 			};
+ 
 -- 
-2.8.1
+2.7.4
