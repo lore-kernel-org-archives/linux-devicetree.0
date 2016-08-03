@@ -1,8 +1,8 @@
 From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
         <noltari@gmail.com>
-Subject: [PATCH v2 2/7] MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom
-Date: Wed,  3 Aug 2016 11:58:25 +0200
-Message-ID: <1470218310-2978-2-git-send-email-noltari@gmail.com>
+Subject: [PATCH v2 3/7] MIPS: BMIPS: Add device tree example for BCM63268
+Date: Wed,  3 Aug 2016 11:58:26 +0200
+Message-ID: <1470218310-2978-3-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -20,85 +20,68 @@ To: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.ker
 Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The prefix bcm9* should only be used for reference and evaluation boards from
-Broadcom.
-Also adds missing console output to bootargs.
+This adds a device tree example for Comtrend VR-3032u, which
+also serves as a real example for brcm,bcm6328-leds.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- arch/mips/bmips/Kconfig                            |  8 ++--
- arch/mips/boot/dts/brcm/Makefile                   |  3 +-
- .../boot/dts/brcm/bcm6358-neufbox4-sercomm.dts     | 47 ++++++++++++++++++++++
- arch/mips/boot/dts/brcm/bcm96358nb4ser.dts         | 46 ---------------------
- 4 files changed, 53 insertions(+), 51 deletions(-)
- create mode 100644 arch/mips/boot/dts/brcm/bcm6358-neufbox4-sercomm.dts
- delete mode 100644 arch/mips/boot/dts/brcm/bcm96358nb4ser.dts
+ arch/mips/bmips/Kconfig                            |   4 +
+ arch/mips/boot/dts/brcm/Makefile                   |   2 +
+ .../boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts   | 108 +++++++++++++++++
+ arch/mips/boot/dts/brcm/bcm63268.dtsi              | 134 +++++++++++++++++++++
+ 4 files changed, 248 insertions(+)
+ create mode 100644 arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts
+ create mode 100644 arch/mips/boot/dts/brcm/bcm63268.dtsi
 
 diff --git a/arch/mips/bmips/Kconfig b/arch/mips/bmips/Kconfig
-index 264328d..c8f1427 100644
+index c8f1427..6a0946c 100644
 --- a/arch/mips/bmips/Kconfig
 +++ b/arch/mips/bmips/Kconfig
-@@ -21,10 +21,6 @@ config DT_BCM93384WVG_VIPER
- 	bool "BCM93384WVG Viper CPU (EXPERIMENTAL)"
- 	select BUILTIN_DTB
- 
--config DT_BCM96358NB4SER
--	bool "BCM96358NB4SER"
--	select BUILTIN_DTB
--
- config DT_BCM96368MVWG
- 	bool "BCM96368MVWG"
- 	select BUILTIN_DTB
-@@ -65,6 +61,10 @@ config DT_BCM97435SVMB
+@@ -61,6 +61,10 @@ config DT_BCM97435SVMB
  	bool "BCM97435SVMB"
  	select BUILTIN_DTB
  
-+config DT_SFR_NEUFBOX4_SERCOMM
-+	bool "SFR Neufbox 4 (Sercomm)"
++config DT_COMTREND_VR3032U
++	bool "Comtrend VR-3032u"
 +	select BUILTIN_DTB
 +
- endchoice
- 
- endif
+ config DT_SFR_NEUFBOX4_SERCOMM
+ 	bool "SFR Neufbox 4 (Sercomm)"
+ 	select BUILTIN_DTB
 diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/brcm/Makefile
-index 87e07e2..0abe298 100644
+index 0abe298..8281ec6 100644
 --- a/arch/mips/boot/dts/brcm/Makefile
 +++ b/arch/mips/boot/dts/brcm/Makefile
-@@ -1,6 +1,5 @@
- dtb-$(CONFIG_DT_BCM93384WVG)		+= bcm93384wvg.dtb
- dtb-$(CONFIG_DT_BCM93384WVG_VIPER)	+= bcm93384wvg_viper.dtb
--dtb-$(CONFIG_DT_BCM96358NB4SER)		+= bcm96358nb4ser.dtb
- dtb-$(CONFIG_DT_BCM96368MVWG)		+= bcm96368mvwg.dtb
- dtb-$(CONFIG_DT_BCM9EJTAGPRB)		+= bcm9ejtagprb.dtb
- dtb-$(CONFIG_DT_BCM97125CBMB)		+= bcm97125cbmb.dtb
-@@ -11,8 +10,10 @@ dtb-$(CONFIG_DT_BCM97362SVMB)		+= bcm97362svmb.dtb
+@@ -10,10 +10,12 @@ dtb-$(CONFIG_DT_BCM97362SVMB)		+= bcm97362svmb.dtb
  dtb-$(CONFIG_DT_BCM97420C)		+= bcm97420c.dtb
  dtb-$(CONFIG_DT_BCM97425SVMB)		+= bcm97425svmb.dtb
  dtb-$(CONFIG_DT_BCM97435SVMB)		+= bcm97435svmb.dtb
-+dtb-$(CONFIG_DT_SFR_NEUFBOX4_SERCOMM)	+= bcm6358-neufbox4-sercomm.dtb
++dtb-$(CONFIG_DT_COMTREND_VR3032U)	+= bcm63268-comtrend-vr-3032u.dtb
+ dtb-$(CONFIG_DT_SFR_NEUFBOX4_SERCOMM)	+= bcm6358-neufbox4-sercomm.dtb
  
  dtb-$(CONFIG_DT_NONE) += \
-+	bcm6358-neufbox4-sercomm.dtb \
+ 	bcm6358-neufbox4-sercomm.dtb \
++	bcm63268-comtrend-vr-3032u.dtb \
  	bcm93384wvg.dtb \
  	bcm93384wvg_viper.dtb \
  	bcm96358nb4ser.dtb \
-diff --git a/arch/mips/boot/dts/brcm/bcm6358-neufbox4-sercomm.dts b/arch/mips/boot/dts/brcm/bcm6358-neufbox4-sercomm.dts
+diff --git a/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts b/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts
 new file mode 100644
-index 0000000..702eae2
+index 0000000..430d35c
 --- /dev/null
-+++ b/arch/mips/boot/dts/brcm/bcm6358-neufbox4-sercomm.dts
-@@ -0,0 +1,47 @@
++++ b/arch/mips/boot/dts/brcm/bcm63268-comtrend-vr-3032u.dts
+@@ -0,0 +1,108 @@
 +/dts-v1/;
 +
-+/include/ "bcm6358.dtsi"
++/include/ "bcm63268.dtsi"
 +
 +/ {
-+	compatible = "sfr,nb4-ser", "brcm,bcm6358";
-+	model = "SFR Neufbox 4 (Sercomm)";
++	compatible = "comtrend,vr-3032u", "brcm,bcm63268";
++	model = "Comtrend VR-3032u";
 +
 +	memory@0 {
 +		device_type = "memory";
-+		reg = <0x00000000 0x02000000>;
++		reg = <0x00000000 0x04000000>;
 +	};
 +
 +	chosen {
@@ -109,83 +92,232 @@ index 0000000..702eae2
 +
 +&leds0 {
 +	status = "ok";
++	brcm,serial-leds;
++	brcm,serial-dat-low;
++	brcm,serial-shift-inv;
 +
 +	led@0 {
 +		reg = <0>;
-+		active-low;
-+		label = "nb4-ser:white:alarm";
++		brcm,hardware-controlled;
++		brcm,link-signal-sources = <0>;
++		/* GPHY0 Speed 0 */
++	};
++	led@1 {
++		reg = <1>;
++		brcm,hardware-controlled;
++		brcm,link-signal-sources = <1>;
++		/* GPHY0 Speed 1 */
 +	};
 +	led@2 {
 +		reg = <2>;
 +		active-low;
-+		label = "nb4-ser:white:tv";
++		label = "vr-3032u:red:inet";
 +	};
 +	led@3 {
 +		reg = <3>;
 +		active-low;
-+		label = "nb4-ser:white:tel";
++		label = "vr-3032u:green:dsl";
 +	};
 +	led@4 {
 +		reg = <4>;
 +		active-low;
-+		label = "nb4-ser:white:adsl";
++		label = "vr-3032u:green:usb";
++	};
++	led@7 {
++		reg = <7>;
++		active-low;
++		label = "vr-3032u:green:wps";
++	};
++	led@8 {
++		reg = <8>;
++		active-low;
++		label = "vr-3032u:green:inet";
++	};
++	led@9 {
++		reg = <9>;
++		brcm,hardware-controlled;
++		/* EPHY0 Activity */
++	};
++	led@10 {
++		reg = <10>;
++		brcm,hardware-controlled;
++		/* EPHY1 Activity */
++	};
++	led@11 {
++		reg = <11>;
++		brcm,hardware-controlled;
++		/* EPHY2 Activity */
++	};
++	led@12 {
++		reg = <12>;
++		brcm,hardware-controlled;
++		/* GPHY0 Activity */
++	};
++	led@13 {
++		reg = <13>;
++		brcm,hardware-controlled;
++		/* EPHY0 Speed */
++	};
++	led@14 {
++		reg = <14>;
++		brcm,hardware-controlled;
++		/* EPHY1 Speed */
++	};
++	led@15 {
++		reg = <15>;
++		brcm,hardware-controlled;
++		/* EPHY2 Speed */
++	};
++	led@20 {
++		reg = <20>;
++		active-low;
++		label = "vr-3032u:green:power";
++		default-state = "on";
 +	};
 +};
 +
 +&uart0 {
 +	status = "okay";
 +};
-diff --git a/arch/mips/boot/dts/brcm/bcm96358nb4ser.dts b/arch/mips/boot/dts/brcm/bcm96358nb4ser.dts
-deleted file mode 100644
-index f412117..0000000
---- a/arch/mips/boot/dts/brcm/bcm96358nb4ser.dts
-+++ /dev/null
-@@ -1,46 +0,0 @@
--/dts-v1/;
--
--/include/ "bcm6358.dtsi"
--
--/ {
--	compatible = "sfr,nb4-ser", "brcm,bcm6358";
--	model = "SFR Neufbox 4 (Sercomm)";
--
--	memory@0 {
--		device_type = "memory";
--		reg = <0x00000000 0x02000000>;
--	};
--
--	chosen {
--		stdout-path = &uart0;
--	};
--};
--
--&leds0 {
--	status = "ok";
--
--	led@0 {
--		reg = <0>;
--		active-low;
--		label = "nb4-ser:white:alarm";
--	};
--	led@2 {
--		reg = <2>;
--		active-low;
--		label = "nb4-ser:white:tv";
--	};
--	led@3 {
--		reg = <3>;
--		active-low;
--		label = "nb4-ser:white:tel";
--	};
--	led@4 {
--		reg = <4>;
--		active-low;
--		label = "nb4-ser:white:adsl";
--	};
--};
--
--&uart0 {
--	status = "okay";
--};
+diff --git a/arch/mips/boot/dts/brcm/bcm63268.dtsi b/arch/mips/boot/dts/brcm/bcm63268.dtsi
+new file mode 100644
+index 0000000..7e6bf2c
+--- /dev/null
++++ b/arch/mips/boot/dts/brcm/bcm63268.dtsi
+@@ -0,0 +1,134 @@
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "brcm,bcm63268";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		mips-hpt-frequency = <200000000>;
++
++		cpu@0 {
++			compatible = "brcm,bmips4350";
++			device_type = "cpu";
++			reg = <0>;
++		};
++
++		cpu@1 {
++			compatible = "brcm,bmips4350";
++			device_type = "cpu";
++			reg = <1>;
++		};
++	};
++
++	clocks {
++		periph_clk: periph-clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <50000000>;
++		};
++	};
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
++	cpu_intc: interrupt-controller {
++		#address-cells = <0>;
++		compatible = "mti,cpu-interrupt-controller";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++
++	ubus {
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		compatible = "simple-bus";
++		ranges;
++
++		periph_cntl: syscon@10000000 {
++			compatible = "syscon";
++			reg = <0x10000000 0x14>;
++			native-endian;
++		};
++
++		reboot: syscon-reboot@10000008 {
++			compatible = "syscon-reboot";
++			regmap = <&periph_cntl>;
++			offset = <0x8>;
++			mask = <0x1>;
++		};
++
++		periph_intc: interrupt-controller@10000020 {
++			compatible = "brcm,bcm6345-l1-intc";
++			reg = <0x10000020 0x20>,
++			      <0x10000040 0x20>;
++
++			interrupt-controller;
++			#interrupt-cells = <1>;
++
++			interrupt-parent = <&cpu_intc>;
++			interrupts = <2>, <3>;
++		};
++
++		uart0: serial@10000180 {
++			compatible = "brcm,bcm6345-uart";
++			reg = <0x10000180 0x18>;
++
++			interrupt-parent = <&periph_intc>;
++			interrupts = <5>;
++
++			clocks = <&periph_clk>;
++
++			status = "disabled";
++		};
++
++		uart1: serial@100001a0 {
++			compatible = "brcm,bcm6345-uart";
++			reg = <0x100001a0 0x18>;
++
++			interrupt-parent = <&periph_intc>;
++			interrupts = <34>;
++
++			clocks = <&periph_clk>;
++
++			status = "disabled";
++		};
++
++		leds0: led-controller@10001900 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "brcm,bcm6328-leds";
++			reg = <0x10001900 0x24>;
++
++			status = "disabled";
++		};
++
++		ehci: usb@10002500 {
++			compatible = "brcm,bcm63268-ehci", "generic-ehci";
++			reg = <0x10002500 0x100>;
++			big-endian;
++
++			interrupt-parent = <&periph_intc>;
++			interrupts = <10>;
++
++			status = "disabled";
++		};
++
++		ohci: usb@10002600 {
++			compatible = "brcm,bcm63268-ohci", "generic-ohci";
++			reg = <0x10002600 0x100>;
++			big-endian;
++			no-big-frame-no;
++
++			interrupt-parent = <&periph_intc>;
++			interrupts = <9>;
++
++			status = "disabled";
++		};
++	};
++};
 -- 
 2.1.4
