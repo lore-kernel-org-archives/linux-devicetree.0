@@ -1,56 +1,45 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH 07/11] ARM: dts: NSP: Add new DT file for bcm958525er
-Date: Wed,  3 Aug 2016 14:39:02 -0400
-Message-ID: <1470249546-12440-8-git-send-email-jon.mason@broadcom.com>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 11/11] ARM: dts: NSP: Add new DT file for bcm958622hr
+Date: Wed,  3 Aug 2016 14:39:06 -0400
+Message-ID: <1470249546-12440-12-git-send-email-jon.mason@broadcom.com>
 References: <1470249546-12440-1-git-send-email-jon.mason@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470249546-12440-1-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: f.fainelli@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470249546-12440-1-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Create a new device tree file for the Broadcom Northstar Plus
-bcm958525er SVK.  This SVK has 2GB RAM, 2 ports Ethernet, 2 eSATA, 2 PCI
-slots, and 1 UART.  Also, it has the ability to reboot via GPIO.  To be
-added in the future is support for the USB.
+bcm958622hr SVK.  This SVK has 2GB RAM, 5 port Ethernet, 2 PCI slots,
+and 1 UART.  Also, it has the ability to reboot via GPIO.  To be added
+in the future are support for the USB and SLIC audio.
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
  arch/arm/boot/dts/Makefile        |   1 +
- arch/arm/boot/dts/bcm958525er.dts | 142 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 143 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm958525er.dts
+ arch/arm/boot/dts/bcm958622hr.dts | 170 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 171 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm958622hr.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 973b0da..8a05bf6 100644
+index 6e41b49..291b551 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -99,6 +99,7 @@ dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
- 	bcm21664-garnet.dtb \
- 	bcm23550-sparrow.dtb
- dtb-$(CONFIG_ARCH_BCM_NSP) += \
-+	bcm958525er.dtb \
+@@ -102,6 +102,7 @@ dtb-$(CONFIG_ARCH_BCM_NSP) += \
+ 	bcm958522er.dtb \
+ 	bcm958525er.dtb \
  	bcm958525xmc.dtb \
++	bcm958622hr.dtb \
+ 	bcm958623hr.dtb \
  	bcm958625hr.dtb \
- 	bcm958625k.dtb
-diff --git a/arch/arm/boot/dts/bcm958525er.dts b/arch/arm/boot/dts/bcm958525er.dts
+ 	bcm988312hr.dtb \
+diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
 new file mode 100644
-index 0000000..be7f2f8
+index 0000000..ad2aa87
 --- /dev/null
-+++ b/arch/arm/boot/dts/bcm958525er.dts
-@@ -0,0 +1,142 @@
++++ b/arch/arm/boot/dts/bcm958622hr.dts
+@@ -0,0 +1,170 @@
 +/*
 + *  BSD LICENSE
 + *
@@ -89,8 +78,8 @@ index 0000000..be7f2f8
 +#include <dt-bindings/gpio/gpio.h>
 +
 +/ {
-+	model = "NorthStar Plus SVK (BCM958525ER)";
-+	compatible = "brcm,bcm58525", "brcm,nsp";
++	model = "NorthStar Plus SVK (BCM958622HR)";
++	compatible = "brcm,bcm58622", "brcm,nsp";
 +
 +	aliases {
 +		serial0 = &uart0;
@@ -112,14 +101,9 @@ index 0000000..be7f2f8
 +	};
 +};
 +
-+/* USB 2/3 support needed to be complete */
++/* USB 2/3 and SLIC support needed to be complete */
 +
 +&amac0 {
-+	status = "okay";
-+};
-+
-+
-+&amac1 {
 +	status = "okay";
 +};
 +
@@ -178,16 +162,49 @@ index 0000000..be7f2f8
 +	};
 +};
 +
-+&sata_phy0 {
++&srab {
++	compatible = "brcm,bcm58622-srab", "brcm,nsp-srab";
 +	status = "okay";
-+};
 +
-+&sata_phy1 {
-+	status = "okay";
-+};
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+&sata {
-+	status = "okay";
++		port@0 {
++			label = "port0";
++			reg = <0>;
++		};
++
++		port@1 {
++			label = "port1";
++			reg = <1>;
++		};
++
++		port@2 {
++			label = "port2";
++			reg = <2>;
++		};
++
++		port@3 {
++			label = "port3";
++			reg = <3>;
++		};
++
++		port@4 {
++			label = "port4";
++			reg = <4>;
++		};
++
++		port@5 {
++			ethernet = <&amac0>;
++			label = "cpu";
++			reg = <5>;
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++			};
++		};
++	};
 +};
 +
 +&uart0 {
@@ -195,3 +212,8 @@ index 0000000..be7f2f8
 +};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
