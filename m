@@ -1,86 +1,62 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] power: add power sequence library
-Date: Wed, 3 Aug 2016 15:16:58 -0700
-Message-ID: <20160803221658.GD1405@google.com>
-References: <1470108652-16812-1-git-send-email-peter.chen@nxp.com>
- <1470108652-16812-3-git-send-email-peter.chen@nxp.com>
+From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RFC][PATCH 0/4] SRAM based reboot reason driver for HiKey
+Date: Wed,  3 Aug 2016 16:05:19 -0700
+Message-ID: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470108652-16812-3-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-El Tue, Aug 02, 2016 at 11:30:48AM +0800 Peter Chen ha dit:
+Now that Andy's reboot reason core driver has landed, I wanted
+to resubmit a reworked version of my SRAM based reboot reason
+driver.
 
-> diff --git a/drivers/power/pwrseq/core.c b/drivers/power/pwrseq/core.c
->
-> ...
->
-> +static DEFINE_MUTEX(pwrseq_list_mutex);
-> +static LIST_HEAD(pwrseq_list);
-> +
-> +int pwrseq_get(struct device_node *np, struct pwrseq *p)
-> +{
-> +	if (p && p->get)
-> +		return p->get(np, p);
-> +
-> +	return -ENOTSUPP;
-> +}
-> +
-> +int pwrseq_on(struct device_node *np, struct pwrseq *p)
-> +{
-> +	if (p && p->on)
-> +		return p->on(np, p);
-> +
-> +	return -ENOTSUPP;
-> +}
-> +
-> +void pwrseq_off(struct pwrseq *p)
-> +{
-> +	if (p && p->off)
-> +		p->off(p);
-> +}
-> +
-> +void pwrseq_put(struct pwrseq *p)
-> +{
-> +	if (p && p->put)
-> +		p->put(p);
-> +}
-> +
-> +void pwrseq_free(struct pwrseq *p)
-> +{
-> +	if (p && p->free)
-> +		p->free(p);
-> +}
-> +
-> +void pwrseq_register(struct pwrseq *pwrseq)
-> +{
-> +	mutex_lock(&pwrseq_list_mutex);
-> +	list_add(&pwrseq->node, &pwrseq_list);
-> +	mutex_unlock(&pwrseq_list_mutex);
-> +}
-> +
-> +void pwrseq_unregister(struct pwrseq *pwrseq)
-> +{
-> +	mutex_lock(&pwrseq_list_mutex);
-> +	list_del(&pwrseq->node);
-> +	mutex_unlock(&pwrseq_list_mutex);
-> +}
+This allows the kernel to communicate to the bootloader what mode
+it should reboot to using some reserved memory.
 
-What is the purpose of pwrseq_register/unregister()? The pwrseq
-structs are added and removed from pwrseq_list, but besides that
-pwrseq_list is not used.
+Feedback would be very much appreciated!
 
-Looks like this is a remainder from the ancestor of this code
-(drivers/mmc/core/pwrseq.c) which uses the list to avoid having
-multiple pwrseq instances for the same device.
+thanks
+-john
 
-Matthias
+Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+
+John Stultz (4):
+  drivers: sram: Have sram driver probe children nodes
+  dt-bindings: power: reset: Add document for sram-reboot-mode driver
+  power: reset: Add sram-reboot-mode driver
+  dts: hikey: Add hikey support for sram-reboot-mode
+
+ .../bindings/power/reset/sram-reboot-mode.txt      | 35 ++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     | 22 ++++-
+ drivers/misc/sram.c                                |  3 +
+ drivers/power/reset/Kconfig                        | 10 +++
+ drivers/power/reset/Makefile                       |  1 +
+ drivers/power/reset/sram-reboot-mode.c             | 95 ++++++++++++++++++++++
+ 6 files changed, 165 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
+ create mode 100644 drivers/power/reset/sram-reboot-mode.c
+
+-- 
+1.9.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
