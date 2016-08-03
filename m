@@ -1,84 +1,291 @@
-From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [RFC][PATCH 2/4] dt-bindings: power: reset: Add document for sram-reboot-mode driver
-Date: Wed,  3 Aug 2016 16:05:21 -0700
-Message-ID: <1470265523-27557-3-git-send-email-john.stultz@linaro.org>
-References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH v2 1/2] ARM64: dts: meson-gxbb: add MMC support
+Date: Wed,  3 Aug 2016 16:18:42 -0700
+Message-ID: <20160803231843.23012-1-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470265523-27557-1-git-send-email-john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Victor Wan <victor.wan@amlogic.com>, Jerry Cao <jerry.cao@amlogic.com>, Xing Wu <xing.xu@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding document for reboot-mode driver
+Add binding and basic support for the SD/eMMC controller on Amlogic
+S905/GXBB devices.
 
-Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 ---
- .../bindings/power/reset/sram-reboot-mode.txt      | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
+ .../devicetree/bindings/mmc/amlogic,meson-gxbb.txt | 29 +++++++++
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 74 ++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   | 71 +++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 36 ++++++++++-
+ 4 files changed, 209 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-gxbb.txt
 
-diff --git a/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
+diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gxbb.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gxbb.txt
 new file mode 100644
-index 0000000..0a0ed05
+index 000000000000..2bfdf47018c5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
-@@ -0,0 +1,35 @@
-+SRAM reboot mode driver
++++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gxbb.txt
+@@ -0,0 +1,29 @@
++Amlogic SD / eMMC controller for S905/GXBB family SoCs
 +
-+This driver get reboot mode magic value form reboot-mode driver
-+and stores it in a SRAM address. Then the bootloader
-+can read it and take different action according to the magic
-+value stored.
++The MMC 5.1 compliant host controller on Amlogic provides the
++interface for SD, eMMC and SDIO devices.
 +
-+This DT node should be represented as a sub-node of a "mmio-sram" node.
++This file documents the properties in addition to those available in
++the MMC core bindings, documented by mmc.txt.
 +
 +Required properties:
-+- compatible: should be "sram-reboot-mode"
-+- reg: offset from the sram range where to store the magic value(in bytes)
-+
-+The rest of the properties should follow the generic reboot-mode discription
-+found in reboot-mode.txt
++- compatible : contains "amlogic,meson-gxbb"
++- clocks     : A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
++- clock-names: Should contain the following:
++	"core" - Main peripheral bus clock
++	"clkin0" - Parent clock of internal mux
++	"clkin1" - Other parent clock of internal mux
++  The driver has an interal mux clock which switches between clkin0 and clkin1 depending on the
++  clock rate requested by the MMC core.
 +
 +Example:
 +
-+	sram@5f01000 {
-+		compatible = "mmio-sram";
-+		reg = <0x0 0x05f01000 0x0 0x00001000>;
-+		ranges = <0x0 0x0 0x05f01000 0x00001000>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		reboot-mode@0 {
-+			compatible = "sram-reboot-mode";
-+			reg = <0x0 0x4>;
-+
-+			mode-normal     = <0x77665501>;
-+			mode-bootloader = <0x77665500>;
-+			mode-recovery   = <0x77665502>;
-+		};
++	sd_emmc_a: mmc@70000 {
++        	compatible = "amlogic,meson-gxbb-mmc";
++		reg = <0x0 0x70000 0x0 0x2000>;
++                interrupts = < GIC_SPI 216 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&clkc CLKID_SD_EMMC_A>, <&xtal>, <&clkc CLKID_FCLK_DIV2>;
++		clock-names = "core", "clkin0", "clkin1";
++		pinctrl-0 = <&emmc_pins>;
 +	};
++
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 90a84c514d3d..f41d8fe5c706 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -73,6 +73,45 @@
+ 			default-state = "off";
+ 		};
+ 	};
++
++	mmc_iv: gpio-regulator {
++		compatible = "regulator-gpio";
++
++		regulator-name = "mmc-gpio-supply";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
++		gpio-states = <0 1>;
++
++		/*
++		 * Based on ODROID-C2 schematics:
++		 * signal name: IO_TF_3V3N_1V8, GPIOAO bit 3
++		 */
++		states = <3300000 0
++			  1800000 1>;
++	};
++
++	vcc1v8: regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	vcc3v3: regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ &uart_AO {
+@@ -87,3 +126,38 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++
++	vmmc-supply = <&mmc_iv>;
++	voltage-ranges = <1800 3300>;
++};
++
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <8>;
++	cap-sd-highspeed;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++	cap-mmc-highspeed;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	voltage-ranges = <1800 3300>;
++	vmmc-supply = <&vcc3v3>;
++	vmmcq-sumpply = <&vcc1v8>;
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index f4f30f674b4c..77698815943a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -57,6 +57,42 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x40000000>;
+ 	};
++
++	mmc_iv: gpio-regulator {
++		compatible = "regulator-gpio";
++
++		regulator-name = "mmc-gpio-supply";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpios = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
++		gpio-states = <0 1>;
++
++		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
++		states = <1800000 0
++			  3300000 1>;
++	};
++
++	vddio_boot: regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_BOOT";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	vcc_3v3: regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ /* This UART is brought out to the DB9 connector */
+@@ -72,3 +108,38 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++
++	voltage-ranges = <1800 3300>;
++	vmmc-supply = <&mmc_iv>;
++};
++
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <8>;
++	cap-sd-highspeed;
++	cap-mmc-highspeed;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	voltage-ranges = <1800 3300>;
++	vmmc-supply = <&vcc_3v3>;
++	vmmcq-sumpply = <&vddio_boot>;
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 35c8b2beb05c..2c200f96467c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -247,7 +247,8 @@
+ 					mux {
+ 						groups = "emmc_nand_d07",
+ 						       "emmc_cmd",
+-						       "emmc_clk";
++						       "emmc_clk",
++						       "emmc_ds";
+ 						function = "emmc";
+ 					};
+ 				};
+@@ -330,6 +331,39 @@
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xd0000000 0x0 0x200000>;
++
++			sd_emmc_a: mmc@70000 {
++				compatible = "amlogic,meson-gxbb-mmc";
++				reg = <0x0 0x70000 0x0 0x2000>;
++				interrupts = <GIC_SPI 216 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc CLKID_SD_EMMC_A>,
++					 <&xtal>,
++					 <&clkc CLKID_FCLK_DIV2>;
++				clock-names = "core", "clkin0", "clkin1";
++				status = "disabled";
++			};
++
++			sd_emmc_b: mmc@72000 {
++				compatible = "amlogic,meson-gxbb-mmc";
++				reg = <0x0 0x72000 0x0 0x2000>;
++				interrupts = <GIC_SPI 217 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc CLKID_SD_EMMC_B>,
++					 <&xtal>,
++					 <&clkc CLKID_FCLK_DIV2>;
++				clock-names = "core", "clkin0", "clkin1";
++				status = "disabled";
++			};
++
++			sd_emmc_c: mmc@74000 {
++				compatible = "amlogic,meson-gxbb-mmc";
++				reg = <0x0 0x74000 0x0 0x2000>;
++				interrupts = <GIC_SPI 218 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc CLKID_SD_EMMC_C>,
++					 <&xtal>,
++					 <&clkc CLKID_FCLK_DIV2>;
++				clock-names = "core", "clkin0", "clkin1";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		ethmac: ethernet@c9410000 {
 -- 
-1.9.1
+2.9.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
