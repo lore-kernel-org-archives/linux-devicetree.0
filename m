@@ -1,11 +1,13 @@
 From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v8 0/5] support rockchip dwc3 driver
-Date: Wed,  3 Aug 2016 19:33:56 +0800
-Message-ID: <1470224041-25744-1-git-send-email-william.wu@rock-chips.com>
+Subject: [PATCH v8 3/5] usb: dwc3: make usb2 phy utmi interface configurable
+Date: Wed,  3 Aug 2016 19:33:59 +0800
+Message-ID: <1470224041-25744-4-git-send-email-william.wu@rock-chips.com>
+References: <1470224041-25744-1-git-send-email-william.wu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1470224041-25744-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -19,25 +21,142 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygd
 Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series add support for rockchip dwc3 driver,
-and add additional optional properties for specific
-platforms (e.g., rockchip rk3399 platform).
+Support to configure the UTMI+ PHY with an 8- or 16-bit
+interface via DT. The UTMI+ PHY interface is a hardware
+capability, and it's platform dependent. Normally, the
+PHYIF can be configured during coreconsultant.
 
-William Wu (5):
-  usb: dwc3: of-simple: add compatible for rockchip rk3399
-  usb: dwc3: add dis_u2_freeclk_exists_quirk
-  usb: dwc3: make usb2 phy utmi interface configurable
-  usb: dwc3: add dis_del_phy_power_chg_quirk
-  usb: dwc3: rockchip: add devicetree bindings documentation
+But for some specific USB cores(e.g. rk3399 SoC DWC3),
+the default PHYIF configuration value is false, so we
+need to reconfigure it by software.
 
- Documentation/devicetree/bindings/usb/dwc3.txt     |  5 ++
- Documentation/devicetree/bindings/usb/generic.txt  |  6 +++
- .../devicetree/bindings/usb/rockchip,dwc3.txt      | 59 ++++++++++++++++++++++
- drivers/usb/dwc3/core.c                            | 28 ++++++++++
- drivers/usb/dwc3/core.h                            | 20 ++++++++
- drivers/usb/dwc3/dwc3-of-simple.c                  |  1 +
- 6 files changed, 119 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes in v8:
+- configure utmi interface via phy_type property in DT (Heiko, Rob Herring)
+- add Acked-by (Rob Herring)
+- modify commit message (Rob Herring)
 
+Changes in v7:
+- remove quirk and use only one property to configure utmi (Heiko, Rob Herring)
+
+Changes in v6:
+- use '-' instead of '_' in dts (Rob Herring)
+
+Changes in v5:
+- None
+
+Changes in v4:
+- rebase on top of balbi testing/next, remove pdata (balbi)
+
+Changes in v3:
+- None
+
+Changes in v2:
+- add a quirk for phyif_utmi (balbi)
+
+ Documentation/devicetree/bindings/usb/generic.txt |  6 ++++++
+ drivers/usb/dwc3/core.c                           | 18 ++++++++++++++++++
+ drivers/usb/dwc3/core.h                           | 12 ++++++++++++
+ 3 files changed, 36 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
+index bba8257..bfadeb1 100644
+--- a/Documentation/devicetree/bindings/usb/generic.txt
++++ b/Documentation/devicetree/bindings/usb/generic.txt
+@@ -11,6 +11,11 @@ Optional properties:
+ 			"peripheral" and "otg". In case this attribute isn't
+ 			passed via DT, USB DRD controllers should default to
+ 			OTG.
++ - phy_type: tells USB controllers that we want to configure the core to support
++			a UTMI+ PHY with an 8- or 16-bit interface if UTMI+ is
++			selected. Valid arguments are "utmi" and "utmi_wide".
++			In case this isn't passed via DT, USB controllers should
++			default to HW capability.
+  - otg-rev: tells usb driver the release number of the OTG and EH supplement
+ 			with which the device and its descriptors are compliant,
+ 			in binary-coded decimal (i.e. 2.0 is 0200H). This
+@@ -34,6 +39,7 @@ dwc3@4a030000 {
+ 	usb-phy = <&usb2_phy>, <&usb3,phy>;
+ 	maximum-speed = "super-speed";
+ 	dr_mode = "otg";
++	phy_type = "utmi_wide";
+ 	otg-rev = <0x0200>;
+ 	adp-disable;
+ };
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 0b7bfd2..edbca03 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -485,6 +485,23 @@ static int dwc3_phy_setup(struct dwc3 *dwc)
+ 		break;
+ 	}
+ 
++	switch (dwc->hsphy_mode) {
++	case USBPHY_INTERFACE_MODE_UTMI:
++		reg &= ~(DWC3_GUSB2PHYCFG_PHYIF_MASK |
++		       DWC3_GUSB2PHYCFG_USBTRDTIM_MASK);
++		reg |= DWC3_GUSB2PHYCFG_PHYIF(UTMI_PHYIF_8_BIT) |
++		       DWC3_GUSB2PHYCFG_USBTRDTIM(USBTRDTIM_UTMI_8_BIT);
++		break;
++	case USBPHY_INTERFACE_MODE_UTMIW:
++		reg &= ~(DWC3_GUSB2PHYCFG_PHYIF_MASK |
++		       DWC3_GUSB2PHYCFG_USBTRDTIM_MASK);
++		reg |= DWC3_GUSB2PHYCFG_PHYIF(UTMI_PHYIF_16_BIT) |
++		       DWC3_GUSB2PHYCFG_USBTRDTIM(USBTRDTIM_UTMI_16_BIT);
++		break;
++	default:
++		break;
++	}
++
+ 	/*
+ 	 * Above 1.94a, it is recommended to set DWC3_GUSB2PHYCFG_SUSPHY to
+ 	 * '0' during coreConsultant configuration. So default value will
+@@ -891,6 +908,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 
+ 	dwc->maximum_speed = usb_get_maximum_speed(dev);
+ 	dwc->dr_mode = usb_get_dr_mode(dev);
++	dwc->hsphy_mode = of_usb_get_phy_mode(dev->of_node);
+ 
+ 	dwc->has_lpm_erratum = device_property_read_bool(dev,
+ 				"snps,has-lpm-erratum");
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index f321a5c..ff5a83a 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -203,6 +203,14 @@
+ #define DWC3_GUSB2PHYCFG_SUSPHY		(1 << 6)
+ #define DWC3_GUSB2PHYCFG_ULPI_UTMI	(1 << 4)
+ #define DWC3_GUSB2PHYCFG_ENBLSLPM	(1 << 8)
++#define DWC3_GUSB2PHYCFG_PHYIF(n)	(n << 3)
++#define DWC3_GUSB2PHYCFG_PHYIF_MASK	DWC3_GUSB2PHYCFG_PHYIF(1)
++#define DWC3_GUSB2PHYCFG_USBTRDTIM(n)	(n << 10)
++#define DWC3_GUSB2PHYCFG_USBTRDTIM_MASK	DWC3_GUSB2PHYCFG_USBTRDTIM(0xf)
++#define USBTRDTIM_UTMI_8_BIT		9
++#define USBTRDTIM_UTMI_16_BIT		5
++#define UTMI_PHYIF_16_BIT		1
++#define UTMI_PHYIF_8_BIT		0
+ 
+ /* Global USB2 PHY Vendor Control Register */
+ #define DWC3_GUSB2PHYACC_NEWREGREQ	(1 << 25)
+@@ -744,6 +752,9 @@ struct dwc3_scratchpad_array {
+  * @maximum_speed: maximum speed requested (mainly for testing purposes)
+  * @revision: revision register contents
+  * @dr_mode: requested mode of operation
++ * @hsphy_mode: UTMI phy mode, one of following:
++ *		- USBPHY_INTERFACE_MODE_UTMI
++ *		- USBPHY_INTERFACE_MODE_UTMIW
+  * @usb2_phy: pointer to USB2 PHY
+  * @usb3_phy: pointer to USB3 PHY
+  * @usb2_generic_phy: pointer to USB2 PHY
+@@ -849,6 +860,7 @@ struct dwc3 {
+ 	size_t			regs_size;
+ 
+ 	enum usb_dr_mode	dr_mode;
++	enum usb_phy_interface	hsphy_mode;
+ 
+ 	u32			fladj;
+ 	u32			irq_gadget;
 -- 
 1.9.1
