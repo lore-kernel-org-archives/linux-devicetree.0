@@ -1,45 +1,45 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 08/11] ARM: dts: NSP: Add new DT file for bcm958522er
-Date: Wed,  3 Aug 2016 14:39:03 -0400
-Message-ID: <1470249546-12440-9-git-send-email-jon.mason@broadcom.com>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: [PATCH 10/11] ARM: dts: NSP: Add new DT file for bcm958623hr
+Date: Wed,  3 Aug 2016 14:39:05 -0400
+Message-ID: <1470249546-12440-11-git-send-email-jon.mason@broadcom.com>
 References: <1470249546-12440-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470249546-12440-1-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470249546-12440-1-git-send-email-jon.mason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: f.fainelli@gmail.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Create a new device tree file for the Broadcom Northstar Plus
-bcm958522er SVK.  This SVK has 2GB RAM, 2 ports Ethernet, 2 PCI slots,
-and 1 UART.  Also, it has the ability to reboot via GPIO.  To be added
-in the future is support for the USB.
+bcm958623hr SVK.  This SVK has 2GB RAM, 5 ports Ethernet, SATA, 2 PCI
+slots, and 1 UART.  Also, it has the ability to reboot via GPIO.  To be
+added in the future are support for the USB and SLIC audio.
 
-Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jon Mason <jon.mason@broadcom.com>
 ---
  arch/arm/boot/dts/Makefile        |   1 +
- arch/arm/boot/dts/bcm958522er.dts | 130 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 131 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm958522er.dts
+ arch/arm/boot/dts/bcm958623hr.dts | 178 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 179 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm958623hr.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8a05bf6..7c04e31 100644
+index 190528d..6e41b49 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -99,6 +99,7 @@ dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
- 	bcm21664-garnet.dtb \
- 	bcm23550-sparrow.dtb
- dtb-$(CONFIG_ARCH_BCM_NSP) += \
-+	bcm958522er.dtb \
+@@ -102,6 +102,7 @@ dtb-$(CONFIG_ARCH_BCM_NSP) += \
+ 	bcm958522er.dtb \
  	bcm958525er.dtb \
  	bcm958525xmc.dtb \
++	bcm958623hr.dtb \
  	bcm958625hr.dtb \
-diff --git a/arch/arm/boot/dts/bcm958522er.dts b/arch/arm/boot/dts/bcm958522er.dts
+ 	bcm988312hr.dtb \
+ 	bcm958625k.dtb
+diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
 new file mode 100644
-index 0000000..a21b0fd
+index 0000000..4ceb8fe
 --- /dev/null
-+++ b/arch/arm/boot/dts/bcm958522er.dts
-@@ -0,0 +1,130 @@
++++ b/arch/arm/boot/dts/bcm958623hr.dts
+@@ -0,0 +1,178 @@
 +/*
 + *  BSD LICENSE
 + *
@@ -78,8 +78,8 @@ index 0000000..a21b0fd
 +#include <dt-bindings/gpio/gpio.h>
 +
 +/ {
-+	model = "NorthStar Plus SVK (BCM958522ER)";
-+	compatible = "brcm,bcm58522", "brcm,nsp";
++	model = "NorthStar Plus SVK (BCM958623HR)";
++	compatible = "brcm,bcm58623", "brcm,nsp";
 +
 +	aliases {
 +		serial0 = &uart0;
@@ -101,14 +101,9 @@ index 0000000..a21b0fd
 +	};
 +};
 +
-+/* USB 2/3 support needed to be complete */
++/* USB 2/3 and SLIC support needed to be complete */
 +
 +&amac0 {
-+	status = "okay";
-+};
-+
-+
-+&amac1 {
 +	status = "okay";
 +};
 +
@@ -167,13 +162,61 @@ index 0000000..a21b0fd
 +	};
 +};
 +
++&srab {
++	compatible = "brcm,bcm58623-srab", "brcm,nsp-srab";
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			label = "port0";
++			reg = <0>;
++		};
++
++		port@1 {
++			label = "port1";
++			reg = <1>;
++		};
++
++		port@2 {
++			label = "port2";
++			reg = <2>;
++		};
++
++		port@3 {
++			label = "port3";
++			reg = <3>;
++		};
++
++		port@4 {
++			label = "port4";
++			reg = <4>;
++		};
++
++		port@5 {
++			ethernet = <&amac0>;
++			label = "cpu";
++			reg = <5>;
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++			};
++		};
++	};
++};
++
++&sata_phy0 {
++	status = "okay";
++};
++
++&sata {
++	status = "okay";
++};
++
 +&uart0 {
 +	status = "okay";
 +};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
