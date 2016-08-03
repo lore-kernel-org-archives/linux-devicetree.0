@@ -1,68 +1,63 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH 4/4] dts: hikey: Add hikey support for sram-reboot-mode
-Date: Wed,  3 Aug 2016 16:05:23 -0700
-Message-ID: <1470265523-27557-5-git-send-email-john.stultz@linaro.org>
+From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [RFC][PATCH 2/4] dt-bindings: power: reset: Add document for sram-reboot-mode driver
+Date: Wed,  3 Aug 2016 16:05:21 -0700
+Message-ID: <1470265523-27557-3-git-send-email-john.stultz@linaro.org>
 References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: John Stultz <john.stultz@linaro.org>, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470265523-27557-1-git-send-email-john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support to hikey dts and defconfig for the
-sram-reboot-mode driver.
+Add device tree binding document for reboot-mode driver
 
-The dts entries added here should really be generated
-by the UEFI firmware, and not be static in the dts,
-since one may be using different firmware on HiKey.
-But this patch provides an example of how the
-sram-reboot-mode entry would otherwise look.
-
-Cc: Andy Yan <andy.yan@rock-chips.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Heiko Stübner <heiko@sntech.de>
-Cc: Caesar Wang <wxt@rock-chips.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Guodong Xu <guodong.xu@linaro.org>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: Vishal Bhoj <vishal.bhoj@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: Android Kernel Team <kernel-team@android.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ .../bindings/power/reset/sram-reboot-mode.txt      | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 593c7e4..62326ab 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -29,6 +29,7 @@
- 	 * Reserve below regions from memory node:
- 	 *
- 	 *  0x05e0,0000 - 0x05ef,ffff: MCU firmware runtime using
-+	 *  0x05f0,1000 - 0x05f0,1fff: Reboot reason
- 	 *  0x06df,f000 - 0x06df,ffff: Mailbox message data
- 	 *  0x0740,f000 - 0x0740,ffff: MCU firmware section
- 	 *  0x3e00,0000 - 0x3fff,ffff: OP-TEE
-@@ -36,11 +37,30 @@
- 	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
--		      <0x00000000 0x05f00000 0x00000000 0x00eff000>,
-+		      <0x00000000 0x05f00000 0x00000000 0x00001000>,
-+		      <0x00000000 0x05f02000 0x00000000 0x00efd000>,
- 		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
- 		      <0x00000000 0x07410000 0x00000000 0x36bf0000>;
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
+new file mode 100644
+index 0000000..0a0ed05
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
+@@ -0,0 +1,35 @@
++SRAM reboot mode driver
++
++This driver get reboot mode magic value form reboot-mode driver
++and stores it in a SRAM address. Then the bootloader
++can read it and take different action according to the magic
++value stored.
++
++This DT node should be represented as a sub-node of a "mmio-sram" node.
++
++Required properties:
++- compatible: should be "sram-reboot-mode"
++- reg: offset from the sram range where to store the magic value(in bytes)
++
++The rest of the properties should follow the generic reboot-mode discription
++found in reboot-mode.txt
++
++Example:
++
 +	sram@5f01000 {
 +		compatible = "mmio-sram";
 +		reg = <0x0 0x05f01000 0x0 0x00001000>;
@@ -75,14 +70,15 @@ index 593c7e4..62326ab 100644
 +			compatible = "sram-reboot-mode";
 +			reg = <0x0 0x4>;
 +
-+			mode-normal	= <0x77665501>;
-+			mode-bootloader	= <0x77665500>;
-+			mode-recovery	= <0x77665502>;
++			mode-normal     = <0x77665501>;
++			mode-bootloader = <0x77665500>;
++			mode-recovery   = <0x77665502>;
 +		};
 +	};
-+
- 	soc {
- 		spi0: spi@f7106000 {
- 			status = "ok";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
