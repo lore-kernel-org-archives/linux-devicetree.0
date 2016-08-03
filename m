@@ -1,54 +1,83 @@
 From: Ian Campbell <ijc@hellion.org.uk>
-Subject: Re: [PATCH] ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from
- arch=arm
-Date: Wed, 03 Aug 2016 14:45:59 +0100
-Message-ID: <1470231959.4745.11.camel@hellion.org.uk>
-References: <1470213635-6934-1-git-send-email-ijc@hellion.org.uk>
- <CAL_JsqKs+9UxKa=_PZWM-AO8b+MqbxypO_3h6ZGQtYjHcB1Drg@mail.gmail.com>
- <20160803133041.GA12499@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160803133041.GA12499@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Lee Jones <lee@kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, "arm@kernel.org" <arm@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org
+Subject: [PATCH v2 1/2] ARM: dts: Remove use of skeleton.dtsi from bcm283x.dtsi
+Date: Wed,  3 Aug 2016 15:12:44 +0100
+Message-ID: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Ian Campbell <ijc@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE2LTA4LTAzIGF0IDE0OjMwICswMTAwLCBNYXJrIFJ1dGxhbmQgd3JvdGU6Cj4g
-T24gV2VkLCBBdWcgMDMsIDIwMTYgYXQgMDg6MTM6NTFBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gPiAKPiA+ID4gPiBPbiBXZWQsIEF1ZyAzLCAyMDE2IGF0IDM6NDAgQU0sIElhbiBDYW1w
-YmVsbCA8aWpjQGhlbGxpb24ub3JnLnVrPiB3cm90ZToKPiA+ID4gCj4gPiA+IFRoZXNlIGluY2x1
-ZGVzIGluIHR1cm4gcmVxdWlyZSBhIHNrZWxldG9uLmR0c2kgdG8gYmUgcHJlc2VudCwgc28gYWRk
-IG9uZSBhcwo+ID4gPiBhIHJlYWwgZmlsZSAod2l0aCB0aGUgc2FtZSBjb250ZW50cyBhcyBhcmNo
-L2FybSkgcmF0aGVyIHRoYW4gYSBzeW1saW5rLgo+ID4gCj4gPiBJIGRvbid0IGZvbGxvdyB3aHkg
-c2tlbGV0b24uZHRzaSBpcyBuZWVkZWQuIFRoZSAzMi1iaXQgUlBpIGR0cyBmaWxlcwo+ID4gYXJl
-IGluY2x1ZGluZyBpdD8KCkV4YWN0bHkuCgo+ID4gIElmIHNvLCBjYW4gd2UganVzdCByZW1vdmUg
-aXQuIFdlIGRlY2lkZWQKPiA+IHNrZWxldG9uLmR0c2kgd2FzIGEgYmFkIGlkZWEuCj4gCj4gWXVw
-LiBJIGRvbid0IHdhbnQgdG8gc2VlIHNrZWxldG9uLmR0c2kgcmVhcHBlYXIsIGFuZCB0aGUgbmVj
-ZXNzYXJ5Cj4gZml4dXBzIHRvIHNvdXJjZSBmaWxlcyBhcmUgcmVsYXRpdmVseSBzaW1wbGUuCj4g
-Cj4gSWFuLCBzZWUgY29tbWl0IDNlYmVlNWEyZTE0MTQ5NmIgKCJhcm02NDogZHRzOiBraWxsIHNr
-ZWxldG9uLmR0c2kiKSBmb3IKPiB0aGUgcmF0aW9uYWxlLCBhbmQgaGludHMgYXMgdG8gd2hhdCBu
-ZWVkcyB0byBiZSBmaXhlZCB1cCAoZS5nLiBpZiBlbXB0eQo+ID4gbWVtb3J5IG5vZGVzIGFyZSBy
-ZXF1aXJlZCwgdGhlcmUgc2hvdWxkIGJlIGEgY29tbWVudCBhcyB0byB3aHkpLgoKVW5kZXJzdG9v
-ZC4KCkkgY2FuIG1ha2UgdGhlIG1lY2hhbmljYWwgZml4IHRvwqBhcmNoL2FybS9ib290L2R0cy9i
-Y20yODN4LmR0c2kgKHdoaWNoCmlzIGxpbmtlZCBoZXJlIGFzwqBhcmNoL2FybTY0L2Jvb3QvZHRz
-L2Jyb2FkY29tL2JjbTI4M3guZHRzaSB3aGljaApjYXVzZXMgdGhlIG5lZWQgZm9yIHNrZWxldG9u
-LmR0c2kpIGJ1dCBJIGRvbid0IGhhdmUgYW55IFItUGkgaGFyZHdhcmUKd2l0aCB3aGljaCB0byB2
-ZXJpZnkgdGhlIG5lZWQgKG9yIG5vdCkgZm9yIGVtcHR5IG1lbW9yeSBub2RlcyBldGMuCgo+IFBl
-cmhhcHMgdGhpcyBpcyBhIGdvb2QgdGltZSB0byBhdHRhY2sgdGhlIHJlbWFpbmluZyAzMi1iaXQg
-c2tlbGV0b24uZHRzaQo+ID4gdXNlcnMuIEknbGwgdGFrZSBhbm90aGVyIGxvb2sgY29tZSAtcmMx
-LgoKbGludXguZ2l0JCBnaXQgZ3JlcCBza2VsZXRvbi5kdHNpIC0tIGFyY2gvYXJtwqDCoHwgd2Mg
-LWwKMTQ4CmxpbnV4LmdpdCQKCkdvb2QgbHVjayA7LSkKCklhbi4KCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+This file is included from DTS files under arch/arm64 too (via
+broadcom/bcm2837-rpi-3-b.dts and broadcom/bcm2837.dtsi). There is a desire
+not to have skeleton.dtsi for ARM64. See commit 3ebee5a2e141 ("arm64: dts:
+kill skeleton.dtsi") for rationale for its removal.
+
+As well as the addition of #*-cells also requires adding the device_type to
+the rpi memory node explicitly.
+
+Note that this change results in the removal of an empty /aliases node from
+bcm2835-rpi-a.dtb and bcm2835-rpi-a-plus.dtb. I have no hardware to check
+if this is a problem or not.
+
+It also results in some reordering of the nodes in the DTBs (the /aliases
+and /memory nodes come later). This isn't supposed to matter but, again,
+I've no hardware to check if it is true in this particular case.
+
+Signed-off-by: Ian Campbell <ijc@hellion.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Eric Anholt <eric@anholt.net>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Lee Jones <lee@kernel.org>
+Cc: Gerd Hoffmann <kraxel@redhat.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-rpi-kernel@lists.infradead.org
+Cc: arm@kernel.org
+---
+v2: New patch to avoid needing to add skeleton.dtsi to arch/arm64
+---
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 1 +
+ arch/arm/boot/dts/bcm283x.dtsi     | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index caf2707..e9b47b2 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -2,6 +2,7 @@
+ 
+ / {
+ 	memory {
++		device_type = "memory";
+ 		reg = <0 0x10000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index b982522..445624a 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -2,7 +2,6 @@
+ #include <dt-bindings/clock/bcm2835.h>
+ #include <dt-bindings/clock/bcm2835-aux.h>
+ #include <dt-bindings/gpio/gpio.h>
+-#include "skeleton.dtsi"
+ 
+ /* This include file covers the common peripherals and configuration between
+  * bcm2835 and bcm2836 implementations, leaving the CPU configuration to
+@@ -13,6 +12,8 @@
+ 	compatible = "brcm,bcm2835";
+ 	model = "BCM2835";
+ 	interrupt-parent = <&intc>;
++	#address-cells = <1>;
++	#size-cells = <1>;
+ 
+ 	chosen {
+ 		bootargs = "earlyprintk console=ttyAMA0";
+-- 
+2.8.1
