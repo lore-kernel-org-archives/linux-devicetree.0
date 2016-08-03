@@ -1,89 +1,42 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH 02/11] ARM: dts: NSP: Enable SATA and add i2c devices on XMC
-Date: Wed,  3 Aug 2016 14:38:57 -0400
-Message-ID: <1470249546-12440-3-git-send-email-jon.mason@broadcom.com>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 03/11] ARM: dts: NSP: Specify RAM amount for BCM958625K board
+Date: Wed,  3 Aug 2016 14:38:58 -0400
+Message-ID: <1470249546-12440-4-git-send-email-jon.mason@broadcom.com>
 References: <1470249546-12440-1-git-send-email-jon.mason@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470249546-12440-1-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: f.fainelli@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470249546-12440-1-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable SATA on bcm958625xmc and add the i2c devices present.
+Add 2GB of memory starting at physical offset 0x6000_0000.
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/bcm958525xmc.dts | 32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm958625k.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
-index d257e83..a337f2d 100644
---- a/arch/arm/boot/dts/bcm958525xmc.dts
-+++ b/arch/arm/boot/dts/bcm958525xmc.dts
-@@ -47,6 +47,24 @@
+diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+index f41a13b..feed1b7 100644
+--- a/arch/arm/boot/dts/bcm958625k.dts
++++ b/arch/arm/boot/dts/bcm958625k.dts
+@@ -46,6 +46,11 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
  	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x60000000 0x80000000>;
++	};
  };
- 
-+&i2c0 {
-+	temperature-sensor@4c {
-+		compatible = "adi,adt7461a";
-+		reg = <0x4c>;
-+	};
-+
-+	eeprom@52 {
-+		compatible = "atmel,24c02";
-+		reg = <0x52>;
-+		pagesize = <16>;
-+	};
-+
-+	rtc@68 {
-+		compatible = "st,m41t81";
-+		reg = <0x68>;
-+	};
-+};
-+
- &nand {
- 	nandcs@0 {
- 		compatible = "brcm,nandcs";
-@@ -85,7 +103,7 @@
- 	};
- };
- 
--/* XHCI, SATA, MMC, and Ethernet support needed to be complete */
-+/* XHCI, MMC, and Ethernet support needed to be complete */
  
  &uart0 {
- 	status = "okay";
-@@ -99,6 +117,18 @@
- 	status = "okay";
- };
- 
-+&sata_phy0 {
-+	status = "okay";
-+};
-+
-+&sata_phy1 {
-+	status = "okay";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&nand_sel>;
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
