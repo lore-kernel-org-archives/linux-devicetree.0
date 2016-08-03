@@ -1,152 +1,68 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH] watchdog: xilinx: Add clock support
-Date: Wed, 3 Aug 2016 04:13:27 +0000
-Message-ID: <4EED9C67BE3EF440A606099F8E34C528265C36B5@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1470134220-12927-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <20160802192313.GA647@roeck-us.net>
+From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v8 1/5] usb: dwc3: of-simple: add compatible for rockchip
+ rk3399
+Date: Wed,  3 Aug 2016 19:33:57 +0800
+Message-ID: <1470224041-25744-2-git-send-email-william.wu@rock-chips.com>
+References: <1470224041-25744-1-git-send-email-william.wu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160802192313.GA647-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1470224041-25744-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Rockchip platform merely enable usb3 clocks and
+populate its children. So we can use this generic
+glue layer to support Rockchip dwc3.
 
+Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+Changes in v8:
+- None
 
-> -----Original Message-----
-> From: Guenter Roeck [mailto:linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org]
-> Sent: Wednesday, August 03, 2016 12:53 AM
-> 
-> On Tue, Aug 02, 2016 at 04:07:00PM +0530, Shubhrajyoti Datta wrote:
-> > Add support for the clock. Currently we enable at probe and relinquish
-> > at remove.
-> >
-> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
-> >  drivers/watchdog/of_xilinx_wdt.c                   | 24
-> ++++++++++++++++++++--
-> >  2 files changed, 25 insertions(+), 2 deletions(-)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-> > b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-> > index 6d63782..b0a9fa3 100644
-> > --- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-> > +++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-> > @@ -5,6 +5,8 @@ Required properties:
-> >  - compatible		: Should be "xlnx,xps-timebase-wdt-1.00.a" or
-> >  			  "xlnx,xps-timebase-wdt-1.01.a".
-> >  - reg			: Physical base address and size
-> > +- clocks		: Input clock specifier. Refer to common clock
-> > +			  bindings.
-> >
-> >  Optional properties:
-> >  - clock-frequency	: Frequency of clock in Hz
-> > @@ -17,6 +19,7 @@ Example:
-> >  axi-timebase-wdt@40100000 {
-> >  	clock-frequency = <50000000>;
-> >  	compatible = "xlnx,xps-timebase-wdt-1.00.a";
-> > +	clocks = <&clkc 15>;
-> >  	reg = <0x40100000 0x10000>;
-> >  	xlnx,wdt-enable-once = <0x0>;
-> >  	xlnx,wdt-interval = <0x1b>;
-> > diff --git a/drivers/watchdog/of_xilinx_wdt.c
-> > b/drivers/watchdog/of_xilinx_wdt.c
-> > index b2e1b4c..23cbb33 100644
-> > --- a/drivers/watchdog/of_xilinx_wdt.c
-> > +++ b/drivers/watchdog/of_xilinx_wdt.c
-> > @@ -10,6 +10,7 @@
-> >   * 2 of the License, or (at your option) any later version.
-> >   */
-> >
-> > +#include <linux/clk.h>
-> >  #include <linux/err.h>
-> >  #include <linux/module.h>
-> >  #include <linux/types.h>
-> > @@ -45,6 +46,7 @@ struct xwdt_device {
-> >  	u32 wdt_interval;
-> >  	spinlock_t spinlock;
-> >  	struct watchdog_device xilinx_wdt_wdd;
-> > +	struct clk		*clk;
-> >  };
-> >
-> >  static int xilinx_wdt_start(struct watchdog_device *wdd) @@ -194,17
-> > +196,30 @@ static int xwdt_probe(struct platform_device *pdev)
-> >
-> >  	spin_lock_init(&xdev->spinlock);
-> >  	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
-> > +	xdev->clk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(xdev->clk)) {
-> > +		dev_err(&pdev->dev, "input clock not found\n");
-> > +		rc = PTR_ERR(xdev->clk);
-> > +		return rc;
-> > +	}
-> > +
-> > +	rc = clk_prepare_enable(xdev->clk);
-> > +	if (rc) {
-> > +		dev_err(&pdev->dev, "unable to enable clock\n");
-> > +		goto err_clk_disable;
-> 
-> Enable failed. Why try to disable ?
-Will fix 
-> 
-> > +	}
-> > +
-> >
-> 
-> Please no double empty lines.
-Will fix thanks.
+Changes in v7:
+- None
 
-> 
-> >  	rc = xwdt_selftest(xdev);
-> >  	if (rc == XWT_TIMER_FAILED) {
-> >  		dev_err(&pdev->dev, "SelfTest routine error\n");
-> > -		return rc;
-> > +		goto err_clk_disable;
-> >  	}
-> >
-> >  	rc = watchdog_register_device(xilinx_wdt_wdd);
-> >  	if (rc) {
-> >  		dev_err(&pdev->dev, "Cannot register watchdog
-> (err=%d)\n", rc);
-> > -		return rc;
-> > +		goto err_clk_disable;
-> >  	}
-> >
-> >  	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout
-> > %ds\n", @@ -213,6 +228,10 @@ static int xwdt_probe(struct
-> platform_device *pdev)
-> >  	platform_set_drvdata(pdev, xdev);
-> >
-> >  	return 0;
-> > +err_clk_disable:
-> > +	clk_disable_unprepare(xdev->clk);
-> > +
-> > +	return rc;
-> >  }
-> >
-> >  static int xwdt_remove(struct platform_device *pdev) @@ -220,6 +239,7
-> > @@ static int xwdt_remove(struct platform_device *pdev)
-> >  	struct xwdt_device *xdev = platform_get_drvdata(pdev);
-> >
-> >  	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
-> > +	clk_disable_unprepare(xdev->clk);
-> >
-> >  	return 0;
-> >  }
-> > --
-> > 2.1.1
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe
-> > linux-watchdog" in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v6:
+- None
+
+Changes in v5:
+- change compatible from "rockchip,dwc3" to "rockchip,rk3399-dwc3" (Heiko)
+
+Changes in v4:
+- None
+
+Changes in v3:
+- None
+
+Changes in v2:
+- sort the list of_dwc3_simple_match (Doug)
+
+ drivers/usb/dwc3/dwc3-of-simple.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+index 9743353..05c9349 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -161,6 +161,7 @@ static const struct dev_pm_ops dwc3_of_simple_dev_pm_ops = {
+ 
+ static const struct of_device_id of_dwc3_simple_match[] = {
+ 	{ .compatible = "qcom,dwc3" },
++	{ .compatible = "rockchip,rk3399-dwc3" },
+ 	{ .compatible = "xlnx,zynqmp-dwc3" },
+ 	{ /* Sentinel */ }
+ };
+-- 
+1.9.1
