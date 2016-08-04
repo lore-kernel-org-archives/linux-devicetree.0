@@ -1,83 +1,94 @@
-From: Peter Senna Tschudin <peter.senna@collabora.com>
-Subject: [PATCH V4 2/4] Documentation/devicetree/bindings: b850v3_lvds_dp
-Date: Fri,  5 Aug 2016 00:36:59 +0200
-Message-ID: <2faeaded0bc299ffbd01c408b813f9a730a6e6db.1470346720.git.peter.senna@collabora.com>
-References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
- <cover.1470346720.git.peter.senna@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1470346720.git.peter.senna@collabora.com>
-In-Reply-To: <cover.1470346720.git.peter.senna@collabora.com>
-References: <cover.1470346720.git.peter.senna@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, airlied@linux.ie, p.zabel@pengutronix.de, martyn.welch@collabora.co.uk, martin.donnelly@ge.com, peter.senna@collabora.com, peter.senna@gmail.com, treding@nvidia.com, architt@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
-Cc: Javier Martinez Canillas <javier@dowhile0.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Rob Herring <robh@kernel.org>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM64: dts: meson-gxbb: add MMC support
+Date: Thu, 04 Aug 2016 15:58:55 -0700
+Message-ID: <m2oa58nntc.fsf@baylibre.com>
+References: <20160803231843.23012-1-khilman@baylibre.com>
+	<20160804181556.GA13000@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160804181556.GA13000@rob-hp-laptop> (Rob Herring's message of
+	"Thu, 4 Aug 2016 13:15:56 -0500")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Xing Wu <xing.xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Devicetree bindings documentation for the GE B850v3 LVDS/DP++
-display bridge.
+Hi Rob,
 
-Cc: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
----
-Changes from V3:
- - 2/4 instead of 3/5
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-Unchanged from V2
+> On Wed, Aug 03, 2016 at 04:18:42PM -0700, Kevin Hilman wrote:
+>> Add binding and basic support for the SD/eMMC controller on Amlogic
+>> S905/GXBB devices.
+>> 
+>> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Changes from V1:
- - Replaced '_' by '-' in node names or compatible strings
- - Added missing @73 to the example
+[...]
 
- .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+>> +	mmc_iv: gpio-regulator {
+>> +		compatible = "regulator-gpio";
+>> +
+>> +		regulator-name = "mmc-gpio-supply";
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +
+>> +		gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
+>> +		gpio-states = <0 1>;
+>> +
+>> +		/*
+>> +		 * Based on ODROID-C2 schematics:
+>> +		 * signal name: IO_TF_3V3N_1V8, GPIOAO bit 3
+>> +		 */
+>> +		states = <3300000 0
+>> +			  1800000 1>;
+>
+> There are multiple things wrong in this node based on the regulator-gpio 
+> documentation.
 
-diff --git a/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-new file mode 100644
-index 0000000..f05c3e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-@@ -0,0 +1,37 @@
-+Driver for GE B850v3 LVDS/DP++ display bridge
-+
-+Required properties:
-+  - compatible : should be "ge,b850v3-lvds-dp".
-+  - reg : should contain the address used to ack the interrupts.
-+  - interrupt-parent : phandle of the interrupt controller that services
-+    interrupts to the device
-+  - interrupts : one interrupt should be described here, as in
-+    <0 IRQ_TYPE_LEVEL_HIGH>.
-+  - edid-reg : should contain the address used to read edid information
-+  - port : should describe the video signal connection between the host
-+    and the bridge.
-+
-+Example:
-+
-+&mux2_i2c2 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	b850v3-lvds-dp-bridge@73  {
-+		compatible = "ge,b850v3-lvds-dp";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg = <0x73>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		edid-reg = <0x72>;
-+
-+		port {
-+			b850v3_dp_bridge_in: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
-+	};
-+};
--- 
-2.5.5
+I see I got the property name wrong, and the number of elements wrong,
+and this fixes those issues:
+
+-               gpio-states = <0 1>;
++               gpios-states = <0>;
+
+By "multiple", did you mean more than those 2?  If so, I'm not seeing
+what else is wrong.
+
+[...]
+
+>> +	mmc_iv: gpio-regulator {
+>> +		compatible = "regulator-gpio";
+>> +
+>> +		regulator-name = "mmc-gpio-supply";
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +
+>> +		gpios = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
+>> +		gpio-states = <0 1>;
+>> +
+>> +		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
+>> +		states = <1800000 0
+>> +			  3300000 1>;
+>> +	};
+>> +
+>> +	vddio_boot: regulator {
+> [...]
+>> +	vcc_3v3: regulator {
+>
+> This won't even compile as you have the same node name twice.
+
+Oops, it's wrong indeed, but in fact, it does compile, otherwise I
+would've caught that..  Even if I remove the labels, it still compiles.
+Interesting.
+
+Anyways, I'll make those unique node-names in the next spin.
+
+Thanks for the review,
+
+Kevin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
