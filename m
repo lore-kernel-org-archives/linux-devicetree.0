@@ -1,79 +1,108 @@
-From: York Sun <york.sun@nxp.com>
-Subject: [Patch v3 11/11] arm64: Update device tree for Layerscape SoCs
-Date: Thu, 4 Aug 2016 15:58:36 -0700
-Message-ID: <1470351518-22404-12-git-send-email-york.sun@nxp.com>
-References: <1470351518-22404-1-git-send-email-york.sun@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470351518-22404-1-git-send-email-york.sun@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-edac@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Liu Gang <Gang.Liu@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Hou Zhiqiang <B48286@freescale.com>, York Sun <york.sun@nxp.com>, Li Yang <leoli@freescale.com>, yangbo lu <yangbo.lu@freescale.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, stuart.yoder@nxp.com, oss@buserror.net, Rob Herring <robh+dt@kernel.org>, bp@alien8.de, Yuan Yao <yao.yuan@nxp.com>, Mingkai Hu <Mingkai.Hu@freescale.com>, linux-arm-kernel@lists.infradead.org, Rajesh Bhagat <rajesh.bhagat@freescale.com>, morbidrsa@gmail.com, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, Shawn Guo <shawnguo@kernel.org>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH v3 02/15] dt/bindings: Update binding for PM domain idle states
+Date: Thu,  4 Aug 2016 17:04:49 -0600
+Message-ID: <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
+References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>, Lina Iyer <lina.iyer@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DDR memory controller nodes to enable EDAC driver.
+From: Axel Haslam <ahaslam+renesas@baylibre.com>
 
-Signed-off-by: York Sun <york.sun@nxp.com>
+Update DT bindings to describe idle states of PM domains.
 
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Marc Titinger <mtitinger+renesas@baylibre.com>
+Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+[Lina: Added state properties, removed state names, wakeup-latency,
+added of_pm_genpd_init() API, pruned commit text]
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+[Ulf: Moved around code to make it compile properly, rebased on top of multiple state support]
 ---
-Change log
-  v3: no change
-  v2: no change
+ .../devicetree/bindings/power/power_domain.txt     | 57 ++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  7 +++++++
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 14 ++++++++++++++
- 2 files changed, 21 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index de0323b..cb33f23 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -196,6 +196,13 @@
- 			bus-width = <4>;
- 		};
+diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+index 025b5e7..4960486 100644
+--- a/Documentation/devicetree/bindings/power/power_domain.txt
++++ b/Documentation/devicetree/bindings/power/power_domain.txt
+@@ -29,6 +29,10 @@ Optional properties:
+    specified by this binding. More details about power domain specifier are
+    available in the next section.
  
-+		ddr: memory-controller@1080000 {
-+			compatible = "fsl,qoriq-memory-controller";
-+			reg = <0x0 0x1080000 0x0 0x1000>;
-+			interrupts = <0 144 0x4>;
-+			big-endian;
++- domain-idle-states : A phandle of an idle-state that shall be soaked into a
++                generic domain power state. The idle state definitions are
++                compatible with arm,idle-state specified in [1].
++
+ Example:
+ 
+ 	power: power-controller@12340000 {
+@@ -59,6 +63,57 @@ The nodes above define two power controllers: 'parent' and 'child'.
+ Domains created by the 'child' power controller are subdomains of '0' power
+ domain provided by the 'parent' power controller.
+ 
++Example 3: ARM v7 style CPU PM domains (Linux domain controller)
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7", "arm,armv7";
++			reg = <0x0>;
++			power-domains = <&a7_pd>;
 +		};
 +
- 		dspi0: dspi@2100000 {
- 			compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
- 			#address-cells = <1>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index 3187c82..3221e5c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -689,4 +689,18 @@
- 			interrupts = <0 12 4>;
- 		};
- 	};
-+
-+	ddr1: memory-controller@1080000 {
-+		compatible = "fsl,qoriq-memory-controller";
-+		reg = <0x0 0x1080000 0x0 0x1000>;
-+		interrupts = <0 17 0x4>;
-+		little-endian;
++		CPU1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15", "arm,armv7";
++			reg = <0x0>;
++			power-domains = <&a15_pd>;
++		};
 +	};
 +
-+	ddr2: memory-controller@1090000 {
-+		compatible = "fsl,qoriq-memory-controller";
-+		reg = <0x0 0x1090000 0x0 0x1000>;
-+		interrupts = <0 18 0x4>;
-+		little-endian;
++	pm-domains {
++		a15_pd: a15_pd {
++			/* will have A15 platform ARM_PD_METHOD_OF_DECLARE*/
++			compatible = "arm,cortex-a15";
++			#power-domain-cells = <0>;
++			domain-idle-states = <&CLUSTER_SLEEP_0>;
++		};
++
++		a7_pd: a7_pd {
++			/* will have a A7 platform ARM_PD_METHOD_OF_DECLARE*/
++			compatible = "arm,cortex-a7";
++			#power-domain-cells = <0>;
++			domain-idle-states = <&CLUSTER_SLEEP_0>, <&CLUSTER_SLEEP_1>;
++		};
++
++		CLUSTER_SLEEP_0: state0 {
++			compatible = "arm,idle-state";
++			entry-latency-us = <1000>;
++			exit-latency-us = <2000>;
++			min-residency-us = <10000>;
++		};
++
++		CLUSTER_SLEEP_1: state1 {
++			compatible = "arm,idle-state";
++			entry-latency-us = <5000>;
++			exit-latency-us = <5000>;
++			min-residency-us = <100000>;
++		};
 +	};
- };
++
+ ==PM domain consumers==
+ 
+ Required properties:
+@@ -76,3 +131,5 @@ Example:
+ The node above defines a typical PM domain consumer device, which is located
+ inside a PM domain with index 0 of a power controller represented by a node
+ with the label "power".
++
++[1]. Documentation/devicetree/bindings/arm/idle-states.txt
 -- 
 2.7.4
