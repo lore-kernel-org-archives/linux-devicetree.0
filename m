@@ -1,73 +1,41 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH 2/2 v16] drm/bridge: Add I2C based driver for ps8640 bridge
-Date: Thu, 4 Aug 2016 12:35:59 +0200
-Message-ID: <CAFqH_53PgPs3_h7XNFEu4u0W6GW7vyWCNFf2vq8Yn7sH2LbFwA@mail.gmail.com>
-References: <1464861445-11086-1-git-send-email-jitao.shi@mediatek.com>
- <1464861445-11086-2-git-send-email-jitao.shi@mediatek.com>
- <CACvgo53002XCPLufbJHQLC1uL1nNS7_0gh=napedetmvT6FoSw@mail.gmail.com>
- <CAGS+omDsDS5tx=+Efq8LWNd3-asU4r2h=-AE6vdKgfG-p6vdAA@mail.gmail.com>
- <CAKMK7uEkUOq1CB3tj_1Qx50fBpw9B39+c3asX6MPNexT=dv9fA@mail.gmail.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiAyLzJdIGlteDUzLmR0c2kgOiBBZGQgRE1BIGNvbmZp?=
+ =?UTF-8?B?Z3VyYXRpb24gZm9yIFVBUlQ=?=
+Date: Thu, 04 Aug 2016 13:49:10 +0300
+Message-ID: <1470307750.712399023@f361.i.mail.ru>
+References: <CAOMZO5BoRsrHv-+5c9bAXO2NCya8sPqmmpy9DOfav6NvQ+VMLQ@mail.gmail.com>
+ <1470306157-11181-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+ <1470306157-11181-2-git-send-email-fabien.lahoudere@collabora.co.uk>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKMK7uEkUOq1CB3tj_1Qx50fBpw9B39+c3asX6MPNexT=dv9fA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, ML dri-devel <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Thierry Reding <treding@nvidia.com>, devicetree <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?B?RWRkaWUgSHVhbmcgKOm7g+aZuuWCkSk=?= <eddie.huang@mediatek.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream <srv_heupstream@mediatek.com>, Emil Velikov <emil>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470306157-11181-2-git-send-email-fabien.lahoudere@collabora.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?RmFiaWVuIExhaG91ZGVyZQ==?= <fabien.lahoudere@collabora.co.uk>
+Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?b3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRCBERVZJQ0Ug?= =?UTF-8?B?VFJFRSBCSU5ESU5HUw==?= <devicetree@vger.kernel.org>, =?UTF-8?B?UnVzc2VsbCBLaW5n?= <linux@armlinux.org.uk>, =?UTF-8?B?b3BlbiBsaXN0?= <linux-kernel@vger.kernel.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel@pengutronix.de>, =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <fabio.estevam@nxp.com>, =?UTF-8?B?U2hhd24gR3Vv?= <shawnguo@kernel.org>, =?UTF-8?B?bW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVTQ0FMRSBJTVggLyBNWEMgQVJNIEFS?= =?UTF-8?B?Q0hJVEVDVFVSRQ==?= <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxNi0wNy0xMiAxMjoxMyBHTVQrMDI6MDAgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNo
-PjoKPiBPbiBXZWQsIEp1biAyOSwgMjAxNiBhdCA2OjMxIEFNLCBEYW5pZWwgS3VydHogPGRqa3Vy
-dHpAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4gT24gRnJpLCBKdW4gMTcsIDIwMTYgYXQgMzoxNCBB
-TSwgRW1pbCBWZWxpa292IDxlbWlsLmwudmVsaWtvdkBnbWFpbC5jb20+IHdyb3RlOgo+Pj4+ICtz
-dGF0aWMgc3NpemVfdCBwczg2NDBfdXBkYXRlX2Z3X3N0b3JlKHN0cnVjdCBkZXZpY2UgKmRldiwK
-Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2Vf
-YXR0cmlidXRlICphdHRyLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgY29uc3QgY2hhciAqYnVmLCBzaXplX3QgY291bnQpCj4+Pj4gK3sKPj4+PiArICAgICAgIHN0
-cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSB0b19pMmNfY2xpZW50KGRldik7Cj4+Pj4gKyAgICAg
-ICBzdHJ1Y3QgcHM4NjQwICpwc19icmlkZ2UgPSBpMmNfZ2V0X2NsaWVudGRhdGEoY2xpZW50KTsK
-Pj4+PiArICAgICAgIGNvbnN0IHN0cnVjdCBmaXJtd2FyZSAqZnc7Cj4+Pj4gKyAgICAgICBpbnQg
-ZXJyb3I7Cj4+Pj4gKwo+Pj4+ICsgICAgICAgZXJyb3IgPSByZXF1ZXN0X2Zpcm13YXJlKCZmdywg
-UFNfRldfTkFNRSwgZGV2KTsKPj4+IENhbiB0aGUgZGV2aWNlIG9wZXJhdGUgd2l0aG91dCBhIGZp
-cm13YXJlID8gSWYgbm90LCB3aHkgaXMgdGhlCj4+PiBmaXJtd2FyZSBsb2FkZWQgc28gbGF0ZXIv
-YWZ0ZXIgdXNlciBpbnRlcmFjdGlvbiAodmlhIHN5c2ZzKSA/IEkgZG9uJ3QKPj4+IHJlY2FsbCBh
-bnkgb3RoZXIgZHJpdmVyIGluIERSTSB0byB1c2Ugc3VjaCBhbiBhcHByb2FjaC4KPj4KPj4gVGhl
-IFBTODY0MCBoYXMgaW50ZXJuYWwgZmxhc2gsIHNvIGl0IHNob3VsZCBhbHdheXMgYWxyZWFkeSBo
-YXZlIGEKPj4gd29ya2luZyBmaXJtd2FyZS4KPj4gVGhpcyBzeXNmcyBpbnRlcmZhY2UgaXMgdXNl
-ZnVsIGZvciB1c2VyIHNwYWNlIGluaXRpYXRlZCBmaWVsZCBmaXJtd2FyZSB1cGRhdGVzLgo+Cj4g
-TWlnaHQgYmUgYmV0dGVyIHRvIGp1c3QgZG8gYSByZXF1ZXN0X2Zpcm13YXJlIG9uIGRyaXZlciBs
-b2FkLCBhbmQKPiBzaW1wbHkgcHJvY2VlZCBpZiBpdCdzIG5vdCB0aGVyZS4gQWRkaW5nIGEgc3lz
-ZnMgaW50ZXJmYWNlICh3aGljaCBpcwo+IGFiaSkgc2VlbXMgd2F5IHRvbyBtdWNoIG92ZXJraWxs
-IGZvciB0aGlzIGltby4gSWYgeW91IHdhbnQgdG8gdXBncmFkZQo+IHRoZSBmaXJtd2FyZSB5b3Ug
-Y2FuIHRoZW4ganVzdCBkcm9wIGl0IGludG8gdGhlIHJpZ2h0IGRpcmVjdG9yeSwgd2l0aAo+IG5v
-IGZ1cnRoZXIgaW50ZXJhY3Rpb24gbmVlZGVkLgoKSU1ITyBJJ20gbm90IHN1cmUgaWYgZm9yIHRo
-aXMgdXNlIGNhc2UgcmVxdWVzdF9maXJtd2FyZSBvbiBkcml2ZXIgbG9hZAppcyBhIGdvb2QgaWRl
-YS4gRmxhc2ggdGhlIG5vbi12b2xhdGlsZSBpbnRlcm5hbCBjaGlwIGNhbiBiZSBhIHNsb3cKb3Bl
-cmF0aW9uIGFuZCBpZiB5b3UgZm9yZ2V0IHRvIHJlbW92ZSB0aGUgZmlybXdhcmUgYWZ0ZXIgZHJv
-cCBpdCBpbnRvCnRoZSByaWdodCBkaXJlY3RvcnkgYXBhcnQgZnJvbSBzbG93IGRvd24gdGhlIGRy
-aXZlciBwcm9iZSB5b3UgY2FuCmRhbWFnZSB0aGUgY2hpcCBkZXBlbmRpbmcgb24gdGhlIHdyaXRl
-IGVuZHVyYW5jZSBvZiB0aGUgY2hpcC4KClRoaXMgc3lzZnMgaW50ZXJmYWNlIGlzIHVzZWQgb24g
-b3RoZXIgc3Vic3lzdGVtcyB3aGVuIHRoZXJlIGlzIGEKbm9uLXZvbGF0aWxlIG1lbW9yeSwgYXMg
-ZXhhbXBsZSB5b3UgY2FuIHNlZSBhdCBbMV0sIFsyXS4gVW5mb3J0dW5hdGVseQpub3QgYWxsIGFy
-ZSB1c2luZyB0aGUgc2FtZSBzeXNmcyBpbnRlcmZhY2UgYW5kIG1heWJlIHRoaXMgc2hvdWxkIGJl
-CnN0YW5kYXJkaXplZCAobWF5YmUgaXQncyBhbiBvcHBvcnR1bml0eSB0byBkZWZpbmUgaXQpCgpS
-ZWdhcmRzLAogRW5yaWMKClsxXSBodHRwOi8vbHhyLmZyZWUtZWxlY3Ryb25zLmNvbS9zb3VyY2Uv
-ZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi93ZHQ4N3h4X2kyYy5jI0w5MjIKWzJdIGh0dHA6Ly9s
-eHIuZnJlZS1lbGVjdHJvbnMuY29tL3NvdXJjZS9kcml2ZXJzL3Njc2kvcG04MDAxL3BtODAwMV9j
-dGwuYyNMNzMyCgoKPiAtRGFuaWVsCj4gLS0KPiBEYW5pZWwgVmV0dGVyCj4gU29mdHdhcmUgRW5n
-aW5lZXIsIEludGVsIENvcnBvcmF0aW9uCj4gKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8v
-YmxvZy5mZndsbC5jaAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+PtCn0LXRgtCy0LXRgNCzLCAgNCDQsNCy0LPRg9GB0YLQsCAyMDE2LCAxMzoyMiArMDM6MDAg0L7R
+giBGYWJpZW4gTGFob3VkZXJlIDxmYWJpZW4ubGFob3VkZXJlQGNvbGxhYm9yYS5jby51az46Cj4K
+PkluIG9yZGVyIHRvIHVzZSBzZG1hIHdpdGggVUFSVCwgd2UgbmVlZCB0byBhZGQgRE1BIGNvbmZp
+Z3VyYXRpb24gaW4gZGV2aWNlIHRyZWUuCj4KPlNpZ25lZC1vZmYtYnk6IEZhYmllbiBMYWhvdWRl
+cmUgPCBmYWJpZW4ubGFob3VkZXJlQGNvbGxhYm9yYS5jby51ayA+Cj4tLS0KPsKgYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NTMuZHRzaSB8IDEwICsrKysrKysrKysKPsKgMSBmaWxlIGNoYW5nZWQsIDEw
+IGluc2VydGlvbnMoKykKLi4uCgpIZWxsby4KClVBUlQgU0RNQSBoYXMgYmVlbiB0ZXN0ZWQgYnkg
+bWUgZm9yIGkuTVg1MS4KU28sIG9uIG15IG9waW5pb24sIEluIHRoZSBmaXJzdCBwYXJ0IG9mIHRo
+ZSBwYXRjaCwgd2UganVzdCBuZWVkIHRvIHJlbW92ZSBpc19pbXg2cV91YXJ0KCkKY2hlY2sgb24g
+YW5kIGFsd2F5cyBsZXQgdGhlIGRldmljZXRyZWUgZGVjaWRlIGFib3V0IERNQSB1c2FnZS4KClRo
+YW5rcy4KLS0tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCg==
